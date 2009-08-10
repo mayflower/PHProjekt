@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -103,25 +103,26 @@ dojo.extend(dojox.gfx.Shape, {
 	},
 
 	setStroke: function(stroke){
-		// summary: sets a stroke object (SVG)
-		// stroke: Object: a stroke object
-		//	(see dojox.gfx.defaultStroke)
+		//	summary:
+		//		sets a stroke object (SVG)
+		//	stroke: Object
+		// 		a stroke object (see dojox.gfx.defaultStroke)
 
+		var rn = this.rawNode;
 		if(!stroke){
 			// don't stroke
 			this.strokeStyle = null;
-			this.rawNode.setAttribute("stroke", "none");
-			this.rawNode.setAttribute("stroke-opacity", 0);
+			rn.setAttribute("stroke", "none");
+			rn.setAttribute("stroke-opacity", 0);
 			return this;
 		}
 		// normalize the stroke
 		if(typeof stroke == "string" || dojo.isArray(stroke) || stroke instanceof dojo.Color){
-			stroke = {color: stroke};
+			stroke = { color: stroke };
 		}
 		var s = this.strokeStyle = dojox.gfx.makeParameters(dojox.gfx.defaultStroke, stroke);
 		s.color = dojox.gfx.normalizeColor(s.color);
 		// generate attributes
-		var rn = this.rawNode;
 		if(s){
 			rn.setAttribute("stroke", s.color.toCss());
 			rn.setAttribute("stroke-opacity", s.color.a);
@@ -134,9 +135,11 @@ dojo.extend(dojox.gfx.Shape, {
 				rn.setAttribute("stroke-linejoin",   s.join);
 			}
 			var da = s.style.toLowerCase();
-			if(da in dojox.gfx.svg.dasharray){ da = dojox.gfx.svg.dasharray[da]; }
+			if(da in dojox.gfx.svg.dasharray){
+				da = dojox.gfx.svg.dasharray[da];
+			}
 			if(da instanceof Array){
-				da = dojo.clone(da);
+				da = dojo._toArray(da);
 				for(var i = 0; i < da.length; ++i){
 					da[i] *= s.width;
 				}
@@ -189,11 +192,7 @@ dojo.extend(dojox.gfx.Shape, {
 			defs.appendChild(fill);
 		}
 		if(nodeType == "pattern"){
-			if(dojo.isSafari){
-				fill.setAttributeNS(null, "patternUnits", "userSpaceOnUse");
-			}else{
-				fill.setAttribute("patternUnits", "userSpaceOnUse");
-			}
+			fill.setAttribute("patternUnits", "userSpaceOnUse");
 			var img = document.createElementNS(svgns, "image");
 			img.setAttribute("x", 0);
 			img.setAttribute("y", 0);
@@ -202,11 +201,7 @@ dojo.extend(dojox.gfx.Shape, {
 			img.setAttributeNS(dojox.gfx.svg.xmlns.xlink, "href", f.src);
 			fill.appendChild(img);
 		}else{
-			if(dojo.isSafari){
-				fill.setAttributeNS(null, "gradientUnits", "userSpaceOnUse");
-			}else{
-				fill.setAttribute("gradientUnits", "userSpaceOnUse");
-			}
+			fill.setAttribute("gradientUnits", "userSpaceOnUse");
 			for(var i = 0; i < f.colors.length; ++i){
 				var c = f.colors[i], t = document.createElementNS(svgns, "stop"),
 					cc = c.color = dojox.gfx.normalizeColor(c.color);
@@ -517,6 +512,10 @@ dojo.declare("dojox.gfx.Surface", dojox.gfx.shape.Surface, {
 	constructor: function(){
 		dojox.gfx.svg.Container._init.call(this);
 	},
+	destroy: function(){
+		this.defNode = null;	// release the external reference
+		this.inherited(arguments);
+	},
 	setDimensions: function(width, height){
 		// summary: sets the width and height of the rawNode
 		// width: String: width of surface, e.g., "100px"
@@ -543,11 +542,13 @@ dojox.gfx.createSurface = function(parentNode, width, height){
 	s.rawNode.setAttribute("width",  width);
 	s.rawNode.setAttribute("height", height);
 
-	var node = document.createElementNS(dojox.gfx.svg.xmlns.svg, "defs");
-	s.rawNode.appendChild(node);
-	s.defNode = node;
-
-	dojo.byId(parentNode).appendChild(s.rawNode);
+	var defNode = document.createElementNS(dojox.gfx.svg.xmlns.svg, "defs");
+	s.rawNode.appendChild(defNode);
+	s.defNode = defNode;
+	
+	s._parent = dojo.byId(parentNode); 
+	s._parent.appendChild(s.rawNode);
+	
 	return s;	// dojox.gfx.Surface
 };
 

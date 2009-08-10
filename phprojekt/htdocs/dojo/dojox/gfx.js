@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -39,13 +39,14 @@ dojo.loadInit(function(){
 					iPhoneOsBuild = parseInt(match[4].substr(0,3), 16);
 				}
 			}
-
+		}
+		if(dojo.isWebKit){
 			// Android detection
 			if(!iPhoneOsBuild){
 				match = ua.match(/Android\s+(\d+\.\d+)/);
 				if(match){
 					androidVersion = parseFloat(match[1]);
-					// Android 1.0 doesn't support SVG but supports Canvas
+					// Android 1.0-1.1 doesn't support SVG but supports Canvas
 				}
 			}
 		}
@@ -54,7 +55,7 @@ dojo.loadInit(function(){
 			switch(renderers[i]){
 				case "svg":
 					//	iPhone OS builds greater than 5F1 should have SVG.
-					if(!dojo.isIE && (!iPhoneOsBuild || iPhoneOsBuild >= 0x5f1) && !androidVersion){
+					if(!dojo.isIE && (!iPhoneOsBuild || iPhoneOsBuild >= 0x5f1) && !androidVersion && !dojo.isAIR){
 						dojox.gfx.renderer = "svg";
 					}
 					break;

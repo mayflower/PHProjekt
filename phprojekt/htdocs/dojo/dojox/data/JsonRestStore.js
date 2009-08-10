@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -36,7 +36,8 @@ dojo.declare("dojox.data.JsonRestStore",
 			//		Note that it is critical that the service parses responses as JSON.
 			//		If you are using dojox.rpc.Service, the easiest way to make sure this 
 			// 		happens is to make the responses have a content type of 
-			// 		application/json.
+			// 		application/json. If you are creating your own service, make sure you
+			//		use handleAs: "json" with your XHR requests.
 			//
 			// The *target* parameter
 			// 		This is the target URL for this Service store. This may be used in place
@@ -56,7 +57,7 @@ dojo.declare("dojox.data.JsonRestStore",
 			//		callbacks are unnecessary
 			//
 			//	description:
-			//		The JsonRestStore will then cause all saved modifications to be server using Rest commands (PUT, POST, or DELETE).
+			//		The JsonRestStore will cause all saved modifications to be sent to the server using Rest commands (PUT, POST, or DELETE).
 			// 		When using a Rest store on a public network, it is important to implement proper security measures to
 			//		control access to resources.
 			//		On the server side implementing a REST interface means providing GET, PUT, POST, and DELETE handlers.
@@ -126,10 +127,17 @@ dojo.declare("dojox.data.JsonRestStore",
 			// wrap the service with so it goes through JsonRest manager 
 			this.service._store = this;
 			this.schema._idAttr = this.idAttribute;
-			this._constructor = dojox.rpc.JsonRest.getConstructor(this.service);
+			var constructor = dojox.rpc.JsonRest.getConstructor(this.service);
+			var self = this;
+			this._constructor = function(data){
+				constructor.call(this, data);
+				self.onNew(this);
+			}
+			this._constructor.prototype = constructor.prototype;
 			this._index = dojox.rpc.Rest._index;
 			//given a url, load json data from as the store
 		},
+		referenceIntegrity: true,
 		target:"",
 		//Write API Support
 		newItem: function(data, parentInfo){
@@ -146,12 +154,11 @@ dojo.declare("dojox.data.JsonRestStore",
 				// set the new value
 				this.setValue(parentInfo.parent,parentInfo.attribute,values.concat([data]));
 			}
-			this.onNew(data); // should this go before the set?
 			return data;
 		},
 		deleteItem: function(item){
 			// summary:
-			//		deletes item any references to that item from the store.
+			//		deletes item and any references to that item from the store.
 			//
 			//	item:
 			//  	item to delete
@@ -159,8 +166,65 @@ dojo.declare("dojox.data.JsonRestStore",
 
 			//	If the desire is to delete only one reference, unsetAttribute or
 			//	setValue is the way to go.
+			var checked = [];
+			var store = dojox.data._getStoreForItem(item) || this;
+			if(this.referenceIntegrity){
+				// cleanup all references
+				dojox.rpc.JsonRest._saveNotNeeded = true;
+				var index = dojox.rpc.Rest._index;
+				var fixReferences = function(parent){
+					var toSplice;
+					// keep track of the checked ones
+					checked.push(parent);
+					// mark it checked so we don't run into circular loops when encountering cycles
+					parent.__checked = 1;
+					for(var i in parent){
+						var value = parent[i];
+						if(value == item){
+							if(parent != index){ // make sure we are just operating on real objects 
+								if(parent instanceof Array){
+									// mark it as needing to be spliced, don't do it now or it will mess up the index into the array
+									(toSplice = toSplice || []).push(i);	
+								}else{
+									// property, just delete it.
+									(dojox.data._getStoreForItem(parent) || store).unsetAttribute(parent, i);
+								}
+							}
+						}else{
+							if((typeof value == 'object') && value){
+								if(!value.__checked){
+									// recursively search
+									fixReferences(value);
+								}
+								if(typeof value.__checked == 'object' && parent != index){
+									// if it is a modified array, we will replace it
+									(dojox.data._getStoreForItem(parent) || store).setValue(parent, i, value.__checked);
+								}
+							}
+						}
+					}
+					if(toSplice){
+						// we need to splice the deleted item out of these arrays
+						i = toSplice.length;
+						parent = parent.__checked = parent.concat(); // indicates that the array is modified
+						while(i--){
+							parent.splice(toSplice[i], 1);
+						}
+						return parent;
+					}
+					return null;
+				};
+				// start with the index
+				fixReferences(index);
+				dojox.rpc.JsonRest._saveNotNeeded = false;
+				var i = 0;
+				while(checked[i]){
+					// remove the checked marker
+					delete checked[i++].__checked;
+				}
+			}			
 			dojox.rpc.JsonRest.deleteObject(item);
-			var store = dojox.data._getStoreForItem(item);
+
 			store.onDelete(item);
 		},
 		changing: function(item,_deleting){
@@ -180,16 +244,14 @@ dojo.declare("dojox.data.JsonRestStore",
 			var store = item.__id ? dojox.data._getStoreForItem(item) : this;
 			if(dojox.json.schema && store.schema && store.schema.properties){
 				// if we have a schema and schema validator available we will validate the property change
-				var result = dojox.json.schema.checkPropertyChange(value,store.schema.properties[attribute]);
-				if(!result.valid){
-					throw new Error(dojo.map(result.errors,function(error){return error.message;}).join(","));
-				}
+				dojox.json.schema.mustBeValid(dojox.json.schema.checkPropertyChange(value,store.schema.properties[attribute]));
 			}
-			if(old !== value){
-				store.changing(item);
-				item[attribute]=value;
-				store.onSet(item,attribute,old,value);
+			if(attribute == store.idAttribute){
+				throw new Error("Can not change the identity attribute for an item");
 			}
+			store.changing(item);
+			item[attribute]=value;
+			store.onSet(item,attribute,old,value);
 		},
 		setValues: function(item, attribute, values){
 			// summary:
@@ -228,9 +290,13 @@ dojo.declare("dojox.data.JsonRestStore",
 			return actions;
 		},
 
-		revert: function(){
+		revert: function(kwArgs){
 			// summary
 			//		returns any modified data to its original state prior to a save();
+			//
+			//	kwArgs.global:
+			//		This will cause the revert to undo all the changes for all 
+			// 		JsonRestStores in a single operation.
 			var dirtyObjects = dojox.rpc.JsonRest.getDirtyObjects().concat([]);
 			while (dirtyObjects.length>0){
 				var d = dirtyObjects.pop();
@@ -250,7 +316,7 @@ dojo.declare("dojox.data.JsonRestStore",
 					}
 				}
 			}
-			dojox.rpc.JsonRest.revert();
+			dojox.rpc.JsonRest.revert(kwArgs && kwArgs.global && this.service);
 		},
 
 		isDirty: function(item){
@@ -258,14 +324,17 @@ dojo.declare("dojox.data.JsonRestStore",
 			//		returns true if the item is marked as dirty.
 			return dojox.rpc.JsonRest.isDirty(item);
 		},
-		isItem: function(item){
-			// summary:
-			//	Checks to see if a passed 'item'
-			//	is really belongs to this JsonRestStore.
+		isItem: function(item, anyStore){
+			//	summary:
+			//		Checks to see if a passed 'item'
+			//		really belongs to this JsonRestStore.
 			//
 			//	item: /* object */
-			//	attribute: /* string */
-			return item && item.__id && this.service == dojox.rpc.JsonRest.getServiceAndId(item.__id).service;
+			//		The value to test for being an item
+			//	anyStore: /* boolean*/
+			//		If true, this will return true if the value is an item for any JsonRestStore,
+			//		not just this instance
+			return item && item.__id && (anyStore || this.service == dojox.rpc.JsonRest.getServiceAndId(item.__id).service);
 		},
 		_doQuery: function(args){
 			var query= typeof args.queryStr == 'string' ? args.queryStr : args.query;
@@ -275,7 +344,7 @@ dojo.declare("dojox.data.JsonRestStore",
 			// index the results
 			var count = results.length;
 			// if we don't know the length, and it is partial result, we will guess that it is twice as big, that will work for most widgets
-			return {totalCount:deferred.fullLength || (deferred.request.count == count ? count * 2 : count), items: results};
+			return {totalCount:deferred.fullLength || (deferred.request.count == count ? (deferred.request.start || 0) + count * 2 : count), items: results};
 		},
 
 		getConstructor: function(){
@@ -286,7 +355,7 @@ dojo.declare("dojox.data.JsonRestStore",
 		getIdentity: function(item){
 			var id = item.__clientId || item.__id;
 			if(!id){
-				this.inherited(arguments); // let service store throw the error
+				return id;
 			}
 			var prefix = this.service.servicePath;
 			// support for relative or absolute referencing with ids 
@@ -296,7 +365,7 @@ dojo.declare("dojox.data.JsonRestStore",
 			var id = args.identity;
 			var store = this;
 			// if it is an absolute id, we want to find the right store to query
-			if(id.match(/^(\w*:)?\//)){
+			if(id.toString().match(/^(\w*:)?\//)){
 				var serviceAndId = dojox.rpc.JsonRest.getServiceAndId(id);
 				store = serviceAndId.service._store;
 				args.identity = serviceAndId.id; 
@@ -323,7 +392,13 @@ dojo.declare("dojox.data.JsonRestStore",
 	}
 );
 dojox.data._getStoreForItem = function(item){
-	return dojox.rpc.JsonRest.services[item.__id.match(/.*\//)[0]]._store;
+	if(item.__id){
+		var servicePath = item.__id.toString().match(/.*\//)[0];
+		var service = dojox.rpc.JsonRest.services[servicePath];
+		return service ? service._store : new dojox.data.JsonRestStore({target:servicePath});
+	}
+	return null;
 };
+dojox.json.ref._useRefs = true; // Use referencing when identifiable objects are referenced
 
 }

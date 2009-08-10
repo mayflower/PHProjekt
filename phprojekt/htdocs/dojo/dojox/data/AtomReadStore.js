@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -409,7 +409,7 @@ dojo.declare("dojox.data.AtomReadStore", null, {
 		nodes = dojo.filter(feedNodes[0].childNodes, "return item.tagName && item.tagName.toLowerCase() == 'entry'");
 
 		if(request.onBegin){
-			request.onBegin(nodes.length);
+			request.onBegin(nodes.length, this.sendQuery ? request : {});
 		}
 
 		for(var i = 0; i < nodes.length; i++){

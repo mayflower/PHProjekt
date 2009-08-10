@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -22,7 +22,7 @@ dojo.declare(
 		
 		baseClass: "dojoxFilePickerTextBox",
 		
-		templateString:"<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\r\n\tid=\"widget_${id}\"\r\n\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse\" waiRole=\"combobox\" tabIndex=\"-1\"\r\n\t><div style=\"overflow:hidden;\"\r\n\t\t><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton'\r\n\t\t\tdojoAttachPoint=\"downArrowNode,dropDownNode,popupStateNode\" waiRole=\"presentation\"\r\n\t\t\t><div class=\"dijitArrowButtonInner\">&thinsp;</div\r\n\t\t\t><div class=\"dijitArrowButtonChar\">&#9660;</div\r\n\t\t></div\r\n\t\t><div class=\"dijitReset dijitValidationIcon\"><br></div\r\n\t\t><div class=\"dijitReset dijitValidationIconText\">&Chi;</div\r\n\t\t><div class=\"dijitReset dijitInputField\"\r\n\t\t\t><input type=\"text\" autocomplete=\"off\" name=\"${name}\" class='dijitReset'\r\n\t\t\t\tdojoAttachEvent='onfocus:_update,onkeyup:_update,onblur:_onMouse,onkeypress:_onKey' \r\n\t\t\t\tdojoAttachPoint='textbox,focusNode' waiRole=\"textbox\" waiState=\"haspopup-true,autocomplete-list\"\r\n\t\t/></div\r\n\t></div\r\n></div>\r\n",
+		templateString:"<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\r\n\tid=\"widget_${id}\"\r\n\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse\" waiRole=\"combobox\" tabIndex=\"-1\"\r\n\t><div style=\"overflow:hidden;\"\r\n\t\t><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton'\r\n\t\t\tdojoAttachPoint=\"downArrowNode,dropDownNode,popupStateNode\" waiRole=\"presentation\"\r\n\t\t\t><div class=\"dijitArrowButtonInner\">&thinsp;</div\r\n\t\t\t><div class=\"dijitArrowButtonChar\">&#9660;</div\r\n\t\t></div\r\n\t\t><div class=\"dijitReset dijitValidationIcon\"><br></div\r\n\t\t><div class=\"dijitReset dijitValidationIconText\">&Chi;</div\r\n\t\t><div class=\"dijitReset dijitInputField\"\r\n\t\t\t><input type=\"text\" autocomplete=\"off\" ${nameAttrSetting} class='dijitReset'\r\n\t\t\t\tdojoAttachEvent='onkeypress:_onKey' \r\n\t\t\t\tdojoAttachPoint='textbox,focusNode' waiRole=\"textbox\" waiState=\"haspopup-true,autocomplete-list\"\r\n\t\t/></div\r\n\t></div\r\n></div>\r\n",
 		
 		// searchDelay: Integer
 		//		Delay in milliseconds between when user types something and we start
@@ -36,6 +36,11 @@ dojo.declare(
 		// valueItem: item
 		//		The item, in our store, of the directory relating to our value
 		valueItem: null,
+		
+		// numPanes: number
+		//	The number of panes to display in our box (if we don't have any
+		//	minPaneWidth specified by our constraints)
+		numPanes: 2.25,
 		
 		postMixInProperties: function(){
 			this.inherited(arguments);
@@ -53,12 +58,18 @@ dojo.declare(
 			});
 		},
 		
-		_setValueAttr: function(/*string*/value){
+		_setValueAttr: function(/*string*/value, priorityChange, fromWidget){
 			// summary: sets the value of this widget
 			if(!this._searchInProgress){
 				this.inherited(arguments);
-				this._skip = true;
-				this.dropDown.attr("pathValue", value);
+				value = value||"";
+				var tVal = this.dropDown.attr("pathValue")||"";
+				if(value !== tVal){
+					this._skip = true;
+					var fx = dojo.hitch(this, "_setBlurValue");
+					this.dropDown._setPathValueAttr(value, !fromWidget, 
+											this._settingBlurValue ? fx : null);
+				}
 			}
 		},
 		
@@ -66,18 +77,17 @@ dojo.declare(
 			// summary: called when the path gets changed in the dropdown
 			if(!item && this.focusNode.value){
 				this._hasValidPath = false;
+				this.focusNode.value = "";
 			}else{
 				this.valueItem = item;
 				var value = this.dropDown._getPathValueAttr(item);
-				if(value || !this._skipInvalidSet){
-					if(value){
-						this._hasValidPath = true;
-					}
-					if(!this._skip){
-						this.attr("value", value);
-					}
-					delete this._skip;
+				if(value){
+					this._hasValidPath = true;
 				}
+				if(!this._skip){
+					this._setValueAttr(value, undefined, true);
+				}
+				delete this._skip;
 			}
 			this.validate();
 		},
@@ -92,6 +102,9 @@ dojo.declare(
 		openDropDown: function(){
 			// set width to 0 so that it will resize automatically
 			this.dropDown.domNode.style.width="0px";
+			if(!("minPaneWidth" in (this.constraints||{}))){
+				this.dropDown.attr("minPaneWidth", (this.domNode.offsetWidth / this.numPanes));
+			}
 			this.inherited(arguments);
 		},
 		
@@ -145,10 +158,13 @@ dojo.declare(
 		
 		_setBlurValue: function(){
 			// summary: sets the value of the widget once focus has left
-			if(this.dropDown){
+			if(this.dropDown && !this._settingBlurValue){
+				this._settingBlurValue = true;
 				this.attr("value", this.focusNode.value);
+			}else{
+				delete this._settingBlurValue;
+				this.inherited(arguments);
 			}
-			this.inherited(arguments);
 		},
 		
 		parse: function(/* String */ value, /* Object */ constraints){
@@ -170,7 +186,7 @@ dojo.declare(
 				return v;
 			};
 			ddVal = norm(ddVal);
-			val = norm(value);
+			var val = norm(value);
 			if(val == ddVal){
 				return value;
 			}

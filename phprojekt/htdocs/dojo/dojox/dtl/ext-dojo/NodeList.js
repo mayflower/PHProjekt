@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,7 +19,7 @@ dojo.extend(dojo.NodeList, {
 		var d = dojox.dtl;
 
 		var self = this;
-		var render = function(data){
+		var render = function(template, context){
 			var content = template.render(new d._Context(context));
 			self.forEach(function(node){
 				node.innerHTML = content;
@@ -28,8 +28,8 @@ dojo.extend(dojo.NodeList, {
 
 		d.text._resolveTemplateArg(template).addCallback(function(templateString){
 			template = new d.Template(templateString);
-			d.text._resolveContextArg(context).addCallback(function(contextObject){
-				render(contextObject);
+			d.text._resolveContextArg(context).addCallback(function(context){
+				render(template, context);
 			});
 		});
 

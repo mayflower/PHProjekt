@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -60,8 +60,7 @@ dojo.require("dojo.fx");
 		var _after = _getStyleSnapshot(cs);
 		d[(addClass ? "removeClass" : "addClass")](node, args.cssClass); 
 
-		var calculated = {};
-		var i = 0;
+		var calculated = {}, i = 0;
 		d.forEach(dojox.fx._allowedProperties,function(prop){
 			if(_before[i] != _after[i]){
 				// FIXME: the static unit: px is not good, either. need to parse unit from computed style?

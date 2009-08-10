@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -28,6 +28,7 @@ dojo.declare("dojox.grid.cell", null, {
 		// grid row index
 		// returns: html for a given grid cell
 		var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex) : this.value;
+		d = (d && d.replace) ? d.replace(/</g, '&lt;') : d;
 		if(this.editor && (this.editor.alwaysOn || (i.rowIndex==inRowIndex && i.cell==this))){
 			return this.editor.format(d, inRowIndex);
 		}else{

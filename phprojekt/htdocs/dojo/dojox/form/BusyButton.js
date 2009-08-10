@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,10 +11,10 @@ dojo.provide("dojox.form.BusyButton");
 
 dojo.require("dijit.form.Button");
 
-dojo.requireLocalization("dijit", "loading", null, "ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,ROOT,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
-dojo.declare("dojox.form.BusyButton",
-	[dijit.form.Button], 
+dojo.declare("dojox.form._BusyButtonMixin",
+	null, 
 	{
 		
 	isBusy: false,	
@@ -91,7 +91,7 @@ dojo.declare("dojox.form.BusyButton",
 		while (this.containerNode.firstChild){
 			this.containerNode.removeChild(this.containerNode.firstChild);
 		}
-		this.containerNode.appendChild(document.createTextNode(this.label));
+		this.containerNode.innerHTML = this.label;
 		
 		this._layoutHack();
 		if(this.showLabel == false && !(dojo.attr(this.domNode, "title"))){
@@ -126,5 +126,9 @@ dojo.declare("dojox.form.BusyButton",
 		}
 	}
 });
+
+dojo.declare("dojox.form.BusyButton", [dijit.form.Button, dojox.form._BusyButtonMixin], {});
+dojo.declare("dojox.form.BusyComboButton", [dijit.form.ComboButton, dojox.form._BusyButtonMixin], {});
+dojo.declare("dojox.form.BusyDropDownButton", [dijit.form.DropDownButton, dojox.form._BusyButtonMixin], {});
 
 }

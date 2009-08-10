@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -48,15 +48,13 @@ dojo.require("dojox.sketch.Anchor");
 
 	p._rot=function(){
 		//	arrowhead rotation
-		var opp=this.start.y-this.control.y;
-		var adj=this.start.x-this.control.x;
-		if(!adj){ adj=1; }
-		this.startRotation=Math.atan(opp/adj);
+		var opp=this.control.y-this.start.y;
+		var adj=this.control.x-this.start.x;
+		this.startRotation=Math.atan2(opp,adj);
 
-		opp=this.control.y-this.end.y;
-		adj=this.control.x-this.end.x;
-		if(!adj){ adj=1; }
-		this.endRotation=Math.atan(opp/adj);
+		opp=this.end.y-this.control.y;
+		adj=this.end.x-this.control.x;
+		this.endRotation=Math.atan2(opp,adj);
 	};
 	p._pos=function(){
 		//	text position
@@ -99,6 +97,18 @@ dojo.require("dojox.sketch.Anchor");
 				s=d[2].split(",");
 				this.end.x=parseFloat(s[0],10);
 				this.end.y=parseFloat(s[1],10);
+				var stroke=this.property('stroke');
+				var style=c.getAttribute('style');
+				var m=style.match(/stroke:([^;]+);/);
+				if(m){
+					stroke.color=m[1];
+					this.property('fill',m[1]);
+				}
+				m=style.match(/stroke-width:([^;]+);/);
+				if(m){
+					stroke.width=m[1];
+				}
+				this.property('stroke',stroke);
 			}
 		}
 	};
@@ -113,30 +123,25 @@ dojo.require("dojox.sketch.Anchor");
 
 		//	rotation matrix
 		var rot=this.startRotation;
-		if(this.control.x<this.start.x){ rot+=Math.PI; }
 		var startRot=dojox.gfx.matrix.rotate(rot);
 
 		rot=this.endRotation;
-		if(this.control.x>=this.end.x){ rot+=Math.PI; }
 		var endRot=dojox.gfx.matrix.rotateAt(rot, this.end.x, this.end.y);
 
 		//	draw the shapes
 		this.shape=this.figure.group.createGroup();
 		this.shape.getEventSource().setAttribute("id", this.id);
-		if(this.transform.dx||this.transform.dy){ this.shape.setTransform(this.transform); }
+		//if(this.transform.dx||this.transform.dy){ this.shape.setTransform(this.transform); }
 
 		this.pathShape=this.shape.createPath("M"+this.start.x+" "+this.start.y+"Q"+this.control.x+" "+this.control.y+" "+this.end.x+" "+this.end.y + " l0,0")
-			.setStroke(this.property('stroke'));
+			//.setStroke(this.property('stroke'));
 		
 		this.startArrowGroup=this.shape.createGroup().setTransform({ dx:this.start.x, dy:this.start.y });
 		this.startArrowGroup.applyTransform(startRot);
-//		console.log('startArrow',this.property('fill'));
-		this.startArrow=this.startArrowGroup.createPath("M0,0 l20,-5 -3,5 3,5 Z")
-			.setFill(this.property('fill'));
+		this.startArrow=this.startArrowGroup.createPath();//"M0,0 l20,-5 -3,5 3,5 Z").setFill(this.property('fill'));
 		
 		this.endArrowGroup=this.shape.createGroup().setTransform(endRot);
-		this.endArrow=this.endArrowGroup.createPath("M" + this.end.x + "," + this.end.y + " l-20,-5 3,5 -3,5 Z")
-			.setFill(this.property('fill'));
+		this.endArrow=this.endArrowGroup.createPath();//("M" + this.end.x + "," + this.end.y + " l-20,-5 3,5 -3,5 Z").setFill(this.property('fill'));
 
 		this.labelShape=this.shape.createText({
 				x:this.textPosition.x, 
@@ -144,8 +149,10 @@ dojo.require("dojox.sketch.Anchor");
 				text:this.property('label'), 
 				align:this.textAlign
 			})
-			.setFont(font)
+			//.setFont(font)
 			.setFill(this.property('fill'));
+		this.labelShape.getEventSource().setAttribute('id',this.id+"-labelShape");
+		this.draw();
 	};
 	p.destroy=function(){
 		if(!this.shape){ return; }
@@ -165,30 +172,39 @@ dojo.require("dojox.sketch.Anchor");
 
 		//	rotation matrix
 		var rot=this.startRotation;
-		if(this.control.x<this.start.x){ rot+=Math.PI; }
 		var startRot=dojox.gfx.matrix.rotate(rot);
 		rot=this.endRotation;
-		if(this.control.x>=this.end.x){ rot+=Math.PI; }
 		var endRot=dojox.gfx.matrix.rotateAt(rot, this.end.x, this.end.y);
 
 		this.shape.setTransform(this.transform);
 		this.pathShape.setShape("M"+this.start.x+" "+this.start.y+" Q"+this.control.x+" "+this.control.y+" "+this.end.x+" "+this.end.y + " l0,0")
-			.setStroke(this.property('stroke'));
-		this.startArrowGroup.setTransform({ dx:this.start.x, dy:this.start.y });
-		this.startArrowGroup.applyTransform(startRot);
+			//.setStroke(this.property('stroke'));
+		this.startArrowGroup.setTransform({ dx:this.start.x, dy:this.start.y }).applyTransform(startRot);
 		this.startArrow.setFill(this.property('fill'));
 		
 		this.endArrowGroup.setTransform(endRot);
-		this.endArrow.setShape("M" + this.end.x + "," + this.end.y + " l-20,-5 3,5 -3,5 Z")
-			.setFill(this.property('fill'));
+		this.endArrow.setFill(this.property('fill'));
 		this.labelShape.setShape({
 				x:this.textPosition.x, 
 				y:this.textPosition.y, 
 				text:this.property('label')
 			})
 			.setFill(this.property('fill'));
+		this.zoom();
 	};
 
+	p.zoom=function(pct){
+		if(this.startArrow){
+			pct = pct || this.figure.zoomFactor;
+			ta.Annotation.prototype.zoom.call(this,pct);
+
+			var l=pct>1?20:Math.floor(20/pct), w=pct>1?5:Math.floor(5/pct),h=pct>1?3:Math.floor(3/pct);
+			this.startArrow.setShape("M0,0 l"+l+",-"+w+" -"+h+","+w+" "+h+","+w+" Z");//.setFill(this.property('fill'));
+
+			this.endArrow.setShape("M" + this.end.x + "," + this.end.y + " l-"+l+",-"+w+" "+h+","+w+" -"+h+","+w+" Z");
+		}
+	};
+	
 	p.getBBox=function(){
 		var x=Math.min(this.start.x, this.control.x, this.end.x);
 		var y=Math.min(this.start.y, this.control.y, this.end.y);

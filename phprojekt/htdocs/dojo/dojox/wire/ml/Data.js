@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -98,6 +98,10 @@ dojo.declare("dojox.wire.ml.DataProperty", [dijit._Widget, dijit._Container], {
 	name: "",
 	type: "",
 	value: "",
+
+	_getValueAttr: function(){
+		return this.getValue();
+	},
 
 	getValue: function(){
 		//	summary:

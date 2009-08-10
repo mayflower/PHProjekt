@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -347,7 +347,7 @@ dojox.Grid.markupFactory = function(props, node, ctor){
 					viewIdx++;
 					// move to allocating things into the next view
 					lastViewIdx += cView.__span;
-					lastView = cView;
+					var lastView = cView;
 					cView = props.structure[viewIdx];
 				}
 

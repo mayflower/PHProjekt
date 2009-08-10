@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -33,23 +33,26 @@ dojo.declare("dojox.dtl._Templated", dijit._Templated, {
 			}
 		}
 		if(!node){
-			var nodes = dijit._Templated._createNodesFromText(
+			var nodes = dojo._toDom(
 				this._template.render(new dojox.dtl._Context(this))
 			);
-			for(var i = 0; i < nodes.length; i++){
-				if(nodes[i].nodeType == 1){
-					node = nodes[i];
-					break;
+			// TODO: is it really necessary to look for the first node?
+			if(nodes.nodeType !== 1 && nodes.nodeType !== 3){
+				// nodes.nodeType === 11
+				// the node is a document fragment
+				for(var i = 0, l = nodes.childNodes.length; i < l; ++i){
+					node = nodes.childNodes[i];
+					if(node.nodeType == 1){
+						break;
+					}
 				}
+			}else{
+				// the node is an element or a text
+				node = nodes;
 			}
 		}
 
 		this._attachTemplateNodes(node);
-
-		var source = this.srcNodeRef;
-		if(source && source.parentNode){
-			source.parentNode.replaceChild(node, source);
-		}
 
 		if(this.widgetsInTemplate){
 			var childWidgets = dojo.parser.parse(node);
@@ -61,11 +64,11 @@ dojo.declare("dojox.dtl._Templated", dijit._Templated, {
 		if(this.domNode){
 			dojo.place(node, this.domNode, "before");
 			this.destroyDescendants();
-			dojo._destroyElement(this.domNode);
+			dojo.destroy(this.domNode);
 		}
 		this.domNode = node;
 
-		this._fillContent(source);
+		this._fillContent(this.srcNodeRef);
 	},
 	_templateCache: {},
 	getCachedTemplate: function(templatePath, templateString, alwaysUseString){
@@ -87,9 +90,9 @@ dojo.declare("dojox.dtl._Templated", dijit._Templated, {
 
 		// If we always use a string, or find no variables, just store it as a node
 		if(alwaysUseString || !templateString.match(/\{[{%]([^\}]+)[%}]\}/g)){
-			return (tmplts[key] = dijit._Templated._createNodesFromText(templateString)[0]);
+			return tmplts[key] = dojo._toDom(templateString);
 		}else{
-			return (tmplts[key] = new dojox.dtl.Template(templateString));
+			return tmplts[key] = new dojox.dtl.Template(templateString);
 		}
 	},
 	render: function(){

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -275,9 +275,6 @@ dojo.declare("dojox.form._HasDropDown",
 			dojo.addClass(self.popupStateNode, "dojoxHasDropDownOpen");
 			this._opened=true;
 			this.state="Opened";
-			if(dropDown.focus){
-				dropDown.focus();
-			}
 			// TODO: set this.checked and call setStateClass(), to affect button look while drop down is shown
 			return retVal;
 		},

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -54,15 +54,17 @@ dojox.json.ref = {
 		//		An object, the result of the processing
 		args = args || {};
 		var idAttribute = args.idAttribute || 'id';
-		var prefix = args.idPrefix || '/'; 
+		var prefix = args.idPrefix || ''; 
 		var assignAbsoluteIds = args.assignAbsoluteIds;
 		var index = args.index || {}; // create an index if one doesn't exist
+		var timeStamps = args.timeStamps;
 		var ref,reWalk=[];
 		var pathResolveRegex = /^(.*\/)?(\w+:\/\/)|[^\/\.]+\/\.\.\/|^.*\/(\/)/;
 		var addProp = this._addProp;
-		function walk(it, stop, defaultId, defaultObject){
+		var F = function(){};
+		function walk(it, stop, defaultId, schema, defaultObject){
 			// this walks the new graph, resolving references and making other changes
-		 	var update, val, id = it[idAttribute] || defaultId;
+		 	var update, val, id = idAttribute in it ? it[idAttribute] : defaultId;
 		 	if(id !== undefined){
 		 		id = (prefix + id).replace(pathResolveRegex,'$2$3');
 		 	}
@@ -71,6 +73,10 @@ dojox.json.ref = {
 				if(assignAbsoluteIds){
 					it.__id = id;
 				}
+				if(args.schemas && (!(it instanceof Array)) && // won't try on arrays to do prototypes, plus it messes with queries 
+		 					(val = id.match(/^(.+\/)[^\.\[]*$/))){ // if it has a direct table id (no paths)
+		 			schema = args.schemas[val[1]];
+				} 
 				// if the id already exists in the system, we should use the existing object, and just 
 				// update it... as long as the object is compatible
 				if(index[id] && ((it instanceof Array) == (index[id] instanceof Array))){ 
@@ -78,56 +84,59 @@ dojox.json.ref = {
 					delete target.$ref; // remove this artifact
 					update = true;
 				}else{
-				 	var proto = args.schemas && (!(it instanceof Array)) && // won't try on arrays to do prototypes, plus it messes with queries 
-		 					(val = id.match(/^(.+\/)[^\.\[]*$/)) && // if it has a direct table id (no paths)
-		 					(val = args.schemas[val[1]]) && val.prototype; // and if has a prototype
+				 	var proto = schema && schema.prototype; // and if has a prototype
 					if(proto){
 						// if the schema defines a prototype, that needs to be the prototype of the object
-						var F = function(){};
 						F.prototype = proto;
 						target = new F();
 					}
 				}
 				index[id] = target; // add the prefix, set _id, and index it
+				if(timeStamps){
+					timeStamps[id] = args.time;
+				}
 			}
-	
-	
+			var properties = schema && schema.properties; 
+			var length = it.length;
 			for(var i in it){
+				if(i==length){
+					break;		
+				}
 				if(it.hasOwnProperty(i)){
-					if((typeof (val=it[i]) =='object') && val){
+					val=it[i];
+					var propertyDefinition = properties && properties[i];
+					if(propertyDefinition && propertyDefinition.format == 'date-time' && typeof val == 'string'){
+						val = dojo.date.stamp.fromISOString(val);
+					}else if((typeof val =='object') && val && !(val instanceof Date)){
 						ref=val.$ref;
 						if(ref){ // a reference was found
-							var stripped = ref.replace(/\\./g, '@').replace(/"[^"\\\n\r]*"/g, '');// trim it
-							if(/[\w\[\]\.\$# \/\r\n\t]/.test(stripped) && !/\=|((^|\W)new\W)/.test(stripped)){
-								// make sure it is a safe reference
-								delete it[i];// remove the property so it doesn't resolve to itself in the case of id.propertyName lazy values
-								var path = ref.match(/(^([^\[]*\/)?[^\.\[]*)([\.\[].*)?/); // divide along the path
-								if((ref = (path[1]=='$' || path[1]=='this' || path[1]=='#') ? root : index[(prefix + path[1]).replace(pathResolveRegex,'$2$3')])){  // a $ indicates to start with the root, otherwise start with an id
-									// // starting point was found, use eval to resolve remaining property references
-									// // need to also make reserved words safe by replacing with index operator
-									try{
-										ref = path[3] ? eval('ref' + path[3].replace(/^#/,'').replace(/^([^\[\.])/,'.$1').replace(/\.([\w$_]+)/g,'["$1"]')) : ref;
-									}catch(e){
-										ref = null;
-									}
+							// make sure it is a safe reference
+							delete it[i];// remove the property so it doesn't resolve to itself in the case of id.propertyName lazy values
+							var path = ref.replace(/(#)([^\.\[])/,'$1.$2').match(/(^([^\[]*\/)?[^#\.\[]*)#?([\.\[].*)?/); // divide along the path
+							if((ref = (path[1]=='$' || path[1]=='this' || path[1]=='') ? root : index[(prefix + path[1]).replace(pathResolveRegex,'$2$3')])){  // a $ indicates to start with the root, otherwise start with an id
+								// if there is a path, we will iterate through the path references
+								if(path[3]){
+									path[3].replace(/(\[([^\]]+)\])|(\.?([^\.\[]+))/g,function(t,a,b,c,d){
+										ref = ref && ref[b ? b.replace(/[\"\'\\]/,'') : d];
+									});
 								}
-								if(ref){
-									// otherwise, no starting point was found (id not found), if stop is set, it does not exist, we have
-									// unloaded reference, if stop is not set, it may be in a part of the graph not walked yet,
-									// we will wait for the second loop
-									val = ref;
-								}else{
-									if(!stop){
-										var rewalking;
-										if(!rewalking){
-											reWalk.push(target); // we need to rewalk it to resolve references
-										}
-										rewalking = true; // we only want to add it once
-									}else{
-										val = walk(val, false, val.$ref);
-										// create a lazy loaded object
-										val._loadObject = args.loader;
+							}
+							if(ref){
+								// otherwise, no starting point was found (id not found), if stop is set, it does not exist, we have
+								// unloaded reference, if stop is not set, it may be in a part of the graph not walked yet,
+								// we will wait for the second loop
+								val = ref;
+							}else{
+								if(!stop){
+									var rewalking;
+									if(!rewalking){
+										reWalk.push(target); // we need to rewalk it to resolve references
 									}
+									rewalking = true; // we only want to add it once
+								}else{
+									val = walk(val, false, val.$ref, propertyDefinition);
+									// create a lazy loaded object
+									val._loadObject = args.loader;
 								}
 							}
 						}else{
@@ -136,7 +145,8 @@ dojox.json.ref = {
 								val = walk(
 									val,
 									reWalk==it,
-									id && addProp(id, i), // the default id to use 
+									id && addProp(id, i), // the default id to use
+									propertyDefinition, 
 									// if we have an existing object child, we want to 
 									// maintain it's identity, so we pass it as the default object
 									target != it && typeof target[i] == 'object' && target[i] 
@@ -145,13 +155,15 @@ dojox.json.ref = {
 						}
 					}
 					it[i] = val;
-					if(target!=it){// performance guard				
+					if(target!=it && !target.__isDirty){// do updates if we are updating an existing object and it's not dirty				
 						var old = target[i];
-						target[i] = val; // update the target
-						if(update && val !== old){ // only update if it changed
-							if(index.onUpdate){
-								index.onUpdate(target,i,old,val); // call the listener for each update
-							}
+						target[i] = val; // only update if it changed
+						if(update && val !== old && // see if it is different 
+								!target._loadObject && // no updates if we are just lazy loading 
+								!(val instanceof Date && old instanceof Date && val.getTime() == old.getTime()) && // make sure it isn't an identical date
+								!(typeof val == 'function' && typeof old == 'function' && val.toString() == old.toString()) && // make sure it isn't an indentical function
+								index.onUpdate){
+							index.onUpdate(target,i,old,val); // call the listener for each update
 						}
 					}
 				}
@@ -160,8 +172,8 @@ dojox.json.ref = {
 			if(update){
 				// this means we are updating, we need to remove deleted
 				for(i in target){
-					if(!it.hasOwnProperty(i) && i != '__id' && i != '__clientId' && !(target instanceof Array && isNaN(i))){
-						if(index.onUpdate){
+					if(!target.__isDirty && target.hasOwnProperty(i) && !it.hasOwnProperty(i) && i != '__id' && i != '__clientId' && !(target instanceof Array && isNaN(i))){
+						if(index.onUpdate && i != "_loadObject" && i != "_idAttr"){
 							index.onUpdate(target,i,target[i],undefined); // call the listener for each update
 						}
 						delete target[i];
@@ -200,7 +212,11 @@ dojox.json.ref = {
 		function ref(target){ // support call styles references as well
 			return {$ref:target};
 		}
-		var root = eval('(' + str + ')'); // do the eval
+		try{
+			var root = eval('(' + str + ')'); // do the eval
+		}catch(e){
+			throw new SyntaxError("Invalid JSON string: " + e.message + " parsing: "+ str);
+		}		
 		if(root){
 			return this.resolveJson(root, args);
 		}
@@ -229,7 +245,8 @@ dojox.json.ref = {
 		var useRefs = this._useRefs;
 		var addProp = this._addProp;
 		idPrefix = idPrefix || ''; // the id prefix for this context
-		var paths=indexSubObjects || {};
+		var paths={};
+		var generated = {};
 		function serialize(it,path,_indentStr){
 			if(typeof it == 'object' && it){
 				var value;
@@ -238,11 +255,12 @@ dojox.json.ref = {
 				}
 				var id = it.__id;
 				if(id){ // we found an identifiable object, we will just serialize a reference to it... unless it is the root
-					if(path != '#' && (useRefs || paths[id])){
-						var ref = id; // a pure path based reference, leave it alone
-	
+					if(path != '#' && ((useRefs && !id.match(/#/)) || paths[id])){
+						var ref = id;	
 						if(id.charAt(0)!='#'){
-							if(id.substring(0, idPrefix.length) == idPrefix){ // see if the reference is in the current context
+							if(it.__clientId == id){
+								ref = "cid:" + id;
+							}else if(id.substring(0, idPrefix.length) == idPrefix){ // see if the reference is in the current context
 								// a reference with a prefix matching the current context, the prefix should be removed
 								ref = id.substring(idPrefix.length);
 							}else{
@@ -257,8 +275,9 @@ dojox.json.ref = {
 					path = id;
 				}else{
 					it.__id = path; // we will create path ids for other objects in case they are circular
-					paths[path] = it;// save it here so they can be deleted at the end
+					generated[path] = it;
 				}
+				paths[path] = it;// save it here so they can be deleted at the end
 				_indentStr = _indentStr || "";
 				var nextIndent = prettyPrint ? _indentStr + dojo.toJsonIndentStr : "";
 				var newLine = prettyPrint ? "\n" : "";
@@ -281,7 +300,8 @@ dojox.json.ref = {
 						var keyStr;
 						if(typeof i == "number"){
 							keyStr = '"' + i + '"';
-						}else if(typeof i == "string" && i.charAt(0) != '_'){
+						}else if(typeof i == "string" && (i.charAt(0) != '_' || i.charAt(1) != '_')){
+							// we don't serialize our internal properties __id and __clientId
 							keyStr = dojo._escapeString(i);
 						}else{
 							// skip non-string or number keys
@@ -304,18 +324,14 @@ dojox.json.ref = {
 		}
 		var json = serialize(it,'#','');
 		if(!indexSubObjects){
-			for(i in paths)  {// cleanup the temporary path-generated ids
-				delete paths[i].__id;
+			for(var i in generated)  {// cleanup the temporary path-generated ids
+				delete generated[i].__id;
 			}
 		}
 		return json;
 	},
 	_addProp: function(id, prop){
-		return id + (id.match(/#/) ? '' : '#') +
-					(typeof prop == 'string' ? // is it a string
-						prop.match(/^[a-zA-Z]\w*$/) ? ('.' + prop) : // yes, otherwise we have to escape it
-							('[' + dojo._escapeString(prop).replace(/"/g,"'") + ']') :
-						('[' + prop + ']'));
+		return id + (id.match(/#/) ? id.length == 1 ? '' : '.' : '#') + prop;
 	},
 	_useRefs: false,
 	serializeFunctions: false

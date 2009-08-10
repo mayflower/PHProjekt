@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,75 +8,9 @@
 if(!dojo._hasResource["dojox.dtl._HtmlTemplated"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.dtl._HtmlTemplated"] = true;
 dojo.provide("dojox.dtl._HtmlTemplated");
-dojo.require("dijit._Templated");
-dojo.require("dojox.dtl.html");
-dojo.require("dojox.dtl.render.html");
-dojo.require("dojox.dtl.contrib.dijit");
-
-dojox.dtl._HtmlTemplated = {
-	prototype: {
-		_dijitTemplateCompat: false,
-		buildRendering: function(){
-			this.domNode = this.srcNodeRef;
-
-			if(!this._render){
-				var ddcd = dojox.dtl.contrib.dijit;
-				var old = ddcd.widgetsInTemplate;
-				ddcd.widgetsInTemplate = this.widgetsInTemplate;
-				this._template = this._getCachedTemplate(this.templatePath, this.templateString);
-				this._render = new dojox.dtl.render.html.Render(this.domNode, this._template);
-				ddcd.widgetsInTemplate = old;
-			}
-
-			var self = this;
-			this._rendering = setTimeout(function(){ self.render(); }, 10);
-		},
-		setTemplate: function(/*String|dojo._Url*/ template, /*dojox.dtl.Context?*/ context){
-			// summary:
-			//		Quickly switch between templated by location
-			if(dojox.dtl.text._isTemplate(template)){
-				this._template = this._getCachedTemplate(null, template);
-			}else{
-				this._template = this._getCachedTemplate(template);
-			}
-			this.render(context);
-		},
-		render: function(/*dojox.dtl.Context?*/ context, /*dojox.dtl.HtmlTemplate?*/ tpl){
-			if(this._rendering){
-				clearTimeout(this._rendering);
-				delete this._rendering;
-			}
-			if(tpl){
-				this._template = tpl;
-			}
-			this._render.render(this._getContext(context), this._template);
-		},
-		_getContext: function(context){
-			if (!(context instanceof dojox.dtl.Context)) {
-				context = false;
-			}
-			context = context || new dojox.dtl.Context(this);
-			context.setThis(this);
-			return context;
-		},
-		_getCachedTemplate: function(templatePath, templateString){
-			if(!this._templates){
-				this._templates = {};
-			}
-			var key = templateString || templatePath.toString();
-			var tmplts = this._templates;
-			if(tmplts[key]){
-				return tmplts[key];
-			}
-			return (tmplts[key] = new dojox.dtl.HtmlTemplate(
-				dijit._Templated.getCachedTemplate(
-					templatePath,
-					templateString,
-					true
-				)
-			));
-		}
-	}
-};
+dojo.require("dojox.dtl._DomTemplated");
+dojo.deprecated("dojox.dtl.html", "All packages and classes in dojox.dtl that start with Html or html have been renamed to Dom or dom");
+dojox.dtl._HtmlTemplated = dojox.dtl._DomTemplated;
+dojox.dtl._HtmlTemplated.prototype.declaredClass = "dojox.dtl._HtmlTemplated";
 
 }

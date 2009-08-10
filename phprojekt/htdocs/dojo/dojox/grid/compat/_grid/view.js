@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -59,7 +59,7 @@ dojo.declare('dojox.GridView',
 
 	// focus 
 	focus: function(){
-		if(dojo.isSafari || dojo.isOpera){
+		if(dojo.isWebKit || dojo.isOpera){
 			this.hiddenFocusNode.focus();
 		}else{
 			this.scrollboxNode.focus();
@@ -67,7 +67,7 @@ dojo.declare('dojox.GridView',
 	},
 
 	setStructure: function(inStructure){
-		var vs = this.structure = inStructure;
+		var vs = (this.structure = inStructure);
 		// FIXME: similar logic is duplicated in layout
 		if(vs.width && !isNaN(vs.width)){
 			this.viewWidth = vs.width + 'em';

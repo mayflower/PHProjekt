@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -7,24 +7,28 @@
 
 if(!dojo._hasResource["dojox.dtl.filter.lists"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.dtl.filter.lists"] = true;
-dojo.provide("dojox.dtl.filter.lists")
+dojo.provide("dojox.dtl.filter.lists");
 
 dojo.require("dojox.dtl._base");
 
 dojo.mixin(dojox.dtl.filter.lists, {
 	_dictsort: function(a, b){
-		if(a[0] == b[0]) return 0;
+		if(a[0] == b[0]){
+			return 0;
+		}
 		return (a[0] < b[0]) ? -1 : 1;
 	},
 	dictsort: function(value, arg){
 		// summary: Takes a list of dicts, returns that list sorted by the property given in the argument.
-		if(!arg) return value;
+		if(!arg){
+			return value;
+		}
 
 		var i, item, items = [];
 		if(!dojo.isArray(value)){
 			var obj = value, value = [];
 			for(var key in obj){
-				value.push(obj[k]);
+				value.push(obj[key]);
 			}
 		}
 		for(i = 0; i < value.length; i++){

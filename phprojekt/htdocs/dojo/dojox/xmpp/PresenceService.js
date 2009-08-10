@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -194,7 +194,7 @@ dojo.declare("dojox.xmpp.PresenceService", null, {
 		req.append(dojox.xmpp.util.createElement("query",{xmlns: "jabber:iq:privacy"},false));
 		req.append(dojox.xmpp.util.createElement("list",{name: "iwcRestrictedContacts"},false))
 		var count = 1;
-		for(jid in this.restrictedContactjids) {
+		for(var jid in this.restrictedContactjids) {
 			var item = this.restrictedContactjids[jid];
 			//console.log("restricted ", jid, item);
 			if(item.blocked || item.invisible) {

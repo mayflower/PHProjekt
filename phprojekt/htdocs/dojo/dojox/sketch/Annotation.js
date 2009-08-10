@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,11 +14,13 @@ dojo.require("dojox.sketch._Plugin");
 (function(){
 	var ta=dojox.sketch;
 	dojo.declare("dojox.sketch.AnnotationTool", ta._Plugin, {
-//		constructor: function(){
-////			console.log('this.shape',this.shape);
-////			this.annotation=ta.tools[this.shape];
-//		},
+		onMouseDown: function(e){
+			this._omd=true;
+		},
 		onMouseMove: function(e,rect){
+			if(!this._omd){
+				return;
+			}
 			if(this._cshape){ 
 				this._cshape.setShape(rect);
 			} else {
@@ -29,23 +31,26 @@ dojo.require("dojox.sketch._Plugin");
 			}
 		},
 		onMouseUp: function(e){
-			var f=this.figure;
-			if(!(f._startPoint.x==e.pageX&&f._startPoint.y==e.pageY)){
-				if(this._cshape){
-					//	The minimum number of pixels one has to travel before a shape
-					//		gets drawn.
-					var limit=40;
-					if(Math.max(
-						limit, 
-						Math.abs(f._absEnd.x-f._start.x), 
-						Math.abs(f._absEnd.y-f._start.y)
-					)>limit){
-						this._create(f._start, f._end);
-					}
-				}
+			if(!this._omd){
+				return;
 			}
+			this._omd=false;
+			var f=this.figure;
 			if(this._cshape){ 
-				f.surface.remove(this._cshape); 
+				f.surface.remove(this._cshape);
+				delete this._cshape;
+			}
+			if(!(f._startPoint.x==e.pageX&&f._startPoint.y==e.pageY)){
+				//	The minimum number of pixels one has to travel before a shape
+				//		gets drawn.
+				var limit=10;
+				if(Math.max(
+					limit, 
+					Math.abs(f._absEnd.x-f._start.x), 
+					Math.abs(f._absEnd.y-f._start.y)
+				)>limit){
+					this._create(f._start, f._end);
+				}
 			}
 		},
 		_create: function(start,end){
@@ -53,7 +58,7 @@ dojo.require("dojox.sketch._Plugin");
 			//		dragging functions.
 			var f=this.figure;
 			var _=f.nextKey();
-			var a=new (this.annotation)(f, "annotation-"+_);
+			var a=new (this.annotation)(f, _);
 			a.transform={
 				dx:start.x/f.zoomFactor, 
 				dy:start.y/f.zoomFactor
@@ -87,6 +92,7 @@ dojo.require("dojox.sketch._Plugin");
 		this.anchors={};	//	ta.Anchor
 		this._properties={
 			'stroke':{ color:"blue", width:2 },
+			'font': {family:"Arial", size:16, weight:"bold"},
 			'fill': "blue",
 			'label': ""
 		};
@@ -100,7 +106,8 @@ dojo.require("dojox.sketch._Plugin");
 	p.constructor=ta.Annotation;
 	p.type=function(){ return ''; };
 	p.getType=function(){ return ta.Annotation; };
-	p.remove=function(){
+	p.onRemove=function(noundo){
+		//this.figure._delete([this],noundo);
 		this.figure.history.add(ta.CommandTypes.Delete, this, this.serialize());
 	};
 	p.property=function(name,/*?*/value){
@@ -111,9 +118,9 @@ dojo.require("dojox.sketch._Plugin");
 		}
 		if(arguments.length>1){
 			this._properties[name]=value;
-		}
-		if(r!=value){
-			this.onPropertyChange(name,r);
+			if(r!=value){
+				this.onPropertyChange(name,r);
+			}
 		}
 		return r;
 	};
@@ -137,18 +144,13 @@ dojo.require("dojox.sketch._Plugin");
 	p.serialize=function(){ };
 	p.getBBox=function(){ };
 	p.beginEdit=function(type){
-		this._type=type||ta.CommandTypes.Move;
-		this._prevState=this.serialize();
+		if(!this._type){
+			this._type=type||ta.CommandTypes.Move;
+			this._prevState=this.serialize();
+		}
 	};
 	p.endEdit=function(){
-		var newstep=true;
-		if(this._type==ta.CommandTypes.Move){
-			var f=this.figure;
-			if(f._absEnd.x==f._start.x&&f._absEnd.y==f._start.y){
-				newstep=false;
-			}
-		}
-		if(newstep){
+		if(this._prevState!=this.serialize()){
 			this.figure.history.add(this._type,this,this._prevState);
 		}
 		this._type=this._prevState='';
@@ -186,9 +188,15 @@ dojo.require("dojox.sketch._Plugin");
 		this.transform.dy+=pt.dy;
 		this.draw();
 	};
-	p.doChange=function(pt){ };
-	p.getTextBox=function(){
-		return dojox.gfx._base._getTextBox(this.property('label'),ta.Annotation.labelFont);
+	//p.doChange=function(pt){ };
+	p.getTextBox=function(zoomfactor){
+		var fp=this.property('font');
+		//_getTextBox expect style camlCase properties, do it manually here
+		var f = {fontFamily:fp.family,fontSize:fp.size,fontWeight:fp.weight};
+		if(zoomfactor){
+			f.fontSize = Math.floor(f.fontSize/zoomfactor);
+		}
+		return dojox.gfx._base._getTextBox(this.property('label'),f);
 	};
 	p.setMode=function(m){
 		if(this.mode==m){ return; }
@@ -209,10 +217,29 @@ dojo.require("dojox.sketch._Plugin");
 			this.anchors[p][method](); 
 		}
 	};
-//	p.writeProperties=function(){
-//		var ps=this._properties;
-//		return "<!CDATA[properties:"+dojo.toJson(ps)+"]]>";
-//	};
+	p.zoom=function(pct){
+		pct = pct || this.figure.zoomFactor;
+		if(this.labelShape){
+			var f=dojo.clone(this.property('font'));
+			f.size=Math.ceil(f.size/pct)+"px";
+			this.labelShape.setFont(f);
+		}
+		
+		for(var n in this.anchors){
+			this.anchors[n].zoom(pct);
+		}
+		
+		//In VML, path are always the same width no matter scaling factors,
+		//so aways use 1 for VML
+		if(dojox.gfx.renderer=='vml'){
+        	pct=1;
+        }
+		if(this.pathShape){
+			var s=dojo.clone(this.property('stroke'));
+			s.width=pct>1?s.width:Math.ceil(s.width/pct)+"px";
+			this.pathShape.setStroke(s);
+		}
+	};
 	p.writeCommonAttrs=function(){
 		return 'id="' + this.id + '" dojoxsketch:type="' + this.type() + '"'
 			+ ' transform="translate('+ this.transform.dx + "," + this.transform.dy + ')"'
@@ -240,15 +267,14 @@ dojo.require("dojox.sketch._Plugin");
 		}
 	};
 	ta.Annotation.Modes={ View:0, Edit:1 };
-	ta.Annotation.labelFont={family:"Arial", size:"16px", weight:"bold"};
-	ta.Annotation.register=function(name){
+	ta.Annotation.register=function(name,toolclass){
 		var cls=ta[name+'Annotation'];
 		ta.registerTool(name, function(p){
 			dojo.mixin(p, {
 				shape: name,
 				annotation:cls
 			});
-			return new ta.AnnotationTool(p);
+			return new (toolclass || ta.AnnotationTool)(p);
 		});
 	};
 })();

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -12,7 +12,7 @@ dojo.experimental("dojox.date.IslamicDate");
 
 dojo.require("dojo.date.locale"); //TODO: move dependency to another module?
 dojo.require("dojo.date");
-dojo.requireLocalization("dojo.cldr", "islamic", null, "");
+dojo.requireLocalization("dojo.cldr", "islamic", null, "ROOT,ar");
 
 dojo.declare("dojox.date.IslamicDate", null, {
 	// summary: The component defines the Islamic (Hijri) Calendar Object

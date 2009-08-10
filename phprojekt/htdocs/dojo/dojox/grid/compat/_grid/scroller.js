@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -69,7 +69,7 @@ dojo.declare('dojox.grid.scroller.base', null, {
 		this.invalidateNodes();
 		this.rowCount = inRowCount;
 		// update page count, adjust document height
-		oldPageCount = this.pageCount;
+		var oldPageCount = this.pageCount;
 		this.pageCount = Math.ceil(this.rowCount / this.rowsPerPage);
 		if(this.pageCount < oldPageCount){
 			for(var i=oldPageCount-1; i>=this.pageCount; i--){

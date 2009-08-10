@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,11 +10,11 @@ dojo._hasResource["dojox.layout.ScrollPane"] = true;
 dojo.provide("dojox.layout.ScrollPane");
 dojo.experimental("dojox.layout.ScrollPane");
 
-dojo.require("dijit.layout._LayoutWidget");
+dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit._Templated");
 
 dojo.declare("dojox.layout.ScrollPane",
-	[dijit.layout._LayoutWidget,dijit._Templated],
+	[dijit.layout.ContentPane, dijit._Templated],
 	{
 	// summary: A pane that "scrolls" its content based on the mouse poisition inside
 	//
@@ -46,19 +46,39 @@ dojo.declare("dojox.layout.ScrollPane",
 	//		either "horizontal" or "vertical" for scroll orientation. 
 	orientation: "vertical",
 	
+	// alwaysShow: Boolean
+	//		whether the scroll helper should hide when mouseleave
+	autoHide: true,
 	templateString:"<div class=\"dojoxScrollWindow\" dojoAttachEvent=\"onmouseenter: _enter, onmouseleave: _leave\">\r\n    <div class=\"dojoxScrollWrapper\" style=\"${style}\" dojoAttachPoint=\"wrapper\" dojoAttachEvent=\"onmousemove: _calc\">\r\n\t<div class=\"dojoxScrollPane\" dojoAttachPoint=\"containerNode\"></div>\r\n    </div>\r\n    <div dojoAttachPoint=\"helper\" class=\"dojoxScrollHelper\"><span class=\"helperInner\">|</span></div>\r\n</div>\r\n",
 	
-	layout: function(){
+	resize: function(size){
 		// summary: calculates required sizes. Call this if you add/remove content manually, or reload the content.
-
+		
+		// if size is passed, it means we need to take care of sizing ourself (this is for IE<8)
+		if(size){
+			if(size.h){
+				dojo.style(this.domNode,'height',size.h+'px');
+			}
+			if(size.w){
+				dojo.style(this.domNode,'width',size.w+'px');
+			}
+		}
 		var dir = this._dir,
 			vert = this._vertical,
 			val = this.containerNode[(vert ? "scrollHeight" : "scrollWidth")];
-		
-		dojo.style(this.wrapper, dir, this.domNode.style[dir]);
-		
+
+		dojo.style(this.wrapper, this._dir, this.domNode.style[this._dir]);
 		this._lo = dojo.coords(this.wrapper, true);
+		
 		this._size = Math.max(0, val - this._lo[(vert ? "h" : "w")]);
+		if(!this._size){
+			this.helper.style.display="none";
+			//make sure we reset scroll position, otherwise the content may be hidden
+			this.wrapper[this._scroll]=0;
+			return;
+		}else{
+			this.helper.style.display="";
+		}
 		this._line = new dojo._Line(0 - this._offset, this._size + (this._offset * 2));
 	
 		// share a relative position w the scroll offset via a line
@@ -76,10 +96,11 @@ dojo.declare("dojox.layout.ScrollPane",
 	
 	postCreate: function(){
 		this.inherited(arguments);
-	
 		// for the helper
-		this._showAnim = dojo._fade({ node:this.helper, end:0.5, duration:350 });
-		this._hideAnim = dojo.fadeOut({ node:this.helper, duration: 750 });
+		if(this.autoHide){
+			this._showAnim = dojo._fade({ node:this.helper, end:0.5, duration:350 });
+			this._hideAnim = dojo.fadeOut({ node:this.helper, duration: 750 });
+		}
 	
 		// orientation helper
 		this._vertical = (this.orientation == "vertical");
@@ -87,24 +108,30 @@ dojo.declare("dojox.layout.ScrollPane",
 			dojo.addClass(this.containerNode,"dijitInline");
 			this._dir = "width";
 			this._edge = "left";
+			this._scroll = "scrollLeft";
 		}else{
 			this._dir = "height";
 			this._edge = "top";
+			this._scroll = "scrollTop";
 		}
-		
-		this._hideAnim.play();
+
+		if(this._hideAnim){
+			this._hideAnim.play();
+		}
 		dojo.style(this.wrapper,"overflow","hidden");
 	
 	},	
 	
 	_set: function(/* Float */n){
+		if(!this._size){ return; }
 		// summary: set the pane's scroll offset, and position the virtual scroll helper 
-		this.wrapper[(this._vertical ? "scrollTop" : "scrollLeft")] = Math.floor(this._line.getValue(n));
+		this.wrapper[this._scroll] = Math.floor(this._line.getValue(n));
 		dojo.style(this.helper, this._edge, Math.floor(this._helpLine.getValue(n)) + "px");    
 	},
 	
 	_calc: function(/* Event */e){
 		// summary: calculate the relative offset of the cursor over the node, and call _set
+		if(!this._lo){ this.resize(); }
 		this._set(this._vertical ? 
 			((e.pageY - this._lo.y) / this._lo.h) :
 			((e.pageX - this._lo.x) / this._lo.w)
@@ -112,14 +139,18 @@ dojo.declare("dojox.layout.ScrollPane",
 	},
 	
 	_enter: function(e){
-		if(this._hideAnim && this._hideAnim.status() == "playing"){ 
-			this._hideAnim.stop(); 
+		if(this._hideAnim){
+			if(this._hideAnim.status() == "playing"){ 
+				this._hideAnim.stop(); 
+			}
+			this._showAnim.play();
 		}
-		this._showAnim.play();
 	},
 	
 	_leave: function(e){
-		this._hideAnim.play();
+		if(this._hideAnim){
+			this._hideAnim.play();
+		}
 	}
     
 });

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -46,10 +46,10 @@ dojo.require("dojox.sketch.Anchor");
 	//	helper functions
 	p._rot=function(){
 		//	arrowhead rotation
-		var opp=this.start.y-this.control.y;
-		var adj=this.start.x-this.control.x;
-		if(!adj){ adj=1; }
-		this.rotation=Math.atan(opp/adj);
+		var opp=this.control.y-this.start.y;
+		var adj=this.control.x-this.start.x;
+		//if(!adj){ adj=1; }
+		this.rotation=Math.atan2(opp,adj);
 	};
 	p._pos=function(){
 		//	text position
@@ -101,6 +101,18 @@ dojo.require("dojox.sketch.Anchor");
 				s=d[2].split(",");
 				this.end.x=parseFloat(s[0],10);
 				this.end.y=parseFloat(s[1],10);
+				var stroke=this.property('stroke');
+				var style=c.getAttribute('style');
+				var m=style.match(/stroke:([^;]+);/);
+				if(m){
+					stroke.color=m[1];
+					this.property('fill',m[1]);
+				}
+				m=style.match(/stroke-width:([^;]+);/);
+				if(m){
+					stroke.width=m[1];
+				}
+				this.property('stroke',stroke);
 			}
 		}
 	};
@@ -115,19 +127,18 @@ dojo.require("dojox.sketch.Anchor");
 
 		//	rotation matrix
 		var rot=this.rotation;
-		if(this.control.x>=this.end.x&&this.control.x<this.start.x){ rot+=Math.PI; }
 		var tRot=dojox.gfx.matrix.rotate(rot);
 
 		//	draw the shapes
 		this.shape=this.figure.group.createGroup();
 		this.shape.getEventSource().setAttribute("id", this.id);
-		if(this.transform.dx||this.transform.dy){ this.shape.setTransform(this.transform); }
+		//if(this.transform.dx||this.transform.dy){ this.shape.setTransform(this.transform); }
 
 		this.pathShape=this.shape.createPath("M"+this.start.x+","+this.start.y+" Q"+this.control.x+","+this.control.y+" "+this.end.x+","+this.end.y+" l0,0")
-			.setStroke(this.property('stroke'));
+			//.setStroke(this.property('stroke'));
 
-		this.arrowheadGroup=this.shape.createGroup().setTransform({ dx:this.start.x, dy:this.start.y }).applyTransform(tRot);
-		this.arrowhead=this.arrowheadGroup.createPath("M0,0 l20,-5 -3,5 3,5 Z").setFill(this.property('fill'));
+		this.arrowheadGroup=this.shape.createGroup();//.setTransform({ dx:this.start.x, dy:this.start.y }).applyTransform(tRot);
+		this.arrowhead=this.arrowheadGroup.createPath();//"M0,0 l50,-10 -6,10 6,10 Z").setFill(this.property('fill'));
 
 		this.labelShape=this.shape.createText({
 				x:this.textPosition.x, 
@@ -135,8 +146,10 @@ dojo.require("dojox.sketch.Anchor");
 				text:this.property('label'), 
 				align:this.textAlign
 			})
-			.setFont(font)
-			.setFill(this.property('fill'));
+			//.setFont(font)
+			//.setFill(this.property('fill'));
+		this.labelShape.getEventSource().setAttribute('id',this.id+"-labelShape");
+		this.draw();
 	};
 
 	p.destroy=function(){
@@ -156,12 +169,11 @@ dojo.require("dojox.sketch.Anchor");
 
 		//	rotation matrix
 		var rot=this.rotation;
-		if(this.control.x<this.start.x){ rot+=Math.PI; }
 		var tRot=dojox.gfx.matrix.rotate(rot);
 
 		this.shape.setTransform(this.transform);
 		this.pathShape.setShape("M"+this.start.x+","+this.start.y+" Q"+this.control.x+","+this.control.y+" "+this.end.x+","+this.end.y+" l0,0")
-			.setStroke(this.property('stroke'));
+			//.setStroke(this.property('stroke'));
 
 		this.arrowheadGroup.setTransform({dx:this.start.x,dy:this.start.y}).applyTransform(tRot);
 		this.arrowhead.setFill(this.property('fill'));
@@ -173,6 +185,20 @@ dojo.require("dojox.sketch.Anchor");
 				align:this.textAlign
 			})
 			.setFill(this.property('fill'));
+		this.zoom();
+	};
+
+	p.zoom=function(pct){
+		if(this.arrowhead){
+			pct = pct || this.figure.zoomFactor;
+			ta.Annotation.prototype.zoom.call(this,pct);
+			//pct = dojox.gfx.renderer=='vml'?1:pct;
+			if(this._curPct!==pct){
+				this._curPct=pct;
+				var l=pct>1?20:Math.floor(20/pct), w=pct>1?5:Math.floor(5/pct),h=pct>1?3:Math.floor(3/pct);
+				this.arrowhead.setShape("M0,0 l"+l+",-"+w+" -"+h+","+w+" "+h+","+w+" Z");
+			}
+		}
 	};
 
 	p.getBBox=function(){
@@ -186,7 +212,6 @@ dojo.require("dojox.sketch.Anchor");
 	p.serialize=function(){
 		var s=this.property('stroke');
 		var r=this.rotation*(180/Math.PI);
-		if(this.start.x>this.end.x){ r-=180; }
 		r=Math.round(r*Math.pow(10,4))/Math.pow(10,4);
 		return '<g '+this.writeCommonAttrs()+'>'
 			+ '<path style="stroke:'+s.color+';stroke-width:'+s.width+';fill:none;" d="'

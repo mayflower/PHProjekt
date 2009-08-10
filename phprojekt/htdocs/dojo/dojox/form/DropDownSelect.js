@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -13,16 +13,17 @@ dojo.require("dojox.form._FormSelectWidget");
 dojo.require("dojox.form._HasDropDown");
 dojo.require("dijit.Menu");
 
-dojo.requireLocalization("dijit.form", "validate", null, "ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,ROOT,zh,zh-tw");
+dojo.requireLocalization("dijit.form", "validate", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
 dojo.declare("dojox.form.DropDownSelect", [dojox.form._FormSelectWidget, dojox.form._HasDropDown], {
+	attributeMap: dojo.mixin(dojo.clone(dojox.form._FormSelectWidget.prototype.attributeMap),{value:"valueNode",name:"valueNode"}),
 	// summary:
 	//		This is a "Styleable" select box - it is basically a DropDownButton which
 	//		can take as its input a <select>.
 
 	baseClass: "dojoxDropDownSelect",
 	
-	templateString:"<span class=\"dijit dijitReset dijitLeft dijitInline\"\r\n\tdojoAttachPoint=\"dropDownNode\"\r\n\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse\"\r\n\t><span class='dijitReset dijitRight dijitInline'\r\n\t\t><span class='dijitReset dijitInline dijitButtonNode'\r\n\t\t\t><table class=\"dojoxDropDownSelectTable\" dojoAttachPoint=\"tableNode\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tbody><tr\r\n\t\t\t\t><td class=\"dojoxDropDownSelectTableContent\" \r\n\t\t\t\t\t><span class=\"dijitReset dijitInline dijitButtonText\"  dojoAttachPoint=\"containerNode,popupStateNode\" id=\"${id}_label\"></span\r\n\t\t\t\t></td><td class=\"dojoxDropDownSelectTableButton\" \r\n\t\t\t\t\t><button class=\"dijitReset dijitStretch dijitButtonContents\" type=\"button\" name=\"${name}\"\r\n\t\t\t\t\t\tdojoAttachPoint=\"focusNode,titleNode\" waiRole=\"button\" waiState=\"haspopup-true,labelledby-${id}_label\"\r\n\t\t\t\t\t\t><span class=\"dijitReset dijitInline dijitArrowButtonInner\">&thinsp;</span\r\n\t\t\t\t\t\t><span class=\"dijitReset dijitInline dijitArrowButtonChar\" waiRole=\"presentation\">&#9660;</span\r\n\t\t\t\t\t></button\r\n\t\t\t\t></td\r\n\t\t\t></tr></tbody></table\r\n\t\t></span\r\n\t></span\r\n></span>\r\n",
+	templateString:"<table class='dijit dijitReset dijitInline dijitLeft'\r\n\tdojoAttachPoint=\"dropDownNode,tableNode\" cellspacing='0' cellpadding='0' waiRole=\"presentation\"\r\n\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse\"\r\n\t><tbody waiRole=\"presentation\"><tr waiRole=\"presentation\"\r\n\t\t><td class=\"dijitReset dijitStretch dijitButtonContents dijitButtonNode\" \r\n\t\t\t><span class=\"dijitReset dijitInline dijitButtonText\"  dojoAttachPoint=\"containerNode,popupStateNode\" id=\"${id}_label\"></span\r\n\t\t\t><input type=\"hidden\" ${nameAttrSetting} dojoAttachPoint=\"valueNode\" value=\"${value}\" />\r\n\t\t</td><td class=\"dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton\" \r\n\t\t\t\tdojoAttachPoint=\"focusNode,titleNode\" waiRole=\"button\" waiState=\"haspopup-true,labelledby-${id}_label\"\r\n\t\t\t><div class=\"dijitReset dijitArrowButtonInner\">&thinsp;</div\r\n\t\t\t><div class=\"dijitReset dijitArrowButtonChar\" waiRole=\"presentation\">&#9660;</div\r\n\t\t></td\r\n\t></tr></tbody\r\n></table>\r\n",
 	
 	// attributeMap: Object
 	//		Add in our style to be applied to the focus node
@@ -116,6 +117,11 @@ dojo.declare("dojox.form.DropDownSelect", [dojox.form._FormSelectWidget, dojox.f
 		this._setValueAttr(this.value);
 	},
 	
+	_setValueAttr: function(value){
+		this.inherited(arguments);
+		dojo.attr(this.valueNode, "value", this.attr("value"));
+	},
+	
 	_setDisplay: function(/*String*/ newDisplay){
 		// summary: sets the display for the given value (or values)
 		this.containerNode.innerHTML = '<span class=" ' + this.baseClass + 'Label">' +
@@ -169,6 +175,9 @@ dojo.declare("dojox.form.DropDownSelect", [dojox.form._FormSelectWidget, dojox.f
 		this.inherited(arguments);
 		if(dojo.attr(this.srcNodeRef, "disabled")){
 			this.attr("disabled", true);
+		}
+		if(this.tableNode.style.width){
+			dojo.addClass(this.domNode, this.baseClass + "FixedWidth");
 		}
 	},
 
@@ -226,6 +235,14 @@ dojo.declare("dojox.form.DropDownSelect", [dojox.form._FormSelectWidget, dojox.f
 		this._iDisabled = value;
 		if(!value && this._childrenLoaded && this.options.length === 0){
 			return;
+		}
+		this.inherited(arguments);
+	},
+
+	uninitialize: function(preserveDom){
+		if(this.dropDown){
+			this.dropDown.destroyRecursive(preserveDom);
+			delete this.dropDown;
 		}
 		this.inherited(arguments);
 	}

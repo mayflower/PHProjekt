@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -17,10 +17,10 @@ dojo.require("dojox.sketch.Anchor");
 		ta.Annotation.call(this, figure, id);
 		this.transform={dx:0, dy:0};
 		this.start={x:0, y:0};
-		this.property('label',this.id);
+		this.property('label','#');
 		this.labelShape=null;
 		this.lineShape=null;
-		this.anchors.start=new ta.Anchor(this, "start", false);
+		//this.anchors.start=new ta.Anchor(this, "start");
 	};
 	ta.UnderlineAnnotation.prototype=new ta.Annotation;
 	var p=ta.UnderlineAnnotation.prototype;
@@ -36,29 +36,52 @@ dojo.require("dojox.sketch.Anchor");
 		
 		for(var i=0; i<obj.childNodes.length; i++){
 			var c=obj.childNodes[i];
-			if(c.localName=="text"){ 
+			if(c.localName=="text"){
 				this.property('label',c.childNodes[0].nodeValue);
-			}
+				var style=c.getAttribute('style');
+				var m=style.match(/fill:([^;]+);/);
+				if(m){
+					var stroke=this.property('stroke');
+					stroke.collor=m[1];
+					this.property('stroke',stroke);
+					this.property('fill',stroke.collor);
+				}
+			}/*else if(c.localName=="line"){
+				var stroke=this.property('stroke');
+				var style=c.getAttribute('style');
+				var m=style.match(/stroke:([^;]+);/)[1];
+				if(m){
+					stroke.color=m;
+					this.property('fill',m);
+				}
+				m=style.match(/stroke-width:([^;]+);/)[1];
+				if(m){
+					stroke.width=m;
+				}
+				this.property('stroke',stroke);
+			}*/
 		}
 	};
 	
 	p.initialize=function(obj){
-		var font=(ta.Annotation.labelFont)?ta.Annotation.labelFont:{family:"Times", size:"16px"};
+		//var font=(ta.Annotation.labelFont)?ta.Annotation.labelFont:{family:"Times", size:"16px"};
 		this.apply(obj);
 
 		//	create either from scratch or based on the passed node
 		this.shape=this.figure.group.createGroup();
 		this.shape.getEventSource().setAttribute("id", this.id);
-		if(this.transform.dx || this.transform.dy){ this.shape.setTransform(this.transform); }
+		//if(this.transform.dx || this.transform.dy){ this.shape.setTransform(this.transform); }
 
 		this.labelShape=this.shape.createText({
 				x:0, 
 				y:0, 
 				text:this.property('label'), 
+				decoration:"underline",
 				align:"start"
 			})
-			.setFont(font)
-			.setFill(this.property('fill'));
+			//.setFont(font)
+			//.setFill(this.property('fill'));
+		this.labelShape.getEventSource().setAttribute('id',this.id+"-labelShape");
 
 		this.lineShape=this.shape.createLine({ 
 				x1:1, 
@@ -66,8 +89,9 @@ dojo.require("dojox.sketch.Anchor");
 				y1:2, 
 				y2:2 
 			})
-			.setStroke({ color:this.property('fill'), width:1 });
+			//.setStroke({ color:this.property('fill'), width:1 });
 		this.lineShape.getEventSource().setAttribute("shape-rendering","crispEdges");
+		this.draw();
 	};
 	p.destroy=function(){
 		if(!this.shape){ return; }
@@ -78,22 +102,35 @@ dojo.require("dojox.sketch.Anchor");
 	};
 	p.getBBox=function(){
 		var b=this.getTextBox();
-//		console.log('getBBox',b,this.getLabel());
-		return { x:0, y:b.h*-1+4, width:b.w+2, height:b.h };
+		var z=this.figure.zoomFactor;
+
+		return { x:0, y:(b.h*-1+4)/z, width:(b.w+2)/z, height:b.h/z };
 	};
 	p.draw=function(obj){
 		this.apply(obj);
 		this.shape.setTransform(this.transform);
 		this.labelShape.setShape({ x:0, y:0, text:this.property('label') })
 			.setFill(this.property('fill'));
-		this.lineShape.setShape({ x1:1, x2:this.labelShape.getTextWidth()+1, y1:2, y2:2 })
-			.setStroke({ color:this.property('fill'), width:1 });
+		this.zoom();
+	};
+	p.zoom=function(pct){
+		if(this.labelShape){
+			pct = pct || this.figure.zoomFactor;
+			var textwidthadj=dojox.gfx.renderer=='vml'?0:2/pct;
+			ta.Annotation.prototype.zoom.call(this,pct);
+			pct = dojox.gfx.renderer=='vml'?1:pct;
+			this.lineShape.setShape({ x1:0, x2:this.getBBox().width-textwidthadj, y1:2, y2:2 })
+				.setStroke({ color:this.property('fill'), width:1/pct });
+			if(this.mode==ta.Annotation.Modes.Edit){
+				this.drawBBox(); //the bbox is dependent on the size of the text, so need to update it here
+			}
+		}
 	};
 	p.serialize=function(){
 		var s=this.property('stroke');
 		return '<g '+this.writeCommonAttrs()+'>'
-			+ '<line x1="1" x2="'+this.labelShape.getTextWidth()+1+'" y1="5" y2="5" style="stroke:'+s.color+';stroke-weight:'+s.width+'" />'
-			+ '<text style="fill:'+this.property('fill')+';" font-weight="bold" '
+			//+ '<line x1="1" x2="'+this.labelShape.getTextWidth()+1+'" y1="5" y2="5" style="stroke:'+s.color+';stroke-width:'+s.width+';" />'
+			+ '<text style="fill:'+this.property('fill')+';" font-weight="bold" text-decoration="underline" '
 			+ 'x="0" y="0">'
 			+ this.property('label')
 			+ '</text>'

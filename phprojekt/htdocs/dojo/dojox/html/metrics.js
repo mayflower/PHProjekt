@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -110,19 +110,20 @@ dojo.provide("dojox.html.metrics");
 		fs.width = "5em";
 		fs.height = "10em";
 		fs.top = "-10000px";
-		dojo.body().appendChild(f);
-
 		if(dojo.isIE){
 			f.onreadystatechange = function(){
 				if(f.contentWindow.document.readyState == "complete"){
-					f.onresize = Function('window.parent.'+dojox._scopeName+'.html.metrics._fontresize()');
+					f.onresize = f.contentWindow.parent[dojox._scopeName].html.metrics._fontresize;
 				}
 			};
 		}else{
 			f.onload = function(){
-				f.contentWindow.onresize = Function('window.parent.'+dojox._scopeName+'.html.metrics._fontresize()');
+				f.contentWindow.onresize = f.contentWindow.parent[dojox._scopeName].html.metrics._fontresize;
 			};
 		}
+		//The script tag is to work around a known firebug race condition.  See comments in bug #9046
+		f.setAttribute("src", "javascript:'<html><head><script>if(\"loadFirebugConsole\" in window){window.loadFirebugConsole();}</script></head><body></body></html>'");
+		dojo.body().appendChild(f);
 		dhm.initOnFontResize = function(){};
 	};
 
@@ -130,6 +131,19 @@ dojo.provide("dojox.html.metrics");
 	dhm._fontresize = function(){
 		dhm.onFontResize();
 	}
+
+	dojo.addOnUnload(function(){
+		// destroy our font resize iframe if we have one
+		var f = dhm._fontResizeNode;
+		if(f){
+			if(dojo.isIE && f.onresize){
+				f.onresize = null;
+			}else if(f.contentWindow && f.contentWindow.onresize){
+				f.contentWindow.onresize = null;
+			}
+			dhm._fontResizeNode = null;
+		}
+	});
 
 	dojo.addOnLoad(function(){
 		// getScrollbar metrics node

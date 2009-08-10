@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -17,16 +17,16 @@ dojo.provide("dojox.rpc.Client");
 		// a specific client. Many servers rely on sessions for this, but sessions are shared
 		// between tabs/windows, so this is not appropriate for application state, it
 		// really only useful for storing user authentication
-		headers["X-Client-Id"] = dojox._clientId;
+		headers["Client-Id"] = dojox.rpc.Client.clientId;
 		// set the sequence id. HTTP is non-deterministic, message can arrive at the server
 		// out of order. In complex Ajax applications, it may be more to ensure that messages
 		// can be properly sequenced deterministically. This applies a sequency id to each
 		// XHR request so that the server can order them.
-		headers["X-Seq-Id"] = dojox._reqSeqId = (dojox._reqSeqId||0)+1;
+		headers["Seq-Id"] = dojox._reqSeqId = (dojox._reqSeqId||0)+1;
 		return dojo._defaultXhr.apply(dojo,arguments);
 	}
 })();
 // initiate the client id to a good random number
-dojox._clientId = (Math.random() + '').substring(2,14) + (Math.random() + '').substring(2,14);
+dojox.rpc.Client.clientId = (Math.random() + '').substring(2,14);
 
 }

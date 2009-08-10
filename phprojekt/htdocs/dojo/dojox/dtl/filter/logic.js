@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -20,20 +20,26 @@ dojo.mixin(dojox.dtl.filter.logic, {
 	},
 	divisibleby: function(value, arg){
 		// summary: Returns true if the value is devisible by the argument"
-		return (parseInt(value) % parseInt(arg)) == 0;
+		return (parseInt(value, 10) % parseInt(arg, 10)) === 0;
 	},
 	_yesno: /\s*,\s*/g,
 	yesno: function(value, arg){
 		// summary:
 		//		arg being a comma-delimited string, value of true/false/none
 		//		chooses the appropriate item from the string
-		if(!arg) arg = 'yes,no,maybe';
+		if(!arg){
+			arg = 'yes,no,maybe';
+		}
 		var parts = arg.split(dojox.dtl.filter.logic._yesno);
 		if(parts.length < 2){
 			return value;
 		}
-		if(value) return parts[0];
-		if((!value && value !== null) || parts.length < 3) return parts[1];
+		if(value){
+			return parts[0];
+		}
+		if((!value && value !== null) || parts.length < 3){
+			return parts[1];
+		}
 		return parts[2];
 	}
 });

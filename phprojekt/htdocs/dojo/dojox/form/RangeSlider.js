@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,7 +8,8 @@
 if(!dojo._hasResource["dojox.form.RangeSlider"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.form.RangeSlider"] = true;
 dojo.provide("dojox.form.RangeSlider");
-dojo.require("dijit.form.Slider");
+dojo.require("dijit.form.HorizontalSlider");
+dojo.require("dijit.form.VerticalSlider");
 dojo.require("dojox.fx");
 
 dojo.declare(
@@ -138,6 +139,7 @@ dojo.declare(
     },
     
     _bumpValue: function(signedChange, useMaxValue){
+				var value;
         // we pass an array to _setValueAttr when signedChange is an array
         if(!dojo.isArray(signedChange)){
             value = this._getBumpValue(signedChange, useMaxValue);

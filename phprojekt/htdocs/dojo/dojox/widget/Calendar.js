@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,43 +14,64 @@ dojo.require("dijit._Calendar");
 dojo.require("dijit._Container");
 
 dojo.declare("dojox.widget._CalendarBase", [dijit._Widget, dijit._Templated, dijit._Container], {
+	// summary: The Root class for all _Calendar extensions
 
 	// templatePath: URL
-	//  the path to the template to be used to construct the widget.
+	//	the path to the template to be used to construct the widget.
 	templateString:"<div class=\"dojoxCalendar\">\r\n    <div tabindex=\"0\" class=\"dojoxCalendarContainer\" style=\"visibility: visible; width: 180px; heightL 138px;\" dojoAttachPoint=\"container\">\r\n\t\t<div style=\"display:none\">\r\n\t\t\t<div dojoAttachPoint=\"previousYearLabelNode\"></div>\r\n\t\t\t<div dojoAttachPoint=\"nextYearLabelNode\"></div>\r\n\t\t\t<div dojoAttachPoint=\"monthLabelSpacer\"></div>\r\n\t\t</div>\r\n        <div class=\"dojoxCalendarHeader\">\r\n            <div>\r\n                <div class=\"dojoxCalendarDecrease\" dojoAttachPoint=\"decrementMonth\"></div>\r\n            </div>\r\n            <div class=\"\">\r\n                <div class=\"dojoxCalendarIncrease\" dojoAttachPoint=\"incrementMonth\"></div>\r\n            </div>\r\n            <div class=\"dojoxCalendarTitle\" dojoAttachPoint=\"header\" dojoAttachEvent=\"onclick: onHeaderClick\">\r\n            </div>\r\n        </div>\r\n        <div class=\"dojoxCalendarBody\" dojoAttachPoint=\"containerNode\"></div>\r\n        <div class=\"\">\r\n            <div class=\"dojoxCalendarFooter\" dojoAttachPoint=\"footer\">                        \r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n",
 
 	// _views: Array
-	//  The list of mixin views available on this calendar.
+	//	The list of mixin views available on this calendar.
 	_views: null,
 
 	// useFx: Boolean
-	//  Specifies if visual effects should be applied to the widget.
-	//  The default behavior of the widget does not contain any effects.
-	//  The dojox.widget.CalendarFx package is needed for these.
+	//	Specifies if visual effects should be applied to the widget.
+	//	The default behavior of the widget does not contain any effects.
+	//	The dojox.widget.CalendarFx package is needed for these.
 	useFx: true,
 
 	// widgetsInTemplate: Boolean
-	//  This widget is a container of other widgets, so this is true.
+	//	This widget is a container of other widgets, so this is true.
 	widgetsInTemplate: true,
 
 	// value: Date
 	// 	the currently selected Date
-	value: null,
+	value: new Date(),
+
+	constraints: null,
+
+	// footerFormat: String
+	//	 The date format of the date displayed in the footer.	Can be
+	//	 'short', 'medium', and 'long'
+	footerFormat: "medium",
 
 	constructor: function(){
 		// summary: constructor for the widget
 		this._views = [];
-		this.value = this.value || new Date();
+	},
+
+	postMixInProperties: function(){
+		var c = this.constraints;
+		if (c) {
+			var fromISO = dojo.date.stamp.fromISOString;
+			if (typeof c.min == "string") {
+				c.min = fromISO(c.min);
+			}
+			if (typeof c.max == "string") {
+				c.max = fromISO(c.max);
+			}
+		}
 	},
 
 	postCreate: function(){
 		// summary: Instantiates the mixin views
 		this._height = dojo.style(this.containerNode, "height");
-		this.displayMonth = new Date(this.value);
+		this.displayMonth = new Date(this.attr('value'));
 
 		var mixin = {
 			parent: this,
-			getValue: dojo.hitch(this, function(){return new Date(this.displayMonth);}),
+			_getValueAttr: dojo.hitch(this, function(){return new Date(this.displayMonth);}),
+			_getConstraintsAttr: dojo.hitch(this, function(){return this.constraints;}),
 			getLang: dojo.hitch(this, function(){return this.lang;}),
 			isDisabledDate: dojo.hitch(this, this.isDisabledDate),
 			getClassForDate: dojo.hitch(this, this.getClassForDate),
@@ -59,22 +80,23 @@ dojo.declare("dojox.widget._CalendarBase", [dijit._Widget, dijit._Templated, dij
 
 		//Add the mixed in views.
 		dojo.forEach(this._views, function(widgetType){
-			var div = document.createElement("div");
-			var widget = new widgetType(mixin, div);
+			var widget = new widgetType(mixin, dojo.create('div'));
 			this.addChild(widget);
 
+			var header = widget.getHeader();
+			if (header) {
 			//place the views's header node in the header of the main widget
-			this.header.appendChild(widget.getHeader());
+				this.header.appendChild(header);
 
-			//hide the header node of the widget
-			dojo.style(widget.getHeader(), "display", "none");
-
+				//hide the header node of the widget
+				dojo.style(header, "display", "none");
+			}
 			//Hide all views
 			dojo.style(widget.domNode, "visibility", "hidden");
 
-			//Listend for the values in a view to be selected
+			//Listen for the values in a view to be selected
 			dojo.connect(widget, "onValueSelected", this, "_onDateSelected");
-			widget.setValue(this.value);
+			widget.attr("value", this.attr('value'));
 		}, this);
 
 		if(this._views.length < 2) {
@@ -91,70 +113,85 @@ dojo.declare("dojox.widget._CalendarBase", [dijit._Widget, dijit._Templated, dij
 		//Populate the footer with today's date.
 		var today = new Date();
 
-		this.footer.innerHTML = "Today: " + dojo.date.locale.format(today, {formatLength:'full',selector:'date', locale:this.lang});
+		this.footer.innerHTML = "Today: " + dojo.date.locale.format(today,
+				{formatLength:this.footerFormat,selector:'date', locale:this.lang});
+
 		dojo.connect(this.footer, "onclick", this, "goToToday");
 
-		dojo.style(this._children[0].domNode, "top", "0px");
-		dojo.style(this._children[0].domNode, "visibility", "visible");
-//		
-		dojo.style(this._children[0].getHeader(), "display", "");
+		var first = this._children[0];
+
+		dojo.style(first.domNode, "top", "0px");
+		dojo.style(first.domNode, "visibility", "visible");
+
+		var header = first.getHeader();
+		if (header) {
+			dojo.style(first.getHeader(), "display", "");
+		}
+
+		dojo[first.useHeader ? "removeClass" : "addClass"](this.container, "no-header");
+
+		first.onDisplay();
 
 		var _this = this;
 
 		var typematic = function(nodeProp, dateProp, adj){
-			dijit.typematic.addMouseListener(_this[nodeProp], _this, function(count){				
+			dijit.typematic.addMouseListener(_this[nodeProp], _this, function(count){
 				if(count >= 0){	_this._adjustDisplay(dateProp, adj);}
 			}, 0.8, 500);
 		};
 		typematic("incrementMonth", "month", 1);
 		typematic("decrementMonth", "month", -1);
+		this._updateTitleStyle();
 	},
 
 	addFx: function(query, fromNode) {
 		// Stub function than can be overridden to add effects.
 	},
 
-	setValue: function(/*Date*/ value){
-		// summary: set the current date and update the UI.  If the date is disabled, the selection will
+	_setValueAttr: function(/*Date*/ value){
+		// summary: set the current date and update the UI.	If the date is disabled, the selection will
 		//	not change, but the display will change to the corresponding month.
+		if (!value["getFullYear"]) {
+			value = dojo.date.stamp.fromISOString(value + "");
+		}
 		if(!this.value || dojo.date.compare(value, this.value)){
 			value = new Date(value);
 			this.displayMonth = new Date(value);
 			if(!this.isDisabledDate(value, this.lang)){
 				this.value = value;
-				this.value.setHours(0,0,0,0);
-				this.onChange(this.value);
+				this.onChange(value);
 			}
-			this._children[this._currentChild].setValue(this.value);
+			this._children[this._currentChild].attr("value", this.value);
 			return true;
 		}
 		return false;
 	},
 
-	isDisabledDate: function(/*Date*/dateObject, /*String?*/locale){
+	isDisabledDate: function(/*Date*/date, /*String?*/locale){
 		// summary:
 		//	May be overridden to disable certain dates in the calendar e.g. `isDisabledDate=dojo.date.locale.isWeekend`
-/*=====
-		return false; // Boolean
-=====*/
+		var c = this.constraints;
+		var compare = dojo.date.compare;
+		return c && (c.min && (compare(c.min, date, "date") > 0) ||
+							(c.max && compare(c.max, date, "date") < 0));
 	},
 
 	onValueSelected: function(/*Date*/date){
-		// summary: a date cell was selected.  It may be the same as the previous value.
+		// summary: a date cell was selected.	It may be the same as the previous value.
 	},
 
-	_onDateSelected: function(date, formattedValue){
+	_onDateSelected: function(date, formattedValue, force){
 		this.displayMonth = date;
+		this.attr("value", date)
 		//Only change the selected value if it was chosen from the
 		//first child.
-		if(this.setValue(date)) {
-			if (!this._transitionVert(-1)) {
-				if (!formattedValue && formattedValue !== 0) {
-					formattedValue = this.value;
-				}
-				this.onValueSelected(formattedValue);
+		if (!this._transitionVert(-1)) {
+			if (!formattedValue && formattedValue !== 0) {
+				formattedValue = this.attr('value');
 			}
+			this.onValueSelected(formattedValue);
 		}
+
 	},
 
 	onChange: function(/*Date*/date){
@@ -167,24 +204,30 @@ dojo.declare("dojox.widget._CalendarBase", [dijit._Widget, dijit._Templated, dij
 	},
 
 	goToToday: function(){
-		this.setValue(new Date());
-		this.onValueSelected(this.value);
+		this.attr("value", new Date());
+		this.onValueSelected(this.attr('value'));
 	},
 
 	_transitionVert: function(/*Number*/direction){
 		// summary: Animates the views to show one and hide another, in a
-		//   vertical direction.
-		//   If 'direction' is 1, then the views slide upwards.
-		//   If 'direction' is -1, the views slide downwards.
+		//	 vertical direction.
+		//	 If 'direction' is 1, then the views slide upwards.
+		//	 If 'direction' is -1, the views slide downwards.
 		var curWidget = this._children[this._currentChild];
 		var nextWidget = this._children[this._currentChild + direction];
 		if(!nextWidget){return false;}
-		
-		var height = dojo.style(this.containerNode, "height");
-		nextWidget.setValue(this.displayMonth);
 
-		dojo.style(curWidget.header, "display", "none");
-		dojo.style(nextWidget.header, "display", "");
+		dojo.style(nextWidget.domNode, "visibility", "visible");
+
+		var height = dojo.style(this.containerNode, "height");
+		nextWidget.attr("value", this.displayMonth);
+
+		if (curWidget.header) {
+			dojo.style(curWidget.header, "display", "none");
+		}
+		if (nextWidget.header) {
+			dojo.style(nextWidget.header, "display", "");
+		}
 		dojo.style(nextWidget.domNode, "top", (height * -1) + "px");
 		dojo.style(nextWidget.domNode, "visibility", "visible");
 
@@ -195,12 +238,34 @@ dojo.declare("dojox.widget._CalendarBase", [dijit._Widget, dijit._Templated, dij
 		dojo.style(nextWidget.domNode, "top", (height1 * -1) + "px");
 
 		// summary: Slides two nodes vertically.
-		var anim1 = dojo.animateProperty({node: curWidget.domNode, properties: {top: height1}});
-		var anim2 = dojo.animateProperty({node: nextWidget.domNode, properties: {top: height2}});
+		var anim1 = dojo.animateProperty({
+			node: curWidget.domNode,
+			properties: {top: height1},
+			onEnd: function(){
+				dojo.style(curWidget.domNode, "visibility", "hidden");
+			}
+		});
+		var anim2 = dojo.animateProperty({
+			node: nextWidget.domNode,
+			properties: {top: height2},
+			onEnd: function(){
+				nextWidget.onDisplay();
+			}
+		});
+
+		dojo[nextWidget.useHeader ? "removeClass" : "addClass"](this.container, "no-header");
 
 		anim1.play();
 		anim2.play();
+		curWidget.onBeforeUnDisplay()
+		nextWidget.onBeforeDisplay();
+
+		this._updateTitleStyle();
 		return true;
+	},
+
+	_updateTitleStyle: function(){
+		dojo[this._currentChild < this._children.length -1 ? "addClass" : "removeClass"](this.header, "navToPanel");
 	},
 
 	_slideTable: function(/*String*/widget, /*Number*/direction, /*Function*/callback){
@@ -238,8 +303,8 @@ dojo.declare("dojox.widget._CalendarBase", [dijit._Widget, dijit._Templated, dij
 
 	getClassForDate: function(/*Date*/dateObject, /*String?*/locale){
 		// summary:
-		//  May be overridden to return CSS classes to associate with the date entry for the given dateObject,
-		//  for example to indicate a holiday in specified locale.
+		//	May be overridden to return CSS classes to associate with the date entry for the given dateObject,
+		//	for example to indicate a holiday in specified locale.
 
 /*=====
 		return ""; // String
@@ -248,27 +313,36 @@ dojo.declare("dojox.widget._CalendarBase", [dijit._Widget, dijit._Templated, dij
 
 	_adjustDisplay: function(/*String*/part, /*int*/amount, noSlide){
 		// summary: This function overrides the base function defined in dijit._Calendar.
-		//   It changes the displayed years, months and days depending on the inputs.
+		//	 It changes the displayed years, months and days depending on the inputs.
 		var child = this._children[this._currentChild];
 
 		var month = this.displayMonth = child.adjustDate(this.displayMonth, amount);
 
 		this._slideTable(child, amount, function(){
-			child.setValue(month);
+			child.attr("value", month);
 		});
 	}
 });
 
 dojo.declare("dojox.widget._CalendarView", dijit._Widget, {
 	// summary: Base implementation for all view mixins.
-	//   All calendar views should extend this widget.
+	//	 All calendar views should extend this widget.
 	headerClass: "",
 
-	cloneClass: function(clazz, n){
+	useHeader: true,
+
+	cloneClass: function(clazz, n, before){
 		// summary: Clones all nodes with the class 'clazz' in a widget
 		var template = dojo.query(clazz, this.domNode)[0];
-		for(var i=0; i<n; i++){
-			template.parentNode.appendChild(template.cloneNode(true));
+		if (!before) {
+			for (var i = 0; i < n; i++) {
+				template.parentNode.appendChild(template.cloneNode(true));
+			}
+		} else {
+			var bNode = dojo.query(clazz, this.domNode)[0];
+			for (var i = 0; i < n; i++) {
+				template.parentNode.insertBefore(template.cloneNode(true), bNode);
+			}
 		}
 	},
 
@@ -280,14 +354,10 @@ dojo.declare("dojox.widget._CalendarView", dijit._Widget, {
 		node.appendChild(dojo.doc.createTextNode(text));
 	},
 
-	getHeader: function() {
-		// summary: returns the header node of a view. If none exists,
-		//   an empty DIV is created and returned.
-		if (!this.header) {
-			this.header = document.createElement("div");
-			dojo.addClass(this.header, this.headerClass);
-		}
-		return this.header;
+	getHeader: function(){
+		// summary: Returns the header node of a view. If none exists,
+		//	 an empty DIV is created and returned.
+		return this.header || (this.header = this.header = dojo.create("span", { "class":this.headerClass }));
 	},
 
 	onValueSelected: function(date){
@@ -296,16 +366,29 @@ dojo.declare("dojox.widget._CalendarView", dijit._Widget, {
 
 	adjustDate: function(date, amount){
 		// summary: Adds or subtracts values from a date.
-		//   The unit, e.g. "day", "month" or "year", is
-		//   specified in the "datePart" property of the
-		//   calendar view mixin.
+		//	 The unit, e.g. "day", "month" or "year", is
+		//	 specified in the "datePart" property of the
+		//	 calendar view mixin.
 		return dojo.date.add(date, this.datePart, amount);
+	},
+
+	onDisplay: function(){
+		// summary: Stub function that can be used to tell a view when it is shown.
+	},
+
+	onBeforeDisplay: function(){
+		// summary: Stub function that can be used to tell a view it is about to be shown.
+	},
+
+	onBeforeUnDisplay: function(){
+		// summary: Stub function that can be used to tell
+		// a view when it is no longer shown.
 	}
 });
 
 dojo.declare("dojox.widget._CalendarDay", null, {
 	// summary: Mixin for the dojox.widget.Calendar which provides
-	//  the standard day-view. A single month is shown at a time.
+	//	the standard day-view. A single month is shown at a time.
 	parent: null,
 
 	constructor: function(){
@@ -315,21 +398,21 @@ dojo.declare("dojox.widget._CalendarDay", null, {
 
 dojo.declare("dojox.widget._CalendarDayView", [dojox.widget._CalendarView, dijit._Templated], {
 	// summary: View class for the dojox.widget.Calendar.
-	//   Adds a view showing every day of a single month to the calendar.
-	//   This should not be mixed in directly with dojox.widget._CalendarBase.
-	//   Instead, use dojox.widget._CalendarDay
+	//	 Adds a view showing every day of a single month to the calendar.
+	//	 This should not be mixed in directly with dojox.widget._CalendarBase.
+	//	 Instead, use dojox.widget._CalendarDay
 
 	// templatePath: URL
-	//  the path to the template to be used to construct the widget.
-	templateString:"<div class=\"dijitCalendarDayLabels\" style=\"left: 0px;\" dojoAttachPoint=\"dayContainer\">\r\n\t<div dojoAttachPoint=\"header\">\r\n\t\t<div dojoAttachPoint=\"monthAndYearHeader\">\r\n\t        <span dojoAttachPoint=\"monthLabelNode\" class=\"dojoxCalendarMonthLabelNode\"></span>\r\n\t\t\t<span dojoAttachPoint=\"headerComma\" class=\"dojoxCalendarComma\">,</span>\r\n\t\t\t<span dojoAttachPoint=\"yearLabelNode\"></span>\r\n\t\t</div>\r\n\t</div>\r\n    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\r\n        <thead>\r\n            <tr>\r\n                <td class=\"dijitCalendarDayLabelTemplate\"><div class=\"dijitCalendarDayLabel\"></div></td>\r\n            </tr>\r\n        </thead>\r\n        <tbody dojoAttachEvent=\"onclick: _onDayClick\">\r\n            <tr class=\"dijitCalendarWeekTemplate\">\r\n                <td class=\"dojoxCalendarNextMonth dijitCalendarDateTemplate\">\r\n                    <div class=\"dijitCalendarDateLabel\"></div>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n",
+	//	the path to the template to be used to construct the widget.
+	templateString:"<div class=\"dijitCalendarDayLabels\" style=\"left: 0px;\" dojoAttachPoint=\"dayContainer\">\r\n\t<div dojoAttachPoint=\"header\">\r\n\t\t<div dojoAttachPoint=\"monthAndYearHeader\">\r\n\t\t\t<span dojoAttachPoint=\"monthLabelNode\" class=\"dojoxCalendarMonthLabelNode\"></span>\r\n\t\t\t<span dojoAttachPoint=\"headerComma\" class=\"dojoxCalendarComma\">,</span>\r\n\t\t\t<span dojoAttachPoint=\"yearLabelNode\" class=\"dojoxCalendarDayYearLabel\"></span>\r\n\t\t</div>\r\n\t</div>\r\n\t<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\r\n\t\t<thead>\r\n\t\t\t<tr>\r\n\t\t\t\t<td class=\"dijitCalendarDayLabelTemplate\"><div class=\"dijitCalendarDayLabel\"></div></td>\r\n\t\t\t</tr>\r\n\t\t</thead>\r\n\t\t<tbody dojoAttachEvent=\"onclick: _onDayClick\">\r\n\t\t\t<tr class=\"dijitCalendarWeekTemplate\">\r\n\t\t\t\t<td class=\"dojoxCalendarNextMonth dijitCalendarDateTemplate\">\r\n\t\t\t\t\t<div class=\"dijitCalendarDateLabel\"></div>\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</tbody>\r\n\t</table>\r\n</div>\r\n",
 
 	// datePart: String
-	//  Specifies how much to increment the displayed date when the user
-	//  clicks the array button to increment of decrement the view.
+	//	Specifies how much to increment the displayed date when the user
+	//	clicks the array button to increment of decrement the view.
 	datePart: "month",
 
 	// dayWidth: String
-	//  Specifies the type of day name to display.  "narrow" causes just one letter to be shown.
+	//	Specifies the type of day name to display.	"narrow" causes just one letter to be shown.
 	dayWidth: "narrow",
 
 	postCreate: function(){
@@ -349,38 +432,50 @@ dojo.declare("dojox.widget._CalendarDayView", [dojox.widget._CalendarView, dijit
 			this._setText(label, dayNames[(i + dayOffset) % 7]);
 		}, this);
 
+	},
+
+	onDisplay: function(){
+		if(!this._addedFx) {
 		// Add visual effects to the view, if any has been specified.
-		this.addFx(".dijitCalendarDateTemplate div", this.domNode);
+			this._addedFx = true;
+			this.addFx(".dijitCalendarDateTemplate div", this.domNode);
+		}
 	},
 
 	_onDayClick: function(e) {
 		// summary: executed when a day value is clicked.
-		var date = this.getValue();
+		var date = new Date(this.attr("value"));
+
 		var p = e.target.parentNode;
 		var c = "dijitCalendar";
 		var d = dojo.hasClass(p, c + "PreviousMonth") ? -1 :
 							(dojo.hasClass(p, c + "NextMonth") ? 1 : 0);
 		if (d){date = dojo.date.add(date, "month", d)}
-
 		date.setDate(e.target._date);
-		this.value = date;
+
+		// If the day is disabled, ignore it
+		if (this.isDisabledDate(date)) {
+			dojo.stopEvent(e);
+			return;
+		}
+		this.attr('value', date);
 		this.parent._onDateSelected(date);
 	},
 
-	setValue: function(value) {
+	_setValueAttr: function(value) {
 		//Change the day values
 		this._populateDays();
 	},
 
 	_populateDays: function() {
 		// summary: Fills the days of the current month.
-		var month = this.getValue();
+		var month = this.attr("value");
 		month.setDate(1);
 		var firstDay = month.getDay();
 		var daysInMonth = dojo.date.getDaysInMonth(month);
 		var daysInPreviousMonth = dojo.date.getDaysInMonth(dojo.date.add(month, "month", -1));
 		var today = new Date();
-		var selected = this.value;
+		var selected = this.attr('value');
 
 		var dayOffset = dojo.cldr.supplemental.getFirstDayOfWeek(this.getLang());
 		if(dayOffset > firstDay){ dayOffset -= 7; }
@@ -426,11 +521,11 @@ dojo.declare("dojox.widget._CalendarDayView", [dojox.widget._CalendarView, dijit
 				clazz += clazz2 + " " + clazz;
 			}
 
-			template.className =  clazz + "Month dijitCalendarDateTemplate";
+			template.className =	clazz + "Month dijitCalendarDateTemplate";
 			template.dijitDateValue = date.valueOf();
 			var label = dojo.query(".dijitCalendarDateLabel", template)[0];
 			this._setText(label, date.getDate());
-			label._date = date.getDate();
+			label._date = label.parentNode._date = date.getDate();
 		}, this);
 
 		// Fill in localized month name
@@ -441,49 +536,97 @@ dojo.declare("dojox.widget._CalendarDayView", [dojox.widget._CalendarView, dijit
 });
 
 
-dojo.declare("dojox.widget._CalendarMonth", null, {
+dojo.declare("dojox.widget._CalendarMonthYear", null, {
 	// summary: Mixin class for adding a view listing all 12 months of the year to the
-	//   dojox.widget._CalendarBase
-
-	// headerClass: String
-	//  Specifies the CSS class to apply to the header node for this view.
-	headerClass: "dojoxCalendarYearHeader",
+	//	 dojox.widget._CalendarBase
 
 	constructor: function(){
 		// summary: Adds a dojox.widget._CalendarMonthView view to the calendar widget.
-		this._addView(dojox.widget._CalendarMonthView);
+		this._addView(dojox.widget._CalendarMonthYearView);
 	}
 });
 
-dojo.declare("dojox.widget._CalendarMonthView", [dojox.widget._CalendarView, dijit._Templated], {
+dojo.declare("dojox.widget._CalendarMonthYearView", [dojox.widget._CalendarView, dijit._Templated], {
 	// summary: A Calendar view listing the 12 months of the year
 
 	// templatePath: URL
-	//  the path to the template to be used to construct the widget.
-	templateString:"<div class=\"dojoxCalendarMonthLabels\" style=\"left: 0px;\"  \r\n\tdojoAttachPoint=\"monthContainer\" dojoAttachEvent=\"onclick: onClick\">\r\n    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\r\n        <tbody>\r\n            <tr class=\"dojoxCalendarMonthGroupTemplate\">\r\n                <td class=\"dojoxCalendarMonthTemplate\">\r\n                    <div class=\"dojoxCalendarMonthLabel\"></div>\r\n                </td>\r\n             </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n",
+	//	the path to the template to be used to construct the widget.
+	templateString:"<div class=\"dojoxCal-MY-labels\" style=\"left: 0px;\"\t\r\n\tdojoAttachPoint=\"myContainer\" dojoAttachEvent=\"onclick: onClick\">\r\n\t\t<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\r\n\t\t\t\t<tbody>\r\n\t\t\t\t\t\t<tr class=\"dojoxCal-MY-G-Template\">\r\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t </tr>\r\n\t\t\t\t\t\t <tr class=\"dojoxCal-MY-btns\">\r\n\t\t\t\t\t\t \t <td class=\"dojoxCal-MY-btns\" colspan=\"4\">\r\n\t\t\t\t\t\t \t\t <span class=\"dijitReset dijitInline dijitButtonNode ok-btn\" dojoAttachEvent=\"onclick: onOk\" dojoAttachPoint=\"okBtn\">\r\n\t\t\t\t\t\t \t \t \t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">OK</button>\r\n\t\t\t\t\t\t\t\t </span>\r\n\t\t\t\t\t\t\t\t <span class=\"dijitReset dijitInline dijitButtonNode cancel-btn\" dojoAttachEvent=\"onclick: onCancel\" dojoAttachPoint=\"cancelBtn\">\r\n\t\t\t\t\t\t \t \t\t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">Cancel</button>\r\n\t\t\t\t\t\t\t\t </span>\r\n\t\t\t\t\t\t \t </td>\r\n\t\t\t\t\t\t </tr>\r\n\t\t\t\t</tbody>\r\n\t\t</table>\r\n</div>\r\n",
 
 	// datePart: String
-	//  Specifies how much to increment the displayed date when the user
-	//  clicks the array button to increment of decrement the view.
+	//	Specifies how much to increment the displayed date when the user
+	//	clicks the array button to increment of decrement the view.
 	datePart: "year",
+
+	displayedYears: 10,
+
+	useHeader: false,
 
 	postCreate: function(){
 		// summary: Constructs the view
-		this.cloneClass(".dojoxCalendarMonthTemplate", 3);
-		this.cloneClass(".dojoxCalendarMonthGroupTemplate", 2);
+		this.cloneClass(".dojoxCal-MY-G-Template", 5, ".dojoxCal-MY-btns");
+		this.monthContainer = this.yearContainer = this.myContainer;
+
+		var yClass = "dojoxCalendarYearLabel";
+		var dClass = "dojoxCalendarDecrease";
+		var iClass = "dojoxCalendarIncrease";
+
+		dojo.query("." + yClass, this.myContainer).forEach(function(node, idx){
+			var clazz = iClass;
+			switch (idx) {
+				case 0:
+					clazz = dClass;
+				case 1:
+					dojo.removeClass(node, yClass);
+					dojo.addClass(node, clazz);
+					break;
+			}
+		});
+		// Get the year increment and decrement buttons.
+		this._decBtn = dojo.query('.' + dClass, this.myContainer)[0];
+		this._incBtn = dojo.query('.' + iClass, this.myContainer)[0];
+
+		dojo.query(".dojoxCal-MY-M-Template", this.domNode)
+			.filter(function(item){
+				return item.cellIndex == 1;
+			})
+			.addClass("dojoxCal-MY-M-last");
+
+		dojo.connect(this, "onBeforeDisplay", dojo.hitch(this, function(){
+			this._cachedDate = new Date(this.attr("value").getTime());
+			this._populateYears(this._cachedDate.getFullYear());
+			this._populateMonths();
+			this._updateSelectedMonth();
+			this._updateSelectedYear();
+		}));
+
+		dojo.connect(this, "_populateYears", dojo.hitch(this, function(){
+			this._updateSelectedYear();
+		}));
+		dojo.connect(this, "_populateMonths", dojo.hitch(this, function(){
+			this._updateSelectedMonth();
+		}));
+
+		this._cachedDate = this.attr("value");
+
+		this._populateYears();
 		this._populateMonths();
 
 		// Add visual effects to the view, if any have been mixed in
-		this.addFx(".dojoxCalendarMonthLabel", this.domNode);
+		this.addFx(".dojoxCalendarMonthLabel,.dojoxCalendarYearLabel ", this.myContainer);
 	},
 
-	setValue: function(value){
-		this.header.innerHTML = value.getFullYear();
+	_setValueAttr: function(value){
+		this._populateYears(value.getFullYear());
+	},
+
+	getHeader: function(){
+		return null;
 	},
 
 	_getMonthNames: function(format) {
 		// summary: Returns localized month names
-		this._monthNames  = this._monthNames || dojo.date.locale.getNames('months', format, 'standAlone', this.getLang());
+		this._monthNames	= this._monthNames || dojo.date.locale.getNames('months', format, 'standAlone', this.getLang());
 		return this._monthNames;
 	},
 
@@ -493,88 +636,179 @@ dojo.declare("dojox.widget._CalendarMonthView", [dojox.widget._CalendarView, dij
 		dojo.query(".dojoxCalendarMonthLabel", this.monthContainer).forEach(dojo.hitch(this, function(node, cnt){
 			this._setText(node, monthNames[cnt]);
 		}));
-	},
+		var constraints = this.attr('constraints');
 
-	onClick: function(evt) {
-		// summary: Handles clicks on month names
-		if(!dojo.hasClass(evt.target, "dojoxCalendarMonthLabel")){dojo.stopEvent(evt); return;}
-		var month = evt.target.parentNode.cellIndex + (evt.target.parentNode.parentNode.rowIndex * 4);
-		var date = this.getValue();
-		date.setMonth(month);
-		this.onValueSelected(date, month);
-	}
-});
+		if (constraints) {
+			var date = new Date();
+			date.setFullYear(this._year);
+			var min = -1, max = 12;
+			if (constraints.min) {
+				var minY = constraints.min.getFullYear();
+				if (minY > this._year) {
+					min = 12;
+				} else if (minY == this._year) {
+					min = constraints.min.getMonth();
+				}
+			}
+			if (constraints.max) {
+				var maxY = constraints.max.getFullYear();
+				if (maxY < this._year) {
+					max = -1;
+				} else if (maxY == this._year) {
+					max = constraints.max.getMonth();
+				}
+			}
+			
+			dojo.query(".dojoxCalendarMonthLabel", this.monthContainer).forEach(dojo.hitch(this, function(node, cnt){
+				dojo[(cnt < min || cnt > max) ? "addClass" : "removeClass"](node, 'dijitCalendarDisabledDate');
+			}));
+		}
 
-dojo.declare("dojox.widget._CalendarYear", null, {
-	// summary: Mixin class for adding a view listing 12 years to the
-	//   dojox.widget._CalendarBase
-	parent: null,
-
-	constructor: function(){
-		// summary: Adds a dojox.widget._CalendarYearView view to the
-		//  dojo.widget._CalendarBase widget.
-		this._addView(dojox.widget._CalendarYearView);
-	}
-});
-
-dojo.declare("dojox.widget._CalendarYearView", [dojox.widget._CalendarView, dijit._Templated], {
-	// summary: A Calendar view listing 12 years
-
-	// templatePath: URL
-	//  the path to the template to be used to construct the widget.
-	templateString:"<div class=\"dojoxCalendarYearLabels\" style=\"left: 0px;\" dojoAttachPoint=\"yearContainer\">\r\n    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\" dojoAttachEvent=\"onclick: onClick\">\r\n        <tbody>\r\n            <tr class=\"dojoxCalendarYearGroupTemplate\">\r\n                <td class=\"dojoxCalendarNextMonth dojoxCalendarYearTemplate\">\r\n                    <div class=\"dojoxCalendarYearLabel\">\r\n                    </div>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n",
-
-	postCreate: function(){
-		// summary: Constructs the view
-		this.cloneClass(".dojoxCalendarYearTemplate", 3);
-		this.cloneClass(".dojoxCalendarYearGroupTemplate", 2);
-		this._populateYears();
-		this.addFx(".dojoxCalendarYearLabel", this.domNode);
-	},
-
-	setValue: function(value){
-		this._populateYears(value.getFullYear());
+		var h = this.getHeader();
+		if (h) {
+			this._setText(this.getHeader(), this.attr("value").getFullYear());
+		}
 	},
 
 	_populateYears: function(year) {
+		// summary: Fills the list of years with a range of 12 numbers, with the current year
+		//	 being the 6th number.
+		var constraints = this.attr('constraints');
+		var dispYear = year || this.attr("value").getFullYear();
+		var firstYear = dispYear - Math.floor(this.displayedYears/2);
+		var min = constraints && constraints.min ? constraints.min.getFullYear() : firstYear -10000;
+
+		firstYear = Math.max(min, firstYear);
+
 		// summary: Writes the years to display to the view
-		if(this._displayedYear && year && year >= this._displayedYear - 5 && year <= this._displayedYear + 6){
+		this._displayedYear = dispYear;
+
+		var yearLabels = dojo.query(".dojoxCalendarYearLabel", this.yearContainer);
+
+		var max = constraints && constraints.max ? constraints.max.getFullYear() - firstYear :	yearLabels.length;
+		var disabledClass = 'dijitCalendarDisabledDate';
+
+		yearLabels.forEach(dojo.hitch(this, function(node, cnt){
+			if (cnt <= max) {
+				this._setText(node, firstYear + cnt);
+				dojo.removeClass(node, disabledClass);
+			} else {
+				dojo.addClass(node, disabledClass);
+			}
+		}));
+
+    if (this._incBtn) {
+			dojo[max < yearLabels.length ? "addClass" : "removeClass"](this._incBtn, disabledClass);
+		}
+		if (this._decBtn) {
+			dojo[min >= firstYear ? "addClass" : "removeClass"](this._decBtn, disabledClass);
+		}
+
+		var h = this.getHeader();
+		if (h) {
+			this._setText(this.getHeader(), firstYear + " - " + (firstYear + 11));
+		}
+	},
+
+	_updateSelectedYear: function(){
+		this._year = String((this._cachedDate || this.attr("value")).getFullYear());
+		this._updateSelectedNode(".dojoxCalendarYearLabel", dojo.hitch(this, function(node, idx){
+			return this._year !== null && node.innerHTML == this._year;
+		}));
+	},
+
+	_updateSelectedMonth: function(){
+		var month = (this._cachedDate || this.attr("value")).getMonth();
+		this._month = month;
+		this._updateSelectedNode(".dojoxCalendarMonthLabel", function(node, idx){
+			return idx == month;
+		});
+	},
+
+	_updateSelectedNode: function(query, filter){
+		var sel = "dijitCalendarSelectedDate";
+		dojo.query(query, this.domNode)
+			.forEach(function(node, idx, array) {
+				dojo[filter(node, idx, array) ? "addClass" : "removeClass"](node.parentNode, sel);
+		});
+		var selMonth = dojo.query('.dojoxCal-MY-M-Template div', this.myContainer).filter(function(node){
+			return dojo.hasClass(node.parentNode, sel);
+		})[0];
+		if (!selMonth){return;}
+		var disabled = dojo.hasClass(selMonth, 'dijitCalendarDisabledDate');
+		
+		dojo[disabled ? 'addClass' : 'removeClass'](this.okBtn, "dijitDisabled");
+	},
+	
+	onClick: function(evt) {
+		var clazz;
+		var _this = this;
+		var sel = "dijitCalendarSelectedDate";
+		function hc(c) {
+			return dojo.hasClass(evt.target, c);
+		}
+
+		if (hc('dijitCalendarDisabledDate')) {
+			dojo.stopEvent(evt);
 			return;
 		}
 
-		// summary: Fills the list of years with a range of 12 numbers, with the current year
-		//   being the 6th number.
-		this._displayedYear = year || this.getValue().getFullYear();
-		var firstYear = this._displayedYear - 5;
-
-		dojo.query(".dojoxCalendarYearLabel", this.yearContainer).forEach(dojo.hitch(this, function(node, cnt){
-			this._setText(node, firstYear + (cnt));
-		}));
-		this._setText(this.getHeader(), firstYear + " - " + (firstYear + 11));
+		// summary: Handles clicks on month names
+		if(hc("dojoxCalendarMonthLabel")){
+			clazz = "dojoxCal-MY-M-Template";
+			this._month = evt.target.parentNode.cellIndex + (evt.target.parentNode.parentNode.rowIndex * 2);
+			this._cachedDate.setMonth(this._month);
+			this._updateSelectedMonth();
+		} else if (hc( "dojoxCalendarYearLabel")) {
+			clazz = "dojoxCal-MY-Y-Template";
+			this._year = Number(evt.target.innerHTML);
+			this._cachedDate.setYear(this._year);
+			this._populateMonths();
+			this._updateSelectedYear();
+		} else if(hc("dojoxCalendarDecrease")) {
+			this._populateYears(this._displayedYear - 10);
+			return
+		} else if(hc("dojoxCalendarIncrease")) {
+			this._populateYears(this._displayedYear + 10);
+			return
+		}	else {
+			return true;
+		}
+		dojo.stopEvent(evt);
+		return false;
 	},
 
-	adjustDate: function(date, amount){
-		// summary: Adjusts the value of a date. It moves it by 12 years each time.
-		return dojo.date.add(date, "year", amount * 12);
+	onOk: function(evt){
+		dojo.stopEvent(evt);
+		if (dojo.hasClass(this.okBtn, "dijitDisabled")) {
+			return false;
+		}
+		this.onValueSelected(this._cachedDate);
+		return false;
 	},
 
-	onClick: function(evt) {
-		// summary: Handles clicks on year values.
-		if(!dojo.hasClass(evt.target, "dojoxCalendarYearLabel")){dojo.stopEvent(evt); return;}
-		var year = Number(evt.target.innerHTML);
-		var date = this.getValue();
-		date.setYear(year);
-		this.onValueSelected(date, year);
+	onCancel: function(evt){
+		dojo.stopEvent(evt);
+		this.onValueSelected(this.attr("value"));
+		return false;
 	}
 });
+
+dojo.declare("dojox.widget.Calendar2Pane",
+	[dojox.widget._CalendarBase,
+	 dojox.widget._CalendarDay,
+	 dojox.widget._CalendarMonthYear], {
+	 	// summary: A Calendar with two panes, the second one
+		//		 containing both month and year
+	 }
+);
 
 dojo.declare("dojox.widget.Calendar",
 	[dojox.widget._CalendarBase,
 	 dojox.widget._CalendarDay,
-	 dojox.widget._CalendarMonth,
-	 dojox.widget._CalendarYear], {
-	 	// summary: The standard Calendar. It includes day, month and year views.
-		//  No visual effects are included.
+	 dojox.widget._CalendarMonthYear], {
+	 	// summary: The standard Calendar. It includes day and month/year views.
+		//	No visual effects are included.
 	 }
 );
 
@@ -585,16 +819,10 @@ dojo.declare("dojox.widget.DailyCalendar",
 	 }
 );
 
-dojo.declare("dojox.widget.MonthlyCalendar",
+dojo.declare("dojox.widget.MonthAndYearlyCalendar",
 	[dojox.widget._CalendarBase,
-	 dojox.widget._CalendarMonth], {
-	 	// summary: A calendar with only a month view.
-	 }
-);
-dojo.declare("dojox.widget.YearlyCalendar",
-	[dojox.widget._CalendarBase,
-	 dojox.widget._CalendarYear], {
-	 	// summary: A calendar with only a year view.
+	 dojox.widget._CalendarMonthYear], {
+	 	// summary: A calendar with only a daily view.
 	 }
 );
 

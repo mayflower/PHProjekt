@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,6 +11,8 @@ dojo.provide("dojox.dtl._base");
 
 dojo.require("dojox.string.Builder");
 dojo.require("dojox.string.tokenize");
+
+dojo.experimental("dojox.dtl");
 
 (function(){
 	var dd = dojox.dtl;
@@ -142,7 +144,7 @@ dojo.require("dojox.string.tokenize");
 
 			var parent = dojo.getObject(require);
 
-			return parent[fn || name] || parent[name + "_"];
+			return parent[fn || name] || parent[name + "_"] || parent[fn + "_"];
 		},
 		getTag: function(name, errorless){
 			return ddt._get("tag", name, errorless);
@@ -349,6 +351,10 @@ dojo.require("dojox.string.tokenize");
 			return this.contents;
 		},
 		resolve: function(context){
+			if(typeof this.key == "undefined"){
+				return "";
+			}
+
 			var str = this.resolvePath(this.key, context);
 
 			for(var i = 0, filter; filter = this.filters[i]; i++){
@@ -381,6 +387,18 @@ dojo.require("dojox.string.tokenize");
 				if(path == "null" || path == "None"){ return null; }
 				parts = path.split(".");
 				current = context.get(parts[0]);
+
+				if(dojo.isFunction(current)){
+					var self = context.getThis && context.getThis();
+					if(current.alters_data){
+						current = "";
+					}else if(self){
+						current = current.call(self);
+					}else{
+						current = "";
+					}
+				}
+
 				for(var i = 1; i < parts.length; i++){
 					var part = parts[i];
 					if(current){
@@ -394,7 +412,7 @@ dojo.require("dojox.string.tokenize");
 							continue;
 						}
 
-						if(current.get && dojo.isFunction(current.get)){
+						if(current.get && dojo.isFunction(current.get) && current.get.safe){
 							current = current.get(part);
 						}else if(typeof current[part] == "undefined"){
 							current = current[part];
@@ -629,7 +647,7 @@ dojo.require("dojox.string.tokenize");
 							if(attr.substr(0, 5) == "attr:"){
 								attr = attr.slice(5);
 							}
-							dd.register._registry.attributes.push([attr, base + "." + path + "." + attr]);
+							dd.register._registry.attributes.push([attr.toLowerCase(), base + "." + path + "." + attr]);
 						}
 						key = key.toLowerCase();
 					}

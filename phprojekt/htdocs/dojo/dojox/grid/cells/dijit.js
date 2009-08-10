@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,6 +11,9 @@ dojo.provide("dojox.grid.cells.dijit");
 
 dojo.require("dojox.grid.cells");
 
+// TODO: shouldn't it be the test file's job to require these modules,
+// if it is using them?  Most of these modules aren't referenced by this file.
+
 dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.TimeTextBox");
 dojo.require("dijit.form.ComboBox");
@@ -20,16 +23,19 @@ dojo.require("dijit.form.TextBox");
 dojo.require("dijit.form.NumberSpinner");
 dojo.require("dijit.form.NumberTextBox");
 dojo.require("dijit.form.CurrencyTextBox");
-dojo.require("dijit.form.Slider");
+dojo.require("dijit.form.HorizontalSlider");
 dojo.require("dijit.Editor");
 
 (function(){
 	var dgc = dojox.grid.cells;
 	dojo.declare("dojox.grid.cells._Widget", dgc._Base, {
-		widgetClass: "dijit.form.TextBox",
+		widgetClass: dijit.form.TextBox,
 		constructor: function(inCell){
 			this.widget = null;
-			this.widgetClass = dojo.getObject(this.widgetClass);
+			if(typeof this.widgetClass == "string"){
+				dojo.deprecated("Passing a string to widgetClass is deprecated", "pass the widget class object instead", "2.0");
+				this.widgetClass = dojo.getObject(this.widgetClass);
+			}
 		},
 		formatEditing: function(inDatum, inRowIndex){
 			this.needFormatNode(inDatum, inRowIndex);
@@ -39,8 +45,16 @@ dojo.require("dijit.Editor");
 			return this.widget.attr('value');
 		},
 		setValue: function(inRowIndex, inValue){
-			if(this.widget&&this.widget.setValue){
-				this.widget.setValue(inValue);
+			if(this.widget&&this.widget.attr){
+				//Look for lazy-loading editor and handle it via its deferred.
+				if(this.widget.onLoadDeferred){
+					var self = this;
+					this.widget.onLoadDeferred.addCallback(function(){
+						self.widget.attr("value",inValue==null?"":inValue); 
+					});
+				}else{
+					this.widget.attr("value", inValue); 
+				}
 			}else{
 				this.inherited(arguments);
 			}
@@ -107,7 +121,7 @@ dojo.require("dijit.Editor");
 	}
 
 	dojo.declare("dojox.grid.cells.ComboBox", dgc._Widget, {
-		widgetClass: "dijit.form.ComboBox",
+		widgetClass: dijit.form.ComboBox,
 		getWidgetProps: function(inDatum){
 			var items=[];
 			dojo.forEach(this.options, function(o){
@@ -139,10 +153,10 @@ dojo.require("dijit.Editor");
 	}
 
 	dojo.declare("dojox.grid.cells.DateTextBox", dgc._Widget, {
-		widgetClass: "dijit.form.DateTextBox",
+		widgetClass: dijit.form.DateTextBox,
 		setValue: function(inRowIndex, inValue){
 			if(this.widget){
-				this.widget.setValue(new Date(inValue));
+				this.widget.attr('value', new Date(inValue));
 			}else{
 				this.inherited(arguments);
 			}
@@ -158,13 +172,13 @@ dojo.require("dijit.Editor");
 	}
 
 	dojo.declare("dojox.grid.cells.CheckBox", dgc._Widget, {
-		widgetClass: "dijit.form.CheckBox",
+		widgetClass: dijit.form.CheckBox,
 		getValue: function(){
 			return this.widget.checked;
 		},
 		setValue: function(inRowIndex, inValue){
-			if(this.widget&&this.widget.setAttribute){
-				this.widget.setAttribute("checked", inValue);
+			if(this.widget&&this.widget.attributeMap.checked){
+				this.widget.attr("checked", inValue);
 			}else{
 				this.inherited(arguments);
 			}
@@ -178,7 +192,7 @@ dojo.require("dijit.Editor");
 	}
 
 	dojo.declare("dojox.grid.cells.Editor", dgc._Widget, {
-		widgetClass: "dijit.Editor",
+		widgetClass: dijit.Editor,
 		getWidgetProps: function(inDatum){
 			return dojo.mixin({}, this.widgetProps||{}, {
 				height: this.widgetHeight || "100px"
@@ -203,7 +217,7 @@ dojo.require("dijit.Editor");
 			}
 		},
 		populateEditor: function(){
-			this.widget.setValue(this.content);
+			this.widget.attr('value', this.content);
 			this.widget.placeCursorAtEnd();
 		}
 	});
@@ -213,7 +227,7 @@ dojo.require("dijit.Editor");
 		var h = dojo.trim(dojo.attr(node, "widgetHeight")||"");
 		if(h){
 			if((h != "auto")&&(h.substr(-2) != "em")){
-				h = parseInt(w)+"px";
+				h = parseInt(h)+"px";
 			}
 			cell.widgetHeight = h;
 		}

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -63,7 +63,6 @@ dojox.io.windowName = {
 		// |		location = loc;
 		// |	};
 		// |	</script></html>
-		
 		args.url += (args.url.match(/\?/) ? '&' : '?') + "windowname=" + (args.authElement ? "auth" : true); // indicate our desire for window.name communication
 		var authElement = args.authElement;
 		var cleanup = function(result){
@@ -201,13 +200,13 @@ dojox.io.windowName = {
 			for(var i in query){
 				var values = query[i];
 				values = values instanceof Array ? values : [values];
-				for(j = 0; j < values.length; j++){
+				for(var j = 0; j < values.length; j++){
 					// create hidden inputs for all the parameters
 					var input = doc.createElement("input");
 					input.type = 'hidden';
 					input.name = i;
-					input.value = values[j];				
-					form.appendChild(input);	
+					input.value = values[j];
+					form.appendChild(input);
 				}
 			}
 			form.method = 'POST';

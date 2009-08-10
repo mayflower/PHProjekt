@@ -20,7 +20,7 @@ function findTempDirectory()
     elseif(is_writable("/winnt/temp")) return "/winnt/temp";
     else return null;
   }
-function trace($txt){
+function trace($txt, $isArray=false){
 	//creating a text file that we can log to
 	// this is helpful on a remote server if you don't
 	//have access to the log files
@@ -28,13 +28,17 @@ function trace($txt){
 	//echo($txt."<br/>");
 	$log = new cLOG("../resources/upload.txt", false);
 	//$log->clear();
-	$log->write($txt);
+	if($isArray){
+		$log->printr($txt);
+	}else{
+		$log->write($txt);
+	}
 }
 function getImageType($filename){
 	return strtolower(substr(strrchr($filename,"."),1));
 }
 trace("---------------------------------------------------------");
-trace("TmpDir:".findTempDirectory());
+
 //
 //
 //	EDIT ME: According to your local directory structure.
@@ -49,73 +53,156 @@ $download_path = "../resources/";	// same folder as above, but relative to the H
 require("../../../dojo/tests/resources/JSON.php");
 $json = new Services_JSON();
 
+//
+// 	Determine if this is a Flash upload, or an HTML upload
+//	
+//
 
-if( isset($_FILES['Filedata'])){
+//		First combine relavant postVars
+$postdata = array();
+$data = "";
+foreach ($_POST as $nm => $val) {
+	$data .= $nm ."=" . $val . ",";	// string for flash
+	$postdata[$nm] = $val;			// array for html
+}
+trace("POSTDATA:");
+trace($postdata, true);
+
+$fieldName = "flashUploadFiles";//Filedata";
+
+if( isset($_FILES[$fieldName])){
 	//
-	// If the data passed has 'Filedata', then it's Flash. That's the default fieldname used.
+	// If the data passed has $fieldName, then it's Flash.
+	// NOTE: "Filedata" is the default fieldname, but we're using a custom fieldname.
 	//
 	trace("returnFlashdata.... ");
-	$returnFlashdata = true;
-	$m = move_uploaded_file($_FILES['Filedata']['tmp_name'],  $upload_path . $_FILES['Filedata']['name']);
-	trace("moved:" . $m);
-	$file = $upload_path . $_FILES['Filedata']['name'];
-	list($width, $height) = getimagesize($file);
+	
+	trace("");
+	trace("ID:");
+	trace($_POST['testId']);
+	
+	trace("Flash POST:");
+	trace($_POST, true);
+	
+	
+	
+	trace("GET:");
+	trace($_GET, true);
+	
+	trace("FILES:");
+	trace($_FILES[$fieldName], true);
+	
+	trace("REQUEST:");
+	trace($_REQUEST, true);
+	
+	
+	
+	
+	
+	$returnFlashdata = true; //for dev
+	$m = move_uploaded_file($_FILES[$fieldName]['tmp_name'],  $upload_path . $_FILES[$fieldName]['name']);
+	$name = $_FILES[$fieldName]['name'];
+	$file = $upload_path . $name;
+	try{
+	  list($width, $height) = getimagesize($file);
+	} catch(Exception $e){
+	  $width=0;
+	  $height=0;
+	}
 	$type = getImageType($file);
 	trace("file: " . $file ."  ".$type." ".$width);
 	// 		Flash gets a string back:
-	$data ='file='.$file.',width='.$width.',height='.$height.',type='.$type;
+	
+	$data .='file='.$file.',name='.$name.',width='.$width.',height='.$height.',type='.$type;
 	if($returnFlashdata){
-		trace("returnFlashdata");
+		trace("returnFlashdata:\n=======================");
+		trace($data);
+		trace("=======================");
+		// echo sends data to Flash:
 		echo($data);
-		return $data;
+		// return is just to stop the script:
+		return;
 	}
+
+
+
 
 }elseif( isset($_FILES['uploadedfile']) ){
 	//
 	// 	If the data passed has 'uploadedfile', then it's HTML. 
-	//	There may be better ways to check this, but this is just a test file.$returnFlashdata = false;
+	//	There may be better ways to check this, but this *is* just a test file.
 	//
 	$m = move_uploaded_file($_FILES['uploadedfile']['tmp_name'],  $upload_path . $_FILES['uploadedfile']['name']);
-	trace("moved:".$m);
-	trace("Temp:".$_FILES['uploadedfile']['tmp_name']);
-	$file = $upload_path . $_FILES['uploadedfile']['name'];
+	
+	trace("HTML single POST:");
+	trace($postdata, true);
+	
+	$name = $_FILES['uploadedfile']['name'];
+	$file = $upload_path . $name;
 	$type = getImageType($file);
-	list($width, $height) = getimagesize($file);
+	try{
+	  list($width, $height) = getimagesize($file);
+	} catch(Exception $e){
+	  $width=0;
+	  $height=0;
+	}
 	trace("file: " . $file );
-	$ar = array(
-		'file' => $file,
-		'width' => $width,
-		'height' => $height,
-		'type'=> $type
-	);
+	
+	$postdata['file'] = $file;
+	$postdata['name'] = $name;
+	$postdata['width'] = $width;
+	$postdata['height'] = $height;
+	$postdata['type'] = $type;
+	$postdata['size'] = filesize($file);
 
 }elseif( isset($_FILES['uploadedfile0']) ){
 	//
 	//	Multiple files have been passed from HTML
 	//
 	$cnt = 0;
-	$ar = array();
+	trace("HTML multiple POST:");
+	trace($postdata, true);
+	
+	$_post = $postdata;
+	$postdata = array();
+	
 	while(isset($_FILES['uploadedfile'.$cnt])){
+	  trace("izzaa file");
 		$moved = move_uploaded_file($_FILES['uploadedfile'.$cnt]['tmp_name'],  $upload_path . $_FILES['uploadedfile'.$cnt]['name']);
+		trace("moved:" . $moved ."  ". $_FILES['uploadedfile'.$cnt]['name']);
 		if($moved){
-			$file = $upload_path . $_FILES['uploadedfile'.$cnt]['name'];
+			$name = $_FILES['uploadedfile'.$cnt]['name'];
+			$file = $upload_path . $name;
 			$type = getImageType($file);
-			list($width, $height) = getimagesize($file);
+			try{
+			  list($width, $height) = getimagesize($file);
+			} catch(Exception $e){
+			  $width=0;
+			  $height=0;
+			}
 			trace("file: " . $file );
-			$ar[] = array(
-				'file' => $file,
-				'width' => $width,
-				'height' => $height,
-				'type'=> $type
-			);
+			
+			$_post['file'] = $file;
+			$_post['name'] = $name;
+			$_post['width'] = $width;
+			$_post['height'] = $height;
+			$_post['type'] = $type;
+			$_post['size'] = filesize($file);
+		  
+			trace($_post, true);
+			
+			$postdata[$cnt] = $_post;
+			
+		}elseif(strlen($_FILES['uploadedfile'.$cnt]['name'])){
+		  $postdata[$cnt] =array("ERROR" => "File could not be moved: ".$_FILES['uploadedfile'.$cnt]['name']);
 		}
 		$cnt++;
 	}
-	
-}else{
-	//
-	//	deleting files
-	//
+	trace("HTML multiple POST done:");
+	foreach($postdata as $key => $value){
+		trace($value, true);
+	}
+}elseif(isset($_GET['rmFiles'])){
 	trace("DELETING FILES" . $_GET['rmFiles']);
 	$rmFiles = explode(";", $_GET['rmFiles']);
 	foreach($rmFiles as $f){
@@ -123,11 +210,16 @@ if( isset($_FILES['Filedata'])){
 			trace("deleted:" . $f. ":" .unlink($f));
 		}
 	}
-	return;
+
+}else{
+	trace("IMROPER DATA SENT... $FILES:");
+	trace($_FILES);
+	$postdata = array("ERROR" => "Improper data sent - no files found");
 }
 
 //HTML gets a json array back:
-$data = $json->encode($ar);
+$data = $json->encode($postdata);
+trace("Json Data Returned:");
 trace($data);
 // in a text field:
 ?>

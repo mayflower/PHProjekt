@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -46,6 +46,14 @@ dojox.json.schema.checkPropertyChange = function(/*Any*/value,/*Object*/schema){
 	//
 	return this._validate(value,schema,true);
 };
+dojox.json.schema.mustBeValid = function(result){
+	//	summary:
+	//		This checks to ensure that the result is valid and will throw an appropriate error message if it is not
+	// result: the result returned from checkPropertyChange or validate
+	if(!result.valid){
+		throw new Error(dojo.map(result.errors,function(error){return error.property + ' ' + error.message;}).join(","));
+	}	
+}
 dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolean*/ _changing){
 	
 	var errors = [];
@@ -79,7 +87,7 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 				if(typeof type == 'string' && type != 'any' && 
 						(type == 'null' ? value !== null : typeof value != type) && 
 						!(value instanceof Array && type == 'array') &&
-						!(type == 'integer' && !(value%1))){
+						!(type == 'integer' && value%1===0)){
 					return [{property:path,message:(typeof value) + " value found, but a " + type + " is required"}];
 				}
 				if(type instanceof Array){
@@ -110,7 +118,7 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 				}
 				if(value instanceof Array){
 					if(schema.items){
-						for(i =0,l=value.length; i < l; i++){
+						for(i=0,l=value.length; i<l; i++){
 							errors.concat(checkProp(value[i],schema.items,path,i));
 						}							
 					}
@@ -178,9 +186,9 @@ dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolea
 			}
 		}
 		for(i in instance){
-			if(instance.hasOwnProperty(i) && objTypeDef && !objTypeDef[i] && additionalProp===false){
+			if(instance.hasOwnProperty(i) && (i.charAt(0) != '_' || i.charAt(0) != '_') && objTypeDef && !objTypeDef[i] && additionalProp===false){
 				errors.push({property:path,message:(typeof value) + "The property " + i +
-						" is not defined in the objTypeDef and the objTypeDef does not allow additional properties"});
+						" is not defined in the schema and the schema does not allow additional properties"});
 			}
 			var requires = objTypeDef && objTypeDef[i] && objTypeDef[i].requires;
 			if(requires && !(requires in instance)){

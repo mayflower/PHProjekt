@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,7 +9,7 @@ if(!dojo._hasResource["dojox.data.HtmlTableStore"]){ //_hasResource checks added
 dojo._hasResource["dojox.data.HtmlTableStore"] = true;
 dojo.provide("dojox.data.HtmlTableStore");
 
-dojo.require("dojox.data.dom");
+dojo.require("dojox.xml.parser");
 dojo.require("dojo.data.util.simpleFetch");
 dojo.require("dojo.data.util.filter");
 
@@ -78,7 +78,7 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 		//		attributes (cells in a row), can have a reasonable name.
 		this._headings = [];
 		dojo.forEach(this._rootNode.tHead.rows[0].cells, dojo.hitch(this, function(th){
-			this._headings.push(dojox.data.dom.textContent(th));
+			this._headings.push(dojox.xml.parser.textContent(th));
 		}));
 	},
 	
@@ -139,7 +139,7 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 		var index = this._assertIsAttribute(attribute);
 
 		if(index>-1){
-			return [dojox.data.dom.textContent(item.cells[index])] ;
+			return [dojox.xml.parser.textContent(item.cells[index])] ;
 		}
 		return []; //Array
 	},

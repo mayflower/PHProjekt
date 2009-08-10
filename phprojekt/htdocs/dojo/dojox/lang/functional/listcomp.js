@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -21,8 +21,8 @@ dojo.provide("dojox.lang.functional.listcomp");
 
 	var listcomp = function(/*String*/ s){
 		var frag = s.split(g_re), act = s.match(g_re),
-			head = ["var r = [];"], tail = [];
-		for(var i = 0; i < act.length;){
+			head = ["var r = [];"], tail = [], i = 0, l = act.length;
+		while(i < l){
 			var a = act[i], f = frag[++i];
 			if(a == "for" && !/^\s*\(\s*(;|var)/.test(f)){
 				f = f.replace(/^\s*\(/, "(var ");

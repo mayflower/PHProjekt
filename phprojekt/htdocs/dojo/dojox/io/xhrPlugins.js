@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -146,18 +146,20 @@ dojo.require("dojo._base.xhr");
 		return function(method,args,hasBody){
 			var content = {};
 			var parameters = {};
-			if(!(method == "GET" || method == "POST")){
+			if(method != "GET"){
 				parameters["http-method"] = method;
-				method = "POST";
 				if(args.putData && noRawBody){
 					content["http-content"] = args.putData;
 					delete args.putData;
 					hasBody = false;
 				}
-			}else if(method=="POST" && args.postData && noRawBody){
-				content["http-content"] = args.postData;
-				delete args.postData;
-				hasBody = false;
+				if(args.postData && noRawBody){
+					content["http-content"] = args.postData;
+					delete args.postData;
+					hasBody = false;
+				}
+				method = "POST";
+			
 			}
 			for(var i in args.headers){
 				var parameterName = i.match(/^X-/) ? i.substring(2).replace(/-/g,'_').toLowerCase() : ("http-" + i);

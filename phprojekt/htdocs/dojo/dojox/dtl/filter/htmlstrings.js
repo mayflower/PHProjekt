@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -25,7 +25,7 @@ dojo.mixin(dojox.dtl.filter.htmlstrings, {
 		value = value.replace(dh._linebreaksrn, "\n");
 		var parts = value.split(dh._linebreaksn);
 		for(var i = 0; i < parts.length; i++){
-			var part = parts[i].replace(dh._linebreakss, "").replace(dh._linebreaksbr, "<br />")
+			var part = parts[i].replace(dh._linebreakss, "").replace(dh._linebreaksbr, "<br />");
 			output.push("<p>" + part + "</p>");
 		}
 

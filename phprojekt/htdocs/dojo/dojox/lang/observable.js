@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -115,11 +115,11 @@ dojox.lang.makeObservable = function(/*function*/onRead,/*function*/onWrite,/*fu
 				throw new Error("Can wrap an object that is already wrapped");
 			}			
 			// create the class
-			var props = [];
-			for(var i in hiddenFunctions){
+			var props = [], i, l;
+			for(i in hiddenFunctions){
 				props.push(i);
 			}
-			vbReservedWords = {type:1,event:1};
+			var vbReservedWords = {type:1,event:1};
 			// find the unique signature for the class so we can reuse it if possible
 			for(i in wrapped){ 
 				if(i.match(/^[a-zA-Z][\w\$_]*$/) && !(i in hiddenFunctions) && !(i in vbReservedWords)){ //can only do properties with valid vb names/tokens and primitive values
@@ -135,7 +135,7 @@ dojox.lang.makeObservable = function(/*function*/onRead,/*function*/onWrite,/*fu
 					"Class "+tname,
 					"	Public data__" // this our reference to the original object
 				];
-				for(i = 0,  l = props.length; i < l; i++){
+				for(i=0, l=props.length; i<l; i++){
 					prop = props[i];
 					var type = typeof wrapped[prop];
 					if(type == 'function' || hiddenFunctions[prop]){ // functions must go in regular properties for delegation:/

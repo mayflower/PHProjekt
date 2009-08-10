@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -53,6 +53,11 @@ dojo.declare("dojox.grid._Layout", null, {
 		}
 		dest_cells.splice(target_ri, 0, cell);
 
+		var sortedCell = this.grid.getCell(this.grid.getSortIndex());
+		if(sortedCell){
+			sortedCell._currentlySorted = this.grid.getSortAsc();
+		}
+
 		this.cells = [];
 		var cellIndex = 0;
 		for(var i=0, v; v=this.structure[i]; i++){
@@ -60,6 +65,12 @@ dojo.declare("dojox.grid._Layout", null, {
 				for(var k=0, c; c=cs[k]; k++){
 					c.index = cellIndex;
 					this.cells.push(c);
+					if("_currentlySorted" in c){
+						var si = cellIndex + 1;
+						si *= c._currentlySorted ? 1 : -1;
+						this.grid.sortInfo = si;
+						delete c._currentlySorted;
+					}
 					cellIndex++;
 				}
 			}
@@ -73,7 +84,6 @@ dojo.declare("dojox.grid._Layout", null, {
 		if(cell.hidden == visible){
 			cell.hidden = !visible;
 			var v = cell.view, w = v.viewWidth;
-			v.convertColPctToFixed();
 			if(w && w != "auto"){
 				v._togglingColumn = dojo.marginBox(cell.getHeaderNode()).w || 0;
 			}
@@ -90,10 +100,12 @@ dojo.declare("dojox.grid._Layout", null, {
 			var w = 0;
 			if(inDef.colSpan > 1){
 				w = 0;
-			}else if(!isNaN(inDef.width)){
-				w = inDef.width + "em";
 			}else{
-				w = inDef.width || self.defaultWidth;
+				w = inDef.width || self._defaultCellProps.width || self.defaultWidth;
+
+				if(!isNaN(w)){
+					w = w + "em";
+				}
 			}
 			return w;
 		};
@@ -128,7 +140,7 @@ dojo.declare("dojox.grid._Layout", null, {
 			// Check and calculate the sum of all relative widths
 			if(doRel && cell.relWidth){
 				relSum += cell.relWidth;
-			}else if (cell.width){
+			}else if(cell.width){
 				var w = cell.width;
 				if(typeof w == "string" && w.slice(-1) == "%"){
 					pctSum += window.parseInt(w, 10);
@@ -168,6 +180,9 @@ dojo.declare("dojox.grid._Layout", null, {
 	
 	addViewDef: function(inDef){
 		this._defaultCellProps = inDef.defaultCell || {};
+		if(inDef.width && inDef.width == "auto"){
+			delete inDef.width;
+		}
 		return dojo.mixin({}, inDef, {cells: this.addRowsDef(inDef.rows || inDef.cells)});
 	},
 	

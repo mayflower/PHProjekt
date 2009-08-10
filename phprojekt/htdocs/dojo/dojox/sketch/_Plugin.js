@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -37,7 +37,7 @@ dojo.declare("dojox.sketch._Plugin", null, {
 			var className = this.iconClassPrefix+" "+this.iconClassPrefix + this.shape.charAt(0).toUpperCase() + this.shape.substr(1);
 			if(!this.button){
 				var props = {
-					label: this.shape,
+					label: this.shape, //I18N
 					showLabel: false,
 					iconClass: className,
 					dropDown: this.dropDown,
@@ -49,11 +49,7 @@ dojo.declare("dojox.sketch._Plugin", null, {
 		}
 	},
 	attr: function(name,/*?*/value){
-		if(arguments.length>1){
-			this.button.setAttribute(name,value);
-		}else{
-			this.button.getAttribute(name);
-		}
+		return this.button.attr(name,value);
 	},
 	onActivate: function(){},
 	activate: function(/*?*/e){

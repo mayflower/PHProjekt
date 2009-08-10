@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -77,13 +77,12 @@ dojo.declare("dojox.fx.Shadow",
 		// summary: append a shadow pieces to the node, and position it
 		var img;
 		var url = this.shadowPng + name.toUpperCase() + ".png";
-		if(dojo.isIE<7){
-			img=document.createElement("div");
+		if(dojo.isIE < 7){
+			img = dojo.create("div");
 			img.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+url+"'"+
 				(sizing?", sizingMethod='"+sizing+"'":"") + ")";
 		}else{
-			img=document.createElement("img");
-			img.src=url;
+			img = dojo.create("img", { src:url });
 		}
 
 		img.style.position="absolute"; 

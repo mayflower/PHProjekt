@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -273,7 +273,7 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 		var selector = rule['selectorText'];
 		var s = selector.split(" ");
 		var classes = [];
-		for(j = 0; j < s.length; j++){
+		for(var j=0; j<s.length; j++){
 			var tmp = s[j];
 			var first = tmp.indexOf('.');
 			if(tmp && tmp.length > 0 && first !== -1){
@@ -343,7 +343,7 @@ dojo.declare("dojox.data.CssRuleStore", null, {
 				var item = request._items[i];
 				// Per https://bugs.webkit.org/show_bug.cgi?id=17935 , Safari 3.x always returns the selectorText 
 				// of a rule in full lowercase.
-				var ignoreCase = dojo.isSafari ? true : (request.queryOptions ? request.queryOptions.ignoreCase : false); 
+				var ignoreCase = dojo.isWebKit ? true : (request.queryOptions ? request.queryOptions.ignoreCase : false); 
 				var regexpList = {};
 				var key;
 				var value;

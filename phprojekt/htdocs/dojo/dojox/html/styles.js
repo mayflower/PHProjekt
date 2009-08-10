@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,10 +9,10 @@ if(!dojo._hasResource["dojox.html.styles"]){ //_hasResource checks added by buil
 dojo._hasResource["dojox.html.styles"] = true;
 dojo.provide("dojox.html.styles");
 	
-	// summary
+	// summary:
 	//		Methods for creating and minipulating dynamic CSS Styles and Style Sheets
 	//
-	// USAGE:
+	// example:
 	//		| dojox.html.createStyle("#myDiv input", "font-size:24px");
 	//			Creates Style #myDiv input, which can now be applied to myDiv, and 
 	//			the inner input will be targeted
@@ -26,8 +26,8 @@ dojo.provide("dojox.html.styles");
 	var titledSheets = [];
 	var styleIndicies = [];
 	
-	dojox.html.insertCssRule = function(selector, declaration, styleSheetName){
-		// summary
+	dojox.html.insertCssRule = function(/*String*/selector, /*String*/declaration, /*String*/styleSheetName){
+		// summary:
 		//	Creates a style and attaches it to a dynamically created stylesheet
 		//	arguments:
 		//		selector: 	
@@ -50,26 +50,27 @@ dojo.provide("dojox.html.styles");
 		//
 		var ss = dojox.html.getDynamicStyleSheet(styleSheetName);
 		var styleText = selector + " {" + declaration + "}";
-		
+		console.log("insertRule:", styleText)
 		if(dojo.isIE){
 			// Note: check for if(ss.cssText) does not work
 			ss.cssText+=styleText;
+			console.log("ss.cssText:", ss.cssText)
 		}else if(ss.sheet){
 			ss.sheet.insertRule(styleText, ss._indicies.length);
 		}else{
 			ss.appendChild(dojo.doc.createTextNode(styleText));
 		}
 		ss._indicies.push(selector+" "+declaration);
-		return selector;
+		return selector; // String 
 	
 	}
 	
-	dojox.html.removeCssRule = function(selector, declaration, styleSheetName){
-		// summary
-		//	Removes a cssRule base on the selector and declaration passed
-		//	The declaration is needed for cases of dupe selectors
-		// NOTE: Only removes DYNAMICALLY created cssRules. If you 
-		//	created it with dojox.html.insertCssRule, it can be removed.
+	dojox.html.removeCssRule = function(/*String*/selector, /*String*/declaration, /*String*/styleSheetName){
+		// summary:
+		//		Removes a cssRule base on the selector and declaration passed
+		//		The declaration is needed for cases of dupe selectors
+		// description: Only removes DYNAMICALLY created cssRules. If you 
+		//		created it with dojox.html.insertCssRule, it can be removed.
 		//
 		var ss;
 		var index=-1;
@@ -106,11 +107,11 @@ dojo.provide("dojox.html.styles");
 			console.log("what browser hath useth thith?")
 			//
 		}
-		return true;
+		return true; //Boolean
 		
 	}
 	
-	/*
+	/* TODO
 	dojox.html.modifyCssRule = function(selector, declaration, styleSheetName){
 		Not implemented - it seems to have some merit for changing some complex 
 		selectors. It's not much use for changing simple ones like "span".
@@ -120,17 +121,17 @@ dojo.provide("dojox.html.styles");
 	}
 	*/
 	
-	dojox.html.getStyleSheet = function(styleSheetName){
-		// summary
-		//	Returns a style sheet based on the argument.
-		//	Searches dynamic style sheets first. If no matches,
-		//	searches document style sheets.
+	dojox.html.getStyleSheet = function(/*String*/styleSheetName){
+		// summary:
+		//		Returns a style sheet based on the argument.
+		//		Searches dynamic style sheets first. If no matches,
+		//		searches document style sheets.
 		//
 		// argument: (optional)
 		//		A title or an href to a style sheet. Title can be 
 		//		an attribute in a tag, or a dynamic style sheet 
 		//		reference. Href can be the name of the file.
-		//		If no argument, the assumed crated dynamic style 
+		//		If no argument, the assumed created dynamic style 
 		//		sheet is used.
 		
 		// try dynamic sheets first 
@@ -157,16 +158,16 @@ dojo.provide("dojox.html.styles");
 				return allSheets[nm];
 			}
 		}
-		return false;
+		return false; //StyleSheet or false
 	}
 	
-	dojox.html.getDynamicStyleSheet = function(styleSheetName){
-		// summary
-		//	Creates and returns a dynamically created style sheet
-		// used for dynamic styles
+	dojox.html.getDynamicStyleSheet = function(/*String*/styleSheetName){
+		// summary:
+		//		Creates and returns a dynamically created style sheet
+		// 		used for dynamic styles
 		//
 		//	argument:
-		//		styleSheetName /* optional String */
+		//			styleSheetName /* optional String */
 		//			The name given the style sheet so that multiple 
 		//			style sheets can be created and referenced. If 
 		//			no argument is given, the name "default" is used.
@@ -175,8 +176,10 @@ dojo.provide("dojox.html.styles");
 		
 		if(!dynamicStyleMap[styleSheetName]){
 			if(dojo.doc.createStyleSheet){ //IE
-				dynamicStyleMap[styleSheetName] = dojo.doc.createStyleSheet(styleSheetName);
+			
+				dynamicStyleMap[styleSheetName] = dojo.doc.createStyleSheet();
 				dynamicStyleMap[styleSheetName].title = styleSheetName;
+
 			}else{
 				dynamicStyleMap[styleSheetName] = dojo.doc.createElement("style");
 				dynamicStyleMap[styleSheetName].setAttribute("type", "text/css");
@@ -187,13 +190,13 @@ dojo.provide("dojox.html.styles");
 		}
 		
 		
-		return dynamicStyleMap[styleSheetName];
+		return dynamicStyleMap[styleSheetName]; //StyleSheet
 	}
 
-	dojox.html.enableStyleSheet = function(styleSheetName){
-		// summary
-		//	Enables the style sheet with the name passed in the
-		//	argument. Deafults to the default style sheet.
+	dojox.html.enableStyleSheet = function(/*String*/styleSheetName){
+		// summary:
+		//		Enables the style sheet with the name passed in the
+		//		argument. Deafults to the default style sheet.
 		//
 		var ss = dojox.html.getStyleSheet(styleSheetName);
 		if(ss){ 
@@ -206,9 +209,9 @@ dojo.provide("dojox.html.styles");
 	}
 
 	dojox.html.disableStyleSheet = function(styleSheetName){
-		// summary
-		//	Disables the dynamic style sheet with the name passed in the
-		//	argument. If no arg is passed, defaults to the default style sheet.
+		// summary:
+		//		Disables the dynamic style sheet with the name passed in the
+		//		argument. If no arg is passed, defaults to the default style sheet.
 		//
 		var ss = dojox.html.getStyleSheet(styleSheetName);
 		if(ss){ 
@@ -220,15 +223,15 @@ dojo.provide("dojox.html.styles");
 		}
 	}
 	
-	dojox.html.activeStyleSheet = function(title /* optional */){
-		// summary
-		//	Getter/Setter
+	dojox.html.activeStyleSheet = function(/*?String*/title){
+		// summary:
+		//		Getter/Setter
+		// description:
+		//		If passed a title, enables a that style sheet. All other
+		//		toggle-able style sheets are disabled.
+		//		If no argument is passed, returns currently enabled
+		//		style sheet.
 		//
-		//	If passed a title, enables a that style sheet. All other
-		//	toggle-able style sheets are disabled.
-		//
-		//	If no argument is passed, returns currently enabled
-		//	style sheet.
 		var sheets = dojox.html.getToggledStyleSheets();
 		if(arguments.length == 1){
 			//console.log("sheets:", sheets);
@@ -243,7 +246,7 @@ dojo.provide("dojox.html.styles");
 				}
 			}
 		}
-		return true;
+		return true; //StyleSheet or Boolean - FIXME - doesn't make a lot of sense
 	}
 	
 	dojox.html.getPreferredStyleSheet = function(){
@@ -258,14 +261,12 @@ dojo.provide("dojox.html.styles");
 	
 	
 	dojox.html.getToggledStyleSheets = function(){
-		// summary
-		//	Searches HTML for style sheets that are "toggle-able" - 
-		//	can be enabled and disabled. These would include sheets
-		//	with the title attribute, as well as the REL attribute.
-		//
+		// summary:
+		//		Searches HTML for style sheets that are "toggle-able" - 
+		//		can be enabled and disabled. These would include sheets
+		//		with the title attribute, as well as the REL attribute.
 		//	returns:
 		//		An array of all toggle-able style sheets
-		//
 		//	TODO: 	Sets of style sheets could be grouped according to
 		//			an ID and used in sets, much like different
 		//			groups of radio buttons. It would not however be
@@ -281,14 +282,14 @@ dojo.provide("dojox.html.styles");
 				}
 			}
 		}
-		return titledSheets;
+		return titledSheets; //Array
 	}
 	
 	
 	dojox.html.getStyleSheets = function(){
-		// summary
-		//	Collects all the style sheets referenced in the HTML page,
-		//	including any incuded via @import. 
+		// summary:
+		//		Collects all the style sheets referenced in the HTML page,
+		//		including any incuded via @import. 
 		//
 		//	returns: 
 		//		An hash map of all the style sheets.
@@ -344,7 +345,7 @@ dojo.provide("dojox.html.styles");
 		
 		
 		pageStyleSheets.collected = true;
-		return pageStyleSheets;
+		return pageStyleSheets; //Object
 	}
 	
 

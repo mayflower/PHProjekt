@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -286,7 +286,7 @@ dojo.require("dojo.html");
 			// .. you'll have no practical way to do this)
 			if(this._styleNodes && this._styleNodes.length){
 				while(this._styleNodes.length){
-					dojo._destroyElement(this._styleNodes.pop());
+					dojo.destroy(this._styleNodes.pop());
 				}
 			}
 			// render new style nodes
@@ -321,7 +321,7 @@ dojo.require("dojo.html");
 			// references to the style nodes we added
 			if(this._styleNodes && this._styleNodes.length){
 				while(this._styleNodes.length){
-					dojo._destroyElement(this._styleNodes.pop());
+					dojo.destroy(this._styleNodes.pop());
 				}
 			}
 			delete this._styleNodes; 

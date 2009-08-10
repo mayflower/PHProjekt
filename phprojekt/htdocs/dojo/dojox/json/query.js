@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -63,6 +63,35 @@ dojo.provide("dojox.json.query");
 		}
 		return results;
 	}
+	
+	function distinctFilter(array, callback){
+		// does the filter with removal of duplicates in O(n)
+		var outArr = [];
+		var primitives = {};
+		for(var i=0,l=array.length; i<l; ++i){
+			var value = array[i];
+			if(callback(value, i, array)){
+				if((typeof value == 'object') && value){
+					// with objects we prevent duplicates with a marker property
+					if(!value.__included){
+						value.__included = true;
+						outArr.push(value);
+					}
+				}else if(!primitives[value + typeof value]){
+					// with primitives we prevent duplicates by putting it in a map 
+					primitives[value + typeof value] = true;
+					outArr.push(value);
+				}
+			}
+		}
+		for(i=0,l=outArr.length; i<l; ++i){
+			// cleanup the marker properties
+			if(outArr[i]){
+				delete outArr[i].__included;
+			}
+		}
+		return outArr;
+	}
 	dojox.json.query = function(/*String*/query,/*Object?*/obj){
 		// summary:
 		// 		Performs a JSONQuery on the provided object and returns the results. 
@@ -96,6 +125,9 @@ dojo.provide("dojox.json.query");
 		//		need to be in brackets, you can simply use ?expression, but since it does not
 		//		have any containment, no operators can be used afterwards when used 
 		// 		without brackets.
+		//		* [^?expression] - This will perform a distinct filter operation on an array. This behaves
+		//		as [?expression] except that it will remove any duplicate values/objects from the 
+		//		result set.
 		// 		* [/expression], [\expression], [/expression, /expression] - This performs a sort 
 		// 		operation on an array, with sort based on the provide expression. Multiple comma delimited sort
 		// 		expressions can be provided for multiple sort orders (first being highest priority). /
@@ -152,7 +184,6 @@ dojo.provide("dojox.json.query");
 		// 	 	This finds objects in array with a price less than 15.00 and sorts then
 		// 		by rating, highest rated first, and returns the first ten items in from this
 		// 		filtered and sorted list.
-		tokens = [];
 		var depth = 0;	
 		var str = [];
 		query = query.replace(/"(\\.|[^"\\])*"|'(\\.|[^'\\])*'|[\[\]]/g,function(t){
@@ -166,10 +197,10 @@ dojo.provide("dojox.json.query");
 			// creates a function call and puts the expression so far in a parameter for a call 
 			prefix = name + "(" + prefix;
 		}
-		function makeRegex(t,a,b,c,d){
+		function makeRegex(t,a,b,c,d,e,f,g){
 			// creates a regular expression matcher for when wildcards and ignore case is used 
-			return str[d].match(/[\*\?]/) ?
-					"/" + str[d].substring(1,str[d].length-1).replace(/\\([btnfr\\"'])|([^\w\*\?])/g,"\\$1$2").replace(/([\*\?])/g,".$1") + (c == '~' ? '/i' : '/') + ".test(" + a + ")" :
+			return str[g].match(/[\*\?]/) || f == '~' ?
+					"/^" + str[g].substring(1,str[g].length-1).replace(/\\([btnfr\\"'])|([^\w\*\?])/g,"\\$1$2").replace(/([\*\?])/g,"[\\w\\W]$1") + (f == '~' ? '$/i' : '$/') + ".test(" + a + ")" :
 					t;
 		}
 		query.replace(/(\]|\)|push|pop|shift|splice|sort|reverse)\s*\(/,function(){
@@ -180,10 +211,10 @@ dojo.provide("dojox.json.query");
 			replace(/@|(\.\s*)?[a-zA-Z\$_]+(\s*:)?/g,function(t){
 				return t.charAt(0) == '.' ? t : // leave .prop alone 
 					t == '@' ? "$obj" :// the reference to the current object 
-					(t.match(/:|^(\$|Math)$/) ? "" : "$obj.") + t; // plain names should be properties of root... unless they are a label in object initializer
+					(t.match(/:|^(\$|Math|true|false|null)$/) ? "" : "$obj.") + t; // plain names should be properties of root... unless they are a label in object initializer
 			}).
 			replace(/\.?\.?\[(`\]|[^\]])*\]|\?.*|\.\.([\w\$_]+)|\.\*/g,function(t,a,b){
-				var oper = t.match(/^\.?\.?(\[\s*\?|\?|\[\s*==)(.*?)\]?$/); // [?expr] and ?expr and [=expr and =expr
+				var oper = t.match(/^\.?\.?(\[\s*\^?\?|\^?\?|\[\s*==)(.*?)\]?$/); // [?expr] and ?expr and [=expr and =expr
 				if(oper){
 					var prefix = '';
 					if(t.match(/^\./)){
@@ -191,7 +222,7 @@ dojo.provide("dojox.json.query");
 						call("expand");
 						prefix = ",true)";
 					}
-					call(oper[1].match(/\=/) ? "dojo.map" : "dojo.filter");
+					call(oper[1].match(/\=/) ? "dojo.map" : oper[1].match(/\^/) ? "distinctFilter" : "dojo.filter");
 					return prefix + ",function($obj){return " + oper[2] + "})"; 
 				}
 				oper = t.match(/^\[\s*([\/\\].*)\]/); // [/sortexpr,\sortexpr]
@@ -201,7 +232,7 @@ dojo.provide("dojox.json.query");
 							return "var av= " + b.replace(/\$obj/,"a") + ",bv= " + b.replace(/\$obj/,"b") + // FIXME: Should check to make sure the $obj token isn't followed by characters
 									";if(av>bv||bv==null){return " + (a== "/" ? 1 : -1) +";}\n" +
 									"if(bv>av||av==null){return " + (a== "/" ? -1 : 1) +";}\n";
-					}) + "})";
+					}) + "return 0;})";
 				}
 				oper = t.match(/^\[(-?[0-9]*):(-?[0-9]*):?(-?[0-9]*)\]/); // slice [0:3]
 				if(oper){
@@ -218,9 +249,9 @@ dojo.provide("dojox.json.query");
 				}
 				return t;
 			}).
-			replace(/(\$obj\s*(\.\s*[\w_$]+\s*)*)(==|~)\s*`([0-9]+)/g,makeRegex). // create regex matching
-			replace(/`([0-9]+)\s*(==|~)\s*(\$obj(\s*\.\s*[\w_$]+)*)/g,function(t,a,b,c,d){ // and do it for reverse =
-				return makeRegex(t,c,d,b,a);
+			replace(/(\$obj\s*((\.\s*[\w_$]+\s*)|(\[\s*`([0-9]+)\s*`\]))*)(==|~)\s*`([0-9]+)/g,makeRegex). // create regex matching
+			replace(/`([0-9]+)\s*(==|~)\s*(\$obj\s*((\.\s*[\w_$]+)|(\[\s*`([0-9]+)\s*`\]))*)/g,function(t,a,b,c,d,e,f,g){ // and do it for reverse =
+				return makeRegex(t,c,d,e,f,g,b,a);
 			});
 		query = prefix + (query.charAt(0) == '$' ? "" : "$") + query.replace(/`([0-9]+|\])/g,function(t,a){
 			//restore the strings

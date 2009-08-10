@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -17,20 +17,18 @@ dojo.require("dijit._Container");
 dojo.declare("dojox.layout.ExpandoPane",
 	[dijit.layout.ContentPane, dijit._Templated, dijit._Contained],
 	{
-	// summary: An experimental expando-pane for dijit.layout.BorderContainer
+	// summary: An experimental collapsing-pane for dijit.layout.BorderContainer
 	//
 	// description:
 	//		Works just like a ContentPane inside of a borderContainer. Will expand/collapse on
 	//		command, and supports having Layout Children as direct descendants
-	//		via a custom "attachParent" attribute on the child.
+	//	
 
 	maxHeight: "",
 	maxWidth: "",
 	splitter: "",
-
+	
 	templateString:"<div class=\"dojoxExpandoPane\" dojoAttachEvent=\"ondblclick:toggle\" >\r\n\t<div dojoAttachPoint=\"titleWrapper\" class=\"dojoxExpandoTitle\">\r\n\t\t<div class=\"dojoxExpandoIcon\" dojoAttachPoint=\"iconNode\" dojoAttachEvent=\"onclick:toggle\"><span class=\"a11yNode\">X</span></div>\t\t\t\r\n\t\t<span class=\"dojoxExpandoTitleNode\" dojoAttachPoint=\"titleNode\">${title}</span>\r\n\t</div>\r\n\t<div class=\"dojoxExpandoWrapper\" dojoAttachPoint=\"cwrapper\" dojoAttachEvent=\"ondblclick:_trap\">\r\n\t\t<div class=\"dojoxExpandoContent\" dojoAttachPoint=\"containerNode\"></div>\r\n\t</div>\r\n</div>\r\n",
-
-	_showing: true,
 
 	// easeOut: String|Function
 	//		easing function used to hide pane
@@ -43,7 +41,9 @@ dojo.declare("dojox.layout.ExpandoPane",
 	// duration: Integer
 	//		duration to run show/hide animations
 	duration: 420,
-	
+
+	// startExpanded: Boolean
+	//		Does this widget start in an open (true) or closed (false) state
 	startExpanded: true, 
 
 	baseClass: "dijitExpandoPane",
@@ -61,15 +61,16 @@ dojo.declare("dojox.layout.ExpandoPane",
 			this.easeIn = dojo.getObject(this.easeIn); 
 		}
 	
-		var thisClass = "";
+		var thisClass = "", rtl = !this.isLeftToRight();
 		if(this.region){
-			// FIXME: add suport for alternate region types?
 			switch(this.region){
+				case "trailing" : 
 				case "right" :
-					thisClass = "Right";
+					thisClass = rtl ? "Left" : "Right";
 					break;
+				case "leading" : 
 				case "left" :
-					thisClass = "Left";
+					thisClass = rtl ? "Right" : "Left";
 					break;
 				case "top" :
 					thisClass = "Top";
@@ -87,11 +88,10 @@ dojo.declare("dojox.layout.ExpandoPane",
 		});
 	},
 	
-	startup: function(){
-		this.inherited(arguments);
+	_startupSizes: function(){
 		
 		this._container = this.getParent();
-		this._closedSize = this._titleHeight = dojo.marginBox/*_getBorderBox*/(this.titleWrapper).h;
+		this._closedSize = this._titleHeight = dojo.marginBox(this.titleWrapper).h;
 		
 		if(this.splitter){
 			// find our splitter and tie into it's drag logic
@@ -103,21 +103,24 @@ dojo.declare("dojox.layout.ExpandoPane",
 			}));
 		}
 		
-		this._currentSize = dojo.marginBox(this.domNode);
+		this._currentSize = dojo.contentBox(this.domNode);	// TODO: can compute this from passed in value to resize(), see _LayoutWidget for example
 		this._showSize = this._currentSize[(this._isHorizontal ? "h" : "w")];
 		this._setupAnims();
 
 		if(this.startExpanded){
 			this._showing = true;
 		}else{
+			this._showing = false;
 			this._hideWrapper();
 			this._hideAnim.gotoPercent(99,true);
 		}
+		
+		this._hasSizes = true;
 	},
 	
 	_afterResize: function(e){
-		var tmp = this._currentSize;
-		this._currentSize = dojo.marginBox(this.domNode);
+		var tmp = this._currentSize;						// the old size
+		this._currentSize = dojo.marginBox(this.domNode);	// the new size
 		var n = this._currentSize[(this._isHorizontal ? "h" : "w")] 
 		if(n > this._titleHeight){
 			if(!this._showing){	
@@ -132,7 +135,7 @@ dojo.declare("dojox.layout.ExpandoPane",
 			this._hideWrapper();
 			this._hideAnim.gotoPercent(89,true);
 		}
-
+		
 	},
 	
 	_setupAnims: function(){
@@ -140,15 +143,15 @@ dojo.declare("dojox.layout.ExpandoPane",
 		dojo.forEach(this._animConnects, dojo.disconnect);
 		
 		var _common = {
-			node:this.domNode,
-			duration:this.duration
-		};
+				node:this.domNode,
+				duration:this.duration
+			},
+			isHorizontal = this._isHorizontal,
+			showProps = {},
+			hideProps = {},
+			dimension = isHorizontal ? "height" : "width"
+		;
 
-		var isHorizontal = this._isHorizontal;
-		var showProps = {};
-		var hideProps = {};
-
-		var dimension = isHorizontal ? "height" : "width";
 		showProps[dimension] = { 
 			end: this._showSize, 
 			unit:"px" 
@@ -157,7 +160,7 @@ dojo.declare("dojox.layout.ExpandoPane",
 			end: this._closedSize, 
 			unit:"px"
 		};
-
+		
 		this._showAnim = dojo.animateProperty(dojo.mixin(_common,{
 			easing:this.easeIn,
 			properties: showProps 
@@ -198,26 +201,39 @@ dojo.declare("dojox.layout.ExpandoPane",
 	
 	_showEnd: function(){
 		// summary: Common animation onEnd code - "unclose"
-		dojo.style(this.cwrapper, { opacity: 0, visibility:"visible" });		
+		dojo.style(this.cwrapper, { opacity: 0, visibility:"visible" });
 		dojo.fadeIn({ node:this.cwrapper, duration:227 }).play(1);
 		dojo.removeClass(this.domNode, "dojoxExpandoClosed");
 		setTimeout(dojo.hitch(this._container, "layout"), 15);
 	},
 	
 	_hideEnd: function(){
+		// summary: Callback for the hide animation - "close"
 		setTimeout(dojo.hitch(this._container, "layout"), 15);
 	},
 	
-	resize: function(){
+	resize: function(/* Object? */psize){
 		// summary: we aren't a layout widget, but need to act like one:
-		var size = dojo.marginBox(this.domNode),
-			h = size.h - this._titleHeight;
-			
-		dojo.style(this.containerNode, "height", h + "px");
-		this.inherited(arguments);
+		//
+		// psize: Object
+		//		The size object optionally passed to us by our parent. 
+		
+		if(!this._hasSizes){ this._startupSizes(psize); }
+
+		// compute size of container (ie, size left over after title bar)
+		// it looks like two marginBox calls, but sometimes psize comes in with only one member
+		var	size = (psize && psize.h) ? psize : dojo.marginBox(this.domNode);
+		this._contentBox = {
+			w: size.w || dojo.marginBox(this.domNode).w,
+			h: size.h - this._titleHeight
+		};
+					
+		dojo.style(this.containerNode, "height", this._contentBox.h + "px");
+		this._layoutChildren();
 	},
 	
 	_trap: function(e){
+		// summary: Trap stray events
 		dojo.stopEvent(e);
 	}
 

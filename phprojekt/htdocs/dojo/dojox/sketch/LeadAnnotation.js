@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -90,29 +90,38 @@ dojo.require("dojox.sketch.Anchor");
 				s=d[2].split(",");
 				this.end.x=parseFloat(s[0],10);
 				this.end.y=parseFloat(s[1],10);
+				var stroke=this.property('stroke');
+				var style=c.getAttribute('style');
+				var m=style.match(/stroke:([^;]+);/);
+				if(m){
+					stroke.color=m[1];
+					this.property('fill',m[1]);
+				}
+				m=style.match(/stroke-width:([^;]+);/);
+				if(m){
+					stroke.width=m[1];
+				}
+				this.property('stroke',stroke);
 			}
 		}
 	};
 
 	p.initialize=function(obj){
-		var font=(ta.Annotation.labelFont)?ta.Annotation.labelFont:{family:"Times", size:"16px"};
 		this.apply(obj);
 		this._pos();
 
 		//	create either from scratch or based on the passed node
 		this.shape=this.figure.group.createGroup();
 		this.shape.getEventSource().setAttribute("id", this.id);
-		if(this.transform.dx || this.transform.dy){ this.shape.setTransform(this.transform); }
-		this.pathShape=this.shape.createPath("M"+this.start.x+","+this.start.y+" Q"+this.control.x+","+this.control.y+" "+this.end.x+","+this.end.y+" l0,0")
-			.setStroke(this.property('stroke'));
+		this.pathShape=this.shape.createPath("M"+this.start.x+","+this.start.y+" Q"+this.control.x+","+this.control.y+" "+this.end.x+","+this.end.y+" l0,0");
 		this.labelShape=this.shape.createText({
 				x:this.textPosition.x, 
 				y:this.textPosition.y, 
 				text:this.property('label'), 
 				align:this.textAlign
-			})
-			.setFont(font)
-			.setFill(this.property('fill'));
+			});
+		this.labelShape.getEventSource().setAttribute('id',this.id+"-labelShape");
+		this.draw();
 	};
 	p.destroy=function(){
 		if(!this.shape){ return; }
@@ -132,14 +141,14 @@ dojo.require("dojox.sketch.Anchor");
 		this.apply(obj);
 		this._pos();
 		this.shape.setTransform(this.transform);
-		this.pathShape.setShape("M"+this.start.x+","+this.start.y+" Q"+this.control.x+","+this.control.y+" "+this.end.x+","+this.end.y+" l0,0")
-			.setStroke(this.property('stroke'));
+		this.pathShape.setShape("M"+this.start.x+","+this.start.y+" Q"+this.control.x+","+this.control.y+" "+this.end.x+","+this.end.y+" l0,0");
 		this.labelShape.setShape({ 
 				x:this.textPosition.x, 
 				y:this.textPosition.y, 
 				text:this.property('label') 
 			})
 			.setFill(this.property('fill'));
+		this.zoom();
 	};
 	p.serialize=function(){
 		var stroke=this.property('stroke');

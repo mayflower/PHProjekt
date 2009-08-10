@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -370,7 +370,7 @@ dojo.declare('dojox.VirtualGrid',
 		// private: sets width and position for views and update grid width if necessary
 		var
 			w = this.autoWidth ? 0 : this.domNode.clientWidth || (this.domNode.offsetWidth - this._getPadBorder().w);
-			vw = this.views.arrange(1, w);
+			var vw = this.views.arrange(1, w);
 		this.views.onEach("adaptWidth");
 		if (this.autoWidth)
 			this.domNode.style.width = vw + "px";
@@ -463,7 +463,7 @@ dojo.declare('dojox.VirtualGrid',
 		if(--i.count === 0){
 			this.updating = false;
 			if(i.rows.length > 0){
-				for(r in i.rows){
+				for(var r in i.rows){
 					this.updateRow(Number(r));
 				}
 				this.invalidated.rows = [];

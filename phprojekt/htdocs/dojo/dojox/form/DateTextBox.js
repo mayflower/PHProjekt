@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,6 +10,7 @@ dojo._hasResource["dojox.form.DateTextBox"] = true;
 dojo.provide("dojox.form.DateTextBox");
 
 dojo.require("dojox.widget.Calendar");
+dojo.require("dojox.widget.CalendarViews");
 dojo.require("dijit.form._DateTimeTextBox");
 
 dojo.declare(
@@ -38,7 +39,6 @@ dojo.declare(
 		// summary:
 		//		A validating, serializable, range-bound date text box with a popup calendar that contains just months.
 		
-		
 		// popupClass: String
 		//  The popup widget to use. In this case, a calendar with just a Month view.
 		popupClass: "dojox.widget.DailyCalendar",
@@ -55,7 +55,7 @@ dojo.declare(
 			this._picker.onValueSelected = dojo.hitch(this, function(value){
 				this.focus(); // focus the textbox before the popup closes to avoid reopening the popup
 				setTimeout(dojo.hitch(this, "_close"), 1); // allow focus time to take
-				dijit.form.TextBox.prototype._setValueAttr.call(this,value.getDate(), true, value.getDate());
+				dijit.form.TextBox.prototype._setValueAttr.call(this, value, true, String(value.getDate()));
 			});			
 		}
 	}
@@ -68,10 +68,12 @@ dojo.declare(
 		// summary:
 		//		A validating, serializable, range-bound date text box with a popup calendar that contains just months.
 		
-		
 		// popupClass: String
 		//  The popup widget to use. In this case, a calendar with just a Month view.
 		popupClass: "dojox.widget.MonthlyCalendar",
+
+		format: function(value){return value + 1},
+
 		validator: function(value) {
 			var num = Number(value);
 			var isInt = /(^-?\d\d*$)/.test(String(value));
@@ -99,6 +101,7 @@ dojo.declare(
 		// popupClass: String
 		//  The popup widget to use. In this case, a calendar with just a Year view.
 		popupClass: "dojox.widget.YearlyCalendar",
+		format: function(value){return value;},
 		validator: function(value) {
 			return value == "" || value == null || /(^-?\d\d*$)/.test(String(value));
 		},

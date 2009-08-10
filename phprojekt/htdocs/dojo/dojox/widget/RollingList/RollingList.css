@@ -1,11 +1,29 @@
 .dojoxRollingList {
 	border: 1px solid #000;
 	height: 20em;
+	background-color: #FFF;
+	position: relative;
+}
+
+.dijitPopup .dojoxRollingList {
+	position: static;
+}
+
+.dojoxRollingListContainer {
 	overflow: scroll;
 	overflow-y: hidden;
 	overflow-x: scroll;
 	white-space: nowrap;
-	background-color: #FFF;
+}
+
+.dojoxRollingListButtons {
+	position: absolute;
+	right: 5px;
+	padding: 5px 0px;
+}
+
+.dojoxRollingListButtonsHidden .dojoxRollingListButtons {
+	display: none;
 }
 
 .dojoxRollingListPane {
@@ -22,12 +40,19 @@
 	#vertical-align: auto;	/* makes TextBox,Button line up w/native counterparts on IE6 */
 }
 
+.dojoxRollingListPane .dijitMenuItem td {
+	width: 1px;
+}
+.dojoxRollingListPane .dijitMenuItem td.dijitMenuItemLabel {
+	width: auto;
+}
+
 .dojoxRollingListPane .dijitMenuItemLabel,
 .dojoxRollingListPane .dijitMenuItemIcon {
 	position: static !important;
 }
 
-.dj_safari .dojoxRollingListPane,
+.dj_webkit .dojoxRollingListPane,
 .dj_ie .dojoxRollingListPane {
 	padding-right: 15px; /* Account for scroll bar */
 }
@@ -56,8 +81,11 @@
 }
 .tundra .dojoxRollingListPane .dojoxRollingListItemSelected {
 	color: #fff;
-	background-color: #3559ac;
+	background-color: #999;
 	font-weight: bold;
+}
+.tundra .dojoxRollingListPaneCurrentSelected .dojoxRollingListItemSelected {
+	background-color: #3559ac;
 }
 .tundra .dojoxRollingListPane .dojoxRollingListItemHoverSelected,
 .tundra .dojoxRollingListPane .dojoxRollingListItemFocusSelected {
@@ -82,8 +110,11 @@
 }
 .soria .dojoxRollingListPane .dojoxRollingListItemSelected {
 	color: #243C5F;
-	background-color: #d9e6f9;
+	background-color: #ccc;
 	font-weight: bold;
+}
+.soria .dojoxRollingListPaneCurrentSelected .dojoxRollingListItemSelected {
+	background-color: #d9e6f9;
 }
 .soria .dojoxRollingListPane .dojoxRollingListItemHoverSelected,
 .soria .dojoxRollingListPane .dojoxRollingListItemFocusSelected {
@@ -109,8 +140,11 @@
 }
 .nihilo .dojoxRollingListPane .dojoxRollingListItemSelected {
 	color: #243C5F;
-	background-color: #ffe284;
+	background-color: #ccc;
 	font-weight: bold;
+}
+.nihilo .dojoxRollingListPaneCurrentSelected .dojoxRollingListItemSelected {
+	background-color: #ffe284;
 }
 .nihilo .dojoxRollingListPane .dojoxRollingListItemHoverSelected,
 .nihilo .dojoxRollingListPane .dojoxRollingListItemFocusSelected {

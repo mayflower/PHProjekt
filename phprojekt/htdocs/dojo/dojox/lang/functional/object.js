@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -28,8 +28,9 @@ dojo.require("dojox.lang.functional.lambda");
 			// summary: returns an array of all keys in the object
 			var t = [];
 			for(var i in obj){
-				if(i in empty){ continue; }
-				t.push(i);
+				if(!(i in empty)){
+					t.push(i);
+				}
 			}
 			return	t; // Array
 		},
@@ -37,8 +38,9 @@ dojo.require("dojox.lang.functional.lambda");
 			// summary: returns an array of all values in the object
 			var t = [];
 			for(var i in obj){
-				if(i in empty){ continue; }
-				t.push(obj[i]);
+				if(!(i in empty)){
+					t.push(obj[i]);
+				}
 			}
 			return	t; // Array
 		},
@@ -46,11 +48,12 @@ dojo.require("dojox.lang.functional.lambda");
 			// summary: creates new object with all attributes that pass the test 
 			//	implemented by the provided function.
 			o = o || d.global; f = df.lambda(f);
-			var t = {}, v;
-			for(var i in obj){
-				if(i in empty){ continue; }
-				v = obj[i];
-				if(f.call(o, v, i, obj)){ t[i] = v; }
+			var t = {}, v, i;
+			for(i in obj){
+				if(!(i in empty)){
+					v = obj[i];
+					if(f.call(o, v, i, obj)){ t[i] = v; }
+				}
 			}
 			return t;	// Object
 		},
@@ -58,8 +61,9 @@ dojo.require("dojox.lang.functional.lambda");
 			// summary: iterates over all object attributes.
 			o = o || d.global; f = df.lambda(f);
 			for(var i in obj){
-				if(i in empty){ continue; }
-				f.call(o, obj[i], i, obj);
+				if(!(i in empty)){
+					f.call(o, obj[i], i, obj);
+				}
 			}
 			return o;	// Object
 		},
@@ -67,10 +71,11 @@ dojo.require("dojox.lang.functional.lambda");
 			// summary: creates new object with the results of calling 
 			//	a provided function on every attribute in this object.
 			o = o || d.global; f = df.lambda(f);
-			var t = {};
-			for(var i in obj){
-				if(i in empty){ continue; }
-				t[i] = f.call(o, obj[i], i, obj);
+			var t = {}, i;
+			for(i in obj){
+				if(!(i in empty)){
+					t[i] = f.call(o, obj[i], i, obj);
+				}
 			}
 			return t;	// Object
 		}

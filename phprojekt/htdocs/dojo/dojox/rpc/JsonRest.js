@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -16,13 +16,31 @@ dojo.require("dojox.rpc.Rest");
 (function(){
 	var dirtyObjects = [];
 	var Rest = dojox.rpc.Rest;
-	var parentIdRegex = /(.*?)(#?(\.\w+)|(\[.+))+$/;
-	var jr = dojox.rpc.JsonRest={
+	var jr;
+	function resolveJson(service, deferred, value, defaultId){
+		var timeStamp = deferred.ioArgs && deferred.ioArgs.xhr && deferred.ioArgs.xhr.getResponseHeader("Last-Modified");
+		if(timeStamp && Rest._timeStamps){
+			Rest._timeStamps[defaultId] = timeStamp;
+		}
+		return value && dojox.json.ref.resolveJson(value, {
+			defaultId: defaultId, 
+			index: Rest._index,
+			timeStamps: timeStamp && Rest._timeStamps,
+			time: timeStamp,
+			idPrefix: service.servicePath,
+			idAttribute: jr.getIdAttribute(service),
+			schemas: jr.schemas,
+			loader:	jr._loader,
+			assignAbsoluteIds: true
+		});
+		
+	}
+	jr = dojox.rpc.JsonRest={
+		conflictDateHeader: "If-Unmodified-Since",
 		commit: function(kwArgs){
 			// summary:
 			//		Saves the dirty data using REST Ajax methods
 
-			var left; // this is how many changes are remaining to be received from the server
 			kwArgs = kwArgs || {};
 			var actions = [];
 			var alreadyRecorded = {};
@@ -32,18 +50,19 @@ dojo.require("dojox.rpc.Rest");
 				var object = dirty.object;
 				var old = dirty.old;
 				var append = false;
-				if(!(kwArgs.service && (object || old) && (object || old).__id.indexOf(kwArgs.service.servicePath))){
+				if(!(kwArgs.service && (object || old) && 
+						(object || old).__id.indexOf(kwArgs.service.servicePath)) && dirty.save){
+					delete object.__isDirty;
 					if(object){
 						if(old){
 							// changed object
-							while(!(dojox.json && dojox.json.ref && dojox.json.ref._useRefs) && object.__id.match(parentIdRegex)){ // it is a path reference
-								// this means it is a sub object and the server doesn't support directly putting to
-								// this object by path, we must go to the parent object and save it
-								var parentId = object.__id.match(parentIdRegex)[1];
-								// record that we are saving
-								object = Rest._index[parentId];
+							var pathParts;
+							if((pathParts = object.__id.match(/(.*)#.*/))){ // it is a path reference
+								// this means it is a sub object, we must go to the parent object and save it
+								object = Rest._index[pathParts[1]];
 							}
 							if(!(object.__id in alreadyRecorded)){// if it has already been saved, we don't want to repeat it
+								// record that we are saving
 								alreadyRecorded[object.__id] = object;
 								actions.push({method:"put",target:object,content:object});
 							}
@@ -61,18 +80,34 @@ dojo.require("dojox.rpc.Rest");
 					dirtyObjects.splice(i--,1);
 				}
 			}
+			dojo.connect(kwArgs,"onError",function(){
+				var postCommitDirtyObjects = dirtyObjects;
+				dirtyObjects = savingObjects;
+				var numDirty = 0; // make sure this does't do anything if it is called again
+				jr.revert(); // revert if there was an error
+				dirtyObjects = postCommitDirtyObjects;
+			});
+			jr.sendToServer(actions, kwArgs);
+			return actions;
+		},
+		sendToServer: function(actions, kwArgs){
 			var xhrSendId;
 			var plainXhr = dojo.xhr;
-			left = actions.length;
-			var contentLocation;
+			var left = actions.length;// this is how many changes are remaining to be received from the server
+			var i, contentLocation;
+			var timeStamp;
+			var conflictDateHeader = this.conflictDateHeader;
 			// add headers for extra information
 			dojo.xhr = function(method,args){
 				// keep the transaction open as we send requests
 				args.headers = args.headers || {};
 				// the last one should commit the transaction
-				args.headers['X-Transaction'] = actions.length - 1 == i ? "commit" : "open";
+				args.headers['Transaction'] = actions.length - 1 == i ? "commit" : "open";
+				if(conflictDateHeader && timeStamp){
+					args.headers[conflictDateHeader] = timeStamp; 
+				}
 				if(contentLocation){
-					args.headers['Content-Location'] = contentLocation;
+					args.headers['Content-ID'] = '<' + contentLocation + '>';
 				}
 				return plainXhr.apply(dojo,arguments);
 			};			
@@ -80,6 +115,11 @@ dojo.require("dojox.rpc.Rest");
 				var action = actions[i];
 				dojox.rpc.JsonRest._contentId = action.content && action.content.__id; // this is used by OfflineRest
 				var isPost = action.method == 'post';
+				timeStamp = action.method == 'put' && Rest._timeStamps[action.content.__id];
+				if(timeStamp){
+					// update it now
+					Rest._timeStamps[action.content.__id] = (new Date()) + '';
+				}
 				// send the content location to the server
 				contentLocation = isPost && dojox.rpc.JsonRest._contentId;
 				var serviceAndId = jr.getServiceAndId(action.target.__id);
@@ -92,7 +132,7 @@ dojo.require("dojox.rpc.Rest");
 					dfd.addCallback(function(value){
 						try{
 							// Implements id assignment per the HTTP specification
-							var newId = dfd.ioArgs.xhr.getResponseHeader("Location");
+							var newId = dfd.ioArgs.xhr && dfd.ioArgs.xhr.getResponseHeader("Location");
 							//TODO: match URLs if the servicePath is relative...
 							if(newId){
 								// if the path starts in the middle of an absolute URL for Location, we will use the just the path part 
@@ -103,14 +143,7 @@ dojo.require("dojox.rpc.Rest");
 								object.__id = newId;
 								Rest._index[newId] = object;
 							}
-							value = value && dojox.json.ref.resolveJson(value, {
-								index: Rest._index,
-								idPrefix: service.servicePath,
-								idAttribute: jr.getIdAttribute(service),
-								schemas: jr.schemas,
-								loader:	jr._loader,
-								assignAbsoluteIds: true
-							});
+							value = resolveJson(service, dfd, value, object && object.__id);
 						}catch(e){}
 						if(!(--left)){
 							if(kwArgs.onComplete){
@@ -119,48 +152,47 @@ dojo.require("dojox.rpc.Rest");
 						}
 						return value;
 					});
-				})(isPost && action.content, dfd, service);
+				})(action.content, dfd, service);
 								
 				dfd.addErrback(function(value){
 					
 					// on an error we want to revert, first we want to separate any changes that were made since the commit
 					left = -1; // first make sure that success isn't called
-					var postCommitDirtyObjects = dirtyObjects;
-					dirtyObject = savingObjects;
-					numDirty = 0; // make sure this does't do anything if it is called again
-					jr.revert(); // revert if there was an error
-					dirtyObjects = postCommitDirtyObjects;
-					if(kwArgs.onError){
-						kwArgs.onError();
-					}
-					return value;
+					kwArgs.onError.call(kwArgs.scope, value);
 				});
 			}
 			// revert back to the normal XHR handler
 			dojo.xhr = plainXhr;
 			
-			return actions;
 		},
 		getDirtyObjects: function(){
 			return dirtyObjects;
 		},
-		revert: function(){
+		revert: function(service){
 			// summary:
 			//		Reverts all the changes made to JSON/REST data
-			while (dirtyObjects.length>0){
-				var d = dirtyObjects.pop();
-				if(d.object && d.old){
-					// changed
-					for(var i in d.old){
-						if(d.old.hasOwnProperty(i)){
-							d.object[i] = d.old[i];
+			for(var i = dirtyObjects.length; i > 0;){
+				i--;
+				var dirty = dirtyObjects[i];
+				var object = dirty.object;
+				var old = dirty.old;
+				if(!(service && (object || old) && 
+					(object || old).__id.indexOf(service.servicePath))){
+					// if we are in the specified store or if this is a global revert
+					if(object && old){
+						// changed
+						for(var j in old){
+							if(old.hasOwnProperty(j)){
+								object[j] = old[j];
+							}
+						}
+						for(j in object){
+							if(!old.hasOwnProperty(j)){
+								delete object[j];
+							}
 						}
 					}
-					for(i in d.object){
-						if(!d.old.hasOwnProperty(i)){
-							delete d.object[i];
-						}
-					}
+					dirtyObjects.splice(i, 1);
 				}
 			}
 		},
@@ -173,13 +205,18 @@ dojo.require("dojox.rpc.Rest");
 			if(!object.__id){
 				return;
 			}
+			object.__isDirty = true;
 			//if an object is already in the list of dirty objects, don't add it again
 			//or it will overwrite the premodification data set.
 			for(var i=0; i<dirtyObjects.length; i++){
-				if(object==dirtyObjects[i].object){
+				var dirty = dirtyObjects[i];
+				if(object==dirty.object){
 					if(_deleting){
 						// we are deleting, no object is an indicator of deletiong
-						dirtyObjects[i].object = false;
+						dirty.object = false;
+						if(!this._saveNotNeeded){
+							dirty.save = true;
+						}
 					}
 					return;
 				}
@@ -190,15 +227,13 @@ dojo.require("dojox.rpc.Rest");
 					old[i] = object[i];
 				}
 			}
-			dirtyObjects.push({object: !_deleting && object, old: old});
+			dirtyObjects.push({object: !_deleting && object, old: old, save: !this._saveNotNeeded});
 		},
 		deleteObject: function(object){
 			// summary:
 			//		deletes an object 
 			//	object:
 			//  	object to delete
-			//
-
 			this.changing(object,true);
 		},
 		getConstructor: function(/*Function|String*/service, schema){
@@ -218,14 +253,36 @@ dojo.require("dojox.rpc.Rest");
 				//
 				//	data:
 				//		object to mixed in
-				if(data){
-					dojo.mixin(this,data);
+				var self = this;
+				var args = arguments;
+				var properties;
+				function addDefaults(schema){
+					if(schema){
+						addDefaults(schema['extends']);
+						properties = schema.properties;
+						for(var i in properties){
+							var propDef = properties[i]; 
+							if(propDef && (typeof propDef == 'object') && ("default" in propDef)){
+								self[i] = propDef["default"];
+							}
+						}
+					}
+					if(data){
+						dojo.mixin(self,data);
+					}
+					if(schema && schema.prototype && schema.prototype.initialize){
+						schema.prototype.initialize.apply(self, args);
+					}
 				}
+				addDefaults(service._schema);
 				var idAttribute = jr.getIdAttribute(service);
-				Rest._index[this.__id = this.__clientId = service.servicePath + (this[idAttribute] || (this[idAttribute] = Math.random().toString(16).substring(2,14)+Math.random().toString(16).substring(2,14)))] = this;
-				dirtyObjects.push({object:this});
-	//			this._getParent(parentInfo).push(data); // append to this list
-
+				Rest._index[this.__id = this.__clientId = 
+						service.servicePath + (this[idAttribute] || 
+							Math.random().toString(16).substring(2,14) + '@' + ((dojox.rpc.Client && dojox.rpc.Client.clientId) || "client"))] = this;
+				if(dojox.json.schema && properties){
+					dojox.json.schema.mustBeValid(dojox.json.schema.validate(this, service._schema));
+				} 
+				dirtyObjects.push({object:this, save: true});
 			};
 			return dojo.mixin(service._constructor, service._schema, {load:service});
 		},
@@ -295,15 +352,7 @@ dojo.require("dojox.rpc.Rest");
 					// return immediately if it is an XML document
 					return result;
 				}
-				return dojox.json.ref.resolveJson(result, {
-					defaultId: typeof id != 'string' || (args && (args.start || args.count)) ? undefined: id, 
-					index: Rest._index,
-					idPrefix: service.servicePath,
-					idAttribute: jr.getIdAttribute(service),
-					schemas: jr.schemas,
-					loader:	jr._loader,
-					assignAbsoluteIds: true
-				});
+				return resolveJson(service, deferred, result, typeof id != 'string' || (args && (args.start || args.count)) ? undefined: id);
 			});
 			return deferred;			
 		},
@@ -331,12 +380,13 @@ dojo.require("dojox.rpc.Rest");
 		},
 		isDirty: function(item){
 			// summary
-			//		returns true if the item is marked as dirty.
-			for(var i = 0, l = dirtyObjects.length; i < l; i++){
-				if(dirtyObjects[i].object==item){return true;}
+			//		returns true if the item is marked as dirty or true if there are any dirty items
+			if(!item){
+				return !!dirtyObjects.length;
 			}
-			return false;
+			return item.__isDirty;
 		}
+		
 	};
 })();
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -64,6 +64,16 @@ dojo.declare("dojox.grid._Events", null, {
 				this.edit.cancel();
 				break;
 			case dk.ENTER:
+				if(!this.edit.isEditing()){
+					var colIdx = this.focus.getHeaderIndex();
+					if(colIdx >= 0) {
+						this.setSortIndex(colIdx);
+						break;
+					}else {
+						this.selection.clickSelect(this.focus.rowIndex, dojo.dnd.getCopyKeyState(e), e.shiftKey);
+					}
+					dojo.stopEvent(e);
+				}
 				if(!e.shiftKey){
 					var isEditing = this.edit.isEditing();
 					this.edit.apply();
@@ -71,14 +81,20 @@ dojo.declare("dojox.grid._Events", null, {
 						this.edit.setEditCell(this.focus.cell, this.focus.rowIndex);
 					}
 				}
+				if (!this.edit.isEditing()){
+					var curView = this.focus.focusView || this.views.views[0];  //if no focusView than only one view
+					curView.content.decorateEvent(e);
+					this.onRowClick(e);
+				}
 				break;
 			case dk.SPACE:
 				if(!this.edit.isEditing()){
 					var colIdx = this.focus.getHeaderIndex();
 					if(colIdx >= 0) {
 						this.setSortIndex(colIdx);
+						break;
 					}else {
-						this.selection.clickSelect(this.focus.rowIndex, e.ctrlKey, e.shiftKey);
+						this.selection.clickSelect(this.focus.rowIndex, dojo.dnd.getCopyKeyState(e), e.shiftKey);
 					}
 					dojo.stopEvent(e);
 				}
@@ -119,7 +135,7 @@ dojo.declare("dojox.grid._Events", null, {
 				}
 				break;
 			case dk.PAGE_DOWN:
-				if(!this.edit.isEditing() && this.store && this.focus.rowIndex+1 != this.store.count){
+				if(!this.edit.isEditing() && this.focus.rowIndex+1 != this.rowCount){
 					dojo.stopEvent(e);
 					if(this.focus.rowIndex != this.scroller.lastVisibleRow-1){
 						this.focus.move(this.scroller.lastVisibleRow-this.focus.rowIndex-1, 0);

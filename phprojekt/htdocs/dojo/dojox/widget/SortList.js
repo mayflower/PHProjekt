@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -51,10 +51,9 @@ dojo.declare("dojox.widget.SortList",
 	templateString:"<div class=\"sortList\" id=\"${id}\">\r\n\t\t<div class=\"sortListTitle\" dojoAttachPoint=\"titleNode\">\r\n\t\t<div class=\"dijitInline sortListIcon\">&thinsp;</div>\r\n\t\t<span dojoAttachPoint=\"focusNode\">${title}</span>\r\n\t\t</div>\r\n\t\t<div class=\"sortListBodyWrapper\" dojoAttachEvent=\"onmouseover: _set, onmouseout: _unset, onclick:_handleClick\" dojoAttachPoint=\"bodyWrapper\">\r\n\t\t<ul dojoAttachPoint=\"containerNode\" class=\"sortListBody\"></ul>\r\n\t</div>\r\n</div>\r\n",
 
 	_addItem: function(item){
-		var node = dojo.doc.createElement("li");
-		var text = this.store.getValue(item, this.key);
-		node.innerHTML = text;
-		this.containerNode.appendChild(node);
+		dojo.create("li", {
+			innerHTML: this.store.getValue(item, this.key).replace(/</g, "&lt;")
+		}, this.containerNode);
 	},
 
 	postCreate: function(){

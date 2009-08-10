@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -108,7 +108,7 @@ dojo.declare("dojox.data.WikipediaStore", dojox.data.ServiceStore,{
 			// so we mark our items as incomplete
 			results = results.query.search;
 			var _thisStore = this;
-			for(i in results){
+			for(var i in results){
 				results[i]._loadObject = function(callback){
 					_thisStore.fetch({
 						query: { action:"parse", title:this.title },

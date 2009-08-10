@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,6 +11,24 @@ dojo.provide("dojox.form._FormSelectWidget");
 
 dojo.require("dijit.form._FormWidget");
 
+/*=====
+dojox.form.__SelectOption = function(){
+	//	value: String
+	//		The value of the option.  Setting to empty (or missing) will
+	//		place a separator at that location
+	//	label: String
+	//		The label for our option.  It can contain html tags.
+	//  selected: Boolean
+	//		Whether or not we are a selected option
+	//	disabled: Boolean
+	//		Whether or not this specific option is disabled
+	this.value = value;
+	this.label = label;
+	this.selected = selected;
+	this.disabled = disabled;
+}
+=====*/
+
 dojo.declare("dojox.form._FormSelectWidget", dijit.form._FormValueWidget, {
 	// multiple: Boolean
 	//		Matches the select's "multiple=" value
@@ -19,24 +37,6 @@ dojo.declare("dojox.form._FormSelectWidget", dijit.form._FormValueWidget, {
 	// _multiValue: Boolean
 	//		Whether or not we are multi-valued (for form)
 	_multiValue: false,
-
-	/*=====
-	dojox.form.__SelectOption = function(){
-		//	value: String
-		//		The value of the option.  Setting to empty (or missing) will
-		//		place a separator at that location
-		//	label: String
-		//		The label for our option.  It can contain html tags.
-		//  selected: Boolean
-		//		Whether or not we are a selected option
-		//	disabled: Boolean
-		//		Whether or not this specific option is disabled
-		this.value = value;
-		this.label = label;
-		this.selected = selected;
-		this.disabled = disabled;
-	}
-	=====*/
 
 	// options: dojox.form.__SelectOption[]
 	//		The set of options for our select item.  Roughly corresponds to
@@ -192,6 +192,23 @@ dojo.declare("dojox.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		this._setDisplay(this._multiValue ? disp : disp[0]);
 		this._updateSelection();
 		this._handleOnChange(this.value, priorityChange);
+	},
+	
+	_getDisplayedValueAttr: function(){
+		// summary: returns the displayed value of the widget
+		var val = this.attr("value");
+		if(!dojo.isArray(val)){
+			val = [val];
+		}
+		var ret = dojo.map(this.getOptions(val), function(v){
+			if(v && "label" in v){
+				return v.label;
+			}else if(v){
+				return v.value;
+			}
+			return null;
+		}, this);
+		return this._multiValue ? ret : ret[0];
 	},
 	
 	_getValueDeprecated: false, // remove when _FormWidget:getValue is removed

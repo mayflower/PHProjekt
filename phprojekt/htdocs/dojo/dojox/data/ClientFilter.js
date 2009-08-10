@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,7 +11,7 @@ dojo.provide("dojox.data.ClientFilter");
 dojo.require("dojo.data.util.filter"); 
 // This is an abstract data store module for adding updateable result set functionality to an existing data store class
 (function(){
-	var lrs;
+	var cf;
 	var addUpdate = function(store,create,remove){
 		// create a handler that adds to the list of notifications
 		return function(item){
@@ -19,10 +19,10 @@ dojo.require("dojo.data.util.filter");
 					create:create && item,
 					remove:remove && item
 				});
-			lrs.onUpdate();
+			cf.onUpdate();
 		}
 	};
-	lrs = dojo.declare("dojox.data.ClientFilter",
+	cf = dojo.declare("dojox.data.ClientFilter",
 		null,
 		{
 			constructor: function(){
@@ -53,9 +53,9 @@ dojo.require("dojo.data.util.filter");
 				// 		This can be defined in the constructor options for ServiceStore/JsonRestStore and subtypes. 
 				//
 				// example:
-				//		to make a live-result-set data store from an existing data store:
+				//		to make a updated-result-set data store from an existing data store:
 				//	|	dojo.declare("dojox.data.MyLiveDataStore",
-				//	|		dojox.data.MyDataStore,dojox.data.LiveResultSets], // subclass LiveResultSets if available
+				//	|		dojox.data.MyDataStore,dojox.data.ClientFilter], // subclass LiveResultSets if available
 				//	|		{}
 				//	|	);
 				this.onSet = addUpdate(this,true,true);
@@ -118,9 +118,14 @@ dojo.require("dojo.data.util.filter");
 				// argsSuper:
 				// 		Dojo Data Fetch arguments 
 				// argsSub:
-				// 		Dojo Data Fetch arguments 
+				// 		Dojo Data Fetch arguments
 				if(argsSuper.query == argsSub.query){
 					return {};
+				}
+				if(!(argsSub.query instanceof Object && // sub query must be an object
+						// super query must be non-existent or an object
+						(!argsSuper.query || typeof argsSuper.query == 'object'))){
+					return false;
 				}
 				var clientQuery = dojo.mixin({},argsSub.query);
 				for(var i in argsSuper.query){
@@ -151,7 +156,9 @@ dojo.require("dojo.data.util.filter");
 							defResult.callback(cachedArgs.cacheResults);
 						}
 						defResult.addCallback(function(results){
-							return self.clientSideFetch({query:clientQuery,sort:args.sort,start:args.start,count:args.count}, results);
+							results = self.clientSideFetch({query:clientQuery,sort:args.sort,start:args.start,count:args.count}, results);
+							defResult.fullLength = results._fullLength;
+							return results;
 						});
 					}
 				}
@@ -220,8 +227,13 @@ dojo.require("dojo.data.util.filter");
 					// do the sort if needed
 					results.sort(this.makeComparator(request.sort.concat()));
 				}
+				return this.clientSidePaging(request, results);
+			},
+			clientSidePaging: function(/*Object*/ request,/*Array*/ baseResults){
 				var start = request.start || 0;
-				return (start || request.count) ? results.slice(start,start + (request.count || results.length)) : results;
+				var finalResults = (start || request.count) ? baseResults.slice(start,start + (request.count || baseResults.length)) : baseResults;
+				finalResults._fullLength = baseResults.length;
+				return finalResults; 
 			},
 			matchesQuery: function(item,request){
 				var query = request.query; 
@@ -263,7 +275,7 @@ dojo.require("dojo.data.util.filter");
 			}
 		}
 	);
-	lrs.onUpdate = function(){};
+	cf.onUpdate = function(){};
 })();
 
 }

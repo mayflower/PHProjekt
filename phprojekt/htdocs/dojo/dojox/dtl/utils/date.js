@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -34,8 +34,12 @@ dojo.extend(dojox.dtl.utils.date.DateFormat, dojox.date.php.DateFormat.prototype
 		// description:
 		//		Examples: '1 a.m.', '1:30 p.m.', 'midnight', 'noon', '12:30 p.m.'
 		//		Proprietary extension.
-		if(!this.date.getMinutes() && !this.date.getHours()) return 'midnight';
-		if(!this.date.getMinutes() && this.date.getHours() == 12) return 'noon';
+		if(!this.date.getMinutes() && !this.date.getHours()){
+			return 'midnight';
+		}
+		if(!this.date.getMinutes() && this.date.getHours() == 12){
+			return 'noon';
+		}
 		return this.f() + " " + this.a();
 	}
 });

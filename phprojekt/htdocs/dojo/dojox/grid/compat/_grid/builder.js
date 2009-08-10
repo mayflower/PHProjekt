@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -330,7 +330,8 @@ dojo.declare("dojox.grid.headerBuilder",
 		if(dojo._isBodyLtr()){
 			return (e.cellIndex>0) && (e.cellX < this.overResizeWidth) && this.prepareResize(e, -1);
 		}
-		return t = e.cellNode && (e.cellX < this.overResizeWidth);
+		var t = e.cellNode && (e.cellX < this.overResizeWidth);
+		return;
 	},
 
 	overRightResizeArea: function(e){

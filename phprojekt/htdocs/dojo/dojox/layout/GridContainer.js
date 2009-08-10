@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -13,10 +13,11 @@ dojo.experimental("dojox.layout.GridContainer");
 dojo.require("dijit._base.focus");
 dojo.require("dijit._Templated");
 dojo.require("dijit._Container");
+dojo.require("dijit._Contained");
 dojo.require("dojo.dnd.move");
 dojo.require("dojox.layout.dnd.PlottedDnd");
 
-dojo.requireLocalization("dojox.layout", "GridContainer", null, "en,fr,ROOT");
+dojo.requireLocalization("dojox.layout", "GridContainer", null, "ROOT,en,fr");
 
 dojo.declare("dojox.layout.GridContainer", 
 	[dijit._Widget, dijit._Templated, dijit._Container, dijit._Contained], 
@@ -30,7 +31,7 @@ dojo.declare("dojox.layout.GridContainer",
 	//		The position of other children is automatically calculated when a child is moved
 	//	
 
-	templateString:"<div id=\"${id}\" class=\"gridContainer\" dojoAttachPoint=\"containerNode\" tabIndex=\"0\" dojoAttachEvent=\"onkeypress:_selectFocus\">\r\n\t<table class=\"gridContainerTable\" dojoAttachPoint=\"gridContainerTable\" cellspacing=\"0\" cellpadding=\"0\">\r\n\t\t<tbody>\r\n\t\t\t<tr dojoAttachPoint=\"gridNode\"></tr>\r\n\t\t</tbody>\r\n\t</table>\r\n</div>\r\n",
+	templateString:"<div id=\"${id}\" class=\"gridContainer\" dojoAttachPoint=\"containerNode\" tabIndex=\"0\" dojoAttachEvent=\"onkeypress:_selectFocus\">\r\n\t<table class=\"gridContainerTable\" dojoAttachPoint=\"gridContainerTable\" cellspacing=\"0\" cellpadding=\"0\">\r\n\t\t<tbody class=\"gridContainerBody\">\r\n\t\t\t<tr class=\"gridContainerRow\" dojoAttachPoint=\"gridNode\"></tr>\r\n\t\t</tbody>\r\n\t</table>\r\n</div>\r\n",
 	isContainer: true,
 
 	//	i18n: Object
@@ -159,6 +160,7 @@ dojo.declare("dojox.layout.GridContainer",
 	},
 	
 	startup:function(){
+		this.inherited(arguments);
 		this._createCells();
 		if(this.usepref !== true){
 			this[(this.isAutoOrganized ? "_organizeServices" : "_organizeServicesManually")]();
@@ -166,7 +168,10 @@ dojo.declare("dojox.layout.GridContainer",
 			//console.info("GridContainer organised by UserPref");
 			return;
 		}
-		this.init();	
+		this.init();
+		dojo.forEach(this.getChildren(), function(child){
+			!child.started && !child._started && child.startup();
+		});
 	},
 	
 	init: function(){
@@ -178,7 +183,7 @@ dojo.declare("dojox.layout.GridContainer",
 		this._oldwidth = this.domNode.offsetWidth;
 		if(this.hasResizableColumns){
 			this._initPlaceGrips();
-			this._placeGrips();			
+			this._placeGrips();
 		}
 	},
 	
@@ -421,7 +426,7 @@ dojo.declare("dojox.layout.GridContainer",
 	
 	_placeGrips: function(){
 		//summary: Define the position of a grip and place it on page.
-		console.log('placegrips');
+
 		var height;
 		if (this.allowAutoScroll){
 			height = this.gridNode.scrollHeight;
@@ -695,7 +700,7 @@ dojo.declare("dojox.layout.GridContainer",
 			this._createGrip(node);			
 		}
 		
-		for(i = 0;i < nbColumns; i++){
+		for(var i=0; i<nbColumns; i++){
 			node = dojo.doc.createElement("td");
 			dojo.addClass(node,"gridContainerZone");
 			//to fix IE Bug Border with empty cells
@@ -1045,7 +1050,7 @@ dojo.declare("dojox.layout.GridContainer",
 			this._canDisplayPopup = false;
 			setTimeout(dojo.hitch(this, function(){
 				this.containerNode.removeChild(attachPopup);
-				dojo._destroyElement(attachPopup);
+				dojo.destroy(attachPopup);
 				this._canDisplayPopup = true;
 			}), this.timeDisplayPopup);
 		}

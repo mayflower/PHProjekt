@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -40,7 +40,7 @@ dojo.declare("dojox.data.CouchDBRestStore",
 			// 		This only differs from JsonRestStore in that it, will put the query string the query part of the URL and it handles start and count
 			args.query = args.query || '_all_docs?';
 			if(args.start){
-				args.query = (args.query ? (args.query + '&') : '') + 'skip=' + args.start;
+				args.query = (args.query ? (args.query + '&') : '') + 'startkey=' + args.start;
 				delete args.start;
 			}
 			if(args.count){

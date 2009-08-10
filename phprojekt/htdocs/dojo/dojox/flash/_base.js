@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,6 +8,7 @@
 if(!dojo._hasResource["dojox.flash._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.flash._base"] = true;
 dojo.provide("dojox.flash._base");
+dojo.experimental("dojox.flash");
 
 // for dijit.getViewport(), needed by dojox.flash.Embed.center()
 dojo.require("dijit._base.place");
@@ -120,7 +121,7 @@ dojox.flash = {
 		this.url = url;
 		
 		this._visible = true;
-		if(visible !== null && typeof visible !== "undefined"){
+		if(visible !== null && visible !== undefined){
 			this._visible = visible;
 		}
 		
@@ -159,7 +160,7 @@ dojox.flash = {
 		//  dojox.flash.addLoadedListener(loadedListener);
 	
 		dojox.flash.ready = true;
-		if(dojox.flash._loadedListeners.length > 0){ // FIXME: redundant if? use forEach?
+		if(dojox.flash._loadedListeners.length){ // FIXME: redundant if? use forEach?
 			for(var i = 0;i < dojox.flash._loadedListeners.length; i++){
 				dojox.flash._loadedListeners[i].call(null);
 			}
@@ -175,7 +176,7 @@ dojox.flash = {
 		//	
 		//	dojo.event.connect(dojox.flash, "installing", myInstance, "myCallback");
 		
-		if(dojox.flash._installingListeners.length > 0){ // FIXME: redundant if? use forEach?
+		if(dojox.flash._installingListeners.length){ // FIXME: redundant if? use forEach?
 			for(var i = 0; i < dojox.flash._installingListeners.length; i++){
 				dojox.flash._installingListeners[i].call(null);
 			}
@@ -494,8 +495,6 @@ dojox.flash.Embed.prototype = {
 				div.style.position = "absolute";
 				div.style.zIndex = "10000";
 				div.style.top = "-1000px";
-				div.style.left = "-1000px";
-				//FIXME: avoid horizontal positioning off-page for BiDi
 			}
 
 			div.innerHTML = objectHTML;
@@ -511,7 +510,9 @@ dojox.flash.Embed.prototype = {
 	
 	get: function(){ /* Object */
 		// summary: Gets the Flash object DOM node.
-		if(dojo.isIE || dojo.isSafari){
+
+		if(dojo.isIE || dojo.isWebKit){
+			//TODO: should this really be the else?
 			return dojo.byId(this.id);
 		}else{
 			// different IDs on OBJECT and EMBED tags or
@@ -530,12 +531,11 @@ dojox.flash.Embed.prototype = {
 		
 		// summary: Sets the visibility of this Flash object.		
 		var container = dojo.byId(this.id + "Container");
-		if(visible == true){
-		  container.style.position = "absolute"; // IE -- Brad Neuberg
+		if(visible){
+			container.style.position = "absolute"; // IE -- Brad Neuberg
 			container.style.visibility = "visible";
 		}else{
 			container.style.position = "absolute";
-			container.style.x = "-1000px"; //FIXME: BiDi
 			container.style.y = "-1000px";
 			container.style.visibility = "hidden";
 		}
@@ -635,9 +635,9 @@ dojox.flash.Communicator.prototype = {
 		// the standard entity encoding, because otherwise we won't be able to
 		// differentiate between our own encoding and any entity characters
 		// that are being used in the string itself
-		data = data.replace(/\&custom_lt\;/g, "<");
-		data = data.replace(/\&custom_gt\;/g, ">");
-		data = data.replace(/\&custom_backslash\;/g, '\\');
+		data = data.replace(/\&custom_lt\;/g, "<")
+			.replace(/\&custom_gt\;/g, ">")
+			.replace(/\&custom_backslash\;/g, '\\');
 		
 		return data;
 	},
@@ -705,7 +705,7 @@ dojox.flash.Install.prototype = {
 		//		needed. 
 	
 		// do we even have flash?
-		if(dojox.flash.info.capable == false){
+		if(!dojox.flash.info.capable){
 			return true;
 		}
 

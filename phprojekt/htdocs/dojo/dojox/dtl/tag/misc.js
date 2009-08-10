@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -20,11 +20,13 @@ dojo.require("dojox.dtl._base");
 	{
 		render: function(context, buffer){
 			var keys = context.getKeys();
-			var debug = "";
+			var debug = [];
+			var only = {};
 			for(var i = 0, key; key = keys[i]; i++){
-				console.debug("DEBUG", key, ":", context[key]);
-				debug += key + ": " + dojo.toJson(context[key]) + "\n\n";
+				only[key] = context[key];
+				debug += "[" + key + ": " + typeof context[key] + "]\n";
 			}
+			console.debug(only);
 			return this.text.set(debug).render(context, buffer, this);
 		},
 		unrender: function(context, buffer){

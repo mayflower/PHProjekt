@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -80,7 +80,7 @@ dojo.require("dojox.string.tokenize");
 				var firstloop = (this.shared.last === null);
 				this.shared.last = change;
 				context = context.push();
-				context.ifchanged = {firstloop: firstloop}
+				context.ifchanged = {firstloop: firstloop};
 				buffer = this.nodes.render(context, buffer);
 				context = context.pop();
 			}else{
@@ -105,7 +105,7 @@ dojo.require("dojox.string.tokenize");
 	{
 		_push: function(container, grouper, stack){
 			if(stack.length){
-				container.push({ grouper: grouper, list: stack })
+				container.push({ grouper: grouper, list: stack });
 			}
 		},
 		render: function(context, buffer){

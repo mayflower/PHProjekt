@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,6 +11,16 @@ dojo.provide("dojox.lang.utils");
 
 (function(){
 	var empty = {}, du = dojox.lang.utils;
+
+	var clone = function(o){
+		if(dojo.isArray(o)){
+			return dojo._toArray(o);
+		}
+		if(!dojo.isObject(o) || dojo.isFunction(o)){
+			return o;
+		}
+		return dojo.delegate(o);
+	}
 	
 	dojo.mixin(du, {
 		coerceType: function(target, source){
@@ -34,7 +44,7 @@ dojo.provide("dojox.lang.utils");
 					if(t && typeof t == "object"){
 						du.updateWithObject(t, source[x], conv);
 					}else{
-						target[x] = conv ? du.coerceType(t, source[x]) : dojo.clone(source[x]);
+						target[x] = conv ? du.coerceType(t, source[x]) : clone(source[x]);
 					}
 				}
 			}
@@ -50,7 +60,7 @@ dojo.provide("dojox.lang.utils");
 			if(!source || !pattern){ return target; }
 			for(var x in pattern){
 				if(x in source && !(x in empty)){
-					target[x] = conv ? du.coerceType(pattern[x], source[x]) : dojo.clone(source[x]);
+					target[x] = conv ? du.coerceType(pattern[x], source[x]) : clone(source[x]);
 				}
 			}
 			return target;	// Object

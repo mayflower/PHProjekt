@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -29,9 +29,9 @@ dojo.require("dojox.lang.functional.lambda");
 			// summary: builds an array by repeatedly applying a unary function N times
 			//	with a seed value Z. N should be greater than 0.
 			o = o || d.global; f = df.lambda(f);
-			var t = new Array(n);
+			var t = new Array(n), i = 1;
 			t[0] = z;
-			for(var i = 1; i < n; t[i] = z = f.call(o, z), ++i);
+			for(; i < n; t[i] = z = f.call(o, z), ++i);
 			return t;	// Array
 		},
 		until: function(/*Function|String|Array*/ pr, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,7 +9,7 @@ if(!dojo._hasResource["dojox.wire.XmlWire"]){ //_hasResource checks added by bui
 dojo._hasResource["dojox.wire.XmlWire"] = true;
 dojo.provide("dojox.wire.XmlWire");
 
-dojo.require("dojox.data.dom");
+dojo.require("dojox.xml.parser");
 dojo.require("dojox.wire.Wire");
 
 dojo.declare("dojox.wire.XmlWire", dojox.wire.Wire, {
@@ -61,14 +61,15 @@ dojo.declare("dojox.wire.XmlWire", dojox.wire.Wire, {
 
 		var node = object;
 		var path = this.path;
+		var i;
 		if(path.charAt(0) == '/'){ // absolute
 			// skip the first expression (supposed to select the top node)
-			var i = path.indexOf('/', 1);
+			i = path.indexOf('/', 1);
 			path = path.substring(i + 1);
 		}
 		var list = path.split('/');
 		var last = list.length - 1;
-		for(var i = 0; i < last; i++){
+		for(i = 0; i < last; i++){
 			node = this._getChildNode(node, list[i]);
 			if(!node){
 				return undefined; //undefined
@@ -101,8 +102,9 @@ dojo.declare("dojox.wire.XmlWire", dojox.wire.Wire, {
 		var node = object;
 		var doc = this._getDocument(node);
 		var path = this.path;
+		var i;
 		if(path.charAt(0) == '/'){ // absolute
-			var i = path.indexOf('/', 1);
+			i = path.indexOf('/', 1);
 			if(!node){
 				var name = path.substring(1, i);
 				node = doc.createElement(name);
@@ -118,7 +120,7 @@ dojo.declare("dojox.wire.XmlWire", dojox.wire.Wire, {
 
 		var list = path.split('/');
 		var last = list.length - 1;
-		for(var i = 0; i < last; i++){
+		for(i = 0; i < last; i++){
 			var child = this._getChildNode(node, list[i]);
 			if(!child){
 				child = doc.createElement(list[i]);
@@ -243,7 +245,7 @@ dojo.declare("dojox.wire.XmlWire", dojox.wire.Wire, {
 		if(node){
 			return (node.nodeType == 9 /* DOCUMENT_NODE */ ? node : node.ownerDocument); //Document
 		}else{
-			return dojox.data.dom.createDocument(); //Document
+			return dojox.xml.parser.parse(); //Document
 		}
 	}
 });

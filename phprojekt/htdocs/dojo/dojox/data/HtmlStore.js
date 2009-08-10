@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,7 +9,7 @@ if(!dojo._hasResource["dojox.data.HtmlStore"]){ //_hasResource checks added by b
 dojo._hasResource["dojox.data.HtmlStore"] = true;
 dojo.provide("dojox.data.HtmlStore");
 
-dojo.require("dojox.data.dom");
+dojo.require("dojox.xml.parser");
 dojo.require("dojo.data.util.simpleFetch");
 dojo.require("dojo.data.util.filter");
 
@@ -114,7 +114,7 @@ dojo.declare("dojox.data.HtmlStore", null, {
 		this._headings = [];
 		if(this._rootNode.tHead){
 			dojo.forEach(this._rootNode.tHead.rows[0].cells, dojo.hitch(this, function(th){
-				this._headings.push(dojox.data.dom.textContent(th));
+				this._headings.push(dojox.xml.parser.textContent(th));
 			}));
 		}else{
 			this._headings = ["name"];
@@ -188,9 +188,9 @@ dojo.declare("dojox.data.HtmlStore", null, {
 
 		if(index>-1){
 			if (item.cells){
-			  return [dojox.data.dom.textContent(item.cells[index])];
+			  return [dojox.xml.parser.textContent(item.cells[index])];
 			}else{//return Value for lists
-			    return [dojox.data.dom.textContent(item)];
+			    return [dojox.xml.parser.textContent(item)];
 			}
 		}
 		return []; //Array
@@ -464,7 +464,7 @@ dojo.declare("dojox.data.HtmlStore", null, {
 					item = this._rootNode.rows[identity + 1];
 				}else{ //Lists
 					for(var i = 0; i < self._rootNode.childNodes.length; i++){
-						if(self._rootNode.childNodes[i].nodeType === 1 && identity === dojox.data.dom.textContent(self._rootNode.childNodes[i])) {
+						if(self._rootNode.childNodes[i].nodeType === 1 && identity === dojox.xml.parser.textContent(self._rootNode.childNodes[i])) {
 								item = self._rootNode.childNodes[i];
 						}
 					}
@@ -503,7 +503,7 @@ dojo.declare("dojox.data.HtmlStore", null, {
 						item = self._rootNode.rows[identity-1];
 					}else{ //List
 						for(var i = 0; i < self._rootNode.childNodes.length; i++){
-							if(self._rootNode.childNodes[i].nodeType === 1 && identity === dojox.data.dom.textContent(self._rootNode.childNodes[i])) {
+							if(self._rootNode.childNodes[i].nodeType === 1 && identity === dojox.xml.parser.textContent(self._rootNode.childNodes[i])) {
 									item = self._rootNode.childNodes[i];
 									break;
 							}

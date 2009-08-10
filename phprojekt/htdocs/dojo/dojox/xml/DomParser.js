@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -75,6 +75,7 @@ dojox.xml.DomParser=new (function(){
 			this.byName=this.getElementsByTagName=byName;
 			this.byNameNS=this.getElementsByTagNameNS=byNameNS;
 			this.childrenByName=childrenByName;
+			this.childrenByNameNS=childrenByNameNS;
 		})();
 	}
 
@@ -117,6 +118,17 @@ dojox.xml.DomParser=new (function(){
 			if(c.nodeType==nodeTypes.ELEMENT){
 				if(name=="*"){ a.push(c); }
 				else if(c.nodeName==name){ a.push(c); }
+			}
+		});
+		return a;
+	}
+
+	function childrenByNameNS(name, ns){
+		var a=[];
+		dojo.forEach(this.childNodes, function(c){
+			if(c.nodeType==nodeTypes.ELEMENT){
+				if(name=="*"&&c.ownerDocument._nsPaths[ns]==c.namespace){ a.push(c); }
+				else if(c.localName==name&&c.ownerDocument._nsPaths[ns]==c.namespace){ a.push(c); }
 			}
 		});
 		return a;
@@ -306,6 +318,7 @@ dojox.xml.DomParser=new (function(){
 					o.byName=o.getElementsByTagName=byName;
 					o.byNameNS=o.getElementsByTagNameNS=byNameNS;
 					o.childrenByName=childrenByName;
+					o.childrenByNameNS=childrenByNameNS;
 					o.getAttribute=getAttr;
 					o.getAttributeNS=getAttrNS;
 					o.setAttribute=setAttr;

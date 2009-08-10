@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,7 +19,7 @@ dojo.require("dojox.grid.util");
 		}catch(e){// IE sux bad
 		}
 	};
-
+	
 	var whenIdle = function(/*inContext, inMethod, args ...*/){
 		setTimeout(dojo.hitch.apply(dojo, arguments), 0);
 	};
@@ -40,6 +40,7 @@ dojo.require("dojox.grid.util");
 		defaultValue: '...',
 		value: null,
 		hidden: false,
+		noresize: false,
 		//private
 		_valueProp: "value",
 		_formatPending: false,
@@ -57,6 +58,7 @@ dojo.require("dojox.grid.util");
 			// grid row index
 			// returns: html for a given grid cell
 			var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
+			d = (d && d.replace) ? d.replace(/</g, '&lt;') : d;
 			if(this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
 				return this.formatEditing(d, inRowIndex);
 			}else{
@@ -90,11 +92,11 @@ dojo.require("dojox.grid.util");
 		},
 		canResize: function(){
 			var uw = this.unitWidth;
-			return uw && (uw=='auto');
+			return uw && (uw!=='auto');
 		},
 		isFlex: function(){
 			var uw = this.unitWidth;
-			return uw && (uw=='auto' || uw.slice(-1)=='%');
+			return uw && dojo.isString(uw) && (uw=='auto' || uw.slice(-1)=='%');
 		},
 		// edit support
 		applyEdit: function(inValue, inRowIndex){
@@ -240,30 +242,29 @@ dojo.require("dojox.grid.util");
 		if(get){
 			cellDef.get = dojo.getObject(get);
 		}
-		var sortDesc = d.trim(d.attr(node, "sortDesc")||"");
-		if(sortDesc){
-			cellDef.sortDesc = !(sortDesc.toLowerCase()=="false");
+		var getBoolAttr = function(attr){
+			var value = d.trim(d.attr(node, attr)||"");
+			return value ? !(value.toLowerCase()=="false") : undefined;
 		}
+		cellDef.sortDesc = getBoolAttr("sortDesc");
+		cellDef.editable = getBoolAttr("editable");
+		cellDef.alwaysEditing = getBoolAttr("alwaysEditing");
+		cellDef.noresize = getBoolAttr("noresize");
+
 		var value = d.trim(d.attr(node, "loadingText")||d.attr(node, "defaultValue")||"");
 		if(value){
 			cellDef.defaultValue = value;
 		}
-		var editable = d.trim(d.attr(node, "editable")||"");
-		if(editable){
-			cellDef.editable = !(editable.toLowerCase()=="false");
-		}
-		var alwaysEditing = d.trim(d.attr(node, "alwaysEditing")||"");
-		if(alwaysEditing){
-			cellDef.alwaysEditing = !(alwaysEditing.toLowerCase()=="false");
-		}
-		var styles = d.trim(d.attr(node, "styles")||"");
-		if(styles){
-			cellDef.styles = styles;
-		}
-		var classes = d.trim(d.attr(node, "classes")||"");
-		if(classes){
-			cellDef.classes = classes;
-		}
+
+		var getStrAttr = function(attr){
+			return d.trim(d.attr(node, attr)||"")||undefined;
+		};
+		cellDef.styles = getStrAttr("styles");
+		cellDef.headerStyles = getStrAttr("headerStyles");
+		cellDef.cellStyles = getStrAttr("cellStyles");
+		cellDef.classes = getStrAttr("classes");
+		cellDef.headerClasses = getStrAttr("headerClasses");
+		cellDef.cellClasses = getStrAttr("cellClasses");
 	}
 
 	dojo.declare("dojox.grid.cells.Cell", dgc._Base, {

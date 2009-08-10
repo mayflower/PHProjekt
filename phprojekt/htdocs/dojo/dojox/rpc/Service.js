@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -115,7 +115,7 @@ dojo.declare("dojox.rpc.Service", null, {
 				//remove any properties that were not defined
 				for(i in args){
 					var found=false;
-					for(j=0; j<parameters.length;j++){
+					for(var j=0; j<parameters.length;j++){
 						if(parameters[i].name==i){ found=true; }
 					}
 					if(!found){
@@ -320,7 +320,7 @@ dojo._contentHandlers.auto = function(xhr){
 	// automatically choose the right handler based on the returned content type
 	var handlers = dojo._contentHandlers;
 	var retContentType = xhr.getResponseHeader("Content-Type");
-	results = !retContentType ? handlers.text(xhr) :
+	var results = !retContentType ? handlers.text(xhr) :
 		retContentType.match(/\/.*json/) ? handlers.json(xhr) :
 		retContentType.match(/\/javascript/) ? handlers.javascript(xhr) :
 		retContentType.match(/\/xml/) ? handlers.xml(xhr) : handlers.text(xhr);

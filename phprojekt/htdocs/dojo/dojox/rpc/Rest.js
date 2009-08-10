@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -85,16 +85,20 @@ dojo.provide("dojox.rpc.Rest");
 		};
 		// the default XHR args creator:
 		service._getRequest = getRequest || function(id, args){
-			return {
+			var request = {
 				url: path + (dojo.isObject(id) ? '?' + dojo.objectToQuery(id) : id == null ? "" : id), 
-				handleAs: isJson?'json':'text', 
-				contentType: isJson?'application/json':'text/plain',
+				handleAs: isJson ? 'json' : 'text', 
+				contentType: isJson ? 'application/json' : 'text/plain',
 				sync: dojox.rpc._sync,
 				headers: {
-					Accept: isJson?'application/json,application/javascript':'*/*',
-					Range: args && (args.start >= 0 || args.count >= 0) ?  "items=" + (args.start || '0') + '-' + ((args.count && (args.count + (args.start || 0) - 1)) || '') : undefined
+					Accept: isJson ? 'application/json,application/javascript' : '*/*'
 				}
 			};
+			if(args && (args.start >= 0 || args.count >= 0)){
+				request.headers.Range = "items=" + (args.start || '0') + '-' + ((args.count && args.count != Infinity && (args.count + (args.start || 0) - 1)) || '');
+			}
+			dojox.rpc._sync = false;
+			return request;
 		};
 		// each calls the event handler
 		function makeRest(name){
@@ -111,6 +115,7 @@ dojo.provide("dojox.rpc.Rest");
 	};
 
 	drr._index={};// the map of all indexed objects that have gone through REST processing
+	drr._timeStamps={};
 	// these do the actual requests
 	drr._change = function(method,service,id,content){
 		// this is called to actually do the put, post, and delete

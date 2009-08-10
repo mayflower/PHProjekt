@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -110,12 +110,23 @@ dojo.declare("dojox.form._SelectStackMixin", null, {
 	onStartup: function(/*Object*/ info){
 		// summary: Called when the stack container is started up
 		var selPane = info.selected;
-		dojo.forEach(info.children, function(c){
-			this.onAddChild(c);
-			if(this._savedValue && this._optionValFromPane(c.id)){
+		this.addOption(dojo.filter(dojo.map(info.children, function(c){
+			var v = this._optionValFromPane(c.id);
+			var toAdd = null;
+			if(!this._panes[c.id]){
+				this._panes[c.id] = c;
+				toAdd = {value: v, label: c.title};
+			}
+			if(!c.onShow || !c.onHide || c._shown == undefined){
+				c.onShow = dojo.hitch(this, "_togglePane", c, true);
+				c.onHide = dojo.hitch(this, "_togglePane", c, false);
+				c.onHide();
+			}
+			if(this._savedValue && v){
 				selPane = c;
 			}
-		}, this);
+			return toAdd;
+		}, this), function(i){ return i;}));
 		delete this._savedValue;
 		this.onSelectChild(selPane);
 		if(!selPane._shown){
@@ -126,6 +137,7 @@ dojo.declare("dojox.form._SelectStackMixin", null, {
 	postMixInProperties: function(){
 		this._savedValue = this.value;
 		this.inherited(arguments);
+		this.connect(this, "onChange", "_handleSelfOnChange");
 	},
 	
 	postCreate: function(){
@@ -146,13 +158,16 @@ dojo.declare("dojox.form._SelectStackMixin", null, {
 	
 	destroy: function(){
 		dojo.forEach(this._subscriptions, dojo.unsubscribe);
+		delete this._panes; // Fixes memory leak in IE
+		this.inherited("destroy", arguments);
 	},
 	
-	onChange: function(/*String*/ val){
+	_handleSelfOnChange: function(/*String*/ val){
 		// summary: Called when form select widget's value has changed
 		var pane = this._panes[this._paneIdFromOption(val)];
-		if (pane)
+		if (pane){
 			dijit.byId(this.stackId).selectChild(pane);
+		}
 	}
 });
 

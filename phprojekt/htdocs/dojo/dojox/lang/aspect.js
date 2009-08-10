@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2008, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -85,7 +85,7 @@ dojo.provide("dojox.lang.aspect");
 					if(i.dynamic){
 						// instantiate a dynamic advice
 						context.dynAdvices.push(a = new i.advice(context));
-						if(t = a.before){
+						if(t = a.before){ // intentional assignment
 							t.apply(a, arguments);
 						}
 					}else{
@@ -103,10 +103,10 @@ dojo.provide("dojox.lang.aspect");
 					context.dynIndex = context.dynAdvices.length;
 					for(i = advices.next_afterThrowing; i != advices; i = i.next_afterThrowing){
 						a = i.dynamic ? context.dynAdvices[--context.dynIndex] : i.advice;
-						if(t = a.afterThrowing){
+						if(t = a.afterThrowing){ // intentional assignment
 							t.call(a, e);
 						}
-						if(t = a.after){
+						if(t = a.after){ // intentional assignment
 							t.call(a);
 						}
 					}
@@ -117,10 +117,10 @@ dojo.provide("dojox.lang.aspect");
 				context.dynIndex = context.dynAdvices.length;
 				for(i = advices.next_afterReturning; i != advices; i = i.next_afterReturning){
 					a = i.dynamic ? context.dynAdvices[--context.dynIndex] : i.advice;
-					if(t = a.afterReturning){
+					if(t = a.afterReturning){ // intentional assignment
 						t.call(a, ret);
 					}
-					if(t = a.after){
+					if(t = a.after){ // intentional assignment
 						t.call(a);
 					}
 				}
