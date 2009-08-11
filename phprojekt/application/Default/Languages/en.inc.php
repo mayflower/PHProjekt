@@ -164,6 +164,7 @@ $lang["Start date invalid"] = "Start date invalid";
 $lang["End date invalid"] = "End date invalid";
 $lang["Start date can not be after End date"] = "Start date can not be after End date";
 $lang["Maximum length exceeded for field"] = "Maximum length exceeded for field";
+$lang["The file 'uploadedFile' exceeds the defined form size"] = "File exceeds maximum allowed size";
 
 // System Modules
 $lang["Administration"] = "Administration";

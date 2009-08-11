@@ -476,6 +476,7 @@ class IndexController extends Zend_Controller_Action
     {
         $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
         $value      = (string) $this->getRequest()->getParam('value', null);
+        $maxSize    = (int) $this->getRequest()->getParam('MAX_FILE_SIZE', null);
         $fileName   = null;
         $addedValue = '';
 
@@ -496,7 +497,15 @@ class IndexController extends Zend_Controller_Action
 
         if (!$adapter->receive()) {
             $messages = $adapter->getMessages();
+            foreach ($messages as $index => $message) {
+                $messages[$index] = Phprojekt::getInstance()->translate($message);
+                if ($index == 'fileUploadErrorFormSize') {
+                    $maxSize           = (int) ($maxSize / 1024);
+                    $messages[$index] .= ': ' . $maxSize . ' Kb.';
+                }
+            }
             $this->view->errorMessage = implode("\n", $messages);
+
         } else {
             if (!empty($value)) {
                 $value .= '||';
