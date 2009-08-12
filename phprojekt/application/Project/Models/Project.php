@@ -125,4 +125,41 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         $modulePermissions->projectId = $this->id;
         $modulePermissions->save();
     }
+
+    /**
+     * Delete the tree cache after save
+     *
+     * @return boolean
+     */
+    public function parentSave()
+    {
+        $result = parent::parentSave();
+        Phprojekt_Tree_Node_Database::deleteCache();
+
+        return $result;
+    }
+
+    /**
+     * Delete the tree cache after save
+     *
+     * @return boolean
+     */
+    public function save()
+    {
+        $result = parent::save();
+        Phprojekt_Tree_Node_Database::deleteCache();
+
+        return $result;
+    }
+
+    /**
+     * Delete the tree cache after delete
+     *
+     * @return boolean
+     */
+    public function delete()
+    {
+        parent::delete();
+        Phprojekt_Tree_Node_Database::deleteCache();
+    }
 }
