@@ -159,10 +159,8 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonBookingDetailAction()
     {
-        $date = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-
-        $model = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
-
+        $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
+        $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
         $records = $model->getRecords($date);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
@@ -242,12 +240,10 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonStopAction()
     {
-        $offset = (int) $this->getRequest()->getParam('start', null);
-
         // Date filter to find the open register
         $db      = Phprojekt::getInstance()->getDb();
         $where   = sprintf('date = %s AND (end_time = "" OR end_time IS NULL)', $db->quote(date("Y-m-d")));
-        $records = $this->getModelObject()->fetchAll($where, null, 1, $offset);
+        $records = $this->getModelObject()->fetchAll($where, null, 1);
 
         $this->getRequest()->setParam('endTime', date("H:i:s"));
 
