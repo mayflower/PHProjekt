@@ -246,7 +246,9 @@ class Core_Models_UserSetting
         } else {
             $password = Phprojekt_Auth::cryptString($params['password']);
         }
-        $fields = $this->getFieldDefinition();
+
+        $namespace = new Zend_Session_Namespace(Setting_Models_Setting::NAMESPACE . $userId);
+        $fields    = $this->getFieldDefinition();
         foreach ($fields as $data) {
             foreach ($params as $key => $value) {
                 if ($key == $data['key'] && $key != 'oldValue' && $key != 'confirmValue') {
@@ -273,6 +275,8 @@ class Core_Models_UserSetting
                         $setting->identifier = 'Core';
                         $setting->save();
                     }
+                    $namespace->$key = $value;
+                    break;
                 }
             }
         }

@@ -34,6 +34,11 @@
 class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
 {
     /**
+     * Name for use with the session
+     */
+    const NAMESPACE = 'Setting_Models_Setting-getSetting-';
+
+    /**
      * The name of a module
      *
      * @var string
@@ -140,17 +145,17 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             $userId = Phprojekt_Auth::getUserId();
         }
 
-        $settingNamespace = new Zend_Session_Namespace('Setting_Models_Setting-getSetting-' . $userId);
-        if (!isset($settingNamespace->$settingName)) {
+        $namespace = new Zend_Session_Namespace(self::NAMESPACE . $userId);
+        if (!isset($namespace->$settingName)) {
             $where = sprintf('user_id = %d AND key_value = %s AND module_id = %d', (int) $userId,
                 $this->_db->quote($settingName), (int) $this->_moduleId);
             $record = $this->fetchAll($where);
             if (!empty($record)) {
                 $toReturn = $record[0]->value;
             }
-            $settingNamespace->$settingName = $toReturn;
+            $namespace->$settingName = $toReturn;
         } else {
-            $toReturn = $settingNamespace->$settingName;
+            $toReturn = $namespace->$settingName;
         }
 
         return $toReturn;
@@ -228,13 +233,11 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             $userId = Phprojekt_Auth::getUserId();
         }
 
-        $settingNamespace = new Zend_Session_Namespace('Setting_Models_Setting-getSetting-' . $userId);
-        $settingNamespace->unsetAll();
-
         if (method_exists($this->getModel(), 'setSettings')) {
             call_user_func(array($this->getModel(), 'setSettings'), $params, $userId);
         } else {
-            $fields = $this->getModel()->getFieldDefinition();
+            $namespace = new Zend_Session_Namespace(self::NAMESPACE . $userId);
+            $fields    = $this->getModel()->getFieldDefinition();
             foreach ($fields as $data) {
                 foreach ($params as $key => $value) {
                     if ($key == $data['key']) {
@@ -254,6 +257,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
                             $clone->identifier = $this->_module;
                             $clone->save();
                         }
+                        $namespace->$key = $value;
                         break;
                     }
                 }

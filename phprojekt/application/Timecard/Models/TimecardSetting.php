@@ -92,7 +92,8 @@ class Timecard_Models_TimecardSetting
      */
     public function setSettings($params)
     {
-        $fields = $this->getFieldDefinition();
+        $namespace = new Zend_Session_Namespace(Setting_Models_Setting::NAMESPACE . Phprojekt_Auth::getUserId());
+        $fields    = $this->getFieldDefinition();
         foreach ($fields as $data) {
             foreach ($params as $key => $value) {
                 if ($key == $data['key']) {
@@ -120,6 +121,8 @@ class Timecard_Models_TimecardSetting
                         $setting->identifier = 'Timecard';
                         $setting->save();
                     }
+                    $namespace->$key = $value;
+                    break;
                 }
             }
         }
