@@ -62,7 +62,7 @@ final class Default_Helpers_Delete
                     $records = $module->fetchAll($where);
                     if (is_array($records)) {
                         foreach ($records as $record) {
-                            $record->delete();
+                            self::delete($record);
                         }
                     }
                 }
