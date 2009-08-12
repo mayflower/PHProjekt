@@ -123,6 +123,9 @@ class Phprojekt_LoginController_Test extends FrontInit
                 $rows  = $settingsModel->fetchAll($where);
                 $this->assertTrue(count($rows) == 0);
 
+
+                // Remove all cache files before the tests end
+                Phprojekt::getInstance()->getCache()->clean();
                 return;
             }
         }

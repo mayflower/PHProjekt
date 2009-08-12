@@ -176,8 +176,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                 $this->_translate[$locale] = array($temp[0]);
             }
 
-            $cache->save($this->_translate[$locale], 'Phprojekt_LanguageAdapter_loadTranslationData_' . $locale,
-                array('Language'));
+            $cache->save($this->_translate[$locale], 'Phprojekt_LanguageAdapter_loadTranslationData_' . $locale);
         }
     }
 

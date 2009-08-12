@@ -696,9 +696,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
 
-        // Clean the metadata cache, without Language tags
-        Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean(Zend_Cache::CLEANING_MODE_NOT_MATCHING_TAG,
-            array('Language'));
+        // Clean the metadata cache
+        if (null !== $this->_model) {
+            $info    = $this->_model->info();
+            $cacheId = $info['schema'].".".$info['name'];
+            $cacheId = md5("$cacheId");
+            Zend_Db_Table_Abstract::getDefaultMetadataCache()->remove($cacheId);
+        }
 
         $oldFields = $this->getDataDefinition();
         $tableDataForCreate['id'] = array('type'   => 'auto_increment',
