@@ -56,7 +56,7 @@ class Statistic_Models_Statistic
         // Get Sub-Projects
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, $projectId);
-        $tree->setup();
+        $tree         = $tree->setup();
         $projectsId = array(0);
         foreach ($tree as $node) {
             if ($node->id) {

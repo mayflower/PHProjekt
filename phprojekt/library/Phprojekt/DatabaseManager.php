@@ -382,7 +382,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             case 'Project':
                 $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
                 $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
-                $tree->setup();
+                $tree         = $tree->setup();
                 foreach ($tree as $node) {
                     $options[] = array('id'   => (int) $node->$key,
                                        'name' => $node->getDepthDisplay($value));

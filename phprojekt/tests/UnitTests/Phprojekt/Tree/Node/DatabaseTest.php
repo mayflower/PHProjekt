@@ -44,7 +44,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
     {
         $this->_model = new Project_Models_Project($this->sharedFixture);
         $this->_tree = new Phprojekt_Tree_Node_Database($this->_model, 1);
-        $this->_tree->setup();
+        $this->_tree = $this->_tree->setup();
     }
 
     /**
@@ -100,15 +100,15 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
         $child = $this->_tree->getFirstChild();
         $this->assertEquals('Project 1', $child->title);
 
-        $node = $this->_tree->getNodeById(2);
+        $node  = $this->_tree->getNodeById(2);
         $child = $node->getFirstChild();
         $this->assertEquals('Sub Project', $child->title);
 
-        $node = $this->_tree->getNodeById(4);
+        $node  = $this->_tree->getNodeById(4);
         $child = $node->getFirstChild();
         $this->assertEquals('Sub Sub Project 1', $child->title);
 
-        $node = $this->_tree->getNodeById(7);
+        $node  = $this->_tree->getNodeById(7);
         $child = $node->getFirstChild();
         $this->assertNull($child);
     }
@@ -123,7 +123,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
         $child1->setParentNode($child2);
 
         $tree = new Phprojekt_Tree_Node_Database($this->_model, 1);
-        $tree->setup();
+        $tree = $tree->setup();
         $this->assertEquals(5, $tree->getNodeById(4)->parentNode->id);
     }
 
@@ -154,7 +154,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
     public function testGetSubtree()
     {
         $tree = new Phprojekt_Tree_Node_Database($this->_model, 4);
-        $tree->setup();
+        $tree = $tree->setup();
 
         $this->assertEquals(2, count($tree->getChildren()));
         $this->assertNull($tree->getNodeById(2));
@@ -170,7 +170,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
     public function testDeleteNode()
     {
         $tree = new Phprojekt_Tree_Node_Database($this->_model, 4);
-        $tree->setup();
+        $tree = $tree->setup();
         $this->assertEquals(2, count($tree->getChildren()));
         $tree->delete();
         $this->assertNull($tree->id);

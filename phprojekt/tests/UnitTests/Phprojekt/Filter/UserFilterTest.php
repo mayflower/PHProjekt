@@ -44,7 +44,7 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
         $record = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'Invisible Root');
         $tree   = new Phprojekt_Tree_Node_Database($record, 1);
-        $tree->setup($filter);
+        $tree   = $tree->setup($filter);
         $this->assertEquals(1, count($tree->getRootNode()->getChildren()));
 
         $this->setExpectedException('InvalidArgumentException');
@@ -61,7 +61,7 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
 
         $filter->setValue('Invisible Root');
         $tree = new Phprojekt_Tree_Node_Database($record, 1);
-        $tree->setup($filter);
+        $tree = $tree->setup($filter);
         $this->assertEquals(1, count($tree->getRootNode()->getChildren()));
     }
 
@@ -76,7 +76,7 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
         $record = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'Invisble Root');
         $tree   = new Phprojekt_Tree_Node_Database($record, 1);
-        $tree->setup($filter);
+        $tree   = $tree->setup($filter);
 
         $filter->saveToBackingStore($user);
     }

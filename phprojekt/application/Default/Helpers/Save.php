@@ -46,14 +46,14 @@ final class Default_Helpers_Save
      */
     protected static function _saveTree(Phprojekt_Tree_Node_Database $node, array $params, $parentId = null)
     {
-        $node->setup();
+        $node = $node->setup();
 
         if (null === $parentId) {
             $parentId = $node->getParentNode()->id;
         }
 
         $parentNode = new Phprojekt_Tree_Node_Database($node->getActiveRecord(), $parentId);
-        $parentNode->setup();
+        $parentNode = $parentNode->setup();
 
         // Assign the values
         foreach ($params as $k => $v) {

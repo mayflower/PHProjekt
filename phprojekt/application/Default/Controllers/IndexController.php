@@ -112,9 +112,8 @@ class IndexController extends Zend_Controller_Action
     {
         $model = Phprojekt_Loader::getModel('Project', 'Project');
         $tree  = new Phprojekt_Tree_Node_Database($model, 1);
-        $tree->setup();
 
-        Phprojekt_Converter_Json::echoConvert($tree);
+        Phprojekt_Converter_Json::echoConvert($tree->setup());
     }
 
     /**

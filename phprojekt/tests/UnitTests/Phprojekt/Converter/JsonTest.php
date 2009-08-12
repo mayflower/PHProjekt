@@ -59,7 +59,7 @@ class Phprojekt_Converter_JsonTest extends PHPUnit_Framework_TestCase
         $converted = '{}&&({"identifier":"id","label":"name","items":[{"name"';
         $object    = Phprojekt_Loader::getModel('Project', 'Project');
         $tree      = new Phprojekt_Tree_Node_Database($object, 1);
-        $tree->setup();
+        $tree      = $tree->setup();
         $result = Phprojekt_Converter_Json::convert($tree);
         $this->assertEquals($converted, substr($result, 0, strlen($converted)));
     }
