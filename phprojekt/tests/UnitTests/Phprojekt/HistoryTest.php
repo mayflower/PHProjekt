@@ -135,7 +135,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $data = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
+        $data  = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
         $array = array('userId'   => '1',
                        'moduleId' => '1',
                        'itemId'   => Zend_Registry::get('insertedId'),
@@ -187,8 +187,7 @@ class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
         $project->find(Zend_Registry::get('insertedId'));
         $project->delete();
 
-        $history = new Phprojekt_History(array('db' => $this->sharedFixture));
-        $data = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
+        $data  = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
         $array = array('userId'   => '1',
                        'moduleId' => '1',
                        'itemId'   => Zend_Registry::get('insertedId'),
