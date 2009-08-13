@@ -59,7 +59,7 @@ dojo.declare("phpr.grid.cells.Percentage", dojox.grid.cells._Widget, {
     //    Redefine the function to return the correct value
     // description:
     //    Redefine the function to return the correct value
-    widgetClass: "dijit.form.HorizontalSlider",
+    widgetClass: dijit.form.HorizontalSlider,
 
     getValue:function(inRowIndex) {
         return dojo.number.round(this.widget.attr('value'), 1);
@@ -102,7 +102,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
     //    Redefine the function to work with iso format
     // description:
     //    Redefine the function to work with iso format
-    widgetClass: "dijit.form.DateTextBox",
+    widgetClass: dijit.form.DateTextBox,
 
     getValue:function(inRowIndex) {
         var date = this.widget.attr('value');
