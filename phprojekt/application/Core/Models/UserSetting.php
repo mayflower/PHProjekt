@@ -247,7 +247,7 @@ class Core_Models_UserSetting
             $password = Phprojekt_Auth::cryptString($params['password']);
         }
 
-        $namespace = new Zend_Session_Namespace(Setting_Models_Setting::NAMESPACE . $userId);
+        $namespace = new Zend_Session_Namespace(Setting_Models_Setting::IDENTIFIER, $userId);
         $fields    = $this->getFieldDefinition();
         foreach ($fields as $data) {
             foreach ($params as $key => $value) {

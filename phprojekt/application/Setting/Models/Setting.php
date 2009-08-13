@@ -36,7 +36,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
     /**
      * Name for use with the session
      */
-    const NAMESPACE = 'Setting_Models_Setting-getSetting-';
+    const IDENTIFIER = 'Setting_Models_Setting-getSetting-';
 
     /**
      * The name of a module
@@ -145,7 +145,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             $userId = Phprojekt_Auth::getUserId();
         }
 
-        $namespace = new Zend_Session_Namespace(self::NAMESPACE . $userId);
+        $namespace = new Zend_Session_Namespace(self::IDENTIFIER. $userId);
         if (!isset($namespace->$settingName)) {
             $where = sprintf('user_id = %d AND key_value = %s AND module_id = %d', (int) $userId,
                 $this->_db->quote($settingName), (int) $this->_moduleId);
@@ -236,7 +236,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         if (method_exists($this->getModel(), 'setSettings')) {
             call_user_func(array($this->getModel(), 'setSettings'), $params, $userId);
         } else {
-            $namespace = new Zend_Session_Namespace(self::NAMESPACE . $userId);
+            $namespace = new Zend_Session_Namespace(self::IDENTIFIER. $userId);
             $fields    = $this->getModel()->getFieldDefinition();
             foreach ($fields as $data) {
                 foreach ($params as $key => $value) {
