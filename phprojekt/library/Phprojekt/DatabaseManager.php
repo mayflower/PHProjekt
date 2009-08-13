@@ -192,6 +192,45 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
+     * Return an array of short field information.
+     * (Just key and type)
+     *
+     * @param integer $ordering An ordering constant
+     *
+     * @return array
+     */
+    public function getShortFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    {
+        $converted = array();
+        $fields    = $this->_getFields($this->_mapping[$ordering]);
+
+        // The db manager handles field different than the encoder/output layer expect
+        foreach ($fields as $field) {
+            $entry        = array();
+            $entry['key'] = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field->tableField);
+            switch ($field->formType) {
+                case 'selectValues':
+                    $entry['type'] = 'selectbox';
+                    break;
+                case 'multipleSelectValues':
+                    $entry['type'] = 'multipleselectbox';
+                    break;
+                case 'display':
+                    $entry['type'] = 'display';
+                    break;
+                case 'upload':
+                    $entry['type'] = 'upload';
+                default:
+                    $entry['type'] = $field->formType;
+                    break;
+            }
+            $converted[]   = $entry;
+        }
+
+        return $converted;
+    }
+
+    /**
      * Return an array of field information.
      *
      * @param integer $ordering An ordering constant
