@@ -68,7 +68,7 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
                 if (data.type == 'success') {
                     if (phpr.submodule == 'User') {
                         var result     = Array();
-                        result.type    = 'success';
+                        result.type    = 'warning';
                         result.message = phpr.nls.get('You need to log out and log in again in order to let changes '
                             + 'have effect');
                         new phpr.handleResponse('serverFeedback', result);
