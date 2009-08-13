@@ -296,8 +296,8 @@ phpr.handleResponse = function(resultArea, result) {
     var css = 'error';
     if (result.type == 'success') {
         css = 'success';
-    } else if (result.type == 'notice') {
-        css = 'notice';
+    } else if (result.type == 'warning') {
+        css = 'warning';
     }
     var message= result.message
     if (!message) {

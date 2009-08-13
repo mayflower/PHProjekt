@@ -40,9 +40,9 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     },
 
     addModuleTab:function(data) {
-        // summary:
+        // Summary:
         //    Add Tab for allow/disallow modules on the project
-        // description:
+        // Description:
         //    Add Tab for allow/disallow modules on the project
         if (this._accessPermissions) {
             var modulesData = this.render(["phpr.Project.template", "modulestab.html"], null, {
@@ -56,9 +56,9 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     },
 
     addRoleTab:function(data) {
-        // summary:
+        // Summary:
         //    Add Tab for user-role relation into the project
-        // description:
+        // Description:
         //    Add Tab for user-role relation into the project
         if (this._accessPermissions) {
             var currentUser  = data[0]["rights"]["currentUser"]["userId"] || 0;
@@ -124,9 +124,9 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     },
 
     newRoleUser:function() {
-        // summary:
+        // Summary:
         //    Add a new row of one user-role
-        // description:
+        // Description:
         //    Add a new row of one user-role
         //    with the values selected on the first row
         var roleId = dijit.byId("relationRoleAdd").attr('value');
@@ -166,18 +166,32 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     },
 
     deleteUserRoleRelation:function(userId) {
-        // summary:
+        // Summary:
         //    Remove the row of one user-accees
-        // description:
+        // Description:
         //    Remove the row of one user-accees
         //    and destroy all the used widgets
         phpr.destroyWidget("roleRelation[" + userId + "]");
         phpr.destroyWidget("userRelation[" + userId + "]");
         phpr.destroyWidget("relationDeleteButton" + userId);
 
-        var e = dojo.byId("trRelationFor" + userId);
+        var e      = dojo.byId("trRelationFor" + userId);
         var parent = e.parentNode;
         parent.removeChild(e);
+    },
+
+    deleteForm:function() {
+        // Summary:
+        //    This function is responsible for deleting a dojo element
+        // Description:
+        //    This function calls jsonDeleteAction
+        //    Also show a warning since the process can take some time
+        var result     = Array();
+        result.type    = 'warning';
+        result.message = phpr.nls.get('The deletion of a project and its subprojects might take a while');
+        new phpr.handleResponse('serverFeedback', result);
+
+        this.inherited(arguments);
     },
 
     updateData:function() {

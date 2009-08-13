@@ -1,4 +1,7 @@
 <?php
+$lang["The deletion of a project and its subprojects might take a while"] = "The deletion of a project and its "
+    . "subprojects might take a while";
+
 // Tooltip Help
 $lang["Tooltip"]["projectId"] = "The parent project, if none then select PHProjekt.";
 
