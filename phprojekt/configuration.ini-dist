@@ -34,9 +34,9 @@ webpath = "http://localhost/phprojekt/htdocs/"
 
 ; Path where will be placed files uploaded by the user.
 ; UNIX
-uploadpath = "/var/www/phprojekt/tmp/"
+uploadpath = "/var/www/phprojekt/upload/"
 ; WINDOWS
-;uploadpath = "C:\phprojekt\tmp\"
+;uploadpath = "C:\phprojekt\upload\"
 
 ;;;;;;;;;;;;
 ; DATABASE ;

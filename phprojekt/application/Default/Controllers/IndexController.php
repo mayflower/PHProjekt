@@ -425,45 +425,24 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Shows the template page form
+     * Shows the upload template page form
      *
      * @return void
      */
-    public function uploadFormAction()
+    public function fileFormAction()
     {
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $link   = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/' . $this->getRequest()->getModuleName();
+        $linkBegin = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/'
+            . $this->getRequest()->getModuleName();
         $value  = (string) $this->getRequest()->getParam('value', null);
         $itemId = (int) $this->getRequest()->getParam('id', null);
         $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
 
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
-        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
-        $this->view->formPath       = $link . '/index/uploadFile/';
-        $this->view->downloadLink   = '';
-        $this->view->fileName       = null;
-        $this->view->itemId         = $itemId;
-        $this->view->field          = $field;
-        $this->view->value          = $value;
-        $this->view->filesChanged   = false;
+        $_SESSION['uploadedFiles_' . $field] = $value;
 
-        // Is there any file?
-        if (!empty($value)) {
-            $files = explode('||', $value);
-            $filesForView = array();
-            foreach ($files as $file) {
-                $fileName = strstr($file, '|');
-                $filesForView[] = array('downloadLink' => $link . '/index/downloadFile/file/' . $file,
-                                        'fileName'     => substr($fileName, 1),
-                                        'deleteLink'   => $link . '/index/deleteFile/file/' . $file . '/value/'
-                                                          . $value . '/id/' . $itemId . '/field/' . $field);
-            }
-            $this->view->files = $filesForView;
-        }
-
-        $this->render('upload');
+        $this->_fileRenderView($linkBegin, $itemId, $field, $value, false);
     }
 
     /**
@@ -471,21 +450,22 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function uploadFileAction()
+    public function fileUploadAction()
     {
         $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $value      = (string) $this->getRequest()->getParam('value', null);
+        $value      = $_SESSION['uploadedFiles_' . $field];
         $maxSize    = (int) $this->getRequest()->getParam('MAX_FILE_SIZE', null);
+        $itemId     = (int) $this->getRequest()->getParam('itemId', null);
         $fileName   = null;
         $addedValue = '';
 
+        $this->_fileCheckWritePermission($itemId);
+
         // Fix name for save it as md5
         if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
-            $md5mane    = md5(uniqid(rand(), 1));
-            $addedValue = $md5mane . '|' . $_FILES['uploadedFile']['name'];
-            $fileName   = $_FILES['uploadedFile']['name'];
-
-            $_FILES['uploadedFile']['name'] = $md5mane;
+            $md5name                        = md5(uniqid(rand(), 1));
+            $addedValue                     = $md5name . '|' . $_FILES['uploadedFile']['name'];
+            $_FILES['uploadedFile']['name'] = $md5name;
         }
 
         $adapter = new Zend_File_Transfer_Adapter_Http();
@@ -511,36 +491,12 @@ class IndexController extends Zend_Controller_Action
             }
             $value .= $addedValue;
         }
-        $link   = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/' . $this->getRequest()->getModuleName();
-        $itemId = (int) $this->getRequest()->getParam('itemId', null);
+        $_SESSION['uploadedFiles_' . $field] = $value;
 
-        $this->view->filesChanged   = true;
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
-        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
-        $this->view->downloadLink   = '';
-        $this->view->formPath       = $link . '/index/uploadFile/';
-        $this->view->itemId         = $itemId;
-        $this->view->field          = $field;
-        $this->view->value          = $value;
+        $linkBegin = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/'
+            . $this->getRequest()->getModuleName();
 
-        // Is there any file?
-        $filesForView = array();
-        if (!empty($value)) {
-            $files = explode('||', $value);
-            foreach ($files as $file) {
-                $fileName = strstr($file, '|');
-                $filesForView[] = array('downloadLink' => $link . '/index/downloadFile/file/' . $file,
-                                        'fileName'     => substr($fileName, 1),
-                                        'deleteLink'   => $link . '/index/deleteFile/file/' . $file . '/value/'
-                                                          . $value . '/id/' . $itemId . '/field/' . $field);
-            }
-        }
-        if (isset($this->view->errorMessage) && !empty($this->view->errorMessage)) {
-            $filesForView[] = array();
-        }
-        $this->view->files = $filesForView;
-
-        $this->render('upload');
+        $this->_fileRenderView($linkBegin, $itemId, $field, $value, true);
     }
 
     /**
@@ -548,12 +504,34 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function downloadFileAction()
+    public function fileDownloadAction()
     {
-        $file     = (string) $this->getRequest()->getParam('file', null);
-        $fileName = strstr($file, '|');
+        $itemId = (int) $this->getRequest()->getParam('itemId', null);
+        $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $order  = (int) $this->getRequest()->getParam('order', null);
+
+        $this->_fileCheckParamField($field);
+
+        if ($itemId > 0) {
+            $model = $this->getModelObject();
+            $model->find($itemId);
+            // The user has download permission?
+            $rights = $model->getRights();
+            if (!$rights['currentUser']['download']) {
+                $error = Phprojekt::getInstance()->translate("You don't have permission for downloading on this item.");
+                die($error);
+            }
+            $files = $model->$field;
+        } else {
+            $files = $_SESSION['uploadedFiles_' . $field];
+        }
+        $files = explode('||', $files);
+
+        $this->_fileCheckParamOrder($order, count($files));
+
+        list($md5Name, $fileName) = explode("|", $files[$order - 1]);
+
         if (!empty($fileName)) {
-            list($md5Name, $fileName) = explode("|", $file);
             $md5Name = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
             if (file_exists($md5Name)) {
                 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -575,22 +553,37 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function deleteFileAction()
+    public function fileDeleteAction()
     {
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $link       = Phprojekt::getInstance()->getConfig()->webpath.'index.php/'.$this->getRequest()->getModuleName();
-        $value      = (string) $this->getRequest()->getParam('value', null);
-        $itemId     = (int) $this->getRequest()->getParam('id', null);
-        $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $deleteFile = (string) $this->getRequest()->getParam('file', null);
+        $linkBegin = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/'
+            . $this->getRequest()->getModuleName();
+        $field     = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $itemId    = (int) $this->getRequest()->getParam('id', null);
+        $order     = (int) $this->getRequest()->getParam('order', 0);
 
-        // Delete the file from the $value string
-        $filesIn = explode('||', $value);
+        $this->_fileCheckParamField($field);
+        $this->_fileCheckWritePermission($itemId);
+
+        if ($itemId > 0) {
+            $model = $this->getModelObject();
+            $model->find($itemId);
+            $files = $model->$field;
+        } else {
+            $files = $_SESSION['uploadedFiles_' . $field];
+        }
+
+        $filesIn = explode('||', $files);
+
+        $this->_fileCheckParamOrder($order, count($filesIn));
+
+        // Delete the file name and md5 from the string
         $filesOut = '';
+        $i        = 1;
         foreach ($filesIn as $file) {
-            if ($file != $deleteFile) {
+            if ($i != $order) {
                 if ($filesOut != '') {
                     $filesOut .= '||';
                 }
@@ -603,34 +596,12 @@ class IndexController extends Zend_Controller_Action
                     unlink($fileAbsolutePath);
                 }
             }
-        }
-        $value = $filesOut;
-
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
-        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
-        $this->view->formPath       = $link . '/index/uploadFile/';
-        $this->view->downloadLink   = '';
-        $this->view->fileName       = null;
-        $this->view->itemId         = $itemId;
-        $this->view->field          = $field;
-        $this->view->value          = $value;
-        $this->view->filesChanged   = true;
-
-        // Is there any file?
-        if (!empty($value)) {
-            $files = explode('||', $value);
-            $filesForView = array();
-            foreach ($files as $file) {
-                $fileName = strstr($file, '|');
-                $filesForView[] = array('downloadLink' => $link . '/index/downloadFile/file/' . $file,
-                                        'fileName'     => substr($fileName, 1),
-                                        'deleteLink'   => $link . '/index/deleteFile/file/' . $file . '/value/'
-                                                          . $value . '/id/' . $itemId . '/field/' . $field);
-            }
-            $this->view->files = $filesForView;
+            $i++;
         }
 
-        $this->render('upload');
+        $_SESSION['uploadedFiles_' . $field] = $filesOut;
+
+        $this->_fileRenderView($linkBegin, $itemId, $field, $filesOut, true);
     }
 
     /**
@@ -648,5 +619,130 @@ class IndexController extends Zend_Controller_Action
         }
 
         return $args[0];
+    }
+
+    /**
+     * Renders the upload file field with the received data
+     *
+     * @return void
+     */
+    private function _fileRenderView($linkBegin, $itemId, $field, $value, $filesChanged)
+    {
+        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
+        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
+        $this->view->formPath       = $linkBegin . '/index/fileUpload/';
+        $this->view->downloadLink   = '';
+        $this->view->fileName       = null;
+        $this->view->itemId         = $itemId;
+        $this->view->field          = $field;
+        $this->view->value          = $value;
+        $this->view->filesChanged   = $filesChanged;
+
+        $filesForView = array();
+
+        // Is there any file?
+        if (!empty($value)) {
+            $files = explode('||', $value);
+            $model = $this->getModelObject();
+            $model->find($itemId);
+            $rights = $model->getRights();
+            $i      = 0;
+            foreach ($files as $file) {
+                $fileName = strstr($file, '|');
+                $fileData = 'itemId/' . $itemId . '/field/' . $field . '/order/' . (string) ($i + 1);
+
+                $filesForView[$i] = array('fileName' => substr($fileName, 1));
+                if ($rights['currentUser']['download']) {
+                    $filesForView[$i]['downloadLink'] = $linkBegin . '/index/fileDownload/' . $fileData;
+                }
+                if ($rights['currentUser']['write']) {
+                    $filesForView[$i]['deleteLink'] = $linkBegin . '/index/fileDelete/' . $fileData;
+                }
+                $i++;
+            }
+
+        }
+        if (isset($this->view->errorMessage) && !empty($this->view->errorMessage)) {
+            $filesForView[] = array();
+        }
+
+        $this->view->files = $filesForView;
+        $this->render('upload');
+    }
+
+    /**
+     * Checks that the 'field' parameter for download and delete file actions is valid. If not, terminates script
+     * execution.
+     *
+     * @return void
+     */
+    private function _fileCheckParamField($field)
+    {
+        $model     = $this->getModelObject();
+        $dbManager = $model->getInformation();
+        $dbField   = $dbManager->find($field);
+        $valid     = false;
+
+        if (!empty($dbField)) {
+            $fieldType = $dbManager->getType($field);
+            if ($fieldType == 'upload') {
+                $valid = true;
+            }
+        }
+        if (!$valid) {
+            $error  = Phprojekt::getInstance()->translate("Error in received parameter, consult the admin. Parameter:");
+            $error .= " field";
+
+            // Log error
+            Phprojekt::getInstance()->getLog()->err("Error: wrong 'field' parameter trying to Download or Delete a file"
+                . ". User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
+            Phprojekt::getInstance()->getLog()->err($error);
+            // Show error to user and stop script execution
+            die($error);
+        }
+    }
+
+
+    /**
+     * Checks that the 'order' parameter for download and delete file actions is valid. If not, terminates script
+     * execution printing an error.
+     *
+     * @return void
+     */
+    private function _fileCheckParamOrder($order, $filesAmount)
+    {
+        if ($order < 1 || $order > $filesAmount) {
+            $error  = Phprojekt::getInstance()->translate("Error in received parameter, consult the admin. Parameter:");
+            $error .= " order";
+
+            // Log error
+            Phprojekt::getInstance()->getLog()->err("Error: wrong 'order' parameter trying to Download or Delete a file"
+                . ". User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
+            Phprojekt::getInstance()->getLog()->err($error);
+            // Show error to user and stop script execution
+            die($error);
+        }
+    }
+
+    /**
+     * Checks that the user has permission for modifying the item, in this case for uploading or deleting files.
+     * If not, prints an error, terminating script execution.
+     *
+     * @return void
+     */
+    private function _fileCheckWritePermission($itemId) {
+        $model = $this->getModelObject();
+        $model->find($itemId);
+        $rights = $model->getRights();
+        if (!$rights['currentUser']['write']) {
+            $error = Phprojekt::getInstance()->translate("You don't have permission for modifying this item.");
+
+            // Log error
+            Phprojekt::getInstance()->getLog()->err("Error: trying to Delete or Upload a file without write access. "
+                . "User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
+            Phprojekt::getInstance()->getLog()->err($error);
+            // Show error to user and stop script execution
+            die($error);
+        }
     }
 }

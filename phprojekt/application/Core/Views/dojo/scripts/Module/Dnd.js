@@ -557,7 +557,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
             labelFor = 'upload';
             inputTxt = '<input type="hidden" dojoType="dijit.form.TextBox" id="' + widgetId + '" />';
             inputTxt += '<iframe id="filesIframe_' + widgetId + '" src="' + phpr.webpath
-                + 'index.php/Project/index/uploadForm/field/' + widgetId
+                + 'index.php/Project/index/fileForm/field/' + widgetId
                 + '" height="25px" width="100%" frameborder="0" style="overflow: hidden; border: 0px;">></iframe>';
             break;
     }

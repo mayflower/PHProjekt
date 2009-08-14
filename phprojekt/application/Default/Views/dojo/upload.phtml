@@ -62,17 +62,27 @@
             if (isset($file['fileName'])) {
                 echo '
             <tr>
-                <td style="padding: 0 0 0 5px; vertical-align: middle;">
-                    <a href="'. $file['downloadLink'] .'" target=_blank>' . $file['fileName'] .'</a>
+                <td style="padding: 0 0 0 5px; vertical-align: middle;">';
+                if (isset($file['downloadLink'])) {
+                    echo '
+                    <a href="'. $file['downloadLink'] .'" target=_blank>' . $file['fileName'] . '</a>';
+                } else {
+                    echo $file['fileName'];
+                }
+                echo '
                 </td>
                 <td style="padding: 0 0 0 5px; width:5px">
                     &nbsp;
-                </td>
+                </td>';
+                if (isset($file['deleteLink'])) {
+                    echo '
                 <td style="padding: 0 0 0 5px;">
                     <button dojoType="dijit.form.Button" showLabel="false" iconClass="close" class="closeButton"
                     onClick="window.location.href=\''. $file['deleteLink'] . '\';">
                     </button>
-                </td>
+                </td>';
+                }
+                echo '
             </tr>
                 ';
             }
