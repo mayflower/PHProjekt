@@ -170,6 +170,9 @@ $lang["You don't have permission for downloading on this item."] = "Ud. no tiene
 $lang["You don't have permission for modifying this item."] = "Ud. no tiene permiso para modificar este ítem.";
 $lang["Error in received parameter, consult the admin. Parameter:"] = "Error en parámetro recibido, consulte al "
     . "administrador. Parámetro:";
+$lang["If you have problems or questions with PHProjekt, please write an email to "] = "Si tiene problemas o preguntas "
+    . "sobre Phprojekt, por favor escriba un correo electrónico a ";
+$lang["Support address:"] = "Dirección de soporte:";
 
 // Error handler messages
 $lang["Run-time notice. The script encountered something that could indicate an error, but could also happen in the "

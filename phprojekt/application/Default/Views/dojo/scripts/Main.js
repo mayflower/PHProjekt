@@ -922,17 +922,25 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             id:    'helpContent'
         }, document.createElement('div'));
 
-        for (i in helpData) {
-            var text = helpData[i];
+        for (tab in helpData) {
+            var text = helpData[tab];
             // Check if the tab have DEFAULT text
             if (text == 'DEFAULT') {
                 var defaultHelpData = nlsSource.get('Content Help', 'Default');
-                if (typeof(defaultHelpData) == 'object' && defaultHelpData[i]) {
-                    text = defaultHelpData[i];
+                if (typeof(defaultHelpData) == 'object' && defaultHelpData[tab]) {
+                    text = defaultHelpData[tab];
                 }
             }
+
+            // Add support address?
+            var support = phpr.config.supportAddress? phpr.config.supportAddress : '';
+            if (tab == 'General' &&  support != '') {
+                text += phpr.nls.get('If you have problems or questions with PHProjekt, please write an email to ')
+                    + '<b>' + support + '</b>.<br /><br /><br />';
+            }
+
             container.addChild(new dijit.layout.ContentPane({
-                title:   i,
+                title:   tab,
                 content: text
             }));
         }
@@ -952,9 +960,15 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Add a tooltip with the current user
         for (var i = 0; i < userList.length; i++) {
             if (userList[i].current) {
-                var version = (phpr.config.phprojektVersion) ? phpr.config.phprojektVersion : '';
+                var version = (phpr.config.phprojektVersion) ? ' ' + phpr.config.phprojektVersion : '';
+                var support = (phpr.config.supportAddress) ? phpr.config.supportAddress : '';
+                var label   = '<div style="text-align: center;">PHProjekt' + version + ' - ';
+                if (support != '') {
+                    label += support + '<br />'
+                }
+                label += userList[i].display + ' (ID: ' + userList[i].id + ')</div>'
                 new dijit.Tooltip({
-                    label:     'PHProjekt ' + version + " - " + userList[i].display + ' (ID: ' + userList[i].id + ')',
+                    label:     label,
                     connectId: ["PHProjektLogo"],
                     showDelay: 50
                 });

@@ -826,6 +826,11 @@ phpr.handleError = function(url, type, message) {
             break;
     }
 
+    // Show support address?
+    if (phpr.config.supportAddress != undefined && phpr.config.supportAddress != '') {
+        response.message += '<br /> ' + phpr.nls.get('Support address:') + ' ' + phpr.config.supportAddress;
+    }
+
     new phpr.handleResponse('serverFeedback', response);
 };
 
