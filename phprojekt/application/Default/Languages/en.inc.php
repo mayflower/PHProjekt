@@ -170,6 +170,8 @@ $lang["You don't have permission for downloading on this item."] = "You don't ha
 $lang["You don't have permission for modifying this item."] = "You don't have permission for modifying this item.";
 $lang["Error in received parameter, consult the admin. Parameter:"] = "Error in received parameter, consult the admin. "
     . "Parameter:";
+
+// Error handler messages
 $lang["Run-time notice. The script encountered something that could indicate an error, but could also happen in the "
     . "normal course of running a script."] = "Run-time notice. The script encountered something that could indicate an"
     . " error, but could also happen in the normal course of running a script.";
