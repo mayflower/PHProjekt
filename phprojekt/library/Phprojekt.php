@@ -403,6 +403,9 @@ class Phprojekt
         $front->setModuleControllerDirectoryName('Controllers');
         $front->addModuleDirectory(PHPR_CORE_PATH);
         $front->setParam('useDefaultControllerAlways', true);
+
+        // Define general error handler
+        set_error_handler(Array("Phprojekt", "errorHandler"));
     }
 
     /**
@@ -467,7 +470,6 @@ class Phprojekt
      */
     public function run()
     {
-        set_error_handler(Array("Phprojekt", "errorHandler"));
         try {
             Zend_Controller_Front::getInstance()->dispatch();
         } catch (Exception $error) {
