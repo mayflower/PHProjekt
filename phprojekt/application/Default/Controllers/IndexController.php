@@ -230,17 +230,32 @@ class IndexController extends Zend_Controller_Action
     public function jsonSaveMultipleAction()
     {
         $data    = (array) $this->getRequest()->getParam('data');
-        $message = Phprojekt::getInstance()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
         $showId  = array();
         $model   = $this->getModelObject();
+        $success = true;
+
         foreach ($data as $id => $fields) {
             $model->find((int) $id);
             $params = $this->setParams($fields, $model);
-            Default_Helpers_Save::save($model, $params);
-            $showId[] = $id;
+            try {
+                Default_Helpers_Save::save($model, $params);
+                $showId[] = $id;
+            } catch (Phprojekt_PublishedException $error) {
+                $message = sprintf("ID %d. %s", $id, $error->getMessage());
+                $success = false;
+                $showId  = Array($id);
+                break;
+            }
         }
 
-        $return = array('type'    => 'success',
+        if ($success) {
+            $message    = Phprojekt::getInstance()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
+            $resultType = 'success';
+        } else {
+            $resultType = 'error';
+        }
+
+        $return = array('type'    => $resultType,
                         'message' => $message,
                         'code'    => 0,
                         'id'      => implode(',', $showId));

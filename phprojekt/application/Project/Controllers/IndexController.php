@@ -91,17 +91,32 @@ class Project_IndexController extends IndexController
     public function jsonSaveMultipleAction()
     {
         $data    = (array) $this->getRequest()->getParam('data');
-        $message = Phprojekt::getInstance()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
         $showId  = array();
         $model   = $this->getModelObject();
+        $success = true;
+
         foreach ($data as $id => $fields) {
             $model->find($id);
-            $node    = new Phprojekt_Tree_Node_Database($model, $id);
-            $newNode = Default_Helpers_Save::save($node, $fields, (int) $this->getRequest()->getParam('nodeId', null));
-            $showId[] = $newNode->id;
+            $node = new Phprojekt_Tree_Node_Database($model, $id);
+            try {
+                $newNode  = Default_Helpers_Save::save($node, $fields, (int) $this->getRequest()->getParam('nodeId', null));
+                $showId[] = $newNode->id;
+            } catch (Phprojekt_PublishedException $error) {
+                $success = false;
+                $showId  = Array($id);
+                $message = sprintf("ID %d. %s", $id, $error->getMessage());
+                break;
+            }
         }
 
-        $return = array('type'    => 'success',
+        if ($success) {
+            $message    = Phprojekt::getInstance()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
+            $resultType = 'success';
+        } else {
+            $resultType = 'error';
+        }
+
+        $return = array('type'    => $resultType,
                         'message' => $message,
                         'code'    => 0,
                         'id'      => implode(',', $showId));

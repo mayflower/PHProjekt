@@ -82,4 +82,18 @@ class Project_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains('{"1":{"id":1,"name":"admin",', $response);
     }
+
+    /**
+     * Test the multiple save with error
+     */
+    public function testJsonSaveMultipleError()
+    {
+        $this->setRequestUrl('Project/index/jsonSaveMultiple');
+        $items = array(2 => array('projectId' => '2'));
+        $this->request->setParam('data', $items);
+        $response = $this->getResponse();
+        $expected = '{"type":"error","message":"ID 2. Project: The project can not be saved under itself","code":0,'
+            . '"id":"2"}';
+        $this->assertContains($expected, $response);
+    }
 }

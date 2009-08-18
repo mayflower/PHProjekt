@@ -45,4 +45,32 @@ class User_IndexController_Test extends FrontInit
             . '"current":true}';
         $this->assertContains($expected, $response);
     }
+
+    /**
+     * Test the multiple save with error (actually Default jsonSaveMultipleAction)
+     */
+    public function testJsonSaveMultipleError()
+    {
+        $this->setRequestUrl('Core/user/jsonSaveMultiple');
+        $items = array(2 => array('username' => 'david'));
+        $this->request->setParam('data', $items);
+        $response = $this->getResponse();
+        $expected = '{"type":"error","message":"ID 2. Username: Already exists, choose another one please","code":0,'
+            . '"id":"2"}';
+        $this->assertContains($expected, $response);
+    }
+
+    /**
+     * Test the multiple save with one item wrong and another one well (actually Default jsonSaveMultipleAction)
+     */
+    public function testJsonSaveMultipleErrorPart2()
+    {
+        $this->setRequestUrl('Core/user/jsonSaveMultiple');
+        $items = array(2 => array('admin' => '1'),
+                       3 => array('firstname' => 'Yo'));
+        $this->request->setParam('data', $items);
+        $response = $this->getResponse();
+        $expected = '{"type":"error","message":"ID 3. Last Name: Is a required field","code":0,"id":"3"}';
+        $this->assertContains($expected, $response);
+    }
 }
