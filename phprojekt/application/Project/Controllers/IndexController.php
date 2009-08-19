@@ -99,7 +99,8 @@ class Project_IndexController extends IndexController
             $model->find($id);
             $node = new Phprojekt_Tree_Node_Database($model, $id);
             try {
-                $newNode  = Default_Helpers_Save::save($node, $fields, (int) $this->getRequest()->getParam('nodeId', null));
+                $nodeId   = (int) $this->getRequest()->getParam('nodeId', null);
+                $newNode  = Default_Helpers_Save::save($node, $fields, $nodeId);
                 $showId[] = $newNode->id;
             } catch (Phprojekt_PublishedException $error) {
                 $success = false;

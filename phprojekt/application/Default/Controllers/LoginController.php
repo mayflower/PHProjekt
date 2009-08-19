@@ -103,11 +103,11 @@ class LoginController extends Zend_Controller_Action
         try {
             $success = Phprojekt_Auth::login($username, $password);
             if ($success === true) {
-                $return = array('type'  => 'success',
+                $return = array('type'    => 'success',
                                 'message' => '');
             }
         } catch (Phprojekt_Auth_Exception $error) {
-            $return = array('type'  => 'error',
+            $return = array('type'    => 'error',
                             'message' => $error->getMessage());
         }
 

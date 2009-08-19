@@ -113,6 +113,7 @@ class Phprojekt_LoginController_Test extends FrontInit
             $this->assertEquals(0, $error->getCode());
             try {
                 $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
+                $this->fail('An error occured on logout action: Id ' . $authNamespace->userId . ' is still logued');
             } catch (Zend_Session_Exception $error) {
                 $this->assertEquals(0, $error->getCode());
                 // Try to fetch login data in settings table to assure it has been deleted
@@ -122,7 +123,6 @@ class Phprojekt_LoginController_Test extends FrontInit
                 $where = sprintf("user_id = 1 AND key_value LIKE %s", $db->quote(Phprojekt_Auth::LOGGED_TOKEN . '%'));
                 $rows  = $settingsModel->fetchAll($where);
                 $this->assertTrue(count($rows) == 0);
-
 
                 // Remove all cache files before the tests end
                 Phprojekt::getInstance()->getCache()->clean();

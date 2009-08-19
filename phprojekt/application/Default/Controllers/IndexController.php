@@ -471,7 +471,6 @@ class IndexController extends Zend_Controller_Action
         $value      = $_SESSION['uploadedFiles_' . $field];
         $maxSize    = (int) $this->getRequest()->getParam('MAX_FILE_SIZE', null);
         $itemId     = (int) $this->getRequest()->getParam('itemId', null);
-        $fileName   = null;
         $addedValue = '';
 
         $this->_fileCheckWritePermission($itemId);

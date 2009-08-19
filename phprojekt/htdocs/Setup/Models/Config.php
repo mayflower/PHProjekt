@@ -291,7 +291,7 @@ class Setup_Models_Config
         $content .= $this->_eol;
         $content .= '; If mailTransport is set to 0, then fill all the needed \'smtp*\' values:' . $this->_eol;
         $content .= '; Name or IP address of the SMTP server to be used to send that notifications.' . $this->_eol;
-        $content .= 'smtpServer = "localhost"' . $this->_eol;
+        $content .= 'smtpServer = "' . $server . '"' . $this->_eol;
         $content .= '; If the SMTP server requires authentication, remove the semicolons \';\' in the' . $this->_eol;
         $content .= '; three following lines and write inside the inverted commas "" the appropriate' . $this->_eol;
         $content .= '; username and password. Auth mode: leave this as "login" if you don\'t know.' . $this->_eol;
