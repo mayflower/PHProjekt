@@ -210,7 +210,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $end       = mktime($endTime[0], $endTime[1], $endTime[2], $endDate[1], $endDate[2], $endDate[0]);
 
         if ($start >= $end) {
-            Phprojekt::getInstance()->getLog()->debug('OO');
             $this->_validate->error->addError(array(
                 'field'   => Phprojekt::getInstance()->translate(self::START_AFTER_END_TITLE),
                 'label'   => Phprojekt::getInstance()->translate(self::START_AFTER_END_TITLE),
