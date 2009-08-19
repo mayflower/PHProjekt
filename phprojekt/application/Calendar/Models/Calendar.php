@@ -63,6 +63,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     const EVENT_TYPE_ANUAL = 5;
 
+    const START_AFTER_END_TITLE = "Event duration";
+    const START_AFTER_END_DESC  = "End date and time has to be after Start date and time.";
+
     public $notifParticipants;
     public $startDateNotif;
     public $endDateNotif;
@@ -193,6 +196,26 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         // one is the unique value available because calendar is a global module
         if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->getModelName())) >= 1) {
             $this->projectId = 1;
+        }
+
+        if (strlen($this->startDate) < 10 || strlen($this->startTime) < 5) {
+            return false;
+        }
+        // Check that the end moment is after start moment
+        $startDate = split('-', $this->startDate);
+        $startTime = split(':', $this->startTime);
+        $start     = mktime($startTime[0], $startTime[1], $startTime[2], $startDate[1], $startDate[2], $startDate[0]);
+        $endDate   = split('-', $this->endDate);
+        $endTime   = split(':', $this->endTime);
+        $end       = mktime($endTime[0], $endTime[1], $endTime[2], $endDate[1], $endDate[2], $endDate[0]);
+
+        if ($start >= $end) {
+            Phprojekt::getInstance()->getLog()->debug('OO');
+            $this->_validate->error->addError(array(
+                'field'   => Phprojekt::getInstance()->translate(self::START_AFTER_END_TITLE),
+                'label'   => Phprojekt::getInstance()->translate(self::START_AFTER_END_TITLE),
+                'message' => Phprojekt::getInstance()->translate(self::START_AFTER_END_DESC)));
+            return false;
         }
 
         return parent::recordValidate();

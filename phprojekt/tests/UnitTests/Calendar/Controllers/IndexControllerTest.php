@@ -112,7 +112,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('place', 'Buenos Aires');
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDate', '2009-04-30');
-        $this->request->setParam('endDate', '2008-04-30');
+        $this->request->setParam('endDate', '2009-04-30');
         $this->request->setParam('startTime', strtotime('22:00'));
         $this->request->setParam('endTime', strtotime('23:00'));
         $this->request->setParam('dataParticipant', array(2 => 2));
@@ -139,7 +139,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('place', 'Buenos Aires');
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDate', '2009-04-30');
-        $this->request->setParam('endDate', '2008-04-30');
+        $this->request->setParam('endDate', '2009-04-30');
         $this->request->setParam('startTime', strtotime('22:00'));
         $this->request->setParam('endTime', strtotime('23:00'));
         $this->request->setParam('participantId', 1);
@@ -150,6 +150,60 @@ class Calendar_IndexController_Test extends FrontInit
         // Check total amount of rows
         $rowsAfter = count($this->_model->fetchAll());
         $this->assertEquals($rowsBefore - 1, $rowsAfter);
+    }
+
+    /**
+     * Test of json save calendar for single events
+     */
+    public function testJsonSaveSinglePart5()
+    {
+        // INSERT: Single event - One participant. WRONG Data: start date after end date
+        $this->setRequestUrl('Calendar/index/jsonSave/');
+        $this->request->setParam('title', 'test');
+        $this->request->setParam('place', 'Buenos Aires');
+        $this->request->setParam('notes', 'test note');
+        $this->request->setParam('startDate', '2009-06-03');
+        $this->request->setParam('endDate', '2009-06-02');
+        $this->request->setParam('startTime', strtotime('09:00'));
+        $this->request->setParam('endTime', strtotime('10:00'));
+        $this->request->setParam('dataParticipant', 1);
+
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $expected = Calendar_Models_Calendar::START_AFTER_END_TITLE . ': '
+                . Calendar_Models_Calendar::START_AFTER_END_DESC;
+            $this->assertEquals($expected, $error->getMessage());
+            return;
+        }
+        $this->fail('Error on inserting with start date after end date');
+    }
+
+    /**
+     * Test of json save calendar for single events
+     */
+    public function testJsonSaveSinglePart6()
+    {
+        // INSERT: Single event - One participant. WRONG Data: start time after end time
+        $this->setRequestUrl('Calendar/index/jsonSave/');
+        $this->request->setParam('title', 'test');
+        $this->request->setParam('place', 'Buenos Aires');
+        $this->request->setParam('notes', 'test note');
+        $this->request->setParam('startDate', '2009-06-02');
+        $this->request->setParam('endDate', '2009-06-02');
+        $this->request->setParam('startTime', strtotime('11:00'));
+        $this->request->setParam('endTime', strtotime('10:00'));
+        $this->request->setParam('dataParticipant', 1);
+
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $expected = Calendar_Models_Calendar::START_AFTER_END_TITLE . ': '
+                . Calendar_Models_Calendar::START_AFTER_END_DESC;
+            $this->assertEquals($expected, $error->getMessage());
+            return;
+        }
+        $this->fail('Error on inserting with start time after end time');
     }
 
     /**

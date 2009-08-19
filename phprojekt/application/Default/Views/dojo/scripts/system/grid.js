@@ -255,6 +255,51 @@ dojo.declare("phpr.grid.cells.Textarea", phpr.grid.cells.Text, {
     }
 });
 
+dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
+    setValue: function(inRowIndex, inValue) {
+        inValue = this.formatTime(inValue);
+        if (this.widget && this.widget.setValue) {
+            this.widget.setValue(inValue);
+        } else {
+            this.inherited(arguments);
+        }
+    },
+
+    getValue:function(inRowIndex) {
+        var value = this.widget.attr('value');
+        return this.formatTime(value);
+    },
+
+    format:function(inRowIndex, inItem) {
+        var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
+        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
+            var d = this.formatTime(d);
+            return this.formatEditing(d, inRowIndex);
+        } else {
+            var output = this.formatTime(d);
+            return output;
+        }
+    },
+
+    formatTime: function(value) {
+        value = value.split(':');
+        if (value.length < 2) {
+            var output = '00:00';
+        } else {
+            var hour = parseInt(value[0], 10);
+            if (isNaN(hour) || hour > 24 || hour < 0) {
+                hour = '00';
+            }
+            var minutes = parseInt(value[1], 10);
+            if (isNaN(minutes) || minutes > 60 || minutes < 0) {
+                minutes = '00';
+            }
+            var output = dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
+        }
+        return output;
+    }
+});
+
 var dgc = dojox.grid.cells;
 dgc.DateTextBox.markupFactory = function(node, cell){
     dgc._Widget.markupFactory(node, cell);

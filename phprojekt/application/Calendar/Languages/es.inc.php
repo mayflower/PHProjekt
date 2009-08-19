@@ -72,6 +72,9 @@ $lang["Edit for all participants"] = "Editar para todos los participantes";
 $lang["Delete for who"] = "Borrar a quién";
 $lang["Delete just for me"] = "Borrar solo para mí";
 $lang["Delete for all participants"] = "Borrar para todos los participantes";
+$lang["Event duration"] = "Duración del evento";
+$lang["End date and time has to be after Start date and time."] = "La fecha y hora de Fin debe ser posterior a la fecha"
+    . "y hora de Inicio.";
 
 // Tooltip Help
 // 'Interval' field

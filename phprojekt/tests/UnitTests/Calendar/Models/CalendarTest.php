@@ -71,6 +71,30 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test recordValidate method
+     */
+    public function testRecordValidateWrong()
+    {
+        // Wrong data: Start date after end date
+        $calendarModel = clone($this->_model);
+        $calendarModel->startDate = '2009-10-10';
+        $calendarModel->endDate   = '2009-09-10';
+
+        $return = $calendarModel->recordValidate();
+        $this->assertEquals(false, $return);
+
+        // Wrong data: Start time after end time
+        $calendarModel = clone($this->_model);
+        $calendarModel->startDate = '2009-10-10';
+        $calendarModel->endDate   = '2009-10-10';
+        $calendarModel->startTime = '15:00';
+        $calendarModel->endTime   = '14:00';
+
+        $return = $calendarModel->recordValidate();
+        $this->assertEquals(false, $return);
+    }
+
+    /**
      * Test getAllParticipants method
      */
     public function testGetAllParticipants()
