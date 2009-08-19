@@ -501,7 +501,8 @@ class Phprojekt
                 $errDesc    = "Run-time warning (non-fatal error).";
                 $messageLog = sprintf("%s\n File: %s - Line: %d\n Description: %s\n", $errDesc, $errFile, $errLine,
                     $errStr);
-                Phprojekt::getInstance()->getLog()->err($messageLog);
+                // Following line is temporary 'commented' because currently is going to make the logs collapse in size
+                //Phprojekt::getInstance()->getLog()->err($messageLog);
                 break;
             case E_NOTICE:
                 // Log error, send advice to the user and -maybe- STOP script execution
@@ -545,7 +546,8 @@ class Phprojekt
                 $errDesc    = "PHP code suggestion of change (non-fatal error).";
                 $messageLog = sprintf("%s\n File: %s - Line: %d\n Description: %s\n", $errDesc, $errFile, $errLine,
                     $errStr);
-                Phprojekt::getInstance()->getLog()->err($messageLog);
+                // Following line is temporary 'commented' because currently is going to make the logs collapse in size
+                //Phprojekt::getInstance()->getLog()->err($messageLog);
                 break;
             case E_RECOVERABLE_ERROR:
                 // Log error, send advice to the user and -maybe- STOP script execution
