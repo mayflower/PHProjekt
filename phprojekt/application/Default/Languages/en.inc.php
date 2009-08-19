@@ -170,8 +170,8 @@ $lang["You don't have permission for downloading on this item."] = "You don't ha
 $lang["You don't have permission for modifying this item."] = "You don't have permission for modifying this item.";
 $lang["Error in received parameter, consult the admin. Parameter:"] = "Error in received parameter, consult the admin. "
     . "Parameter:";
-$lang["If you have problems or questions with PHProjekt, please write an email to "] = "If you have problems or "
-    . "questions with PHProjekt, please write an email to ";
+$lang["If you have problems or questions with PHProjekt, please write an email to"] = "If you have problems or "
+    . "questions with PHProjekt, please write an email to";
 $lang["Support address:"] = "Support address:";
 
 // Error handler messages

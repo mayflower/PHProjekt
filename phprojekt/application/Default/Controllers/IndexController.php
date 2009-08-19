@@ -498,7 +498,6 @@ class IndexController extends Zend_Controller_Action
                 }
             }
             $this->view->errorMessage = implode("\n", $messages);
-
         } else {
             if (!empty($value)) {
                 $value .= '||';
@@ -574,9 +573,9 @@ class IndexController extends Zend_Controller_Action
 
         $linkBegin = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/'
             . $this->getRequest()->getModuleName();
-        $field     = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $itemId    = (int) $this->getRequest()->getParam('id', null);
-        $order     = (int) $this->getRequest()->getParam('order', 0);
+        $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
+        $itemId = (int) $this->getRequest()->getParam('id', null);
+        $order  = (int) $this->getRequest()->getParam('order', 0);
 
         $this->_fileCheckParamField($field);
         $this->_fileCheckWritePermission($itemId);
@@ -674,7 +673,6 @@ class IndexController extends Zend_Controller_Action
                 }
                 $i++;
             }
-
         }
         if (isset($this->view->errorMessage) && !empty($this->view->errorMessage)) {
             $filesForView[] = array();
@@ -685,8 +683,8 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Checks that the 'field' parameter for download and delete file actions is valid. If not, terminates script
-     * execution.
+     * Checks that the 'field' parameter for download and delete file actions is valid.
+     * If not, terminates script execution.
      *
      * @return void
      */
@@ -710,16 +708,14 @@ class IndexController extends Zend_Controller_Action
             // Log error
             Phprojekt::getInstance()->getLog()->err("Error: wrong 'field' parameter trying to Download or Delete a file"
                 . ". User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
-            Phprojekt::getInstance()->getLog()->err($error);
             // Show error to user and stop script execution
             die($error);
         }
     }
 
-
     /**
-     * Checks that the 'order' parameter for download and delete file actions is valid. If not, terminates script
-     * execution printing an error.
+     * Checks that the 'order' parameter for download and delete file actions is valid.
+     * If not, terminates script execution printing an error.
      *
      * @return void
      */
@@ -732,7 +728,6 @@ class IndexController extends Zend_Controller_Action
             // Log error
             Phprojekt::getInstance()->getLog()->err("Error: wrong 'order' parameter trying to Download or Delete a file"
                 . ". User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
-            Phprojekt::getInstance()->getLog()->err($error);
             // Show error to user and stop script execution
             die($error);
         }
@@ -744,7 +739,8 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    private function _fileCheckWritePermission($itemId) {
+    private function _fileCheckWritePermission($itemId)
+    {
         $model = $this->getModelObject();
         $model->find($itemId);
         $rights = $model->getRights();
@@ -754,7 +750,6 @@ class IndexController extends Zend_Controller_Action
             // Log error
             Phprojekt::getInstance()->getLog()->err("Error: trying to Delete or Upload a file without write access. "
                 . "User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
-            Phprojekt::getInstance()->getLog()->err($error);
             // Show error to user and stop script execution
             die($error);
         }

@@ -922,7 +922,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             id:    'helpContent'
         }, document.createElement('div'));
 
-        for (tab in helpData) {
+        for (var tab in helpData) {
             var text = helpData[tab];
             // Check if the tab have DEFAULT text
             if (text == 'DEFAULT') {
@@ -933,10 +933,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             }
 
             // Add support address?
-            var support = phpr.config.supportAddress? phpr.config.supportAddress : '';
+            var support = phpr.config.supportAddress ? phpr.config.supportAddress : '';
             if (tab == 'General' &&  support != '') {
-                text += phpr.nls.get('If you have problems or questions with PHProjekt, please write an email to ')
-                    + '<b>' + support + '</b>.<br /><br /><br />';
+                text += phpr.nls.get('If you have problems or questions with PHProjekt, please write an email to')
+                    + ' <b>' + support + '</b>.<br /><br /><br />';
             }
 
             container.addChild(new dijit.layout.ContentPane({
@@ -960,9 +960,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Add a tooltip with the current user
         for (var i = 0; i < userList.length; i++) {
             if (userList[i].current) {
-                var version = (phpr.config.phprojektVersion) ? ' ' + phpr.config.phprojektVersion : '';
+                var version = (phpr.config.phprojektVersion) ? phpr.config.phprojektVersion : '';
                 var support = (phpr.config.supportAddress) ? phpr.config.supportAddress : '';
-                var label   = '<div style="text-align: center;">PHProjekt' + version + ' - ';
+                var label   = '<div style="text-align: center;">PHProjekt ' + version + ' - ';
                 if (support != '') {
                     label += support + '<br />'
                 }

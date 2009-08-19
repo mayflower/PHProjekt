@@ -353,5 +353,9 @@ class Setup_Models_Config
         $content .= $this->_eol;
         $content .= '; Activate the mail notification by default' . $this->_eol;
         $content .= 'front.notificationEnabledByDefault = false' . $this->_eol;
+        $content .= $this->_eol;
+        $content .= '; Optional email support address to show inside error messages, general help and logo alt text'
+            . $this->_eol;
+        $content .= 'front.supportAddress = ""' . $this->_eol;
     }
 }

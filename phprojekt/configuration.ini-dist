@@ -141,7 +141,7 @@ useCacheForClasses = true;
 ; Activate the mail notification by default
 front.notificationEnabledByDefault = false
 
-// Optional email support address to show inside error messages, general help and logo alt text
+; Optional email support address to show inside error messages, general help and logo alt text
 front.supportAddress = ""
 
 [test-other-config]
