@@ -636,7 +636,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function getError()
     {
-        return array_pop($this->_error->getError());
+        $errors = $this->_error->getError();
+
+        return array_pop($errors);
     }
 
     /**

@@ -38,20 +38,6 @@ require_once 'PHPUnit/Framework.php';
 class Phprojekt_Date_ConverterTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * Test simple daily recurrence
-     */
-    public function testParseIsoDateTime()
-    {
-        $converter = new Phprojekt_Date_Converter();
-        $date = '20090512T230000';
-        $this->assertEquals('2009-05-12', date("Y-m-d", $converter->parseIsoDateTime($date)->get()));
-
-        $date   = '20090512T230000';
-        $return = date("Y-m-d", $converter->parseIsoDateTime($date, 'America/Argentina/Buenos_Aires')->get());
-        $this->assertEquals('2009-05-13', $return);
-    }
-
-    /**
      * Test convertMinutesToHours
      */
     public function testConvertMinutesToHours()

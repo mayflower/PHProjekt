@@ -362,7 +362,8 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testFloat()
     {
-        Zend_Locale::setLocale('es_AR');
+        $locale = new Zend_Locale();
+        $locale->setLocale('es_AR');
         $item         = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '1000,30';
         $item->budget;
@@ -373,7 +374,8 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testEmptyFloat()
     {
-        Zend_Locale::setLocale('es_AR');
+        $locale = new Zend_Locale();
+        $locale->setLocale('es_AR');
         $item         = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '';
     }

@@ -57,7 +57,7 @@ class Phprojekt_Converter_Text
                 }
                 break;
             case 'percentage':
-                $value = number_format($model->$field['key'], 2);
+                $value = number_format(doubleval($model->$field['key']), 2);
                 break;
             case 'upload':
                 $i     = 0;

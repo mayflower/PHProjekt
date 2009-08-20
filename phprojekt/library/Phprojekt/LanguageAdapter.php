@@ -96,7 +96,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      */
     public function __construct($data, $locale = 'en')
     {
-        $locale = $this->_convertToZendLocale($locale);
+        $locale = self::_convertToZendLocale($locale);
         parent::__construct($data, $locale, array());
     }
 
@@ -318,7 +318,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      */
     public function getTranslatedStrings($locale)
     {
-        $locale = $this->_convertToZendLocale($locale);
+        $locale = self::_convertToZendLocale($locale);
         if (isset($this->_translate[$locale])) {
             $toReturn = $this->_translate[$locale];
         } else {
@@ -344,7 +344,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      */
     public function get($message, $moduleName, $locale = null)
     {
-        $locale = $this->_convertToZendLocale($locale);
+        $locale = self::_convertToZendLocale($locale);
 
         // Core don't have any language file, all is in Adminsitration
         if ($moduleName == 'Core') {
@@ -388,7 +388,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      */
     public function isLoaded($locale)
     {
-        $locale = $this->_convertToZendLocale($locale);
+        $locale = self::_convertToZendLocale($locale);
         if (false === isset($this->_langLoaded[$locale])) {
             return false;
         } else {
@@ -403,7 +403,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      *
      * @return string Zend locale
      */
-    protected function _convertToZendLocale($locale)
+    protected static function _convertToZendLocale($locale)
     {
         switch ($locale) {
             case 'al':
@@ -457,11 +457,12 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         $reflect   = new ReflectionClass('Phprojekt_LanguageAdapter');
         $constants = $reflect->getConstants();
         $languages = array();
+        $locale    = new Zend_Locale();
         foreach ($constants as $value) {
             if (strstr($value, 'inc.php')) {
                 $value     = str_replace('.inc.php', '', $value);
                 $zendValue = substr(self::_convertToZendLocale($value), 0, 2);
-                $langName  = Zend_Locale::getTranslation($zendValue, 'language', 'en');
+                $langName  = $locale->getTranslation($zendValue, 'language', 'en');
 
                 $languages[$value] = $langName;
             }

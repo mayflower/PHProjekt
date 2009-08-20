@@ -347,7 +347,7 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @return boolean
      */
-    public function tryToLoadClass($class, $isLibraryClass = false)
+    public static function tryToLoadClass($class, $isLibraryClass = false)
     {
         $names  = explode('_', $class);
 
@@ -377,7 +377,7 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @return boolean
      */
-    public function tryToLoadLibClass($class)
+    public static function tryToLoadLibClass($class)
     {
         return self::tryToLoadClass($class, true);
     }
@@ -387,7 +387,7 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @return void;
      */
-    public function loadViewScript($view = null)
+    public static function loadViewScript($view = null)
     {
         $module = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
         if (null === $view) {

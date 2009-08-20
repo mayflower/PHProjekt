@@ -146,7 +146,7 @@ final class Default_Helpers_Delete
      *
      * @return boolean
      */
-    private function _checkItemRights($model, $moduleName)
+    private static function _checkItemRights($model, $moduleName)
     {
         $canDelete = false;
 

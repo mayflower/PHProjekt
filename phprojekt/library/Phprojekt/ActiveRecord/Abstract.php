@@ -1220,7 +1220,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return string
      */
-    public function convertVarToSql($varName)
+    public static function convertVarToSql($varName)
     {
         static $replace = array();
         if (empty($replace)) {
@@ -1241,7 +1241,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @return string
      */
-    public function convertVarFromSql($varName)
+    public static function convertVarFromSql($varName)
     {
         static $replace = array();
         if (empty($replace)) {

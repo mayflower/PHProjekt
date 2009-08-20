@@ -107,7 +107,7 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return boolean true if login process was sucessful
      */
-    public function login($username, $password, $keepLogged = false)
+    public static function login($username, $password, $keepLogged = false)
     {
         $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $userId = $user->findIdByUsername($username);
@@ -173,7 +173,7 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return 1 or 0
      */
-    public function isAdminUser()
+    public static function isAdminUser()
     {
         $returnValue   = 0;
         $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
@@ -190,7 +190,7 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return boolean true if logout process was sucessful
      */
-    public function logout()
+    public static function logout()
     {
         $userId        = 0;
         $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
@@ -219,7 +219,7 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return boolean true if the string crypted is equal to provide password
      */
-    private function _compareStringWithPassword($string, $password)
+    private static function _compareStringWithPassword($string, $password)
     {
         // One of the methods to check the password
         $defaultMethod = 'phprojektmd5' . (string) $string;
@@ -241,7 +241,7 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return scring crypted password
      */
-    private function _cryptPassword($password)
+    private static function _cryptPassword($password)
     {
         return md5($password);
     }
@@ -266,7 +266,8 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return void
      */
-    private function _deleteDbAndCookies($userId) {
+    private static function _deleteDbAndCookies($userId)
+    {
         if ($userId) {
             // Delete all DB settings table token rows
             $db      = Phprojekt::getInstance()->getDb();
@@ -294,7 +295,7 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return void
      */
-    private function _saveLoginData($userId)
+    private static function _saveLoginData($userId)
     {
         // The hash string is changed everytime it is used, and the expiration time updated.
         // DB Settings table: create new md5 hash and update expiration time for it
@@ -346,7 +347,7 @@ class Phprojekt_Auth extends Zend_Auth
      *
      * @return void
      */
-    private function _setCookies($hash, $userId, $expires)
+    private static function _setCookies($hash, $userId, $expires)
     {
         // Set cookies
         $completePath     = Phprojekt::getInstance()->getConfig()->webpath;

@@ -146,7 +146,8 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
 
             return $this->id;
         } else {
-            $error = array_pop($this->getError());
+            $errors = $this->getError();
+            $error  = array_pop($error);
             throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
         }
     }

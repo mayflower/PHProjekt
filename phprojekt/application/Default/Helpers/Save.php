@@ -81,7 +81,8 @@ final class Default_Helpers_Save
 
         // Checks
         if (!$node->getActiveRecord()->recordValidate()) {
-            $error = array_pop($node->getActiveRecord()->getError());
+            $errors = $node->getActiveRecord()->getError();
+            $error  = array_pop($errors);
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
         } else if (!self::_checkModule(1, $projectId)) {
             throw new Phprojekt_PublishedException('You do not have access to add projects on the parent project');
@@ -251,7 +252,7 @@ final class Default_Helpers_Save
      *
      * @return boolean
      */
-    private function _checkModule($moduleId, $projectId)
+    private static function _checkModule($moduleId, $projectId)
     {
         $boolean = false;
         if ($projectId > 0) {
@@ -278,13 +279,13 @@ final class Default_Helpers_Save
 
     /**
      * Check if the user has write access to the item if is not a global module
-     *     *
+     *
      * @param Phprojekt_Model_Interface $model      The model to save
      * @param string                    $moduleName The current module
      *
      * @return boolean
      */
-    private function _checkItemRights($model, $moduleName)
+    private static function _checkItemRights($model, $moduleName)
     {
         $canWrite = false;
 

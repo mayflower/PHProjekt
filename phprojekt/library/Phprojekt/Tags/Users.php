@@ -80,8 +80,9 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
             $data['tag_id']  = $tagId;
             $id = $this->insert($data);
         } else {
-            $record = array_shift(current((array) $record));
-            $id = $record['id'];
+            $records = current((array) $record);
+            $record  = array_shift($records);
+            $id      = $record['id'];
         }
 
         return $id;
@@ -132,7 +133,8 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
      */
     public function isFromUser($id)
     {
-        $record = array_shift(current($this->find($id)));
+        $records = current($this->find($id));
+        $record  = array_shift($records);
 
         return ($record['user_id'] == $this->_user);
     }
@@ -146,7 +148,8 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
      */
     public function getTagId($id)
     {
-        $record = array_shift(current($this->find($id)));
+        $records = current($this->find($id));
+        $record  = array_shift($records);
 
         return $record['tag_id'];
     }

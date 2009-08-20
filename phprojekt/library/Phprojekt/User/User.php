@@ -315,7 +315,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      *
      * @return string
      */
-    public function applyDisplay(array $display, $model)
+    public static function applyDisplay(array $display, $model)
     {
         $showValue = array();
         foreach ($display as $value) {

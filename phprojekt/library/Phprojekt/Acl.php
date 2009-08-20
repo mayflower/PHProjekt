@@ -134,7 +134,7 @@ class Phprojekt_Acl extends Zend_Acl
      *
      * @return array
      */
-    static function convertBitmaskToArray($right)
+    public static function convertBitmaskToArray($right)
     {
         $return = array();
         $return['none']     = (boolean) ($right == 0) ? true : false;
@@ -156,7 +156,7 @@ class Phprojekt_Acl extends Zend_Acl
      *
      * @return int
      */
-    static function convertArrayToBitmask($rights)
+    public static function convertArrayToBitmask($rights)
     {
         $right = self::NONE;
         if ($rights['read']) {

@@ -94,7 +94,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         // Getting requested dates for the serial meeting (if it is serial)
         if (!empty($rrule)) {
             if (!$this->_validateRecurrence($rrule)) {
-                $error = array_pop($this->getError());
+                $errors = $this->getError();
+                $error  = array_pop($error);
                 throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
             }
             if ($multipleEvents) {
@@ -202,11 +203,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             return false;
         }
         // Check that the end moment is after start moment
-        $startDate = split('-', $this->startDate);
-        $startTime = split(':', $this->startTime);
+        $startDate = explode('-', $this->startDate);
+        $startTime = explode(':', $this->startTime);
         $start     = mktime($startTime[0], $startTime[1], $startTime[2], $startDate[1], $startDate[2], $startDate[0]);
-        $endDate   = split('-', $this->endDate);
-        $endTime   = split(':', $this->endTime);
+        $endDate   = explode('-', $this->endDate);
+        $endTime   = explode(':', $this->endTime);
         $end       = mktime($endTime[0], $endTime[1], $endTime[2], $endDate[1], $endDate[2], $endDate[0]);
 
         if ($start >= $end) {

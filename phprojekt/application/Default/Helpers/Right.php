@@ -41,7 +41,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function addUser($params, $user)
+    public static function addUser($params, $user)
     {
         if (!array_key_exists('dataAccess', $params)) {
             $params['dataAccess'] = array();
@@ -62,7 +62,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function allowNone($params, $user)
+    public static function allowNone($params, $user)
     {
         return self::_addRight($params, $user, 'checkNoneAccess');
     }
@@ -75,7 +75,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function allowRead($params, $user)
+    public static function allowRead($params, $user)
     {
         return self::_addRight($params, $user, 'checkReadAccess');
     }
@@ -88,7 +88,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function allowWrite($params, $user)
+    public static function allowWrite($params, $user)
     {
         return self::_addRight($params, $user, 'checkWriteAccess');
     }
@@ -101,7 +101,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function allowAccess($params, $user)
+    public static function allowAccess($params, $user)
     {
         return self::_addRight($params, $user, 'checkAccessAccess');
     }
@@ -114,7 +114,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function allowCreate($params, $user)
+    public static function allowCreate($params, $user)
     {
         return self::_addRight($params, $user, 'checkCreateAccess');
     }
@@ -127,7 +127,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function allowCopy($params, $user)
+    public static function allowCopy($params, $user)
     {
         return self::_addRight($params, $user, 'checkCopyAccess');
     }
@@ -140,7 +140,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function allowDelete($params, $user)
+    public static function allowDelete($params, $user)
     {
         return self::_addRight($params, $user, 'checkDeleteAccess');
     }
@@ -153,7 +153,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function allowDownload($params, $user)
+    public static function allowDownload($params, $user)
     {
         return self::_addRight($params, $user, 'checkDownloadAccess');
     }
@@ -166,7 +166,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function allowAdmin($params, $user)
+    public static function allowAdmin($params, $user)
     {
         return self::_addRight($params, $user, 'checkAdminAccess');
     }
@@ -179,7 +179,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function allowReadWriteDelete($params, $user)
+    public static function allowReadWriteDelete($params, $user)
     {
         $params = self::allowRead($params, $user);
         $params = self::allowWrite($params, $user);
@@ -196,7 +196,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function allowAll($params, $user)
+    public static function allowAll($params, $user)
     {
         $params = self::allowRead($params, $user);
         $params = self::allowWrite($params, $user);
@@ -219,7 +219,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function getRights($params, $newItem, $ownerId = 0)
+    public static function getRights($params, $newItem, $ownerId = 0)
     {
         $right  = array();
         $rights = array();
@@ -271,7 +271,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    private function _addRight($params, $user, $right)
+    private static function _addRight($params, $user, $right)
     {
         // Add the user if don't exist
         $params = self::addUser($params, $user);
@@ -295,7 +295,7 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public function addRightsToAssignedUser($key, $params, $model, $newItem)
+    public static function addRightsToAssignedUser($key, $params, $model, $newItem)
     {
         // Add rights to the Assigned user, if any
         $assignedUser = (isset($params[$key])) ? $params[$key] : 0;

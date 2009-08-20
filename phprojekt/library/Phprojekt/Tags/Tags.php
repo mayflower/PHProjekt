@@ -76,8 +76,9 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
             $data['word']  = $word;
             $id = $this->insert($data);
         } else {
-            $record = array_shift(current((array) $record));
-            $id     = $record['id'];
+            $records = current((array) $record);
+            $record  = array_shift($records);
+            $id      = $record['id'];
         }
 
         return $id;
@@ -96,7 +97,8 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
 
         $record = $this->fetchAll($where);
         if ($record->count() > 0) {
-            $record = array_shift(current((array) $record));
+            $records = current((array) $record);
+            $record  = array_shift($records);
             return $record['id'];
         }
 
@@ -112,7 +114,8 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
      */
     public function getTagName($tagId)
     {
-        $record = array_shift(current($this->find($tagId)));
+        $records = current($this->find($tagId));
+        $record  = array_shift($records);
 
         return $record['word'];
     }

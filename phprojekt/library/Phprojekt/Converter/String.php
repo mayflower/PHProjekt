@@ -42,7 +42,7 @@ class Phprojekt_Converter_String
      *
      * @return string
      */
-    static function cleanupString($string)
+    public static function cleanupString($string)
     {
         // Clean up HTML
         $string = strip_tags($string);
@@ -59,7 +59,7 @@ class Phprojekt_Converter_String
      *
      * @return boolean
      */
-    static function stripLengthWords($string)
+    public static function stripLengthWords($string)
     {
         $len = mb_strlen($string, 'UTF-8');
 

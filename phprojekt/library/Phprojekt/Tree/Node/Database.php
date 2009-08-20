@@ -319,7 +319,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $table    = $this->getActiveRecord()->getTableName();
         $database = Phprojekt::getInstance()->getDb();
         $database->delete($table, $database->quoteInto('path LIKE ?', $this->path . '%'));
-        $this->_deleteChildren($this->getChildren());
+        $children = $this->getChildren();
+        $this->_deleteChildren($children);
         $this->_initialize();
         self::deleteCache();
     }
@@ -585,7 +586,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      *
      * @return void;
      */
-    static function deleteCache()
+    public static function deleteCache()
     {
         $cache = Phprojekt::getInstance()->getCache();
         $cache->remove(self::CACHE_NAME);
