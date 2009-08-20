@@ -49,17 +49,20 @@ class ErrorController extends Zend_Controller_Action
      */
     public function errorAction()
     {
-        $errors = $this->_getParam('error_handler');
+        $error = $this->_getParam('error_handler');
 
         $this->getResponse()->clearBody();
-        switch ($errors->type) {
+        switch ($error->type) {
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
                 // 404 error -- controller or action not found
                 $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
+                $message  = "The url " . $error->request->getRequestUri() . " do not exists";
+                Phprojekt::getInstance()->getLog()->err($message);
+                die($message);
                 break;
             default:
-                $exception = $errors->exception;
+                $exception = $error->exception;
                 // We only forward exception with type PublishedException
                 if ($exception instanceof Phprojekt_PublishedException) {
                     $error = array('type'    => 'error',
