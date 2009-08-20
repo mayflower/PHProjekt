@@ -95,7 +95,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         if (!empty($rrule)) {
             if (!$this->_validateRecurrence($rrule)) {
                 $errors = $this->getError();
-                $error  = array_pop($error);
+                $error  = array_pop($errors);
                 throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
             }
             if ($multipleEvents) {

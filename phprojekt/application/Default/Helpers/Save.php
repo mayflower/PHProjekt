@@ -164,8 +164,8 @@ final class Default_Helpers_Save
         // Checks
         $moduleName = Phprojekt_Loader::getModuleFromObject($model);
         if (!$model->recordValidate()) {
-            $error = $model->getError();
-            $error = array_pop($error);
+            $errors = $model->getError();
+            $error  = array_pop($errors);
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
         } else if (!self::_checkModule(Phprojekt_Module::getId($moduleName), $projectId)) {
             throw new Phprojekt_PublishedException('The parent project do not have enabled this module');
