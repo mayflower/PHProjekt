@@ -19,6 +19,7 @@
 
 dojo.provide("phpr.grid");
 dojo.provide("phpr.grid.cells.Select");
+dojo.provide("phpr.grid._View");
 
 phpr.grid.formatDateTime = function(date) {
     if (!date || !String(date).match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/)) {
@@ -52,6 +53,15 @@ phpr.grid.formatUpload = function(value) {
         }
     }
     return value;
+},
+
+phpr.grid.formatIcon = function(value) {
+    data = value.split('||');
+    if (!data[1]) {
+        data[1] = "";
+    }
+
+    return '<div class="' + data[0] + '" title="' + data[1] + '"></div>';
 },
 
 dojo.declare("phpr.grid.cells.Percentage", dojox.grid.cells._Widget, {
@@ -282,6 +292,9 @@ dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
     },
 
     formatTime: function(value) {
+        if (value.toString().indexOf(':') <= 0) {
+            return value;
+        }
         value = value.split(':');
         if (value.length < 2) {
             var output = '00:00';
@@ -304,3 +317,37 @@ var dgc = dojox.grid.cells;
 dgc.DateTextBox.markupFactory = function(node, cell){
     dgc._Widget.markupFactory(node, cell);
 };
+
+dojo.declare('phpr.grid._View', [dojox.grid._View], {
+    // Summary
+    //    Extend the normal grid view
+    // Description
+    //    Add a div after the grid for allow multiple actions
+    templateString: '<div class="dojoxGridView" wairole="presentation">\r\n\t<div class="dojoxGridHeader" '
+        + 'dojoAttachPoint="headerNode" wairole="presentation">\r\n\t\t<div dojoAttachPoint="headerNodeContainer" '
+        + 'style="width:9000em" wairole="presentation">\r\n\t\t\t<div dojoAttachPoint="headerContentNode" '
+        + 'wairole="row"></div>\r\n\t\t</div>\r\n\t</div>\r\n\t<input type="checkbox" class="dojoxGridHiddenFocus" '
+        + 'dojoAttachPoint="hiddenFocusNode" wairole="presentation" />\r\n\t<input type="checkbox" '
+        + 'class="dojoxGridHiddenFocus" wairole="presentation" />\r\n\t<div class="dojoxGridScrollbox" '
+        + 'dojoAttachPoint="scrollboxNode" wairole="presentation">\r\n\t\t<div class="dojoxGridContent" '
+        + 'dojoAttachPoint="contentNode" hidefocus="hidefocus" wairole="presentation"></div>\r\n\t\t'
+        + '<div dojoAttachPoint="gridActions"></div>\r\n\t</div>\r\n</div>\r\n',
+
+    doStyleRowNode: function(inRowIndex, inRowNode) {
+        // Summary
+        //    Change the style of the row
+        // Description
+        //    Marck as checked the checked rows
+        if (inRowNode) {
+            var row = this.grid.rows.prepareStylingRow(inRowIndex, inRowNode);
+            this.grid.onStyleRow(row);
+            var item = this.grid.getItem(inRowIndex);
+            if (item) {
+                if (item['gridComboBox'] == "true") {
+                    row.customClasses += " dojoxGridRowChecked";
+                }
+            }
+            this.grid.rows.applyStyles(row);
+        }
+    }
+});

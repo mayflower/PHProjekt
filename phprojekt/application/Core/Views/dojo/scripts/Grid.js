@@ -25,6 +25,14 @@ dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
         this.url = phpr.webpath + "index.php/Core/" + phpr.module.toLowerCase() + "/jsonList";
     },
 
+    setGetExtraActionsUrl:function() {
+        this.getActionsUrl = phpr.webpath + "index.php/Core/" + phpr.module.toLowerCase() + "/jsonGetExtraActions";
+    },
+
+    useCheckbox:function() {
+        return false;
+    },
+
     canEdit:function(inRowIndex) {
         return true;
     },

@@ -40,14 +40,19 @@
  */
 class IndexController extends Zend_Controller_Action
 {
-    const ADD_TRUE_TEXT           = "The Item was added correctly";
-    const EDIT_TRUE_TEXT          = "The Item was edited correctly";
-    const EDIT_MULTIPLE_TRUE_TEXT = "The Items were edited correctly";
-    const DELETE_FALSE_TEXT       = "The Item can't be deleted";
-    const DELETE_TRUE_TEXT        = "The Item was deleted correctly";
-    const NOT_FOUND               = "The Item was not found";
-    const ID_REQUIRED_TEXT        = "ID parameter required";
-    const INVISIBLE_ROOT          = 1;
+    const ADD_TRUE_TEXT             = "The Item was added correctly";
+    const EDIT_TRUE_TEXT            = "The Item was edited correctly";
+    const EDIT_MULTIPLE_TRUE_TEXT   = "The Items were edited correctly";
+    const DELETE_FALSE_TEXT         = "The Item can't be deleted";
+    const DELETE_TRUE_TEXT          = "The Item was deleted correctly";
+    const DELETE_MULTIPLE_TRUE_TEXT = "The Items were deleted correctly";
+    const NOT_FOUND                 = "The Item was not found";
+    const ID_REQUIRED_TEXT          = "ID parameter required";
+    const INVISIBLE_ROOT            = 1;
+    const MODE_ACTION_XHR           = 0;
+    const MODE_ACTION_WINDOW        = 1;
+    const TARGET_ACTION_SINGLE      = 0;
+    const TARGET_ACTION_MULTIPLE    = 1;
 
     /**
      * Init function
@@ -304,6 +309,43 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
+     * Delete many items together
+     * Uses the model module to delete them
+     *
+     * If there is an error, this returns a Phprojekt_PublishedException
+     * If not, it returns is a string with the same format than the Phprojekt_PublishedException
+     * but with success type
+     *
+     * @requestparam string ids Comma separated ids
+     *
+     * @return void
+     */
+    public function jsonDeleteMultipleAction()
+    {
+        $ids = $this->getRequest()->getParam('ids');
+
+        if (!empty($ids)) {
+            $message  = Phprojekt::getInstance()->translate(self::DELETE_MULTIPLE_TRUE_TEXT);
+            $showId   = array();
+            $model    = $this->getModelObject();
+            $idsArray = explode(",", $ids);
+
+            foreach ($idsArray as $id) {
+                $model->find((int) $id);
+                Default_Helpers_Delete::delete($model);
+                $showId[] = $id;
+            }
+
+            $return = array('type'    => 'success',
+                            'message' => $message,
+                            'code'    => 0,
+                            'id'      => implode(',', $showId));
+
+            Phprojekt_Converter_Json::echoConvert($return);
+        }
+    }
+
+    /**
      * Get the model object, or the default if none exists.
      *
      * @return Phprojekt_Model_Interface
@@ -381,7 +423,6 @@ class IndexController extends Zend_Controller_Action
     /**
      * Returns the list for a model in CSV format.
      *
-     *
      * @return void
      */
     public function csvListAction()
@@ -400,6 +441,33 @@ class IndexController extends Zend_Controller_Action
         $records = $this->getModelObject()->fetchAll($where, null, 0, 0);
 
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
+
+    /**
+     * Returns the list for the requested ids of a model in CSV format.
+     *
+     * @return void
+     */
+    public function csvExportMultipleAction()
+    {
+        $ids = $this->getRequest()->getParam('ids', null);
+
+        if (!empty($ids)) {
+            $idsArray = explode(",", $ids);
+            $where    = "id IN (";
+            $i        = 0;
+            foreach ($idsArray as $id) {
+                $i++;
+                $where .= (int) $id;
+                if ($i < count($idsArray)) {
+                    $where .= ", ";
+                }
+            }
+            $where .= ")";
+
+            $records = $this->getModelObject()->fetchAll($where, null, 0, 0);
+            Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        }
     }
 
     /**
@@ -437,6 +505,30 @@ class IndexController extends Zend_Controller_Action
                         'value' => Phprojekt::getVersion());
 
         Phprojekt_Converter_Json::echoConvert($data);
+    }
+
+    /**
+     * Returns the possible extra actions to perform for multiple or singles ids
+     *
+     * @return array
+     */
+    public function jsonGetExtraActionsAction()
+    {
+        $delete = array('target' => self::TARGET_ACTION_MULTIPLE,
+                        'action' => 'jsonDeleteMultiple',
+                        'label'  => Phprojekt::getInstance()->translate("Delete"),
+                        'mode'   => self::MODE_ACTION_XHR,
+                        'class'  => 'deleteOption');
+
+        $export = array('target' => self::TARGET_ACTION_MULTIPLE,
+                        'action' => 'csvExportMultiple',
+                        'label'  => Phprojekt::getInstance()->translate("Export"),
+                        'mode'   => self::MODE_ACTION_WINDOW,
+                        'class'  => 'exportOption');
+
+        $actions = array($delete, $export);
+
+        Phprojekt_Converter_Json::echoConvert($actions);
     }
 
     /**

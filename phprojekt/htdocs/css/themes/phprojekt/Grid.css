@@ -178,7 +178,7 @@
 }
 
 .dojoxGridRowSelected {
-    background-color: #D9E8F9;
+    /*background-color: #D9E8F9;*/
 }
 
 .dojoxGridRowTable {
@@ -231,10 +231,22 @@
     border: 1px dotted green;
 }
 
+.dojoxGridCell .editButton {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    background-image: url("images/edit.png");
+    background-color: transparent;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    border: none;
+    cursor: pointer;
+}
+
 /* editing */
 
 .dojoxGridRowEditing td {
-    background-color: #F4FFF4;
+    /* background-color: #bcd5f0; */
 }
 
 .dojoxGridRow-inserting td {

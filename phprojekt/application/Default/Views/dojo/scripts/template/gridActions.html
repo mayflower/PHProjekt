@@ -1,0 +1,21 @@
+<div dojoType="dijit.layout.ContentPane" region="bottom" class="gridActions"
+style="width: 100%; height: 20px; vertical-align: baseline;">
+    <table>
+    <tr>
+        <td style="width: 45px; align: center; vertical-align: middle;">
+            <div id="arrow"></div>
+        </td>
+        <td style="width: 150px; align: center;">
+            <div><a href="javascript: dojo.publish('Grid.itemsCheck', [true]);">{{checkAllTxt}}</a>
+            / <a href="javascript: dojo.publish('Grid.itemsCheck', [false]);">{{uncheckAllTxt}}</a></div>
+        </td>
+        <td style="width: 120px; align: center;">
+            <select id="gridComboAction" name="gridComboAction" size="1" style="width: 160px;">
+                {% for action in actions %}
+                    <option value="{{action.key}}" class="{{action.class}}">{{action.label}}</option>
+                {% endfor %}
+           </select>
+        </td>
+    </tr>
+    </table>
+</div>

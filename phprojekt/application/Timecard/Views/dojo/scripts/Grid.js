@@ -58,6 +58,12 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
         return false;
     },
 
+    useCheckbox:function() {
+        // Summary:
+        //    Whether to show or not the checkbox and pencil in the grid list
+        return false;
+    },
+
     customGridLayout:function(meta) {
        this.gridLayout[0].styles = "cursor:pointer; text-align:center;";
     },
@@ -116,7 +122,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
         return false;
     },
 
-    showForm:function(e) {
+    cellClick:function(e) {
         if (e.cellIndex == 0) {
             var item = this.grid.getItem(e.rowIndex);
             var date = this.grid.store.getValue(item, 'date');

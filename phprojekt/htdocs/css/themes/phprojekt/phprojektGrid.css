@@ -105,6 +105,10 @@
 }
 
 .phprojekt .dojoxGridRowSelected {
+    /*background-color: #D9E8F9;*/
+}
+
+.phprojekt .dojoxGridRowChecked {
     background-color: #aec7e3;
 }
 
@@ -141,7 +145,7 @@
 /* editing */
 
 .phprojekt .dojoxGridRowEditing td {
-    background-color: #60a1ea;
+    /* background-color: #60a1ea; */
 }
 
 .phprojekt .dojoxGridRow-inserting td {
@@ -163,4 +167,22 @@
 }
 .phprojekt .dojoxGrid .dojoDndItemAfter {
     border-right-color: #4B5AAA;
+}
+
+/* Actions */
+.phprojekt .gridActions #arrow {
+    background-image: url("images/arrowLeft.png");
+    background-color: transparent;
+    width: 38px;
+    height: 22px;
+}
+
+.phprojekt .gridActions #gridComboAction .exportOption {
+    color: green;
+    background-color: white;
+}
+
+.phprojekt .gridActions #gridComboAction .deleteOption {
+    color: red;
+    background-color: white;
 }
