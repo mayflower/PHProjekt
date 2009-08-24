@@ -151,11 +151,13 @@ class Cleaner_Sanitizer
         if (is_int($value)) {
             return gmdate($format, $value);
         } else {
-            $time = strtotime($value);
-            if ($time === false) {
+            // Remove GMT declaration if exists
+            $value = preg_replace('/ GMT([-+0-9])+ \((\D)*\)/', '', $value);
+            $time  = strtotime($value);
+            if ($time === false || $time === -1) {
                 return null;
             }
-            return gmdate($format, $time);
+            return date($format, $time);
         }
     }
 
