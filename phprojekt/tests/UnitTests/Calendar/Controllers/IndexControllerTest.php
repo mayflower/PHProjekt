@@ -171,8 +171,7 @@ class Calendar_IndexController_Test extends FrontInit
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
-            $expected = Calendar_Models_Calendar::START_AFTER_END_TITLE . ': '
-                . Calendar_Models_Calendar::START_AFTER_END_DESC;
+            $expected = 'Event duration: End date and time has to be after Start date and time';
             $this->assertEquals($expected, $error->getMessage());
             return;
         }
@@ -198,8 +197,7 @@ class Calendar_IndexController_Test extends FrontInit
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
-            $expected = Calendar_Models_Calendar::START_AFTER_END_TITLE . ': '
-                . Calendar_Models_Calendar::START_AFTER_END_DESC;
+            $expected = 'Event duration: End date and time has to be after Start date and time';
             $this->assertEquals($expected, $error->getMessage());
             return;
         }

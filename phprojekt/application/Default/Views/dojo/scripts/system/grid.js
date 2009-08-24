@@ -286,30 +286,25 @@ dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
             var d = this.formatTime(d);
             return this.formatEditing(d, inRowIndex);
         } else {
-            var output = this.formatTime(d);
-            return output;
+            return this.formatTime(d);
         }
     },
 
     formatTime: function(value) {
-        if (value.toString().indexOf(':') <= 0) {
-            return value;
-        }
-        value = value.split(':');
-        if (value.length < 2) {
-            var output = '00:00';
+        var value = value.toString();
+        var hour  = parseInt(value.substr(0, 2));
+        if (value.indexOf(':') <= 0 && value.indexOf('.') <= 0) {
+            var minutes = parseInt(value.substr(2, 2));
         } else {
-            var hour = parseInt(value[0], 10);
-            if (isNaN(hour) || hour > 24 || hour < 0) {
-                hour = '00';
-            }
-            var minutes = parseInt(value[1], 10);
-            if (isNaN(minutes) || minutes > 60 || minutes < 0) {
-                minutes = '00';
-            }
-            var output = dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
+            var minutes = parseInt(value.substr(3, 2));
         }
-        return output;
+        if (isNaN(hour) || hour > 24 || hour < 0) {
+            hour = '00';
+        }
+        if (isNaN(minutes) || minutes > 60 || minutes < 0) {
+            minutes = '00';
+        }
+        return dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
     }
 });
 

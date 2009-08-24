@@ -73,8 +73,8 @@ $lang["Delete for who"] = "Delete for who";
 $lang["Delete just for me"] = "Delete just for me";
 $lang["Delete for all participants"] = "Delete for all participants";
 $lang["Event duration"] = "Event duration";
-$lang["End date and time has to be after Start date and time."] = "End date and time has to be after Start date and "
-    . "time.";
+$lang["End date and time has to be after Start date and time"] = "End date and time has to be after Start date and "
+    . "time";
 
 // Tooltip Help
 // 'Interval' field

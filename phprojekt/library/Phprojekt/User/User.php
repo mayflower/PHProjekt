@@ -238,7 +238,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
             $records = $this->fetchAll($where);
             if (count($records) > 0) {
                 $this->_validate->error->addError(array(
-                    'field'   => Phprojekt::getInstance()->translate('Username'),
+                    'field'   => 'username',
                     'label'   => Phprojekt::getInstance()->translate('Username'),
                     'message' => Phprojekt::getInstance()->translate('Already exists, choose another one please')));
                 $result = false;

@@ -63,9 +63,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     const EVENT_TYPE_ANUAL = 5;
 
-    const START_AFTER_END_TITLE = "Event duration";
-    const START_AFTER_END_DESC  = "End date and time has to be after Start date and time.";
-
     public $notifParticipants;
     public $startDateNotif;
     public $endDateNotif;
@@ -212,9 +209,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         if ($start >= $end) {
             $this->_validate->error->addError(array(
-                'field'   => Phprojekt::getInstance()->translate(self::START_AFTER_END_TITLE),
-                'label'   => Phprojekt::getInstance()->translate(self::START_AFTER_END_TITLE),
-                'message' => Phprojekt::getInstance()->translate(self::START_AFTER_END_DESC)));
+                'field'   => "Event duration",
+                'label'   => Phprojekt::getInstance()->translate("Event duration"),
+                'message' => Phprojekt::getInstance()->translate("End date and time has to be after Start date and "
+                    . "time")));
             return false;
         }
 

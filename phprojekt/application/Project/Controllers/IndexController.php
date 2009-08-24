@@ -104,7 +104,7 @@ class Project_IndexController extends IndexController
                 $showId[] = $newNode->id;
             } catch (Phprojekt_PublishedException $error) {
                 $success = false;
-                $showId  = Array($id);
+                $showId  = array($id);
                 $message = sprintf("ID %d. %s", $id, $error->getMessage());
                 break;
             }

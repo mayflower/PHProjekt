@@ -131,7 +131,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $startTime = (int) $startTime;
             if (($startTime >= 2400) || ($startTime < 0)) {
                 $this->_validate->error->addError(array(
-                    'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'field'   => 'Hours',
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
                     'message' => Phprojekt::getInstance()->translate('Start time has to be between 0:00 and 24:00')));
                 return false;
@@ -139,7 +139,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $startMinutes = substr($startTime, strlen($startTime) - 2, 2);
                 if ($startMinutes > 59 || $startMinutes < 0) {
                     $this->_validate->error->addError(array(
-                        'field'   => Phprojekt::getInstance()->translate('Hours'),
+                        'field'   => 'Hours',
                         'label'   => Phprojekt::getInstance()->translate('Hours'),
                         'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
                     return false;
@@ -151,7 +151,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $records = $this->fetchAll($this->_getWhereForTimes());
                 if (count($records) > 0) {
                     $this->_validate->error->addError(array(
-                        'field'   => Phprojekt::getInstance()->translate('Time period'),
+                        'field'   => 'Time period',
                         'label'   => Phprojekt::getInstance()->translate('Time period'),
                         'message' => Phprojekt::getInstance()->translate('Can not Start Working Time because this '
                             . 'moment is occupied by an existing period.')));
@@ -163,7 +163,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         if (isset($data['endTime']) && !empty($data['endTime'])) {
             if ($this->getDiffTime($data['endTime'], $data['startTime']) < 0) {
                 $this->_validate->error->addError(array(
-                    'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'field'   => 'Hours',
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
                     'message' => Phprojekt::getInstance()->translate('The end time must be after the start time')));
                 return false;
@@ -176,7 +176,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $endTime = (int) $endTime;
             if (($endTime > 2400) || ($endTime < 0)) {
                 $this->_validate->error->addError(array(
-                    'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'field'   => 'Hours',
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
                     'message' => Phprojekt::getInstance()->translate('End time has to be between 0:00 and 24:00')));
                 return false;
@@ -184,7 +184,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 $endMinutes = substr($endTime, strlen($endTime) - 2, 2);
                 if ($endMinutes > 59 || $endMinutes < 0) {
                     $this->_validate->error->addError(array(
-                        'field'   => Phprojekt::getInstance()->translate('Hours'),
+                        'field'   => 'Hours',
                         'label'   => Phprojekt::getInstance()->translate('Hours'),
                         'message' => Phprojekt::getInstance()->translate('The end time is invalid')));
                     return false;
@@ -193,7 +193,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
             if (empty($data['startTime']) || $data['startTime'] == ':') {
                 $this->_validate->error->addError(array(
-                    'field'   => Phprojekt::getInstance()->translate('Hours'),
+                    'field'   => 'Hours',
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
                     'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
                 return false;
@@ -220,7 +220,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                         }
                         if ($showError) {
                             $this->_validate->error->addError(array(
-                                'field'   => Phprojekt::getInstance()->translate('Time period'),
+                                'field'   => 'Time period',
                                 'label'   => Phprojekt::getInstance()->translate('Time period'),
                                 'message' => Phprojekt::getInstance()->translate('Can not End Working Time because this'
                                     . ' moment is occupied by an existing period.')));
@@ -233,7 +233,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     }
                     if ($showError) {
                         $this->_validate->error->addError(array(
-                            'field'   => Phprojekt::getInstance()->translate('Time period'),
+                            'field'   => 'Time period',
                             'label'   => Phprojekt::getInstance()->translate('Time period'),
                             'message' => Phprojekt::getInstance()->translate('Can not save it because it overlaps '
                                 . 'existing one')));

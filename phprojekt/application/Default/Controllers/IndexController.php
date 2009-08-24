@@ -248,7 +248,7 @@ class IndexController extends Zend_Controller_Action
             } catch (Phprojekt_PublishedException $error) {
                 $message = sprintf("ID %d. %s", $id, $error->getMessage());
                 $success = false;
-                $showId  = Array($id);
+                $showId  = array($id);
                 break;
             }
         }

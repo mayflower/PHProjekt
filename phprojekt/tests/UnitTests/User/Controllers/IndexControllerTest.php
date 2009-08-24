@@ -66,7 +66,7 @@ class User_IndexController_Test extends FrontInit
     public function testJsonSaveMultipleErrorPart2()
     {
         $this->setRequestUrl('Core/user/jsonSaveMultiple');
-        $items = array(2 => array('admin' => '1'),
+        $items = array(2 => array('admin'     => '1'),
                        3 => array('firstname' => 'Yo'));
         $this->request->setParam('data', $items);
         $response = $this->getResponse();
