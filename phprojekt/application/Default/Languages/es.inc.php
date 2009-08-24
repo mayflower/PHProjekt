@@ -85,6 +85,10 @@ $lang["City"] = "Ciudad";
 $lang["Zip Code"] = "Código postal";
 $lang["Country"] = "País";
 $lang["Private"] = "Privado";
+$lang["With selected"] = "Con ítems marcados";
+$lang["Export"] = "Exportar";
+$lang["Check All"] = "Marcar todos";
+$lang["Uncheck All"] = "Desmarcar Todos";
 
 // Access
 $lang["User"] = "Usuario";
@@ -108,6 +112,7 @@ $lang["Edit"]  = "Editar";
 $lang["Export all items to a CSV file"] = "Exportar todos los ítems a un archivo CSV";
 $lang["Save changes made to the grid through in-place editing"] = "Guardar modificaciones hechas sobre la grilla";
 $lang["Open an empty form to add a new item"] = "Abrir un formulario vacío para agregar un nuevo ítem";
+$lang["Open this item in the form to edit it"] = "Abrir este ítem en el formulario para editarlo";
 
 // Messages
 $lang["There are no entries on this level"] = "No hay elementos en este nivel";
@@ -117,6 +122,7 @@ $lang["The Item was edited correctly"] = "El ítem fue editado correctamente";
 $lang["The Items were edited correctly"] = "Los ítems fueron editados correctamente";
 $lang["The Item can't be deleted"] = "El ítem no puede ser borrado";
 $lang["The Item was deleted correctly"] = "El ítem fue borrado correctamente";
+$lang["The Item were deleted correctly"] = "Los ítems fueron borrados correctamente";
 $lang["Is a required field"] = "Es un campo requerido";
 $lang["Invalid format for date"] = "Formato de fecha inválida";
 $lang["Invalid Format"] = "Formato inválido";

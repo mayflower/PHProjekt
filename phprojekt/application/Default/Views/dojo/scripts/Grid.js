@@ -113,6 +113,14 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         return true;
     },
 
+    usePencilForEdit:function() {
+        // Summary:
+        //    Draw the pencil icon for edit the row
+        // Description:
+        //    Draw the pencil icon for edit the row
+        return true;
+    },
+
     useCheckbox:function() {
         // Summary:
         //    Whether to show or not the checkbox in the grid list
@@ -137,15 +145,17 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }
 
         // Pencil column
-        this.gridLayout.push({
-            name:      " ",
-            field:     "gridEdit",
-            width:     "20px",
-            type:      dojox.grid.cells.Cell,
-            editable:  false,
-            styles:    "vertical-align: middle;",
-            formatter: phpr.grid.formatIcon
-        });
+        if (this.usePencilForEdit()) {
+            this.gridLayout.push({
+                name:      " ",
+                field:     "gridEdit",
+                width:     "20px",
+                type:      dojox.grid.cells.Cell,
+                editable:  false,
+                styles:    "vertical-align: middle;",
+                formatter: phpr.grid.formatIcon
+            });
+        }
 
         // Id column
         if (this.useIdInGrid()) {
@@ -399,7 +409,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             };
             var content = dojo.clone(phpr.DataStore.getData({url: this.url}));
             for (var i in content) {
-                content[i]['gridEdit'] = 'editButton || ' + phpr.nls.get('Open this item in the form to edit it');
+                if (this.usePencilForEdit()) {
+                    content[i]['gridEdit'] = 'editButton || ' + phpr.nls.get('Open this item in the form to edit it');
+                }
 
                 // Extra Columns for current module
                 for (var indexCol in this.extraColumns) {
@@ -509,9 +521,12 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    This function process a 'row' action
         // Description:
         //    As soon as a Pencil icon or an extra action cell is clicked the corresponding action is processed
-        var useCheckBox = this.useCheckbox();
-        var index       = e.cellIndex;
-        if ((useCheckBox && index == 1) || (!useCheckBox && index == 0) || (index >= this.firstExtraCol)) {
+        var useCheckBox      = this.useCheckbox();
+        var usePencilForEdit = this.usePencilForEdit();
+        var index            = e.cellIndex;
+        if ((useCheckBox && usePencilForEdit && index == 1) ||
+            (!useCheckBox && usePencilForEdit && index == 0) ||
+            (this.firstExtraCol && index >= this.firstExtraCol)) {
             var item  = this.grid.getItem(e.rowIndex);
             var rowId = this.grid.store.getValue(item, 'id');
             if ((useCheckBox && index == 1) || (!useCheckBox && index == 0)) {

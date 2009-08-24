@@ -58,6 +58,10 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
         return false;
     },
 
+    usePencilForEdit:function() {
+        return false;
+    },
+
     useCheckbox:function() {
         // Summary:
         //    Whether to show or not the checkbox and pencil in the grid list
