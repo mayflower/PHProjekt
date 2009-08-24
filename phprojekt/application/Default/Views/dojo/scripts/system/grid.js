@@ -291,13 +291,11 @@ dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
     },
 
     formatTime: function(value) {
-        var value = value.toString();
-        var hour  = parseInt(value.substr(0, 2));
-        if (value.indexOf(':') <= 0 && value.indexOf('.') <= 0) {
-            var minutes = parseInt(value.substr(2, 2));
-        } else {
-            var minutes = parseInt(value.substr(3, 2));
-        }
+        var value   = value.toString().replace(/\D/g, "");
+        value       = value.substr(0, 4);
+        var minutes = value.substr(value.length - 2);
+        var hour    = value.substr(0, value.length - 2);
+
         if (isNaN(hour) || hour > 24 || hour < 0) {
             hour = '00';
         }
