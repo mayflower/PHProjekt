@@ -530,11 +530,10 @@ h1,h2,h3,h4,h5,h6 {
     margin-right: 10px;
 }
 
-.phprojekt .greyContainer {
+.phprojekt .formContainer {
     margin-top: 10px;
     color: #292929;
-    border: 1px solid #BABABA;
-    background-color: #ddd;
+    border: 1px solid #294064;
     padding-left: 10px;
     padding-right: 10px;
     margin-left: 10px;
@@ -554,7 +553,7 @@ h1,h2,h3,h4,h5,h6 {
     width: 95%;
 }
 
-.phprojekt .greyContainer td {
+.phprojekt .formContainer td {
     padding: 4px 0px 4px 5px;
 }
 
