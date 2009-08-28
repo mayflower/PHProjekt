@@ -107,9 +107,9 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
             var sumPerProject = 0;
             for (var u in data.users) {
                 if (!data.rows[p] || !data.rows[p][u]) {
-                    userData.push(phpr.Date.convertTime(0));
+                    userData.push(phpr.Date.convertMinutesToTime(0));
                 } else {
-                    userData.push(phpr.Date.convertTime(data.rows[p][u]));
+                    userData.push(phpr.Date.convertMinutesToTime(data.rows[p][u]));
                     sumPerProject   = Math.abs(sumPerProject + data.rows[p][u]);
                     if (!sumPerUser[u]) {
                         sumPerUser[u] = 0;
@@ -117,21 +117,29 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
                     sumPerUser[u] = Math.abs(sumPerUser[u] + data.rows[p][u]);
                 }
             }
-            rows.push({"project": data.projects[p], "userData": userData, "sum": phpr.Date.convertTime(sumPerProject)});
+            rows.push({
+                "project":  data.projects[p],
+                "userData": userData,
+                "sum":      phpr.Date.convertMinutesToTime(sumPerProject)
+            });
         }
 
         var total        = 0;
         var totalPerUser = new Array();
         for (var u in data.users) {
             if (!sumPerUser[u]) {
-                totalPerUser.push(phpr.Date.convertTime(0));
+                totalPerUser.push(phpr.Date.convertMinutesToTime(0));
             } else {
-                totalPerUser.push(phpr.Date.convertTime(sumPerUser[u]));
+                totalPerUser.push(phpr.Date.convertMinutesToTime(sumPerUser[u]));
                 total = Math.abs(total + sumPerUser[u]);
             }
         }
         var totalRow = new Array();
-        totalRow.push({"title": phpr.nls.get("Total"), "userData": totalPerUser, "sum": phpr.Date.convertTime(total)});
+        totalRow.push({
+            "title":    phpr.nls.get("Total"),
+            "userData": totalPerUser,
+            "sum":      phpr.Date.convertMinutesToTime(total)
+        });
 
         this.render(["phpr.Statistic.template", "table.html"], dojo.byId('statisticContent'), {
             sumTxt: phpr.nls.get("Sum"),

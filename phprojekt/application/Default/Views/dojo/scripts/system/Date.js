@@ -21,9 +21,9 @@ dojo.provide("phpr.Date");
 
 dojo.declare("phpr.Date", null, {
     getIsoDate:function(date) {
-        // summary:
+        // Summary:
         //    Convert a js date into ISO date
-        // description:
+        // Description:
         //    Convert a js date into ISO date
         var day = date.getDate();
         if (day < 10) {
@@ -38,24 +38,31 @@ dojo.declare("phpr.Date", null, {
     },
 
     getIsoTime:function(time) {
-        // summary:
+        // Summary:
         //    Convert a js time into ISO time
-        // description:
+        // Description:
         //    Convert a js time into ISO time
-       time        = time.replace(/\D/g, "");
-       var minutes = time.substr(time.length - 2);
-       var hour    = time.substr(0, time.length - 2);
+        var value   = time.toString().replace(/\D/g, "");
+        value       = value.substr(0, 4);
+        var minutes = value.substr(value.length - 2);
+        var hour    = value.substr(0, value.length - 2);
 
-       return hour + ':' + minutes;
+        if (isNaN(hour) || hour > 24 || hour < 0) {
+            hour = '00';
+        }
+        if (isNaN(minutes) || minutes > 60 || minutes < 0) {
+            minutes = '00';
+        }
+        return dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
     },
 
-    convertTime:function(time) {
-        // summary:
+    convertMinutesToTime:function(minutes) {
+        // Summary:
         //    Convert a number of minutes into HH:mm
-        // description:
+        // Description:
         //    Convert a number of minutes into HH:mm
-        hoursDiff   = Math.floor(time / 60);
-        minutesDiff = time - (hoursDiff * 60);
+        hoursDiff   = Math.floor(minutes / 60);
+        minutesDiff = minutes - (hoursDiff * 60);
 
         if (hoursDiff == 0 || hoursDiff < 10) {
             hoursDiff = '0' + hoursDiff;
@@ -67,10 +74,21 @@ dojo.declare("phpr.Date", null, {
         return hoursDiff + ':' + minutesDiff;
     },
 
+    convertTimeToMinutes:function(time) {
+        // Summary:
+        //    Convert a HH:mm into a number of minutes
+        // Description:
+        //    Convert a HH:mm into a number of minutes
+        var hours   = parseInt(time.substr(0, 2));
+        var minutes = parseInt(time.substr(3, 2));
+
+        return (hours * 60) + (minutes);
+    },
+
     isoDateTojsDate:function(date) {
-        // summary:
+        // Summary:
         //    Convert a iso string of a date into a js object date
-        // description:
+        // Description:
         //    Convert a iso string of a date into a js object date
         var day   = date.substr(8, 2);
         var month = date.substr(5, 2);

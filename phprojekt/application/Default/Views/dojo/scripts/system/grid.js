@@ -267,7 +267,7 @@ dojo.declare("phpr.grid.cells.Textarea", phpr.grid.cells.Text, {
 
 dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
     setValue: function(inRowIndex, inValue) {
-        inValue = this.formatTime(inValue);
+        inValue = phpr.Date.getIsoTime(inValue);
         if (this.widget && this.widget.setValue) {
             this.widget.setValue(inValue);
         } else {
@@ -277,32 +277,17 @@ dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
 
     getValue:function(inRowIndex) {
         var value = this.widget.attr('value');
-        return this.formatTime(value);
+        return phpr.Date.getIsoTime(value);
     },
 
     format:function(inRowIndex, inItem) {
         var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
         if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
-            var d = this.formatTime(d);
+            var d = phpr.Date.getIsoTime(d);
             return this.formatEditing(d, inRowIndex);
         } else {
-            return this.formatTime(d);
+            return phpr.Date.getIsoTime(d);
         }
-    },
-
-    formatTime: function(value) {
-        var value   = value.toString().replace(/\D/g, "");
-        value       = value.substr(0, 4);
-        var minutes = value.substr(value.length - 2);
-        var hour    = value.substr(0, value.length - 2);
-
-        if (isNaN(hour) || hour > 24 || hour < 0) {
-            hour = '00';
-        }
-        if (isNaN(minutes) || minutes > 60 || minutes < 0) {
-            minutes = '00';
-        }
-        return dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
     }
 });
 
