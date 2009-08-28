@@ -419,6 +419,22 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     }
 
     /**
+     * Get running bookings and return an array
+     * of currently running for the given userid
+     *
+     * @param integer $ownerId Owner of the bookings
+     *
+     * @return array
+     */
+    public function getRunningBookings($ownerId)
+    {
+        $where   = sprintf('date = %s AND (end_time = "" OR end_time IS NULL) AND owner_id = %d',
+                        $this->getAdapter()->quote(date('Y-m-d')), $ownerId);
+        $records = $this->fetchAll($where, null, 1);
+        return $records;
+    }
+
+    /**
      * Delete only the own records
      *
      * @return boolean

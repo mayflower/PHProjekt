@@ -268,6 +268,33 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
+     * Checks if there are running bookings at the moment.
+     * This method doesn't take any argument. It returns
+     * a field 'status' with either true or false.
+     *
+     * @return void
+     */
+    public function jsonHasRunningBookingsAction()
+    {
+        $records = $this->getModelObject()->getRunningBookings(Phprojekt_Auth::getUserId());
+        if (count($records) > 0) {
+            /* TODO: make sure we use phprojekt's default date/time format */
+            $record = end($records);
+            $date   = $record->startTime . ' ' . $record->date;
+        } else {
+            $date = null;
+        }
+
+        $return = array('type'    => 'success',
+                        'status'  => (count($records) > 0) ? 'true' : 'false',
+                        'date'    => $date,
+                        'code'    => 0,
+                        'id'      => 0);
+
+        Phprojekt_Converter_Json::echoConvert($return);
+    }
+
+    /**
      * Save a booking project
      *
      * @return void
