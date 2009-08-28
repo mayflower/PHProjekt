@@ -52,6 +52,9 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals("2009-05-16", $timecardModel->date);
         $this->assertEquals("10:30:00", $timecardModel->startTime);
         $this->assertEquals("12:30:00", $timecardModel->endTime);
+        $this->assertEquals("120", $timecardModel->minutes);
+        $this->assertEquals("1", $timecardModel->projectId);
+        $this->assertEquals("My note", $timecardModel->notes);
     }
 
     /**
@@ -64,6 +67,8 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $timecardModel->date      = '2009-05-17';
         $timecardModel->startTime = '10:00:00';
         $timecardModel->endTime   = '18:00:00';
+        $timecardModel->projectId = 1;
+        $timecardModel->notes     = 'TEST';
         $response                 = $timecardModel->recordValidate();
         $this->assertEquals(true, $response);
 
@@ -159,6 +164,8 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $timecardModel->date      = '2009-05-17';
         $timecardModel->startTime = '14:00:00';
         $timecardModel->endTime   = '18:00:00';
+        $timecardModel->projectId = 1;
+        $timecardModel->notes     = 'TEST';
         $response                 = $timecardModel->recordValidate();
         $this->assertEquals(true, $response);
         $timecardModel->save();
@@ -178,6 +185,8 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $timecardModel->ownerId   = 1;
         $timecardModel->date      = '2009-05-17';
         $timecardModel->startTime = '13:00:00';
+        $timecardModel->projectId = 1;
+        $timecardModel->notes     = 'TEST';
         $response                 = $timecardModel->recordValidate();
         $this->assertEquals(true, $response);
         $timecardModel->save();
@@ -229,7 +238,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data1['range']    = array('id'   => '',
                                    'name' => '');
         $data1['required'] = true;
-        $data1['readOnly'] = true;
+        $data1['readOnly'] = false;
         $data1['tab']      = 1;
         $data1['integer']  = false;
         $data1['length']   = 0;
@@ -268,11 +277,64 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data3['integer']  = false;
         $data3['length']   = 0;
 
-        $timecardModel = clone($this->_model);
-        $expected = array($data2, $data3);
-        $this->assertEquals($expected, $timecardModel->getInformation()->getFieldDefinition('today'));
+        $data4 = array();
+        $data4['key']      = 'minutes';
+        $data4['label']    = Phprojekt::getInstance()->translate('Minutes');
+        $data4['type']     = 'text';
+        $data4['hint']     = Phprojekt::getInstance()->getTooltip('minutes');
+        $data4['order']    = 0;
+        $data4['position'] = 4;
+        $data4['fieldset'] = '';
+        $data4['range']    = array('id'   => '',
+                                   'name' => '');
+        $data4['required'] = false;
+        $data4['readOnly'] = false;
+        $data4['tab']      = 1;
+        $data4['integer']  = true;
+        $data4['length']   = 0;
 
-        $expected = array($data1, $data2, $data3);
-        $this->assertEquals($expected, $timecardModel->getInformation()->getFieldDefinition('export'));
+        $data5 = array();
+        $data5['key']      = 'projectId';
+        $data5['label']    = Phprojekt::getInstance()->translate('Project');
+        $data5['type']     = 'time';
+        $data5['hint']     = Phprojekt::getInstance()->getTooltip('projectId');
+        $data5['order']    = 0;
+        $data5['position'] = 5;
+        $data5['fieldset'] = '';
+        $data5['range']    = array();
+        $data5['type']     = 'selectbox';
+        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+        $tree = $tree->setup();
+        foreach ($tree as $node) {
+            $data5['range'][] = array('id'   => (int) $node->id,
+                                      'name' => $node->getDepthDisplay('title'));
+        }
+        $data5['required'] = true;
+        $data5['readOnly'] = false;
+        $data5['tab']      = 1;
+        $data5['integer']  = true;
+        $data5['length']   = 0;
+
+        $data6 = array();
+        $data6['key']      = 'notes';
+        $data6['label']    = Phprojekt::getInstance()->translate('Notes');
+        $data6['type']     = 'textarea';
+        $data6['hint']     = Phprojekt::getInstance()->getTooltip('notes');
+        $data6['order']    = 0;
+        $data6['position'] = 6;
+        $data6['fieldset'] = '';
+        $data6['range']    = array('id'   => '',
+                                   'name' => '');
+        $data6['required'] = true;
+        $data6['readOnly'] = false;
+        $data6['tab']      = 1;
+        $data6['integer']  = false;
+        $data6['length']   = 0;
+
+        $timecardModel = clone($this->_model);
+        $expected      = array($data1, $data2, $data3, $data4, $data5, $data6);
+        $order         = Phprojekt_ModelInformation_Default::ORDERING_FORM;
+        $this->assertEquals($expected, $timecardModel->getInformation()->getFieldDefinition($order));
     }
 }

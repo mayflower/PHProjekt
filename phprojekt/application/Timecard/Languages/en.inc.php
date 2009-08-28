@@ -1,17 +1,9 @@
 <?php
 // Words and phrases
-$lang["Working Times"] = "Working Times";
-$lang["Start working time"] = "Start working time";
-$lang["Stop working time"] = "Stop working time";
-$lang["Hours"] = "Hours";
 $lang["The end time must be after the start time"] = "The end time must be after the start time";
-$lang["Change date"] = "Change date";
-$lang["Project Bookings"] = "Project Bookings";
-$lang["Add working time and drag projects into the bar"] = "Add working time and drag projects into the bar";
 $lang["Manage project list"] = "Manage project list";
-$lang["Amount"] = "Amount";
 $lang["Total"] = "Total";
-$lang["The amount is invalid (from 30 to 2400)"] = "The amount is invalid (from 30 to 2400)";
+$lang["Sum"] = "Sum";
 $lang["Start time has to be between 0:00 and 24:00"] = "Start time has to be between 0:00 and 24:00";
 $lang["End time has to be between 0:00 and 24:00"] = "End time has to be between 0:00 and 24:00";
 $lang["Time period"] = "Time period";
@@ -22,18 +14,8 @@ $lang["Can not End Working Time because this moment is occupied by an existing p
     . "because this moment is occupied by an existing period.";
 
 // Tooltip Help
-// Start Stop Buttons
-$lang["These buttons Start and Stop working time automatically."] = "These buttons Start and Stop working time "
-    . "automatically.";
-// Working Times
-$lang["Here you should add the all the worked hours of the selected day."] = "Here you should add the all the worked "
-    . "hours of the selected day.";
-// Hours
-$lang["The format of the hours may be with or without a symbol: 08:00, 0800, 800, etc."] = "The format of the hours may"
-    . " be with or without a symbol: 08:00, 0800, 800, etc.";
-// Project Times
-$lang["Inside this panel you can Drag & Drop Projects into the worked hours."] = "Inside this panel you can Drag & Drop"
-    . " Projects into the worked hours.";
+$lang["Tooltip"]["startTime"] = "The format of the hours may be with or without a symbol: 08:00, 0800, 800, etc.";
+$lang["Tooltip"]["endTime"] = "The format of the hours may be with or without a symbol: 08:00, 0800, 800, etc.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

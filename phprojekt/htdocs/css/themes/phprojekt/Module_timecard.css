@@ -1,24 +1,101 @@
-/* Dnd */
+/* MonthView */
+.phprojekt #tableMonthView {
+    width: 100%;
+    line-height: 1.09;
+}
 
-.phprojekt .dndTarget {
+.phprojekt #tableMonthView .col1 {
+    width: 10%;
+}
+
+.phprojekt #tableMonthView .col2 {
+    width: 50%;
+}
+
+.phprojekt #tableMonthView .col3 {
+    width: 40%;
+}
+
+.phprojekt #tableMonthView td {
+    padding: 0 0.5em 0 0.5em;
+}
+
+.phprojekt #tableMonthView .weekday,
+.phprojekt #tableMonthView .weekday a,
+.phprojekt #tableMonthView .weekend,
+.phprojekt #tableMonthView .weekend a {
+    color: #000;
+}
+
+.phprojekt #tableMonthView .weekend,
+.phprojekt #tableMonthView .weekend a {
+    color: red;
+}
+
+/* DayView */
+.phprojekt #timecardDayView .dayViewWhite,
+.phprojekt #timecardDayView .dayViewCelestial {
+    background-color: white;
+    float: left;
+    width: 100%;
+    margin-left: 0px;
+    z-index: -10;
+    height: 20px;
+}
+
+.phprojekt #timecardDayView .dayViewCelestial {
+    background-color: #e9f3ff;
+}
+
+.phprojekt #timecardDayView .addButton .dijitButtonNode {
+    padding: 0px 0px 0px 0px;
+    margin: 0 0 0.3em;
+    width: 15px;
+    border: none;
+    background: none;
+}
+
+.phprojekt #timecardDayView .add {
+    margin-left: 0;
+}
+
+.phprojekt .dndTarget,
+.phprojekt .dndTargetOpen {
     border: 3px solid #f4cc47;
     -moz-border-radius: 8pt 8pt;
     radius: 8pt;
-    color: #292929;
     display: inline;
     position: absolute;
     left: 0px;
-    width: 195px;
+    width: 85%;
     float: left;
     cursor: pointer;
+    background: #F1CE47;
+    color: #000;
+    font-size: 8pt;
+    font-weight: bold;
+    padding-left: 10%;
+    filter: alpha(opacity=50);
+    opacity: .5;
 }
 
+.phprojekt .dndTargetOpen {
+    border: 3px solid red;
+    background: red;
+}
+
+/* FormView*/
 .phprojekt .dndSource {
-    border: 1px dotted skyblue;
+    border: 3px solid #f4cc47;
     -moz-border-radius: 8pt 8pt;
     radius: 8pt;
-    cursor: move;
+    cursor: pointer;
     padding-left: 10px;
-    background-color: #afb8c5;
-    color: #213f64;
+    color: #000;
+    background-color: #F1CE47;
+    width: 95%;
+    font-size: 8pt;
+    font-weight: bold;
+    filter: alpha(opacity=50);
+    opacity: .5;
 }

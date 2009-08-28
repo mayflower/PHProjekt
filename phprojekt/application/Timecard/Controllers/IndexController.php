@@ -34,237 +34,68 @@
 class Timecard_IndexController extends IndexController
 {
    /**
-     * Returns the list for a model in JSON.
+     * Returns a list of the days in the month with the sum of bookings per day
      *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
-     *
-     * Only return data for the current user.
-     * User the params for set the month and year
-     *
-     * @requestparam integer count ...
-     * @requestparam integer start ...
      * @requestparam integer year  Year for the list view
      * @requestparam integer month Month for the list view
-     * @requestparam string  view  Type of the view for the list
      *
      * @return void
      */
-    public function jsonListAction()
+    public function jsonMonthListAction()
     {
-        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
-        // so lets apply this to the query set. This is also used for loading a
-        // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-        $count  = (int) $this->getRequest()->getParam('count', null);
-        $offset = (int) $this->getRequest()->getParam('start', null);
-        $year   = (int) $this->getRequest()->getParam('year', date("Y"));
-        $month  = (int) $this->getRequest()->getParam('month', date("m"));
-        $view   = Cleaner::sanitize('alpha', $this->getRequest()->getParam('view', 'month'));
-
-        $records = $this->getModelObject()->getRecords($view, $year, $month, $count, $offset);
+        $year    = (int) $this->getRequest()->getParam('year', date("Y"));
+        $month   = (int) $this->getRequest()->getParam('month', date("m"));
+        $records = $this->getModelObject()->getMonthRecords($year, $month);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
-     * Save the timecard hours
-     * IF the start is empty, looking for an open time and close it.
-     *
-     * @requestparam integer id ...
-     *
-     * @return void
-     */
-    public function jsonSaveAction()
-    {
-        $id = (int) $this->getRequest()->getParam('id');
-
-        if (empty($id)) {
-            $model   = $this->getModelObject();
-            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
-        } else {
-            $model   = $this->getModelObject()->find($id);
-            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
-        }
-
-        $startTime = $this->getRequest()->getParam('startTime', null);
-        $endTime   = $this->getRequest()->getParam('endTime', null);
-        if (empty($startTime)) {
-            // Date filter to find the open register
-            $date    = $this->getRequest()->getParam('date', null);
-            $db      = Phprojekt::getInstance()->getDb();
-            $where   = sprintf('date = %s AND (end_time = "" OR end_time IS NULL)', $db->quote($date));
-            $records = $this->getModelObject()->fetchAll($where, null, 1);
-
-            if (isset($records[0])) {
-                $model = $records[0];
-                $this->getRequest()->setParam('startTime', $model->startTime);
-                Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-                $type    = 'success';
-                $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
-                $showId  = $model->id;
-            } else {
-                $type    = 'error';
-                $message = Phprojekt::getInstance()->translate(self::NOT_FOUND);
-                $showId  = null;
-            }
-        } else if (empty($endTime)) {
-            $params = $this->getRequest()->getParams();
-            unset($params['endTime']);
-            Default_Helpers_Save::save($model, $params);
-            $type   = 'success';
-            $showId = $model->id;
-        } else {
-            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-            $type   = 'success';
-            $showId = $model->id;
-        }
-
-        $return = array('type'    => $type,
-                        'message' => $message,
-                        'code'    => 0,
-                        'id'      => $showId);
-
-        Phprojekt_Converter_Json::echoConvert($return);
-    }
-
-    /**
-     * Returns the detail for a model in JSON.
-     *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
+     * Returns a list of the bookings in a day
      *
      * @requestparam string date
      *
      * @return void
      */
-    public function jsonDetailAction()
-    {
-        $db      = Phprojekt::getInstance()->getDb();
-        $date    = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
-        $where   = sprintf('(owner_id = %d AND date = %s)', (int) Phprojekt_Auth::getUserId(), $date);
-        $records = $this->getModelObject()->fetchAll($where, 'start_time');
-
-        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
-    }
-
-    /**
-     * Returns the detail for the bookings in JSON.
-     *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
-     *
-     * @requestparam string date
-     *
-     * @return void
-     */
-    public function jsonBookingDetailAction()
+    public function jsonDayListAction()
     {
         $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-        $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
-        $records = $model->getRecords($date);
+        $records = $this->getModelObject()->getDayRecords($date);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
-   /**
-     * Deletes a certain item
-     *
-     * If the item are already deleted or do not exist
-     * return a Phprojekt_PublishedException
-     * If the item is deleted, the return is a string with the same format than the Phprojekt_PublishedException
-     * but with success type
-     *
-     * @requestparam integer id ...
-     *
-     * @return void
-     */
-    public function jsonBookingDeleteAction()
-    {
-        $id = (int) $this->getRequest()->getParam('id');
-
-        if (empty($id)) {
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
-        }
-
-        $model = Phprojekt_Loader::getModel('Timecard', 'Timeproj')->find($id);
-
-        if ($model instanceof Phprojekt_Model_Interface) {
-            if ($model->ownerId == Phprojekt_Auth::getUserId()) {
-                $tmp = Default_Helpers_Delete::delete($model);
-                if ($tmp === false) {
-                    $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
-                } else {
-                    $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
-                }
-                $return = array('type'    => 'success',
-                                'message' => $message,
-                                'code'    => 0,
-                                'id'      => $id);
-
-                Phprojekt_Converter_Json::echoConvert($return);
-            } else {
-                throw new Phprojekt_PublishedException('You do not have access for do this action');
-            }
-        } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
-        }
-    }
-
     /**
-     * Creates a new timecard record with the current date and time.
+     * Return a list of Project (Ids and Names) saved as "favorites"
      *
      * @return void
      */
-    public function jsonStartAction()
+    public function jsonGetFavoritesProjectsAction()
     {
-        $model   = $this->getModelObject();
-        $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
+        $setting->setModule('Timecard');
 
-        $this->getRequest()->setParam('date', date("Y-m-d"));
-        $this->getRequest()->setParam('startTime', date("H:i:s"));
-
-        Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-
-        $return = array('type'    => 'success',
-                        'message' => $message,
-                        'code'    => 0,
-                        'id'      => $model->id);
-
-        Phprojekt_Converter_Json::echoConvert($return);
-    }
-
-    /**
-     * Closes the first timecard record of the current date.
-     *
-     * @return void
-     */
-    public function jsonStopAction()
-    {
-        // Date filter to find the open register
-        $db      = Phprojekt::getInstance()->getDb();
-        $where   = sprintf('date = %s AND (end_time = "" OR end_time IS NULL)', $db->quote(date("Y-m-d")));
-        $records = $this->getModelObject()->fetchAll($where, null, 1);
-
-        $this->getRequest()->setParam('endTime', date("H:i:s"));
-
-        if (isset($records[0])) {
-            $model = $records[0];
-            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-            $type    = 'success';
-            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
-            $showId  = $model->id;
+        $favorites = $setting->getSetting('favorites');
+        if (!empty($favorites)) {
+            $favorites = unserialize($favorites);
         } else {
-            $type    = 'error';
-            $message = Phprojekt::getInstance()->translate(self::NOT_FOUND);
-            $showId  = null;
+            $favorites = array();
         }
 
-        $return = array('type'    => $type,
-                        'message' => $message,
-                        'code'    => 0,
-                        'id'      => $showId);
+        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+        $tree         = $tree->setup();
 
-        Phprojekt_Converter_Json::echoConvert($return);
+        $datas = array();
+        foreach ($favorites as $projectId) {
+            $data            = array();
+            $data['id']      = $projectId;
+            $data['display'] = $tree->getNodeById($projectId)->title;
+
+            $datas[] = $data;
+        }
+
+        Phprojekt_Converter_Json::echoConvert($datas);
     }
 
     /**
@@ -297,21 +128,28 @@ class Timecard_IndexController extends IndexController
     /**
      * Save a booking project
      *
+     * @requestparam integer date ...
+     * @requestparam integer startTime ...
+     * @requestparam integer endTime ...
+     * @requestparam integer projectId ...
+     * @requestparam integer notes ...
+     *
      * @return void
      */
-    public function jsonBookingSaveAction()
+    public function jsonSaveAction()
     {
         $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
+            $model   = $this->getModelObject();
             $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
         } else {
-            $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj')->find($id);
+            $model   = $this->getModelObject()->find($id);
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
-        Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+        $params = $this->setParams($this->getRequest()->getParams(), $model);
+        Default_Helpers_Save::save($model, $params);
 
         $return = array('type'    => 'success',
                         'message' => $message,
@@ -319,26 +157,6 @@ class Timecard_IndexController extends IndexController
                         'id'      => $model->id);
 
         Phprojekt_Converter_Json::echoConvert($return);
-    }
-
-    /**
-     * Return a list of Project Ids saved as "favorites" for th
-     *
-     * @return void
-     */
-    public function jsonGetFavoritesProjectsAction()
-    {
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-        $setting->setModule('Timecard');
-
-        $favorites = $setting->getSetting('favorites');
-        if (!empty($favorites)) {
-            $favorites = unserialize($favorites);
-        } else {
-            $favorites = array();
-        }
-
-        Phprojekt_Converter_Json::echoConvert($favorites);
     }
 
     /**
@@ -363,14 +181,14 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
-     * Export the list of the hours in the month
+     * Export the list of the bookings in the month
      *
      * @requestparam integer year  Current year
      * @requestparam integer month Current month
      *
      * @return void
      */
-    public function csvHourListAction()
+    public function csvListAction()
     {
         $db     = Phprojekt::getInstance()->getDb();
         $userId = Phprojekt_Auth::getUserId();
@@ -380,33 +198,43 @@ class Timecard_IndexController extends IndexController
             $month = '0' . $month;
         }
         $where   = sprintf('(owner_id = %d AND date LIKE %s)', (int) $userId, $db->quote($year . '-' . $month . '-%'));
-        $records = $this->getModelObject()->fetchAll($where);
+        $records = $this->getModelObject()->fetchAll($where, 'date ASC');
 
         Phprojekt_Converter_Csv::echoConvert($records, 'export');
     }
 
+
     /**
-     * Export the list of the project bookings in the month
+     * Set some values deppend on the params
      *
-     * @requestparam integer year  Current year
-     * @requestparam integer month Current month
-     *
-     * @return void
+     * @return array
      */
-    public function csvBookingListAction()
+    public function setParams()
     {
-        $db     = Phprojekt::getInstance()->getDb();
-        $userId = Phprojekt_Auth::getUserId();
-        $year   = (int) $this->getRequest()->getParam('year', date("Y"));
-        $month  = (int) $this->getRequest()->getParam('month', date("m"));
-        if (strlen($month) == 1) {
-            $month = '0' . $month;
+        $args = func_get_args();
+
+        $params = $args[0];
+        $model  = $args[1];
+
+        $params['date']      = Cleaner::sanitize('date', $params['date']);
+        $params['startTime'] = Cleaner::sanitize('time', $params['startTime']);
+        if ($params['startTime'] == '') {
+            unset($params['startTime']);
+        }
+        $params['endTime'] = Cleaner::sanitize('time', $params['endTime']);
+        if ($params['endTime'] == '') {
+            unset($params['endTime']);
+        }
+        $params['projectId'] = (int) $params['projectId'];
+        $params['notes']     = Cleaner::sanitize('string', $params['notes']);
+        if (isset($params['endTime']) && isset($params['startTime'])) {
+            $params['minutes'] = Timecard_Models_Timecard::getDiffTime($params['endTime'], $params['startTime']);
+        } else if (!isset($params['endTime'])) {
+            $params['minutes'] = 0;
+        } else {
+            $params['minutes'] = Timecard_Models_Timecard::getDiffTime($params['endTime'], $model->startTime);
         }
 
-        $where   = sprintf('(owner_id = %d AND date LIKE %s)', (int) $userId, $db->quote($year . '-' . $month . '-%'));
-        $model   = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
-        $records = $model->fetchAll($where);
-
-        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_DEFAULT);
+        return $params;
     }
 }

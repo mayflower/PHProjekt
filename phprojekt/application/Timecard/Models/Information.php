@@ -49,108 +49,133 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
      *
      * @return array
      */
-    public function getFieldDefinition($ordering = 'month')
+    public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $converted = array();
 
-        // date
-        $dateData = array();
-        $dateData['key']      = 'date';
-        $dateData['label']    = Phprojekt::getInstance()->translate('Date');
-        $dateData['type']     = 'date';
-        $dateData['hint']     = Phprojekt::getInstance()->getTooltip('date');
-        $dateData['order']    = 0;
-        $dateData['position'] = 1;
-        $dateData['fieldset'] = '';
-        $dateData['range']    = array('id'   => '',
-                                      'name' => '');
-        $dateData['required'] = true;
-        $dateData['readOnly'] = true;
-        $dateData['tab']      = 1;
-        $dateData['integer']  = false;
-        $dateData['length']   = 0;
-
-        // startDate
-        $startDateData = array();
-        $startDateData['key']      = 'startTime';
-        $startDateData['label']    = Phprojekt::getInstance()->translate('Start Time');
-        $startDateData['type']     = 'time';
-        $startDateData['hint']     = Phprojekt::getInstance()->getTooltip('startTime');
-        $startDateData['order']    = 0;
-        $startDateData['position'] = 2;
-        $startDateData['fieldset'] = '';
-        $startDateData['range']    = array('id'   => '',
-                                           'name' => '');
-        $startDateData['required'] = true;
-        $startDateData['readOnly'] = false;
-        $startDateData['tab']      = 1;
-        $startDateData['integer']  = false;
-        $startDateData['length']   = 0;
-
-        // endDate
-        $endDateData = array();
-        $endDateData['key']      = 'endTime';
-        $endDateData['label']    = Phprojekt::getInstance()->translate('End Time');
-        $endDateData['type']     = 'time';
-        $endDateData['hint']     = Phprojekt::getInstance()->getTooltip('endTime');
-        $endDateData['order']    = 0;
-        $endDateData['position'] = 3;
-        $endDateData['fieldset'] = '';
-        $endDateData['range']    = array('id'   => '',
-                                         'name' => '');
-        $endDateData['required'] = false;
-        $endDateData['readOnly'] = false;
-        $endDateData['tab']      = 1;
-        $endDateData['integer']  = false;
-        $endDateData['length']   = 0;
-
         switch ($ordering) {
-            case 'today':
             default:
-                $converted[] = $startDateData;
-                $converted[] = $endDateData;
-                break;
-            case 'export':
-                $converted[] = $dateData;
-                $converted[] = $startDateData;
-                $converted[] = $endDateData;
-                break;
-            case 'month':
                 // date
-                $converted[] = $dateData;
-
-                // Sum of hours
                 $data = array();
-                $data['key']      = 'sum';
-                $data['label']    = Phprojekt::getInstance()->translate('Working Times');
-                $data['type']     = 'time';
-                $data['hint']     = Phprojekt::getInstance()->getTooltip('sum');
+
+                $data['key']      = 'date';
+                $data['label']    = Phprojekt::getInstance()->translate('Date');
+                $data['type']     = 'date';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('date');
                 $data['order']    = 0;
-                $data['position'] = 2;
+                $data['position'] = 1;
                 $data['fieldset'] = '';
                 $data['range']    = array('id'   => '',
                                           'name' => '');
                 $data['required'] = true;
-                $data['readOnly'] = true;
+                $data['readOnly'] = false;
                 $data['tab']      = 1;
                 $data['integer']  = false;
                 $data['length']   = 0;
 
                 $converted[] = $data;
 
-                // Sum of Bookinks
+                // startTime
                 $data = array();
-                $data['key']      = 'bookings';
-                $data['label']    = Phprojekt::getInstance()->translate('Project Bookings');
+
+                $data['key']      = 'startTime';
+                $data['label']    = Phprojekt::getInstance()->translate('Start Time');
                 $data['type']     = 'time';
-                $data['hint']     = Phprojekt::getInstance()->getTooltip('bookings');
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('startTime');
+                $data['order']    = 0;
+                $data['position'] = 2;
+                $data['fieldset'] = '';
+                $data['range']    = array('id'   => '',
+                                          'name' => '');
+                $data['required'] = true;
+                $data['readOnly'] = false;
+                $data['tab']      = 1;
+                $data['integer']  = false;
+                $data['length']   = 0;
+
+                $converted[] = $data;
+
+                // endTime
+                $data = array();
+
+                $data['key']      = 'endTime';
+                $data['label']    = Phprojekt::getInstance()->translate('End Time');
+                $data['type']     = 'time';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('startTime');
                 $data['order']    = 0;
                 $data['position'] = 3;
                 $data['fieldset'] = '';
                 $data['range']    = array('id'   => '',
                                           'name' => '');
+                $data['required'] = false;
+                $data['readOnly'] = false;
+                $data['tab']      = 1;
+                $data['integer']  = false;
+                $data['length']   = 0;
+
+                $converted[] = $data;
+
+                // minutes
+                $data = array();
+
+                $data['key']      = 'minutes';
+                $data['label']    = Phprojekt::getInstance()->translate('Minutes');
+                $data['type']     = 'text';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('minutes');
+                $data['order']    = 0;
+                $data['position'] = 4;
+                $data['fieldset'] = '';
+                $data['range']    = array('id'   => '',
+                                          'name' => '');
+                $data['required'] = false;
+                $data['readOnly'] = false;
+                $data['tab']      = 1;
+                $data['integer']  = true;
+                $data['length']   = 0;
+
+                $converted[] = $data;
+
+                // projectId
+                $data = array();
+
+                $data['key']      = 'projectId';
+                $data['label']    = Phprojekt::getInstance()->translate('Project');
+                $data['type']     = 'time';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('projectId');
+                $data['order']    = 0;
+                $data['position'] = 5;
+                $data['fieldset'] = '';
+                $data['range']    = array();
+                $data['type']     = 'selectbox';
+                $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+                $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+                $tree = $tree->setup();
+                foreach ($tree as $node) {
+                    $data['range'][] = array('id'   => (int) $node->id,
+                                             'name' => $node->getDepthDisplay('title'));
+                }
                 $data['required'] = true;
-                $data['readOnly'] = true;
+                $data['readOnly'] = false;
+                $data['tab']      = 1;
+                $data['integer']  = true;
+                $data['length']   = 0;
+
+                $converted[] = $data;
+
+                // notes
+                $data = array();
+
+                $data['key']      = 'notes';
+                $data['label']    = Phprojekt::getInstance()->translate('Notes');
+                $data['type']     = 'textarea';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('notes');
+                $data['order']    = 0;
+                $data['position'] = 6;
+                $data['fieldset'] = '';
+                $data['range']    = array('id'   => '',
+                                          'name' => '');
+                $data['required'] = true;
+                $data['readOnly'] = false;
                 $data['tab']      = 1;
                 $data['integer']  = false;
                 $data['length']   = 0;

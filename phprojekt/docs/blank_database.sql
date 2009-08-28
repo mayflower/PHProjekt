@@ -8,7 +8,6 @@ BEGIN;
 
 -- Drop table if exists
 DROP TABLE IF EXISTS `timecard`;
-DROP TABLE IF EXISTS `timeproj`;
 DROP TABLE IF EXISTS `item_rights`;
 DROP TABLE IF EXISTS `configuration`;
 DROP TABLE IF EXISTS `note`;
@@ -374,20 +373,9 @@ CREATE TABLE `timecard` (
   `date` date default NULL,
   `start_time` time default NULL,
   `end_time` time default NULL,
-  PRIMARY KEY  (`id`)
-) CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-
---
--- Table structure for table `timeproj`
---
-CREATE TABLE `timeproj` (
-  `id` int(11) NOT NULL auto_increment,
+  `minutes` int(11) default NULL,
+  `project_id` int(11) default NULL,
   `notes` text default NULL,
-  `owner_id` int(11) default NULL,
-  `project_id` int(11),
-  `date` date default NULL,
-  `amount` time default NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 

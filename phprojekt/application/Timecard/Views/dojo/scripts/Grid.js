@@ -19,126 +19,126 @@
 
 dojo.provide("phpr.Timecard.Grid");
 
-dojo.declare("phpr.Timecard.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Timecard.Grid", phpr.Component, {
+    main:   null,
+    _node:  null,
+    _month: null,
+    _year:  null,
 
-    reloadView:function(/*String*/ view, /*int*/ year, /*int*/ month) {
-        this.main.cleanPage();
-        this.gridLayout = new Array();
-        this.setUrl(year, month, view);
+    constructor:function(/*Object*/main, /*js Date object */date) {
+        // Summary:
+        //    Render the list of dates in the month
+        // Description:
+        //    Render the list of dates in the month
+        this.main   = main;
+        this._month = date.getMonth();
+        this._year  = date.getFullYear();
+
+        this.setUrl();
+        this.setNode();
+
+        // Render export Button
+        this.setExportButton();
+
         phpr.DataStore.addStore({url: this.url});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
     },
 
-    setUrl:function(year, month, view) {
-        if (typeof year == "undefined") {
-            date = new Date();
-            year = date.getFullYear();
-        }
-        if (typeof month == "undefined") {
-            date = new Date();
-            month = date.getMonth() + 1;
-        }
-        if (typeof view == "undefined") {
-            view = 'month';
-        }
-        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList"
-            + "/year/" + year
-            + "/month/" + month
-            + "/view/" + view;
-    },
-
-    showTags:function() {
-    },
-
-    canEdit:function(inRowIndex) {
-        return false;
-    },
-
-    useIdInGrid:function() {
-        return false;
-    },
-
-    usePencilForEdit:function() {
-        return false;
-    },
-
-    useCheckbox:function() {
+    setUrl:function() {
         // Summary:
-        //    Whether to show or not the checkbox and pencil in the grid list
-        return false;
+        //    Set the url for getting the data
+        // Description:
+        //    Set the url for getting the data
+        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonMonthList" + "/year/" + this._year
+            + "/month/" + (this._month + 1);
     },
 
-    customGridLayout:function(meta) {
-       this.gridLayout[0].styles = "cursor:pointer; text-align:center;";
+    setNode:function() {
+        // Summary:
+        //    Set the node to put the grid
+        // Description:
+        //    Set the node to put the grid
+        this._node = dijit.byId("monthView");
     },
 
-    setSaveChangesButton:function(meta) {
-    },
+    onLoaded:function() {
+        // Summary:
+        //    Render the list itself
+        // Description:
+        //    Render the list itself
+        var content       = phpr.DataStore.getData({url: this.url});
+        var shortWeekdays = dojo.date.locale.getNames('days', 'abbr');
+        var months        = dojo.date.locale.getNames('months', 'wide');
+        var total         = 0;
 
-    setExportButton:function(meta) {
-        var params = {
-            baseClass: "positive",
-            iconClass: "export",
-            alt:       "Export",
-            disabled:  false,
-            label:     phpr.nls.get("Working Times")
-
-        };
-        var exportButtonHours = new dijit.form.Button(params);
-        dojo.byId("buttonRow").appendChild(exportButtonHours.domNode);
-        dojo.connect(exportButtonHours, "onClick", dojo.hitch(this, "exportHourData"));
-
-        var params = {
-            baseClass: "positive",
-            iconClass: "export",
-            alt:       "Export",
-            disabled:  false,
-            label:     phpr.nls.get("Project Bookings")
-        };
-        var exportButtonProjects = new dijit.form.Button(params);
-        dojo.byId("buttonRow").appendChild(exportButtonProjects.domNode);
-        dojo.connect(exportButtonProjects, "onClick", dojo.hitch(this, "exportProjectData"));
-    },
-
-    exportHourData:function() {
-        // summary:
-        //    Open a new widnows in CVS mode
-        // description:
-        //    Export hours of the month
-        var month = this.main.form.dateObject.getMonth() + 1;
-        var year  = this.main.form.dateObject.getFullYear();
-        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvHourList"
-            + "/month/" + month
-            + "/year/" + year);
-        return false;
-    },
-
-    exportProjectData:function() {
-        // summary:
-        //    Open a new widnows in CVS mode
-        // description:
-        //    Export projects of the month
-        var month = this.main.form.dateObject.getMonth() + 1;
-        var year  = this.main.form.dateObject.getFullYear();
-        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvBookingList"
-            + "/month/" + month
-            + "/year/" + year);
-        return false;
-    },
-
-    cellClick:function(e) {
-        if (e.cellIndex == 0) {
-            var item = this.grid.getItem(e.rowIndex);
-            var date = this.grid.store.getValue(item, 'date');
-            if (date) {
-                var year  = date.substr(0, 4);
-                var month = date.substr(5, 2);
-                var day   = date.substr(8, 2);
-                var date  = new Date(year, (month - 1), day);
-                this.main.form.setDate(date);
-                this.main.form.reloadDateView();
-                this.publish("changeDate", [date]);
+        var dates = new Array();
+        for (var i in content) {
+            var weekTxt = shortWeekdays[content[i]['week']].charAt(0).toUpperCase();
+            weekTxt     = weekTxt + shortWeekdays[content[i]['week']].substr(1);
+            dates.push({
+                week:      weekTxt,
+                weekClass: (content[i]['week'] == 0 || content[i]['week'] == 6) ? 'weekend' : 'weekday',
+                date:      content[i]['date'],
+                sum:       (content[i]['sumInHours'] != '0') ? content[i]['sumInHours'] : "-"
+            });
+            if (content[i]['sumInMinutes'] != '0') {
+                total += content[i]['sumInMinutes'];
             }
         }
+
+        var month = months[this._month].charAt(0).toUpperCase();
+        month     = month + months[this._month].substr(1);
+
+        this.render(["phpr.Timecard.template", "monthView.html"], this._node.domNode, {
+            monthTxt: month,
+            sumTxt:   phpr.nls.get('Sum'),
+            totalTxt: phpr.nls.get('Total'),
+            total:    phpr.Date.convertMinutesToTime(total),
+            dates:    dates
+        });
+    },
+
+    reload:function(date, forceReload) {
+        // Summary:
+        //    Reload the list if some value change
+        // Description:
+        //    Reload the list if some value change or forceReload is true
+        var newMonth = date.getMonth();
+        var newYear  = date.getFullYear();
+        if (forceReload || newMonth != this._month || newYear != this._year) {
+            phpr.DataStore.deleteData({url: this.url});
+            this._month = date.getMonth();
+            this._year  = date.getFullYear();
+            this.setUrl();
+            phpr.DataStore.addStore({url: this.url});
+            phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
+        }
+    },
+
+    setExportButton:function() {
+        // Summary:
+        //    Set the export button
+        // Description:
+        //    Set the export button
+        var params = {
+            label:     phpr.nls.get('Export all items to a CSV file'),
+            showLabel: false,
+            baseClass: "positive",
+            iconClass: "export",
+            disabled:  false
+        };
+        var exportButton = new dijit.form.Button(params);
+        dojo.byId("buttonRow").appendChild(exportButton.domNode);
+        dojo.connect(exportButton, "onClick", dojo.hitch(this, "exportData"));
+    },
+
+    exportData:function() {
+        // summary:
+        //    Open a new widnows in CVS mode
+        // description:
+        //    Export all the bookings of the month
+        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvList" + "/year/" + this._year + "/month/"
+            + (this._month + 1));
+        return false;
     }
 });

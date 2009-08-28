@@ -1,18 +1,9 @@
 <?php
 // Words and phrases
-$lang["Working Times"] = "Tiempo de Trabajo";
-$lang["Start working time"] = "Empezar tiempo de trabajo";
-$lang["Stop working time"] = "Terminar tiempo de trabajo";
-$lang["Hours"] = "Horas";
 $lang["The end time must be after the start time"] = "El tiempo final debe ser mayor al tiempo inicial";
-$lang["Change date"] = "Cambiar día";
-$lang["Project Bookings"] = "Horas de Proyectos";
-$lang["Add working time and drag projects into the bar"] = "Agregar tiempo de trabajo "
-    . "y luego arrastrar los proyectos en la barra";
 $lang["Manage project list"] = "Admin. lista de proyectos";
-$lang["Amount"] = "Cantidad";
 $lang["Total"] = "Total";
-$lang["The amount is invalid (from 30 to 2400)"] = "La cantidad es inválida (De 30 a 2400)";
+$lang["Sum"] = "Suma";
 $lang["Start time has to be between 0:00 and 24:00"] = "La hora de inicio tiene que ser entre 0:00 y 24:00";
 $lang["End time has to be between 0:00 and 24:00"] = "La hora final tiene que ser entre 8:00 y 24:00";
 $lang["Time period"] = "Período de tiempo";
@@ -24,18 +15,10 @@ $lang["Can not End Working Time because this moment is occupied by an existing p
     . "Tiempo de Trabajo porque este momento está ocupado por un período existente.";
 
 // Tooltip Help
-// Start Stop Buttons
-$lang["These buttons Start and Stop working time automatically."] = "Estos botones Comienzan y Finalizan las horas de "
-    . "trabajo automáticamente.";
-// Working Times
-$lang["Here you should add the all the worked hours of the selected day."] = "Aquí puede agregar todas las horas "
-    . "trabajadas del día elegido.";
-// Hours
-$lang["The format of the hours may be with or without a symbol: 08:00, 0800, 800, etc."] = "El formato de las horas "
+$lang["Tooltip"]["startTime"] = "El formato de las horas "
     . "puede ser con o sin símbolo separador:  08:00, 0800, 800, etc.";
-// Project Times
-$lang["Inside this panel you can Drag & Drop Projects into the worked hours."] = "Dentro de este panel puede Arrastrar"
-    . " y Soltar proyectos dentro de las horas trabajadas.";
+$lang["Tooltip"]["endTime"] = "El formato de las horas "
+    . "puede ser con o sin símbolo separador:  08:00, 0800, 800, etc.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

@@ -37,19 +37,6 @@ class Timecard_IndexController_Test extends FrontInit
     /**
      * Test of json Save
      */
-    public function testJsonSaveNotFound()
-    {
-        // No startime with empty table. Will return error
-        $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('endTime', '13:00');
-        $response = $this->getResponse();
-        $this->assertContains(Timecard_IndexController::NOT_FOUND, $response);
-    }
-
-    /**
-     * Test of json Save
-     */
     public function testJsonSaveCommon()
     {
         // INSERT. Defined start and end time.
@@ -57,21 +44,26 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('startTime', '09:00');
         $this->request->setParam('endTime', '13:00');
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
 
         $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('startTime', '14:00');
         $this->request->setParam('endTime', '18:00');
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
 
         // Check that the period has been added
-        $this->setRequestUrl('Timecard/index/jsonDetail/');
+        $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-05-16');
         $response = $this->getResponse();
-        $expected = '"data":[{"id":7,"startTime":"09:00:00","rights":[],"endTime":"13:00:00"},{"id":8,'
-            . '"startTime":"14:00:00","rights":[],"endTime":"18:00:00"}],"numRows":2}';
+        $expected = '"data":[{"id":"7","projectId":"1","startTime":"09:00:00","endTime":"13:00:00",'
+            . '"display":"Invisible Root"},{"id":"8","projectId":"1","startTime":"14:00:00","endTime":"18:00:00",'
+            . '"display":"Invisible Root"}]';
         $this->assertContains($expected, $response);
     }
 
@@ -85,14 +77,16 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('date', '2009-07-02');
         $this->request->setParam('startTime', '10:00');
         $this->request->setParam('endTime', '');
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
 
         // Check that the period has been added
-        $this->setRequestUrl('Timecard/index/jsonDetail/');
+        $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-07-02');
         $response = $this->getResponse();
-        $expected = '"data":[{"id":9,"startTime":"10:00:00","rights":[],"endTime":""}],"numRows":1}';
+        $expected = '{"id":"9","projectId":"1","startTime":"10:00:00","endTime":null,"display":"Invisible Root"}';
         $this->assertContains($expected, $response);
     }
 
@@ -103,17 +97,20 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // INSERT. Just defined end time.
         $this->setRequestUrl('Timecard/index/jsonSave/');
+        $this->request->setParam('id', 9);
         $this->request->setParam('date', '2009-07-02');
         $this->request->setParam('startTime', '');
         $this->request->setParam('endTime', '19:00');
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
-        $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(Timecard_IndexController::EDIT_TRUE_TEXT, $response);
 
         // Check that the period has been modified
-        $this->setRequestUrl('Timecard/index/jsonDetail/');
+        $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-07-02');
         $response = $this->getResponse();
-        $expected = '"data":[{"id":9,"startTime":"10:00:00","rights":[],"endTime":"19:00:00"}],"numRows":1}';
+        $expected = '{"id":"9","projectId":"1","startTime":"10:00:00","endTime":"19:00:00","display":"Invisible Root"}';
         $this->assertContains($expected, $response);
     }
 
@@ -128,15 +125,18 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('startTime', '10:30');
         $this->request->setParam('endTime', '12:30');
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::EDIT_TRUE_TEXT, $response);
 
         // Check that the period has been modified
-        $this->setRequestUrl('Timecard/index/jsonDetail/');
+        $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-05-16');
         $response = $this->getResponse();
-        $expected = '"data":[{"id":7,"startTime":"10:30:00","rights":[],"endTime":"12:30:00"},{"id":8,'
-            . '"startTime":"14:00:00","rights":[],"endTime":"18:00:00"}],"numRows":2})';
+        $expected = '"data":[{"id":"7","projectId":"1","startTime":"10:30:00","endTime":"12:30:00",'
+            . '"display":"Invisible Root"},{"id":"8","projectId":"1","startTime":"14:00:00","endTime":"18:00:00",'
+            . '"display":"Invisible Root"}]';
         $this->assertContains($expected, $response);
     }
 
@@ -150,8 +150,14 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('startTime', '10:00');
         $this->request->setParam('endTime', '12:00');
-        $response = $this->getResponse();
-        $this->assertEquals('', $response);
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 1);
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $this->assertEquals("Time period: Can not save it because it overlaps existing one", $error->getMessage());
+            return;
+        }
     }
 
     /**
@@ -163,8 +169,15 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonSave/');
         $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('startTime', '11:00');
-        $response = $this->getResponse();
-        $this->assertEquals('', $response);
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 1);
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $this->assertEquals("Time period: Can not Start Working Time because this moment is occupied by an "
+                . "existing period.", $error->getMessage());
+            return;
+        }
     }
 
     /**
@@ -176,13 +189,19 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonSave/');
         $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('startTime', '09:00');
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
 
         $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('endTime', '18:00');
-        $response = $this->getResponse();
-        $this->assertEquals('', $response);
+        $this->request->setParam('endTime', '12:00');
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $this->assertEquals("Time period: Can not save it because it overlaps existing one", $error->getMessage());
+            return;
+        }
     }
 
     /**
@@ -193,9 +212,15 @@ class Timecard_IndexController_Test extends FrontInit
         // Try to INSERT a period with wrong start time. Returns nothing here
         $this->setRequestUrl('Timecard/index/jsonSave/');
         $this->request->setParam('date', '2009-05-20');
-        $this->request->setParam('startTime', '11:60');
-        $response = $this->getResponse();
-        $this->assertEquals('', $response);
+        $this->request->setParam('startTime', '');
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 1);
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $this->assertEquals("Start Time: Is a required field", $error->getMessage());
+            return;
+        }
     }
 
     /**
@@ -208,8 +233,14 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('date', '2009-05-21');
         $this->request->setParam('startTime', '17:00');
         $this->request->setParam('endTime', '08:00');
-        $response = $this->getResponse();
-        $this->assertEquals('', $response);
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 1);
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $this->assertEquals("Hours: The end time must be after the start time", $error->getMessage());
+            return;
+        }
     }
 
     /**
@@ -221,9 +252,29 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonSave/');
         $this->request->setParam('date', '2009-05-21');
         $this->request->setParam('startTime', '17:00');
-        $this->request->setParam('endTime', '18:60');
+        $this->request->setParam('endTime', '12:60');
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 1);
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $this->assertEquals("Hours: The end time must be after the start time", $error->getMessage());
+            return;
+        }
+    }
+
+    /**
+     * Test the list
+     */
+    public function testJsonMonthListActionPart1()
+    {
+        $this->setRequestUrl('Timecard/index/jsonMonthList/');
+        $this->request->setParam('year', 2009);
+        $this->request->setParam('month', '05');
         $response = $this->getResponse();
-        $this->assertEquals('', $response);
+        $this->assertContains('{"date":"2009-05-01","week":"5","sumInMinutes":0,"sumInHours":0}', $response);
+        $this->assertContains('{"date":"2009-05-16","week":"6","sumInMinutes":360,"sumInHours":"06:00"}', $response);
+        $this->assertContains('{"date":"2009-05-31","week":"0","sumInMinutes":0,"sumInHours":0}', $response);
     }
 
     /**
@@ -232,153 +283,23 @@ class Timecard_IndexController_Test extends FrontInit
     public function testJsonDelete()
     {
         $this->setRequestUrl('Timecard/index/jsonDelete');
-        $this->request->setParam('id', '9');
-        $response = $this->getResponse();
-        $this->assertContains(Calendar_IndexController::DELETE_TRUE_TEXT, $response);
-    }
-
-    /**
-     * Test of json Booking Save
-     */
-    public function testJsonBookingSaveInsert()
-    {
-        // INSERT
-        $this->setRequestUrl('Timecard/index/jsonBookingSave/');
-        $this->request->setParam('date', '2009-05-17');
-        $this->request->setParam('amount', '02:00');
-        $this->request->setParam('notes', 'My note');
-        $this->request->setParam('projectId', 1);
-        $response = $this->getResponse();
-        $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
-
-        // Check that the period has been added
-        $this->setRequestUrl('Timecard/index/jsonBookingDetail/');
-        $this->request->setParam('date', '2009-05-17');
-        $response = $this->getResponse();
-        $expected = '"data":{"timecard":[],"timeproj":[{"id":1,"date":"2009-05-17","rights":[],"projectId":1,'
-            . '"notes":"My note","amount":"02:00:00"}]},"numRows":1}';
-        $this->assertContains($expected, $response);
-    }
-
-    /**
-     * Test of json Booking Save
-     */
-    public function testJsonBookingSaveModify()
-    {
-        // INSERT
-        $this->setRequestUrl('Timecard/index/jsonBookingSave/');
-        $this->request->setParam('id', '1');
-        $this->request->setParam('date', '2009-05-17');
-        $this->request->setParam('amount', '01:00');
-        $this->request->setParam('notes', 'My note 2');
-        $this->request->setParam('projectId', 1);
-        $response = $this->getResponse();
-        $this->assertContains(Timecard_IndexController::EDIT_TRUE_TEXT, $response);
-
-        // Check that the period has been modified
-        $this->setRequestUrl('Timecard/index/jsonBookingDetail/');
-        $this->request->setParam('date', '2009-05-17');
-        $response = $this->getResponse();
-        $expected = '"data":{"timecard":[],"timeproj":[{"id":1,"date":"2009-05-17","rights":[],"projectId":1,'
-            . '"notes":"My note 2","amount":"01:00:00"}]},"numRows":1}';
-        $this->assertContains($expected, $response);
-    }
-
-    /**
-     * Test of json Booking Delete
-     */
-    public function testJsonBookingDelete()
-    {
-        $this->setRequestUrl('Timecard/index/jsonBookingDelete/');
-        $this->request->setParam('id', '1');
+        $this->request->setParam('id', '8');
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::DELETE_TRUE_TEXT, $response);
-
-        // Check that the period has been deleted
-        $this->setRequestUrl('Timecard/index/jsonBookingDetail/');
-        $this->request->setParam('date', '2009-05-17');
-        $response = $this->getResponse();
-        $expected = '"data":{"timecard":[],"timeproj":[]},"numRows":0}';
-        $this->assertContains($expected, $response);
     }
 
     /**
-     * Test of json Booking Delete
+     * Test the list
      */
-    public function testJsonBookingDeleteEmptyId()
+    public function testJsonMonthListActionPart2()
     {
-        $this->setRequestUrl('Timecard/index/jsonBookingDelete/');
-        $this->getResponse();
-
-        $this->assertTrue($this->error);
-        $this->assertContains(Timecard_IndexController::ID_REQUIRED_TEXT, $this->errormessage);
-    }
-
-    /**
-     * Test of json Booking Delete
-     */
-    public function testJsonBookingDeleteWrongId()
-    {
-        $this->setRequestUrl('Timecard/index/jsonBookingDelete/');
-        $this->request->setParam('id', '50');
-        $this->getResponse();
-
-        $this->assertTrue($this->error);
-        $this->assertContains(Timecard_IndexController::NOT_FOUND, $this->errormessage);
-    }
-
-    /**
-     * Test if the limits work
-     */
-    public function testJsonListAction()
-    {
-        $this->setRequestUrl('Timecard/index/jsonList/');
+        $this->setRequestUrl('Timecard/index/jsonMonthList/');
         $this->request->setParam('year', 2009);
         $this->request->setParam('month', '05');
-        $this->request->setParam('view', 'month');
         $response = $this->getResponse();
-        $this->assertContains('"numRows":' . date("t") . '}', $response);
-    }
-
-    /**
-     * Test of json Start
-     */
-    public function testJsonStartAction()
-    {
-        $this->setRequestUrl('Timecard/index/jsonStart');
-        $response = $this->getResponse();
-        $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
-
-        // Check that the period has been added
-        $this->setRequestUrl('Timecard/index/jsonDetail/');
-        $this->request->setParam('date', date('Y-m-d'));
-        $response = $this->getResponse();
-        // We don't expect the complete string containing date('Y-m-d') because the seconds usually change
-        $expected = '"data":[{"id":11,"startTime":"';
-        $this->assertContains($expected, $response);
-
-        $expected = '","rights":[],"endTime":""}],"numRows":1}';
-        $this->assertContains($expected, $response);
-    }
-
-    /**
-     * Test of json Stop
-     */
-    public function testJsonStopAction()
-    {
-        $this->setRequestUrl('Timecard/index/jsonStop');
-        $response = $this->getResponse();
-        $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
-    }
-
-    /**
-     * Test of json Stop without open record
-     */
-    public function testJsonStopActionNoRecordOpen()
-    {
-        $this->setRequestUrl('Timecard/index/jsonStop');
-        $response = $this->getResponse();
-        $this->assertContains(Timecard_IndexController::NOT_FOUND, $response);
+        $this->assertContains('{"date":"2009-05-01","week":"5","sumInMinutes":0,"sumInHours":0}', $response);
+        $this->assertContains('{"date":"2009-05-16","week":"6","sumInMinutes":120,"sumInHours":"02:00"}', $response);
+        $this->assertContains('{"date":"2009-05-31","week":"0","sumInMinutes":0,"sumInHours":0}', $response);
     }
 
     /**
@@ -414,7 +335,6 @@ class Timecard_IndexController_Test extends FrontInit
         // INSERT
         $this->setRequestUrl('Timecard/index/jsonGetFavoritesProjects/');
         $response = $this->getResponse();
-        $this->assertContains('{}&&([1,2])', $response);
+        $this->assertContains('{"id":1,"display":"Invisible Root"},{"id":2,"display":"Project 1"}', $response);
     }
-
 }

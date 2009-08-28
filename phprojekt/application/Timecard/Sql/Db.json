@@ -12,20 +12,10 @@
                 "owner_id":   {"type": "int"},
                 "date":       {"type": "date"},
                 "start_time": {"type": "time"},
-                "end_time":   {"type": "time"}
-            }
-        },
-
-        "timeproj":
-        {
-            "create":
-            {
-                "id":         "default",
-                "notes":      {"type": "text"},
-                "owner_id":   {"type": "int"},
+                "end_time":   {"type": "time"},
+                "minutes":    {"type": "int"},
                 "project_id": {"type": "int"},
-                "date":       {"type": "date"},
-                "amount":     {"type": "time"}
+                "notes":      {"type": "text"},
             }
         }
     },

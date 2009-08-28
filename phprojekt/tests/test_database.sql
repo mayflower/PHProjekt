@@ -8,7 +8,6 @@ BEGIN;
 
 -- Drop table if exists
 DROP TABLE IF EXISTS `timecard`;
-DROP TABLE IF EXISTS `timeproj`;
 DROP TABLE IF EXISTS `item_rights`;
 DROP TABLE IF EXISTS `configuration`;
 DROP TABLE IF EXISTS `note`;
@@ -376,20 +375,9 @@ CREATE TABLE `timecard` (
   `date` date default NULL,
   `start_time` time default NULL,
   `end_time` time default NULL,
-  PRIMARY KEY  (`id`)
-) CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-
---
--- Table structure for table `timeproj`
---
-CREATE TABLE `timeproj` (
-  `id` int(11) NOT NULL auto_increment,
+  `minutes` int(11) default NULL,
+  `project_id` int(11) default NULL,
   `notes` text default NULL,
-  `owner_id` int(11) default NULL,
-  `project_id` int(11),
-  `date` date default NULL,
-  `amount` time default NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -716,13 +704,13 @@ INSERT INTO `item_rights` (`module_id`, `item_id`, `user_id`, `access`) VALUES
 INSERT INTO `todo` (`id`, `title`, `notes`, `owner_id`, `project_id`, `start_date`, `end_date`, `priority`, `current_status`) VALUES
 (1,'Todo of Test Project','',1,1,'2007-12-12','2007-12-31',0,1);
 
-INSERT INTO `timecard` (`id`, `owner_id`, `date`, `start_time`, `end_time`) VALUES
-(1, 1, '2008-04-29', '0800', '1300'),
-(2, 1, '2008-04-29', '1400', '1800'),
-(3, 1, '2008-04-30', '0800', '1300'),
-(4, 1, '2008-04-30', '1400', '1800'),
-(5, 1, '2008-05-02', '0800', '1300'),
-(6, 1, '2008-05-02', '1400', '1800');
+INSERT INTO `timecard` (`id`, `owner_id`, `date`, `start_time`, `end_time`, `minutes`, `project_id`, `notes`) VALUES
+(1, 1, '2008-04-29', '0800', '1300', 300, 1, 'TEST'),
+(2, 1, '2008-04-29', '1400', '1800', 240, 2, 'TEST'),
+(3, 1, '2008-04-30', '0800', '1300', 300, 1, 'TEST'),
+(4, 1, '2008-04-30', '1400', '1800', 240, 1, 'TEST'),
+(5, 1, '2008-05-02', '0800', '1300', 300, 2, 'TEST'),
+(6, 1, '2008-05-02', '1400', '1800', 240, 1, 'TEST');
 
 INSERT INTO `tags` (`id`, `word`, `crc32`) VALUES
 (1,'this',-17923545),
