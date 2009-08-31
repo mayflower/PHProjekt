@@ -251,6 +251,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             label:     phpr.nls.get('Settings'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
+                phpr.currentProjectId = phpr.rootProjectId;
                 this.setUrlHash("Setting");
             })
         });
@@ -263,6 +264,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 label:     phpr.nls.get('Administration'),
                 showLabel: true,
                 onClick:   dojo.hitch(this, function() {
+                    phpr.currentProjectId = phpr.rootProjectId;
                     this.setUrlHash("Administration");
                 })
             });

@@ -238,7 +238,9 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
                                 }});
                             }
                         }
-                        projectsNames.push(item.name);
+                        if (i > 1) {
+                            projectsNames.push(item.name);
+                        }
                     }
             }});
 

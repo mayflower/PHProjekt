@@ -864,7 +864,7 @@ dojo.declare("phpr.BreadCrumb", null, {
         //     Change the module and sub-module only if these change
         if (phpr.module != this._lastModule || phpr.parentmodule != this._lastParent) {
             if (phpr.parentmodule) {
-                this._module = phpr.parentmodule + this._separatorTho + phpr.module;;
+                this._module = phpr.parentmodule + this._separatorOne + phpr.module;;
                 this._lastParent = phpr.parentmodule;
             } else {
                 this._module = phpr.module;
@@ -891,7 +891,11 @@ dojo.declare("phpr.BreadCrumb", null, {
         //     Draw the breadcrumb
         // Description:
         //     Show the breadcrumb in the title
-        var breadCrumb = this._projects + this._separatorOne + this._module;
+        if (this._projects.length > 0) {
+            var breadCrumb = this._projects + this._separatorOne + this._module;
+        } else {
+            var breadCrumb = this._module;
+        }
         if (this._item) {
             breadCrumb += this._separatorOne + this._item;
         }
