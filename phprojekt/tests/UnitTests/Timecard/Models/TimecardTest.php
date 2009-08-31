@@ -88,7 +88,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $response                 = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
         $error           = $timecardModel->getError();
-        $expectedMessage = 'Can not Start Working Time because this moment is occupied by an existing period or a '
+        $expectedMessage = 'Can not Start Working Time because this moment is occupied by an existing period or an '
             . 'open one';
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
