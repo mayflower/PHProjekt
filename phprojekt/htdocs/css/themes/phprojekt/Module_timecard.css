@@ -5,7 +5,7 @@
 }
 
 .dj_ie7 .phprojekt #tableMonthView {
-    line-height: 1.04;
+    line-height: 1.04 !important;
 }
 
 .dj_ie .phprojekt #tableMonthView {

@@ -57,7 +57,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             hours.push({
                 "hour"   : i,
                 "display": show,
-                "pair":    pair,
+                "pair":    pair
             });
         }
         this.render(["phpr.Timecard.template", "dayView.html"], dojo.byId('dayView'), {
@@ -145,9 +145,19 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 dojo.style(tmp, "top", top);
                 dojo.style(tmp, "height", height);
                 if (parseInt(height) <= 4) {
-                    dojo.style(tmp, "lineHeight", 0);
+                    if (dojo.isIE && dojo.isIE < 8) {
+                        lineHeight = 0.5;
+                    } else {
+                        lineHeight = 0;
+                    }
+                    dojo.style(tmp, "lineHeight", lineHeight);
                 } else if (parseInt(height) < 14) {
-                    dojo.style(tmp, "lineHeight", 0.5);
+                    if (dojo.isIE && dojo.isIE < 8) {
+                        lineHeight = 1;
+                    } else {
+                        lineHeight = 0.5;
+                    }
+                    dojo.style(tmp, "lineHeight", lineHeight);
                 }
                 dijit.byId("projectBookingContainer").domNode.appendChild(tmp);
                 dojo.connect(tmp, "onclick",  dojo.hitch(this, "fillForm", data[i].id));
