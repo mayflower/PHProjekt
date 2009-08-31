@@ -845,7 +845,7 @@ dojo.declare("phpr.BreadCrumb", null, {
     _lastModule:   null,
     _lastParent:   null,
     _separatorOne: ' / ',
-    _separatorTwo: '-',
+    _separatorTwo: ' > ',
 
     setProjects:function(projectsNames) {
         // Summary:
