@@ -7,6 +7,12 @@
     list-style: none;
 }
 
+.phprojekt #ganttChart .slider li {
+    font-size: 8pt;
+    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    text-align: center;
+}
+
 .phprojekt #ganttChart .ganttcontent {
     position: absolute;
     left: 0;

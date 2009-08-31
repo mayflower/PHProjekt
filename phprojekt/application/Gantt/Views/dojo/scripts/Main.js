@@ -367,7 +367,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         }
 
         var maxWidth  = 268 + (365 * 2 * years);
-        var surface   = dojox.gfx.createSurface("timeLine", maxWidth, 100);
 
         // Make the scale
         this.scale = 2;
@@ -394,15 +393,9 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             var monthNumber = (i < 9) ? '0' + Math.round(i+1) : Math.round(i+1);
             var monthString = monthNumber + '.' + year;
 
-            html += '<li style="width:' + width + 'px; float: left;">&nbsp;</li>';
+            html += '<li style="width:' + width + 'px; float: left;">' + monthString + '</li>';
             html += '<li class="splitter" style="float: left; width: 1px; height: ' + height + 'px;';
             html += 'border-left: 1px dotted #3d3d3d; margin-left: -2px;"></li>';
-
-            var x    = 275 + (totalWidth - width);
-            var size = 7;
-            phpr.Gfx.makeText(surface, {x: x, y: 85, text: monthString, align: "start"},
-                {family: "Verdana", size: size + "pt"}, "black");
-
         }
         html += '</ul></li></ul>';
 
