@@ -46,6 +46,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.setSubmoduleNavigation('BasicData');
         this.hideSuggest();
         this.setSearchForm();
+        phpr.TreeContent.fadeIn();
         this.tree = new this.treeWidget(this);
         if (!dojo.byId('detailsBox')) {
             this.reload();
