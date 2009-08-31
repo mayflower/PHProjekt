@@ -65,8 +65,8 @@ class Statistic_Models_Statistic
             }
         }
 
-        // Get TimeProj
-        $model = Phprojekt_Loader::getModel('Timecard', 'Timeproj');
+        // Get Timecard
+        $model = Phprojekt_Loader::getModel('Timecard', 'Timecard');
         $where = sprintf('(date >= %s AND date <= %s AND project_id IN (%s))', $model->_db->quote($startDate),
             $model->_db->quote($endDate), implode(", ", $projectsId));
         $records = $model->fetchAll($where);
@@ -81,8 +81,7 @@ class Statistic_Models_Statistic
             if (!isset($data['data']['rows'][$record->projectId][$record->ownerId])) {
                 $data['data']['rows'][$record->projectId][$record->ownerId] = 0;
             }
-            $amount = Timecard_Models_Timecard::getDiffTime($record->amount, '00:00:00');
-            $data['data']['rows'][$record->projectId][$record->ownerId] += $amount;
+            $data['data']['rows'][$record->projectId][$record->ownerId] += $record->minutes;
         }
 
         return $data;

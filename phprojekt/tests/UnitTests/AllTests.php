@@ -60,6 +60,7 @@ require_once 'Administration/AllTests.php';
 require_once 'Contact/AllTests.php';
 require_once 'Filemanager/AllTests.php';
 require_once 'Gantt/AllTests.php';
+require_once 'Statistic/AllTests.php';
 
 // require_once 'Selenium/AllTests.php';
 
@@ -107,6 +108,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->sharedFixture = Phprojekt::getInstance()->getDb();
 
         $suite->addTest(Timecard_AllTests::suite());
+        $suite->addTest(Statistic_AllTests::suite());
         $suite->addTest(User_AllTests::suite());
         $suite->addTest(Calendar_AllTests::suite());
         $suite->addTest(Note_AllTests::suite());
