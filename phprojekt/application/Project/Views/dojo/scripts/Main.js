@@ -63,6 +63,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         if (this.form) {
             this.form.updateData();
         }
+        phpr.DataStore.deleteAllCache();
     },
 
     processActionFromUrlHash:function(data) {
