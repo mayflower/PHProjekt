@@ -228,7 +228,8 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
                     if (item) {
                         var paths = phpr.treePaths[phpr.currentProjectId].toString().split("\/");
                         for (i in paths) {
-                            if (paths[i] > 0 && paths[i] != phpr.currentProjectId) {
+                            /* do not display the invidisble root node, so we discard the first one */
+                            if (paths[i] > 1 && paths[i] != phpr.currentProjectId) {
                                 _this.tree.model.store.fetchItemByIdentity({identity: paths[i],
                                     onItem:function(item) {
                                         if (item) {
