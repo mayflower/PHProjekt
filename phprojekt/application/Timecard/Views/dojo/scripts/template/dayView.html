@@ -6,7 +6,7 @@ style="position: absolute; height: 480px; overflow: hidden;">
     {% else %}
     <div id="hours{{hour.hour}}" dojoType="dijit.layout.ContentPane" class="dayViewCelestial">
     {% endifequal %}
-    {{hour.hour}}
+    {{hour.display}}
     <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
     onClick="dojo.publish('Timecard.fillFormTime', ['{{hour.hour}}']);">
     </button>

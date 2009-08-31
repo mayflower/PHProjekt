@@ -54,7 +54,11 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 show = '0';
             }
             show = show + i + ':00';
-            hours.push({"hour": show, "pair": pair});
+            hours.push({
+                "hour"   : i,
+                "display": show,
+                "pair":    pair,
+            });
         }
         this.render(["phpr.Timecard.template", "dayView.html"], dojo.byId('dayView'), {
             hours: hours
@@ -140,6 +144,11 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 dojo.addClass(tmp, dndClass);
                 dojo.style(tmp, "top", top);
                 dojo.style(tmp, "height", height);
+                if (parseInt(height) <= 4) {
+                    dojo.style(tmp, "lineHeight", 0);
+                } else if (parseInt(height) < 14) {
+                    dojo.style(tmp, "lineHeight", 0.5);
+                }
                 dijit.byId("projectBookingContainer").domNode.appendChild(tmp);
                 dojo.connect(tmp, "onclick",  dojo.hitch(this, "fillForm", data[i].id));
             }
@@ -187,6 +196,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             manageFavoritesText: phpr.nls.get('Manage project list'),
             favorites:           favorites
         });
+        // Fix layout
+        projectBookingSource.domNode.style.height = 'auto';
 
         // Event buttons
         dojo.connect(dijit.byId('manageFavorites'), "hide",  dojo.hitch(this, "submitFavoritesForm"));
@@ -406,11 +417,16 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // Description:
         //    Fill the form with the start and end time
         this.id = 0;
-        var hour = parseInt(start.substr(0, start.length - 3)) + 1;
+        start   = parseInt(start);
+        var hour = start + 1;
         if (hour < 10) {
             hour = '0' + hour;
         }
         var end  = hour + ':00';
+        if (start < 10) {
+            start = '0' + start;
+        }
+        start = start + ':00';
         this.updateForm(this.dateObject, start, end, '', "\n");
         dojo.byId('projectId').focus();
     },
