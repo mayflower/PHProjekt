@@ -88,7 +88,8 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $response                 = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
         $error           = $timecardModel->getError();
-        $expectedMessage = 'Can not Start Working Time because this moment is occupied by an existing period.';
+        $expectedMessage = 'Can not Start Working Time because this moment is occupied by an existing period or a '
+            . 'open one';
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
         // Wrong data start time after end time
@@ -206,7 +207,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $response               = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
         $error           = $timecardModel->getError();
-        $expectedMessage = 'Can not End Working Time because this moment is occupied by an existing period.';
+        $expectedMessage = 'Can not End Working Time because this moment is occupied by an existing period';
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
         // Part 6 - Close previous period not overlapping another

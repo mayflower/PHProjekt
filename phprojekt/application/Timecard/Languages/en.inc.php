@@ -8,10 +8,10 @@ $lang["Start time has to be between 0:00 and 24:00"] = "Start time has to be bet
 $lang["End time has to be between 0:00 and 24:00"] = "End time has to be between 0:00 and 24:00";
 $lang["Time period"] = "Time period";
 $lang["Can not save it because it overlaps existing one"] = "Can not save it because it overlaps existing one";
-$lang["Can not Start Working Time because this moment is occupied by an existing period."] = "Can not Start Working "
-    . "Time because this moment is occupied by an existing period.";
-$lang["Can not End Working Time because this moment is occupied by an existing period."] = "Can not End Working Time "
-    . "because this moment is occupied by an existing period.";
+$lang["Can not Start Working Time because this moment is occupied by an existing period or a open one"] = "Can not "
+    . "Start Working Time because this moment is occupied by an existing period or a open one";
+$lang["Can not End Working Time because this moment is occupied by an existing period"] = "Can not End Working Time "
+    . "because this moment is occupied by an existing period";
 
 // Tooltip Help
 $lang["Tooltip"]["startTime"] = "The format of the hours may be with or without a symbol: 08:00, 0800, 800, etc.";

@@ -175,7 +175,7 @@ class Timecard_IndexController_Test extends FrontInit
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
             $this->assertEquals("Time period: Can not Start Working Time because this moment is occupied by an "
-                . "existing period.", $error->getMessage());
+                . "existing period or a open one", $error->getMessage());
             return;
         }
     }

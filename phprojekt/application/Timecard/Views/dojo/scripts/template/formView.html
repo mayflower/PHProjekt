@@ -15,10 +15,13 @@ style="width: 100%; height: 45%;">
                 {{saveText}}
             </button>
             &nbsp;
-            <button dojoType="dijit.form.Button" baseClass="positive" id="deleteBookingButton" type="button"
-            iconClass="cross">
-                {{deleteText}}
-            </button>
+            <div id="deleteBookingButtonDiv"
+            style="display: none;">
+                <button dojoType="dijit.form.Button" baseClass="positive" id="deleteBookingButton" type="button"
+                iconClass="cross">
+                    {{deleteText}}
+                </button>
+            </div>
         </td>
     </tr>
     </table>

@@ -154,7 +154,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                         'field'   => 'Time period',
                         'label'   => Phprojekt::getInstance()->translate('Time period'),
                         'message' => Phprojekt::getInstance()->translate('Can not Start Working Time because this '
-                            . 'moment is occupied by an existing period.')));
+                            . 'moment is occupied by an existing period or a open one')));
                     return false;
                 }
             }
@@ -223,7 +223,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                                 'field'   => 'Time period',
                                 'label'   => Phprojekt::getInstance()->translate('Time period'),
                                 'message' => Phprojekt::getInstance()->translate('Can not End Working Time because this'
-                                    . ' moment is occupied by an existing period.')));
+                                    . ' moment is occupied by an existing period')));
                             return false;
                         }
                     }

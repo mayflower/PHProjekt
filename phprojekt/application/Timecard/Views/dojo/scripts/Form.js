@@ -59,6 +59,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         this.render(["phpr.Timecard.template", "dayView.html"], dojo.byId('dayView'), {
             hours: hours
         });
+        dojo.byId('dayView').scrollTop = dojo.byId('dayView').scrollHeight;
 
         this._contentBar = new phpr.Timecard.ContentBar("projectBookingContainer");
 
@@ -140,7 +141,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 dojo.style(tmp, "top", top);
                 dojo.style(tmp, "height", height);
                 dijit.byId("projectBookingContainer").domNode.appendChild(tmp);
-                dojo.connect(tmp, "onclick",  dojo.hitch(this, "fillForm", [data[i].id]));
+                dojo.connect(tmp, "onclick",  dojo.hitch(this, "fillForm", data[i].id));
             }
         })});
     },
@@ -372,6 +373,11 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         dijit.byId('endTime').attr('value', end);
         dijit.byId('projectId').attr('value', project);
         dijit.byId('notes').attr('value', notes);
+        if (parseInt(this.id) > 0) {
+            dojo.style(dojo.byId('deleteBookingButtonDiv'), 'display', 'inline');
+        } else {
+            dojo.style(dojo.byId('deleteBookingButtonDiv'), 'display', 'none')
+        }
     },
 
     fillForm:function(id) {
@@ -384,8 +390,12 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         phpr.DataStore.addStore({url: this._url});
         phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
             var data = phpr.DataStore.getData({url: this._url});
-            this.updateForm(this.dateObject, data[0]['startTime'].substr(0,5), data[0]['endTime'].substr(0,5),
-                data[0]['projectId'], data[0]['notes']);
+            var endTime = data[0]['endTime'].substr(0,5);
+            if (endTime == 0 || endTime == null) {
+                endTime = this._getNow();
+            }
+            this.updateForm(this.dateObject, data[0]['startTime'].substr(0,5), endTime, data[0]['projectId'],
+                data[0]['notes']);
             dojo.byId('notes').focus();
         })});
     },
@@ -395,6 +405,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Fill the form with the start and end time
         // Description:
         //    Fill the form with the start and end time
+        this.id = 0;
         var hour = parseInt(start.substr(0, start.length - 3)) + 1;
         if (hour < 10) {
             hour = '0' + hour;
@@ -404,22 +415,23 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         dojo.byId('projectId').focus();
     },
 
-    fillFormProject:function(id) {
+    fillFormProject:function(projectId) {
         // Summary:
         //    Fill the form with one project
         // Description:
         //    Fill the form with one project
+        this.id = 0;
         if (dijit.byId('startTime').attr('value') != '') {
             var start = dijit.byId('startTime').attr('value');
         } else {
-            var start = phpr.Date.getIsoTime(this.dateObject);
+            var start = this._getNow();
         }
         if (dijit.byId('endTime').attr('value') != '') {
             var end = dijit.byId('endTime').attr('value');
         } else {
             var end = '';
         }
-        this.updateForm(this.dateObject, start, end, id, "\n");
+        this.updateForm(this.dateObject, start, end, projectId, "\n");
         dojo.byId('notes').focus();
     },
 
@@ -428,6 +440,24 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Remove all the values of the form
         // Description:
         //    Remove all the values of the form
+        this.id = 0;
         this.updateForm(this.dateObject, '', '', '', "\n");
+    },
+
+    _getNow:function() {
+        // Summary:
+        //    Return the current HH:mm
+        // Description:
+        //    Return the current HH:mm
+        var now    = new Date();
+        var hour   = now.getHours();
+        var minute = now.getMinutes();
+        if (hour < 10) {
+            hour   = "0" + hour;
+        }
+        if (minute < 10) {
+            minute = "0" + minute;
+        }
+        return phpr.Date.getIsoTime(hour + ':' + minute);
     }
 });
