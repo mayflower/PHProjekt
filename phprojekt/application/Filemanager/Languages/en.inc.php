@@ -1,6 +1,6 @@
 <?php
 // Tooltip help
-$lang["Tooltip"]["files"] = "You can upload as many files as you want";
+$lang["Tooltip"]["files"] = "You can upload as many files as you want.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

@@ -38,17 +38,17 @@ class Minutes_IndexController extends IndexController
      * specifying any recipient addresses.
      * @see Minutes_IndexController::jsonSendMailAction()
      */
-    const MISSING_MAIL_RECIPIENTS = 'No recipient addresses have been specified.';
+    const MISSING_MAIL_RECIPIENTS = 'No recipient addresses have been specified';
 
     /**
      * Constant for error message displayed when trying to send mail
      * without being the owner of the requested Minutes entry.
      * @see Minutes_IndexController::jsonSendMailAction()
      */
-    const USER_IS_NOT_OWNER = 'The currently logged-in user is not owner of the given minutes entry.';
+    const USER_IS_NOT_OWNER = 'The currently logged-in user is not owner of the given minutes entry';
 
-    const MAIL_FAIL_TEXT    = 'The mail could not be sent.';
-    const MAIL_SUCCESS_TEXT = 'The mail was sent successfully.';
+    const MAIL_FAIL_TEXT    = 'The mail could not be sent';
+    const MAIL_SUCCESS_TEXT = 'The mail was sent successfully';
 
     /**
      * Get a user list in JSON

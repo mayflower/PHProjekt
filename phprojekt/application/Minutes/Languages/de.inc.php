@@ -53,10 +53,10 @@ $lang["Mail"] = "E-Mail";
 
 // Mail functions
 $lang["Meeting minutes for"] = "Meeting-Protokoll";
-$lang["The mail could not be sent."] = "Die E-Mail konnte nicht gesendet werden.";
-$lang["The mail was sent successfully."] = "Die E-Mail wurde erfolgreich versandt.";
+$lang["The mail could not be sent"] = "Die E-Mail konnte nicht gesendet werden";
+$lang["The mail was sent successfully"] = "Die E-Mail wurde erfolgreich versandt";
 $lang["Invalid email address detected:"] = "Ungültige E-Mail Adresse:";
-$lang["No recipient addresses have been specified."] = "Keine Empfänger-Adressen angegeben wurden.";
+$lang["No recipient addresses have been specified"] = "Keine Empfänger-Adressen angegeben wurden";
 
 // PDF formatting strings
 $lang["Undefined topicType"] = "Undefinierter Typ";
@@ -82,8 +82,8 @@ $lang["Editing data is no longer possible."] = "Einträge sind nicht mehr mögli
 $lang["Your changes have not been saved."] = "Ihre Änderungen wurden nicht gespeichert.";
 
 // Messages
-$lang["The currently logged-in user is not owner of the given minutes entry."] = "Die derzeit angemeldeten Benutzers "
-    . "ist nicht Eigentümer der gegebenen Minuten Eintrag.";
+$lang["The currently logged-in user is not owner of the given minutes entry"] = "Die derzeit angemeldeten Benutzers "
+    . "ist nicht Eigentümer der gegebenen Minuten Eintrag";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

@@ -1,6 +1,6 @@
 <?php
 // Tooltip Help
-$lang["Tooltip"]["private"] = "No: all users can see it - Yes: only the creator can see it";
+$lang["Tooltip"]["private"] = "No: all users can see it - Yes: only the creator can see it.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

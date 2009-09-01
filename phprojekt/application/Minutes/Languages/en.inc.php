@@ -53,10 +53,10 @@ $lang["Mail"] = "Mail";
 
 // Mail functions
 $lang["Meeting minutes for"] = "Meeting minutes for";
-$lang["The mail could not be sent."] = "The mail could not be sent.";
-$lang["The mail was sent successfully."] = "The mail was sent successfully.";
+$lang["The mail could not be sent"] = "The mail could not be sent";
+$lang["The mail was sent successfully"] = "The mail was sent successfully";
 $lang["Invalid email address detected:"] = "Invalid email address detected:";
-$lang["No recipient addresses have been specified."] = "No recipient addresses have been specified.";
+$lang["No recipient addresses have been specified"] = "No recipient addresses have been specified";
 
 // PDF formatting strings
 $lang["Undefined topicType"] = "Undefined Type";
@@ -82,8 +82,8 @@ $lang["Editing data is no longer possible."] = "Editing data is no longer possib
 $lang["Your changes have not been saved."] = "Your changes have not been saved.";
 
 // Messages
-$lang["The currently logged-in user is not owner of the given minutes entry."] = "The currently logged-in user is not "
-    . "owner of the given minutes entry.";
+$lang["The currently logged-in user is not owner of the given minutes entry"] = "The currently logged-in user is not "
+    . "owner of the given minutes entry";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
@@ -96,18 +96,18 @@ $lang["Content Help"]["Basic data"] = "DEFAULT";
 $lang["Content Help"]["People"] = "<br />
     <b>People tab</b><br />
     <br />
-    Allows defining people invited to the meeting, actual attendees and people who are excused.<br/>
+    Allows defining people invited to the meeting, actual attendees and people who are excused.<br />
     Also permits defining recipients for the Notification email.
     ";
 $lang["Content Help"]["Items"] = "<br />
     <b>Items tab</b><br />
     <br />
-    This tab permits gathering, writing and organizing all the contents exposed in the meeting.<br/>
-    <br/>
-    It has a grid listing at the left and a form at the right side.<br/>
-    <br/>
-    Each item added to the listing has the following fields in the form, for you to edit them:<br/>
-    <br/>
+    This tab permits gathering, writing and organizing all the contents exposed in the meeting.<br />
+    <br />
+    It has a grid listing at the left and a form at the right side.<br />
+    <br />
+    Each item added to the listing has the following fields in the form, for you to edit them:<br />
+    <br />
     <ul>
         <li><b>Title:</b> a descriptive title for the item to be added, like 'New mobile phone design'.
         <li><b>Type:</b> the type for the item being added, it may be one of the following.
@@ -124,8 +124,8 @@ $lang["Content Help"]["Items"] = "<br />
             that has been discussed.
         <li><b>Sort after:</b> where in the list will be situated this item.
     </ul>
-    <br/>
-    The grid orders and shows automatically all the items added.<br/>
+    <br />
+    The grid orders and shows automatically all the items added.<br />
     <br />
     <br />";
 
@@ -133,16 +133,16 @@ $lang["Content Help"]["Mail"] = "<br />
     <b>Mail tab</b><br />
     <br />
     From here it can be sent an email containing all the information of the selected Minutes register, with an optional
-    PDF attachment.<br/>
-    <br/>
+    PDF attachment.<br />
+    <br />
     Recipients can be selected in the <b>Recipients</b> field and also may be written plain email addresses in the
-    <b>Additional Recipients</b> field below it.<br/>
-    Check the box <b>Include PDF attachment</b> to send also the same info as a PDF file.<br/>
-    <br/>
+    <b>Additional Recipients</b> field below it.<br />
+    Check the box <b>Include PDF attachment</b> to send also the same info as a PDF file.<br />
+    <br />
     Then the button <b>Send mail</b> sends it, or the button <b>Preview</b> shows you the attachment so that you can
-    verify the content before sending the email.<br/>
-    <br/>
-    <br/>";
+    verify the content before sending the email.<br />
+    <br />
+    <br />";
 $lang["Content Help"]["Access"] = "DEFAULT";
 $lang["Content Help"]["Notification"] = "DEFAULT";
 $lang["Content Help"]["History"] = "DEFAULT";

@@ -71,22 +71,22 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
                 var modules = new Array();
                 modules.push({
                     "name":           "Module",
-                    "label":          phpr.nls.get("Module"),
+                    "label":          phpr.nls.get('Module'),
                     "moduleFunction": "setUrlHash",
                     "functionParams": "'Administration', null, ['Module']"});
                 modules.push({
                     "name":           "Tab",
-                    "label":          phpr.nls.get("Tab"),
+                    "label":          phpr.nls.get('Tab'),
                     "moduleFunction": "setUrlHash",
                     "functionParams": "'Administration', null, ['Tab']"});
                 modules.push({
                     "name":           "User",
-                    "label":          phpr.nls.get("User"),
+                    "label":          phpr.nls.get('User'),
                     "moduleFunction": "setUrlHash",
                     "functionParams": "'Administration', null, ['User']"});
                 modules.push({
                     "name":           "Role",
-                    "label":          phpr.nls.get("Role"),
+                    "label":          phpr.nls.get('Role'),
                     "moduleFunction": "setUrlHash",
                     "functionParams": "'Administration', null, ['Role']"});
                 tmp = phpr.DataStore.getData({url: subModuleUrl});

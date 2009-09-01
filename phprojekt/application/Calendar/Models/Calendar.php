@@ -210,9 +210,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         if ($start >= $end) {
             $this->_validate->error->addError(array(
                 'field'   => "Event duration",
-                'label'   => Phprojekt::getInstance()->translate("Event duration"),
-                'message' => Phprojekt::getInstance()->translate("End date and time has to be after Start date and "
-                    . "time")));
+                'label'   => Phprojekt::getInstance()->translate('Event duration'),
+                'message' => Phprojekt::getInstance()->translate('End date and time has to be after Start date and '
+                    . 'time')));
             return false;
         }
 

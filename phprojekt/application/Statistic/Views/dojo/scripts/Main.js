@@ -41,8 +41,8 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         phpr.parentmodule = '';
         this.render(["phpr.Statistic.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             webpath:            phpr.webpath,
-            selectedPeriodText: phpr.nls.get("Selected Statistic Period"),
-            selectedPeriodHelp: phpr.nls.get("Choose here the period for the statistics to be calculated.")
+            selectedPeriodText: phpr.nls.get('Selected Statistic Period'),
+            selectedPeriodHelp: phpr.nls.get('Choose here the period for the statistics to be calculated.')
         });
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {
@@ -136,17 +136,17 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         }
         var totalRow = new Array();
         totalRow.push({
-            "title":    phpr.nls.get("Total"),
+            "title":    phpr.nls.get('Total'),
             "userData": totalPerUser,
             "sum":      phpr.Date.convertMinutesToTime(total)
         });
 
         this.render(["phpr.Statistic.template", "table.html"], dojo.byId('statisticContent'), {
-            sumTxt: phpr.nls.get("Sum"),
-            projectTxt: phpr.nls.get("Project"),
-            rows:   rows,
-            users:  data.users,
-            total:  totalRow
+            sumTxt:     phpr.nls.get('Sum'),
+            projectTxt: phpr.nls.get('Project'),
+            rows:       rows,
+            users:      data.users,
+            total:      totalRow
         });
     },
 

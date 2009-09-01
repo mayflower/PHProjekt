@@ -1,7 +1,7 @@
 <?php
 // Words and phrases
-$lang["Please, log out and log in again to the application to apply the changes."] = "Bitte aus und einloggen, "
-    . "um die Änderungen wirksam werden zu lassen.";
+$lang["Please, log out and log in again to the application to apply the changes"] = "Bitte aus und einloggen, "
+    . "um die Änderungen wirksam werden zu lassen";
 $lang["The value for the setting is incorrect"] = "Der Wert für diese Einstellung ist nicht gültig";
 $lang["The password and confirmation are different or one of them is empty"] = "The password and confirmation are "
     . "different or one of them is empty";

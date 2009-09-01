@@ -207,20 +207,20 @@ class Core_Models_UserSetting
 
         if ((!empty($newPassValue) && $newPassValue != $confirmPassValue)
             || (empty($newPassValue) && !empty($confirmPassValue))) {
-            $message = Phprojekt::getInstance()->translate("The password and confirmation are different or one of them "
-                . "is empty");
+            $message = Phprojekt::getInstance()->translate('The password and confirmation are different or one of them '
+                . 'is empty');
         } else if (!empty($newPassValue) && $currentPassValue != Phprojekt_Auth::cryptString($oldPassValue)) {
-            $message = Phprojekt::getInstance()->translate("The old password provided is invalid");
+            $message = Phprojekt::getInstance()->translate('The old password provided is invalid');
         }
 
         // TimeZone
         if (!in_array($params['timeZone'], $this->_timeZoneRange)) {
-            $message = Phprojekt::getInstance()->translate("The Time Zone value is out of range");
+            $message = Phprojekt::getInstance()->translate('The Time Zone value is out of range');
         }
 
         // Language
         if (!array_key_exists($params['language'], $this->_languageRange)) {
-            $message = Phprojekt::getInstance()->translate("The Language value do not exists");
+            $message = Phprojekt::getInstance()->translate('The Language value do not exists');
         }
 
         return $message;

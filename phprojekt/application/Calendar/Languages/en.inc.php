@@ -82,8 +82,8 @@ $lang["The interval for the option selected in Repeats."] = "The interval for th
 $lang["E.g.: Repeats Weekly - Interval 2, that will create one event every 2 weeks."] = "E.g.: Repeats Weekly - "
     . "Interval 2, that will create one event every 2 weeks.";
 // 'Until' field
-$lang["The day the recurrence will stop happening. <br />The last event's day could not match this day."] = "The day "
-    . "the recurrence will stop happening. <br />The last event's day could not match this day.";
+$lang["The day the recurrence will stop happening."] = "The day the recurrence will stop happening.";
+$lang["The last event's day could not match this day."] = "The last event's day could not match this day.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

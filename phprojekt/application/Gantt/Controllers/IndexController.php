@@ -129,8 +129,8 @@ class Gantt_IndexController extends IndexController
 
         // Error check: no project received
         if (empty($projects)) {
-            $label   = Phprojekt::getInstance()->translate("Projects");
-            $message = Phprojekt::getInstance()->translate("No project info was received");
+            $label   = Phprojekt::getInstance()->translate('Projects');
+            $message = Phprojekt::getInstance()->translate('No project info was received');
             throw new Phprojekt_PublishedException($label . ': ' . $message);
         }
 
@@ -139,8 +139,8 @@ class Gantt_IndexController extends IndexController
 
             // Check: are the three values available?
             if (empty($id) || empty($startDate) || empty($endDate)) {
-                $label   = Phprojekt::getInstance()->translate("Projects");
-                $message = Phprojekt::getInstance()->translate("Incomplete data received");
+                $label   = Phprojekt::getInstance()->translate('Projects');
+                $message = Phprojekt::getInstance()->translate('Incomplete data received');
                 throw new Phprojekt_PublishedException($label . ': ' . $message);
             }
 
@@ -148,8 +148,8 @@ class Gantt_IndexController extends IndexController
             $activeRecord->find($id);
             // Check: project id exists?
             if (empty($activeRecord->id)) {
-                $label   = Phprojekt::getInstance()->translate("Project");
-                $message = Phprojekt::getInstance()->translate("Id not found #") . $id;
+                $label   = Phprojekt::getInstance()->translate('Project');
+                $message = Phprojekt::getInstance()->translate('Id not found #') . $id;
                 throw new Phprojekt_PublishedException($label . ': ' . $message);
             }
 
@@ -157,11 +157,11 @@ class Gantt_IndexController extends IndexController
             $validStart = Cleaner::validate('date', $startDate, false);
             $validEnd   = Cleaner::validate('date', $endDate, false);
             if (!$validStart || !$validEnd) {
-                $label = Phprojekt::getInstance()->translate("Project id #") . $id;
+                $label = Phprojekt::getInstance()->translate('Project id #') . $id;
                 if (!$validStart) {
-                    $message = Phprojekt::getInstance()->translate("Start date invalid");
+                    $message = Phprojekt::getInstance()->translate('Start date invalid');
                 } else {
-                    $message = Phprojekt::getInstance()->translate("End date invalid");
+                    $message = Phprojekt::getInstance()->translate('End date invalid');
                 }
                 throw new Phprojekt_PublishedException($label . ': ' . $message);
             }
@@ -170,8 +170,8 @@ class Gantt_IndexController extends IndexController
             $startDateTemp = strtotime($startDate);
             $endDateTemp   = strtotime($endDate);
             if ($startDateTemp > $endDateTemp) {
-                $label   = Phprojekt::getInstance()->translate("Project id #") . $id;
-                $message = Phprojekt::getInstance()->translate("Start date can not be after End date");
+                $label   = Phprojekt::getInstance()->translate('Project id #') . $id;
+                $message = Phprojekt::getInstance()->translate('Start date can not be after End date');
                 throw new Phprojekt_PublishedException($label . ': ' . $message);
             }
 

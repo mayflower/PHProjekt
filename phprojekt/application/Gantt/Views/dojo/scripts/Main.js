@@ -41,11 +41,11 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         phpr.module           = this.module;
         phpr.submodule        = '';
         phpr.parentmodule     = '';
-        var projectPeriodHelp = phpr.nls.get("Click on a Project timeline and see and/or change here the Start and End"
-            + " dates.");
+        var projectPeriodHelp = phpr.nls.get('Click on a Project timeline and see and/or change here the Start and End '
+            + 'dates.');
         this.render(["phpr.Gantt.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             webpath:                     phpr.webpath,
-            selectedProjectTimelineText: phpr.nls.get("Selected Project Timeline"),
+            selectedProjectTimelineText: phpr.nls.get('Selected Project Timeline'),
             projectPeriodHelp:           projectPeriodHelp
         });
         this.cleanPage();

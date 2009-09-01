@@ -516,13 +516,13 @@ class IndexController extends Zend_Controller_Action
     {
         $delete = array('target' => self::TARGET_ACTION_MULTIPLE,
                         'action' => 'jsonDeleteMultiple',
-                        'label'  => Phprojekt::getInstance()->translate("Delete"),
+                        'label'  => Phprojekt::getInstance()->translate('Delete'),
                         'mode'   => self::MODE_ACTION_XHR,
                         'class'  => 'deleteOption');
 
         $export = array('target' => self::TARGET_ACTION_MULTIPLE,
                         'action' => 'csvExportMultiple',
-                        'label'  => Phprojekt::getInstance()->translate("Export"),
+                        'label'  => Phprojekt::getInstance()->translate('Export'),
                         'mode'   => self::MODE_ACTION_WINDOW,
                         'class'  => 'exportOption');
 
@@ -623,7 +623,8 @@ class IndexController extends Zend_Controller_Action
             // The user has download permission?
             $rights = $model->getRights();
             if (!$rights['currentUser']['download']) {
-                $error = Phprojekt::getInstance()->translate("You don't have permission for downloading on this item.");
+                $error = Phprojekt::getInstance()->translate('You don\'t have permission for downloading on this '
+                    + 'item.');
                 die($error);
             }
             $files = $model->$field;
@@ -794,8 +795,8 @@ class IndexController extends Zend_Controller_Action
             }
         }
         if (!$valid) {
-            $error  = Phprojekt::getInstance()->translate("Error in received parameter, consult the admin. Parameter:");
-            $error .= " field";
+            $error  = Phprojekt::getInstance()->translate('Error in received parameter, consult the admin. Parameter:');
+            $error .= ' field';
 
             // Log error
             Phprojekt::getInstance()->getLog()->err("Error: wrong 'field' parameter trying to Download or Delete a file"
@@ -814,7 +815,7 @@ class IndexController extends Zend_Controller_Action
     private function _fileCheckParamOrder($order, $filesAmount)
     {
         if ($order < 1 || $order > $filesAmount) {
-            $error  = Phprojekt::getInstance()->translate("Error in received parameter, consult the admin. Parameter:");
+            $error  = Phprojekt::getInstance()->translate('Error in received parameter, consult the admin. Parameter:');
             $error .= " order";
 
             // Log error
@@ -837,7 +838,7 @@ class IndexController extends Zend_Controller_Action
         $model->find($itemId);
         $rights = $model->getRights();
         if (!$rights['currentUser']['write']) {
-            $error = Phprojekt::getInstance()->translate("You don't have permission for modifying this item.");
+            $error = Phprojekt::getInstance()->translate('You don\'t have permission for modifying this item.');
 
             // Log error
             Phprojekt::getInstance()->getLog()->err("Error: trying to Delete or Upload a file without write access. "

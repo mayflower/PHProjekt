@@ -665,8 +665,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
                         search += "<a class=\"searchsuggesttitle\" href='javascript: dojo.publish(\""
                             + this.module + ".clickResult\", [\"search\"]); dojo.publish(\""
-                            + this.module + ".setUrlHash\", [\"" + this.module + "\",  null, [\"Search\", \"" + words + "\"]])'>" + phpr.nls.get('View all')
-                            + "</a>";
+                            + this.module + ".setUrlHash\", [\"" + this.module
+                            + "\",  null, [\"Search\", \"" + words + "\"]])'>" + phpr.nls.get('View all') + "</a>";
                         search += "</div>";
                     }
 

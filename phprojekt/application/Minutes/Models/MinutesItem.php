@@ -302,13 +302,13 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
                 break;
             case 3: // Todo
                 $form = "%1\$s\n%2\$s\n" . $translate->translate('Who') . ": %4\$s\n"
-                    . $translate->translate("Date") . ": %3\$s";
+                    . $translate->translate('Date') . ": %3\$s";
                 break;
             case 5: // Date
-                $form = "%1\$s\n%2\$s\n" . $translate->translate("Date") . ": %3\$s";
+                $form = "%1\$s\n%2\$s\n" . $translate->translate('Date') . ": %3\$s";
                 break;
             default:
-                $form = $translate->translate("Undefined topicType");
+                $form = $translate->translate('Undefined topicType');
                 break;
         }
 

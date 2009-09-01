@@ -1,7 +1,7 @@
 <?php
 // Words and phrases
-$lang["Please, log out and log in again to the application to apply the changes."] = "Please, "
-    . "log out and log in again to the application to apply the changes.";
+$lang["Please, log out and log in again to the application to apply the changes"] = "Please, "
+    . "log out and log in again to the application to apply the changes";
 $lang["The value for the setting is incorrect"] = "The value for the setting is incorrect";
 $lang["The password and confirmation are different or one of them is empty"] = "The password and confirmation are "
     . "different or one of them is empty";
@@ -17,7 +17,7 @@ $lang["Favorite projects"] = "Favorite projects";
 $lang["Max Number of favorites projects"] = "Max Number of favorites projects";
 
 // Tooltip Help
-$lang["Tooltip"]["amount"] = "Projects that will be allowed to be seen in Timecard and will be ready to Drag and Drop";
+$lang["Tooltip"]["amount"] = "Projects that will be allowed to be seen in Timecard and will be ready to Drag and Drop.";
 $lang["Tooltip"]["timeZone"] = "The Time Zone (UTC) for the region or country you will be using Phprojekt.<br />"
     . "This is required for all users but specially useful for international events time coordination.";
 

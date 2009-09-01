@@ -386,8 +386,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         }
         var intervalHelp = phpr.nls.get('The interval for the option selected in Repeats.')
             + '<br />' + phpr.nls.get('E.g.: Repeats Weekly - Interval 2, that will create one event every 2 weeks.');
-        var untilHelp = phpr.nls.get('The day the recurrence will stop happening. <br />The last event\'s day could '
-            + 'not match this day.');
+        var untilHelp = phpr.nls.get('The day the recurrence will stop happening.')
+            + '<br />' + phpr.nls.get('The last event\'s day could not match this day.');
         recurrenceTab += this.fieldTemplate.selectRender(rangeFreq, phpr.nls.get('Repeats'), 'rruleFreq', values.FREQ,
             false, disabled);
         recurrenceTab += this.fieldTemplate.textFieldRender(phpr.nls.get('Interval'), 'rruleInterval',

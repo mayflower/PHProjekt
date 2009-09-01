@@ -104,7 +104,7 @@ class Phprojekt_Model_Validate
                             $this->error->addError(array(
                                 'field'   => $varname,
                                 'label'   => Phprojekt::getInstance()->translate($field['label']),
-                                'message' => Phprojekt::getInstance()->translate("Invalid Format")));
+                                'message' => Phprojekt::getInstance()->translate('Invalid Format')));
                         }
                         break;
                     }

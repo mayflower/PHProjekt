@@ -189,7 +189,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         formData += this.fieldTemplate.textFieldRender(meta[1]["label"], meta[1]["key"], '', 5, meta[1]["required"],
             false, meta[1]["hint"]);
         // endTime
-        formData += this.fieldTemplate.textFieldRender(phpr.nls.get("End Time"), 'endTime', '', 5, meta[2]["required"],
+        formData += this.fieldTemplate.textFieldRender(phpr.nls.get('End Time'), 'endTime', '', 5, meta[2]["required"],
             false, meta[2]["hint"]);
         // projectId
         meta[4]['range'].push({'id': -1, 'name': ''});
