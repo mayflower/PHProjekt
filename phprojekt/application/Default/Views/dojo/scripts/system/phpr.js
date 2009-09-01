@@ -173,9 +173,6 @@ dojo.require("dojox.dtl.tag.logic");
 dojo.require("dojox.fx._base");
 dojo.require("dojox.fx._core");
 dojo.require("dojox.fx.scroll");
-dojo.require("dojox.gfx");
-dojo.require("dojox.gfx.shape");
-dojo.require("dojox.gfx.path");
 
 // Dojox layout
 dojo.require("dojox.form.RangeSlider");

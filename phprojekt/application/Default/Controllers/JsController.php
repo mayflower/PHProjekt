@@ -68,7 +68,6 @@ class JsController extends IndexController
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/roundedContentPane.js');
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Store.js');
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Date.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Gfx.js');
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Url.js');
 
         // Default Folder
@@ -128,7 +127,6 @@ class JsController extends IndexController
                 phpr.config           = new Array();
                 phpr.serverFeedback   = new phpr.ServerFeedback();
                 phpr.Date             = new phpr.Date();
-                phpr.Gfx              = new phpr.Gfx();
                 phpr.loading          = new phpr.loading();
                 phpr.DataStore        = new phpr.DataStore();
                 phpr.TreeContent      = new phpr.TreeContent();
