@@ -95,5 +95,35 @@ dojo.declare("phpr.Date", null, {
         var year  = date.substr(0, 4);
 
         return new Date(year, month - 1, day);
+    },
+
+    getLongTranslateMonth:function(month) {
+        // Summary:
+        //    Return the string of one month
+        // Description:
+        //    Return the string of one month
+        var months = dojo.date.locale.getNames('months', 'wide');
+        var string = '' + months[month].charAt(0).toUpperCase();
+        return string + months[month].substr(1);
+    },
+
+    getLongTranslateWeekDay:function(week) {
+        // Summary:
+        //    Return the string of one week day
+        // Description:
+        //    Return the string of one week day
+        var weekdays = dojo.date.locale.getNames('days', 'wide');
+        var string = '' + weekdays[week].charAt(0).toUpperCase();
+        return string + weekdays[week].substr(1);
+    },
+
+    getShortTranslateWeekDay:function(week) {
+        // Summary:
+        //    Return the short string of one week day
+        // Description:
+        //    Return the short string of one week day
+        var weekdays = dojo.date.locale.getNames('days', 'abbr');
+        var string   = '' + weekdays[week].charAt(0).toUpperCase();
+        return string + weekdays[week].substr(1);
     }
 });

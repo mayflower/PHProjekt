@@ -66,17 +66,13 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         //    Render the list itself
         // Description:
         //    Render the list itself
-        var content       = phpr.DataStore.getData({url: this.url});
-        var shortWeekdays = dojo.date.locale.getNames('days', 'abbr');
-        var months        = dojo.date.locale.getNames('months', 'wide');
-        var total         = 0;
+        var content = phpr.DataStore.getData({url: this.url});
+        var total   = 0;
 
         var dates = new Array();
         for (var i in content) {
-            var weekTxt = shortWeekdays[content[i]['week']].charAt(0).toUpperCase();
-            weekTxt     = weekTxt + shortWeekdays[content[i]['week']].substr(1);
             dates.push({
-                week:      weekTxt,
+                week:      phpr.Date.getShortTranslateWeekDay(content[i]['week']),
                 weekClass: (content[i]['week'] == 0 || content[i]['week'] == 6) ? 'weekend' : 'weekday',
                 date:      content[i]['date'],
                 sum:       (content[i]['sumInHours'] != '0') ? content[i]['sumInHours'] : "-"
@@ -86,11 +82,8 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
             }
         }
 
-        var month = months[this._month].charAt(0).toUpperCase();
-        month     = month + months[this._month].substr(1);
-
         this.render(["phpr.Timecard.template", "monthView.html"], this._node.domNode, {
-            monthTxt: month,
+            monthTxt: phpr.Date.getLongTranslateMonth(this._month),
             sumTxt:   phpr.nls.get('Sum'),
             totalTxt: phpr.nls.get('Total'),
             total:    phpr.Date.convertMinutesToTime(total),
