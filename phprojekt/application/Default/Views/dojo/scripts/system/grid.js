@@ -176,6 +176,14 @@ dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
 
             return output;
         }
+    },
+
+    attachWidget: function(inNode, inDatum, inRowIndex){
+        // Add fix for IE
+        if (dojo.isIE) {
+            this.widget.domNode.unselectable = 'off';
+        }
+        this.inherited(arguments);
     }
 });
 
