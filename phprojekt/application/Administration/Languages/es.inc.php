@@ -43,6 +43,11 @@ $lang["The module must have a project selector called projectId"] = "El módulo 
 // User submodule
 $lang["Already exists, choose another one please"] = "Ya existente, elija otro por favor";
 
+// Tooltip Help
+$lang["Here can be configured general settings of the site that affects all the users."] = "Aquí pueden configurarse "
+    . "parámetros generales del sitio que afectan a todos los usuarios.";
+$lang["Please choose one of the tabs of above."] = "Por favor, elija una de las solapa de arriba.";
+
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Administración"] = "<br />

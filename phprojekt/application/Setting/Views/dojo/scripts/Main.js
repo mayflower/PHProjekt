@@ -35,7 +35,15 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
         phpr.module       = this.module;
         phpr.submodule    = '';
         phpr.parentmodule = '';
-        this.render(["phpr.Setting.template", "mainContent.html"], dojo.byId('centerMainContent'));
+        var summaryTxt = '<b>' + phpr.nls.get('Settings') + '</b>'
+            + '<br /><br />'
+            + phpr.nls.get('This module is for the user to set and change specific configuration parameters of '
+            + 'his/her profile.')
+            + '<br /><br />'
+            + phpr.nls.get('Please choose one of the tabs of above.');
+        this.render(["phpr.Setting.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+            summaryTxt: summaryTxt
+        });
         this.cleanPage();
         phpr.TreeContent.fadeOut();
         this.setSubGlobalModulesNavigation();

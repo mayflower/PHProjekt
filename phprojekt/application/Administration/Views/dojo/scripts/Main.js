@@ -37,7 +37,14 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         phpr.module       = this.module;
         phpr.submodule    = '';
         phpr.parentmodule = '';
-        this.render(["phpr.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'));
+        var summaryTxt = '<b>' + phpr.nls.get('Administration') + '</b>'
+            + '<br /><br />'
+            + phpr.nls.get('Here can be configured general settings of the site that affects all the users.')
+            + '<br /><br />'
+            + phpr.nls.get('Please choose one of the tabs of above.');
+        this.render(["phpr.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+            summaryTxt: summaryTxt
+        });
         this.cleanPage();
         phpr.TreeContent.fadeOut();
         this.setSubGlobalModulesNavigation();
