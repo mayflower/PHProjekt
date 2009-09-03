@@ -264,6 +264,14 @@ class Phprojekt
         $translate  = Phprojekt::getInstance()->getTranslate($locale);
         $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
 
+        // Fix for request to the core (Like History)
+        if ($moduleName == 'Core') {
+            $paramModule = Zend_Controller_Front::getInstance()->getRequest()->getParam('moduleName', null);
+            if (null !== $paramModule) {
+                $moduleName = $paramModule;
+            }
+        }
+
         if (null === $locale) {
             $locale = Phprojekt_User_User::getSetting("language", $this->_config->language);
         }
