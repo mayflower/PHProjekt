@@ -33,7 +33,7 @@
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Timecard_Models_TimecardSetting
+class Timecard_Models_Setting
 {
     /**
      * Return an array of field information.

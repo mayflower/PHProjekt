@@ -78,7 +78,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
                 continue;
             }
             if (is_dir($path)) {
-                $configClass = Phprojekt_Loader::getModelClassname($dir, sprintf('%sConfiguration', $dir));
+                $configClass = Phprojekt_Loader::getModelClassname($dir, 'Configuration');
                 if (Phprojekt_Loader::tryToLoadClass($configClass)) {
                     $results[] = array('name'  => $dir,
                                        'label' => Phprojekt::getInstance()->translate($dir));
@@ -110,7 +110,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     public function getModel()
     {
         if (null === $this->_object) {
-            $this->_object = Phprojekt_Loader::getModel($this->_module, sprintf('%sConfiguration', $this->_module));
+            $this->_object = Phprojekt_Loader::getModel($this->_module, 'Configuration');
         }
 
         return $this->_object;

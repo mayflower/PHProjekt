@@ -33,7 +33,7 @@
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Core_Models_UserSetting
+class Core_Models_User_Setting
 {
     /**
      * Range of dates language setting

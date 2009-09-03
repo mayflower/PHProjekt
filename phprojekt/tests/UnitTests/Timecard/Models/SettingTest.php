@@ -34,14 +34,14 @@ require_once 'PHPUnit/Framework.php';
  * @group      timecard-model
  * @group      timecard-model-setting
  */
-class Timecard_Models_TimecardSetting_Test extends PHPUnit_Framework_TestCase
+class Timecard_Models_Setting_Test extends PHPUnit_Framework_TestCase
 {
     /**
      * setUp method for PHPUnit
      */
     public function setUp()
     {
-        $this->_model = new Timecard_Models_TimecardSetting();
+        $this->_model = new Timecard_Models_Setting();
     }
 
     /**

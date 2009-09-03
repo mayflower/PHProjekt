@@ -85,7 +85,7 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
      */
     public function testTryToLoadClass()
     {
-        $this->assertTrue(Phprojekt_Loader::tryToLoadClass('Timecard_Models_TimecardSetting'));
+        $this->assertTrue(Phprojekt_Loader::tryToLoadClass('Core_Models_User_Setting'));
 
         $this->assertFalse(Phprojekt_Loader::tryToLoadClass('Timecard_Models_None'));
     }

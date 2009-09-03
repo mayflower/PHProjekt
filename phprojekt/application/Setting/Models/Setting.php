@@ -76,8 +76,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
     {
         $results = array();
         // System settings
-        $moduleClass = sprintf('UserSetting');
-        $model = Phprojekt_Loader::getModel('Core', $moduleClass);
+        $model = Phprojekt_Loader::getModel('Core', 'User_Setting');
         if ($model) {
             $results[] = array('name'  => 'User',
                                'label' => Phprojekt::getInstance()->translate('User'));
@@ -89,7 +88,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
                 continue;
             }
             if (is_dir($path)) {
-                $settingClass = Phprojekt_Loader::getModelClassname($dir, sprintf('%sSetting', $dir));
+                $settingClass = Phprojekt_Loader::getModelClassname($dir, 'Setting');
                 if (Phprojekt_Loader::tryToLoadClass($settingClass)) {
                     $results[] = array('name'  => $dir,
                                        'label' => Phprojekt::getInstance()->translate($dir));
@@ -122,9 +121,9 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
         if (null === $this->_object) {
             // System settings
             if ($this->_module == 'User') {
-                $this->_object = Phprojekt_Loader::getModel('Core', sprintf('%sSetting', $this->_module));
+                $this->_object = Phprojekt_Loader::getModel('Core', sprintf('%s_Setting', $this->_module));
             } else {
-                $this->_object = Phprojekt_Loader::getModel($this->_module, sprintf('%sSetting', $this->_module));
+                $this->_object = Phprojekt_Loader::getModel($this->_module, 'Setting');
             }
         }
         return $this->_object;
