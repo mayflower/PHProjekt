@@ -337,4 +337,23 @@ class Timecard_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains('{"id":1,"display":"Invisible Root"},{"id":2,"display":"Project 1"}', $response);
     }
+
+    /**
+     * Test of csv
+     */
+    public function testCsvList()
+    {
+        $this->setRequestUrl('Timecard/index/csvList/');
+        $this->request->setParam('year', 2009);
+        $this->request->setParam('month', '05');
+        $response = $this->getResponse();
+        $this->assertContains('"Date","Start Time","End Time","Minutes","Project","Notes"'."\n"
+            .'"2009-05-16","10:30","12:30","120","Invisible Root","My note"'."\n"
+            .'"2009-05-16","09:00","","0","Invisible Root","My note"'."\n", $response);
+
+        $this->request->setParam('year', 2009);
+        $this->request->setParam('month', '9');
+        $response = $this->getResponse();
+        $this->assertContains('""', $response);
+    }
 }

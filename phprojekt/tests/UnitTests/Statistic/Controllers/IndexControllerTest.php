@@ -67,4 +67,25 @@ class Statistic_IndexController_Test extends FrontInit
             return;
         }
     }
+
+    /**
+     * Test of csv
+     */
+    public function testCsvList()
+    {
+        $this->setRequestUrl('Statistic/index/csvList/');
+        $this->request->setParam('startDate', '2009-04-01');
+        $this->request->setParam('endDate', '2009-05-31');
+        $this->request->setParam('nodeId', 1);
+
+        $response = $this->getResponse();
+        $this->assertContains('"Project","david","Total"'."\n"
+            . '"Invisible Root","02:00","02:00"'."\n"
+            . '"....Project 1","00:00","00:00"'."\n"
+            . '"........Sub Project","00:00","00:00"'."\n"
+            . '"............Sub Sub Project 1","00:00","00:00"'."\n"
+            . '"............Sub Sub Project 2","00:00","00:00"'."\n"
+            . '"........Test Project","00:00","00:00"'."\n"
+            . '"Total","02:00","02:00"'."\n", $response);
+    }
 }

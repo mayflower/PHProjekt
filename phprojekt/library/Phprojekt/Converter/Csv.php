@@ -72,14 +72,16 @@ class Phprojekt_Converter_Csv
     {
         $outputString = self::convert($param1, $param2);
 
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-        header("Cache-Control: must-revalidate");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
-        header('Content-Length: ' . strlen($outputString));
-        header("Content-Disposition: attachment; filename=\"export.csv\"");
-        header("Content-type: application/octet-stream");
+        if (!headers_sent()) {
+            header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            header("Cache-Control: must-revalidate");
+            header("Cache-Control: post-check=0, pre-check=0", false);
+            header("Pragma: no-cache");
+            header('Content-Length: ' . strlen($outputString));
+            header("Content-Disposition: attachment; filename=\"export.csv\"");
+            header("Content-type: application/octet-stream");
+        }
 
         echo $outputString;
     }

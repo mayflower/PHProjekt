@@ -146,4 +146,42 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->assertContains('project":"Project', $response);
         $this->assertContains('username":"Username', $response);
     }
+
+    /**
+     * Test of csv
+     */
+    public function testCsvListNodeId()
+    {
+        $this->setRequestUrl('Project/index/csvList/');
+        $this->request->setParam('nodeId', '1');
+        $response = $this->getResponse();
+        $this->assertContains('"Title","Start Date","End Date","Priority","Status","Percentage Completed"'."\n"
+            . '"Project 1","2009-06-01","2009-10-31","","Offered","0.00"'."\n"
+            . '"test","2008-01-01","2008-12-31","2","Ordered","0.00"'."\n", $response);
+    }
+
+    /**
+     * Test of csv
+     */
+    public function testCsvListId()
+    {
+        $this->setRequestUrl('Project/index/csvList/');
+        $this->request->setParam('id', '1');
+        $response = $this->getResponse();
+        $this->assertContains('"Title","Start Date","End Date","Priority","Status","Percentage Completed"'."\n"
+            . '"Invisible Root","","","","Offered","0.00"'."\n", $response);
+    }
+
+    /**
+     * Test of csv
+     */
+    public function testCsvExportMultipleAction()
+    {
+        $this->setRequestUrl('Project/index/csvExportMultiple/');
+        $this->request->setParam('ids', '1,2');
+        $response = $this->getResponse();
+        $this->assertContains('"Title","Start Date","End Date","Priority","Status","Percentage Completed"'."\n"
+            . '"Invisible Root","","","","Offered","0.00"'."\n"
+            . '"Project 1","2009-06-01","2009-10-31","","Offered","0.00"'."\n", $response);
+    }
 }

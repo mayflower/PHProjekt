@@ -842,4 +842,54 @@ class Calendar_IndexController_Test extends FrontInit
         $expected = '{"id":2,"display":"Solt, Gustavo"},{"id":1,"display":"Soria Parra, David"}';
         $this->assertContains($expected, $response);
     }
+
+    /**
+     * Test of csv
+     */
+    public function testCsvDayListSelf()
+    {
+        $this->setRequestUrl('Calendar/index/csvDayListSelf/');
+        $this->request->setParam('date', '2009-06-14');
+        $response = $this->getResponse();
+        $this->assertContains('"Title","Start Date","Start Time","End Date","End Time"'."\n"
+            . '"Multiple5","2009-06-14","08:00","2009-06-14","10:00"'."\n", $response);
+    }
+
+    /**
+     * Test of csv
+     */
+    public function testCsvDayListSelect()
+    {
+        $this->setRequestUrl('Calendar/index/csvDayListSelect/');
+        $this->request->setParam('date', '2009-06-14');
+        $this->request->setParam('users', '1,2,3');
+        $response = $this->getResponse();
+        $this->assertContains('"Title","Place","Notes","Start Date","Start Time","End Date","End Time","Participant",'
+            . '"Rrule"'."\n"
+            . '"Multiple5","Buenos Aires","test note","2009-06-14","08:00","2009-06-14","10:00","1",'
+            . '"FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="'."\n"
+            . '"Multiple5","Buenos Aires","test note","2009-06-14","08:00","2009-06-14","10:00","2",'
+            . '"FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="'."\n", $response);
+    }
+
+    /**
+     * Test of csv
+     */
+    public function testCsvPeriodList()
+    {
+        $this->setRequestUrl('Calendar/index/csvPeriodList/');
+        $this->request->setParam('dateStart', '2009-06-01');
+        $this->request->setParam('dateEnd', '2009-06-25');
+        $response = $this->getResponse();
+        $this->assertContains('"Title","Place","Notes","Start Date","Start Time","End Date","End Time","Participant",'
+            . '"Rrule"'."\n"
+            . '"Multiple5","Buenos Aires","test note","2009-06-11","08:00","2009-06-11","10:00","1",'
+            . '"FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="'."\n"
+            . '"Multiple5","Buenos Aires","test note","2009-06-12","08:00","2009-06-12","10:00","1",'
+            . '"FREQ=DAILY;UNTIL=20090613T040000Z;INTERVAL=1;BYDAY="'."\n"
+            . '"Multiple5","Buenos Aires","test note","2009-06-13","08:00","2009-06-13","10:00","1",'
+            . '"FREQ=DAILY;UNTIL=20090613T040000Z;INTERVAL=1;BYDAY="'."\n"
+            . '"Multiple5","Buenos Aires","test note","2009-06-14","08:00","2009-06-14","10:00","1",'
+            . '"FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="'."\n", $response);
+    }
 }
