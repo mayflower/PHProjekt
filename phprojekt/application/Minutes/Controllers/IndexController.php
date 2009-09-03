@@ -282,7 +282,7 @@ class Minutes_IndexController extends IndexController
             $mail->setBodyHtml($this->_getHtmlList($minutes), 'utf-8');
 
             // Keep send() commented out until test phase is over
-            //$mail->send($smtpTransport);
+            $mail->send($smtpTransport);
 
             $return = array('type'    => 'success',
                             'message' => Phprojekt::getInstance()->translate(self::MAIL_SUCCESS_TEXT),
