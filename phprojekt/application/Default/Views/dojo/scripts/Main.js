@@ -821,8 +821,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     }
                     results[modulesData.moduleLabel] += self.render(["phpr.Default.template.results", "results.html"],
                         null, {
-                        id :           modulesData.id,
-                        moduleId :     modulesData.modulesId,
+                        id:            modulesData.id,
+                        moduleId:      modulesData.modulesId,
                         moduleName:    modulesData.moduleName,
                         projectId:     modulesData.projectId,
                         firstDisplay:  modulesData.firstDisplay,

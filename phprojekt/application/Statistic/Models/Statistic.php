@@ -94,7 +94,7 @@ class Statistic_Models_Statistic
      *
      * @return array
      */
-    public function fetchAll($where)
+    public function fetchAll($where = null)
     {
         return array();
     }
