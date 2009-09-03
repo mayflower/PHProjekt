@@ -301,7 +301,7 @@ class Calendar_IndexController extends IndexController
         }
 
         $where = sprintf('participant_id IN (%s) AND start_date <= %s AND end_date >= %s',
-            explode(", ", $ids), $date, $date);
+            implode(", ", $ids), $date, $date);
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
