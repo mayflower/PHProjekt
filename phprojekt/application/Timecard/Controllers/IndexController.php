@@ -221,9 +221,11 @@ class Timecard_IndexController extends IndexController
         if ($params['startTime'] == '') {
             unset($params['startTime']);
         }
-        $params['endTime'] = Cleaner::sanitize('time', $params['endTime']);
-        if ($params['endTime'] == '') {
-            unset($params['endTime']);
+        if (isset($params['endTime'])) {
+            $params['endTime'] = Cleaner::sanitize('time', $params['endTime']);
+            if ($params['endTime'] == '') {
+                unset($params['endTime']);
+            }
         }
         $params['projectId'] = (int) $params['projectId'];
         $params['notes']     = Cleaner::sanitize('string', $params['notes']);
