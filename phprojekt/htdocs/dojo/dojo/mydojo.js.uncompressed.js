@@ -23450,184 +23450,162 @@ dojo.declare(
 
 }
 
-if(!dojo._hasResource["dijit.form.MultiSelect"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.MultiSelect"] = true;
-dojo.provide("dijit.form.MultiSelect");
+if(!dojo._hasResource["dijit.form.HorizontalRule"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit.form.HorizontalRule"] = true;
+dojo.provide("dijit.form.HorizontalRule");
 
 
 
-dojo.declare("dijit.form.MultiSelect", dijit.form._FormWidget, {
+
+dojo.declare("dijit.form.HorizontalRule", [dijit._Widget, dijit._Templated],
+{
 	// summary:
-	//		Widget version of a <select multiple=true> element,
-	//		for selecting multiple options.
+	//		Hash marks for `dijit.form.HorizontalSlider`
 
-	// size: Number
-	//		Number of elements to display on a page
-	//		NOTE: may be removed in version 2.0, since elements may have variable height;
-	//		set the size via style="..." or CSS class names instead.
-	size: 7,
-	
-	templateString: "<select multiple='true' ${nameAttrSetting} dojoAttachPoint='containerNode,focusNode' dojoAttachEvent='onchange: _onChange'></select>",
+	templateString: '<div class="dijitRuleContainer dijitRuleContainerH"></div>',
 
-	attributeMap: dojo.delegate(dijit.form._FormWidget.prototype.attributeMap, {
-		size: "focusNode"
-	}),
+	// count: Integer
+	//		Number of hash marks to generate
+	count: 3,
 
-	reset: function(){
-		// summary:
-		//		Reset the widget's value to what it was at initialization time
+	// container: String
+	//		For HorizontalSlider, this is either "topDecoration" or "bottomDecoration",
+	//		and indicates whether this rule goes above or below the slider.
+	container: "containerNode",
 
-		// TODO: once we inherit from FormValueWidget this won't be needed
-		this._hasBeenBlurred = false;
-		this._setValueAttr(this._resetValue, true);
-	},
+	// ruleStyle: String
+	//		CSS style to apply to individual hash marks
+	ruleStyle: "",
 
-	addSelected: function(/* dijit.form.MultiSelect */ select){
-		// summary:
-		//		Move the selected nodes of a passed Select widget
-		//		instance to this Select widget.
-		//
-		// example:
-		// |	// move all the selected values from "bar" to "foo"
-		// | 	dijit.byId("foo").addSelected(dijit.byId("bar"));
-		
-		select.getSelected().forEach(function(n){
-			this.containerNode.appendChild(n);
-			// scroll to bottom to see item
-			// cannot use scrollIntoView since <option> tags don't support all attributes
-			// does not work on IE due to a bug where <select> always shows scrollTop = 0
-			this.domNode.scrollTop = this.domNode.offsetHeight; // overshoot will be ignored
-			// scrolling the source select is trickier esp. on safari who forgets to change the scrollbar size
-			var oldscroll = select.domNode.scrollTop;
-			select.domNode.scrollTop = 0;
-			select.domNode.scrollTop = oldscroll;
-		},this);
-	},
-					
-	getSelected: function(){
-		// summary:
-		//		Access the NodeList of the selected options directly
-		return dojo.query("option",this.containerNode).filter(function(n){
-			return n.selected; // Boolean
-		}); // dojo.NodeList
-	},
-	
-	_getValueAttr: function(){
-		// summary:
-		//		Hook so attr('value') works.
-		// description:
-		//		Returns an array of the selected options' values.
-		return this.getSelected().map(function(n){
-			return n.value;
-		});
-	},
-	
-	_multiValue: true, // for Form
+	_positionPrefix: '<div class="dijitRuleMark dijitRuleMarkH" style="left:',
+	_positionSuffix: '%;',
+	_suffix: '"></div>',
 
-	_setValueAttr: function(/* Array */values){
-		// summary:
-		//		Hook so attr('value', values) works.
-		// description:
-		//		Set the value(s) of this Select based on passed values
-		dojo.query("option",this.containerNode).forEach(function(n){
-			n.selected = (dojo.indexOf(values,n.value) != -1);
-		});
-	},
-		
-	invertSelection: function(onChange){
-		// summary:
-		//		Invert the selection
-		// onChange: Boolean
-		//		If null, onChange is not fired.
-		dojo.query("option",this.containerNode).forEach(function(n){
-			n.selected = !n.selected;
-		});
-		this._handleOnChange(this.attr('value'), onChange==true);
+	_genHTML: function(pos, ndx){
+		return this._positionPrefix + pos + this._positionSuffix + this.ruleStyle + this._suffix;
 	},
 
-	_onChange: function(/*Event*/ e){
-		this._handleOnChange(this.attr('value'), true);
-	},
-	
-	// for layout widgets:
-	resize: function(/* Object */size){
-		if(size){
-			dojo.marginBox(this.domNode, size);
-		}
-	},
-	
+	// _isHorizontal: [protected extension] Boolean
+	//		VerticalRule will override this...
+	_isHorizontal: true,
+
 	postCreate: function(){
-		this._onChange();
+		var innerHTML;
+		if(this.count==1){
+			innerHTML = this._genHTML(50, 0);
+		}else{
+			var i;
+			var interval = 100 / (this.count-1);
+			if(!this._isHorizontal || this.isLeftToRight()){
+				innerHTML = this._genHTML(0, 0);
+				for(i=1; i < this.count-1; i++){
+					innerHTML += this._genHTML(interval*i, i);
+				}
+				innerHTML += this._genHTML(100, this.count-1);
+			}else{
+				innerHTML = this._genHTML(100, 0);
+				for(i=1; i < this.count-1; i++){
+					innerHTML += this._genHTML(100-interval*i, i);
+				}
+				innerHTML += this._genHTML(0, this.count-1);
+			}
+		}
+		this.domNode.innerHTML = innerHTML;
 	}
 });
 
 }
 
-if(!dojo._hasResource["dijit.form.NumberSpinner"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.NumberSpinner"] = true;
-dojo.provide("dijit.form.NumberSpinner");
+if(!dojo._hasResource["dijit.form.HorizontalRuleLabels"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit.form.HorizontalRuleLabels"] = true;
+dojo.provide("dijit.form.HorizontalRuleLabels");
 
 
 
-
-dojo.declare("dijit.form.NumberSpinner",
-	[dijit.form._Spinner, dijit.form.NumberTextBoxMixin],
-	{
+dojo.declare("dijit.form.HorizontalRuleLabels", dijit.form.HorizontalRule,
+{
 	// summary:
-	//		Extends NumberTextBox to add up/down arrows and pageup/pagedown for incremental change to the value
-	//
-	// description:
-	//		A `dijit.form.NumberTextBox` extension to provide keyboard accessible value selection
-	//		as well as icons for spinning direction. When using the keyboard, the typematic rules
-	//		apply, meaning holding the key will gradually increarease or decrease the value and
-	// 		accelerate.
-	//		
-	// example:
-	//	| new dijit.form.NumberSpinner({ constraints:{ max:300, min:100 }}, "someInput");
+	//		Labels for `dijit.form.HorizontalSlider`
 
-	// Override required=false from ValidationTextBox
-	required: true,
+	templateString: '<div class="dijitRuleContainer dijitRuleContainerH dijitRuleLabelsContainer dijitRuleLabelsContainerH"></div>',
 
-	adjust: function(/* Object */val, /* Number*/delta){
+	// labelStyle: String
+	//		CSS style to apply to individual text labels
+	labelStyle: "",
+
+	// labels: String[]?
+	//		Array of text labels to render - evenly spaced from left-to-right or bottom-to-top.
+	//		Alternately, minimum and maximum can be specified, to get numeric labels.
+	labels: [],
+
+	// numericMargin: Integer
+	//		Number of generated numeric labels that should be rendered as '' on the ends when labels[] are not specified
+	numericMargin: 0,
+
+	// numericMinimum: Integer
+	//		Leftmost label value for generated numeric labels when labels[] are not specified
+	minimum: 0,
+
+	// numericMaximum: Integer
+	//		Rightmost label value for generated numeric labels when labels[] are not specified
+	maximum: 1,
+
+	// constraints: Object
+	//		pattern, places, lang, et al (see dojo.number) for generated numeric labels when labels[] are not specified
+	constraints: {pattern:"#%"},
+
+	_positionPrefix: '<div class="dijitRuleLabelContainer dijitRuleLabelContainerH" style="left:',
+	_labelPrefix: '"><span class="dijitRuleLabel dijitRuleLabelH">',
+	_suffix: '</span></div>',
+
+	_calcPosition: function(pos){
 		// summary:
-		//		Change Number val by the given amount
+		//		Returns the value to be used in HTML for the label as part of the left: attribute
 		// tags:
-		//		protected
-
-		var tc = this.constraints, 
-			v = isNaN(val), 
-			gotMax = !isNaN(tc.max), 
-			gotMin = !isNaN(tc.min)
-		;
-		if(v && delta != 0){ // blank or invalid value and they want to spin, so create defaults
-			val = (delta > 0) ? 
-				gotMin ? tc.min : gotMax ? tc.max : 0 :
-				gotMax ? this.constraints.max : gotMin ? tc.min : 0
-			;
-		}
-		var newval = val + delta;
-		if(v || isNaN(newval)){ return val; }
-		if(gotMax && (newval > tc.max)){
-			newval = tc.max;
-		}
-		if(gotMin && (newval < tc.min)){
-			newval = tc.min;
-		}
-		return newval;
+		//		protected extension
+		return pos;
 	},
-	
-	_onKeyPress: function(e){
-		if((e.charOrCode == dojo.keys.HOME || e.charOrCode == dojo.keys.END) && !e.ctrlKey && !e.altKey){
-			var value = this.constraints[(e.charOrCode == dojo.keys.HOME ? "min" : "max")];
-			if(value){
-				this._setValueAttr(value,true);
-			}
-			// eat home or end key whether we change the value or not
-			dojo.stopEvent(e);
+
+	_genHTML: function(pos, ndx){
+		return this._positionPrefix + this._calcPosition(pos) + this._positionSuffix + this.labelStyle + this._labelPrefix + this.labels[ndx] + this._suffix;
+	},
+
+	getLabels: function(){
+		// summary:
+		//		Overridable function to return array of labels to use for this slider.
+		//		Can specify a getLabels() method instead of a labels[] array, or min/max attributes.
+		// tags:
+		//		protected extension
+
+		// if the labels array was not specified directly, then see if <li> children were
+		var labels = this.labels;
+		if(!labels.length){
+			// for markup creation, labels are specified as child elements
+			labels = dojo.query("> li", this.srcNodeRef).map(function(node){
+				return String(node.innerHTML);
+			});
 		}
+		this.srcNodeRef.innerHTML = '';
+		// if the labels were not specified directly and not as <li> children, then calculate numeric labels
+		if(!labels.length && this.count > 1){
+			var start = this.minimum;
+			var inc = (this.maximum - start) / (this.count-1);
+			for (var i=0; i < this.count; i++){
+				labels.push((i<this.numericMargin||i>=(this.count-this.numericMargin))? '' : dojo.number.format(start, this.constraints));
+				start += inc;
+			}
+		}
+		return labels;
+	},
+
+	postMixInProperties: function(){
+		this.inherited(arguments);
+		this.labels = this.getLabels();
+		this.count = this.labels.length;
 	}
-	
 });
+
+
 
 }
 
@@ -23946,303 +23924,184 @@ dojo.declare("dijit.form._SliderMover",
 
 }
 
-if(!dojo._hasResource["dijit.form.VerticalSlider"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.VerticalSlider"] = true;
-dojo.provide("dijit.form.VerticalSlider");
+if(!dojo._hasResource["dijit.form.MultiSelect"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit.form.MultiSelect"] = true;
+dojo.provide("dijit.form.MultiSelect");
 
 
 
-dojo.declare(
-	"dijit.form.VerticalSlider",
-	dijit.form.HorizontalSlider,
-{
+dojo.declare("dijit.form.MultiSelect", dijit.form._FormWidget, {
 	// summary:
-	//		A form widget that allows one to select a value with a vertically draggable handle
+	//		Widget version of a <select multiple=true> element,
+	//		for selecting multiple options.
 
-	templateString:"<table class=\"dijitReset dijitSlider\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" rules=\"none\" dojoAttachEvent=\"onkeypress:_onKeyPress\"\r\n><tbody class=\"dijitReset\"\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset dijitSliderButtonContainer dijitSliderButtonContainerV\"\r\n\t\t\t><div class=\"dijitSliderIncrementIconV\" tabIndex=\"-1\" style=\"display:none\" dojoAttachPoint=\"decrementButton\"><span class=\"dijitSliderButtonInner\">+</span></div\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset\"\r\n\t\t\t><center><div class=\"dijitSliderBar dijitSliderBumper dijitSliderBumperV dijitSliderTopBumper dijitSliderTopBumper\" dojoAttachEvent=\"onmousedown:_onClkIncBumper\"></div></center\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td dojoAttachPoint=\"leftDecoration\" class=\"dijitReset\" style=\"text-align:center;height:100%;\"></td\r\n\t\t><td class=\"dijitReset\" style=\"height:100%;\"\r\n\t\t\t><input dojoAttachPoint=\"valueNode\" type=\"hidden\" ${nameAttrSetting}\r\n\t\t\t/><center class=\"dijitReset dijitSliderBarContainerV\" waiRole=\"presentation\" dojoAttachPoint=\"sliderBarContainer\"\r\n\t\t\t\t><div waiRole=\"presentation\" dojoAttachPoint=\"remainingBar\" class=\"dijitSliderBar dijitSliderBarV dijitSliderRemainingBar dijitSliderRemainingBarV\" dojoAttachEvent=\"onmousedown:_onBarClick\"><!--#5629--></div\r\n\t\t\t\t><div waiRole=\"presentation\" dojoAttachPoint=\"progressBar\" class=\"dijitSliderBar dijitSliderBarV dijitSliderProgressBar dijitSliderProgressBarV\" dojoAttachEvent=\"onmousedown:_onBarClick\"\r\n\t\t\t\t\t><div class=\"dijitSliderMoveable\" style=\"vertical-align:top;\" \r\n\t\t\t\t\t\t><div dojoAttachPoint=\"sliderHandle,focusNode\" class=\"dijitSliderImageHandle dijitSliderImageHandleV\" dojoAttachEvent=\"onmousedown:_onHandleClick\" waiRole=\"slider\" valuemin=\"${minimum}\" valuemax=\"${maximum}\"></div\r\n\t\t\t\t\t></div\r\n\t\t\t\t></div\r\n\t\t\t></center\r\n\t\t></td\r\n\t\t><td dojoAttachPoint=\"containerNode,rightDecoration\" class=\"dijitReset\" style=\"text-align:center;height:100%;\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset\"\r\n\t\t\t><center><div class=\"dijitSliderBar dijitSliderBumper dijitSliderBumperV dijitSliderBottomBumper dijitSliderBottomBumper\" dojoAttachEvent=\"onmousedown:_onClkDecBumper\"></div></center\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset dijitSliderButtonContainer dijitSliderButtonContainerV\"\r\n\t\t\t><div class=\"dijitSliderDecrementIconV\" tabIndex=\"-1\" style=\"display:none\" dojoAttachPoint=\"incrementButton\"><span class=\"dijitSliderButtonInner\">-</span></div\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n></tbody></table>\r\n",
-	_mousePixelCoord: "pageY",
-	_pixelCount: "h",
-	_startingPixelCoord: "y",
-	_startingPixelCount: "t",
-	_handleOffsetCoord: "top",
-	_progressPixelSize: "height",
+	// size: Number
+	//		Number of elements to display on a page
+	//		NOTE: may be removed in version 2.0, since elements may have variable height;
+	//		set the size via style="..." or CSS class names instead.
+	size: 7,
+	
+	templateString: "<select multiple='true' ${nameAttrSetting} dojoAttachPoint='containerNode,focusNode' dojoAttachEvent='onchange: _onChange'></select>",
 
-	// _descending: Boolean
-	//	   Specifies if the slider values go from high-on-top (true), or low-on-top (false)
-	//	TODO: expose this in 1.2 - the css progress/remaining bar classes need to be reversed
-	_descending: true,
+	attributeMap: dojo.delegate(dijit.form._FormWidget.prototype.attributeMap, {
+		size: "focusNode"
+	}),
 
-	startup: function(){
-		if(this._started){ return; }
+	reset: function(){
+		// summary:
+		//		Reset the widget's value to what it was at initialization time
 
-		if(!this.isLeftToRight() && dojo.isMoz){
-			if(this.leftDecoration){this._rtlRectify(this.leftDecoration);}
-			if(this.rightDecoration){this._rtlRectify(this.rightDecoration);}
-		}
+		// TODO: once we inherit from FormValueWidget this won't be needed
+		this._hasBeenBlurred = false;
+		this._setValueAttr(this._resetValue, true);
+	},
 
-		this.inherited(arguments);
+	addSelected: function(/* dijit.form.MultiSelect */ select){
+		// summary:
+		//		Move the selected nodes of a passed Select widget
+		//		instance to this Select widget.
+		//
+		// example:
+		// |	// move all the selected values from "bar" to "foo"
+		// | 	dijit.byId("foo").addSelected(dijit.byId("bar"));
+		
+		select.getSelected().forEach(function(n){
+			this.containerNode.appendChild(n);
+			// scroll to bottom to see item
+			// cannot use scrollIntoView since <option> tags don't support all attributes
+			// does not work on IE due to a bug where <select> always shows scrollTop = 0
+			this.domNode.scrollTop = this.domNode.offsetHeight; // overshoot will be ignored
+			// scrolling the source select is trickier esp. on safari who forgets to change the scrollbar size
+			var oldscroll = select.domNode.scrollTop;
+			select.domNode.scrollTop = 0;
+			select.domNode.scrollTop = oldscroll;
+		},this);
+	},
+					
+	getSelected: function(){
+		// summary:
+		//		Access the NodeList of the selected options directly
+		return dojo.query("option",this.containerNode).filter(function(n){
+			return n.selected; // Boolean
+		}); // dojo.NodeList
+	},
+	
+	_getValueAttr: function(){
+		// summary:
+		//		Hook so attr('value') works.
+		// description:
+		//		Returns an array of the selected options' values.
+		return this.getSelected().map(function(n){
+			return n.value;
+		});
+	},
+	
+	_multiValue: true, // for Form
+
+	_setValueAttr: function(/* Array */values){
+		// summary:
+		//		Hook so attr('value', values) works.
+		// description:
+		//		Set the value(s) of this Select based on passed values
+		dojo.query("option",this.containerNode).forEach(function(n){
+			n.selected = (dojo.indexOf(values,n.value) != -1);
+		});
 	},
 		
-	_isReversed: function(){
+	invertSelection: function(onChange){
 		// summary:
-		//		Overrides HorizontalSlider._isReversed.
-		//		Indicates if values are high on top (with low numbers on the bottom).
-		return this._descending;
+		//		Invert the selection
+		// onChange: Boolean
+		//		If null, onChange is not fired.
+		dojo.query("option",this.containerNode).forEach(function(n){
+			n.selected = !n.selected;
+		});
+		this._handleOnChange(this.attr('value'), onChange==true);
 	},
 
-	_rtlRectify: function(decorationNode/*NodeList*/){
-		// summary:
-		//	    Helper function on gecko.
-		//		Rectify children nodes for left/right decoration in rtl case.
-		//		Simply switch the rule and label child for each decoration node.
-		// tags:
-		//		private
-		var childNodes = [];
-		while(decorationNode.firstChild){
-				childNodes.push(decorationNode.firstChild);
-				decorationNode.removeChild(decorationNode.firstChild);
-		}
-		for(var i = childNodes.length-1; i >=0; i--){
-			if(childNodes[i]){
-				decorationNode.appendChild(childNodes[i]);
-			}
-		}
-	}
-});
-
-
-}
-
-if(!dojo._hasResource["dijit.form.HorizontalRule"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.HorizontalRule"] = true;
-dojo.provide("dijit.form.HorizontalRule");
-
-
-
-
-dojo.declare("dijit.form.HorizontalRule", [dijit._Widget, dijit._Templated],
-{
-	// summary:
-	//		Hash marks for `dijit.form.HorizontalSlider`
-
-	templateString: '<div class="dijitRuleContainer dijitRuleContainerH"></div>',
-
-	// count: Integer
-	//		Number of hash marks to generate
-	count: 3,
-
-	// container: String
-	//		For HorizontalSlider, this is either "topDecoration" or "bottomDecoration",
-	//		and indicates whether this rule goes above or below the slider.
-	container: "containerNode",
-
-	// ruleStyle: String
-	//		CSS style to apply to individual hash marks
-	ruleStyle: "",
-
-	_positionPrefix: '<div class="dijitRuleMark dijitRuleMarkH" style="left:',
-	_positionSuffix: '%;',
-	_suffix: '"></div>',
-
-	_genHTML: function(pos, ndx){
-		return this._positionPrefix + pos + this._positionSuffix + this.ruleStyle + this._suffix;
+	_onChange: function(/*Event*/ e){
+		this._handleOnChange(this.attr('value'), true);
 	},
-
-	// _isHorizontal: [protected extension] Boolean
-	//		VerticalRule will override this...
-	_isHorizontal: true,
-
+	
+	// for layout widgets:
+	resize: function(/* Object */size){
+		if(size){
+			dojo.marginBox(this.domNode, size);
+		}
+	},
+	
 	postCreate: function(){
-		var innerHTML;
-		if(this.count==1){
-			innerHTML = this._genHTML(50, 0);
-		}else{
-			var i;
-			var interval = 100 / (this.count-1);
-			if(!this._isHorizontal || this.isLeftToRight()){
-				innerHTML = this._genHTML(0, 0);
-				for(i=1; i < this.count-1; i++){
-					innerHTML += this._genHTML(interval*i, i);
-				}
-				innerHTML += this._genHTML(100, this.count-1);
-			}else{
-				innerHTML = this._genHTML(100, 0);
-				for(i=1; i < this.count-1; i++){
-					innerHTML += this._genHTML(100-interval*i, i);
-				}
-				innerHTML += this._genHTML(0, this.count-1);
-			}
-		}
-		this.domNode.innerHTML = innerHTML;
+		this._onChange();
 	}
 });
 
 }
 
-if(!dojo._hasResource["dijit.form.VerticalRule"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.VerticalRule"] = true;
-dojo.provide("dijit.form.VerticalRule");
+if(!dojo._hasResource["dijit.form.NumberSpinner"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit.form.NumberSpinner"] = true;
+dojo.provide("dijit.form.NumberSpinner");
 
 
 
-dojo.declare("dijit.form.VerticalRule", dijit.form.HorizontalRule,
-{
+
+dojo.declare("dijit.form.NumberSpinner",
+	[dijit.form._Spinner, dijit.form.NumberTextBoxMixin],
+	{
 	// summary:
-	//		Hash marks for the `dijit.form.VerticalSlider`
+	//		Extends NumberTextBox to add up/down arrows and pageup/pagedown for incremental change to the value
+	//
+	// description:
+	//		A `dijit.form.NumberTextBox` extension to provide keyboard accessible value selection
+	//		as well as icons for spinning direction. When using the keyboard, the typematic rules
+	//		apply, meaning holding the key will gradually increarease or decrease the value and
+	// 		accelerate.
+	//		
+	// example:
+	//	| new dijit.form.NumberSpinner({ constraints:{ max:300, min:100 }}, "someInput");
 
-	templateString: '<div class="dijitRuleContainer dijitRuleContainerV"></div>',
-	_positionPrefix: '<div class="dijitRuleMark dijitRuleMarkV" style="top:',
+	// Override required=false from ValidationTextBox
+	required: true,
 
-/*=====
-	// container: String
-	//		This is either "leftDecoration" or "rightDecoration",
-	//		to indicate whether this rule goes to the left or to the right of the slider.
-	//		Note that on RTL system, "leftDecoration" would actually go to the right, and vice-versa.
-	container: "",
-=====*/
-
-	// Overrides HorizontalRule._isHorizontal
-	_isHorizontal: false
-
-});
-
-
-}
-
-if(!dojo._hasResource["dijit.form.HorizontalRuleLabels"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.HorizontalRuleLabels"] = true;
-dojo.provide("dijit.form.HorizontalRuleLabels");
-
-
-
-dojo.declare("dijit.form.HorizontalRuleLabels", dijit.form.HorizontalRule,
-{
-	// summary:
-	//		Labels for `dijit.form.HorizontalSlider`
-
-	templateString: '<div class="dijitRuleContainer dijitRuleContainerH dijitRuleLabelsContainer dijitRuleLabelsContainerH"></div>',
-
-	// labelStyle: String
-	//		CSS style to apply to individual text labels
-	labelStyle: "",
-
-	// labels: String[]?
-	//		Array of text labels to render - evenly spaced from left-to-right or bottom-to-top.
-	//		Alternately, minimum and maximum can be specified, to get numeric labels.
-	labels: [],
-
-	// numericMargin: Integer
-	//		Number of generated numeric labels that should be rendered as '' on the ends when labels[] are not specified
-	numericMargin: 0,
-
-	// numericMinimum: Integer
-	//		Leftmost label value for generated numeric labels when labels[] are not specified
-	minimum: 0,
-
-	// numericMaximum: Integer
-	//		Rightmost label value for generated numeric labels when labels[] are not specified
-	maximum: 1,
-
-	// constraints: Object
-	//		pattern, places, lang, et al (see dojo.number) for generated numeric labels when labels[] are not specified
-	constraints: {pattern:"#%"},
-
-	_positionPrefix: '<div class="dijitRuleLabelContainer dijitRuleLabelContainerH" style="left:',
-	_labelPrefix: '"><span class="dijitRuleLabel dijitRuleLabelH">',
-	_suffix: '</span></div>',
-
-	_calcPosition: function(pos){
+	adjust: function(/* Object */val, /* Number*/delta){
 		// summary:
-		//		Returns the value to be used in HTML for the label as part of the left: attribute
+		//		Change Number val by the given amount
 		// tags:
-		//		protected extension
-		return pos;
-	},
+		//		protected
 
-	_genHTML: function(pos, ndx){
-		return this._positionPrefix + this._calcPosition(pos) + this._positionSuffix + this.labelStyle + this._labelPrefix + this.labels[ndx] + this._suffix;
-	},
-
-	getLabels: function(){
-		// summary:
-		//		Overridable function to return array of labels to use for this slider.
-		//		Can specify a getLabels() method instead of a labels[] array, or min/max attributes.
-		// tags:
-		//		protected extension
-
-		// if the labels array was not specified directly, then see if <li> children were
-		var labels = this.labels;
-		if(!labels.length){
-			// for markup creation, labels are specified as child elements
-			labels = dojo.query("> li", this.srcNodeRef).map(function(node){
-				return String(node.innerHTML);
-			});
+		var tc = this.constraints, 
+			v = isNaN(val), 
+			gotMax = !isNaN(tc.max), 
+			gotMin = !isNaN(tc.min)
+		;
+		if(v && delta != 0){ // blank or invalid value and they want to spin, so create defaults
+			val = (delta > 0) ? 
+				gotMin ? tc.min : gotMax ? tc.max : 0 :
+				gotMax ? this.constraints.max : gotMin ? tc.min : 0
+			;
 		}
-		this.srcNodeRef.innerHTML = '';
-		// if the labels were not specified directly and not as <li> children, then calculate numeric labels
-		if(!labels.length && this.count > 1){
-			var start = this.minimum;
-			var inc = (this.maximum - start) / (this.count-1);
-			for (var i=0; i < this.count; i++){
-				labels.push((i<this.numericMargin||i>=(this.count-this.numericMargin))? '' : dojo.number.format(start, this.constraints));
-				start += inc;
+		var newval = val + delta;
+		if(v || isNaN(newval)){ return val; }
+		if(gotMax && (newval > tc.max)){
+			newval = tc.max;
+		}
+		if(gotMin && (newval < tc.min)){
+			newval = tc.min;
+		}
+		return newval;
+	},
+	
+	_onKeyPress: function(e){
+		if((e.charOrCode == dojo.keys.HOME || e.charOrCode == dojo.keys.END) && !e.ctrlKey && !e.altKey){
+			var value = this.constraints[(e.charOrCode == dojo.keys.HOME ? "min" : "max")];
+			if(value){
+				this._setValueAttr(value,true);
 			}
+			// eat home or end key whether we change the value or not
+			dojo.stopEvent(e);
 		}
-		return labels;
-	},
-
-	postMixInProperties: function(){
-		this.inherited(arguments);
-		this.labels = this.getLabels();
-		this.count = this.labels.length;
 	}
+	
 });
-
-
-
-}
-
-if(!dojo._hasResource["dijit.form.VerticalRuleLabels"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.VerticalRuleLabels"] = true;
-dojo.provide("dijit.form.VerticalRuleLabels");
-
-
-
-dojo.declare("dijit.form.VerticalRuleLabels", dijit.form.HorizontalRuleLabels,
-{
-	// summary:
-	//		Labels for the `dijit.form.VerticalSlider`
-
-	templateString: '<div class="dijitRuleContainer dijitRuleContainerV dijitRuleLabelsContainer dijitRuleLabelsContainerV"></div>',
-
-	_positionPrefix: '<div class="dijitRuleLabelContainer dijitRuleLabelContainerV" style="top:',
-	_labelPrefix: '"><span class="dijitRuleLabel dijitRuleLabelV">',
-
-	_calcPosition: function(pos){
-		// Overrides HorizontalRuleLabel._calcPosition()
-		return 100-pos;
-	},
-
-	// TODO: remove this.   Apparently it's not used.
-	_isHorizontal: false
-});
-
-}
-
-if(!dojo._hasResource["dijit.form.Slider"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.Slider"] = true;
-dojo.provide("dijit.form.Slider");
-
-dojo.deprecated("Call require() for HorizontalSlider / VerticalRule, explicitly rather than 'dijit.form.Slider' itself", "", "2.0");
-
-// For back-compat, remove for 2.0
-
-
-
-
-
-
-
 
 }
 
@@ -39132,2010 +38991,70 @@ dojox.fx.wipeTo = function(/*Object*/ args){
 
 }
 
-if(!dojo._hasResource["dojox.gfx.matrix"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx.matrix"] = true;
-dojo.provide("dojox.gfx.matrix");
+if(!dojo._hasResource["dijit.form.VerticalSlider"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit.form.VerticalSlider"] = true;
+dojo.provide("dijit.form.VerticalSlider");
 
-(function(){
-	var m = dojox.gfx.matrix;
 
-	// candidates for dojox.math:
-	var _degToRadCache = {};
-	m._degToRad = function(degree){
-		return _degToRadCache[degree] || (_degToRadCache[degree] = (Math.PI * degree / 180));
-	};
-	m._radToDeg = function(radian){ return radian / Math.PI * 180; };
 
-	m.Matrix2D = function(arg){
-		// summary: a 2D matrix object
-		// description: Normalizes a 2D matrix-like object. If arrays is passed,
-		//		all objects of the array are normalized and multiplied sequentially.
-		// arg: Object
-		//		a 2D matrix-like object, a number, or an array of such objects
-		if(arg){
-			if(typeof arg == "number"){
-				this.xx = this.yy = arg;
-			}else if(arg instanceof Array){
-				if(arg.length > 0){
-					var matrix = m.normalize(arg[0]);
-					// combine matrices
-					for(var i = 1; i < arg.length; ++i){
-						var l = matrix, r = dojox.gfx.matrix.normalize(arg[i]);
-						matrix = new m.Matrix2D();
-						matrix.xx = l.xx * r.xx + l.xy * r.yx;
-						matrix.xy = l.xx * r.xy + l.xy * r.yy;
-						matrix.yx = l.yx * r.xx + l.yy * r.yx;
-						matrix.yy = l.yx * r.xy + l.yy * r.yy;
-						matrix.dx = l.xx * r.dx + l.xy * r.dy + l.dx;
-						matrix.dy = l.yx * r.dx + l.yy * r.dy + l.dy;
-					}
-					dojo.mixin(this, matrix);
-				}
-			}else{
-				dojo.mixin(this, arg);
-			}
-		}
-	};
+dojo.declare(
+	"dijit.form.VerticalSlider",
+	dijit.form.HorizontalSlider,
+{
+	// summary:
+	//		A form widget that allows one to select a value with a vertically draggable handle
 
-	// the default (identity) matrix, which is used to fill in missing values
-	dojo.extend(m.Matrix2D, {xx: 1, xy: 0, yx: 0, yy: 1, dx: 0, dy: 0});
+	templateString:"<table class=\"dijitReset dijitSlider\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" rules=\"none\" dojoAttachEvent=\"onkeypress:_onKeyPress\"\r\n><tbody class=\"dijitReset\"\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset dijitSliderButtonContainer dijitSliderButtonContainerV\"\r\n\t\t\t><div class=\"dijitSliderIncrementIconV\" tabIndex=\"-1\" style=\"display:none\" dojoAttachPoint=\"decrementButton\"><span class=\"dijitSliderButtonInner\">+</span></div\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset\"\r\n\t\t\t><center><div class=\"dijitSliderBar dijitSliderBumper dijitSliderBumperV dijitSliderTopBumper dijitSliderTopBumper\" dojoAttachEvent=\"onmousedown:_onClkIncBumper\"></div></center\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td dojoAttachPoint=\"leftDecoration\" class=\"dijitReset\" style=\"text-align:center;height:100%;\"></td\r\n\t\t><td class=\"dijitReset\" style=\"height:100%;\"\r\n\t\t\t><input dojoAttachPoint=\"valueNode\" type=\"hidden\" ${nameAttrSetting}\r\n\t\t\t/><center class=\"dijitReset dijitSliderBarContainerV\" waiRole=\"presentation\" dojoAttachPoint=\"sliderBarContainer\"\r\n\t\t\t\t><div waiRole=\"presentation\" dojoAttachPoint=\"remainingBar\" class=\"dijitSliderBar dijitSliderBarV dijitSliderRemainingBar dijitSliderRemainingBarV\" dojoAttachEvent=\"onmousedown:_onBarClick\"><!--#5629--></div\r\n\t\t\t\t><div waiRole=\"presentation\" dojoAttachPoint=\"progressBar\" class=\"dijitSliderBar dijitSliderBarV dijitSliderProgressBar dijitSliderProgressBarV\" dojoAttachEvent=\"onmousedown:_onBarClick\"\r\n\t\t\t\t\t><div class=\"dijitSliderMoveable\" style=\"vertical-align:top;\" \r\n\t\t\t\t\t\t><div dojoAttachPoint=\"sliderHandle,focusNode\" class=\"dijitSliderImageHandle dijitSliderImageHandleV\" dojoAttachEvent=\"onmousedown:_onHandleClick\" waiRole=\"slider\" valuemin=\"${minimum}\" valuemax=\"${maximum}\"></div\r\n\t\t\t\t\t></div\r\n\t\t\t\t></div\r\n\t\t\t></center\r\n\t\t></td\r\n\t\t><td dojoAttachPoint=\"containerNode,rightDecoration\" class=\"dijitReset\" style=\"text-align:center;height:100%;\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset\"\r\n\t\t\t><center><div class=\"dijitSliderBar dijitSliderBumper dijitSliderBumperV dijitSliderBottomBumper dijitSliderBottomBumper\" dojoAttachEvent=\"onmousedown:_onClkDecBumper\"></div></center\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset dijitSliderButtonContainer dijitSliderButtonContainerV\"\r\n\t\t\t><div class=\"dijitSliderDecrementIconV\" tabIndex=\"-1\" style=\"display:none\" dojoAttachPoint=\"incrementButton\"><span class=\"dijitSliderButtonInner\">-</span></div\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n></tbody></table>\r\n",
+	_mousePixelCoord: "pageY",
+	_pixelCount: "h",
+	_startingPixelCoord: "y",
+	_startingPixelCount: "t",
+	_handleOffsetCoord: "top",
+	_progressPixelSize: "height",
 
-	dojo.mixin(m, {
-		// summary: class constants, and methods of dojox.gfx.matrix
+	// _descending: Boolean
+	//	   Specifies if the slider values go from high-on-top (true), or low-on-top (false)
+	//	TODO: expose this in 1.2 - the css progress/remaining bar classes need to be reversed
+	_descending: true,
 
-		// matrix constants
+	startup: function(){
+		if(this._started){ return; }
 
-		// identity: dojox.gfx.matrix.Matrix2D
-		//		an identity matrix constant: identity * (x, y) == (x, y)
-		identity: new m.Matrix2D(),
-
-		// flipX: dojox.gfx.matrix.Matrix2D
-		//		a matrix, which reflects points at x = 0 line: flipX * (x, y) == (-x, y)
-		flipX:    new m.Matrix2D({xx: -1}),
-
-		// flipY: dojox.gfx.matrix.Matrix2D
-		//		a matrix, which reflects points at y = 0 line: flipY * (x, y) == (x, -y)
-		flipY:    new m.Matrix2D({yy: -1}),
-
-		// flipXY: dojox.gfx.matrix.Matrix2D
-		//		a matrix, which reflects points at the origin of coordinates: flipXY * (x, y) == (-x, -y)
-		flipXY:   new m.Matrix2D({xx: -1, yy: -1}),
-
-		// matrix creators
-
-		translate: function(a, b){
-			// summary: forms a translation matrix
-			// description: The resulting matrix is used to translate (move) points by specified offsets.
-			// a: Number: an x coordinate value
-			// b: Number: a y coordinate value
-			if(arguments.length > 1){
-				return new m.Matrix2D({dx: a, dy: b}); // dojox.gfx.matrix.Matrix2D
-			}
-			// branch
-			// a: dojox.gfx.Point: a point-like object, which specifies offsets for both dimensions
-			// b: null
-			return new m.Matrix2D({dx: a.x, dy: a.y}); // dojox.gfx.matrix.Matrix2D
-		},
-		scale: function(a, b){
-			// summary: forms a scaling matrix
-			// description: The resulting matrix is used to scale (magnify) points by specified offsets.
-			// a: Number: a scaling factor used for the x coordinate
-			// b: Number: a scaling factor used for the y coordinate
-			if(arguments.length > 1){
-				return new m.Matrix2D({xx: a, yy: b}); // dojox.gfx.matrix.Matrix2D
-			}
-			if(typeof a == "number"){
-				// branch
-				// a: Number: a uniform scaling factor used for the both coordinates
-				// b: null
-				return new m.Matrix2D({xx: a, yy: a}); // dojox.gfx.matrix.Matrix2D
-			}
-			// branch
-			// a: dojox.gfx.Point: a point-like object, which specifies scale factors for both dimensions
-			// b: null
-			return new m.Matrix2D({xx: a.x, yy: a.y}); // dojox.gfx.matrix.Matrix2D
-		},
-		rotate: function(angle){
-			// summary: forms a rotating matrix
-			// description: The resulting matrix is used to rotate points
-			//		around the origin of coordinates (0, 0) by specified angle.
-			// angle: Number: an angle of rotation in radians (>0 for CW)
-			var c = Math.cos(angle);
-			var s = Math.sin(angle);
-			return new m.Matrix2D({xx: c, xy: -s, yx: s, yy: c}); // dojox.gfx.matrix.Matrix2D
-		},
-		rotateg: function(degree){
-			// summary: forms a rotating matrix
-			// description: The resulting matrix is used to rotate points
-			//		around the origin of coordinates (0, 0) by specified degree.
-			//		See dojox.gfx.matrix.rotate() for comparison.
-			// degree: Number: an angle of rotation in degrees (>0 for CW)
-			return m.rotate(m._degToRad(degree)); // dojox.gfx.matrix.Matrix2D
-		},
-		skewX: function(angle) {
-			// summary: forms an x skewing matrix
-			// description: The resulting matrix is used to skew points in the x dimension
-			//		around the origin of coordinates (0, 0) by specified angle.
-			// angle: Number: an skewing angle in radians
-			return new m.Matrix2D({xy: Math.tan(angle)}); // dojox.gfx.matrix.Matrix2D
-		},
-		skewXg: function(degree){
-			// summary: forms an x skewing matrix
-			// description: The resulting matrix is used to skew points in the x dimension
-			//		around the origin of coordinates (0, 0) by specified degree.
-			//		See dojox.gfx.matrix.skewX() for comparison.
-			// degree: Number: an skewing angle in degrees
-			return m.skewX(m._degToRad(degree)); // dojox.gfx.matrix.Matrix2D
-		},
-		skewY: function(angle){
-			// summary: forms a y skewing matrix
-			// description: The resulting matrix is used to skew points in the y dimension
-			//		around the origin of coordinates (0, 0) by specified angle.
-			// angle: Number: an skewing angle in radians
-			return new m.Matrix2D({yx: Math.tan(angle)}); // dojox.gfx.matrix.Matrix2D
-		},
-		skewYg: function(degree){
-			// summary: forms a y skewing matrix
-			// description: The resulting matrix is used to skew points in the y dimension
-			//		around the origin of coordinates (0, 0) by specified degree.
-			//		See dojox.gfx.matrix.skewY() for comparison.
-			// degree: Number: an skewing angle in degrees
-			return m.skewY(m._degToRad(degree)); // dojox.gfx.matrix.Matrix2D
-		},
-		reflect: function(a, b){
-			// summary: forms a reflection matrix
-			// description: The resulting matrix is used to reflect points around a vector,
-			//		which goes through the origin.
-			// a: dojox.gfx.Point: a point-like object, which specifies a vector of reflection
-			// b: null
-			if(arguments.length == 1){
-				b = a.y;
-				a = a.x;
-			}
-			// branch
-			// a: Number: an x coordinate value
-			// b: Number: a y coordinate value
-
-			// make a unit vector
-			var a2 = a * a, b2 = b * b, n2 = a2 + b2, xy = 2 * a * b / n2;
-			return new m.Matrix2D({xx: 2 * a2 / n2 - 1, xy: xy, yx: xy, yy: 2 * b2 / n2 - 1}); // dojox.gfx.matrix.Matrix2D
-		},
-		project: function(a, b){
-			// summary: forms an orthogonal projection matrix
-			// description: The resulting matrix is used to project points orthogonally on a vector,
-			//		which goes through the origin.
-			// a: dojox.gfx.Point: a point-like object, which specifies a vector of projection
-			// b: null
-			if(arguments.length == 1){
-				b = a.y;
-				a = a.x;
-			}
-			// branch
-			// a: Number: an x coordinate value
-			// b: Number: a y coordinate value
-
-			// make a unit vector
-			var a2 = a * a, b2 = b * b, n2 = a2 + b2, xy = a * b / n2;
-			return new m.Matrix2D({xx: a2 / n2, xy: xy, yx: xy, yy: b2 / n2}); // dojox.gfx.matrix.Matrix2D
-		},
-
-		// ensure matrix 2D conformance
-		normalize: function(matrix){
-			// summary: converts an object to a matrix, if necessary
-			// description: Converts any 2D matrix-like object or an array of
-			//		such objects to a valid dojox.gfx.matrix.Matrix2D object.
-			// matrix: Object: an object, which is converted to a matrix, if necessary
-			return (matrix instanceof m.Matrix2D) ? matrix : new m.Matrix2D(matrix); // dojox.gfx.matrix.Matrix2D
-		},
-
-		// common operations
-
-		clone: function(matrix){
-			// summary: creates a copy of a 2D matrix
-			// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix-like object to be cloned
-			var obj = new m.Matrix2D();
-			for(var i in matrix){
-				if(typeof(matrix[i]) == "number" && typeof(obj[i]) == "number" && obj[i] != matrix[i]) obj[i] = matrix[i];
-			}
-			return obj; // dojox.gfx.matrix.Matrix2D
-		},
-		invert: function(matrix){
-			// summary: inverts a 2D matrix
-			// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix-like object to be inverted
-			var M = m.normalize(matrix),
-				D = M.xx * M.yy - M.xy * M.yx,
-				M = new m.Matrix2D({
-					xx: M.yy/D, xy: -M.xy/D,
-					yx: -M.yx/D, yy: M.xx/D,
-					dx: (M.xy * M.dy - M.yy * M.dx) / D,
-					dy: (M.yx * M.dx - M.xx * M.dy) / D
-				});
-			return M; // dojox.gfx.matrix.Matrix2D
-		},
-		_multiplyPoint: function(matrix, x, y){
-			// summary: applies a matrix to a point
-			// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix object to be applied
-			// x: Number: an x coordinate of a point
-			// y: Number: a y coordinate of a point
-			return {x: matrix.xx * x + matrix.xy * y + matrix.dx, y: matrix.yx * x + matrix.yy * y + matrix.dy}; // dojox.gfx.Point
-		},
-		multiplyPoint: function(matrix, /* Number||Point */ a, /* Number, optional */ b){
-			// summary: applies a matrix to a point
-			// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix object to be applied
-			// a: Number: an x coordinate of a point
-			// b: Number: a y coordinate of a point
-			var M = m.normalize(matrix);
-			if(typeof a == "number" && typeof b == "number"){
-				return m._multiplyPoint(M, a, b); // dojox.gfx.Point
-			}
-			// branch
-			// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix object to be applied
-			// a: dojox.gfx.Point: a point
-			// b: null
-			return m._multiplyPoint(M, a.x, a.y); // dojox.gfx.Point
-		},
-		multiply: function(matrix){
-			// summary: combines matrices by multiplying them sequentially in the given order
-			// matrix: dojox.gfx.matrix.Matrix2D...: a 2D matrix-like object,
-			//		all subsequent arguments are matrix-like objects too
-			var M = m.normalize(matrix);
-			// combine matrices
-			for(var i = 1; i < arguments.length; ++i){
-				var l = M, r = m.normalize(arguments[i]);
-				M = new m.Matrix2D();
-				M.xx = l.xx * r.xx + l.xy * r.yx;
-				M.xy = l.xx * r.xy + l.xy * r.yy;
-				M.yx = l.yx * r.xx + l.yy * r.yx;
-				M.yy = l.yx * r.xy + l.yy * r.yy;
-				M.dx = l.xx * r.dx + l.xy * r.dy + l.dx;
-				M.dy = l.yx * r.dx + l.yy * r.dy + l.dy;
-			}
-			return M; // dojox.gfx.matrix.Matrix2D
-		},
-
-		// high level operations
-
-		_sandwich: function(matrix, x, y){
-			// summary: applies a matrix at a centrtal point
-			// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix-like object, which is applied at a central point
-			// x: Number: an x component of the central point
-			// y: Number: a y component of the central point
-			return m.multiply(m.translate(x, y), matrix, m.translate(-x, -y)); // dojox.gfx.matrix.Matrix2D
-		},
-		scaleAt: function(a, b, c, d){
-			// summary: scales a picture using a specified point as a center of scaling
-			// description: Compare with dojox.gfx.matrix.scale().
-			// a: Number: a scaling factor used for the x coordinate
-			// b: Number: a scaling factor used for the y coordinate
-			// c: Number: an x component of a central point
-			// d: Number: a y component of a central point
-
-			// accepts several signatures:
-			//	1) uniform scale factor, Point
-			//	2) uniform scale factor, x, y
-			//	3) x scale, y scale, Point
-			//	4) x scale, y scale, x, y
-
-			switch(arguments.length){
-				case 4:
-					// a and b are scale factor components, c and d are components of a point
-					return m._sandwich(m.scale(a, b), c, d); // dojox.gfx.matrix.Matrix2D
-				case 3:
-					if(typeof c == "number"){
-						// branch
-						// a: Number: a uniform scaling factor used for both coordinates
-						// b: Number: an x component of a central point
-						// c: Number: a y component of a central point
-						// d: null
-						return m._sandwich(m.scale(a), b, c); // dojox.gfx.matrix.Matrix2D
-					}
-					// branch
-					// a: Number: a scaling factor used for the x coordinate
-					// b: Number: a scaling factor used for the y coordinate
-					// c: dojox.gfx.Point: a central point
-					// d: null
-					return m._sandwich(m.scale(a, b), c.x, c.y); // dojox.gfx.matrix.Matrix2D
-			}
-			// branch
-			// a: Number: a uniform scaling factor used for both coordinates
-			// b: dojox.gfx.Point: a central point
-			// c: null
-			// d: null
-			return m._sandwich(m.scale(a), b.x, b.y); // dojox.gfx.matrix.Matrix2D
-		},
-		rotateAt: function(angle, a, b){
-			// summary: rotates a picture using a specified point as a center of rotation
-			// description: Compare with dojox.gfx.matrix.rotate().
-			// angle: Number: an angle of rotation in radians (>0 for CW)
-			// a: Number: an x component of a central point
-			// b: Number: a y component of a central point
-
-			// accepts several signatures:
-			//	1) rotation angle in radians, Point
-			//	2) rotation angle in radians, x, y
-
-			if(arguments.length > 2){
-				return m._sandwich(m.rotate(angle), a, b); // dojox.gfx.matrix.Matrix2D
-			}
-
-			// branch
-			// angle: Number: an angle of rotation in radians (>0 for CCW)
-			// a: dojox.gfx.Point: a central point
-			// b: null
-			return m._sandwich(m.rotate(angle), a.x, a.y); // dojox.gfx.matrix.Matrix2D
-		},
-		rotategAt: function(degree, a, b){
-			// summary: rotates a picture using a specified point as a center of rotation
-			// description: Compare with dojox.gfx.matrix.rotateg().
-			// degree: Number: an angle of rotation in degrees (>0 for CW)
-			// a: Number: an x component of a central point
-			// b: Number: a y component of a central point
-
-			// accepts several signatures:
-			//	1) rotation angle in degrees, Point
-			//	2) rotation angle in degrees, x, y
-
-			if(arguments.length > 2){
-				return m._sandwich(m.rotateg(degree), a, b); // dojox.gfx.matrix.Matrix2D
-			}
-
-			// branch
-			// degree: Number: an angle of rotation in degrees (>0 for CCW)
-			// a: dojox.gfx.Point: a central point
-			// b: null
-			return m._sandwich(m.rotateg(degree), a.x, a.y); // dojox.gfx.matrix.Matrix2D
-		},
-		skewXAt: function(angle, a, b){
-			// summary: skews a picture along the x axis using a specified point as a center of skewing
-			// description: Compare with dojox.gfx.matrix.skewX().
-			// angle: Number: an skewing angle in radians
-			// a: Number: an x component of a central point
-			// b: Number: a y component of a central point
-
-			// accepts several signatures:
-			//	1) skew angle in radians, Point
-			//	2) skew angle in radians, x, y
-
-			if(arguments.length > 2){
-				return m._sandwich(m.skewX(angle), a, b); // dojox.gfx.matrix.Matrix2D
-			}
-
-			// branch
-			// angle: Number: an skewing angle in radians
-			// a: dojox.gfx.Point: a central point
-			// b: null
-			return m._sandwich(m.skewX(angle), a.x, a.y); // dojox.gfx.matrix.Matrix2D
-		},
-		skewXgAt: function(degree, a, b){
-			// summary: skews a picture along the x axis using a specified point as a center of skewing
-			// description: Compare with dojox.gfx.matrix.skewXg().
-			// degree: Number: an skewing angle in degrees
-			// a: Number: an x component of a central point
-			// b: Number: a y component of a central point
-
-			// accepts several signatures:
-			//	1) skew angle in degrees, Point
-			//	2) skew angle in degrees, x, y
-
-			if(arguments.length > 2){
-				return m._sandwich(m.skewXg(degree), a, b); // dojox.gfx.matrix.Matrix2D
-			}
-
-			// branch
-			// degree: Number: an skewing angle in degrees
-			// a: dojox.gfx.Point: a central point
-			// b: null
-			return m._sandwich(m.skewXg(degree), a.x, a.y); // dojox.gfx.matrix.Matrix2D
-		},
-		skewYAt: function(angle, a, b){
-			// summary: skews a picture along the y axis using a specified point as a center of skewing
-			// description: Compare with dojox.gfx.matrix.skewY().
-			// angle: Number: an skewing angle in radians
-			// a: Number: an x component of a central point
-			// b: Number: a y component of a central point
-
-			// accepts several signatures:
-			//	1) skew angle in radians, Point
-			//	2) skew angle in radians, x, y
-
-			if(arguments.length > 2){
-				return m._sandwich(m.skewY(angle), a, b); // dojox.gfx.matrix.Matrix2D
-			}
-
-			// branch
-			// angle: Number: an skewing angle in radians
-			// a: dojox.gfx.Point: a central point
-			// b: null
-			return m._sandwich(m.skewY(angle), a.x, a.y); // dojox.gfx.matrix.Matrix2D
-		},
-		skewYgAt: function(/* Number */ degree, /* Number||Point */ a, /* Number, optional */ b){
-			// summary: skews a picture along the y axis using a specified point as a center of skewing
-			// description: Compare with dojox.gfx.matrix.skewYg().
-			// degree: Number: an skewing angle in degrees
-			// a: Number: an x component of a central point
-			// b: Number: a y component of a central point
-
-			// accepts several signatures:
-			//	1) skew angle in degrees, Point
-			//	2) skew angle in degrees, x, y
-
-			if(arguments.length > 2){
-				return m._sandwich(m.skewYg(degree), a, b); // dojox.gfx.matrix.Matrix2D
-			}
-
-			// branch
-			// degree: Number: an skewing angle in degrees
-			// a: dojox.gfx.Point: a central point
-			// b: null
-			return m._sandwich(m.skewYg(degree), a.x, a.y); // dojox.gfx.matrix.Matrix2D
+		if(!this.isLeftToRight() && dojo.isMoz){
+			if(this.leftDecoration){this._rtlRectify(this.leftDecoration);}
+			if(this.rightDecoration){this._rtlRectify(this.rightDecoration);}
 		}
 
-		//TODO: rect-to-rect mapping, scale-to-fit (isotropic and anisotropic versions)
+		this.inherited(arguments);
+	},
+		
+	_isReversed: function(){
+		// summary:
+		//		Overrides HorizontalSlider._isReversed.
+		//		Indicates if values are high on top (with low numbers on the bottom).
+		return this._descending;
+	},
 
-	});
-})();
-
-// propagate Matrix2D up
-dojox.gfx.Matrix2D = dojox.gfx.matrix.Matrix2D;
-
-}
-
-if(!dojo._hasResource["dojox.gfx._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx._base"] = true;
-dojo.provide("dojox.gfx._base");
-
-(function(){
-	var g = dojox.gfx, b = g._base;
-
-	// candidates for dojox.style (work on VML and SVG nodes)
-	g._hasClass = function(/*DomNode*/node, /*String*/classStr){
-		//	summary:
-		//		Returns whether or not the specified classes are a portion of the
-		//		class list currently applied to the node.
-		// return (new RegExp('(^|\\s+)'+classStr+'(\\s+|$)')).test(node.className)	// Boolean
-		var cls = node.getAttribute("className");
-		return cls && (" " + cls + " ").indexOf(" " + classStr + " ") >= 0;  // Boolean
-	}
-	g._addClass = function(/*DomNode*/node, /*String*/classStr){
-		//	summary:
-		//		Adds the specified classes to the end of the class list on the
-		//		passed node.
-		var cls = node.getAttribute("className") || "";
-		if(!cls || (" " + cls + " ").indexOf(" " + classStr + " ") < 0){
-			node.setAttribute("className", cls + (cls ? " " : "") + classStr);
+	_rtlRectify: function(decorationNode/*NodeList*/){
+		// summary:
+		//	    Helper function on gecko.
+		//		Rectify children nodes for left/right decoration in rtl case.
+		//		Simply switch the rule and label child for each decoration node.
+		// tags:
+		//		private
+		var childNodes = [];
+		while(decorationNode.firstChild){
+				childNodes.push(decorationNode.firstChild);
+				decorationNode.removeChild(decorationNode.firstChild);
 		}
-	}
-	g._removeClass = function(/*DomNode*/node, /*String*/classStr){
-		//	summary: Removes classes from node.
-		var cls = node.getAttribute("className");
-		if(cls){
-			node.setAttribute(
-				"className", 
-				cls.replace(new RegExp('(^|\\s+)' + classStr + '(\\s+|$)'), "$1$2")
-			);
-		}
-	}
-
-	// candidate for dojox.html.metrics (dynamic font resize handler is not implemented here)
-
-	//	derived from Morris John's emResized measurer
-	b._getFontMeasurements = function(){
-		//	summary:
-		//		Returns an object that has pixel equivilents of standard font
-		//		size values.
-		var heights = {
-			'1em': 0, '1ex': 0, '100%': 0, '12pt': 0, '16px': 0, 'xx-small': 0,
-			'x-small': 0, 'small': 0, 'medium': 0, 'large': 0, 'x-large': 0,
-			'xx-large': 0
-		};
-
-		if(dojo.isIE){
-			//	we do a font-size fix if and only if one isn't applied already.
-			//	NOTE: If someone set the fontSize on the HTML Element, this will kill it.
-			dojo.doc.documentElement.style.fontSize="100%";
-		}
-
-		//	set up the measuring node.
-		var div = dojo.doc.createElement("div");
-		var s = div.style;
-		s.position = "absolute";
-		s.left = "-100px";
-		s.top = "0px";
-		s.width = "30px";
-		s.height = "1000em";
-		s.border = "0px";
-		s.margin = "0px";
-		s.padding = "0px";
-		s.outline = "none";
-		s.lineHeight = "1";
-		s.overflow = "hidden";
-		dojo.body().appendChild(div);
-
-		//	do the measurements.
-		for(var p in heights){
-			div.style.fontSize = p;
-			heights[p] = Math.round(div.offsetHeight * 12/16) * 16/12 / 1000;
-		}
-
-		dojo.body().removeChild(div);
-		div = null;
-		return heights; 	//	object
-	};
-
-	var fontMeasurements = null;
-
-	b._getCachedFontMeasurements = function(recalculate){
-		if(recalculate || !fontMeasurements){
-			fontMeasurements = b._getFontMeasurements();
-		}
-		return fontMeasurements;
-	};
-
-	// candidate for dojox.html.metrics
-
-	var measuringNode = null, empty = {};
-	b._getTextBox = function(/* String */ text, /* Object */ style, /* String? */ className){
-		var m, s;
-		if(!measuringNode){
-			m = measuringNode = dojo.doc.createElement("div");
-			s = m.style;
-			s.position = "absolute";
-			s.left = "-10000px";
-			s.top = "0";
-			dojo.body().appendChild(m);
-		}else{
-			m = measuringNode;
-			s = m.style;
-		}
-		// reset styles
-		m.className = "";
-		s.border = "0";
-		s.margin = "0";
-		s.padding = "0";
-		s.outline = "0";
-		// set new style
-		if(arguments.length > 1 && style){
-			for(var i in style){
-				if(i in empty){ continue; }
-				s[i] = style[i];
+		for(var i = childNodes.length-1; i >=0; i--){
+			if(childNodes[i]){
+				decorationNode.appendChild(childNodes[i]);
 			}
-		}
-		// set classes
-		if(arguments.length > 2 && className){
-			m.className = className;
-		}
-		// take a measure
-		m.innerHTML = text;
-		return dojo.marginBox(m);
-	};
-
-	// candidate for dojo.dom
-
-	var uniqueId = 0;
-	b._getUniqueId = function(){
-		// summary: returns a unique string for use with any DOM element
-		var id;
-		do{
-			id = dojo._scopeName + "Unique" + (++uniqueId);
-		}while(dojo.byId(id));
-		return id;
-	};
-})();
-
-dojo.mixin(dojox.gfx, {
-	//	summary:
-	// 		defines constants, prototypes, and utility functions
-
-	// default shapes, which are used to fill in missing parameters
-	defaultPath: {
-		type: "path", path: ""
-	},
-	defaultPolyline: {
-		type: "polyline", points: []
-	},
-	defaultRect: {
-		type: "rect", x: 0, y: 0, width: 100, height: 100, r: 0
-	},
-	defaultEllipse: {
-		type: "ellipse", cx: 0, cy: 0, rx: 200, ry: 100
-	},
-	defaultCircle: {
-		type: "circle", cx: 0, cy: 0, r: 100
-	},
-	defaultLine: {
-		type: "line", x1: 0, y1: 0, x2: 100, y2: 100
-	},
-	defaultImage: {
-		type: "image", x: 0, y: 0, width: 0, height: 0, src: ""
-	},
-	defaultText: {
-		type: "text", x: 0, y: 0, text: "", align: "start",
-		decoration: "none", rotated: false, kerning: true
-	},
-	defaultTextPath: {
-		type: "textpath", text: "", align: "start",
-		decoration: "none", rotated: false, kerning: true
-	},
-
-	// default geometric attributes
-	defaultStroke: {
-		type: "stroke", color: "black", style: "solid", width: 1, 
-		cap: "butt", join: 4
-	},
-	defaultLinearGradient: {
-		type: "linear", x1: 0, y1: 0, x2: 100, y2: 100,
-		colors: [
-			{ offset: 0, color: "black" }, { offset: 1, color: "white" }
-		]
-	},
-	defaultRadialGradient: {
-		type: "radial", cx: 0, cy: 0, r: 100,
-		colors: [
-			{ offset: 0, color: "black" }, { offset: 1, color: "white" }
-		]
-	},
-	defaultPattern: {
-		type: "pattern", x: 0, y: 0, width: 0, height: 0, src: ""
-	},
-	defaultFont: {
-		type: "font", style: "normal", variant: "normal", 
-		weight: "normal", size: "10pt", family: "serif"
-	},
-
-	getDefault: (function(){
-		var typeCtorCache = {};
-		// a memoized delegate()
-		return function(/*String*/ type){
-			var t = typeCtorCache[type];
-			if(t){
-				return new t();
-			}
-			t = typeCtorCache[type] = function(){};
-			t.prototype = dojox.gfx[ "default" + type ];
-			return new t();
-		}
-	})(),
-
-	normalizeColor: function(/*Color*/ color){
-		//	summary:
-		// 		converts any legal color representation to normalized
-		// 		dojo.Color object
-		return (color instanceof dojo.Color) ? color : new dojo.Color(color); // dojo.Color
-	},
-	normalizeParameters: function(existed, update){
-		//	summary:
-		// 		updates an existing object with properties from an "update"
-		// 		object
-		//	existed: Object
-		//		the "target" object to be updated
-		//	update:  Object
-		//		the "update" object, whose properties will be used to update
-		//		the existed object
-		if(update){
-			var empty = {};
-			for(var x in existed){
-				if(x in update && !(x in empty)){
-					existed[x] = update[x];
-				}
-			}
-		}
-		return existed;	// Object
-	},
-	makeParameters: function(defaults, update){
-		//	summary:
-		// 		copies the original object, and all copied properties from the
-		// 		"update" object
-		//	defaults: Object
-		//		the object to be cloned before updating
-		//	update:   Object
-		//		the object, which properties are to be cloned during updating
-		if(!update){
-			// return dojo.clone(defaults);
-			return dojo.delegate(defaults);
-		}
-		var result = {};
-		for(var i in defaults){
-			if(!(i in result)){
-				result[i] = dojo.clone((i in update) ? update[i] : defaults[i]);
-			}
-		}
-		return result; // Object
-	},
-	formatNumber: function(x, addSpace){
-		// summary: converts a number to a string using a fixed notation
-		// x:			Number:		number to be converted
-		// addSpace:	Boolean?:	if it is true, add a space before a positive number
-		var val = x.toString();
-		if(val.indexOf("e") >= 0){
-			val = x.toFixed(4);
-		}else{
-			var point = val.indexOf(".");
-			if(point >= 0 && val.length - point > 5){
-				val = x.toFixed(4);
-			}
-		}
-		if(x < 0){
-			return val; // String
-		}
-		return addSpace ? " " + val : val; // String
-	},
-	// font operations
-	makeFontString: function(font){
-		// summary: converts a font object to a CSS font string
-		// font:	Object:	font object (see dojox.gfx.defaultFont)
-		return font.style + " " + font.variant + " " + font.weight + " " + font.size + " " + font.family; // Object
-	},
-	splitFontString: function(str){
-		// summary: converts a CSS font string to a font object
-		// str:		String:	a CSS font string
-		var font = dojox.gfx.getDefault("Font");
-		var t = str.split(/\s+/);
-		do{
-			if(t.length < 5){ break; }
-			font.style  = t[0];
-			font.varian = t[1];
-			font.weight = t[2];
-			var i = t[3].indexOf("/");
-			font.size = i < 0 ? t[3] : t[3].substring(0, i);
-			var j = 4;
-			if(i < 0){
-				if(t[4] == "/"){
-					j = 6;
-					break;
-				}
-				if(t[4].substr(0, 1) == "/"){
-					j = 5;
-					break;
-				}
-			}
-			if(j + 3 > t.length){ break; }
-			font.size = t[j];
-			font.family = t[j + 1];
-		}while(false);
-		return font;	// Object
-	},
-	// length operations
-	cm_in_pt: 72 / 2.54,	// Number: points per centimeter
-	mm_in_pt: 7.2 / 2.54,	// Number: points per millimeter
-	px_in_pt: function(){
-		// summary: returns a number of pixels per point
-		return dojox.gfx._base._getCachedFontMeasurements()["12pt"] / 12;	// Number
-	},
-	pt2px: function(len){
-		// summary: converts points to pixels
-		// len: Number: a value in points
-		return len * dojox.gfx.px_in_pt();	// Number
-	},
-	px2pt: function(len){
-		// summary: converts pixels to points
-		// len: Number: a value in pixels
-		return len / dojox.gfx.px_in_pt();	// Number
-	},
-	normalizedLength: function(len) {
-		// summary: converts any length value to pixels
-		// len: String: a length, e.g., "12pc"
-		if(len.length == 0) return 0;
-		if(len.length > 2){
-			var px_in_pt = dojox.gfx.px_in_pt();
-			var val = parseFloat(len);
-			switch(len.slice(-2)){
-				case "px": return val;
-				case "pt": return val * px_in_pt;
-				case "in": return val * 72 * px_in_pt;
-				case "pc": return val * 12 * px_in_pt;
-				case "mm": return val * dojox.gfx.mm_in_pt * px_in_pt;
-				case "cm": return val * dojox.gfx.cm_in_pt * px_in_pt;
-			}
-		}
-		return parseFloat(len);	// Number
-	},
-
-	// a constant used to split a SVG/VML path into primitive components
-	pathVmlRegExp: /([A-Za-z]+)|(\d+(\.\d+)?)|(\.\d+)|(-\d+(\.\d+)?)|(-\.\d+)/g,
-	pathSvgRegExp: /([A-Za-z])|(\d+(\.\d+)?)|(\.\d+)|(-\d+(\.\d+)?)|(-\.\d+)/g,
-
-	equalSources: function(a, b){
-		// summary: compares event sources, returns true if they are equal
-		return a && b && a == b;
-	}
-});
-
-}
-
-if(!dojo._hasResource["dojox.gfx"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx"] = true;
-dojo.provide("dojox.gfx");
-
-
-
-
-dojo.loadInit(function(){
-	//Since loaderInit can be fired before any dojo.provide/require calls,
-	//make sure the dojox.gfx object exists and only run this logic if dojox.gfx.renderer
-	//has not been defined yet.
-	var gfx = dojo.getObject("dojox.gfx", true), sl, flag, match;
-	if(!gfx.renderer){
-		var renderers = (typeof dojo.config.gfxRenderer == "string" ?
-			dojo.config.gfxRenderer : "svg,vml,silverlight,canvas").split(",");
-
-		// mobile platform detection
-		// TODO: move to the base?
-
-		var ua = navigator.userAgent, iPhoneOsBuild = 0, androidVersion = 0;
-		if(dojo.isSafari >= 3){
-			// detect mobile version of WebKit starting with "version 3"
-
-			//	comprehensive iPhone test.  Have to figure out whether it's SVG or Canvas based on the build.
-			//	iPhone OS build numbers from en.wikipedia.org.
-			if(ua.indexOf("iPhone") >= 0 || ua.indexOf("iPod") >= 0){
-				//	grab the build out of this.  Expression is a little nasty because we want
-				//		to be sure we have the whole version string.
-				match = ua.match(/Version\/(\d(\.\d)?(\.\d)?)\sMobile\/([^\s]*)\s?/);
-				if(match){
-					//	grab the build out of the match.  Only use the first three because of specific builds.
-					iPhoneOsBuild = parseInt(match[4].substr(0,3), 16);
-				}
-			}
-		}
-		if(dojo.isWebKit){
-			// Android detection
-			if(!iPhoneOsBuild){
-				match = ua.match(/Android\s+(\d+\.\d+)/);
-				if(match){
-					androidVersion = parseFloat(match[1]);
-					// Android 1.0-1.1 doesn't support SVG but supports Canvas
-				}
-			}
-		}
-
-		for(var i = 0; i < renderers.length; ++i){
-			switch(renderers[i]){
-				case "svg":
-					//	iPhone OS builds greater than 5F1 should have SVG.
-					if(!dojo.isIE && (!iPhoneOsBuild || iPhoneOsBuild >= 0x5f1) && !androidVersion && !dojo.isAIR){
-						dojox.gfx.renderer = "svg";
-					}
-					break;
-				case "vml":
-					if(dojo.isIE){
-						dojox.gfx.renderer = "vml";
-					}
-					break;
-				case "silverlight":
-					try{
-						if(dojo.isIE){
-							sl = new ActiveXObject("AgControl.AgControl");
-							if(sl && sl.IsVersionSupported("1.0")){
-								flag = true;
-							}
-						}else{
-							if(navigator.plugins["Silverlight Plug-In"]){
-								flag = true;
-							}
-						}
-					}catch(e){
-						flag = false;
-					}finally{
-						sl = null;
-					}
-					if(flag){ dojox.gfx.renderer = "silverlight"; }
-					break;
-				case "canvas":
-					//TODO: need more comprehensive test for Canvas
-					if(!dojo.isIE){
-						dojox.gfx.renderer = "canvas";
-					}
-					break;
-			}
-			if(dojox.gfx.renderer){ break; }
-		}
-		if(dojo.config.isDebug){
-			console.log("gfx renderer = " + dojox.gfx.renderer);
 		}
 	}
 });
 
-// include a renderer conditionally
-dojo.requireIf(dojox.gfx.renderer == "svg", "dojox.gfx.svg");
-dojo.requireIf(dojox.gfx.renderer == "vml", "dojox.gfx.vml");
-dojo.requireIf(dojox.gfx.renderer == "silverlight", "dojox.gfx.silverlight");
-dojo.requireIf(dojox.gfx.renderer == "canvas", "dojox.gfx.canvas");
-
-}
-
-if(!dojo._hasResource["dojox.gfx.shape"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx.shape"] = true;
-dojo.provide("dojox.gfx.shape");
-
-
-
-dojo.declare("dojox.gfx.Shape", null, {
-	// summary: a Shape object, which knows how to apply
-	// graphical attributes and transformations
-
-	constructor: function(){
-		// rawNode: Node: underlying node
-		this.rawNode = null;
-
-		// shape: Object: an abstract shape object
-		//	(see dojox.gfx.defaultPath,
-		//	dojox.gfx.defaultPolyline,
-		//	dojox.gfx.defaultRect,
-		//	dojox.gfx.defaultEllipse,
-		//	dojox.gfx.defaultCircle,
-		//	dojox.gfx.defaultLine,
-		//	or dojox.gfx.defaultImage)
-		this.shape = null;
-
-		// matrix: dojox.gfx.Matrix2D: a transformation matrix
-		this.matrix = null;
-
-		// fillStyle: Object: a fill object
-		//	(see dojox.gfx.defaultLinearGradient,
-		//	dojox.gfx.defaultRadialGradient,
-		//	dojox.gfx.defaultPattern,
-		//	or dojo.Color)
-		this.fillStyle = null;
-
-		// strokeStyle: Object: a stroke object
-		//	(see dojox.gfx.defaultStroke)
-		this.strokeStyle = null;
-
-		// bbox: dojox.gfx.Rectangle: a bounding box of this shape
-		//	(see dojox.gfx.defaultRect)
-		this.bbox = null;
-
-		// virtual group structure
-
-		// parent: Object: a parent or null
-		//	(see dojox.gfx.Surface,
-		//	dojox.gfx.shape.VirtualGroup,
-		//	or dojox.gfx.Group)
-		this.parent = null;
-
-		// parentMatrix: dojox.gfx.Matrix2D
-		//	a transformation matrix inherited from the parent
-		this.parentMatrix = null;
-	},
-
-	// trivial getters
-
-	getNode: function(){
-		// summary: returns the current DOM Node or null
-		return this.rawNode; // Node
-	},
-	getShape: function(){
-		// summary: returns the current shape object or null
-		//	(see dojox.gfx.defaultPath,
-		//	dojox.gfx.defaultPolyline,
-		//	dojox.gfx.defaultRect,
-		//	dojox.gfx.defaultEllipse,
-		//	dojox.gfx.defaultCircle,
-		//	dojox.gfx.defaultLine,
-		//	or dojox.gfx.defaultImage)
-		return this.shape; // Object
-	},
-	getTransform: function(){
-		// summary: returns the current transformation matrix or null
-		return this.matrix;	// dojox.gfx.Matrix2D
-	},
-	getFill: function(){
-		// summary: returns the current fill object or null
-		//	(see dojox.gfx.defaultLinearGradient,
-		//	dojox.gfx.defaultRadialGradient,
-		//	dojox.gfx.defaultPattern,
-		//	or dojo.Color)
-		return this.fillStyle;	// Object
-	},
-	getStroke: function(){
-		// summary: returns the current stroke object or null
-		//	(see dojox.gfx.defaultStroke)
-		return this.strokeStyle;	// Object
-	},
-	getParent: function(){
-		// summary: returns the parent or null
-		//	(see dojox.gfx.Surface,
-		//	dojox.gfx.shape.VirtualGroup,
-		//	or dojox.gfx.Group)
-		return this.parent;	// Object
-	},
-	getBoundingBox: function(){
-		// summary: returns the bounding box or null
-		//	(see dojox.gfx.defaultRect)
-		return this.bbox;	// dojox.gfx.Rectangle
-	},
-	getTransformedBoundingBox: function(){
-		// summary: returns an array of four points or null
-		//	four points represent four corners of the untransformed bounding box
-		var b = this.getBoundingBox();
-		if(!b){
-			return null;	// null
-		}
-		var m = this._getRealMatrix();
-		var r = [];
-		var g = dojox.gfx.matrix;
-		r.push(g.multiplyPoint(m, b.x, b.y));
-		r.push(g.multiplyPoint(m, b.x + b.width, b.y));
-		r.push(g.multiplyPoint(m, b.x + b.width, b.y + b.height));
-		r.push(g.multiplyPoint(m, b.x, b.y + b.height));
-		return r;	// Array
-	},
-	getEventSource: function(){
-		// summary: returns a Node, which is used as
-		//	a source of events for this shape
-
-		// COULD BE RE-IMPLEMENTED BY THE RENDERER!
-
-		return this.rawNode;	// Node
-	},
-
-	// empty settings
-
-	setShape: function(shape){
-		// summary: sets a shape object
-		//	(the default implementation simply ignores it)
-		// shape: Object: a shape object
-		//	(see dojox.gfx.defaultPath,
-		//	dojox.gfx.defaultPolyline,
-		//	dojox.gfx.defaultRect,
-		//	dojox.gfx.defaultEllipse,
-		//	dojox.gfx.defaultCircle,
-		//	dojox.gfx.defaultLine,
-		//	or dojox.gfx.defaultImage)
-
-		// COULD BE RE-IMPLEMENTED BY THE RENDERER!
-
-		this.shape = dojox.gfx.makeParameters(this.shape, shape);
-		this.bbox = null;
-		return this;	// self
-	},
-	setFill: function(fill){
-		// summary: sets a fill object
-		//	(the default implementation simply ignores it)
-		// fill: Object: a fill object
-		//	(see dojox.gfx.defaultLinearGradient,
-		//	dojox.gfx.defaultRadialGradient,
-		//	dojox.gfx.defaultPattern,
-		//	or dojo.Color)
-
-		// COULD BE RE-IMPLEMENTED BY THE RENDERER!
-
-		if(!fill){
-			// don't fill
-			this.fillStyle = null;
-			return this;	// self
-		}
-		var f = null;
-		if(typeof(fill) == "object" && "type" in fill){
-			// gradient or pattern
-			switch(fill.type){
-				case "linear":
-					f = dojox.gfx.makeParameters(dojox.gfx.defaultLinearGradient, fill);
-					break;
-				case "radial":
-					f = dojox.gfx.makeParameters(dojox.gfx.defaultRadialGradient, fill);
-					break;
-				case "pattern":
-					f = dojox.gfx.makeParameters(dojox.gfx.defaultPattern, fill);
-					break;
-			}
-		}else{
-			// color object
-			f = dojox.gfx.normalizeColor(fill);
-		}
-		this.fillStyle = f;
-		return this;	// self
-	},
-	setStroke: function(stroke){
-		// summary: sets a stroke object
-		//	(the default implementation simply ignores it)
-		// stroke: Object: a stroke object
-		//	(see dojox.gfx.defaultStroke)
-
-		// COULD BE RE-IMPLEMENTED BY THE RENDERER!
-
-		if(!stroke){
-			// don't stroke
-			this.strokeStyle = null;
-			return this;	// self
-		}
-		// normalize the stroke
-		if(typeof stroke == "string" || dojo.isArray(stroke) || stroke instanceof dojo.Color){
-			stroke = {color: stroke};
-		}
-		var s = this.strokeStyle = dojox.gfx.makeParameters(dojox.gfx.defaultStroke, stroke);
-		s.color = dojox.gfx.normalizeColor(s.color);
-		return this;	// self
-	},
-	setTransform: function(matrix){
-		// summary: sets a transformation matrix
-		// matrix: dojox.gfx.Matrix2D: a matrix or a matrix-like object
-		//	(see an argument of dojox.gfx.Matrix2D
-		//	constructor for a list of acceptable arguments)
-
-		// COULD BE RE-IMPLEMENTED BY THE RENDERER!
-
-		this.matrix = dojox.gfx.matrix.clone(matrix ? dojox.gfx.matrix.normalize(matrix) : dojox.gfx.matrix.identity);
-		return this._applyTransform();	// self
-	},
-
-	_applyTransform: function(){
-		// summary: physically sets a matrix
-
-		// COULD BE RE-IMPLEMENTED BY THE RENDERER!
-
-		return this;	// self
-	},
-
-	// z-index
-
-	moveToFront: function(){
-		// summary: moves a shape to front of its parent's list of shapes
-		var p = this.getParent();
-		if(p){
-			p._moveChildToFront(this);
-			this._moveToFront();	// execute renderer-specific action
-		}
-		return this;	// self
-	},
-	moveToBack: function(){
-		// summary: moves a shape to back of its parent's list of shapes
-		var p = this.getParent();
-		if(p){
-			p._moveChildToBack(this);
-			this._moveToBack();	// execute renderer-specific action
-		}
-		return this;
-	},
-	_moveToFront: function(){
-		// summary: renderer-specific hook, see dojox.gfx.shape.Shape.moveToFront()
-
-		// COULD BE RE-IMPLEMENTED BY THE RENDERER!
-	},
-	_moveToBack: function(){
-		// summary: renderer-specific hook, see dojox.gfx.shape.Shape.moveToFront()
-
-		// COULD BE RE-IMPLEMENTED BY THE RENDERER!
-	},
-
-	// apply left & right transformation
-
-	applyRightTransform: function(matrix){
-		// summary: multiplies the existing matrix with an argument on right side
-		//	(this.matrix * matrix)
-		// matrix: dojox.gfx.Matrix2D: a matrix or a matrix-like object
-		//	(see an argument of dojox.gfx.Matrix2D
-		//	constructor for a list of acceptable arguments)
-		return matrix ? this.setTransform([this.matrix, matrix]) : this;	// self
-	},
-	applyLeftTransform: function(matrix){
-		// summary: multiplies the existing matrix with an argument on left side
-		//	(matrix * this.matrix)
-		// matrix: dojox.gfx.Matrix2D: a matrix or a matrix-like object
-		//	(see an argument of dojox.gfx.Matrix2D
-		//	constructor for a list of acceptable arguments)
-		return matrix ? this.setTransform([matrix, this.matrix]) : this;	// self
-	},
-	applyTransform: function(matrix){
-		// summary: a shortcut for dojox.gfx.Shape.applyRightTransform
-		// matrix: dojox.gfx.Matrix2D: a matrix or a matrix-like object
-		//	(see an argument of dojox.gfx.Matrix2D
-		//	constructor for a list of acceptable arguments)
-		return matrix ? this.setTransform([this.matrix, matrix]) : this;	// self
-	},
-
-	// virtual group methods
-
-	removeShape: function(silently){
-		// summary: removes the shape from its parent's list of shapes
-		// silently: Boolean?: if true, do not redraw a picture yet
-		if(this.parent){
-			this.parent.remove(this, silently);
-		}
-		return this;	// self
-	},
-	_setParent: function(parent, matrix){
-		// summary: sets a parent
-		// parent: Object: a parent or null
-		//	(see dojox.gfx.Surface,
-		//	dojox.gfx.shape.VirtualGroup,
-		//	or dojox.gfx.Group)
-		// matrix: dojox.gfx.Matrix2D:
-		//	a 2D matrix or a matrix-like object
-		this.parent = parent;
-		return this._updateParentMatrix(matrix);	// self
-	},
-	_updateParentMatrix: function(matrix){
-		// summary: updates the parent matrix with new matrix
-		// matrix: dojox.gfx.Matrix2D:
-		//	a 2D matrix or a matrix-like object
-		this.parentMatrix = matrix ? dojox.gfx.matrix.clone(matrix) : null;
-		return this._applyTransform();	// self
-	},
-	_getRealMatrix: function(){
-		// summary: returns the cumulative ("real") transformation matrix
-		//	by combining the shape's matrix with its parent's matrix
-		var m = this.matrix;
-		var p = this.parent;
-		while(p){
-			if(p.matrix){
-				m = dojox.gfx.matrix.multiply(p.matrix, m);
-			}
-			p = p.parent;
-		}
-		return m;	// dojox.gfx.Matrix2D
-	}
-});
-
-dojox.gfx.shape._eventsProcessing = {
-	connect: function(name, object, method){
-		// summary: connects a handler to an event on this shape
-
-		// COULD BE RE-IMPLEMENTED BY THE RENDERER!
-
-		return arguments.length > 2 ?	// Object
-			dojo.connect(this.getEventSource(), name, object, method) :
-			dojo.connect(this.getEventSource(), name, object);
-	},
-	disconnect: function(token){
-		// summary: connects a handler by token from an event on this shape
-
-		// COULD BE RE-IMPLEMENTED BY THE RENDERER!
-
-		dojo.disconnect(token);
-	}
-};
-
-dojo.extend(dojox.gfx.Shape, dojox.gfx.shape._eventsProcessing);
-
-dojox.gfx.shape.Container = {
-	// summary: a container of shapes, which can be used
-	//	as a foundation for renderer-specific groups, or as a way
-	//	to logically group shapes (e.g, to propagate matricies)
-
-	_init: function() {
-		// children: Array: a list of children
-		this.children = [];
-	},
-
-	// group management
-
-	add: function(shape){
-		// summary: adds a shape to the list
-		// shape: dojox.gfx.Shape: a shape
-		var oldParent = shape.getParent();
-		if(oldParent){
-			oldParent.remove(shape, true);
-		}
-		this.children.push(shape);
-		return shape._setParent(this, this._getRealMatrix());	// self
-	},
-	remove: function(shape, silently){
-		// summary: removes a shape from the list
-		// silently: Boolean?: if true, do not redraw a picture yet
-		for(var i = 0; i < this.children.length; ++i){
-			if(this.children[i] == shape){
-				if(silently){
-					// skip for now
-				}else{
-					shape.parent = null;
-					shape.parentMatrix = null;
-				}
-				this.children.splice(i, 1);
-				break;
-			}
-		}
-		return this;	// self
-	},
-	clear: function(){
-		// summary: removes all shapes from a group/surface
-		this.children = [];
-		return this;	// self
-	},
-
-	// moving child nodes
-
-	_moveChildToFront: function(shape){
-		// summary: moves a shape to front of the list of shapes
-		for(var i = 0; i < this.children.length; ++i){
-			if(this.children[i] == shape){
-				this.children.splice(i, 1);
-				this.children.push(shape);
-				break;
-			}
-		}
-		return this;	// self
-	},
-	_moveChildToBack: function(shape){
-		// summary: moves a shape to back of the list of shapes
-		for(var i = 0; i < this.children.length; ++i){
-			if(this.children[i] == shape){
-				this.children.splice(i, 1);
-				this.children.unshift(shape);
-				break;
-			}
-		}
-		return this;	// self
-	}
-};
-
-dojo.declare("dojox.gfx.shape.Surface", null, {
-	// summary: a surface object to be used for drawings
-	constructor: function(){
-		// underlying node
-		this.rawNode = null;
-		// the parent node
-		this._parent = null;
-		// the list of DOM nodes to be deleted in the case of destruction
-		this._nodes = [];
-		// the list of events to be detached in the case of destruction
-		this._events = [];
-	},
-	destroy: function(){
-		// summary: destroy all relevant external resources and release all
-		//	external references to make this object garbage-collectible
-		dojo.forEach(this._nodes, dojo.destroy);
-		this._nodes = [];
-		dojo.forEach(this._events, dojo.disconnect);
-		this._events = [];
-		this.rawNode = null;	// recycle it in _nodes, if it needs to be recycled
-		if(dojo.isIE){
-			while(this._parent.lastChild){
-				dojo.destroy(this._parent.lastChild);
-			}
-		}else{
-			this._parent.innerHTML = "";
-		}
-		this._parent = null;
-	},
-	getEventSource: function(){
-		// summary: returns a node, which can be used to attach event listeners
-		return this.rawNode; // Node
-	},
-	_getRealMatrix: function(){
-		// summary: always returns the identity matrix
-		return null;	// dojox.gfx.Matrix2D
-	},
-	isLoaded: true,
-	onLoad: function(/*dojox.gfx.Surface*/ surface){
-		// summary: local event, fired once when the surface is created
-		// asynchronously, used only when isLoaded is false, required
-		// only for Silverlight.
-	},
-	whenLoaded: function(
-		/*Object?*/ context,
-		/*Function|String*/ method
-	){
-		var f = dojo.hitch(context, method);
-		if(this.isLoaded){
-			f(this);
-		}else{
-			var h = dojo.connect(this, "onLoad", function(surface){
-				dojo.disconnect(h);
-				f(surface);
-			});
-		}
-	}
-});
-
-dojo.extend(dojox.gfx.shape.Surface, dojox.gfx.shape._eventsProcessing);
-
-dojo.declare("dojox.gfx.Point", null, {
-	// summary: a hypothetical 2D point to be used for drawings - {x, y}
-	// description: This object is defined for documentation purposes.
-	//	You should use the naked object instead: {x: 1, y: 2}.
-});
-
-dojo.declare("dojox.gfx.Rectangle", null, {
-	// summary: a hypothetical rectangle - {x, y, width, height}
-	// description: This object is defined for documentation purposes.
-	//	You should use the naked object instead: {x: 1, y: 2, width: 100, height: 200}.
-});
-
-dojo.declare("dojox.gfx.shape.Rect", dojox.gfx.Shape, {
-	// summary: a generic rectangle
-	constructor: function(rawNode){
-		// rawNode: Node: a DOM Node
-		this.shape = dojox.gfx.getDefault("Rect");
-		this.rawNode = rawNode;
-	},
-	getBoundingBox: function(){
-		// summary: returns the bounding box (its shape in this case)
-		return this.shape;	// dojox.gfx.Rectangle
-	}
-});
-
-dojo.declare("dojox.gfx.shape.Ellipse", dojox.gfx.Shape, {
-	// summary: a generic ellipse
-	constructor: function(rawNode){
-		// rawNode: Node: a DOM Node
-		this.shape = dojox.gfx.getDefault("Ellipse");
-		this.rawNode = rawNode;
-	},
-	getBoundingBox: function(){
-		// summary: returns the bounding box
-		if(!this.bbox){
-			var shape = this.shape;
-			this.bbox = {x: shape.cx - shape.rx, y: shape.cy - shape.ry,
-				width: 2 * shape.rx, height: 2 * shape.ry};
-		}
-		return this.bbox;	// dojox.gfx.Rectangle
-	}
-});
-
-dojo.declare("dojox.gfx.shape.Circle", dojox.gfx.Shape, {
-	// summary: a generic circle
-	//	(this is a helper object, which is defined for convenience)
-	constructor: function(rawNode){
-		// rawNode: Node: a DOM Node
-		this.shape = dojox.gfx.getDefault("Circle");
-		this.rawNode = rawNode;
-	},
-	getBoundingBox: function(){
-		// summary: returns the bounding box
-		if(!this.bbox){
-			var shape = this.shape;
-			this.bbox = {x: shape.cx - shape.r, y: shape.cy - shape.r,
-				width: 2 * shape.r, height: 2 * shape.r};
-		}
-		return this.bbox;	// dojox.gfx.Rectangle
-	}
-});
-
-dojo.declare("dojox.gfx.shape.Line", dojox.gfx.Shape, {
-	// summary: a generic line
-	//	(this is a helper object, which is defined for convenience)
-	constructor: function(rawNode){
-		// rawNode: Node: a DOM Node
-		this.shape = dojox.gfx.getDefault("Line");
-		this.rawNode = rawNode;
-	},
-	getBoundingBox: function(){
-		// summary: returns the bounding box
-		if(!this.bbox){
-			var shape = this.shape;
-			this.bbox = {
-				x:		Math.min(shape.x1, shape.x2),
-				y:		Math.min(shape.y1, shape.y2),
-				width:	Math.abs(shape.x2 - shape.x1),
-				height:	Math.abs(shape.y2 - shape.y1)
-			};
-		}
-		return this.bbox;	// dojox.gfx.Rectangle
-	}
-});
-
-dojo.declare("dojox.gfx.shape.Polyline", dojox.gfx.Shape, {
-	// summary: a generic polyline/polygon
-	//	(this is a helper object, which is defined for convenience)
-	constructor: function(rawNode){
-		// rawNode: Node: a DOM Node
-		this.shape = dojox.gfx.getDefault("Polyline");
-		this.rawNode = rawNode;
-	},
-	setShape: function(points, closed){
-		// summary: sets a polyline/polygon shape object
-		// points: Object: a polyline/polygon shape object
-		// closed: Boolean: close the polyline to make a polygon
-		if(points && points instanceof Array){
-			// points: Array: an array of points
-			dojox.gfx.Shape.prototype.setShape.call(this, {points: points});
-			if(closed && this.shape.points.length){
-				this.shape.points.push(this.shape.points[0]);
-			}
-		}else{
-			dojox.gfx.Shape.prototype.setShape.call(this, points);
-		}
-		return this;	// self
-	},
-	getBoundingBox: function(){
-		// summary: returns the bounding box
-		if(!this.bbox && this.shape.points.length){
-			var p = this.shape.points;
-			var l = p.length;
-			var t = p[0];
-			var bbox = {l: t.x, t: t.y, r: t.x, b: t.y};
-			for(var i = 1; i < l; ++i){
-				t = p[i];
-				if(bbox.l > t.x) bbox.l = t.x;
-				if(bbox.r < t.x) bbox.r = t.x;
-				if(bbox.t > t.y) bbox.t = t.y;
-				if(bbox.b < t.y) bbox.b = t.y;
-			}
-			this.bbox = {
-				x:		bbox.l,
-				y:		bbox.t,
-				width:	bbox.r - bbox.l,
-				height:	bbox.b - bbox.t
-			};
-		}
-		return this.bbox;	// dojox.gfx.Rectangle
-	}
-});
-
-dojo.declare("dojox.gfx.shape.Image", dojox.gfx.Shape, {
-	// summary: a generic image
-	//	(this is a helper object, which is defined for convenience)
-	constructor: function(rawNode){
-		// rawNode: Node: a DOM Node
-		this.shape = dojox.gfx.getDefault("Image");
-		this.rawNode = rawNode;
-	},
-	getBoundingBox: function(){
-		// summary: returns the bounding box (its shape in this case)
-		return this.shape;	// dojox.gfx.Rectangle
-	},
-	setStroke: function(){
-		// summary: ignore setting a stroke style
-		return this;	// self
-	},
-	setFill: function(){
-		// summary: ignore setting a fill style
-		return this;	// self
-	}
-});
-
-dojo.declare("dojox.gfx.shape.Text", dojox.gfx.Shape, {
-	// summary: a generic text
-	constructor: function(rawNode){
-		// rawNode: Node: a DOM Node
-		this.fontStyle = null;
-		this.shape = dojox.gfx.getDefault("Text");
-		this.rawNode = rawNode;
-	},
-	getFont: function(){
-		// summary: returns the current font object or null
-		return this.fontStyle;	// Object
-	},
-	setFont: function(newFont){
-		// summary: sets a font for text
-		// newFont: Object: a font object (see dojox.gfx.defaultFont) or a font string
-		this.fontStyle = typeof newFont == "string" ? dojox.gfx.splitFontString(newFont) :
-			dojox.gfx.makeParameters(dojox.gfx.defaultFont, newFont);
-		this._setFont();
-		return this;	// self
-	}
-});
-
-dojox.gfx.shape.Creator = {
-	// summary: shape creators
-	createShape: function(shape){
-		// summary: creates a shape object based on its type; it is meant to be used
-		//	by group-like objects
-		// shape: Object: a shape descriptor object
-		var gfx = dojox.gfx;
-		switch(shape.type){
-			case gfx.defaultPath.type:		return this.createPath(shape);
-			case gfx.defaultRect.type:		return this.createRect(shape);
-			case gfx.defaultCircle.type:		return this.createCircle(shape);
-			case gfx.defaultEllipse.type:		return this.createEllipse(shape);
-			case gfx.defaultLine.type:		return this.createLine(shape);
-			case gfx.defaultPolyline.type:	return this.createPolyline(shape);
-			case gfx.defaultImage.type:		return this.createImage(shape);
-			case gfx.defaultText.type:		return this.createText(shape);
-			case gfx.defaultTextPath.type:	return this.createTextPath(shape);
-		}
-		return null;
-	},
-	createGroup: function(){
-		// summary: creates a group shape
-		return this.createObject(dojox.gfx.Group);	// dojox.gfx.Group
-	},
-	createRect: function(rect){
-		// summary: creates a rectangle shape
-		// rect: Object: a path object (see dojox.gfx.defaultRect)
-		return this.createObject(dojox.gfx.Rect, rect);	// dojox.gfx.Rect
-	},
-	createEllipse: function(ellipse){
-		// summary: creates an ellipse shape
-		// ellipse: Object: an ellipse object (see dojox.gfx.defaultEllipse)
-		return this.createObject(dojox.gfx.Ellipse, ellipse);	// dojox.gfx.Ellipse
-	},
-	createCircle: function(circle){
-		// summary: creates a circle shape
-		// circle: Object: a circle object (see dojox.gfx.defaultCircle)
-		return this.createObject(dojox.gfx.Circle, circle);	// dojox.gfx.Circle
-	},
-	createLine: function(line){
-		// summary: creates a line shape
-		// line: Object: a line object (see dojox.gfx.defaultLine)
-		return this.createObject(dojox.gfx.Line, line);	// dojox.gfx.Line
-	},
-	createPolyline: function(points){
-		// summary: creates a polyline/polygon shape
-		// points: Object: a points object (see dojox.gfx.defaultPolyline)
-		//	or an Array of points
-		return this.createObject(dojox.gfx.Polyline, points);	// dojox.gfx.Polyline
-	},
-	createImage: function(image){
-		// summary: creates a image shape
-		// image: Object: an image object (see dojox.gfx.defaultImage)
-		return this.createObject(dojox.gfx.Image, image);	// dojox.gfx.Image
-	},
-	createText: function(text){
-		// summary: creates a text shape
-		// text: Object: a text object (see dojox.gfx.defaultText)
-		return this.createObject(dojox.gfx.Text, text);	// dojox.gfx.Text
-	},
-	createPath: function(path){
-		// summary: creates a path shape
-		// path: Object: a path object (see dojox.gfx.defaultPath)
-		return this.createObject(dojox.gfx.Path, path);	// dojox.gfx.Path
-	},
-	createTextPath: function(text){
-		// summary: creates a text shape
-		// text: Object: a textpath object (see dojox.gfx.defaultTextPath)
-		return this.createObject(dojox.gfx.TextPath, {}).setText(text);	// dojox.gfx.TextPath
-	},
-	createObject: function(shapeType, rawShape){
-		// summary: creates an instance of the passed shapeType class
-		// shapeType: Function: a class constructor to create an instance of
-		// rawShape: Object: properties to be passed in to the classes "setShape" method
-
-		// SHOULD BE RE-IMPLEMENTED BY THE RENDERER!
-
-		return null;	// dojox.gfx.Shape
-	}
-};
-
-}
-
-if(!dojo._hasResource["dojox.gfx.path"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx.path"] = true;
-dojo.provide("dojox.gfx.path");
-
-
-
-dojo.declare("dojox.gfx.path.Path", dojox.gfx.Shape, {
-	// summary: a generalized path shape
-
-	constructor: function(rawNode){
-		// summary: a path constructor
-		// rawNode: Node: a DOM node to be used by this path object
-		this.shape = dojo.clone(dojox.gfx.defaultPath);
-		this.segments = [];
-		this.absolute = true;
-		this.last = {};
-		this.rawNode = rawNode;
-	},
-
-	// mode manipulations
-	setAbsoluteMode: function(mode){
-		// summary: sets an absolute or relative mode for path points
-		// mode: Boolean: true/false or "absolute"/"relative" to specify the mode
-		this.absolute = typeof mode == "string" ? (mode == "absolute") : mode;
-		return this; // self
-	},
-	getAbsoluteMode: function(){
-		// summary: returns a current value of the absolute mode
-		return this.absolute; // Boolean
-	},
-
-	getBoundingBox: function(){
-		// summary: returns the bounding box {x, y, width, height} or null
-		return (this.bbox && ("l" in this.bbox)) ? {x: this.bbox.l, y: this.bbox.t, width: this.bbox.r - this.bbox.l, height: this.bbox.b - this.bbox.t} : null; // dojox.gfx.Rectangle
-	},
-
-	getLastPosition: function(){
-		// summary: returns the last point in the path, or null
-		return "x" in this.last ? this.last : null; // Object
-	},
-
-	// segment interpretation
-	_updateBBox: function(x, y){
-		// summary: updates the bounding box of path with new point
-		// x: Number: an x coordinate
-		// y: Number: a y coordinate
-
-		// we use {l, b, r, t} representation of a bbox
-		if(this.bbox && ("l" in this.bbox)){
-			if(this.bbox.l > x) this.bbox.l = x;
-			if(this.bbox.r < x) this.bbox.r = x;
-			if(this.bbox.t > y) this.bbox.t = y;
-			if(this.bbox.b < y) this.bbox.b = y;
-		}else{
-			this.bbox = {l: x, b: y, r: x, t: y};
-		}
-	},
-	_updateWithSegment: function(segment){
-		// summary: updates the bounding box of path with new segment
-		// segment: Object: a segment
-		var n = segment.args, l = n.length;
-		// update internal variables: bbox, absolute, last
-		switch(segment.action){
-			case "M":
-			case "L":
-			case "C":
-			case "S":
-			case "Q":
-			case "T":
-				for(var i = 0; i < l; i += 2){
-					this._updateBBox(n[i], n[i + 1]);
-				}
-				this.last.x = n[l - 2];
-				this.last.y = n[l - 1];
-				this.absolute = true;
-				break;
-			case "H":
-				for(var i = 0; i < l; ++i){
-					this._updateBBox(n[i], this.last.y);
-				}
-				this.last.x = n[l - 1];
-				this.absolute = true;
-				break;
-			case "V":
-				for(var i = 0; i < l; ++i){
-					this._updateBBox(this.last.x, n[i]);
-				}
-				this.last.y = n[l - 1];
-				this.absolute = true;
-				break;
-			case "m":
-				var start = 0;
-				if(!("x" in this.last)){
-					this._updateBBox(this.last.x = n[0], this.last.y = n[1]);
-					start = 2;
-				}
-				for(var i = start; i < l; i += 2){
-					this._updateBBox(this.last.x += n[i], this.last.y += n[i + 1]);
-				}
-				this.absolute = false;
-				break;
-			case "l":
-			case "t":
-				for(var i = 0; i < l; i += 2){
-					this._updateBBox(this.last.x += n[i], this.last.y += n[i + 1]);
-				}
-				this.absolute = false;
-				break;
-			case "h":
-				for(var i = 0; i < l; ++i){
-					this._updateBBox(this.last.x += n[i], this.last.y);
-				}
-				this.absolute = false;
-				break;
-			case "v":
-				for(var i = 0; i < l; ++i){
-					this._updateBBox(this.last.x, this.last.y += n[i]);
-				}
-				this.absolute = false;
-				break;
-			case "c":
-				for(var i = 0; i < l; i += 6){
-					this._updateBBox(this.last.x + n[i], this.last.y + n[i + 1]);
-					this._updateBBox(this.last.x + n[i + 2], this.last.y + n[i + 3]);
-					this._updateBBox(this.last.x += n[i + 4], this.last.y += n[i + 5]);
-				}
-				this.absolute = false;
-				break;
-			case "s":
-			case "q":
-				for(var i = 0; i < l; i += 4){
-					this._updateBBox(this.last.x + n[i], this.last.y + n[i + 1]);
-					this._updateBBox(this.last.x += n[i + 2], this.last.y += n[i + 3]);
-				}
-				this.absolute = false;
-				break;
-			case "A":
-				for(var i = 0; i < l; i += 7){
-					this._updateBBox(n[i + 5], n[i + 6]);
-				}
-				this.last.x = n[l - 2];
-				this.last.y = n[l - 1];
-				this.absolute = true;
-				break;
-			case "a":
-				for(var i = 0; i < l; i += 7){
-					this._updateBBox(this.last.x += n[i + 5], this.last.y += n[i + 6]);
-				}
-				this.absolute = false;
-				break;
-		}
-		// add an SVG path segment
-		var path = [segment.action];
-		for(var i = 0; i < l; ++i){
-			path.push(dojox.gfx.formatNumber(n[i], true));
-		}
-		if(typeof this.shape.path == "string"){
-			this.shape.path += path.join("");
-		}else{
-			Array.prototype.push.apply(this.shape.path, path);
-		}
-	},
-
-	// a dictionary, which maps segment type codes to a number of their argemnts
-	_validSegments: {m: 2, l: 2, h: 1, v: 1, c: 6, s: 4, q: 4, t: 2, a: 7, z: 0},
-
-	_pushSegment: function(action, args){
-		// summary: adds a segment
-		// action: String: valid SVG code for a segment's type
-		// args: Array: a list of parameters for this segment
-		var group = this._validSegments[action.toLowerCase()];
-		if(typeof group == "number"){
-			if(group){
-				if(args.length >= group){
-					var segment = {action: action, args: args.slice(0, args.length - args.length % group)};
-					this.segments.push(segment);
-					this._updateWithSegment(segment);
-				}
-			}else{
-				var segment = {action: action, args: []};
-				this.segments.push(segment);
-				this._updateWithSegment(segment);
-			}
-		}
-	},
-
-	_collectArgs: function(array, args){
-		// summary: converts an array of arguments to plain numeric values
-		// array: Array: an output argument (array of numbers)
-		// args: Array: an input argument (can be values of Boolean, Number, dojox.gfx.Point, or an embedded array of them)
-		for(var i = 0; i < args.length; ++i){
-			var t = args[i];
-			if(typeof t == "boolean"){
-				array.push(t ? 1 : 0);
-			}else if(typeof t == "number"){
-				array.push(t);
-			}else if(t instanceof Array){
-				this._collectArgs(array, t);
-			}else if("x" in t && "y" in t){
-				array.push(t.x, t.y);
-			}
-		}
-	},
-
-	// segments
-	moveTo: function(){
-		// summary: formes a move segment
-		var args = [];
-		this._collectArgs(args, arguments);
-		this._pushSegment(this.absolute ? "M" : "m", args);
-		return this; // self
-	},
-	lineTo: function(){
-		// summary: formes a line segment
-		var args = [];
-		this._collectArgs(args, arguments);
-		this._pushSegment(this.absolute ? "L" : "l", args);
-		return this; // self
-	},
-	hLineTo: function(){
-		// summary: formes a horizontal line segment
-		var args = [];
-		this._collectArgs(args, arguments);
-		this._pushSegment(this.absolute ? "H" : "h", args);
-		return this; // self
-	},
-	vLineTo: function(){
-		// summary: formes a vertical line segment
-		var args = [];
-		this._collectArgs(args, arguments);
-		this._pushSegment(this.absolute ? "V" : "v", args);
-		return this; // self
-	},
-	curveTo: function(){
-		// summary: formes a curve segment
-		var args = [];
-		this._collectArgs(args, arguments);
-		this._pushSegment(this.absolute ? "C" : "c", args);
-		return this; // self
-	},
-	smoothCurveTo: function(){
-		// summary: formes a smooth curve segment
-		var args = [];
-		this._collectArgs(args, arguments);
-		this._pushSegment(this.absolute ? "S" : "s", args);
-		return this; // self
-	},
-	qCurveTo: function(){
-		// summary: formes a quadratic curve segment
-		var args = [];
-		this._collectArgs(args, arguments);
-		this._pushSegment(this.absolute ? "Q" : "q", args);
-		return this; // self
-	},
-	qSmoothCurveTo: function(){
-		// summary: formes a quadratic smooth curve segment
-		var args = [];
-		this._collectArgs(args, arguments);
-		this._pushSegment(this.absolute ? "T" : "t", args);
-		return this; // self
-	},
-	arcTo: function(){
-		// summary: formes an elliptic arc segment
-		var args = [];
-		this._collectArgs(args, arguments);
-		this._pushSegment(this.absolute ? "A" : "a", args);
-		return this; // self
-	},
-	closePath: function(){
-		// summary: closes a path
-		this._pushSegment("Z", []);
-		return this; // self
-	},
-
-	// setShape
-	_setPath: function(path){
-		// summary: forms a path using an SVG path string
-		// path: String: an SVG path string
-		var p = dojo.isArray(path) ? path : path.match(dojox.gfx.pathSvgRegExp);
-		this.segments = [];
-		this.absolute = true;
-		this.bbox = {};
-		this.last = {};
-		if(!p) return;
-		// create segments
-		var action = "",	// current action
-			args = [],		// current arguments
-			l = p.length;
-		for(var i = 0; i < l; ++i){
-			var t = p[i], x = parseFloat(t);
-			if(isNaN(x)){
-				if(action){
-					this._pushSegment(action, args);
-				}
-				args = [];
-				action = t;
-			}else{
-				args.push(x);
-			}
-		}
-		this._pushSegment(action, args);
-	},
-	setShape: function(newShape){
-		// summary: forms a path using a shape
-		// newShape: Object: an SVG path string or a path object (see dojox.gfx.defaultPath)
-		dojox.gfx.Shape.prototype.setShape.call(this, typeof newShape == "string" ? {path: newShape} : newShape);
-		var path = this.shape.path;
-		// switch to non-updating version of path building
-		this.shape.path = [];
-		this._setPath(path);
-		// switch back to the string path
-		this.shape.path = this.shape.path.join("");
-		return this; // self
-	},
-
-	// useful constant for descendants
-	_2PI: Math.PI * 2
-});
-
-dojo.declare("dojox.gfx.path.TextPath", dojox.gfx.path.Path, {
-	// summary: a generalized TextPath shape
-
-	constructor: function(rawNode){
-		// summary: a TextPath shape constructor
-		// rawNode: Node: a DOM node to be used by this TextPath object
-		if(!("text" in this)){
-			this.text = dojo.clone(dojox.gfx.defaultTextPath);
-		}
-		if(!("fontStyle" in this)){
-			this.fontStyle = dojo.clone(dojox.gfx.defaultFont);
-		}
-	},
-	getText: function(){
-		// summary: returns the current text object or null
-		return this.text;	// Object
-	},
-	setText: function(newText){
-		// summary: sets a text to be drawn along the path
-		this.text = dojox.gfx.makeParameters(this.text,
-			typeof newText == "string" ? {text: newText} : newText);
-		this._setText();
-		return this;	// self
-	},
-	getFont: function(){
-		// summary: returns the current font object or null
-		return this.fontStyle;	// Object
-	},
-	setFont: function(newFont){
-		// summary: sets a font for text
-		this.fontStyle = typeof newFont == "string" ?
-			dojox.gfx.splitFontString(newFont) :
-			dojox.gfx.makeParameters(dojox.gfx.defaultFont, newFont);
-		this._setFont();
-		return this;	// self
-	}
-});
 
 }
 
