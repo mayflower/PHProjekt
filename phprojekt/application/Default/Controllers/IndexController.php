@@ -16,6 +16,7 @@
  * @version    $Id$
  * @author     David Soria Parra <soria_parra@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Default
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -23,11 +24,12 @@
 /**
  * Default Controller for PHProjekt 6
  *
- * The controller will get all the actions
- * and run the nessesary stuff for each one
- *
- * The class contain the model var for get the module model object
- * that return all the data for process
+ * <pre>
+ * The controller gets an action and runs the nessesary stuff for it.
+ * The actions whose name starts with "json", returns the data in JSON format.
+ * The actions whose name starts with csv, returns the data in CSV format.
+ * The controller calls the class model of the module, for process all the data.
+ * </pre>
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -40,28 +42,82 @@
  */
 class IndexController extends Zend_Controller_Action
 {
-    const ADD_TRUE_TEXT             = "The Item was added correctly";
-    const EDIT_TRUE_TEXT            = "The Item was edited correctly";
-    const EDIT_MULTIPLE_TRUE_TEXT   = "The Items were edited correctly";
-    const DELETE_FALSE_TEXT         = "The Item can't be deleted";
-    const DELETE_TRUE_TEXT          = "The Item was deleted correctly";
+    /**
+     * String to use on success in the action save for new items.
+     */
+    const ADD_TRUE_TEXT = "The Item was added correctly";
+
+    /**
+     * String to use on success in the action save for existing items.
+     */
+    const EDIT_TRUE_TEXT = "The Item was edited correctly";
+
+    /**
+     * String to use on success in the action save for many items together.
+     */
+    const EDIT_MULTIPLE_TRUE_TEXT = "The Items were edited correctly";
+
+    /**
+     * String to use on success in the action delete.
+     */
+    const DELETE_TRUE_TEXT = "The Item was deleted correctly";
+
+    /**
+     * String to use on error in the action delete.
+     */
+    const DELETE_FALSE_TEXT = "The Item can't be deleted";
+
+    /**
+     * String to use on success in the action delete for many items together.
+     */
     const DELETE_MULTIPLE_TRUE_TEXT = "The Items were deleted correctly";
-    const NOT_FOUND                 = "The Item was not found";
-    const ID_REQUIRED_TEXT          = "ID parameter required";
-    const INVISIBLE_ROOT            = 1;
-    const MODE_ACTION_XHR           = 0;
-    const MODE_ACTION_WINDOW        = 1;
-    const TARGET_ACTION_SINGLE      = 0;
-    const TARGET_ACTION_MULTIPLE    = 1;
+
+    /**
+     * String for use if the item don't exists.
+     */
+    const NOT_FOUND = "The Item was not found";
+
+    /**
+     * String for use if the id is not in the request parameters.
+     */
+    const ID_REQUIRED_TEXT = "ID parameter required";
+
+    /**
+     * Internal number for the root project.
+     */
+    const INVISIBLE_ROOT = 1;
+
+    /**
+     * The link will be executed using a normal POST and ajax.
+     */
+    const MODE_ACTION_XHR = 0;
+
+    /**
+     * The link will be executed in a new windows as a normal GET.
+     */
+    const MODE_ACTION_WINDOW = 1;
+
+    /**
+     * The action is for one id,
+     * used in the grid for one row.
+     */
+    const TARGET_ACTION_SINGLE = 0;
+
+    /**
+     * The action is for multiple ids,
+     * used in the selectbox of the grid for all the checked rows.
+     */
+    const TARGET_ACTION_MULTIPLE = 1;
 
     /**
      * Init function
      *
-     * First check if it is a logged user, if not he is redirected to the login form.
+     * Checks if it is a logged user, if not,
+     * is redirected to the login form or throws an exception.
      *
-     * The function initializes all the Helpers,
-     * collects the data from the Model Object for list and form
-     * and initializes the Project Tree view
+     * The function sets up the helper and cleans all the variables.
+     *
+     * @throws Phprojekt_PublishedException If the user is not logged in and the request is a POST.
      *
      * @return void
      */
@@ -88,9 +144,8 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Standard action
-     * Use the list action
      *
-     * List Action
+     * The function sets up the template index.phtml and renders it.
      *
      * @return void
      */
@@ -106,10 +161,53 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Returns a tree for a model in JSON.
+     * Gets the class model of the module or the default one.
      *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
+     * @return Phprojekt_Model_Interface
+     */
+    public function getModelObject()
+    {
+        $moduleName = $this->getRequest()->getModuleName();
+        $object     = Phprojekt_Loader::getModel($moduleName, $moduleName);
+        if (null === $object) {
+            $object = Phprojekt_Loader::getModel('Default', 'Default');
+        }
+
+        return $object;
+    }
+
+    /**
+     * Sets some values depending on the parameters.
+     * Each module can implement this function to change their values.
+     *
+     * The function needs at least one parameter
+     * (The array of parameters itself for return it).
+     *
+     * @throws Phprojekt_PublishedException If the arguments are missing.
+     *
+     * @return array
+     */
+    public function setParams()
+    {
+        $args = func_get_args();
+
+        if (1 > count($args)) {
+            throw new Phprojekt_PublishedException('Missing arguments in setParams function');
+        }
+
+        return $args[0];
+    }
+
+    /**
+     * Returns the project tree.
+     *
+     * The return is a tree compatible format, with identifier, label,
+     * and the list of items, each one with the name, id, parent, path and children´s id.
+     *
+     * The tree is stored as a file until a user add, edit or delete a project
+     * (tmp/ZendCache/zend_cache---Phprojekt_Tree_Node_Database_setup).
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -122,25 +220,33 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Returns the list for a model in JSON.
+     * Returns the list of items for one model.
      *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of all the rows.
+     *  - The number of rows.
      *
-     * @requestparam integer count ...
-     * @requestparam integer start ...
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * <pre>
+     * OPTIONAL request parameters:
+     *  - integer <b>id</b>     List only this id.
+     *  - integer <b>nodeId</b> List all the items with projectId == nodeId.
+     *  - integer <b>count</b>  Use for SQL LIMIT count.
+     *  - integer <b>offset</b> Use for SQL LIMIT offset.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
     public function jsonListAction()
     {
-        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
-        // so lets apply this to the query set. This is also used for loading a
-        // grid on demand (initially only a part is shown, scrolling down loads what is needed).
+        $itemId    = (int) $this->getRequest()->getParam('id', null);
+        $projectId = (int) $this->getRequest()->getParam('nodeId', null);
         $count     = (int) $this->getRequest()->getParam('count', null);
         $offset    = (int) $this->getRequest()->getParam('start', null);
-        $projectId = (int) $this->getRequest()->getParam('nodeId', null);
-        $itemId    = (int) $this->getRequest()->getParam('id', null);
 
         if (!empty($itemId)) {
             $where = sprintf('id = %d', (int) $itemId);
@@ -155,12 +261,24 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Returns the detail for a model in JSON.
+     * Returns the detail (fields and data) of one item from the model.
      *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of one item.
+     *  - The number of rows.
      *
-     * @requestparam integer id ...
+     * If the request parameter "id" is null or 0, the data will be all values of a "new item",
+     * if the "id" is an existing item, the data will be all the values of the item.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_FORM for get and sort the fields.
+     *
+     * <pre>
+     * OPTIONAL request parameters:
+     *  - integer <b>id</b> id of the item to consult.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -178,15 +296,24 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Saves the current item
-     * Save if you add or edit one.
-     * Use the model module to get the data
+     * Saves the current item.
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException
-     * If not, it returns a string with the same format than the Phprojekt_PublishedException
-     * but with success type
+     * If the request parameter "id" is null or 0, the function will add a new item,
+     * if the "id" is an existing item, the function will update it.
      *
-     * @requestparam integer id ...
+     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * if not, it returns a string with the same format than the Phprojekt_PublishedException,
+     * but with type as 'success' instead of 'error'
+     *
+     * <pre>
+     * OPTIONAL request parameters:
+     *  - integer <b>id</b>                      id of the item to save.
+     *  - mixed   <b>all other module fields</b> All the fields values to save.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @throws Phprojekt_PublishedException On error in the action save.
      *
      * @return void
      */
@@ -220,15 +347,22 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Save some fields for many items
-     * Only edit existing items
-     * Use the model module to get the data
+     * Save some fields for many items.
+     * Only edit existing items.
      *
-     * If there is an error, the saving will return a Phprojekt_PublishedException
-     * If not, it returns is a string with the same format than the Phprojekt_PublishedException
-     * but with success type
+     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * if not, it returns a string with the same format than the Phprojekt_PublishedException,
+     * but with type as 'success' instead of 'error'
      *
-     * @requestparam string data Array with fields and values
+     * <pre>
+     * OPTIONAL request parameters:
+     *  - array <b>data</b> Array with itemId and field as index, and the value.
+     *    ($data[2]['title'] = 'new tittle')
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @throws Phprojekt_PublishedException On error in the action save.
      *
      * @return void
      */
@@ -271,12 +405,17 @@ class IndexController extends Zend_Controller_Action
     /**
      * Deletes a certain item
      *
-     * If the item are already deleted or do not exist
-     * return a Phprojekt_PublishedException
-     * If the item is deleted, the return is a string with the same format than the Phprojekt_PublishedException
-     * but with success type
+     * On success, the returns is a string with the same format than the Phprojekt_PublishedException,
+     * but with type as 'success' instead of 'error'
      *
-     * @requestparam integer id ...
+     * <pre>
+     * REQUIRES request parameters:
+     *  - integer <b>id</b> id of the item to delete.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @throws Phprojekt_PublishedException On missing or wrong id, or on error in the action delete.
      *
      * @return void
      */
@@ -309,14 +448,20 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Delete many items together
-     * Uses the model module to delete them
+     * Deletes many items together
      *
-     * If there is an error, this returns a Phprojekt_PublishedException
-     * If not, it returns is a string with the same format than the Phprojekt_PublishedException
-     * but with success type
+     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * if not, it returns a string with the same format than the Phprojekt_PublishedException,
+     * but with type as 'success' instead of 'error'
      *
-     * @requestparam string ids Comma separated ids
+     * <pre>
+     * OPTIONAL request parameters:
+     *  - string <b>ids</b> Comma separated ids of the item to delete.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @throws Phprojekt_PublishedException On error in the action delete.
      *
      * @return void
      */
@@ -346,27 +491,20 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Get the model object, or the default if none exists.
+     * Returns project-module && user-role-project permissions.
      *
-     * @return Phprojekt_Model_Interface
-     */
-    public function getModelObject()
-    {
-        $moduleName = $this->getRequest()->getModuleName();
-        $object     = Phprojekt_Loader::getModel($moduleName, $moduleName);
-        if (null === $object) {
-            $object = Phprojekt_Loader::getModel('Default', 'Default');
-        }
-        return $object;
-    }
-
-
-    /**
-     * Get a list of permissions for each module
-     * for the users who requested the list.
-     * It checks the user permission on the projectId
+     * Returns the permissions,
+     * ("none", "read", "write", "access", "create", "copy", "delete", "download", "admin")
+     * for each module that have the project,
+     * for the current logged user,
+     * depending on their role and access, in the project.
      *
-     * @requestparam integer projectId
+     * <pre>
+     * REQUIRES request parameters:
+     *  - integer <b>nodeId</b> The projectId for consult.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -408,20 +546,98 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Return a list of all the projects
+     * Returns all the words translated in each modules for the request language.
+     *
+     * <pre>
+     * REQUIRES request parameters:
+     *  - string <b>language</b> The current language for get the translations.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
-    public function jsonGetProjectsAction()
+    public function jsonGetTranslatedStringsAction()
     {
-        $object  = Phprojekt_Loader::getModel('Project', 'Project');
-        $records = $object->fetchAll();
+        $language  = Cleaner::sanitize('alpha', $this->getRequest()->getParam('language', 'en'));
+        $translate = Phprojekt::getInstance()->getTranslate();
 
-        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        Phprojekt_Converter_Json::echoConvert($translate->getTranslatedStrings($language));
     }
 
     /**
-     * Returns the list for a model in CSV format.
+     * Returns the front configurations from the configuration.ini (front.xxx),
+     * and some others Core Settings.
+     *
+     * The return is an array like ('name' => varName, 'value' => varValue')
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonGetConfigurationsAction()
+    {
+        $fronVars = Phprojekt::getInstance()->getConfig()->front;
+        $data     = array();
+        if (null !== $fronVars) {
+            foreach ($fronVars as $key => $value) {
+                $data[] = array('name'  => $key,
+                                'value' => $value);
+            }
+        }
+        $data[] = array('name'  => 'phprojektVersion',
+                        'value' => Phprojekt::getVersion());
+
+        Phprojekt_Converter_Json::echoConvert($data);
+    }
+
+    /**
+     * Returns the possible extra actions to perform for multiple or singles ids.
+     *
+     * <pre>
+     * Each action defines in the array:
+     *  - target: {@link TARGET_ACTION_MULTIPLE} or {@link TARGET_ACTION_SIMPLE}.
+     *  - action: Name of the action that will process ids.
+     *  - label:  Display for the action.
+     *  - mode:   {@link MODE_ACTION_XHR} or {@link MODE_ACTION_WINDOW}.
+     *  - class:  Name of the class for display the icon.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonGetExtraActionsAction()
+    {
+        $delete = array('target' => self::TARGET_ACTION_MULTIPLE,
+                        'action' => 'jsonDeleteMultiple',
+                        'label'  => Phprojekt::getInstance()->translate('Delete'),
+                        'mode'   => self::MODE_ACTION_XHR,
+                        'class'  => 'deleteOption');
+
+        $export = array('target' => self::TARGET_ACTION_MULTIPLE,
+                        'action' => 'csvExportMultiple',
+                        'label'  => Phprojekt::getInstance()->translate('Export'),
+                        'mode'   => self::MODE_ACTION_WINDOW,
+                        'class'  => 'exportOption');
+
+        $actions = array($delete, $export);
+
+        Phprojekt_Converter_Json::echoConvert($actions);
+    }
+
+    /**
+     * Returns the list of items for one model.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * <pre>
+     * OPTIONAL request parameters:
+     *  - integer <b>id</b>     List only this id.
+     *  - integer <b>nodeId</b> List all the items with projectId == nodeId.
+     * </pre>
+     *
+     * The return is in CSV format.
      *
      * @return void
      */
@@ -438,13 +654,22 @@ class IndexController extends Zend_Controller_Action
             $where = null;
         }
 
-        $records = $this->getModelObject()->fetchAll($where, null, 0, 0);
+        $records = $this->getModelObject()->fetchAll($where);
 
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
-     * Returns the list for the requested ids of a model in CSV format.
+     * Returns the list of requested ids items.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * <pre>
+     * OPTIONAL request parameters:
+     *  - string <b>ids</b> Comma separated ids of the item to list.
+     * </pre>
+     *
+     * The return is in CSV format.
      *
      * @return void
      */
@@ -467,384 +692,6 @@ class IndexController extends Zend_Controller_Action
 
             $records = $this->getModelObject()->fetchAll($where, null, 0, 0);
             Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
-        }
-    }
-
-    /**
-     * Return all the words translated in each modules for the $language
-     *
-     * @requestparam string $language The current language
-     *
-     * @return void
-     */
-    public function getTranslatedStringsAction()
-    {
-        $language  = Cleaner::sanitize('alpha', $this->getRequest()->getParam('language', 'en'));
-        $translate = Phprojekt::getInstance()->getTranslate();
-
-        Phprojekt_Converter_Json::echoConvert($translate->getTranslatedStrings($language));
-    }
-
-    /**
-     * Return the front configurations from the configuration.ini
-     * And some others Core Settings
-     *
-     * @return void
-     */
-    public function jsonGetConfigurationsAction()
-    {
-        $fronVars = Phprojekt::getInstance()->getConfig()->front;
-        $data     = array();
-        if (null !== $fronVars) {
-            foreach ($fronVars as $key => $value) {
-                $data[] = array('name'  => $key,
-                                'value' => $value);
-            }
-        }
-        $data[] = array('name'  => 'phprojektVersion',
-                        'value' => Phprojekt::getVersion());
-
-        Phprojekt_Converter_Json::echoConvert($data);
-    }
-
-    /**
-     * Returns the possible extra actions to perform for multiple or singles ids
-     *
-     * @return array
-     */
-    public function jsonGetExtraActionsAction()
-    {
-        $delete = array('target' => self::TARGET_ACTION_MULTIPLE,
-                        'action' => 'jsonDeleteMultiple',
-                        'label'  => Phprojekt::getInstance()->translate('Delete'),
-                        'mode'   => self::MODE_ACTION_XHR,
-                        'class'  => 'deleteOption');
-
-        $export = array('target' => self::TARGET_ACTION_MULTIPLE,
-                        'action' => 'csvExportMultiple',
-                        'label'  => Phprojekt::getInstance()->translate('Export'),
-                        'mode'   => self::MODE_ACTION_WINDOW,
-                        'class'  => 'exportOption');
-
-        $actions = array($delete, $export);
-
-        Phprojekt_Converter_Json::echoConvert($actions);
-    }
-
-    /**
-     * Shows the upload template page form
-     *
-     * @return void
-     */
-    public function fileFormAction()
-    {
-        $this->getResponse()->clearHeaders();
-        $this->getResponse()->clearBody();
-
-        $linkBegin = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/'
-            . $this->getRequest()->getModuleName();
-        $value  = (string) $this->getRequest()->getParam('value', null);
-        $itemId = (int) $this->getRequest()->getParam('id', null);
-        $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-
-        $_SESSION['uploadedFiles_' . $field] = $value;
-
-        $this->_fileRenderView($linkBegin, $itemId, $field, $value, false);
-    }
-
-    /**
-     * Handle the files from upload form
-     *
-     * @return void
-     */
-    public function fileUploadAction()
-    {
-        $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $value      = $_SESSION['uploadedFiles_' . $field];
-        $maxSize    = (int) $this->getRequest()->getParam('MAX_FILE_SIZE', null);
-        $itemId     = (int) $this->getRequest()->getParam('itemId', null);
-        $addedValue = '';
-
-        $this->_fileCheckWritePermission($itemId);
-
-        // Fix name for save it as md5
-        if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
-            $md5name                        = md5(uniqid(rand(), 1));
-            $addedValue                     = $md5name . '|' . $_FILES['uploadedFile']['name'];
-            $_FILES['uploadedFile']['name'] = $md5name;
-        }
-
-        $adapter = new Zend_File_Transfer_Adapter_Http();
-        $adapter->setDestination(Phprojekt::getInstance()->getConfig()->uploadpath);
-
-        $this->getResponse()->clearHeaders();
-        $this->getResponse()->clearBody();
-
-        if (!$adapter->receive()) {
-            $messages = $adapter->getMessages();
-            foreach ($messages as $index => $message) {
-                $messages[$index] = Phprojekt::getInstance()->translate($message);
-                if ($index == 'fileUploadErrorFormSize') {
-                    $maxSize           = (int) ($maxSize / 1024);
-                    $messages[$index] .= ': ' . $maxSize . ' Kb.';
-                }
-            }
-            $this->view->errorMessage = implode("\n", $messages);
-        } else {
-            if (!empty($value)) {
-                $value .= '||';
-            }
-            $value .= $addedValue;
-        }
-        $_SESSION['uploadedFiles_' . $field] = $value;
-
-        $linkBegin = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/'
-            . $this->getRequest()->getModuleName();
-
-        $this->_fileRenderView($linkBegin, $itemId, $field, $value, true);
-    }
-
-    /**
-     * Retrieve the file from upload folder
-     *
-     * @return void
-     */
-    public function fileDownloadAction()
-    {
-        $itemId = (int) $this->getRequest()->getParam('itemId', null);
-        $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $order  = (int) $this->getRequest()->getParam('order', null);
-
-        $this->_fileCheckParamField($field);
-
-        if ($itemId > 0) {
-            $model = $this->getModelObject();
-            $model->find($itemId);
-            // The user has download permission?
-            $rights = $model->getRights();
-            if (!$rights['currentUser']['download']) {
-                $error = Phprojekt::getInstance()->translate('You don\'t have permission for downloading on this '
-                    + 'item.');
-                die($error);
-            }
-            $files = $model->$field;
-        } else {
-            $files = $_SESSION['uploadedFiles_' . $field];
-        }
-        $files = explode('||', $files);
-
-        $this->_fileCheckParamOrder($order, count($files));
-
-        list($md5Name, $fileName) = explode("|", $files[$order - 1]);
-
-        if (!empty($fileName)) {
-            $md5Name = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
-            if (file_exists($md5Name)) {
-                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-                header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-                header("Cache-Control: no-store, no-cache, must-revalidate");
-                header("Cache-Control: post-check=0, pre-check=0", false);
-                header("Pragma: no-cache");
-                header('Content-Length: ' . filesize($md5Name));
-                header("Content-Disposition: attachment; filename=\"" . (string) $fileName . "\"");
-                header('Content-Type: download');
-                $fh = fopen($md5Name, 'r');
-                fpassthru($fh);
-            }
-        }
-    }
-
-    /**
-     * Delete a file from the Upload field
-     *
-     * @return void
-     */
-    public function fileDeleteAction()
-    {
-        $this->getResponse()->clearHeaders();
-        $this->getResponse()->clearBody();
-
-        $linkBegin = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/'
-            . $this->getRequest()->getModuleName();
-        $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $itemId = (int) $this->getRequest()->getParam('id', null);
-        $order  = (int) $this->getRequest()->getParam('order', 0);
-
-        $this->_fileCheckParamField($field);
-        $this->_fileCheckWritePermission($itemId);
-
-        if ($itemId > 0) {
-            $model = $this->getModelObject();
-            $model->find($itemId);
-            $files = $model->$field;
-        } else {
-            $files = $_SESSION['uploadedFiles_' . $field];
-        }
-
-        $filesIn = explode('||', $files);
-
-        $this->_fileCheckParamOrder($order, count($filesIn));
-
-        // Delete the file name and md5 from the string
-        $filesOut = '';
-        $i        = 1;
-        foreach ($filesIn as $file) {
-            if ($i != $order) {
-                if ($filesOut != '') {
-                    $filesOut .= '||';
-                }
-                $filesOut .= $file;
-            } else {
-                // Delete the file from the server
-                $md5Name          = substr($file, 0, strpos($file, '|'));
-                $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
-                if (file_exists($fileAbsolutePath)) {
-                    unlink($fileAbsolutePath);
-                }
-            }
-            $i++;
-        }
-
-        $_SESSION['uploadedFiles_' . $field] = $filesOut;
-
-        $this->_fileRenderView($linkBegin, $itemId, $field, $filesOut, true);
-    }
-
-    /**
-     * Set some values deppend on the params
-     * Each module can implement this function to change their values
-     *
-     * @return array
-     */
-    public function setParams()
-    {
-        $args = func_get_args();
-
-        if (1 > count($args)) {
-            throw new Exception('Missing argument');
-        }
-
-        return $args[0];
-    }
-
-    /**
-     * Renders the upload file field with the received data
-     *
-     * @return void
-     */
-    private function _fileRenderView($linkBegin, $itemId, $field, $value, $filesChanged)
-    {
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
-        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
-        $this->view->formPath       = $linkBegin . '/index/fileUpload/';
-        $this->view->downloadLink   = '';
-        $this->view->fileName       = null;
-        $this->view->itemId         = $itemId;
-        $this->view->field          = $field;
-        $this->view->value          = $value;
-        $this->view->filesChanged   = $filesChanged;
-
-        $filesForView = array();
-
-        // Is there any file?
-        if (!empty($value)) {
-            $files = explode('||', $value);
-            $model = $this->getModelObject();
-            $model->find($itemId);
-            $rights = $model->getRights();
-            $i      = 0;
-            foreach ($files as $file) {
-                $fileName = strstr($file, '|');
-                $fileData = 'itemId/' . $itemId . '/field/' . $field . '/order/' . (string) ($i + 1);
-
-                $filesForView[$i] = array('fileName' => substr($fileName, 1));
-                if ($rights['currentUser']['download']) {
-                    $filesForView[$i]['downloadLink'] = $linkBegin . '/index/fileDownload/' . $fileData;
-                }
-                if ($rights['currentUser']['write']) {
-                    $filesForView[$i]['deleteLink'] = $linkBegin . '/index/fileDelete/' . $fileData;
-                }
-                $i++;
-            }
-        }
-        if (isset($this->view->errorMessage) && !empty($this->view->errorMessage)) {
-            $filesForView[] = array();
-        }
-
-        $this->view->files = $filesForView;
-        $this->render('upload');
-    }
-
-    /**
-     * Checks that the 'field' parameter for download and delete file actions is valid.
-     * If not, terminates script execution.
-     *
-     * @return void
-     */
-    private function _fileCheckParamField($field)
-    {
-        $model     = $this->getModelObject();
-        $dbManager = $model->getInformation();
-        $dbField   = $dbManager->find($field);
-        $valid     = false;
-
-        if (!empty($dbField)) {
-            $fieldType = $dbManager->getType($field);
-            if ($fieldType == 'upload') {
-                $valid = true;
-            }
-        }
-        if (!$valid) {
-            $error  = Phprojekt::getInstance()->translate('Error in received parameter, consult the admin. Parameter:');
-            $error .= ' field';
-
-            // Log error
-            Phprojekt::getInstance()->getLog()->err("Error: wrong 'field' parameter trying to Download or Delete a file"
-                . ". User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
-            // Show error to user and stop script execution
-            die($error);
-        }
-    }
-
-    /**
-     * Checks that the 'order' parameter for download and delete file actions is valid.
-     * If not, terminates script execution printing an error.
-     *
-     * @return void
-     */
-    private function _fileCheckParamOrder($order, $filesAmount)
-    {
-        if ($order < 1 || $order > $filesAmount) {
-            $error  = Phprojekt::getInstance()->translate('Error in received parameter, consult the admin. Parameter:');
-            $error .= " order";
-
-            // Log error
-            Phprojekt::getInstance()->getLog()->err("Error: wrong 'order' parameter trying to Download or Delete a file"
-                . ". User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
-            // Show error to user and stop script execution
-            die($error);
-        }
-    }
-
-    /**
-     * Checks that the user has permission for modifying the item, in this case for uploading or deleting files.
-     * If not, prints an error, terminating script execution.
-     *
-     * @return void
-     */
-    private function _fileCheckWritePermission($itemId)
-    {
-        $model = $this->getModelObject();
-        $model->find($itemId);
-        $rights = $model->getRights();
-        if (!$rights['currentUser']['write']) {
-            $error = Phprojekt::getInstance()->translate('You don\'t have permission for modifying this item.');
-
-            // Log error
-            Phprojekt::getInstance()->getLog()->err("Error: trying to Delete or Upload a file without write access. "
-                . "User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
-            // Show error to user and stop script execution
-            die($error);
         }
     }
 }

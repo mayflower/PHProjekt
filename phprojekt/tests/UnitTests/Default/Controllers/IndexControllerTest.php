@@ -139,9 +139,9 @@ class Phprojekt_IndexController_Test extends FrontInit
     /**
      * Test the get all translated strings
      */
-    public function testGetTranslatedStrings()
+    public function testJsonGetTranslatedStrings()
     {
-        $this->setRequestUrl('Project/index/getTranslatedStrings');
+        $this->setRequestUrl('Project/index/jsonGetTranslatedStrings');
         $response = $this->getResponse();
         $this->assertContains('project":"Project', $response);
         $this->assertContains('username":"Username', $response);

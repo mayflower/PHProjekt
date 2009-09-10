@@ -174,7 +174,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 this.userStore.fetch(
                     dojo.hitch(this, function() {
                     this.addLogoTooltip();
-                    this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
+                    this._langUrl = phpr.webpath + "index.php/Default/index/jsonGetTranslatedStrings/language/" + phpr.language;
                     phpr.DataStore.addStore({url: this._langUrl});
                     phpr.DataStore.requestData({
                         url:         this._langUrl,
@@ -866,7 +866,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    Request to the server the languagues strings and change the current lang
         //    Call the reload function then
         phpr.language = language;
-        this._langUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/" + phpr.language;
+        this._langUrl = phpr.webpath + "index.php/Default/index/jsonGetTranslatedStrings/language/" + phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
         phpr.DataStore.requestData({url: this._langUrl, processData: dojo.hitch(this, function() {
             phpr.nls = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
@@ -896,7 +896,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             this.showHelp_part2(helpData, phpr.nls);
         } else {
             // If help is not available in current language, the default language is English
-            var defLangUrl = phpr.webpath + "index.php/Default/index/getTranslatedStrings/language/en";
+            var defLangUrl = phpr.webpath + "index.php/Default/index/jsonGetTranslatedStrings/language/en";
             phpr.DataStore.addStore({url: defLangUrl});
             phpr.DataStore.requestData({
                 url:         defLangUrl,
