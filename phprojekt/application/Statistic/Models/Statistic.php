@@ -90,11 +90,9 @@ class Statistic_Models_Statistic
     /**
      * Implement fetchAll for delete projects
      *
-     * @param string $where The SQL where
-     *
      * @return array
      */
-    public function fetchAll($where = null)
+    public function fetchAll()
     {
         return array();
     }

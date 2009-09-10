@@ -94,10 +94,11 @@ class AllTests extends PHPUnit_Framework_TestSuite
      */
     public static function suite()
     {
-        // These directories are
-        // covered for the code coverage even they are not part of unit testing
+        // These directories are covered for the code coverage even they are not part of unit testing
         PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/application');
         PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/library/Phprojekt');
+        // Avoid Selenium checks
+        PHPUnit_Util_Filter::addDirectoryToFilter(dirname(__FILE__) . '/Selenium');
 
         $authNamespace         = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $authNamespace->userId = 1;
@@ -196,6 +197,9 @@ if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
         PHPUnit_Util_Filter::addDirectoryToWhitelist($config->applicationDir . '/application');
         PHPUnit_Util_Filter::addDirectoryToWhitelist(PHPR_LIBRARY_PATH . '/Phprojekt');
     }
+
+    // Avoid Selenium checks
+    PHPUnit_Util_Filter::addDirectoryToFilter('Selenium');
 
     AllTests::main();
 }
