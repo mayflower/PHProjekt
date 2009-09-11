@@ -16,6 +16,7 @@
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Default
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -37,11 +38,31 @@
 class SearchController extends IndexController
 {
     /**
-     * Search for words
+     * Search for words.
      *
-     * @requestparam string  $words    The words for seach
-     * @requestparam integer $count    Number of results
-     * @requestparam integer $start    Number of page
+     * Returns a list of items that have the word, sorted by module with:
+     * <pre>
+     *  - id            => id of the item found.
+     *  - moduleId      => id of the module.
+     *  - moduleName    => Name of the module.
+     *  - moduleLabel   => Display for the module.
+     *  - firstDisplay  => Firts display for the item (Ej. title).
+     *  - secondDisplay => Second display for the item (Ej. notes).
+     *  - projectId     => Parent project id of the item.
+     * </pre>
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - string <b>words</b> An string of words (Will be separated by the spaces).
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>count</b>  Number of results.
+     *  - integer <b>offset</b> Number of page.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */

@@ -16,6 +16,7 @@
  * @version    $Id$
  * @author     David Soria Parra <soria_parra@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Default
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -35,7 +36,9 @@
 class ErrorController extends Zend_Controller_Action
 {
     /**
-     * Initialize our error controller and disable the viewRenderer
+     * Initialize our error controller and disable the viewRenderer.
+     *
+     * @return void
      */
     public function init()
     {
@@ -43,7 +46,18 @@ class ErrorController extends Zend_Controller_Action
     }
 
     /**
-     * Default error action
+     * Default error action.
+     *
+     * On Phprojekt_PublishedException, return an error string in JSON format.
+     * <pre>
+     *  - type    => 'error'.
+     *  - message => Error message.
+     *  - code    => Error code.
+     * </pre>
+     *
+     * On wrong controller name or action, terminates script execution.
+     *
+     * In all cases, the error is logged.
      *
      * @return void
      */

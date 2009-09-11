@@ -229,8 +229,8 @@ class IndexController extends Zend_Controller_Action
      *
      * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
      *
-     * <pre>
      * OPTIONAL request parameters:
+     * <pre>
      *  - integer <b>id</b>     List only this id.
      *  - integer <b>nodeId</b> List all the items with projectId == nodeId.
      *  - integer <b>count</b>  Use for SQL LIMIT count.
@@ -273,8 +273,8 @@ class IndexController extends Zend_Controller_Action
      *
      * The function use Phprojekt_ModelInformation_Default::ORDERING_FORM for get and sort the fields.
      *
-     * <pre>
      * OPTIONAL request parameters:
+     * <pre>
      *  - integer <b>id</b> id of the item to consult.
      * </pre>
      *
@@ -302,18 +302,23 @@ class IndexController extends Zend_Controller_Action
      * if the "id" is an existing item, the function will update it.
      *
      * If there is an error, the save will return a Phprojekt_PublishedException,
-     * if not, it returns a string with the same format than the Phprojekt_PublishedException,
-     * but with type as 'success' instead of 'error'
-     *
+     * if not, it returns a string in JSON format with:
      * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0 by Default.
+     *  - id      => Id of the item.
+     * </pre>
+     *
      * OPTIONAL request parameters:
+     * <pre>
      *  - integer <b>id</b>                      id of the item to save.
      *  - mixed   <b>all other module fields</b> All the fields values to save.
      * </pre>
      *
      * The return is in JSON format.
      *
-     * @throws Phprojekt_PublishedException On error in the action save.
+     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
      *
      * @return void
      */
@@ -350,19 +355,21 @@ class IndexController extends Zend_Controller_Action
      * Save some fields for many items.
      * Only edit existing items.
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
-     * if not, it returns a string with the same format than the Phprojekt_PublishedException,
-     * but with type as 'success' instead of 'error'
-     *
+     * The return is a string in JSON format with:
      * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0 by Default.
+     *  - id      => Comma separated ids of the items.
+     * </pre>
+     *
      * OPTIONAL request parameters:
+     * <pre>
      *  - array <b>data</b> Array with itemId and field as index, and the value.
      *    ($data[2]['title'] = 'new tittle')
      * </pre>
      *
      * The return is in JSON format.
-     *
-     * @throws Phprojekt_PublishedException On error in the action save.
      *
      * @return void
      */
@@ -405,11 +412,16 @@ class IndexController extends Zend_Controller_Action
     /**
      * Deletes a certain item
      *
-     * On success, the returns is a string with the same format than the Phprojekt_PublishedException,
-     * but with type as 'success' instead of 'error'
-     *
+     * The return is a string in JSON format with:
      * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0 by Default.
+     *  - id      => id of the deleted item.
+     * </pre>
+     *
      * REQUIRES request parameters:
+     * <pre>
      *  - integer <b>id</b> id of the item to delete.
      * </pre>
      *
@@ -432,11 +444,13 @@ class IndexController extends Zend_Controller_Action
         if ($model instanceof Phprojekt_Model_Interface) {
             $tmp = Default_Helpers_Delete::delete($model);
             if ($tmp === false) {
-                $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
+                $message    = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
+                $resultType = 'error';
             } else {
-                $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
+                $message    = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
+                $resultType = 'success';
             }
-            $return = array('type'    => 'success',
+            $return = array('type'    => $resultType,
                             'message' => $message,
                             'code'    => 0,
                             'id'      => $id);
@@ -450,12 +464,17 @@ class IndexController extends Zend_Controller_Action
     /**
      * Deletes many items together
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
-     * if not, it returns a string with the same format than the Phprojekt_PublishedException,
-     * but with type as 'success' instead of 'error'
-     *
+     * If there is an error, the delete will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
      * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0 by Default.
+     *  - id      => Comma separated ids of the items.
+     * </pre>
+     *
      * OPTIONAL request parameters:
+     * <pre>
      *  - string <b>ids</b> Comma separated ids of the item to delete.
      * </pre>
      *
@@ -499,8 +518,8 @@ class IndexController extends Zend_Controller_Action
      * for the current logged user,
      * depending on their role and access, in the project.
      *
-     * <pre>
      * REQUIRES request parameters:
+     * <pre>
      *  - integer <b>nodeId</b> The projectId for consult.
      * </pre>
      *
@@ -548,8 +567,8 @@ class IndexController extends Zend_Controller_Action
     /**
      * Returns all the words translated in each modules for the request language.
      *
-     * <pre>
      * REQUIRES request parameters:
+     * <pre>
      *  - string <b>language</b> The current language for get the translations.
      * </pre>
      *
@@ -594,8 +613,8 @@ class IndexController extends Zend_Controller_Action
     /**
      * Returns the possible extra actions to perform for multiple or singles ids.
      *
-     * <pre>
      * Each action defines in the array:
+     * <pre>
      *  - target: {@link TARGET_ACTION_MULTIPLE} or {@link TARGET_ACTION_SIMPLE}.
      *  - action: Name of the action that will process ids.
      *  - label:  Display for the action.
@@ -631,8 +650,8 @@ class IndexController extends Zend_Controller_Action
      *
      * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
      *
-     * <pre>
      * OPTIONAL request parameters:
+     * <pre>
      *  - integer <b>id</b>     List only this id.
      *  - integer <b>nodeId</b> List all the items with projectId == nodeId.
      * </pre>
@@ -664,8 +683,8 @@ class IndexController extends Zend_Controller_Action
      *
      * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
      *
-     * <pre>
      * OPTIONAL request parameters:
+     * <pre>
      *  - string <b>ids</b> Comma separated ids of the item to list.
      * </pre>
      *

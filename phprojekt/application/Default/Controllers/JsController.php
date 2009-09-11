@@ -16,6 +16,7 @@
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Default
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -37,21 +38,21 @@
 class JsController extends IndexController
 {
     /**
-     * Array with all the modules found
+     * Array with all the modules found.
      *
      * @var array
      */
     private $_modules = array();
 
     /**
-     * Array with all the templates by module
+     * Array with all the templates by module.
      *
      * @var array
      */
     private $_templates = array();
 
     /**
-     * Collect all the js files and return it as one
+     * Collect all the js files and return it as one.
      *
      * @return void
      */
@@ -148,8 +149,12 @@ class JsController extends IndexController
     }
 
     /**
-     * Collect all the js files and return it as one
-     * Only in the $module folder
+     * Collect all the js files in the module folder, and return it as one.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - string <b>name</b> Name of the module to consult.
+     * </pre>
      *
      * @return void
      */

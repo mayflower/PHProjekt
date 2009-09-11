@@ -16,6 +16,7 @@
  * @version    $Id$
  * @author     Eduardo Polidor <soria_parra@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Default
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -37,6 +38,8 @@ class LoginController extends Zend_Controller_Action
     /**
      * Default action
      *
+     * The function sets up the template index.phtml and renders it.
+     *
      * @return void
      */
     public function indexAction()
@@ -52,8 +55,19 @@ class LoginController extends Zend_Controller_Action
 
     /**
      * Executes the login using the username and password provided on login form
-     * If it works fine you will be redirect to homepage
-     * Keep the hash for redirect
+     *
+     * If it works fine, redirect the user to homepage,
+     * if not, show the error message.
+     *
+     * Keep the hash for redirect the user after the login.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - string <b>username</b>   Username for login.
+     *  - string <b>password</b>   Password for login.
+     *  - string <b>hash</b>       Hash URL for redirect after the login.
+     *  - string <b>keepLogged</b> "on" if the user clicks on the checkbox.
+     * </pre>
      *
      * @return void
      */
@@ -90,8 +104,21 @@ class LoginController extends Zend_Controller_Action
     }
 
     /**
-     * Executes the login by json using the username and password
-     * If it works fine, json returns success
+     * Executes the login by json using the username and password.
+     *
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - string <b>username</b> Username for login.
+     *  - string <b>password</b> Password for login.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -119,6 +146,8 @@ class LoginController extends Zend_Controller_Action
 
     /**
      * Logout action
+     *
+     * Logout the user, and redirect them to the login page.
      *
      * @return void
      */

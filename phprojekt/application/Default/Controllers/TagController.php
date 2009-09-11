@@ -16,6 +16,7 @@
  * @version    $Id$
  * @author     David Soria Parra <soria_parra@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Default
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -37,10 +38,21 @@
 class TagController extends IndexController
 {
     /**
-     * Get an array with tags
-     * order by number of ocurrences
+     * Returns an array with tags order by number of ocurrences.
      *
-     * @requestparam integer $limit Limit the number of tags for return
+     * Returns the metadata of the fieds and the data itself with:
+     * <pre>
+     *  - string => The tag.
+     *  - count  => Number of ocurrences.
+     * </pre>
+     * Also the number of rows is returned.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>limit</b> Number of results.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -55,12 +67,23 @@ class TagController extends IndexController
     }
 
     /**
-     * Get an array with tags for the $module and $id
-     * order by number of ocurrences
+     * Returns an array with tags for one item.
      *
-     * @requestparam integer $id        Item id
-     * @requestparam integer $limit      Limit the number of tags for return
-     * @requestparam string  $moduleName Module name
+     * Returns the metadata of the fieds and the data itself with:
+     * <pre>
+     *  - string => The tag.
+     *  - count  => Number of ocurrences.
+     * </pre>
+     * Also the number of rows is returned.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b>         id of the item.
+     *  - integer <b>limit</b>      Number of results.
+     *  - integer <b>moduleName</b> Name of the module.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -84,10 +107,26 @@ class TagController extends IndexController
     }
 
     /**
-     * Get an array with all the modules with a tag
+     * Search for a tag.
      *
-     * @requestparam string  $tag   Tag to search
-     * @requestparam integer $limit Limit the number of tags for return
+     * Returns an array with all the modules with the tag, with:
+     * <pre>
+     *  - id            => id of the item found.
+     *  - moduleId      => id of the module.
+     *  - moduleName    => Name of the module.
+     *  - moduleLabel   => Display for the module.
+     *  - firstDisplay  => Firts display for the item (Ej. title).
+     *  - secondDisplay => Second display for the item (Ej. notes).
+     *  - projectId     => Parent project id of the item.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>tag</b>   Tag to search.
+     *  - integer <b>limit</b> Number of results.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -102,11 +141,31 @@ class TagController extends IndexController
     }
 
     /**
-     * Saves the tags for the current item
+     * Saves the tags for the current item.
      *
-     * @requestparam integer $id         Item id
-     * @requestparam string  $string     All the tags separated by space
-     * @requestparam string  $moduleName Module name
+     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => 0.
+     * </pre>
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the item.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - string <b>string</b>     An string of words (Will be separated by the spaces).
+     *  - string <b>moduleName</b> Name of the module.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @throws Phprojekt_PublishedException On missing or wrong id.
      *
      * @return void
      */
@@ -136,11 +195,30 @@ class TagController extends IndexController
     }
 
     /**
-     * Delete the tags for one item
+     * Delete the tags for one item.
      *
-     * @requestparam integer $id         Item id
-     * @requestparam string  $string     All the tags separated by space
-     * @requestparam string  $moduleName Module name
+     * If there is an error, the delete will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => 0.
+     * </pre>
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the item.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - string <b>moduleName</b> Name of the module.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @throws Phprojekt_PublishedException On missing or wrong id.
      *
      * @return void
      */

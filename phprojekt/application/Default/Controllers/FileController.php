@@ -42,8 +42,8 @@ class FileController extends IndexController
      *
      * This function draws the upload field in the form.
      *
-     * <pre>
      * OPTIONAL request parameters:
+     * <pre>
      *  - string  <b>moduleName</b> Current module name.
      *  - string  <b>value</b>      Value for the upload field (All the uploaded filenames).
      *  - integer <b>id</b>         Id of the current item.
@@ -74,8 +74,8 @@ class FileController extends IndexController
      *
      * This function draws the upload field in the form.
      *
-     * <pre>
      * OPTIONAL request parameters:
+     * <pre>
      *  - string  <b>moduleName</b>    Current module name.
      *  - string  <b>field</b>         Name of the field in the module.
      *  - integer <b>MAX_FILE_SIZE</b> Max size allowed for the file.
@@ -135,8 +135,8 @@ class FileController extends IndexController
     /**
      * Retrieves the file from upload folder.
      *
-     * <pre>
      * OPTIONAL request parameters:
+     * <pre>
      *  - string  <b>moduleName</b>  Current module name.
      *  - integer <b>itemId</b>      Id of the current item.
      *  - string  <b>field</b>       Name of the field in the module.
@@ -196,8 +196,8 @@ class FileController extends IndexController
      *
      * This function draws the upload field in the form.
      *
-     * <pre>
      * OPTIONAL request parameters:
+     * <pre>
      *  - string  <b>moduleName</b> Current module name.
      *  - string  <b>field</b>      Name of the field in the module.
      *  - integer <b>id</b>         Id of the current item.
