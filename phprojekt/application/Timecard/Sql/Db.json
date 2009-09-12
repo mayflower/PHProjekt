@@ -15,7 +15,7 @@
                 "end_time":   {"type": "time"},
                 "minutes":    {"type": "int"},
                 "project_id": {"type": "int"},
-                "notes":      {"type": "text"},
+                "notes":      {"type": "text"}
             }
         }
     },
