@@ -15,7 +15,7 @@
                 "title":          {"type": "varchar"},
                 "place":          {"type": "varchar"},
                 "notes":          {"type": "text"},
-                "uid":            {"type": "varchar", "notNull": "true", "unique": "true"},
+                "uid":            {"type": "varchar", "unique": "true"},
                 "start_date":     {"type": "date"},
                 "start_time":     {"type": "time"},
                 "end_date":       {"type": "date"},

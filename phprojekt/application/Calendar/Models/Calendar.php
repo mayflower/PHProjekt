@@ -646,10 +646,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             }
             $request = Default_Helpers_Right::allowAll($request, $ownerId);
 
-            if (null === $model->uid) {
-                $model->uid = md5($date . $participantId . time());
-            }
-
             Default_Helpers_Save::save($model, $request);
         }
 
