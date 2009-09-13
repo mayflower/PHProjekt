@@ -117,7 +117,7 @@
             {
                 "id":               "default",
                 "project_id":       {"type": "int"},
-                "path":             {"type": "varchar", "length": "25", "notNull": "true", "default": "/"},
+                "path":             {"type": "varchar", "length": "50", "notNull": "true", "default": "/"},
                 "title":            {"type": "varchar", "notNull": "true"},
                 "notes":            {"type": "text"},
                 "owner_id":         {"type": "int"},
