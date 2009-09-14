@@ -147,7 +147,7 @@ CREATE TABLE `history` (
 CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` int(11) default NULL,
-  `path` varchar(25) NOT NULL default '/',
+  `path` varchar(50) NOT NULL default '/',
   `title` varchar(255) NOT NULL,
   `notes` text default NULL,
   `owner_id` int(11) default NULL,
@@ -393,7 +393,7 @@ CREATE TABLE `calendar` (
   `title` varchar(255) default NULL,
   `place` varchar(255) default NULL,
   `notes` text default NULL,
-  `uid` varchar(255) NOT NULL,
+  `uid` varchar(255) NULL,
   `start_date` date default NULL,
   `start_time` time default NULL,
   `end_date` date default NULL,
