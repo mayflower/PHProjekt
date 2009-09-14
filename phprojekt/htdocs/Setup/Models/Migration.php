@@ -503,17 +503,19 @@ class Setup_Models_Migration
                 if ($currentDatum == $timeproj['datum'] && $currentUser == $timeproj['users']
                     && $currentProj == $timeproj['projekt']) {
                     // We are still working with the same day, user and project
-                    // As it is possible that the same project is booked more than once the same day for the same user (I
-                    // say it in the big DB script), it is needed to obtain the total amount of time of the project
+
+                    // As it is wrong but possible, that the same project is found as booked more than once the same day
+                    // for the same user (I saw it in a production DB), it is needed to obtain the total amount of time
+                    // of the project
                     $currentHours   += $timeproj['h'];
                     $currentMinutes += $timeproj['m'];
                 } else {
                     // New combination of date, user and project reached, so it is time to insert the previous project
-                    // booking for specific date, user and project into P6 table 'timeproj'. This may occupy more than one
-                    // row depending on working times charged in P5 'timecard' table.
-                    $query = sprintf("SELECT * FROM %stimecard WHERE datum = %s AND users = %d and projekt = %d ORDER BY "
-                        . "start_time", PHPR_DB_PREFIX, $this->_dbOrig->quote($timeproj['datum']), $timeproj['users'],
-                        $timeproj['projekt']);
+                    // booking for specific date, user and project into P6 table 'timeproj'. This may occupy more than
+                    // one row depending on working times charged in P5 'timecard' table.
+                    $query = sprintf("SELECT * FROM %stimecard WHERE datum = %s AND users = %d and projekt = %d ORDER "
+                        . "BY start_time", PHPR_DB_PREFIX, $this->_dbOrig->quote($timeproj['datum']),
+                        $timeproj['users'], $timeproj['projekt']);
                     $timecards = $this->_dbOrig->query($query)->fetchAll();
 
                     foreach ($timecards as $timecard) {
@@ -632,7 +634,8 @@ class Setup_Models_Migration
             if (!empty($calendar["anfang"]) && !empty($calendar["ende"]) && !empty($calendar["datum"])) {
 
                 if (!empty($calendar["serie_typ"]) && !empty($calendar["serie_bis"])) {
-                    $rrule = $this->_serietypToRrule($calendar["serie_typ"], $calendar["serie_bis"], $calendar["anfang"]);
+                    $rrule = $this->_serietypToRrule($calendar["serie_typ"], $calendar["serie_bis"],
+                        $calendar["anfang"]);
                 } else {
                     $rrule = "";
                 }
@@ -1049,7 +1052,7 @@ class Setup_Models_Migration
             }
         } else if (strlen($value) <= 2) {
             // String mode, e.g.: 'd', 'w2'
-            switch (substr($value, 0,1)) {
+            switch (substr($value, 0, 1)) {
                 case 'd':
                 default:
                     $returnValue = 'FREQ=DAILY;' . $until;
