@@ -628,22 +628,20 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.grid.edit.apply();
 
         // Get all the IDs for the data sets.
-        var content = "";
+        var content = new Array();
         for (var i in this._newRowValues) {
-            var item = this.grid.getItem(i);
+            var item  = this.grid.getItem(i);
             var curId = this.grid.store.getValue(item, 'id');
             for (var j in this._newRowValues[i]) {
-                content += '&data[' + encodeURIComponent(curId) + '][' + encodeURIComponent(j) + ']='
-                    + encodeURIComponent(this._newRowValues[i][j]);
+                content['data[' + curId + '][' + j + ']'] = this._newRowValues[i][j];
             }
         }
 
         // post the content of all changed forms
-        dojo.rawXhrPost( {
-            url:      this.updateUrl,
-            postData: content,
-            handleAs: "json",
-            load: dojo.hitch(this, function(response, ioArgs) {
+        phpr.send({
+            url:       this.updateUrl,
+            content:   content,
+            onSuccess: dojo.hitch(this, function(response) {
                 new phpr.handleResponse('serverFeedback', response);
                 if (response.type == 'success') {
                     this._newRowValues = {};
@@ -651,10 +649,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     this.publish("updateCacheData");
                     this.publish("reload");
                 }
-            }),
-            error:function(response, ioArgs) {
-                phpr.handleError(this.url, 'exception');
-            }
+            })
         });
     },
 

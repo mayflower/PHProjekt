@@ -625,7 +625,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             var self = this;
             phpr.send({
                 url:       getDataUrl,
-                handleAs: "json",
                 onSuccess: dojo.hitch(this, function(data) {
                     var search        = '';
                     var results       = {};
@@ -805,7 +804,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         phpr.send({
             url:       getDataUrl,
-            handleAs:  "json",
             onSuccess: dojo.hitch(this, function(data) {
                 this.render(["phpr.Default.template.results", "mainContentResults.html"],
                     dojo.byId('centerMainContent'), {
