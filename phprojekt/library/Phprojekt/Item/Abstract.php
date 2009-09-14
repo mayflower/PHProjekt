@@ -341,6 +341,20 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $moduleId = Phprojekt_Module::getId($this->getModelName());
 
+        $this->deleteUploadFiles();
+        $this->_history->saveFields($this, 'delete');
+        $this->_search->deleteObjectItem($this);
+        $this->_rights->saveRights($moduleId, $this->id, array());
+        parent::delete();
+    }
+
+    /**
+     * Delete all the files uploaded in the upload fields.
+     *
+     * @return void
+     */
+    public function deleteUploadFiles()
+    {
         // Is there is any upload file, -> delete the files from the server
         $fields = $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM,
             Phprojekt_DatabaseManager::COLUMN_NAME);
@@ -348,7 +362,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             $field = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field);
             if ($this->getInformation()->getType($field) == 'upload') {
                 $filesField = $this->$field;
-                $files = explode('||', $filesField);
+                $files      = explode('||', $filesField);
                 foreach ($files as $file) {
                     $md5Name = substr($file, 0, strpos($file, '|'));
                     $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
@@ -358,11 +372,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                 }
             }
         }
-
-        $this->_history->saveFields($this, 'delete');
-        $this->_search->deleteObjectItem($this);
-        $this->_rights->saveRights($moduleId, $this->id, array());
-        parent::delete();
     }
 
     /**

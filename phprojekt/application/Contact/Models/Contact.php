@@ -118,25 +118,8 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     public function delete()
     {
         if (!$this->private || ($this->private && $this->ownerId == Phprojekt_Auth::getUserId())) {
-            // Is there is any upload file, -> delete the files from the server
-            $fields = $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM,
-                Phprojekt_DatabaseManager::COLUMN_NAME);
-            foreach ($fields as $field) {
-                if ($this->getInformation()->getType($field) == 'upload') {
-                    $filesField = $this->$field;
-                    $files = explode('||', $filesField);
-                    foreach ($files as $file) {
-                        $md5Name = substr($file, 0, strpos($file, '|'));
-                        $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
-                        if (file_exists($fileAbsolutePath)) {
-                            unlink($fileAbsolutePath);
-                        }
-                    }
-                }
-            }
-
+            $this->deleteUploadFiles();
             $this->_history->saveFields($this, 'delete');
-
             parent::delete();
         }
     }
