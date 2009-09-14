@@ -16,17 +16,19 @@
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Note
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
 /**
- * Default Note Module Controller for PHProjekt 6.0
+ * Note Module Controller for PHProjekt 6.0
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Note
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>

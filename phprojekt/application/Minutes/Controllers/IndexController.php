@@ -16,17 +16,19 @@
  * @version    $Id$
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Minutes
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
 /**
- * Default Minutes Module Controller for PHProjekt 6.0
+ * Minutes Module Controller for PHProjekt 6.0
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Minutes
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
@@ -34,49 +36,44 @@
 class Minutes_IndexController extends IndexController
 {
     /**
-     * Constant for error message displayed when sending mail without
-     * specifying any recipient addresses.
-     * @see Minutes_IndexController::jsonSendMailAction()
+     * String to use on error when send an mail
+     * without specifying any recipient addresses.
      */
     const MISSING_MAIL_RECIPIENTS = 'No recipient addresses have been specified';
 
     /**
-     * Constant for error message displayed when trying to send mail
+     * String to use on error when trying to send mail
      * without being the owner of the requested Minutes entry.
-     * @see Minutes_IndexController::jsonSendMailAction()
      */
     const USER_IS_NOT_OWNER = 'The currently logged-in user is not owner of the given minutes entry';
 
-    const MAIL_FAIL_TEXT    = 'The mail could not be sent';
+    /**
+     * String to use on error in the action sendMail.
+     */
+    const MAIL_FAIL_TEXT = 'The mail could not be sent';
+
+    /**
+     * String to use on success in the action sendMail.
+     */
     const MAIL_SUCCESS_TEXT = 'The mail was sent successfully';
 
     /**
-     * Get a user list in JSON
+     * Deletes minutes and also all minutes items belonging to this minutes.
      *
-     * Produces a list of users that should be selectable in the frontend.
-     * First implementation returns the list of users invited to the meeting.
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the minute to delete.
+     * </pre>
      *
-     * @return void
-     */
-    public function jsonListUserAction()
-    {
-        $id      = (int) $this->getRequest()->getParam('id');
-        $minutes = $this->getModelObject();
-        $minutes->find($id);
-
-        if (!empty($minutes->id)) {
-            $data         = array();
-            $data['data'] = Minutes_Helpers_Userlist::expandIdList($minutes->participantsInvited,
-                $minutes->participantsExcused, $minutes->participantsAttending, $minutes->recipients);
-            $data['numRows'] = count($data['data']);
-            Phprojekt_Converter_Json::echoConvert($data);
-        } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
-        }
-    }
-
-    /*
-     * Deleting minutes also deletes all minutes items belonging to this minutes.
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0.
+     *  - id      => id of the deleted item.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On missing or wrong id, or on error in the action delete.
      *
      * @return void
      */
@@ -116,102 +113,72 @@ class Minutes_IndexController extends IndexController
     }
 
     /**
-     * Collects all mail addresses from user ids
+     * Returns a list of users.
      *
-     * @param array                  $userIdList Array of user ids to be fetched
-     * @param Zend_Validate_Abstract $validator  Validator to be used for the mail addresses
+     * Produces a list of users that should be selectable in the frontend.
      *
-     * @return array Array of arrays with either 'mail'/'name' pairs or 'message'/'value' errors.
+     * First implementation returns the list of users invited to the meeting.
+     *
+     * Returns a list of all the users with:
+     * <pre>
+     *  - id      => id of user.
+     *  - display => Display for the user.
+     * </pre>
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the minute to consult.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @throws Phprojekt_PublishedException On wrong id.
+     *
+     * @return void
      */
-    protected function _getMailFromUserIds($userIdList, Zend_Validate_Abstract $validator)
+    public function jsonListUserAction()
     {
-        // Add regular recipients:
-        $idList = array();
-        if (!empty($userIdList) && is_array($userIdList)) {
-            foreach ($userIdList as $recipientId) {
-                if (is_numeric($recipientId)) {
-                    $idList[] = (int) $recipientId;
-                }
-            }
+        $id      = (int) $this->getRequest()->getParam('id');
+        $minutes = $this->getModelObject();
+        $minutes->find($id);
+
+        if (!empty($minutes->id)) {
+            $data         = array();
+            $data['data'] = Minutes_Helpers_Userlist::expandIdList($minutes->participantsInvited,
+                $minutes->participantsExcused, $minutes->participantsAttending, $minutes->recipients);
+            $data['numRows'] = count($data['data']);
+            Phprojekt_Converter_Json::echoConvert($data);
+        } else {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
-
-        $userMailList = array();
-        if (count($idList)) {
-            /* @var $userModel Phprojekt_User_User */
-            $userModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-            $userList  = $userModel->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
-            $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
-            $display   = $userModel->getDisplay();
-            /* @var $record Phprojekt_User_User */
-            foreach ($userList as $record) {
-                $address = $setting->getSetting('email', (int) $record->id);
-
-                if ($validator->isValid($address)) {
-                    $userMailList[] = array('mail' => $address,
-                                            'name' => $record->applyDisplay($display, $record));
-                } else {
-                    $userMailList[] = array('message' => 'Invalid email address detected:',
-                                            'value'   => $address) ;
-                }
-            }
-        }
-
-        return $userMailList;
-    }
-
-    /**
-     * Collects all mail addresses from a comma separated string
-     *
-     * @param string                 $csvString String with mail addresses
-     * @param Zend_Validate_Abstract $validator Validator to be used for the mail addresses
-     *
-     * @return array Array of arrays with either 'mail'/'name' pairs or 'message'/'value' errors.
-     */
-    protected function _getMailFromCsvString($csvString, Zend_Validate_Abstract $validator)
-    {
-        $mailList = array();
-        // Add additional recipients:
-        if (!empty($csvString)) {
-            $additional = explode(',', $csvString);
-            foreach ($additional as $recipient) {
-                $address = trim($recipient);
-                if ($validator->isValid($address)) {
-                    $mailList[] = array('mail' => $address,
-                                        'name' => '');
-                } else {
-                    $mailList[] = array('message' => 'Invalid email address detected:',
-                                        'value'   => $address);
-                }
-            }
-        }
-
-        return $mailList;
-    }
-
-    /**
-     * Add recipients to the Zend_Mail object if valid, or put error message into return array
-     *
-     * @param Zend_Mail $mail     Zend_Mail object to be used
-     * @param array     $mailList Array of mail addresses to be added, or error messages to be returned
-     * @param array     $errors   Array of errors that new errors should be added to.
-     *
-     * @return array Array of errors encountered
-     */
-    protected function _addRecipients(Zend_Mail $mail, array $mailList, array $errors)
-    {
-        foreach ($mailList as $mailUser) {
-            if (isset($mailUser['mail'])) {
-                $mail->addTo($mailUser['mail'], $mailUser['name']);
-            } else {
-                $errors[] = $mailUser;
-            }
-        }
-
-        return $errors;
     }
 
     /**
      * Sends a mail containing the Minutes protocol.
+     *
+     * A pdf can be also attached to the mail.
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the minute to send.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - array <b>options</b> If contain 'pdf', a pdf is attached to the mail.
+     * </pre>
+     *
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0 for success, -1 for error.
+     *  - id      => id of the minute.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On error in the send action or wrong id.
+     *
+     * @return void
      */
     public function jsonSendMailAction()
     {
@@ -305,13 +272,148 @@ class Minutes_IndexController extends IndexController
     }
 
     /**
-     * Returns a string with HTML representing the minutes data
+     * Creates a pdf file and stream ite to the client.
      *
-     * @param Minutes_Models_Minutes $minutes Minutes object to use for data
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the minute to send.
+     * </pre>
      *
-     * @return string HTML representation of minutes data
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0 for success, -1 for error.
+     *  - id      => id of the minute.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On error in the pdf creation action or wrong id.
+     *
+     * @return void
      */
-    protected function _getHtmlList(Phprojekt_Model_Interface $minutes)
+    public function pdfAction()
+    {
+        $id = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+        }
+
+        $minutes = $this->getModelObject()->find($id);
+
+        if ($minutes instanceof Phprojekt_Model_Interface) {
+            $this->getResponse()->setHeader("Content-Disposition", "inline; filename=minutes-" . $minutes->id . ".pdf");
+            $this->getResponse()->setHeader("Content-type", "application/x-pdf; charset=utf-8");
+            echo Minutes_Helpers_Pdf::getPdf($minutes);
+        } else {
+            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+        }
+    }
+
+    /**
+     * Collects all mail addresses from user ids.
+     *
+     * @param array                  $userIdList Array of user ids to be fetched.
+     * @param Zend_Validate_Abstract $validator  Validator to be used for the mail addresses.
+     *
+     * @return array Array of arrays with either 'mail'/'name' pairs or 'message'/'value' errors.
+     */
+    private function _getMailFromUserIds($userIdList, Zend_Validate_Abstract $validator)
+    {
+        // Add regular recipients:
+        $idList = array();
+        if (!empty($userIdList) && is_array($userIdList)) {
+            foreach ($userIdList as $recipientId) {
+                if (is_numeric($recipientId)) {
+                    $idList[] = (int) $recipientId;
+                }
+            }
+        }
+
+        $userMailList = array();
+        if (count($idList)) {
+            /* @var $userModel Phprojekt_User_User */
+            $userModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $userList  = $userModel->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
+            $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
+            $display   = $userModel->getDisplay();
+            /* @var $record Phprojekt_User_User */
+            foreach ($userList as $record) {
+                $address = $setting->getSetting('email', (int) $record->id);
+
+                if ($validator->isValid($address)) {
+                    $userMailList[] = array('mail' => $address,
+                                            'name' => $record->applyDisplay($display, $record));
+                } else {
+                    $userMailList[] = array('message' => 'Invalid email address detected:',
+                                            'value'   => $address) ;
+                }
+            }
+        }
+
+        return $userMailList;
+    }
+
+    /**
+     * Collects all mail addresses from a comma separated string.
+     *
+     * @param string                 $csvString String with mail addresses.
+     * @param Zend_Validate_Abstract $validator Validator to be used for the mail addresses.
+     *
+     * @return array Array of arrays with either 'mail'/'name' pairs or 'message'/'value' errors.
+     */
+    private function _getMailFromCsvString($csvString, Zend_Validate_Abstract $validator)
+    {
+        $mailList = array();
+        // Add additional recipients:
+        if (!empty($csvString)) {
+            $additional = explode(',', $csvString);
+            foreach ($additional as $recipient) {
+                $address = trim($recipient);
+                if ($validator->isValid($address)) {
+                    $mailList[] = array('mail' => $address,
+                                        'name' => '');
+                } else {
+                    $mailList[] = array('message' => 'Invalid email address detected:',
+                                        'value'   => $address);
+                }
+            }
+        }
+
+        return $mailList;
+    }
+
+    /**
+     * Adds recipients to the Zend_Mail object if valid,
+     * or put error message into return array.
+     *
+     * @param Zend_Mail $mail     Zend_Mail object to be used.
+     * @param array     $mailList Array of mail addresses to be added, or error messages to be returned.
+     * @param array     $errors   Array of errors that new errors should be added to.
+     *
+     * @return array Array of errors encountered.
+     */
+    private function _addRecipients(Zend_Mail $mail, array $mailList, array $errors)
+    {
+        foreach ($mailList as $mailUser) {
+            if (isset($mailUser['mail'])) {
+                $mail->addTo($mailUser['mail'], $mailUser['name']);
+            } else {
+                $errors[] = $mailUser;
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Returns a string with HTML representing the minutes data.
+     *
+     * @param Minutes_Models_Minutes $minutes Minutes object to use for data.
+     *
+     * @return string HTML representation of minutes data.
+     */
+    private function _getHtmlList(Phprojekt_Model_Interface $minutes)
     {
         $items     = $minutes->items->fetchAll();
         $translate = Phprojekt::getInstance()->getTranslate();
@@ -337,32 +439,9 @@ class Minutes_IndexController extends IndexController
     }
 
     /**
-     * Create pdf file and stream to client
+     * Sets some values depending on the parameters.
      *
-     * @return void
-     */
-    public function pdfAction()
-    {
-        $id = (int) $this->getRequest()->getParam('id');
-
-        if (empty($id)) {
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
-        }
-
-        $minutes = $this->getModelObject()->find($id);
-
-        if ($minutes instanceof Phprojekt_Model_Interface) {
-            $this->getResponse()->setHeader("Content-Disposition", "inline; filename=minutes-" . $minutes->id . ".pdf");
-            $this->getResponse()->setHeader("Content-type", "application/x-pdf; charset=utf-8");
-            echo Minutes_Helpers_Pdf::getPdf($minutes);
-        } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
-        }
-    }
-
-    /**
-     * Final minutes only allow write access to status field
-     * @todo This should really be placed inside the model itself
+     * Final minutes only allow write access to status field.
      *
      * @return array
      */

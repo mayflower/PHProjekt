@@ -16,6 +16,7 @@
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Administration
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -27,6 +28,7 @@
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Administration
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
@@ -34,7 +36,15 @@
 class Administration_IndexController extends IndexController
 {
     /**
-     * Return all the modules that contain admin configurations
+     * Returns all the modules that contain configurations.
+     *
+     * Returns a list of modules that have a Configuration class, with:
+     * <pre>
+     *  - name  => Name of the module.
+     *  - label => Display for the module.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -47,7 +57,19 @@ class Administration_IndexController extends IndexController
     }
 
     /**
-     * Return the admin configurations fields for one module
+     * Returns the configuration fields and data for one module.
+     *
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of the setting.
+     *  - The number of rows.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - string <b>moduleName</b> Name of the module.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -69,9 +91,23 @@ class Administration_IndexController extends IndexController
     }
 
     /**
-     * Saves the admin configurations
+     * Saves the configuration for one module.
      *
-     * @requestparam string moduleName ...
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - string <b>moduleName</b>              Name of the module.
+     *  - mixed  <b>all other module fields</b> All the fields values to save.
+     * </pre>
+     *
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0.
+     *  - id      => 0.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
      *
      * @return void
      */

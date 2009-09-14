@@ -301,22 +301,20 @@ class IndexController extends Zend_Controller_Action
      * If the request parameter "id" is null or 0, the function will add a new item,
      * if the "id" is an existing item, the function will update it.
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
-     * if not, it returns a string in JSON format with:
-     * <pre>
-     *  - type    => 'success'.
-     *  - message => Success message.
-     *  - code    => 0 by Default.
-     *  - id      => Id of the item.
-     * </pre>
-     *
      * OPTIONAL request parameters:
      * <pre>
      *  - integer <b>id</b>                      id of the item to save.
      *  - mixed   <b>all other module fields</b> All the fields values to save.
      * </pre>
      *
-     * The return is in JSON format.
+     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => Id of the item.
+     * </pre>
      *
      * @throws Phprojekt_PublishedException On error in the action save or wrong id.
      *
@@ -355,21 +353,19 @@ class IndexController extends Zend_Controller_Action
      * Save some fields for many items.
      * Only edit existing items.
      *
-     * The return is a string in JSON format with:
-     * <pre>
-     *  - type    => 'success' or 'error'.
-     *  - message => Success or error message.
-     *  - code    => 0 by Default.
-     *  - id      => Comma separated ids of the items.
-     * </pre>
-     *
      * OPTIONAL request parameters:
      * <pre>
      *  - array <b>data</b> Array with itemId and field as index, and the value.
      *    ($data[2]['title'] = 'new tittle')
      * </pre>
      *
-     * The return is in JSON format.
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0.
+     *  - id      => Comma separated ids of the items.
+     * </pre>
      *
      * @return void
      */
@@ -410,22 +406,20 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Deletes a certain item
-     *
-     * The return is a string in JSON format with:
-     * <pre>
-     *  - type    => 'success' or 'error'.
-     *  - message => Success or error message.
-     *  - code    => 0 by Default.
-     *  - id      => id of the deleted item.
-     * </pre>
+     * Deletes a certain item.
      *
      * REQUIRES request parameters:
      * <pre>
      *  - integer <b>id</b> id of the item to delete.
      * </pre>
      *
-     * The return is in JSON format.
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0.
+     *  - id      => id of the deleted item.
+     * </pre>
      *
      * @throws Phprojekt_PublishedException On missing or wrong id, or on error in the action delete.
      *
@@ -462,23 +456,21 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Deletes many items together
-     *
-     * If there is an error, the delete will return a Phprojekt_PublishedException,
-     * if not, it returns a string in JSON format with:
-     * <pre>
-     *  - type    => 'success'.
-     *  - message => Success message.
-     *  - code    => 0 by Default.
-     *  - id      => Comma separated ids of the items.
-     * </pre>
+     * Deletes many items together.
      *
      * OPTIONAL request parameters:
      * <pre>
      *  - string <b>ids</b> Comma separated ids of the item to delete.
      * </pre>
      *
-     * The return is in JSON format.
+     * If there is an error, the delete will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => Comma separated ids of the items.
+     * </pre>
      *
      * @throws Phprojekt_PublishedException On error in the action delete.
      *

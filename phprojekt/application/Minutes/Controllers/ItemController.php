@@ -16,29 +16,46 @@
  * @version    $Id$
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Minutes
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
 /**
- * Default Minutes Module Controller for PHProjekt 6.0
+ * Minutes Module Controller for PHProjekt 6.0
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Minutes
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
 class Minutes_ItemController extends IndexController
 {
+    /**
+     * String to use on error in the action save and delete when the item is read only.
+     */
     const MINUTES_READ_ONLY = 'This minutes is final and cannot be edited.';
 
     /**
-     * Returns list of minutes items referenced by a minutesId
+     * Returns the list of minutes items referenced by a minutesId.
      *
-     * @requestparam integer minutesId The id of the minutes this list belongs to.
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of all the rows.
+     *  - The number of rows.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>minutesId</b> The id of the minutes this list belongs to.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -63,10 +80,22 @@ class Minutes_ItemController extends IndexController
     }
 
     /**
-     * Returns the detail for a single minutes item
+     * Returns the detail (fields and data) of a single minutes item.
      *
-     * @requestparam integer id         The id of the item.
-     * @requestparam integer minutesId  The id of the minutes.
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of one item.
+     *  - The number of rows.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_FORM for get and sort the fields.
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b>        The id of the item.
+     *  - integer <b>minutesId</b> The id of the minutes.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -86,14 +115,32 @@ class Minutes_ItemController extends IndexController
     }
 
     /**
-     * Saves the current minutesitem
+     * Saves the current minute item.
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException
-     * If not, the return is a string with the same format than the Phprojekt_PublishedException
-     * but with success type
+     * If the request parameter "id" is null or 0, the function will add a new item,
+     * if the "id" is an existing item, the function will update it.
      *
-     * @requestparam integer id         The id of the item.
-     * @requestparam integer minutesId  The id of the minutes.
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>minutesId</b> The id of the minutes.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b>                      id of the item to save.
+     *  - mixed   <b>all other module fields</b> All the fields values to save.
+     * </pre>
+     *
+     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => Id of the minute item.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
      *
      * @return void
      */
@@ -137,11 +184,24 @@ class Minutes_ItemController extends IndexController
         }
     }
 
-    /*
-     * Deletes the minutes item
+    /**
+     * Deletes a certain item.
      *
-     * @requestparam integer minutesId Id of the minutes being worked on.
-     * @requestparam integer id        Id of the item to be deleted.
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b>        The id of the item.
+     *  - integer <b>minutesId</b> The id of the minutes.
+     * </pre>
+     *
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0.
+     *  - id      => id of the deleted item.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On missing or wrong id, or on error in the action delete.
      *
      * @return void
      */
@@ -185,9 +245,20 @@ class Minutes_ItemController extends IndexController
     }
 
     /**
-     * Provide list of items for sort ordering
+     * Returns a list of items for sort ordering.
      *
-     * @requestparam integer minutesId
+     * The return data have:
+     * <pre>
+     *  - sortOrder: Order number.
+     *  - title:     Title of the item.
+     * </pre>
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>minutesId</b> The id of the minutes.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */

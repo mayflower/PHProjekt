@@ -143,15 +143,6 @@ class TagController extends IndexController
     /**
      * Saves the tags for the current item.
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
-     * if not, it returns a string in JSON format with:
-     * <pre>
-     *  - type    => 'success'.
-     *  - message => Success message.
-     *  - code    => 0.
-     *  - id      => 0.
-     * </pre>
-     *
      * REQUIRES request parameters:
      * <pre>
      *  - integer <b>id</b> id of the item.
@@ -163,7 +154,14 @@ class TagController extends IndexController
      *  - string <b>moduleName</b> Name of the module.
      * </pre>
      *
-     * The return is in JSON format.
+     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => 0.
+     * </pre>
      *
      * @throws Phprojekt_PublishedException On missing or wrong id.
      *
@@ -197,15 +195,6 @@ class TagController extends IndexController
     /**
      * Delete the tags for one item.
      *
-     * If there is an error, the delete will return a Phprojekt_PublishedException,
-     * if not, it returns a string in JSON format with:
-     * <pre>
-     *  - type    => 'success'.
-     *  - message => Success message.
-     *  - code    => 0.
-     *  - id      => 0.
-     * </pre>
-     *
      * REQUIRES request parameters:
      * <pre>
      *  - integer <b>id</b> id of the item.
@@ -216,7 +205,14 @@ class TagController extends IndexController
      *  - string <b>moduleName</b> Name of the module.
      * </pre>
      *
-     * The return is in JSON format.
+     * If there is an error, the delete will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => 0.
+     * </pre>
      *
      * @throws Phprojekt_PublishedException On missing or wrong id.
      *

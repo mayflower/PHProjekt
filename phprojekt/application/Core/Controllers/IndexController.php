@@ -16,6 +16,7 @@
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -27,6 +28,7 @@
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
@@ -34,8 +36,13 @@
 class Core_IndexController extends IndexController
 {
     /**
-     * Add Check for see if the current user is an admin
-     * If not, go to the login page
+     * Init function
+     *
+     * There are only a few actions that a normal user can do requesting the Core controller.
+     * The function check them, and allow the acction or not,
+     * if not, the user is redirected to the login form or throws an exception.
+     *
+     * @throws Phprojekt_PublishedException If the user is not an admin.
      *
      * @return void
      */
@@ -77,14 +84,14 @@ class Core_IndexController extends IndexController
     }
 
     /**
-     * Get the model object
-     * This function must be redefined in each module
+     * Gets the core class model of the module or the default one.
      *
      * @return Phprojekt_Model_Interface
      */
     public function getModelObject()
     {
         static $object = null;
+
         if (null === $object) {
             $moduleName = ucfirst($this->getRequest()->getControllerName());
             $moduleName = "Phprojekt_" . $moduleName . "_" . $moduleName;
@@ -98,6 +105,7 @@ class Core_IndexController extends IndexController
                 $object = Phprojekt_Loader::getModel('Default', 'Default');
             }
         }
+
         return $object;
     }
 }

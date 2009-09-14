@@ -14,30 +14,45 @@
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    $Id$
- * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Timecard
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
 /**
- * Default Timecard Module Controller for PHProjekt 6.0
+ * Timecard Module Controller for PHProjekt 6.0
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Timecard
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Timecard_IndexController extends IndexController
 {
-   /**
-     * Returns a list of the days in the month with the sum of bookings per day
+    /**
+     * Returns a list of the days in the month with the sum of bookings per day.
      *
-     * @requestparam integer year  Year for the list view
-     * @requestparam integer month Month for the list view
+     * For each day in the return, the data have:
+     * <pre>
+     *  - date         => Iso date.
+     *  - week         => Number of day in the week (0-6).
+     *  - sumInMinutes => Sum of bookings in the day in minutes.
+     *  - sumInHours   => Sum of bookings in the day in HH:mm format.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>year</b>  Year to consult.
+     *  - integer <b>month</b> Month to consult.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -51,9 +66,23 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
-     * Returns a list of the bookings in a day
+     * Returns a list of the bookings in a day.
      *
-     * @requestparam string date
+     * For each booking, the data have:
+     * <pre>
+     *  - id        => id of the booking record.
+     *  - projectId => id of the booking project.
+     *  - startTime => HH:mm:ss of the start time.
+     *  - endTime   => HH:mm:ss of the end time.
+     *  - display   => Display for the booking project.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - date <b>date</b> Iso date to consult.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -67,6 +96,20 @@ class Timecard_IndexController extends IndexController
 
     /**
      * Return a list of Project (Ids and Names) saved as "favorites"
+     *
+     * @return void
+     */
+
+    /**
+     * Return a list of Project saved as "favorites".
+     *
+     * For each one, the data have:
+     * <pre>
+     *  - id      => id of the project.
+     *  - display => Display for the project.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -99,9 +142,16 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
-     * Checks if there are running bookings at the moment.
-     * This method doesn't take any argument. It returns
-     * a field 'status' with either true or false.
+     * Checks if there are open bookings at the moment.
+     *
+     * It returns a string in JSON format with:
+     * <pre>
+     *  - type   => 'success'.
+     *  - status => True or false if there are open bookings.
+     *  - date   => startTime and date of the open booking or null.
+     *  - code   => 0.
+     *  - id     => 0.
+     * </pre>
      *
      * @return void
      */
@@ -126,13 +176,27 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
-     * Save a booking project
+     * Saves a booking.
      *
-     * @requestparam integer date ...
-     * @requestparam integer startTime ...
-     * @requestparam integer endTime ...
-     * @requestparam integer projectId ...
-     * @requestparam integer notes ...
+     * If the request parameter "id" is null or 0, the function will add a new booking,
+     * if the "id" is an existing booking, the function will update it.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b>                      id of the booking to save.
+     *  - mixed   <b>all other module fields</b> All the fields values to save.
+     * </pre>
+     *
+     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => Id of the booking.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
      *
      * @return void
      */
@@ -160,7 +224,20 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
-     * Save the favorites projects for the current user
+     * Save the favorites projects for the current user.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - array <b>favorites</b> Array with ids of the projects.
+     * </pre>
+     *
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => 0.
+     * </pre>
      *
      * @return void
      */
@@ -181,10 +258,17 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
-     * Export the list of the bookings in the month
+     * Returns the list of the bookings in the month.
      *
-     * @requestparam integer year  Current year
-     * @requestparam integer month Current month
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>year</b>  Year to consult.
+     *  - integer <b>month</b> Month to consult.
+     * </pre>
+     *
+     * The return is in CSV format.
      *
      * @return void
      */
@@ -200,12 +284,13 @@ class Timecard_IndexController extends IndexController
         $where   = sprintf('(owner_id = %d AND date LIKE %s)', (int) $userId, $db->quote($year . '-' . $month . '-%'));
         $records = $this->getModelObject()->fetchAll($where, 'date ASC');
 
-        Phprojekt_Converter_Csv::echoConvert($records, 'export');
+        Phprojekt_Converter_Csv::echoConvert($records);
     }
-
 
     /**
      * Set some values deppend on the params
+     *
+     * Sanitize some values and calculate the minutes value.
      *
      * @return array
      */

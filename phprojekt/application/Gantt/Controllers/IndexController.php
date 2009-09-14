@@ -16,17 +16,19 @@
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Gantt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
 /**
- * Default Gantt Module Controller for PHProjekt 6.0
+ * Gantt Module Controller for PHProjekt 6.0
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Gantt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
@@ -34,9 +36,40 @@
 class Gantt_IndexController extends IndexController
 {
     /**
-     * Return a list of projects with the necessary info to make the gantt chart
+     * Return a list of projects with the necessary info to make the gantt chart.
      *
-     * @requestparam integer nodeId
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>nodeId</b> List all the items with projectId == nodeId.
+     * </pre>
+     *
+     * The return have:
+     * <pre>
+     *  - projects => A list of projects.
+     *  - rights   => Write access only if all the projects have write access.
+     *  - min      => First startDate of all the projects.
+     *  - max      => Last endDate of all the projects.
+     *  - step     => Number of days in the year of the min value.
+     * </pre>
+     *
+     * For each project in the list, the data have:
+     * <pre>
+     *  - id      => id of the project.
+     *  - level   => Child level * 10.
+     *  - parent  => id of the parent project.
+     *  - childs  => Number of children.
+     *  - caption => Title of the project.
+     *  - start   => Timestamp of the startDate.
+     *  - end     => Timestamp of the endDate.
+     *  - startD  => Day of startDate.
+     *  - startM  => Month of startDate.
+     *  - startY  => Year of startDate.
+     *  - endD    => Day of endDate.
+     *  - endM    => Month of endDate.
+     *  - endY    => Year of endDate.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -81,7 +114,6 @@ class Gantt_IndexController extends IndexController
                                                         'startM'  => $startMonth,
                                                         'startY'  => $startYear,
                                                         'endD'    => $endDay,
-                                                        'startD'  => $startDay,
                                                         'endM'    => $endMonth,
                                                         'endY'    => $endYear);
                 }
@@ -114,9 +146,23 @@ class Gantt_IndexController extends IndexController
     }
 
     /**
-     * Save the new values of the projects dates
+     * Saves the new values of the projects dates.
      *
-     * @requestparam array projects
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - array <b>projects</b> Array with projectId,startDate and endDate by comma separated
+     * </pre>
+     *
+     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => 0.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On error in the action save or wrong parameters.
      *
      * @return void
      */

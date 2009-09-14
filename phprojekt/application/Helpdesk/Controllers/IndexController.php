@@ -16,17 +16,19 @@
  * @version    $Id$
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Helpdesk
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
 /**
- * Default Helpdesk Module Controller for PHProjekt 6.0
+ * Helpdesk Module Controller for PHProjekt 6.0
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Helpdesk
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
@@ -34,12 +36,26 @@
 class Helpdesk_IndexController extends IndexController
 {
     /**
-     * Returns the detail for a model in JSON.
+     * Returns the detail (fields and data) of one item from the model.
      *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of one item.
+     *  - The number of rows.
      *
-     * @requestparam integer id ...
+     * If the request parameter "id" is null or 0, the data will be all values of a "new item",
+     * if the "id" is an existing item, the data will be all the values of the item.
+     *
+     * For new items, the author and date values are set.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_FORM for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the item to consult.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -66,7 +82,7 @@ class Helpdesk_IndexController extends IndexController
     /**
      * Set some values deppend on the params
      *
-     * Set the author, solvedBy, solvedDate
+     * Set the author, solvedBy, solvedDate.
      * Also set the rights for each user (owner, assigned and the normal access tab)
      *
      * @return array

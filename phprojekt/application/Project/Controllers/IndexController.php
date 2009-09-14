@@ -16,22 +16,19 @@
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Project
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
 /**
- * Default Project Module Controller for PHProjekt 6
- *
- * For make a indexController for your module
- * just extend it to the IndexController
- * and redefine the function getModelsObject
- * for return the object model that you want
+ * Project Module Controller for PHProjekt 6
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Project
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
@@ -39,9 +36,27 @@
 class Project_IndexController extends IndexController
 {
     /**
-     * Save Action
+     * Saves the current project.
      *
-     * The save is redefined for use with tree in the project module
+     * If the request parameter "id" is null or 0, the function will add a new project,
+     * if the "id" is an existing project, the function will update it.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b>                      id of the project to save.
+     *  - mixed   <b>all other module fields</b> All the fields values to save.
+     * </pre>
+     *
+     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => Id of the project.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
      *
      * @return void
      */
@@ -70,10 +85,10 @@ class Project_IndexController extends IndexController
                 $showId = $id;
             }
 
-            $return    = array('type'    => 'success',
-                               'message' => $message,
-                               'code'    => 0,
-                               'id'      => $showId);
+            $return = array('type'    => 'success',
+                            'message' => $message,
+                            'code'    => 0,
+                            'id'      => $showId);
 
             Phprojekt_Converter_Json::echoConvert($return);
         } else {
@@ -82,9 +97,22 @@ class Project_IndexController extends IndexController
     }
 
     /**
-     * Save Multiple items Action
+     * Save some fields for many projects.
+     * Only edit existing projects.
      *
-     * The save is redefined for use with tree in the project module
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - array <b>data</b> Array with projectId and field as index, and the value.
+     *    ($data[2]['title'] = 'new tittle')
+     * </pre>
+     *
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0.
+     *  - id      => Comma separated ids of the projects.
+     * </pre>
      *
      * @return void
      */
@@ -126,9 +154,22 @@ class Project_IndexController extends IndexController
     }
 
     /**
-     * Get all the modules active and their relation with the projectId
+     * Returns all the active modules that have the project.
      *
-     * @requestparam int $id The project Id
+     * Returns a list of all the modules with:
+     * <pre>
+     *  - id        => id of the module.
+     *  - name      => Name of the module.
+     *  - label     => Display for the module.
+     *  - inProject => True or false if the project have the module.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b> The project id for consult.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -142,9 +183,21 @@ class Project_IndexController extends IndexController
     }
 
     /**
-     * Get all the role-user relation with the projectId
+     * Returns all the role-user relation with the project.
      *
-     * @requestparam int $id The project Id
+     * Returns a list of all the roles related to the users under the project with:
+     * <pre>
+     *  - id    => id of the role.
+     *  - name  => Name of the role.
+     *  - users => id and display of the users with the role.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b> The project id for consult.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */

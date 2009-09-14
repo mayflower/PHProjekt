@@ -16,6 +16,7 @@
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -27,6 +28,7 @@
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
@@ -34,22 +36,30 @@
 class Core_HistoryController extends Core_IndexController
 {
     /**
-     * Returns the list for History items in JSON.
+     * Returns the list of actions done in one item.
      *
-     * @requestparam integer moduleId    Id of the module (if moduleName is sent, this is not necessary)
-     * @requestparam integer itemId      Id of the item
-     * @requestparam integer userId      Id of the user (optional)
-     * @requestparam string  moduleName  Name of the module (if moduleId is sent, this is not necessary)
-     * @requestparam date    startDate   To limit the list start date (optional)
-     * @requestparam date    endDate     To limit the list end date (optional)
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>moduleId</b> id of the module (if moduleName is sent, this is not necessary).
+     *  - integer <b>itemId</b>   id of the item.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>userId</b>     To filter by user id.
+     *  - string  <b>moduleName</b> Name of the module (if moduleId is sent, this is not necessary).
+     *  - date    <b>startDate</b>  To filter by start date.
+     *  - date    <b>endDate</b>    To filter by end date.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @throws Phprojekt_PublishedException On missing or wrong moduleId or itemId.
      *
      * @return void
      */
     public function jsonListAction()
     {
-        // Every dojox.data.QueryReadStore may use "start" and "count" for paging,
-        // This could be applied to the query set. This is also used for loading a
-        // grid on demand (initially only a part is shown, scrolling down loads what is needed).
         $moduleId   = (int) $this->getRequest()->getParam('moduleId', null);
         $itemId     = (int) $this->getRequest()->getParam('itemId', null);
         $userId     = (int) $this->getRequest()->getParam('userId', null);

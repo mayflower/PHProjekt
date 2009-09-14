@@ -16,17 +16,19 @@
  * @version    $Id$
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Setting
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
 /**
- * Default Setting Module Controller for PHProjekt 6.0
+ * Setting Module Controller for PHProjekt 6.0
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Setting
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
@@ -34,7 +36,15 @@
 class Setting_IndexController extends IndexController
 {
     /**
-     * Return all the modules that contain settings
+     * Returns all the modules that contain settings.
+     *
+     * Returns a list of modules that have a Setting class, with:
+     * <pre>
+     *  - name  => Name of the module.
+     *  - label => Display for the module.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -47,7 +57,19 @@ class Setting_IndexController extends IndexController
     }
 
     /**
-     * Return the setting fields for one module
+     * Returns the setting fields and data for one module.
+     *
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of the setting.
+     *  - The number of rows.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - string <b>moduleName</b> Name of the module.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -69,9 +91,23 @@ class Setting_IndexController extends IndexController
     }
 
     /**
-     * Saves the settings
+     * Saves the settings for one module.
      *
-     * @requestparam string moduleName ...
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - string <b>moduleName</b>              Name of the module.
+     *  - mixed  <b>all other module fields</b> All the fields values to save.
+     * </pre>
+     *
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0.
+     *  - id      => 0.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
      *
      * @return void
      */

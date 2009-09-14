@@ -16,17 +16,19 @@
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Statistic
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
 /**
- * Default Statistic Module Controller for PHProjekt 6.0
+ * Statistic Module Controller for PHProjekt 6.0
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Statistic
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
@@ -34,11 +36,25 @@
 class Statistic_IndexController extends IndexController
 {
    /**
-     * Returns an array with the statistics data
+     * Returns the statistics data.
      *
-     * @requestparam integer startDate Start date for the query
-     * @requestparam integer endDate   End date for the query
-     * @requestparam integer nodeId    Current project Id
+     * The return have
+     * <pre>
+     *  - users    => id and display of all the users involved
+     *  - projects => id and display of all the projects involved.
+     *  - rows     => pair projectId => userId - Booked minutes.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - date    <b>startDate</b> ISO start date for filter.
+     *  - date    <b>endDate</b>   ISO end date for filter.
+     *  - integer <b>nodeId</b>    List all the projects under nodeId.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @throws Phprojekt_PublishedException On error in the parameters.
      *
      * @return void
      */
@@ -59,7 +75,18 @@ class Statistic_IndexController extends IndexController
     }
 
     /**
-     * Returns the data for export
+     * Returns the statistics data.
+     *
+     * Also return the Total per rows.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - date    <b>startDate</b> ISO start date for filter.
+     *  - date    <b>endDate</b>   ISO end date for filter.
+     *  - integer <b>nodeId</b>    List all the projects under nodeId.
+     * </pre>
+     *
+     * The return is in CSV format.
      *
      * @return void
      */

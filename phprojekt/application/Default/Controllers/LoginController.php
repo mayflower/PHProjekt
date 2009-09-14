@@ -106,19 +106,17 @@ class LoginController extends Zend_Controller_Action
     /**
      * Executes the login by json using the username and password.
      *
-     * The return is a string in JSON format with:
-     * <pre>
-     *  - type    => 'success' or 'error'.
-     *  - message => Success or error message.
-     * </pre>
-     *
      * OPTIONAL request parameters:
      * <pre>
      *  - string <b>username</b> Username for login.
      *  - string <b>password</b> Password for login.
      * </pre>
      *
-     * The return is in JSON format.
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     * </pre>
      *
      * @return void
      */

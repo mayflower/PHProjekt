@@ -16,6 +16,7 @@
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -27,6 +28,7 @@
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
@@ -34,9 +36,30 @@
 class Core_RoleController extends Core_IndexController
 {
     /**
-     * Return all the modules in an array and the access if exists
+     * Returns all the modules and the access for one roleId.
      *
-     * @requestparam integer $roleId The role id
+     * Returns a list of all the modules with:
+     * <pre>
+     *  - id       => id of the module.
+     *  - name     => Name of the module.
+     *  - label    => Display for the module.
+     *  - none     => True or false for none access.
+     *  - read     => True or false for read access.
+     *  - write    => True or false for write access.
+     *  - access   => True or false for access access.
+     *  - create   => True or false for create access.
+     *  - copy     => True or false for copy access.
+     *  - delete   => True or false for delete access.
+     *  - download => True or false for download access.
+     *  - admin    => True or false for admin access.
+     * </pre>
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b> The role id for consult.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */

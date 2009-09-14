@@ -16,6 +16,7 @@
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
@@ -27,6 +28,7 @@
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
@@ -34,9 +36,12 @@
 class Core_ModuleDesignerController extends Core_IndexController
 {
     /**
-     * Returns the detail for a module in JSON.
+     * Returns the data of each field of the module.
      *
-     * @requestparam integer id ...
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the item to consult.
+     * </pre>
      *
      * @return void
      */
@@ -60,14 +65,30 @@ class Core_ModuleDesignerController extends Core_IndexController
     }
 
     /**
-     * Saves the current desginer of the module
+     * Saves the design of all the fields in the module.
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException
-     * If not, the return is a string with the same format than the Phprojekt_PublishedException
-     * but with success type
+     * If the request parameter "id" is null or 0, the function will add a new module,
+     * if the "id" is an existing module, the function will update it.
      *
-     * @requestparam integer id
-     * @requestparam string  designerData
+     * The save action will try to add or update the module table itself and the database_manager.
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b>           id of the module to save.
+     *  - string  <b>designerData</b> Data of the fields.
+     *  - string  <b>name</b>         Name of the module.
+     *  - string  <b>label</b>        Display of the module.
+     * </pre>
+     *
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0.
+     *  - id      => id of the module.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On error in the action save.
      *
      * @return void
      */
@@ -126,9 +147,9 @@ class Core_ModuleDesignerController extends Core_IndexController
     }
 
     /**
-     * Get the length and type from the values
+     * Get the length and type from the values.
      *
-     * @param array $data Array $_POST
+     * @param array $data Array $_POST values.
      *
      * @return array
      */

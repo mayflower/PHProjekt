@@ -16,17 +16,19 @@
  * @version    $Id$
  * @author     Eduardo Polidor <polidor@mayflower.de>
  * @package    PHProjekt
+ * @subpackage Calendar
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
 /**
- * Default Calendar Module Controller for PHProjekt 6.0
+ * Calendar Module Controller for PHProjekt 6.0
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
+ * @subpackage Calendar
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
@@ -34,19 +36,177 @@
 class Calendar_IndexController extends IndexController
 {
     /**
-     * Saves the current item
-     * Save if you are add one or edit one.
-     * Use the model module for get the data
+     * Returns the list of events where the logged user is involved.
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException
-     * If not, the return is a string with the same format than the Phprojekt_PublishedException
-     * but with success type
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of all the rows.
+     *  - The number of rows.
      *
-     * @requestparam integer id              Current item id or null for new
-     * @requestparam string  startDate       Start Date for the item or recurring
-     * @requestparam string  rrule           Rule for aply the recurring
-     * @requestparam array   dataParticipant Array with usersId involved in the event
-     * @requestparam bool    multipleEvents  Aply the save for one item or multiple events
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b>     List only this id.
+     *  - integer <b>count</b>  Use for SQL LIMIT count.
+     *  - integer <b>offset</b> Use for SQL LIMIT offset.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonListAction()
+    {
+        $count  = (int) $this->getRequest()->getParam('count', null);
+        $offset = (int) $this->getRequest()->getParam('start', null);
+        $itemId = (int) $this->getRequest()->getParam('id', null);
+
+        if (!empty($itemId)) {
+            $where = 'id = ' . (int) $itemId;
+        } else {
+            $where = 'participant_id = ' . (int) PHprojekt_Auth::getUserId();
+        }
+        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
+
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
+
+    /**
+     * Returns the list of events where the logged user is involved,
+     * only for one date.
+     *
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of all the rows.
+     *  - The number of rows.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - date    <b>date</b>   Date for consult.
+     *  - integer <b>count</b>  Use for SQL LIMIT count.
+     *  - integer <b>offset</b> Use for SQL LIMIT offset.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonDayListSelfAction()
+    {
+        $count  = (int) $this->getRequest()->getParam('count', null);
+        $offset = (int) $this->getRequest()->getParam('start', null);
+        $db     = Phprojekt::getInstance()->getDb();
+        $date   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
+
+        $where = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+            (int) PHprojekt_Auth::getUserId(), $date, $date);
+        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
+
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+
+    /**
+     * Returns the list of events where some users are involved,
+     * only for one date.
+     *
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of all the rows.
+     *  - The number of rows.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - date    <b>date</b>   Date for consult.
+     *  - users   <b>users</b>  Comma separated ids of the users.
+     *  - integer <b>count</b>  Use for SQL LIMIT count.
+     *  - integer <b>offset</b> Use for SQL LIMIT offset.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonDayListSelectAction()
+    {
+        $count   = (int) $this->getRequest()->getParam('count', null);
+        $offset  = (int) $this->getRequest()->getParam('start', null);
+        $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
+        $usersId = $this->getRequest()->getParam('users', null);
+
+        $records = $this->getModelObject()->getUserSelectionRecords($usersId, $date, $count, $offset);
+
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+
+    /**
+     * Returns the list of events where the logged user is involved,
+     * for a specific period (like week or month).
+     *
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of all the rows.
+     *  - The number of rows.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - date    <b>dateStart</b> Start date for filter.
+     *  - date    <b>dateEnd</b>   End date for filter.
+     *  - integer <b>count</b>     Use for SQL LIMIT count.
+     *  - integer <b>offset</b>    Use for SQL LIMIT offset.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonPeriodListAction()
+    {
+        $count     = (int) $this->getRequest()->getParam('count', null);
+        $offset    = (int) $this->getRequest()->getParam('start', null);
+        $db        = Phprojekt::getInstance()->getDb();
+        $dateStart = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d"))));
+        $dateEnd   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d"))));
+
+        $where     = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+            (int) PHprojekt_Auth::getUserId(), $dateEnd, $dateStart);
+        $records = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
+
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+
+    /**
+     * Saves the current item.
+     *
+     * If the request parameter "id" is null or 0, the function will add a new item,
+     * if the "id" is an existing item, the function will update it.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b>                      id of the item to save.
+     *  - string  <b>startDate</b>               Start Date of the item or recurring.
+     *  - string  <b>rrule</b>                   Recurring rule.
+     *  - array   <b>dataParticipant</b>         Array with users id involved in the event.
+     *  - boolean <b>multipleEvents</b>          Aply the save for one item or multiple events.
+     *  - mixed   <b>all other module fields</b> All the fields values to save.
+     * </pre>
+     *
+     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * if not, it returns a string in JSON format with:
+     * <pre>
+     *  - type    => 'success'.
+     *  - message => Success message.
+     *  - code    => 0.
+     *  - id      => Id of the item.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
      *
      * @return void
      */
@@ -86,38 +246,27 @@ class Calendar_IndexController extends IndexController
     }
 
     /**
-     * Echoes:
-     * 1) All the participants for one item (checks the recurrence and returns all the users involved)
-     * 2) All the related events to the current one
+     * Deletes a certain event.
      *
-     * @requestparam integer id The event id
+     * If the multipleEvents is true, all the related events will be deleted too.
+     * If the multipleParticipants is true, the action delete also the events to the other participants.
      *
-     * @return void
-     */
-    public function jsonGetRelatedDataAction()
-    {
-        $id   = (int) $this->getRequest()->getParam('id');
-        $data = array('data' => array());
-
-        if ($id > 0) {
-            $record = $this->getModelObject()->find($id);
-            if (isset($record->id)) {
-                $participants  = $record->getAllParticipants();
-                $relatedEvents = implode(",", $record->getRelatedEvents());
-                $data['data']  = array('participants'  => $participants,
-                                       'relatedEvents' => $relatedEvents);
-            }
-        }
-
-        Phprojekt_Converter_Json::echoConvert($data);
-    }
-
-    /**
-     * Deletes an event.
-     * If the multipleEvents is true, all the related events will be deleted too
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b>                   id of the event to delete.
+     *  - boolean <b>multipleEvents</b>       Deletes one item or multiple events.
+     *  - boolean <b>multipleParticipants</b> Deletes for multiple participants or just the logged one.
+     * </pre>
      *
-     * @requestparam integer id             The event id
-     * @requestparam bool    multipleEvents Aply the save for one item or multiple events
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0.
+     *  - id      => id of the deleted event.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On missing or wrong id, or on error in the action delete.
      *
      * @return void
      */
@@ -148,190 +297,57 @@ class Calendar_IndexController extends IndexController
     }
 
     /**
-     * Returns the list for a model in JSON.
+     * Returns the relations for one event.
      *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
+     * Returns a data array with:
+     * <pre>
+     *  - participants  => All the participants for one item
+     *                     (checks the recurrence and returns all the users involved).
+     *  - relatedEvents => All the related events to the current one.
+     * </pre>
      *
-     * @requestparam integer count ...
-     * @requestparam integer start ...
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the event to consult.
+     * </pre>
      *
-     * @return void
-     */
-    public function jsonListAction()
-    {
-        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
-        // so lets apply this to the query set. This is also used for loading a
-        // grid on demand (initially only a part is shown, scrolling down loads what is needed).
-        $count  = (int) $this->getRequest()->getParam('count', null);
-        $offset = (int) $this->getRequest()->getParam('start', null);
-        $itemId = (int) $this->getRequest()->getParam('id', null);
-
-        if (!empty($itemId)) {
-            $where = 'id = ' . (int) $itemId;
-        } else {
-            $where = 'participant_id = ' . (int) PHprojekt_Auth::getUserId();
-        }
-        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
-
-        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
-    }
-
-    /**
-     * Returns the Day List for the logged user in JSON.
-     *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
-     *
-     * @requestparam integer count ...
-     * @requestparam integer start ...
-     * @requestparam string  date ...
+     * The return is in JSON format.
      *
      * @return void
      */
-    public function jsonDayListSelfAction()
+    public function jsonGetRelatedDataAction()
     {
-        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
-        // so lets apply this to the query set.
-        $count   = (int) $this->getRequest()->getParam('count', null);
-        $offset  = (int) $this->getRequest()->getParam('start', null);
-        $db      = Phprojekt::getInstance()->getDb();
-        $date    = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
-        $where   = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
-            (int) PHprojekt_Auth::getUserId(), $date, $date);
-        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
+        $id   = (int) $this->getRequest()->getParam('id');
+        $data = array('data' => array());
 
-        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
-    }
-
-    /**
-     * Returns the Day List for a specific selection of users in JSON.
-     *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
-     *
-     * @requestparam integer count ...
-     * @requestparam integer start ...
-     * @requestparam string  date ...
-     * @requestparam string  usersId ...
-     *
-     * @return void
-     */
-    public function jsonDayListSelectAction()
-    {
-        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
-        // so lets apply this to the query set.
-        $count   = (int) $this->getRequest()->getParam('count', null);
-        $offset  = (int) $this->getRequest()->getParam('start', null);
-        $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-        $usersId = $this->getRequest()->getParam('users', null);
-        $records = $this->getModelObject()->getUserSelectionRecords($usersId, $date, $count, $offset);
-
-        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
-    }
-
-    /**
-     * Returns a List for a specific period (like week or month) in JSON.
-     *
-     * For further information see the chapter json exchange
-     * in the internals documentantion
-     *
-     * @requestparam integer count ...
-     * @requestparam integer start ...
-     * @requestparam string  dateStart ...
-     * @requestparam string  dateEnd ...
-     *
-     * @return void
-     */
-    public function jsonPeriodListAction()
-    {
-        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
-        // so lets apply this to the query set.
-        $count     = (int) $this->getRequest()->getParam('count', null);
-        $offset    = (int) $this->getRequest()->getParam('start', null);
-        $db        = Phprojekt::getInstance()->getDb();
-        $dateStart = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d"))));
-        $dateEnd   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d"))));
-        $where     = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
-            (int) PHprojekt_Auth::getUserId(), $dateEnd, $dateStart);
-        $records = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
-
-        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
-    }
-
-    /**
-     * Returns the Day List for the logged user in CSV format.
-     *
-     * @return void
-     */
-    public function csvDayListSelfAction()
-    {
-        $count   = (int) $this->getRequest()->getParam('count', null);
-        $offset  = (int) $this->getRequest()->getParam('start', null);
-        $db      = Phprojekt::getInstance()->getDb();
-        $date    = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
-        $where   = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
-            (int) PHprojekt_Auth::getUserId(), $date, $date);
-        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
-
-        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
-    }
-
-    /**
-     * Returns the Day List for a specific selection of users in CSV format.
-     *
-     * @return void
-     */
-    public function csvDayListSelectAction()
-    {
-        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
-        // so lets apply this to the query set.
-        $count   = (int) $this->getRequest()->getParam('count', null);
-        $offset  = (int) $this->getRequest()->getParam('start', null);
-        $db      = Phprojekt::getInstance()->getDb();
-        $date    = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
-        $users   = explode(",", $this->getRequest()->getParam('users', null));
-
-        $ids = array();
-        foreach ($users as $users) {
-            $ids[] = (int) $users;
-        }
-        if (empty($ids)) {
-            $ids[] = (int) PHprojekt_Auth::getUserId();
+        if ($id > 0) {
+            $record = $this->getModelObject()->find($id);
+            if (isset($record->id)) {
+                $participants  = $record->getAllParticipants();
+                $relatedEvents = implode(",", $record->getRelatedEvents());
+                $data['data']  = array('participants'  => $participants,
+                                       'relatedEvents' => $relatedEvents);
+            }
         }
 
-        $where = sprintf('participant_id IN (%s) AND start_date <= %s AND end_date >= %s',
-            implode(", ", $ids), $date, $date);
-        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
-
-        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**
-     * Returns a List for a specific period (like week or month) in CSV format.
+     * Returns a specific list of users.
      *
-     * @return void
-     */
-    public function csvPeriodListAction()
-    {
-        // Every dojox.data.QueryReadStore has to (and does) return "start" and "count" for paging,
-        // so lets apply this to the query set.
-        $count     = (int) $this->getRequest()->getParam('count', null);
-        $offset    = (int) $this->getRequest()->getParam('start', null);
-        $db        = Phprojekt::getInstance()->getDb();
-        $dateStart = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d"))));
-        $dateEnd   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d"))));
-        $where     = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
-            (int) PHprojekt_Auth::getUserId(), $dateEnd, $dateStart);
-        $records = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
-
-        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
-    }
-
-    /**
-     * Return a specific list of users
+     * Returns a list of all the selected users with:
+     * <pre>
+     *  - id      => id of user.
+     *  - display => Display for the user.
+     * </pre>
      *
-     * @requestparam string users   The users id list. E.g.: '1,3,5'
+     * REQUIRES request parameters:
+     * <pre>
+     *  - string <b>users</b> Comma separated ids of the users.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
@@ -360,5 +376,110 @@ class Calendar_IndexController extends IndexController
         }
 
         Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
+
+    /**
+     * Returns the list of events where the logged user is involved,
+     * only for one date.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - date    <b>date</b>   Date for consult.
+     *  - integer <b>count</b>  Use for SQL LIMIT count.
+     *  - integer <b>offset</b> Use for SQL LIMIT offset.
+     * </pre>
+     *
+     * The return is in CSV format.
+     *
+     * @return void
+     */
+    public function csvDayListSelfAction()
+    {
+        $count   = (int) $this->getRequest()->getParam('count', null);
+        $offset  = (int) $this->getRequest()->getParam('start', null);
+        $db      = Phprojekt::getInstance()->getDb();
+        $date    = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
+
+        $where = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+            (int) PHprojekt_Auth::getUserId(), $date, $date);
+        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
+
+        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
+
+    /**
+     * Returns the list of events where some users are involved,
+     * only for one date.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - date    <b>date</b>   Date for consult.
+     *  - users   <b>users</b>  Comma separated ids of the users.
+     *  - integer <b>count</b>  Use for SQL LIMIT count.
+     *  - integer <b>offset</b> Use for SQL LIMIT offset.
+     * </pre>
+     *
+     * The return is in CSV format.
+     *
+     * @return void
+     */
+    public function csvDayListSelectAction()
+    {
+        $count  = (int) $this->getRequest()->getParam('count', null);
+        $offset = (int) $this->getRequest()->getParam('start', null);
+        $db     = Phprojekt::getInstance()->getDb();
+        $date   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
+        $users  = explode(",", $this->getRequest()->getParam('users', null));
+
+        $ids = array();
+        foreach ($users as $users) {
+            $ids[] = (int) $users;
+        }
+        if (empty($ids)) {
+            $ids[] = (int) PHprojekt_Auth::getUserId();
+        }
+
+        $where = sprintf('participant_id IN (%s) AND start_date <= %s AND end_date >= %s',
+            implode(", ", $ids), $date, $date);
+        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
+
+        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+
+    /**
+     * Returns the list of events where the logged user is involved,
+     * for a specific period (like week or month).
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - date    <b>dateStart</b> Start date for filter.
+     *  - date    <b>dateEnd</b>   End date for filter.
+     *  - integer <b>count</b>     Use for SQL LIMIT count.
+     *  - integer <b>offset</b>    Use for SQL LIMIT offset.
+     * </pre>
+     *
+     * The return is in CSV format.
+     *
+     * @return void
+     */
+    public function csvPeriodListAction()
+    {
+        $count     = (int) $this->getRequest()->getParam('count', null);
+        $offset    = (int) $this->getRequest()->getParam('start', null);
+        $db        = Phprojekt::getInstance()->getDb();
+        $dateStart = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d"))));
+        $dateEnd   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d"))));
+
+        $where     = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+            (int) PHprojekt_Auth::getUserId(), $dateEnd, $dateStart);
+        $records = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
+
+        Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 }
