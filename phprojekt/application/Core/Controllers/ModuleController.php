@@ -151,7 +151,9 @@ class Core_ModuleController extends Core_IndexController
      */
     public function jsonDeleteAction()
     {
-        $id = (int) $this->getRequest()->getParam('id');
+        $id          = (int) $this->getRequest()->getParam('id');
+        $tmpModule   = true;
+        $tmpDatabase = true;
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
