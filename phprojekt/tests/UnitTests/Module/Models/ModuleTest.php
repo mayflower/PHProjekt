@@ -78,6 +78,27 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
 
         $converted[] = $data;
 
+        // saveType
+        $data = array();
+        $data['key']      = 'saveType';
+        $data['label']    = Phprojekt::getInstance()->translate('Type');
+        $data['type']     = 'selectbox';
+        $data['hint']     = Phprojekt::getInstance()->getTooltip('saveType');
+        $data['order']    = 0;
+        $data['position'] = 3;
+        $data['fieldset'] = '';
+        $data['range'][]  = array('id'   => '0',
+                                  'name' => Phprojekt::getInstance()->translate('Normal'));
+        $data['range'][]  = array('id'   => '1',
+                                  'name' => Phprojekt::getInstance()->translate('Global'));
+        $data['required'] = false;
+        $data['readOnly'] = false;
+        $data['tab']      = 1;
+        $data['integer']  = true;
+        $data['length']   = 0;
+
+        $converted[] = $data;
+
         // active
         $data = array();
         $data['key']      = 'active';
@@ -85,7 +106,7 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $data['type']     = 'selectbox';
         $data['hint']     = Phprojekt::getInstance()->getTooltip('active');
         $data['order']    = 0;
-        $data['position'] = 3;
+        $data['position'] = 4;
         $data['fieldset'] = '';
         $data['range'][]  = array('id'   => '0',
                                   'name' => Phprojekt::getInstance()->translate('No'));

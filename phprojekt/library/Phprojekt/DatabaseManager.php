@@ -255,7 +255,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     break;
                 case 'display':
                     // Has it an Id value that should be translated into a descriptive String?
-                    if (null === $field->formRange) {
+                    if (null === $field->formRange || empty($field->formRange)) {
                         // No
                         $entry = $this->_convertStandard($field);
                     } else {
@@ -458,11 +458,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     /**
      * Validate the fields definitions per each field
      *
-     * @param array $data The field definition
+     * @param array   $data     The field definition
+     * @param integer $saveType Type of module save (0 for normal -under project-, 1 for global)
      *
      * @return boolean
      */
-    public function recordValidate($data)
+    public function recordValidate($data, $saveType = 0)
     {
         $valid        = true;
         $this->_error = new Phprojekt_Error();
@@ -617,13 +618,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             }
         }
 
-        if ($valid && !$foundProjectId) {
+        if ($valid && !$foundProjectId && $saveType != 1) {
             $valid = false;
             $this->_error->addError(array(
                 'field'   => 'Module Designer',
                 'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                 'message' => Phprojekt::getInstance()->translate('The module must have a project selector called '
-                    . 'projectId')));
+                    . 'project_id')));
         }
 
         return $valid;
@@ -644,12 +645,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     /**
      * Delete all entries for the current table and create the new one
      *
-     * @param string $table The table name
-     * @param array  $data  All the data of each field
+     * @param string $table      The table name
+     * @param array  $data       All the data of each field
+     * @param array  $tableData  All the table data of each field
      *
      * @return void
      */
-    public function saveData($table, $data)
+    public function saveData($table, $data, $tableData)
     {
         $where  = $this->getAdapter()->quoteInto('table_name = ?', $table);
         $result = $this->fetchAll($where);
@@ -660,6 +662,21 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $databaseManager = clone($this);
             foreach ($values as $key => $value) {
                 if (isset($databaseManager->$key)) {
+                    switch ($key) {
+                        case 'formRegexp':
+                        case 'formRange':
+                        case 'defaultValue':
+                            if (empty($value)) {
+                                $value = null;
+                            }
+                            break;
+                        case 'isInteger':
+                            if ($tableData[$values['tableField']]['type'] == 'int') {
+                                $value = 1;
+                            }
+                            break;
+                    }
+
                     $databaseManager->$key = $value;
                 }
             }
@@ -704,7 +721,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $field->next();
                 }
                 $index = Phprojekt_ActiveRecord_Abstract::convertVarToSql($field->tableField);
-                $data[$i]['tableType']   = $info['metadata'][$index]['DATA_TYPE'];
+                $data[$i]['tableType'] = $info['metadata'][$index]['DATA_TYPE'];
                 if (null === $info['metadata'][$index]['LENGTH']) {
                     switch ($info['metadata'][$index]['DATA_TYPE']) {
                         case 'int':
@@ -735,12 +752,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function syncTable($newFields, $tableName, $tableData)
     {
+        $systemFields = array('id', 'owner_id', 'project_id');
         $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
 
         // Clean the metadata cache
         if (null !== $this->_model) {
             $info    = $this->_model->info();
-            $cacheId = $info['schema'].".".$info['name'];
+            $cacheId = $info['schema'] . "." . $info['name'];
             $cacheId = md5("$cacheId");
             Zend_Db_Table_Abstract::getDefaultMetadataCache()->remove($cacheId);
         }
@@ -750,6 +768,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                                           'length' => 11);
         $tableDataForCreate['owner_id'] = array('type'   => 'int',
                                                 'length' => 11);
+        if (!isset($tableDataForCreate['project_id'])) {
+            $tableDataForCreate['project_id'] = array('type'   => 'int',
+                                                      'length' => 11);
+        }
         array_merge($tableDataForCreate, $tableData);
         $tableName   = strtolower(Phprojekt_ActiveRecord_Abstract::convertVarToSql($tableName));
         $tableFields = $tableManager->getTableFields($tableName, $tableDataForCreate);
@@ -763,14 +785,16 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $newValues['tableField']    = preg_replace('/[^a-zA-Z0-9_]/i', '', $newValues['tableField']);
                     $fieldDefinition            = $tableData[$newValues['tableField']];
                     $fieldDefinition['name']    = $newValues['tableField'];
-                    if ($oldValues['tableField'] == $newValues['tableField']) {
-                        if (!$tableManager->modifyField($tableName, $fieldDefinition)) {
-                            $return = false;
-                        }
-                    } else {
-                        $fieldDefinition['oldName'] = $oldValues['tableField'];
-                        if (!$tableManager->changeField($tableName, $fieldDefinition)) {
-                            $return = false;
+                    if (!in_array($fieldDefinition['name'], $systemFields)) {
+                        if ($oldValues['tableField'] == $newValues['tableField']) {
+                            if (!$tableManager->modifyField($tableName, $fieldDefinition)) {
+                                $return = false;
+                            }
+                        } else {
+                            $fieldDefinition['oldName'] = $oldValues['tableField'];
+                            if (!$tableManager->changeField($tableName, $fieldDefinition)) {
+                                $return = false;
+                            }
                         }
                     }
                     $found = true;
@@ -780,8 +804,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             if (!$found) {
                 $fieldDefinition         = array();
                 $fieldDefinition['name'] = $oldValues['tableField'];
-                if (!$tableManager->deleteField($tableName, $fieldDefinition)) {
-                    $return = false;
+                if (!in_array($fieldDefinition['name'], $systemFields)) {
+                    if (!$tableManager->deleteField($tableName, $fieldDefinition)) {
+                        $return = false;
+                    }
                 }
             }
         }
@@ -792,8 +818,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 $newValues['tableField'] = preg_replace('/[^a-zA-Z0-9_]/i', '', $newValues['tableField']);
                 $fieldDefinition         = $tableData[$newValues['tableField']];
                 $fieldDefinition['name'] = $newValues['tableField'];
-                if (!$tableManager->addField($tableName, $fieldDefinition)) {
-                    $return = false;
+                if (!in_array($fieldDefinition['name'], $systemFields)) {
+                    if (!$tableManager->addField($tableName, $fieldDefinition)) {
+                        $return = false;
+                    }
                 }
             }
         }

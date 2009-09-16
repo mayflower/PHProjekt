@@ -302,8 +302,8 @@ $lang["The length of the varchar fields must be between 1 and 255"] = "Die Läng
 $lang["The length of the int fields must be between 1 and 11"] = "Die Feldlänger von Integer Feldern muss zwischen 1 "
     . "und 11 liegen";
 $lang["Invalid form Range for the select field"] = "Ungültiger Wert für die Select Box";
-$lang["The module must have a project selector called projectId"] = "Das Modul muss ein Feld als Projektauswahlbox "
-    . "enhalten";
+$lang["The module must have a project selector called project_id"] = "Das Modul muss ein Feld als project_id "
+    . "enthalten";
 
 // Tooltip Help
 // 'Notification' checkbox

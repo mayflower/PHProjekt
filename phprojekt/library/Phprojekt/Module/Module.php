@@ -118,7 +118,8 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
         $this->name     = ucfirst($params['name']);
         $this->label    = $params['label'];
         $this->active   = (int) $params['active'];
-        $this->saveType = 0;
+        $this->saveType = (int) $params['saveType'];
+        $this->version  = Phprojekt::getInstance()->getVersion();
 
         if ($this->recordValidate()) {
             $saveNewModule = false;
@@ -138,6 +139,9 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
 
                 // Copy Templates files
                 $this->_copyTemplates(array('Template'));
+
+                // Change SQL file
+                $this->_createSqlFile();
             }
 
             // Reset cache for modules
@@ -271,13 +275,13 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
             if ($file != '.'  &&
                 $file != '..' &&
                 $file != '.svn') {
-                if (is_dir($templatePath . DIRECTORY_SEPARATOR .$file)) {
+                if (is_dir($templatePath . DIRECTORY_SEPARATOR . $file)) {
                     array_push($paths, $file);
                     $this->_makeFolder($paths);
                     $this->_copyTemplates($paths);
                     array_pop($paths);
                 } else {
-                    $templateContent = file_get_contents($templatePath . DIRECTORY_SEPARATOR .$file);
+                    $templateContent = file_get_contents($templatePath . DIRECTORY_SEPARATOR . $file);
                     $templateContent = str_replace("##TEMPLATE##", $this->name, $templateContent);
                     if ($file == 'Template.php') {
                         $file = $this->name . '.php';
@@ -289,7 +293,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                             $modulePath .= DIRECTORY_SEPARATOR . $path;
                         }
                     }
-                    if ($newFile = fopen($modulePath . DIRECTORY_SEPARATOR .$file, 'w')) {
+                    if ($newFile = fopen($modulePath . DIRECTORY_SEPARATOR . $file, 'w')) {
                         if (false === fwrite($newFile, $templateContent)) {
                             Phprojekt::getInstance()->getLog()->debug('Error on copy file ' .
                                 $modulePath . DIRECTORY_SEPARATOR . $file);
@@ -298,6 +302,89 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                     }
                 }
             }
+        }
+    }
+
+    private function _createSqlFile()
+    {
+        $eol        = "\n";
+        $modulePath = PHPR_CORE_PATH . DIRECTORY_SEPARATOR
+            . $this->name . DIRECTORY_SEPARATOR
+            . 'Sql' . DIRECTORY_SEPARATOR
+            . 'Db.json';
+
+        $content = file_get_contents($modulePath);
+
+        $content = str_replace("##VERSION##", $this->version, $content);
+        $content = str_replace("##MODULETABLE##", strtolower($this->name), $content);
+        $content = str_replace("##MODULENAME##", $this->name, $content);
+        $content = str_replace("##MODULELABEL##", $this->label, $content);
+        $content = str_replace("##MODULESAVETYPE##", $this->saveType, $content);
+
+        $module = Phprojekt_Loader::getModel($this->name, $this->name);
+        $fields = $module->getInformation()->getDataDefinition();
+
+        $structure   = '';
+        $initialData = '';
+        $space1      = '                ';
+        $space2      = '                    ';
+        $count       = count($fields);
+        $i           = 0;
+        foreach ($fields as $field) {
+            $i++;
+            if (empty($field['formRegexp'])) {
+                $field['formRegexp'] = 'NULL';
+            }
+            if (empty($field['formRange'])) {
+                $field['formRange'] = 'NULL';
+            }
+            if (empty($field['defaultValue'])) {
+                $field['defaultValue'] = 'NULL';
+            }
+            $initialData .= $space1 . '{' . $eol;
+            $initialData .= $space2 . '"table_name":      "' . $field['tableName'] . '",' . $eol;
+            $initialData .= $space2 . '"table_field":     "' . $field['tableField'] . '",' . $eol;
+            $initialData .= $space2 . '"form_tab":        "' . $field['formTab'] . '",' . $eol;
+            $initialData .= $space2 . '"form_label":      "' . $field['formLabel'] . '",' . $eol;
+            $initialData .= $space2 . '"form_type":       "' . $field['formType'] . '",' . $eol;
+            $initialData .= $space2 . '"form_position":   "' . $field['formPosition'] . '",' . $eol;
+            $initialData .= $space2 . '"form_columns":    "' . $field['formColumns'] . '",' . $eol;
+            $initialData .= $space2 . '"form_regexp":     "' . $field['formRegexp'] . '",' . $eol;
+            $initialData .= $space2 . '"form_range":      "' . $field['formRange'] . '",' . $eol;
+            $initialData .= $space2 . '"default_value":   "' . $field['defaultValue'] . '",' . $eol;
+            $initialData .= $space2 . '"list_position":   "' . $field['listPosition'] . '",' . $eol;
+            $initialData .= $space2 . '"list_align":      "' . $field['listAlign'] . '",' . $eol;
+            $initialData .= $space2 . '"list_use_filter": "' . $field['listUseFilter'] . '",' . $eol;
+            $initialData .= $space2 . '"alt_position":    "' . $field['altPosition'] . '",' . $eol;
+            $initialData .= $space2 . '"status":          "' . $field['status'] . '",' . $eol;
+            $initialData .= $space2 . '"is_integer":      "' . $field['isInteger'] . '",' . $eol;
+            $initialData .= $space2 . '"is_required":     "' . $field['isRequired'] . '",' . $eol;
+            $initialData .= $space2 . '"is_unique":       "' . $field['isUnique'] . '"' . $eol;
+            $initialData .= $space1 . '}';
+
+            $structure .= $space1 . '"' . $field['tableField'] . '":     {"type": "' . $field['tableType'] . '"';
+            if ($field['tableLength'] > 0) {
+                if (($field['tableType'] == 'int' && $field['tableLength'] != 11) ||
+                    ($field['tableType'] == 'varchar' && $field['tableLength'] != 255)) {
+                    $structure .= ', "length": "' . $field['tableLength'] .'"';
+                }
+            }
+            $structure .= '}';
+
+            if ($i != $count) {
+                $initialData .= ',' . $eol . $eol;
+                $structure   .= ',' . $eol;
+            }
+        }
+
+        $content = str_replace("##STRUCTURE##", $structure, $content);
+        $content = str_replace("##INITIALDATA##", $initialData, $content);
+
+        if ($file = fopen($modulePath, 'w')) {
+            if (false === fwrite($file, $content)) {
+                Phprojekt::getInstance()->getLog()->debug('Error on write file ' . $modulePath);
+            }
+            fclose($file);
         }
     }
 

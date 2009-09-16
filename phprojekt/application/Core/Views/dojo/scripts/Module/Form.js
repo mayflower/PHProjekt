@@ -259,7 +259,15 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                                     phpr.loadJsFile(phpr.webpath + 'index.php/js/module/name/' + this.sendData['name']);
                                 }
                                 this.publish("updateCacheData");
-                                this.publish("setUrlHash", [phpr.module]);
+                                phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
+                                phpr.DataStore.addStore({url: phpr.globalModuleUrl});
+                                phpr.DataStore.requestData({
+                                    url:         phpr.globalModuleUrl,
+                                    processData: dojo.hitch(this, function() {
+                                        this.main.setGlobalModulesNavigation();
+                                        this.publish("setUrlHash", [phpr.module]);
+                                    })
+                                });
                             }
                         })
                     });

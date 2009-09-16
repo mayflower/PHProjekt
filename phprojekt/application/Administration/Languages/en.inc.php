@@ -38,8 +38,8 @@ $lang["The length of the varchar fields must be between 1 and 255"] = "The lengt
 $lang["The length of the int fields must be between 1 and 11"] = "The length of the int fields must be between 1 and "
     . "11";
 $lang["Invalid form Range for the select field"] = "Invalid form Range for the select field";
-$lang["The module must have a project selector called projectId"] = "The module must have a project selector called "
-    . "projectId";
+$lang["The module must have a project selector called project_id"] = "The module must have a project selector called "
+    . "project_id";
 
 // User submodule
 $lang["Already exists, choose another one please"] = "Already exists, choose another one please";

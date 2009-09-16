@@ -94,10 +94,11 @@ class Core_ModuleDesignerController extends Core_IndexController
      */
     public function jsonSaveAction()
     {
-        $id     = (int) $this->getRequest()->getParam('id');
-        $data   = $this->getRequest()->getParam('designerData');
-        $model  = null;
-        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
+        $id       = (int) $this->getRequest()->getParam('id');
+        $data     = $this->getRequest()->getParam('designerData');
+        $saveType = (int) $this->getRequest()->getParam('saveType');
+        $model    = null;
+        $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
         if (empty($module)) {
             $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('label'));
         }
@@ -111,7 +112,7 @@ class Core_ModuleDesignerController extends Core_IndexController
             $data            = Zend_Json_Decoder::decode($data);
 
             // Validate
-            if ($databaseManager->recordValidate($data)) {
+            if ($databaseManager->recordValidate($data, $saveType)) {
                 // Update Table Structure
                 $tableData = $this->_getTableData($data);
                 if (!$databaseManager->syncTable($data, $module, $tableData)) {
@@ -119,7 +120,7 @@ class Core_ModuleDesignerController extends Core_IndexController
                     $message = Phprojekt::getInstance()->translate('There was an error writing the table');
                 } else {
                     // Update DatabaseManager Table
-                    $databaseManager->saveData($module, $data);
+                    $databaseManager->saveData($module, $data, $tableData);
 
                     if (empty($id)) {
                         $message = Phprojekt::getInstance()->translate('The table module was created correctly');
@@ -130,7 +131,7 @@ class Core_ModuleDesignerController extends Core_IndexController
                 }
             } else {
                 $error   = $databaseManager->getError();
-                $message = $error['label'].': '.$error['message'];
+                $message = $error['label'] . ': ' . $error['message'];
                 $type    = 'error';
             }
         } else {

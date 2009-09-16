@@ -250,7 +250,7 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
         $error = $db->getError();
         $this->assertEquals($message, $error['message']);
 
-        $message = 'The module must have a project selector called projectId';
+        $message = 'The module must have a project selector called project_id';
         $this->assertFalse($db->recordValidate(array(
             array('tableName'   => 'Project',
                   'tableType'   => 'int',

@@ -21,15 +21,14 @@ dojo.provide("phpr.Default.Main");
 
 dojo.declare("phpr.Default.Main", phpr.Component, {
     // Summary: class for initialilzing a default module
-    tree:          null,
-    grid:          null,
-    module:        null,
-    gridWidget:    null,
-    formWidget:    null,
-    treeWidget:    null,
-    globalModules: null,
-    _langUrl:      null,
-    userStore:     null,
+    tree:       null,
+    grid:       null,
+    module:     null,
+    gridWidget: null,
+    formWidget: null,
+    treeWidget: null,
+    _langUrl:   null,
+    userStore:  null,
 
     loadFunctions:function(module) {
         // Summary:
@@ -180,11 +179,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         url:         this._langUrl,
                         processData: dojo.hitch(this, function() {
                             // Load the components, tree, list and details.
-                            phpr.nls      = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
-                            var globalUrl = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
-                            phpr.DataStore.addStore({url: globalUrl});
+                            phpr.nls = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
+                            phpr.DataStore.addStore({url: phpr.globalModuleUrl});
                             phpr.DataStore.requestData({
-                                url:         globalUrl,
+                                url:         phpr.globalModuleUrl,
                                 processData: dojo.hitch(this, function() {
                                     this.setGlobalModulesNavigation();
                                     this.processUrlHash(window.location.hash);
@@ -228,10 +226,14 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     setGlobalModulesNavigation:function() {
         var toolbar       = dijit.byId('mainNavigation');
         var systemToolbar = dijit.byId('systemNavigation');
-        var globalUrl     = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
-        var globalModules = phpr.DataStore.getData({url: globalUrl});
-        var isAdmin       = phpr.DataStore.getMetaData({url: globalUrl});
+        var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
+        var isAdmin       = phpr.DataStore.getMetaData({url: phpr.globalModuleUrl});
+
+        phpr.destroySubWidgets("mainNavigation");
+        dojo.byId("mainNavigation").innerHTML = '';
+
         for (i in globalModules) {
+            phpr.destroyWidget("globalModule" + globalModules[i].id);
             var button = new dijit.form.Button({
                 id:        "globalModule" + globalModules[i].id,
                 label:     phpr.nls.get(globalModules[i].label),
@@ -246,6 +248,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
 
         // Setting
+        phpr.destroyWidget("globalModuleSettings");
         var button = new dijit.form.Button({
             id:        "globalModuleSettings",
             label:     phpr.nls.get('Settings'),
@@ -259,6 +262,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         if (isAdmin > 0) {
             // Administration
+            phpr.destroyWidget("globalModuleAdmin");
             var button = new dijit.form.Button({
                 id:        "globalModuleAdmin",
                 label:     phpr.nls.get('Administration'),
@@ -272,28 +276,32 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
 
         // Help
-        var button = new dijit.form.Button({
-            id:        "globalModuleHelp",
-            label:     phpr.nls.get('Help'),
-            showLabel: true,
-            onClick:   dojo.hitch(this, function() {
-                dojo.publish(this.module + ".showHelp");
-            })
-        });
-        systemToolbar.addChild(button);
-        var separator = new dijit.ToolbarSeparator();
-        systemToolbar.addChild(separator);
+        if (!dojo.byId('globalModuleHelp')) {
+            var button = new dijit.form.Button({
+                id:        "globalModuleHelp",
+                label:     phpr.nls.get('Help'),
+                showLabel: true,
+                onClick:   dojo.hitch(this, function() {
+                    dojo.publish(this.module + ".showHelp");
+                })
+            });
+            systemToolbar.addChild(button);
+            var separator = new dijit.ToolbarSeparator();
+            systemToolbar.addChild(separator);
+        }
 
         // Logout
-        var button = new dijit.form.Button({
-            id:        "globalModuleLogout",
-            label:     phpr.nls.get('Logout'),
-            showLabel: true,
-            onClick:   dojo.hitch(this, function() {
-                location = phpr.webpath + "index.php/Login/logout";
-            })
-        });
-        systemToolbar.addChild(button);
+        if (!dojo.byId('globalModuleLogout')) {
+            var button = new dijit.form.Button({
+                id:        "globalModuleLogout",
+                label:     phpr.nls.get('Logout'),
+                showLabel: true,
+                onClick:   dojo.hitch(this, function() {
+                    location = phpr.webpath + "index.php/Login/logout";
+                })
+            });
+            systemToolbar.addChild(button);
+        }
     },
 
     _isGlobalModule:function(module) {
@@ -301,8 +309,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    Return if the module is global or per project
         // Description:
         //    Return if the module is global or per project
-        var globalUrl     = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
-        var globalModules = phpr.DataStore.getData({url: globalUrl});
+        var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
 
         // System Global Modules
         if (module == 'Administration' ||
@@ -442,8 +449,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.destroySubWidgets("subModuleNavigation");
         dojo.byId("subModuleNavigation").innerHTML = '';
 
-        var globalUrl     = phpr.webpath + "index.php/Core/module/jsonGetGlobalModules";
-        var globalModules = phpr.DataStore.getData({url: globalUrl});
+        var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
         globalModules[1000] = {id: "Settings", "name": "Setting"};
         globalModules[1001] = {id: "Admin", "name": "Administration"};
         for (i in globalModules) {

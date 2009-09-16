@@ -1,35 +1,38 @@
 {
 
-"6.0.0":
+"##VERSION##":
 {
     "structure":
     {
-        "timecard":
+        "##MODULETABLE##":
         {
             "create":
             {
-                "id":         "default",
-                "owner_id":   {"type": "int"},
-                "date":       {"type": "date"},
-                "start_time": {"type": "time"},
-                "end_time":   {"type": "time"},
-                "minutes":    {"type": "int"},
-                "project_id": {"type": "int"},
-                "notes":      {"type": "text"}
+                "id":          "default",
+                "owner_id":    {"type": "int"},
+##STRUCTURE##
             }
         }
     },
 
     "initialData":
     {
+        "database_manager":
+        {
+            "insert":
+            [
+##INITIALDATA##
+            ]
+        },
+
         "module":
         {
             "insert":
             [
                 {
-                    "name":      "Timecard",
-                    "label":     "Timecard",
-                    "save_type": "1",
+                    "name":      "##MODULENAME##",
+                    "label":     "##MODULELABEL##",
+                    "save_type": "##MODULESAVETYPE##",
                     "active":    "1",
                     "_relations":
                     {

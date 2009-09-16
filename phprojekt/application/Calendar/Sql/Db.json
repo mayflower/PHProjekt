@@ -239,10 +239,35 @@
             "insert":
             [
                 {
-                    "name":      "Calendar",
-                    "label":     "Calendar",
-                    "save_type": "1",
-                    "active":    "1"
+                    "name":       "Calendar",
+                    "label":      "Calendar",
+                    "save_type":  "1",
+                    "active":     "1",
+                    "_relations":
+                    {
+                        "project_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id":  "##id##",
+                                    "project_id": "1"
+                                }
+                            ]
+                        },
+
+                        "role_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id": "##id##",
+                                    "role_id":   "1",
+                                    "access":    "139"
+                                }
+                            ]
+                        }
+                    }
                 }
             ]
         }
