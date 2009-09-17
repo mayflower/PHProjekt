@@ -422,7 +422,7 @@ CREATE TABLE `calendar` (
 CREATE TABLE `filemanager` (
   `id` int(11) NOT NULL auto_increment,
   `owner_id` int(11) default NULL,
-  `title` varchar(50) NOT NULL,
+  `title` varchar(100) NOT NULL,
   `comments` text default NULL,
   `project_id` int(11) NOT NULL,
   `files` text NOT NULL,

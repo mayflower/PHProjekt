@@ -10,7 +10,7 @@
             {
                 "id":         "default",
                 "owner_id":   {"type": "int"},
-                "title":      {"type": "varchar", "length": "50", "notNull": "true"},
+                "title":      {"type": "varchar", "length": "100", "notNull": "true"},
                 "comments":   {"type": "text"},
                 "project_id": {"type": "int", "notNull": "true"},
                 "files":      {"type": "text", "notNull": "true"}

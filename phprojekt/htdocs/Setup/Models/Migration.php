@@ -29,19 +29,28 @@
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>s
+ * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Setup_Models_Migration
 {
     /**
-     * Array with P5 info
+     * Arrays with P6 info
      *
      * @var array
      */
-    private $_groups           = array();
-    private $_userKurz         = array();
-    private $_timeZone         = array();
-    private $_users            = array();
+    private $_userKurz    = array();
+    private $_timeZone    = array();
+
+    /**
+     * Arrays with P6 info: the key of each array position is the P5 id, and the value the P6 id, they are used for
+     * conversions.
+     *
+     * @var array
+     */
+    private $_users       = array();
+    private $_groupsUsers = array();
+    private $_projects    = array();
+    private $_calendars   = array();
 
     /**
      * P5 Database
@@ -82,8 +91,13 @@ class Setup_Models_Migration
     const ACCESS_DOWNLOAD =  64;
     const ACCESS_ADMIN    = 128;
 
-    const USER_ADMIN = 1;
-    const USER_TEST  = 2;
+    // Phproject 6 Ids
+    const USER_ADMIN   = 1;
+    const USER_TEST    = 2;
+    const PROJECT_ROOT = 1;
+
+    const TODO_STATUS_ACCEPTED = 1;
+    const MODULES_AMOUNT       = 12;
 
     public function __construct($file, $db = null)
     {
@@ -162,7 +176,6 @@ class Setup_Models_Migration
      */
     private function _getGroups()
     {
-        // Group migration
         $groups = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "gruppen")->fetchAll();
 
         foreach ($groups as $group) {
@@ -178,9 +191,10 @@ class Setup_Models_Migration
     private function _migrateUsers()
     {
         // User migration
-        $query           = "SELECT * FROM " . PHPR_DB_PREFIX . "users WHERE is_deleted IS NULL";
-        $users           = $this->_dbOrig->query($query)->fetchAll();
-        $this->_users[1] = true;
+        $query = "SELECT * FROM " . PHPR_DB_PREFIX . "users WHERE is_deleted IS NULL";
+        $users = $this->_dbOrig->query($query)->fetchAll();
+
+        $this->_users[self::USER_ADMIN] = self::USER_ADMIN;
 
         foreach ($users as $user) {
             if ($user["loginname"] != "root") {
@@ -213,19 +227,19 @@ class Setup_Models_Migration
                     $status = 'I';
                 }
 
-                $userId = $user["ID"];
+                $oldUserId = $user["ID"];
 
-                $this->_tableManager->insertRow('user', array(
-                    'id'        => $userId,
+                $userId = $this->_tableManager->insertRow('user', array(
                     'username'  => utf8_encode($username),
                     'firstname' => utf8_encode($user["vorname"]),
                     'lastname'  => utf8_encode($user["nachname"]),
                     'status'    => $status,
                     'admin'     => 0
                 ));
-
-                $this->_timeZone[$userId] = 2;
-                $language                 = 'en';
+                $this->_users[$oldUserId]       = $userId;
+                $this->_userKurz[$user['kurz']] = $userId;
+                $this->_timeZone[$userId]       = 2;
+                $language                       = 'en';
 
                 @$settings = unserialize($user["settings"]);
                 if (is_array($settings)) {
@@ -282,10 +296,8 @@ class Setup_Models_Migration
                 // Add permission for this user to root project
                 $moduleId      = $this->_getModuleId('Project');
                 $userRightsAdd = array($userId => $this->_accessAdmin);
-                $this->_addItemRights($moduleId, 1, $userRightsAdd);
 
-                $this->_userKurz[$user['kurz']] = $userId;
-                $this->_users[$userId]          = true;
+                $this->_addItemRights($moduleId, self::PROJECT_ROOT, $userRightsAdd);
             }
         }
     }
@@ -302,21 +314,28 @@ class Setup_Models_Migration
         $userGroups = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "grup_user")->fetchAll();
 
         foreach ($userGroups as $userGroup) {
-            $userId = $userGroup["user_ID"];
+            $oldUserId = $userGroup["user_ID"];
 
-            if (isset($this->_users[$userId])) {
+            // User exists?
+            if (isset($this->_users[$oldUserId])) {
+                $userId = $this->_users[$oldUserId];
+                $group  = $userGroup["grup_ID"];
+
                 $this->_tableManager->insertRow('groups_user_relation', array(
-                    'groups_id' => (int) $userGroup["grup_ID"],
+                    'groups_id' => $group,
                     'user_id'   => $userId
                 ));
 
-                // Add user to internal groupsUsers variable
-                $group = (int) $userGroup["grup_ID"];
-                // Just in case group wasn't in 'gruppen' table (it should be)
+                // Just in case group wasn't in 'gruppen' table (it should be),
                 if (!isset($this->_groupsUsers[$group])) {
                     $this->_groupsUsers[$group] = array();
                 }
-                $this->_groupsUsers[$group][] = $userId;
+
+                // Avoid duplicate entries
+                if (!in_array($userId, $this->_groupsUsers[$group])) {
+                    // Add user to internal groupsUsers variable
+                    $this->_groupsUsers[$group][] = $userId;
+                }
             }
         }
     }
@@ -341,10 +360,10 @@ class Setup_Models_Migration
         // Project migration
         $projects = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "projekte ORDER BY id")->fetchAll();
 
-        $paths    = array();
-        $paths[1] = "/1/";
+        $paths                     = array();
+        $paths[self::PROJECT_ROOT] = "/1/";
+        $projectsNotMigrated       = -1;
 
-        $projectsNotMigrated = -1;
         // As the Projects may have other projects that come later in the list as parents, it may be needed to postpone
         // their migration until next iteration, and so on, because of 'path' field.
         // Note: 'count($projects)' has to be outside the 'for' sentence because that amount varies after each iteration
@@ -353,25 +372,29 @@ class Setup_Models_Migration
         for ($i = 0; $i < $totalProjects; $i++) {
             if ($projectsNotMigrated == count($projects)) {
                 // Migration ended: last iteration hasn't migrated any Project so neither will do it this one.
-                // This is supposed to happen when there are no projects left to migrate.
+                // This is supposed to happen when there are no projects left to migrate
                 break;
             }
             $projectsNotMigrated = count($projects);
 
             foreach ($projects as $index => $project) {
-                $project["ID"]     = $this->_convertProjectId($project["ID"]);
-                $project["parent"] = $this->_convertProjectId($project["parent"]);
 
-                $parent = (int) $project["parent"];
-                // If parent path hasn't been defined yet
-                if (!isset($paths[$parent])) {
-                    // Continue to the next iteration of the foreach structure
-                    continue;
+                $oldProjectId = $project["ID"];
+                if (empty($project["parent"])) {
+                    $parentId = self::PROJECT_ROOT;
+                } else {
+                    // Has parent project been processed?
+                    $oldParentId = $project["parent"];
+                    if (isset($this->_projects[$oldParentId])) {
+                        // Yes
+                        $parentId = $this->_projects[$oldParentId];
+                    } else {
+                        // No - Continue to the next iteration of the foreach structure, current project has to be
+                        // processed later.
+                        continue;
+                    }
                 }
-                $project["path"] = $paths[$parent] . $project["ID"] . "/";
 
-                $id         = (int) $project["ID"];
-                $paths[$id] = $project["path"];
                 $tmpStatus  = $project["kategorie"];
                 if (!empty($statusConversion[$tmpStatus])) {
                     $tmpStatus = $statusConversion[$tmpStatus];
@@ -385,10 +408,8 @@ class Setup_Models_Migration
 
                 $project['von'] = $this->_processOwner($project['von']);
 
-                $this->_tableManager->insertRow('project', array(
-                    'id'               => (int) $project["ID"],
-                    'project_id'       => (int) $project["parent"],
-                    "path"             => $project["path"],
+                $projectId = $this->_tableManager->insertRow('project', array(
+                    'project_id'       => $parentId,
                     "title"            => utf8_encode($project["name"]),
                     "notes"            => utf8_encode($project["note"]),
                     "owner_id"         => $project['von'],
@@ -400,12 +421,23 @@ class Setup_Models_Migration
                     "hourly_wage_rate" => utf8_encode($project["stundensatz"]),
                     "budget"           => utf8_encode($project["budget"])));
 
+                $this->_projects[$oldProjectId] = $projectId;
+                $path                           = $paths[$parentId] . $projectId . "/";
+                $paths[$projectId]              = $path;
+
+                // Update path
+                $data  = array('path' => $path);
+                $where = sprintf('id = %s', $projectId);
+                $this->_tableManager->updateRows('project', $data, $where);
+
+                // Migrate permissions
+                $project["ID"] = $projectId;
                 $this->_migratePermissions('Project', $project);
 
-                for ($j = 1; $j < 12; $j++) {
+                for ($j = 1; $j < self::MODULES_AMOUNT; $j++) {
                     $this->_tableManager->insertRow('project_module_permissions', array(
                         'module_id'  => $j,
-                        'project_id' => (int) $project["ID"]
+                        'project_id' => $projectId
                     ));
                 }
 
@@ -422,20 +454,34 @@ class Setup_Models_Migration
      */
     private function _migrateTodos()
     {
-        // Todo
         $todos = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "todo ORDER BY ID")->fetchAll();
 
         foreach ($todos as $todo) {
-            $todo["project"] = $this->_convertProjectId($todo["project"]);
-            $todo['von']     = $this->_processOwner($todo['von']);
+            $projectId   = $this->_processParentProjId($todo["project"]);
+            $todo['von'] = $this->_processOwner($todo['von']);
 
-            $data = array('id'             => (int) $todo["ID"],
-                          'project_id'     => $todo["project"],
+            if (empty($todo['status'])) {
+                $todo['status'] = self::TODO_STATUS_ACCEPTED;
+            }
+
+            // Process assigned user
+            $oldAssignedId = $todo['ext'];
+            $todo['ext']   = null;
+            if (!empty($oldAssignedId) && is_numeric($oldAssignedId)) {
+                // The assigned user exists in the DB?
+                if (isset($this->_users[$oldAssignedId])) {
+                    // Yes
+                    $todo['ext']     = $this->_users[$oldAssignedId];
+                    $data['user_id'] = $todo['ext'];
+                }
+            }
+
+            $data = array('project_id'     => $projectId,
                           "title"          => utf8_encode($todo["remark"]),
                           "notes"          => utf8_encode($todo["note"]),
                           "owner_id"       => $todo['von'],
                           "priority"       => (int) $todo["priority"],
-                          "current_status" => (int) $todo["status"],
+                          "current_status" => $todo["status"],
                           "user_id"        => (int) $todo["ext"]);
 
             // If dates are empty strings, don't send the fields; if not, clean them and fix wrong values as P5 would
@@ -446,8 +492,12 @@ class Setup_Models_Migration
             if (!empty($todo["deadline"])) {
                 $data["end_date"] = Cleaner::sanitize('date', $todo["deadline"]);
             }
-            $this->_tableManager->insertRow('todo', $data);
 
+            // Insert data
+            $todoId = $this->_tableManager->insertRow('todo', $data);
+
+            // Migrate permissions
+            $todo["ID"] = $todoId;
             $this->_migratePermissions('Todo', $todo);
         }
     }
@@ -459,21 +509,21 @@ class Setup_Models_Migration
      */
     private function _migrateNotes()
     {
-        // Notes
         $notes = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "notes ORDER BY ID")->fetchAll();
 
         foreach ($notes as $note) {
-            $note["projekt"] = $this->_convertProjectId($note["projekt"]);
-            $note['von']     = $this->_processOwner($note['von']);
+            $projectId   = $this->_processParentProjId($note["projekt"]);
+            $note['von'] = $this->_processOwner($note['von']);
 
-            $this->_tableManager->insertRow('note', array(
-                'id'         => (int) $note["ID"],
-                'project_id' => (int) $note["projekt"],
+            $noteId = $this->_tableManager->insertRow('note', array(
+                'project_id' => $projectId,
                 "title"      => utf8_encode($note["name"]),
                 "comments"   => utf8_encode($note["remark"]),
                 "owner_id"   => $note['von']
             ));
 
+            // Migrate permissions
+            $note["ID"] = $noteId;
             $this->_migratePermissions('Note', $note);
         }
     }
@@ -617,15 +667,16 @@ class Setup_Models_Migration
                 $calendar["ende"] = $this->_stringToTime($calendar["ende"]);
             }
 
-            $calendar["projekt"] = 1;
             $timezone            = (isset($this->_timeZone[$calendar["ID"]])) ? $this->_timeZone[$calendar["ID"]] : 2;
             $date                = Cleaner::sanitize('date', $calendar["datum"]);
             $calendar['von']     = $this->_processOwner($calendar['von']);
             $userVon             = $calendar['von'];
 
             // Process participant
-            $participantId = $calendar['an'];
-            if (!isset($this->_users[$participantId])) {
+            $oldParticipId = $calendar['an'];
+            if (isset($this->_users[$oldParticipId])) {
+                $participantId = $this->_users[$oldParticipId];
+            } else {
                 // Don't migrate rows for non existing users
                 continue;
             }
@@ -641,11 +692,9 @@ class Setup_Models_Migration
                 }
                 // @todo: 'ical_ID' field is not being migrated to 'uid' field, it will be done when implemented P6 ical
 
-                $this->_tableManager->insertRow('calendar', array(
-                    'id'             => (int) $calendar["ID"],
-                    "parent_id"      => (int) $calendar["serie_id"],
+                $calendarId = $this->_tableManager->insertRow('calendar', array(
                     "owner_id"       => $calendar['von'],
-                    "project_id"     => (int) $calendar["projekt"],
+                    "project_id"     => self::PROJECT_ROOT,
                     "title"          => utf8_encode($calendar["event"]),
                     "place"          => utf8_encode($calendar["ort"]),
                     "notes"          => utf8_encode($calendar["remark"]),
@@ -660,25 +709,45 @@ class Setup_Models_Migration
                     "priority"       => $calendar["priority"],
                     "rrule"          => $rrule,
                     "properties"     => "",
-                    "participant_id" => $calendar['an']
+                    "participant_id" => $participantId
                 ));
 
-                // Give 'admin' user admin permission for this item
-                $userRightsAdd    = array();
-                $userRightsAdd[1] = $this->_accessAdmin;
+                $oldCalendarId                    = $calendar['ID'];
+                $this->_calendars[$oldCalendarId] = $calendarId;
 
-                // Add owner permission to this item, only if it wasn't added before
-                if (!isset($userRightsAdd[$userVon])) {
-                    $userRightsAdd[$userVon] = $this->_accessAdmin;
+                // Process and update parent for this row
+                if (empty($calendar['serie_id'])) {
+                    $parentId = 0;
+                } else {
+                    $oldParentId = $calendar['serie_id'];
+                    if (isset($this->_calendars[$oldParentId])) {
+                        $parentId = $this->_calendars[$oldParentId];
+                    } else {
+                        // The P5 parent for this row is probably a deleted row, so it will be assigned current key id.
+                        // The rest of the rows that point to the same deleted row, will point to the same 'new' row.
+                        $parentId = $calendarId;
+                        $this->_calendars[$oldParentId] = $calendarId;
+                    }
                 }
+                $data  = array('parent_id' => $parentId);
+                $where = sprintf('id = %s', $calendarId);
+                $this->_tableManager->updateRows('calendar', $data, $where);
+
+                // Give 'admin' user admin permission for this item
+                $userRightsAdd                   = array();
+                $userRightsAdd[self::USER_ADMIN] = $this->_accessAdmin;
+
+                // Add owner permission to this item
+                $userRightsAdd[$userVon] = $this->_accessAdmin;
 
                 // Add participant permission to this item, only if it wasn't added before
                 if (!isset($userRightsAdd[$participantId])) {
                     $userRightsAdd[$participantId] = $this->_accessWrite;
                 }
 
+                // Save permissions according to P6 criterion
                 $moduleId = $this->_getModuleId('Calendar');
-                $itemId   = (int) $calendar["ID"];
+                $itemId   =  $calendarId;
                 $this->_addItemRights($moduleId, $itemId, $userRightsAdd);
             }
         }
@@ -695,23 +764,25 @@ class Setup_Models_Migration
         $files = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "dateien ORDER BY ID")->fetchAll();
 
         foreach ($files as $file) {
-            $file["div2"] = $this->_convertProjectId($file["div2"]);
+            $file['von']  = $this->_processOwner($file['von']);
+            $file["div2"] = $this->_processParentProjId($file["div2"]);
             $newFilename  = md5($file["tempname"]);
             $uploadDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
+            $title        = utf8_encode($file["filename"]);
+            $title        = substr($title,0,100);
 
             copy(PHPR_FILE_PATH . "\\" . $file["tempname"], $uploadDir . "\\" . $newFilename);
 
-            $file['von'] = $this->_processOwner($file['von']);
-
-            $this->_tableManager->insertRow('filemanager', array(
-                'id'         => (int) $file["ID"],
+            $fileId = $this->_tableManager->insertRow('filemanager', array(
                 'owner_id'   => $file['von'],
-                "title"      => utf8_encode($file["filename"]),
+                "title"      => $title,
                 "comments"   => utf8_encode($file["remark"]),
-                "project_id" => (int) $file["div2"],
+                "project_id" => $file["div2"],
                 "files"      => utf8_encode($newFilename . "|" . $file["filename"])
             ));
 
+            // Migrate permissions
+            $file["ID"] = $fileId;
             $this->_migratePermissions('Filemanager', $file);
         }
     }
@@ -750,8 +821,7 @@ class Setup_Models_Migration
             }
 
             $this->_tableManager->insertRow('contact', array(
-                'id'          => (int) $contact['ID'],
-                'project_id'  => 1,
+                'project_id'  => self::PROJECT_ROOT,
                 'name'        => utf8_encode($contact['vorname'] . ' ' . $contact['nachname']),
                 'email'       => utf8_encode($contact['email']),
                 'company'     => utf8_encode($contact['firma']),
@@ -818,24 +888,6 @@ class Setup_Models_Migration
         return $time;
     }
 
-    /**
-     * Converts the old project Id to a Phprojekt 6 ID
-     *
-     * @param integer $oldprojectId
-     *
-     * @return integer
-     */
-    private function _convertProjectId($oldprojectId)
-    {
-        if ($oldprojectId == 1) {
-            return 10001;
-        } elseif (empty($oldprojectId)) {
-            return 1;
-        }
-
-        return $oldprojectId;
-    }
-
     private function _getModuleId($module)
     {
         $select = $this->_db->select()
@@ -866,9 +918,7 @@ class Setup_Models_Migration
         // @todo: Permission migration for big DBs has just been tested for Project module.
 
         $projectPermFound = false;
-        $userList         = array();
-        // Admin user will have admin access to everything
-        $userRightsAdd[self::USER_ADMIN] = $this->_accessAdmin;
+        $userRightsAdd    = array();
 
         // The given permissions accord with the content of 'acc_write' field of 'projekte' table
         if ($item['acc_write'] == 'w') {
@@ -884,16 +934,12 @@ class Setup_Models_Migration
             $projUserRels = $this->_dbOrig->query($query)->fetchAll();
 
             foreach ($projUserRels as $projUserRel) {
-                // Discard rows with wrong user_ID values
-                if ($projUserRel['user_ID'] == 0 || empty($projUserRel['user_ID'])) {
+                // Discard rows with wrong or non-existing user_ID values
+                $oldUserId = $projUserRel['user_ID'];
+                if (empty($oldUserId) || !isset($this->_users[$oldUserId])) {
                     continue;
                 }
-
-                $userId = $projUserRel['user_ID'];
-                if (!isset($this->_users[$userId])) {
-                    // Non-existing user permissionss won't be migrated
-                    continue;
-                }
+                $userId = $this->_users[$oldUserId];
 
                 // Discard repeated users
                 if (!array_key_exists($userId, $userRightsAdd)) {
@@ -908,6 +954,7 @@ class Setup_Models_Migration
         if ($module != 'Project' || !$projectPermFound) {
             $userIds = $this->_getUsersFromAccField($item);
             foreach ($userIds as $userId) {
+                // Avoid duplicate entries
                 if (!array_key_exists($userId, $userRightsAdd)) {
                     $userRightsAdd[$userId] = $access;
                 }
@@ -917,25 +964,22 @@ class Setup_Models_Migration
         $userVon = $item['von'];
 
         if ($module == 'Todo') {
-            // Assigned user: 'ext' field
-            $todoAssignedUser = -1;
-            // Give write access to assigned user, if any
-            if (!empty($item['ext']) && is_numeric($item['ext'])) {
-                $ext = $item['ext'];
-                // Conditions to migrate it: 1) It is not the admin  2) It is not the owner 3) It exists.
-                if ($ext != self::USER_ADMIN && $ext != $userVon && isset($this->_users[$ext])) {
-                    $userRightsAdd[$ext] = $this->_accessWrite;
-                    $todoAssignedUser    = $ext;
-                }
+            // Assigned user: 'ext' field -  Give write access to assigned user, if any
+            if (!empty($item['ext'])) {
+                $assignedId                 = $item['ext'];
+                $userRightsAdd[$assignedId] = $this->_accessWrite;
             }
         }
 
-        // Add owner with Admin access, if it has not been already set to be added
+        // Add owner with Admin access. This may overwrite previous right assignment for owner, that's ok.
         $userRightsAdd[$userVon] = $this->_accessAdmin;
+
+        // Add admin user with Admin access. This may overwrite previous right assignment for admin, that's ok.
+        $userRightsAdd[self::USER_ADMIN] = $this->_accessAdmin;
 
         // Migrate each permission
         $moduleId = $this->_getModuleId($module);
-        $itemId   = (int) $item["ID"];
+        $itemId   = $item["ID"];
         $this->_addItemRights($moduleId, $itemId, $userRightsAdd);
     }
 
@@ -956,7 +1000,11 @@ class Setup_Models_Migration
             foreach ($tmpAcc as $kurz) {
                 // User exists?
                 if (array_key_exists($kurz, $this->_userKurz)) {
-                    $userList[] = $this->_userKurz[$kurz];
+                    $userId = $this->_userKurz[$kurz];
+                    // Avoid duplicate entries
+                    if (!in_array($userId, $userList)) {
+                        $userList[] = $userId;
+                    }
                 }
             }
         } elseif ($acc == 'group') {
@@ -967,11 +1015,10 @@ class Setup_Models_Migration
             }
         } elseif (is_numeric($acc)) {
             // Just a user id
-            $acc = (int) $acc;
-            // Is it admin user (added outside here) or a non-existing user?
-            if ($acc != self::USER_ADMIN && isset($this->_users[$acc])) {
-                // No
-                $userList[] = $user;
+            $oldUserId = (int) $acc;
+            // User exists?
+            if (isset($this->_users[$oldUserId])) {
+                $userList[] = $this->_users[$oldUserId];
             }
         } elseif ($acc == 'private') {
             // Just give permission for 'von' user, which will be given later by default
@@ -1108,19 +1155,37 @@ class Setup_Models_Migration
 
     /**
      * Process the received owner for an item, if it is a non-existing user, returns the admin id, otherwise returns
-     * the same.
+     * the matching P6 user for this P5 one.
      *
-     * @param int $von  Id of the owner user ('von' field) as it is in the original P5 item.
+     * @param int $oldId  Id of the owner user ('von' field) as it is in the original P5 item.
      *
-     * @return int  User id to insert in P6 table row.
+     * @return int  User id to insert in P6 table owner field.
      */
-    private function _processOwner($von) {
-        if (!isset($this->_users[$von])) {
+    private function _processOwner($oldId) {
+        if (!isset($this->_users[$oldId])) {
             // Non existing users will be migrated as 'admin' user
             $userId = self::USER_ADMIN;
         } else {
-            $userId = $von;
+            $userId = $this->_users[$oldId];
         }
         return $userId;
+    }
+
+    /**
+     * Process the received parent project Id for an item, if it is a non-existing one, returns the root project id,
+     * otherwise returns the matching P6 project Id for this P5 one.
+     *
+     * @param int $oldId  Id of the P5 parent project Id as it is in the original P5 item.
+     *
+     * @return int  User id to insert in P6 field 'project_id'
+     */
+    private function _processParentProjId($oldId) {
+        if (!isset($this->_projects[$oldId])) {
+            // Non existing projects will be migrated as root one
+            $projectId = self::PROJECT_ROOT;
+        } else {
+            $projectId = $this->_projects[$oldId];
+        }
+        return $projectId;
     }
 }
