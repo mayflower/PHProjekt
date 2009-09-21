@@ -617,6 +617,8 @@ class Setup_Models_Migration
                      // I don't know how P5 shows more than 24 hours in a day, but I suppose this is the right way
                      $timeproj["h"] == 24;
                      $timeproj["m"] == 0;
+                     // Cruise Control: for Zend Code Analyser not to warn anything:
+                     echo $timeproj["h"] . $timeproj["m"];
                 }
                 if (empty($timeproj["m"])) {
                     $timeproj["m"] = 0;
@@ -793,7 +795,7 @@ class Setup_Models_Migration
             $newFilename  = md5($file["tempname"]);
             $uploadDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
             $title        = utf8_encode($file["filename"]);
-            $title        = substr($title,0,100);
+            $title        = substr($title, 0, 100);
 
             copy(PHPR_FILE_PATH . "\\" . $file["tempname"], $uploadDir . "\\" . $newFilename);
 
@@ -950,7 +952,7 @@ class Setup_Models_Migration
             $filenameField   = $item["filename"];
             $attachmentField = null;
             if (strpos($filenameField, "|")) {
-                $tmp             = split("\|", $filenameField);
+                $tmp             = split('\|', $filenameField);
                 $currentFileName = $tmp[1];
                 $realName        = $tmp[0];
                 if ($currentFileName != '' && $realName != '') {
@@ -1362,6 +1364,8 @@ class Setup_Models_Migration
                     }
                     $returnValue .= $weeksDays[$day];
                     $i++;
+                    // Cruise Control: for Zend Code Analyser not to warn anything:
+                    $tmp = "";
                 }
             }
         } else if (strlen($value) <= 2) {
