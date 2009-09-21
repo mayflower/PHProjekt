@@ -44,6 +44,8 @@ class Setup_Models_Migration
     /**
      * Arrays with P6 info: the key of each array position is the P5 id, and the value the P6 id, they are used for
      * conversions.
+     * E.g.: $this->_users[<oldId>] = <newId>
+     *       $this->_users[50] = 40  (this could be because of id reordering)
      *
      * @var array
      */
@@ -51,6 +53,7 @@ class Setup_Models_Migration
     private $_groupsUsers = array();
     private $_projects    = array();
     private $_calendars   = array();
+    private $_contacts    = array();
 
     /**
      * P5 Database
@@ -82,6 +85,14 @@ class Setup_Models_Migration
     private $_accessWrite = null;
     private $_accessAdmin = null;
 
+    /**
+     * Root path, taken out from the config file path
+     *
+     * @var string
+     */
+    private $_p5RootPath = null;
+
+    // Permissions constants
     const ACCESS_READ     =   1;
     const ACCESS_WRITE    =   2;
     const ACCESS_ACCESS   =   4;
@@ -96,7 +107,15 @@ class Setup_Models_Migration
     const USER_TEST    = 2;
     const PROJECT_ROOT = 1;
 
+    // Status constants
+    const HELPDESK_STATUS_OPEN     = 1;
+    const HELPDESK_STATUS_ASSIGNED = 2;
+    const HELPDESK_STATUS_SOLVED   = 3;
+    const HELPDESK_STATUS_VERIFIED = 4;
+    const HELPDESK_STATUS_CLOSED   = 5;
     const TODO_STATUS_ACCEPTED = 1;
+
+    // General constants
     const MODULES_AMOUNT       = 12;
 
     public function __construct($file, $db = null)
@@ -118,6 +137,10 @@ class Setup_Models_Migration
             + self::ACCESS_COPY + self::ACCESS_DELETE + self::ACCESS_DOWNLOAD;
         $this->_accessAdmin = self::ACCESS_READ + self::ACCESS_WRITE + self::ACCESS_ACCESS + self::ACCESS_CREATE
             + self::ACCESS_COPY + self::ACCESS_DELETE + self::ACCESS_DOWNLOAD + self::ACCESS_ADMIN;
+
+        // Set P5 root path
+        $pos               = strpos($file, 'config.inc.php');
+        $this->_p5RootPath = substr($file, 0, $pos);
     }
 
     /**
@@ -134,9 +157,10 @@ class Setup_Models_Migration
         $this->_migrateTodos();
         $this->_migrateNotes();
         // Awaiting definitions: $this->_migrateTimeCard();
-        $this->_migrateCalendars();
-        $this->_migrateFilemanagers();
+        $this->_migrateCalendar();
+        $this->_migrateFilemanager();
         $this->_migrateContacts();
+        $this->_migrateHelpdesk();
     }
 
     /**
@@ -480,9 +504,9 @@ class Setup_Models_Migration
                           "title"          => utf8_encode($todo["remark"]),
                           "notes"          => utf8_encode($todo["note"]),
                           "owner_id"       => $todo['von'],
-                          "priority"       => (int) $todo["priority"],
+                          "priority"       => $todo["priority"],
                           "current_status" => $todo["status"],
-                          "user_id"        => (int) $todo["ext"]);
+                          "user_id"        => $todo["ext"]);
 
             // If dates are empty strings, don't send the fields; if not, clean them and fix wrong values as P5 would
             // show them to the users
@@ -647,7 +671,7 @@ class Setup_Models_Migration
      *
      * @return void
      */
-    private function _migrateCalendars()
+    private function _migrateCalendar()
     {
         // Calendar
         $events = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "termine ORDER BY ID")->fetchAll();
@@ -754,11 +778,11 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrate P5 files
+     * Migrate P5 filemanager
      *
      * @return void
      */
-    private function _migrateFilemanagers()
+    private function _migrateFilemanager()
     {
         // Filemanager
         $files = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "dateien ORDER BY ID")->fetchAll();
@@ -820,7 +844,7 @@ class Setup_Models_Migration
                 $comment .= chr(10) . 'User defined field 2: ' . $contact['div2'];
             }
 
-            $this->_tableManager->insertRow('contact', array(
+            $contactId = $this->_tableManager->insertRow('contact', array(
                 'project_id'  => self::PROJECT_ROOT,
                 'name'        => utf8_encode($contact['vorname'] . ' ' . $contact['nachname']),
                 'email'       => utf8_encode($contact['email']),
@@ -836,6 +860,214 @@ class Setup_Models_Migration
                 'owner_id'    => $contact['von'],
                 'private'     => 1
             ));
+            $oldContactId                   = $contact["ID"];
+            $this->_contacts[$oldContactId] = $contactId;
+        }
+    }
+
+    /**
+     * Migrate P5 Helpdesk
+     *
+     * @return void
+     */
+    private function _migrateHelpdesk()
+    {
+        $query     = "SELECT * FROM " . PHPR_DB_PREFIX . "rts WHERE is_deleted IS NULL ORDER BY ID";
+        $incidents = $this->_dbOrig->query($query)->fetchAll();
+
+        foreach ($incidents as $item) {
+            $projectId = $this->_processParentProjId($item["proj"]);
+
+            // Process owner - Id, email or wrong value
+            $owner = $item["von"];
+            // Default value:
+            $ownerId = self::USER_ADMIN;
+            if (is_numeric($owner) && !empty($owner)) {
+                // Id
+                $ownerId = (int) $owner;
+            } else if (strpos($owner, '@')) {
+                // It is apparently an email - Search for the Id
+                $query   = sprintf("SELECT ID FROM " . PHPR_DB_PREFIX . "users WHERE email = '%s'", $owner);
+                $userIds = $this->_dbOrig->query($query)->fetchAll();
+                if (count($userIds > 0)) {
+                    $oldOwnerId = $userIds[0]["ID"];
+                    if (isset($this->_users[$oldOwnerId])) {
+                        $ownerId     = $this->_users[$oldOwnerId];
+                        $item["von"] = $ownerId;
+                    }
+                }
+            }
+
+            // Process assigned user
+            $oldAssignedId = (int) $item["assigned"];
+            if (isset($this->_users[$oldAssignedId])) {
+                $assignedId       = $this->_users[$oldAssignedId];
+                $item["assigned"] = $assignedId;
+            } else {
+                $assignedId       = null;
+                $item["assigned"] = null;
+            }
+
+            // Process creation date
+            $date = null;
+            if (!empty($item['submit'])) {
+                $date = $item['submit'];
+            } else if (isset($item['created']) && !empty($item['created'])) {
+                $date = $item['created'];
+            }
+            if (!empty($date)) {
+                $date = $this->_longDateToShortDate($date);
+            }
+
+            // Process priority
+            $priority = $item['priority'];
+            if (is_numeric($priority)) {
+                // It is an int
+                $priority = (int) $priority;
+                if ($priority < 1 || $priority > 10) {
+                    $priority = 5;
+                }
+            } else {
+                // Maybe it is a string representing the priority
+                switch ($priority) {
+                    case 'Hoch':
+                        // High
+                        $priority = 1;
+                        break;
+                    case 'Niedrig':
+                    default:
+                        // Low
+                        $priority = 5;
+                        break;
+                    case 'Keine':
+                        //None
+                        $priority = 10;
+                        break;
+                }
+            }
+
+            // Process attachment
+            $filenameField   = $item["filename"];
+            $attachmentField = null;
+            if (strpos($filenameField, "|")) {
+                $tmp             = split("\|", $filenameField);
+                $currentFileName = $tmp[1];
+                $realName        = $tmp[0];
+                if ($currentFileName != '' && $realName != '') {
+                    $md5Name         = md5(uniqid(rand(), 1));
+                    $attachmentField = $md5Name . '|' . $realName;
+                    $uploadDir       = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
+                    // Copy file
+                    $originPath = $this->_p5RootPath . '\\' . PHPR_DOC_PATH . '\\' . $currentFileName;
+                    $targetPath = $uploadDir . '\\' . $md5Name;
+                    copy($originPath, $targetPath);
+                }
+            }
+
+            // Process description
+            $description  = utf8_encode($item["note"]) . chr(10) . chr(10);
+            $description .= $item["solution"];
+
+            // Process status
+            $status = $item["status"];
+            if (is_numeric($status)) {
+                $statusNumber = (int) $status;
+                if ($statusNumber == 7) {
+                    $statusNumber = self::HELPDESK_STATUS_OPEN;
+                    // Informar al usuario, pasa 1 sola vez en el big script?
+                }
+            } else if (!empty($status)) {
+                // It is apparently a descriptive string
+                switch ($status) {
+                    case 'erfolgreich geschlossen':
+                        // Succesfully closed
+                        $statusNumber = self::HELPDESK_STATUS_CLOSED;
+                        break;
+                    case 'erfolglos geschlossen':
+                        // Unsuccessfully closed
+                        $statusNumber = self::HELPDESK_STATUS_CLOSED;
+                        break;
+                    case 'in Bearbeitung':
+                        // In treatment
+                        $statusNumber = self::HELPDESK_STATUS_ASSIGNED;
+                        break;
+                    case 'neu':
+                    default:
+                        // New
+                        $statusNumber = self::HELPDESK_STATUS_OPEN;
+                        break;
+                }
+            } else {
+                $statusNumber = self::HELPDESK_STATUS_OPEN;
+            }
+
+            // Process due date
+            $dueDate = $item["due_date"];
+            if (!empty($dueDate)) {
+                // Just in case
+                $dueDate = Cleaner::sanitize('date', $dueDate);
+            } else {
+                $dueDate = null;
+            }
+
+            // Process author
+            // Default value:
+            $authorId = $ownerId;
+            if (isset($item["autor"]) && !empty($item["autor"])) {
+                // It is apparently an email - Search for the Id
+                $author  = $item["autor"];
+                $query   = sprintf("SELECT ID FROM " . PHPR_DB_PREFIX . "users WHERE email = '%s'", $author);
+                $userIds = $this->_dbOrig->query($query)->fetchAll();
+                if (count($userIds > 0)) {
+                    $oldAuthorId = $userIds[0]["ID"];
+                    if (isset($this->_users[$oldAuthorId])) {
+                        $authorId = $this->_users[$oldAuthorId];
+                    }
+                }
+            }
+
+            // Process P5 'solving' fields: 'solved' and 'solve_date'
+            $solvedBy = $item["solved"];
+            if (isset($this->_users[$solvedBy])) {
+                $solvedBy = $this->_users[$solvedBy];
+            } else {
+                $solvedBy = null;
+            }
+            if (!empty($item["solve_time"])) {
+                $solvedDate = $this->_longDateToShortDate($item["solve_time"]);
+            } else {
+                $solvedDate = null;
+            }
+
+            // Process contact
+            $contact = (int) $item["contact"];
+            if (isset($this->_contacts[$contact])) {
+                $contact = $this->_contacts[$contact];
+            } else {
+                $contact = null;
+            }
+
+            $data = array("project_id"  => $projectId,
+                          "owner_id"    => $ownerId,
+                          "title"       => utf8_encode($item["name"]),
+                          "assigned"    => $assignedId,
+                          "date"        => $date,
+                          "priority"    => $priority,
+                          "attachments" => $attachmentField,
+                          "description" => $description,
+                          "status"      => $statusNumber,
+                          "due_date"    => $dueDate,
+                          "author"      => $authorId,
+                          "solved_by"   => $solvedBy,
+                          "solved_date" => $solvedDate,
+                          "contact_id"  => $contact);
+
+            // Insert data
+            $itemId = $this->_tableManager->insertRow('helpdesk', $data);
+
+            // Migrate permissions
+            $item["ID"] = $itemId;
+            $this->_migratePermissions('Helpdesk', $item);
         }
     }
 
@@ -886,6 +1118,27 @@ class Setup_Models_Migration
         }
 
         return $time;
+    }
+
+    /**
+     * Converts the P5 datetime format YYYYMMDDHHMMSS to P6 date format YYYY-MM-DD
+     *
+     * @param string $date  Date & time in YYYYMMDDHHMMSS format
+     *
+     * @return string  Date in YYYY-MM-DD format
+     */
+    private function _longDateToShortDate($date)
+    {
+        if (strlen($date) == 14) {
+            $year    = substr($date, 0, 4);
+            $month   = substr($date, 4, 2);
+            $day     = substr($date, 6, 2);
+            $dateOut = $year . "-" . $month . "-" . $day;
+            $dateOut = Cleaner::sanitize('date', $dateOut);
+        } else {
+            $dateOut = null;
+        }
+        return $dateOut;
     }
 
     private function _getModuleId($module)
@@ -969,6 +1222,15 @@ class Setup_Models_Migration
                 $assignedId                 = $item['ext'];
                 $userRightsAdd[$assignedId] = $this->_accessWrite;
             }
+        } elseif ($module == 'Helpdesk') {
+            // Give write access to assigned user, if any. 'assigned' field
+            if (!empty($item['assigned'])) {
+                $oldAssignedId = $item['assigned'];
+                if (isset($this->_users[$oldAssignedId])) {
+                    $assignedId                 = $this->_users[$oldAssignedId];
+                    $userRightsAdd[$assignedId] = $this->_accessWrite;
+                }
+            }
         }
 
         // Add owner with Admin access. This may overwrite previous right assignment for owner, that's ok.
@@ -993,7 +1255,12 @@ class Setup_Models_Migration
     private function _getUsersFromAccField($item) {
         $userList = array();
 
-        $acc = $item['acc'];
+        if (isset($item['acc'])) {
+            $acc = $item['acc'];
+        } elseif (isset($item['acc_read'])) {
+            $acc = $item['acc_read'];
+        }
+
         if (substr($acc, 0, 2) == 'a:') {
             // It is a serialized array of user ids
             $tmpAcc = unserialize($acc);
