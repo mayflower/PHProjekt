@@ -300,7 +300,7 @@ final class Default_Helpers_Right
         // Add rights to the Assigned user, if any
         $assignedUser = (isset($params[$key])) ? $params[$key] : 0;
 
-        // The assgined user is setted
+        // The assgined user is set
         if ($assignedUser != 0) {
             // Is an Existing item
             // The logged user don't have access to the 'Access' tab
