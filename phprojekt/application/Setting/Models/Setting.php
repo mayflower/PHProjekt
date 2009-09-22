@@ -185,7 +185,7 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
             $data[$meta['key']] = '';
             foreach ($record as $oneSetting) {
                 if ($oneSetting->keyValue == $meta['key']) {
-                    $getter = 'get'.ucfirst($oneSetting->keyValue);
+                    $getter = 'get' . ucfirst($oneSetting->keyValue);
                     if (method_exists($this->getModel(), $getter)) {
                         $data[$meta['key']] = call_user_func(array($this->getModel(), $getter), $oneSetting->value);
                     } else {
