@@ -545,7 +545,7 @@ INSERT INTO `module` (`id`, `name`, `label`, `save_type`, `version`, `active`) V
 INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `form_label`, `form_type`, `form_position`, `form_columns`, `form_regexp`, `form_range`, `default_value`, `list_position`, `list_align`, `list_use_filter`, `alt_position`, `status`, `is_integer`, `is_required`, `is_unique`) VALUES
 (0, 'Project', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Project', 'notes', 1, 'Notes', 'textarea', 2, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Project', 'project_id', 1, 'Parent', 'selectValues', 3, 1, NULL, 'Project#id#title', '1', 0, NULL, 1, 1, '1', 1, 1, 0),
+(0, 'Project', 'project_id', 1, 'Parent', 'selectValues', 3, 1, NULL, 'Project#id#title', NULL, 0, NULL, 1, 0, '1', 1, 1, 0),
 (0, 'Project', 'start_date', 1, 'Start date', 'date', 4, 1, NULL, NULL, NULL, 3, 'center', 1, 3, '1', 0, 0, 0),
 (0, 'Project', 'end_date', 1, 'End date', 'date', 5, 1, NULL, NULL, NULL, 4, 'center', 1, 4, '1', 0, 0, 0),
 (0, 'Project', 'priority', 1, 'Priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 0, 0),
@@ -560,10 +560,10 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Todo', 'end_date', 1, 'End date', 'date', 5, 1, NULL, NULL, NULL   , 4, 'center', 1, 4, '1', 0, 0, 0),
 (0, 'Todo', 'priority', 1, 'Priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 0, 0),
 (0, 'Todo', 'current_status', 1, 'Current status', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 7, 'center', 1, 6, '1', 1, 0, 0),
-(0, 'Todo', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', NULL, 0, NULL, 1, 1, '1', 1, 1, 0),
+(0, 'Todo', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', NULL, 0, NULL, 1, 0, '1', 1, 1, 0),
 (0, 'Todo', 'user_id', 1, 'User', 'selectValues', 8, 1, NULL, 'User#id#lastname', NULL  , 6, 'left', 1, 7, '1', 1, 0, 0),
 
-(0, 'Note', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', '', 0, NULL, 1, 1, '1', 1, 1, 0),
+(0, 'Note', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', NULL, 0, NULL, 1, 0, '1', 1, 1, 0),
 (0, 'Note', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, '', 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Note', 'comments', 1, 'Comments', 'textarea', 2, 1, NULL, NULL, '', 0, NULL, 1, 0, '1', 0, 0, 0),
 
@@ -579,7 +579,7 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 
 (0, 'Filemanager', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Filemanager', 'comments', 1, 'Comments', 'textarea', 2, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Filemanager', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project # id # title', '1', 0, NULL, 1, 0, '1', 1, 1, 0),
+(0, 'Filemanager', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', NULL, 0, NULL, 1, 0, '1', 1, 1, 0),
 (0, 'Filemanager', 'files', 1, 'Upload', 'upload', 5, 1, NULL, NULL, NULL, 3, 'center', 1, 0, '1', 0, 1, 0),
 
 (0, 'Contact', 'name', 1, 'Name', 'text', 1, 1, NULL, NULL, NULL, 1, 'left', 1, 0, '1', 0, 1, 0),
@@ -598,7 +598,7 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Helpdesk', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'center', 1, 0, '1', 0, 1, 0),
 (0, 'Helpdesk', 'assigned', 1, 'Assigned', 'selectValues', 3, 1, NULL, 'User#id#lastname', NULL, 4, 'center', 1, 0, '1', 1, 0, 0),
 (0, 'Helpdesk', 'date', 1, 'Date', 'display', 4, 1, NULL, NULL, NULL, 2, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Helpdesk', 'project_id', 1, 'Project', 'selectValues', 6, 1, NULL, 'Project # id # title', '1', 0, NULL, 1, 0, '1', 1, 1, 0),
+(0, 'Helpdesk', 'project_id', 1, 'Project', 'selectValues', 6, 1, NULL, 'Project#id#title', NULL, 0, NULL, 1, 0, '1', 1, 1, 0),
 (0, 'Helpdesk', 'priority', 1, 'Priority', 'selectValues', 7, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 0, '1', 1, 0, 0),
 (0, 'Helpdesk', 'attachments', 1, 'Attachments', 'upload', 8, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Helpdesk', 'description', 1, 'Description', 'textarea', 11, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
@@ -609,10 +609,10 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Helpdesk', 'solved_date', 1, 'Solved date', 'display', 10, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Helpdesk', 'contact_id', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 0, '1', 1, 0, 0),
 
-(0, 'Minutes', 'project_id', 1, 'Select', 'hidden', 1, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 1, 0, 0),
-(0, 'Minutes', 'title', 1, 'Title', 'text', 2, 1, NULL, NULL, NULL, 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Minutes', 'description', 1, 'Description', 'textarea', 3, 1, NULL, NULL, NULL, 4, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'meeting_date', 1, 'Date of Meeting', 'date', 4, 1, NULL, NULL, NULL, 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 3, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'meeting_date', 1, 'Date of Meeting', 'date', 2, 1, NULL, NULL, NULL, 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', NULL, 0, NULL, 1, 0, '1', 1, 1, 0),
+(0, 'Minutes', 'description', 1, 'Description', 'textarea', 4, 1, NULL, NULL, NULL, 4, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'start_time', 1, 'Start Time', 'time', 5, 1, NULL, NULL, NULL, 2, 'center', 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'end_time', 1, 'End Time', 'time', 6, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'place', 1, 'Place', 'text', 7, 1, NULL, NULL, NULL, 5, 'center', 1, 0, '1', 0, 0, 0),
@@ -622,6 +622,7 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Minutes', 'participants_excused', 2, 'Excused', 'multipleSelectValues', 11, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'recipients', 2, 'Recipients', 'multipleSelectValues', 12, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 13, 1, NULL, '1#Planned|2#Created|3#Filled|4#Final', '1', 6, 'center', 1, 0, '1', 1, 0, 0);
+
 
 INSERT INTO `user` (`id`, `username`, `firstname`, `lastname`, `status`, `admin`) VALUES
 (1,'david', 'David', 'Soria Parra', 'A', 1),

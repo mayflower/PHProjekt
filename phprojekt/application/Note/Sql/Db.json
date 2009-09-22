@@ -37,7 +37,7 @@
                     "list_position":   "0",
                     "list_align":      "NULL",
                     "list_use_filter": "1",
-                    "alt_position":    "1",
+                    "alt_position":    "0",
                     "status":          "1",
                     "is_integer":      "1",
                     "is_required":     "1",

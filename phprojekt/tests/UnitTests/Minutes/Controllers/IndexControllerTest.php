@@ -53,10 +53,10 @@ class Minutes_IndexController_Test extends FrontInit
         $this->setRequestUrl('Minutes/index/jsonDetail/id/0');
         $this->request->setParam('start', 0);
         $response = $this->getResponse();
-        $expected = '{"metadata":[{"key":"projectId","label":"Select","type":"hidden",';
+        $expected = '{"metadata":[{"key":"title","label":"Title","type":"text",';
         $this->assertContains($expected, $response, "Response was: '$response'");
 
-        $expected = ',"data":[{"id":0,"projectId":0,"rights":{"currentUser":{"moduleId":11,"itemId":0';
+        $expected = ',"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":11,"itemId":0';
         $this->assertContains($expected, $response, "Response was: '$response'");
     }
 
