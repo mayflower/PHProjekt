@@ -53,18 +53,19 @@ class Timecard_Models_Setting
         $data['order']    = 0;
         $data['position'] = 1;
         $data['fieldset'] = '';
-        $activeRecord     = Phprojekt_Loader::getModel('Project', 'Project');
-        $result           = $activeRecord->fetchAll();
-        $data['range']    = array();
-        foreach ($result as $item) {
-            $data['range'][] = array('id'   => $item->id,
-                                     'name' => $item->title);
+        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+        $tree = $tree->setup();
+        foreach ($tree as $node) {
+            $data['range'][] = array('id'   => (int) $node->id,
+                                     'name' => $node->getDepthDisplay('title'));
         }
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
         $data['length']   = 0;
+        $data['default']  = null;
 
         $converted[] = $data;
 

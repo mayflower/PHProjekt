@@ -85,6 +85,7 @@ class Core_Models_User_Setting
         $data['tab']      = 1;
         $data['integer']  = false;
         $data['length']   = 50;
+        $data['default']  = null;
 
         $converted[] = $data;
 
@@ -103,6 +104,7 @@ class Core_Models_User_Setting
         $data['tab']      = 1;
         $data['integer']  = false;
         $data['length']   = 50;
+        $data['default']  = null;
 
         $converted[] = $data;
 
@@ -121,6 +123,7 @@ class Core_Models_User_Setting
         $data['tab']      = 1;
         $data['integer']  = false;
         $data['length']   = 50;
+        $data['default']  = null;
 
         $converted[] = $data;
 
@@ -140,6 +143,7 @@ class Core_Models_User_Setting
         $data['tab']      = 1;
         $data['integer']  = false;
         $data['length']   = 255;
+        $data['default']  = null;
 
         $converted[] = $data;
 
@@ -161,6 +165,7 @@ class Core_Models_User_Setting
         $data['tab']      = 1;
         $data['integer']  = false;
         $data['length']   = 0;
+        $data['default']  = 'en';
 
         $converted[] = $data;
 
@@ -182,6 +187,7 @@ class Core_Models_User_Setting
         $data['tab']      = 1;
         $data['integer']  = false;
         $data['length']   = 0;
+        $data['default']  = 0;
 
         $converted[] = $data;
 

@@ -599,8 +599,8 @@ class Calendar_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":5,"itemId":0,"userId":1,'
             . '"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
-            . '"download":true,"admin":true}},"place":"","notes":"","startDate":"","startTime":"02:00:00","endDate":"",'
-            . '"endTime":"02:00:00","participantId":0,"rrule":""}],"numRows":1})';
+            . '"download":true,"admin":true}},"place":"","notes":"","startDate":"","startTime":"","endDate":"",'
+            . '"endTime":"","participantId":0,"rrule":""}],"numRows":1})';
         $this->assertContains($expected, $response);
 
         // Existing event

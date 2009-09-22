@@ -116,30 +116,36 @@ class Phprojekt_Converter_Json
         $information     = $model->getInformation($order);
         $fieldDefinition = $information->getFieldDefinition($order);
 
-        /* we can check the returned array, but at the moment we just pass it */
+        // We can check the returned array, but at the moment we just pass it
         $datas   = array();
         $data    = array();
         $numRows = 0;
 
-        /*
-         * we have to do this ugly convert, because Zend_Json_Encoder doesnot check
-         * if a value in an array is an object
-         */
+        // We have to do this ugly convert, because Zend_Json_Encoder doesnot check
+        // if a value in an array is an object
         if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
             foreach ($fieldDefinition as $field) {
                 $data['id'] = (int) $models->id;
 
                 $key   = $field['key'];
                 $value = $models->$key;
-                if ($field['integer']) {
+                if (is_numeric($value) && $field['integer']) {
                     $data[$key] = (int) $value;
                 } else if (is_scalar($value)) {
                     $data[$key] = $value;
                 } else {
                     if ($field['integer']) {
-                        $data[$key] = (int) $value;
+                        if (is_null($value) && !is_null($field['default'])) {
+                            $data[$key] = (int) $field['default'];
+                        } else {
+                            $data[$key] = (int) $value;
+                        }
                     } else {
-                        $data[$key] = (string) $value;
+                        if (is_null($value) && !is_null($field['default'])) {
+                            $data[$key] = (string) $field['default'];
+                        } else {
+                            $data[$key] = (string) $value;
+                        }
                     }
                 }
                 $data['rights'] = $model->getRights();
@@ -151,15 +157,23 @@ class Phprojekt_Converter_Json
                 foreach ($fieldDefinition as $field) {
                     $key   = $field['key'];
                     $value = $cmodel->$key;
-                    if ($field['integer']) {
+                    if (is_numeric($value) && $field['integer']) {
                         $data[$key] = (int) $value;
                     } else if (is_scalar($value)) {
                         $data[$key] = $value;
                     } else {
                         if ($field['integer']) {
-                            $data[$key] = (int) $value;
+                            if (is_null($value) && !is_null($field['default'])) {
+                                $data[$key] = (int) $field['default'];
+                            } else {
+                                $data[$key] = (int) $value;
+                            }
                         } else {
-                            $data[$key] = (string) $value;
+                            if (is_null($value) && !is_null($field['default'])) {
+                                $data[$key] = (string) $field['default'];
+                            } else {
+                                $data[$key] = (string) $value;
+                            }
                         }
                     }
                     $data['rights'] = $cmodel->getRights();
@@ -169,9 +183,9 @@ class Phprojekt_Converter_Json
         }
 
         $numRows = count($datas);
-        $data = array('metadata' => $fieldDefinition,
-                      'data'     => $datas,
-                      'numRows'  => (int) $numRows);
+        $data    = array('metadata' => $fieldDefinition,
+                         'data'     => $datas,
+                         'numRows'  => (int) $numRows);
 
         return self::_makeJsonString($data);
     }
@@ -233,9 +247,9 @@ class Phprojekt_Converter_Json
     private static function _convertMetadataAndData($data, $fieldDefinition)
     {
         $numRows = count($data);
-        $data = array('metadata' => $fieldDefinition,
-                      'data'     => $data,
-                      'numRows'  => (int) $numRows);
+        $data    = array('metadata' => $fieldDefinition,
+                         'data'     => $data,
+                         'numRows'  => (int) $numRows);
 
         return self::_makeJsonString($data);
     }

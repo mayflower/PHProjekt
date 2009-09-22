@@ -72,6 +72,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['tab']      = 1;
                 $data['integer']  = false;
                 $data['length']   = 0;
+                $data['default']  = null;
 
                 $converted[] = $data;
 
@@ -92,6 +93,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['tab']      = 1;
                 $data['integer']  = false;
                 $data['length']   = 0;
+                $data['default']  = null;
 
                 $converted[] = $data;
 
@@ -112,6 +114,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['tab']      = 1;
                 $data['integer']  = false;
                 $data['length']   = 0;
+                $data['default']  = null;
 
                 $converted[] = $data;
 
@@ -132,6 +135,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['tab']      = 1;
                 $data['integer']  = true;
                 $data['length']   = 0;
+                $data['default']  = null;
 
                 $converted[] = $data;
 
@@ -159,6 +163,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['tab']      = 1;
                 $data['integer']  = true;
                 $data['length']   = 0;
+                $data['default']  = null;
 
                 $converted[] = $data;
 
@@ -179,6 +184,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['tab']      = 1;
                 $data['integer']  = false;
                 $data['length']   = 0;
+                $data['default']  = null;
 
                 $converted[] = $data;
                 break;

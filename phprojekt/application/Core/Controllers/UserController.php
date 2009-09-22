@@ -106,7 +106,8 @@ class Core_UserController extends Core_IndexController
         $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
         $setting->setModule('User');
 
-        $tmp = $setting->getList(0, $setting->getModel()->getFieldDefinition(), $user->id);
+        $fields = $setting->getModel()->getFieldDefinition();
+        $tmp    = $setting->getList(0, $fields, $user->id);
 
         foreach ($tmp as $values) {
             foreach ($values as $key => $value) {
@@ -114,7 +115,16 @@ class Core_UserController extends Core_IndexController
                     if (!empty($data["id"])) {
                         $data[$key] = $value;
                     } else {
-                        $data[$key] = "";
+                        foreach ($fields as $field) {
+                            if ($field['key'] == $key) {
+                                if (!is_null($field['default'])) {
+                                    $data[$key] = $field['default'];
+                                } else {
+                                    $data[$key] = "";
+                                }
+                                break;
+                            }
+                        }
                     }
                 }
             }

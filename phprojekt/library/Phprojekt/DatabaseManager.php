@@ -338,7 +338,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
 
         $maxLength = isset($this->_modelInfo['metadata'][$field->tableField]['LENGTH']) ?
             (int) $this->_modelInfo['metadata'][$field->tableField]['LENGTH'] : 0;
-        $converted['length'] = $maxLength;
+        $converted['length']  = $maxLength;
+        $converted['default'] = $field->defaultValue;
 
         return $converted;
     }

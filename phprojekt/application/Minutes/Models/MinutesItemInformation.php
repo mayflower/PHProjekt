@@ -167,7 +167,8 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
             'readOnly' => false,
             'tab'      => 1,
             'integer'  => false,
-            'length'   => 0);
+            'length'   => 0,
+            'default'  => null);
     }
 
     /**

@@ -243,6 +243,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data1['tab']      = 1;
         $data1['integer']  = false;
         $data1['length']   = 0;
+        $data1['default']  = null;
 
         // startDate
         $data2 = array();
@@ -260,6 +261,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data2['tab']      = 1;
         $data2['integer']  = false;
         $data2['length']   = 0;
+        $data2['default']  = null;
 
         // endDate
         $data3 = array();
@@ -277,6 +279,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data3['tab']      = 1;
         $data3['integer']  = false;
         $data3['length']   = 0;
+        $data3['default']  = null;
 
         $data4 = array();
         $data4['key']      = 'minutes';
@@ -293,6 +296,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data4['tab']      = 1;
         $data4['integer']  = true;
         $data4['length']   = 0;
+        $data4['default']  = null;
 
         $data5 = array();
         $data5['key']      = 'projectId';
@@ -316,6 +320,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data5['tab']      = 1;
         $data5['integer']  = true;
         $data5['length']   = 0;
+        $data5['default']  = null;
 
         $data6 = array();
         $data6['key']      = 'notes';
@@ -332,6 +337,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data6['tab']      = 1;
         $data6['integer']  = false;
         $data6['length']   = 0;
+        $data6['default']  = null;
 
         $timecardModel = clone($this->_model);
         $expected      = array($data1, $data2, $data3, $data4, $data5, $data6);

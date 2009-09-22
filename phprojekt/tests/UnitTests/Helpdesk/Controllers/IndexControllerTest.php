@@ -279,8 +279,8 @@ class Helpdesk_IndexController_Test extends FrontInit
         $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":10,"itemId":0,'
             . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
             . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":0,"date":"' . date("Y-m-d") . '",'
-            . '"dueDate":"","projectId":0,"priority":0,"attachments":"","solvedBy":0,"solvedDate":"",'
-            . '"description":"","status":0,"contactId":0}],"numRows":1})';
+            . '"dueDate":"","projectId":1,"priority":5,"attachments":"","solvedBy":0,"solvedDate":"",'
+            . '"description":"","status":1,"contactId":0}],"numRows":1})';
         $this->assertContains($expected, $response);
 
         // Existing item

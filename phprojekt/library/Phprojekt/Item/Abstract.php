@@ -269,21 +269,24 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     $value = Zend_Locale_Format::toFloat($value, array('precision' => 2));
                     break;
                 case 'time':
-                    $timeZone = (int) $this->_timezone;
-                    $u = strtotime($value);
+                    if (!empty($value)) {
+                        $timeZone = (int) $this->_timezone;
+                        $u        = strtotime($value);
 
-                    $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u),
-                             date("m"), date("d"), date("Y"));
-
-                    $value = date("H:i:s", $value);
+                        $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u), date("m"), date("d"),
+                            date("Y"));
+                        $value = date("H:i:s", $value);
+                    }
                     break;
                 case 'datetime':
                 case 'timestamp':
-                    $timeZone = (int) $this->_timezone * -1;
-                    $u = strtotime($value);
+                    if (!empty($value)) {
+                        $timeZone = (int) $this->_timezone * -1;
+                        $u        = strtotime($value);
 
-                    $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u),
-                             date("m", $u), date("d", $u), date("Y", $u));
+                        $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u), date("m", $u),
+                            date("d", $u), date("Y", $u));
+                    }
                     break;
             }
         }
