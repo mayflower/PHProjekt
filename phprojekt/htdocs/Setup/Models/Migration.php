@@ -218,21 +218,15 @@ class Setup_Models_Migration
         $query = "SELECT * FROM " . PHPR_DB_PREFIX . "users WHERE is_deleted IS NULL";
         $users = $this->_dbOrig->query($query)->fetchAll();
 
+        // Just in case
         $this->_users[self::USER_ADMIN] = self::USER_ADMIN;
 
         foreach ($users as $user) {
-            if ($user["loginname"] != "root") {
-                // Don't migrate 'root' user, it is used 'admin' user instead that has already been inserted
-                if ($user["loginname"] == "test") {
-                    // First delete it from P6 DB because it was inserted previous to the migration
-                    $this->_tableManager->deleteRows("user", "username = 'test'");
-                    $where = sprintf("user_id = %s", self::USER_TEST);
-                    $this->_tableManager->deleteRows("setting", $where);
-                    $this->_tableManager->deleteRows("groups_user_relation", $where);
-                    $this->_tableManager->deleteRows("project_role_user_permissions", $where);
-                    $this->_tableManager->deleteRows("item_rights", $where);
-                }
+            $loginName = $user["loginname"];
+            $firstName = utf8_encode($user["vorname"]);
+            $lastName  = utf8_encode($user["nachname"]);
 
+            if ($loginName != "root" && $loginName != "test") {
                 switch (PHPR_LOGIN_SHORT) {
                     case '2':
                         $username = $user["loginname"];
@@ -251,45 +245,102 @@ class Setup_Models_Migration
                     $status = 'I';
                 }
 
-                $oldUserId = $user["ID"];
-
                 $userId = $this->_tableManager->insertRow('user', array(
                     'username'  => utf8_encode($username),
-                    'firstname' => utf8_encode($user["vorname"]),
-                    'lastname'  => utf8_encode($user["nachname"]),
+                    'firstname' => $firstName,
+                    'lastname'  => $lastName,
                     'status'    => $status,
                     'admin'     => 0
                 ));
-                $this->_users[$oldUserId]       = $userId;
-                $this->_userKurz[$user['kurz']] = $userId;
-                $this->_timeZone[$userId]       = 2;
-                $language                       = 'en';
 
-                @$settings = unserialize($user["settings"]);
-                if (is_array($settings)) {
-                    if (isset($settings["timezone"])) {
-                        $this->_timeZone[$userId] = $settings["timezone"];
-                    }
-                    if (isset($settings["langua"])) {
-                        $language = $settings["langua"];
-                    }
+                // Add permission for this user to root project
+                $moduleId      = $this->_getModuleId('Project');
+                $userRightsAdd = array($userId => $this->_accessAdmin);
+                $this->_addItemRights($moduleId, self::PROJECT_ROOT, $userRightsAdd);
+
+            } else {
+                // Don't migrate 'root' and 'test' users themselves, they are replaced by already inserted 'admin' and
+                // 'test' although but its attributes will be migrated indeed.
+                if ($loginName == 'root') {
+                    $userId = self::USER_ADMIN;
+                } elseif ($loginName = 'test') {
+                    $userId = self::USER_TEST;
                 }
 
+                // Update name fields
+                $data  = array('firstname' => $firstName,
+                               'lastname'  => $lastName);
+                $where = sprintf("id = %d", $userId);
+                $this->_tableManager->updateRows('user', $data, $where);
+            }
+
+            // Migrate password for all users except for P5 'root'
+            if ($loginName != 'root') {
                 if (defined("PHPR_VERSION") && PHPR_VERSION >= '5.2.1') {
                     $password = $user['pw'];
                 } else {
                     $password = md5('phprojektmd5' . $username);
                 }
 
-                $this->_tableManager->insertRow('setting', array(
-                    'id'         => null,
-                    'user_id'    => $userId,
-                    'module_id'  => 0,
-                    'key_value'  => 'password',
-                    'value'      => $password,
-                    'identifier' => 'Core'
-                ));
+                if ($loginName == 'test') {
+                    // Update setting
+                    $data  = array('value' => $password);
+                    $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'password' AND identifier= 'Core'",
+                        $userId);
+                    $this->_tableManager->updateRows('setting', $data, $where);
+                } else {
+                    // Insert setting
+                    $this->_tableManager->insertRow('setting', array(
+                        'id'         => null,
+                        'user_id'    => $userId,
+                        'module_id'  => 0,
+                        'key_value'  => 'password',
+                        'value'      => $password,
+                        'identifier' => 'Core'
+                    ));
+                }
+            }
 
+            $oldUserId                      = $user["ID"];
+            $this->_users[$oldUserId]       = $userId;
+            $this->_userKurz[$user['kurz']] = $userId;
+            $this->_timeZone[$userId]       = 2;
+            $language                       = 'en';
+
+            @$settings = unserialize($user["settings"]);
+            if (is_array($settings)) {
+                if (isset($settings["timezone"])) {
+                    $this->_timeZone[$userId] = $settings["timezone"];
+                }
+                if (isset($settings["langua"])) {
+                    $language = $settings["langua"];
+                }
+            }
+
+            // Migrate rest of settings
+            if ($loginName == 'root' || $loginName == 'test') {
+                // Update them
+                // Email
+                $data  = array('value' => $user['email']);
+                $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'email' AND identifier= 'Core'",
+                    $userId);
+                $this->_tableManager->updateRows('setting', $data, $where);
+
+                // Language
+                $data  = array('value' => $language);
+                $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'language' AND identifier= 'Core'",
+                    $userId);
+                $this->_tableManager->updateRows('setting', $data, $where);
+
+                // Time Zone
+                $data  = array('value' => $this->_timeZone[$userId]);
+                $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'timeZone' AND identifier= 'Core'",
+                    $userId);
+                $this->_tableManager->updateRows('setting', $data, $where);
+
+            } else {
+                // Insert them
+                // Email
                 $this->_tableManager->insertRow('setting', array(
                     'id'         => null,
                     'user_id'    => $userId,
@@ -299,6 +350,7 @@ class Setup_Models_Migration
                     'identifier' => 'Core'
                 ));
 
+                // Language
                 $this->_tableManager->insertRow('setting', array(
                     'id'         => null,
                     'user_id'    => $userId,
@@ -308,6 +360,7 @@ class Setup_Models_Migration
                     'identifier' => 'Core'
                 ));
 
+                // Time Zone
                 $this->_tableManager->insertRow('setting', array(
                     'id'         => null,
                     'user_id'    => $userId,
@@ -316,12 +369,6 @@ class Setup_Models_Migration
                     'value'      => $this->_timeZone[$userId],
                     'identifier' => 'Core'
                 ));
-
-                // Add permission for this user to root project
-                $moduleId      = $this->_getModuleId('Project');
-                $userRightsAdd = array($userId => $this->_accessAdmin);
-
-                $this->_addItemRights($moduleId, self::PROJECT_ROOT, $userRightsAdd);
             }
         }
     }
