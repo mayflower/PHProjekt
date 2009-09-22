@@ -1031,8 +1031,8 @@ class Setup_Models_Migration
                 $author  = $item["autor"];
                 $query   = sprintf("SELECT ID FROM " . PHPR_DB_PREFIX . "users WHERE email = '%s'", $author);
                 $userIds = $this->_dbOrig->query($query)->fetchAll();
-                if (count($userIds > 0)) {
-                    $oldAuthorId = $userIds[0]["ID"];
+                foreach ($userIds as $userId) {
+                    $oldAuthorId = $userId["ID"];
                     if (isset($this->_users[$oldAuthorId])) {
                         $authorId = $this->_users[$oldAuthorId];
                     }
@@ -1365,19 +1365,15 @@ class Setup_Models_Migration
 
             // Weeks days
             $returnValue .= 'BYDAY=';
-            $weeksDays = array( 0 => 'MO', 1 => 'TU', 2 => 'WE', 3 => 'TH',
-                                4 => 'FR', 5 => 'SA', 6 => 'SU');
+            $weekDaysList = array(0 => 'MO', 1 => 'TU', 2 => 'WE', 3 => 'TH',
+                                  4 => 'FR', 5 => 'SA', 6 => 'SU');
             if (isset($value['weekday']) && !empty($value['weekday'])) {
-                $i = 0;
-                foreach ($value['weekday'] as $day => $tmp) {
-                    if ($i > 0) {
+                $byDay = array_keys($value['weekday']);
+                foreach ($byDay as $position => $day) {
+                    if ($position > 0) {
                         $returnValue .= ",";
                     }
-                    $returnValue .= $weeksDays[$day];
-                    $i++;
-                    // Cruise Control: for Zend Code Analyser not to warn anything:
-                    if ($tmp = "") {
-                    }
+                    $returnValue .= $weekDaysList[$day];
                 }
             }
         } else if (strlen($value) <= 2) {
