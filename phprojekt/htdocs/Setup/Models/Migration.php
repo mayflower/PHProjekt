@@ -788,26 +788,39 @@ class Setup_Models_Migration
         $files = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "dateien ORDER BY ID")->fetchAll();
 
         foreach ($files as $file) {
-            $file['von']  = $this->_processOwner($file['von']);
-            $file["div2"] = $this->_processParentProjId($file["div2"]);
-            $newFilename  = md5($file["tempname"]);
-            $uploadDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
-            $title        = utf8_encode($file["filename"]);
-            $title        = substr($title, 0, 100);
+            // Is it a file? (not a folder)
+            if ($file["typ"] == "f") {
+                $file['von']  = $this->_processOwner($file['von']);
+                $file["div2"] = $this->_processParentProjId($file["div2"]);
+                $newFilename  = md5(uniqid(rand(), 1));
+                $uploadDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
 
-            copy(PHPR_FILE_PATH . "\\" . $file["tempname"], $uploadDir . "\\" . $newFilename);
+                // All the required data is filled?
+                if (!empty($file["tempname"]) && !empty($file["filename"])) {
+                    $title = utf8_encode($file["filename"]);
+                    $title = substr($title, 0, 100);
 
-            $fileId = $this->_tableManager->insertRow('filemanager', array(
-                'owner_id'   => $file['von'],
-                "title"      => $title,
-                "comments"   => utf8_encode($file["remark"]),
-                "project_id" => $file["div2"],
-                "files"      => utf8_encode($newFilename . "|" . $file["filename"])
-            ));
+                    // Copy file, if it is there
+                    $originPath = PHPR_FILE_PATH . "\\" . $file["tempname"];
+                    $targetPath = $uploadDir . "\\" . $newFilename;
+                    if (file_exists($originPath)) {
+                        copy($originPath, $targetPath);
+                    }
 
-            // Migrate permissions
-            $file["ID"] = $fileId;
-            $this->_migratePermissions('Filemanager', $file);
+                    // Insert row
+                    $fileId = $this->_tableManager->insertRow('filemanager', array(
+                        'owner_id'   => $file['von'],
+                        "title"      => $title,
+                        "comments"   => utf8_encode($file["remark"]),
+                        "project_id" => $file["div2"],
+                        "files"      => utf8_encode($newFilename . "|" . $file["filename"])
+                    ));
+
+                    // Migrate permissions
+                    $file["ID"] = $fileId;
+                    $this->_migratePermissions('Filemanager', $file);
+                }
+            }
         }
     }
 
