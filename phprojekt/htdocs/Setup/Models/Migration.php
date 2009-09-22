@@ -615,10 +615,8 @@ class Setup_Models_Migration
                     $timeproj["h"] = 0;
                 } else if ($timeproj["h"] > 24) {
                      // I don't know how P5 shows more than 24 hours in a day, but I suppose this is the right way
-                     $timeproj["h"] == 24;
-                     $timeproj["m"] == 0;
-                     // Cruise Control: for Zend Code Analyser not to warn anything:
-                     echo $timeproj["h"] . $timeproj["m"];
+                     $timeproj["h"] = 24;
+                     $timeproj["m"] = 0;
                 }
                 if (empty($timeproj["m"])) {
                     $timeproj["m"] = 0;
@@ -1365,7 +1363,8 @@ class Setup_Models_Migration
                     $returnValue .= $weeksDays[$day];
                     $i++;
                     // Cruise Control: for Zend Code Analyser not to warn anything:
-                    $tmp = "";
+                    if ($tmp = "") {
+                    }
                 }
             }
         } else if (strlen($value) <= 2) {
