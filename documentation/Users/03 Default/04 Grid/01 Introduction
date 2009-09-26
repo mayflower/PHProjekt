@@ -1,0 +1,42 @@
+[emph]Location[/emph]
+
+The grid, when it is shown, is situated at the upper center of the screen, behind the Project-Modules white tab bar and
+the buttons and breadcrumb trail.
+
+
+[empth]What's the grid?[/emph]
+
+The grid is an editable list of items for the selected module plus some extra items for performing actions on them. The 
+items listed are those that you have Read access to. If there are no available items for the selected module and logged
+user, no grid is shown, just a legend 'There are no entries on this level'.
+
+
+[emph]Resize panel[/emph]
+
+You can resize the grid panel in two ways:
+
+Vertically
+Take the mouse pointer over the bottom horizontal border of the grid panel, generally the pointer will get 
+into a different icon like a vertical bar with one arrow on each point. Click and drag the mouse up or down to
+increase or decrease panel's height.
+
+Horizontally
+Take the mouse pointer over the left vertical border between the tree and the grid, click and drag the mouse
+left or right to widen or narrow the grid's width respectively. 
+
+
+[emph]Exceptions[/emph]
+
+When using Project module and selected a Project from the tree, the Basic Data of it is shown in the center of the 
+screen without any Grid. Then, if the Project has associated modules you can choose another tab and the Grid will be 
+shown with the list of items for that clicked module tab. 
+
+There are some modules like Gantt, Statistic, Timecard and Setting that don't use a Grid.
+
+In Calendar module the use of a Grid is optional because the module provides also some calendar based views that replace
+the grid: Day, Week and Month views.
+
+Minute module has, in addition to the common Grid, another grid inside Items tab of the Form. That point will be
+explained in detail in Minutes section of this User help.
+
+ 

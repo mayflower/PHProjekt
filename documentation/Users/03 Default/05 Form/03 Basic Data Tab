@@ -1,0 +1,6 @@
+This tab shows the main contents of the active item like its name, description and all kind of 'field-type' info related
+to it, according to what has been defined for the module.
+It is a list of different fields for the user to fill them. Each field type is described in the help section 'Fields'.
+
+Basic Data tab is present in all modules that have use a Form. 
+

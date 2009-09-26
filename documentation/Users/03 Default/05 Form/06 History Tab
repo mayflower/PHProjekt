@@ -1,0 +1,13 @@
+History tab is simply a 'history' of the changes made to the item since its creation (including original values)
+Its content is loaded when clicked the tab, to save time on whole form loading.
+
+[emph]Data stored[/emph]
+
+For each row of data it is shown the following info:
+
+  Date: date and time when the change was done (or creation, the first time). 
+  User: who made it.
+  Field: what field of the item it applies to.
+  Old value: previous value (except for item creation).
+  New value: new value.
+  

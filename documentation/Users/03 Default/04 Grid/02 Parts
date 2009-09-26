@@ -1,0 +1,54 @@
+The grid is formed by three parts: Header, Items rows and Actions bar.
+
+
+[emph]Header[/emph] row with the titles of the columns.
+  
+Width
+
+The columns width is automatically set according to the content type of each column and its defined maximum length.
+Anyway, most of the columns can get its width adjusted taking the mouse to the border line between two column headers 
+and clicking and dragging it left or right.
+
+
+Order of listing
+
+The order of the items in the listing can be modified and make it depend on one particular column, clicking on
+the column. When a column header is clicked, a triangle facing up will be shown at the top right of the column header,
+and the listing will get arranged according to the content of that column for each row (A to Z). If you click it again,
+the order criteria will remain but will get the opposite direction (Z to A).
+
+
+[emph]Items rows[/emph]
+
+Here is where the items of the module are listed.
+
+First column: checkbox
+You can check one or more rows, and then perform a specific action on them like Delete, Export or maybe another 
+module-specific one selecting the action in the Actions select box behind the item listing.
+
+Second column: pencil
+Click the pencil of any row to open that item in the form, behind the grid, to see it in detail and/or edit it,
+according your permissions.
+
+Rest of the columns: data content
+The rest of the columns show the info titled in the header of the column, for each item, like Id, Title, Start Date, 
+etc.
+
+Last column/s (optional): extra actions for this specific module
+The last column/s of each row may have special icons for specific actions on that row defined by the module: it may be
+'delete', 'send an email' or whatever.
+   
+
+[emph]Actions bar[/emph]
+
+Check all / Uncheck all:
+These links check or uncheck all rows, then you can select an action to carry out on them in the Actions select box.
+
+Actions select box:
+Here you choose an action to perform with the checked rows.
+Common actions:
+   Delete - Deletes selected rows.
+   Export - Creates a spreadsheet CSV file with the selected items and allows you to download it.
+Special actions:
+   Each module may define extra actions.
+   

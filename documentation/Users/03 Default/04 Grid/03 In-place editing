@@ -1,0 +1,24 @@
+Most of the cells can be edited just clicking on them and modifying the content.
+
+[emph]Steps to modify an item from the Grid[/emph]
+
+1 - Click on a cell.
+
+2 - If it is an editable cell its content gets changed depending on its data type:
+    Text/time: a textbox appears.
+    Date: a little floating calendar appears.
+    Selectable string, number, user, Yes/No, etc: a select box appears, allowing you to choose among many options.
+    Percentage: a slide bar appears for you to drag the knob left or right.
+
+3 - Modify its content.
+
+4 - If the content is invalid the field could get yellow and show a warning.
+
+5 - Repeat steps 1 to 3 for all the cells you want to modify.
+
+6 - Press the Disk button over the grid to save changes.
+
+7 - If any data is wrong, an error message will be shown at the top right of the screen, if not, all data is saved, a
+    success message is shown on top right of screen and the grid is reloaded.
+    
+ 

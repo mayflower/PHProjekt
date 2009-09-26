@@ -1,0 +1,50 @@
+There are some values stored in browser's cookies to simplify the user experience in the site.
+All these navigation attributes that will be mentioned here, are stored automatically, except for 'Keep me logged'
+functionality. 
+
+
+[emph]Keep me logged[/emph]
+
+When you log in you can check the box 'Keep me logged', and it will save a pair of cookies:
+
+* An encrypted string 
+* Your user Id
+
+Both values will match Phprojekt database data to let you access the site without writing your user and password after
+your session time has expired, or you restart the computer, etc. The expiration time will be initially of 1 week.
+Each time you get logged automatically using the cookies, the expiration time of them is set to 1 week from that moment
+again, both in your browser cookies and in Phprojekt database. If you don't log for 1 week or more, they won't work any
+more and you have to enter your data again to log in.
+
+To inactive these pair of cookies, just log out of the site using the top right link.
+
+
+[emph]Location[/emph]
+
+The location where you are navigating is stored in the cookies so that if you log out or close the browser, next time
+you log into the site or enter the root path to access it, you will be taken there.
+The location URL involves the active module, selected item if any, and parent Project if any.
+
+
+[emph]Grid column list order and direction[/emph]
+
+The order of the items in the listing can be modified and make it depend on one particular column, clicking on
+the column. When a column is clicked, a triangle facing up will be shown at the top right of the column header, and will
+the listing will be ordered according to the content of that column for each row (A to Z). If you click it again, the
+order criterion will remain the same but its direction will get opposite (Z to A).
+This order criteria, if any, is stored individually for each module in the cookies.
+
+
+[emph]Grid vertical scroll position[/emph]
+
+When the grid listing exceeds panel's height a vertical scrollbar appears letting you scroll the content up and down.
+That listing position is stored individually for each module in the cookies.
+
+
+[emph]Grid and Form panel's height[/emph]
+
+The height of Grid and Form can be changed taking the mouse pointer over the bottom horizontal border between them and
+clicking and dragging it up or down to increase or decrease panel's height.
+That border position is stored in the cookies, it may be saved as a shared value for many modules that have Grid and 
+Form sections.
+

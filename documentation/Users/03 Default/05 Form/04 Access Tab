@@ -1,0 +1,31 @@
+[emph]What modules have an Access tab?[/emph]
+
+All modules that use the form, except for Calendar and Contact that have their own permission system, may show Access
+tab depending on the rights of the logged user.
+
+
+[emph]What is it intended for?[/emph]
+
+It is used to manage the rights for the rest of the users (not the logged one) for current item.
+You can select a user in the select box inside that tab, check the rights you want to give him/her, and then press the
+[+] plus sign button at the right so that a new row appear showing the user and the rights you have added for him/her.
+You can delete that added right pressing the cross button at its right side.
+
+
+[emph]Available rights[/emph]
+
+The different permissions are:
+  Read: see the item.
+  Write: modify the item.
+  Access: pass through the item (e.g.: see the sub projects but not to see the project itself).
+  Create: create sub items.
+  Copy: copy the item to create other one.
+  Delete: delete the item.
+  Download: download files (for example in the Filemanager module).
+  Admin: allows to do all, including editing the access of the item.
+  None: the user can't even see the item.
+
+Note: the owner (creator) of the item has by default all the permissions.
+
+
+See 'Permissions' section of this help for more info on Access permissions.
