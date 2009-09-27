@@ -13,8 +13,8 @@ $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Estadística"] = "<br />
     <b>Solapa Estadística</b><br />
     <br />
-    Este modulo suma todas las horas trabajadas clasificándolas por <b>Proyectos</b>, <b>Subproyectos</b> y
-    <b>Usuarios</b> y los muestra como diagrama en una tabla.<br />
+    Este modulo suma todas las horas trabajadas clasificándolas por <b>Proyectos</b> y <b>Subproyectos</b> y los muestra
+    como diagrama en una tabla.<br />
     <br />
     Hay un panel sobre ella 'Período de Estadística Seleccionado' que permite elegir un período para el cuál el
     módulo deba calcular las horas.<br />
