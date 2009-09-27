@@ -21,7 +21,7 @@ You can click on them and all the Project info will be loaded into the upper cen
 When you are navigating inside a global module; those top right linked ones which don't depend on a specific Project, 
 the Tree gets faded out to make you know you aren't inside any Project.
 
-When you are working inside a specific Project, that Project inside the tree gets dark bolder.
+When you are working inside a specific Project, that Project inside the tree gets dark and bolder.
 
 
 [emph]Toggle the projects to see Sub-Projects[/emph]
