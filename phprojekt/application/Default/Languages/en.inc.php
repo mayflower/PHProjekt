@@ -152,7 +152,7 @@ $lang["The module was edited correctly"] = "The module was edited correctly";
 $lang["The module can not be deleted"] = "The module can not be deleted";
 $lang["The module was deleted correctly"] = "The module was deleted correctly";
 $lang["No help available"] = "No help available";
-$lang["You do not have access for do this action"] = "You do not have access for do this action";
+$lang["You do not have access to do this action"] = "You do not have access to do this action";
 $lang["Internal exception"] = "Internal exception";
 $lang["Please contact the administrator and check the error logs"] = "Please contact the administrator"
     . " and check the error logs";

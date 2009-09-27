@@ -49,7 +49,7 @@ final class Default_Helpers_Delete
         if ($id == 1) {
             throw new Phprojekt_PublishedException('You can not delete the root project');
         } else if (!self::_checkItemRights($model, 'Project')) {
-            throw new Phprojekt_PublishedException('You do not have access for do this action');
+            throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
             $relations = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
             $where     = sprintf('project_id = %d', (int) $id);
@@ -104,7 +104,7 @@ final class Default_Helpers_Delete
         // Checks
         $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
         if (!self::_checkItemRights($model, $moduleName)) {
-            throw new Phprojekt_PublishedException('You do not have access for do this action');
+            throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
             return $model->delete();
         }

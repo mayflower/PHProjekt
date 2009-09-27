@@ -87,7 +87,7 @@ final class Default_Helpers_Save
         } else if (!self::_checkModule(1, $projectId)) {
             throw new Phprojekt_PublishedException('You do not have access to add projects on the parent project');
         } else if (!self::_checkItemRights($node->getActiveRecord(), 'Project')) {
-            throw new Phprojekt_PublishedException('You do not have access for do this action');
+            throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
             if (null === $node->id || $node->id == 0) {
                 $parentNode->appendNode($node);
@@ -170,7 +170,7 @@ final class Default_Helpers_Save
         } else if (!self::_checkModule(Phprojekt_Module::getId($moduleName), $projectId)) {
             throw new Phprojekt_PublishedException('The parent project do not have enabled this module');
         } else if (!self::_checkItemRights($model, $moduleName)) {
-            throw new Phprojekt_PublishedException('You do not have access for do this action');
+            throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
             $model->save();
 
