@@ -1,0 +1,41 @@
+The modules that can be associated to a Project inside Module tab so that all their items will have that Project as 
+their parent are called Project-modules and they are:
+
+[emph]Gantt[/emph]
+
+This module is a Gantt chart interface, mouse editable, which is automatically synchronized to the Project data loaded
+in the database.
+
+
+[emph]Statistic[/emph]
+
+This module sums all the worked hours, classifies them by Projects and Sub-Projects and shows them in a chart table.
+
+
+[emph]Todo[/emph]
+
+The Todo is a module to store To-Do items and assign them to a user.
+
+
+[emph]Note[/emph]
+
+The Note is just a module to leave notes and associate them to a Project or Subproject.
+
+
+[emph]Filemanager[/emph]
+
+The File manager is a module defined exclusively for uploading and downloading files from the system.
+
+
+[emph]Minute[/emph]
+
+This module is meant for the transcription of meeting minutes.
+
+
+[emph]Helpdesk[/emph]
+
+The Helpdesk is a module to report and track bugs or issues that must be solved inside whatever context.
+
+
+
+Note: all these modules are explained in detail inside its appropriate section of the User help.

@@ -1,0 +1,56 @@
+[emph]Scenario[/emph]
+
+The following Role is defined:
+    "Senior Developer":
+        Todo module:        (read, write, create)
+        Filemanager module: (read, create)
+        Rest of modules:    ()
+
+User "John" has been assigned 
+    "Senior developer" Role on "Project 1"
+
+"Project 1" has the following "Todo" module items:
+    
+    #1. "Write documentation"
+    There is no user specified in "Access" tab.
+
+    #2. "Call Mr.Hanson"
+    User "John" has Read access in "Access" tab.
+
+And also, "Project 1" has the following "Notes" module item:
+
+    #1. "How to cook a Banana Tarte Tatin"
+    User "John" has Read and Write access in "Access" tab.
+
+
+And also, "Project 1" has the following "Helpdesk" module item:
+
+    #1. "Change front left wheel of the car"
+    User "John" has Read and Write access in "Access" tab.
+
+
+
+[emph]Result[/emph]
+
+Todo item #1 "Write documentation", "John" can do nothing (even seeing it) because:
+    Item access (Access tab):   None
+    Role for parent Project:    Read, Write, Create
+    Combination = {}
+
+Todo item #2 "Call Mr.Hanson", "John" can 'Read' it because:
+    Item access (Access tab):   Read
+    Role for parent Project:    Read, Write, Create
+    Combination = {Read}
+
+Notes item #1 "How to cook a Banana Tarte Tatin", "John" can 'Read' and 'Write' it because:
+    Item access (Access tab):   Read, Write
+    Role for parent Project:    Read, Create
+    Combination = {Read, Write} 
+    Note: In this specific case, a combination between Write and Create gives Write access. The same result
+    happens with Write and Write, and Write and Admin accesses.
+
+Helpdesk item #1 "Change front left wheel of the car", "John" can't even see the module tab because:
+    Item access (Access tab):   Read, Write
+    Role for parent Project:    -nothing-
+    Combination = {}
+    

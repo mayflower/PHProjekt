@@ -1,0 +1,50 @@
+Project tabs are:
+
+
+[emph]Basic Data[/emph]
+
+Fields:
+- Title
+- Notes
+- Project - Here goes the parent Project; every Project is child of another, at least child of the 'Root' one: PHProjekt
+- Start Date
+- End Date
+- Priority
+- Status - May be one of the following: Offered, Ordered, Working, Ended, Stopped, Re-Opened and Waiting.
+- Percentage completed
+- Budget
+- Contact - Contacts list from Contact module for you to choose one
+- Tag - Explained in 'Tags panel' section of 'Default' Users help
+
+
+[emph]Access[/emph]
+
+Specific permissions for the users on this item are defined here.
+See 'Permissions' section of this 'Project' Users help for more info.
+
+
+[emph]Module[/emph]
+
+Here the Project-modules are associated to the Project.
+See 'Associated modules' section of this 'Project' Users help for more info.
+
+
+[emph]Role[/emph]
+
+Here the Roles for the Project are defined. Each user may have a different Role.
+See 'Permissions' section of this 'Project' Users help for more info.
+
+
+[emph]Notification[/emph]
+
+Notification tab allows you to send notifications to related users when a Project is created or modified.
+
+ 
+[emph]History[/emph]
+
+History tab is simply a 'history' of the changes made to the item since its creation.
+
+
+Note
+To learn more about how Form and Tabs work and how to modify module items contents (in this case a Project item), read 
+Form and Grid help inside 'Default' section of User help.
