@@ -14,7 +14,8 @@ $lang["Content Help"]["Proyecto"] = "<br />
     y luego carga toda la información en el proyecto en sí más los módulos asociados que se activaron para él (ver
     solapa Módulo dentro de un proyecto). Con el transcurso del tiempo, puede agregar o modificar información.<br />
     <br />
-    Puede darle permisos específicos a los usuarios que desee, como roles o sólo permisos individuales.<br />
+    El creador y usuarios con permisos apropiados pueden darle derechos específicos a los usuarios que deseen, como
+    roles o sólo permisos individuales para acceder al Proyecto, ver el contenido y/o modificarlo.<br />
     <br />
     El módulo Proyecto tiene otros módulos asociados que son parte de él. Esas asociaciones están definidas en la
     solapa Módulo, que se ve cuando se edita el proyecto. Los módulos que vienen con la versión original del sistema

@@ -14,7 +14,8 @@ $lang["Content Help"]["Project"] = "<br />
     loads all the data on the Project itself plus the associated modules that were activated for it (view Module tab
     inside a project). As time goes by, data can be added or modified.<br />
     <br />
-    You can give specific rights to the users you want, like roles or just individual rights.<br />
+    The owner and users with appropriate permissions can give specific rights to the users they want on a specific
+    Project, like roles or just individual rights for them to access it, see its content and maybe modify it.<br />
     <br />
     The Project module has another modules associated that are part of it. Those associations are defined in tab
     Module, which can be seen when editing the Project itself. The modules that come with the original release of the
