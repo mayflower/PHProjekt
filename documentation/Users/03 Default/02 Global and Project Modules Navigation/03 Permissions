@@ -30,12 +30,13 @@ Note: the owner (creator) of the item has by default all the permissions.
 Each Project has a Role tab, visible for the owner and those users with specific rights.
 There you can assign Roles to users. Each Role is a series of permissions for each module. For example, a specific Role 
 can give Admin access to Todo module and just Read access for Helpdesk module. It means that if a user has that Role
-assigned for a Project, then for the Todo items that have that Project as parent he/she will be able to do everything
-but for the Helpdesk items that has that Project as parent he/she will just be able to see them and not making any
-modification. 
-Each Role scope is defined by Admin users in Administration module.
+assigned for a Project, then he/she will be able to do everything with the Todo items that have that Project as parent 
+but will just be able to see, and not modify Helpdesk items that also have that Project as parent. 
 
-Note: Roles don't affect top right linked Global modules like Calendar, Contact, etc.
+Notes:
+- Each Role scope is defined by Admin users in Administration module.
+- Important: when a Project doesn't have any Roles defined, then it inherits its parent Roles.
+- Roles don't affect top right linked Global modules like Calendar, Contact, etc.
 
 
 [emph]Important[/emph]

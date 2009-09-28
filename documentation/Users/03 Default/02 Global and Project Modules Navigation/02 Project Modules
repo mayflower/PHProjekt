@@ -4,7 +4,7 @@ The middle top white module bar has a series of tabs like "Project", "Gantt", "S
 selected Project: maybe the Root one or a Tree one. Those modules are directly associated to a Project, if the
 selected Project has associated modules (Project -> Module tab in the form), then, they will be seen there at the right 
 of Basic Data tab when that Project is selected in the Tree.
-All the items of these Project-modules are children of it parent Projects.
+All the items of these Project-modules are children of its parent Projects.
 
 
 They are not always visible and not always the same ones; in order to see them, a Project has to be selected: maybe 
@@ -39,9 +39,6 @@ in the database.
 
 
 [emph]Statistic[/emph]
-
-
-Statistic tab
 
 This module sums all the worked hours, classifies them by Projects and Sub-Projects and shows them in a chart table.
 
