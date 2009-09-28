@@ -43,7 +43,7 @@ $lang["Content Help"]["Project"] = "<br />
     <br />
     For specific help about every Project tab, see the other tabs of this help.<br />
     <br />
-    The project can have subprojects and many other properties that you can start to learn in the <b>Basic Data</b> tab
+    Projects may have subprojects and many other properties that you can start to learn reading <b>Basic Data</b> tab
     inside this help.";
 
 $lang["Content Help"]["Basic data"] = "DEFAULT";

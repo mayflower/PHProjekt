@@ -46,8 +46,8 @@ $lang["Content Help"]["Proyecto"] = "<br />
     <br />
     Para ayuda específica acerca de cada solapa del módulo Proyecto, entre en las otras solapas de esta ayuda.<br />
     <br />
-    El proyecto puede tener subproyectos y muchas otras propiedades que puede empezar a aprender en la solapa <b>Datos
-    Básicos</b> dentro de esta ayuda.<br />
+    Los proyectos pueden tener subproyectos y muchas otras propiedades que puede empezar a aprender leyendo la solapa
+    <b>Datos Básicos</b> dentro de esta ayuda.<br />
     <br />
     <br />";
 
