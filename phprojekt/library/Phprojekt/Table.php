@@ -494,7 +494,73 @@ class Phprojekt_Table
             $this->_db->insert($tableName, $data);
             return $this->_db->lastInsertId($tableName, 'id');
         } catch (Exception $error) {
-            echo $error.'<br>';
+            echo $error . '<br\>';
+            return 0;
+        }
+    }
+
+    /**
+     * Make multiple inserts
+     *
+     * @param string  $tableName The name of the table
+     * @param array   $fields    Array with keys
+     * @param array   $datas     Array with values
+     * @param boolean $returnId  Return the inserted ids or not
+     *
+     * @return array
+     */
+    public function insertMultipleRows($tableName, $fields, $datas, $returnId = false)
+    {
+        $maxRows = 1500;
+
+        try {
+            if ($returnId) {
+                $sqlString = "SELECT MAX(id) as count FROM " . $this->_db->quoteIdentifier((string) $tableName);
+                $result    = $this->_db->query($sqlString)->fetchAll();
+                $currentId = (int) $result[0]['count'];
+            }
+            $ids  = array();
+            $sql  = 'INSERT INTO ' . $this->_db->quoteIdentifier($tableName) . ' ';
+            $sql .= '(' . implode(",", $fields) . ') ';
+            $sql .= 'VALUES ';
+
+            $countFields = count($fields);
+            $countData   = count($datas);
+            $values      = array();
+            $current     = 0;
+            $sqlValues   = '';
+            foreach ($datas as $data) {
+                $current++;
+                $sqlValues .= '(';
+                for ($i = 0; $i < $countFields; $i++) {
+                    $sqlValues .= "?";
+                    if ($i != $countFields - 1) {
+                        $sqlValues .= ",";
+                    }
+                }
+                $sqlValues .= ')';
+                if ($countData != $current && ($current % $maxRows != 0)) {
+                    $sqlValues .= ', ';
+                }
+                $values = array_merge($values, $data);
+                if ($returnId) {
+                    $currentId++;
+                    $ids[] = $currentId;
+                }
+                // If the query have more than $maxRows values, execute it
+                if ($current % $maxRows == 0) {
+                    $stmt      = $this->_db->query($sql . $sqlValues, $values);
+                    $sqlValues = '';
+                    $values    = array();
+                }
+            }
+            // Execute the rest of the values
+            if (!empty($values)) {
+                $this->_db->query($sql . $sqlValues, $values);
+            }
+            return $ids;
+        } catch (Exception $error) {
+            echo $error . '<br\>';
             return 0;
         }
     }
@@ -514,7 +580,7 @@ class Phprojekt_Table
             $this->_db->update($tableName, $data, $where);
             return true;
         } catch (Exception $error) {
-            echo $error.'<br>';
+            echo $error . '<br\>';
             return false;
         }
     }
@@ -533,7 +599,7 @@ class Phprojekt_Table
             $this->_db->delete($tableName, $where);
             return true;
         } catch (Exception $error) {
-            echo $error.'<br>';
+            echo $error . '<br\>';
             return false;
         }
     }
