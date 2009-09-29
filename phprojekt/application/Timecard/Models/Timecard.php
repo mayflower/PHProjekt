@@ -162,11 +162,13 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
         if (isset($data['endTime']) && !empty($data['endTime'])) {
             if ($this->getDiffTime($data['endTime'], $data['startTime']) < 0) {
-                $this->_validate->error->addError(array(
-                    'field'   => 'Hours',
-                    'label'   => Phprojekt::getInstance()->translate('Hours'),
-                    'message' => Phprojekt::getInstance()->translate('The end time must be after the start time')));
-                return false;
+                if (($data['endTime'] != "00:00:00") && ($data['endTime'] != "00:00")) {
+                    $this->_validate->error->addError(array(
+                        'field'   => 'Hours',
+                        'label'   => Phprojekt::getInstance()->translate('Hours'),
+                        'message' => Phprojekt::getInstance()->translate('The end time must be after the start time')));
+                    return false;
+                }
             }
 
             $endTime = str_replace(":", "", $data['endTime']);
@@ -384,6 +386,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
         $hoursStart   = substr($start, 0, 2);
         $minutesStart = substr($start, 3, 2);
+
+        if ($hoursEnd == 0 && $minutesEnd == 0) {
+            $hoursEnd = 24;
+        }
 
         return (($hoursEnd - $hoursStart) * 60) + ($minutesEnd - $minutesStart);
     }

@@ -376,6 +376,8 @@ CREATE TABLE `timecard` (
   `minutes` int(11) default NULL,
   `project_id` int(11) default NULL,
   `notes` text default NULL,
+  `module_id` int(11) default 1,
+  `item_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 

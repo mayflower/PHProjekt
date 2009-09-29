@@ -378,6 +378,8 @@ CREATE TABLE `timecard` (
   `minutes` int(11) default NULL,
   `project_id` int(11) default NULL,
   `notes` text default NULL,
+  `module_id` int(11) default 1,
+  `item_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -705,13 +707,13 @@ INSERT INTO `item_rights` (`module_id`, `item_id`, `user_id`, `access`) VALUES
 INSERT INTO `todo` (`id`, `title`, `notes`, `owner_id`, `project_id`, `start_date`, `end_date`, `priority`, `current_status`) VALUES
 (1,'Todo of Test Project','',1,1,'2007-12-12','2007-12-31',0,1);
 
-INSERT INTO `timecard` (`id`, `owner_id`, `date`, `start_time`, `end_time`, `minutes`, `project_id`, `notes`) VALUES
-(1, 1, '2008-04-29', '0800', '1300', 300, 1, 'TEST'),
-(2, 1, '2008-04-29', '1400', '1800', 240, 2, 'TEST'),
-(3, 1, '2008-04-30', '0800', '1300', 300, 1, 'TEST'),
-(4, 1, '2008-04-30', '1400', '1800', 240, 1, 'TEST'),
-(5, 1, '2008-05-02', '0800', '1300', 300, 2, 'TEST'),
-(6, 1, '2008-05-02', '1400', '1800', 240, 1, 'TEST');
+INSERT INTO `timecard` (`id`, `owner_id`, `date`, `start_time`, `end_time`, `minutes`, `project_id`, `notes`, `module_id`, `item_id`) VALUES
+(1, 1, '2008-04-29', '0800', '1300', 300, 1, 'TEST', 1, NULL),
+(2, 1, '2008-04-29', '1400', '1800', 240, 2, 'TEST', 1, NULL),
+(3, 1, '2008-04-30', '0800', '1300', 300, 1, 'TEST', 1, NULL),
+(4, 1, '2008-04-30', '1400', '1800', 240, 1, 'TEST', 1, NULL),
+(5, 1, '2008-05-02', '0800', '1300', 300, 2, 'TEST', 1, NULL),
+(6, 1, '2008-05-02', '1400', '1800', 240, 1, 'TEST', 1, NULL);
 
 INSERT INTO `tags` (`id`, `word`, `crc32`) VALUES
 (1,'this',-17923545),

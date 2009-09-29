@@ -15,7 +15,9 @@
                 "end_time":   {"type": "time"},
                 "minutes":    {"type": "int"},
                 "project_id": {"type": "int"},
-                "notes":      {"type": "text"}
+                "notes":      {"type": "text"},
+                "module_id":  {"type": "int", "default": "1"},
+                "item_id":    {"type": "int"}
             }
         }
     },

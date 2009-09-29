@@ -128,7 +128,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 if (null === data[i].endTime) {
                     data[i].endTime = data[i].startTime;
                     var dndClass = 'dndTargetOpen';
+                } else if (data[i].endTime == '00:00' || data[i].endTime == '00:00:00') {
+                    data[i].endTime = '24:00';
                 }
+
                 var start = this._contentBar.convertHourToPixels(hourHeight, data[i].startTime);
                 var end   = this._contentBar.convertHourToPixels(hourHeight, data[i].endTime);
                 var top   = start + 'px';
