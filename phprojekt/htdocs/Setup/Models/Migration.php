@@ -40,6 +40,8 @@ class Setup_Models_Migration
      */
     private $_userKurz    = array();
     private $_timeZone    = array();
+    private $_groupsUsers = array();
+    private $_modules     = array();
 
     /**
      * Arrays with P6 info: the key of each array position is the P5 id, and the value the P6 id, they are used for
@@ -49,11 +51,13 @@ class Setup_Models_Migration
      *
      * @var array
      */
-    private $_users       = array();
-    private $_groupsUsers = array();
-    private $_projects    = array();
-    private $_calendars   = array();
-    private $_contacts    = array();
+    private $_users     = array();
+    private $_groups    = array();
+    private $_projects  = array();
+    private $_calendars = array();
+    private $_contacts  = array();
+    private $_todos     = array();
+    private $_helpdesk  = array();
 
     /**
      * P5 Database
@@ -86,21 +90,18 @@ class Setup_Models_Migration
     private $_accessAdmin = null;
 
     /**
+     * Permissions values
+     *
+     * @var array
+     */
+    private $_dbItemRightValues = array();
+
+    /**
      * Root path, taken out from the config file path
      *
      * @var string
      */
     private $_p5RootPath = null;
-
-    // Permissions constants
-    const ACCESS_READ     =   1;
-    const ACCESS_WRITE    =   2;
-    const ACCESS_ACCESS   =   4;
-    const ACCESS_CREATE   =   8;
-    const ACCESS_COPY     =  16;
-    const ACCESS_DELETE   =  32;
-    const ACCESS_DOWNLOAD =  64;
-    const ACCESS_ADMIN    = 128;
 
     // Phproject 6 Ids
     const USER_ADMIN   = 1;
@@ -113,10 +114,9 @@ class Setup_Models_Migration
     const HELPDESK_STATUS_SOLVED   = 3;
     const HELPDESK_STATUS_VERIFIED = 4;
     const HELPDESK_STATUS_CLOSED   = 5;
-    const TODO_STATUS_ACCEPTED = 1;
 
-    // General constants
-    const MODULES_AMOUNT       = 12;
+    // Pagination
+    const ROWS_PER_QUERY = 5000;
 
     public function __construct($file, $db = null)
     {
@@ -132,15 +132,18 @@ class Setup_Models_Migration
         $this->_checkFile();
 
         // Set permission variables
-        $this->_accessRead  = self::ACCESS_READ + self::ACCESS_ACCESS + self::ACCESS_DOWNLOAD;
-        $this->_accessWrite = self::ACCESS_READ + self::ACCESS_WRITE + self::ACCESS_ACCESS + self::ACCESS_CREATE
-            + self::ACCESS_COPY + self::ACCESS_DELETE + self::ACCESS_DOWNLOAD;
-        $this->_accessAdmin = self::ACCESS_READ + self::ACCESS_WRITE + self::ACCESS_ACCESS + self::ACCESS_CREATE
-            + self::ACCESS_COPY + self::ACCESS_DELETE + self::ACCESS_DOWNLOAD + self::ACCESS_ADMIN;
+        $this->_accessRead  = Phprojekt_Acl::NONE | Phprojekt_Acl::READ | Phprojekt_Acl::ACCESS
+            | Phprojekt_Acl::DOWNLOAD;
+        $this->_accessWrite = $this->_accessRead | Phprojekt_Acl::WRITE | Phprojekt_Acl::CREATE | Phprojekt_Acl::COPY
+            | Phprojekt_Acl::DELETE;
+        $this->_accessAdmin = $this->_accessWrite | Phprojekt_Acl::ADMIN;
 
         // Set P5 root path
         $pos               = strpos($file, 'config.inc.php');
         $this->_p5RootPath = substr($file, 0, $pos);
+
+        // Set modules
+        $this->_setModules();
     }
 
     /**
@@ -150,17 +153,19 @@ class Setup_Models_Migration
      */
     public function migrateTables()
     {
-        $this->_getGroups();
+        $this->_migrateGroups();
         $this->_migrateUsers();
         $this->_migrateGroupsUserRelations();
         $this->_migrateProjects();
         $this->_migrateTodos();
         $this->_migrateNotes();
-        // Awaiting definitions: $this->_migrateTimeCard();
         $this->_migrateCalendar();
         $this->_migrateFilemanager();
         $this->_migrateContacts();
         $this->_migrateHelpdesk();
+        $this->_migrateTimeCard();
+
+        $this->_executeItemRightsInsert();
     }
 
     /**
@@ -194,16 +199,33 @@ class Setup_Models_Migration
     }
 
     /**
-     * Collect all the P5 groups
+     * Collect all the P5 groups and migrate them
      *
      * @return void
      */
-    private function _getGroups()
+    private function _migrateGroups()
     {
-        $groups = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "gruppen")->fetchAll();
+        $p5Groups = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "gruppen")->fetchAll();
+        $p6Groups = $this->_db->query("SELECT * FROM groups")->fetchAll();
 
-        foreach ($groups as $group) {
-            $this->_groupsUsers[$group["ID"]] = array();
+        foreach ($p5Groups as $p5Group) {
+            $found = false;
+            foreach ($p6Groups as $p6Group) {
+                if ($p6Group['id'] == $p5Group['ID']) {
+                    $found = true;
+                    break;
+                }
+            }
+            $this->_groupsUsers[$p5Group['ID']] = array();
+            if (!$found) {
+                $id = $this->_tableManager->insertRow('groups', array(
+                    'id'   => null,
+                    'name' => $p5Group['name']
+                ));
+            } else {
+                $id = $p5Group['ID'];
+            }
+            $this->_groups[$p5Group['ID']] = $id;
         }
     }
 
@@ -221,25 +243,36 @@ class Setup_Models_Migration
         // Just in case
         $this->_users[self::USER_ADMIN] = self::USER_ADMIN;
 
+        // Multiple inserts
+        $dbFields = array('id', 'user_id', 'module_id', 'key_value', 'value', 'identifier');
+        $dbValues = array();
+
+        $moduleId = $this->_getModuleId('Project');
+
         foreach ($users as $user) {
-            $loginName = $user["loginname"];
-            $firstName = utf8_encode($user["vorname"]);
-            $lastName  = utf8_encode($user["nachname"]);
+            $loginName = $user['loginname'];
+            $firstName = utf8_encode($user['vorname']);
+            $lastName  = utf8_encode($user['nachname']);
 
             if ($loginName != "root" && $loginName != "test") {
                 switch (PHPR_LOGIN_SHORT) {
                     case '2':
-                        $username = $user["loginname"];
+                        $username = $user['loginname'];
                         break;
                     case '1':
-                        $username = $user["kurz"];
+                        $username = $user['kurz'];
                         break;
                     default:
-                        $username = $user["nachname"];
+                        $username = $user['nachname'];
                         break;
                 }
 
-                if ($user["status"] == 0) {
+                // Set random username for wrong values
+                if (empty($username)) {
+                    $username = md5(uniqid(rand(), 1));
+                }
+
+                if ($user['status'] == 0) {
                     $status = "A";
                 } else {
                     $status = 'I';
@@ -254,10 +287,8 @@ class Setup_Models_Migration
                 ));
 
                 // Add permission for this user to root project
-                $moduleId      = $this->_getModuleId('Project');
                 $userRightsAdd = array($userId => $this->_accessAdmin);
                 $this->_addItemRights($moduleId, self::PROJECT_ROOT, $userRightsAdd);
-
             } else {
                 // Don't migrate 'root' and 'test' users themselves, they are replaced by already inserted 'admin' and
                 // 'test' although but its attributes will be migrated indeed.
@@ -285,35 +316,28 @@ class Setup_Models_Migration
                 if ($loginName == 'test') {
                     // Update setting
                     $data  = array('value' => $password);
-                    $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'password' AND identifier= 'Core'",
-                        $userId);
+                    $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'password' AND "
+                        . "identifier = 'Core'", $userId);
                     $this->_tableManager->updateRows('setting', $data, $where);
                 } else {
-                    // Insert setting
-                    $this->_tableManager->insertRow('setting', array(
-                        'id'         => null,
-                        'user_id'    => $userId,
-                        'module_id'  => 0,
-                        'key_value'  => 'password',
-                        'value'      => $password,
-                        'identifier' => 'Core'
-                    ));
+                    // Prepare setting
+                    $dbValues[] = array(null, $userId, 0, 'password', $password, 'Core');
                 }
             }
 
-            $oldUserId                      = $user["ID"];
+            $oldUserId                      = $user['ID'];
             $this->_users[$oldUserId]       = $userId;
             $this->_userKurz[$user['kurz']] = $userId;
             $this->_timeZone[$userId]       = 2;
             $language                       = 'en';
 
-            @$settings = unserialize($user["settings"]);
+            @$settings = unserialize($user['settings']);
             if (is_array($settings)) {
-                if (isset($settings["timezone"])) {
-                    $this->_timeZone[$userId] = $settings["timezone"];
+                if (isset($settings['timezone'])) {
+                    $this->_timeZone[$userId] = $settings['timezone'];
                 }
-                if (isset($settings["langua"])) {
-                    $language = $settings["langua"];
+                if (isset($settings['langua'])) {
+                    $language = $settings['langua'];
                 }
             }
 
@@ -321,55 +345,45 @@ class Setup_Models_Migration
             if ($loginName == 'root' || $loginName == 'test') {
                 // Update them
                 // Email
+                if (is_null($user['email'])) {
+                    $user['email'] = '';
+                }
                 $data  = array('value' => $user['email']);
-                $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'email' AND identifier= 'Core'",
+                $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'email' AND identifier = 'Core'",
                     $userId);
                 $this->_tableManager->updateRows('setting', $data, $where);
 
                 // Language
                 $data  = array('value' => $language);
-                $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'language' AND identifier= 'Core'",
+                $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'language' AND identifier = 'Core'",
                     $userId);
                 $this->_tableManager->updateRows('setting', $data, $where);
 
                 // Time Zone
                 $data  = array('value' => $this->_timeZone[$userId]);
-                $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'timeZone' AND identifier= 'Core'",
+                $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'timeZone' AND identifier = 'Core'",
                     $userId);
                 $this->_tableManager->updateRows('setting', $data, $where);
 
             } else {
                 // Insert them
                 // Email
-                $this->_tableManager->insertRow('setting', array(
-                    'id'         => null,
-                    'user_id'    => $userId,
-                    'module_id'  => 0,
-                    'key_value'  => 'email',
-                    'value'      => $user["email"],
-                    'identifier' => 'Core'
-                ));
+                if (is_null($user['email'])) {
+                    $user['email'] = '';
+                }
+                $dbValues[] = array(null, $userId, 0, 'email', $user['email'], 'Core');
 
                 // Language
-                $this->_tableManager->insertRow('setting', array(
-                    'id'         => null,
-                    'user_id'    => $userId,
-                    'module_id'  => 0,
-                    'key_value'  => 'language',
-                    'value'      => $language,
-                    'identifier' => 'Core'
-                ));
+                $dbValues[] = array(null, $userId, 0, 'language', $language, 'Core');
 
                 // Time Zone
-                $this->_tableManager->insertRow('setting', array(
-                    'id'         => null,
-                    'user_id'    => $userId,
-                    'module_id'  => 0,
-                    'key_value'  => 'timeZone',
-                    'value'      => $this->_timeZone[$userId],
-                    'identifier' => 'Core'
-                ));
+                $dbValues[] = array(null, $userId, 0, 'timeZone', $this->_timeZone[$userId], 'Core');
             }
+        }
+
+        // Run the multiples insert
+        if (!empty($dbValues)) {
+            $this->_tableManager->insertMultipleRows('setting', $dbFields, $dbValues);
         }
     }
 
@@ -384,18 +398,19 @@ class Setup_Models_Migration
         // User group
         $userGroups = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "grup_user")->fetchAll();
 
+        // Multiple inserts
+        $dbFields = array('groups_id', 'user_id');
+        $dbValues = array();
+
         foreach ($userGroups as $userGroup) {
-            $oldUserId = $userGroup["user_ID"];
+            $oldUserId = $userGroup['user_ID'];
 
             // User exists?
             if (isset($this->_users[$oldUserId])) {
                 $userId = $this->_users[$oldUserId];
-                $group  = $userGroup["grup_ID"];
+                $group  = $userGroup['grup_ID'];
 
-                $this->_tableManager->insertRow('groups_user_relation', array(
-                    'groups_id' => $group,
-                    'user_id'   => $userId
-                ));
+                $dbValues[] = array($this->_groups[$userGroup['grup_ID']], $userId);
 
                 // Just in case group wasn't in 'gruppen' table (it should be),
                 if (!isset($this->_groupsUsers[$group])) {
@@ -409,6 +424,11 @@ class Setup_Models_Migration
                 }
             }
         }
+
+        // Run the multiple inserts
+        if (!empty($dbValues)) {
+            $this->_tableManager->insertMultipleRows('groups_user_relation', $dbFields, $dbValues);
+        }
     }
 
     /**
@@ -418,22 +438,16 @@ class Setup_Models_Migration
      */
     private function _migrateProjects()
     {
-        $statusConversion = array(
-            1 => "offered",
-            2 => "ordered",
-            3 => "Working",
-            4 => "ended",
-            5 => "stopped",
-            6 => "Re-Opened",
-            7 => "waiting"
-        );
-
         // Project migration
         $projects = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "projekte ORDER BY id")->fetchAll();
 
         $paths                     = array();
         $paths[self::PROJECT_ROOT] = "/1/";
         $projectsNotMigrated       = -1;
+
+        // Multiple inserts
+        $dbFields = array('module_id', 'project_id');
+        $dbValues = array();
 
         // As the Projects may have other projects that come later in the list as parents, it may be needed to postpone
         // their migration until next iteration, and so on, because of 'path' field.
@@ -449,13 +463,12 @@ class Setup_Models_Migration
             $projectsNotMigrated = count($projects);
 
             foreach ($projects as $index => $project) {
-
-                $oldProjectId = $project["ID"];
-                if (empty($project["parent"])) {
+                $oldProjectId = $project['ID'];
+                if (empty($project['parent'])) {
                     $parentId = self::PROJECT_ROOT;
                 } else {
                     // Has parent project been processed?
-                    $oldParentId = $project["parent"];
+                    $oldParentId = $project['parent'];
                     if (isset($this->_projects[$oldParentId])) {
                         // Yes
                         $parentId = $this->_projects[$oldParentId];
@@ -466,55 +479,46 @@ class Setup_Models_Migration
                     }
                 }
 
-                $tmpStatus  = $project["kategorie"];
-                if (!empty($statusConversion[$tmpStatus])) {
-                    $tmpStatus = $statusConversion[$tmpStatus];
-                } else {
-                    $tmpStatus = $statusConversion[3];
-                }
-
                 // Check and repair corrupted dates the way P5 would show them to the user: 2005-06-31 -> 2005-07-01
-                $startDate = Cleaner::sanitize('date', $project["anfang"]);
-                $endDate   = Cleaner::sanitize('date', $project["ende"]);
+                $startDate = Cleaner::sanitize('date', $project['anfang']);
+                $endDate   = Cleaner::sanitize('date', $project['ende']);
 
                 $project['von'] = $this->_processOwner($project['von']);
 
                 $projectId = $this->_tableManager->insertRow('project', array(
+                    'path'             => $paths[$parentId],
                     'project_id'       => $parentId,
-                    "title"            => utf8_encode($project["name"]),
-                    "notes"            => utf8_encode($project["note"]),
-                    "owner_id"         => $project['von'],
-                    "start_date"       => $startDate,
-                    "end_date"         => $endDate,
-                    "priority"         => (int) $project["wichtung"],
-                    "current_status"   => (int) $tmpStatus,
-                    "complete_percent" => $project["status"],
-                    "hourly_wage_rate" => utf8_encode($project["stundensatz"]),
-                    "budget"           => utf8_encode($project["budget"])));
+                    'title'            => utf8_encode($project['name']),
+                    'notes'            => utf8_encode($project['note']),
+                    'owner_id'         => $project['von'],
+                    'start_date'       => $startDate,
+                    'end_date'         => $endDate,
+                    'priority'         => (int) $project['wichtung'],
+                    'current_status'   => (int) $project['kategorie'],
+                    'complete_percent' => $project['status'],
+                    'hourly_wage_rate' => utf8_encode($project['stundensatz']),
+                    'budget'           => utf8_encode($project['budget'])));
 
                 $this->_projects[$oldProjectId] = $projectId;
                 $path                           = $paths[$parentId] . $projectId . "/";
                 $paths[$projectId]              = $path;
 
-                // Update path
-                $data  = array('path' => $path);
-                $where = sprintf('id = %s', $projectId);
-                $this->_tableManager->updateRows('project', $data, $where);
-
                 // Migrate permissions
-                $project["ID"] = $projectId;
+                $project['ID'] = $projectId;
                 $this->_migratePermissions('Project', $project);
 
-                for ($j = 1; $j < self::MODULES_AMOUNT; $j++) {
-                    $this->_tableManager->insertRow('project_module_permissions', array(
-                        'module_id'  => $j,
-                        'project_id' => $projectId
-                    ));
+                foreach ($this->_modules as $moduleId) {
+                    $dbValues[] = array($moduleId, $projectId);
                 }
 
                 // Take out this project from the array
                 unset($projects[$index]);
             }
+        }
+
+        // Run the multiple inserts
+        if (!empty($dbValues)) {
+            $this->_tableManager->insertMultipleRows('project_module_permissions', $dbFields, $dbValues);
         }
     }
 
@@ -525,51 +529,77 @@ class Setup_Models_Migration
      */
     private function _migrateTodos()
     {
-        $todos = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "todo ORDER BY ID")->fetchAll();
+        $run   = true;
+        $start = 0;
+        $end   = self::ROWS_PER_QUERY;
 
-        foreach ($todos as $todo) {
-            $projectId   = $this->_processParentProjId($todo["project"]);
-            $todo['von'] = $this->_processOwner($todo['von']);
-
-            if (empty($todo['status'])) {
-                $todo['status'] = self::TODO_STATUS_ACCEPTED;
+        while ($run) {
+            $todos = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "todo ORDER BY ID LIMIT "
+                . $start . ", ". $end)->fetchAll();
+            if (empty($todos)) {
+                $run = false;
+            } else {
+                $start = $start + $end;
             }
 
-            // Process assigned user
-            $oldAssignedId = $todo['ext'];
-            $todo['ext']   = null;
-            if (!empty($oldAssignedId) && is_numeric($oldAssignedId)) {
-                // The assigned user exists in the DB?
-                if (isset($this->_users[$oldAssignedId])) {
-                    // Yes
-                    $todo['ext']     = $this->_users[$oldAssignedId];
-                    $data['user_id'] = $todo['ext'];
+            // Multiple inserts
+            $dbFields = array('project_id', 'title', 'notes', 'owner_id', 'priority', 'current_status', 'user_id',
+                'start_date', 'end_date');
+            $dbValues = array();
+
+            foreach ($todos as $todo) {
+                $projectId   = $this->_processParentProjId($todo['project']);
+                $todo['von'] = $this->_processOwner($todo['von']);
+
+                $todo['status'] = (int) $todo['status'];
+                if ($todo['status'] < 2) {
+                    $todo['status'] = 1;
+                } else if ($todo['status'] > 5) {
+                    $todo['status'] = 5;
+                }
+
+                // Process assigned user
+                $oldAssignedId = $todo['ext'];
+                $todo['ext']   = null;
+                if (!empty($oldAssignedId) && is_numeric($oldAssignedId)) {
+                    // The assigned user exists in the DB?
+                    if (isset($this->_users[$oldAssignedId])) {
+                        // Yes
+                        $todo['ext']     = $this->_users[$oldAssignedId];
+                        $data['user_id'] = $todo['ext'];
+                    }
+                }
+
+                // If dates are empty strings, don't send the fields; if not,
+                // clean them and fix wrong values as P5 would
+                // show them to the users
+                if (!empty($todo['anfang'])) {
+                    $start_date = Cleaner::sanitize('date', $todo['anfang']);
+                } else {
+                    $start_date = null;
+                }
+                if (!empty($todo['deadline'])) {
+                    $end_date = Cleaner::sanitize('date', $todo['deadline']);
+                } else {
+                    $end_date = null;
+                }
+
+                $dbValues[] = array($projectId, utf8_encode($todo['remark']), utf8_encode($todo['note']), $todo['von'],
+                    $todo['priority'], $todo['status'], $todo['ext'], $start_date, $end_date);
+            }
+
+            // Run the multiple inserts
+            if (!empty($dbValues)) {
+                $ids = $this->_tableManager->insertMultipleRows('todo', $dbFields, $dbValues, true);
+
+                foreach ($todos as $todo) {
+                    // Migrate permissions
+                    $oldTodoId                = $todo['ID'];
+                    $todo['ID']               = array_shift($ids);
+                    $this->_todos[$oldTodoId] = $todo['ID'];
+                    $this->_migratePermissions('Todo', $todo);
                 }
             }
-
-            $data = array('project_id'     => $projectId,
-                          "title"          => utf8_encode($todo["remark"]),
-                          "notes"          => utf8_encode($todo["note"]),
-                          "owner_id"       => $todo['von'],
-                          "priority"       => $todo["priority"],
-                          "current_status" => $todo["status"],
-                          "user_id"        => $todo["ext"]);
-
-            // If dates are empty strings, don't send the fields; if not, clean them and fix wrong values as P5 would
-            // show them to the users
-            if (!empty($todo["anfang"])) {
-                $data["start_date"] = Cleaner::sanitize('date', $todo["anfang"]);
-            }
-            if (!empty($todo["deadline"])) {
-                $data["end_date"] = Cleaner::sanitize('date', $todo["deadline"]);
-            }
-
-            // Insert data
-            $todoId = $this->_tableManager->insertRow('todo', $data);
-
-            // Migrate permissions
-            $todo["ID"] = $todoId;
-            $this->_migratePermissions('Todo', $todo);
         }
     }
 
@@ -580,136 +610,161 @@ class Setup_Models_Migration
      */
     private function _migrateNotes()
     {
-        $notes = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "notes ORDER BY ID")->fetchAll();
+        $run   = true;
+        $start = 0;
+        $end   = self::ROWS_PER_QUERY;
 
-        foreach ($notes as $note) {
-            $projectId   = $this->_processParentProjId($note["projekt"]);
-            $note['von'] = $this->_processOwner($note['von']);
+        while ($run) {
+            $notes = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "notes ORDER BY ID LIMIT "
+                . $start . ", ". $end)->fetchAll();
+            if (empty($notes)) {
+                $run = false;
+            } else {
+                $start = $start + $end;
+            }
 
-            $noteId = $this->_tableManager->insertRow('note', array(
-                'project_id' => $projectId,
-                "title"      => utf8_encode($note["name"]),
-                "comments"   => utf8_encode($note["remark"]),
-                "owner_id"   => $note['von']
-            ));
+            // Multiple inserts
+            $dbFields = array('project_id', 'title', 'comments', 'owner_id');
+            $dbValues = array();
 
-            // Migrate permissions
-            $note["ID"] = $noteId;
-            $this->_migratePermissions('Note', $note);
+            foreach ($notes as $note) {
+                $projectId   = $this->_processParentProjId($note['projekt']);
+                $note['von'] = $this->_processOwner($note['von']);
+
+                $dbValues[] = array($projectId, utf8_encode($note['name']), utf8_encode($note['remark']), $note['von']);
+            }
+
+            // Run the multiple inserts
+            if (!empty($dbValues)) {
+                $ids = $this->_tableManager->insertMultipleRows('note', $dbFields, $dbValues, true);
+
+                foreach ($notes as $note) {
+                    // Migrate permissions
+                    $note['ID'] = array_shift($ids);
+                    $this->_migratePermissions('Note', $note);
+                }
+            }
         }
     }
 
     /**
-     * @todo: this function doesn't work, its programming has to be completed. It has not been decided yet all its
-     * functionality.
-     *
-     * Migrate P5 timecard and timeproj
+     * Migrate P5 timeproj
      *
      * @return void
      */
     private function _migrateTimeCard()
     {
-        // Timeproj
-        $query     = "SELECT * FROM " . PHPR_DB_PREFIX . "timeproj ORDER BY datum, users, projekt";
-        $timeprojs = $this->_dbOrig->query($query)->fetchAll();
-        $currentDatum   = '';
-        $currentUser    = -1;
-        $currentProj    = -1;
-        $currentHours   = 0;
-        $currentMinutes = 0;
+        // Multiple inserts
+        $dbFields = array('owner_id', 'date', 'start_time', 'end_time', 'minutes', 'project_id', 'notes', 'module_id',
+            'item_id');
+        $dbValues = array();
 
-        foreach ($timeprojs as $timeproj) {
-            $currentUser = $timeproj['users'];
-            if (isset($this->_users[$currentUser])) {
-                if ($currentDatum == $timeproj['datum'] && $currentUser == $timeproj['users']
-                    && $currentProj == $timeproj['projekt']) {
-                    // We are still working with the same day, user and project
+        $currentDatum = '';
+        $currentUser  = -1;
+        $lastHour     = 8;
+        $lastMinutes  = 0;
 
-                    // As it is wrong but possible, that the same project is found as booked more than once the same day
-                    // for the same user (I saw it in a production DB), it is needed to obtain the total amount of time
-                    // of the project
-                    $currentHours   += $timeproj['h'];
-                    $currentMinutes += $timeproj['m'];
-                } else {
-                    // New combination of date, user and project reached, so it is time to insert the previous project
-                    // booking for specific date, user and project into P6 table 'timeproj'. This may occupy more than
-                    // one row depending on working times charged in P5 'timecard' table.
-                    $query = sprintf("SELECT * FROM %stimecard WHERE datum = %s AND users = %d and projekt = %d ORDER "
-                        . "BY start_time", PHPR_DB_PREFIX, $this->_dbOrig->quote($timeproj['datum']),
-                        $timeproj['users'], $timeproj['projekt']);
-                    $timecards = $this->_dbOrig->query($query)->fetchAll();
+        $run   = true;
+        $start = 0;
+        $end   = self::ROWS_PER_QUERY;
 
-                    foreach ($timecards as $timecard) {
-                         // Todo this.
-                         // Check that only migrates existing users. migrate text fields using utf8_enconde
+        while ($run) {
+            // Timeproj
+            $query = "SELECT * FROM " . PHPR_DB_PREFIX . "timeproj ORDER BY datum, users, projekt LIMIT "
+                . $start . ", ". $end;
+            $timeprojs = $this->_dbOrig->query($query)->fetchAll();
+            if (empty($timeprojs)) {
+                $run = false;
+            } else {
+                $start = $start + $end;
+            }
+
+            foreach ($timeprojs as $timeproj) {
+                $userId = $timeproj['users'];
+                if (isset($this->_users[$userId])) {
+                    if ($currentDatum != $timeproj['datum']) {
+                        $currentDatum = $timeproj['datum'];
+                        $lastHour     = 8;
+                        $lastMinutes  = 0;
+                    }
+                    if ($currentUser != $userId) {
+                        $lastHour    = 8;
+                        $lastMinutes = 0;
+                        $currentUser = $userId;
                     }
 
-                    // Prepare variables of current row for next iteration
-                    $currentDatum   = $timeproj['datum'];
-                    $currentUser    = $timeproj['users'];
-                    $currentProj    = $timeproj['projekt'];
-                    $currentHours   = $timeproj['h'];
-                    $currentMinutes = $timeproj['m'];
+                    $timeproj['projekt'] = $this->_processParentProjId($timeproj['projekt']);
+
+                    // Fix wrong values the way P5 would show it to the users
+                    if (empty($timeproj['h']) || $timeproj['h'] < 0) {
+                        $timeproj['h'] = 0;
+                    } else if ($timeproj['h'] > 24) {
+                         // I don't know how P5 shows more than 24 hours in a day, but I suppose this is the right way
+                         $timeproj['h'] = 24;
+                         $timeproj['m'] = 0;
+                    }
+                    if (empty($timeproj['m']) || $timeproj['m'] < 0) {
+                        $timeproj['m'] = 0;
+                    }
+
+                    $minutes = ($timeproj['h'] * 60) + $timeproj['m'];
+
+                    if ($minutes == 0) {
+                        continue;
+                    }
+
+                    $dateTime = strtotime($timeproj['datum']);
+                    if ($dateTime === false || $dateTime === -1) {
+                        continue;
+                    } else {
+                        $year  = date("Y", $dateTime);
+                        $month = date("m", $dateTime);
+                        $day   = date("d", $dateTime);
+
+                        $timeproj['datum'] = $year . "-" . $month . "-" . $day;
+
+                        $starTimeValue = mktime($lastHour, $lastMinutes, 0, $month, $day, $year);
+                        $endTimeValue  = mktime($lastHour, $lastMinutes + $minutes, 0, $month, $day, $year);
+
+                        // Check endTime
+                        if (date("d", $endTimeValue) != $day) {
+                            // Split into 2 days
+                            $starTime = date("H:i:s", $starTimeValue);
+                            $endTime  = "00:00:00";
+
+                            list($module_id, $item_id) = $this->_getItemAndModule($timeproj);
+
+                            $dbValues[] = array($this->_users[$userId], $timeproj['datum'], $starTime, $endTime,
+                                $minutes, $timeproj['projekt'], utf8_encode($timeproj['note']), $module_id, $item_id);
+
+                            $tmpMinutes = ((24 - $lastHour)* 60);
+                            if ($lastMinutes > 0) {
+                                $tmpMinutes += (60 - $lastMinutes);
+                            }
+                            $minutes = $minutes - $tmpMinutes;
+
+                            $starTimeValue     = mktime(8, 0, 0, $month, $day + 1, $year);
+                            $endTimeValue      = mktime(8, $minutes, 0, $month, $day + 1, $year);
+                            $timeproj['datum'] = date("Y-m-d", $starTimeValue);
+                            $currentDatum      = $timeproj['datum'];
+                        }
+
+                        $starTime    = date("H:i:s", $starTimeValue);
+                        $lastHour    = date("H", $endTimeValue);
+                        $lastMinutes = date("i", $endTimeValue);
+                        $endTime     = $lastHour . ":" . $lastMinutes . ":00";
+                        list($module_id, $item_id) = $this->_getItemAndModule($timeproj);
+
+                        $dbValues[] = array($this->_users[$userId], $timeproj['datum'], $starTime, $endTime, $minutes,
+                            $timeproj['projekt'], utf8_encode($timeproj['note']), $module_id, $item_id);
+                    }
                 }
-
-                // Old code:
-
-                $timeproj["projekt"] = $this->_convertProjectId($timeproj["projekt"]);
-                $userId              = $timeproj["users"];
-
-                // Fix wrong values the way P5 would show it to the users
-                if (empty($timeproj["h"])) {
-                    $timeproj["h"] = 0;
-                } else if ($timeproj["h"] > 24) {
-                     // I don't know how P5 shows more than 24 hours in a day, but I suppose this is the right way
-                     $timeproj["h"] = 24;
-                     $timeproj["m"] = 0;
-                }
-                if (empty($timeproj["m"])) {
-                    $timeproj["m"] = 0;
-                } else if ($timeproj["m"] > 59) {
-                    $addHours       = floor($timeproj["m"] / 60);
-                    $timeproj["h"] += $addHours;
-                    $timeproj["m"] -= $addHours * 60;
-                }
-
-                $this->_tableManager->insertRow('timeproj', array(
-                    'id'         => (int) $timeproj["ID"],
-                    'notes'      => $timeproj["note"],
-                    "owner_id"   => $userId,
-                    "project_id" => (int) $timeproj["projekt"],
-                    "date"       => $timeproj["datum"],
-                    "amount"     => $timeproj["h"] . ":" . $timeproj["m"] . ":00"
-                ));
             }
+        }
 
-            // Timecard
-            $timecards = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "timecard ORDER BY ID")->fetchAll();
-
-            foreach ($timecards as $timecard) {
-                $timecard["anfang"]  = $this->_stringToTime($timecard["anfang"]);
-                $timecard["ende"]    = $this->_stringToTime($timecard["ende"]);
-                $timecard["projekt"] = $this->_convertProjectId($timecard["projekt"]);
-                $userId              = $timecard["users"];
-
-                // Check / fix wrong values as P5 would show it to the user
-                if ($timecard["anfang"] == $timecard["ende"] || empty($timecard["anfang"])) {
-                    // Skip this item, because P5 will show it with 0 hours and 0 minutes in length in both cases
-                    continue;
-                }
-                if (empty($timecard["anfang"])) {
-                    // This is how P5 manages null start values
-                    $timecard["anfang"] = "00:00:00";
-                }
-
-                $this->_tableManager->insertRow('timecard', array(
-                    'id'         => (int) $timecard["ID"],
-                    "owner_id"   => $userId,
-                    "date"       => $timecard["datum"],
-                    "start_time" => $timecard["anfang"],
-                    "end_time"   => $timecard["ende"]
-                ));
-            }
+        // Run the multiple inserts
+        if (!empty($dbValues)) {
+            $this->_tableManager->insertMultipleRows('timecard', $dbFields, $dbValues);
         }
     }
 
@@ -721,105 +776,130 @@ class Setup_Models_Migration
     private function _migrateCalendar()
     {
         // Calendar
-        $events = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "termine ORDER BY ID")->fetchAll();
+        $run      = true;
+        $start    = 0;
+        $end      = self::ROWS_PER_QUERY;
+        $moduleId = $this->_getModuleId('Calendar');
 
-        foreach ($events as $calendar) {
-            // Start and End times
-            if ($calendar['anfang'] == '----') {
-                // This is because start and end times are not required fields in P5, but they are required in P6.
-                $calendar['anfang'] = '09:00:00';
-            } else {
-                $calendar["anfang"] = $this->_stringToTime($calendar["anfang"]);
-            }
-            if ($calendar['ende'] == '----') {
-                // This is because start and end times are not required fields in P5, but they are required in P6.
-                $calendar['ende'] = '18:00:00';
-            } else {
-                $calendar["ende"] = $this->_stringToTime($calendar["ende"]);
-            }
+        $sqlString = "SELECT MAX(id) as count FROM " . $this->_db->quoteIdentifier((string) 'calendar');
+        $result    = $this->_db->query($sqlString)->fetchAll();
+        $currentId = (int) $result[0]['count'];
 
-            $timezone            = (isset($this->_timeZone[$calendar["ID"]])) ? $this->_timeZone[$calendar["ID"]] : 2;
-            $date                = Cleaner::sanitize('date', $calendar["datum"]);
-            $calendar['von']     = $this->_processOwner($calendar['von']);
-            $userVon             = $calendar['von'];
-
-            // Process participant
-            $oldParticipId = $calendar['an'];
-            if (isset($this->_users[$oldParticipId])) {
-                $participantId = $this->_users[$oldParticipId];
+        while ($run) {
+            $events = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "termine ORDER BY ID LIMIT "
+                . $start . ", ". $end)->fetchAll();
+            if (empty($events)) {
+                $run = false;
             } else {
-                // Don't migrate rows for non existing users
-                continue;
+                $start = $start + $end;
             }
 
-            // Migrate row
-            if (!empty($calendar["anfang"]) && !empty($calendar["ende"]) && !empty($calendar["datum"])) {
+            // Multiple inserts
+            $dbFields = array('parent_id', 'owner_id', 'project_id', 'title', 'place', 'notes', 'uid' , 'start_date',
+                'start_time', 'end_date', 'end_time', 'timezone', 'location', 'categories', 'priority', 'rrule',
+                'properties', 'participant_id');
+            $dbValues = array();
 
-                if (!empty($calendar["serie_typ"]) && !empty($calendar["serie_bis"])) {
-                    $rrule = $this->_serietypToRrule($calendar["serie_typ"], $calendar["serie_bis"],
-                        $calendar["anfang"]);
+            foreach ($events as $index => $calendar) {
+                // Start and End times
+                if ($calendar['anfang'] == '----') {
+                    // This is because start and end times are not required fields in P5, but they are required in P6.
+                    $calendar['anfang'] = '09:00:00';
                 } else {
-                    $rrule = "";
+                    $calendar['anfang'] = $this->_stringToTime($calendar['anfang']);
                 }
-                // @todo: 'ical_ID' field is not being migrated to 'uid' field, it will be done when implemented P6 ical
-
-                $calendarId = $this->_tableManager->insertRow('calendar', array(
-                    "owner_id"       => $calendar['von'],
-                    "project_id"     => self::PROJECT_ROOT,
-                    "title"          => utf8_encode($calendar["event"]),
-                    "place"          => utf8_encode($calendar["ort"]),
-                    "notes"          => utf8_encode($calendar["remark"]),
-                    "uid"            => null,
-                    "start_date"     => $date,
-                    "start_time"     => $calendar["anfang"],
-                    "end_date"       => $date,
-                    "end_time"       => $calendar["ende"],
-                    "timezone"       => $timezone,
-                    "location"       => utf8_encode($calendar["ort"]),
-                    "categories"     => "",
-                    "priority"       => $calendar["priority"],
-                    "rrule"          => $rrule,
-                    "properties"     => "",
-                    "participant_id" => $participantId
-                ));
-
-                $oldCalendarId                    = $calendar['ID'];
-                $this->_calendars[$oldCalendarId] = $calendarId;
-
-                // Process and update parent for this row
-                if (empty($calendar['serie_id'])) {
-                    $parentId = 0;
+                if ($calendar['ende'] == '----') {
+                    // This is because start and end times are not required fields in P5, but they are required in P6.
+                    $calendar['ende'] = '18:00:00';
                 } else {
-                    $oldParentId = $calendar['serie_id'];
-                    if (isset($this->_calendars[$oldParentId])) {
-                        $parentId = $this->_calendars[$oldParentId];
+                    $calendar['ende'] = $this->_stringToTime($calendar['ende']);
+                }
+
+                $timezone        = (isset($this->_timeZone[$calendar['ID']])) ? $this->_timeZone[$calendar['ID']] : 2;
+                $date            = Cleaner::sanitize('date', $calendar['datum']);
+                $calendar['von'] = $this->_processOwner($calendar['von']);
+
+                // Process participant
+                $oldParticipId = $calendar['an'];
+                if (isset($this->_users[$oldParticipId])) {
+                    $participantId = $this->_users[$oldParticipId];
+                } else {
+                    // Don't migrate rows for non existing users
+                    unset($events[$index]);
+                    continue;
+                }
+
+                // Migrate row
+                if (!empty($calendar['anfang']) && !empty($calendar['ende']) && !empty($calendar['datum'])) {
+                    if (!empty($calendar['serie_typ']) && !empty($calendar['serie_bis'])) {
+                        $rrule = $this->_serietypToRrule($calendar['serie_typ'], $calendar['serie_bis'],
+                            $calendar['anfang']);
                     } else {
-                        // The P5 parent for this row is probably a deleted row, so it will be assigned current key id.
-                        // The rest of the rows that point to the same deleted row, will point to the same 'new' row.
-                        $parentId = $calendarId;
-                        $this->_calendars[$oldParentId] = $calendarId;
+                        $rrule = "";
                     }
+
+                    // Assign id before exists
+                    $currentId++;
+                    $oldCalendarId                    = $calendar['ID'];
+                    $this->_calendars[$oldCalendarId] = $currentId;
+
+                    // Process parent for this row
+                    if (!empty($calendar['serie_id'])) {
+                        $oldParentId = $calendar['serie_id'];
+                        if (isset($this->_calendars[$oldParentId])) {
+                            $parentId = $this->_calendars[$oldParentId];
+                        } else {
+                            // The P5 parent for this row is probably a deleted row,
+                            // so it will be assigned current key id.
+                            // The rest of the rows that point to the same deleted row,
+                            // will point to the same 'new' row.
+                            $parentId                       = $currentId;
+                            $this->_calendars[$oldParentId] = $currentId;
+                        }
+                    } else {
+                        $parentId = 0;
+                    }
+
+                    // @todo: 'ical_ID' field is not being migrated to 'uid' field,
+                    // it will be done when implemented P6 ical
+                    $dbValues[] = array($parentId, $calendar['von'], self::PROJECT_ROOT,
+                        utf8_encode($calendar['event']), utf8_encode($calendar['ort']),
+                        utf8_encode($calendar['remark']), null, $date, $calendar['anfang'], $date, $calendar['ende'],
+                        $timezone, utf8_encode($calendar['ort']), "", $calendar['priority'], $rrule, "",
+                        $participantId);
+                } else {
+                    unset($events[$index]);
                 }
-                $data  = array('parent_id' => $parentId);
-                $where = sprintf('id = %s', $calendarId);
-                $this->_tableManager->updateRows('calendar', $data, $where);
+            }
 
-                // Give 'admin' user admin permission for this item
-                $userRightsAdd                   = array();
-                $userRightsAdd[self::USER_ADMIN] = $this->_accessAdmin;
+            // Run the multiple inserts
+            if (!empty($dbValues)) {
+                $ids = $this->_tableManager->insertMultipleRows('calendar', $dbFields, $dbValues, true);
 
-                // Add owner permission to this item
-                $userRightsAdd[$userVon] = $this->_accessAdmin;
+                foreach ($events as $calendar) {
+                    // Migrate permissions
+                    $calendarId = array_shift($ids);
 
-                // Add participant permission to this item, only if it wasn't added before
-                if (!isset($userRightsAdd[$participantId])) {
-                    $userRightsAdd[$participantId] = $this->_accessWrite;
+                    // Give 'admin' user admin permission for this item
+                    $userRightsAdd                   = array();
+                    $userRightsAdd[self::USER_ADMIN] = $this->_accessAdmin;
+
+                    // Add owner permission to this item
+                    $userVon                 = $calendar['von'];
+                    $userRightsAdd[$userVon] = $this->_accessAdmin;
+
+                    // Add participant permission to this item, only if it wasn't added before
+                    $oldParticipId = $calendar['an'];
+                    if (isset($this->_users[$oldParticipId])) {
+                        $participantId = $this->_users[$oldParticipId];
+                        if (!isset($userRightsAdd[$participantId])) {
+                            $userRightsAdd[$participantId] = $this->_accessWrite;
+                        }
+                    }
+
+                    // Save permissions according to P6 criterion
+                    $this->_addItemRights($moduleId, $calendarId, $userRightsAdd);
                 }
-
-                // Save permissions according to P6 criterion
-                $moduleId = $this->_getModuleId('Calendar');
-                $itemId   =  $calendarId;
-                $this->_addItemRights($moduleId, $itemId, $userRightsAdd);
             }
         }
     }
@@ -831,40 +911,61 @@ class Setup_Models_Migration
      */
     private function _migrateFilemanager()
     {
-        // Filemanager
-        $files = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "dateien ORDER BY ID")->fetchAll();
+        $run   = true;
+        $start = 0;
+        $end   = self::ROWS_PER_QUERY;
 
-        foreach ($files as $file) {
-            // Is it a file? (not a folder)
-            if ($file["typ"] == "f") {
-                $file['von']  = $this->_processOwner($file['von']);
-                $file["div2"] = $this->_processParentProjId($file["div2"]);
-                $newFilename  = md5(uniqid(rand(), 1));
-                $uploadDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
+        while ($run) {
+            // Filemanager
+            $files = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "dateien ORDER BY ID LIMIT "
+                . $start . ", ". $end)->fetchAll();
+            if (empty($files)) {
+                $run = false;
+            } else {
+                $start = $start + $end;
+            }
 
-                // All the required data is filled?
-                if (!empty($file["tempname"]) && !empty($file["filename"])) {
-                    $title = utf8_encode($file["filename"]);
-                    $title = substr($title, 0, 100);
+            // Multiple inserts
+            $dbFields = array('owner_id', 'title', 'comments', 'project_id', 'files');
+            $dbValues = array();
 
-                    // Copy file, if it is there
-                    $originPath = PHPR_FILE_PATH . "\\" . $file["tempname"];
-                    $targetPath = $uploadDir . "\\" . $newFilename;
-                    if (file_exists($originPath)) {
-                        copy($originPath, $targetPath);
+            foreach ($files as $index => $file) {
+                // Is it a file? (not a folder)
+                if ($file['typ'] == "f") {
+                    $file['von']  = $this->_processOwner($file['von']);
+                    $file['div2'] = $this->_processParentProjId($file['div2']);
+                    $newFilename  = md5(uniqid(rand(), 1));
+                    $uploadDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
+
+                    // All the required data is filled?
+                    if (!empty($file['tempname']) && !empty($file['filename'])) {
+                        $title = utf8_encode($file['filename']);
+                        $title = substr($title, 0, 100);
+
+                        // Copy file, if it is there
+                        $originPath = PHPR_FILE_PATH . "\\" . $file['tempname'];
+                        $targetPath = $uploadDir . "\\" . $newFilename;
+                        if (file_exists($originPath)) {
+                            copy($originPath, $targetPath);
+                        }
+
+                        $dbValues[] = array($file['von'], $title, utf8_encode($file['remark']), $file['div2'],
+                            utf8_encode($newFilename . "|" . $file['filename']));
+                    } else {
+                        unset($files[$index]);
                     }
+                } else {
+                    unset($files[$index]);
+                }
+            }
 
-                    // Insert row
-                    $fileId = $this->_tableManager->insertRow('filemanager', array(
-                        'owner_id'   => $file['von'],
-                        "title"      => $title,
-                        "comments"   => utf8_encode($file["remark"]),
-                        "project_id" => $file["div2"],
-                        "files"      => utf8_encode($newFilename . "|" . $file["filename"])
-                    ));
+            // Run the multiple inserts
+            if (!empty($dbValues)) {
+                $ids = $this->_tableManager->insertMultipleRows('filemanager', $dbFields, $dbValues, true);
 
+                foreach ($files as $file) {
                     // Migrate permissions
-                    $file["ID"] = $fileId;
+                    $file['ID'] = array_shift($ids);
                     $this->_migratePermissions('Filemanager', $file);
                 }
             }
@@ -878,50 +979,65 @@ class Setup_Models_Migration
      */
     private function _migrateContacts()
     {
-        $contacts = $this->_dbOrig->query('SELECT * FROM ' . PHPR_DB_PREFIX . 'contacts ORDER BY ID')->fetchAll();
+        $run   = true;
+        $start = 0;
+        $end   = self::ROWS_PER_QUERY;
 
-        foreach ($contacts as $contact) {
-            $contact['von'] = $this->_processOwner($contact['von']);
-
-            // 'Comment' field will have also all fields not supported by P6.
-            $comment = $contact['bemerkung'];
-            if (!empty($contact['email2'])) {
-                $comment .= chr(10) . 'Email 2: ' . $contact['email2'];
-            }
-            if (!empty($contact['fax'])) {
-                $comment .= chr(10) . 'Fax: ' . $contact['fax'];
-            }
-            if (!empty($contact['anrede'])) {
-                $comment .= chr(10) . 'Salutation: ' . $contact['anrede'];
-            }
-            if (!empty($contact['url'])) {
-                $comment .= chr(10) . 'URL: ' . $contact['url'];
-            }
-            if (!empty($contact['div1'])) {
-                $comment .= chr(10) . 'User defined field 1: ' . $contact['div1'];
-            }
-            if (!empty($contact['div2'])) {
-                $comment .= chr(10) . 'User defined field 2: ' . $contact['div2'];
+        while ($run) {
+            $contacts = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "contacts ORDER BY ID LIMIT "
+                . $start . ", ". $end)->fetchAll();
+            if (empty($contacts)) {
+                $run = false;
+            } else {
+                $start = $start + $end;
             }
 
-            $contactId = $this->_tableManager->insertRow('contact', array(
-                'project_id'  => self::PROJECT_ROOT,
-                'name'        => utf8_encode($contact['vorname'] . ' ' . $contact['nachname']),
-                'email'       => utf8_encode($contact['email']),
-                'company'     => utf8_encode($contact['firma']),
-                'firstphone'  => utf8_encode($contact['tel1']),
-                'secondphone' => utf8_encode($contact['tel2']),
-                'mobilephone' => utf8_encode($contact['mobil']),
-                'street'      => utf8_encode($contact['strasse']),
-                'city'        => utf8_encode($contact['stadt']),
-                'zipcode'     => utf8_encode($contact['plz']),
-                'country'     => utf8_encode($contact['land']),
-                'comment'     => utf8_encode($comment),
-                'owner_id'    => $contact['von'],
-                'private'     => 1
-            ));
-            $oldContactId                   = $contact["ID"];
-            $this->_contacts[$oldContactId] = $contactId;
+            // Multiple inserts
+            $dbFields = array('project_id', 'name', 'email', 'company', 'firstphone', 'secondphone', 'mobilephone',
+                'street', 'city', 'zipcode', 'country', 'comment', 'owner_id', 'private');
+            $dbValues = array();
+
+            foreach ($contacts as $contact) {
+                $contact['von'] = $this->_processOwner($contact['von']);
+
+                // 'Comment' field will have also all fields not supported by P6.
+                $comment = $contact['bemerkung'];
+                if (!empty($contact['email2'])) {
+                    $comment .= chr(10) . 'Email 2: ' . $contact['email2'];
+                }
+                if (!empty($contact['fax'])) {
+                    $comment .= chr(10) . 'Fax: ' . $contact['fax'];
+                }
+                if (!empty($contact['anrede'])) {
+                    $comment .= chr(10) . 'Salutation: ' . $contact['anrede'];
+                }
+                if (!empty($contact['url'])) {
+                    $comment .= chr(10) . 'URL: ' . $contact['url'];
+                }
+                if (!empty($contact['div1'])) {
+                    $comment .= chr(10) . 'User defined field 1: ' . $contact['div1'];
+                }
+                if (!empty($contact['div2'])) {
+                    $comment .= chr(10) . 'User defined field 2: ' . $contact['div2'];
+                }
+
+                $dbValues[] = array(self::PROJECT_ROOT, utf8_encode($contact['vorname'] . ' ' . $contact['nachname']),
+                    utf8_encode($contact['email']), utf8_encode($contact['firma']), utf8_encode($contact['tel1']),
+                    utf8_encode($contact['tel2']), utf8_encode($contact['mobil']), utf8_encode($contact['strasse']),
+                    utf8_encode($contact['stadt']), utf8_encode($contact['plz']), utf8_encode($contact['land']),
+                    utf8_encode($comment), $contact['von'], 1);
+            }
+
+            // Run the multiple inserts
+            if (!empty($dbValues)) {
+                $ids = $this->_tableManager->insertMultipleRows('contact', $dbFields, $dbValues, true);
+
+                foreach ($contacts as $contact) {
+                    $contactId                      = array_shift($ids);
+                    $oldContactId                   = $contact['ID'];
+                    $this->_contacts[$oldContactId] = $contactId;
+                }
+            }
         }
     }
 
@@ -932,202 +1048,218 @@ class Setup_Models_Migration
      */
     private function _migrateHelpdesk()
     {
-        $query     = "SELECT * FROM " . PHPR_DB_PREFIX . "rts WHERE is_deleted IS NULL ORDER BY ID";
-        $incidents = $this->_dbOrig->query($query)->fetchAll();
+        $run   = true;
+        $start = 0;
+        $end   = self::ROWS_PER_QUERY;
 
-        foreach ($incidents as $item) {
-            $projectId = $this->_processParentProjId($item["proj"]);
+        while ($run) {
+            $query     = "SELECT * FROM " . PHPR_DB_PREFIX . "rts WHERE is_deleted IS NULL ORDER BY ID LIMIT "
+                . $start . ", ". $end;
+            $incidents = $this->_dbOrig->query($query)->fetchAll();
+            if (empty($incidents)) {
+                $run = false;
+            } else {
+                $start = $start + $end;
+            }
 
-            // Process owner - Id, email or wrong value
-            $owner = $item["von"];
-            // Default value:
-            $ownerId = self::USER_ADMIN;
-            if (is_numeric($owner) && !empty($owner)) {
-                // Id
-                $ownerId = (int) $owner;
-            } else if (strpos($owner, '@')) {
-                // It is apparently an email - Search for the Id
-                $query   = sprintf("SELECT ID FROM " . PHPR_DB_PREFIX . "users WHERE email = '%s'", $owner);
-                $userIds = $this->_dbOrig->query($query)->fetchAll();
-                if (count($userIds > 0)) {
-                    $oldOwnerId = $userIds[0]["ID"];
-                    if (isset($this->_users[$oldOwnerId])) {
-                        $ownerId     = $this->_users[$oldOwnerId];
-                        $item["von"] = $ownerId;
+            // Multiple inserts
+            $dbFields = array('project_id', 'owner_id', 'title', 'assigned', 'date', 'priority', 'attachments',
+                'description', 'status', 'due_date', 'author', 'solved_by', 'solved_date', 'contact_id');
+            $dbValues = array();
+
+            foreach ($incidents as $item) {
+                $projectId = $this->_processParentProjId($item['proj']);
+
+                // Process owner - Id, email or wrong value
+                $owner = $item['von'];
+                // Default value:
+                $ownerId = self::USER_ADMIN;
+                if (is_numeric($owner) && !empty($owner)) {
+                    // Id
+                    $ownerId = (int) $owner;
+                } else if (strpos($owner, '@')) {
+                    // It is apparently an email - Search for the Id
+                    $query   = sprintf("SELECT ID FROM " . PHPR_DB_PREFIX . "users WHERE email = '%s'", $owner);
+                    $userIds = $this->_dbOrig->query($query)->fetchAll();
+                    if (count($userIds > 0)) {
+                        $oldOwnerId = $userIds[0]['ID'];
+                        if (isset($this->_users[$oldOwnerId])) {
+                            $ownerId     = $this->_users[$oldOwnerId];
+                            $item['von'] = $ownerId;
+                        }
                     }
                 }
-            }
 
-            // Process assigned user
-            $oldAssignedId = (int) $item["assigned"];
-            if (isset($this->_users[$oldAssignedId])) {
-                $assignedId       = $this->_users[$oldAssignedId];
-                $item["assigned"] = $assignedId;
-            } else {
-                $assignedId       = null;
-                $item["assigned"] = null;
-            }
-
-            // Process creation date
-            $date = null;
-            if (!empty($item['submit'])) {
-                $date = $item['submit'];
-            } else if (isset($item['created']) && !empty($item['created'])) {
-                $date = $item['created'];
-            }
-            if (!empty($date)) {
-                $date = $this->_longDateToShortDate($date);
-            }
-
-            // Process priority
-            $priority = $item['priority'];
-            if (is_numeric($priority)) {
-                // It is an int
-                $priority = (int) $priority;
-                if ($priority < 1 || $priority > 10) {
-                    $priority = 5;
+                // Process assigned user
+                $oldAssignedId = (int) $item['assigned'];
+                if (isset($this->_users[$oldAssignedId])) {
+                    $assignedId       = $this->_users[$oldAssignedId];
+                    $item['assigned'] = $assignedId;
+                } else {
+                    $assignedId       = null;
+                    $item['assigned'] = null;
                 }
-            } else {
-                // Maybe it is a string representing the priority
-                switch ($priority) {
-                    case 'Hoch':
-                        // High
-                        $priority = 1;
-                        break;
-                    case 'Niedrig':
-                    default:
-                        // Low
+
+                // Process creation date
+                $date = null;
+                if (!empty($item['submit'])) {
+                    $date = $item['submit'];
+                } else if (isset($item['created']) && !empty($item['created'])) {
+                    $date = $item['created'];
+                }
+                if (!empty($date)) {
+                    $date = $this->_longDateToShortDate($date);
+                }
+
+                // Process priority
+                $priority = $item['priority'];
+                if (is_numeric($priority)) {
+                    // It is an int
+                    $priority = (int) $priority;
+                    if ($priority < 1 || $priority > 10) {
                         $priority = 5;
-                        break;
-                    case 'Keine':
-                        //None
-                        $priority = 10;
-                        break;
-                }
-            }
-
-            // Process attachment
-            $filenameField   = $item["filename"];
-            $attachmentField = null;
-            if (strpos($filenameField, "|")) {
-                $tmp             = split('\|', $filenameField);
-                $currentFileName = $tmp[1];
-                $realName        = $tmp[0];
-                if ($currentFileName != '' && $realName != '') {
-                    $md5Name         = md5(uniqid(rand(), 1));
-                    $attachmentField = $md5Name . '|' . $realName;
-                    $uploadDir       = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
-                    // Copy file
-                    $originPath = $this->_p5RootPath . '\\' . PHPR_DOC_PATH . '\\' . $currentFileName;
-                    $targetPath = $uploadDir . '\\' . $md5Name;
-                    copy($originPath, $targetPath);
-                }
-            }
-
-            // Process description
-            $description  = utf8_encode($item["note"]) . chr(10) . chr(10);
-            $description .= $item["solution"];
-
-            // Process status
-            $status = $item["status"];
-            if (is_numeric($status)) {
-                $statusNumber = (int) $status;
-                if ($statusNumber == 7) {
-                    $statusNumber = self::HELPDESK_STATUS_OPEN;
-                    // Informar al usuario, pasa 1 sola vez en el big script?
-                }
-            } else if (!empty($status)) {
-                // It is apparently a descriptive string
-                switch ($status) {
-                    case 'erfolgreich geschlossen':
-                        // Succesfully closed
-                        $statusNumber = self::HELPDESK_STATUS_CLOSED;
-                        break;
-                    case 'erfolglos geschlossen':
-                        // Unsuccessfully closed
-                        $statusNumber = self::HELPDESK_STATUS_CLOSED;
-                        break;
-                    case 'in Bearbeitung':
-                        // In treatment
-                        $statusNumber = self::HELPDESK_STATUS_ASSIGNED;
-                        break;
-                    case 'neu':
-                    default:
-                        // New
-                        $statusNumber = self::HELPDESK_STATUS_OPEN;
-                        break;
-                }
-            } else {
-                $statusNumber = self::HELPDESK_STATUS_OPEN;
-            }
-
-            // Process due date
-            $dueDate = $item["due_date"];
-            if (!empty($dueDate)) {
-                // Just in case
-                $dueDate = Cleaner::sanitize('date', $dueDate);
-            } else {
-                $dueDate = null;
-            }
-
-            // Process author
-            // Default value:
-            $authorId = $ownerId;
-            if (isset($item["autor"]) && !empty($item["autor"])) {
-                // It is apparently an email - Search for the Id
-                $author  = $item["autor"];
-                $query   = sprintf("SELECT ID FROM " . PHPR_DB_PREFIX . "users WHERE email = '%s'", $author);
-                $userIds = $this->_dbOrig->query($query)->fetchAll();
-                foreach ($userIds as $userId) {
-                    $oldAuthorId = $userId["ID"];
-                    if (isset($this->_users[$oldAuthorId])) {
-                        $authorId = $this->_users[$oldAuthorId];
+                    }
+                } else {
+                    // Maybe it is a string representing the priority
+                    switch ($priority) {
+                        case 'Hoch':
+                            // High
+                            $priority = 1;
+                            break;
+                        case 'Niedrig':
+                        default:
+                            // Low
+                            $priority = 5;
+                            break;
+                        case 'Keine':
+                            // None
+                            $priority = 10;
+                            break;
                     }
                 }
+
+                // Process attachment
+                $filenameField   = $item['filename'];
+                $attachmentField = null;
+                if (strpos($filenameField, "|")) {
+                    $tmp = explode('\|', $filenameField);
+                    if (isset($tmp[0]) && isset($tmp[1])) {
+                        $currentFileName = $tmp[1];
+                        $realName        = $tmp[0];
+                        if ($currentFileName != '' && $realName != '') {
+                            $md5Name         = md5(uniqid(rand(), 1));
+                            $attachmentField = $md5Name . '|' . $realName;
+                            $uploadDir       = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME'])
+                                . 'upload';
+                            // Copy file
+                            $originPath = $this->_p5RootPath . '\\' . PHPR_DOC_PATH . '\\' . $currentFileName;
+                            $targetPath = $uploadDir . '\\' . $md5Name;
+                            if (file_exists($originPath)) {
+                                copy($originPath, $targetPath);
+                            }
+                        }
+                    }
+                }
+
+                // Process description
+                $description  = utf8_encode($item['note']) . chr(10) . chr(10);
+                $description .= $item['solution'];
+
+                // Process status
+                $status = $item['status'];
+                if (is_numeric($status)) {
+                    $statusNumber = (int) $status;
+                    if ($statusNumber == 7) {
+                        $statusNumber = self::HELPDESK_STATUS_OPEN;
+                    }
+                } else if (!empty($status)) {
+                    // It is apparently a descriptive string
+                    switch ($status) {
+                        case 'erfolgreich geschlossen':
+                            // Succesfully closed
+                            $statusNumber = self::HELPDESK_STATUS_CLOSED;
+                            break;
+                        case 'erfolglos geschlossen':
+                            // Unsuccessfully closed
+                            $statusNumber = self::HELPDESK_STATUS_CLOSED;
+                            break;
+                        case 'in Bearbeitung':
+                            // In treatment
+                            $statusNumber = self::HELPDESK_STATUS_ASSIGNED;
+                            break;
+                        case 'neu':
+                        default:
+                            // New
+                            $statusNumber = self::HELPDESK_STATUS_OPEN;
+                            break;
+                    }
+                } else {
+                    $statusNumber = self::HELPDESK_STATUS_OPEN;
+                }
+
+                // Process due date
+                $dueDate = $item['due_date'];
+                if (!empty($dueDate)) {
+                    // Just in case
+                    $dueDate = Cleaner::sanitize('date', $dueDate);
+                } else {
+                    $dueDate = null;
+                }
+
+                // Process author
+                // Default value:
+                $authorId = $ownerId;
+                if (isset($item['autor']) && !empty($item['autor'])) {
+                    // It is apparently an email - Search for the Id
+                    $author  = $item['autor'];
+                    $query   = sprintf("SELECT ID FROM " . PHPR_DB_PREFIX . "users WHERE email = '%s'", $author);
+                    $userIds = $this->_dbOrig->query($query)->fetchAll();
+                    foreach ($userIds as $userId) {
+                        $oldAuthorId = $userId['ID'];
+                        if (isset($this->_users[$oldAuthorId])) {
+                            $authorId = $this->_users[$oldAuthorId];
+                        }
+                    }
+                }
+
+                // Process P5 'solving' fields: 'solved' and 'solve_date'
+                $solvedBy = $item['solved'];
+                if (isset($this->_users[$solvedBy])) {
+                    $solvedBy = $this->_users[$solvedBy];
+                } else {
+                    $solvedBy = null;
+                }
+                if (!empty($item['solve_time'])) {
+                    $solvedDate = $this->_longDateToShortDate($item['solve_time']);
+                } else {
+                    $solvedDate = null;
+                }
+
+                // Process contact
+                $contact = (int) $item['contact'];
+                if (isset($this->_contacts[$contact])) {
+                    $contact = $this->_contacts[$contact];
+                } else {
+                    $contact = null;
+                }
+
+                $dbValues[] = array($projectId, $ownerId, utf8_encode($item['name']), $assignedId, $date, $priority,
+                    $attachmentField, $description, $statusNumber, $dueDate, $authorId, $solvedBy, $solvedDate,
+                    $contact);
             }
 
-            // Process P5 'solving' fields: 'solved' and 'solve_date'
-            $solvedBy = $item["solved"];
-            if (isset($this->_users[$solvedBy])) {
-                $solvedBy = $this->_users[$solvedBy];
-            } else {
-                $solvedBy = null;
+            // Run the multiple inserts
+            if (!empty($dbValues)) {
+                $ids = $this->_tableManager->insertMultipleRows('helpdesk', $dbFields, $dbValues, true);
+
+                foreach ($incidents as $item) {
+                    // Migrate permissions
+                    $oldHelpdeskId                   = $item['ID'];
+                    $item['ID']                      = array_shift($ids);
+                    $this->_helpdesk[$oldHelpdeskId] = $item['ID'];
+                    $this->_migratePermissions('Helpdesk', $item);
+                }
             }
-            if (!empty($item["solve_time"])) {
-                $solvedDate = $this->_longDateToShortDate($item["solve_time"]);
-            } else {
-                $solvedDate = null;
-            }
-
-            // Process contact
-            $contact = (int) $item["contact"];
-            if (isset($this->_contacts[$contact])) {
-                $contact = $this->_contacts[$contact];
-            } else {
-                $contact = null;
-            }
-
-            $data = array("project_id"  => $projectId,
-                          "owner_id"    => $ownerId,
-                          "title"       => utf8_encode($item["name"]),
-                          "assigned"    => $assignedId,
-                          "date"        => $date,
-                          "priority"    => $priority,
-                          "attachments" => $attachmentField,
-                          "description" => $description,
-                          "status"      => $statusNumber,
-                          "due_date"    => $dueDate,
-                          "author"      => $authorId,
-                          "solved_by"   => $solvedBy,
-                          "solved_date" => $solvedDate,
-                          "contact_id"  => $contact);
-
-            // Insert data
-            $itemId = $this->_tableManager->insertRow('helpdesk', $data);
-
-            // Migrate permissions
-            $item["ID"] = $itemId;
-            $this->_migratePermissions('Helpdesk', $item);
         }
     }
 
@@ -1167,10 +1299,10 @@ class Setup_Models_Migration
                 $addHours = floor((int) $minutes / 60);
                 $hour     = (string) ((int) $hour + $addHours);
                 // Take out equivalent extra minutes
-                $minutes  = (string) ((int) $minutes - ($addHours * 60));
+                $minutes = (string) ((int) $minutes - ($addHours * 60));
                 // Add zeros at the left to reach 2 positions in total for each string variable
-                $hour     = str_repeat("0", 2 - strlen($hour)) . $hour;
-                $minutes  = str_repeat("0", 2 - strlen($minutes)) . $minutes;
+                $hour    = str_repeat("0", 2 - strlen($hour)) . $hour;
+                $minutes = str_repeat("0", 2 - strlen($minutes)) . $minutes;
             }
             $time = $hour . ":" . $minutes . ":00";
         } else {
@@ -1198,22 +1330,50 @@ class Setup_Models_Migration
         } else {
             $dateOut = null;
         }
+
         return $dateOut;
     }
 
+    /**
+     * Collect all the modules
+     *
+     * @return void
+     */
+    private function _setModules()
+    {
+        // Set the modules id
+        $modules = $this->_db->query("SELECT * FROM module WHERE (save_type = 0 OR save_type = 2)")->fetchAll();
+        foreach ($modules as $module) {
+            $this->_modules[$module['name']] = $module['id'];
+        }
+    }
+
+    /**
+     * Return the module id
+     *
+     * @param string $module The name of the module
+     *
+     * @return integer
+     */
     private function _getModuleId($module)
     {
-        $select = $this->_db->select()
-                            ->from('module')
-                            ->where('name = ?', $module);
-
-        $stmt = $this->_db->query($select);
-        $rows = $stmt->fetchAll();
-
-        if (isset($rows[0])) {
-            return $rows[0]['id'];
+        if (isset($this->_modules[$module])) {
+            return $this->_modules[$module];
         } else {
-            return 0;
+            // Global modules
+            $select = $this->_db->select()
+                                ->from('module')
+                                ->where('name = ?', $module);
+
+            $stmt = $this->_db->query($select);
+            $rows = $stmt->fetchAll();
+
+            if (isset($rows[0])) {
+                $this->_modules[$rows[0]['name']] = $rows[0]['id'];
+                return $rows[0]['id'];
+            } else {
+                return 0;
+            }
         }
     }
 
@@ -1243,7 +1403,7 @@ class Setup_Models_Migration
         if ($module == 'Project') {
             // 1 - Fetch user permissions from 'project_users_rel'
             $query = sprintf("SELECT * FROM %sproject_users_rel WHERE project_ID = %d ORDER BY id", PHPR_DB_PREFIX,
-                $item["ID"]);
+                $item['ID']);
             $projUserRels = $this->_dbOrig->query($query)->fetchAll();
 
             foreach ($projUserRels as $projUserRel) {
@@ -1274,7 +1434,7 @@ class Setup_Models_Migration
             }
         }
 
-        $userVon = $item['von'];
+        $userVon = (int) $item['von'];
 
         if ($module == 'Todo') {
             // Assigned user: 'ext' field -  Give write access to assigned user, if any
@@ -1294,14 +1454,16 @@ class Setup_Models_Migration
         }
 
         // Add owner with Admin access. This may overwrite previous right assignment for owner, that's ok.
-        $userRightsAdd[$userVon] = $this->_accessAdmin;
+        if ($userVon > 0) {
+            $userRightsAdd[$userVon] = $this->_accessAdmin;
+        }
 
         // Add admin user with Admin access. This may overwrite previous right assignment for admin, that's ok.
         $userRightsAdd[self::USER_ADMIN] = $this->_accessAdmin;
 
         // Migrate each permission
         $moduleId = $this->_getModuleId($module);
-        $itemId   = $item["ID"];
+        $itemId   = $item['ID'];
         $this->_addItemRights($moduleId, $itemId, $userRightsAdd);
     }
 
@@ -1312,7 +1474,8 @@ class Setup_Models_Migration
      *
      * @return array List of users
     */
-    private function _getUsersFromAccField($item) {
+    private function _getUsersFromAccField($item)
+    {
         $userList = array();
 
         if (isset($item['acc'])) {
@@ -1366,11 +1529,12 @@ class Setup_Models_Migration
      *
      * @return string Recurrence parameters in P6 format
      */
-    private function _serietypToRrule($value, $endDate, $startTime) {
+    private function _serietypToRrule($value, $endDate, $startTime)
+    {
         $until = 'UNTIL=' . str_replace('-', '', $endDate) . 'T' . str_replace(':', '', $startTime) . 'Z;';
         if (substr($value, 0, 2) == 'a:' && strpos($value, 'weekday')) {
             // Serialized array
-            $value = unserialize($value);
+            $value       = unserialize($value);
             $returnValue ="ERROR on migration";
 
             // Frequency
@@ -1408,7 +1572,6 @@ class Setup_Models_Migration
                     $returnValue = 'FREQ=YEARLY;' . $until . 'INTERVAL=1;';
                     break;
             }
-
 
             // Weeks days
             $returnValue .= 'BYDAY=';
@@ -1458,7 +1621,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Inserts into 'item_rights' table the permissions according to received parameters
+     * Collect all the values for save  into 'item_rights' table according to received parameters
      *
      * @param int   $moduleId    Id of the module in 'module' table
      * @param int   $itemId      Id of the item in the table of the module
@@ -1470,12 +1633,20 @@ class Setup_Models_Migration
     private function _addItemRights($moduleId, $itemId, $userRights)
     {
         foreach ($userRights as $user => $rights) {
-            $this->_tableManager->insertRow('item_rights', array(
-                'module_id' => $moduleId,
-                'item_id'   => $itemId,
-                'user_id'   => $user,
-                'access'    => $rights
-                ));
+            $this->_dbItemRightValues[] = array($moduleId, $itemId, $user, $rights);
+        }
+    }
+
+    /**
+     * Insert all the permissions into item_rights table
+     *
+     * @return void
+     */
+    private function _executeItemRightsInsert()
+    {
+        $dbFields = array('module_id', 'item_id', 'user_id', 'access');
+        if (!empty($this->_dbItemRightValues)) {
+            $this->_tableManager->insertMultipleRows('item_rights', $dbFields, $this->_dbItemRightValues);
         }
     }
 
@@ -1487,13 +1658,15 @@ class Setup_Models_Migration
      *
      * @return int  User id to insert in P6 table owner field.
      */
-    private function _processOwner($oldId) {
+    private function _processOwner($oldId)
+    {
         if (!isset($this->_users[$oldId])) {
             // Non existing users will be migrated as 'admin' user
             $userId = self::USER_ADMIN;
         } else {
             $userId = $this->_users[$oldId];
         }
+
         return $userId;
     }
 
@@ -1505,13 +1678,57 @@ class Setup_Models_Migration
      *
      * @return int  User id to insert in P6 field 'project_id'
      */
-    private function _processParentProjId($oldId) {
+    private function _processParentProjId($oldId)
+    {
         if (!isset($this->_projects[$oldId])) {
             // Non existing projects will be migrated as root one
             $projectId = self::PROJECT_ROOT;
         } else {
             $projectId = $this->_projects[$oldId];
         }
+
         return $projectId;
+    }
+
+    /**
+     * Parse module and item id from timeproj
+     *
+     * @param array $data Timeproj record
+     *
+     * @return array (module_id, item_id)
+     */
+    private function _getItemAndModule($data)
+    {
+        $module_id = $this->_getModuleId($data['module']);
+        if ($module_id < 1) {
+            $module_id = 1;
+            $item_id   = null;
+        } else {
+            switch ($data['module']) {
+                case 'todo':
+                case 'Todo':
+                    if (isset($this->_todos[$data['module_id']])) {
+                        $item_id = $this->_todos[$data['module_id']];
+                    } else {
+                        $module_id = 1;
+                        $item_id   = null;
+                    }
+                    break;
+                case 'Helpdsek':
+                case 'helpdesk':
+                    if (isset($this->_helpdesk[$data['module_id']])) {
+                        $item_id = $this->_helpdesk[$data['module_id']];
+                    } else {
+                        $module_id = 1;
+                        $item_id   = null;
+                    }
+                    break;
+                default:
+                        $item_id = null;
+                        break;
+            }
+        }
+
+        return array($module_id, $item_id);
     }
 }

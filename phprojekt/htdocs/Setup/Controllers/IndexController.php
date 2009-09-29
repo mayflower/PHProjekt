@@ -87,7 +87,8 @@ class IndexController extends Zend_Controller_Action
             if ($this->_setup->validate($params)) {
                 ob_start();
                 $this->_setup->install($params);
-                $this->view->success = ob_get_flush();
+                $this->view->success = ob_get_contents();
+                ob_end_clean();
                 $this->view->finish  = true;
                 $this->view->message = null;
             } else {
