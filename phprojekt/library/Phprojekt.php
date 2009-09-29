@@ -344,7 +344,7 @@ class Phprojekt
         if (!defined('PHPR_CONFIG_FILE')) {
             define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.ini');
         }
-        define('PHPR_TEMP_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp/');
+        define('PHPR_TEMP_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR);
 
         set_include_path('.' . PATH_SEPARATOR
             . PHPR_LIBRARY_PATH . PATH_SEPARATOR
@@ -361,9 +361,8 @@ class Phprojekt
             $this->_config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
         } catch (Zend_Config_Exception $error) {
             $webPath = "http://" . $_SERVER['HTTP_HOST'] . str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
-            echo 'You need the file configuration.ini to continue.
-                  Have you tried the <a href="' . $webPath . 'setup.php">setup</a> routine?';
-            die();
+            die('You need the file configuration.ini to continue. Have you tried the <a href="' . $webPath
+                . 'setup.php">setup</a> routine?');
         }
 
         if (substr($this->_config->webpath, -1) != '/') {
@@ -380,9 +379,12 @@ class Phprojekt
 
         // Set a metadata cache and clean it
         $frontendOptions = array('automatic_serialization' => true);
-        $backendOptions  = array('cache_dir' => PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR
-            . 'zendCache' . DIRECTORY_SEPARATOR);
-        $this->_cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+        $backendOptions  = array('cache_dir' => PHPR_TEMP_PATH . 'zendCache' . DIRECTORY_SEPARATOR);
+        try {
+            $this->_cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
+        } catch (Exception $error) {
+            die("The directory " . PHPR_TEMP_PATH . "zendCache do not exists or not have write access.");
+        }
         Zend_Db_Table_Abstract::setDefaultMetadataCache($this->_cache);
 
         // Use for Debug only
@@ -390,6 +392,50 @@ class Phprojekt
 
         // Check Logs
         $this->getLog();
+
+        $missingRequirements = array();
+
+        // The following extensions are either needed by components of the Zend Framework that are used
+        // or by P6 components itself.
+        $extensionsNeeded = array('mbstring', 'iconv', 'ctype', 'gd', 'pcre', 'pdo', 'Reflection', 'session', 'SPL',
+            'zlib');
+
+        // These settings need to be properly configured by the admin
+        $settingsNeeded = array('magic_quotes_gpc' => 0, 'magic_quotes_runtime' => 0, 'magic_quotes_sybase' => 0);
+
+        // Check the PHP version
+        $requiredPhpVersion = "5.2.4";
+        if (version_compare(phpversion(), $requiredPhpVersion, '<')) {
+            // This is a requirement of the Zend Framework
+            $missingRequirements[] = "- PHP Version '" . $requiredPhpVersion . "' or newer";
+        }
+
+        foreach ($extensionsNeeded as $extension) {
+            if (!extension_loaded($extension)) {
+                $missingRequirements[] = "- The '" . $extension . "' extension must be enabled.";
+            }
+        }
+
+        // Check pdo library
+        $mysql  = extension_loaded('pdo_mysql');
+        $sqlite = extension_loaded('pdo_sqlite2');
+        $pgsql  = extension_loaded('pdo_pgsql');
+
+        if (!$mysql && !$sqlite && !$pgsql) {
+            $missingRequirements[] = "- You need one of these PDO extensions: pdo_mysql, pdo_pgsql or pdo_sqlite";
+        }
+
+        foreach ($settingsNeeded as $conf => $value) {
+            if (ini_get($conf) != $value) {
+                $missingRequirements[] = "- The php.ini setting of '" . $conf ."' has to be '" . $value . "'.";
+            }
+        }
+
+        if (!empty($missingRequirements)) {
+            $message = "Your PHP does not meet the requirements needed for P6.<br />"
+                . implode("<br />", $missingRequirements);
+            die($message);
+        }
 
         $helperPaths = $this->_getHelperPaths();
         $view        = $this->_setView($helperPaths);
