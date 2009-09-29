@@ -549,7 +549,7 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Todo', 'start_date', 1, 'Start date', 'date', 4, 1, NULL, NULL, NULL, 3, 'center', 1, 3, '1', 0, 0, 0),
 (0, 'Todo', 'end_date', 1, 'End date', 'date', 5, 1, NULL, NULL, NULL   , 4, 'center', 1, 4, '1', 0, 0, 0),
 (0, 'Todo', 'priority', 1, 'Priority', 'selectValues', 6, 1, NULL, '1#1|2#2|3#3|4#4|5#5|6#6|7#7|8#8|9#9|10#10', '5', 5, 'center', 1, 5, '1', 1, 0, 0),
-(0, 'Todo', 'current_status', 1, 'Current status', 'selectValues', 7, 1, NULL, '1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting', '1', 7, 'center', 1, 6, '1', 1, 0, 0),
+(0, 'Todo', 'current_status', 1, 'Current status', 'selectValues', 7, 1, NULL, '1#Waiting|2#Accepted|3#Working|4#Stopped|5#Ended', '1', 7, 'center', 1, 6, '1', 1, 0, 0),
 (0, 'Todo', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', NULL, 0, NULL, 1, 0, '1', 1, 1, 0),
 (0, 'Todo', 'user_id', 1, 'User', 'selectValues', 8, 1, NULL, 'User#id#lastname', NULL  , 6, 'left', 1, 7, '1', 1, 0, 0),
 

@@ -142,7 +142,7 @@
                     "form_position":   "7",
                     "form_columns":    "1",
                     "form_regexp":     "NULL",
-                    "form_range":      "1#Accepted|2#Working|4#Ended|5#Stopped|7#Waiting",
+                    "form_range":      "1#Waiting|2#Accepted|3#Working|4#Stopped|5#Ended",
                     "default_value":   "1",
                     "list_position":   "7",
                     "list_align":      "center",
