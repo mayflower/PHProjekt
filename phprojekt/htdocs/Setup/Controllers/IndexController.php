@@ -113,11 +113,11 @@ class IndexController extends Zend_Controller_Action
         return array(
             'serverType'          => Cleaner::sanitize('string', $this->getRequest()->getParam('serverType')),
             'dbHost'              => Cleaner::sanitize('string', $this->getRequest()->getParam('dbHost')),
-            'dbUser'              => Cleaner::sanitize('alnum', $this->getRequest()->getParam('dbUser')),
-            'dbPass'              => Cleaner::sanitize('alnum', $this->getRequest()->getParam('dbPass')),
-            'dbName'              => Cleaner::sanitize('alnum', $this->getRequest()->getParam('dbName')),
-            'adminPass'           => Cleaner::sanitize('alnum', $this->getRequest()->getParam('adminPass')),
-            'adminPassConfirm'    => Cleaner::sanitize('alnum', $this->getRequest()->getParam('adminPassConfirm')),
+            'dbUser'              => Cleaner::sanitize('string', $this->getRequest()->getParam('dbUser')),
+            'dbPass'              => Cleaner::sanitize('string', $this->getRequest()->getParam('dbPass')),
+            'dbName'              => Cleaner::sanitize('string', $this->getRequest()->getParam('dbName')),
+            'adminPass'           => Cleaner::sanitize('string', $this->getRequest()->getParam('adminPass')),
+            'adminPassConfirm'    => Cleaner::sanitize('string', $this->getRequest()->getParam('adminPassConfirm')),
             'migrationConfigFile' => Cleaner::sanitize('string', $this->getRequest()->getParam('migrationConfigFile')),
             'useExtraData'        => (int) $this->getRequest()->getParam('useExtraData'),
         );
