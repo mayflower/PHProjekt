@@ -37,21 +37,21 @@ class Phprojekt_Acl extends Zend_Acl
 {
     /**
      * Fixed permission values for items and modules
-     *
      */
-    const NONE      = 0;
-    const READ      = 1;
-    const WRITE     = 2;
-    const ACCESS    = 4;
-    const CREATE    = 8;
-    const COPY      = 16;
-    const DELETE    = 32;
-    const DOWNLOAD  = 64;
-    const ADMIN     = 128;
-    const ALL       = 255;
+    const NONE     = 0;
+    const READ     = 1;
+    const WRITE    = 2;
+    const ACCESS   = 4;
+    const CREATE   = 8;
+    const COPY     = 16;
+    const DELETE   = 32;
+    const DOWNLOAD = 64;
+    const ADMIN    = 128;
+    const ALL      = 255;
 
     /**
      * Singleton instance
+     *
      * @var PHProjekt_Acl
      */
     protected static $_instance = null;
@@ -74,9 +74,9 @@ class Phprojekt_Acl extends Zend_Acl
      */
     private function __construct()
     {
-        //first construct roles
+        // First construct roles
         $this->_registerRoles();
-        //than get rights and assign them to roles and ressources
+        // Than get rights and assign them to roles and ressources
         $this->_registerRights();
     }
 
@@ -137,6 +137,7 @@ class Phprojekt_Acl extends Zend_Acl
     public static function convertBitmaskToArray($right)
     {
         $return = array();
+
         $return['none']     = (boolean) ($right == 0) ? true : false;
         $return['read']     = (boolean) ($right & self::READ) ? true : false;
         $return['write']    = (boolean) ($right & self::WRITE) ? true : false;
@@ -146,6 +147,7 @@ class Phprojekt_Acl extends Zend_Acl
         $return['delete']   = (boolean) ($right & self::DELETE) ? true : false;
         $return['download'] = (boolean) ($right & self::DOWNLOAD) ? true : false;
         $return['admin']    = (boolean) ($right & self::ADMIN) ? true : false;
+
         return $return;
     }
 
@@ -159,6 +161,7 @@ class Phprojekt_Acl extends Zend_Acl
     public static function convertArrayToBitmask($rights)
     {
         $right = self::NONE;
+
         if ($rights['read']) {
             $right = $right | self::READ;
         }
@@ -183,6 +186,7 @@ class Phprojekt_Acl extends Zend_Acl
         if ($rights['admin']) {
             $right = $right | self::ADMIN;
         }
+
         return $right;
     }
 }
