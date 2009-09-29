@@ -213,8 +213,21 @@ class Setup_Models_Setup
             $valid = false;
         }
 
-        // Check cache dir
+        // Check tmp dir
         $cacheDir = $baseDir . "tmp";
+
+        if (!file_exists($cacheDir)) {
+            if (!mkdir($cacheDir)) {
+                $this->_error[] = 'Please create the dir ' . $cacheDir . ' to use the cache';
+                $valid = false;
+            }
+        } else if (!is_writable($cacheDir)) {
+            $this->_error[] = 'Please set permission to allow use the cache in ' . $cacheDir;
+            $valid = false;
+        }
+
+        // Check zendCache dir
+        $cacheDir = $baseDir . "tmp" . DIRECTORY_SEPARATOR . "zendCache";
 
         if (!file_exists($cacheDir)) {
             if (!mkdir($cacheDir)) {
