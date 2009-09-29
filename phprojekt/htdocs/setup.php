@@ -38,10 +38,14 @@ require_once 'Phprojekt/Loader.php';
 
 Zend_Loader::registerAutoload('Phprojekt_Loader');
 
+ini_set('max_execution_time', 0);
+error_reporting(-1);
+
+// Set the timezone to UTC
+date_default_timezone_set('UTC');
+
 // Start zend session to handle all session stuff
 Zend_Session::start();
-
-ini_set('max_execution_time', 0);
 
 $view = new Zend_View();
 $view->addScriptPath(PHPR_CORE_PATH . '/Setup/Views/dojo/');
