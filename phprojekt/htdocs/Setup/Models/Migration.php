@@ -574,18 +574,18 @@ class Setup_Models_Migration
                 // clean them and fix wrong values as P5 would
                 // show them to the users
                 if (!empty($todo['anfang'])) {
-                    $start_date = Cleaner::sanitize('date', $todo['anfang']);
+                    $startDate = Cleaner::sanitize('date', $todo['anfang']);
                 } else {
-                    $start_date = null;
+                    $startDate = null;
                 }
                 if (!empty($todo['deadline'])) {
-                    $end_date = Cleaner::sanitize('date', $todo['deadline']);
+                    $endDate = Cleaner::sanitize('date', $todo['deadline']);
                 } else {
-                    $end_date = null;
+                    $endDate = null;
                 }
 
                 $dbValues[] = array($projectId, utf8_encode($todo['remark']), utf8_encode($todo['note']), $todo['von'],
-                    $todo['priority'], $todo['status'], $todo['ext'], $start_date, $end_date);
+                    $todo['priority'], $todo['status'], $todo['ext'], $startDate, $endDate);
             }
 
             // Run the multiple inserts
@@ -732,10 +732,10 @@ class Setup_Models_Migration
                             $starTime = date("H:i:s", $starTimeValue);
                             $endTime  = "00:00:00";
 
-                            list($module_id, $item_id) = $this->_getItemAndModule($timeproj);
+                            list($moduleId, $itemId) = $this->_getItemAndModule($timeproj);
 
                             $dbValues[] = array($this->_users[$userId], $timeproj['datum'], $starTime, $endTime,
-                                $minutes, $timeproj['projekt'], utf8_encode($timeproj['note']), $module_id, $item_id);
+                                $minutes, $timeproj['projekt'], utf8_encode($timeproj['note']), $moduleId, $itemId);
 
                             $tmpMinutes = ((24 - $lastHour)* 60);
                             if ($lastMinutes > 0) {
@@ -753,10 +753,10 @@ class Setup_Models_Migration
                         $lastHour    = date("H", $endTimeValue);
                         $lastMinutes = date("i", $endTimeValue);
                         $endTime     = $lastHour . ":" . $lastMinutes . ":00";
-                        list($module_id, $item_id) = $this->_getItemAndModule($timeproj);
+                        list($moduleId, $itemId) = $this->_getItemAndModule($timeproj);
 
                         $dbValues[] = array($this->_users[$userId], $timeproj['datum'], $starTime, $endTime, $minutes,
-                            $timeproj['projekt'], utf8_encode($timeproj['note']), $module_id, $item_id);
+                            $timeproj['projekt'], utf8_encode($timeproj['note']), $moduleId, $itemId);
                     }
                 }
             }
@@ -1699,36 +1699,36 @@ class Setup_Models_Migration
      */
     private function _getItemAndModule($data)
     {
-        $module_id = $this->_getModuleId($data['module']);
-        if ($module_id < 1) {
-            $module_id = 1;
-            $item_id   = null;
+        $moduleId = $this->_getModuleId($data['module']);
+        if ($moduleId < 1) {
+            $moduleId = 1;
+            $itemId = null;
         } else {
             switch ($data['module']) {
                 case 'todo':
                 case 'Todo':
                     if (isset($this->_todos[$data['module_id']])) {
-                        $item_id = $this->_todos[$data['module_id']];
+                        $itemId = $this->_todos[$data['module_id']];
                     } else {
-                        $module_id = 1;
-                        $item_id   = null;
+                        $moduleId = 1;
+                        $itemId   = null;
                     }
                     break;
                 case 'Helpdsek':
                 case 'helpdesk':
                     if (isset($this->_helpdesk[$data['module_id']])) {
-                        $item_id = $this->_helpdesk[$data['module_id']];
+                        $itemId = $this->_helpdesk[$data['module_id']];
                     } else {
-                        $module_id = 1;
-                        $item_id   = null;
+                        $moduleId = 1;
+                        $itemId   = null;
                     }
                     break;
                 default:
-                        $item_id = null;
-                        break;
+                    $itemId = null;
+                    break;
             }
         }
 
-        return array($module_id, $item_id);
+        return array($moduleId, $itemId);
     }
 }
