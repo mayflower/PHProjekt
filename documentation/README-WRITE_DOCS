@@ -13,14 +13,14 @@ At the moment, we have 3 manuals:
              and people who want to change and enhance the basic
              PHProjekt Framework and API.
 
-Every manual is splitted into chapter. A chapter is represented 
+Every manual is split into chapter. A chapter is represented 
 by an directory. Every directory has the format:
  "CHAPTERNUMBER - CHAPTERNAME"
 e.g
  "02 Basic Concepts"
 
 You can nest chapters. If the chapternumber is not decided, leave it out.
-Articles have exaclty the same format except for being text files and not
+Articles have exactly the same format except for being text files and not
 directories.
 
 The format of the article:

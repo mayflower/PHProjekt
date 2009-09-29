@@ -1,6 +1,6 @@
 - Role System
-The role system is aplly on a module.
-You can assign read, write, create, or admin access for each active module.
+The role system is applied to a module.
+You can assign read, write, create, or admin access to each active module.
 Example:
     Rolename:
         Senior Developer

@@ -1,4 +1,4 @@
-PHProjekt has a hierarchical projcet tree.
+PHProjekt has a hierarchical project tree.
 Rights are applied to the modules for each project node,
 and each item in it has their own rights.
 

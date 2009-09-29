@@ -18,9 +18,12 @@ show all them in the Tab bar over the Form.
 
 [emph]Grid[/emph]
 
-The only way to make the Grid show Projects is clicking the top right logo of the site; the Grid will list all Projects 
-that depend on the Root one, then if you click the pencil of any of those rows, the Form will show all available
-info for the Project, except for the associated modules' content.
+You can make the Grid show Projects clicking the top right logo of the site; the Grid will list all Projects that depend
+on the Root one, then if you click the pencil of any of those rows, the Form will show all available info for the 
+Project, except for the associated modules' content.
+Another way to make the Grid show Projects is when the clicked Project in the Tree has 'Project' module associated in
+the Form -> 'Module' tab. You will see 'Project' tab at the right of 'Basic Data' tab. Yes, the Project item can have
+its own module associated and can show its Sub-Projects there. 
 
 
 [emph]Notification Link[/emph]

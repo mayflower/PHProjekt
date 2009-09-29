@@ -27,7 +27,7 @@ accesses and roles for each user on each Project, make them work as a group, bec
 and give them Read and other access types to a couple of Projects, and those Projects will be the only visible ones in 
 the Tree for those users, and all the Project-module items associated to them and its children will also just be seem by 
 them.
-The Roles for a Project are inherited by its children Projects, if no Roles are defined for a Project, then it inherits
-the parent Project ones.
+The Roles for a Project may be inherited by its children Projects: if no Roles are defined for a Project, then it 
+inherits the parent Project ones.
 
 For more info about permissions read 'Permissions' part of this Project Help.
