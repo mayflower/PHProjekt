@@ -1,0 +1,65 @@
+The last step is create the view part.
+
+As PHProjekt provide a javascript/dojo view, here are explayed these folders.
+
+The View/ directory must contain the next structure:
+
+[code]
+/application
+  /WorkingHours
+    /Controllers
+    /Models
+    /Views
+        /dojo
+            /scripts
+                Form.js
+                Grid.js
+                Main.js
+                Tree.js
+[/code]
+
+The content of these files, is like the PHP structure, just extent the Default one.
+
+Filename: application/WorkingHours/Views/dojo/scripts/Form.js
+
+[code]
+dojo.provide("phpr.WorkingHours.Form");
+
+dojo.declare("phpr.WorkingHours.Form", phpr.Default.Form, {
+});
+[/code]
+
+Filename: application/WorkingHours/Views/dojo/scripts/Grid.js
+
+[code]
+dojo.provide("phpr.WorkingHours.Grid");
+
+dojo.declare("phpr.WorkingHours.Grid", phpr.Default.Grid, {
+});
+[/code]
+
+Filename: application/WorkingHours/Views/dojo/scripts/Tree.js
+
+[code]
+dojo.provide("phpr.WorkingHours.Tree");
+
+dojo.declare("phpr.WorkingHours.Tree", phpr.Default.Tree, {
+});
+[/code]
+
+Filename: application/WorkingHours/Views/dojo/scripts/Main.js
+
+[code]
+dojo.provide("phpr.WorkingHours.Main");
+
+dojo.declare("phpr.WorkingHours.Main", phpr.Default.Main, {
+    constructor:function() {
+        this.module = "WorkingHours";
+        this.loadFunctions(this.module);
+
+        this.gridWidget = phpr.WorkingHours.Grid;
+        this.formWidget = phpr.WorkingHours.Form;
+        this.treeWidget = phpr.WorkingHours.Tree;
+    }
+});
+[/code]

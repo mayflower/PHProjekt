@@ -3,3 +3,6 @@ It receives the actions from a user, e.g. updating a dataset,
 and then receiving the data using the model,
 manipulating it and display the result using the view.
 It controls all other parts.
+
+For send the data to the view, is used the JSON format, for example:
+{}&&([{"id":1,"name":"Project1"),{"id":2,"name":"Project2")]}

@@ -1,0 +1,19 @@
+Now we need a controller for manage the actions.
+
+As the model, we need only to extend the default, so we create the file IndexController.php
+
+Filename: application/WorkingHours/Controllers/IndexController.php
+
+[code]
+<?php
+/**
+ * Manage actions
+ *
+ * @copyright 2007 PHProjekt development team
+ */
+class WorkingHours_IndexController extends IndexController
+{
+}
+[/code]
+
+This file will use all the functions defined by default.

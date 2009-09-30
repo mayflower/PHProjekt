@@ -1,11 +1,11 @@
 Modules are a core part of PHProjekt.
 They constist of a set of features, that are related to each other.
 E.g. managing tasks or managing appointments are combined into a module.
-Modules have a specific directory layout. 
+Modules have a specific directory layout.
 
 Every module is displayed on a per-project base.
 This means, that a e.g. the task module is displayed if you click on a project at the project tree.
-Therefore data saved by a model is usually related to a project id, but need't to.
+Therefore data saved by a model is related to a project id.
 
 PHProjekt provides a default module.
 Every module in PHProjekt uses those parts of the default module automaticly,

@@ -1,15 +1,15 @@
 Since we have our database table and our directory structure ready,
 we need a way to communicate with our database.
-We are using the Active Record Pattern provided by the PHProjekt Core API to access the table data. 
+We are using the Active Record Pattern provided by the PHProjekt Core API to access the table data.
 
 Active Record is a way to automaticly map a database table into an (PHP) object.
-It provides you all the necessary methods to receive, manipulate and store data
-without even touching any SQL statements.
+It provides you all the necessary methods to receive, manipulate and store data without even touching
+any SQL statements.
 We just have to follow some naming conventions.
 The first naming convention was allready done, by choosing the name of our database table.
-If you remember, we used WorkingHours.
-The class we have to create to map our database will have the same name,
-as well as the file containing the class. 
+If you remember, we used working_hours.
+The class we have to create to map our database will have the same name but without the CamelCase,
+as well as the file containing the class.
 
 So let's start by creating the WorkingHours.php in our Models/ directory.
 
@@ -17,8 +17,8 @@ Filename: application/WorkingHours/Models/WorkingHours.php
 
 [code]
 <?php
-/** 
- * Map our database table using active record 
+/**
+ * Map our database table using active record
  *
  * @copyright 2007 PHProjekt development team
  */
@@ -29,7 +29,7 @@ class WorkingHours_Models_WorkingHours extends PHProjekt_Item_Abstract
 
 You may wonder, why we use such a long class name.
 It's necessary to prefix the class with the filepath using underscores instead of slashes.
-Without that the autoloader function won't find our class. 
+Without that the autoloader function won't find our class.
 
 You also may have noticed that we extend from the PHProjekt_Item_Abstract class.
 This class provides all our Active Record methods and does the actual mapping.
@@ -42,18 +42,14 @@ That's everything we have to do in our model.
 No SQL or anything else.
 Just save the file. Our database access is complete. Active Record will do the job.
 
-If you want to see if it worked, just go into your PHProjekt.
-The module should exist and you should be able to see a list of items that are stored
-in the WorkingHours table.
-
 [emph]Naming Conventions[/emph]
 Active Record uses some special naming conventions.
 Make sure that you follow these.
 
-The last part of the class name is the exact name of the database table that is mapped.
-It's also case-sensitive.
-MyModule_Models_Foo is mapped to the database table named Foo.
-MyModule_Models_bar is mapped to the database table named bar.
+The last part of the class name is the not CamelCase name of the database table that is mapped.
+It's always lowercase.
+MyModule_Models_Foo is mapped to the database table named foo.
+MyModule_Models_Boo is mapped to the database table named bar.
+MyModule_Models_FooBar is mapped to the database table named foo_bar.
 
-Database tables must contain a primary key called id.
-
+Database tables must contain a primary key called id, and the fields owner_id and project_id.
