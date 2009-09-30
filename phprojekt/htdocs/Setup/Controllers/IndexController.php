@@ -92,7 +92,8 @@ class IndexController extends Zend_Controller_Action
                 $this->view->finish  = true;
                 $this->view->message = null;
             } else {
-                $this->view->message = array_shift($this->_setup->getError());
+                $error               = $this->_setup->getError();
+                $this->view->message = array_shift($error);
             }
         }
         $this->view->dbHost              = $params['dbHost'];

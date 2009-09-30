@@ -135,11 +135,11 @@ class Setup_Models_Setup
         } else {
             // Mysql
             @mysql_connect($params['dbHost'], $params['dbUser'], $params['dbPass']);
-            @mysql_query("DROP DATABASE " . $params['dbName']);
-            @mysql_query("CREATE DATABASE " . $params['dbName'] .
+            @mysql_query("DROP DATABASE `" . $params['dbName']) . "`";
+            @mysql_query("CREATE DATABASE `" . $params['dbName'] . "`" .
                 " DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;");
             if (!mysql_select_db($params['dbName'])) {
-                $this->_error[] = 'Error selecting database ' . $params['dnName'];
+                $this->_error[] = 'Error selecting database ' . $params['dbName'];
                 $valid = false;
             }
 

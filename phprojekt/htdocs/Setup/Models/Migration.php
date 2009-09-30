@@ -880,11 +880,8 @@ class Setup_Models_Migration
                     // Migrate permissions
                     $calendarId = array_shift($ids);
 
-                    // Give 'admin' user admin permission for this item
-                    $userRightsAdd                   = array();
-                    $userRightsAdd[self::USER_ADMIN] = $this->_accessAdmin;
-
                     // Add owner permission to this item
+                    $userRightsAdd           = array();
                     $userVon                 = $calendar['von'];
                     $userRightsAdd[$userVon] = $this->_accessAdmin;
 
@@ -1457,9 +1454,6 @@ class Setup_Models_Migration
         if ($userVon > 0) {
             $userRightsAdd[$userVon] = $this->_accessAdmin;
         }
-
-        // Add admin user with Admin access. This may overwrite previous right assignment for admin, that's ok.
-        $userRightsAdd[self::USER_ADMIN] = $this->_accessAdmin;
 
         // Migrate each permission
         $moduleId = $this->_getModuleId($module);
