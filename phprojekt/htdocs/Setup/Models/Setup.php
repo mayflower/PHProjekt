@@ -239,6 +239,14 @@ class Setup_Models_Setup
             $valid = false;
         }
 
+        // Migration
+        if (!empty($params['migrationConfigFile'])) {
+            if (!file_exists($params['migrationConfigFile'])) {
+                $this->_error[] = 'The file "' . $params['migrationConfigFile'] . '" do not exists.';
+                $valid = false;
+            }
+        }
+
         return $valid;
     }
 

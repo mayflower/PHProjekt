@@ -191,7 +191,7 @@ class Setup_Models_Migration
                 'password' => PHPR_DB_PASS,
                 'dbname'   => PHPR_DB_NAME
              );
-             $this->_dbOrig = Zend_Db::factory('pdo_'.PHPR_DB_TYPE, $dbParams);
+             $this->_dbOrig = Zend_Db::factory('pdo_' . PHPR_DB_TYPE, $dbParams);
         } catch (Exception $error) {
             throw new Exception('Can not connect to server at ' . PHPR_DB_HOST
                 . ' using ' . PHPR_DB_USER . ' user ' . '(' . $error->getMessage() . ')');
@@ -533,9 +533,11 @@ class Setup_Models_Migration
         $start = 0;
         $end   = self::ROWS_PER_QUERY;
 
+        $userIdRelation = array();
+
         while ($run) {
             $todos = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "todo ORDER BY ID LIMIT "
-                . $start . ", ". $end)->fetchAll();
+                . $start . ", " . $end)->fetchAll();
             if (empty($todos)) {
                 $run = false;
             } else {
@@ -565,10 +567,10 @@ class Setup_Models_Migration
                     // The assigned user exists in the DB?
                     if (isset($this->_users[$oldAssignedId])) {
                         // Yes
-                        $todo['ext']     = $this->_users[$oldAssignedId];
-                        $data['user_id'] = $todo['ext'];
+                        $todo['ext'] = $this->_users[$oldAssignedId];
                     }
                 }
+                $userIdRelation[$todo['ID']] = $todo['ext'];
 
                 // If dates are empty strings, don't send the fields; if not,
                 // clean them and fix wrong values as P5 would
@@ -594,8 +596,11 @@ class Setup_Models_Migration
 
                 foreach ($todos as $todo) {
                     // Migrate permissions
-                    $oldTodoId                = $todo['ID'];
-                    $todo['ID']               = array_shift($ids);
+                    $oldTodoId   = $todo['ID'];
+                    $todo['ID']  = array_shift($ids);
+                    $todo['von'] = $this->_processOwner($todo['von']);
+                    $todo['ext'] = $userIdRelation[$oldTodoId];
+
                     $this->_todos[$oldTodoId] = $todo['ID'];
                     $this->_migratePermissions('Todo', $todo);
                 }
@@ -616,7 +621,7 @@ class Setup_Models_Migration
 
         while ($run) {
             $notes = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "notes ORDER BY ID LIMIT "
-                . $start . ", ". $end)->fetchAll();
+                . $start . ", " . $end)->fetchAll();
             if (empty($notes)) {
                 $run = false;
             } else {
@@ -640,7 +645,9 @@ class Setup_Models_Migration
 
                 foreach ($notes as $note) {
                     // Migrate permissions
-                    $note['ID'] = array_shift($ids);
+                    $note['von'] = $this->_processOwner($note['von']);
+                    $note['ID']  = array_shift($ids);
+
                     $this->_migratePermissions('Note', $note);
                 }
             }
@@ -671,7 +678,7 @@ class Setup_Models_Migration
         while ($run) {
             // Timeproj
             $query = "SELECT * FROM " . PHPR_DB_PREFIX . "timeproj ORDER BY datum, users, projekt LIMIT "
-                . $start . ", ". $end;
+                . $start . ", " . $end;
             $timeprojs = $this->_dbOrig->query($query)->fetchAll();
             if (empty($timeprojs)) {
                 $run = false;
@@ -787,7 +794,7 @@ class Setup_Models_Migration
 
         while ($run) {
             $events = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "termine ORDER BY ID LIMIT "
-                . $start . ", ". $end)->fetchAll();
+                . $start . ", " . $end)->fetchAll();
             if (empty($events)) {
                 $run = false;
             } else {
@@ -882,7 +889,7 @@ class Setup_Models_Migration
 
                     // Add owner permission to this item
                     $userRightsAdd           = array();
-                    $userVon                 = $calendar['von'];
+                    $userVon                 = $this->_processOwner($calendar['von']);
                     $userRightsAdd[$userVon] = $this->_accessAdmin;
 
                     // Add participant permission to this item, only if it wasn't added before
@@ -915,7 +922,7 @@ class Setup_Models_Migration
         while ($run) {
             // Filemanager
             $files = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "dateien ORDER BY ID LIMIT "
-                . $start . ", ". $end)->fetchAll();
+                . $start . ", " . $end)->fetchAll();
             if (empty($files)) {
                 $run = false;
             } else {
@@ -962,7 +969,9 @@ class Setup_Models_Migration
 
                 foreach ($files as $file) {
                     // Migrate permissions
-                    $file['ID'] = array_shift($ids);
+                    $file['von'] = $this->_processOwner($file['von']);
+                    $file['ID']  = array_shift($ids);
+
                     $this->_migratePermissions('Filemanager', $file);
                 }
             }
@@ -982,7 +991,7 @@ class Setup_Models_Migration
 
         while ($run) {
             $contacts = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "contacts ORDER BY ID LIMIT "
-                . $start . ", ". $end)->fetchAll();
+                . $start . ", " . $end)->fetchAll();
             if (empty($contacts)) {
                 $run = false;
             } else {
@@ -1049,9 +1058,12 @@ class Setup_Models_Migration
         $start = 0;
         $end   = self::ROWS_PER_QUERY;
 
+        $ownerIdRelation  = array();
+        $assignedRelation = array();
+
         while ($run) {
-            $query     = "SELECT * FROM " . PHPR_DB_PREFIX . "rts WHERE is_deleted IS NULL ORDER BY ID LIMIT "
-                . $start . ", ". $end;
+            $query = "SELECT * FROM " . PHPR_DB_PREFIX . "rts WHERE is_deleted IS NULL ORDER BY ID LIMIT "
+                . $start . ", " . $end;
             $incidents = $this->_dbOrig->query($query)->fetchAll();
             if (empty($incidents)) {
                 $run = false;
@@ -1081,21 +1093,20 @@ class Setup_Models_Migration
                     if (count($userIds > 0)) {
                         $oldOwnerId = $userIds[0]['ID'];
                         if (isset($this->_users[$oldOwnerId])) {
-                            $ownerId     = $this->_users[$oldOwnerId];
-                            $item['von'] = $ownerId;
+                            $ownerId = $this->_users[$oldOwnerId];
                         }
                     }
                 }
+                $ownerIdRelation[$item['ID']] = $ownerId;
 
                 // Process assigned user
                 $oldAssignedId = (int) $item['assigned'];
                 if (isset($this->_users[$oldAssignedId])) {
-                    $assignedId       = $this->_users[$oldAssignedId];
-                    $item['assigned'] = $assignedId;
+                    $assignedId = $this->_users[$oldAssignedId];
                 } else {
-                    $assignedId       = null;
-                    $item['assigned'] = null;
+                    $assignedId = null;
                 }
+                $assignedRelation[$item['ID']] = $assignedId;
 
                 // Process creation date
                 $date = null;
@@ -1251,8 +1262,11 @@ class Setup_Models_Migration
 
                 foreach ($incidents as $item) {
                     // Migrate permissions
-                    $oldHelpdeskId                   = $item['ID'];
-                    $item['ID']                      = array_shift($ids);
+                    $oldHelpdeskId    = $item['ID'];
+                    $item['ID']       = array_shift($ids);
+                    $item['von']      = $ownerIdRelation[$oldHelpdeskId];
+                    $item['assigned'] = $assignedRelation[$oldHelpdeskId];
+
                     $this->_helpdesk[$oldHelpdeskId] = $item['ID'];
                     $this->_migratePermissions('Helpdesk', $item);
                 }
