@@ -511,7 +511,16 @@ class Phprojekt_Table
      */
     public function insertMultipleRows($tableName, $fields, $datas, $returnId = false)
     {
-        $maxRows = 1500;
+        $countFields = count($fields);
+        if ($countFields < 5) {
+            $maxRows = 2000;
+        } else if ($countFields < 7) {
+            $maxRows = 1500;
+        } else if ($countFields < 9) {
+            $maxRows = 1000;
+        } else {
+            $maxRows = 500;
+        }
 
         try {
             if ($returnId) {
@@ -524,11 +533,10 @@ class Phprojekt_Table
             $sql .= '(' . implode(",", $fields) . ') ';
             $sql .= 'VALUES ';
 
-            $countFields = count($fields);
-            $countData   = count($datas);
-            $values      = array();
-            $current     = 0;
-            $sqlValues   = '';
+            $countData  = count($datas);
+            $values     = array();
+            $current    = 0;
+            $sqlValues  = '';
             foreach ($datas as $data) {
                 $current++;
                 $sqlValues .= '(';
