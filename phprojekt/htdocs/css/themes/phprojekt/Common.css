@@ -280,6 +280,10 @@
     height: 28px;
 }
 
+.dj_ie .phprojekt .phprScrollWrapper {
+    width: 95%;
+}
+
 .phprojekt .phprScrollPane {
     height: 28px;
 }
