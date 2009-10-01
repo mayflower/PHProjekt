@@ -1,0 +1,12 @@
+You can see the exact Start and End dates for any bar of the Projects.
+
+Just click on one bar, and a panel called 'Selected Project Timeline' will appear on top of the window Gantt section
+showing you both dates. After changing any bar width and/or position, both fields get updated automatically with the
+changes made to the bar.
+
+
+[emph]Modifying the Dates using those fields[/emph]
+
+Those 2 dates are editable; you can click on any of them and pick a date in the dynamic pop-up calendar that appears
+behind, or write it manually in the field.
+Then press the Check button; if no error is found the bar will move onto its new parameters.

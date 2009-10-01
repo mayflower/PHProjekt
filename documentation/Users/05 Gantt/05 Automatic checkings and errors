@@ -1,0 +1,50 @@
+After you change Project dates either from the bar (moving the whole bar or just a border of it) or upper panel fields,
+internal checks are performed. If any error is found, one of the following four errors will be brought up in a dialog
+for you to choose what to do. XX in the error title means a Project name.
+
+Note: all errors are connected with the fact that in this structure of Projects hierarchy all Sub-Projects are supposed
+to happen inside parent's time. 
+
+
+Errors:
+
+
+[emph]Subproject XX starts before parent project XX[/emph]
+
+When you change a Start date of a Project so that any of its children now starts before it, this error appears.
+
+The Error pop-up dialog offers you to choose one of these three options:
+  Click OK for the Sub-Project Start date to be moved forward to match parent's Start date.
+  Click Reset to restore the moved Project to its previous position and/or width.
+  Click the top right [x] cross button or Esc to leave things as they are.
+
+
+[emph]Subproject XX ends after parent project XX[/emph]
+
+When you change an End date of a Project so that now it ends before any of its children, this error appears.
+
+The Error pop-up dialog offers you to choose one of these three options:
+  Click OK for the Sub-Project End date to be moved backwards to match parent's End date.
+  Click Reset to restore the moved Project to its previous position and/or width.
+  Click the top right [x] cross button or Esc to leave things as they are.
+
+
+[emph]Parent project XX starts after subproject XX[/emph]
+
+When you change a Start date of a Sub-Project so that now it starts before its parent, this error appears.
+
+The Error pop-up dialog offers you to choose one of these three options:
+  Click OK for the parent Project Start date to be moved backwards to match child's Start date.
+  Click Reset to restore the moved Sub-Project to its previous position and/or width.
+  Click the top right [x] cross button or Esc to leave things as they are.
+
+
+[emph]Parent project XX ends before subproject XX[/emph]
+
+When you change an End date of a Sub-Project so that now it ends after its parent, this error appears.
+
+The Error pop-up dialog offers you to choose one of these three options:
+  Click OK for the parent Project End date to be moved forward to match child's End date.
+  Click Reset to restore the moved Sub-Project to its previous position and/or width.
+  Click the top right [x] cross button or Esc to leave things as they are.
+
