@@ -40,7 +40,8 @@ in the database.
 
 [emph]Statistic[/emph]
 
-This module sums all the worked hours, classifies them by Projects and Sub-Projects and shows them in a chart table.
+This module shows all the worked hours for each user on the Projects you have at least Read access to, classifying them 
+by Projects (and Sub-Projects) showing them in an organized chart table.
 
 
 [emph]Todo[/emph]

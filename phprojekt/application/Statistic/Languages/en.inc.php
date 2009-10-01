@@ -13,8 +13,8 @@ $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Statistic"] = "<br />
     <b>Statistic tab</b><br />
     <br />
-    This module sums all the worked hours, classifies them by <b>Projects</b> and <b>Subprojects</b> and shows them in a
-    chart table.<br />
+    This module shows all the worked hours for each user on the Projects you have Read access to, classifying them by
+    <b>Projects</b> (and <b>Sub-Projects</b>) showing them in an organized chart table.<br />
     <br />
     There is a panel over it, 'Selected Statistic Timeline' that allows you to select a period
     for the module to calculate the hours inside it.<br />
