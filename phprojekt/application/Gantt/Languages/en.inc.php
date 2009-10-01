@@ -31,7 +31,7 @@ $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Gantt"] = "<br />
     This is the <b>General Help of Gantt module</b><br />
     <br />
-    This module is a Gantt chart interface, mouse editable, which is automatically synchronized to the data loaded
+    This module is a Gantt chart interface, mouse editable, which is automatically synchronized with the data stored
     in the database.<br />
     <br />
     It reads the Projects and Subprojects and elaborates this graphic that has one horizontal bar per Project
@@ -40,6 +40,6 @@ $lang["Content Help"]["Gantt"] = "<br />
     <br />
     Up the chart there is a panel &#39;Selected Project Timeline&#39;, when you click on a Project timeline bar, this
     panel's fields get loaded with the start and end dates of it, so that you can see and/or modify them writing a
-    different date or graphically selecting a day in the calendar that pops up.<br />
+    different date or selecting a day in the calendar that pops up.<br />
     <br />
     <br />";
