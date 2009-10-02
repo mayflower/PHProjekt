@@ -1,0 +1,14 @@
+[emph]Listed Projects[/emph]
+
+The Projects that are listed in the rows are those the logged user has at least Read access to.
+
+
+[emph]Listed Users[/emph]
+
+The Users that appear in the columns are those who have charged at least one item in the Timecard for that Project, 
+inside the selected period above. 
+
+
+[emph]Final Row: Total[/emph]
+
+This row sums all values for each column: each user's worked hours plus the total worked hours for all users.
