@@ -1,0 +1,8 @@
+This global module is a contact book to store data of people, that can be also associated with Projects and Helpdesk 
+tickets, from the form of those modules. The contacts are independent from the users registered in the system.
+
+
+Permissions:
+
+There is a field 'Private' used for determining whether each contact is private or not so that everyone can see it; or
+just the creator is able to do it.

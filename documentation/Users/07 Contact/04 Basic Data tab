@@ -1,0 +1,61 @@
+Fields:
+
+[emph]Name[/emph]
+
+Text: the name of the person (or company / institution), e.g.: John Doe
+* Required field
+
+
+[emph]E-Mail[/emph]
+
+Text: email address, e.g.: john@doe.com
+
+
+[emph]Company[/emph]
+
+Text: the company the contact works for, e.g.: Mayflower
+
+
+[emph]First phone[/emph]
+
+Text: a telephone number. E.g.: 1234-5678
+
+
+[emph]Second phone[/emph]
+
+Text: another telephone number. E.g.: 2345-6789
+
+
+[emph]Mobile phone[/emph]
+
+Text: a mobile telephone number. E.g.: (15) 3456-7890
+
+
+[emph]Street[/emph]
+
+Text: street and number of the address. E.g.: Maanhardtstrasse 100
+
+
+[emph]City[/emph]
+
+Text: city where the contact live or works. E.g.: Munich
+
+
+[emph]Zip Code[/emph]
+
+Text: zip code for the contact. E.g.: 12345
+
+
+[emph]Country[/emph]
+
+Text: country for the contact. E.g.: Argentina
+
+
+[emph]Comment[/emph]
+
+Textarea: just a comment about the contact. E.g.: call him from 9:00 to 5:00
+
+
+[emph]Private[/emph]
+
+Select: whether this item is private or not; so that just the owner can see it or everyone can do it, respectively.

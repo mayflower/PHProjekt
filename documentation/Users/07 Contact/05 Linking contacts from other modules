@@ -1,0 +1,14 @@
+[emph]Project and Helpdesk[/emph]
+
+Project and Helpdesk modules have a field Contacts to select one to be associated with that Project or Helpdesk item.
+
+When you create or modify a Project or Helpdesk item, you can pick a contact from Contact field select box, for you to 
+provide a reference to a specific person or company that may be useful for people who work with that Project or
+Helpdesk ticket.
+
+
+[emph]Other modules[/emph]
+
+The Module Designer (Administration -> Module), permits adding a Contact field to any module. It has to be a 'Select'
+field that has, inside left bottom edit box of the Module Designer for that field, tab Form, field Range, the value
+'Contact#id#name'.
