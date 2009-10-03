@@ -1,6 +1,8 @@
+Form tabs:
+
 [emph]Basic Data[/emph]
 
-This is a specific tab for Todo module, where you can enter the data of the item. It has dates, priority, status,
+Here are the specific fields of Todo module, where you can enter the data of the item. It has dates, priority, status,
 assigned user, etc. See 'Basic Data tab' section of this help.
 
 

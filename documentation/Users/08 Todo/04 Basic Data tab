@@ -3,6 +3,7 @@ Fields:
 [emph]Title[/emph]
 
 Text: the title of the item, e.g.: 'Buy 5 notebooks for the team'.
+* Required field
 
 
 [emph]Notes[/emph]
@@ -17,6 +18,7 @@ E.g.:
 [emph]Project[/emph]
 
 Select: parent Project which contains the to-do, if none then select PHProjekt. 
+* Required field
 
 
 [emph]Start Date[/emph]
