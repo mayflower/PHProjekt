@@ -2,13 +2,14 @@ Form tabs:
 
 [emph]Basic Data[/emph]
 
-Here are the specific fields of Note module, where you can enter the data of the item. It has a title, a comment, the
-parent Project and a Tag. See 'Basic Data tab' section of this help.
+Fields here are the specific ones of Note module, where you can enter the data of the item. It has a title, a comment, 
+the parent Project and a Tag. See 'Basic Data tab' section of this help.
 
 
 [emph]Access[/emph]
 
 A tab present in many modules, explained in the following section of User help: Default -> Form -> Access Tab
+
 
 [emph]Notification[/emph]
 
