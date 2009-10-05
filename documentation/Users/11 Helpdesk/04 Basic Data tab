@@ -1,0 +1,95 @@
+Fields:
+
+[emph]Title[/emph]
+
+Text: the title of the item, e.g.: 'Fix my notebook'.
+* Required field
+
+
+[emph]Author[/emph]
+
+Display: a read-only mode field that is automatically filled with the name of the user who created the item.
+
+
+[emph]Assigned[/emph]
+
+A user the ticket is assigned to, if any. He/she is the one to solve it.
+When this user is selected, or it is changed to another user, some rights are assigned to him/her: Read, Write, Delete
+and Download access.
+
+
+[emph]Date[/emph]
+
+Display: a read-only mode field that is automatically filled with the date of creation of the item.
+
+
+[emph]Due Date[/emph]
+
+Date: when the ticket is expected to have been solved.
+
+
+[emph]Project[/emph]
+
+Select: parent Project which contains the ticket (item), if none then select PHProjekt. 
+* Required field
+
+
+[emph]Priority[/emph]
+
+Select: a number between 1 and 10 for the priority. When you have many items in the Grid, you can sort them into the
+priority clicking the header of that column. It may be ranked in ascending or descending order.
+
+
+[emph]Attachments[/emph]
+
+This field allows you to upload one or more files.
+Its way of work is absolutely intuitive: press the button at the right of the field, choose a file from your computer
+and the file is sent.
+Then the uploaded file appears behind the field with a cross button at its right side to delete it. The file itself is a
+link to download it.
+
+
+[emph]Solved by[/emph]
+
+Display: a read-only mode field that is automatically filled with the name of the user that changed the Status field to
+'Solved'.
+
+
+[emph]Solved Date[/emph]
+
+Display: a read-only mode field that is automatically filled with the date when it was changed the Status field to
+'Solved'.
+
+
+[emph]Description[/emph]
+
+Textarea: the description of the ticket.
+E.g.: 
+1 - Turn the notebook on
+2 - Put a CD into the CD-ROM drive
+3 - Try to open its content, you can't 
+
+
+[emph]Status[/emph]
+
+Select: the status of the item, this is supposed to change over time as the task advances.
+The options are self-descriptive:
+1 - Open: the first state.
+2 - Assigned: you select it when item has been assigned to a user.
+3 - Solved: this is supposed to be the final state for a solved issue.
+4 - Verified: the issue was corroborated but it wasn't solved nor closed.
+5 - Closed: this is supposed to be the final state for a NON-solved issue.
+
+When the status is set to Solved, the fields Solved By and Solved Date in the form are automatically filled with the
+logged user name and current date respectively. If you change Solved status by another one, those 2 fields are emptied
+again.
+
+
+[emph]Contact[/emph]
+
+A contact to relate the item with, maybe a user that can be consulted about the issue.
+
+
+[emph]Tag[/emph]
+
+The tag field that synchronizes the item with Tags panel.

@@ -1,0 +1,7 @@
+The Helpdesk is a module to report and track bugs or issues that must be solved inside whatever context.
+
+It has lot of fields that can be filled with the needed information for the assigned user to solve the ticket.
+There are some automatic fields: Author, Date, Solved by and Solved date that are filled automatically depending on the
+users that create and solve the items.
+
+It has a Grid and a Form, like most of the modules.

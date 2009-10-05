@@ -1,0 +1,43 @@
+Apart from the common Grid fields like checkbox, pencil and Id, there are the following fields in the Todo Grid:
+
+[emph]Title[/emph]
+
+Text: the title of the item, e.g.: 'Fix my notebook'.
+
+
+[emph]Date[/emph]
+
+Display: a read-only mode field that is automatically filled with the date of creation of the item.
+
+
+[emph]Author[/emph]
+
+Display: a read-only mode field that is automatically filled with the name of the user who created the item.
+
+
+[emph]Assigned[/emph]
+
+A user the ticket is assigned to, if any. He/she is the one to solve it.
+When this user is selected, or it is changed to another user, some rights are assigned to him/her: Read, Write, Delete
+and Download access.
+
+
+[emph]Priority[/emph]
+
+Select: a number between 1 and 10 for the priority. When you have many items in the Grid, you can sort them into the
+priority clicking the header of that column. It may be ranked in ascending or descending order.
+
+
+[emph]Status[/emph]
+
+Select: the status of the item, this is supposed to change over time as the task advances.
+The options are self-descriptive:
+1 - Open: the first state.
+2 - Assigned: you select it when item has been assigned to a user.
+3 - Solved: this is supposed to be the final state for a solved issue.
+4 - Verified: the issue was corroborated but it wasn't solved nor closed.
+5 - Closed: this is supposed to be the final state for a NON-solved issue.
+
+When the status is set to Solved, the fields Solved By and Solved Date in the form are automatically filled with the
+logged user name and current date respectively. If you change Solved status by another one, those 2 fields are emptied
+again.
