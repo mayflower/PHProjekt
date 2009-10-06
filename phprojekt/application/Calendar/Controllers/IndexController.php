@@ -69,6 +69,43 @@ class Calendar_IndexController extends IndexController
         }
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
+        // Set dates depending on the times
+        foreach ($records as $record) {
+            $timeZoneComplement = (int) Phprojekt_User_User::getSetting("timeZone", 'UTC');
+
+            $startDate = strtotime($record->startDate);
+            $startTime = strtotime($record->startTime);
+            $endDate   = strtotime($record->endDate);
+            $endTime   = strtotime($record->endTime);
+
+            // Get the database values without convertions
+            $startHour = date("H", $startTime) + ($timeZoneComplement * -1);
+            if ($startHour > 24) {
+                $startHour = $startHour - 24;
+            } else if ($startHour < 0) {
+                $startHour = 24 + $startHour;
+            }
+
+            $endHour = date("H", $endTime) + ($timeZoneComplement * -1);
+            if ($endHour > 24) {
+                $endHour = $endHour - 24;
+            } else if ($endHour < 0) {
+                $endHour = 24 + $endHour;
+            }
+
+            // Convert again the values
+            $startHour = $startHour + $timeZoneComplement;
+            $endHour   = $endHour + $timeZoneComplement;
+
+            // Set the new dates
+            $valueStartTime = mktime($startHour, date("i", $startTime), 0, date("m", $startDate), date("d", $startDate),
+                date("Y", $startDate));
+            $valueEndTime = mktime($endHour, date("i", $endTime), 0, date("m", $endDate), date("d", $endDate),
+                date("Y", $endDate));
+            $record->startDate = date("Y-m-d", $valueStartTime);
+            $record->endDate   = date("Y-m-d", $valueEndTime);
+        }
+
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 

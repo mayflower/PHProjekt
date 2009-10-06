@@ -646,6 +646,21 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             }
             $request = Default_Helpers_Right::allowAll($request, $ownerId);
 
+            // Set dates depending on the times
+            $timeZoneComplement = (int) Phprojekt_User_User::getSetting("timeZone", 'UTC') * -1;
+
+            $startDate = strtotime($request['startDate']);
+            $startTime = strtotime($request['startTime']);
+            $endDate   = strtotime($request['endDate']);
+            $endTime   = strtotime($request['endTime']);
+
+            $valueStartTime = mktime(date("H", $startTime) + $timeZoneComplement, date("i", $startTime), 0,
+                date("m", $startDate), date("d", $startDate), date("Y", $startDate));
+            $valueEndTime = mktime(date("H", $endTime) + $timeZoneComplement, date("i", $endTime), 0,
+                date("m", $endDate), date("d", $endDate), date("Y", $endDate));
+            $request['startDate'] = date("Y-m-d", $valueStartTime);
+            $request['endDate']   = date("Y-m-d", $valueEndTime);
+
             Default_Helpers_Save::save($model, $request);
         }
 
