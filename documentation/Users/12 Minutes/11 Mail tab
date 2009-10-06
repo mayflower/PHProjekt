@@ -1,0 +1,37 @@
+This tab allows sending an email that is different from the regular Notification.
+
+[emph]Contents[/emph]
+
+The focus of the email is the Items tab contents. 
+The contents will be the title of the Minutes item, the description and then all Items tab contents in HTML format and
+an optional PDF attachment having almost all Basic Data tab info plus People tab info and Items tab Grid contents again.
+
+
+[emph]Recipients[/emph]
+
+You can select to whom send this emails in the 'Recipients' Multiple Select box. To select more than one, click on all
+users you want while holding CTRL key in your keyboard.
+
+
+[emph]Additional Recipients[/emph]
+
+You can write email addresses of non-listed users, or alternative email addresses for already listed users in 
+'Additional Recipients' textbox, comma-separated.
+
+
+[emph]Optional PDF Attachment[/emph]
+
+You may click 'Include PDF attachment' to attach a PDF file to the email.
+The PDF file has almost all Basic Data tab info plus People tab info and Items tab Grid contents again.
+
+
+[emph]Send mail[/emph]
+
+Press it to Send the email. You will read at the top right of screen the result of the action, the expected message is
+'The mail was sent successfully'.
+
+
+[emph]Preview[/emph]
+
+You can receive a copy of the PDF file previous to sending it pressing 'Preview' button: you will be offered to download
+the file.

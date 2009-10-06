@@ -1,0 +1,37 @@
+The purpose is that, when meeting contents are 100% filled in this Tab Grid, it shows all the contents of the meeting
+ordered, maybe chronologically, and showing behind each Topic row its statements, todos, decisions and dates so that the
+Grid is a clear representation of all main events and ideas discussed during the meeting.
+
+It has many columns but not all of them are used in the five kind of items added from the Form.
+
+Columns:
+
+[emph]Topic[/emph]
+
+Each time a item of Topic type row is added to the Grid this column shows an integer that follows the previous one.
+E.g.: if you add a Topic as the first item for Items Grid, it will show number 1 in this column. If you add another one
+behind it, it will show number 2.
+The rest of types of items added here will be under a Topic and will have the Topic's number plus a point and a 
+'inside-Topic' element number. So that if you add a 'Statement' row behind Topic 1, it will show here '1.1'. If there is
+no any Topic over it, it will show '0.1'.
+This column shows a value on all types of rows.
+
+
+[emph]Title[/emph]
+
+This column is used in the five types of rows and represents the title of the row. 
+
+
+[emph]Type[/emph]
+
+May be: Topic, Statement, Todo, Decision or Date.
+
+
+[emph]Date[/emph]
+
+This column is just used in the rows of the type 'Todo' and 'Date', the Date for doing a Todo or the Date of an event. 
+
+
+[emph]Who[/emph]
+
+This column is just used by Todo type rows. It represents who is going to do the task.

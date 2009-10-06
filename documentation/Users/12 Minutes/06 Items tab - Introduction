@@ -1,0 +1,11 @@
+Items tab is almost a module inside a tab.
+It has a Grid at its left and a Form at its right, this right Form is used to fill the left Grid, just like a common 
+module.
+
+The Items Grid is intended to show the contents of the meeting ordered and divided by Topics. Each Topic may have 
+Statements, Todos, Decisions and Dates, and according to each of these 5 kind of content for the Grid, different columns 
+of it will be filled.
+
+New Items Grid elements are added to the Items Grid from an empty Form or pressing New in the Form, then filling it and
+pressing Save. To edit or delete existing Items Grid elements click on them and the content will be filled into the 
+Items Form at the right.

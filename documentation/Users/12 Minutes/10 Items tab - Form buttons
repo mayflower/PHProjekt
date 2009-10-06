@@ -1,0 +1,17 @@
+Buttons are shown at the bottom of Form fields, which ones are shown depends on the state of the Form: if you are
+editing an item: Save, Delete and New will be shown, if not, just Save will be enough.
+
+[emph]New[/emph]
+
+Just shown when editing an item of Items Grid. Changes made to the Form will be lost when pressed, if any, and an empty 
+Form will be opened.
+
+
+[emph]Save[/emph]
+
+Shown when editing a row of the Grid, press it to apply changes.
+
+
+[emph]Delete[/emph]
+
+Shown after clicking a row of the Grid, press it to delete it.

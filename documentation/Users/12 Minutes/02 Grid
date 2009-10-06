@@ -1,0 +1,39 @@
+Apart from the common Grid fields like checkbox, pencil and Id, there are the following fields in the Minute Grid:
+
+[emph]Date of Meeting[/emph]
+
+Date: date when the meeting takes place.
+
+
+[emph]Start Time[/emph]
+
+Time: time when the meeting takes place.
+
+
+[emph]Title[/emph]
+
+Text: the title of the Minute, e.g.: 'Moving to a new office'.
+
+
+[emph]Description[/emph]
+
+Textarea: a brief description of the meeting (the content and subjects themselves will be written in Items tab of the 
+Form).
+
+
+[emph]Place[/emph]
+
+Text: where the meeting takes place.
+
+
+[emph]Status[/emph]
+
+Select: the status of the item, this is supposed to change over time when the meeting takes place and contents are
+filled.
+The options are self-descriptive:
+1 - Planned: the first state.
+2 - Empty 
+3 - Filled: this status is set automatically when some content is filled inside Items tab.
+4 - Final: this status makes the item to be read-only, because it is supposed to be finalized.
+
+After the status is saved as Final, no content can be modified unless you change it back to Filled state.

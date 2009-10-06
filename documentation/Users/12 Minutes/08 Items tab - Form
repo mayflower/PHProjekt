@@ -1,0 +1,10 @@
+This right Form inside Items tab is used to fill the left Grid, just as if it was a common module inside a tab.
+
+The Items Grid is intended to show the contents of the meeting ordered and divided by topics; all that contents are
+filled and defined from this Form.
+
+New Items Grid elements are added to the Items Grid from an empty Form or pressing New in the Form, then filling it and
+pressing Save. To edit or delete existing Items Grid elements click on them and the content will be filled into the 
+Items Form at the right.
+
+This form has many fields, how many of them are shown depends on the selection in 'Type' field.

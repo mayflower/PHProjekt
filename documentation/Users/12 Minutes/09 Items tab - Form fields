@@ -1,0 +1,62 @@
+Fields:
+
+[emph]Title[/emph]
+
+This column is used in the five types of rows and represents the title of them. 
+* Required field
+
+[emph]Type[/emph]
+
+Select: possibilities are Topic, Statement, Todo, Decision and Date.
+* Required field
+
+1 - Topic:
+This is a subject discussed or exposed in the meeting, it will content other items inside.
+Each time a item of Topic type is added to the Grid that column shows an integer that follows the previous one.
+E.g.: if you add a Topic as the first item for Items Grid, it will show number 1 in this column. If you add another one
+behind it, it will show number 2.
+The rest of types of items added there will be under a Topic and will have the Topic's number plus a point and a 
+'inside-Topic' element number. So that if you add a 'Statement' row behind Topic 1, it will show here '1.1'. If there is
+no any Topic over it, it will show '0.1'.
+That column is used by all types of rows.
+Fields used by Topic type: Title, Comment and Sort After.
+
+2 - Statement
+This will be shown inside a Topic in the Grid, and is a text representing an idea, a point, a concept, etc.
+Fields shown in this Form when 'Statement' is selected here: Title, Comment and Sort After.
+
+3 - Todo
+This will be inside a Topic in the Grid and means a planned task to carry out.
+Fields showed in this Form when 'Todo' is selected here: Title, Comment, Who, Date and Sort After.
+
+4 - Decision
+This will be inside a Topic in the Grid and means a planned task to carry out.
+Fields showed in this Form when 'Decision' is selected here: Title, Comment and Sort After.
+
+5 - Date
+This will be inside a Topic in the Grid and represents an discussed event or something planned during the meeting.
+Fields showed in this Form when 'Decision' is selected here: Title, Comment, Date and Sort After.
+
+
+[emph]Comment[/emph]
+
+Text: This field is present for all types of selected Topics and is used to describe the row to be added to Items Grid.
+
+
+[emph]Who[/emph]
+
+Select: this field is only shown when 'Todo' is the selected Topic and it is used to select the user who is going to 
+carry out the planned task.
+
+
+[emph]Date[/emph]
+
+Date: this field is just shown when 'Todo' or 'Date' are the selected Topics and it is used to establish when the task 
+is going to be carried out or when the event is going to take place, respectively.
+
+
+[emph]Sort After[/emph]
+
+Select: this is a very important field, it is used for establishing the order of each row: when you create or edit a 
+row, here you select 'after which' one will it be located. You can re-arrange a whole listing clicking on each row in
+the Grid, changing its 'Sort after' value in the Form and then clicking Save. 

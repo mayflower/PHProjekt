@@ -1,0 +1,23 @@
+This tab allows defining people invited to the meeting, actual attendees and people who are excused.
+Also permits defining recipients for the Notification email. 
+
+Fields
+
+[emph]Invited[/emph]
+
+Multiple Select box: people who is invited to the meeting.
+
+
+[emph]Attending[/emph]
+
+Multiple Select box: who are going to attend, or have attended the meeting.
+
+
+[emph]Excused[/emph]
+
+Multiple Select box: people who is not going or have not attended the meeting.
+
+
+[emph]Recipients[/emph]
+
+Multiple Select box: email recipients for the Notification.

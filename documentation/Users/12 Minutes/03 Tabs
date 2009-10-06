@@ -1,0 +1,40 @@
+Form tabs:
+
+[emph]Basic Data[/emph]
+
+Fields here are the specific ones of Minute module, where you can enter the data of the item. It has title, date,
+parent Project, time, status, etc. See 'Basic Data tab' section of this help.
+
+
+[emph]People[/emph]
+
+It relates people to the meeting. See 'People tab' section of this help.
+See 'People tab' section of this Help.
+
+[emph]Access[/emph]
+
+A tab present in many modules, explained in the following section of User help: Default -> Form -> Access Tab
+
+
+[emph]Notification[/emph]
+
+A tab present in many modules, explained in the following section of User help: Default -> Form -> Notification Tab 
+
+
+[emph]History[/emph]
+
+A tab present in many modules, explained in the following section of User help: Default -> Form -> History Tab
+
+
+[emph]Items[/emph]
+
+This is the most sophisticated tab of whole Phprojekt 6. Here all the discussed contents, or going to be exposed or 
+discussed during the meeting are written and organized in a simple and clear Grid.
+See all 'Items tab' sections of this Help.
+
+
+[emph]Mail[/emph]
+
+Here you can send an email to the selected users with an optional PDF file attachment containing the contents of the 
+Minute in detail.
+See 'Mail tab' section of this help for more info.
