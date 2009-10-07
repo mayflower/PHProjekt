@@ -1,0 +1,27 @@
+Timecard is a module designed to assign working times to Projects so that it is kept a record about what the people
+involved in the Projects have worked in, and how much time have they spent on each thing.
+These times will also impact on Statistic module.
+
+[emph]Sections of the module[/emph]
+
+It has a month section at the left which shows all days of selected month and booked time for each one for the logged 
+user. On top of all the booked amounts for each day, there is the sum of all them.
+Each day is a link for you to click on and load its contents in the Day section, in the middle of the screen. 
+
+The Day section has a Date type field on top that permits to change not only the day but also the month and year both
+showed in Month left view and this Day view. Behind it there is a schedule for the day. The purpose of it is that the
+user may perceive graphically the amount of time worked for selected day and the Projects involved.
+
+At the right top of the module view there is a Form to add, edit and delete Project bookings.
+
+Finally, at the right bottom of the Timecard view there is the Favorite Projects sections that provides a way to access
+rapidly to a Project to add it to a specific time booking.
+
+There is an export button on the top left of the module that exports in CSV file format all booked times for logged user
+and selected month.
+
+
+[emph]Overlapping times error[/emph]
+
+When you try to add or edit a booking so that some of its time overlaps part of the time of another booking, an internal 
+checking will bring up an error for you to correct the start and end time of it and/or the date.

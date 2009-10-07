@@ -1,0 +1,24 @@
+The way to add new bookings to Timecard is always the same: firstly setting the Form in Add mode, that's when the button 
+Delete is not there and only Save is visible. When you enter Timecard module or after saving a booking it is 
+automatically set in Add mode, but there are also some ways to pre-fill some fields while getting it into Add mode:
+
+
+[emph]Clicking on a day in Month view or selecting a date in Date field[/emph]
+
+If you click on any day of the Month section, the Day schedule will load all booked Projects for that day, if any, and 
+the Date field on top of the schedule will be filled with that date. Also, it will be loaded the clicked date into the 
+Date field inside the right Form getting the Form in Add mode and the rest of fields will be emptied.
+The same happens in the Form if a day is selected in the Date field over the center schedule.
+
+
+[emph]Clicking a (+) plus sign in a schedule row[/emph]
+
+Each row of the schedule has a (+) plus sign to add a booking for that time. If you press it the selected Date and Time 
+will be loaded into the Form in fields Date and Start Time, and the Form will get into Add mode and the rest of fields 
+is emptied. The End Time will be filled automatically as one hour after Start Time.
+
+
+[emph]Clicking on a favorite Project[/emph]
+
+When you click on any of the favorite Projects under the Form, this last one is emptied, set into Add mode, Project 
+field is filled with clicked Project and the Start Time is set to current time.

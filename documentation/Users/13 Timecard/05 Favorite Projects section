@@ -1,0 +1,24 @@
+Favorite Projects section is located at the right bottom of the module and provides shortcuts to most booked Projects,
+or the ones you want to put there. This list of Projects is independent for each user. 
+
+When you click on any of the favorite Projects the Form is emptied and Project field is filled with clicked Project and 
+the Start Time is set to current time, then you are ready to fill the rest of fields and press Save to add the booking.
+
+This listing of favorite Projects is located between the Form and the button 'Manage project list'. Projects available 
+to be added to favorites list are those you have at least Read access to.
+
+
+[emph]Managing favorite Projects list[/emph]
+
+If there are not any Projects in the listing under the Form, or you want to add one or modify the listing, press 
+'Manage project list' button.
+When you press 'Manage project list' button, a little pop-up window appears. It has two panels. The left one shows all 
+Projects and Sub-Projects you are involved in, it allows you to drag and drop each Project with the mouse to the second
+panel, at the right. That right panel is the one that has the Projects that will be seen under the Form when you save 
+changes pressing the Check button and this window gets closed.
+
+If you want to take out a Project from the right panel of this pop-up window, drag and drop it back to the left panel 
+using the mouse.
+
+When you have finished doing the changes, press the Check button to save and close the pop-up window. The new Projects
+listing appears under the Form. Each Project is shown as a yellow ochre color rectangle with curved ends.
