@@ -224,6 +224,12 @@ dojo.declare('phpr.Project.GanttBase', null, {
             current[index] = this.convertStampToIndex(new_date.getTime());
             this.assertUpdate(current[0], current[1], this.activeSlider);
             dijit.byId(this.activeSlider).attr('value', current);
+
+            // Try to find the named project element in the list and store the state
+            var listIndex = this.findArrayIndex(this.activeSlider);
+            if (listIndex > -1) {
+                this.projectDataBuffer[listIndex][4] = 1;
+            }
         }
     },
 
@@ -398,6 +404,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
             // Set the 'projects' values to the current state
             dijit.byId(projectId).attr('value', new Array(this.projectDataBuffer[projectIndex][1],
                                                           this.projectDataBuffer[projectIndex][2]));
+            this.projectDataBuffer[projectIndex][4] = 1;
         }
     },
 
@@ -412,6 +419,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
             // Set the 'projects' values to the current state
             this.projectDataBuffer[projectIndex][1] = sliderValues[0];
             this.projectDataBuffer[projectIndex][2] = sliderValues[1];
+            this.projectDataBuffer[projectIndex][4] = 1;
         }
     }
 });

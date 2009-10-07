@@ -117,7 +117,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 var display       = (projectLevel == 10) ? 'block' : 'none';
 
                 this.gantt.projectDataBuffer[j] = new Array(projectName, projectValues[0], projectValues[1],
-                    projectChilds);
+                    projectChilds, 0);
 
                 dataForRender.push({
                     name:     projectName,
@@ -436,7 +436,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             var value = this.gantt.normalizeValues(dijit.byId(name).attr('value'));
             // Only send the changed values
             if ((value[0] != this.gantt.projectDataBuffer[listIndex][1]) ||
-                (value[1] != this.gantt.projectDataBuffer[listIndex][2])) {
+                (value[1] != this.gantt.projectDataBuffer[listIndex][2]) ||
+                this.gantt.projectDataBuffer[listIndex][4]) {
                 var id = name.split(':')[2];
                 projects.push(id + "," + this.gantt.convertIndex2DateString(value[0]) + ","
                     + this.gantt.convertIndex2DateString(value[1]));
