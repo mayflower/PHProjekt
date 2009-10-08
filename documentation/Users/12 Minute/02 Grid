@@ -1,4 +1,8 @@
-Apart from the common Grid fields like checkbox, pencil and Id, there are the following fields in the Minute Grid:
+There are two Grids in Minute module, the common one up the Form, and another smaller one, inside Items tab. This last
+one is explained in 'Items tab' sections of this help.
+
+Concerning the main Grid, apart from the common Grid fields like checkbox, pencil and Id, there are the following fields 
+inside it:
 
 [emph]Date of Meeting[/emph]
 
