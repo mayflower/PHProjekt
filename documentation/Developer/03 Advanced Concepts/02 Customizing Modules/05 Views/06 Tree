@@ -1,0 +1,12 @@
+A basic module will have in the Tree.js file:
+
+[code]
+dojo.provide("phpr.MyModule.Tree");
+
+dojo.declare("phpr.MyModule.Tree", phpr.Default.Tree, {
+});
+[/code]
+
+This is the obligatory code for the file and you don't must re-write any function of it.
+Since the Tree is the same for all the modules (The project tree),
+must work in the same way in all the places.

@@ -1,0 +1,62 @@
+As we already see, all the models implements with Phprojekt_Model_Interface have the function:
+
+[emph]public function getInformation()[/emph]
+[emph]public function find()[/emph]
+[emph]public function fetchAll()[/emph]
+[emph]public function save()[/emph]
+[emph]public function recordValidate()[/emph]
+[emph]public function getRights()[/emph]
+
+If your module needs that, you can re-write these functions for work in other way that the default.
+Some examples:
+
+[emph]public function getInformation()[/emph]
+
+This function in the Phprojekt_Item_Abstract, returns the Phprojekt_DatabaseManager class,
+that provide the data of all the fields from the table database_manager.
+If your module don't use this table, you can return other class that return the fields and all the data needed.
+You can see examples of that in modules like Timecard and Minutes.
+The Timecard is not an item, and have their own information manager.
+The minutes is an item, but have a sub-module with a own information manager.
+
+[emph]public function find()[/emph]
+
+If your module is a Phprojekt_Item_Abstract, is not recommend to overwrite this function.
+
+[emph]public function save()[/emph]
+
+The Phprojekt_Item_Abstract::save make some stuff, like save the history, the values for search, and rights.
+One example of a re-write for this function, is in the case that your module DON'T need these stuff.
+You can see an example of that in the Contact module.
+Other example is if you need to do extra stuff after the save, like the Project module does (delete the tree cache).
+
+[emph]public function recordValidate()[/emph]
+
+This function is often re-written since each module have special ways for validate their data.
+You can create validates functions for each field or re-write this function for validate all the values together.
+
+[emph]public function getRights()[/emph]
+
+If your module is a Phprojekt_Item_Abstract, is not recommend to overwrite this function.
+
+[emph]Other functions for Phprojekt_Item_Abstract.[/emph]
+
+[emph]public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null,
+$join = null)[/emph]
+
+Is not recommend to overwrite this function, but in some cases, where you don't need the rights system,
+you can re-write the fetchAll for make a simple query.
+You can see an example of that in the Contact module.
+
+[emph]public function saveRights()[/emph]
+
+Is not recommend to overwrite this function, but in some cases, where you don't need the rights system,
+you can re-write the saveRights for do nothing.
+You can see an example of that in the Contact module.
+
+[emph]public function delete()[/emph]
+
+The Phprojekt_Item_Abstract::delete make some stuff, like save the history, delete the values for search,
+and delete rights.
+One example of a re-write for this function, is in the case that your module DON'T need these stuff.
+You can see an example of that in the Contact module.

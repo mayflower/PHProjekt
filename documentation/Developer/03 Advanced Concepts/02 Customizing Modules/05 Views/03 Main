@@ -1,0 +1,119 @@
+A basic module will have in the Main.js file:
+
+[code]
+dojo.provide("phpr.MyModule.Main");
+
+dojo.declare("phpr.MyModule.Main", phpr.Default.Main, {
+    constructor:function() {
+        this.module = "MyModule";
+        this.loadFunctions(this.module);
+
+        this.gridWidget = phpr.MyModule.Grid;
+        this.formWidget = phpr.MyModule.Form;
+        this.treeWidget = phpr.MyModule.Tree;
+    }
+});
+[/code]
+
+The loadFunctions function define which functions can be executed from outside the module with the dojo.publish() method,
+for example when the function is called by a button or similar.
+Is the function is not here, the javascript can't execute it since don't know where found it.
+With this.loadFunctions(this.module); all the basic functions are defined for the module,
+but if you want to add a new one, just add a code like:
+
+[code]
+constructor:function() {
+    this.module = "MyModule";
+    this.loadFunctions(this.module);
+
+    dojo.subscribe("MyModule.myNiceFunction", this, "myNiceFunction");
+
+    this.gridWidget = phpr.MyModule.Grid;
+
+    this.gridWidget = phpr.MyModule.Grid;
+    this.formWidget = phpr.MyModule.Form;
+    this.treeWidget = phpr.MyModule.Tree;
+}
+[/code]
+
+And you will be able to execute from a button, the function myNiceFunction.
+
+This is the obligatory code for the file,
+but there are other functions that can be re-written for customize the layout:
+
+[emph]openForm:function(/*int*/id, /*String*/module)[/emph]
+
+This function opens a new Detail View using the formWidget.
+Change this function only if you need to open the form with extra parameters,
+of if you don't want to use a form.
+The function is called when the user click on the pencil icon from the grid (for edit)
+or on the [+] icon (for add a new item).
+
+[emph]reload:function()[/emph]
+
+This function is often re-written, is executed for init, load and render the module.
+Here you define the template to use, set all the navigations bars, and set the widget to use.
+Is the heart of the module.
+See the examples in the other modules, for change it.
+
+The most commoun change is the template, for change that, use a line like:
+
+[code]
+this.render(["phpr.MyModule.template", "mytemplate.html"], dojo.byId('centerMainContent'));
+[/code]
+
+This line will render the mytemplate.html template found in
+application/MyModule/Views/dojo/scripts/template/mytemplate.html
+and put the content into the div with id 'centerMainContent'.
+
+The centerMainContent div is defined in the main.html, and is fixed.
+All the module will be render inside this div.
+
+By default, the reload function use the mainContent.html that have two divs:
+- "gridBox"    (Used for put the grid)
+- "detailsBox" (Used for put the form)
+
+If you change the template here, remember that the other widgets like grid and form,
+will try to put the content in these divs.
+
+For example, the Statistic module, use a mainContent.html different than the default,
+without the normals divs, but also don't use the form and grid widgets.
+
+You are free for create your own templates and widgets that interacts with it,
+but always inside the centerMainContent div.
+
+[emph]setSubmoduleNavigation:function(currentModule)[/emph]
+
+This function is responsible for displaying the Navigation of the current Module
+When calling this function, the available Submodules for the current Module are received from the server
+and the Navigation is rendered accordingly.
+We recommend do not change this function, at least your module work with a different navigation bar.
+The calendar module is an example of that.
+In general the changes are applied on global modules with an empty bar or an special one.
+
+[emph]setSubGlobalModulesNavigation:function(currentModule)[/emph]
+
+This function is responsible for displaying the Navigation of the current Global Module.
+Delete all the submodules tabs and put the add button.
+This function can set your own navigation bar for the global modules.
+
+[emph]customSetSubmoduleNavigation:function()[/emph]
+
+This function is called by setSubmoduleNavigation after the submodules are created.
+Is used for extend the navigation routine.
+
+[emph]setNewEntry:function()[/emph]
+
+The function create the Add button [+], so if you want that your module don't have this button,
+just re-write this function for do nothing.
+
+[emph]processActionFromUrlHash:function(data)[/emph]
+
+Check the action parameters and run the correct function.
+reload is the default, but each module can redefine it.
+
+[emph]updateCacheData:function()[/emph]
+
+Forces every widget of the page to update its data, by deleting its cache.
+You should provide the way of your module delete their data on a update action.
+By default, is called the updateData function for the grid and for the form.

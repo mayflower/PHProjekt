@@ -1,0 +1,6 @@
+The only controller that can be modified is the IndexController,
+the others are part of the system and runs always under the Default module.
+But you can add new controllers under the new module, with the action that you want.
+
+Here are explained all the functions of the Default IndexController,
+for provide a good documentation about what and how can be modified.

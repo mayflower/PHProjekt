@@ -1,0 +1,60 @@
+[emph]public function jsonTreeAction()[/emph]
+
+Returns the project tree.
+Is recommended to don't change this function.
+Since the tree is always the same in all the modules,
+you don't need to change it.
+
+[emph]public function jsonListAction()[/emph]
+
+Returns the list of items for one model.
+The function provides just the general way for get all the items.
+If you need to add special "WHERE" clauses into the query,
+you must re-write this function.
+
+[emph]public function jsonDetailAction()[/emph]
+
+Returns the detail (fields and data) of one item from the model.
+The function provides the general way for get all the field of one item and their data.
+Re-write them only if you need to add special fields, or change some data values on the fly.
+Also if your module is not a normal item,
+you can re-write the function for return the necessary data for make your form.
+
+[emph]public function jsonSaveAction()[/emph]
+
+Saves the current item.
+Since all the modules are different, this function is almost always re-written.
+Change it if you need to save your module in a different way than the default.
+
+[emph]public function jsonSaveMultipleAction()[/emph]
+
+Saves some fields for many items.
+Change them if you need to save your module in a different way than the default.
+
+[emph]public function jsonDeleteAction()[/emph]
+
+Deletes a certain item.
+Change them if you need to delete your module in a different way than the default.
+In general all the modules use the same default delete.
+
+[emph]public function jsonDeleteMultipleAction()[/emph]
+
+Deletes many items together.
+Change them if you need to delete your module in a different way than the default.
+
+[emph]public function jsonGetExtraActionsAction()[/emph]
+
+Returns the possible extra actions to perform for multiple or singles ids.
+Re-write this function for return all the actions that your module can do in the Grid.
+Use the constants TARGET_ACTION_* and MODE_ACTION_* for define the array.
+
+[emph]public function csvListAction()[/emph]
+
+Returns the list of items for one model.
+In general you don't need to change this function
+at least that your module return the CVS
+
+[emph]public function csvExportMultipleAction()[/emph]
+
+Returns the list of requested ids items.
+This function should not be changed, since works with all the modules.

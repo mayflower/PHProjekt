@@ -1,0 +1,101 @@
+Under the Phprojekt_Item_Abstract class, you have all the functions for your module.
+
+Re-write these functions is NOT recommended, but the class provide also for you,
+some functions that you can set for work with custom fields.
+
+[emph]Getter[/emph]
+All the ActiveRecords have a __get for return the value of the fields.
+Since the Phprojekt_Item_Abstract is an extension of the Phprojekt_ActiveRecord_Abstract, it also have it.
+But if you want to provide an special getter for your fields, just define in the model a function like:
+
+[code]
+public function getMyField($value)
+{
+    return 'myValue';
+}
+[/code]
+
+This function will be called for get the value of the field "myField". Look the CamelCase.
+All the getter functions are getXXX where XXX is the name of the field.
+You can define a getter for all the fields that the module have, or leave that to the parent class.
+
+[emph]Setter[/emph]
+
+All the ActiveRecords have a __set for store the value of the fields.
+Since the Phprojekt_Item_Abstract is an extension of the Phprojekt_ActiveRecord_Abstract, it also have it.
+But if you want to provide an special setter for your fields, just define in the model a function like:
+
+[code]
+public function setMyField($value)
+{
+    $this->_data['myField'] = $value;
+}
+[/code]
+
+This function will be called for set the value of the field "myField". Look the CamelCase.
+All the setter functions are setXXX where XXX is the name of the field.
+You can define a setter for all the fields that the module have, or leave that to the parent class.
+
+[emph]validater[/emph]
+
+The class Phprojekt_Model_Validate validate all the values of the fields in the module.
+Is called by the Phprojekt_Item_Abstract before save the data.
+As the getters and setters, you can make a function for validate an special field in an special way.
+The function will be something like:
+
+[code]
+public function validateMyField($value)
+{
+    if ($value > 0) {
+        return null;
+    } else {
+        return 'Wrong value';
+    }
+}
+[/code]
+
+Return null means "OK", return an string means an error.
+This function will be called for validate the value of the field "myField". Look the CamelCase.
+All the validates functions are validateXXX where XXX is the name of the field.
+You can define a validates for all the fields that the module have, or leave that to the parent class.
+
+[emph]Range[/emph]
+
+The Phprojekt_DatabaseManager define the range values of the comoun modules like Projects and Users.
+This class is used by the Phprojekt_Item_Abstract for provide the data for make the form field of one field.
+The function will get the value saved in the database in the field formRange, for example:
+
+Project#id#title: will make a select box with all the projects where the key is the id and the text to show is the title.
+User#id#username: will make a select box with all the users where the key is the id and the text to show is the user name.
+
+If you want to provide another value into this field, for example MyModule#id#title,
+you will must define how the module provide this list of values.
+The function is like:
+
+[code]
+public function getRangeFromModel($field)
+{
+    if (!$field->isRequired) {
+        $options[] = array('id'   => 0,
+                           'name' => '');
+    }
+
+    $result = $this->fetchAll();
+    foreach ($result as $item) {
+        $options[] = array('id'   => $item->id,
+                           'name' => $item->title);
+    }
+
+    return $options;
+}
+[/code]
+
+[emph]getShortFieldDefinition[/emph]
+
+This function is set in the Phprojekt_DatabaseManager class,
+and return an array of short field information (Just key and type).
+This data is used in the History for display the values in a correct way.
+Write this function if your module have a special field that you think needs to change the way
+that the field is displayed in the history.
+For example this function can change the type or the value before show it in the history.
+Is not recommended write your own getShortFieldDefinition, just leave the work to the Phprojekt_DatabaseManager.

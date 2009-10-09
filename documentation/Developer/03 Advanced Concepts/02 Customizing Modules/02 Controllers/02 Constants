@@ -1,0 +1,14 @@
+There are some text constant that are used for the messages.
+This constants should not be changed, just change the text in your language file,
+but is recommended to use them instead of the text message directly,
+since they give support for several languages.
+
+These constant are:
+- ADD_TRUE_TEXT
+- EDIT_TRUE_TEXT
+- EDIT_MULTIPLE_TRUE_TEXT
+- DELETE_TRUE_TEXT
+- DELETE_FALSE_TEXT
+- DELETE_MULTIPLE_TRUE_TEXT
+- NOT_FOUND
+- ID_REQUIRED_TEXT

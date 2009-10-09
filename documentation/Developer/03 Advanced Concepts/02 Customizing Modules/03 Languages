@@ -1,0 +1,29 @@
+In the folder Languages, there are all the translation files, one per language.
+
+If your module have special strings, you must add them into the languages files in order to be translated.
+
+On one string to be translated, the system will looking for:
+
+First, in the module, in the current language file, if the string is not found,
+Second, in the Default module, in the current language file, if the string is not found,
+Third, show the string without translation.
+
+All the strings in the code, so all the index strings in the languages file, ARE IN ENGLISH.
+That is important, since if the translation is not found, the untranslated text is showed,
+so the english text will be seen.
+
+Since all the tranaslations are cached at the first time in two files,
+if you change something in the languages file, please delete these cache file, for see the changes.
+Also you will need to logout and login again, for reload the translations.
+The cache files are:
+
+tmp/zendCache/zend_cache---Phprojekt_getTranslate_en
+and
+tmp/zendCache/zend_cache---Phprojekt_LanguageAdapter_loadTranslationData_en
+
+Look the end of the files (_en), are the cache files for ALL the en.inc.php languages files of all the modules.
+If you change one string in other language, like de, the files will be:
+
+tmp/zendCache/zend_cache---Phprojekt_getTranslate_de
+and
+tmp/zendCache/zend_cache---Phprojekt_LanguageAdapter_loadTranslationData_de

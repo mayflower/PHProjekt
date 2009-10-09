@@ -1,0 +1,25 @@
+The Phprojekt_Item_Abstract have 2 variables, for use in the search.
+
+[emph]public $searchFirstDisplayField = 'title'[emph]
+
+This will be the first field for use to display the search values of the module.
+By default is "title", but if your module don't have a title field, you must change that to other field.
+
+[emph]public $searchSecondDisplayField = 'notes'[/emph]
+
+This will be the second field for use to display the search values of the module.
+By default is "notes", but if your module don't have a notes field, you must change that to other field.
+
+[emph]public $hasMany[/emph]
+[emph]public $hasManyAndBelongsToMany[/emph]
+[emph]public $belongsTo[/emph]
+
+This variables provide the relations between the module and other modules.
+For example, in the Project module, there is the relation:
+
+[code]
+public $hasMany = array('modulePermissions' => array('classname' => 'Project_Models_ProjectModulePermissions'));
+[/code]
+
+This relation say that for each project value, there are many values in the project_module_permissions table.
+For an extend documentation about these variables, please see the Phprojekt_ActiveRecord_Abstract documentation.
