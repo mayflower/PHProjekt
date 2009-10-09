@@ -1,0 +1,9 @@
+Settings module allows logged user to modify personal information.
+
+It is formed by two sub-modules: User and Timecard. You can switch between them clicking their tabs in the upper central
+tab bar.
+The first sub-module allows setting and changing Password, Email, Language and Time Zone, the second one is for Timecard 
+favorite Projects.
+
+All users including Admin type ones only can modify their own information here.
+Admin type users are able to modify other users information, but not here, they do it in Administration module.

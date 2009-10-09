@@ -1,0 +1,39 @@
+Here you will see logged user info.
+Password fields don't show anything for security reasons, if you want to change your password, fill the 3 fields as 
+explained here later and then press Save. If you leave them blank and press Save, password won't be modified.
+The rest of fields show current values and let you modify them.
+
+Fields:
+
+[emph]Password[/emph]
+
+Text: if you want to change your password write here the NEW one. Black dots will be seen instead of typed characters.
+
+
+[emph]Confirm Password[/emph]
+
+Text: if you want to change your password write here the NEW one again. Black dots will be seen instead of typed 
+characters.
+
+
+[emph]Old password[/emph]
+
+Text: if you want to change your password write here the OLD one that will be verified for security reasons. Black dots 
+will be seen instead of typed characters.
+
+
+[emph]Email[/emph]
+
+Text: your email registered in the system. It is used to send you Notifications, among other purposes.
+
+
+[emph]Language[/emph]
+
+Select: choose a language for you to be shown site text and messages.
+
+
+[emph]Time Zone[/emph]
+
+Select: The Time Zone (UTC) for the region or country you will be using Phprojekt. This is required for all users but 
+specially useful for international events time coordination, so that each participant of an event will see the time (and
+eventually the date) converted to his/her local time.
