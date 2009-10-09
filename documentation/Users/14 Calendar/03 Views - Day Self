@@ -1,0 +1,46 @@
+When you press Day tab, Day view is activated and Self is the default mode for it.
+
+Day view provides two specific tabs at the right of the tab upper bar: Self and Selection.
+Self represents the Day view for the logged user and Selection allows you to view the Day schedule of a specific 
+selection of users, maybe one or more, that will be seen simultaneously in the same view so that you can compare the
+activities and occupied / free time of them.
+
+Here it will be explained the Self mode of Day view, for Selection mode go to 'Views - Day Self' section of this
+help.
+
+
+All the calendar based views (Day, Week and Month) have a schedule bar over the listing to change the current shown 
+period, also it can be changed using the scroll wheel. This is explained in the Introduction section of Calendar help.
+
+
+[emph]Characteristics[/emph]
+
+This Day view is a schedule for the selected day formed by 24 rows that represent half an hour each one.
+It will show each event as a rectangle occupying an amount of rows proportional to its length in time.
+Inside the rectangle it will be shown the length of it; if it starts and ends on the selected day just the times will 
+be there, if not, also the dates. Also it will be shown the title and the note if any. 
+The title of the event itself is a link to click on and open the event in the Form.
+
+
+[emph]Out of schedule events[/emph]
+
+If an event occurs outside the time range covered by the schedule (8:00 to 20:00) it appears under it in text mode. If 
+it starts and ends on the selected day, only start and end times are shown, if not, also the dates are shown. The title
+of the event is a link to open it in the Form, like inside schedule events.
+
+
+[emph]Multiple events[/emph]
+
+The view provides support for simultaneous events, in that case each event will occupy just a part of the view width
+sharing total panel width with the other event/s, so that the view keeps graphical clarity.   
+
+
+[emph]Add buttons[/emph] 
+
+Each row has a (+) plus button at the right of the hour. That's an Add button, if you press it, an empty Form will be
+opened with the following pre-filled fields:
+
+Start Date: selected date, the one that is shown in the schedule bar behind the tabs.
+Start Time: the one of the clicked row.
+End Date: the same that Start Date.
+End Time: one hour after Start Time.

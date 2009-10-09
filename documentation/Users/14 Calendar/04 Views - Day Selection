@@ -1,0 +1,39 @@
+When you press Day tab, Day view is activated and Self is the default mode for it. Then you press Selection tab and
+enter Selection mode.
+
+Day view provides two specific tabs at the right of the tab upper bar: Self and Selection.
+Self represents the Day view for the logged user and Selection allows you to view the Day schedule of a specific 
+selection of users, maybe one or more, that will be seen simultaneously in the same view so that you can compare the
+activities and occupied / free time of them.
+
+Here it will be explained the Selection mode of Day view, for Self mode go to 'Views - Day Self' section of this
+help.
+
+
+All the calendar based views (Day, Week and Month) have a schedule bar over the listing to change the current shown 
+period, also it can be changed using the scroll wheel. This is explained in the Introduction section of Calendar help.
+
+
+[emph]How to use it[/emph]
+
+1 - Click on Day tab if it is not the active one
+2 - Click on Selection right tab (no matter if it is already the active one)
+3 - A pop-up dialog will appear. It asks you to select what users to show in the listing, click on any of them. If you
+    want to select more than one hold CTRL keyboard key while you click on other users.
+4 - Press Done. The dialog will close and the view will list day schedule for the selected users.
+
+
+[emph]Characteristics[/emph]
+
+This Day view is a schedule for the selected day formed by 24 rows that represent half an hour each one.
+The listing width will get divided into the amount of users selected. Each user will have a column, the header of each
+column will show the user name.
+For each user it will show each event as a rectangle occupying an amount of rows proportional to its length in time.
+Inside the rectangle it will be shown the length of it; if it starts and ends on the selected day just the times will 
+be shown, if not, also the dates. Then the title and the note if any. 
+
+
+[emph]Multiple events[/emph]
+
+The view provides support for simultaneous events, in that case each event will occupy just a part of the user section
+width sharing it with the other event/s, so that the view keeps graphical clarity.   

@@ -1,0 +1,34 @@
+Form tabs:
+
+[emph]Basic Data[/emph]
+
+Fields here are specific ones of Calendar module, where you can enter the data of the item. It has title, place, notes,
+dates, times and tag. See 'Basic Data tab' section of this help.
+
+
+[emph]Participants[/emph]
+
+It relates people to the event.
+There is no Access tab in this module, instead, it is used this tab that allows adding participants to the event. The 
+owner (creator) of the event as Admin access, and the participants Write access just to their events, the rest of the
+participants and the owner won't see their changes.
+See 'Participants tab' section of this help.
+
+
+[emph]Recurrence[/emph]
+
+There is a tab Recurrence in the Form that allows setting a recurrence to the events so that the same event is repeated
+later one or more times, according to a user defined pattern.
+The resulting series of events may be edited individually although they will be connected as an individual series of 
+recurrent events.
+See 'Recurrence tab' section of this help.
+
+
+[emph]Notification[/emph]
+
+A tab present in many modules, explained in the following section of User help: Default -> Form -> Notification Tab 
+
+
+[emph]History[/emph]
+
+A tab present in many modules, explained in the following section of User help: Default -> Form -> History Tab

@@ -1,0 +1,57 @@
+Press Week tab to activate this view.
+
+All the calendar based views (Day, Week and Month) have a schedule bar over the listing to change the current shown 
+period, also it can be changed using the scroll wheel. This is explained in the Introduction section of Calendar help.
+
+
+[emph]Characteristics[/emph]
+
+Week view is a schedule for the selected week formed by 24 rows that represent half an hour each one, and 7 columns, one
+for each week day.
+Each column works like a Day schedule. It will show each event as a rectangle occupying an amount of rows proportional 
+to its length in time. 
+Inside the rectangle it will be shown the length of it. 
+  If it starts and ends on the selected day, the start and end times will be shown.
+  If it starts on a previous day and/or ends on a later day, an arrow will replace that start and/or end time so that
+  you visually intuit that it doesn't start and/or end on that day.
+The title of the event itself is a link to click on and open the event in the Form.
+
+
+[emph]Multiple events[/emph]
+
+The view provides support for simultaneous events, in that case each event will occupy just a part of the day column 
+width sharing it with the other event/s, so that the view keeps graphical clarity.   
+
+
+[emph]Header link[/emph]
+
+Each column header is a link to the Day view for clicked day.
+
+
+[emph]Add buttons[/emph] 
+
+Each day header has a (+) plus button at the left side. That's an Add button, if you press it, an empty Form will be
+opened with the following pre-filled fields to help you in adding the event.
+
+1 - If the clicked day is not current day:
+    Start Date: clicked date.
+    Start Time: 8:00
+    End Date: same that Start one.
+    End Time: 9:00
+
+2 - If the clicked day matches current day, same behavior that Add button over the listing:
+    Start Date: if current client computer time is before 17:00, then it will be set at current date, if not, the next 
+    day.
+    Start Time:
+      If current client computer time is before 8:00, then it will be set at 8:00.
+      If current client computer time is between 8:00 and 17:00, then it will be set at the next hour and 0 minutes. For
+      times that have 00 minutes, the same hour will be set.
+      If current client computer time is 17:01 or after, it will be set at 8:00 (of the next day).
+      E.g.: 05:45 => 08:00
+            08:00 => 08:00
+            08:05 => 09:00
+            16:30 => 17:00
+            17:05 => 08:00 (of the next day)
+            20:00 => 08:00 (of the next day)
+    End Date: the same that Start Date.
+    End Time: one hour after Start Time.

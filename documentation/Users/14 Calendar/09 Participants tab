@@ -1,0 +1,78 @@
+[emph]Permissions[/emph]
+
+There is no Access tab in this module, instead, it is used this Participants tab that allows adding participants to the
+event. The owner (creator) of the event as Admin access, and the participants Write access just to their events, the 
+rest of the participants and the owner won't see their changes.
+This tab is only seen by the owner of the opened event.
+
+
+[emph]Scope of each event and participants[/emph]
+
+When it is created an event with many participants, as many events as participants are created internally although
+each user only sees one. This behavior has a purpose: each participant has a unique event and he/she can modify its
+content, maybe add a note, and even delete it without affecting other participants and owner's content.
+When a participant modifies an event, those changes only affect his/her event, nobody else will see them.
+When an owner modifies an event, those changes may be applied to his/her event or also to all participants, the system
+will eventually ask it. 
+
+
+[emph]Layout[/emph]
+
+The tab has a select box and an Add button at its right side. You select a user, click the button and it will be added 
+as a participant under the select box the name of the user and a cross button that permits you to take it out.
+This way you are adding participants to the event so that they will see it in their views of Calendar module, and will
+receive a Notification if the checkbox of Notification tab is checked to send it.
+
+
+[emph]Pop-up Dialog: To whom will this apply[/emph]
+
+When the owner (creator) of an event that has participants in this tab modifies the content of any tab of the event, a 
+pop-up dialog will appear when he/she presses Save button. That dialog asks what events will these modifications apply 
+to. Available buttons to answer are:
+Edit just for me => changes will affect just owner event, participants won't see them.
+Edit for all participants => changes will be applied to events of all participants. 
+
+This dialog may be combined with the recurrence one (see 'Recurrence tab' help). If both dialogs appear asking you how 
+to save the event, the results may be the following, according to your answers:
+
+1 - First answer: Edit just this occurrence - Second answer: Edit just for me
+The changes will apply to this occurrence of the whole series, and just for logged user. The rest of the dates and
+participants won't be affected.
+
+2 - First answer: Edit just this occurrence - Second answer: Edit for all participants
+The changes will apply just to this occurrence of the whole series, but for logged user and all participants.
+
+3 - First answer: Edit all occurrences - Second answer: Edit just for me
+The changes will apply to the whole series of events but just for logged user. The rest of participants won't be 
+affected.
+
+4 - First answer: Edit all occurrences - Second answer: Edit for all participants
+The changes will apply to the whole series of events and for logged user and all participants. This is the maximum
+possible scope for the changes.
+
+
+[emph]Pop-up Dialog: Delete for Who[/emph]
+
+When the owner (creator) of an event that has participants in this tab tries to delete it, a pop-up dialog will appear 
+when he/she presses Delete button. That dialog asks what events will this deletion apply to. Available buttons to answer
+are:
+Delete just for me => deletion will affect just owner event, participants will remain.
+Delete for all participants => deletion will be applied to events of all participants. 
+
+This dialog may be combined with the recurrence one (see 'Recurrence tab' help). If both dialogs appear asking you how 
+to delete the event, the results may be the following, according to your answers:
+
+1 - First answer: Delete just this occurrence - Second answer: Delete just for me
+The deletion will apply to this occurrence of the whole series, and just for logged user. The rest of the dates and
+participants won't be affected.
+
+2 - First answer: Delete just this occurrence - Second answer: Delete for all participants
+The deletion will apply just to this occurrence of the whole series, but for logged user and all participants.
+
+3 - First answer: Delete all occurrences - Second answer: Delete just for me
+The deletion will apply to the whole series of events but just for logged user. The rest of participants won't be 
+affected.
+
+4 - First answer: Delete all occurrences - Second answer: Delete for all participants
+The deletion will apply to the whole series of events and for logged user and all participants. This is the maximum
+possible scope for the deletion.

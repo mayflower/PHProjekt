@@ -1,0 +1,100 @@
+The Calendar is a very complete module for managing events. You can create an event, set descriptive info to it, assign 
+it date and time, specify participants, create a particular recurrence for the event, and the rest of things common to 
+most of modules like mail Notification and History registry.
+The created event will appear, apart from the owner's one, inside each participant's calendar and they will be able to 
+open it and see its contents.
+
+An event may last more than one day.
+
+
+[emph]Views[/emph]
+
+There are four types of views that are activated through the tabs over the button bar and Grid: List, Day, Week and 
+Month, all views are located in the same space, so you only can use one at a time.
+There are one or two tabs at the left of these 4 view tabs: Self and Selection. Self is always there and means that the 
+listing shows 'self' data, the logged user events. Selection tab currently only appears when 'Day' is the selected view
+and allows showing a listing for a 'selection' of users. That's explained here behind and also in 'Views - Day' section
+of this help.
+ 
+* List: a grid with all the events for the current user, the common Grid.
+* Day: a schedule from 8:00 to 20:00 where all the events of a specific day are shown.
+  It has two sub-types that are chosen through the Self and Selection tabs that appear at the right of the same bar when 
+  Day mode is active:
+    o Self: there are shown the events of the chosen day for the current user.
+    o Selection: when this tab is pressed, a pop-up window appears letting the user select a small group of people so 
+       that the list of events will have as many columns as users selected; it will be seen a group schedule for the
+       active day showing events of the selected users. 
+* Week: a weekly schedule, like the common day schedule but for the seven days of the week simultaneously.
+* Month: a monthly schedule, shows in a clear calendar table all the days of the month and the necessary days of
+  previous and next months in order to complete all the weeks shown. 
+
+When the Day, Week or Month view are active, it appears a schedule bar over the listings. It has the previous (<<), 
+today and next (>>) links to change the day / week / month in sequence, or go to the calendar listing that corresponds
+to 'today'. 
+At the right of that bar, it will be shown the selected period in the following way, according to selected view:
+Day view => selected day, e.g.: Thursday, 2009-10-08
+Week view => selected week, e.g.: 41. Calendar week, 2009
+Month view => selected month, e.g.: October, 2009
+
+There is another way to move forward and backward the schedule: the scroll wheel of the mouse. Scrolling up or down the
+mouse wheel over the listing will bring up the previous or next schedule respectively, depending on the selected view it
+will jump a day, week or month.
+
+
+[emph]Permissions[/emph]
+
+There is no Access tab in this module, instead, it is used a Participants tab that allows adding participants to the
+event. The owner (creator) of the event has Admin access, and the participants a limited Write access. See 'Participants 
+tab' section of this help.
+
+
+[emph]Scope of each event and participants[/emph]
+
+When it is created an event with many participants, internally as many events as participants are created. This behavior
+has a purpose: each participant has a unique event and he/she can modify its content, maybe add a note, and even delete
+it.
+When a participant modifies an event, those changes only affect his/her event, nobody else will see them.
+When an owner modifies an event or tries to delete it, the action may be applied to his/her event or also to all 
+participants, the system will eventually ask it. This is explained in detail in 'Participants tab' section of this help. 
+
+
+[emph]Recurrence[/emph]
+
+There is a tab Recurrence in the Form that allows setting a recurrence to the events so that the same event is repeated
+later one or more times, according to a user defined pattern.
+The resulting series of events may be later edited individually or all at once, and they will be connected as an 
+individual series of recurrent events.
+When an owner tries to Save changes made to an event that belongs to a series, or tries to delete it, the action may be 
+applied to one event or all the series, the system will eventually ask it. This is explained in detail in 'Recurrence 
+tab' section of this help. 
+
+
+[emph]Add button[/emph]
+
+The common Add button up the events listing has a special behavior here, it pre-fills some Form fields to help you. The
+criterion is the following:
+
+Start Date: if current client computer time is before 17:00, then it will be set at current date, if not, the next day.
+Start Time:
+  If current client computer time is before 8:00, then it will be set at 8:00.
+  If current client computer time is between 8:00 and 17:00, then it will be set at the next hour and 0 minutes. For
+  times that have 00 minutes, the same hour will be set.
+  If current client computer time is 17:01 or after, it will be set at 8:00 (of the next day).
+  E.g.: 05:45 => 08:00
+        08:00 => 08:00
+        08:05 => 09:00
+        16:30 => 17:00
+        17:05 => 08:00 (of the next day)
+        20:00 => 08:00 (of the next day)
+End Date: the same that Start Date.
+End Time: one hour after Start Time.
+
+The purpose of this criteria is to automatically pre-fill the dates and times with the next possible moment for the 
+event.
+
+
+[emph]Pop-up questions[/emph]
+
+When an existing event is being modified and Save button is pressed, up to 2 pop-up questions may appear asking about
+the way of saving the changes made. Those questions are related to participants and recurrence and are explained in
+detail in the respective help of both tabs inside this documentation.
