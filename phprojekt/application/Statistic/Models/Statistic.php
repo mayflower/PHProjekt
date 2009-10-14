@@ -57,7 +57,7 @@ class Statistic_Models_Statistic
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, $projectId);
         $tree         = $tree->setup();
-        $projectsId = array(0);
+        $projectsId   = array(0);
         foreach ($tree as $node) {
             if ($node->id) {
                 $projectsId[]                        = (int) $node->id;

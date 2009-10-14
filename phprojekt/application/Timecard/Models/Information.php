@@ -151,9 +151,10 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['fieldset'] = '';
                 $data['range']    = array();
                 $data['type']     = 'selectbox';
+
                 $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
-                $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
-                $tree = $tree->setup();
+                $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+                $tree         = $tree->setup();
                 foreach ($tree as $node) {
                     $data['range'][] = array('id'   => (int) $node->id,
                                              'name' => $node->getDepthDisplay('title'));

@@ -75,9 +75,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
     setNode:function() {
         // Summary:
-        //    Set the node to put the grid
+        //    Set the node where put the form
         // Description:
-        //    Set the node to put the grid
+        //    Set the node where put the form
         this._formNode = dijit.byId("detailsBox");
     },
 

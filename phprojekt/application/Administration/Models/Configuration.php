@@ -155,7 +155,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
             $data[$meta['key']] = '';
             foreach ($record as $config) {
                 if ($config->keyValue == $meta['key']) {
-                    $getter = 'get'.ucfirst($config->keyValue);
+                    $getter = 'get' . ucfirst($config->keyValue);
                     if (method_exists($this->getModel(), $getter)) {
                         $data[$meta['key']] = call_user_func(array($this->getModel(), $getter), $config->value);
                     } else {

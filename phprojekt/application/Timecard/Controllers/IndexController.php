@@ -133,7 +133,7 @@ class Timecard_IndexController extends IndexController
         foreach ($favorites as $projectId) {
             $data            = array();
             $data['id']      = $projectId;
-            $data['display'] = $tree->getNodeById($projectId)->title;
+            $data['display'] = $tree->getNodeById($projectId)->getDepthDisplay('title');
 
             $datas[] = $data;
         }
