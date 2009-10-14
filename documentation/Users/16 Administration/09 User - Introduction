@@ -1,0 +1,4 @@
+This sub-module allows modifying users main data and settings.
+Here all the users of the system will be seen.
+
+It has a Grid and a Form like most of modules. 

@@ -1,0 +1,54 @@
+Note:
+The users can be added and modified but not deleted, if you want to delete a user, set it to Inactive instead, through
+Status field. He won't be able to log in and won't appear in the User Select fields.
+ 
+
+Fields:
+
+[emph]Username[/emph]
+
+Text: the login name for the user.
+
+
+[emph]Password[/emph]
+
+Text: if you want to change a password write here the NEW one. Black dots will be seen instead of typed characters. If 
+you don't want to change it leave this field blank.
+
+
+[emph]First Name[/emph]
+
+Text: first name of the user.
+
+
+[emph]Last Name[/emph]
+
+Text: last name of the user.
+
+
+[emph]Email[/emph]
+
+Text: the email of the user, mainly used to send Notifications.
+
+
+[emph]Language[/emph]
+
+Select: choose a language for the user to be shown site text and messages.
+
+
+[emph]Time Zone[/emph]
+
+Select: The Time Zone (UTC) for the region or country the user will be using Phprojekt. This is required for all users 
+but specially useful for international events time coordination, so that each participant of an event will see the time 
+(and eventually the date) converted to his/her local time.
+
+
+[emph]Status[/emph]
+
+Select: whether this user is active in the system or not (if not, he/she can't log in).
+
+
+[emph]Admin[/emph]
+
+Select: whether this user has Admin access or not.
+

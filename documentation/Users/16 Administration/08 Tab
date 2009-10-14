@@ -1,0 +1,37 @@
+[emph]Introduction[/emph]
+
+This sub-module permits creating tabs to add them to the modules using the Module designer.
+
+You will have 'Basic Data' tab plus user created ones.
+All tabs available here are the ones that will be shown in the right section of the Module Designer.
+Anyway, the modules will have only the tabs that you dragged fields to, in the Module Designer, so here you can create
+as many tabs as you want and then just use the ones you want on each module.
+E.g.: you can create an extra tab 'Geographic Info' and create a module with the Module designer. If you just drag & 
+drop fields to the 'Basic Data' tab and nothing to the 'Geographic Info' tab, then the second tab won't be seen in the
+module. See 'Module - Designer' section of User help for more info.
+
+
+[emph]Grid[/emph]
+
+The Grid has the Pencil, Id and Label columns.
+Label is a text field having the name that will be shown for the tab when no translation is available. The translation 
+can't be added here, it's a developer task.
+
+
+[emph]Form[/emph]
+
+The Form only has Label field.
+Label is a text field having the name that will be shown for the tab when no translation is available. The translation 
+can't be added here, it's a developer task.
+
+
+[emph]Other special tabs[/emph]
+
+There are other tabs used in the system modules that are not defined here, nor could be modified.
+
+    * General modules: tabs Access, Notification and History.
+      All the modules created with the Module designer will have, apart from the tabs designed by the user, these 3 tabs 
+      explained in the help of most of the modules. History will only be shown in edit mode.
+    * Project module: tabs Module and Role.
+    * Calendar module: tab Recurrence.
+    * Minute module: People, Items and Mail tabs.

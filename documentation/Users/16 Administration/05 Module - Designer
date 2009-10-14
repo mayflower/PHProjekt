@@ -1,0 +1,95 @@
+The Module Designer opened when clicked 'Open Dialog' Form button has 3 panels / sections:
+
+[emph]Left fields panel[/emph]
+
+Here all the field types are located; text, date, time, select, checkbox, percentage, textarea and upload. This is a
+repository where you can drag & drop fields to the right panel, that right panel is the tab of the module you are 
+creating or modifying as it will be seen (except for Tag field after the last field that isn't seen in the designer).
+The Edit button in the right side of the fields permits modifying its data before adding them to the module tab (right 
+panel) although it is also possible to drag and drop them first and then edit them pressing that button in the right 
+panel.
+
+
+[emph]Right tabs panel[/emph]
+
+This one has the main tabs of the module the way they are going to be seen when you open it outside the Module Designer 
+(except for Tag field after the last field that isn't seen here). You add fields dragging and dropping them from the 
+left panel, then pressing Edit button the edit panel is opened in the left bottom part of the window so that you can 
+configure the field.
+The fields can be reordered with drag & drop method and deleted from the tab dragging & dropping them back to the left 
+panel or just pressing Delete button at the right side of them.
+There are as many tabs in this panel as tabs are defined in module Administration, sub-module Tab.
+You don't need to use all the tabs created. The tab will appear in the final module only if there are fields inside it.
+
+
+[emph]Left bottom editing panel[/emph]
+
+At the bottom left of the screen, when it is pressed the Edit button of a field, a window appears to modify its values 
+and parameters. The most of the values are already filled but you can change them. It is very important that all filled
+values are correct. When you finish making changes here press the Check button to close it.
+It has 4 tabs:
+
+TABLE: to set the data of the table of the database for this field. Contents:
+
+  Field Name: the name that the field will have in the database table.
+  
+  Field Type: depending on the type of the field selected you will have different options here. If it only has one 
+    option don't change it but in the case of Text and Select field types you can choose whether the field for the
+    module you are editing it will contain characters and numbers (Varchar) or just allow numbers (INT).
+  
+  Table Length: this field is not always shown, it represents the maximum amount of characters, no more than 255 for 
+    Varchar or 11 for Int.
+  
+  Select Type: this field is only shown for Select type fields. Those fields show values for the user to pick one of 
+    them. You can choose whether you want to take those values from a specific table contents or provide Custom Values.
+    On the one hand, if you select here Project, Users or Contacts, the field Range from Form tab inside this bottom 
+    left editor will get filled automatically with 'Project#id#title', this value means <table>#<key>#<label> so that 
+    the field inside the module you are editing will allow the user to select a Project title (<table>=Projects, 
+    <label>='title' field) and will save the selected Id (<key>) in the database module table.
+    On the other hand, if you select 'Custom values' here, then the field Range from Form tab will allow you to use the 
+    same system (<table>#<key>#<label>) with other table, or the alternative system 'key1#label1|key2#label2|etc' for 
+    you to provide a series of values that are independent from any table. E.g.: '1#black|2#blue|3#yellow', the field
+    you are editing (the one you clicked Edit inside the tab) will show in this case three colors for the user to choose 
+    one of them, according to the selected color the respective number will be saved in the database, the numbers won't
+    be seen in the list.     
+  
+FORM: to edit the data shown in the form. Contents:
+  
+  Label: the name that will be shown for the field when no translation is available. The translation can't be added 
+    here, it's a developer task.
+  
+  Range: explained in 'Select Type' part of 'TABLE' here above, only available for 'Select' fields.
+  
+  Default Value: the default value shown when the user creates an item.
+  
+LIST: to edit whether the field is shown in the list or not, and its position inside it. Contents:
+
+  List Position: this refers to the Grid, if 0 is set then the field won't be shown, if 1 or higher, then it will be
+    shown and the number is the position from left to right after the Id column.
+  
+GENERAL: general parameters. Contents:
+
+  Status: whether the field will be used in the module or not, maybe to temporarily delete fields. 
+  
+  Required Field: whether the field is a required one or you can leave it empty when you edit an item in the Grid or the 
+    Form.
+
+ 
+ 
+[emph]Notes[/emph]
+
+
+1 - When finished editing the tabs and fields press Close button to close this pop-up and return to the Form.
+
+2 - Other special tabs:
+There are other tabs used in the system modules that are not defined here, nor could be modified. They depend on the 
+module you are working with and were created using programming techniques:
+* General modules: tabs Access, Notification and History. All the modules created with the Module designer will have, 
+  apart from the tabs designed by the user, these 3 tabs explained in the General section of User help. History will 
+  only be shown in edit mode.
+* Project module: tabs Module and Role.
+* Calendar module: tab Recurrence.
+* Minute module: People, Items and Mail.
+
+3 - There can be dragged back right panel fields to the left panel. This is useful to take them back later to the right 
+panel or to move them to another right panel tab.

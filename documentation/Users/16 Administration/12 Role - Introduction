@@ -1,0 +1,35 @@
+[emph]Introduction[/emph]
+
+This tab permits managing the Roles.
+
+A Role is a specific set of permissions for each module. That Role is assigned to users of the Project you want, so 
+that they will have those rights for the modules associated with that Project. When you create or edit a Project, you 
+can give every different user that Role inside Role tab.
+The final right for a specific user to work with an item is defined by the conjunction of the permissions defined both 
+inside Role and Access tabs of the parent Project module.
+
+By default, no Role is assigned to anybody, and the permission to access to a new project will be Admin access for the 
+creator and nothing for the rest.
+
+
+[emph]Example[/emph]
+
+You can create a Role called 'Can read TODOs and NOTEs'.
+Then set inside the Form Read access to Todo and Note modules.
+Then you create a Project and assign the user 'john' the Role 'Can read TODOs and NOTEs', so when he enters the Project,
+the only thing he will be able to do apart from reading the main data of the Project itself is to read (but not modify) 
+items of Todo and Note modules.
+
+* For a detailed example about Roles and permissions go to 'Permissions example' section of 'Project' chapter of User 
+help.
+
+
+[emph]Notes[/emph]
+
+* Look at the listing of modules that you select to assign rights to a role: the Project module represents the 
+Subprojects of the Project you assign the Role to.
+
+* For detailed info about Roles and permissions go to 'Permissions' and 'Permissions example' sections of 'Project'
+chapter of User help.
+
+* Role Id 1 'Admin in all' can't be deleted.

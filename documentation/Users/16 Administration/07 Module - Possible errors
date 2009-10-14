@@ -1,0 +1,64 @@
+Possible errors when creating or modifying a module and how to solve them.
+
+[emph]The Module must contain at least one field[/emph]
+
+If this error appears, you tried to save an empty module. Enter the module designer and check that at least one field is
+in any of the available tabs in the right section of the designer.
+
+
+[emph]Please enter a name for this module[/emph]
+
+This error is thrown when you try to save a module leaving the 'Label' Form field blank. Just give it a name and press
+Save again.
+
+
+[emph]The module name must start with a letter[/emph]
+
+This error is shown when you don't use a letter at the beginning of module's label. Just replace first character by a
+letter and click on Save again.
+
+
+[emph]Invalid parameters[/emph]
+
+General error pointing that something is wrong with the filled data of Module designer -> Editing left bottom panel ->
+Table tab. Check its values for every field and try to Save the module again.
+
+
+[emph]All the fields must have a table name[/emph]
+
+This error appears when not all the fields have a Field Name in Module designer -> Editing left bottom panel -> Table 
+tab -> Field name. Check that value for every field and try to Save the module again.
+
+
+[emph]There are two fields with the same Field Name[/emph]
+
+This error is shown when there is a repeated Field Name in Module designer -> Editing left bottom panel -> Table tab -> 
+Field Name. Check that value for each field until you find and solve the repeated name and try to Save the module again.
+
+
+[emph]The length of the varchar fields must be between 1 and 255[/emph]
+
+If this error appears it points that a field has been configured as Varchar and was set a length lower than 1 or higher
+than 255 so it doesn't respect the allowed range. Look for the field and change the value in Module designer -> Editing
+left bottom panel -> Table tab -> Table Length.
+
+
+[emph]The length of the int fields must be between 1 and 11[/emph] 
+
+This error appears when a field has been configured as Int and was set a length lower than 1 or higher than 11 so it 
+doesn't respect the allowed range. Look for the field and change the value in Module designer -> Editing left bottom
+panel -> Table tab -> Table Length.
+
+
+[emph]Invalid form Range for the select field[/emph]
+
+Error shown when a field of type Select box has empty the Range value in Module designer -> Editing left bottom panel ->
+Form tab -> Range. This value is filled automatically when selected an item in Table tab -> Select Type field. E.g.: for
+Projects the Range value is 'Project#id#title'. Anyway, you can modify it.
+
+
+[emph]The module must have a project selector called project_id[/emph]
+
+When you are creating or editing a Normal module (Form -> Type = Normal) and you have deleted the Project selector in
+the module designer this error points you that it is needed to put it again in any of the tabs in the right section of
+the designer. This is because all items of the Normal modules depend on a specific Project.

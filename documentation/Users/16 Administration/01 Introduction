@@ -1,0 +1,26 @@
+This module is only accessible to users with Admin profile.
+It is located at the top right global modules, the last one.
+
+Here general settings of the site that affects all the users can be set and modified.
+
+It is formed by 4 tabs:
+
+[emph]Module[/emph]
+
+This is the Module Designer, a very easy-to-use visual drag & drop interface to create modules or modify many existing 
+ones.
+
+
+[emph]Tab[/emph]
+
+Here additional tabs for modules can be created and modified.
+
+
+[emph]User[/emph]
+
+To administer users of the system: their main info and settings.
+
+
+[emph]Role[/emph]
+
+To edit roles; a role is a set of permissions for the Project-modules (non Global ones) that is assigned to users.

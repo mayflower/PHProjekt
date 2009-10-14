@@ -1,0 +1,31 @@
+[emph]How to create a module, from zero[/emph]
+
+1. Assuming you are in the Module tab of Administration module, press Add button.
+
+2. An empty form appears. Write the name of the new module in the Label textbox. Leave Type in 'Normal' and Active in
+   'Yes'.
+
+3. Press the Open Dialog button. A big pop-up window containing the module designer appears.
+   You will see two big panels: one at the left and one at the right side, plus an empty space in the left bottom where 
+   the field editing window will appear.
+   Inside the right panel there is a Project select box. That field should exist if this is a 'Normal' type module for 
+   it to work, it is the relation between the item and the Projects.
+
+4. Add to the right panel using drag & drop a field of your choice. If there is more than one tab in the right panel, 
+   you can select the tab you want previous to the drag & drop to set the field there. In both cases, after dropping it 
+   the editing window appears for you to configure the field.
+   Note: to drop the field, you have to position it with the mouse over a place where the floating box that you are 
+   dragging converts itself from reddish pink to green color; that color means that you are able to drop the field 
+   there, because it's up or behind another field.
+
+5. Configure the field attending to each of the 4 tabs of the editing window as explained in 'Module - Designer' section
+   of this help.
+
+6. Repeat the steps 5 and 6 as many times as fields you want to add.
+
+7. Arrange the fields in the right panel in the order you want using drag & drop.
+
+8. Press the Close button in the left bottom of the window.
+
+9. The pop-up window has been closed. Press Save and the module creation is finished. The saving process, when creating 
+   a module, creates the table in the database, saves the parameters and creates the structure of folders and files.
