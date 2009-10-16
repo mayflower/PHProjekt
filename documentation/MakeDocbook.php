@@ -15,7 +15,7 @@ error_reporting(E_ALL);
 
 
 if (function_exists('getopt')) {
-	$opts = getopt("x:o:p:h");
+	$opts = getopt("x:o:p:hi");
 }  else {
 	$opts = array();
 }
@@ -46,7 +46,11 @@ if (array_key_exists('o', $opts)) {
 	$makeDocbook->setOutput($opts['o']);
 }
 
-$makeDocbook->process();
+if (array_key_exists('i', $opts)) {
+	$makeDocbook->xml();
+} else {
+    $makeDocbook->process();
+}
 
 /* create new MakeDocbook Class **/
 
@@ -162,6 +166,11 @@ class MakeDocbook
 	{		
         $this->_execCommandLine($this->generateXml()->asXml());
 	}
+
+    public function xml()
+    {
+        file_put_contents($this->_xmlOutputFile, $this->generateXml()->asXml());
+    }
 
     /**
      * get Directorys from filesystem
