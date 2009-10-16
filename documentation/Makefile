@@ -37,4 +37,4 @@ user:
 clean:
 	rm -rf $(OUTDIR)/
 
-.PHONEY: clean user internals developer css
+.PHONY: clean user internals developer css
