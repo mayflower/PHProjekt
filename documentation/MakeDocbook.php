@@ -246,8 +246,8 @@ class MakeDocbook
     {
         $fileContents = utf8_encode(file_get_contents($realpath));
         
-        $in           = array("/\n\r/", "/\r\n/", "/\r/");
-        $out          = array("\n", "\n", "\n");
+        $in           = array("/\n\r/", "/\r\n/", "/\r/", "@&@");
+        $out          = array("\n", "\n", "\n", "@&amp;@");
         $fileContents = preg_replace($in, $out, $fileContents);
         $this->_parseLineParagraph($fileContents, $fileNode);
         return $fileContents;
