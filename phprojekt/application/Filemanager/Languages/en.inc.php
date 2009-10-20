@@ -7,7 +7,7 @@ $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Filemanager"] = "<br />
     This is the <b>General Help of Filemanager module</b><br />
     <br />
-    The File manager is a module defined exclusively for uploading files to the system.<br />
+    The File manager is a module defined exclusively for uploading and downloading files from the system.<br />
     <br />
     It can be added more than one file in just one item of the module, with description, category, etc.<br />
     <br />
