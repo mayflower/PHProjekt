@@ -58,13 +58,18 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         if (!dojo.byId('detailsBox')) {
             this.reload();
         }
-        phpr.submodule = module;
-        this.render(["phpr.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'));
+        phpr.module       = this.module;
+        phpr.submodule    = module;
+        phpr.parentmodule = '';
+        this.render(["phpr.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+            summaryTxt: ''
+        });
         this.cleanPage();
         phpr.TreeContent.fadeOut();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
+        this.tree = new this.treeWidget(this);
         this.form = new this.formWidget(this, 0, this.module);
     },
 
@@ -115,7 +120,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
                         liclass   = 'class = active';
                     }
                     navigation += self.render(["phpr.Administration.template", "navigation.html"], null, {
-                        moduleName :    moduleName,
+                        moduleName :    'Administration',
                         moduleLabel:    moduleLabel,
                         liclass:        liclass,
                         moduleFunction: moduleFunction,
@@ -136,6 +141,13 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
     },
 
     updateCacheData:function() {
+        phpr.DataStore.deleteAllCache();
+        if (this.tree) {
+            this.tree.updateData();
+        }
+        if (this.grid) {
+            this.grid.updateData();
+        }
         if (this.form) {
             this.form.updateData();
         }

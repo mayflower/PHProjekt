@@ -62,14 +62,15 @@ dojo.declare("phpr.Administration.Form", phpr.Default.Form, {
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
-                if (!this.id) {
-                    this.id = data['id'];
-                }
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
                     this.publish("setUrlHash", [phpr.module]);
                 }
             })
         });
+    },
+
+    setBreadCrumbItem:function() {
+        phpr.BreadCrumb.setItem(phpr.submodule);
     }
 });

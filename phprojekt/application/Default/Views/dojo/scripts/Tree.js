@@ -32,7 +32,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
 
     constructor:function(main) {
         // Summary: The tree is rendere on construction
-        this.main  = main;
+        this.main = main;
         this.setUrl();
         this.setId();
         this.setNode();
@@ -69,7 +69,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         // Description:
         //    Fix width and select the current project
         this.checkTreeSize();
-        this.drawBreadScrum();
+        this.drawBreadCrumb();
         this.selecteCurrent(phpr.currentProjectId);
     },
 
@@ -219,31 +219,33 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         }
     },
 
-    drawBreadScrum:function() {
+    drawBreadCrumb:function() {
         var projectsNames = new Array();
         var _this         = this;
-        if (phpr.treeLastProjectSelected != phpr.currentProjectId) {
-            this.tree.model.store.fetchItemByIdentity({identity: phpr.currentProjectId,
-                onItem:function(item) {
-                    if (item) {
-                        var paths = phpr.treePaths[phpr.currentProjectId].toString().split("\/");
-                        for (i in paths) {
-                            /* do not display the invidisble root node, so we discard the first one */
-                            if (paths[i] > 1 && paths[i] != phpr.currentProjectId) {
-                                _this.tree.model.store.fetchItemByIdentity({identity: paths[i],
-                                    onItem:function(item) {
-                                        if (item) {
-                                            projectsNames.push(item.name);
-                                        }
-                                }});
+
+        if (!this.main._isGlobalModule(phpr.module)) {
+            if (phpr.treeLastProjectSelected != phpr.currentProjectId || phpr.currentProjectId == 1) {
+                this.tree.model.store.fetchItemByIdentity({identity: phpr.currentProjectId,
+                    onItem:function(item) {
+                        if (item) {
+                            var paths = phpr.treePaths[phpr.currentProjectId].toString().split("\/");
+                            for (i in paths) {
+                                if (paths[i] > 0 && paths[i] != phpr.currentProjectId) {
+                                    _this.tree.model.store.fetchItemByIdentity({identity: paths[i],
+                                        onItem:function(item) {
+                                            if (item) {
+                                                projectsNames.push(item.name);
+                                            }
+                                    }});
+                                }
                             }
-                        }
-                        if (i > 1) {
                             projectsNames.push(item.name);
                         }
-                    }
-            }});
-
+                }});
+                phpr.BreadCrumb.setProjects(projectsNames);
+            }
+        } else {
+            phpr.treeLastProjectSelected = null;
             phpr.BreadCrumb.setProjects(projectsNames);
         }
         phpr.BreadCrumb.setModule();

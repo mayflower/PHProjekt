@@ -71,6 +71,13 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     {
         $results = array();
 
+        // System settings
+        $model = Phprojekt_Loader::getModel('Core', 'General_Configuration');
+        if ($model) {
+            $results[] = array('name'  => 'General',
+                               'label' => Phprojekt::getInstance()->translate('General'));
+        }
+
         // Module Configuration
         foreach (scandir(PHPR_CORE_PATH) as $dir) {
             $path = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $dir;
@@ -110,7 +117,12 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
     public function getModel()
     {
         if (null === $this->_object) {
-            $this->_object = Phprojekt_Loader::getModel($this->_module, 'Configuration');
+            // System configuration
+            if ($this->_module == 'General') {
+                $this->_object = Phprojekt_Loader::getModel('Core', sprintf('%s_Configuration', $this->_module));
+            } else {
+                $this->_object = Phprojekt_Loader::getModel($this->_module, 'Configuration');
+            }
         }
 
         return $this->_object;
