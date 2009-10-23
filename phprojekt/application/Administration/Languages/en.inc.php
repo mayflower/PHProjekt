@@ -1,4 +1,7 @@
 <?php
+// General Tab
+$lang['Company Name'] = "Company Name";
+
 // Words and phrases
 // Visual Module Editor
 $lang["Open Dialog"]    = "Open Dialog";

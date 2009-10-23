@@ -1,4 +1,7 @@
 <?php
+// General Tab
+$lang['Company Name'] = "Firmenname";
+
 // Words and phrases
 // Visual Module Editor
 $lang["Open Dialog"] =   "Maske öffnen";
