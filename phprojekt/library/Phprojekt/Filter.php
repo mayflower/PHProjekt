@@ -1,0 +1,201 @@
+<?php
+/**
+ * Filter manager
+ *
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 2.1 as published by the Free Software Foundation
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @license    LGPL 2.1 (See LICENSE file)
+ * @version    $Id$
+ * @package    PHProjekt
+ * @subpackage Core
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 6.0
+ * @author     Gustavo Solt <solt@mayflower.de>
+ */
+
+/**
+ * Manage the where clause
+ *
+ * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @version    Release: @package_version@
+ * @license    LGPL 2.1 (See LICENSE file)
+ * @package    PHProjekt
+ * @subpackage Core
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 6.0
+ * @author     Gustavo Solt <solt@mayflower.de>
+ */
+class Phprojekt_Filter
+{
+    /**
+     * The where clause after apply the filters
+     *
+     * @var string
+     */
+    protected $_userWhere = null;
+
+    /**
+     * The internal where clause used by the Model
+     *
+     * @var string
+     */
+    protected $_where = null;
+
+    /**
+     * Metadata info of the fields
+     *
+     * @var array
+     */
+    protected $_info = null;
+
+    /**
+     * Metadata info of the fields
+     *
+     * @var array
+     */
+    protected $_cols = null;
+
+    /**
+     * An active record for work with the filters
+     *
+     * @var Phprojekt_ActiveRecord_Abstract
+     */
+    protected $_record = null;
+
+    /**
+     * Initialize a new user filter on an active record.
+     *
+     * @param Phprojekt_ActiveRecord_Abstract $record An active record
+     * @param string                          $where  The internal where clause
+     */
+    public function __construct(Phprojekt_ActiveRecord_Abstract $record, $where = null)
+    {
+        $this->_info   = $record->info();
+        $this->_cols   = $this->_info['cols'];
+        $this->_where  = $where;
+        $this->_record = $record;
+    }
+
+    /**
+     * Make a where clause
+     *
+     * @param string $field    Field for filter
+     * @param string $rule     Rule for apply the filter
+     * @param string $value    Value used for filter
+     * @param string $operator AND/OR operator for concatenate the where clause
+     *
+     * @return void
+     */
+    public function addFilter($field, $rule, $value, $operator = 'AND')
+    {
+        $identifier = Phprojekt_ActiveRecord_Abstract::convertVarToSql($field);
+
+        if (in_array($identifier, $this->_cols)) {
+            $rule = $this->_convertRule($field, $identifier, $rule, $value);
+
+            if (null !== $this->_userWhere) {
+                $this->_userWhere .= $operator . " ";
+            }
+            $this->_userWhere .= sprintf('(%s) ', $rule);
+        }
+    }
+
+    /**
+     * Return the where clause for use in the fetchAll
+     *
+     * @return string
+     */
+    public function getWhere()
+    {
+        $return = null;
+
+        if (null !== $this->_where) {
+            $return .= "(" . $this->_where . ")";
+        }
+
+        if (null !== $this->_userWhere) {
+            if (null === $return) {
+                $return .= "( " . $this->_userWhere . " )";
+            } else {
+                $return .= " AND ( " . $this->_userWhere . " )";
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Convert the rule and value into a real where clause
+     *
+     * @param string $field       Field for filter
+     * @param string $identifier  Converted field for filter
+     * @param string $rule        Rule for apply the filter
+     * @param string $keyword     Value used for filter
+     *
+     * @return string
+     */
+    private function _convertRule($field, $identifier, $rule, $keyword)
+    {
+        // Sanitize values
+        if ($this->_info['metadata'][$identifier]['DATA_TYPE'] == 'time') {
+            // Moving the value to UTC
+            $value    = Cleaner::sanitize('time', $keyword);
+            $timeZone = (int) Phprojekt_User_User::getSetting("timeZone", 'UTC') * -1;
+            $u        = strtotime($value);
+            $value    = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u), date("m"), date("d"),
+                date("Y"));
+            $k = date("H:i:s", $value);
+        } else {
+            $this->_record->$field = $keyword;
+            $k                     = $this->_record->$field;
+        }
+        $identifier = Phprojekt::getInstance()->getDb()->quoteIdentifier($identifier);
+
+        switch ($rule) {
+            case 'equal':
+                $w = $identifier . ' = ? ';
+                break;
+            case 'notEqual':
+                $w = $identifier . ' != ? ';
+                break;
+            case 'major':
+                $w = $identifier . ' > ? ';
+                break;
+            case 'majorEqual':
+                $w = $identifier . ' >= ? ';
+                break;
+            case 'minor':
+                $w = $identifier . ' < ? ';
+                break;
+            case 'minorEqual':
+                $w = $identifier . ' <= ? ';
+                break;
+            case 'begins':
+                $w = $identifier . ' LIKE ? ';
+                $k = $keyword . '%';
+                break;
+            case 'ends':
+                $w = $identifier . ' LIKE ? ';
+                $k = '%' . $keyword;
+                break;
+            case 'notLike':
+                $w = $identifier . ' NOT LIKE ? ';
+                $k = '%' . $keyword . '%';
+                break;
+            case 'like':
+            default:
+                $w = $identifier . ' LIKE ? ';
+                $k = '%' . $keyword . '%';
+        }
+
+        return Phprojekt::getInstance()->getDb()->quoteInto($w, $k);
+    }
+}

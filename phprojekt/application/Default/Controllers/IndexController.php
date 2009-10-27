@@ -199,6 +199,32 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
+     * Add to the internal where, the filters set by the user.
+     *
+     * @param string $where Internal where clause.
+     *
+     * @return string
+     */
+    public function getFilterWhere($where)
+    {
+        $filters = (string) $this->getRequest()->getParam('filters', null);
+
+        if (!empty($filters)) {
+            $filterClass = new Phprojekt_Filter($this->getModelObject(), $where);
+            $filters = explode(",", $filters);
+            foreach ($filters as $filter) {
+                list($filterOperator, $filterField, $filterRule, $filterValue) = explode(";", $filter);
+                if (isset($filterOperator) && isset($filterField) &&  isset($filterRule) && isset($filterValue)) {
+                    $filterClass->addFilter($filterField, $filterRule, $filterValue, $filterOperator);
+                }
+            }
+            $where = $filterClass->getWhere();
+        }
+
+        return $where;
+    }
+
+    /**
      * Returns the project tree.
      *
      * The return is a tree compatible format, with identifier, label,
@@ -255,6 +281,8 @@ class IndexController extends Zend_Controller_Action
         } else {
             $where = null;
         }
+
+        $where   = $this->getFilterWhere($where);
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);

@@ -67,6 +67,7 @@ class Calendar_IndexController extends IndexController
         } else {
             $where = 'participant_id = ' . (int) PHprojekt_Auth::getUserId();
         }
+        $where   = $this->getFilterWhere($where);
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
         // Set dates depending on the times
