@@ -123,6 +123,7 @@ class JsController extends IndexController
                 phpr.webpath          = webpath;
                 phpr.rootProjectId    = rootProjectId;
                 phpr.currentProjectId = rootProjectId ;
+                phpr.currentUserId    = 0;
                 phpr.language         = language;
                 phpr.config           = new Array();
                 phpr.serverFeedback   = new phpr.ServerFeedback();
