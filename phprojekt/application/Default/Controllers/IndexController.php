@@ -596,8 +596,12 @@ class IndexController extends Zend_Controller_Action
                                 'value' => $value);
             }
         }
+
+        // System info
         $data[] = array('name'  => 'phprojektVersion',
                         'value' => Phprojekt::getVersion());
+        $data[] = array('name'  => 'currentUserId',
+                        'value' => Phprojekt_Auth::getUserId());
 
         Phprojekt_Converter_Json::echoConvert($data);
     }

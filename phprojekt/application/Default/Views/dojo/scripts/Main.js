@@ -162,7 +162,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Get all configuration.ini vars for the front
         var config = new phpr.Store.Config();
         config.fetch(dojo.hitch(this, function() {
-            phpr.config = config.getList();
+            phpr.config        = config.getList();
+            phpr.currentUserId = phpr.config.currentUserId ? phpr.config.currentUserId : 0;
 
             // Get all the tabs
             var tabStore = new phpr.Store.Tab();
