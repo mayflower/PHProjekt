@@ -1,0 +1,18 @@
+.phprojekt .displayOperator {
+    float: left;
+    padding: 4px 5px 1px;
+    width: auto;
+}
+
+.phprojekt .displayFilter {
+    border: 1px solid #294064;
+    float: left;
+    padding: 1px 5px;
+    width: auto;
+    margin-bottom: 2px;
+}
+
+.phprojekt .closeFilter {
+    padding-bottom: 5px;
+    padding-right: 10px;
+}

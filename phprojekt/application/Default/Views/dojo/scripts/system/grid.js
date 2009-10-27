@@ -20,6 +20,7 @@
 dojo.provide("phpr.grid");
 dojo.provide("phpr.grid.cells.Select");
 dojo.provide("phpr.grid._View");
+dojo.provide("phpr.Filter.ExpandoPane");
 
 phpr.grid.formatDateTime = function(date) {
     if (!date || !String(date).match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/)) {
@@ -335,5 +336,63 @@ dojo.declare('phpr.grid._View', [dojox.grid._View], {
             }
             this.grid.rows.applyStyles(row);
         }
+    }
+});
+
+dojo.declare('phpr.Filter.ExpandoPane', [dojox.layout.ExpandoPane], {
+    _startupSizes: function() {
+        // Summary
+        //    Re-write the function for allow height 0
+        // Description
+        //    Re-write the function for allow height 0
+        this._container   = this.getParent();
+        this._titleHeight = dojo.marginBox(this.titleWrapper).h;
+        this._closedSize  = 0;
+
+        this._currentSize = dojo.contentBox(this.domNode);
+        this._showSize    = this._currentSize["h"];
+        this._setupAnims();
+
+        if (this.startExpanded) {
+            this._showing = true;
+        } else {
+            this._showing = false;
+            this._hideWrapper();
+            this._hideAnim.gotoPercent(99, true);
+        }
+
+        this._hasSizes = true;
+    },
+
+    resize: function(/* Object? */psize) {
+        // Summary
+        //    Re-write the function for allow height 0
+        // Description
+        //    Re-write the function for allow height 0
+        if (!this._hasSizes) {
+            this._startupSizes(psize);
+        }
+
+        var    size = (psize && psize.h) ? psize : dojo.marginBox(this.domNode);
+        this._contentBox = {
+            w: size.w || dojo.marginBox(this.domNode).w,
+            h: size.h - 26
+        };
+
+        dojo.style(this.containerNode, "height", this._contentBox.h + "px");
+        dojo.style(this.containerNode, "overflowX", "hidden");
+        this._layoutChildren();
+    },
+
+    show:function() {
+        // Summary
+        //    Open the panel
+        // Description
+        //    Open the panel
+        if (!this._showing){
+            this._hideAnim && this._hideAnim.stop();
+            this._showAnim.play();
+        }
+        this._showing = !this._showing;
     }
 });

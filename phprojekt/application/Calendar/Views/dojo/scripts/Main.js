@@ -194,6 +194,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     dayViewClick:function() {
         // Summary:
         //    This function loads the Day List with the entered date, if any.
+        if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
+            dijit.byId('gridFiltersBox').toggle();
+        }
 
         if (this.actionRequested()) {
             return;
@@ -209,6 +212,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     weekViewClick:function() {
         // Summary:
         //    This function loads the Week List with the entered date, if any.
+        if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
+            dijit.byId('gridFiltersBox').toggle();
+        }
 
         if (this.actionRequested()) {
             return;
@@ -220,6 +226,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     monthViewClick:function() {
         // Summary:
         //    This function loads the Month List with the entered date, if any.
+        if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
+            dijit.byId('gridFiltersBox').toggle();
+        }
 
         if (this.actionRequested()) {
             return;
@@ -638,10 +647,14 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         //    Forces every widget of the page to update its data, by deleting its cache.
 
         // As the 'grid' object may not exist, it is not called updateData function but deleted the cache manually
-        var gridUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList/nodeId/" + phpr.currentProjectId;
-        var tagUrl  = phpr.webpath + "index.php/Default/Tag/jsonGetTags";
-        phpr.DataStore.deleteData({url: gridUrl});
-        phpr.DataStore.deleteData({url: tagUrl});
+        if (this.grid) {
+            this.grid.updateData();
+        } else {
+            var gridUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList/nodeId/" + phpr.currentProjectId;
+            var tagUrl  = phpr.webpath + "index.php/Default/Tag/jsonGetTags";
+            phpr.DataStore.deleteData({url: gridUrl});
+            phpr.DataStore.deleteData({url: tagUrl});
+        }
 
         if (this.form) {
             this.form.updateData();

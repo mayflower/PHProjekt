@@ -1,7 +1,15 @@
 <div dojoType="dijit.layout.BorderContainer" design="sidebar" id="calendarMain" persist="true"
     style="width: 100%; height: 100%;">
     <!-- List View -->
-    <div dojoType="dijit.layout.ContentPane" id="gridBox" region="center" class="prepend-0 append-0">
+    <div dojoType="dijit.layout.ContentPane" region="center" class="prepend-0 append-0">
+        <div dojoType="dijit.layout.BorderContainer" gutters="false"
+        style="height: 100%; overflow-X: hidden; overflow-Y: hidden;">
+            <div dojoType="phpr.Filter.ExpandoPane" id="gridFiltersBox" title="Filters" region="top"
+            startExpanded="false" maxHeight="200" style="height: 90px; z-index: 3; overflow-x: hidden;">
+            </div>
+            <div dojoType="dijit.layout.ContentPane" id="gridBox" region="center" startExpanded="true">
+	   	   </div>
+        </div>
     </div>
     <!-- Form View -->
     <div dojoType="dijit.layout.ContentPane" id="detailsBox" region="bottom" splitter="true"

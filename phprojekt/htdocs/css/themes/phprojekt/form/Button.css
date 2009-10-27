@@ -95,6 +95,15 @@
     height: 16px;
 }
 
+.phprojekt .filter {
+    background-image: url("../images/filter.png");
+    background-repeat: no-repeat;
+    margin-left: 1px;
+    margin-right: 1px;
+    width: 16px;
+    height: 16px;
+}
+
 .phprojekt .dijitButtonNode {
     /* enabled state - inner */
     border: 1px solid #8ba0bd;
@@ -266,7 +275,8 @@
     vertical-align: top;
 }
 
-.phprojekt #filesList .closeButton .dijitButtonNode {
+.phprojekt #filesList .closeButton .dijitButtonNode,
+.phprojekt #gridFiltersBox .closeButton .dijitButtonNode {
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
     width: 13px;

@@ -291,6 +291,25 @@ $lang["Re-Opened"] = "Wieder geöffnet";
 $lang["Waiting"] = "Warten";
 $lang["Accepted"] = "Akzeptiert";
 
+// Filters
+$lang["Filters"] = "Filter";
+$lang["Delete all the filters"] = "Löschen Sie alle Filter";
+$lang["Select a filter"] = "Wählen Sie einen Filter";
+$lang["Please, delete some filters for get a correct result set."] = "Bitte, löschen Sie einige Filter für Sie eine "
+    . " richtige.";
+$lang["Filter_equal_rule"] = "Gleich";
+$lang["Filter_not_equal_rule"] = "Nicht gleich";
+$lang["Filter_major_rule"] = "Major";
+$lang["Filter_major_equal_rule"] = "Major gleich";;
+$lang["Filter_minor_rule"] = "Minor";
+$lang["Filter_minor_equal_rule"] = "Minor gleich";
+$lang["Filter_like_rule"] = "Wie";
+$lang["Filter_not_like_rule"] = "Nicht so wie";
+$lang["Filter_begins_rule"] = "Beginnt";
+$lang["Filter_ends_rule"] = "Endet";
+$lang["Filter_AND"] = "UND";
+$lang["Filter_OR"] = "ODER";
+
 // Error messages from Module Designer (this later should be moved to Administration language file)
 $lang["The Module must contain at least one field"] = "Das Modul muss mindestens ein Feld enthalten";
 $lang["Please enter a name for this module"] = "Bitte geben Sie dem Modul einen Namen";

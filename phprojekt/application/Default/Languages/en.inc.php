@@ -327,6 +327,25 @@ $lang["Re-Opened"] = "Re-Opened";
 $lang["Waiting"] = "Waiting";
 $lang["Accepted"] = "Accepted";
 
+// Filters
+$lang["Filters"] = "Filters";
+$lang["Delete all the filters"] = "Delete all the filters";
+$lang["Select a filter"] = "Select a filter";
+$lang["Please, delete some filters for get a correct result set."] = "Please, delete some filters for get a correct "
+    . "result set.";
+$lang["Filter_equal_rule"] = "Equal";
+$lang["Filter_not_equal_rule"] = "Not equal";
+$lang["Filter_major_rule"] = "Major";
+$lang["Filter_major_equal_rule"] = "Major equal";;
+$lang["Filter_minor_rule"] = "Minor";
+$lang["Filter_minor_equal_rule"] = "Minor equal";
+$lang["Filter_like_rule"] = "Like";
+$lang["Filter_not_like_rule"] = "Not like";
+$lang["Filter_begins_rule"] = "Begins";
+$lang["Filter_ends_rule"] = "Ends";
+$lang["Filter_AND"] = "AND";
+$lang["Filter_OR"] = "OR";
+
 // Tooltip Help
 // 'Notification' checkbox
 $lang["Check this box to send an email notification to the participants"] = "Check this box to send an email "
