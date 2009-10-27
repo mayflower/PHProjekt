@@ -55,6 +55,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.subscribe(module + ".processUrlHash", this, "processUrlHash");
         dojo.subscribe(module + ".processActionFromUrlHash", this, "processActionFromUrlHash");
         dojo.subscribe(module + ".setUrlHash", this, "setUrlHash");
+
+        // Grid
+        dojo.subscribe(module + ".gridProxy", this, "gridProxy");
     },
 
     openForm:function(/*int*/id, /*String*/module) {
@@ -1016,5 +1019,15 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
 
         return sortedModules;
+    },
+
+    gridProxy:function(functionName, params) {
+        // Summary:
+        //    Proxy for run grid functions
+        // Description:
+        //    Proxy for run grid functions
+        if (this.grid) {
+            eval("this.grid." + functionName + "('" + params + "')");
+        }
     }
 });
