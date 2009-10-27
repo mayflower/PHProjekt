@@ -374,7 +374,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             // add special inputs to the Basic Data
             this.addBasicFields();
 
-            this.form = this.setFormContent();
+            this.form        = this.setFormContent();
             this.formsWidget = new Array();
 
             for (t in tabs) {

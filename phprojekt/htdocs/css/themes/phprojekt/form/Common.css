@@ -82,6 +82,9 @@
     color: #eee;
 }
 
+.dj_gecko .phprojekt select {
+    padding: 0;
+}
 .phprojekt .dijitComboBox .dijitButtonNode,
 .phprojekt select {
     padding: 0 0.2em;
