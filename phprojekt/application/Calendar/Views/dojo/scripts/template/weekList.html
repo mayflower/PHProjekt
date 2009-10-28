@@ -1,10 +1,10 @@
 <!-- Events inside the schedule chart -->
 <div id="calendarSchedule">
-    <table width="{{widthTable}}%">
+    <table width="{{widthTable}}%" id="scheduleBackground">
     <tr>
         <td width="{{widthHourColumn}}%"></td>
         {% for day in header.days %}
-        <td width="{{header.columnsWidth}}%" class="weekDayHeaders" colspan="{{day.columnsTotal}}">
+        <td width="{{header.columnsWidth}}%" class="weekDayHeaders" id="td{{day.date}}">
             <a href="javascript: dojo.publish('Calendar.anotherViewDayClick', ['{{day.date}}']);">
                 {{day.dayAbbrev}}.{{day.date}}</a> &nbsp;
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
@@ -19,40 +19,43 @@
             {{row.hour}}
         </td>
         {% for day in row %}
-            {% for column in day.columns %}
-                {% if column.occupied %}
-                    {% ifequal column.typeEvent 1 %}
-        <td rowspan="{{column.halvesDuration}}" width="{{column.width}}%" class="events">
-            {{column.time|safe}}
-            <a href="javascript: dojo.publish('Calendar.showFormFromList', [{{column.id}}]);">{{column.title|safe}}</a>
-            <br />
-            <div class="horizontalLine">
-            </div>
-            {{column.notes|safe}}
+            {% ifequal row.even true %}
+        <td width="{{row.columnWidth}}%" class="emptyCellEven">
         </td>
-                    {% endifequal %}
-                {% else %}
-                    {% ifequal row.even true %}
-        <td width="{{column.width}}%" class="{{column.class}}"
-        style="background-color: white;"></td>
-                    {% else %}
-        <td width="{{column.width}}%" class="{{column.class}}"
-        style="background-color: #e9f3ff;"></td>
-                    {% endifequal %}
-                {% endif %}
-            {% endfor %}
+            {% else %}
+        <td width="{{row.columnWidth}}%" class="emptyCellOdd">
+        </td>
+            {% endifequal %}
         {% endfor %}
     </tr>
     {% endfor %}
     </table>
 </div>
+<div id="eventsArea" style="float: left; position: absolute;">
+    {% for event in events %}
+    <div dojoType="phpr.Calendar.Moveable" area="margin" within="true" id="{{eventsAttr.divIdPre}}{{event.order}}" 
+    class="eventsDivMain"
+    style="position: absolute; overflow-Y: hidden; overflow-X: hidden;">
+        <div id="plainDiv{{event.order}}" class="eventsDivSecond" 
+        style="border-width: {{eventsAttr.borderWidth}}px; cursor: pointer;">
+            {{event.timeDescrip}} {{event.title}} <br>
+            {{event.notes|safe}}
+        </div>
+        <div dojoType="phpr.Calendar.ResizeHandle" resizeAxis="y" activeResize="true" targetId="plainDiv{{event.order}}"
+        id="eventResize{{event.order}}"
+        style="bottom: 0; width: 100%; position: absolute;"></div>
+    </div>
+    {% endfor %}
+</div>
+
 <!-- Events outside the schedule chart -->
 {% if furtherEvents.show %}
 <br />
     {{furtherEventsMessage}}:<br />
     {% for event in furtherEvents.events %}
-{{event.time}}&nbsp;
+{{event.time}}:&nbsp;
 <a href="javascript: dojo.publish('Calendar.showFormFromList', [{{event.id}}]);">{{event.title|safe}}</a>
 <br />
     {% endfor %}
 {% endif %}
+

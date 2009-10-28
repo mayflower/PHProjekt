@@ -157,7 +157,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
         var dateString = this.dateToString();
-        this.weekList  = new this.weekListWidget(this, phpr.currentProjectId, dateString);
+        var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
+            + phpr.currentProjectId;
+        this.weekList  = new this.weekListWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
     },
@@ -696,8 +698,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                     this._scrollLastDirection = 0;
                     this._scrollDelayed       = 0;
                     dojo.disconnect(this._scrollConnection);
-                    dojo.publish('Calendar.setDate', [0])
                     this._dateWheelChanged = true;
+                    dojo.publish('Calendar.saveChanges');
+                    dojo.publish('Calendar.setDate', [0]);
+
                 }
             } else {
                 this._scrollLastDirection = this.SCROLL_UP;
@@ -715,6 +719,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                     this._scrollDelayed       = 0;
                     dojo.disconnect(this._scrollConnection);
                     this._dateWheelChanged = true;
+                    dojo.publish('Calendar.saveChanges');
                     dojo.publish('Calendar.setDate', [2])
                 }
             } else {
