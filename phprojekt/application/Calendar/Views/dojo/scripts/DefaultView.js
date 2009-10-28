@@ -82,9 +82,6 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // Description:
         //    This function receives the list data from the server and renders the corresponding table
 
-        dojo.subscribe("Calendar.eventMoved", this, "eventMoved");
-        dojo.subscribe("Calendar.saveChanges", this, "saveChanges");
-
         this.updateUrl = updateUrl;
         this.main      = main;
         this.id        = id;
@@ -470,10 +467,12 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
     connectMoveableClass:function() {
         // Summary:
-        //    Something needed for the view to work fine! Strange issue
+        //    Provides the dragging and resize classes with a reference object variable to this class
         for (var i in this._events) {
-            var eventDiv         = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i);
-            eventDiv.parentClass = this;
+            var eventDiv          = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i);
+            eventDiv.parentClass  = this;
+            var resizeDiv         = dijit.byId('eventResize' + i)
+            resizeDiv.parentClass = this;
         }
     },
 
@@ -899,7 +898,7 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
         leftTop.t = top;
 
         // Update descriptive content of the event
-        dojo.publish("Calendar.eventMoved", [this.node, false]);
+        this.parentClass.eventMoved(this.node, false);
     },
 
     onMoveStop: function(mover) {
@@ -914,7 +913,7 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
 
         if (this.eventHasBeenDragged) {
             // The event has been dragged, update descriptive content of the event and internal array
-            dojo.publish("Calendar.eventMoved", [this.node, true]);
+            this.parentClass.eventMoved(this.node, true);
             this.eventHasBeenDragged = false;
         } else {
             // It was just a click - Open event in the form
@@ -980,7 +979,7 @@ dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
             this.onResize(e);
         }
 
-        dojo.publish("Calendar.eventMoved", [this.targetDomNode.parentNode, false]);
+        this.parentClass.eventMoved(this.targetDomNode.parentNode, false);
     },
 
     onResize: function(e){
@@ -989,6 +988,6 @@ dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
         // Stub fired when sizing is done. Fired once
         //  after resize, or often when `intermediateChanges` is
         //  set to true.
-        dojo.publish("Calendar.eventMoved", [this.targetDomNode.parentNode, true]);
+        this.parentClass.eventMoved(this.targetDomNode.parentNode, true);
     }
 });

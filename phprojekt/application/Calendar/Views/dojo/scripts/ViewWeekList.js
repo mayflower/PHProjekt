@@ -92,15 +92,13 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
             eventsAttr:           eventsAttr
         });
         dojo.publish('Calendar.connectMouseScroll');
+        dojo.publish('Calendar.connectViewResize');
 
         this.updateSizeValues();
         this.setEventsAreaDivValues();
         this.setEventDivsValues();
         this.connectMoveableClass();
         this.setEventMinimumSizes();
-
-        // Used to corroborate whether the view has been resized
-        dojo.connect(dijit.byId('gridBox'), 'resize', dojo.hitch(this, "gridResized"));
     },
 
     gridResized:function() {

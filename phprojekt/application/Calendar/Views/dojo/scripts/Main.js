@@ -27,6 +27,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     _gridLastScrollTop:    0,
     _scrollDelayed:        0,
     _scrollConnection:     null,
+    _resizeConnection:     null,
     _actionPending:        false,
     _dateWheelChanged:     false, // Whether the current date has just changed using the mouse wheel
 
@@ -50,6 +51,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dojo.subscribe(this.module + ".loadAppropriateList", this, "loadAppropriateList");
         dojo.subscribe(this.module + ".connectMouseScroll", this, "connectMouseScroll");
         dojo.subscribe(this.module + ".scrollDone", this, "scrollDone");
+        dojo.subscribe(this.module + ".connectViewResize", this, "connectViewResize");
+        dojo.subscribe(this.module + "saveChanges", this, "saveChanges");
 
         this.gridWidget          = phpr.Calendar.Grid;
         this.dayListSelfWidget   = phpr.Calendar.ViewDayListSelf;
@@ -111,6 +114,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Summary:
         //   This function loads the Dojo Grid
         this.scrollDisconnect();
+        this.resizeDisconnect();
         this.destroyOtherLists('grid');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
@@ -127,6 +131,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Summary:
         //    This function loads the Day List in Self mode
         this.scrollDisconnect();
+        this.resizeDisconnect();
         this.destroyOtherLists('dayListSelf');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
@@ -140,6 +145,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Summary:
         //    This function loads the Day List in a Selection mode
         this.scrollDisconnect();
+        this.resizeDisconnect();
         this.destroyOtherLists('dayListSelect');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
@@ -153,6 +159,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Summary:
         //    This function loads the Week List
         this.scrollDisconnect();
+        this.resizeDisconnect();
         this.destroyOtherLists('weekList');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
@@ -168,6 +175,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Summary:
         //    This function loads the Month List
         this.scrollDisconnect();
+        this.resizeDisconnect();
         this.destroyOtherLists('monthList');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
@@ -681,6 +689,21 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this._actionPending = false;
     },
 
+    connectViewResize:function() {
+        // Summary:
+        //    Connects the resize event of the Grid box to its appropriate function. Used in Day, Week and Month views
+        var gridBox            = dijit.byId('gridBox');
+        this._resizeConnection = dojo.connect(gridBox, 'resize',  dojo.hitch(this, "gridResized"));
+    },
+
+    gridResized:function() {
+        // Summary:
+        //    Calls the appropriate function gridResized depending on the class that triggered the event
+        if (this.weekList) {
+            this.weekList.gridResized();
+        }
+    },
+
     scrollDone:function(scrollValue) {
         // Summary
         //    Called whenever the user scrolls the mouse wheel over the grid. Detects whether to interpret it as a
@@ -739,6 +762,15 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         }
     },
 
+    resizeDisconnect:function() {
+        // Summary
+        //    Disconnects the event of the gridBox resize
+        if (this._resizeConnection != null) {
+            dojo.disconnect(this._resizeConnection);
+            this._resizeConnection = null;
+        }
+    },
+
     actionRequested:function() {
         // Summary
         //    The following lines are to avoid repetition of the Mouse Wheel scroll event connection, that could be
@@ -764,5 +796,13 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             duration: 1200
         }).play();
         setTimeout('text.style.color="black";', 1200);
+    },
+
+    saveChanges:function() {
+        // Summary:
+        //    Calls the appropriate function saveChanges depending on the class that triggered the event.
+        if (this.weekList) {
+            this.weekList.saveChanges();
+        }
     }
 });
