@@ -12,7 +12,24 @@
     margin-bottom: 2px;
 }
 
+.dj_ie .phprojekt #filterForm {
+    margin-top: 2px;
+}
+
+.dj_ie .phprojekt .displayOperator,
+.dj_ie .phprojekt .displayFilter {
+    margin-top: 7px;
+}
+
 .phprojekt .closeFilter {
     padding-bottom: 5px;
     padding-right: 10px;
+}
+
+.dj_ie .phprojekt .closeFilter {
+    padding-bottom: 0px;
+}
+
+.dj_ie .phprojekt #filterDisplayDiv {
+    height: auto !important;
 }

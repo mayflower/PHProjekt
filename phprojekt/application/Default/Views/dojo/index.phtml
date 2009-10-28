@@ -56,8 +56,8 @@
         function init() {
             availHeight = getMaxHeight();
 
-            dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
             if (dijit.byId('completeContent')) {
+                dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
                 dijit.byId('completeContent').resize();
             }
 

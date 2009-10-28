@@ -379,20 +379,11 @@ dojo.declare('phpr.Filter.ExpandoPane', [dojox.layout.ExpandoPane], {
             h: size.h - 26
         };
 
+        if (this._contentBox.h < 0) {
+            this._contentBox.h = 0;
+        }
         dojo.style(this.containerNode, "height", this._contentBox.h + "px");
         dojo.style(this.containerNode, "overflowX", "hidden");
         this._layoutChildren();
-    },
-
-    show:function() {
-        // Summary
-        //    Open the panel
-        // Description
-        //    Open the panel
-        if (!this._showing){
-            this._hideAnim && this._hideAnim.stop();
-            this._showAnim.play();
-        }
-        this._showing = !this._showing;
     }
 });
