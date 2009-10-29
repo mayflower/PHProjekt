@@ -507,8 +507,15 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         var hash = url.join(",");
         phpr.Url.addUrl(hash);
-        // Stores the hash in a browser cookie
-        dojo.cookie('p6.location.hash', hash, {expires: 500});
+
+        if ((hash.indexOf('Administration') < 0) &&
+            (hash.indexOf('User') < 0) &&
+            (hash.indexOf('Role') < 0) &&
+            (hash.indexOf('Tab') < 0) &&
+            (hash.indexOf('Module') < 0)) {
+            // Stores the hash in a browser cookie (Only normal url, no Administration one)
+            dojo.cookie('p6.location.hash', hash, {expires: 500});
+        }
     },
 
     processUrlHash:function(hash) {
