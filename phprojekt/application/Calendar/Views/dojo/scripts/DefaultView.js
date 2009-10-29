@@ -41,6 +41,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     _cellTimeHeight:     null,
     _lastGridBoxWidth:   null,
     _saveChanges:        null,
+    eventHasBeenDragged: null,
 
     // General constants
     SCHEDULE_START_HOUR: 8,
@@ -842,15 +843,13 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 dojo.provide("phpr.Calendar.Moveable");
 dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
 
-    eventHasBeenDragged: null,
-
     onMoving: function(mover, leftTop) {
         // Summary:
         //    Original function is empty. This one is in charge of making the 'stepped' allike draging. Then calls
         // eventMoved function of Calendar view class.
 
         // Following value will be checked by onMoveStop function of this class
-        this.eventHasBeenDragged = true;
+        this.parentClass.eventHasBeenDragged = true;
 
         var cellTimeWidth = this.parentClass._cellTimeWidth;
         var widthDays     = dojo.byId('scheduleBackground').offsetWidth - cellTimeWidth;
@@ -911,10 +910,11 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
         // Following code has been added for this view, it calls eventMoved view class function or opens the form with
         // the clicked event.
 
-        if (this.eventHasBeenDragged) {
+        if (this.parentClass.eventHasBeenDragged) {
             // The event has been dragged, update descriptive content of the event and internal array
             this.parentClass.eventMoved(this.node, true);
-            this.eventHasBeenDragged = false;
+            // Allow the event to be just clicked to open it in the form, but wait a while first...
+            setTimeout('dojo.publish("Calendar.enableEventDivClick")', 500);
         } else {
             // It was just a click - Open event in the form
             var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);

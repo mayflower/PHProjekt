@@ -52,7 +52,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         dojo.subscribe(this.module + ".connectMouseScroll", this, "connectMouseScroll");
         dojo.subscribe(this.module + ".scrollDone", this, "scrollDone");
         dojo.subscribe(this.module + ".connectViewResize", this, "connectViewResize");
-        dojo.subscribe(this.module + "saveChanges", this, "saveChanges");
+        dojo.subscribe(this.module + ".saveChanges", this, "saveChanges");
+        dojo.subscribe(this.module + ".enableEventDivClick", this, "enableEventDivClick");
 
         this.gridWidget          = phpr.Calendar.Grid;
         this.dayListSelfWidget   = phpr.Calendar.ViewDayListSelf;
@@ -803,6 +804,15 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         //    Calls the appropriate function saveChanges depending on the class that triggered the event.
         if (this.weekList) {
             this.weekList.saveChanges();
+        }
+    },
+
+    enableEventDivClick:function() {
+        // Summary:
+        //    Called using setTimeout to allow the events to be just clicked to open them in the form, but waiting a
+        // while first, because an event has just been dragged...
+        if (this.weekList) {
+            this.weekList.eventHasBeenDragged = false;
         }
     }
 });
