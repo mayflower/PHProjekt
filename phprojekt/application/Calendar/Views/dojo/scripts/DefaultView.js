@@ -42,6 +42,10 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     _lastGridBoxWidth:   null,
     _saveChanges:        null,
     eventHasBeenDragged: null,
+    stepH:               null,
+    stepY:               null,
+    posHMax:             null,
+    posYMaxComplement:   null,
 
     // General constants
     SCHEDULE_START_HOUR: 8,
@@ -321,14 +325,23 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         return date;
     },
 
-    updateSizeValues:function() {
+    updateSizeValuesPart1:function() {
         // Summary
         //    Updates internal class variables with current sizes of schedule
-        var scheduleBkg      = dojo.byId('scheduleBackground').getElementsByTagName('td');
-        this._cellTimeWidth  = scheduleBkg[0].offsetWidth;
-        this._cellDayWidth   = scheduleBkg[1].offsetWidth;
-        this._cellDayHeight  = scheduleBkg[0].offsetHeight;
-        this._cellTimeHeight = scheduleBkg[8].offsetHeight;
+        var scheduleBkg        = dojo.byId('scheduleBackground').getElementsByTagName('td');
+        this._cellTimeWidth    = scheduleBkg[0].offsetWidth;
+        this._cellDayWidth     = scheduleBkg[1].offsetWidth;
+        this._cellDayHeight    = scheduleBkg[0].offsetHeight;
+        this._cellTimeHeight   = scheduleBkg[8].offsetHeight;
+    },
+
+    updateSizeValuesPart2:function() {
+        // Summary
+        //    Updates internal class variables with current sizes of schedule
+        this.stepH             = (dojo.byId('scheduleBackground').offsetWidth - this._cellTimeWidth) / 7;
+        this.stepY             = this._cellTimeHeight;
+        this.posHMax           = parseInt(dojo.byId('eventsArea').style.width) - this.stepH;
+        this.posYMaxComplement = parseInt(dojo.byId('eventsArea').style.height) - this.stepY;
     },
 
     timeToDivPosition:function(moment, isEvent, type) {
@@ -363,6 +376,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         if (!isEvent) {
             position += this._cellDayHeight;
         }
+        position = parseInt(position);
 
         return position;
     },
@@ -379,6 +393,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         if (!isEvent) {
             position += this._cellTimeWidth;
         }
+        position = parseInt(position);
 
         return position;
     },
@@ -499,61 +514,36 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         var posLeftNew   = parseInt(node.style.left);
         var posTopNew    = parseInt(node.style.top);
         var posBottomNew = posTopNew + node.offsetHeight;
+        var movedEvent   = this.nodeIdToEventOrder(node.id);
+        var startTimeNew = this.divPositionToTime(posTopNew);
+        startTimeNew     = this.formatTime(startTimeNew);
+        var endTimeNew   = this.divPositionToTime(posBottomNew);
+        endTimeNew       = this.formatTime(endTimeNew);
+        var dayOrder     = this.divPositionToDay(posLeftNew);
 
-        var movedEvent = this.nodeIdToEventOrder(node.id);
+        // Update some events array data just when dragged to other position
+        this._events[movedEvent]['dayOrder']  = dayOrder;
+        this._events[movedEvent]['startTime'] = startTimeNew;
+        this._events[movedEvent]['endTime']   = endTimeNew;
 
-        var posLeftCurrent   = this._events[movedEvent]['currentLeft'];
-        var posTopCurrent    = this._events[movedEvent]['currentTop'];
-        var posBottomCurrent = this._events[movedEvent]['currentBottom'];
-        var maxBottomAllowed = parseInt(dojo.byId('eventsArea').style.height) - this._cellDayHeight / 2;
-        var minTopAllowed    = 0;
 
-        // Is the mouse pointer dragging the event inside schedule boundaries?
-        if (posTopNew >= minTopAllowed && posBottomNew <= maxBottomAllowed) {
-            // Yes
-            // Day did change?
-            if (posLeftCurrent != posLeftNew) {
-                // Yes - Store new data in the events array
-                var dayOrder = this.divPositionToDay(posLeftNew);
-                if (dropped) {
-                    this._events[movedEvent]['currentLeft'] = posLeftNew;
-                    this._events[movedEvent]['hasChanged']  = true;
-                    this._events[movedEvent]['dayOrder']    = dayOrder;
-                    this._events[movedEvent]['startDate']   = this._weekDays[dayOrder];
-                    this._events[movedEvent]['endDate']     = this._weekDays[dayOrder];
-                }
-            }
-
-            // Times did change?
-            var endTimeNew     = this.divPositionToTime(posBottomNew);
-            endTimeNew         = this.formatTime(endTimeNew);
-            var endTimeCurrent = this._events[movedEvent]['endTime'];
-            endTimeNew         = this.formatTime(endTimeNew);
-            var startTimeNew   = this.divPositionToTime(posTopNew);
-            startTimeNew       = this.formatTime(startTimeNew);
-
-            if (posTopCurrent != posTopNew || posBottomCurrent != posBottomNew || endTimeCurrent != endTimeNew) {
-                // Yes - Store new data in the events array
-                if (dropped) {
-                    this._events[movedEvent]['currentTop']    = posTopNew;
-                    this._events[movedEvent]['currentBottom'] = posBottomNew;
-                    this._events[movedEvent]['hasChanged']    = true;
-                    this._events[movedEvent]['startTime']     = startTimeNew;
-                    this._events[movedEvent]['endTime']       = endTimeNew;
-                }
-            }
-
-            if (dropped) {
-                this.enableSaveButton();
-            }
-
-            // Update event textual contents
-            var timeDescrip  = this.eventDateTimeDescrip(this.DATETIME_SHORT, startTimeNew, endTimeNew);
-            var eventDescrip = timeDescrip + ' ' + this._events[movedEvent]['title'] + '<br>'
-                + this._events[movedEvent]['notes'];
-
-            dojo.byId('plainDiv' + movedEvent).innerHTML = eventDescrip;
+        // Update the rest of events array data just when dropped
+        if (dropped) {
+            this._events[movedEvent]['currentLeft']   = posLeftNew;
+            this._events[movedEvent]['hasChanged']    = true;
+            this._events[movedEvent]['startDate']     = this._weekDays[dayOrder];
+            this._events[movedEvent]['endDate']       = this._weekDays[dayOrder];
+            this._events[movedEvent]['currentTop']    = posTopNew;
+            this._events[movedEvent]['currentBottom'] = posBottomNew;
+            this.enableSaveButton();
         }
+
+        // Update event textual contents
+        var timeDescrip  = this.eventDateTimeDescrip(this.DATETIME_SHORT, startTimeNew, endTimeNew);
+        var eventDescrip = timeDescrip + ' ' + this._events[movedEvent]['title'] + '<br>'
+            + this._events[movedEvent]['notes'];
+
+        dojo.byId('plainDiv' + movedEvent).innerHTML = eventDescrip;
 
         // Check the items just in case there has been a change concerning simultaneous events
         if (dropped) {
@@ -615,9 +605,6 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     enableSaveButton:function() {
         // Summary:
         //    Enables Save button if it was disabled
-        // mlp1: if you are in week view and go to list view and then come back to this view, this function doesn't work
-        // because there is something wrong with the save button and some functions are called simultaneously as many
-        // times as times you go out and come back to week view.
 
         if (this._saveChanges.disabled == true) {
             dojox.fx.highlight({
@@ -837,7 +824,11 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 dojo.provide("phpr.Calendar.Moveable");
 dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
 
-    onMoving: function(mover, leftTop) {
+    markupFactory: function(params, node){
+        return this;
+    },
+
+    onMove: function(mover, leftTop) {
         // Summary:
         //    Original function is empty. This one is in charge of making the 'stepped' allike draging. Then calls
         // eventMoved function of Calendar view class.
@@ -845,25 +836,25 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
         // Following value will be checked by onMoveStop function of this class
         this.parentClass.eventHasBeenDragged = true;
 
-        var cellTimeWidth = this.parentClass._cellTimeWidth;
-        var widthDays     = dojo.byId('scheduleBackground').offsetWidth - cellTimeWidth;
-        var stepH         = widthDays / 7;
-        var stepY         = dojo.byId('scheduleBackground').getElementsByTagName('td')[8].offsetHeight;
-
-        // Define maximum left and top positions
-        var HMax        = parseInt(dojo.byId('eventsArea').style.width) - stepH;
-        var eventHeight = this.node.offsetHeight;
-        var YMax        = parseInt(dojo.byId('eventsArea').style.height) - eventHeight - stepY;
+        var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);
+        var stepH      = this.parentClass.stepH;
+        var stepY      = this.parentClass.stepY;
+        var posHmax    = this.parentClass.posHMax;
+        var posYmax    = this.parentClass.posYMaxComplement - this.node.offsetHeight;
 
         // If the event is a concurrent one, return it to 100% column width
-        var movedEvent     = this.parentClass.nodeIdToEventOrder(this.node.id);
         var eventDivSecond = dojo.byId('plainDiv' + movedEvent);
-        var width          = this.parentClass._cellDayWidth - (2 * this.parentClass.EVENTS_BORDER_WIDTH);
         dojo.style(eventDivSecond, {
-            width:  width + 'px'
+            width:  this.parentClass._cellDayWidth - (2 * this.parentClass.EVENTS_BORDER_WIDTH) + 'px'
         });
 
-        // Set left position
+        // Store original event position before this dragging attempt
+        var eventDay       = this.parentClass._events[movedEvent]['dayOrder'];
+        var eventStartTime = this.parentClass._events[movedEvent]['startTime'];
+        var originalLeft   = this.parentClass.dayToDivPosition(eventDay, true);
+        var originalTop    = this.parentClass.timeToDivPosition(eventStartTime, true);
+
+        // Calculate new left position
         var rest = leftTop.l % stepH;
         if (rest < stepH / 2) {
             var left = leftTop.l - rest;
@@ -872,22 +863,30 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
         }
         if (left < 0) {
             left = 0;
-        } else if (left > HMax) {
-            left = HMax;
+        } else if (left > posHmax) {
+            left = posHmax;
         }
-        leftTop.l = left;
+        leftTop.l = parseInt(left);
 
-        // Set top position
+        // Calculate new top position
         var top = leftTop.t - (leftTop.t % stepY);
         if (top < 0) {
             top = 0;
-        } else if (top > YMax) {
-            top = stepY * parseInt(YMax / stepY);
+        } else if (top > posYmax) {
+            top = stepY * parseInt(posYmax / stepY);
         }
-        leftTop.t = top;
+        leftTop.t = parseInt(top);
 
-        // Update descriptive content of the event
-        this.parentClass.eventMoved(this.node, false);
+        // According to new calculated left and top values, the div will be moved?
+        if (originalLeft != leftTop.l || originalTop != leftTop.t) {
+            var s  = mover.node.style;
+            s.left = leftTop.l + "px";
+            s.top  = leftTop.t + "px";
+            this.onMoved(mover, leftTop);
+
+            // Update descriptive content of the event
+            this.parentClass.eventMoved(this.node, false);
+        }
     },
 
     onMoveStop: function(mover) {
@@ -922,54 +921,55 @@ dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
         if(tmp === false){ return; }
 
         // Stepped dragging added for this view
-        var step           = dojo.byId('scheduleBackground').getElementsByTagName('td')[8].offsetHeight;
+        var currentHeight  = dojo.style(this.targetDomNode, "height");
+        var step           = this.parentClass._cellTimeHeight;
         var sizerDivHeight = this.domNode.offsetHeight;
         var proposedHeight = tmp['h'];
-        var sizerToBottom  = Math.floor(sizerDivHeight / 2);
-        var steppedHeight  = sizerToBottom + proposedHeight - (proposedHeight % step);
+        var steppedHeight  = sizerDivHeight + proposedHeight - (proposedHeight % step)
+            + ((5 - this.parentClass.EVENTS_BORDER_WIDTH) * 2) - 7;
 
         // Maximum height - Set for the event end time not to be after 20:00
         var maxY      = parseInt(dojo.byId('eventsArea').offsetHeight);
         var eventTopY = parseInt(this.targetDomNode.parentNode.style.top);
         var proposedY = eventTopY + proposedHeight + step + sizerDivHeight;
-        if (proposedY <= maxY) {
+
+        // The event bottom border will be moved?
+        if (proposedY <= maxY && steppedHeight != currentHeight) {
             tmp['h'] = steppedHeight;
-        } else {
-            return;
-        }
 
-        if(this.targetWidget && dojo.isFunction(this.targetWidget.resize)){
-            this.targetWidget.resize(tmp);
-        }else{
-            if(this.animateSizing){
-                var anim = dojo.fx[this.animateMethod]([
-                    dojo.animateProperty({
-                        node: this.targetDomNode,
-                        properties: {
-                            width: { start: this.startSize.w, end: tmp.w, unit:'px' }
-                        },
-                        duration: this.animateDuration
-                    }),
-                    dojo.animateProperty({
-                        node: this.targetDomNode,
-                        properties: {
-                            height: { start: this.startSize.h, end: tmp.h, unit:'px' }
-                        },
-                        duration: this.animateDuration
-                    })
-                ]);
-                anim.play();
+            if(this.targetWidget && dojo.isFunction(this.targetWidget.resize)){
+                this.targetWidget.resize(tmp);
             }else{
-                dojo.style(this.targetDomNode,{
-                    height: tmp.h + "px"
-                });
+                if(this.animateSizing){
+                    var anim = dojo.fx[this.animateMethod]([
+                        dojo.animateProperty({
+                            node: this.targetDomNode,
+                            properties: {
+                                width: { start: this.startSize.w, end: tmp.w, unit:'px' }
+                            },
+                            duration: this.animateDuration
+                        }),
+                        dojo.animateProperty({
+                            node: this.targetDomNode,
+                            properties: {
+                                height: { start: this.startSize.h, end: tmp.h, unit:'px' }
+                            },
+                            duration: this.animateDuration
+                        })
+                    ]);
+                    anim.play();
+                }else{
+                    dojo.style(this.targetDomNode,{
+                        height: tmp.h + "px"
+                    });
+                }
             }
-        }
-        if(this.intermediateChanges){
-            this.onResize(e);
-        }
+            if(this.intermediateChanges){
+                this.onResize(e);
+            }
 
-        this.parentClass.eventMoved(this.targetDomNode.parentNode, false);
+            this.parentClass.eventMoved(this.targetDomNode.parentNode, false);
+        }
     },
 
     onResize: function(e){

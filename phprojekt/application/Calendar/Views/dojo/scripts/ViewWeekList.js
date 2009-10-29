@@ -17,9 +17,6 @@
  * @since      File available since Release 6.0
  */
 
-// mlp move require to general require file but previously check whether it is necessary to require this file
-dojo.require("dojo.parser");
-
 dojo.provide("phpr.Calendar.ViewWeekList");
 
 dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
@@ -94,9 +91,10 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         dojo.publish('Calendar.connectMouseScroll');
         dojo.publish('Calendar.connectViewResize');
 
-        this.updateSizeValues();
+        this.updateSizeValuesPart1();
         this.setEventsAreaDivValues();
         this.setEventDivsValues();
+        this.updateSizeValuesPart2();
         this.connectMoveableClass();
         this.setEventMinimumSizes();
     },
@@ -258,6 +256,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         }
     },
 
+    // Debugging function
     dump:function (arr,level) {
         var dumped_text = "";
         if(!level) level = 0;
@@ -288,9 +287,10 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         // Summary:
         //    Update grid contents
         this._lastGridBoxWidth = dojo.byId('gridBox').offsetWidth;
-        this.updateSizeValues();
+        this.updateSizeValuesPart1();
         this.setEventsAreaDivValues();
         this.setEventDivsValues();
+        this.updateSizeValuesPart2();
         this.setEventMinimumSizes();
     }
 });
