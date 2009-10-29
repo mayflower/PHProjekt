@@ -101,17 +101,6 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         this.setEventMinimumSizes();
     },
 
-    gridResized:function() {
-        // Summary:
-        //    Update grid contents
-        this._lastGridBoxWidth = dojo.byId('gridBox').offsetWidth;
-        this.updateSizeValues();
-        this.setEventsAreaDivValues();
-        this.setEventDivsValues();
-        this.connectMoveableClass();
-        this.setEventMinimumSizes();
-    },
-
     exportData:function() {
         // Summary:
         //    Opens a new window in CSV mode
@@ -292,5 +281,16 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
             dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
         }
         return dumped_text;
+    },
+
+
+    gridResized:function() {
+        // Summary:
+        //    Update grid contents
+        this._lastGridBoxWidth = dojo.byId('gridBox').offsetWidth;
+        this.updateSizeValues();
+        this.setEventsAreaDivValues();
+        this.setEventDivsValues();
+        this.setEventMinimumSizes();
     }
 });

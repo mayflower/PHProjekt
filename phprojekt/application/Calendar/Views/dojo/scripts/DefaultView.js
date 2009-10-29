@@ -71,7 +71,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     TYPE_EVENT_START: 0,
     TYPE_EVENT_END:   1,
 
-    EVENTS_BORDER_WIDTH: 5,
+    EVENTS_BORDER_WIDTH: 3,
     EVENTS_MAIN_DIV_ID: 'containerPlainDiv',
 
     ROUND_TIME_HALVES_PREVIOUS: 0,
@@ -618,12 +618,6 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // mlp1: if you are in week view and go to list view and then come back to this view, this function doesn't work
         // because there is something wrong with the save button and some functions are called simultaneously as many
         // times as times you go out and come back to week view.
-        var debugging = false;
-        if (debugging) {
-            console.log('ENTRA AL EVENT MOVED')
-            var saveButton             = dojo.byId(this._saveChanges.id);
-            console.log(saveButton)
-        }
 
         if (this._saveChanges.disabled == true) {
             dojox.fx.highlight({
@@ -855,12 +849,19 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
         var widthDays     = dojo.byId('scheduleBackground').offsetWidth - cellTimeWidth;
         var stepH         = widthDays / 7;
         var stepY         = dojo.byId('scheduleBackground').getElementsByTagName('td')[8].offsetHeight;
-        //var stepY         = this.parentClass._cellDayHeight;
 
         // Define maximum left and top positions
         var HMax        = parseInt(dojo.byId('eventsArea').style.width) - stepH;
         var eventHeight = this.node.offsetHeight;
         var YMax        = parseInt(dojo.byId('eventsArea').style.height) - eventHeight - stepY;
+
+        // If the event is a concurrent one, return it to 100% column width
+        var movedEvent     = this.parentClass.nodeIdToEventOrder(this.node.id);
+        var eventDivSecond = dojo.byId('plainDiv' + movedEvent);
+        var width          = this.parentClass._cellDayWidth - (2 * this.parentClass.EVENTS_BORDER_WIDTH);
+        dojo.style(eventDivSecond, {
+            width:  width + 'px'
+        });
 
         // Set left position
         var rest = leftTop.l % stepH;
@@ -869,22 +870,11 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
         } else {
             var left = leftTop.l + stepH - rest;
         }
-
         if (left < 0) {
             left = 0;
         } else if (left > HMax) {
             left = HMax;
         }
-
-        // Simultaneous events
-        var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);
-        movedEvent     = parseInt(movedEvent);
-        eventInfo      = this.parentClass._events[movedEvent];
-        // Is this event part of simultaneous ones and it is not in the first position?
-        if (eventInfo['simultWidth'] && eventInfo['simultOrder'] > 1) {
-            left += ((eventInfo['simultOrder'] - 1) / eventInfo['simultAmount'] * stepH) - 1;
-        }
-
         leftTop.l = left;
 
         // Set top position
