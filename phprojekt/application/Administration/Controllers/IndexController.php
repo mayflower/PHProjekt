@@ -36,6 +36,32 @@
 class Administration_IndexController extends IndexController
 {
     /**
+     * Init function
+     *
+     * Only admin users can access to these actions,
+     * if the user is not an admin, is redirected to the login form or throws an exception.
+     *
+     * @throws Phprojekt_PublishedException If the user is not an admin.
+     *
+     * @return void
+     */
+    public function init()
+    {
+        parent::init();
+
+        if (!Phprojekt_Auth::isAdminUser()) {
+            // If is a GET, show the login page
+            // If is a POST, send message in json format
+            if (!$this->getFrontController()->getRequest()->isGet()) {
+                throw new Phprojekt_PublishedException('Admin section is only for admin users', 500);
+            } else {
+                $this->_redirect(Phprojekt::getInstance()->getConfig()->webpath . 'index.php/Login/logout');
+            }
+            exit;
+        }
+    }
+
+    /**
      * Returns all the modules that contain configurations.
      *
      * Returns a list of modules that have a Configuration class, with:
