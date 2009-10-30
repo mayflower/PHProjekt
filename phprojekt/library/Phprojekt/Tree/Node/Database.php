@@ -161,9 +161,12 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             }
 
             $tree = $object->getNodeById($this->_requestedId);
+            if (null === $tree) {
+                throw new Phprojekt_Tree_Node_Exception('Requested node not found');
+            }
             $tree->_parentNode = null;
 
-            return $tree;
+            return $this->applyRights($tree);
         } else if (!($object = $cache->load(self::CACHE_NAME))) {
             $database = $this->getActiveRecord()->getAdapter();
             $table    = $this->getActiveRecord()->getTableName();
@@ -183,15 +186,12 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                 throw new Phprojekt_Tree_Node_Exception('Requested node not found');
             }
 
-            $where = sprintf("(%s OR t.id = %d) AND i.access > 0",
-                $database->quoteInto("t.path LIKE ?", $rootPath . '%'), (int) $this->id);
-            $whereJoin = sprintf('(i.item_id = t.id AND i.module_id = %d AND i.user_id = %d)',
-                Phprojekt_Module::getId($this->getActiveRecord()->getModelName()), Phprojekt_Auth::getUserId());
+            // Get all the projects
+            $where  = sprintf("(%s OR id = %d)", $database->quoteInto("path LIKE ?", $rootPath . '%'), (int) $this->id);
             $select = $database->select();
-            $select->from(array('t' => $table))
-                   ->joinInner(array('i' => 'item_rights'), $whereJoin)
+            $select->from($table)
                    ->where($where)
-                   ->order('t.path');
+                   ->order('path');
             $treeData = $select->query()->fetchAll(Zend_Db::FETCH_CLASS);
             foreach ($treeData as $index => $record) {
                 foreach ($record as $key => $value) {
@@ -217,6 +217,58 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
             $object = $this;
             $cache->save($this, self::CACHE_NAME);
+
+            // Delete the session for re-calculate the rights
+            $sessionName     = 'Phprojekt_Tree_Node_Database-applyRights';
+            $rightsNamespace = new Zend_Session_Namespace($sessionName);
+            $rightsNamespace->unsetAll();
+        }
+
+        return $this->applyRights($object);
+    }
+
+    /**
+     * Delete the projects where the user don't have access
+     *
+     * @param Phprojekt_Tree_Node_Database $object
+     *
+     * @return Phprojekt_Tree_Node_Database
+     */
+    public function applyRights($object)
+    {
+        $sessionName     = 'Phprojekt_Tree_Node_Database-applyRights';
+        $rightsNamespace = new Zend_Session_Namespace($sessionName);
+
+        // Get the itemRights relation
+        if (isset($rightsNamespace->rights)) {
+            $rights = $rightsNamespace->rights;
+        } else {
+            $database = $this->getActiveRecord()->getAdapter();
+            $where    = sprintf("module_id = %d AND user_id = %d AND access > 0",
+                Phprojekt_Module::getId($this->getActiveRecord()->getModelName()), Phprojekt_Auth::getUserId());
+            $select = $database->select();
+            $select->from('item_rights')
+                   ->where($where);
+            $rights = $select->query()->fetchAll(Zend_Db::FETCH_CLASS);
+            $rightsNamespace->rights = $rights;
+        }
+
+        // Delete the projects where the user don't have access
+        foreach ($object as $index => $tree) {
+            $found = false;
+            foreach ($rights as $right) {
+                if ($right->item_id == $tree->id) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                if ($tree->isRootNodeForCurrentTree()) {
+                    throw new Phprojekt_Tree_Node_Exception('Requested node not found');
+                } else {
+                    unset($object->_children[$tree->id]);
+                }
+            }
         }
 
         return $object;
