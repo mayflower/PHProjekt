@@ -91,10 +91,8 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         dojo.publish('Calendar.connectMouseScroll');
         dojo.publish('Calendar.connectViewResize');
 
-        this.updateSizeValuesPart1();
-        this.setEventsAreaDivValues();
-        this.setEventDivsValues();
-        this.updateSizeValuesPart2();
+        this.setVarsAndDivs();
+
         this.connectMoveableClass();
         this.setEventMinimumSizes();
     },
@@ -280,17 +278,5 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
             dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
         }
         return dumped_text;
-    },
-
-
-    gridResized:function() {
-        // Summary:
-        //    Update grid contents
-        this._lastGridBoxWidth = dojo.byId('gridBox').offsetWidth;
-        this.updateSizeValuesPart1();
-        this.setEventsAreaDivValues();
-        this.setEventDivsValues();
-        this.updateSizeValuesPart2();
-        this.setEventMinimumSizes();
     }
 });

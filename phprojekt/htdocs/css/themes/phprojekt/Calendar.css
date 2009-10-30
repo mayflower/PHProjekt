@@ -206,11 +206,6 @@
     background-color: #e9f3ff
 }
 
-.phprojekt #calendarSchedule .horizontalLine {
-    margin:3px;
-    border-bottom:1px dashed #203040;
-}
-
 .phprojekt #calendarSchedule  a:link,
 .phprojekt #calendarSchedule  a:visited,
 .phprojekt #calendarMain a:link,

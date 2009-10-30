@@ -699,9 +699,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 
     gridResized:function() {
         // Summary:
-        //    Calls the appropriate function gridResized depending on the class that triggered the event
+        //    Receives the call of event of view resize and calls the appropriate function to update vars and divs.
         if (this.weekList) {
-            this.weekList.gridResized();
+            this.weekList.setVarsAndDivs();
         }
     },
 

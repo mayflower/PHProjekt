@@ -38,7 +38,7 @@
     style="position: absolute; overflow-Y: hidden; overflow-X: hidden;">
         <div id="plainDiv{{event.order}}" class="eventsDivSecond" 
         style="border-width: {{eventsAttr.borderWidth}}px; cursor: pointer;">
-            {{event.timeDescrip}} {{event.title}} <br>
+            {{event.timeDescrip}} {{event.title|safe}} <br>
             {{event.notes|safe}}
         </div>
         <div dojoType="phpr.Calendar.ResizeHandle" resizeAxis="y" activeResize="true" targetId="plainDiv{{event.order}}"

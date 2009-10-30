@@ -27,25 +27,26 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     //    This Class provides the basic variables and functions for the class that takes care of displaying the list
     // information we receive from our Server in a HTML table.
 
-    main:                null,
-    id:                  0,
-    url:                 null,
-    updateUrl:           null,
-    _tagUrl:             null,
-    _date:               null,
-    _widthTable:         0,
-    _widthHourColumn:    8,
-    _cellTimeWidth:      null,
-    _cellDayWidth:       null,
-    _cellDayHeight:      null,
-    _cellTimeHeight:     null,
-    _lastGridBoxWidth:   null,
-    _saveChanges:        null,
-    eventHasBeenDragged: null,
-    stepH:               null,
-    stepY:               null,
-    posHMax:             null,
-    posYMaxComplement:   null,
+    main:                 null,
+    id:                   0,
+    url:                  null,
+    updateUrl:            null,
+    _tagUrl:              null,
+    _date:                null,
+    _widthTable:          0,
+    _widthHourColumn:     8,
+    _cellTimeWidth:       null,
+    _cellDayWidth:        null,
+    _cellDayHeight:       null,
+    _cellTimeHeight:      null,
+    _gridBoxWidthPrev:    null,
+    _calenSchedWidthPrev: null,
+    _saveChanges:         null,
+    eventHasBeenDragged:  null,
+    stepH:                null,
+    stepY:                null,
+    posHMax:              null,
+    posYMaxComplement:    null,
 
     // General constants
     SCHEDULE_START_HOUR: 8,
@@ -328,11 +329,19 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     updateSizeValuesPart1:function() {
         // Summary
         //    Updates internal class variables with current sizes of schedule
-        var scheduleBkg        = dojo.byId('scheduleBackground').getElementsByTagName('td');
-        this._cellTimeWidth    = scheduleBkg[0].offsetWidth;
-        this._cellDayWidth     = scheduleBkg[1].offsetWidth;
-        this._cellDayHeight    = scheduleBkg[0].offsetHeight;
-        this._cellTimeHeight   = scheduleBkg[8].offsetHeight;
+
+        // This is done before everything because moving 'eventsArea' div changes width of 'scheduleBackground' grid
+        // sometimes depending of browser size, at least in FF 3.5.
+        var eventsAreaDiv = dojo.byId('eventsArea');
+        dojo.style(eventsAreaDiv, {
+            top: '0px'
+        });
+
+        var scheduleBkg      = dojo.byId('scheduleBackground').getElementsByTagName('td');
+        this._cellTimeWidth  = scheduleBkg[0].offsetWidth;
+        this._cellDayWidth   = scheduleBkg[1].offsetWidth;
+        this._cellDayHeight  = scheduleBkg[0].offsetHeight;
+        this._cellTimeHeight = scheduleBkg[8].offsetHeight;
     },
 
     updateSizeValuesPart2:function() {
@@ -818,6 +827,50 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         }
 
         return halves;
+    },
+
+    setVarsAndDivs:function() {
+        // Summary:
+        //    The first time this function is called (on class load) sets / updates class variables of div sizes, steps,
+        // limits, etc. and updates sizes of the eventsArea and events on screen.
+        // The following times does the same things only if the gridBox width has changed.
+
+        var gridBox           = dojo.byId('gridBox');
+        var gridBoxWidth      = dojo.style(gridBox, "width");
+        var calendarSchedule  = dojo.byId('calendarSchedule');
+        var calenSchedWidth   = dojo.style(calendarSchedule,"width");
+        var minCalenSchedSize = 600;
+
+        if (gridBoxWidth != this._gridBoxWidthPrev || calenSchedWidth != this._calenSchedWidthPrev) {
+            var doUpdateAndResize = true;
+
+            // Don't allow very small sizes because floating events positioning would start to be imprecise
+            if (gridBoxWidth < minCalenSchedSize) {
+                if (calenSchedWidth < minCalenSchedSize) {
+                    dojo.style(calendarSchedule, {
+                        width: minCalenSchedSize + 'px'
+                    });
+                } else {
+                    // The width of the calendar schedule hasn't changed
+                    doUpdateAndResize = false;
+                }
+            } else if (calenSchedWidth == minCalenSchedSize) {
+                dojo.style(calendarSchedule, {
+                    width: ''
+                });
+            }
+
+            this._gridBoxWidthPrev    = gridBoxWidth;
+            this._calenSchedWidthPrev = calenSchedWidth;
+
+            if (doUpdateAndResize) {
+                this.updateSizeValuesPart1();
+                this.setEventsAreaDivValues();
+                this.setEventDivsValues();
+                this.updateSizeValuesPart2();
+                this.setEventMinimumSizes();
+            }
+        }
     }
 });
 
