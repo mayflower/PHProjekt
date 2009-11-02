@@ -206,6 +206,11 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
                 this._events[nextEvent]['endTime']     = eventInfo['endTime'];
                 this._events[nextEvent]['dayOrder']    = eventInfo['dayOrder'];
                 this._events[nextEvent]['hasChanged']  = false;
+                // To check whether the event is pending to be saved - The last position where it was dropped, so if
+                // user drags it and leaves it in the same position, it doesn't need to be saved.
+                this._events[nextEvent]['posEventDB'] = content[event]['startDate'] + '-' + eventInfo['startTime']
+                     + '-' + content[event]['endDate'] + '-' + eventInfo['endTime'];
+
                 // Will be filled later:
                 this._events[nextEvent]['currentLeft']  = null;
                 this._events[nextEvent]['currentTop']   = null;

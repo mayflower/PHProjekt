@@ -201,17 +201,16 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         if (eventStartHour < 20 && ((eventEndHour > 7) && !(eventEndHour == 8 && eventEndMinutes == 0))) {
             // Yes - Show the event inside the schedule
             result['range']     = this.SHOWN_INSIDE_CHART;
-            result['startTime'] = eventStartTime;
-            result['endTime']   = eventEndTime;
+            result['startTime'] = this.formatTime(eventStartTime);
+            result['endTime']   = this.formatTime(eventEndTime);
             result['dayOrder']  = this.getDayOrder(eventStartDate);
 
             // Date-time description
             result['timeDescrip'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime,
                                     eventEndTime);
         } else {
-
             // No - Shown out of the schedule
-            result['range']         = this.SHOWN_OUTSIDE_CHART;
+            result['range'] = this.SHOWN_OUTSIDE_CHART;
             // Date-time description
             if (this.main.weekList != null) {
                 if (eventStartDate == eventEndDate) {
@@ -514,41 +513,75 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         }
     },
 
-    eventMoved:function(node, dropped) {
+    eventMoved:function(node, dropped, resized) {
         // Summary:
         //    Called when an event is moved: both dragged or Y-resized, both in the dragging of the event or the border
         // itself and when mouse is released. Its purpose is to eventually update an internal array, the event
         // description, change shapes of events according to 'simultaneous events' criteria and activate Save button.
+        // Parameters:
+        //   node: the div node of the moved event
+        //   dropped: whether the mouse button was released, so the dragged actioni has been finished
+        //   resized: whether the event has just been resized (not moved)
 
-        var posLeftNew   = parseInt(node.style.left);
-        var posTopNew    = parseInt(node.style.top);
-        var posBottomNew = posTopNew + node.offsetHeight;
-        var movedEvent   = this.nodeIdToEventOrder(node.id);
-        var startTimeNew = this.divPositionToTime(posTopNew);
-        startTimeNew     = this.formatTime(startTimeNew);
-        var endTimeNew   = this.divPositionToTime(posBottomNew);
-        endTimeNew       = this.formatTime(endTimeNew);
-        var dayOrder     = this.divPositionToDay(posLeftNew);
+        var posLeftNew        = parseInt(node.style.left);
+        var posTopNew         = parseInt(node.style.top);
+        var posBottomNew      = posTopNew + node.offsetHeight;
+        var movedEvent        = this.nodeIdToEventOrder(node.id);
+        var posTopCurrent     = this._events[movedEvent]['currentTop'];
+        var posBottomCurrent  = this._events[movedEvent]['currentBottom'];
+        var posLeftCurrent    = this._events[movedEvent]['currentLeft'];
 
-        // Update some events array data just when dragged to other position
-        this._events[movedEvent]['dayOrder']  = dayOrder;
-        this._events[movedEvent]['startTime'] = startTimeNew;
-        this._events[movedEvent]['endTime']   = endTimeNew;
-
-
-        // Update the rest of events array data just when dropped
-        if (dropped) {
-            this._events[movedEvent]['currentLeft']   = posLeftNew;
-            this._events[movedEvent]['hasChanged']    = true;
-            this._events[movedEvent]['startDate']     = this._weekDays[dayOrder];
-            this._events[movedEvent]['endDate']       = this._weekDays[dayOrder];
-            this._events[movedEvent]['currentTop']    = posTopNew;
+        // If event was moved (not resized), then attend the start time change
+        if (!resized) {
+            // Start Time did change?
+            if (posTopNew != posTopCurrent) {
+                var startTime                          = this.divPositionToTime(posTopNew);
+                startTime                              = this.formatTime(startTime);
+                this._events[movedEvent]['currentTop'] = posTopNew;
+                this._events[movedEvent]['startTime']  = startTime;
+            }
+            // Day did change?
+            if (posLeftNew != posLeftCurrent) {
+                var dayOrder                            = this.divPositionToDay(posLeftNew);
+                this._events[movedEvent]['currentLeft'] = posLeftNew;
+                this._events[movedEvent]['dayOrder']    = dayOrder;
+                this._events[movedEvent]['startDate']   = this._weekDays[dayOrder];
+                this._events[movedEvent]['endDate']     = this._weekDays[dayOrder];
+            }
+        }
+        // End Time did change?
+        if (posBottomNew != posBottomCurrent) {
+            var endTime                               = this.divPositionToTime(posBottomNew);
+            endTime                                   = this.formatTime(endTime);
             this._events[movedEvent]['currentBottom'] = posBottomNew;
-            this.enableSaveButton();
+            this._events[movedEvent]['endTime']       = endTime;
+        }
+
+        // Fill values for event description update
+        if (startTime == null) {
+            var startTime = this._events[movedEvent]['startTime'];
+        }
+        if (endTime == null) {
+            var endTime = this._events[movedEvent]['endTime'];
+        }
+
+        // The event was dropped?
+        if (dropped) {
+            var posEventCurrent = this._events[movedEvent]['startDate'] + '-' + this._events[movedEvent]['startTime']
+                + '-' + this._events[movedEvent]['endDate'] + '-' + this._events[movedEvent]['endTime'];
+
+            // The event was dropped in a different location than the one where it was the first time picked up?
+            if (posEventCurrent != this._events[movedEvent]['posEventDB']) {
+                // Yes
+                this._events[movedEvent]['hasChanged'] = true;
+                this.enableSaveButton();
+            } else {
+                this._events[movedEvent]['hasChanged'] = false;
+            }
         }
 
         // Update event textual contents
-        var timeDescrip  = this.eventDateTimeDescrip(this.DATETIME_SHORT, startTimeNew, endTimeNew);
+        var timeDescrip  = this.eventDateTimeDescrip(this.DATETIME_SHORT, startTime, endTime);
         var eventDescrip = timeDescrip + ' ' + this._events[movedEvent]['title'] + '<br>'
             + this._events[movedEvent]['notes'];
 
@@ -884,7 +917,7 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
     onMove: function(mover, leftTop) {
         // Summary:
         //    Original function is empty. This one is in charge of making the 'stepped' allike draging. Then calls
-        // eventMoved function of Calendar view class.
+        // eventMoved function of Calendar view class, if some movement was actually done.
 
         // Following value will be checked by onMoveStop function of this class
         this.parentClass.eventHasBeenDragged = true;
@@ -1021,7 +1054,7 @@ dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
                 this.onResize(e);
             }
 
-            this.parentClass.eventMoved(this.targetDomNode.parentNode, false);
+            this.parentClass.eventMoved(this.targetDomNode.parentNode, false, true);
         }
     },
 
@@ -1031,6 +1064,6 @@ dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
         // Stub fired when sizing is done. Fired once
         //  after resize, or often when `intermediateChanges` is
         //  set to true.
-        this.parentClass.eventMoved(this.targetDomNode.parentNode, true);
+        this.parentClass.eventMoved(this.targetDomNode.parentNode, true, true);
     }
 });
