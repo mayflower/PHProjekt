@@ -668,7 +668,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         }
 
         if (this.form) {
-            this.form.updateData();
+            this.form = null;
         }
     },
 
