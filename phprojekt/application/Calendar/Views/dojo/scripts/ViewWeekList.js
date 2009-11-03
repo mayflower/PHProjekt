@@ -28,7 +28,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     _schedule:      Array(24),
     _furtherEvents: Array(),
     _weekDays:      Array(7),
-    _events:        Array(),
+    events:         Array(),
 
     beforeConstructor:function() {
         // Summary:
@@ -83,7 +83,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
             widthHourColumn:      this._widthHourColumn,
             header:               this._header,
             schedule:             this._schedule,
-            events:               this._events,
+            events:               this.events,
             furtherEvents:        this._furtherEvents,
             furtherEventsMessage: phpr.nls.get('Further events'),
             eventsAttr:           eventsAttr
@@ -92,9 +92,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         dojo.publish('Calendar.connectViewResize');
 
         this.setVarsAndDivs();
-
-        this.connectMoveableClass();
-        this.setEventMinimumSizes();
+        this.movementClassesSettings();
     },
 
     exportData:function() {
@@ -173,7 +171,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         // Summary:
         //    Puts every event in the corresponding array position.
 
-        this._events                = new Array();
+        this.events                 = new Array();
         furtherEventsTemp           = new Array();
         furtherEventsTemp['show']   = false;
         furtherEventsTemp['events'] = new Array();
@@ -188,32 +186,32 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
                 var notes = this.htmlEntities(content[event]['notes']);
                 notes     = notes.replace('\n', '<br />');
 
-                var nextEvent = this._events.length;
-                if (this._events[0] == undefined) {
+                var nextEvent = this.events.length;
+                if (this.events[0] == undefined) {
                     nextEvent = 0;
                 }
 
-                this._events[nextEvent]                = new Array();
-                this._events[nextEvent]['order']       = nextEvent; // For Django template
-                this._events[nextEvent]['id']          = content[event]['id'];
-                this._events[nextEvent]['title']       = this.htmlEntities(content[event]['title']);
-                this._events[nextEvent]['timeDescrip'] = eventInfo['timeDescrip'];
-                this._events[nextEvent]['notes']       = notes;
-                this._events[nextEvent]['class']       = '';
-                this._events[nextEvent]['startDate']   = content[event]['startDate']
-                this._events[nextEvent]['endDate']     = content[event]['endDate']
-                this._events[nextEvent]['startTime']   = eventInfo['startTime'];
-                this._events[nextEvent]['endTime']     = eventInfo['endTime'];
-                this._events[nextEvent]['dayOrder']    = eventInfo['dayOrder'];
-                this._events[nextEvent]['hasChanged']  = false;
+                this.events[nextEvent]                = new Array();
+                this.events[nextEvent]['order']       = nextEvent; // For Django template
+                this.events[nextEvent]['id']          = content[event]['id'];
+                this.events[nextEvent]['title']       = this.htmlEntities(content[event]['title']);
+                this.events[nextEvent]['timeDescrip'] = eventInfo['timeDescrip'];
+                this.events[nextEvent]['notes']       = notes;
+                this.events[nextEvent]['class']       = '';
+                this.events[nextEvent]['startDate']   = content[event]['startDate']
+                this.events[nextEvent]['endDate']     = content[event]['endDate']
+                this.events[nextEvent]['startTime']   = eventInfo['startTime'];
+                this.events[nextEvent]['endTime']     = eventInfo['endTime'];
+                this.events[nextEvent]['dayOrder']    = eventInfo['dayOrder'];
+                this.events[nextEvent]['hasChanged']  = false;
                 // To check whether the event is pending to be saved - The last position where it was dropped, so if
                 // user drags it and leaves it in the same position, it doesn't need to be saved.
-                this._events[nextEvent]['posEventDB'] = content[event]['startDate'] + '-' + eventInfo['startTime']
+                this.events[nextEvent]['posEventDB'] = content[event]['startDate'] + '-' + eventInfo['startTime']
                      + '-' + content[event]['endDate'] + '-' + eventInfo['endTime'];
 
                 // Will be filled later:
-                this._events[nextEvent]['currentLeft']  = null;
-                this._events[nextEvent]['currentTop']   = null;
+                this.events[nextEvent]['currentLeft']  = null;
+                this.events[nextEvent]['currentTop']   = null;
 
             } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
                 furtherEventsTemp['show'] = true;
