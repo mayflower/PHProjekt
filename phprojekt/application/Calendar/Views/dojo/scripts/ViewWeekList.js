@@ -92,7 +92,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         dojo.publish('Calendar.connectViewResize');
 
         this.setVarsAndDivs();
-        this.movementClassesSettings();
+        this.classesSetup();
     },
 
     exportData:function() {

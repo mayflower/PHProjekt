@@ -33,8 +33,7 @@
 </div>
 <div id="eventsArea" style="float: left; position: absolute;">
     {% for event in events %}
-    <div dojoType="phpr.Calendar.Moveable" area="margin" within="true" id="{{eventsAttr.divIdPre}}{{event.order}}" 
-    class="eventsDivMain"
+    <div id="{{eventsAttr.divIdPre}}{{event.order}}" class="eventsDivMain"
     style="position: absolute; overflow-Y: hidden; overflow-X: hidden;">
         <div id="plainDiv{{event.order}}" class="eventsDivSecond" 
         style="border-width: {{eventsAttr.borderWidth}}px; cursor: pointer;">

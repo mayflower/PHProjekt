@@ -489,15 +489,13 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         }
     },
 
-    movementClassesSettings:function() {
+    classesSetup:function() {
         // Summary:
-        //    Provides the dragging and resize classes with a reference object variable to this class.
-        // Establishes a minimum height for the events, it is the height of one cell.
+        //    Creates dragging class. Provides the dragging and resize classes with a reference object variable to this
+        // class. Establishes a minimum height for the events, it is the height of one cell.
 
         for (var i in this.events) {
-            // Connection between Moveable and ResizeHandle classes and this class
-            var eventDiv          = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i);
-            eventDiv.parentClass  = this;
+            var eventDiv          = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
             var resizeDiv         = dijit.byId('eventResize' + i)
             resizeDiv.parentClass = this;
 
@@ -940,6 +938,10 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 dojo.provide("phpr.Calendar.Moveable");
 dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
 
+    constructor: function(node, params, parentClass) {
+        this.parentClass = parentClass;
+    },
+
     markupFactory: function(params, node){
         return this;
     },
@@ -1044,6 +1046,7 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
 
 dojo.provide("phpr.Calendar.ResizeHandle");
 dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
+
     _changeSizing: function(/*Event*/ e){
         // summary: apply sizing information based on information in (e) to attached node
         var tmp = this._getNewCoords(e);
