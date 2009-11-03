@@ -973,7 +973,7 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
 
                 if (eventWidthComplete != eventWidthCurrent) {
                     dojo.style(eventDivSecond, {
-                        width: eventWidthComplete + 'px';
+                        width: eventWidthComplete + 'px'
                     });
                 }
             }
