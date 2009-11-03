@@ -922,25 +922,24 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
         // Following value will be checked by onMoveStop function of this class
         this.parentClass.eventHasBeenDragged = true;
 
-        var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);
-        var stepH      = this.parentClass.stepH;
-        var stepY      = this.parentClass.stepY;
-        var posHmax    = this.parentClass.posHMax;
-        var posYmax    = this.parentClass.posYMaxComplement - this.node.offsetHeight;
-
-        // If the event is a concurrent one, return it to 100% column width
-        var eventDivSecond = dojo.byId('plainDiv' + movedEvent);
-        dojo.style(eventDivSecond, {
-            width:  this.parentClass._cellDayWidth - (2 * this.parentClass.EVENTS_BORDER_WIDTH) + 'px'
-        });
+        var movedEventIndex = this.parentClass.nodeIdToEventOrder(this.node.id);
+        var movedEvent      = this.parentClass._events[movedEventIndex];
+        var stepH           = this.parentClass.stepH;
+        var stepY           = this.parentClass.stepY;
+        var posHmax         = this.parentClass.posHMax;
+        var posYmax         = this.parentClass.posYMaxComplement - this.node.offsetHeight;
 
         // Store original event position before this dragging attempt
-        var eventDay       = this.parentClass._events[movedEvent]['dayOrder'];
-        var eventStartTime = this.parentClass._events[movedEvent]['startTime'];
-        var originalLeft   = this.parentClass.dayToDivPosition(eventDay, true);
-        var originalTop    = this.parentClass.timeToDivPosition(eventStartTime, true);
+        var originalLeft   = this.parentClass.dayToDivPosition(movedEvent['dayOrder'], true);
+        var originalTop    = this.parentClass.timeToDivPosition(movedEvent['startTime'], true);
 
         // Calculate new left position
+        if (movedEvent['simultWidth']) {
+            //  If event is concurrent and it is not the first one from left to right, attach its left side to column
+            // border
+            leftTop.l -= stepH / movedEvent['simultAmount'] * (movedEvent['simultOrder'] - 1);
+            leftTop.l  = parseInt(leftTop.l);
+        }
         var rest = leftTop.l % stepH;
         if (rest < stepH / 2) {
             var left = leftTop.l - rest;
@@ -965,6 +964,20 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
 
         // According to new calculated left and top values, the div will be moved?
         if (originalLeft != leftTop.l || originalTop != leftTop.t) {
+            // Yes
+            // If the event is a concurrent one, return it to 100% column width
+            if (movedEvent['simultWidth']) {
+                var eventDivSecond     = dojo.byId('plainDiv' + movedEventIndex);
+                var eventWidthComplete = this.parentClass._cellDayWidth - (2 * this.parentClass.EVENTS_BORDER_WIDTH);
+                var eventWidthCurrent  = dojo.style(eventDivSecond, 'width');
+
+                if (eventWidthComplete != eventWidthCurrent) {
+                    dojo.style(eventDivSecond, {
+                        width: eventWidthComplete + 'px';
+                    });
+                }
+            }
+
             var s  = mover.node.style;
             s.left = leftTop.l + "px";
             s.top  = leftTop.t + "px";
