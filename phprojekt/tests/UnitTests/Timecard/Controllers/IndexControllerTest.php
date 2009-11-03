@@ -335,7 +335,7 @@ class Timecard_IndexController_Test extends FrontInit
         // INSERT
         $this->setRequestUrl('Timecard/index/jsonGetFavoritesProjects/');
         $response = $this->getResponse();
-        $this->assertContains('{"id":1,"display":"Invisible Root"},{"id":2,"display":"Project 1"}', $response);
+        $this->assertContains('{"id":1,"display":"Invisible Root"},{"id":2,"display":"....Project 1"}', $response);
     }
 
     /**

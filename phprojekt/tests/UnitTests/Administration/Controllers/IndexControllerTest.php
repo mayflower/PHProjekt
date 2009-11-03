@@ -41,6 +41,6 @@ class Administration_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Administration/index/jsonGetModules/');
         $response = $this->getResponse();
-        $this->assertEquals('{}&&({"metadata":[]})', $response);
+        $this->assertContains('"name":"General","label":"General"', $response);
     }
 }
