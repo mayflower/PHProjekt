@@ -82,7 +82,7 @@ class Timecard_Models_Setting_Test extends PHPUnit_Framework_TestCase
         $timecardSetting->setSettings($params);
 
         // Check it was well saved
-        $settingsModel = new Setting_Models_Setting();
+        $settingsModel = new Phprojekt_Setting();
         $settingsModel->setModule('Timecard');
         $response      = $settingsModel->getSetting('favorites');
         $response      = unserialize($response);

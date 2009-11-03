@@ -1,6 +1,6 @@
 <?php
 /**
- * A model that receives information about Setting models of other modules
+ * Class for manage user setting from different modules
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
  */
 
 /**
- * A model that receives information about Setting models of other modules
+ * Class for manage user setting from different modules
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -31,12 +31,12 @@
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
+class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
 {
     /**
      * Name for use with the session
      */
-    const IDENTIFIER = 'Setting_Models_Setting-getSetting-';
+    const IDENTIFIER = 'Phprojekt_Setting-getSetting-';
 
     /**
      * The name of a module
@@ -65,10 +65,10 @@ class Setting_Models_Setting extends Phprojekt_ActiveRecord_Abstract
      *
      * @var array
      */
-    protected static $_excludePaths = array('Default', 'Administration', 'Setting', 'Core', '.svn');
+    protected static $_excludePaths = array('Default', 'Core', '.svn');
 
     /**
-     * Returns a set of modules available and have setting sections
+     * Returns a set of modules available that have Setting.php files
      *
      * @return array
      */

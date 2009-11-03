@@ -41,7 +41,7 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
             + 'his/her profile.')
             + '<br /><br />'
             + phpr.nls.get('Please choose one of the tabs of above.');
-        this.render(["phpr.Setting.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+        this.render(["phpr.Core.Setting.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             summaryTxt: summaryTxt
         });
         this.cleanPage();
@@ -63,7 +63,7 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
-        var subModuleUrl = phpr.webpath + 'index.php/Setting/index/jsonGetModules';
+        var subModuleUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonGetModules'
         var self = this;
         phpr.DataStore.addStore({url: subModuleUrl});
         phpr.DataStore.requestData({
@@ -80,7 +80,7 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
                     if (moduleName == phpr.submodule) {
                         liclass   = 'class = active';
                     }
-                    navigation += self.render(["phpr.Setting.template", "navigation.html"], null, {
+                    navigation += self.render(["phpr.Core.Setting.template", "navigation.html"], null, {
                         moduleName :    moduleName,
                         moduleLabel:    moduleLabel,
                         liclass:        liclass,

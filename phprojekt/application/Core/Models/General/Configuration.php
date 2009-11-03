@@ -93,7 +93,7 @@ class Core_Models_General_Configuration
     {
         $fields = $this->getFieldDefinition();
 
-        $configuration = Phprojekt_Loader::getModel('Administration', 'Configuration');
+        $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
         $configuration->setModule('General');
 
         foreach ($fields as $data) {

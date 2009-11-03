@@ -19,7 +19,7 @@
 
 dojo.provide("phpr.Administration.Main");
 
-dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
+dojo.declare("phpr.Administration.Main", phpr.Core.Main, {
     constructor:function() {
         this.module = "Administration";
         this.loadFunctions(this.module);
@@ -42,7 +42,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
             + phpr.nls.get('Here can be configured general settings of the site that affects all the users.')
             + '<br /><br />'
             + phpr.nls.get('Please choose one of the tabs of above.');
-        this.render(["phpr.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+        this.render(["phpr.Core.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             summaryTxt: summaryTxt
         });
         this.cleanPage();
@@ -61,7 +61,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
         phpr.module       = this.module;
         phpr.submodule    = module;
         phpr.parentmodule = '';
-        this.render(["phpr.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+        this.render(["phpr.Core.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             summaryTxt: ''
         });
         this.cleanPage();
@@ -74,7 +74,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
-        var subModuleUrl = phpr.webpath + 'index.php/Administration/index/jsonGetModules';
+        var subModuleUrl = phpr.webpath + 'index.php/Core/' + this.module.toLowerCase() + '/jsonGetModules';
         var self = this;
         phpr.DataStore.addStore({url: subModuleUrl});
         phpr.DataStore.requestData({
@@ -119,7 +119,7 @@ dojo.declare("phpr.Administration.Main", phpr.Default.Main, {
                     if (moduleName == phpr.submodule) {
                         liclass   = 'class = active';
                     }
-                    navigation += self.render(["phpr.Administration.template", "navigation.html"], null, {
+                    navigation += self.render(["phpr.Core.Administration.template", "navigation.html"], null, {
                         moduleName :    'Administration',
                         moduleLabel:    moduleLabel,
                         liclass:        liclass,

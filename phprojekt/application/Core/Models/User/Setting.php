@@ -202,7 +202,7 @@ class Core_Models_User_Setting
     public function validateSettings($params)
     {
         $message = null;
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
+        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
         $setting->setModule('User');
 
         // Passwords
@@ -245,7 +245,7 @@ class Core_Models_User_Setting
         if (!$userId) {
             $userId = Phprojekt_Auth::getUserId();
         }
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
+        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
         $setting->setModule('User');
         if (empty($params['password'])) {
             $password = $setting->getSetting('password', $userId);
@@ -253,12 +253,12 @@ class Core_Models_User_Setting
             $password = Phprojekt_Auth::cryptString($params['password']);
         }
 
-        $namespace = new Zend_Session_Namespace(Setting_Models_Setting::IDENTIFIER, $userId);
+        $namespace = new Zend_Session_Namespace(Phprojekt_Setting::IDENTIFIER, $userId);
         $fields    = $this->getFieldDefinition();
         foreach ($fields as $data) {
             foreach ($params as $key => $value) {
                 if ($key == $data['key'] && $key != 'oldValue' && $key != 'confirmValue') {
-                    $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
+                    $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
                     $setting->setModule('User');
 
                     if (($key == 'password')) {

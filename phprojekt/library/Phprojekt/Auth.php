@@ -61,7 +61,7 @@ class Phprojekt_Auth extends Zend_Auth
                 $tokenCookieHash   = Cleaner::sanitize('alnum', $_COOKIE[$cookieHashName]);
                 $tokenCookieUserId = (int) $_COOKIE[$cookieUserId];
                 $goToLoginPage     = false;
-                $setting           = Phprojekt_Loader::getModel('Setting', 'Setting');
+                $setting           = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
                 $setting->setModule('User');
                 $tokenDbHash    = $setting->getSetting(self::LOGGED_TOKEN . '_hash', $tokenCookieUserId);
                 $tokenDbExpires = (int) $setting->getSetting(self::LOGGED_TOKEN . '_expires', (int) $tokenCookieUserId);
@@ -123,7 +123,7 @@ class Phprojekt_Auth extends Zend_Auth
         }
 
         try {
-            $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
+            $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
             $setting->setModule('User');
 
             // The password does not match with password provided
@@ -271,7 +271,7 @@ class Phprojekt_Auth extends Zend_Auth
         if ($userId) {
             // Delete all DB settings table token rows
             $db      = Phprojekt::getInstance()->getDb();
-            $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
+            $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
             $setting->setModule('User');
             $where = sprintf("user_id = %d AND key_value LIKE %s", (int) $userId, $db->quote(self::LOGGED_TOKEN . '%'));
             $rows  = $setting->fetchAll($where);

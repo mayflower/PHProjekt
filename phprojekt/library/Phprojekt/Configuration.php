@@ -1,6 +1,6 @@
 <?php
 /**
- * A model that receives information about Configuration models of other modules
+ * Class for manage system configurations from different modules
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
  */
 
 /**
- * A model that receives information about Configuration models of other modules
+ * Class for manage system configurations from different modules
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
@@ -31,7 +31,7 @@
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstract
+class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
 {
     /**
      * The name of a module
@@ -60,7 +60,7 @@ class Administration_Models_Configuration extends Phprojekt_ActiveRecord_Abstrac
      *
      * @var array
      */
-    protected static $_excludePaths = array('Default', 'Administration', 'Setting', 'Core', '.svn');
+    protected static $_excludePaths = array('Default', 'Core', '.svn');
 
     /**
      * Returns a set of modules available and have Configuration sections

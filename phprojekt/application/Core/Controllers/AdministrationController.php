@@ -1,6 +1,6 @@
 <?php
 /**
- * Setting Module Controller for PHProjekt 6.0
+ * Administration Module Controller for PHProjekt 6.0
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -14,31 +14,57 @@
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    $Id$
- * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
- * @subpackage Setting
+ * @subpackage Administration
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
 
 /**
- * Setting Module Controller for PHProjekt 6.0
+ * Administration Module Controller for PHProjekt 6.0
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @package    PHProjekt
- * @subpackage Setting
+ * @subpackage Administration
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
+ * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Setting_IndexController extends IndexController
+class Core_AdministrationController extends Core_IndexController
 {
     /**
-     * Returns all the modules that contain settings.
+     * Init function
      *
-     * Returns a list of modules that have a Setting class, with:
+     * Only admin users can access to these actions,
+     * if the user is not an admin, is redirected to the login form or throws an exception.
+     *
+     * @throws Phprojekt_PublishedException If the user is not an admin.
+     *
+     * @return void
+     */
+    public function init()
+    {
+        parent::init();
+
+        if (!Phprojekt_Auth::isAdminUser()) {
+            // If is a GET, show the login page
+            // If is a POST, send message in json format
+            if (!$this->getFrontController()->getRequest()->isGet()) {
+                throw new Phprojekt_PublishedException('Admin section is only for admin users', 500);
+            } else {
+                $this->_redirect(Phprojekt::getInstance()->getConfig()->webpath . 'index.php/Login/logout');
+            }
+            exit;
+        }
+    }
+
+    /**
+     * Returns all the modules that contain Configuration.php file
+     *
+     * Returns a list of modules that have a Configuration class, with:
      * <pre>
      *  - name  => Name of the module.
      *  - label => Display for the module.
@@ -50,14 +76,14 @@ class Setting_IndexController extends IndexController
      */
     public function jsonGetModulesAction()
     {
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-        $data    = $setting->getModules();
+        $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
+        $data          = $configuration->getModules();
 
         Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**
-     * Returns the setting fields and data for one module.
+     * Returns the configuration fields and data for one module.
      *
      * The return have:
      *  - The metadata of each field.
@@ -78,10 +104,10 @@ class Setting_IndexController extends IndexController
         $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
         $moduleId = (int) Phprojekt_Module::getId($module);
 
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-        $setting->setModule($module);
-        $metadata = $setting->getModel()->getFieldDefinition();
-        $records  = $setting->getList($moduleId, $metadata);
+        $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
+        $configuration->setModule($module);
+        $metadata = $configuration->getModel()->getFieldDefinition();
+        $records  = $configuration->getList($moduleId, $metadata);
 
         $data = array("metadata" => $metadata,
                       "data"     => $records,
@@ -91,7 +117,7 @@ class Setting_IndexController extends IndexController
     }
 
     /**
-     * Saves the settings for one module.
+     * Saves the configuration for one module.
      *
      * OPTIONAL request parameters:
      * <pre>
@@ -113,18 +139,18 @@ class Setting_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $module  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
-        $setting->setModule($module);
+        $module        = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
+        $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
+        $configuration->setModule($module);
 
-        $message = $setting->validateSettings($this->getRequest()->getParams());
+        $message = $configuration->validateConfigurations($this->getRequest()->getParams());
 
         if (!empty($message)) {
             $message = Phprojekt::getInstance()->translate($message);
-            $type = "error";
+            $type    = "error";
         } else {
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
-            $setting->setSettings($this->getRequest()->getParams());
+            $configuration->setConfigurations($this->getRequest()->getParams());
             $type = "success";
         }
 

@@ -88,7 +88,7 @@ class Phprojekt_LoginController_Test extends FrontInit
         } catch (Zend_Controller_Response_Exception $error) {
             $this->assertEquals(0, $error->getCode());
             // Fetch logged data in settings table
-            $settingsModel = new Setting_Models_Setting();
+            $settingsModel = new Phprojekt_Setting();
             $settingsModel->setModule('User');
             $hash = $settingsModel->getSetting(Phprojekt_Auth::LOGGED_TOKEN . '_hash', 1);
             $this->assertEquals(32, strlen($hash));
@@ -117,7 +117,7 @@ class Phprojekt_LoginController_Test extends FrontInit
             } catch (Zend_Session_Exception $error) {
                 $this->assertEquals(0, $error->getCode());
                 // Try to fetch login data in settings table to assure it has been deleted
-                $settingsModel = new Setting_Models_Setting();
+                $settingsModel = new Phprojekt_Setting();
                 $settingsModel->setModule('User');
                 $db    = Phprojekt::getInstance()->getDb();
                 $where = sprintf("user_id = 1 AND key_value LIKE %s", $db->quote(Phprojekt_Auth::LOGGED_TOKEN . '%'));

@@ -103,7 +103,7 @@ class Core_UserController extends Core_IndexController
         $data['status']    = (empty($user->status)) ? "" : $user->status;
         $data['admin']     = (empty($user->admin)) ? "" : $user->admin;
 
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
+        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
         $setting->setModule('User');
 
         $fields = $setting->getModel()->getFieldDefinition();
@@ -188,7 +188,7 @@ class Core_UserController extends Core_IndexController
         }
 
         // Saving the settings
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
+        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
         $setting->setModule('User');
         $setting->setSettings($this->getRequest()->getParams(), $id);
 

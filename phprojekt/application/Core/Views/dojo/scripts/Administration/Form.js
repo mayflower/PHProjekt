@@ -17,12 +17,12 @@
  * @since      File available since Release 6.0
  */
 
-dojo.provide("phpr.Setting.Form");
+dojo.provide("phpr.Administration.Form");
 
-dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
+dojo.declare("phpr.Administration.Form", phpr.Default.Form, {
 
     setUrl:function() {
-        this._url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/moduleName/" + phpr.submodule;
+        this._url = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDetail/moduleName/' + phpr.submodule;
     },
 
     initData:function() {
@@ -58,21 +58,11 @@ dojo.declare("phpr.Setting.Form", phpr.Default.Form, {
         }
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/moduleName/' + phpr.submodule,
+            url:       phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSave/moduleName/' + phpr.submodule,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
-                if (!this.id) {
-                    this.id = data['id'];
-                }
                 if (data.type == 'success') {
-                    if (phpr.submodule == 'User') {
-                        var result     = Array();
-                        result.type    = 'warning';
-                        result.message = phpr.nls.get('You need to log out and log in again in order to let changes '
-                            + 'have effect');
-                        new phpr.handleResponse('serverFeedback', result);
-                    }
                     this.publish("updateCacheData");
                     this.publish("setUrlHash", [phpr.module]);
                 }
