@@ -41,7 +41,7 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
             + 'his/her profile.')
             + '<br /><br />'
             + phpr.nls.get('Please choose one of the tabs of above.');
-        this.render(["phpr.Core.Setting.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+        this.render(["phpr.Core.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             summaryTxt: summaryTxt
         });
         this.cleanPage();
@@ -80,7 +80,7 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
                     if (moduleName == phpr.submodule) {
                         liclass   = 'class = active';
                     }
-                    navigation += self.render(["phpr.Core.Setting.template", "navigation.html"], null, {
+                    navigation += self.render(["phpr.Core.template", "navigation.html"], null, {
                         moduleName :    moduleName,
                         moduleLabel:    moduleLabel,
                         liclass:        liclass,

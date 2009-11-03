@@ -79,6 +79,9 @@ class JsController extends IndexController
         // Add Default templates
         $this->_getTemplates(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/template/', 'Default');
 
+        // Add Core templates
+        $this->_getTemplates(PHPR_CORE_PATH . '/Core/Views/dojo/scripts/template/', 'Core');
+
         // Load all modules and make and array of it
         $files = scandir(PHPR_CORE_PATH);
         foreach ($files as $file) {

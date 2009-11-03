@@ -42,7 +42,7 @@ dojo.declare("phpr.Administration.Main", phpr.Core.Main, {
             + phpr.nls.get('Here can be configured general settings of the site that affects all the users.')
             + '<br /><br />'
             + phpr.nls.get('Please choose one of the tabs of above.');
-        this.render(["phpr.Core.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+        this.render(["phpr.Core.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             summaryTxt: summaryTxt
         });
         this.cleanPage();
@@ -61,7 +61,7 @@ dojo.declare("phpr.Administration.Main", phpr.Core.Main, {
         phpr.module       = this.module;
         phpr.submodule    = module;
         phpr.parentmodule = '';
-        this.render(["phpr.Core.Administration.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+        this.render(["phpr.Core.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             summaryTxt: ''
         });
         this.cleanPage();
@@ -119,7 +119,7 @@ dojo.declare("phpr.Administration.Main", phpr.Core.Main, {
                     if (moduleName == phpr.submodule) {
                         liclass   = 'class = active';
                     }
-                    navigation += self.render(["phpr.Core.Administration.template", "navigation.html"], null, {
+                    navigation += self.render(["phpr.Core.template", "navigation.html"], null, {
                         moduleName :    'Administration',
                         moduleLabel:    moduleLabel,
                         liclass:        liclass,
