@@ -145,7 +145,7 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
 
 dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
     constructor:function(id) {
-        this._url = phpr.webpath + "index.php/Core/" + phpr.module.toLowerCase() + "/jsonGetModulesAccess/id/" + id;
+        this._url = phpr.webpath + "index.php/Core/role/jsonGetModulesAccess/id/" + id;
     },
 
     makeSelect:function() {

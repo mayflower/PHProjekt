@@ -862,10 +862,10 @@ dojo.declare("phpr.BreadCrumb", null, {
         //     Change the module and sub-module only if these change
         if (phpr.module != this._lastModule || phpr.parentmodule != this._lastParent) {
             if (phpr.parentmodule) {
-                this._module = phpr.parentmodule + this._separatorOne + phpr.module;;
+                this._module     = phpr.nls.get(phpr.parentmodule) + this._separatorOne + phpr.nls.get(phpr.module);
                 this._lastParent = phpr.parentmodule;
             } else {
-                this._module = phpr.module;
+                this._module = phpr.nls.get(phpr.module);
             }
             this._item       = null;
             this._lastModule = phpr.module;
