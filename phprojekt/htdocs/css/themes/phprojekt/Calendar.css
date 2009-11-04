@@ -166,13 +166,12 @@
 }
 
 .phprojekt #calendarSchedule .weekDayHeaders {
-    border: 1px solid;
+    border: 1px solid black;
     padding: 0;
     vertical-align: middle;
     text-align: center;
     background-color: #d4dfea;
     font-size: 10px;
-    border-color: black;
 }
 
 .phprojekt #eventsArea .eventsDivMain {

@@ -142,7 +142,6 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
                     // Odd row
                     this._schedule[row]['even'] = false;
                 }
-                this._schedule[row]['columnWidth'] = this._header['columnsWidth'];
             }
         }
     },

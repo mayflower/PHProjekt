@@ -34,7 +34,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     _tagUrl:              null,
     _date:                null,
     _widthTable:          0,
-    _widthHourColumn:     8,
+    _widthHourColumn:     7,
     _cellTimeWidth:       null,
     cellDayWidth:         null,
     _cellDayHeight:       null,
@@ -142,26 +142,27 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // Summary:
         //    Sets the export button
         // Description:
-        //    If there is any row, renders export Button
-        if (meta.length > 0) {
+        //    If there is any row, render export Button
+        if (meta.length > 0 && this._exportButton === null) {
             var params = {
+                label:     phpr.nls.get('Export all items to a CSV file'),
+                showLabel: false,
                 baseClass: "positive",
                 iconClass: "export",
-                alt:       "Export",
                 disabled:  false
             };
-            var exportButton = new dijit.form.Button(params);
-            dojo.byId("buttonRow").appendChild(exportButton.domNode);
-            dojo.connect(exportButton, "onClick", dojo.hitch(this, "exportData"));
+            this._exportButton = new dijit.form.Button(params);
+            dojo.byId("buttonRow").appendChild(this._exportButton.domNode);
+            dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"));
         }
     },
 
     setSaveChangesButton:function(meta) {
         // Summary:
-        //    Set the Save changes button
+        //    Sets the Save changes button
         // Description:
-        //    If there is any event for the selected period, render Save changes button
-        if (meta.length > 0) {
+        //    If there is any row, render Save changes button
+        if (meta.length > 0 && this._saveChanges === null) {
             var params = {
                 label:     phpr.nls.get('Save changes made to the grid through in-place editing'),
                 showLabel: false,
@@ -347,6 +348,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // Summary
         //    Updates internal class variables with current sizes of schedule
         this.stepH             = (dojo.byId('scheduleBackground').offsetWidth - this._cellTimeWidth) / 7;
+        this.stepH             = dojo.number.round(this.stepH, 1);
         this.stepY             = this.cellTimeHeight;
         this.posHMax           = parseInt(dojo.byId('eventsArea').style.width) - this.stepH;
         this.posYMaxComplement = parseInt(dojo.byId('eventsArea').style.height) - this.stepY;
@@ -465,9 +467,10 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
                 // Yes
                 // Reduce its width
                 width = (width / this.events[i]['simultAmount']) - this.EVENTS_BORDER_WIDTH;
+                width = dojo.number.round(width);
 
                 // Maybe change its left position
-                left += Math.floor(this.cellDayWidth / this.events[i]['simultAmount']
+                left += dojo.number.round(this.cellDayWidth / this.events[i]['simultAmount']
                     * (this.events[i]['simultOrder'] - 1));
             }
 
@@ -877,10 +880,10 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         var gridBoxWidth      = dojo.style(gridBox, "width");
         var calendarSchedule  = dojo.byId('calendarSchedule');
         var calenSchedWidth   = dojo.style(calendarSchedule,"width");
-        var minCalenSchedSize = 600;
 
         if (gridBoxWidth != this._gridBoxWidthPrev || calenSchedWidth != this._calenSchedWidthPrev) {
             var doUpdateAndResize = true;
+            var minCalenSchedSize = 600;
 
             // Don't allow very small sizes because floating events positioning would start to be imprecise
             if (gridBoxWidth < minCalenSchedSize) {
@@ -899,7 +902,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             }
 
             this._gridBoxWidthPrev    = gridBoxWidth;
-            this._calenSchedWidthPrev = calenSchedWidth;
+            this._calenSchedWidthPrev = dojo.style(calendarSchedule,"width");
 
             if (doUpdateAndResize) {
                 this.updateSizeValuesPart1();
