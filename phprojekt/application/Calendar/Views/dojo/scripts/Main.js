@@ -71,7 +71,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
         // important set the global phpr.module to the module which is currently loaded!!!
-        phpr.module = this.module;
+        phpr.module       = this.module;
+        phpr.submodule    = '';
+        phpr.parentmodule = '';
+
         this.render(["phpr.Calendar.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             changeDate: phpr.nls.get('Change date'),
             today:      phpr.nls.get('Today'),
