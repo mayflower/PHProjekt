@@ -158,7 +158,7 @@ $lang["You need to log out and log in again in order to let changes have effect"
 $lang["Administration"] = "Administration";
 $lang["Calendar"] = "Kalender";
 $lang["Note"] = "Notizen";
-$lang["Settings"] = "Einstellungen";
+$lang["Setting"] = "Einstellungen";
 $lang["Timecard"] = "Zeitkarte";
 $lang["Todo"] = "Aufgaben";
 $lang["Help"] = "Hilfe";
@@ -189,7 +189,7 @@ $lang["Hours"] = "Stunden";
 $lang["Change date"] = "Neues Datum";
 $lang["Total"] = "Gesamt";
 
-// Originally from Settings module
+// Originally from Setting module
 $lang["keyValue"] = "Schlüssel";
 $lang["value"] = "Wert";
 $lang["Confirm Password"] = "Passwort bestätigen";

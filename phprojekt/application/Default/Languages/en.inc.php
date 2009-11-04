@@ -194,7 +194,7 @@ $lang["Unknown error type."] = "Unknown error type.";
 $lang["Administration"] = "Administration";
 $lang["Calendar"] = "Calendar";
 $lang["Note"] = "Note";
-$lang["Settings"] = "Setting";
+$lang["Setting"] = "Setting";
 $lang["Timecard"] = "Timecard";
 $lang["Todo"] = "Todo";
 $lang["Help"] = "Help";
@@ -225,7 +225,7 @@ $lang["Hours"] = "Hours";
 $lang["Change date"] = "Change date";
 $lang["Total"] = "Total";
 
-// Originally from Settings module
+// Originally from Setting module
 $lang["keyValue"] = "Configuration";
 $lang["value"] = "value";
 $lang["Confirm Password"] = "confirm password";
