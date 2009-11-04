@@ -79,7 +79,7 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
     public function setTo($recipients)
     {
         $phpUser = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $setting = Phprojekt_Loader::getModel('Setting', 'Setting');
+        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
 
         foreach ($recipients as $recipient) {
             $email = $setting->getSetting('email', (int) $recipient);
