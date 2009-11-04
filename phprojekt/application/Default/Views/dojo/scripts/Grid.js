@@ -921,7 +921,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             var item  = this.grid.getItem(e.rowIndex);
             var rowId = this.grid.store.getValue(item, 'id');
             if ((useCheckBox && index == 1) || (!useCheckBox && index == 0)) {
-                this.main.setUrlHash(phpr.module, rowId);
+                this.getLinkForEdit(rowId);
             } else {
                 var key    = e['cell']['field'];
                 var temp   = key.split('|');
@@ -930,6 +930,14 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 this.doAction(action, rowId, mode, this.TARGET_SINGLE);
             }
         }
+    },
+
+    getLinkForEdit:function(id) {
+        // Summary:
+        //    Return the link for open the form
+        // Description:
+        //    Return the link for open the form
+        this.main.setUrlHash(phpr.module, id);
     },
 
     checkCanEdit:function(inCell, inRowIndex) {
