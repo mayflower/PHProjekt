@@ -267,7 +267,7 @@ class Phprojekt
         // Fix for request to the core (Like History)
         if ($moduleName == 'Core') {
             $paramModule = Zend_Controller_Front::getInstance()->getRequest()->getParam('moduleName', null);
-            if (null !== $paramModule) {
+            if (null !== $paramModule && $paramModule != 'General') {
                 $moduleName = $paramModule;
             }
         }

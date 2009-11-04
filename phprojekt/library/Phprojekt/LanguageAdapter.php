@@ -345,12 +345,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     public function get($message, $moduleName, $locale = null)
     {
         $locale = self::_convertToZendLocale($locale);
-
-        // Core don't have any language file, all is in Adminsitration
-        if ($moduleName == 'Core') {
-            $moduleName = 'Administration';
-        }
-
         if (isset($this->_translate[$locale][$moduleName]) &&
             isset($this->_translate[$locale][$moduleName][$message])) {
             $toReturn = $this->_translate[$locale][$moduleName][$message];

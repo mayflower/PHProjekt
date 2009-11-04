@@ -94,12 +94,16 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             // System Global Modules
             if (this.module == 'Administration' ||
                 this.module == 'Setting' ||
-                this.module == 'User' ||
-                this.module == 'Role' ||
-                this.module == 'Tab' ||
-                this.module == 'Module') {
+                phpr.parentmodule == 'Setting' ||
+                phpr.parentmodule == 'Administration') {
+                phpr.module       = null;
+                phpr.submodule    = null;
+                phpr.parentmodule = null;
                 dojo.publish("Project.changeProject", [phpr.currentProjectId]);
             } else {
+                phpr.module       = null;
+                phpr.submodule    = null;
+                phpr.parentmodule = null;
                 if (functionFrom && functionFrom == 'loadResult') {
                     this.setUrlHash(this.module);
                 } else {
@@ -254,8 +258,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Setting
         phpr.destroyWidget("globalModuleSettings");
         var button = new dijit.form.Button({
-            id:        "globalModuleSettings",
-            label:     phpr.nls.get('Settings'),
+            id:        "globalModuleSetting",
+            label:     phpr.nls.get('Setting'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
                 phpr.currentProjectId = phpr.rootProjectId;
@@ -316,12 +320,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
 
         // System Global Modules
-        if (module == 'Administration' ||
-            module == 'Setting' ||
-            module == 'User' ||
-            module == 'Role' ||
-            module == 'Tab' ||
-            module == 'Module') {
+        if (module == 'Administration' || module == 'Setting') {
+            return true;
+        } else if (phpr.parentmodule == 'Administration' || phpr.parentmodule == 'Setting') {
             return true;
         } else {
             for (index in globalModules) {
@@ -454,7 +455,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.byId("subModuleNavigation").innerHTML = '';
 
         var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
-        globalModules[1000] = {id: "Settings", "name": "Setting"};
+        globalModules[1000] = {id: "Setting", "name": "Setting"};
         globalModules[1001] = {id: "Admin", "name": "Administration"};
         for (i in globalModules) {
             if (dojo.byId("globalModule" + globalModules[i].id)) {
@@ -480,24 +481,40 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    After that, add all the params
         if (id && module) {
             if (!this._isGlobalModule(module)) {
+                // Module,projectId,id,xx (Open form for edit in normal modules)
                 var url = new Array([module, phpr.currentProjectId, "id", id]);
             } else {
-                var url = new Array([module, "id", id]);
+                if (params && params.length > 0) {
+                    // GlobalModule,Module,id,xx (Open form for edit in Adminisration)
+                    var url = new Array([module, params.shift(), "id", id]);
+                } else {
+                    // GlobalModule,id,xx (Open form for edit in global modules)
+                    var url = new Array([module, "id", id]);
+                }
             }
         } else if (module && id == 0) {
             if (!this._isGlobalModule(module)) {
+                // Module,projectId,id,0 (Open form for add in normal modules)
                 var url = new Array([module, phpr.currentProjectId, "id", 0]);
             } else {
-                var url = new Array([module, "id", 0]);
+                if (params && params.length > 0) {
+                    // GlobalModule,Module,id,xx (Open form for add in Adminisration)
+                    var url = new Array([module, params.shift(), "id", 0]);
+                } else {
+                    // GlobalModule,id,xx (Open a form for add in global modules)
+                    var url = new Array([module, "id", 0]);
+                }
             }
         } else {
             if (!module) {
                 var module = this.module;
             }
-            if (this._isGlobalModule(module)) {
-                var url = new Array([module]);
-            } else {
+            if (!this._isGlobalModule(module)) {
+                // Module,projectId (Reload a module -> List view)
                 var url = new Array([module, phpr.currentProjectId]);
+            } else {
+                // GlobalModule (Reload a global module -> List view)
+                var url = new Array([module]);
             }
         }
 
@@ -508,11 +525,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var hash = url.join(",");
         phpr.Url.addUrl(hash);
 
-        if ((hash.indexOf('Administration') < 0) &&
-            (hash.indexOf('User') < 0) &&
-            (hash.indexOf('Role') < 0) &&
-            (hash.indexOf('Tab') < 0) &&
-            (hash.indexOf('Module') < 0)) {
+        if (hash.indexOf('Administration') < 0) {
             // Stores the hash in a browser cookie (Only normal url, no Administration one)
             dojo.cookie('p6.location.hash', hash, {expires: 500});
         }
@@ -900,13 +913,17 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // Get the current module or use the parent
         var currentModule = phpr.module;
-        if (phpr.parentmodule && 'Administration' == phpr.parentmodule) {
-            currentModule = phpr.parentmodule;
+        if (phpr.parentmodule && ('Administration' == phpr.parentmodule || 'Setting' == phpr.parentmodule)) {
+            currentModule = 'Core';
+            dijit.byId('helpDialog').attr('title', phpr.nls.get('Help', currentModule));
+            dojo.byId('helpTitle').innerHTML = phpr.nls.get(phpr.parentmodule);
+            var helpData = phpr.nls.get('Content Help ' + phpr.parentmodule, currentModule);
+        } else {
+            dijit.byId('helpDialog').attr('title', phpr.nls.get('Help', currentModule));
+            dojo.byId('helpTitle').innerHTML = phpr.nls.get(currentModule, currentModule);
+            var helpData = phpr.nls.get('Content Help', currentModule);
         }
-        dijit.byId('helpDialog').attr('title', phpr.nls.get('Help', currentModule));
-        dojo.byId('helpTitle').innerHTML = phpr.nls.get(currentModule, currentModule);
 
-        var helpData = phpr.nls.get('Content Help', currentModule);
         if (typeof(helpData) == 'object') {
             this.showHelp_part2(helpData, phpr.nls);
         } else {
@@ -918,7 +935,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 processData: dojo.hitch(this, function() {
                     // Load the components, tree, list and details.
                     nlsSource = new phpr.translator(phpr.DataStore.getData({url: defLangUrl}));
-                    helpData  = nlsSource.get('Content Help', currentModule);
+                    if (phpr.parentmodule &&
+                       ('Administration' == phpr.parentmodule || 'Setting' == phpr.parentmodule)) {
+                        helpData = nlsSource.get('Content Help ' + phpr.parentmodule, currentModule);
+                    } else {
+                        helpData = nlsSource.get('Content Help', currentModule);
+                    }
                     if (typeof(helpData) == 'object') {
                         this.showHelp_part2(helpData, nlsSource);
                     } else {

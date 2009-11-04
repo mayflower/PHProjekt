@@ -675,6 +675,9 @@ dojo.declare("phpr.translator", null, {
         // Default module
         } else if (this._strings['Default'] && this._strings['Default'][string]) {
             returnValue = this._strings['Default'][string];
+        // Core module
+        } else if (this._strings['Core'] && this._strings['Core'][string]) {
+            returnValue = this._strings['Core'][string];
         } else {
             // Unstranslated string
             returnValue = string;
@@ -860,8 +863,8 @@ dojo.declare("phpr.BreadCrumb", null, {
         //     Set the module and sub-module
         // Description:
         //     Change the module and sub-module only if these change
-        if (phpr.module != this._lastModule || phpr.parentmodule != this._lastParent) {
-            if (phpr.parentmodule) {
+        if (phpr.module != this._lastModule || phpr.parentmodule != this._lastParent || !this._module) {
+            if (phpr.parentmodule && phpr.parentmodule != phpr.module) {
                 this._module     = phpr.nls.get(phpr.parentmodule) + this._separatorOne + phpr.nls.get(phpr.module);
                 this._lastParent = phpr.parentmodule;
             } else {

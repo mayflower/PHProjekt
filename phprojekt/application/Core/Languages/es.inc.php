@@ -1,4 +1,6 @@
 <?php
+// Administration
+
 // General Tab
 $lang['Company Name'] = "Nombre de la companía";
 
@@ -52,8 +54,8 @@ $lang["Here can be configured general settings of the site that affects all the 
 $lang["Please choose one of the tabs of above."] = "Por favor, elija una de las solapa de arriba.";
 
 // General Help
-$lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Administración"] = "<br />
+$lang["Content Help Administration"]["General"] = "DEFAULT";
+$lang["Content Help Administration"]["Administración"] = "<br />
     Esta es la <b>Ayuda General del módulo Administración</b><br />
     <br />
     Este módulo es sólo accesible por usuario con perfil Admin.<br />
@@ -75,7 +77,7 @@ $lang["Content Help"]["Administración"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Modulo"] = "<br />
+$lang["Content Help Administration"]["Modulo"] = "<br />
     <b>Solapa Módulo</b><br />
     <br />
     El Diseñador de Módulos es una interfaz muy fácil de usar, con un manejo visual y con métodos <i>arrastrar y
@@ -181,7 +183,7 @@ $lang["Content Help"]["Modulo"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Solapa"] = "<br />
+$lang["Content Help Administration"]["Solapa"] = "<br />
     <b>Solapa SOLAPA</b><br />
     <br />
     Esta sección permite modificar las solapas de los módulos.<br />
@@ -212,7 +214,7 @@ $lang["Content Help"]["Solapa"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Usuario"] = "<br />
+$lang["Content Help Administration"]["Usuario"] = "<br />
     <b>Solapa Usuario</b><br />
     <br />
     Esta sección está diseñada para administrar todos los usuarios del sistema.<br />
@@ -221,7 +223,7 @@ $lang["Content Help"]["Usuario"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Rol"] = "<br />
+$lang["Content Help Administration"]["Rol"] = "<br />
     <b>Solapa Rol</b><br />
     <br />
     Esta sección permite administrar los Roles.<br />
@@ -248,6 +250,7 @@ $lang["Content Help"]["Rol"] = "<br />
     <br />
     <br />";
 
+// Settings
 
 // Words and phrases
 $lang["Please, log out and log in again to the application to apply the changes"] = "Por favor, "
@@ -277,8 +280,8 @@ $lang["This module is for the user to set and change specific configuration para
 $lang["Please choose one of the tabs of above."] = "Por favor, elija una de las solapa de arriba.";
 
 // General Help
-$lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Configuración"] = "<br />
+$lang["Content Help Setting"]["General"] = "DEFAULT";
+$lang["Content Help Setting"]["Configuración"] = "<br />
     Esta es la <b>Ayuda General del módulo Configuración</b><br />
     <br />
     Este módulo permite al usuario cambiar atributos específicos de configuración de su perfil.<br />
@@ -288,7 +291,7 @@ $lang["Content Help"]["Configuración"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Usuario"] = "<br />
+$lang["Content Help Setting"]["Usuario"] = "<br />
     <b>Solapa Usuario</b><br />
     <br />
     Dentro de esta solapa se configuran los parámetros básicos del usuario.<br />
@@ -298,7 +301,7 @@ $lang["Content Help"]["Usuario"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Asistencia"] = "<br />
+$lang["Content Help Setting"]["Asistencia"] = "<br />
     <b>Solapa Asistencia</b><br />
     <br />
     Aquí el usuario puede configurar los Proyectos donde mayormente está trabajando, de modo que ellos aparecerán
@@ -308,4 +311,3 @@ $lang["Content Help"]["Asistencia"] = "<br />
     Se permite cambiar: <i>Max. Número de Proyectos favoritos</i> y qué <i>Proyectos favoritos</i> se eligen.<br />
     <br />
     <br />";
-
