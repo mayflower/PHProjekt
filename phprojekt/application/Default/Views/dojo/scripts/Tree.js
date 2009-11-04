@@ -164,8 +164,6 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
                         }
                     }
             }});
-        } else {
-            phpr.treeLastProjectSelected = id;
         }
     },
 
@@ -245,7 +243,6 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
                 phpr.BreadCrumb.setProjects(projectsNames);
             }
         } else {
-            phpr.treeLastProjectSelected = null;
             phpr.BreadCrumb.setProjects(projectsNames);
         }
         phpr.BreadCrumb.setModule();
