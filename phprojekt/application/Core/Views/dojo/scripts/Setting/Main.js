@@ -19,7 +19,7 @@
 
 dojo.provide("phpr.Setting.Main");
 
-dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
+dojo.declare("phpr.Setting.Main", phpr.Core.Main, {
     constructor:function() {
         this.module = "Setting";
         this.loadFunctions(this.module);
@@ -27,84 +27,30 @@ dojo.declare("phpr.Setting.Main", phpr.Default.Main, {
         this.gridWidget = phpr.Setting.Grid;
         this.formWidget = phpr.Setting.Form;
         this.treeWidget = phpr.Setting.Tree;
-
-        dojo.subscribe("Setting.loadSubModule", this, "loadSubModule");
     },
 
-    reload:function() {
-        phpr.module       = this.module;
-        phpr.submodule    = '';
-        phpr.parentmodule = '';
-        var summaryTxt = '<b>' + phpr.nls.get('Settings') + '</b>'
+    getSummary:function() {
+        return '<b>' + phpr.nls.get('Setting') + '</b>'
             + '<br /><br />'
             + phpr.nls.get('This module is for the user to set and change specific configuration parameters of '
             + 'his/her profile.')
             + '<br /><br />'
             + phpr.nls.get('Please choose one of the tabs of above.');
-        this.render(["phpr.Core.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            summaryTxt: summaryTxt
-        });
-        this.cleanPage();
-        phpr.TreeContent.fadeOut();
-        this.setSubGlobalModulesNavigation();
-        this.hideSuggest();
-        this.setSearchForm();
-        this.tree = new this.treeWidget(this);
     },
 
-    loadSubModule:function(/*String*/module) {
-        //summary: this function opens a new Detail View
-        if (!dojo.byId('detailsBox')) {
-            this.reload();
-        }
-        phpr.submodule = module;
-        this.setSubGlobalModulesNavigation();
-        this.form = new this.formWidget(this, 0, this.module);
+    getSystemModules:function() {
+        return new Array();
     },
 
-    setSubGlobalModulesNavigation:function(currentModule) {
-        var subModuleUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonGetModules'
-        var self = this;
-        phpr.DataStore.addStore({url: subModuleUrl});
-        phpr.DataStore.requestData({
-            url: subModuleUrl,
-            processData: dojo.hitch(this, function() {
-                modules = phpr.DataStore.getData({url: subModuleUrl});
-                var navigation ='<ul id="nav_main">';
-                for (var i = 0; i < modules.length; i++) {
-                    var liclass        = '';
-                    var moduleName     = modules[i].name;
-                    var moduleLabel    = modules[i].label;
-                    var moduleFunction = "setUrlHash";
-                    var functionParams = "'Setting', null, ['" + modules[i].name + "']";
-                    if (moduleName == phpr.submodule) {
-                        liclass   = 'class = active';
-                    }
-                    navigation += self.render(["phpr.Core.template", "navigation.html"], null, {
-                        moduleName :    moduleName,
-                        moduleLabel:    moduleLabel,
-                        liclass:        liclass,
-                        moduleFunction: moduleFunction,
-                        functionParams: functionParams
-                    });
-                }
-                navigation += "</ul>";
-                dojo.byId("subModuleNavigation").innerHTML = navigation;
-                phpr.initWidgets(dojo.byId("subModuleNavigation"));
-                this.customSetSubmoduleNavigation();
-            })
-        })
-    },
-
-    updateCacheData:function() {
-        if (this.form) {
-            this.form.updateData();
-        }
+    defineModules:function(module) {
+        phpr.module       = this.module;
+        phpr.submodule    = module;
+        phpr.parentmodule = 'Setting';
     },
 
     processActionFromUrlHash:function(data) {
         if (data[0]) {
-            this.loadSubModule(data[0]);
+            dojo.publish(this.module + ".reload", [data[0]]);
         }
     }
 });

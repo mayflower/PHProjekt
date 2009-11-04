@@ -19,5 +19,5 @@
 
 dojo.provide("phpr.Tab.Tree");
 
-dojo.declare("phpr.Tab.Tree", phpr.Default.Tree, {
+dojo.declare("phpr.Tab.Tree", phpr.Core.Tree, {
 });

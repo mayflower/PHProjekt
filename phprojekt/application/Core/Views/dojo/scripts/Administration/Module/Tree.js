@@ -19,5 +19,5 @@
 
 dojo.provide("phpr.Module.Tree");
 
-dojo.declare("phpr.Module.Tree", phpr.Default.Tree, {
+dojo.declare("phpr.Module.Tree", phpr.Core.Tree, {
 });

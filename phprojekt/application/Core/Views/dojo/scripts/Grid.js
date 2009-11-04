@@ -20,7 +20,6 @@
 dojo.provide("phpr.Core.Grid");
 
 dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
-
     setUrl:function() {
         this.url = phpr.webpath + "index.php/Core/" + phpr.module.toLowerCase() + "/jsonList";
     },
@@ -31,6 +30,10 @@ dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
 
     useCheckbox:function() {
         return false;
+    },
+
+    getLinkForEdit:function(id) {
+        this.main.setUrlHash(phpr.parentmodule, id, [phpr.module]);
     },
 
     canEdit:function(inRowIndex) {

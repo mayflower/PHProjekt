@@ -19,7 +19,7 @@
 
 dojo.provide("phpr.Administration.Tree");
 
-dojo.declare("phpr.Administration.Tree", phpr.Default.Tree, {
+dojo.declare("phpr.Administration.Tree", phpr.Core.Tree, {
     updateData:function() {
         this.inherited(arguments);
         phpr.treeLastProjectSelected = null;

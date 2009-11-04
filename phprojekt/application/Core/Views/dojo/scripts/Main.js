@@ -29,27 +29,198 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         this.treeWidget = phpr.Core.Tree;
     },
 
-    reload:function() {
-        phpr.module       = this.module;
-        phpr.submodule    = this.module;
-        phpr.parentmodule = 'Administration';
-        this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
+    getSystemModules:function() {
+        // Summary:
+        //    Return the modules that are like normal modules instead of just a form
+        // Description:
+        //    All this modules will have Grid and Form like normal modules
+        //    Add here other modules if you add them into the Administration section
+        return new Array("Module","Tab","User","Role");
+    },
+
+    isSystemModule:function(module) {
+        // Summary:
+        //    Return if the module is like a system one or not
+        // Description:
+        //    Return if the module is like a system one or not
+        var modules = this.getSystemModules();
+        for (key in modules) {
+            if (modules[key] === module) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    getSummary:function() {
+        // Summary:
+        //    Function for be rewritten
+        // Description:
+        //    Function for be rewritten
+    },
+
+    defineModules:function(module) {
+        // Summary:
+        //    Set the global vars for this module
+        // Description:
+        //    Set the global vars for this module
+        phpr.module = this.module;
+        if (this.isSystemModule(this.module)) {
+            phpr.submodule    = this.module;
+            phpr.parentmodule = 'Administration';
+        } else {
+            phpr.submodule    = module || '';
+            phpr.parentmodule = '';
+        }
+    },
+
+    reload:function(module) {
+        // Summary:
+        //    Rewritten the function for work like a system module and like a form
+        // Description:
+        //    Rewritten the function for work like a system module and like a form
+        this.defineModules(module);
+        if (this.isSystemModule(this.module)) {
+            this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
+        } else {
+            if (!module) {
+                var summaryTxt = this.getSummary();
+            } else {
+                var summaryTxt = '';
+            }
+            this.render(["phpr.Core.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+                summaryTxt: summaryTxt
+            });
+        }
         this.cleanPage();
         phpr.TreeContent.fadeOut();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
         this.tree = new this.treeWidget(this);
-        var updateUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSaveMultiple/nodeId/'
-            + phpr.currentProjectId;
-        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+        if (this.isSystemModule(this.module)) {
+            var updateUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSaveMultiple/nodeId/'
+                + phpr.currentProjectId;
+            this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+        } else if (module) {
+            this.form = new this.formWidget(this, 0, this.module);
+        }
     },
 
     setSubGlobalModulesNavigation:function(currentModule) {
-        dojo.publish("Administration.setSubGlobalModulesNavigation", [currentModule]);
+        // Summary:
+        //    Display the sub modules for navigate them
+        // Description:
+        //    Join the system modules and the user modules defined with
+        //    the Configuration.php and Setting.php files into the models
+        if (phpr.parentmodule) {
+            var parentModule = phpr.parentmodule;
+        } else {
+            var parentModule = this.module;
+        }
+        var subModuleUrl = phpr.webpath + 'index.php/Core/' + parentModule + '/jsonGetModules';
+        var self         = this;
+
+        phpr.DataStore.addStore({url: subModuleUrl});
+        phpr.DataStore.requestData({
+            url: subModuleUrl,
+            processData: dojo.hitch(this, function() {
+                var systemModules = this.getSystemModules();
+                var modules       = new Array();
+                for (var index in systemModules) {
+                    modules.push({
+                        "name":           systemModules[index],
+                        "label":          phpr.nls.get(systemModules[index]),
+                        "moduleFunction": "setUrlHash",
+                        "functionParams": "'" + parentModule + "', null, ['" + systemModules[index] + "']"});
+                }
+                var tmp = phpr.DataStore.getData({url: subModuleUrl});
+                for (var i = 0; i < tmp.length; i++) {
+                    modules.push({
+                        "name":           tmp[i].name,
+                        "label":          tmp[i].label,
+                        "moduleFunction": "setUrlHash",
+                        "functionParams": "'" + parentModule + "', null, ['" + tmp[i].name + "']"});
+                }
+                var navigation = '<ul id="nav_main">';
+                for (var i = 0; i < modules.length; i++) {
+                    var liclass        = '';
+                    var moduleName     = modules[i].name;
+                    var moduleLabel    = modules[i].label;
+                    var moduleFunction = modules[i].moduleFunction;
+                    var functionParams = modules[i].functionParams;
+                    if (moduleName == phpr.submodule) {
+                        liclass = 'class = active';
+                    }
+                    navigation += self.render(["phpr.Core.template", "navigation.html"], null, {
+                        moduleName:     parentModule,
+                        moduleLabel:    moduleLabel,
+                        liclass:        liclass,
+                        moduleFunction: moduleFunction,
+                        functionParams: functionParams
+                    });
+                }
+                navigation += "</ul>";
+                dojo.byId("subModuleNavigation").innerHTML = navigation;
+                phpr.initWidgets(dojo.byId("subModuleNavigation"));
+                this.customSetSubmoduleNavigation();
+            })
+        })
+    },
+
+    updateCacheData:function() {
+        // Summary:
+        //    Rewritten the function for work like a system module and like a form
+        // Description:
+        //    Rewritten the function for work like a system module and like a form
+        if (this.isSystemModule(this.module)) {
+            phpr.DataStore.deleteAllCache();
+            if (this.tree) {
+                this.tree.updateData();
+            }
+            if (this.grid) {
+                this.grid.updateData();
+            }
+        }
+        if (this.form) {
+            this.form.updateData();
+        }
     },
 
     processActionFromUrlHash:function(data) {
-        dojo.publish("Administration.processActionFromUrlHash", [data]);
+        // Summary:
+        //    Rewritten the function for work like a system module and like a form
+        // Description:
+        //    Rewritten the function for work like a system module and like a form
+
+        // Module name
+        if (data[0]) {
+            if (this.isSystemModule(data[0])) {
+                var module    = data.shift();
+                var subModule = module;
+            } else {
+                var module    = this.module;
+                var subModule = data.shift();
+            }
+
+            if (data[0] && data[1] && data[0] == 'id') {
+                // If is an id, open a form
+                var id = parseInt(data[1]);
+                if (subModule && (id > 0 || id == 0)) {
+                    dojo.publish(module + ".reload", [subModule]);
+                    dojo.publish(module + ".openForm", [id, subModule]);
+                }
+            } else {
+                dojo.publish(module + ".reload", [subModule]);
+            }
+        }
+    },
+
+    customSetSubmoduleNavigation:function() {
+        // Summary:
+        //    Function for be rewritten
+        // Description:
+        //    Function for be rewritten
     }
 });

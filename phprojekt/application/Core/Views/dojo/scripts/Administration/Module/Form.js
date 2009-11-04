@@ -20,7 +20,6 @@
 dojo.provide("phpr.Module.Form");
 
 dojo.declare("phpr.Module.Form", phpr.Core.Form, {
-
     initData:function() {
         // Get all the active users
         this._moduleDesignerUrl  = phpr.webpath + 'index.php/Core/moduleDesigner/jsonDetail/id/' + this.id;
@@ -271,19 +270,6 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                             }
                         })
                     });
-               }
-            })
-        });
-    },
-
-    deleteForm:function() {
-        phpr.send({
-            url:       phpr.webpath + 'index.php/Core/module/jsonDelete/id/' + this.id,
-            onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (data.type == 'success') {
-                    this.publish("updateCacheData");
-                    this.publish("setUrlHash", [phpr.module]);
                }
             })
         });

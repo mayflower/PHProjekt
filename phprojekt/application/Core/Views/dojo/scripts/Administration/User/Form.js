@@ -22,39 +22,19 @@ dojo.provide("phpr.User.Form");
 dojo.declare("phpr.User.Form", phpr.Core.Form, {
     setPermissions:function(data) {
         this._writePermissions = true;
-
         // users can't be deleted
         this._deletePermissions = false;
         this._accessPermissions = true;
-    },
-
-    addModuleTabs:function(data) {
     },
 
     useCache:function() {
         return false;
     },
 
-    submitForm:function() {
-        if (!this.prepareSubmission()) {
-            return false;
-        }
-
-        phpr.send({
-            url:       phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSave/id/' + this.id,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
-                new phpr.handleResponse('serverFeedback', data);
-                if (data.type == 'success') {
-                    var result     = Array();
-                    result.type    = 'warning';
-                    result.message = phpr.nls.get('You need to log out and log in again in order to let changes have '
-                        + 'effect');
-                    new phpr.handleResponse('serverFeedback', result);
-                    this.publish("updateCacheData");
-                    this.publish("setUrlHash", [phpr.module]);
-                }
-            })
-        });
+    customActionOnSuccess:function() {
+        var result     = Array();
+        result.type    = 'warning';
+        result.message = phpr.nls.get('You need to log out and log in again in order to let changes have effect');
+        new phpr.handleResponse('serverFeedback', result);
     }
 });

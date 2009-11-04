@@ -30,7 +30,6 @@ dojo.declare("phpr.Module.Main", phpr.Core.Main, {
 
         dojo.subscribe("Module.openDialog", this, "openDialog");
         dojo.subscribe("Module.submitForm", this, "submitForm");
-        dojo.subscribe("Module.customSetSubmoduleNavigation", this, "customSetSubmoduleNavigation");
     },
 
     customSetSubmoduleNavigation:function() {
@@ -43,9 +42,5 @@ dojo.declare("phpr.Module.Main", phpr.Core.Main, {
 
     submitForm:function() {
         this.form.submitForm();
-    },
-
-    updateCacheData:function() {
-        phpr.DataStore.deleteAllCache();
     }
 });
