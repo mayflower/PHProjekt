@@ -237,7 +237,7 @@ class Setup_Models_Migration
     private function _migrateUsers()
     {
         // User migration
-        $query = "SELECT * FROM " . PHPR_DB_PREFIX . "users WHERE is_deleted IS NULL";
+        $query = "SELECT * FROM " . PHPR_DB_PREFIX . "users";
         $users = $this->_dbOrig->query($query)->fetchAll();
 
         // Just in case
@@ -1062,7 +1062,7 @@ class Setup_Models_Migration
         $assignedRelation = array();
 
         while ($run) {
-            $query = "SELECT * FROM " . PHPR_DB_PREFIX . "rts WHERE is_deleted IS NULL ORDER BY ID LIMIT "
+            $query = "SELECT * FROM " . PHPR_DB_PREFIX . "rts ORDER BY ID LIMIT "
                 . $start . ", " . $end;
             $incidents = $this->_dbOrig->query($query)->fetchAll();
             if (empty($incidents)) {
