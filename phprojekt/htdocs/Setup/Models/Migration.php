@@ -294,7 +294,7 @@ class Setup_Models_Migration
                 // 'test' although but its attributes will be migrated indeed.
                 if ($loginName == 'root') {
                     $userId = self::USER_ADMIN;
-                } elseif ($loginName = 'test') {
+                } elseif ($loginName == 'test') {
                     $userId = self::USER_TEST;
                 }
 

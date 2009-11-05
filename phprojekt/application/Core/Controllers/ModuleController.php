@@ -151,9 +151,7 @@ class Core_ModuleController extends Core_IndexController
      */
     public function jsonDeleteAction()
     {
-        $id          = (int) $this->getRequest()->getParam('id');
-        $tmpModule   = true;
-        $tmpDatabase = true;
+        $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
@@ -164,10 +162,8 @@ class Core_ModuleController extends Core_IndexController
         if ($model instanceof Phprojekt_Model_Interface) {
             $databaseModel   = Phprojekt_Loader::getModel($model->name, $model->name);
             $databaseManager = new Phprojekt_DatabaseManager($databaseModel);
-            $tmpModule       = Default_Helpers_Delete::delete($model);
-            $tmpDatabase     = $databaseManager->deleteModule();
 
-            if ($tmpModule === false || $tmpDatabase === false) {
+            if (Default_Helpers_Delete::delete($model) === false || $databaseManager->deleteModule() === false) {
                 $message = Phprojekt::getInstance()->translate('The module can not be deleted');
             } else {
                 $message = Phprojekt::getInstance()->translate('The module was deleted correctly');
