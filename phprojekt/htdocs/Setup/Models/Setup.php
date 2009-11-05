@@ -133,16 +133,6 @@ class Setup_Models_Setup
             $this->_error[] = 'The database name can not be empty';
             $valid = false;
         } else {
-            // Mysql
-            @mysql_connect($params['dbHost'], $params['dbUser'], $params['dbPass']);
-            @mysql_query("DROP DATABASE `" . $params['dbName']) . "`";
-            @mysql_query("CREATE DATABASE `" . $params['dbName'] . "`" .
-                " DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;");
-            if (!mysql_select_db($params['dbName'])) {
-                $this->_error[] = 'Error selecting database ' . $params['dbName'];
-                $valid = false;
-            }
-
             try {
                 $dbParams = array(
                     'host'     => $params['dbHost'],
@@ -150,6 +140,10 @@ class Setup_Models_Setup
                     'password' => $params['dbPass'],
                     'dbname'   => $params['dbName']
                 );
+                $this->_db = Zend_Db::factory($params['serverType'], $dbParams);
+                $this->_db->query("DROP DATABASE `" . $params['dbName'] . "`");
+                $this->_db->query("CREATE DATABASE `" . $params['dbName'] . "`"
+                    ." DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;");
                 $this->_db = Zend_Db::factory($params['serverType'], $dbParams);
             } catch (Exception $error) {
                 $this->_error[] = 'Cannot connect to server at ' . $params['dbHost']
