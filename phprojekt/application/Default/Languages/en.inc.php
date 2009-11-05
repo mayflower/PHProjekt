@@ -329,8 +329,9 @@ $lang["Accepted"] = "Accepted";
 
 // Filters
 $lang["Filters"] = "Filters";
-$lang["Delete all the filters"] = "Delete all the filters";
-$lang["Select a filter"] = "Select a filter";
+$lang["Manage filters for the list view"] = "Manage filters for the list view";
+$lang["Delete all filters"] = "Delete all filters";
+$lang["Add a filter"] = "Add a filter";
 $lang["Please, delete some filters for get a correct result set."] = "Please, delete some filters for get a correct "
     . "result set.";
 $lang["Filter_equal_rule"] = "Equal";

@@ -446,7 +446,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Render filter Button
         if (meta.length > 0 && this._filterButton === null) {
             var params = {
-                label:     phpr.nls.get('Filters'),
+                label:     phpr.nls.get('Manage filters for the list view'),
                 showLabel: false,
                 baseClass: "positive",
                 iconClass: "filter",
@@ -482,6 +482,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         var filters = this.getFilters();
 
         if (dojo.byId('gridFiltersBox')) {
+            dijit.byId('gridFiltersBox').titleNode.innerHTML = phpr.nls.get('Filters');
             // Closed div
             if (dojo.byId('gridFiltersBox').style.height == '0px') {
                 var html = this.render(["phpr.Default.template.filters", "form.html"], null, {
@@ -660,11 +661,13 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         var first = 1;
 
         // Message
-        if (this.filterField.length > 0) {
-            dijit.byId('filterLabelDiv').attr('content', phpr.nls.get("Select a filter"));
-        } else {
-            dijit.byId('filterLabelDiv').attr('content', phpr.nls.get("Please, delete some filters for get a correct "
-                + "result set."));
+        if (dijit.byId('filterLabelDiv')) {
+            if (this.filterField.length > 0) {
+                dijit.byId('filterLabelDiv').attr('content', phpr.nls.get("Add a filter"));
+            } else {
+                dijit.byId('filterLabelDiv').attr('content',
+                    phpr.nls.get("Please, delete some filters for get a correct result set."));
+            }
         }
 
         // Field
@@ -748,7 +751,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 module:   phpr.module,
                 id:       'all',
                 operator: '  |  ',
-                field:    phpr.nls.get('Delete all the filters'),
+                field:    phpr.nls.get('Delete all filters'),
                 rule:     '',
                 value:    ''
             });
