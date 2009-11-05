@@ -171,17 +171,12 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
 
     updateCacheData:function() {
         // Summary:
-        //    Rewritten the function for work like a system module and like a form
+        //    Rewritten the function for delete all the cache
         // Description:
-        //    Rewritten the function for work like a system module and like a form
-        if (this.isSystemModule(this.module)) {
-            phpr.DataStore.deleteAllCache();
-            if (this.tree) {
-                this.tree.updateData();
-            }
-            if (this.grid) {
-                this.grid.updateData();
-            }
+        //    Rewritten the function for delete all the cache
+        phpr.DataStore.deleteAllCache();
+        if (this.grid) {
+            this.grid.updateData();
         }
         if (this.form) {
             this.form.updateData();
