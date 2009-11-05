@@ -22,6 +22,11 @@
  * @since      File available since Release 6.0
  */
 
+// Force quotes off to run in cruisecontrol
+ini_set("magic_quotes_gpc", 0);
+ini_set("magic_quotes_runtime", 0);
+ini_set("magic_quotes_sybase", 0);
+
 /* use command line switches to overwrite this */
 define("DEFAULT_CONFIG_FILE", "configuration.ini");
 define("PHPR_CONFIG_FILE", "configuration.ini");
