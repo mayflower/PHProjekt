@@ -108,17 +108,19 @@ style="width: 20%;" />
         Please, provide the path to the config.inc.php file of your old PHProjekt 5.x.<br />
         <u>Notes</u>:<br />
         <ul style="margin: 0 1.5em">
+            <li><b>Choose a different database from the one used for version 5 so that you don't lost your data.</b>
+            </li>
             <li>It could take several minutes depending on the number of projects to be migrated.</li>
             <li>The migration is compatible with version 5.1 or a superior one.</li>
             <li>The config.inc.php needs to be on the same server where you are installing PHProjekt 6</li>
             <li>User passwords will be migrated from version 5.2.1 or better.
             All previous versions migration will have the same username and password.</li>
-            <li>Root user will not be migrated. Please use the 'admin' user instead. This 'admin' user is just another regular user, but of 'admin' type which provides access to 'Administration' module, won't have access to everything.</li>
+            <li>Root user will not be migrated. Please use the 'admin' user instead. This 'admin' user is just another
+            regular user, but of 'admin' type which provides access to 'Administration' module, won't have access to
+            everything.</li>
             <li>The modules to be migrated are: Calendar, Projects, Notes, Todos, Timeproj, Contacts, Helpdesk and
             Filemanager.</li>
             <li>Customized module fields will not be migrated.</li>
-            <li>If Filemanager files does not work after migration please try moving manually the uploaded files
-            (e.g. move the files on /phprojekt5.x/uploads to /phprojekt6/uploads).</li>
         </ul>
     </td>
 </tr>
