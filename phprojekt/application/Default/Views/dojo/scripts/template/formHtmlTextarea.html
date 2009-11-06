@@ -26,10 +26,11 @@
             dojo.byId('displayHtml_{{id}}').style.display = 'inline';
             dojo.byId('htmlButtons_{{id}}').style.display = 'inline';"
         style="width: 82%;">
-            <div dojoType="dijit.Editor" id="editorFor_{{id}}" plugins="['undo', 'redo', '|', 'bold', 'italic', 'underline', 'strikethrough',
-                'subscript', 'superscript', 'removeFormat','|', 'justifyCenter', 'justifyFull', 'justifyLeft',
-                'justifyRight', 'delete', '|', 'insertOrderedList', 'insertUnorderedList', '|', 'insertHorizontalRule',
-                'createLink', 'insertImage', '|', 'foreColor', 'hiliteColor', '|', 'fontName', 'fontSize']"
+            <div dojoType="dijit.Editor" id="editorFor_{{id}}" plugins="['bold', 'italic', 'underline',
+                'strikethrough', 'subscript', 'superscript', 'removeFormat','|', 'justifyCenter',
+                'justifyFull', 'justifyLeft', 'justifyRight', 'delete', '|', 'insertOrderedList',
+                'insertUnorderedList', 'indent', 'outdent', '|', 'insertHorizontalRule', 'createLink', 'insertImage',
+                '|', 'foreColor', 'hiliteColor', '|', 'fontName', 'fontSize']"
             style="width: 99%; height: 99%; border: 1px solid;">
             </div>
             <button dojoType="dijit.form.Button" iconClass="tick" type="submit"
@@ -41,7 +42,7 @@
     <td>
         {{tooltip|safe}}
         <div id="textButtons_{{id}}"
-        style="display: {{displayText}};">
+        style="display: {{displayText}}; margin-left: 7px;">
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="toHtmlButton" class="toHtmlButton"
             title="{{htmlModeTxt}}" onclick="
                 dojo.byId('displayText_{{id}}').style.display = 'none';

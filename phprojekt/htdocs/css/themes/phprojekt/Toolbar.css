@@ -99,10 +99,20 @@ a:focus.dijitToolbar {
 }
 
 /* Under dialogs */
+.phprojekt .dijitDialog .dijitToolbar {
+    background: #C3D3E5 url(images/buttonDisabled.png) repeat-x scroll center top;
+    color: #000;
+}
+
 .phprojekt .dijitDialog .dijitToolbar .dijitComboBox {
     width: 12em;
+    background: #FFF;
 }
 
 .phprojekt .dijitDialog .dijitToolbar label {
     color: #000;
+}
+
+.phprojekt .dijitDialog .dijitToolbar .dijitArrowButtonInner {
+    width: 0;
 }
