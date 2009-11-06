@@ -460,13 +460,15 @@ dojo.declare("phpr.DataStore", null, {
             phpr.handleError(scope.url, 'php');
         } else {
             // Js error
-            var message = null;
-            if (error.message) {
-                message = error.message;
-            } else if (error.description) {
-                message = error.description;
+            if (phpr.config.showInternalJsErrors) {
+                var message = null;
+                if (error.message) {
+                    message = error.message;
+                } else if (error.description) {
+                    message = error.description;
+                }
+                phpr.handleError(scope.url, 'js', message);
             }
-            phpr.handleError(scope.url, 'js', message);
         }
     },
 
