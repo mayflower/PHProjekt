@@ -52,7 +52,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     SCHEDULE_START_HOUR: 8,
     SCHEDULE_END_HOUR:   20,
 
-    // Constants used by the function getEventInfo:
+    // Constants used by the function processEventInfo:
     EVENT_TIME_START:    0,
     EVENT_TIME_INSIDE:   1,
     EVENT_TIME_OUTSIDE:  2,
@@ -176,56 +176,69 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         }
     },
 
-    getEventInfo:function(/*string*/ eventStartDate, /*string*/ eventStartTime, /*string*/ eventEndDate,
-                          /*string*/ eventEndTime) {
+    processEventInfo:function(eventInfo,i) {
         // Summary:
         //    Returns useful data about an event, used to create the schedule table.
         // Description:
         //    Returns useful data about an event, used to create the schedule table.
         // 1) Whether it is inside or outside the 8:00 to 20:00 range.
         // 2) Time description for the event.
+        // 3) Formatted start and end times.
+        // 4) Date and whether it is a multi-day event
 
         var result = new Array();  // The variable that will be returned
 
         // Times have to be rounded according the vertical time schedule divisions
-        eventStartTime = this.roundTimeByHourHalves(eventStartTime, this.ROUND_TIME_HALVES_PREVIOUS);
-        eventEndTime =   this.roundTimeByHourHalves(eventEndTime, this.ROUND_TIME_HALVES_NEXT);
+        startTimeRounded = this.roundTimeByHourHalves(eventInfo['startTime'], this.ROUND_TIME_HALVES_PREVIOUS);
+        endTimeRounded   = this.roundTimeByHourHalves(eventInfo['endTime'], this.ROUND_TIME_HALVES_NEXT);
 
-        temp                  = eventStartTime.split(':');
+        temp                  = startTimeRounded.split(':');
         var eventStartHour    = parseInt(temp[0], 10);
         var eventStartMinutes = parseInt(temp[1], 10);
-        temp                  = eventEndTime.split(':');
+        temp                  = endTimeRounded.split(':');
         var eventEndHour      = parseInt(temp[0], 10);
         var eventEndMinutes   = parseInt(temp[1], 10);
+        result['startTime']   = this.formatTime(eventInfo['startTime']);
+        result['endTime']     = this.formatTime(eventInfo['endTime']);
 
         // Is at least one minute of the event inside the schedule?
         if (eventStartHour < 20 && ((eventEndHour > 7) && !(eventEndHour == 8 && eventEndMinutes == 0))) {
             // Yes - Show the event inside the schedule
             result['range']     = this.SHOWN_INSIDE_CHART;
-            result['startTime'] = this.formatTime(eventStartTime);
-            result['endTime']   = this.formatTime(eventEndTime);
-            result['dayOrder']  = this.getDayOrder(eventStartDate);
 
             // Date-time description
-            result['timeDescrip'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime,
-                                    eventEndTime);
+            // What view are we in?
+            if (this.main.weekList != null) {
+                // Week view
+                // Is it a multiple days event?
+                if (!eventInfo['multDay']) {
+                    // No
+                    result['timeDescrip'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, result['startTime'],
+                        result['endTime']);
+                } else {
+                    // Yes
+                    result['timeDescrip'] = this.eventDateTimeDescrip(eventInfo['multDayPos'], result['startTime'],
+                        result['endTime']);
+                }
+            }
         } else {
             // No - Shown out of the schedule
             result['range'] = this.SHOWN_OUTSIDE_CHART;
             // Date-time description
-            if (this.main.weekList != null) {
-                if (eventStartDate == eventEndDate) {
-                    result['time'] = this.eventDateTimeDescrip(this.DATETIME_LONG_ONE_DAY, eventStartTime,
-                            eventEndTime, eventStartDate, eventEndDate);
-                } else {
-                    result['time'] = this.eventDateTimeDescrip(this.DATETIME_LONG_MANY_DAYS, eventStartTime,
-                        eventEndTime, eventStartDate, eventEndDate);
-                }
+            // How many days does the event last?
+            if (eventInfo['startDate'] == eventInfo['endDate']) {
+                // One day
+                result['timeDescrip'] = this.eventDateTimeDescrip(this.DATETIME_LONG_ONE_DAY, result['startTime'],
+                    result['endTime'], eventInfo['startDate']);
             } else {
-                result['time'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime,
-                                                           eventEndTime);
+                // More than one day
+                result['timeDescrip'] = this.eventDateTimeDescrip(this.DATETIME_LONG_MANY_DAYS, result['startTime'],
+                    result['endTime'], eventInfo['startDate'], eventInfo['endDate']);
             }
         }
+
+        result['date']    = eventInfo['startDate'];
+        result['multDay'] = eventInfo['multDay'];
 
         return result;
     },
@@ -291,12 +304,12 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         var description;
         switch (mode) {
             case this.DATETIME_LONG_MANY_DAYS:
-                description = startDate + ' ' + this.formatTime(startTime) + ' - ' + endDate + ' '
-                    + this.formatTime(endTime);
+                description = startDate + ' &nbsp;' + this.formatTime(startTime) + ' &nbsp;- &nbsp;' + endDate
+                    + ' &nbsp;' + this.formatTime(endTime);
                 break;
             case this.DATETIME_LONG_ONE_DAY:
             default:
-                description = startDate + ' ' + this.formatTime(startTime) + ' - ' + this.formatTime(endTime);
+                description = startDate + ' &nbsp;' + this.formatTime(startTime) + ' - ' + this.formatTime(endTime);
                 break;
             case this.DATETIME_SHORT:
                 description = this.formatTime(startTime) + ' - ' +  this.formatTime(endTime);
@@ -499,14 +512,17 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
         for (var i in this.events) {
             var eventDiv          = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
-            var resizeDiv         = dijit.byId('eventResize' + i)
-            resizeDiv.parentClass = this;
 
-            // Minimum size
-            var divEventResize     = dijit.byId('eventResize' + i);
-            var minWidth           = this.cellDayWidth - (2 * this.EVENTS_BORDER_WIDTH);
-            var minHeight          = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
-            divEventResize.minSize = { w: minWidth, h: minHeight};
+            if (this.events[i]['hasResizeHandler']) {
+                var resizeDiv         = dijit.byId('eventResize' + i)
+                resizeDiv.parentClass = this;
+
+                // Minimum size
+                var divEventResize     = dijit.byId('eventResize' + i);
+                var minWidth           = this.cellDayWidth - (2 * this.EVENTS_BORDER_WIDTH);
+                var minHeight          = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
+                divEventResize.minSize = { w: minWidth, h: minHeight};
+            }
         }
     },
 
@@ -523,13 +539,15 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // 1 - Put div in the front of stack
         this.putDivInTheFront(node);
 
-        var movedEvent        = this.nodeIdToEventOrder(node.id);
+
         var posLeftNew        = parseInt(node.style.left);
         var posTopNew         = parseInt(node.style.top);
         var posBottomNew      = posTopNew + node.offsetHeight;
-        var posTopCurrent     = this.events[movedEvent]['currentTop'];
-        var posBottomCurrent  = this.events[movedEvent]['currentBottom'];
-        var posLeftCurrent    = this.events[movedEvent]['currentLeft'];
+        var movedEventIndex   = this.nodeIdToEventOrder(node.id);
+        var movedEvent        = this.events[movedEventIndex];
+        var posTopCurrent     = movedEvent['currentTop'];
+        var posBottomCurrent  = movedEvent['currentBottom'];
+        var posLeftCurrent    = movedEvent['currentLeft'];
 
         // 2 - If event was moved (not resized), then attend the start time change
         if (!resized) {
@@ -537,55 +555,59 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             if (posTopNew != posTopCurrent) {
                 var startTime                          = this.divPositionToTime(posTopNew);
                 startTime                              = this.formatTime(startTime);
-                this.events[movedEvent]['currentTop']  = posTopNew;
-                this.events[movedEvent]['startTime']   = startTime;
+                movedEvent['currentTop']  = posTopNew;
+                movedEvent['startTime']   = startTime;
             }
             // Day did change?
             if (posLeftNew != posLeftCurrent) {
                 var dayOrder                           = this.divPositionToDay(posLeftNew);
-                this.events[movedEvent]['currentLeft'] = posLeftNew;
-                this.events[movedEvent]['dayOrder']    = dayOrder;
-                this.events[movedEvent]['startDate']   = this._weekDays[dayOrder];
-                this.events[movedEvent]['endDate']     = this._weekDays[dayOrder];
+                movedEvent['currentLeft'] = posLeftNew;
+                movedEvent['dayOrder']    = dayOrder;
+                movedEvent['date']        = this._weekDays[dayOrder];
             }
         }
         // End Time did change?
         if (posBottomNew != posBottomCurrent) {
             var endTime                              = this.divPositionToTime(posBottomNew);
             endTime                                  = this.formatTime(endTime);
-            this.events[movedEvent]['currentBottom'] = posBottomNew;
-            this.events[movedEvent]['endTime']       = endTime;
+            movedEvent['currentBottom'] = posBottomNew;
+            movedEvent['endTime']       = endTime;
         }
 
         // 3 - Fill remaining values, if any, for event description update
         if (startTime == null) {
-            var startTime = this.events[movedEvent]['startTime'];
+            var startTime = movedEvent['startTime'];
         }
         if (endTime == null) {
-            var endTime = this.events[movedEvent]['endTime'];
+            var endTime = movedEvent['endTime'];
         }
 
         // 4 - The event was dropped?
         if (dropped) {
-            var posEventCurrent = this.events[movedEvent]['startDate'] + '-' + this.events[movedEvent]['startTime']
-                + '-' + this.events[movedEvent]['endDate'] + '-' + this.events[movedEvent]['endTime'];
+            var posEventCurrent = movedEvent['date'] + '-' + movedEvent['startTime']
+                + '-' + movedEvent['endTime'];
 
             // The event was dropped in a different location than the one where it was the first time picked up?
-            if (posEventCurrent != this.events[movedEvent]['posEventDB']) {
+            if (posEventCurrent != movedEvent['posEventDB']) {
                 // Yes
-                this.events[movedEvent]['hasChanged'] = true;
+                movedEvent['hasChanged'] = true;
                 this.enableSaveButton();
             } else {
-                this.events[movedEvent]['hasChanged'] = false;
+                movedEvent['hasChanged'] = false;
             }
         }
 
         // 5 - Update event textual contents
-        var timeDescrip  = this.eventDateTimeDescrip(this.DATETIME_SHORT, startTime, endTime);
-        var eventDescrip = timeDescrip + ' ' + this.events[movedEvent]['title'] + '<br>'
-            + this.events[movedEvent]['notes'];
-
-        dojo.byId('plainDiv' + movedEvent).innerHTML = eventDescrip;
+        // Is it a multiple days event?
+        if (!movedEvent['multDay']) {
+            // No
+            var timeDescrip = this.eventDateTimeDescrip(this.DATETIME_SHORT, startTime, endTime);
+        } else {
+            // Yes
+            var timeDescrip = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_END, startTime, endTime);
+        }
+        var eventDescrip = timeDescrip + ' ' + movedEvent['title'] + '<br>' + movedEvent['notes'];
+        dojo.byId('plainDiv' + movedEventIndex).innerHTML = eventDescrip;
 
         // 6 - Check the items just in case there has been a change concerning simultaneous events
         if (dropped) {
@@ -619,10 +641,30 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             if (this.events[i]['hasChanged']) {
                 doSaving = true;
                 var id   = this.events[i]['id'];
-                content['data[' + id + '][startDate]'] = this.events[i]['startDate'];
-                content['data[' + id + '][endDate]']   = this.events[i]['endDate'];
-                content['data[' + id + '][startTime]'] = this.events[i]['startTime'];
-                content['data[' + id + '][endTime]']   = this.events[i]['endTime'];
+
+                // Is it a multiple days event?
+                if (!this.events[i]['multDay']) {
+                    // No
+                    content['data[' + id + '][startDate]'] = this.events[i]['date'];
+                    content['data[' + id + '][endDate]']   = this.events[i]['date'];
+                    content['data[' + id + '][startTime]'] = this.events[i]['startTime'];
+                    content['data[' + id + '][endTime]']   = this.events[i]['endTime'];
+                } else {
+                    // Yes
+                    // Was this event id already processed?
+                    if (dojo.indexOf(processedIds, id) == -1) {
+                        //No
+                        // Obtain the data of the whole event, not just of this div
+                        var parent      = this.events[i]['multDayParent'];
+                        var multDayData = this.events[parent]['multDayData'];
+                        content['data[' + id + '][startDate]'] = multDayData['startDate'];
+                        content['data[' + id + '][endDate]']   = multDayData['endDate'];
+                        content['data[' + id + '][startTime]'] = multDayData['startTime'];
+                        content['data[' + id + '][endTime]']   = multDayData['endTime'];
+                        // Add this event id to the list of processed ones:
+                        processedIds.push(id);
+                    }
+                }
             }
         }
 

@@ -40,9 +40,11 @@
             {{event.timeDescrip}} {{event.title|safe}} <br>
             {{event.notes|safe}}
         </div>
+        {% ifequal event.hasResizeHandler true %}
         <div dojoType="phpr.Calendar.ResizeHandle" resizeAxis="y" activeResize="true" targetId="plainDiv{{event.order}}"
         id="eventResize{{event.order}}"
         style="bottom: 0; width: 100%; position: absolute;"></div>
+        {% endifequal %}
     </div>
     {% endfor %}
 </div>
@@ -52,7 +54,7 @@
 <br />
     {{furtherEventsMessage}}:<br />
     {% for event in furtherEvents.events %}
-{{event.time}}:&nbsp;
+{{event.time|safe}}:&nbsp;
 <a href="javascript: dojo.publish('Calendar.showFormFromList', [{{event.id}}]);">{{event.title|safe}}</a>
 <br />
     {% endfor %}

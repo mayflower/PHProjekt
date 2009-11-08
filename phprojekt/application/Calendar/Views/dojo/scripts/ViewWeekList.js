@@ -168,57 +168,117 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
 
     fillEventsArrays:function(content) {
         // Summary:
-        //    Puts every event in the corresponding array position.
+        //    Parses and analyses 'content' contents and puts every event in 'events' array, if there are any multiple
+        // days event, they get splitted into each day events with a connection among them.
 
         this.events                 = new Array();
         furtherEventsTemp           = new Array();
         furtherEventsTemp['show']   = false;
         furtherEventsTemp['events'] = new Array();
-        // All events IDs to be shown both in schedule and 'Further events'
-        eventsToBeShown = new Array();
 
+        // For each event received from the DB
         for (var event in content) {
-            var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
-                                              content[event]['endDate'], content[event]['endTime']);
 
-            if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
-                var notes = this.htmlEntities(content[event]['notes']);
-                notes     = notes.replace('\n', '<br />');
+            var eventsInfo     = new Array();
+            var id             = content[event]['id'];
+            var singleDayEvent = false;
 
-                var nextEvent = this.events.length;
-                if (this.events[0] == undefined) {
-                    nextEvent = 0;
+            // Process title and note
+            var title = this.htmlEntities(content[event]['title']);
+            var notes = this.htmlEntities(content[event]['notes']);
+            notes     = notes.replace('\n', '<br />');
+
+            // What kind of event is this one concerning multiple day events?
+            if (content[event]['startDate'] == content[event]['endDate']) {
+                // Single day event
+                singleDayEvent = true;
+            } else {
+                // Multiple days event
+                var eventsSplitted = this.splitMultDayEvent(content[event]);
+
+                // The event has at least 1 minute inside the 8:00 to 20:00 grid?
+                if (eventsSplitted['eventShownInGrid']) {
+                    // Yes - It uses one or more day columns. Split it into each day events and keep connection among
+                    // them
+                    // For each day column (it can't be used 'for (var i in eventsSplitted)':
+                    for (var i = 0; i < eventsSplitted.length; i ++) {
+                        var eventInfo = eventsSplitted[i];
+                        if (eventInfo['dayShownInGrid']) {
+                            // Obtain more info
+                            eventInfo['multDay'] = true;
+                            eventsInfo[i]        = this.processEventInfo(eventInfo);
+                            if (eventInfo['multDayPos'] == this.DATETIME_MULTIDAY_END) {
+                                eventsInfo[i]['hasResizeHandler'] = true;
+                            } else {
+                                eventsInfo[i]['hasResizeHandler'] = false;
+                            }
+                        }
+                    }
+                } else {
+                    // No - Show it as a 1 day out-of-schedule event
+                    singleDayEvent = true;
                 }
+            }
 
-                this.events[nextEvent]                = new Array();
-                this.events[nextEvent]['order']       = nextEvent; // For Django template
-                this.events[nextEvent]['id']          = content[event]['id'];
-                this.events[nextEvent]['title']       = this.htmlEntities(content[event]['title']);
-                this.events[nextEvent]['timeDescrip'] = eventInfo['timeDescrip'];
-                this.events[nextEvent]['notes']       = notes;
-                this.events[nextEvent]['class']       = '';
-                this.events[nextEvent]['startDate']   = content[event]['startDate']
-                this.events[nextEvent]['endDate']     = content[event]['endDate']
-                this.events[nextEvent]['startTime']   = eventInfo['startTime'];
-                this.events[nextEvent]['endTime']     = eventInfo['endTime'];
-                this.events[nextEvent]['dayOrder']    = eventInfo['dayOrder'];
-                this.events[nextEvent]['hasChanged']  = false;
-                // To check whether the event is pending to be saved - The last position where it was dropped, so if
-                // user drags it and leaves it in the same position, it doesn't need to be saved.
-                this.events[nextEvent]['posEventDB'] = content[event]['startDate'] + '-' + eventInfo['startTime']
-                     + '-' + content[event]['endDate'] + '-' + eventInfo['endTime'];
+            if (singleDayEvent) {
+                var eventInfo        = content[event];
+                eventInfo['multDay'] = false;
+                eventsInfo[0]        = this.processEventInfo(content[event], event);
+            }
 
-                // Will be filled later:
-                this.events[nextEvent]['currentLeft']  = null;
-                this.events[nextEvent]['currentTop']   = null;
+            // Fill the 'events' class array
+            for (var i in eventsInfo) {
+                var eventInfo = eventsInfo[i];
 
-            } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
-                furtherEventsTemp['show'] = true;
-                var nextPosition = furtherEventsTemp['events'].length;
-                furtherEventsTemp['events'][nextPosition]          = new Array();
-                furtherEventsTemp['events'][nextPosition]['id']    = content[event]['id'];
-                furtherEventsTemp['events'][nextPosition]['time']  = eventInfo['time'];
-                furtherEventsTemp['events'][nextPosition]['title'] = content[event]['title'];
+                // Events inside the grid
+                if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
+                    var nextEvent = this.events.length;
+                    if (this.events[0] == undefined) {
+                        nextEvent = 0;
+                    }
+
+                    this.events[nextEvent]                = new Array();
+                    this.events[nextEvent]['order']       = nextEvent; // For Django template
+                    this.events[nextEvent]['id']          = id;
+                    this.events[nextEvent]['title']       = title;
+                    this.events[nextEvent]['timeDescrip'] = eventInfo['timeDescrip'];
+                    this.events[nextEvent]['notes']       = notes;
+                    this.events[nextEvent]['class']       = '';
+                    this.events[nextEvent]['date']        = eventInfo['date']
+                    this.events[nextEvent]['startTime']   = eventInfo['startTime'];
+                    this.events[nextEvent]['endTime']     = eventInfo['endTime'];
+                    this.events[nextEvent]['dayOrder']    = this.getDayOrder(eventInfo['date']);
+                    this.events[nextEvent]['hasChanged']  = false;
+                    // To check whether the event is pending to be saved - The last position where it was dropped, so if
+                    // user drags it and leaves it in the same position, it doesn't need to be saved.
+                    this.events[nextEvent]['posEventDB'] = eventInfo['date'] + '-' + eventInfo['startTime']
+                         + '-' + eventInfo['endTime'];
+
+                    // Multiple day event? Set position among rest of divs of same event, also set if this div has to
+                    // allow Y resizing.
+                    this.events[nextEvent]['multDay'] = eventInfo['multDay'];
+                    if (eventInfo['multDay']) {
+                        this.events[nextEvent]['multDayPos']       = eventInfo['multDayPos'];
+                        this.events[nextEvent]['hasResizeHandler'] = eventInfo['hasResizeHandler'];
+                    } else {
+                        this.events[nextEvent]['hasResizeHandler'] = true;
+                    }
+
+                    // Will be filled later:
+                    this.events[nextEvent]['currentLeft'] = null;
+                    this.events[nextEvent]['currentTop']  = null;
+
+                } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
+                    // Events outside the grid: located under it as textual strings
+                    furtherEventsTemp['show'] = true;
+                    var nextPosition          = furtherEventsTemp['events'].length;
+
+                    furtherEventsTemp['events'][nextPosition]          = new Array();
+                    furtherEventsTemp['events'][nextPosition]['id']    = id;
+                    furtherEventsTemp['events'][nextPosition]['time']  = eventInfo['timeDescrip'];
+                    furtherEventsTemp['events'][nextPosition]['title'] = title;
+
+                }
             }
         }
 
@@ -254,6 +314,81 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
                 return i;
             }
         }
+    },
+
+    splitMultDayEvent:function(eventInfo) {
+        // Summary:
+        //    Splits a multiple days event into as many events as days it lasts and sets to each one dates and times.
+        // If a day is out of present week, it is not returned.
+        // It also checkes whether the event has at least 1 minute to be shown inside the grid. If not, then it has to
+        // be shown under the grid in 'Further events' section
+
+        var startDate    = dojo.date.stamp.fromISOString(eventInfo['startDate']);
+        var endDate      = dojo.date.stamp.fromISOString(eventInfo['endDate']);
+        var amountEvents = dojo.date.difference(startDate, endDate) + 1;
+        var events       = new Array();
+        var monday       = dojo.date.stamp.fromISOString(this._weekDays[0]);
+        var sunday       = dojo.date.stamp.fromISOString(this._weekDays[6]);
+
+        // Whether the event has to show at least 1 minute inside the grid, if not, it will be shown under the grid in
+        // 'Further events' section.
+        events['eventShownInGrid'] = false;
+
+        // For each resulting day
+        for (var i = 0; i < amountEvents; i ++) {
+            var oneDay = dojo.date.add(startDate, 'day', i);
+
+            // Is this day inside the week?
+            if ((dojo.date.compare(oneDay, monday) >= 0) && (dojo.date.compare(oneDay, sunday) <= 0)) {
+                // Yes
+                var nextPos                  = events.length;
+                events[nextPos]              = new Array();
+                var tmp                      = dojo.date.stamp.toISOString(oneDay);
+                events[nextPos]['startDate'] = tmp.substr(0, 10);
+
+                // Whether this day has a part to be shown in the day column from 8:00 to 20:00.
+                events[nextPos]['dayShownInGrid'] = false;
+
+                // Set times
+                if (i == 0) {
+                    // First day
+                    events[nextPos]['startTime']  = eventInfo['startTime'];
+                    events[nextPos]['endTime']    = '20:00';
+                    events[nextPos]['multDayPos'] = this.DATETIME_MULTIDAY_START;
+                    // This day has to be shown inside the grid?
+                    var tmp  = eventInfo['startTime'].split(':');
+                    var hour = parseInt(tmp[0], 10);
+                    if (hour < 20) {
+                        events[nextPos]['dayShownInGrid'] = true;
+                        events['eventShownInGrid']        = true;
+                    }
+                } else {
+                    // Between second and last day
+                    events[nextPos]['startTime'] = '8:00';
+                    if (events[nextPos]['startDate'] == eventInfo['endDate']) {
+                        // Last day
+                        events[nextPos]['endTime']    = eventInfo['endTime'];
+                        events[nextPos]['multDayPos'] = this.DATETIME_MULTIDAY_END;
+                        // This day has to be shown inside the grid?
+                        var tmp     = eventInfo['endTime'].split(':');
+                        var hour    = parseInt(tmp[0], 10);
+                        var minutes = parseInt(tmp[1], 10);
+                        if (hour > 8 || (hour == 8 && minutes != 0)) {
+                            events[nextPos]['dayShownInGrid'] = true;
+                            events['eventShownInGrid']        = true;
+                        }
+                    } else {
+                        // Between second and penultimate day
+                        events[nextPos]['endTime']        = '20:00';
+                        events[nextPos]['multDayPos']     = this.DATETIME_MULTIDAY_MIDDLE;
+                        events[nextPos]['dayShownInGrid'] = true;
+                        events['eventShownInGrid']        = true;
+                    }
+                }
+            }
+        }
+
+        return events;
     },
 
     // Debugging function
