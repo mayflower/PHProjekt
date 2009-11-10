@@ -33,6 +33,7 @@ $lang["There are no Results"] = "No se encontraron resultados";
 
 // Error messages from Module Designer
 $lang["Module Designer"] = "Diseñador de Módulos";
+$lang["Invalid parameters"] = "Parámetros inválidos";
 $lang["The Module must contain at least one field"] = "El módulo debe contener al menos un campo";
 $lang["Please enter a name for this module"] = "Por favor ingrese un nombre para este módulo";
 $lang["The module name must start with a letter"] = "El nombre del módulo debe comenzar con una letra";

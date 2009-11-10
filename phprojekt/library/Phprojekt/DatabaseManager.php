@@ -502,7 +502,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 $this->_error->addError(array(
                     'field'   => 'Module Designer',
                     'label'   => Phprojekt::getInstance()->translate('Module Designer'),
-                    'message' => Phprojekt::getInstance()->translate('Invalid parameteres')));
+                    'message' => Phprojekt::getInstance()->translate('Invalid parameters')));
             }
 
             if ($valid) {
