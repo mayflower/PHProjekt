@@ -152,7 +152,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
 });
 
 dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
-    setValue: function(inRowIndex, inValue) {
+    setValue:function(inRowIndex, inValue) {
         if (this.widget && this.widget.setValue) {
             this.widget.setValue(inValue);
         } else {
@@ -179,7 +179,7 @@ dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
         }
     },
 
-    attachWidget: function(inNode, inDatum, inRowIndex){
+    attachWidget:function(inNode, inDatum, inRowIndex){
         // Add fix for IE
         if (dojo.isIE) {
             this.widget.domNode.unselectable = 'off';
@@ -275,7 +275,7 @@ dojo.declare("phpr.grid.cells.Textarea", phpr.grid.cells.Text, {
 });
 
 dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
-    setValue: function(inRowIndex, inValue) {
+    setValue:function(inRowIndex, inValue) {
         inValue = phpr.Date.getIsoTime(inValue);
         if (this.widget && this.widget.setValue) {
             this.widget.setValue(inValue);
@@ -320,7 +320,7 @@ dojo.declare('phpr.grid._View', [dojox.grid._View], {
         + 'dojoAttachPoint="contentNode" hidefocus="hidefocus" wairole="presentation"></div>\r\n\t\t'
         + '<div dojoAttachPoint="gridActions"></div>\r\n\t</div>\r\n</div>\r\n',
 
-    doStyleRowNode: function(inRowIndex, inRowNode) {
+    doStyleRowNode:function(inRowIndex, inRowNode) {
         // Summary
         //    Change the style of the row
         // Description
@@ -336,11 +336,27 @@ dojo.declare('phpr.grid._View', [dojox.grid._View], {
             }
             this.grid.rows.applyStyles(row);
         }
+    },
+
+    doHeaderEvent:function(e) {
+        // Summary
+        //    Re-write the function for remove effect on the action bar
+        // Description
+        //    Re-write the function for remove effect on the action bar
+        if(this.header.decorateEvent(e)){
+            if (e.type == 'click') {
+                dojo.style(this.gridActions, 'display', 'none');
+                this.grid.onHeaderEvent(e);
+                dojo.style(this.gridActions, 'display', 'inline');
+            } else {
+                this.grid.onHeaderEvent(e);
+            }
+        }
     }
 });
 
 dojo.declare('phpr.Filter.ExpandoPane', [dojox.layout.ExpandoPane], {
-    _startupSizes: function() {
+    _startupSizes:function() {
         // Summary
         //    Re-write the function for allow height 0
         // Description
@@ -364,7 +380,7 @@ dojo.declare('phpr.Filter.ExpandoPane', [dojox.layout.ExpandoPane], {
         this._hasSizes = true;
     },
 
-    resize: function(/* Object? */psize) {
+    resize:function(/* Object? */psize) {
         // Summary
         //    Re-write the function for allow height 0
         // Description
