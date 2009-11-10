@@ -131,11 +131,15 @@ class Timecard_IndexController extends IndexController
 
         $datas = array();
         foreach ($favorites as $projectId) {
-            $data            = array();
-            $data['id']      = $projectId;
-            $data['display'] = $tree->getNodeById($projectId)->getDepthDisplay('title');
+            foreach ($tree as $node) {
+                if ($node->id == $projectId) {
+                    $data            = array();
+                    $data['id']      = $projectId;
+                    $data['display'] = $node->getDepthDisplay('title');
 
-            $datas[] = $data;
+                    $datas[] = $data;
+                }
+            }
         }
 
         Phprojekt_Converter_Json::echoConvert($datas);

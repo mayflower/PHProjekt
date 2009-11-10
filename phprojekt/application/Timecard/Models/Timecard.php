@@ -363,7 +363,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $data['projectId'] = $record->projectId;
             $data['startTime'] = $record->startTime;
             $data['endTime']   = $record->endTime;
-            $data['display']   = $tree->getNodeById($record->projectId)->title;
+            $data['display']   = $tree->getNodeById($record->projectId)->getDepthDisplay('title');
 
             $datas[] = $data;
         }
