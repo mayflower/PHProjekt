@@ -17,6 +17,8 @@
  * @since      File available since Release 6.0
  */
 
+contentModuleDesignerSource = new Array();
+
 dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
     // Summary:
     //    Extend the dojo Source
@@ -47,7 +49,6 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
     }
 });
 
-contentModuleDesignerSource = new Array();
 phpr.makeModuleDesignerSource = function() {
     // Summary:
     //    Draw the source fields
@@ -208,7 +209,6 @@ phpr.editModuleDesignerField = function(nodeId) {
     var tableTypeRange = new Array();
     switch (formType) {
         case 'text':
-        case 'checkbox':
         case 'selectValues':
             tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
             tableTypeRange.push({'id': 'int', 'name': 'INT'});
@@ -216,6 +216,12 @@ phpr.editModuleDesignerField = function(nodeId) {
                 true, false);
             fieldsTable += template.textFieldRender(phpr.nls.get('Table Lenght'), 'tableLength', tableLength,
                 3, true, false);
+            break;
+        case 'checkbox':
+            tableTypeRange.push({'id': 'int', 'name': 'INT'});
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', tableType,
+                true, false);
+            fieldsTable += template.textFieldRender(phpr.nls.get('Table Lenght'), 'tableLength', 1, 1, true, false);
             break;
         case 'date':
             tableTypeRange.push({'id': 'date', 'name': 'DATE'});
@@ -482,7 +488,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
         case 'checkbox':
             formLabel = params['formLabel'] || 'Checkbox';
             labelFor = 'checkbox';
-            inputTxt = '<input type="checkbox" dojotype="dijit.form.CheckBox" value="on" />'
+            inputTxt = '<input type="checkbox" dojotype="dijit.form.CheckBox" value="1" />'
             break;
         case 'date':
             formLabel = params['formLabel'] || 'Date';

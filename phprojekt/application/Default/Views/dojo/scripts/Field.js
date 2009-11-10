@@ -28,7 +28,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     checkRender:function(itemlabel, itemid, itemvalue, itemhint) {
         phpr.destroyWidget(itemid);
         var itemchecked = null;
-        if (itemvalue == "on") {
+        if (itemvalue == "on" || itemvalue == "1") {
             itemchecked = "checked";
         }
         return this.render(["phpr.Default.template", "formcheck.html"], null, {
