@@ -120,14 +120,22 @@ class Gantt_IndexController extends IndexController
             }
         }
 
-        // Only allow write if all the projects have write or hight access
-        $data['data']['rights']["currentUser"]["write"] = true;
+        // Define right access for each project
+        // Also define the general write access for display the save button
+        // (only if at least one project different than the parent have write or hight access)
+        $data['data']['rights']["currentUser"]["write"] = false;
         if (count($ids) > 0) {
             $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-            $where  = sprintf('user_id = %d AND item_id IN (%s) AND module_id = 1 AND access < %d',
-                Phprojekt_Auth::getUserId(), implode(", ", $ids), Phprojekt_Acl::WRITE);
-            if (count($rights->fetchAll($where)) > 0) {
-                $data['data']['rights']["currentUser"]["write"] = false;
+            $where  = sprintf('user_id = %d AND item_id IN (%s) AND module_id = 1', Phprojekt_Auth::getUserId(),
+                implode(", ", $ids));
+            $access = $rights->fetchAll($where);
+            foreach ($access as $right) {
+                $data['data']['rights']["currentUser"][$right->item_id] = ($right->access > 1);
+                if ($data['data']['rights']["currentUser"]["write"] === false &&
+                    $projectId != $right->item_id &&
+                    $right->access > 1) {
+                    $data['data']['rights']["currentUser"]["write"] = true;
+                }
             }
         }
 

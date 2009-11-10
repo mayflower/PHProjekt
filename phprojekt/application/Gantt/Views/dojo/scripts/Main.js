@@ -115,6 +115,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 var projectChilds = new String(this.gantt.projectDataBuffer[j].childs)
                 var projectLevel  = this.gantt.projectDataBuffer[j].level;
                 var display       = (projectLevel == 10) ? 'block' : 'none';
+                var writeAccess   = data["rights"]["currentUser"][this.gantt.projectDataBuffer[j].id] || false;
 
                 this.gantt.projectDataBuffer[j] = new Array(projectName, projectValues[0], projectValues[1],
                     projectChilds, 0);
@@ -124,7 +125,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                     level:    projectLevel,
                     caption:  caption,
                     value:    projectValues,
-                    display:  display
+                    display:  display,
+                    disabled: !writeAccess
                 });
             }
 

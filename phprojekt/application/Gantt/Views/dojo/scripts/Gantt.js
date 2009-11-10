@@ -115,6 +115,11 @@ dojo.declare('phpr.Project.GanttBase', null, {
         //    This function delivers the error text and executes showDialog()
         // description:
         //    This function delivers the error text and executes showDialog()
+
+        if (dijit.byId(nodeToChange).attr('disabled')) {
+            return;
+        }
+
         var toChange = this.getProjectCaption(nodeToChange);
         var current  = this.getProjectCaption(currentNode);
 
