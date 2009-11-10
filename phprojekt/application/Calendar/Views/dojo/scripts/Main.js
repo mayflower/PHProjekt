@@ -816,7 +816,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         //    Called using setTimeout to allow the events to be just clicked to open them in the form, but waiting a
         // while first, because an event has just been dragged...
         if (this.weekList) {
-            this.weekList.eventHasBeenDragged = false;
+            this.weekList.eventClickDisabled = false;
         }
     }
 });

@@ -47,6 +47,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     stepY:                null,
     posHMax:              null,
     posYMaxComplement:    null,
+    eventClickDisabled:   false,
 
     // General constants
     SCHEDULE_START_HOUR: 8,
@@ -477,8 +478,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
             // Is this event part of two or more simulteaneous ones?
             if (this.events[i]['simultWidth']) {
-                // Yes
-                // Reduce its width
+                // Yes - Reduce its width
                 width = (width / this.events[i]['simultAmount']) - this.EVENTS_BORDER_WIDTH;
                 width = dojo.number.round(width);
 
@@ -494,9 +494,16 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             this.events[i]['currentTop']    = top;
             this.events[i]['currentBottom'] = bottom;
 
+            if (this.events[i]['shown']) {
+                var visibility = 'visible';
+            } else {
+                var visibility = 'hidden';
+            }
+
             dojo.style(eventDiv1, {
-                left: left + 'px',
-                top:  top + 'px'
+                left:       left + 'px',
+                top:        top + 'px',
+                visibility: visibility
             });
             dojo.style(eventDiv2, {
                 width:  width + 'px',
@@ -511,17 +518,19 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // class. Establishes a minimum height for the events, it is the height of one cell.
 
         for (var i in this.events) {
-            var eventDiv          = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
+            if (this.events[i]['shown']) {
+                var eventDiv = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
 
-            if (this.events[i]['hasResizeHandler']) {
-                var resizeDiv         = dijit.byId('eventResize' + i)
-                resizeDiv.parentClass = this;
+                if (this.events[i]['hasResizeHandler']) {
+                    var resizeDiv         = dijit.byId('eventResize' + i)
+                    resizeDiv.parentClass = this;
 
-                // Minimum size
-                var divEventResize     = dijit.byId('eventResize' + i);
-                var minWidth           = this.cellDayWidth - (2 * this.EVENTS_BORDER_WIDTH);
-                var minHeight          = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
-                divEventResize.minSize = { w: minWidth, h: minHeight};
+                    // Minimum size
+                    var divEventResize     = dijit.byId('eventResize' + i);
+                    var minWidth           = this.cellDayWidth - (2 * this.EVENTS_BORDER_WIDTH);
+                    var minHeight          = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
+                    divEventResize.minSize = { w: minWidth, h: minHeight};
+                }
             }
         }
     },
@@ -539,7 +548,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // 1 - Put div in the front of stack
         this.putDivInTheFront(node);
 
-
+        // 2 - Define some variables
         var posLeftNew        = parseInt(node.style.left);
         var posTopNew         = parseInt(node.style.top);
         var posBottomNew      = posTopNew + node.offsetHeight;
@@ -549,18 +558,31 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         var posBottomCurrent  = movedEvent['currentBottom'];
         var posLeftCurrent    = movedEvent['currentLeft'];
 
-        // 2 - If event was moved (not resized), then attend the start time change
+        // 3 - If div is being moved (not resized) and the div corresponds to a multiple days event then make
+        // temporarily invisible the rest of days of this event. Also save original coordinates.
+        if (movedEvent['multDay'] && !resized && !dropped && !movedEvent['multDayDragging']) {
+            this.toggleMultDaysDivs(movedEventIndex, false);
+            movedEvent['multDayDragging'] = true;
+            movedEvent['multDayDateOrig'] = movedEvent['date'];
+        }
+
+        if (this.main.weekList != null && !resized && dropped) {
+            var dayOrderCurrent = movedEvent['dayOrder'];
+        }
+
+        // 4 - Time and day changes
         if (!resized) {
+            // If event was moved (not resized), then attend the start time change
             // Start Time did change?
             if (posTopNew != posTopCurrent) {
-                var startTime                          = this.divPositionToTime(posTopNew);
-                startTime                              = this.formatTime(startTime);
+                var startTime             = this.divPositionToTime(posTopNew);
+                startTime                 = this.formatTime(startTime);
                 movedEvent['currentTop']  = posTopNew;
                 movedEvent['startTime']   = startTime;
             }
             // Day did change?
             if (posLeftNew != posLeftCurrent) {
-                var dayOrder                           = this.divPositionToDay(posLeftNew);
+                var dayOrder              = this.divPositionToDay(posLeftNew);
                 movedEvent['currentLeft'] = posLeftNew;
                 movedEvent['dayOrder']    = dayOrder;
                 movedEvent['date']        = this._weekDays[dayOrder];
@@ -573,8 +595,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             movedEvent['currentBottom'] = posBottomNew;
             movedEvent['endTime']       = endTime;
         }
-
-        // 3 - Fill remaining values, if any, for event description update
+        // Fill remaining values, if any, for event description update:
         if (startTime == null) {
             var startTime = movedEvent['startTime'];
         }
@@ -582,12 +603,21 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             var endTime = movedEvent['endTime'];
         }
 
-        // 4 - The event was dropped?
+        // 5 - Is it a multiple days event?
+        if (movedEvent['multDay']) {
+            if (resized) {
+                // The event was resized, update end time inside multiple days event data of main div
+                var parent                                    = movedEvent['multDayParent'];
+                this.events[parent]['multDayData']['endTime'] = endTime;
+            }
+        }
+
+        // 6 - The event was dropped?
         if (dropped) {
             var posEventCurrent = movedEvent['date'] + '-' + movedEvent['startTime']
                 + '-' + movedEvent['endTime'];
 
-            // The event was dropped in a different location than the one where it was the first time picked up?
+            // The event was dropped in a different location than the one saved in the DB?
             if (posEventCurrent != movedEvent['posEventDB']) {
                 // Yes
                 movedEvent['hasChanged'] = true;
@@ -595,21 +625,40 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             } else {
                 movedEvent['hasChanged'] = false;
             }
+
+            if (this.main.weekList != null) {
+                // The dropped event was being dragged (not resized) and it was a multiple days event?
+                if (!resized && movedEvent['multDay']) {
+                    // Yes - Update the position and sizes of the rest of divs of this event
+                    this.updateMultDaysEvent(movedEventIndex);
+                    // It was being dragged?
+                    if (movedEvent['multDayDragging']) {
+                        // Yes - Give back visibility to the rest of days of the event
+                        this.toggleMultDaysDivs(movedEventIndex, true);
+                        movedEvent['multDayDragging'] = false;
+                    }
+                }
+            }
         }
 
-        // 5 - Update event textual contents
+        // 7 - Update event textual contents
         // Is it a multiple days event?
         if (!movedEvent['multDay']) {
             // No
             var timeDescrip = this.eventDateTimeDescrip(this.DATETIME_SHORT, startTime, endTime);
         } else {
             // Yes
-            var timeDescrip = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_END, startTime, endTime);
+            if (resized) {
+                var timeDescrip = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_END, startTime, endTime);
+            } else {
+                var timeDescrip = this.eventDateTimeDescrip(movedEvent['multDayPos'], movedEvent['startTime'],
+                    movedEvent['endTime']);
+            }
         }
         var eventDescrip = timeDescrip + ' ' + movedEvent['title'] + '<br>' + movedEvent['notes'];
         dojo.byId('plainDiv' + movedEventIndex).innerHTML = eventDescrip;
 
-        // 6 - Check the items just in case there has been a change concerning simultaneous events
+        // 8 - Check the items just in case there has been a change concerning simultaneous events
         if (dropped) {
             this.updateSimultEventWidths();
             this.setEventDivsValues();
@@ -637,13 +686,18 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         var content  = new Array();
         var doSaving = false;
 
+        if (this.main.weekList != null) {
+            // For week view, to store processed ids and not repeat processings in multiple days events
+            var processedIds = new Array;
+        }
+
         for (var i in this.events) {
             if (this.events[i]['hasChanged']) {
                 doSaving = true;
                 var id   = this.events[i]['id'];
 
-                // Is it a multiple days event?
-                if (!this.events[i]['multDay']) {
+                // Is it week view and a multiple days event?
+                if (!(this.main.weekList != null && this.events[i]['multDay'])) {
                     // No
                     content['data[' + id + '][startDate]'] = this.events[i]['date'];
                     content['data[' + id + '][endDate]']   = this.events[i]['date'];
@@ -956,7 +1010,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     },
 
     putDivInTheFront:function(node) {
-        // Summary
+        // Summary:
         //    Prepares the div to be shown in the front of any other event div this one could be dragged over.
 
         var EVENT_BEHIND = 1;
@@ -995,9 +1049,6 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
         // Summary:
         //    Original function is empty. This one is in charge of making the 'stepped' allike draging. Then calls
         // eventMoved function of Calendar view class, if some movement was actually done.
-
-        // Following value will be checked by onMoveStop function of this class
-        this.parentClass.eventHasBeenDragged = true;
 
         var movedEventIndex = this.parentClass.nodeIdToEventOrder(this.node.id);
         var movedEvent      = this.parentClass.events[movedEventIndex];
@@ -1060,14 +1111,19 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
             s.top  = leftTop.t + "px";
             this.onMoved(mover, leftTop);
 
+            // Following values will be checked by onMoveStop function of this class
+            this.parentClass.eventHasBeenDragged = true;
+            this.parentClass.eventClickDisabled  = true;
+
             // Update descriptive content of the event
             this.parentClass.eventMoved(this.node, false);
         }
     },
 
     onMoveStop: function(mover) {
-        // Original code:
         // summary: called after every move operation
+
+        // Original code:
         dojo.publish("/dnd/move/stop", [mover]);
         dojo.removeClass(dojo.body(), "dojoMove");
         dojo.removeClass(this.node, "dojoMoveItem");
@@ -1079,12 +1135,15 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
             // The event has been dragged, update descriptive content of the event and internal array
             this.parentClass.eventMoved(this.node, true);
             // Allow the event to be just clicked to open it in the form, but wait a while first...
+            this.parentClass.eventHasBeenDragged = false;
             setTimeout('dojo.publish("Calendar.enableEventDivClick")', 500);
         } else {
-            // It was just a click - Open event in the form
-            var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);
-            var eventId    = this.parentClass.events[movedEvent]['id'];
-            dojo.publish('Calendar.showFormFromList', [eventId]);
+            if (!this.parentClass.eventClickDisabled) {
+                // It was just a click - Open event in the form
+                var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);
+                var eventId    = this.parentClass.events[movedEvent]['id'];
+                dojo.publish('Calendar.showFormFromList', [eventId]);
+            }
         }
     }
 });
