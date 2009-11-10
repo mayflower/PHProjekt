@@ -80,7 +80,7 @@ class Core_Models_User_Setting
         $data['fieldset'] = '';
         $data['range']    = array('id'   => '',
                                   'name' => '');
-        $data['required'] = true;
+        $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
@@ -99,7 +99,7 @@ class Core_Models_User_Setting
         $data['fieldset'] = '';
         $data['range']    = array('id'   => '',
                                   'name' => '');
-        $data['required'] = true;
+        $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
@@ -118,7 +118,7 @@ class Core_Models_User_Setting
         $data['fieldset'] = '';
         $data['range']    = array('id'   => '',
                                   'name' => '');
-        $data['required'] = true;
+        $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
@@ -138,7 +138,7 @@ class Core_Models_User_Setting
         $data['fieldset'] = '';
         $data['range']    = array('id'   => '',
                                   'name' => '');
-        $data['required'] = true;
+        $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
@@ -211,11 +211,15 @@ class Core_Models_User_Setting
         $newPassValue     = $params['password'];
         $currentPassValue = $setting->getSetting('password');
 
-        if ((!empty($newPassValue) && $newPassValue != $confirmPassValue)
-            || (empty($newPassValue) && !empty($confirmPassValue))) {
+        if (isset($params['id']) && $params['id'] == 0 && empty($newPassValue)) {
+            $message = Phprojekt::getInstance()->translate('Password') . ': '
+                . Phprojekt::getInstance()->translate('Is a required field');
+        } else if (!isset($params['id']) && ((!empty($newPassValue) && $newPassValue != $confirmPassValue)
+            || (empty($newPassValue) && !empty($confirmPassValue)))) {
             $message = Phprojekt::getInstance()->translate('The password and confirmation are different or one of them '
                 . 'is empty');
-        } else if (!empty($newPassValue) && $currentPassValue != Phprojekt_Auth::cryptString($oldPassValue)) {
+        } else if (!isset($params['id']) &&
+            (!empty($newPassValue) && $currentPassValue != Phprojekt_Auth::cryptString($oldPassValue))) {
             $message = Phprojekt::getInstance()->translate('The old password provided is invalid');
         }
 

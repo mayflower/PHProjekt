@@ -173,26 +173,34 @@ class Core_UserController extends Core_IndexController
     {
         $id = (int) $this->getRequest()->getParam('id');
 
-        if (empty($id)) {
-            $model   = $this->getModelObject();
-            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
-        } else {
-            $model   = $this->getModelObject()->find($id);
-            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
-        }
-
-        Default_Helpers_Save::save($model, $this->getRequest()->getParams());
-
-        if (empty($id)) {
-            $id = $model->id;
-        }
-
-        // Saving the settings
+        // Settings
         $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
         $setting->setModule('User');
-        $setting->setSettings($this->getRequest()->getParams(), $id);
+        $message = $setting->validateSettings($this->getRequest()->getParams());
 
-        $return = array('type'    => 'success',
+        if (!empty($message)) {
+            $message = Phprojekt::getInstance()->translate($message);
+            $type = "error";
+        } else {
+            if (empty($id)) {
+                $model   = $this->getModelObject();
+                $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+            } else {
+                $model   = $this->getModelObject()->find($id);
+                $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
+            }
+
+            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+
+            if (empty($id)) {
+                $id = $model->id;
+            }
+
+            $setting->setSettings($this->getRequest()->getParams(), $id);
+            $type = "success";
+        }
+
+        $return = array('type'    => $type,
                         'message' => $message,
                         'code'    => 0,
                         'id'      => $model->id);

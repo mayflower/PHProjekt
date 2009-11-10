@@ -36,5 +36,18 @@ dojo.declare("phpr.User.Form", phpr.Core.Form, {
         result.type    = 'warning';
         result.message = phpr.nls.get('You need to log out and log in again in order to let changes have effect');
         new phpr.handleResponse('serverFeedback', result);
+    },
+
+    prepareSubmission:function() {
+        // Check the admin value
+        if (dijit.byId('admin').attr('value') == "") {
+            dijit.byId('admin').attr('value', 0);
+        }
+        // Check the status value
+        if (dijit.byId('status').attr('value') == "") {
+            dijit.byId('status').attr('value', "A");
+        }
+
+        return this.inherited(arguments);
     }
 });

@@ -85,7 +85,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['fieldset'] = '';
             $data['range']    = array('id'   => '',
                                       'name' => '');
-            $data['required'] = true;
+            $data['required'] = false;
             $data['readOnly'] = false;
             $data['tab']      = 1;
             $data['integer']  = false;
@@ -147,7 +147,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['fieldset'] = '';
             $data['range']    = array('id'   => '',
                                       'name' => '');
-            $data['required'] = true;
+            $data['required'] = false;
             $data['readOnly'] = false;
             $data['tab']      = 1;
             $data['integer']  = false;
@@ -222,7 +222,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
                                         'name' => Phprojekt::getInstance()->translate('Active')),
                                   array('id'   => 'I',
                                         'name' => Phprojekt::getInstance()->translate('Inactive')));
-        $data['required'] = true;
+        $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = false;
