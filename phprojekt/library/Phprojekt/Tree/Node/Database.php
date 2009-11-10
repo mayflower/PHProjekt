@@ -266,12 +266,31 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                 if ($tree->isRootNodeForCurrentTree()) {
                     throw new Phprojekt_Tree_Node_Exception('Requested node not found');
                 } else {
-                    unset($object->_children[$tree->id]);
+                    $this->deleteNode($object, $tree->id);
                 }
             }
         }
 
         return $object;
+    }
+
+    /**
+     * Delete a children node
+     *
+     * @param Phprojekt_Tree_Node_Database $object Tree class
+     * @param integer                      $id     id for delete
+     *
+     * @return void
+     */
+    public function deleteNode($object, $id)
+    {
+        if (isset($object->_children[$id])) {
+            unset($object->_children[$id]);
+        } else {
+            foreach ($object->_children as $children) {
+                $this->deleteNode($children, $id);
+            }
+        }
     }
 
     /**
