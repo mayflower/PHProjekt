@@ -214,14 +214,14 @@ phpr.editModuleDesignerField = function(nodeId) {
             tableTypeRange.push({'id': 'int', 'name': 'INT'});
             fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', tableType,
                 true, false);
-            fieldsTable += template.textFieldRender(phpr.nls.get('Table Lenght'), 'tableLength', tableLength,
+            fieldsTable += template.textFieldRender(phpr.nls.get('Field Lenght'), 'tableLength', tableLength,
                 3, true, false);
             break;
         case 'checkbox':
             tableTypeRange.push({'id': 'int', 'name': 'INT'});
             fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', tableType,
                 true, false);
-            fieldsTable += template.textFieldRender(phpr.nls.get('Table Lenght'), 'tableLength', 1, 1, true, false);
+            fieldsTable += template.textFieldRender(phpr.nls.get('Field Lenght'), 'tableLength', 1, 1, true, false);
             break;
         case 'date':
             tableTypeRange.push({'id': 'date', 'name': 'DATE'});
