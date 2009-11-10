@@ -28,6 +28,15 @@ dojo.declare("phpr.Role.Form", phpr.Core.Form, {
         this._initData.push({'store': this.roleModuleAccessStore});
     },
 
+    setPermissions:function(data) {
+        this._writePermissions  = true;
+        this._deletePermissions = false;
+        if (this.id > 1) {
+            this._deletePermissions = true;
+        }
+        this._accessPermissions = true;
+    },
+
     addBasicFields:function() {
         this.formdata[1] += this.render(["phpr.Core.Role.template", "formAccess.html"], null, {
             accessModuleText: phpr.nls.get('Module'),
