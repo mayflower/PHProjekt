@@ -42,7 +42,7 @@ class Helpdesk_Models_Helpdesk_Test extends PHPUnit_Framework_TestCase
         $helpdeskModel = new Helpdesk_Models_Helpdesk();
         $helpdeskModel->find(1);
         $response = $helpdeskModel->getNotification()->getTo();
-        $expected = array("1");
+        $expected = array();
         $this->assertEquals($expected, $response);
 
         $helpdeskModel->find(2);
@@ -50,8 +50,8 @@ class Helpdesk_Models_Helpdesk_Test extends PHPUnit_Framework_TestCase
         $helpdeskModel->save();
         $helpdeskModel->assigned = 1;
         $helpdeskModel->save();
-        $response   = $helpdeskModel->getNotification()->getTo();
-        $expected[] = "2";
+        $response = $helpdeskModel->getNotification()->getTo();
+        $expected = array(2);
         $this->assertEquals($expected, $response);
     }
 }

@@ -40,44 +40,34 @@ class Helpdesk_Models_Notification extends Phprojekt_Notification
      */
     public function getTo()
     {
-        $phpUser    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $recipients = Array();
+        $userId = Phprojekt_Auth::getUserId();
 
-        // Currently the user selects whether to send a notification or not, so the criteria is the following:
-        // Is there any assigned user?
-        if ($this->_model->assigned != 0) {
-            // Yes
-            $phpUser = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-            $phpUser->find(Phprojekt_Auth::getUserId());
-            // The assigned user is the logged user?
-            if ($this->_model->assigned != $phpUser->id) {
-                // No - Send it to the assigned user
-                $recipients[] = $this->_model->assigned;
-            } else {
-                // Yes - Send it to the creator of the ticket
-                $recipients[] = $this->_model->author;
-            }
-        } else {
-            // No - Send it to the creator of the ticket
+        // Gets only the recipients with at least a 'read' right.
+        $recipients = parent::getTo();
+
+        // Assigned user
+        if (isset($this->_model->assigned) && $this->_model->assigned != $userId) {
+            $recipients[] = $this->_model->assigned;
+        }
+
+        // Author user
+        if (isset($this->_model->author) && $this->_model->author != $userId) {
             $recipients[] = $this->_model->author;
+        }
+
+        // Owner user
+        if (isset($this->_model->ownerId) && $this->_model->ownerId != $userId) {
+            $recipients[] = $this->_model->ownerId;
         }
 
         // If the item has been reassigned, add the previous assigned user to the recipients
         $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $changes = $history->getLastHistoryData($this->_model);
-        if ($changes[0]['action'] == 'edit') {
-            foreach ($changes as $change) {
-                if ($change['field'] == 'assigned') {
-                    // The user has changed
-                    if ($change['oldValue'] != $this->_model->ownerId && $change['oldValue'] != '0'
-                        && $change['oldValue'] !== null) {
-                        $recipients[] = $change['oldValue'];
-                        break;
-                    }
-                }
-            }
+        $olUser  = $history->getLastAssignedUser($this->_model, 'assigned');
+        if ($olUser > 0) {
+            $recipients[] = $olUser;
         }
 
-        return $recipients;
+        // Return without duplicates
+        return array_unique($recipients);
     }
 }

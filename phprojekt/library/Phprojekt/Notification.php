@@ -112,18 +112,23 @@ class Phprojekt_Notification
     }
 
     /**
-     * Returns an array with recipients obtained from $this->_model through class Phprojekt_Item_Rights()
+     * Gets only the recipients with at least a 'read' right.
+     * If no recipient is given, returns an empty array.
+     * Exclude the current user
      *
      * @return array
      */
     public function getTo()
     {
-        // The recipients are all the users with at least 'read' access to the item
-        $rights     = $this->_model->getRights();
-        $recipients = Array();
-        foreach ($rights as $userId => $userRights) {
-            if ($userRights['read']) {
-                $recipients[] = $userId;
+        $userIds    = $this->_model->getRights();
+        $recipients = array();
+
+        if (is_array($userIds) && !empty($userIds)) {
+            foreach ($userIds as $right) {
+                if (($right['userId'] == Phprojekt_Auth::getUserId()) || $right['none']) {
+                    continue;
+                }
+                $recipients[] = $right['userId'];
             }
         }
 

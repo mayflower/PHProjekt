@@ -40,28 +40,29 @@ class Todo_Models_Notification extends Phprojekt_Notification
      */
     public function getTo()
     {
-        $recipients   = Array();
-        $recipients[] = $this->_model->ownerId;
-        if ($this->_model->userId != 0 && $this->_model->userId != $this->_model->ownerId) {
+        $userId = Phprojekt_Auth::getUserId();
+
+        // Gets only the recipients with at least a 'read' right.
+        $recipients = parent::getTo();
+
+        // Assigned user
+        if (isset($this->_model->userId) && $this->_model->userId != $userId) {
             $recipients[] = $this->_model->userId;
         }
 
-        // If the todo has been reassigned, add the previous assigned user to the recipients
-        $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $changes = $history->getLastHistoryData($this->_model);
-        if ($changes[0]['action'] == 'edit') {
-            foreach ($changes as $change) {
-                if ($change['field'] == 'userId') {
-                    // The user has changed
-                    if ($change['oldValue'] != $this->_model->ownerId && $change['oldValue'] != '0'
-                        && $change['oldValue'] !== null) {
-                        $recipients[] = $change['oldValue'];
-                        break;
-                    }
-                }
-            }
+        // Owner user
+        if (isset($this->_model->ownerId) && $this->_model->ownerId != $userId) {
+            $recipients[] = $this->_model->ownerId;
         }
 
-        return $recipients;
+        // If the item has been reassigned, add the previous assigned user to the recipients
+        $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+        $olUser  = $history->getLastAssignedUser($this->_model, 'userId');
+        if ($olUser > 0) {
+            $recipients[] = $olUser;
+        }
+
+        // Return without duplicates
+        return array_unique($recipients);
     }
 }

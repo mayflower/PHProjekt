@@ -274,4 +274,30 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
 
         return array_reverse($result);
     }
+
+    /**
+     * Return the last value for an assigned user
+     *
+     * @param Phprojekt_Item_Abstract $model The item object
+     * @param string                  $fieldName Field name used for assign users.
+     *
+     * @return integer
+     */
+    public function getLastAssignedUser($model, $fieldName)
+    {
+        $changes = $this->getLastHistoryData($model);
+        if ($changes[0]['action'] == 'edit') {
+            foreach ($changes as $change) {
+                if ($change['field'] == $fieldName) {
+                    // The user has changed
+                    if ($change['oldValue'] != $model->ownerId && $change['oldValue'] != '0'
+                        && $change['oldValue'] !== null) {
+                        return $change['oldValue'];
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
 }
