@@ -125,8 +125,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         if ($id == 0) {
             $sendNotification = false;
             if (array_key_exists('sendNotification', $request)) {
-                if ($request['sendNotification'] == 'on') {
-                    $sendNotification = true;
+                if ($request['sendNotification'] == 'on' || $request['sendNotification'] == 1) {
+                    $sendNotification            = true;
                     $request['sendNotification'] = '';
                 }
             }

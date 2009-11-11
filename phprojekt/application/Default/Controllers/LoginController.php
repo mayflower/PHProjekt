@@ -78,7 +78,7 @@ class LoginController extends Zend_Controller_Action
         $hash       = (string) $this->getRequest()->getParam('hash', null);
         $keepLogged = (string) $this->getRequest()->getParam('keepLogged', null);
 
-        if ($keepLogged == "on") {
+        if ($keepLogged == "on" || $keepLogged == 1) {
             $keepLogged = true;
         } else {
             $keepLogged = false;
