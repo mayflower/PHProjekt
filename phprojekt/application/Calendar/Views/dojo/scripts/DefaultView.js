@@ -467,7 +467,8 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
     setEventDivsValues:function() {
         // Summary:
-        //    Sets / updates the position and size of each event according to panel and background sizes.
+        //    Sets / updates the position and size and textual contents of each event according to last updated values
+        // in this.events and background sizes.
 
         for (var i in this.events) {
             var left   = this.dayToDivPosition(this.events[i]['dayOrder'], true);
@@ -509,27 +510,53 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
                 width:  width + 'px',
                 height: height + 'px'
             });
+
+            // Update textual visible contents of event
+            var textualContents = this.events[i]['timeDescrip'] + ' ' + this.events[i]['title'] + '<br>' +
+                this.events[i]['notes'];
+            eventDiv2.innerHTML = textualContents;
+        }
+
+        if (this.main.weekList != null) {
+            // Any remaining unused html divs?
+            var lastIndex = parseInt(i);
+            if ((lastIndex + 1) < this._htmlEventDivsAmount) {
+                // Yes, hide them
+                for (indexToHide = lastIndex + 1; indexToHide < this._htmlEventDivsAmount; indexToHide ++) {
+                    var eventDiv1 = dojo.byId(this.EVENTS_MAIN_DIV_ID + indexToHide);
+                    dojo.style(eventDiv1, {
+                        visibility: 'hidden'
+                    });
+                }
+            }
         }
     },
 
-    classesSetup:function() {
+    classesSetup:function(startup) {
         // Summary:
-        //    Creates dragging class. Provides the dragging and resize classes with a reference object variable to this
-        // class. Establishes a minimum height for the events, it is the height of one cell.
+        //    Creates dragging class on startup. Provides the dragging and resize classes with a reference object
+        // variable to this class. Establishes a minimum height for the events, it is the height of one cell.
+        // Activates or inactivates Y resize for each div.
 
         for (var i in this.events) {
             if (this.events[i]['shown']) {
-                var eventDiv = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
+                if (startup) {
+                    var eventDiv  = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
+                }
+
+                var resizeDiv = dijit.byId('eventResize' + i)
+                if (startup) {
+                    resizeDiv.parentClass = this;
+                    // Minimum size:
+                    var minWidth      = this.cellDayWidth - (2 * this.EVENTS_BORDER_WIDTH);
+                    var minHeight     = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
+                    resizeDiv.minSize = { w: minWidth, h: minHeight};
+                }
 
                 if (this.events[i]['hasResizeHandler']) {
-                    var resizeDiv         = dijit.byId('eventResize' + i)
-                    resizeDiv.parentClass = this;
-
-                    // Minimum size
-                    var divEventResize     = dijit.byId('eventResize' + i);
-                    var minWidth           = this.cellDayWidth - (2 * this.EVENTS_BORDER_WIDTH);
-                    var minHeight          = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
-                    divEventResize.minSize = { w: minWidth, h: minHeight};
+                    resizeDiv.active = true;
+                } else {
+                    resizeDiv.active = false;
                 }
             }
         }
@@ -549,29 +576,31 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         this.putDivInTheFront(node);
 
         // 2 - Define some variables
-        var posLeftNew        = parseInt(node.style.left);
-        var posTopNew         = parseInt(node.style.top);
-        var posBottomNew      = posTopNew + node.offsetHeight;
-        var movedEventIndex   = this.nodeIdToEventOrder(node.id);
-        var movedEvent        = this.events[movedEventIndex];
-        var posTopCurrent     = movedEvent['currentTop'];
-        var posBottomCurrent  = movedEvent['currentBottom'];
-        var posLeftCurrent    = movedEvent['currentLeft'];
+        var posLeftNew       = parseInt(node.style.left);
+        var posTopNew        = parseInt(node.style.top);
+        var posBottomNew     = posTopNew + node.offsetHeight;
+        var movedEventIndex  = this.nodeIdToEventOrder(node.id);
+        var movedEvent       = this.events[movedEventIndex];
+        var posTopCurrent    = movedEvent['currentTop'];
+        var posBottomCurrent = movedEvent['currentBottom'];
+        var posLeftCurrent   = movedEvent['currentLeft'];
+        var dragged          = !resized;
 
         // 3 - If div is being moved (not resized) and the div corresponds to a multiple days event then make
         // temporarily invisible the rest of days of this event. Also save original coordinates.
-        if (movedEvent['multDay'] && !resized && !dropped && !movedEvent['multDayDragging']) {
+        if (movedEvent['multDay'] && dragged && !dropped && !movedEvent['multDayDragging']) {
             this.toggleMultDaysDivs(movedEventIndex, false);
-            movedEvent['multDayDragging'] = true;
-            movedEvent['multDayDateOrig'] = movedEvent['date'];
+            movedEvent['multDayDragging']      = true;
+            movedEvent['multDayDateOrig']      = movedEvent['date'];
+            movedEvent['multDayStartTimeOrig'] = movedEvent['startTime'];
         }
 
-        if (this.main.weekList != null && !resized && dropped) {
+        if (this.main.weekList != null && dragged && dropped) {
             var dayOrderCurrent = movedEvent['dayOrder'];
         }
 
         // 4 - Time and day changes
-        if (!resized) {
+        if (dragged) {
             // If event was moved (not resized), then attend the start time change
             // Start Time did change?
             if (posTopNew != posTopCurrent) {
@@ -620,23 +649,17 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             // The event was dropped in a different location than the one saved in the DB?
             if (posEventCurrent != movedEvent['posEventDB']) {
                 // Yes
-                movedEvent['hasChanged'] = true;
+                this.events[movedEventIndex]['hasChanged'] = true;
                 this.enableSaveButton();
             } else {
-                movedEvent['hasChanged'] = false;
+                this.events[movedEventIndex]['hasChanged'] = false;
             }
 
             if (this.main.weekList != null) {
                 // The dropped event was being dragged (not resized) and it was a multiple days event?
-                if (!resized && movedEvent['multDay']) {
+                if (dragged && movedEvent['multDay']) {
                     // Yes - Update the position and sizes of the rest of divs of this event
                     this.updateMultDaysEvent(movedEventIndex);
-                    // It was being dragged?
-                    if (movedEvent['multDayDragging']) {
-                        // Yes - Give back visibility to the rest of days of the event
-                        this.toggleMultDaysDivs(movedEventIndex, true);
-                        movedEvent['multDayDragging'] = false;
-                    }
                 }
             }
         }
@@ -648,20 +671,27 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             var timeDescrip = this.eventDateTimeDescrip(this.DATETIME_SHORT, startTime, endTime);
         } else {
             // Yes
-            if (resized) {
-                var timeDescrip = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_END, startTime, endTime);
-            } else {
-                var timeDescrip = this.eventDateTimeDescrip(movedEvent['multDayPos'], movedEvent['startTime'],
-                    movedEvent['endTime']);
+            if (!dropped) {
+                if (resized) {
+                    var timeDescrip = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_END, startTime, endTime);
+                } else {
+                    var timeDescrip = this.eventDateTimeDescrip(movedEvent['multDayPos'], movedEvent['startTime'],
+                        movedEvent['endTime']);
+                }
+                this.events[movedEventIndex]['timeDescrip'] = timeDescrip;
             }
         }
-        var eventDescrip = timeDescrip + ' ' + movedEvent['title'] + '<br>' + movedEvent['notes'];
-        dojo.byId('plainDiv' + movedEventIndex).innerHTML = eventDescrip;
 
-        // 8 - Check the items just in case there has been a change concerning simultaneous events
-        if (dropped) {
+        // 8 - Make changes on screen
+        if (!dropped) {
+            // Update description of moved or resized event
+            var eventDescrip = timeDescrip + ' ' + movedEvent['title'] + '<br>' + movedEvent['notes'];
+            dojo.byId('plainDiv' + movedEventIndex).innerHTML = eventDescrip;
+        } else {
+            // Update concurrent events internal values just in case, and update divs on screen
             this.updateSimultEventWidths();
             this.setEventDivsValues();
+            this.classesSetup();
         }
     },
 
@@ -1156,6 +1186,10 @@ dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
         var tmp = this._getNewCoords(e);
         if(tmp === false){ return; }
 
+        if (!this.active) {
+            return;
+        }
+
         // Stepped dragging added for this view
         var currentHeight  = dojo.style(this.targetDomNode, "height");
         var step           = this.parentClass.cellTimeHeight;
@@ -1214,6 +1248,10 @@ dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
         // Stub fired when sizing is done. Fired once
         //  after resize, or often when `intermediateChanges` is
         //  set to true.
+        if (!this.active) {
+            return;
+        }
+
         this.parentClass.eventMoved(this.targetDomNode.parentNode, true, true);
     }
 });
