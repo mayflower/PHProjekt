@@ -215,21 +215,21 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
                 if (!this._schedule[row]['columns'][column]['occupied']) {
                     // Is it the only column?
                     if (this._maxSimultEvents == 1) {
-                        this._schedule[row]['columns'][column]['class'] = 'emptyCellSingle';
+                        this._schedule[row]['columns'][column]['class'] = 'fixedEmptyCellSingle';
                         // Is it the bottom row?
                         if (row == this._schedule.length - 1) {
                             this._schedule[row]['columns'][column]['class'] += 'Bottom';
                         }
                     } else {
                         if (column == 0) {
-                            this._schedule[row]['columns'][column]['class'] = 'emptyCellLeft';
+                            this._schedule[row]['columns'][column]['class'] = 'fixedEmptyCellLeft';
                         } else if (column == (this._maxSimultEvents - 1)) {
-                            this._schedule[row]['columns'][column]['class'] = 'emptyCellRight';
+                            this._schedule[row]['columns'][column]['class'] = 'fixedEmptyCellRight';
                         } else {
                             this._schedule[row]['columns'][column]['class'] = '';
                         }
                         if (row == this._schedule.length - 1) {
-                            this._schedule[row]['columns'][column]['class'] += ' emptyCellBottom';
+                            this._schedule[row]['columns'][column]['class'] += ' fixedEmptyCellBottom';
                         }
                     }
                 }

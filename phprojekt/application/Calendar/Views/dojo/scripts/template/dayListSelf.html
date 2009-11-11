@@ -11,7 +11,7 @@
         {% for column in row.columns %}
             {% if column.occupied %}
                 {% ifequal column.typeEvent 1 %}
-        <td rowspan="{{column.halvesDuration}}" width="{{column.width}}%" class="events">
+        <td rowspan="{{column.halvesDuration}}" width="{{column.width}}%" class="fixedEvents">
             {{column.time|safe}}
             <a href="javascript: dojo.publish('Calendar.showFormFromList', [{{column.id}}]);">{{column.title|safe}}</a>
             <br />

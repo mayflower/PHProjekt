@@ -193,6 +193,36 @@
     border-color: black;
 }
 
+.phprojekt #calendarSchedule .fixedEvents {
+    border: 1px solid;
+    padding: 4;
+    vertical-align: middle;
+    background-color: #DDDDDD;
+    border-color: black;
+}
+
+.phprojekt #calendarSchedule .fixedEmptyCellSingle {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.phprojekt #calendarSchedule .fixedEmptyCellLeft {
+    border-left: 1px solid black;
+}
+
+.phprojekt #calendarSchedule .fixedEmptyCellRight {
+    border-right: 1px solid black;
+}
+
+.phprojekt #calendarSchedule .fixedEmptyCellBottom {
+    border-bottom: 1px solid black;
+}
+
+.phprojekt #calendarSchedule .horizontalLine {
+    margin:3px;
+    border-bottom:1px dashed #203040;
+}
+
 .phprojekt #calendarSchedule .emptyCellEven {
     border-left: 1px solid black;
     border-right: 1px solid black;

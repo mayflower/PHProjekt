@@ -140,7 +140,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
         var dateString   = this.dateToString();
-        this.dayListSelf = new this.dayListSelfWidget(this, phpr.currentProjectId, dateString);
+        this.dayListSelf = new this.dayListSelfWidget('', phpr.currentProjectId, dateString, null, this);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, true);
     },
@@ -154,7 +154,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
         var dateString     = this.dateToString();
-        this.dayListSelect = new this.dayListSelectWidget(this, phpr.currentProjectId, dateString, this._usersSelected);
+        this.dayListSelect = new this.dayListSelectWidget('', phpr.currentProjectId, dateString, this._usersSelected,
+            this);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, true);
     },
@@ -170,7 +171,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         var dateString = this.dateToString();
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
-        this.weekList  = new this.weekListWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
+        this.weekList = new this.weekListWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
     },

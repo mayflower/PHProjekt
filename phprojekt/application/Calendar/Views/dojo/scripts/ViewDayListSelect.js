@@ -194,12 +194,12 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
                     this._schedule[row][user]['columns'][column]['typeEvent'] = this.EVENT_NONE;
                     this._schedule[row][user]['columns'][column]['width']     = widthColumn;
                     if (totalColumns == 1) {
-                        this._schedule[row][user]['columns'][column]['class'] = 'emptyCellSingle';
+                        this._schedule[row][user]['columns'][column]['class'] = 'fixedEmptyCellSingle';
                     } else if (totalColumns > 1) {
                         if (column == 0) {
-                            this._schedule[row][user]['columns'][column]['class'] = 'emptyCellLeft';
+                            this._schedule[row][user]['columns'][column]['class'] = 'fixedEmptyCellLeft';
                         } else if (column == (totalColumns - 1)) {
-                            this._schedule[row][user]['columns'][column]['class'] = 'emptyCellRight';
+                            this._schedule[row][user]['columns'][column]['class'] = 'fixedEmptyCellRight';
                         } else {
                             this._schedule[row][user]['columns'][column]['class'] = '';
                         }

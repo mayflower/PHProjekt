@@ -1061,6 +1061,185 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
                 }
             }
         }
+    },
+
+    getEventInfo:function(/*string*/ eventStartDate_String, /*string*/ eventStartTime_String,
+            /*string*/ eventEndDate_String, /*string*/ eventEndTime_String,
+            /*string*/ momentAskedDate, /*string*/ momentAskedTime) {
+
+        // Summary:
+        // IMPORTANT: This function is similar to 'processEventInfo' but works for Day views with fixed events.
+        //    Returns useful data about an event, used to create the schedule table.
+        // Description:
+        //    Returns useful data about an event, used to create the schedule table. E.g.: whether it is inside or
+        // outside the 8:00 to 20:00 range, in what row (and maybe day) of the shown table should it start and end.
+        // If the 'momentAskedTime' optional parameter is set, then one of three possibilities happens and is informed:
+        // 1) The event start time matchs that start time
+        // or 2) The moment asked is inside the event period but doesn't match the event start time
+        // or 3) The moment asked is outside the event time
+        // Note:
+        //    Because of this function having lots of time and date variables, I added the suffix '_Date' to the ones of
+        // Date type format, for making all these no so difficult to understand. Also, to just a few of the String
+        // variables, there was added the '_String' suffix, with the same purpose.
+
+        var result             = new Array();  // The variable that will be returned
+
+        var scheduleStart_Date = new Date();  // For the momentAskedDate (current Day), what time the schedule starts
+        var scheduleEnd_Date   = new Date();  // For the momentAskedDate (current Day), what time the schedule ends
+        var eventStart_Date    = new Date();  // Date and time the event starts
+        var eventEnd_Date      = new Date();  // Date and time the event ends
+        var momentAsked_Date   = new Date();  // momentAsked (with or without time)
+        var eventStartDay_Date = new Date();  // Just the year/month/day of the event start
+        var eventEndDay_Date   = new Date();  // Just the year/month/day of the event end
+
+        var temp             = momentAskedDate.split('-');
+        var momentAskedYear  = parseInt(temp[0], 10);
+        var momentAskedMonth = parseInt(temp[1], 10);
+        var momentAskedDay   = parseInt(temp[2], 10);
+        scheduleStart_Date.setFullYear(momentAskedYear, momentAskedMonth - 1, momentAskedDay);
+        scheduleStart_Date.setHours(this.SCHEDULE_START_HOUR, 0, 0, 0);
+        scheduleEnd_Date.setFullYear(momentAskedYear, momentAskedMonth - 1, momentAskedDay);
+        scheduleEnd_Date.setHours(this.SCHEDULE_END_HOUR, 0, 0, 0);
+
+        // Convert event start and end Strings into Date formats
+        temp                  = eventStartDate_String.split('-');
+        var eventStartYear    = parseInt(temp[0], 10);
+        var eventStartMonth   = parseInt(temp[1], 10);
+        var eventStartDay     = parseInt(temp[2], 10);
+        temp                  = eventStartTime_String.split(':');
+        var eventStartHour    = parseInt(temp[0], 10);
+        var eventStartMinutes = parseInt(temp[1], 10);
+        temp                  = eventEndDate_String.split('-');
+        var eventEndYear      = parseInt(temp[0], 10);
+        var eventEndMonth     = parseInt(temp[1], 10);
+        var eventEndDay       = parseInt(temp[2], 10);
+        temp                  = eventEndTime_String.split(':');
+        var eventEndHour      = parseInt(temp[0], 10);
+        var eventEndMinutes   = parseInt(temp[1], 10);
+        temp                  = momentAskedDate.split('-');
+        if (momentAskedTime != null) {
+            var temp               = momentAskedTime.split(':');
+            var momentAskedHour    = parseInt(temp[0], 10);
+            var momentAskedMinutes = parseInt(temp[1], 10);
+        }
+
+        // Round downwards the event start time to the nearest half of hour
+        if ((eventStartMinutes/30) != Math.floor(eventStartMinutes/30)) {
+            eventStartMinutes = Math.floor(eventStartMinutes/30) * 30;
+        }
+        // Round upwards the event end time to the nearest half of hour
+        if ((eventEndMinutes/30) != Math.ceil(eventEndMinutes/30)) {
+            eventEndMinutes = Math.ceil(eventEndMinutes/30) * 30;
+            if (eventEndMinutes == 60) {
+                eventEndHour ++;
+                eventEndMinutes = 0;
+            }
+        }
+
+        eventStart_Date.setFullYear(eventStartYear, eventStartMonth - 1, eventStartDay);
+        eventStart_Date.setHours(eventStartHour, eventStartMinutes, 0, 0);
+        eventEnd_Date.setFullYear(eventEndYear, eventEndMonth - 1, eventEndDay);
+        eventEnd_Date.setHours(eventEndHour, eventEndMinutes, 0, 0);
+        eventStartDay_Date.setFullYear(eventStartYear, eventStartMonth - 1, eventStartDay);
+        eventStartDay_Date.setHours(0, 0, 0, 0);
+        eventEndDay_Date.setFullYear(eventEndYear, eventEndMonth - 1, eventEndDay);
+        eventEndDay_Date.setHours(0, 0, 0, 0);
+        momentAsked_Date.setFullYear(momentAskedYear, momentAskedMonth - 1, momentAskedDay);
+        if (momentAskedTime != null) {
+            momentAsked_Date.setHours(momentAskedHour, momentAskedMinutes, 0, 0);
+        } else {
+            momentAsked_Date.setHours(0, 0, 0, 0);
+        }
+        if (momentAskedTime != null) {
+            // Compare the event start date and time with the momentAsked
+            if (dojo.date.compare(eventStart_Date, momentAsked_Date) == 0) {
+                result['type'] = this.EVENT_TIME_START;
+            } else if ((dojo.date.compare(eventStart_Date, momentAsked_Date) < 0)
+                && (dojo.date.compare(eventEnd_Date, momentAsked_Date) >= 0)) {
+                result['type'] = this.EVENT_TIME_INSIDE
+            } else {
+                result['type'] = this.EVENT_TIME_OUTSIDE;
+            }
+        } else {
+            // Determine if the event has to be shown for the day received (momentAskedDate). If so, also define:
+            // 1) Whether it has to be inside or outside the chart.
+            // 2) If it is inside the chart, in which row it has to begin, and how many rows it lasts.
+            if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) <= 0)
+                && (dojo.date.compare(eventEndDay_Date, momentAsked_Date) >= 0)) {
+                // Shown
+                var startsBeforeScheduleEnds = false;
+                var endsAfterScheduleBegins  = false;
+                if (dojo.date.compare(eventStart_Date, scheduleEnd_Date) < 0) {
+                    startsBeforeScheduleEnds = true;
+                }
+                if (dojo.date.compare(eventEnd_Date, scheduleStart_Date) >= 0) {
+                    endsAfterScheduleBegins = true
+                }
+                if (startsBeforeScheduleEnds && endsAfterScheduleBegins) {
+                    result['range'] = this.SHOWN_INSIDE_CHART;
+                    // If event start happens before the asked day at 8:00, the schedule must show it from the 8:00 row
+                    // (but the text will show the real info)
+                    if (dojo.date.compare(eventStart_Date, scheduleStart_Date) < 0) {
+                        eventStart_Date = scheduleStart_Date;
+                    }
+                    // If event end happens after the asked day at 20:00, the schedule must show it until the 19:30 row
+                    // inclusive (but the text will show the real info)
+                    if (dojo.date.compare(eventEnd_Date, scheduleEnd_Date) > 0) {
+                        eventEnd_Date = scheduleEnd_Date;
+                    }
+
+                    // Date-time description
+                    if (this.main.dayListSelf != null || this.main.dayListSelect != null) {
+                        if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0)
+                            || (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0)) {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_LONG_MANY_DAYS,
+                                eventStartTime_String, eventEndTime_String, eventStartDate_String, eventEndDate_String);
+                        } else {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime_String,
+                                eventEndTime_String);
+                        }
+                    } else if (this.main.weekList != null || this.main.monthList != null) {
+                        if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0)
+                            && (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0)) {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_MIDDLE);
+                        } else if (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0) {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_START,
+                                eventStartTime_String);
+                        } else if (dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0) {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_END, null,
+                                eventEndTime_String);
+                        } else {
+                            result['time'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime_String,
+                                eventEndTime_String);
+                        }
+                    }
+                    var halfBeginning        = eventStart_Date.getTime() - scheduleStart_Date.getTime();
+                    var duration             = eventEnd_Date.getTime() - eventStart_Date.getTime();
+                    result['halfBeginning']  = Math.floor(halfBeginning / (1000 * 60 * 30));
+                    result['halvesDuration'] = Math.floor(duration / (1000 * 60 * 30));
+
+                } else {
+                    result['range']         = this.SHOWN_OUTSIDE_CHART;
+
+                    // Date-time description
+                    if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0)
+                        || (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0)) {
+                        result['time'] = this.eventDateTimeDescrip(this.DATETIME_LONG_MANY_DAYS, eventStartTime_String,
+                            eventEndTime_String, eventStartDate_String, eventEndDate_String);
+                    } else if (this.main.weekList != null) {
+                        result['time'] = this.eventDateTimeDescrip(this.DATETIME_LONG_MANY_DAYS, eventStartTime_String,
+                            eventEndTime_String, eventStartDate_String, eventEndDate_String);
+                    } else {
+                        result['time'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime_String,
+                            eventEndTime_String);
+                    }
+                }
+            } else {
+                result['range'] = this.SHOWN_NOT;
+            }
+        }
+
+        return result;
     }
 });
 
