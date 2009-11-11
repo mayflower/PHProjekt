@@ -164,7 +164,7 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
         $error = $db->getError();
         $this->assertEquals($message, $error['message']);
 
-        $message = 'Invalid parameteres';
+        $message = 'Invalid parameters';
         $this->assertFalse($db->recordValidate(array(
             array('tableName'   => 'Project',
                   'tableType'   => 'varchar',
