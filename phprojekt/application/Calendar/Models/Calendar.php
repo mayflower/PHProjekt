@@ -635,8 +635,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
         // The save is needed?
         if ($this->_needSave($model, $request)) {
-            // Add 'read, write and delete' access to the participant
-            $request = Default_Helpers_Right::allowReadWriteDelete($request, $participantId);
+            // Add 'read, write, downlaod and delete' access to the participant
+            $request = Default_Helpers_Right::allowReadWriteDownloadDelete($request, $participantId);
 
             // Access for the owner
             if (null !== $model->ownerId) {

@@ -172,18 +172,19 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set read, write and delete access for the user
+     * Set read, write, delete and download access for the user
      *
      * @param array   $params The post values
      * @param integer $user   The user to set
      *
      * @return array
      */
-    public static function allowReadWriteDelete($params, $user)
+    public static function allowReadWriteDownloadDelete($params, $user)
     {
         $params = self::allowRead($params, $user);
         $params = self::allowWrite($params, $user);
         $params = self::allowDelete($params, $user);
+        $params = self::allowDownload($params, $user);
 
         return $params;
     }
@@ -338,7 +339,7 @@ final class Default_Helpers_Right
             if ($model->ownerId == $assignedUser) {
                 $params = self::allowAll($params, $model->ownerId);
             } else {
-                $params = self::allowReadWriteDelete($params, $assignedUser);
+                $params = self::allowReadWriteDownloadDelete($params, $assignedUser);
             }
         }
 
