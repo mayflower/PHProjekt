@@ -669,6 +669,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         if (!movedEvent['multDay']) {
             // No
             var timeDescrip = this.eventDateTimeDescrip(this.DATETIME_SHORT, startTime, endTime);
+            this.events[movedEventIndex]['timeDescrip'] = timeDescrip;
         } else {
             // Yes
             if (!dropped) {
