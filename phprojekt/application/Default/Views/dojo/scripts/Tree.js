@@ -218,8 +218,8 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
     },
 
     drawBreadCrumb:function() {
-        var projectsNames = new Array();
-        var _this         = this;
+        var projects = new Array();
+        var _this    = this;
 
         if (!this.main._isGlobalModule(phpr.module)) {
             if (phpr.treeLastProjectSelected != phpr.currentProjectId || phpr.currentProjectId == 1) {
@@ -232,18 +232,20 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
                                     _this.tree.model.store.fetchItemByIdentity({identity: paths[i],
                                         onItem:function(item) {
                                             if (item) {
-                                                projectsNames.push(item.name);
+                                                projects.push({"id":   item.id,
+                                                               "name": item.name});
                                             }
                                     }});
                                 }
                             }
-                            projectsNames.push(item.name);
+                            projects.push({"id":   item.id,
+                                           "name": item.name});
                         }
                 }});
-                phpr.BreadCrumb.setProjects(projectsNames);
+                phpr.BreadCrumb.setProjects(projects);
             }
         } else {
-            phpr.BreadCrumb.setProjects(projectsNames);
+            phpr.BreadCrumb.setProjects(projects);
         }
         phpr.BreadCrumb.setModule();
         phpr.BreadCrumb.draw();

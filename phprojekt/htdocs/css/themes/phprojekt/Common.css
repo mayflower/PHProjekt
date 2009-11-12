@@ -590,11 +590,17 @@ h1,h2,h3,h4,h5,h6 {
     background-color: white;
 }
 
-.phprojekt #breadCrumb {
+.phprojekt #breadCrumb,
+.phprojekt #breadCrumb a {
     font-family: Verdana;
     font-size: 10px;
     font-weight: 600;
     color: #CBCBCB;
     margin-left: 1%;
     margin-top: 8px;
+}
+
+.phprojekt #breadCrumb a {
+    margin-left: 0;
+    text-decoration: none;
 }

@@ -843,19 +843,19 @@ dojo.declare("phpr.BreadCrumb", null, {
     // Description:
     //     Manage the Breadcrumb
     _module:       '',
-    _projects:     '',
+    _projects:     new Array(),
     _item:         '',
     _lastModule:   null,
     _lastParent:   null,
     _separatorOne: ' / ',
     _separatorTwo: ' > ',
 
-    setProjects:function(projectsNames) {
+    setProjects:function(projects) {
         // Summary:
         //     Set the projects tree as one string
         // Description:
         //     Set the projects tree as one string
-        this._projects = projectsNames.join(this._separatorTwo.toString());
+        this._projects = projects;
         this._module   = null;
         this._item     = null;
     },
@@ -895,7 +895,13 @@ dojo.declare("phpr.BreadCrumb", null, {
         // Description:
         //     Show the breadcrumb in the title
         if (this._projects.length > 0) {
-            var breadCrumb = this._projects + this._separatorOne + this._module;
+            var projectsArray = new Array();
+            for (var i in this._projects) {
+                var link = '<a href="javascript: dojo.publish(\'' + phpr.module + '.changeProject\', ['
+                    + this._projects[i].id + ']);">' + this._projects[i].name + '</a>';
+                projectsArray.push(link);
+            }
+            var breadCrumb = projectsArray.join(this._separatorTwo.toString()) + this._separatorOne + this._module;
         } else {
             var breadCrumb = this._module;
         }
