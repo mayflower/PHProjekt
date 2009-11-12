@@ -88,17 +88,20 @@ class Phprojekt_Notification
         }
         $adapter = new $adapterName($params);
         $adapter->setCustomFrom($this->getFrom());
-        $adapter->setTo($this->getTo());
-        if ($showSubject) {
-            $adapter->setCustomSubject($this->getSubject());
+        $recipients = $this->getTo();
+        if (!empty($recipients)) {
+            $adapter->setTo($recipients);
+            if ($showSubject) {
+                $adapter->setCustomSubject($this->getSubject());
+            }
+            if ($this->_lastHistory[0]['action'] == self::LAST_ACTION_EDIT) {
+                $changes = $this->getBodyChanges();
+                $adapter->setCustomBody($this->getBodyParams(), $this->getBodyFields(), $changes);
+            } else {
+                $adapter->setCustomBody($this->getBodyParams(), $this->getBodyFields());
+            }
+            $adapter->sendNotification();
         }
-        if ($this->_lastHistory[0]['action'] == self::LAST_ACTION_EDIT) {
-            $changes = $this->getBodyChanges();
-            $adapter->setCustomBody($this->getBodyParams(), $this->getBodyFields(), $changes);
-        } else {
-            $adapter->setCustomBody($this->getBodyParams(), $this->getBodyFields());
-        }
-        $adapter->sendNotification();
     }
 
     /**
