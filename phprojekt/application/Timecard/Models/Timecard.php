@@ -307,10 +307,13 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $sortRecords = array();
         foreach ($records as $record) {
             if (!isset($sortRecords[$record->date])) {
-                $sortRecords[$record->date] = array('sum' => (int) $record->minutes);
-            } else {
-                $sortRecords[$record->date]['sum'] += (int) $record->minutes;
+                $sortRecords[$record->date]['sum']        = 0;
+                $sortRecords[$record->date]['openPeriod'] = 0;
             }
+            if ($record->minutes == 0 && null === $record->endTime) {
+                $sortRecords[$record->date]['openPeriod'] = 1;
+            }
+            $sortRecords[$record->date]['sum'] += (int) $record->minutes;
         }
 
         $endDayofTheMonth = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -328,9 +331,11 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             if (isset($sortRecords[$date])) {
                 $data['sumInMinutes'] = $sortRecords[$date]['sum'];
                 $data['sumInHours']   = self::convertTime($sortRecords[$date]['sum']);
+                $data['openPeriod']   = $sortRecords[$date]['openPeriod'];
             } else {
                 $data['sumInMinutes'] = 0;
                 $data['sumInHours']   = 0;
+                $data['openPeriod']   = 0;
             }
             $datas[] = $data;
         }

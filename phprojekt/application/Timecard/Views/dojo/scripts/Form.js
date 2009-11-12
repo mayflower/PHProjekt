@@ -125,15 +125,16 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             for (i in data) {
                 var dndClass = 'dndTarget';
                 // Open period
+                var endTime  = data[i].endTime;
                 if (null === data[i].endTime) {
-                    data[i].endTime = data[i].startTime;
+                    endTime      = data[i].startTime;
                     var dndClass = 'dndTargetOpen';
                 } else if (data[i].endTime == '00:00' || data[i].endTime == '00:00:00') {
-                    data[i].endTime = '24:00';
+                    endTime = '24:00';
                 }
 
                 var start = this._contentBar.convertHourToPixels(hourHeight, data[i].startTime);
-                var end   = this._contentBar.convertHourToPixels(hourHeight, data[i].endTime);
+                var end   = this._contentBar.convertHourToPixels(hourHeight, endTime);
                 var top   = start + 'px';
                 if ((end - start) - 6 < 0) {
                     var height = (end - start) + 'px';
@@ -413,12 +414,17 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         this._url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + this.id;
         phpr.DataStore.addStore({url: this._url});
         phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
-            var data = phpr.DataStore.getData({url: this._url});
-            var endTime = data[0]['endTime'].substr(0,5);
+            var data      = phpr.DataStore.getData({url: this._url});
+            var endTime   = data[0]['endTime'].substr(0,5);
+            var startTime = data[0]['startTime'].substr(0,5);
             if (endTime == 0 || endTime == null) {
-                endTime = this._getNow();
+                var hour = parseInt(startTime) + 1;
+                if (hour < 10) {
+                    hour = '0' + hour;
+                }
+                var endTime = hour + ':00';
             }
-            this.updateForm(this.dateObject, data[0]['startTime'].substr(0,5), endTime, data[0]['projectId'],
+            this.updateForm(this.dateObject, startTime, endTime, data[0]['projectId'],
                 data[0]['notes']);
             dojo.byId('notes').focus();
         })});

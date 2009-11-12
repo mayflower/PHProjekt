@@ -69,25 +69,31 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         var content = phpr.DataStore.getData({url: this.url});
         var total   = 0;
 
-        var dates = new Array();
+        var dates      = new Array();
+        var totalClass = 'weekday';
         for (var i in content) {
             dates.push({
                 week:      phpr.Date.getShortTranslateWeekDay(content[i]['week']),
                 weekClass: (content[i]['week'] == 0 || content[i]['week'] == 6) ? 'weekend' : 'weekday',
                 date:      content[i]['date'],
-                sum:       (content[i]['sumInHours'] != '0') ? content[i]['sumInHours'] : "-"
+                sum:       (content[i]['sumInHours'] != '0') ? content[i]['sumInHours'] : "-",
+                sumClass:  (content[i]['openPeriod'] == 1) ? 'weekend' : 'weekday'
             });
             if (content[i]['sumInMinutes'] != '0') {
                 total += content[i]['sumInMinutes'];
             }
+            if (content[i]['openPeriod'] == 1) {
+                totalClass = 'weekend';
+            }
         }
 
         this.render(["phpr.Timecard.template", "monthView.html"], this._node.domNode, {
-            monthTxt: phpr.Date.getLongTranslateMonth(this._month),
-            sumTxt:   phpr.nls.get('Sum'),
-            totalTxt: phpr.nls.get('Total'),
-            total:    phpr.Date.convertMinutesToTime(total),
-            dates:    dates
+            monthTxt:   phpr.Date.getLongTranslateMonth(this._month),
+            sumTxt:     phpr.nls.get('Sum'),
+            totalTxt:   phpr.nls.get('Total'),
+            total:      phpr.Date.convertMinutesToTime(total),
+            totalClass: totalClass,
+            dates:      dates
         });
     },
 

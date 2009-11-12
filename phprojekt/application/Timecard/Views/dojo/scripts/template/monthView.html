@@ -15,7 +15,7 @@
 <tr>
     <td colspan="2"
     style="padding-left: 6em;">{{totalTxt}}</td>
-    <td>{{total}}</td>
+    <td class="{{totalClass}}">{{total}}</td>
 </tr>
 {% for day in dates %}
 <tr class="{{day.weekClass}}">
@@ -26,7 +26,7 @@
         dijit.byId('selectDate').attr('value', new Date(date.getFullYear(), date.getMonth(), date.getDate()));
         dojo.publish('Timecard.changeDate', [date]);">{{day.date}}</a>
     </td>
-    <td>{{day.sum}}</td>
+    <td class="{{day.sumClass}}">{{day.sum}}</td>
 </tr>
 {% endfor %}
 </table>
