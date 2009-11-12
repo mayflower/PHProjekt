@@ -335,7 +335,7 @@ class Minutes_IndexController extends IndexController
             /* @var $userModel Phprojekt_User_User */
             $userModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $userList  = $userModel->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
-            $setting   = Phprojekt_Loader::getModel('Setting', 'Setting');
+            $setting   = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
             $display   = $userModel->getDisplay();
             /* @var $record Phprojekt_User_User */
             foreach ($userList as $record) {
