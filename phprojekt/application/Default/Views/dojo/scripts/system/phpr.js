@@ -895,20 +895,25 @@ dojo.declare("phpr.BreadCrumb", null, {
         // Description:
         //     Show the breadcrumb in the title
         if (this._projects.length > 0) {
+            var titleArray    = new Array();
             var projectsArray = new Array();
             for (var i in this._projects) {
                 var link = '<a href="javascript: dojo.publish(\'' + phpr.module + '.changeProject\', ['
                     + this._projects[i].id + ']);">' + this._projects[i].name + '</a>';
                 projectsArray.push(link);
+                titleArray.push(this._projects[i].name);
             }
-            var breadCrumb = projectsArray.join(this._separatorTwo.toString()) + this._separatorOne + this._module;
+            var breadCrumb      = projectsArray.join(this._separatorTwo.toString()) + this._separatorOne + this._module;
+            var breadCrumbTitle = titleArray.join(this._separatorTwo.toString()) + this._separatorOne + this._module;
         } else {
-            var breadCrumb = this._module;
+            var breadCrumb      = this._module;
+            var breadCrumbTitle = this._module;
         }
         if (this._item) {
-            breadCrumb += this._separatorOne + this._item;
+            breadCrumb      += this._separatorOne + this._item;
+            breadCrumbTitle += this._separatorOne + this._item;
         }
-        document.title                    = breadCrumb;
+        document.title                    = breadCrumbTitle;
         dojo.byId("breadCrumb").innerHTML = breadCrumb;
     }
 
