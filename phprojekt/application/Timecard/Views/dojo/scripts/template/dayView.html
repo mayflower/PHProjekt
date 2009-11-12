@@ -8,7 +8,7 @@ style="position: absolute; height: 480px; overflow: hidden;">
     {% endifequal %}
     {{hour.display}}
     <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
-    onClick="dojo.publish('Timecard.fillFormTime', ['{{hour.hour}}']);">
+    onClick="dojo.publish('Timecard.formProxy', ['fillFormTime', '{{hour.hour}}']);">
     </button>
     </div>
 {% endfor %}

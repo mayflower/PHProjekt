@@ -58,6 +58,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // Grid
         dojo.subscribe(module + ".gridProxy", this, "gridProxy");
+
+        // Form
+        dojo.subscribe(module + ".formProxy", this, "formProxy");
     },
 
     openForm:function(/*int*/id, /*String*/module) {
@@ -1057,6 +1060,16 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    Proxy for run grid functions
         if (this.grid) {
             eval("this.grid." + functionName + "('" + params + "')");
+        }
+    },
+
+    formProxy:function(functionName, params) {
+        // Summary:
+        //    Proxy for run form functions
+        // Description:
+        //    Proxy for run form functions
+        if (this.form) {
+            eval("this.form." + functionName + "('" + params + "')");
         }
     }
 });

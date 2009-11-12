@@ -67,8 +67,8 @@ dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
                 var id = nodes[0].id.replace(/favoritesTarget-/, "").replace(/favoritesSoruce-/, "");
                 dojo.byId('selectedProjectFavorites').value += id + ",";
                 dojo.byId('projectBookingSource').innerHTML += '<div class="dojoDndItem dndSource" '
-                    + 'id="projectSource' + id +'" onClick="dojo.publish(\'Timecard.fillFormProject\', [' + id + ']);">'
-                    + nodes[0].innerHTML + '</div><br />';
+                    + 'id="projectSource' + id +'" onClick="dojo.publish(\'Timecard.formProxy\', [\'fillFormProject\', '
+                    + id + ']);">' + nodes[0].innerHTML + '</div><br />';
             } else if (source.node.id == 'projectFavoritesTarget') {
                 // If there are no projects in the box, don't let it reduce its height so much
                 if (projectFavoritesTarget && projectFavoritesTarget.getAllNodes().length == 0) {
@@ -84,8 +84,8 @@ dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
                     var name = node.innerHTML;
                     tmp += id + ',';
                     dojo.byId('projectBookingSource').innerHTML += '<div class="dojoDndItem dndSource" '
-                    + 'id="' + id +'" onClick="dojo.publish(\'Timecard.fillFormProject\', [' + id + ']);">'
-                    + name + '</div><br />';
+                    + 'id="' + id +'" onClick="dojo.publish(\'Timecard.formProxy\', [\'fillFormProject\', '
+                    + id + ']);">' + name + '</div><br />';
                 });
                 dojo.byId('selectedProjectFavorites').value = tmp;
             }

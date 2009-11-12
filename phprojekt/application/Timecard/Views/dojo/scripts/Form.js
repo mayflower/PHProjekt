@@ -71,9 +71,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         this.loadView();
         dijit.byId("selectDate").attr('value', new Date(this.dateObject.getFullYear(), this.dateObject.getMonth(),
             this.dateObject.getDate()));
-
-        dojo.subscribe("Timecard.fillFormTime", this, "fillFormTime");
-        dojo.subscribe("Timecard.fillFormProject", this, "fillFormProject");
     },
 
     setDate:function(date) {
