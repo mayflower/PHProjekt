@@ -49,7 +49,7 @@ class Helpdesk_IndexController_Test extends FrontInit
     /**
      * Test of json save Helpdesk
      */
-    public function testJsonSavePart1()
+    public function testJsonSaveAdd()
     {
         // INSERT
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
@@ -64,7 +64,13 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('status', '1');
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::ADD_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json save Helpdesk
+     */
+    public function testJsonSaveAddNotification()
+    {
         // INSERT. Send notification
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
         $this->request->setParam('title', 'My Helpdesk task 2');
@@ -89,7 +95,7 @@ class Helpdesk_IndexController_Test extends FrontInit
     /**
      * Test of json save Helpdesk
      */
-    public function testJsonSavePart2()
+    public function testJsonSaveEdit()
     {
         // EDIT: First inserted item. Change status to Solved. Send notification.
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
@@ -116,7 +122,13 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->assertEquals(1, $model->solvedBy);
         $this->assertEquals(date("Y-m-d"), $model->solvedDate);
         $this->assertEquals(3, $model->status);
+    }
 
+    /**
+     * Test of json save Helpdesk
+     */
+    public function testJsonSaveEditNotification()
+    {
         // EDIT: First inserted item. This call, similar to the previous one will cover another line of the Controller
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
         $this->request->setParam('id', 1);
@@ -248,6 +260,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->assertEquals('My completely new title', $model->title);
         $this->assertEquals(3, $model->status);
         $this->assertEquals(1, $model->solvedBy);
+
         $model = clone($this->_model);
         $model->find(2);
         $this->assertEquals('My completely new title 2', $model->title);
@@ -263,7 +276,13 @@ class Helpdesk_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":3', $response);
+    }
 
+    /**
+     * Test of json list Helpdesk -in fact, default json list
+     */
+    public function testJsonListWithParent()
+    {
         $this->setRequestUrl('Helpdesk/index/jsonList');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
@@ -271,7 +290,10 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->assertContains('"numRows":1', $response);
     }
 
-    public function testJsonDetailAction()
+    /**
+     * Test of json detail Helpdesk
+     */
+    public function testJsonDetailWithoutId()
     {
         // New item data request
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
@@ -282,7 +304,13 @@ class Helpdesk_IndexController_Test extends FrontInit
             . '"dueDate":"","projectId":0,"priority":5,"attachments":"","solvedBy":0,"solvedDate":"",'
             . '"description":"","status":1,"contactId":0}],"numRows":1})';
         $this->assertContains($expected, $response);
+    }
 
+    /**
+     * Test of json detail Helpdesk
+     */
+    public function testJsonDetailWithId()
+    {
         // Existing item
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
         $this->request->setParam('id', 1);
@@ -294,7 +322,13 @@ class Helpdesk_IndexController_Test extends FrontInit
             . '"solvedBy":1,"solvedDate":"' . date("Y-m-d") . '","description":"This is the description MODIFIED",'
             . '"status":3,"contactId":0}],"numRows":1}';
         $this->assertContains($expected, $response);
+    }
 
+    /**
+     * Test of json detail Helpdesk
+     */
+    public function testJsonDetailWithOtherId()
+    {
         // Existing item
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
         $this->request->setParam('id', 2);

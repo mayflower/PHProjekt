@@ -37,7 +37,7 @@ class Timecard_IndexController_Test extends FrontInit
     /**
      * Test of json Save
      */
-    public function testJsonSaveCommon()
+    public function testJsonSaveCommonPart1()
     {
         // INSERT. Defined start and end time.
         $this->setRequestUrl('Timecard/index/jsonSave/');
@@ -48,7 +48,14 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json Save
+     */
+    public function testJsonSaveCommonPart2()
+    {
+        $this->setRequestUrl('Timecard/index/jsonSave/');
         $this->request->setParam('date', '2009-05-16');
         $this->request->setParam('startTime', '14:00');
         $this->request->setParam('endTime', '18:00');
@@ -56,7 +63,13 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json Save
+     */
+    public function testJsonSaveCommonCheck()
+    {
         // Check that the period has been added
         $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-05-16');
@@ -81,7 +94,13 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json Save
+     */
+    public function testJsonSaveJustStartCheck()
+    {
         // Check that the period has been added
         $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-07-02');
@@ -105,7 +124,13 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::EDIT_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json Save
+     */
+    public function testJsonSaveJustEndCheck()
+    {
         // Check that the period has been modified
         $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-07-02');
@@ -129,7 +154,13 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::EDIT_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json Save
+     */
+    public function testJsonSaveEditCheck()
+    {
         // Check that the period has been modified
         $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-05-16');
@@ -350,10 +381,17 @@ class Timecard_IndexController_Test extends FrontInit
         $this->assertContains('"Date","Start Time","End Time","Minutes","Project","Notes"'."\n"
             .'"2009-05-16","10:30","12:30","120","Invisible Root","My note"'."\n"
             .'"2009-05-16","09:00","","0","Invisible Root","My note"'."\n", $response);
+    }
 
+    /**
+     * Test of csv
+     */
+    public function testCsvListEmptyResult()
+    {
+        $this->setRequestUrl('Timecard/index/csvList/');
         $this->request->setParam('year', 2009);
         $this->request->setParam('month', '9');
         $response = $this->getResponse();
-        $this->assertContains('""', $response);
+        $this->assertEquals(2, strlen($response));
     }
 }

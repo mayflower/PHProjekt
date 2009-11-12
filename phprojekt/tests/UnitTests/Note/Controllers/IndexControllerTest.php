@@ -58,7 +58,13 @@ class Note_IndexController_Test extends FrontInit
         $this->request->setParam('comments', 'comment test');
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::ADD_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json save Note -in fact, default json save
+     */
+    public function testJsonSavePart2()
+    {
         // INSERT
         $this->setRequestUrl('Note/index/jsonSave/');
         $this->request->setParam('projectId', 1);
@@ -75,7 +81,7 @@ class Note_IndexController_Test extends FrontInit
     /**
      * Test of json save Note -in fact, default json save
      */
-    public function testJsonSavePart2()
+    public function testJsonSaveEdit()
     {
         // EDIT
         $this->setRequestUrl('Note/index/jsonSave/');
@@ -112,6 +118,7 @@ class Note_IndexController_Test extends FrontInit
         $model->find(1);
         $this->assertEquals('test title MODIFIED AGAIN', $model->title);
         $this->assertEquals('comment test MODIFIED AGAIN', $model->comments);
+
         $model = clone($this->_model);
         $model->find(2);
         $this->assertEquals('test title 2 MODIFIED', $model->title);
@@ -127,7 +134,13 @@ class Note_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":2', $response);
+    }
 
+    /**
+     * Test of json list Note -in fact, default json list
+     */
+    public function testJsonListWithParent()
+    {
         $this->setRequestUrl('Note/index/jsonList');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
@@ -138,7 +151,7 @@ class Note_IndexController_Test extends FrontInit
     /**
      * Test of json list Note -in fact, default json detail
      */
-    public function testJsonDetailAction()
+    public function testJsonDetailNewItem()
     {
         // New item data request
         $this->setRequestUrl('Note/index/jsonDetail/');
@@ -147,7 +160,13 @@ class Note_IndexController_Test extends FrontInit
             . '"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
             . '"download":true,"admin":true}},"comments":"","projectId":0}],"numRows":1})';
         $this->assertContains($expected, $response);
+    }
 
+    /**
+     * Test of json list Note -in fact, default json detail
+     */
+    public function testJsonDetail()
+    {
         // Existing item
         $this->setRequestUrl('Note/index/jsonDetail/');
         $this->request->setParam('id', 1);

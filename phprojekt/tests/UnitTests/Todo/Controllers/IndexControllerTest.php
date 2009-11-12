@@ -49,7 +49,7 @@ class Todo_IndexController_Test extends FrontInit
     /**
      * Test of json save Todo
      */
-    public function testJsonSavePart1()
+    public function testJsonSaveAdd()
     {
         // INSERT
         $this->setRequestUrl('Todo/index/jsonSave/');
@@ -64,7 +64,13 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('string', 'My todo tag');
         $response = $this->getResponse();
         $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json save Todo
+     */
+    public function testJsonSaveAddNotification()
+    {
         // INSERT. Send notification
         $this->setRequestUrl('Todo/index/jsonSave/');
         $this->request->setParam('title', 'My todo task 2');
@@ -84,7 +90,7 @@ class Todo_IndexController_Test extends FrontInit
     /**
      * Test of json save Todo
      */
-    public function testJsonSavePart2()
+    public function testJsonSaveEdit()
     {
         // EDIT: First inserted item. Send notification.
         $this->setRequestUrl('Todo/index/jsonSave/');
@@ -100,7 +106,13 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('sendNotification', 'on');
         $response = $this->getResponse();
         $this->assertContains(Todo_IndexController::EDIT_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json save Todo
+     */
+    public function testJsonSaveEditNotification()
+    {
         // Check saved data
         $model = clone($this->_model);
         $model->find(2);
@@ -159,6 +171,7 @@ class Todo_IndexController_Test extends FrontInit
         $model->find(2);
         $this->assertEquals('My todo task CHANGED', $model->title);
         $this->assertEquals(3, $model->currentStatus);
+
         $model = clone($this->_model);
         $model->find(3);
         $this->assertEquals('My todo task 2 CHANGED', $model->title);
@@ -174,7 +187,13 @@ class Todo_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":3', $response);
+    }
 
+    /**
+     * Test of json list todo -in fact, default json list
+     */
+    public function testJsonListWithParent()
+    {
         $this->setRequestUrl('Todo/index/jsonList');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();

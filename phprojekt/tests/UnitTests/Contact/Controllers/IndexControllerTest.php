@@ -35,9 +35,9 @@ require_once 'PHPUnit/Framework.php';
 class Contact_IndexController_Test extends FrontInit
 {
     /**
-     * Test of json save, json list and json detail - actually the Default functions
+     * Test of json save
      */
-    public function testJsonSaveListDetailPart1()
+    public function testJsonSaveAdd()
     {
         // INSERT
         $this->setRequestUrl('Contact/index/jsonSave/');
@@ -55,7 +55,13 @@ class Contact_IndexController_Test extends FrontInit
         $this->request->setParam('private', 0);
         $response = $this->getResponse();
         $this->assertContains(Contact_IndexController::ADD_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json list
+     */
+    public function testJsonListBeforeAdd()
+    {
         // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
         $response = $this->getResponse();
@@ -64,7 +70,13 @@ class Contact_IndexController_Test extends FrontInit
             . '"delete":true,"download":true,"admin":true}},"email":"mariano.lapenna@mayflower.de",'
             . '"firstphone":"004912341234","street":"Edison 1234","private":0}],"numRows":1})';
         $this->assertContains($expected, $response);
+    }
 
+    /**
+     * Test of json detail
+     */
+    public function testJsonDetailBeforeAdd()
+    {
         // Check it
         $this->setRequestUrl('Contact/index/jsonDetail/');
         $this->request->setParam('id', 1);
@@ -79,9 +91,9 @@ class Contact_IndexController_Test extends FrontInit
     }
 
     /**
-     * Test of json save, json list and json detail - actually the Default functions
+     * Test of json save
      */
-    public function testJsonSaveListDetailPart2()
+    public function testJsonSaveEdit()
     {
         // EDIT
         $this->setRequestUrl('Contact/index/jsonSave/');
@@ -100,7 +112,13 @@ class Contact_IndexController_Test extends FrontInit
         $this->request->setParam('private', 1);
         $response = $this->getResponse();
         $this->assertContains(Contact_IndexController::EDIT_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json list
+     */
+    public function testJsonListBeforeEdit()
+    {
         // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
         $response = $this->getResponse();
@@ -109,7 +127,13 @@ class Contact_IndexController_Test extends FrontInit
             . '"delete":true,"download":true,"admin":true}},"email":"mariano.lapenna@mayflower.de2",'
             . '"firstphone":"12341234B","street":"Edison 1234B","private":1}],"numRows":1})';
         $this->assertContains($expected, $response);
+    }
 
+    /**
+     * Test of json detail
+     */
+    public function testJsonDetailBeforeEdit()
+    {
         // Check it
         $this->setRequestUrl('Contact/index/jsonDetail/');
         $this->request->setParam('id', 1);

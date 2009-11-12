@@ -84,7 +84,13 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('dataParticipant', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json save calendar for single events
+     */
+    public function testJsonSaveSinglePart2Check()
+    {
         // Check saved data
         $calendarModel = clone($this->_model);
         $calendarModel->find(1);
@@ -592,7 +598,7 @@ class Calendar_IndexController_Test extends FrontInit
     /**
      * Test the calendar event detail
      */
-    public function testJsonDetailAction()
+    public function testJsonDetailNewItem()
     {
         // New event data request
         $this->setRequestUrl('Calendar/index/jsonDetail/');
@@ -602,7 +608,13 @@ class Calendar_IndexController_Test extends FrontInit
             . '"download":true,"admin":true}},"place":"","notes":"","startDate":"","startTime":"","endDate":"",'
             . '"endTime":"","participantId":0,"rrule":""}],"numRows":1})';
         $this->assertContains($expected, $response);
+    }
 
+    /**
+     * Test the calendar event detail
+     */
+    public function testJsonDetail()
+    {
         // Existing event
         $this->setRequestUrl('Calendar/index/jsonDetail/');
         $this->request->setParam('id', 1);
@@ -625,6 +637,13 @@ class Calendar_IndexController_Test extends FrontInit
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":17}', $response);
 
+    }
+
+    /**
+     * Test the calendar list
+     */
+    public function testJsonListActionWithParent()
+    {
         $this->setRequestUrl('Calendar/index/jsonList/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();

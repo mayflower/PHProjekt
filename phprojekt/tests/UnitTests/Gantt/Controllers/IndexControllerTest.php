@@ -92,7 +92,13 @@ class Gantt_IndexController_Test extends FrontInit
         $this->request->setParam('projects', $projects);
         $response = $this->getResponse();
         $this->assertContains(Gantt_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
+    }
 
+    /**
+     * Test of json save Gantt
+     */
+    public function testJsonSaveCheck()
+    {
         // Verify it
         $this->setRequestUrl('Gantt/index/jsonGetProjects/');
         $this->request->setParam('nodeId', 1);
