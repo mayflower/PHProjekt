@@ -303,9 +303,14 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('year', 2009);
         $this->request->setParam('month', '05');
         $response = $this->getResponse();
-        $this->assertContains('{"date":"2009-05-01","week":"5","sumInMinutes":0,"sumInHours":0}', $response);
-        $this->assertContains('{"date":"2009-05-16","week":"6","sumInMinutes":360,"sumInHours":"06:00"}', $response);
-        $this->assertContains('{"date":"2009-05-31","week":"0","sumInMinutes":0,"sumInHours":0}', $response);
+        $expected = '{"date":"2009-05-01","week":"5","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
+        $this->assertContains($expected, $response);
+
+        $expected = '{"date":"2009-05-16","week":"6","sumInMinutes":360,"sumInHours":"06:00","openPeriod":1}';
+        $this->assertContains($expected, $response);
+
+        $expected = '{"date":"2009-05-31","week":"0","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
+        $this->assertContains($expected, $response);
     }
 
     /**
@@ -328,9 +333,14 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('year', 2009);
         $this->request->setParam('month', '05');
         $response = $this->getResponse();
-        $this->assertContains('{"date":"2009-05-01","week":"5","sumInMinutes":0,"sumInHours":0}', $response);
-        $this->assertContains('{"date":"2009-05-16","week":"6","sumInMinutes":120,"sumInHours":"02:00"}', $response);
-        $this->assertContains('{"date":"2009-05-31","week":"0","sumInMinutes":0,"sumInHours":0}', $response);
+        $expected = '{"date":"2009-05-01","week":"5","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
+        $this->assertContains($expected, $response);
+
+        $expected = '{"date":"2009-05-16","week":"6","sumInMinutes":120,"sumInHours":"02:00","openPeriod":1}';
+        $this->assertContains($expected, $response);
+
+        $expected = '{"date":"2009-05-31","week":"0","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
+        $this->assertContains($expected, $response);
     }
 
     /**
