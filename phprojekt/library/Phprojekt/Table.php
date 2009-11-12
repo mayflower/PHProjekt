@@ -54,7 +54,7 @@ class Phprojekt_Table
      *
      * @var array
      */
-    protected $_excludeFields = array('id','ownerId');
+    protected $_excludeFields = array('id', 'ownerId');
 
     /**
      * Use log file

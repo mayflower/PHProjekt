@@ -36,36 +36,6 @@
 class Core_ModuleController extends Core_IndexController
 {
     /**
-     * Returns all global modules
-     *
-     * Returns a list of all the global modules with:
-     * <pre>
-     *  - id     => id of the module.
-     *  - name   => Name of the module.
-     *  - label  => Display for the module.
-     * </pre>
-     * Also return in the metadata, if the user is an admin or not.
-     *
-     * The return is in JSON format.
-     *
-     * @return array
-     */
-    function jsonGetGlobalModulesAction()
-    {
-        $modules = array();
-        $model   = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
-        foreach ($model->fetchAll('active = 1 AND (save_type = 1 OR save_type = 2)', 'name ASC') as $module) {
-            $modules['data'][$module->id] = array();
-            $modules['data'][$module->id]['id']    = $module->id;
-            $modules['data'][$module->id]['name']  = $module->name;
-            $modules['data'][$module->id]['label'] = $module->name;
-        }
-        $modules['metadata'] = Phprojekt_Auth::isAdminUser();
-
-        Phprojekt_Converter_Json::echoConvert($modules);
-    }
-
-    /**
      * Saves a module.
      *
      * If the request parameter "id" is null or 0, the function will add a new module,
@@ -124,6 +94,36 @@ class Core_ModuleController extends Core_IndexController
                         'id'      => $model->id);
 
         Phprojekt_Converter_Json::echoConvert($return);
+    }
+
+    /**
+     * Returns all global modules
+     *
+     * Returns a list of all the global modules with:
+     * <pre>
+     *  - id     => id of the module.
+     *  - name   => Name of the module.
+     *  - label  => Display for the module.
+     * </pre>
+     * Also return in the metadata, if the user is an admin or not.
+     *
+     * The return is in JSON format.
+     *
+     * @return array
+     */
+    function jsonGetGlobalModulesAction()
+    {
+        $modules = array();
+        $model   = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
+        foreach ($model->fetchAll('active = 1 AND (save_type = 1 OR save_type = 2)', 'name ASC') as $module) {
+            $modules['data'][$module->id] = array();
+            $modules['data'][$module->id]['id']    = $module->id;
+            $modules['data'][$module->id]['name']  = $module->name;
+            $modules['data'][$module->id]['label'] = $module->name;
+        }
+        $modules['metadata'] = Phprojekt_Auth::isAdminUser();
+
+        Phprojekt_Converter_Json::echoConvert($modules);
     }
 
     /**

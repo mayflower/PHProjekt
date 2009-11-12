@@ -128,12 +128,12 @@ class Gantt_IndexController extends IndexController
             $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
             $where  = sprintf('user_id = %d AND item_id IN (%s) AND module_id = 1', Phprojekt_Auth::getUserId(),
                 implode(", ", $ids));
-            $access = $rights->fetchAll($where);
+            $access = $rights->fetchAll($where)->toArray();
             foreach ($access as $right) {
-                $data['data']['rights']["currentUser"][$right->item_id] = ($right->access > 1);
+                $data['data']['rights']["currentUser"][$right['item_id']] = ($right['access'] > 1);
                 if ($data['data']['rights']["currentUser"]["write"] === false &&
-                    $projectId != $right->item_id &&
-                    $right->access > 1) {
+                    $projectId != $right['item_id'] &&
+                    $right['access'] > 1) {
                     $data['data']['rights']["currentUser"]["write"] = true;
                 }
             }
