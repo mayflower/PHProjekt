@@ -365,7 +365,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         this.stepH             = dojo.number.round(this.stepH, 1);
         this.stepY             = this.cellTimeHeight;
         this.posHMax           = parseInt(dojo.byId('eventsArea').style.width) - this.stepH;
-        this.posYMaxComplement = parseInt(dojo.byId('eventsArea').style.height) - this.stepY;
+        this.posYMaxComplement = parseInt(dojo.byId('eventsArea').style.height);
     },
 
     timeToDivPosition:function(moment, isEvent, type) {
@@ -452,14 +452,13 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         var xPos   = this.dayToDivPosition(0, false);
         var yPos   = this.timeToDivPosition('8:00', false);
         var width  = dojo.byId('scheduleBackground').offsetWidth - this._cellTimeWidth;
-        var height = (this.cellTimeHeight * 24) + this._cellDayHeight;
+        var height = this.cellTimeHeight * 24;
 
         var eventsAreaDiv = dojo.byId('eventsArea');
         dojo.style(eventsAreaDiv, {
             left:       '0px',
-            top:        '0px',
+            top:        yPos + 'px',
             marginLeft: xPos + 'px',
-            marginTop:  yPos + 'px',
             width:      width + 'px',
             height:     height + 'px'
         });
@@ -1376,7 +1375,7 @@ dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
             + ((5 - this.parentClass.EVENTS_BORDER_WIDTH) * 2) - 7;
 
         // Maximum height - Set for the event end time not to be after 20:00
-        var maxY      = parseInt(dojo.byId('eventsArea').offsetHeight);
+        var maxY      = parseInt(dojo.byId('eventsArea').offsetHeight) + step;
         var eventTopY = parseInt(this.targetDomNode.parentNode.style.top);
         var proposedY = eventTopY + proposedHeight + step + sizerDivHeight;
 
