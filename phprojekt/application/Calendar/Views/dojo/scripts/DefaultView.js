@@ -1353,7 +1353,7 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
                 // It was just a click - Open event in the form
                 var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);
                 var eventId    = this.parentClass.events[movedEvent]['id'];
-                dojo.publish('Calendar.showFormFromList', [eventId]);
+                dojo.publish('Calendar.setUrlHash', [phpr.module, eventId]);
             }
         }
     }

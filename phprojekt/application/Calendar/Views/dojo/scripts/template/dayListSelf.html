@@ -13,7 +13,8 @@
                 {% ifequal column.typeEvent 1 %}
         <td rowspan="{{column.halvesDuration}}" width="{{column.width}}%" class="fixedEvents">
             {{column.time|safe}}
-            <a href="javascript: dojo.publish('Calendar.showFormFromList', [{{column.id}}]);">{{column.title|safe}}</a>
+            <a href="javascript: dojo.publish('Calendar.setUrlHash', ['Calendar', 
+                {{column.id}}]);">{{column.title|safe}}</a>
             <br />
             <div class="horizontalLine">
             </div>
@@ -40,7 +41,7 @@
     {{furtherEventsMessage}}:<br />
     {% for event in furtherEvents.events %}
 {{event.time|safe}}&nbsp; 
-<a href="javascript: dojo.publish('Calendar.showFormFromList', [{{event.id}}]);">{{event.title|safe}}</a>
+<a href="javascript: dojo.publish('Calendar.setUrlHash', ['Calendar', {{event.id}}]);">{{event.title|safe}}</a>
 <br />
     {% endfor %}
 {% endif %}

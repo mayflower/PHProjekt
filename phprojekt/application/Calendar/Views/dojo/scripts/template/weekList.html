@@ -59,7 +59,7 @@
     {{furtherEventsMessage}}:<br />
     {% for event in furtherEvents.events %}
 {{event.time|safe}}:&nbsp;
-<a href="javascript: dojo.publish('Calendar.showFormFromList', [{{event.id}}]);">{{event.title|safe}}</a>
+<a href="javascript: dojo.publish('Calendar.setUrlHash', ['Calendar', {{event.id}}]);">{{event.title|safe}}</a>
 <br />
     {% endfor %}
 {% endif %}
