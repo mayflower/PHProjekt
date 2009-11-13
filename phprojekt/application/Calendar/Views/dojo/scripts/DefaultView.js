@@ -539,9 +539,9 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    On startup and everytime it is called: activates or inactivates Y resize for each div.
 
         for (var i in this.events) {
-            var resizeDiv = dijit.byId('eventResize' + i)
             if (startup) {
                 var eventDiv          = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
+                var resizeDiv         = dijit.byId('eventResize' + i);
                 resizeDiv.parentClass = this;
                 // Minimum size:
                 var minWidth      = this.cellDayWidth - (2 * this.EVENTS_BORDER_WIDTH);
@@ -550,11 +550,15 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             }
 
             if (this.events[i]['shown']) {
+                var resizeDivPlain = dojo.byId('eventResize' + i);
                 if (this.events[i]['hasResizeHandler']) {
-                    resizeDiv.active = true;
+                    var displayMode = 'inline';
                 } else {
-                    resizeDiv.active = false;
+                    var displayMode = 'none';
                 }
+                dojo.style(resizeDivPlain, {
+                    display: displayMode
+                });
             }
         }
     },
@@ -1363,10 +1367,6 @@ dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
         var tmp = this._getNewCoords(e);
         if(tmp === false){ return; }
 
-        if (!this.active) {
-            return;
-        }
-
         // Stepped dragging added for this view
         var currentHeight  = dojo.style(this.targetDomNode, "height");
         var step           = this.parentClass.cellTimeHeight;
@@ -1425,9 +1425,6 @@ dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
         // Stub fired when sizing is done. Fired once
         //  after resize, or often when `intermediateChanges` is
         //  set to true.
-        if (!this.active) {
-            return;
-        }
 
         this.parentClass.eventMoved(this.targetDomNode.parentNode, true, true);
     }
