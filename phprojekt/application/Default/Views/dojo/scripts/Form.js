@@ -38,6 +38,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     _historyUrl:        null,
     _presetValues:      null,
     _htmlEditorWidget:  null,
+    _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
 
     constructor:function(main, id, module, params) {
         // Summary:
@@ -150,59 +151,87 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             }
         }
 
-        if (this._accessPermissions) {
-            // template for the access tab
-            var accessData = this.render(["phpr.Default.template", "accesstab.html"], null, {
-                accessUserText:     phpr.nls.get('User'),
-                accessReadText:     phpr.nls.get('Read'),
-                accessWriteText:    phpr.nls.get('Write'),
-                accessAccessText:   phpr.nls.get('Access'),
-                accessCreateText:   phpr.nls.get('Create'),
-                accessCopyText:     phpr.nls.get('Copy'),
-                accessDeleteText:   phpr.nls.get('Delete'),
-                accessDownloadText: phpr.nls.get('Download'),
-                accessAdminText:    phpr.nls.get('Admin'),
-                accessNoneText:     phpr.nls.get('None'),
-                accessActionText:   phpr.nls.get('Action'),
-                users:              users,
-                currentUser:        currentUser,
-                accessContent:      accessContent
+        var rows = '';
+        for (var id in accessContent) {
+            var checkBoxs = '';
+            var userId    = (id == 'currentUser') ? currentUser : accessContent[id]['userId'];
+            for (var i in this._rights) {
+                var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
+                checkBoxs += this.render(["phpr.Default.template.access", "checkbox.html"], null, {
+                    fieldId:  fieldId,
+                    checked:  accessContent[id][this._rights[i].toLowerCase()],
+                    hidden:   (id == 'currentUser' && this._accessPermissions),
+                    value:    (accessContent[id][this._rights[i].toLowerCase()]) ? 1 : 0,
+                    disabled: (id == 'currentUser' || !this._accessPermissions) ? 'disabled="disabled"' : ''
+                });
+            }
+            var subRow = this.render(["phpr.Default.template.access", "subRow.html"], null, {
+                id:          userId,
+                disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
+                userDisplay: accessContent[id]['userDisplay'],
+                currentUser: (id == 'currentUser'),
+                checkBoxs:   checkBoxs,
+                useDelete:   (id != 'currentUser')
             });
+            rows += this.render(["phpr.Default.template.access", "row.html"], null, {
+                id:     userId,
+                subRow: subRow
+            });
+        }
 
-            this.addTab(accessData, 'tabAccess', 'Access', 'accessFormTab');
+        // Template for the access tab
+        var accessData = this.render(["phpr.Default.template.access", "tab.html"], null, {
+            accessUserText:     phpr.nls.get('User'),
+            accessReadText:     phpr.nls.get('Read'),
+            accessWriteText:    phpr.nls.get('Write'),
+            accessAccessText:   phpr.nls.get('Access'),
+            accessCreateText:   phpr.nls.get('Create'),
+            accessCopyText:     phpr.nls.get('Copy'),
+            accessDeleteText:   phpr.nls.get('Delete'),
+            accessDownloadText: phpr.nls.get('Download'),
+            accessAdminText:    phpr.nls.get('Admin'),
+            accessActionText:   phpr.nls.get('Action'),
+            accessPermissions:  this._accessPermissions,
+            users:              users,
+            rows:               rows
+        });
 
-            // add button for access
-            var params = {
-                label:     '',
-                iconClass: 'add',
-                alt:       'Add'
-            };
-            newAccess = new dijit.form.Button(params);
-            dojo.byId("accessAddButton").appendChild(newAccess.domNode);
-            dojo.connect(newAccess, "onClick", dojo.hitch(this, "newAccess"));
+        this.addTab(accessData, 'tabAccess', 'Access', 'accessFormTab');
+
+        // Add "add" button for access
+        if (this._accessPermissions) {
+            this.addTinyButton('add', 'accessAddButton', 'newAccess');
             dojo.connect(dijit.byId("checkAdminAccessAdd"), "onClick", dojo.hitch(this, "checkAllAccess", "Add"));
-            dojo.connect(dijit.byId("checkNoneAccessAdd"), "onClick", dojo.hitch(this, "checkNoneAccess", "Add"));
+        }
 
-            // delete buttons for access
-            // add check all and none functions
+        if (this._accessPermissions) {
+            // Add "delete" buttons for access
+            // Add "check all" functions
             for (i in accessContent) {
-                var userId     = accessContent[i]["userId"];
-                var buttonName = "accessDeleteButton" + userId;
-                var params = {
-                    label:     '',
-                    iconClass: 'cross',
-                    alt:       'Delete'
-                };
-
-                var tmp = new dijit.form.Button(params);
-                dojo.byId(buttonName).appendChild(tmp.domNode);
-                dojo.connect(tmp, "onClick", dojo.hitch(this, "deleteAccess", userId));
-                dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick",
-                    dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
-                dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick",
-                    dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
+                var userId = accessContent[i]["userId"];
+                if (userId != currentUser) {
+                    this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
+                    dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick",
+                        dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
+                }
             }
         }
+    },
+
+    addTinyButton:function(type, nodeId, functionName, extraParams) {
+        // Summary:
+        //    Add a button
+        // Description:
+        //    Add a button into the node and connect id to one function
+        var params = {
+            label:     '',
+            iconClass: (type == 'add') ? 'add' : 'cross',
+            alt:       (type == 'add') ? phpr.nls.get('Add') : phpr.nls.get('Delete'),
+            baseClass: 'dijitButton, smallIcon'
+        };
+        var button = new dijit.form.Button(params);
+        dojo.byId(nodeId).appendChild(button.domNode);
+        dojo.connect(button, "onClick", dojo.hitch(this, functionName, extraParams));
     },
 
     setPermissions:function(data) {
@@ -479,80 +508,42 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         var userId = dijit.byId("dataAccessAdd").attr('value');
         if (!dojo.byId("trAccessFor" + userId) && userId > 0) {
             phpr.destroyWidget("dataAccess[" + userId + "]");
-            phpr.destroyWidget("checkReadAccess[" + userId + "]");
-            phpr.destroyWidget("checkWriteAccess[" + userId + "]");
-            phpr.destroyWidget("checkAccessAccess[" + userId + "]");
-            phpr.destroyWidget("checkCreateAccess[" + userId + "]");
-            phpr.destroyWidget("checkCopyAccess[" + userId + "]");
-            phpr.destroyWidget("checkDeleteAccess[" + userId + "]");
-            phpr.destroyWidget("checkDownloadAccess[" + userId + "]");
-            phpr.destroyWidget("checkAdminAccess[" + userId + "]");
-            phpr.destroyWidget("checkNoneAccess[" + userId + "]");
+            for (var i in this._rights) {
+                var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
+                phpr.destroyWidget(fieldId);
+            }
             phpr.destroyWidget("accessDeleteButton" + userId);
 
-            var userDisplay = dijit.byId("dataAccessAdd").attr('displayedValue');
-            var table       = dojo.byId("accessTable");
-            var row         = table.insertRow(table.rows.length);
-            row.id          = "trAccessFor" + userId;
+            var table = dojo.byId("accessTable");
+            var row   = table.insertRow(table.rows.length);
+            row.id    = "trAccessFor" + userId;
 
-            var cell = row.insertCell(0);
-            cell.innerHTML = '<input id="dataAccess[' + userId + ']" name="dataAccess[' + userId + ']" '
-                + ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userDisplay;
-            var cell = row.insertCell(1);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
-                + ' id="checkReadAccess[' + userId + ']" name="checkReadAccess[' + userId + ']" '
-                + ' checked="' + dijit.byId("checkReadAccessAdd").checked + '" value="1" />';
-            var cell = row.insertCell(2);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
-                + ' id="checkWriteAccess[' + userId + ']" name="checkWriteAccess[' + userId + ']" '
-                + ' checked="' + dijit.byId("checkWriteAccessAdd").checked + '" value="1" /></div>';
-            var cell = row.insertCell(3);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
-                + ' id="checkAccessAccess[' + userId + ']" name="checkAccessAccess[' + userId + ']" '
-                + ' checked="' + dijit.byId("checkAccessAccessAdd").checked + '" value="1" /></div>';
-            var cell = row.insertCell(4);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
-                + ' id="checkCreateAccess[' + userId + ']" name="checkCreateAccess[' + userId + ']" '
-                + ' checked="' + dijit.byId("checkCreateAccessAdd").checked + '" value="1" /></div>';
-            var cell = row.insertCell(5);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
-                + ' id="checkCopyAccess[' + userId + ']" name="checkCopyAccess[' + userId + ']" '
-                + ' checked="' + dijit.byId("checkCopyAccessAdd").checked + '" value="1" /></div>';
-            var cell = row.insertCell(6);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
-                + ' id="checkDeleteAccess[' + userId + ']" name="checkDeleteAccess[' + userId + ']" '
-                + ' checked="' + dijit.byId("checkDeleteAccessAdd").checked + '" value="1" /></div>';
-            var cell = row.insertCell(7);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
-                + ' id="checkDownloadAccess[' + userId + ']" name="checkDownloadAccess[' + userId + ']" '
-                + ' checked="' + dijit.byId("checkDownloadAccessAdd").checked + '" value="1" /></div>';
-            var cell = row.insertCell(8);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
-                + ' id="checkAdminAccess[' + userId + ']" name="checkAdminAccess[' + userId + ']" '
-                + ' checked="' + dijit.byId("checkAdminAccessAdd").checked + '" value="1" /></div>';
-            var cell = row.insertCell(9);
-            cell.innerHTML = '<div align="center"><input type="checkbox" dojotype="dijit.form.CheckBox" '
-                + ' id="checkNoneAccess[' + userId + ']" name="checkNoneAccess[' + userId + ']" '
-                + ' checked="' + dijit.byId("checkNoneAccessAdd").checked + '" value="1" /></div>';
-
-            var cell = row.insertCell(10);
-            cell.innerHTML = '<div id="accessDeleteButton' + userId + '"></div>';
-
+            var checkBoxs = '';
+            for (var i in this._rights) {
+                var fieldId    = 'check' + this._rights[i] + 'Access[' + userId + ']';
+                var fieldAddId = 'check' + this._rights[i] + 'AccessAdd';
+                checkBoxs += this.render(["phpr.Default.template.access", "checkbox.html"], null, {
+                    fieldId:  fieldId,
+                    checked:  dijit.byId(fieldAddId).checked,
+                    hidden:   false,
+                    value:    1,
+                    disabled: ''
+                });
+            }
+            var subRow = this.render(["phpr.Default.template.access", "subRow.html"], null, {
+                id:          userId,
+                disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
+                userDisplay: dijit.byId("dataAccessAdd").attr('displayedValue'),
+                checkBoxs:   checkBoxs,
+                currentUser: false,
+                useDelete:   true
+            });
+            row.innerHTML = subRow;
             dojo.parser.parse(row);
 
-            var buttonName = "accessDeleteButton" + userId;
-            var params = {
-                label:     '',
-                iconClass: 'cross',
-                alt:       'Delete'
-            };
-            var tmp = new dijit.form.Button(params);
-            dojo.byId(buttonName).appendChild(tmp.domNode);
-            dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteAccess", userId));
+            this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
             dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick",
                 dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
-            dojo.connect(dijit.byId("checkNoneAccess[" + userId + "]"), "onClick",
-                dojo.hitch(this, "checkNoneAccess", "[" + userId + "]"));
         }
     },
 
@@ -563,18 +554,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Remove the row of one user-accees
         //    and destroy all the used widgets
         phpr.destroyWidget("dataAccess[" + userId + "]");
-        phpr.destroyWidget("checkReadAccess[" + userId + "]");
-        phpr.destroyWidget("checkWriteAccess[" + userId + "]");
-        phpr.destroyWidget("checkAccessAccess[" + userId + "]");
-        phpr.destroyWidget("checkCreateAccess[" + userId + "]");
-        phpr.destroyWidget("checkCopyAccess[" + userId + "]");
-        phpr.destroyWidget("checkDeleteAccess[" + userId + "]");
-        phpr.destroyWidget("checkDownloadAccess[" + userId + "]");
-        phpr.destroyWidget("checkAdminAccess[" + userId + "]");
-        phpr.destroyWidget("checkNoneAccess[" + userId + "]");
+        for (var i in this._rights) {
+            var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
+            phpr.destroyWidget(fieldId);
+        }
         phpr.destroyWidget("accessDeleteButton" + userId);
 
-        var e = dojo.byId("trAccessFor" + userId);
+        var e      = dojo.byId("trAccessFor" + userId);
         var parent = e.parentNode;
         parent.removeChild(e);
     },
@@ -584,32 +570,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Select all the access
         // Description:
         //    Select all the access
-        if (dijit.byId("checkAdminAccess"+str).checked) {
-            dijit.byId("checkReadAccess"+str).attr('checked', true);
-            dijit.byId("checkWriteAccess"+str).attr('checked', true);
-            dijit.byId("checkAccessAccess"+str).attr('checked', true);
-            dijit.byId("checkCreateAccess"+str).attr('checked', true);
-            dijit.byId("checkCopyAccess"+str).attr('checked', true);
-            dijit.byId("checkDeleteAccess"+str).attr('checked', true);
-            dijit.byId("checkDownloadAccess"+str).attr('checked', true);
-            dijit.byId("checkNoneAccess"+str).attr('checked', false);
-        }
-    },
-
-    checkNoneAccess:function(str) {
-        // Summary:
-        //    Un-select all the access
-        // Description:
-        //    Un-select all the access
-        if (dijit.byId("checkNoneAccess"+str).checked) {
-            dijit.byId("checkReadAccess"+str).attr('checked', false);
-            dijit.byId("checkWriteAccess"+str).attr('checked', false);
-            dijit.byId("checkAccessAccess"+str).attr('checked', false);
-            dijit.byId("checkCreateAccess"+str).attr('checked', false);
-            dijit.byId("checkCopyAccess"+str).attr('checked', false);
-            dijit.byId("checkDeleteAccess"+str).attr('checked', false);
-            dijit.byId("checkDownloadAccess"+str).attr('checked', false);
-            dijit.byId("checkAdminAccess"+str).attr('checked', false);
+        if (dijit.byId("checkAdminAccess" + str).checked) {
+            for (var i in this._rights) {
+                var fieldId = 'check' + this._rights[i] + 'Access' + str;
+                dijit.byId(fieldId).attr('checked', true);
+            }
         }
     },
 

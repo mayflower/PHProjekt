@@ -1,0 +1,23 @@
+<td>
+    <input name="userRelation[{{userId}}]" type="hidden" value="{{userId}}"
+    dojoType="dijit.form.TextBox" {{disabled}} />
+    {% if currentUser %}
+    <b>{{userDisplay}}</b>
+    {% else %}
+    {{userDisplay}}
+    {% endif %}
+</td>
+<td>
+    <input name="roleRelation[{{userId}}]" type="hidden" value="{{roleId}}"
+    dojoType="dijit.form.TextBox" {{disabled}} />
+    {% if currentUser %}
+    <b>{{roleName}}</b>
+    {% else %}
+    {{roleName}}
+    {% endif %}
+</td>
+<td>
+    {% if useDelete %}
+    <div id="relationDeleteButton{{userId}}"></div>
+    {% endif %}
+</td>

@@ -1,0 +1,104 @@
+<tr>
+    <td colspan="3">
+    <table id="accessTable" style="position: relative; left: 75px">
+    <tr>
+        <td>
+            <label>{{accessUserText}}</label>
+        </td>
+        <td>
+            <label>{{accessReadText}}</label>
+        </td>
+        <td>
+            <label>{{accessWriteText}}</label>
+        </td>
+        <td>
+            <label>{{accessAccessText}}</label>
+        </td>
+        <td>
+            <label>{{accessCreateText}}</label>
+        </td>
+        <td>
+            <label>{{accessCopyText}}</label>
+        </td>
+        <td>
+            <label>{{accessDeleteText}}</label>
+        </td>
+        <td>
+            <label>{{accessDownloadText}}</label>
+        </td>
+        <td>
+            <label>{{accessAdminText}}</label>
+        </td>
+        <td>
+            {% if accessPermissions %}
+            <label>{{accessActionText}}</label>
+            {% endif %}
+        </td>
+    </tr>
+    {% if accessPermissions %}
+    <tr>
+        <td>
+            <select id="dataAccessAdd" name="dataAccessAdd" dojoType="dijit.form.FilteringSelect" required="true"
+            autocomplete="true" value="" invalidMessage="" >
+                {% for user in users %}
+                <option value="{{user.id}}" >{{user.display}}</option>
+                {% endfor %}
+            </select>
+        </td>
+        <td>
+            <div align="center">
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkReadAccessAdd"
+                name="checkReadAccessAdd" checked="false" value="1" />
+            </div>
+        </td>
+        <td>
+            <div align="center">
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkWriteAccessAdd"
+                name="checkWriteAccessAdd" checked="false" value="1" />
+            </div>
+        </td>
+        <td>
+            <div align="center">
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkAccessAccessAdd"
+                name="checkAccessAccessAdd" checked="false" value="1" />
+            </div>
+        </td>
+        <td>
+            <div align="center">
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkCreateAccessAdd"
+                name="checkCreateAccessAdd" checked="false" value="1" />
+            </div>
+        </td>
+        <td>
+            <div align="center">
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkCopyAccessAdd"
+                name="checkCopyAccessAdd" checked="false" value="1" />
+            </div>
+        </td>
+        <td>
+            <div align="center">
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkDeleteAccessAdd"
+                name="checkDeleteAccessAdd" checked="false" value="1" />
+            </div>
+        </td>
+        <td>
+            <div align="center">
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkDownloadAccessAdd"
+                name="checkDownloadAccessAdd" checked="false" value="1" />
+            </div>
+        </td>
+        <td>
+            <div align="center">
+                <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkAdminAccessAdd"
+                name="checkAdminAccessAdd" checked="false" value="1" />
+            </div>
+        </td>
+        <td>
+            <div id="accessAddButton"></div>
+        </td>
+    </tr>
+    {% endif %}
+    {{rows|safe}}
+    </table>
+    </td>
+</tr>

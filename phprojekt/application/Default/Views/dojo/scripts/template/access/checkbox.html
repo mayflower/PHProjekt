@@ -1,0 +1,15 @@
+<td>
+    <div align="center">
+        {% if hidden %}
+            {% if checked %}
+        <input type="hidden" dojotype="dijit.form.TextBox" id="{{fieldId}}"
+        name="{{fieldId}}" value="{{value}}" />
+            {% endif %}
+        <input type="checkbox" dojotype="dijit.form.CheckBox"
+        checked="{{checked}}" {{disabled}} value="1" />
+        {% else %}
+        <input type="checkbox" dojotype="dijit.form.CheckBox" id="{{fieldId}}"
+        name="{{fieldId}}" checked="{{checked}}" {{disabled}} value="1" />
+        {% endif %}
+    </div>
+</td>

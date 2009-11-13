@@ -104,6 +104,15 @@
     height: 16px;
 }
 
+.phprojekt .smallIcon .dijitButtonNode {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    width: 13px;
+    border: none;
+    background: none;
+    vertical-align: middle;
+}
+
 .phprojekt .dijitButtonNode {
     /* enabled state - inner */
     border: 1px solid #8ba0bd;

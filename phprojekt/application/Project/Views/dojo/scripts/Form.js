@@ -44,15 +44,14 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Add Tab for allow/disallow modules on the project
         // Description:
         //    Add Tab for allow/disallow modules on the project
-        if (this._accessPermissions) {
-            var modulesData = this.render(["phpr.Project.template", "modulestab.html"], null, {
-                moduleNameText:   phpr.nls.get('Module'),
-                moduleActiveText: phpr.nls.get('Active'),
-                modules:          this.moduleStore.getList()
-            });
+        var modulesData = this.render(["phpr.Project.template", "moduleTab.html"], null, {
+            moduleNameText:   phpr.nls.get('Module'),
+            moduleActiveText: phpr.nls.get('Active'),
+            modules:          this.moduleStore.getList(),
+            disabled:        (!this._accessPermissions) ? 'disabled="disabled"' : ''
+        });
 
-            this.addTab(modulesData, 'tabModules', 'Module', 'moduleFormTab');
-        }
+        this.addTab(modulesData, 'tabModules', 'Module', 'moduleFormTab');
     },
 
     addRoleTab:function(data) {
@@ -60,55 +59,58 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Add Tab for user-role relation into the project
         // Description:
         //    Add Tab for user-role relation into the project
-        if (this._accessPermissions) {
-            var currentUser  = data[0]["rights"]["currentUser"]["userId"] || 0;
-            var users        = new Array();
-            var userList     = this.userStore.getList();
-            var relationList = this.roleStore.getRelationList();
+        var currentUser  = data[0]["rights"]["currentUser"]["userId"] || 0;
+        var users        = new Array();
+        var userList     = this.userStore.getList();
+        var relationList = this.roleStore.getRelationList();
 
-            // Make an array with the users expect the current one
-            if (userList) {
-                for (var i in userList) {
-                    if (userList[i].id != currentUser) {
-                        users.push({'id': userList[i].id, 'display': userList[i].display});
-                    }
+        // Make an array with the users expect the current one
+        if (userList) {
+            for (var i in userList) {
+                if (userList[i].id != currentUser) {
+                    users.push({'id': userList[i].id, 'display': userList[i].display});
                 }
             }
+        }
 
-            var rolesData = this.render(["phpr.Project.template", "rolestab.html"], null, {
-                accessUserText:   phpr.nls.get('User'),
-                accessRoleText:   phpr.nls.get('Role'),
-                accessActionText: phpr.nls.get('Action'),
-                users:            users,
-                roles:            this.roleStore.getList(),
-                currentUser:      currentUser,
-                relations:        relationList
+        var rows = '';
+        for (i in relationList) {
+            var fields = this.render(["phpr.Project.template", "roleField.html"], null, {
+                userId:      relationList[i].userId,
+                userDisplay: relationList[i].userDisplay,
+                currentUser: (relationList[i].userId == currentUser),
+                roleId:      relationList[i].roleId,
+                roleName:    relationList[i].roleName,
+                disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
+                useDelete:  (relationList[i].userId != currentUser && this._accessPermissions)
             });
+            rows += this.render(["phpr.Project.template", "roleRow.html"], null, {
+                userId: relationList[i].userId,
+                fields: fields
+            });
+        }
+        var rolesData = this.render(["phpr.Project.template", "roleTab.html"], null, {
+            accessUserText:   phpr.nls.get('User'),
+            accessRoleText:   phpr.nls.get('Role'),
+            accessActionText: phpr.nls.get('Action'),
+            disabled:         (!this._accessPermissions) ? 'disabled="disabled"' : '',
+            users:            users,
+            roles:            this.roleStore.getList(),
+            rows:             rows
+        });
 
-            this.addTab(rolesData, 'tabRoles', 'Role', 'roleFormTab');
+        this.addTab(rolesData, 'tabRoles', 'Role', 'roleFormTab');
 
-            // add button for role-user
-            var params = {
-                label:     '',
-                iconClass: 'add',
-                alt:       'Add'
-            };
-            newRoleUser = new dijit.form.Button(params);
-            dojo.byId("relationAddButton").appendChild(newRoleUser.domNode);
-            dojo.connect(newRoleUser, "onClick", dojo.hitch(this, "newRoleUser"));
+        // Add "add" button for role-user relation
+        if (this._accessPermissions) {
+            this.addTinyButton('add', 'relationAddButton', 'newRoleUser');
+        }
 
-            // delete buttons for role-user relation
-            for (i in relationList) {
-                var userId     = relationList[i].userId;
-                var buttonName = "relationDeleteButton" + userId;
-                var params = {
-                    label:     '',
-                    iconClass: 'cross',
-                    alt:       'Delete'
-                };
-                tmp = new dijit.form.Button(params);
-                dojo.byId(buttonName).appendChild(tmp.domNode);
-                dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteUserRoleRelation", userId));
+        // Add "delete" buttons for role-user relation
+        for (i in relationList) {
+            if (relationList[i].userId != currentUser && this._accessPermissions) {
+                var userId = relationList[i].userId;
+                this.addTinyButton('delete', 'relationDeleteButton' + userId, 'deleteUserRoleRelation', [userId]);
             }
         }
     },
@@ -136,32 +138,22 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             phpr.destroyWidget("userRelation[" + userId + "]");
             phpr.destroyWidget("relationDeleteButton" + userId);
 
-            var roleName = dijit.byId("relationRoleAdd").attr('displayedValue');
-            var userName = dijit.byId("relationUserAdd").attr('displayedValue');
-            var table    = dojo.byId("relationTable");
-            var row      = table.insertRow(table.rows.length);
-            row.id       = "trRelationFor" + userId;
-
-            var cell = row.insertCell(0);
-            cell.innerHTML = '<input name="roleRelation[' + userId + ']" type="hidden" value="' + roleId
-                + '" dojoType="dijit.form.TextBox" />' + roleName;
-            var cell = row.insertCell(1);
-            cell.innerHTML = '<input name="userRelation[' + userId + ']" type="hidden" value="' + userId
-                + '" dojoType="dijit.form.TextBox" />' + userName;
-            var cell = row.insertCell(2);
-            cell.innerHTML = '<div id="relationDeleteButton' + userId + '"></div>';
-
+            var table = dojo.byId("relationTable");
+            var row   = table.insertRow(table.rows.length);
+            row.id    = "trRelationFor" + userId;
+            var fields = this.render(["phpr.Project.template", "roleField.html"], null, {
+                userId:      userId,
+                userDisplay: dijit.byId("relationUserAdd").attr('displayedValue'),
+                currentUser: false,
+                roleId:      roleId,
+                roleName:    dijit.byId("relationRoleAdd").attr('displayedValue'),
+                disabled:    '',
+                useDelete:   true
+            });
+            row.innerHTML = fields;
             dojo.parser.parse(row);
 
-            var buttonName = "relationDeleteButton" + userId;
-            var params = {
-                label:     '',
-                iconClass: 'cross',
-                alt:       'Delete'
-            };
-            tmp = new dijit.form.Button(params);
-            dojo.byId(buttonName).appendChild(tmp.domNode);
-            dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteUserRoleRelation", userId));
+            this.addTinyButton('delete', 'relationDeleteButton' + userId, 'deleteUserRoleRelation', [userId]);
         }
     },
 

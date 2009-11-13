@@ -14,13 +14,13 @@
     <tr id="trModulesFor{{module.id}}">
         <td>
             <input id="moduleRelation[{{module.id}}]" name="moduleRelation[{{module.id}}]" type="hidden"
-            value="{{module.name}}" dojoType="dijit.form.TextBox" />
+            value="{{module.name}}" dojoType="dijit.form.TextBox" {{disabled}} />
             {{module.label}}
         </td>
         <td>
             <div align="center">
                 <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkModuleRelation[{{module.id}}]"
-                name="checkModuleRelation[{{module.id}}]" checked="{{module.inProject}}" value="1" />
+                name="checkModuleRelation[{{module.id}}]" checked="{{module.inProject}}" value="1" {{disabled}} />
             </div>
         </td>
     </tr>
