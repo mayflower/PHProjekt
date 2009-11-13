@@ -534,25 +534,22 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
     classesSetup:function(startup) {
         // Summary:
-        //    Creates dragging class on startup. Provides the dragging and resize classes with a reference object
-        // variable to this class. Establishes a minimum height for the events, it is the height of one cell.
-        // Activates or inactivates Y resize for each div.
+        //    On startup: creates dragging classes, provides the dragging and resize classes with a reference object
+        // variable to this class, establishes the cell height as the minimum height for the events.
+        //    On startup and everytime it is called: activates or inactivates Y resize for each div.
 
         for (var i in this.events) {
+            var resizeDiv = dijit.byId('eventResize' + i)
+            if (startup) {
+                var eventDiv          = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
+                resizeDiv.parentClass = this;
+                // Minimum size:
+                var minWidth      = this.cellDayWidth - (2 * this.EVENTS_BORDER_WIDTH);
+                var minHeight     = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
+                resizeDiv.minSize = { w: minWidth, h: minHeight};
+            }
+
             if (this.events[i]['shown']) {
-                if (startup) {
-                    var eventDiv  = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
-                }
-
-                var resizeDiv = dijit.byId('eventResize' + i)
-                if (startup) {
-                    resizeDiv.parentClass = this;
-                    // Minimum size:
-                    var minWidth      = this.cellDayWidth - (2 * this.EVENTS_BORDER_WIDTH);
-                    var minHeight     = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
-                    resizeDiv.minSize = { w: minWidth, h: minHeight};
-                }
-
                 if (this.events[i]['hasResizeHandler']) {
                     resizeDiv.active = true;
                 } else {
