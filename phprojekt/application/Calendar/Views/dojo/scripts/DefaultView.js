@@ -768,7 +768,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
                     }
                 })
             });
-       }
+        }
     },
 
     enableSaveButton:function() {
