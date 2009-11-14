@@ -661,13 +661,15 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Summary:
         //    Forces every widget of the page to update its data, by deleting its cache.
 
-        // As the 'grid' object may not exist, it is not called updateData function but deleted the cache manually
+        // As the 'grid' object may not exist, it is not called always updateData function but deleted the cache
+        // manually - Note: preUrl may be used later to make the url of other views
+        var preUrl = phpr.webpath + "index.php/" + phpr.module + "/index/";
         if (this.grid) {
             this.grid.updateData();
         } else {
-            var gridUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList/nodeId/" + phpr.currentProjectId;
+            var gridUrl = preUrl + "jsonList/nodeId/" + phpr.currentProjectId + '/filters/';
             var tagUrl  = phpr.webpath + "index.php/Default/Tag/jsonGetTags";
-            phpr.DataStore.deleteData({url: gridUrl});
+            phpr.DataStore.deleteDataPartialString({url: gridUrl});
             phpr.DataStore.deleteData({url: tagUrl});
         }
 
