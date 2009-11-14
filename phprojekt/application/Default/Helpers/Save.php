@@ -96,25 +96,30 @@ final class Default_Helpers_Save
                 $node->setParentNode($parentNode);
             }
 
-            $rights = Default_Helpers_Right::getRights($params, $newItem);
+            // Save access, modules and roles only if the user have "access" right
+            $itemRights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+            $check      = $itemRights->getRights(1, $node->getActiveRecord()->id);
+            if ($check['currentUser']['access']) {
+                $rights = Default_Helpers_Right::getRights($params, $newItem);
 
-            if (count($rights) > 0) {
-                $node->getActiveRecord()->saveRights($rights);
-            }
-
-            // Save the module-project relation
-            if (isset($params['moduleRelation'])) {
-                if (!isset($params['checkModuleRelation'])) {
-                    $params['checkModuleRelation'] = array();
+                if (count($rights) > 0) {
+                    $node->getActiveRecord()->saveRights($rights);
                 }
-                $node->getActiveRecord()->saveModules(array_keys($params['checkModuleRelation']));
-            }
 
-            // Save the role-user-project relation
-            if (isset($params['userRelation'])) {
-                $model = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
-                $model->saveRelation($params['roleRelation'], array_keys($params['userRelation']),
-                    $node->getActiveRecord()->id);
+                // Save the module-project relation
+                if (isset($params['moduleRelation'])) {
+                    if (!isset($params['checkModuleRelation'])) {
+                        $params['checkModuleRelation'] = array();
+                    }
+                    $node->getActiveRecord()->saveModules(array_keys($params['checkModuleRelation']));
+                }
+
+                // Save the role-user-project relation
+                if (isset($params['userRelation'])) {
+                    $model = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
+                    $model->saveRelation($params['roleRelation'], array_keys($params['userRelation']),
+                        $node->getActiveRecord()->id);
+                }
             }
 
             return $node->getActiveRecord();
@@ -174,10 +179,15 @@ final class Default_Helpers_Save
         } else {
             $model->save();
 
-            $rights = Default_Helpers_Right::getRights($params, $newItem);
+            // Save access only if the user have "access" right
+            $itemRights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+            $check      = $itemRights->getRights(Phprojekt_Module::getId($moduleName), $model->id);
+            if ($check['currentUser']['access']) {
+                $rights = Default_Helpers_Right::getRights($params, $newItem);
 
-            if (count($rights) > 0) {
-                $model->saveRights($rights);
+                if (count($rights) > 0) {
+                    $model->saveRights($rights);
+                }
             }
 
             return $model;
