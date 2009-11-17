@@ -470,50 +470,53 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // in this.events and background sizes.
 
         for (var i in this.events) {
-            var left   = this.dayToDivPosition(this.events[i]['dayOrder'], true);
-            var top    = this.timeToDivPosition(this.events[i]['startTime'], true, this.TYPE_EVENT_START);
-            var width  = this.cellDayWidth - (2 * this.EVENTS_BORDER_WIDTH);
-            var bottom = this.timeToDivPosition(this.events[i]['endTime'], true, this.TYPE_EVENT_END);
-            var height = bottom - top - (2 * this.EVENTS_BORDER_WIDTH);
-
-            // Is this event part of two or more simulteaneous ones?
-            if (this.events[i]['simultWidth']) {
-                // Yes - Reduce its width
-                width = (width / this.events[i]['simultAmount']) - this.EVENTS_BORDER_WIDTH;
-                width = dojo.number.round(width);
-
-                // Maybe change its left position
-                left += dojo.number.round(this.cellDayWidth / this.events[i]['simultAmount']
-                    * (this.events[i]['simultOrder'] - 1));
-            }
-
             var eventDiv1 = dojo.byId(this.EVENTS_MAIN_DIV_ID + i);
-            var eventDiv2 = dojo.byId('plainDiv' + i);
-
-            this.events[i]['currentLeft']   = left;
-            this.events[i]['currentTop']    = top;
-            this.events[i]['currentBottom'] = bottom;
-
-            if (this.events[i]['shown']) {
+            if (this.events[i] != null && this.events[i]['shown']) {
                 var visibility = 'visible';
+                var left       = this.dayToDivPosition(this.events[i]['dayOrder'], true);
+                var top        = this.timeToDivPosition(this.events[i]['startTime'], true, this.TYPE_EVENT_START);
+                var width      = this.cellDayWidth - (2 * this.EVENTS_BORDER_WIDTH);
+                var bottom     = this.timeToDivPosition(this.events[i]['endTime'], true, this.TYPE_EVENT_END);
+                var height     = bottom - top - (2 * this.EVENTS_BORDER_WIDTH);
+
+                // Is this event part of two or more simulteaneous ones?
+                if (this.events[i]['simultWidth']) {
+                    // Yes - Reduce its width
+                    width = (width / this.events[i]['simultAmount']) - this.EVENTS_BORDER_WIDTH;
+                    width = dojo.number.round(width);
+
+                    // Maybe change its left position
+                    left += dojo.number.round(this.cellDayWidth / this.events[i]['simultAmount']
+                        * (this.events[i]['simultOrder'] - 1));
+                }
+
+                var eventDiv2 = dojo.byId('plainDiv' + i);
+
+                this.events[i]['currentLeft']   = left;
+                this.events[i]['currentTop']    = top;
+                this.events[i]['currentBottom'] = bottom;
+
+                dojo.style(eventDiv1, {
+                    left:       left + 'px',
+                    top:        top + 'px'
+                });
+                dojo.style(eventDiv2, {
+                    width:  width + 'px',
+                    height: height + 'px'
+                });
+
+                // Update textual visible contents of event
+                var textualContents = this.events[i]['timeDescrip'] + ' ' + this.events[i]['title'] + '<br>' +
+                    this.events[i]['notes'];
+                eventDiv2.innerHTML = textualContents;
+
             } else {
                 var visibility = 'hidden';
             }
 
-            dojo.style(eventDiv1, {
-                left:       left + 'px',
-                top:        top + 'px',
+             dojo.style(eventDiv1, {
                 visibility: visibility
             });
-            dojo.style(eventDiv2, {
-                width:  width + 'px',
-                height: height + 'px'
-            });
-
-            // Update textual visible contents of event
-            var textualContents = this.events[i]['timeDescrip'] + ' ' + this.events[i]['title'] + '<br>' +
-                this.events[i]['notes'];
-            eventDiv2.innerHTML = textualContents;
         }
 
         if (this.main.weekList != null) {
@@ -548,7 +551,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
                 resizeDiv.minSize = { w: minWidth, h: minHeight};
             }
 
-            if (this.events[i]['shown']) {
+            if (this.events[i] != null && this.events[i]['shown']) {
                 var resizeDivPlain = dojo.byId('eventResize' + i);
                 if (this.events[i]['hasResizeHandler']) {
                     var displayMode = 'inline';
@@ -723,7 +726,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         }
 
         for (var i in this.events) {
-            if (this.events[i]['hasChanged']) {
+            if (this.events[i] != null && this.events[i]['hasChanged']) {
                 doSaving = true;
                 var id   = this.events[i]['id'];
 
@@ -823,7 +826,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             // For each event...
             for (var otherEvent in this.events) {
                 // ...different to the received event...
-                if (otherEvent != currentEvent) {
+                if (this.events[otherEvent] != null && otherEvent != currentEvent) {
                     // ...that happens in the same day...
                     if (this.events[currentEvent]['dayOrder'] == this.events[otherEvent]['dayOrder']) {
                         // ...check whether it shares time with current half of hour of the received event.
@@ -936,13 +939,17 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    Checks every event and updates its 'simultaneous' type properties
 
         for (var i in this.events) {
-            var simultEvents = this.isSharingSpace(i);
-            if (simultEvents['sharing']) {
-                this.events[i]['simultWidth']  = true;
-                this.events[i]['simultAmount'] = simultEvents['amountEvents'];
-                this.events[i]['simultOrder']  = simultEvents['order'];
-            } else {
-                this.events[i]['simultWidth'] = false;
+            if (this.events[i] != null) {
+                // parseInt is very important here:
+                i = parseInt(i);
+                var simultEvents = this.isSharingSpace(i);
+                if (simultEvents['sharing']) {
+                    this.events[i]['simultWidth']  = true;
+                    this.events[i]['simultAmount'] = simultEvents['amountEvents'];
+                    this.events[i]['simultOrder']  = simultEvents['order'];
+                } else {
+                    this.events[i]['simultWidth']  = false;
+                }
             }
         }
     },

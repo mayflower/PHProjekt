@@ -42,10 +42,7 @@
         {% endifequal %}
         ">
         <div id="plainDiv{{event.order}}" class="eventsDivSecond" 
-        style="border-width: {{eventsAttr.borderWidth}}px; cursor: pointer;">
-            {{event.timeDescrip}} {{event.title|safe}} <br>
-            {{event.notes|safe}}
-        </div>
+        style="border-width: {{eventsAttr.borderWidth}}px; cursor: pointer;"></div>
         <div dojoType="phpr.Calendar.ResizeHandle" resizeAxis="y" activeResize="true" targetId="plainDiv{{event.order}}"
         id="eventResize{{event.order}}"
         style="bottom: 0; width: 100%; position: absolute;"></div>

@@ -440,11 +440,13 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         var wholeEndTime   = date2.substr(11, 5);
 
         // 4 - Delete all divs of dragged event from main array
-        this.events = dojo.filter(this.events,
-            function(elem) {
-                return elem['multDayParent'] != parentDiv;
+        for (var i in this.events) {
+            if (this.events[i] != null && this.events[i]['multDay']) {
+                if (this.events[i]['multDayParent'] == parentDiv) {
+                    this.events[i] = null;
+                }
             }
-        )
+        }
 
         // 5 - Generate new this.events elements for this event (one per day shown in the grid)
         var eventsSplitted = this.splitMultDayEvent(wholeStartDate, wholeStartTime, wholeEndDate, wholeEndTime);
@@ -477,7 +479,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
 
         var id = this.events[index]['id'];
         for (var i in this.events) {
-            if (i != index && id == this.events[i]['id']) {
+            if (this.events[i] != null && i != index && id == this.events[i]['id']) {
                 // This is another div of received event!
                 if (!visible) {
                     var mode = 'hidden';
@@ -529,9 +531,12 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         // Summary:
         //    Adds an event to 'events' class array. Returns parent index.
 
-        var nextEvent = this.events.length;
-        if (this.events[0] == undefined) {
-            nextEvent = 0;
+        var nextEvent = 0;
+        for (var i = 0; i - 1 < this.events.length; i++) {
+            if (this.events[i] == null) {
+                var nextEvent = i;
+                break;
+            }
         }
         var newEventDiv            = new Array();
         newEventDiv['shown']       = eventInfo['shown'];
@@ -540,7 +545,6 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         newEventDiv['title']       = title;
         newEventDiv['timeDescrip'] = eventInfo['timeDescrip'];
         newEventDiv['notes']       = notes;
-        newEventDiv['class']       = '';
         newEventDiv['date']        = eventInfo['date']
         newEventDiv['startTime']   = eventInfo['startTime'];
         newEventDiv['endTime']     = eventInfo['endTime'];
