@@ -42,12 +42,12 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     _gridBoxWidthPrev:    null,
     _calenSchedWidthPrev: null,
     _saveChanges:         null,
-    eventHasBeenDragged:  null,
+    eventDivMoved:        false,
+    eventClickDisabled:   false,
     stepH:                null,
     stepY:                null,
     posHMax:              null,
     posYMaxComplement:    null,
-    eventClickDisabled:   false,
 
     // General constants
     SCHEDULE_START_HOUR: 8,
@@ -1271,6 +1271,9 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
         var originalLeft   = this.parentClass.dayToDivPosition(movedEvent['dayOrder'], true);
         var originalTop    = this.parentClass.timeToDivPosition(movedEvent['startTime'], true);
 
+        // Following value will be checked by onMoveStop function of this class
+        this.parentClass.eventClickDisabled = true;
+
         // Calculate new left position
         if (movedEvent['simultWidth']) {
             //  If event is concurrent and it is not the first one from left to right, attach its left side to column
@@ -1321,9 +1324,8 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
             s.top  = leftTop.t + "px";
             this.onMoved(mover, leftTop);
 
-            // Following values will be checked by onMoveStop function of this class
-            this.parentClass.eventHasBeenDragged = true;
-            this.parentClass.eventClickDisabled  = true;
+            // Following value will be checked by onMoveStop function of this class
+            this.parentClass.eventDivMoved = true;
 
             // Update descriptive content of the event
             this.parentClass.eventMoved(this.node, false);
@@ -1341,11 +1343,11 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
         // Following code has been added for this view, it calls eventMoved view class function or opens the form with
         // the clicked event.
 
-        if (this.parentClass.eventHasBeenDragged) {
+        if (this.parentClass.eventDivMoved) {
             // The event has been dragged, update descriptive content of the event and internal array
             this.parentClass.eventMoved(this.node, true);
             // Allow the event to be just clicked to open it in the form, but wait a while first...
-            this.parentClass.eventHasBeenDragged = false;
+            this.parentClass.eventDivMoved = false;
             setTimeout('dojo.publish("Calendar.enableEventDivClick")', 500);
         } else {
             if (!this.parentClass.eventClickDisabled) {
@@ -1355,6 +1357,7 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
                 dojo.publish('Calendar.setUrlHash', [phpr.module, eventId]);
             }
         }
+        this.parentClass.eventClickDisabled = false;
     }
 });
 
