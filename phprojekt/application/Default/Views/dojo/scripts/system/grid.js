@@ -165,15 +165,19 @@ dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
         if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
             return this.formatEditing(d, inRowIndex);
         } else {
-            var maxLength = (this.getHeaderNode().offsetWidth - 21) / 7;
-            var output    = d.toString();
+            if (d) {
+                var maxLength = (this.getHeaderNode().offsetWidth - 21) / 7;
+                var output    = d.toString();
 
-            if (output.length > maxLength) {
-                output = output.substr(0, maxLength) + '...';
+                if (output.length > maxLength) {
+                    output = output.substr(0, maxLength) + '...';
+                }
+                output = output.replace(/&/g, "&amp;");
+                output = output.replace(/</g, "&lt;");
+                output = output.replace(/>/g, "&gt;");
+            } else {
+                var output = '';
             }
-            output = output.replace(/&/g, "&amp;");
-            output = output.replace(/</g, "&lt;");
-            output = output.replace(/>/g, "&gt;");
 
             return output;
         }

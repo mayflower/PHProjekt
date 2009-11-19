@@ -28,9 +28,7 @@ dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
     },
 
     addModuleTabs:function(data) {
-        if (this.id > 0) {
-            this.addTab(this.render(["phpr.Default.template.history", "content.html"]), 'tabHistory', 'History');
-        }
+        this.addHistoryTab();
     },
 
     addBasicFields:function() {

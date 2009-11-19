@@ -830,14 +830,13 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                                 type:     phpr.grid.cells.Text,
                                 styles:   'text-align: left;'
                             },
-                            rows: [this.gridLayout]
+                            rows: this.gridLayout
                 }]
             }, document.createElement('div'));
 
             this.setClickEdit();
 
             this._node.attr('content', this.grid.domNode);
-            this.grid.startup();
             this.loadGridSorting();
             this.loadGridScroll();
 

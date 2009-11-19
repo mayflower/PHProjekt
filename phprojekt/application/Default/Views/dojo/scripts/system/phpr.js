@@ -1114,3 +1114,15 @@ dojo.declare("phpr.ScrollPane", [dijit.layout._LayoutWidget, dijit._Templated], 
         return this.wrapper["scrollWidth"] - this.wrapper["offsetWidth"];
     }
 });
+
+phpr.inArray = function(needle, haystack) {
+    var key = '';
+
+    for (key in haystack) {
+        if (haystack[key] === needle) {
+            return true;
+        }
+    }
+
+    return false;
+};

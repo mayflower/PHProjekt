@@ -311,17 +311,18 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             this.fieldTemplate = new phpr.Default.Field();
 
             for (var i = 0; i < meta.length; i++) {
-                var itemtype     = meta[i]["type"];
-                var itemid       = meta[i]["key"];
-                var itemlabel    = meta[i]["label"];
-                var itemdisabled = meta[i]["readOnly"];
-                var itemrequired = meta[i]["required"];
-                var itemlabel    = meta[i]["label"];
-                var itemvalue    = data[0][itemid];
-                var itemrange    = meta[i]["range"];
-                var itemtab      = meta[i]["tab"] || 1;
-                var itemhint     = meta[i]["hint"];
-                var itemlength   = meta[i]["length"] || 0;
+                var fieldValues  = this.setFieldValues(meta[i], data[0]);
+                var itemtype     = fieldValues['type'];
+                var itemid       = fieldValues['id'];
+                var itemlabel    = fieldValues['label'];
+                var itemdisabled = fieldValues['disabled'];
+                var itemrequired = fieldValues['required'];
+                var itemlabel    = fieldValues['label'];
+                var itemvalue    = fieldValues['value'];
+                var itemrange    = fieldValues['range'];
+                var itemtab      = fieldValues['tab'];
+                var itemhint     = fieldValues['hint'];
+                var itemlength   = fieldValues['length'];
 
                 if (i == 0) {
                     this.setBreadCrumbItem(itemvalue);
@@ -416,18 +417,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             }
 
             this._formNode.attr('content', this.form.domNode);
-            this.form.startup();
 
-            this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"), {
-                writePermissions:  this._writePermissions,
-                deletePermissions: this._deletePermissions,
-                saveText:          phpr.nls.get('Save'),
-                deleteText:        phpr.nls.get('Delete')
-            });
-
-            // Action buttons for the form
-            dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
-            dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
+            this.setFormButtons();
 
             this.addModuleTabs(data);
 
@@ -436,7 +427,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 phpr.DataStore.deleteData({url: this._url});
             }
 
-            if (this.id > 0 && dijit.byId('tabHistory')) {
+            if (this.id > 0 && this.useHistoryTab()) {
                 dojo.connect(dijit.byId("tabHistory"), "onShow", dojo.hitch(this, "showHistory"));
             }
 
@@ -448,6 +439,53 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
             this.postRenderForm();
         }
+    },
+
+    setFieldValues:function(meta, data) {
+        // Summary:
+        //    Set the fields values for render the form
+        // Description:
+        //    Set the fields values for render the form
+        var fieldValues = {
+            type:     meta['type'],
+            id:       meta['key'],
+            label:    meta['label'],
+            disabled: meta['readOnly'],
+            required: meta['required'],
+            label:    meta['label'],
+            value:    data[meta['key']],
+            range:    meta['range'],
+            tab:      meta['tab'] || 1,
+            hint:     meta['hint'],
+            length:   meta['length'] || 0
+        };
+
+        return this.setCustomFieldValues(fieldValues);
+    },
+
+    setCustomFieldValues:function(fieldValues) {
+        // Summary:
+        //    Custom function for setFieldValues
+        // Description:
+        //    Custom function for setFieldValues
+        return fieldValues;
+    },
+
+    setFormButtons:function() {
+        // Summary:
+        //    Render the save and delete buttons
+        // Description:
+        //    Render the save and delete buttons
+        this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"), {
+            writePermissions:  this._writePermissions,
+            deletePermissions: this._deletePermissions,
+            saveText:          phpr.nls.get('Save'),
+            deleteText:        phpr.nls.get('Delete')
+        });
+
+        // Action buttons for the form
+        dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
+        dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
     },
 
     useCache:function() {
@@ -479,9 +517,24 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Add all the tabs that are not the basic data
         this.addAccessTab(data);
         this.addNotificationTab(data);
-        if (this.id > 0) {
+        this.addHistoryTab();
+    },
+
+    addHistoryTab:function() {
+        // Summary:
+        //    History tab
+        // Description:
+        //    Display all the history of the item
+        if (this.id > 0 && this.useHistoryTab()) {
             this.addTab(this.render(["phpr.Default.template.history", "content.html"]), 'tabHistory', 'History');
         }
+    },
+
+    useHistoryTab:function() {
+        //    Return true or false if the history tab is used
+        // Description:
+        //    Return true or false if the history tab is used
+        return true;
     },
 
     addBasicFields:function() {
@@ -592,7 +645,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 this.formsWidget[i].validate();
                 return false;
             }
-            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
+            var sendData = this.formsWidget[i].attr('value');
+            if (typeof(sendData) != 'object') {
+                sendData = new Array(sendData);
+            }
+            this.sendData = dojo.mixin(this.sendData, sendData);
         }
         return true;
     },

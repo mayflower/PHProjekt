@@ -120,9 +120,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.addModuleTab(data);
         this.addRoleTab(data);
         this.addNotificationTab(data);
-        if (this.id > 0) {
-            this.addTab(this.render(["phpr.Default.template.history", "content.html"]), 'tabHistory', 'History');
-        }
+        this.addHistoryTab();
     },
 
     newRoleUser:function() {

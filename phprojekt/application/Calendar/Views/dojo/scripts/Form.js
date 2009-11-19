@@ -152,9 +152,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
         this.addRecurrenceTab(data);
         this.addNotificationTab(data);
-        if (this.id > 0) {
-            this.addTab(this.render(["phpr.Default.template.history", "content.html"]), 'tabHistory', 'History');
-        }
+        this.addHistoryTab();
     },
 
     postRenderForm:function() {
