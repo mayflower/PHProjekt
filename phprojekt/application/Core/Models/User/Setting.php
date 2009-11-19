@@ -206,8 +206,8 @@ class Core_Models_User_Setting
         $setting->setModule('User');
 
         // Passwords
-        $confirmPassValue = $params['confirmValue'];
-        $oldPassValue     = $params['oldValue'];
+        $confirmPassValue = (isset($params['confirmValue'])) ? $params['confirmValue'] : null;
+        $oldPassValue     = (isset($params['oldValue'])) ? $params['oldValue'] : null;
         $newPassValue     = $params['password'];
         $currentPassValue = $setting->getSetting('password');
 

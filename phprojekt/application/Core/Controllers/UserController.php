@@ -180,7 +180,8 @@ class Core_UserController extends Core_IndexController
 
         if (!empty($message)) {
             $message = Phprojekt::getInstance()->translate($message);
-            $type = "error";
+            $type    = "error";
+            $id      = 0;
         } else {
             if (empty($id)) {
                 $model   = $this->getModelObject();
@@ -203,7 +204,7 @@ class Core_UserController extends Core_IndexController
         $return = array('type'    => $type,
                         'message' => $message,
                         'code'    => 0,
-                        'id'      => $model->id);
+                        'id'      => $id);
 
         Phprojekt_Converter_Json::echoConvert($return);
     }
