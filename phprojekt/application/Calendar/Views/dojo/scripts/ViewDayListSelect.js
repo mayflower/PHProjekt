@@ -26,7 +26,6 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
     _headerDataUrl: null,
     _header:        Array(),
-    _schedule:      Array(24),
     _users:         Array(),
 
     afterConstructor:function() {
@@ -108,6 +107,8 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
         //    Fills the array with the users and all the possible points in time for this day view: 8:00, 8:30, 9:00
         // and so on, until 19:30. Each of that rows will have as many columns as users plus simultaneous events exist.
         // Also sets for every row whether it is even or not.
+
+        this._schedule = new Array(24);
 
         for (var hour = 8; hour < 20; hour++) {
             for (var half = 0; half < 2; half++) {

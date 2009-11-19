@@ -25,7 +25,6 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
     _header:              Array(7),
-    _schedule:            null,
     _scrollLastDirection: 0,
 
     COLOR_WEEKDAY:      '#FFFFFF',
@@ -103,9 +102,12 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         // It includes not only the days of this month but the necessary days of the previous and next month in
         // order to fill 4 or 6 week rows, from Monday to Sunday.
 
-        var today       = new Date();
-        today           = this.formatDate(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate());
-        this._schedule  = new Array();
+        var today = new Date();
+        today     = this.formatDate(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate());
+
+        // First dimension is each row shown, the amount of rows depends on each month:
+        this._schedule = new Array();
+
         var dateTemp    = this.stringToDate();
         var daysInMonth = dojo.date.getDaysInMonth(dateTemp);
         dateTemp.setDate(1);
