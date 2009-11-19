@@ -24,7 +24,7 @@ dojo.provide("phpr.Default.SubModule.Form");
 dojo.declare("phpr.Default.SubModule", phpr.Component, {
     // Internal vars
     gridBox:    null,
-    detailsBox: null
+    detailsBox: null,
     subForm:    null,
     subGrid:    null,
     module:     null,

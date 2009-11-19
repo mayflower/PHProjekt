@@ -208,7 +208,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
             }
             options.push(range[j]);
         }
-        if (!found) {
+        if (!found && first) {
             itemvalue = first;
         }
         var html = this.render(["phpr.Default.template", "formfilterselect.html"], null, {
