@@ -133,10 +133,12 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonDetailsWithNoItem()
     {
         $this->setRequestUrl('Minutes/item/jsonDetail/minutesId/3');
-        $this->getResponse();
+        $response = $this->getResponse();
 
-        $this->assertTrue($this->error);
-        $this->assertContains(Minutes_ItemController::NOT_FOUND, $this->errormessage);
+        $this->assertContains('"data":[{"id":0,"projectId":0,"rights":{"currentUser":{"moduleId":11,"itemId":0,'
+            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
+            . '"download":true,"admin":true}},"minutesId":0,"topicId":0,"sortOrder":0,"title":"","topicType":0,'
+            . '"comment":"","topicDate":"","userId":""}]', $response);
     }
 
     /**
@@ -178,7 +180,7 @@ class Minutes_ItemController_Test extends FrontInit
     {
         $this->setRequestUrl('Minutes/item/jsonListItemSortOrder/minutesId/3');
         $response = $this->getResponse();
-        $expected = '[{"sortOrder":"1","title":"DerTitel"},{"sortOrder":"2","title":"SecondTitle"}]';
+        $expected = '[{"id":"1","name":"DerTitel"},{"id":"2","name":"SecondTitle"}]';
         $this->assertContains($expected, $response);
     }
 
@@ -289,8 +291,8 @@ class Minutes_ItemController_Test extends FrontInit
         $this->setRequestUrl('Minutes/item/jsonListItemSortOrder/minutesId/3');
         $response = $this->getResponse();
 
-        $this->assertContains('[{"sortOrder":"1","title":"DerTitel"},'
-            . '{"sortOrder":"2","title":"StatementTitle"},{"sortOrder":"3","title":"SecondTitleSecondSave"}',
+        $this->assertContains('[{"id":"1","name":"DerTitel"},'
+            . '{"id":"2","name":"StatementTitle"},{"id":"3","name":"SecondTitleSecondSave"}',
             $response);
     }
 

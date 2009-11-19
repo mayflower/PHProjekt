@@ -106,7 +106,7 @@ class Minutes_ItemController extends IndexController
         $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            $record = $itemModel;
         } else {
             $record = $itemModel->find($id);
         }
@@ -249,8 +249,8 @@ class Minutes_ItemController extends IndexController
      *
      * The return data have:
      * <pre>
-     *  - sortOrder: Order number.
-     *  - title:     Title of the item.
+     *  - id:   Order number.
+     *  - name: Title of the item.
      * </pre>
      *
      * REQUIRES request parameters:
@@ -269,8 +269,8 @@ class Minutes_ItemController extends IndexController
 
         $return = array('data' => array());
         foreach ($items as $item) {
-            $return['data'][] = array('sortOrder' => $item->sortOrder,
-                                      'title'     => $item->title);
+            $return['data'][] = array('id'   => $item->sortOrder,
+                                      'name' => $item->title);
         }
 
         Phprojekt_Converter_Json::echoConvert($return);

@@ -19,26 +19,13 @@
  */
 
 dojo.provide("phpr.Minutes.Form");
-dojo.provide("phpr.Minutes.ItemGrid");
 
 dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
-    // Current item id
-    itemId: null,
-
     // Request url for get the data
-    _peopleUrl:   null,
-    _itemGridUrl: null,
-    _itemUrl:     null,
-
-    // List of item types. used as cache.
-    _itemTypes: [],
+    _peopleUrl: null,
 
     // Global flag needed for confirm dialogs
     _allowSubmit: false,
-
-    // Internal Widgets
-    _minutesGridBox:      null,
-    _minutesDetailsRight: null,
 
     initData:function() {
         // Summary:
@@ -55,12 +42,12 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
 
     addModuleTabs:function(data) {
         // Summary:
-        //    Add default module tabs plus Items tab
+        //    Add default module tabs plus Items and mail tabs
         // Description:
-        //    Extends inherited method to add the Items tab,
+        //    Extends inherited method to add the Items and mail tabs,
         this.inherited(arguments);
 
-        // render additional tabs only if there is an ID
+        // Render additional tabs only if there is an ID
         // (these tabs don't make sense for unsaved records)
         if (this.id > 0) {
             this.addItemsTab(data);
@@ -76,30 +63,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    See Default/Form.js, method addAccessTab for
         //    a more detailed example of adding tabs.
         this.addTab('', 'tabItems', 'Items', 'itemsFormTab');
-
-        dojo.byId('itemsFormTab').style.display = 'none';
-
-        var minutesBox = new dijit.layout.ContentPane({
-            region: 'center'
-        }, dojo.doc.createElement('div'));
-
-        var minutesLayout = new dijit.layout.BorderContainer({
-            design: 'sidebar'
-        }, dojo.doc.createElement('div'));
-
-        this._minutesGridBox = new dijit.layout.ContentPane({
-            region: 'center'
-        }, dojo.doc.createElement('div'));
-
-        this._minutesDetailsRight = new dijit.layout.ContentPane({
-            region: 'right',
-            style:  'width: 50%;'
-        }, dojo.doc.createElement('div'));
-
-        minutesLayout.addChild(this._minutesGridBox);
-        minutesLayout.addChild(this._minutesDetailsRight);
-        minutesBox.attr("content", minutesLayout.domNode);
-        dijit.byId('tabItems').attr('content', minutesBox.domNode);
+        this.itemModule = new phpr.Minutes.Item(this.id);
+        this.itemModule.fillTab('tabItems');
     },
 
     addMailTab:function(data) {
@@ -135,307 +100,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', dojo.hitch(this, function() {
             window.open(phpr.webpath + 'index.php/Minutes/index/pdf/id/' + this.id, 'pdf');
         }));
-    },
-
-    postRenderForm: function() {
-        // Summary:
-        //    Render grid
-        // Description:
-        //    Render the datagrid after the rest of the form has been
-        //    processed. Neccessary because the datagrid won't render
-        //    unless dimensions of all surrounding elements are known.
-        dojo.connect(dijit.byId("tabItems"), "onShow", dojo.hitch(this, function() {
-            this._itemGridUrl = phpr.webpath + "index.php/Minutes/item/jsonList/minutesId/" + this.id;
-            phpr.DataStore.addStore({"url": this._itemGridUrl});
-            phpr.DataStore.requestData({"url": this._itemGridUrl, processData: dojo.hitch(this, "_buildGrid")});
-        }));
-    },
-
-    _buildGrid: function() {
-        // Summary:
-        //    Return grid object instance
-        // Description:
-        //    Internal method for creating and configuring a grid object for MinutesItems.
-        //    Row configuration is defined here.
-        this.loadSubForm();
-        var self   = this;
-        var layout = [{
-            cells: [[
-                     {
-                         name:    phpr.nls.get('Topic'),
-                         field:   'topicId',
-                         styles:  "text-align: center;",
-                         width:   '9%',
-                         rowSpan: 2
-                     },
-                     {
-                         name:   phpr.nls.get('Title'),
-                         field:  'title',
-                         styles: "text-align: left;",
-                         width:  '46%'
-                     },
-                     {
-                         name:   phpr.nls.get('Type'),
-                         field:  'topicType',
-                         styles: "text-align: center;",
-                         width:  '10%',
-                         type:   dojox.grid.cells.Select,
-                         formatter:function(value) {
-                             var typeList = self.getItemTypes();
-                             for (var i = 0; i < typeList.length; i++) {
-                                 if (typeList[i].id && typeList[i].id == value) {
-                                     return typeList[i].name;
-                                 }
-                             }
-                             return value;
-                         }
-                     },
-                     {
-                         name:   phpr.nls.get('Date'),
-                         field:  'topicDate',
-                         styles: "text-align: center;",
-                         width:  '15%',
-                         formatter:function(value) {
-                             if (value == "0000-00-00") {
-                                 return '';
-                             }
-                             return value;
-                         }
-                     },
-                     {
-                         name:   phpr.nls.get('Who'),
-                         field:  'userId',
-                         styles: "text-align: center;",
-                         width:  '20%',
-                         formatter:function(value) {
-                             var userList = phpr.DataStore.getData({url: self._peopleUrl});
-                             for(var i=0; i < userList.length; i++) {
-                                 if (userList[i].id && userList[i].id == value) {
-                                     return userList[i].display;
-                                 }
-                             }
-                             return '';
-                         }
-                     },
-                 ],[
-                     {
-                         name:    phpr.nls.get('Comment'),
-                         field:   'comment',
-                         styles:  "text-align: left;",
-                         width:   '100%',
-                         colSpan: 4
-                     }
-                 ]]
-            }];
-
-        var store = this._getItemGridStore();
-        var grid  = new dojox.grid.DataGrid({
-            store:     store,
-            structure: layout
-        }, document.createElement('div'));
-
-        dojo.connect(grid, 'onRowClick', dojo.hitch(this, function(e) {
-            var data      = e.grid.getItem(e.rowIndex);
-            this.itemId   = data.id;
-            this._itemUrl = phpr.webpath + 'index.php/Minutes/item/jsonDetail/minutesId/' + this.id + '/id/' + data.id,
-            phpr.DataStore.addStore({url: this._itemUrl});
-            phpr.DataStore.requestData({url: this._itemUrl, processData: dojo.hitch(this, function() {
-                this.loadSubForm();
-            })});
-        }));
-
-        this._minutesGridBox.attr('content', grid.domNode);
-        grid.startup();
-    },
-
-    _getItemGridStore: function() {
-        // Summary:
-        //    Return data store for the grid
-        // Description:
-        //    Creates Dojo.Data.ItemFileWriteStore instance for
-        //    displaying MinutesItems in the grid.
-        var content  = dojo.clone(phpr.DataStore.getData({url: this._itemGridUrl}));
-        var gridData = {items: new Array()};
-        for (var i in content) {
-            gridData.items.push(content[i]);
-        }
-        return new dojo.data.ItemFileWriteStore({"data": gridData});
-    },
-
-    updateGrid: function() {
-        // Summary:
-        //    Refreshes the grid's data source
-        // Description:
-        //    Recreated the data store for the grid, which automatically
-        //    updates the view
-        phpr.DataStore.deleteData({"url": this._itemGridUrl});
-        phpr.DataStore.requestData({"url": this._itemGridUrl, processData: dojo.hitch(this, "_buildGrid")});
-    },
-
-    saveSubFormData: function() {
-        // Summary:
-        //    Save the detail form for a MinutesItem
-        // Description:
-        //    Retrieves the data from the detail form, posts it to
-        //    the sever and refreshes the grid to reflect changes.
-        var sendData    = new Array();
-        var formsWidget = dijit.byId("minutesItemForm");
-        if (!formsWidget.isValid()) {
-            formsWidget.validate();
-            return false;
-        }
-        sendData = dojo.mixin(sendData, formsWidget.attr('value'));
-
-        phpr.send({
-            url:       phpr.webpath + 'index.php/Minutes/item/jsonSave/minutesId/' + this.id + '/id/' + this.itemId,
-            content:   sendData,
-            onSuccess: dojo.hitch(this, function(data) {
-                new phpr.handleResponse('serverFeedback', data);
-                if (data.type == 'success') {
-                    var itemUrl = phpr.webpath + 'index.php/Minutes/item/jsonDetail/minutesId/' + this.id + '/id/'
-                        + this.itemId;
-                    phpr.DataStore.deleteData({url: itemUrl});
-                    this.itemId = null;
-                    this.updateGrid();
-                }
-            })
-        });
-    },
-
-    deleteSubFormData: function() {
-        // Summary:
-        //    Deletes the currently active MinutesItem
-        // Description:
-        //    Posts current form data to the server.
-        //    Resets detail form to default values, allowing to enter a new record.
-        phpr.send({
-            url:       phpr.webpath + 'index.php/Minutes/item/jsonDelete/minutesId/' + this.id + '/id/' + this.itemId,
-            onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (data.type == 'success') {
-                    var itemUrl = phpr.webpath + 'index.php/Minutes/item/jsonDetail/minutesId/' + this.id + '/id/'
-                        + this.itemId;
-                    phpr.DataStore.deleteData({url: itemUrl});
-                    this.itemId = null;
-                    this.updateGrid();
-                }
-            })
-        });
-    },
-
-    getItemTypes: function() {
-        // Summary:
-        //    Returns a list of item types
-        // Description:
-        //    Will return a list of valid item types for MinutesItems from metadata.
-        //    Uses cached property if available.
-        if (this._itemTypes.length == 0) {
-            meta = dojo.clone(phpr.DataStore.getMetaData({url: this._itemGridUrl}));
-            for (var i = 0; i < meta.length; i++) {
-                if (meta[i]['key'] == 'topicType') {
-                    this._itemTypes = meta[i]['range'];
-                }
-            }
-        }
-        return this._itemTypes;
-    },
-
-    loadSubForm: function() {
-        // Summary:
-        //    Load detail form and populate it
-        // Description:
-        //    Loads the detail form template for MinutesItems and populates it with
-        //    either default data or data from a loaded MinutesItem. Also registers
-        //    event listeners for various detail form behaviours.
-        this._itemsUrl = phpr.webpath + "index.php/Minutes/item/jsonListItemSortOrder/minutesId/" + this.id;
-        phpr.DataStore.addStore({"url": this._itemsUrl, "noCache": true });
-        phpr.DataStore.requestData({"url": this._itemsUrl, processData: dojo.hitch(this, function() {
-            if (this.itemId && this.itemId > 0) {
-                var itemFormData = dojo.clone(phpr.DataStore.getData({url: this._itemUrl})).shift();
-            } else {
-                // Use default empty dataset
-                var itemFormData = {
-                    topicType:  1,
-                    userId:     0,
-                    sortOrder:  0,
-                    title:      '',
-                    comment:    '',
-                    topicDate:  ''
-                };
-            }
-
-            var placeholders = {
-                lblTitle:       phpr.nls.get('Title'),
-                lblComment:     phpr.nls.get('Comment'),
-                lblUserId:      phpr.nls.get('Who'),
-                lblTopicType:   phpr.nls.get('Type'),
-                lblTopicDate:   phpr.nls.get('Date'),
-                lblParentOrder: phpr.nls.get('Sort after'),
-                lblSubmit:      phpr.nls.get('Save'),
-                lblDelete:      phpr.nls.get('Delete'),
-                lblClear:       phpr.nls.get('New'),
-                parentOrder:    itemFormData.sortOrder - 1 >= 0 ? itemFormData.sortOrder - 1 : 0,
-                users:          phpr.DataStore.getData({url: this._peopleUrl}),
-                items:          phpr.DataStore.getData({url: this._itemsUrl}),
-                types:          this.getItemTypes(),
-                editItem:       this.itemId > 0,
-                lblRequired:    phpr.nls.get('Required Field')
-            };
-            placeholders = dojo.mixin(placeholders, itemFormData);
-
-            // Render the template
-            this.render(["phpr.Minutes.template", "minutesItemForm.html"], this._minutesDetailsRight.domNode,
-                placeholders);
-
-            // Connect save/delete events to buttons
-            dojo.connect(dijit.byId('minutesItemFormSubmit'), 'onClick', dojo.hitch(this, this.saveSubFormData));
-            dojo.connect(dijit.byId('minutesItemFormDelete'), 'onClick', dojo.hitch(this, this.deleteSubFormData));
-
-            // Have reset button reload the form using defaults
-            dojo.connect(dijit.byId('minutesItemFormClear'), 'onClick', dojo.hitch(this, function() {
-                this.itemId = null;
-                this.loadSubForm();
-            }));
-
-            // Have the appropriate input fields appear for each type
-            this._switchItemFormFields(placeholders.topicType); // defaults
-            dojo.connect(dijit.byId('minutesItemFormTopicType'), 'onChange', dojo.hitch(this, this._switchItemFormFields));
-
-            // Set cursor to title field when all is done
-            dojo.byId("minutesItemFormTitle").focus();
-        })
-        });
-
-    },
-
-    _switchItemFormFields: function(typeValue) {
-        // Summary:
-        //    Toggle visibility of detail form fields
-        // Description:
-        //    Hides or shows the appropriate form fields for the currently
-        //    selected topicType. Currently registered types are:
-        //    1='Topic', 2='Statement',3='TODO',4='Decision',5='Date'
-        var display = (dojo.isIE) ? 'block' : 'table-row';
-        switch(parseInt(typeValue)) {
-            case 3:
-                dojo.style(dojo.byId('minutesItemFormRowUser'), "display", display);
-                dojo.style(dojo.byId('minutesItemFormRowDate'), "display", display);
-                dijit.byId('minutesItemFormUserId').attr("disabled", false);
-                dijit.byId('topicDate').attr("disabled", false);
-                break;
-            case 5:
-                dojo.style(dojo.byId('minutesItemFormRowUser'), "display", "none");
-                dojo.style(dojo.byId('minutesItemFormRowDate'), "display", display);
-                dijit.byId('minutesItemFormUserId').attr("disabled", true);
-                dijit.byId('topicDate').attr("disabled", false);
-                break;
-            default:
-                dojo.style(dojo.byId('minutesItemFormRowUser'), "display", "none");
-                dojo.style(dojo.byId('minutesItemFormRowDate'), "display", "none");
-                dijit.byId('minutesItemFormUserId').attr("disabled", true);
-                dijit.byId('topicDate').attr("disabled", true);
-                break;
-        }
     },
 
     prepareSubmission: function() {
