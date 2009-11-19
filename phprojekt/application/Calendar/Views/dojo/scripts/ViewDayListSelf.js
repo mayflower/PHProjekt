@@ -40,8 +40,6 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
     setUrl:function() {
         // Summary:
         //    Sets the url to get the data from
-        // Description:
-        //    Sets the url for get the data from
         this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDayListSelf/date/" + this._date;
     },
 
@@ -72,6 +70,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         this.render(["phpr.Calendar.template", "dayListSelf.html"], dojo.byId('gridBox'), {
             widthTable:           this._widthTable,
             widthHourColumn:      this._widthHourColumn,
+            date:                 this._date,
             schedule:             this._schedule,
             events:               this.events,
             furtherEvents:        this._furtherEvents,
@@ -87,8 +86,6 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
 
     exportData:function() {
         // Summary:
-        //    Open a new window in CSV mode
-        // Description:
         //    Open a new window in CSV mode
         window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvDayListSelf/date/" + this._date);
 

@@ -181,7 +181,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // Summary:
         //    Returns useful data about an event, used to create the schedule table.
         // Description:
-        //    Returns useful data about an event, used to create the schedule table.
+        //    It returns:
         // 1) Whether it is inside or outside the 8:00 to 20:00 range.
         // 2) Time description for the event.
         // 3) Formatted start and end times.
@@ -208,31 +208,15 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             result['range']     = this.SHOWN_INSIDE_CHART;
 
             // Date-time description
-            // What view are we in?
-            if (this.main.weekList != null) {
-                // Week view
-                // Is it a multiple days event?
-                if (!eventInfo['multDay']) {
-                    // No
-                    result['timeDescrip'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, result['startTime'],
-                        result['endTime']);
-                } else {
-                    // Yes
-                    result['timeDescrip'] = this.eventDateTimeDescrip(eventInfo['multDayPos'], result['startTime'],
-                        result['endTime']);
-                }
-            } else if (this.main.dayListSelf != null) {
-                // Day view
-                // Is it a multiple days event?
-                if (!eventInfo['multDay']) {
-                    // No
-                    result['timeDescrip'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, result['startTime'],
-                        result['endTime']);
-                } else {
-                    // Yes
-                    result['timeDescrip'] = this.eventDateTimeDescrip(eventInfo['multDayPos'], result['startTime'],
-                        result['endTime']);
-                }
+            // Is it a multiple days event?
+            if (!eventInfo['multDay']) {
+                // No
+                result['timeDescrip'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, result['startTime'],
+                    result['endTime']);
+            } else {
+                // Yes
+                result['timeDescrip'] = this.eventDateTimeDescrip(eventInfo['multDayPos'], result['startTime'],
+                    result['endTime']);
             }
         } else {
             // No - Shown out of the schedule
@@ -372,6 +356,12 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         } else if (this.main.dayListSelf != null) {
             this.cellTimeHeight = scheduleBkg[0].offsetHeight;
         }
+
+        // Ie8 obtains badly cell height - dojo.isIE returns 7 when using 8.0
+        var isIe8 = navigator.userAgent.indexOf('MSIE 8')
+        if (this.main.dayListSelf != null && isIe8 > -1) {
+            this.cellTimeHeight -= 1;
+        }
     },
 
     updateSizeValuesPart2:function() {
@@ -393,7 +383,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    Receives a time string and returns a number for the corresponding vertical position in pixels.
         // Parameters:
         //    moment: string, e.g.: '14:40'
-        //    isEvent: whether the number returned will be used to position an event (not the background)
+        //    isEvent: whether the number returned will be used to position an event (not background 'eventsArea' div)
         //    type: used when isEvent = true, whether we are receiving the start or the end time of the event.
 
         var tmp     = moment.split(':');
@@ -430,7 +420,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    Receives a week day number from 0 to 6 and returns a number for the corresponding horizontal position in
         // pixels.
         // Parameters:
-        //    isEvent: whether the number returned will be used to position an event (not the background)
+        // isEvent: whether the number returned will be used to position an event (not the background 'eventsArea' div)
 
         var widthDays = dojo.byId('scheduleBackground').offsetWidth - this._cellTimeWidth;
         if (this.main.weekList != null) {
@@ -596,8 +586,8 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // description, change shapes of events according to 'simultaneous events' criteria and activate Save button.
         // Parameters:
         //   node: the div node of the moved event
-        //   dropped: whether the mouse button was released, so the dragged actioni has been finished
-        //   resized: whether the event has just been resized (not moved)
+        //   dropped: (boolean) whether the mouse button was released, so the dragged actioni has been finished
+        //   resized: (boolean) whether the event has just been resized (not moved)
 
         // 1 - Put div in the front of stack
         this.putDivInTheFront(node);
@@ -819,7 +809,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // Description:
         //    This function receives an index of this.events and returns whether that event shares visual space with
         // another event, how many events share space with it and the horizontal position that this event will have
-        // among the rest
+        // among the rest.
 
         var result = new Array();
 
@@ -995,7 +985,6 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         tmp              = endTime.split(':');
         var endHour      = parseInt(tmp[0], 10);
         var endMinutes   = parseInt(tmp[1], 10);
-
         var diffHours    = endHour - startHour;
         var difMinutes   = endMinutes - startMinutes;
         var totalHalves  = (diffHours * 2) + (difMinutes / 30);
@@ -1098,7 +1087,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             /*string*/ momentAskedDate, /*string*/ momentAskedTime) {
 
         // Summary:
-        // IMPORTANT: This function is similar to 'processEventInfo' but works for Day views with fixed events.
+        // IMPORTANT: This function is similar to 'processEventInfo' but works for Day Group view with fixed events.
         //    Returns useful data about an event, used to create the schedule table.
         // Description:
         //    Returns useful data about an event, used to create the schedule table. E.g.: whether it is inside or
@@ -1274,8 +1263,9 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
     splitMultDayEvent:function(startDateString, startTimeString, endDateString, endTimeString, onlyDayString) {
         // Summary:
-        //    Splits a multiple days event into as many events as days it lasts and sets to each one dates and times.
-        // If a day is out of present week, it is not returned.
+        //    INSIDE WEEK VIEW: Splits a multiple days event into as many events as days it lasts and sets to each one
+        // dates and times. If a day is out of present week, it is not returned.
+        //    INSIDE DAY VIEW: trims the event returning just the data for the selected day.
         // It also checkes whether the event has at least 1 minute to be shown inside the grid. If not, then it has to
         // be shown under the grid in 'Further events' section
 
@@ -1509,7 +1499,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     addGridEventToArray: function(eventInfo, id, title, notes, parent, wholeStartDate, wholeStartTime, wholeEndDate,
             wholeEndTime) {
         // Summary:
-        //    Adds an event to 'events' class array. Returns parent index.
+        //    Adds an event to 'events' class array. Returns parent index which is useful just for multiple day events.
 
         var nextEvent = 0;
         for (var i = 0; i - 1 < this.events.length; i++) {
@@ -1586,37 +1576,11 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         return result;
     },
 
-    // Debugging function
-    dump:function (arr,level) {
-        var dumped_text = "";
-        if(!level) level = 0;
-
-        //The padding given at the beginning of the line.
-        var level_padding = "";
-        for(var j=0;j<level+1;j++) level_padding += "    ";
-
-        if(typeof(arr) == 'object') { //Array/Hashes/Objects
-            for(var item in arr) {
-                var value = arr[item];
-
-                if(typeof(value) == 'object') { //If it is an array,
-                    dumped_text += level_padding + "'" + item + "' ...\n";
-                    dumped_text += this.dump(value,level+1);
-                } else {
-                    dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
-                }
-            }
-        } else { //Stings/Chars/Numbers etc.
-            dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
-        }
-        return dumped_text;
-    },
-
     fillScheduleArray:function() {
         // Summary:
         //    This function fills the schedule structure and background array
         // Description:
-        //     Fills the array with the header and all the possible points in time for this week view: 8:00, 8:30, 9:00
+        //     Fills the array with all the possible days and hour:minutes for this day or week view: 8:00, 8:30, 9:00
         // and so on, until 19:30. Each of that rows will have as many columns as days. Also sets for every row whether
         // it is even or not.
         for (var hour = 8; hour < 20; hour++) {
@@ -1648,11 +1612,13 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
     updateMultDaysEvent:function(index) {
         // Summary:
-        //    Updates the date and time of all the divs corresponding to a specific multiple days event except for the
-        // moved div, which has just been dragged. Current values will get added the difference between the original
-        // position of the moved div and the dropped position. Also it will be prepared saving data.
+        //    Updates the date and time of all the divs corresponding to a specific multiple days event that has just
+        // been dragged (and dropped). Current values will get added the difference between the original position of the
+        // moved div and the dropped position. Also it will be prepared saving data. The moved div itself could get its
+        // height increased.
         //   Since new divs can appear after the dragging, or existing divs may dissappear, the whole series of divs for
         // this event will be calculated again. Old ones will be deleted from 'events' array and new ones will be added.
+        // In case of Day views, just the moved div will be affected.
 
         // 1 - Obtain days and minutes difference of the dragged event compared with the original position, prepare
         // other variables
@@ -1726,7 +1692,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             onlyDayString);
         var eventsInfo = new Array();
         var parent     = -1;
-        // For each day column (it can't be used 'for (var i in eventsSplitted)':
+        // For each day column (it can't be used 'for (var i in eventsSplitted)'):
         for (var i = 0; i < eventsSplitted.length; i ++) {
             var eventSplitted = eventsSplitted[i];
             if (eventSplitted['dayShownInGrid']) {
@@ -1745,6 +1711,32 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             parent = this.addGridEventToArray(eventInfo, movedEvent['id'], movedEvent['title'], movedEvent['notes'],
                 parent, wholeStartDate, wholeStartTime, wholeEndDate, wholeEndTime);
         }
+    },
+
+    // Debugging function
+    dump:function (arr,level) {
+        var dumped_text = "";
+        if(!level) level = 0;
+
+        //The padding given at the beginning of the line.
+        var level_padding = "";
+        for(var j=0;j<level+1;j++) level_padding += "    ";
+
+        if(typeof(arr) == 'object') { //Array/Hashes/Objects
+            for(var item in arr) {
+                var value = arr[item];
+
+                if(typeof(value) == 'object') { //If it is an array,
+                    dumped_text += level_padding + "'" + item + "' ...\n";
+                    dumped_text += this.dump(value,level+1);
+                } else {
+                    dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+                }
+            }
+        } else { //Stings/Chars/Numbers etc.
+            dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+        }
+        return dumped_text;
     }
 });
 
@@ -1873,13 +1865,20 @@ dojo.declare("phpr.Calendar.ResizeHandle", dojox.layout.ResizeHandle, {
         var tmp = this._getNewCoords(e);
         if(tmp === false){ return; }
 
-        // Stepped dragging added for this view
+        // Stepped dragging added for this views
         var currentHeight  = dojo.style(this.targetDomNode, "height");
         var step           = this.parentClass.cellTimeHeight;
         var sizerDivHeight = this.domNode.offsetHeight;
         var proposedHeight = tmp['h'];
         var steppedHeight  = sizerDivHeight + proposedHeight - (proposedHeight % step)
             + ((5 - this.parentClass.EVENTS_BORDER_WIDTH) * 2) - 7;
+        // Depending on the view and browser the steppedHeight value may be different:
+        if (this.parentClass.main.dayListSelf != null) {
+            steppedHeight += 3;
+            if (dojo.isIE) {
+                steppedHeight += 2;
+            }
+        }
 
         // Maximum height - Set for the event end time not to be after 20:00
         var maxY      = parseInt(dojo.byId('eventsArea').offsetHeight) + step;

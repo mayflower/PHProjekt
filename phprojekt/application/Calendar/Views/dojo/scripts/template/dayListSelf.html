@@ -5,6 +5,9 @@
     <tr>
         <td class="hours" width="{{widthHourColumn}}%">
             {{row.hour}}
+            <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
+            onClick="dojo.publish('Calendar.openForm', [null, null, '{{date}}', '{{row.hour}}']);">
+            </button> &nbsp;
         </td>
         {% for day in row %}
             {% ifequal row.even true %}
