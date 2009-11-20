@@ -119,7 +119,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         } else {
             var parentModule = this.module;
         }
-        var subModuleUrl = phpr.webpath + 'index.php/Core/' + parentModule + '/jsonGetModules';
+        var subModuleUrl = phpr.webpath + 'index.php/Core/' + parentModule.toLowerCase() + '/jsonGetModules';
         var self         = this;
 
         phpr.DataStore.addStore({url: subModuleUrl});
