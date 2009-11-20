@@ -348,7 +348,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 switch (itemtype) {
                     case 'checkbox':
                         this.formdata[itemtab] += this.fieldTemplate.checkRender(itemlabel, itemid, itemvalue,
-                                                    itemhint);
+                                                    itemdisabled, itemhint);
                         break;
                     case'selectbox':
                         this.formdata[itemtab] += this.fieldTemplate.selectRender(itemrange, itemlabel, itemid,
@@ -837,10 +837,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Adds a tab for sending a notification to the users with read access, telling them about the item added
         //    or modified. It has a "Send Notification" checkbox.
         // Default value
-        var defaultValue = (phpr.config.notificationEnabledByDefault) ? 'on' : '';
+        var defaultValue = (phpr.config.notificationEnabledByDefault) ? '1' : '';
         // Add field
         var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification',
-            defaultValue, phpr.nls.get('Check this box to send an email notification to the participants'));
+            defaultValue, false, phpr.nls.get('Check this box to send an email notification to the participants'));
         // Add the tab to the form
         this.addTab(notificationTab, 'tabNotify', 'Notification', 'accessnotificationTab');
     },

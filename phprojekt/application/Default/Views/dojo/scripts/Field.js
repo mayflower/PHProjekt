@@ -25,19 +25,33 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     // description:
     //    this class renders the different form types which are available in a PHProjekt Detail View
 
-    checkRender:function(itemlabel, itemid, itemvalue, itemhint) {
+    checkRender:function(itemlabel, itemid, itemvalue, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
-        var itemchecked = null;
+        var itemchecked = false;
         if (itemvalue == "on" || itemvalue == "1") {
-            itemchecked = "checked";
+            itemchecked = true;
         }
-        return this.render(["phpr.Default.template", "formcheck.html"], null, {
-                            label:    itemlabel,
-                            labelfor: itemid,
-                            id:       itemid,
-                            checked: (itemchecked) ? "checked" : '',
-                            tooltip:  this.getTooltip(itemhint)
-                });
+
+        if (itemdisabled && ((itemvalue == "on" || itemvalue == "1"))) {
+            var useDisableField = true;
+        } else {
+            var useDisableField = false;
+        }
+
+        var html = this.render(["phpr.Default.template", "formcheck.html"], null, {
+                        label:    itemlabel,
+                        labelfor: (useDisableField) ? itemid + "_disabled" : itemid,
+                        id:       (useDisableField) ? itemid + "_disabled" : itemid,
+                        checked:  (itemchecked) ? "checked" : '',
+                        disabled: (itemdisabled) ? "disabled" : '',
+                        tooltip:  this.getTooltip(itemhint)
+        });
+
+        if (useDisableField) {
+            return html + this.disabledField(itemlabel, itemid, itemvalue, false, itemdisabled);
+        } else {
+            return html;
+        }
     },
 
     textFieldRender:function(itemlabel, itemid, itemvalue, itemlength, itemrequired, itemdisabled, itemhint) {
