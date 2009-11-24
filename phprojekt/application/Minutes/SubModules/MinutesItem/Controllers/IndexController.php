@@ -33,7 +33,7 @@
  * @since      File available since Release 6.0
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
-class Minutes_ItemController extends IndexController
+class MinutesItem_IndexController extends IndexController
 {
     /**
      * String to use on error in the action save and delete when the item is read only.
@@ -63,7 +63,7 @@ class Minutes_ItemController extends IndexController
     {
         $minutesId = (int) $this->getRequest()->getParam('minutesId', 0);
         if (!empty($minutesId)) {
-            $itemModel = Phprojekt_Loader::getModel('Minutes', 'MinutesItem');
+            $itemModel = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem');
             $itemModel->init($minutesId);
             $result = $itemModel->fetchAll();
         } else {
@@ -101,7 +101,7 @@ class Minutes_ItemController extends IndexController
      */
     public function jsonDetailAction()
     {
-        $itemModel = Phprojekt_Loader::getModel('Minutes', 'MinutesItem');
+        $itemModel = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem');
         $itemModel->init((int) $this->getRequest()->getParam('minutesId', 0));
         $id = (int) $this->getRequest()->getParam('id');
 
@@ -159,11 +159,11 @@ class Minutes_ItemController extends IndexController
             $id = (int) $this->getRequest()->getParam('id');
 
             if (empty($id)) {
-                $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId);
+                $model   = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem')->init($minutesId);
                 $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
                 $newItem = true;
             } else {
-                $model   = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->find($id);
+                $model   = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem')->init($minutesId)->find($id);
                 $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
                 $newItem = false;
             }
@@ -223,7 +223,7 @@ class Minutes_ItemController extends IndexController
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
-        $model = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->find($id);
+        $model = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem')->init($minutesId)->find($id);
 
         if ($model instanceof Phprojekt_Model_Interface) {
             $tmp = Default_Helpers_Delete::delete($model);
@@ -265,7 +265,7 @@ class Minutes_ItemController extends IndexController
     public function jsonListItemSortOrderAction()
     {
         $minutesId = (int) $this->getRequest()->getParam('minutesId');
-        $items     = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($minutesId)->fetchAll();
+        $items     = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem')->init($minutesId)->fetchAll();
 
         $return = array('data' => array());
         foreach ($items as $item) {

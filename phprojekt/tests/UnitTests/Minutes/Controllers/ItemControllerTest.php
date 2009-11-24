@@ -39,11 +39,11 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonListActionBeforeAll()
     {
-        $this->setRequestUrl('Minutes/item/jsonList/minutesId/1');
+        $this->setRequestUrl('MinutesItem/index/jsonList/minutesId/1');
         $response = $this->getResponse();
 
         $this->assertContains('{"metadata":[{"key":', $response);
-        $this->assertContains('"topicType","type":"selectbox"', $response);
+        $this->assertContains('"Type","type":"selectbox"', $response);
 
         $expected = '"range":[{"id":1,"name":"Topic"},{"id":2,"name":"Statement"},{"id":3,"name":"Todo"},'
             . '{"id":4,"name":"Decision"},{"id":5,"name":"Date"}]';
@@ -56,11 +56,11 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonSaveMinutesDoNotExist()
     {
-        $this->setRequestUrl('Minutes/item/jsonSave/minutesId/1/id/0');
+        $this->setRequestUrl('MinutesItem/index/jsonSave/minutesId/1/id/0');
         $this->getResponse();
 
         $this->assertTrue($this->error);
-        $this->assertContains(Minutes_ItemController::NOT_FOUND, $this->errormessage);
+        $this->assertContains(MinutesItem_IndexController::NOT_FOUND, $this->errormessage);
     }
 
     /*
@@ -104,7 +104,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonSaveFirstItem()
     {
-        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->setRequestUrl('MinutesItem/index/jsonSave/');
         $this->request->setParam('id', null);
         $this->request->setParam('minutesId', '3');
         $this->request->setParam('title', 'DerTitel');
@@ -112,7 +112,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('comment', '');
 
         $response = $this->getResponse();
-        $this->assertContains(Minutes_ItemController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(MinutesItem_IndexController::ADD_TRUE_TEXT, $response);
     }
 
     /**
@@ -120,7 +120,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonListActionAfterFirstItem()
     {
-        $this->setRequestUrl('Minutes/item/jsonList/minutesId/3');
+        $this->setRequestUrl('MinutesItem/index/jsonList/minutesId/3');
         $response = $this->getResponse();
 
         $this->assertContains('DerTitel', $response);
@@ -132,7 +132,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonDetailsWithNoItem()
     {
-        $this->setRequestUrl('Minutes/item/jsonDetail/minutesId/3');
+        $this->setRequestUrl('MinutesItem/index/jsonDetail/minutesId/3');
         $response = $this->getResponse();
 
         $this->assertContains('"data":[{"id":0,"projectId":0,"rights":{"currentUser":{"moduleId":11,"itemId":0,'
@@ -146,7 +146,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonSaveSecondItem()
     {
-        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->setRequestUrl('MinutesItem/index/jsonSave/');
         $this->request->setParam('id', '');
         $this->request->setParam('minutesId', '3');
         $this->request->setParam('title', 'SecondTitle');
@@ -156,7 +156,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('userId', '1');
         $response = $this->getResponse();
 
-        $this->assertContains(Minutes_ItemController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(MinutesItem_IndexController::ADD_TRUE_TEXT, $response);
     }
 
     /**
@@ -164,7 +164,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonListActionAfterSecondItem()
     {
-        $this->setRequestUrl('Minutes/item/jsonList/minutesId/3');
+        $this->setRequestUrl('MinutesItem/index/jsonList/minutesId/3');
         $response = $this->getResponse();
 
         $this->assertContains('"DerTitel"', $response);
@@ -178,7 +178,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonListItemSortOrder()
     {
-        $this->setRequestUrl('Minutes/item/jsonListItemSortOrder/minutesId/3');
+        $this->setRequestUrl('MinutesItem/index/jsonListItemSortOrder/minutesId/3');
         $response = $this->getResponse();
         $expected = '[{"id":"1","name":"DerTitel"},{"id":"2","name":"SecondTitle"}]';
         $this->assertContains($expected, $response);
@@ -189,7 +189,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonSaveActionWithEditedData()
     {
-        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->setRequestUrl('MinutesItem/index/jsonSave/');
         $this->request->setParam('id', '2');
         $this->request->setParam('minutesId', '3');
         $this->request->setParam('sortOrder', '2');
@@ -200,7 +200,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('userId', '1');
         $response = $this->getResponse();
 
-        $this->assertContains(Minutes_ItemController::EDIT_TRUE_TEXT, $response);
+        $this->assertContains(MinutesItem_IndexController::EDIT_TRUE_TEXT, $response);
     }
 
     /**
@@ -208,7 +208,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonDetailActionWithSecondItem()
     {
-        $this->setRequestUrl('Minutes/item/jsonDetail/minutesId/3/id/2');
+        $this->setRequestUrl('MinutesItem/index/jsonDetail/minutesId/3/id/2');
         $response = $this->getResponse();
 
         $this->assertContains(',"numRows":1}', $response);
@@ -221,7 +221,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonSaveThirdItem()
     {
-        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->setRequestUrl('MinutesItem/index/jsonSave/');
         $this->request->setParam('id', null);
         $this->request->setParam('minutesId', '3');
         $this->request->setParam('title', 'StatementTitle');
@@ -229,7 +229,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('comment', 'StatementComment');
 
         $response = $this->getResponse();
-        $this->assertContains(Minutes_ItemController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(MinutesItem_IndexController::ADD_TRUE_TEXT, $response);
     }
 
     /**
@@ -237,7 +237,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonSaveFourthItem()
     {
-        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->setRequestUrl('MinutesItem/index/jsonSave/');
         $this->request->setParam('id', null);
         $this->request->setParam('minutesId', '3');
         $this->request->setParam('title', 'DecisionTitle');
@@ -245,7 +245,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('comment', 'DecisionComment');
 
         $response = $this->getResponse();
-        $this->assertContains(Minutes_ItemController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(MinutesItem_IndexController::ADD_TRUE_TEXT, $response);
     }
 
     /**
@@ -253,7 +253,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonSaveFifthItem()
     {
-        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->setRequestUrl('MinutesItem/index/jsonSave/');
         $this->request->setParam('id', null);
         $this->request->setParam('minutesId', '3');
         $this->request->setParam('title', 'DateTitle');
@@ -262,7 +262,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('comment', 'DateComment');
 
         $response = $this->getResponse();
-        $this->assertContains(Minutes_ItemController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(MinutesItem_IndexController::ADD_TRUE_TEXT, $response);
     }
 
     /**
@@ -270,7 +270,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonSaveActionThirdItemEdit()
     {
-        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->setRequestUrl('MinutesItem/index/jsonSave/');
         $this->request->setParam('id', '3');
         $this->request->setParam('minutesId', '3');
         $this->request->setParam('sortOrder', '2');
@@ -280,7 +280,7 @@ class Minutes_ItemController_Test extends FrontInit
 
         $response = $this->getResponse();
 
-        $this->assertContains(Minutes_ItemController::EDIT_TRUE_TEXT, $response);
+        $this->assertContains(MinutesItem_IndexController::EDIT_TRUE_TEXT, $response);
     }
 
     /**
@@ -288,7 +288,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonListItemSortOrder2()
     {
-        $this->setRequestUrl('Minutes/item/jsonListItemSortOrder/minutesId/3');
+        $this->setRequestUrl('MinutesItem/index/jsonListItemSortOrder/minutesId/3');
         $response = $this->getResponse();
 
         $this->assertContains('[{"id":"1","name":"DerTitel"},'
@@ -428,12 +428,12 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonDeleteAction()
     {
-        $this->setRequestUrl('Minutes/item/jsonDelete/');
+        $this->setRequestUrl('MinutesItem/index/jsonDelete/');
         $this->request->setParam('id', '1');
         $this->request->setParam('minutesId', '3');
         $response = $this->getResponse();
 
-        $this->assertContains(Minutes_ItemController::DELETE_TRUE_TEXT, $response);
+        $this->assertContains(MinutesItem_IndexController::DELETE_TRUE_TEXT, $response);
     }
 
     /**
@@ -441,7 +441,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonListActionAfterDeleteItem()
     {
-        $this->setRequestUrl('Minutes/item/jsonList/minutesId/3');
+        $this->setRequestUrl('MinutesItem/index/jsonList/minutesId/3');
         $response = $this->getResponse();
 
         $this->assertNotContains('"DerTitel"', $response);
@@ -455,7 +455,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonSaveWithNoTitle()
     {
-        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->setRequestUrl('MinutesItem/index/jsonSave/');
         $this->request->setParam('id', '0');
         $this->request->setParam('minutesId', '3');
         $this->request->setParam('sortOrder', '1');
@@ -476,7 +476,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonSaveWithNotopicType()
     {
-        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->setRequestUrl('MinutesItem/index/jsonSave/');
         $this->request->setParam('id', '0');
         $this->request->setParam('minutesId', '3');
         $this->request->setParam('sortOrder', '1');
@@ -489,7 +489,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->getResponse();
 
         $this->assertTrue($this->error);
-        $this->assertContains('topicType: Is a required field', $this->errormessage);
+        $this->assertContains('Type: Is a required field', $this->errormessage);
     }
 
     /**
@@ -511,7 +511,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testItemsNowReadonly()
     {
-        $this->setRequestUrl('Minutes/item/jsonSave/');
+        $this->setRequestUrl('MinutesItem/index/jsonSave/');
         $this->request->setParam('id', '2');
         $this->request->setParam('minutesId', '3');
         $this->request->setParam('parentOrder', '1');
@@ -524,7 +524,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->getResponse();
 
         $this->assertTrue($this->error);
-        $this->assertContains(Minutes_ItemController::MINUTES_READ_ONLY, $this->errormessage);
+        $this->assertContains(MinutesItem_IndexController::MINUTES_READ_ONLY, $this->errormessage);
     }
 
     /**
@@ -532,13 +532,13 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testItemsUndeletable()
     {
-        $this->setRequestUrl('Minutes/item/jsonDelete/');
+        $this->setRequestUrl('MinutesItem/index/jsonDelete/');
         $this->request->setParam('id', '1');
         $this->request->setParam('minutesId', '3');
         $this->getResponse();
 
         $this->assertTrue($this->error);
-        $this->assertContains(Minutes_ItemController::MINUTES_READ_ONLY, $this->errormessage);
+        $this->assertContains(MinutesItem_IndexController::MINUTES_READ_ONLY, $this->errormessage);
     }
 
     /**
@@ -584,13 +584,13 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonDeleteActionWrongItemId()
     {
-        $this->setRequestUrl('Minutes/item/jsonDelete/');
+        $this->setRequestUrl('MinutesItem/index/jsonDelete/');
         $this->request->setParam('id', '12');
         $this->request->setParam('minutesId', '3');
         $this->getResponse();
 
         $this->assertTrue($this->error);
-        $this->assertContains(Minutes_ItemController::NOT_FOUND, $this->errormessage);
+        $this->assertContains(MinutesItem_IndexController::NOT_FOUND, $this->errormessage);
     }
 
     /**
@@ -598,12 +598,12 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonDeleteActionNoItemId()
     {
-        $this->setRequestUrl('Minutes/item/jsonDelete/');
+        $this->setRequestUrl('MinutesItem/index/jsonDelete/');
         $this->request->setParam('minutesId', '3');
         $this->getResponse();
 
         $this->assertTrue($this->error);
-        $this->assertContains(Minutes_ItemController::ID_REQUIRED_TEXT, $this->errormessage);
+        $this->assertContains(MinutesItem_IndexController::ID_REQUIRED_TEXT, $this->errormessage);
     }
 
     /**
@@ -611,12 +611,12 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonDeleteActionNoMinutesId()
     {
-        $this->setRequestUrl('Minutes/item/jsonDelete/');
+        $this->setRequestUrl('MinutesItem/index/jsonDelete/');
         $this->request->setParam('id', '1');
         $this->getResponse();
 
         $this->assertTrue($this->error);
-        $this->assertContains(Minutes_ItemController::NOT_FOUND, $this->errormessage);
+        $this->assertContains(MinutesItem_IndexController::NOT_FOUND, $this->errormessage);
     }
 
     /**
@@ -635,7 +635,7 @@ class Minutes_ItemController_Test extends FrontInit
      */
     public function testJsonDetailActionDeletedItem()
     {
-        $this->setRequestUrl('Minutes/item/jsonDetail/minutesId/3/id/2');
+        $this->setRequestUrl('MinutesItem/index/jsonDetail/minutesId/3/id/2');
         $response = $this->getResponse();
 
         $this->assertContains('{"metadata":[]}', $response, "Response was: '$response'");

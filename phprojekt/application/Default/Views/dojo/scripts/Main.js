@@ -29,6 +29,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     treeWidget: null,
     _langUrl:   null,
     userStore:  null,
+    subModules: new Array(),
+
+    constructor:function(subModules) {
+        this.subModules = subModules;
+    },
 
     loadFunctions:function(module) {
         // Summary:
@@ -925,6 +930,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             dijit.byId('helpDialog').attr('title', phpr.nls.get('Help', currentModule));
             dojo.byId('helpTitle').innerHTML = phpr.nls.get(currentModule, currentModule);
             var helpData = phpr.nls.get('Content Help', currentModule);
+            if (this.subModules.length > 0) {
+                for (var index in this.subModules) {
+                    var subModuleName = this.subModules[index];
+                    var helpData      = dojo.mixin(helpData, phpr.nls.get('Content Help', subModuleName));
+                }
+            }
         }
 
         if (typeof(helpData) == 'object') {
@@ -943,6 +954,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         helpData = nlsSource.get('Content Help ' + phpr.parentmodule, currentModule);
                     } else {
                         helpData = nlsSource.get('Content Help', currentModule);
+                        if (this.subModules.length > 0) {
+                            for (var index in this.subModules) {
+                                var subModuleName = this.subModules[index];
+                                var helpData      = dojo.mixin(helpData, phpr.nls.get('Content Help', subModuleName));
+                            }
+                        }
                     }
                     if (typeof(helpData) == 'object') {
                         this.showHelp_part2(helpData, nlsSource);

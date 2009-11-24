@@ -17,74 +17,19 @@
  * @since      File available since Release 6.0
  */
 
-dojo.provide("phpr.Minutes.Item");
+dojo.provide("phpr.MinutesItem.Form");
 
-dojo.declare("phpr.Minutes.Item", phpr.Default.SubModule, {
-    constructor:function(parentId) {
-        this.module     = "MinutesItem";
-        this.gridWidget = phpr.Minutes.Item.Grid;
-        this.formWidget = phpr.Minutes.Item.Form;
-        this.parentId   = parentId;
-    },
-
-    getController:function() {
-        return 'item';
-    }
-});
-
-dojo.declare("phpr.Minutes.Item.Grid", phpr.Default.SubModule.Grid, {
-    useIdInGrid:function() {
-        return false;
-    },
-
-    customGridLayout:function(meta) {
-        // Summary:
-        //    Set a different layout for the grid
-        // Description:
-        //    Set a different layout for the grid
-        var deleteFields = new Array('sortOrder', 'minutesId', 'projectId', 'comment');
-        this.gridLayout = dojo.filter(this.gridLayout, function(item) {
-                return (!phpr.inArray(item['field'], deleteFields));
-            }
-        );
-
-        for (cell in this.gridLayout) {
-            if (this.gridLayout[cell]['field'] == 'topicId') {
-                this.gridLayout[cell]['rowSpan'] = 2;
-                this.gridLayout[cell]['width']   = '9%';
-            } else if (this.gridLayout[cell]['field'] == 'gridEdit') {
-                this.gridLayout[cell]['rowSpan'] = 2;
-            } else if (this.gridLayout[cell]['field'] == 'title') {
-                this.gridLayout[cell]['width'] = '46%';
-            } else if (this.gridLayout[cell]['field'] == 'userId') {
-                this.gridLayout[cell]['width'] = '20%';
-            }
-        }
-
-        this.gridLayout = [this.gridLayout, [
-            {
-                width:    'auto',
-                name:     phpr.nls.get('Comment'),
-                field:    'comment',
-                type:     phpr.grid.cells.Textarea,
-                styles:   "text-align: left;",
-                editable: false,
-                colSpan:  4
-            }
-        ]];
-    }
-});
-
-dojo.declare("phpr.Minutes.Item.Form", phpr.Default.SubModule.Form, {
+dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
     initData:function() {
-        this._itemsUrl = phpr.webpath + "index.php/Minutes/item/jsonListItemSortOrder/minutesId/" + this.main.parentId;
+        this._itemsUrl = phpr.webpath + "index.php/MinutesItem/index/jsonListItemSortOrder/minutesId/"
+            + this.main.parentId;
         this._initData.push({'url': this._itemsUrl});
     },
 
     addBasicFields:function() {
         var data  = phpr.DataStore.getData({url: this._url});
         var range = phpr.DataStore.getData({url: this._itemsUrl});
-        var label = phpr.nls.get('Sort after');
+        var label = phpr.nls.get('Sort after', this.main.module);
         var id    = this.main.module + 'parentOrder';
         var value = (data[0]['sortOrder'] - 1 >= 0) ? data[0]['sortOrder'] - 1 : 0;
 

@@ -86,8 +86,9 @@ class Minutes_IndexController extends IndexController
         }
 
         $minutes      = $this->getModelObject()->find($id);
-        $minutesItems = Phprojekt_Loader::getModel('Minutes', 'MinutesItem')->init($id)->fetchAll();
-        $success      = true;
+        $minutesItems = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
+            'MinutesItem')->init($id)->fetchAll();
+        $success = true;
 
         if ($minutes instanceof Phprojekt_Model_Interface) {
             foreach ($minutesItems as $item) {

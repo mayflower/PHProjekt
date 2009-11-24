@@ -110,6 +110,24 @@ class Phprojekt_DbParser
         $json = file_get_contents($coreDirectory . '/Core/Sql/Db.json');
         $data = Zend_Json::decode($json);
         $this->_parseData($data, 'Core');
+        if (is_dir($coreDirectory . '/Core/SubModules/')) {
+            $files = scandir($coreDirectory . '/Core/SubModules/');
+            foreach ($files as $file) {
+                if ($file != '.'  && $file != '..' && $file != '.svn') {
+                    $subFiles = scandir($coreDirectory . '/Core/SubModules/' . $file);
+                    foreach ($subFiles as $subFile) {
+                        if ($subFile != '.'  && $subFile != '..' && $subFile != '.svn') {
+                            $subPath = $coreDirectory . '/Core/SubModules/' . $file . '/' . $subFile . '/Sql/Db.json';
+                            if (file_exists($subPath)) {
+                                $json = file_get_contents($subPath);
+                                $data = Zend_Json::decode($json);
+                                $this->_parseData($data, $subFile);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // Per module, load the file and process it
         $files = scandir($coreDirectory);
@@ -119,6 +137,19 @@ class Phprojekt_DbParser
                     $json = file_get_contents($coreDirectory . '/' . $file . '/Sql/Db.json');
                     $data = Zend_Json::decode($json);
                     $this->_parseData($data, $file);
+                }
+                if (is_dir($coreDirectory . '/' . $file . '/SubModules/')) {
+                    $subFiles = scandir($coreDirectory . '/' . $file . '/SubModules/');
+                    foreach ($subFiles as $subFile) {
+                        if ($subFile != '.'  && $subFile != '..' && $subFile != '.svn') {
+                            $subPath = $coreDirectory . '/' . $file . '/SubModules/' . $subFile . '/Sql/Db.json';
+                            if (file_exists($subPath)) {
+                                $json = file_get_contents($subPath);
+                                $data = Zend_Json::decode($json);
+                                $this->_parseData($data, $subFile);
+                            }
+                        }
+                    }
                 }
             }
         }

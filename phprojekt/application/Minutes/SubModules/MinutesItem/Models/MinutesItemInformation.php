@@ -35,7 +35,7 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
-class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Phprojekt_ModelInformation_Interface
+class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends EmptyIterator implements Phprojekt_ModelInformation_Interface
 {
     /**
      * @var array List of available topic types.
@@ -224,33 +224,33 @@ class Minutes_Models_MinutesItemInformation extends EmptyIterator implements Php
             'integer'  => true));
 
         // topicId
-        $converted[] = $this->_fillTemplate('topicId', 'topicId', 'hidden', 'topicId', 0, array(
+        $converted[] = $this->_fillTemplate('topicId', 'Id', 'hidden', 'topicId', 0, array(
             'readOnly' => true,
             'integer'  => false));
 
         // sortOrder
-        $converted[] = $this->_fillTemplate('sortOrder', 'sortOrder', 'hidden', 'sortOrder', 1, array(
+        $converted[] = $this->_fillTemplate('sortOrder', 'Sort after', 'hidden', 'sortOrder', 1, array(
             'integer'  => true));
 
         // title
-        $converted[] = $this->_fillTemplate('title', 'title', 'text', 'title', 2, array(
+        $converted[] = $this->_fillTemplate('title', 'Title', 'text', 'title', 2, array(
             'length'   => 255,
             'required' => true));
 
         // topicType
-        $converted[] = $this->_fillTemplate('topicType', 'topicType', 'selectbox', 'topicType', 3, array(
+        $converted[] = $this->_fillTemplate('topicType', 'Type', 'selectbox', 'topicType', 3, array(
             'range'    => $this->convertArray($this->_getTopicTypeList()),
             'required' => true,
             'integer'  => true));
 
         // comment
-        $converted[] = $this->_fillTemplate('comment', 'comment', 'textarea', 'comment', 4);
+        $converted[] = $this->_fillTemplate('comment', 'Comment', 'textarea', 'comment', 4);
 
         // topicDate
-        $converted[] = $this->_fillTemplate('topicDate', 'topicDate', 'date', 'topicDate', 5);
+        $converted[] = $this->_fillTemplate('topicDate', 'Date', 'date', 'topicDate', 5);
 
         // userId
-        $converted[] = $this->_fillTemplate('userId', 'userId', 'selectbox', 'userId', 6, array(
+        $converted[] = $this->_fillTemplate('userId', 'Who', 'selectbox', 'userId', 6, array(
             'range' => $this->convertArray($this->_getUserIdList())));
 
         return $converted;

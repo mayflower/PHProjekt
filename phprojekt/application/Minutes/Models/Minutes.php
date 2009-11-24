@@ -38,7 +38,9 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
      *
      * @var array hasMany
      */
-    public $hasMany = array('items' => array('classname' => 'Minutes_Models_MinutesItem'));
+    public $hasMany = array('items'=> array('module'=>'Minutes_SubModules_MinutesItem',
+                                            'model' =>'MinutesItem'));
+
 
     /**
      * Constructor initializes additional Infomanager.

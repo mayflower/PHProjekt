@@ -56,7 +56,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
         //    Set all the urls
         // Description:
         //    Set all the urls
-        var url = phpr.webpath + "index.php/" + phpr.module + "/" + this.getController();
+        var url = phpr.webpath + "index.php/" + this.module + "/" + this.getController();
         switch (type) {
             case 'grid':
                 url += "/jsonList/";
@@ -324,16 +324,16 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
         }
 
         var params = {
-            label:     phpr.nls.get('Clear'),
+            label:     phpr.nls.get('New'),
             showLabel: true,
             baseClass: 'positive',
             iconClass: 'add',
             style:     'padding-right: 7px',
             disabled:  false
         };
-        this._submoduleClearButton = new dijit.form.Button(params);
-        this.main.buttonsBox.domNode.appendChild(this._submoduleClearButton.domNode);
-        dojo.connect(this._submoduleClearButton, 'onClick', dojo.hitch(this, function() {
+        this._submoduleNewButton = new dijit.form.Button(params);
+        this.main.buttonsBox.domNode.appendChild(this._submoduleNewButton.domNode);
+        dojo.connect(this._submoduleNewButton, 'onClick', dojo.hitch(this, function() {
             this.main.subForm = new this.main.formWidget(this.main, 0, phpr.module);
         }));
     },

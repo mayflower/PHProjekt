@@ -31,7 +31,7 @@
  * @since      File available since Release 6.0
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
-class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
+class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
      * The Minutes object this item is related to
@@ -84,7 +84,8 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
         parent::__construct($db);
 
         $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getModel('Minutes', 'MinutesItemInformation');
+        $this->_informationManager = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
+            'MinutesItemInformation');
     }
 
     /**
@@ -96,7 +97,8 @@ class Minutes_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract impleme
     {
         parent::__clone();
         $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getModel('Minutes', 'MinutesItemInformation');
+        $this->_informationManager = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
+            'MinutesItemInformation');
     }
 
     /**

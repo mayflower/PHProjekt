@@ -421,6 +421,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             this.setFormButtons();
 
             this.addModuleTabs(data);
+            this.addSubModulesTab();
 
             // Delete the data if is not used the cache
             if (!this.useCache()) {
@@ -527,6 +528,23 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Display all the history of the item
         if (this.id > 0 && this.useHistoryTab()) {
             this.addTab(this.render(["phpr.Default.template.history", "content.html"]), 'tabHistory', 'History');
+        }
+    },
+
+    addSubModulesTab:function() {
+        // Summary:
+        //    Add SubModules tabs
+        // Description:
+        //    Add all the SubModules that have the current module
+        if (this.id > 0) {
+            for (var index in this.main.subModules) {
+                var subModuleName  = this.main.subModules[index];
+                var subModuleClass = 'phpr.' + subModuleName + '.Main';
+                this.addTab('', 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
+                    subModuleName + 'FormTab');
+                var subModule = eval('new ' + subModuleClass + '(' + this.id + ')');
+                subModule.fillTab('tab' + subModuleName);
+            }
         }
     },
 

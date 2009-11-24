@@ -50,21 +50,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         // Render additional tabs only if there is an ID
         // (these tabs don't make sense for unsaved records)
         if (this.id > 0) {
-            this.addItemsTab(data);
             this.addMailTab(data);
         }
-    },
-
-    addItemsTab:function(data) {
-        // Summary:
-        //    Items tab
-        // Description:
-        //    Display minute items grid and input form.
-        //    See Default/Form.js, method addAccessTab for
-        //    a more detailed example of adding tabs.
-        this.addTab('', 'tabItems', 'Items', 'itemsFormTab');
-        this.itemModule = new phpr.Minutes.Item(this.id);
-        this.itemModule.fillTab('tabItems');
     },
 
     addMailTab:function(data) {

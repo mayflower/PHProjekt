@@ -74,6 +74,7 @@ class FrontInit extends PHPUnit_Framework_TestCase
         $this->front->registerPlugin(new Zend_Controller_Plugin_ErrorHandler());
         $this->front->setDefaultModule('Default');
 
+        $moduleDirectories = array();
         foreach (scandir(PHPR_CORE_PATH) as $module) {
             $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
 
@@ -87,6 +88,25 @@ class FrontInit extends PHPUnit_Framework_TestCase
                 $view->addHelperPath($helperPath, $module . '_' . 'Helpers');
                 Zend_Controller_Action_HelperBroker::addPath($helperPath);
             }
+
+
+            $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . 'SubModules';
+            if (is_dir($dir)) {
+                if ($module != 'Core') {
+                    $moduleDirectories[] = $dir;
+                } else {
+                    $coreModules = scandir($dir);
+                    foreach ($coreModules as $coreModule) {
+                        $coreDir = $dir . DIRECTORY_SEPARATOR . $coreModule;
+                        if ($coreModule != '.'  &&
+                            $coreModule != '..' &&
+                            $coreModule != '.svn' &&
+                            is_dir($coreDir)) {
+                            $moduleDirectories[] = $coreDir;
+                        }
+                    }
+                }
+            }
         }
 
         Zend_Registry::set('view', $view);
@@ -94,6 +114,11 @@ class FrontInit extends PHPUnit_Framework_TestCase
 
         $this->front->setModuleControllerDirectoryName('Controllers');
         $this->front->addModuleDirectory(PHPR_CORE_PATH);
+
+        foreach ($moduleDirectories as $moduleDirectory) {
+            $this->front->addModuleDirectory($moduleDirectory);
+        }
+
         $this->front->setParam('useDefaultControllerAlways', true);
 
         $this->front->throwExceptions(true);

@@ -167,6 +167,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                                     $lang);
                             }
                         }
+                        // SubModules
+                        $this->_processSubModuleFolder($locale, $langFile, $module);
                     }
                 }
             }
@@ -177,6 +179,60 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             }
 
             $cache->save($this->_translate[$locale], 'Phprojekt_LanguageAdapter_loadTranslationData_' . $locale);
+        }
+    }
+
+    /**
+     * Collect the data and create the array translation set for SubModules folders
+     *
+     * @param string|Zend_Locale $locale   Locale/Language to set,
+     *                                     identical with Locale identifiers
+     *                                     see Zend_Locale for more information
+     * @param string             $langFile Current lang file for get
+     * @param string             $module   Folder name of the module
+     *
+     * @return void
+     */
+    private function _processSubModuleFolder($locale, $langFile, $module)
+    {
+        $languageDir = PHPR_CORE_PATH . '/' . $module . '/SubModules/';
+        if (file_exists($languageDir)) {
+            $subFiles = scandir(PHPR_CORE_PATH . '/' . $module . '/SubModules/');
+            foreach ($subFiles as $subModule) {
+                if ($subModule != '.' && $subModule != '..' && $subModule != '.svn') {
+                    $languageDir = PHPR_CORE_PATH . '/' . $module . '/SubModules/' . $subModule . '/Languages/';
+                    if (file_exists($languageDir . $langFile)) {
+                        include_once($languageDir . $langFile);
+                        if (isset($lang)) {
+                            if (!isset($this->_translate[$locale][$subModule])) {
+                                $this->_translate[$locale][$subModule] = array();
+                            }
+                            $this->_langLoaded[$locale] = 1;
+                            $this->_translate[$locale][$subModule] = array_merge(
+                                $this->_translate[$locale][$subModule], $lang);
+                        }
+                    } else if ($module == 'Core') {
+                        $subCoreFiles = scandir(PHPR_CORE_PATH . '/' . $module . '/SubModules/' . $subModule);
+                        foreach ($subCoreFiles as $subCoreModule) {
+                            if ($subCoreModule != '.' && $subCoreModule != '..' && $subCoreModule != '.svn') {
+                                $coreLanguageDir = PHPR_CORE_PATH . '/' . $module . '/SubModules/' . $subModule
+                                    . '/' . $subCoreModule . '/Languages/';
+                                if (file_exists($coreLanguageDir . $langFile)) {
+                                    include_once($coreLanguageDir . $langFile);
+                                    if (isset($lang)) {
+                                        if (!isset($this->_translate[$locale][$subCoreModule])) {
+                                            $this->_translate[$locale][$subCoreModule] = array();
+                                        }
+                                        $this->_langLoaded[$locale] = 1;
+                                        $this->_translate[$locale][$subCoreModule] = array_merge(
+                                            $this->_translate[$locale][$subCoreModule], $lang);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

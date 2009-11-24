@@ -1,0 +1,26 @@
+{
+
+"6.0.0":
+{
+    "structure":
+    {
+        "minutes_item":
+        {
+            "create":
+            {
+                "id":         "default",
+                "owner_id":   {"type": "int", "notNull": "true"},
+                "project_id": {"type": "int", "notNull": "true"},
+                "minutes_id": {"type": "int", "notNull": "true"},
+                "topic_type": {"type": "int", "notNull": "true"},
+                "sort_order": {"type": "int", "notNull": "true"},
+                "title":      {"type": "varchar", "notNull": "true"},
+                "comment":    {"type": "text"},
+                "topic_date": {"type": "date"},
+                "user_id":    {"type": "int"}
+            }
+        }
+    }
+}
+
+}

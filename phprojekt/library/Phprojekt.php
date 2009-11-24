@@ -459,6 +459,13 @@ class Phprojekt
         $front->setDefaultModule('Default');
         $front->setModuleControllerDirectoryName('Controllers');
         $front->addModuleDirectory(PHPR_CORE_PATH);
+
+        // Add SubModules direcroties with controlles
+        $moduleDirectories = $this->_getControllersFolders($helperPaths);
+        foreach ($moduleDirectories as $moduleDirectory) {
+            $front->addModuleDirectory($moduleDirectory);
+        }
+
         $front->setParam('useDefaultControllerAlways', true);
 
         // Define general error handler
@@ -505,7 +512,7 @@ class Phprojekt
             $helperPaths = array();
             foreach (scandir(PHPR_CORE_PATH) as $module) {
                 $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
-                if (is_dir(!$dir)) {
+                if ($module == '.'  || $module == '..' || $module == '.svn' || !is_dir($dir)) {
                     continue;
                 }
 
@@ -518,6 +525,47 @@ class Phprojekt
         }
 
         return $helperPaths;
+    }
+
+
+    /**
+     * Cache the SubModules folders with controllers files
+     *
+     * @param array $helperPaths Array with all the folders with helpers
+     *
+     * @return array
+     */
+    private function _getControllersFolders($helperPaths)
+    {
+        $controllerPathNamespace = new Zend_Session_Namespace('Phprojekt-_getControllersFolders');
+        if (!isset($controllerPathNamespace->controllerPaths)) {
+            $controllerPaths = array();
+            foreach ($helperPaths as $helperPath) {
+                $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $helperPath['module'] . DIRECTORY_SEPARATOR
+                    . 'SubModules';
+                if (is_dir($dir)) {
+                    if ($helperPath['module'] != 'Core') {
+                        $controllerPaths[] = $dir;
+                    } else {
+                        $coreModules = scandir($dir);
+                        foreach ($coreModules as $coreModule) {
+                            $coreDir = $dir . DIRECTORY_SEPARATOR . $coreModule;
+                            if ($coreModule != '.'  &&
+                                $coreModule != '..' &&
+                                $coreModule != '.svn' &&
+                                is_dir($coreDir)) {
+                                $controllerPaths[] = $coreDir;
+                            }
+                        }
+                    }
+                }
+            }
+            $controllerPathNamespace->controllerPaths = $controllerPaths;
+        } else {
+            $controllerPaths = $controllerPathNamespace->controllerPaths;
+        }
+
+        return $controllerPaths;
     }
 
     /**
