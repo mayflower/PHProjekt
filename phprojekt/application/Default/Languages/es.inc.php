@@ -107,7 +107,9 @@ $lang["Save"]   = "Grabar";
 $lang["Delete"] = "Borrar";
 $lang["Cancel"] = "Cancelar";
 $lang["Close"]  = "Cerrar";
-$lang["Edit"]  = "Editar";
+$lang["Edit"]   = "Editar";
+$lang["New"]    = "Nuevo";
+
 // Alt text
 $lang["Export all items to a CSV file"] = "Exportar todos los ítems a un archivo CSV";
 $lang["Save changes made to the grid through in-place editing"] = "Guardar modificaciones hechas sobre la grilla";

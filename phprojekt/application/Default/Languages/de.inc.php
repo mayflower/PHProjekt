@@ -102,8 +102,9 @@ $lang["Action"] = "Aktion";
 $lang["Save"] = "Speichern";
 $lang["Delete"] = "Löschen";
 $lang["Cancel"] = "Abbrechen";
-$lang["Close"] = "Schließen";
-$lang["Edit"] = "Editieren";
+$lang["Close"]  = "Schließen";
+$lang["Edit"]   = "Editieren";
+$lang["New"]    = "Neu";
 
 // Messages
 $lang["There are no entries on this level"] = "Keine Element auf dieser Ebene vorhanden, bitte über [+] eines
