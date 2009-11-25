@@ -30,19 +30,35 @@
             </td>
             <td>
                 <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkReadAccess[{{module.id}}]"
-                name="checkReadAccess[{{module.id}}]" checked="{{module.read}}" value="1" />
+                name="checkReadAccess[{{module.id}}]"
+                {% if module.read %}
+                checked
+                {% endif %}
+                value="1" />
             </td>
             <td>
                 <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkWriteAccess[{{module.id}}]"
-                name="checkWriteAccess[{{module.id}}]" checked="{{module.write}}" value="1" />
+                name="checkWriteAccess[{{module.id}}]"
+                {% if module.write %}
+                checked
+                {% endif %}
+                value="1" />
             </td>
             <td>
                 <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkCreateAccess[{{module.id}}]"
-                name="checkCreateAccess[{{module.id}}]" checked="{{module.create}}" value="1" />
+                name="checkCreateAccess[{{module.id}}]"
+                {% if module.create %}
+                checked
+                {% endif %}
+                value="1" />
             </td>
             <td>
                 <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkAdminAccess[{{module.id}}]"
-                name="checkAdminAccess[{{module.id}}]" checked="{{module.admin}}" value="1" />
+                name="checkAdminAccess[{{module.id}}]"
+                {% if module.admin %}
+                checked
+                {% endif %}
+                value="1" />
             </td>
         </tr>
         {% endfor %}

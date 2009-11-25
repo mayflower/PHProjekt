@@ -153,29 +153,33 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
         var rows = '';
         for (var id in accessContent) {
-            var checkBoxs = '';
+            var checkBoxs = new Array();
             var userId    = (id == 'currentUser') ? currentUser : accessContent[id]['userId'];
             for (var i in this._rights) {
                 var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
-                checkBoxs += this.render(["phpr.Default.template.access", "checkbox.html"], null, {
+                checkBoxs.push(this.render(["phpr.Default.template.access", "checkbox.html"], null, {
                     fieldId:  fieldId,
-                    checked:  accessContent[id][this._rights[i].toLowerCase()],
+                    checked:  accessContent[id][this._rights[i].toLowerCase()] ? 'checked' : '',
                     hidden:   (id == 'currentUser' && this._accessPermissions),
                     value:    (accessContent[id][this._rights[i].toLowerCase()]) ? 1 : 0,
                     disabled: (id == 'currentUser' || !this._accessPermissions) ? 'disabled="disabled"' : ''
-                });
+                }));
             }
-            var subRow = this.render(["phpr.Default.template.access", "subRow.html"], null, {
+            var input = this.render(["phpr.Default.template.access", "input.html"], null, {
                 id:          userId,
                 disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
                 userDisplay: accessContent[id]['userDisplay'],
-                currentUser: (id == 'currentUser'),
-                checkBoxs:   checkBoxs,
-                useDelete:   (id != 'currentUser')
+                currentUser: (id == 'currentUser')
+            });
+            var button = this.render(["phpr.Default.template.access", "button.html"], null, {
+                id:        userId,
+                useDelete: (id != 'currentUser')
             });
             rows += this.render(["phpr.Default.template.access", "row.html"], null, {
-                id:     userId,
-                subRow: subRow
+                id:        userId,
+                input:     input,
+                checkBoxs: checkBoxs,
+                button:    button
             });
         }
 
@@ -589,27 +593,44 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             var row   = table.insertRow(table.rows.length);
             row.id    = "trAccessFor" + userId;
 
-            var checkBoxs = '';
+            var cellIndex = 0;
+
+            // Input
+            var cell  = row.insertCell(cellIndex);
+            var input = this.render(["phpr.Default.template.access", "input.html"], null, {
+                id:          userId,
+                disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
+                userDisplay: dijit.byId("dataAccessAdd").attr('displayedValue'),
+                currentUser: false
+            });
+            cell.innerHTML = input;
+            cellIndex++;
+
+            // CheckBoxs
             for (var i in this._rights) {
+                var cell       = row.insertCell(cellIndex);
                 var fieldId    = 'check' + this._rights[i] + 'Access[' + userId + ']';
                 var fieldAddId = 'check' + this._rights[i] + 'AccessAdd';
-                checkBoxs += this.render(["phpr.Default.template.access", "checkbox.html"], null, {
+                var checkBox   = this.render(["phpr.Default.template.access", "checkbox.html"], null, {
                     fieldId:  fieldId,
-                    checked:  dijit.byId(fieldAddId).checked,
+                    checked:  dijit.byId(fieldAddId).checked ? 'checked' : '',
                     hidden:   false,
                     value:    1,
                     disabled: ''
                 });
+                cell.innerHTML = checkBox;
+                cellIndex++;
             }
-            var subRow = this.render(["phpr.Default.template.access", "subRow.html"], null, {
-                id:          userId,
-                disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
-                userDisplay: dijit.byId("dataAccessAdd").attr('displayedValue'),
-                checkBoxs:   checkBoxs,
-                currentUser: false,
-                useDelete:   true
+
+            // Delete Button
+            var cell   = row.insertCell(cellIndex);
+            var button = this.render(["phpr.Default.template.access", "button.html"], null, {
+                id:        userId,
+                useDelete: true
             });
-            row.innerHTML = subRow;
+            cell.innerHTML = button;
+            cellIndex++;
+
             dojo.parser.parse(row);
 
             this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);

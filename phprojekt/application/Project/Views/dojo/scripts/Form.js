@@ -75,18 +75,30 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
         var rows = '';
         for (i in relationList) {
-            var fields = this.render(["phpr.Project.template", "roleField.html"], null, {
+            var userField = this.render(["phpr.Project.template", "roleInputUser.html"], null, {
                 userId:      relationList[i].userId,
-                userDisplay: relationList[i].userDisplay,
-                currentUser: (relationList[i].userId == currentUser),
-                roleId:      relationList[i].roleId,
-                roleName:    relationList[i].roleName,
                 disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
-                useDelete:  (relationList[i].userId != currentUser && this._accessPermissions)
+                userDisplay: relationList[i].userDisplay,
+                currentUser: (relationList[i].userId == currentUser)
+            });
+
+            var roleField = this.render(["phpr.Project.template", "roleInputRole.html"], null, {
+                userId:      relationList[i].userId,
+                roleId:      relationList[i].roleId,
+                disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
+                currentUser: (relationList[i].userId == currentUser),
+                roleName:    relationList[i].roleName
+            });
+
+            var button = this.render(["phpr.Project.template", "roleButton.html"], null, {
+                userId:    relationList[i].userId,
+                useDelete: (relationList[i].userId != currentUser && this._accessPermissions)
             });
             rows += this.render(["phpr.Project.template", "roleRow.html"], null, {
-                userId: relationList[i].userId,
-                fields: fields
+                userId:    relationList[i].userId,
+                userField: userField,
+                roleField: roleField,
+                button:    button
             });
         }
         var rolesData = this.render(["phpr.Project.template", "roleTab.html"], null, {
@@ -139,16 +151,40 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             var table = dojo.byId("relationTable");
             var row   = table.insertRow(table.rows.length);
             row.id    = "trRelationFor" + userId;
-            var fields = this.render(["phpr.Project.template", "roleField.html"], null, {
+
+            // User field
+            var cellIndex = 0;
+            var userField = this.render(["phpr.Project.template", "roleInputUser.html"], null, {
                 userId:      userId,
-                userDisplay: dijit.byId("relationUserAdd").attr('displayedValue'),
-                currentUser: false,
-                roleId:      roleId,
-                roleName:    dijit.byId("relationRoleAdd").attr('displayedValue'),
                 disabled:    '',
+                userDisplay: dijit.byId("relationUserAdd").attr('displayedValue'),
+                currentUser: false
+            });
+            var cell = row.insertCell(cellIndex);
+            cell.innerHTML = userField;
+            cellIndex++;
+
+            // Role field
+            var roleField = this.render(["phpr.Project.template", "roleInputRole.html"], null, {
+                userId:      userId,
+                roleId:      roleId,
+                disabled:    '',
+                currentUser: false,
+                roleName:    dijit.byId("relationRoleAdd").attr('displayedValue')
+            });
+            var cell = row.insertCell(cellIndex);
+            cell.innerHTML = roleField;
+            cellIndex++;
+
+            // Delete button
+            var button = this.render(["phpr.Project.template", "roleButton.html"], null, {
+                userId:      userId,
                 useDelete:   true
             });
-            row.innerHTML = fields;
+            var cell = row.insertCell(cellIndex);
+            cell.innerHTML = button;
+            cellIndex++;
+
             dojo.parser.parse(row);
 
             this.addTinyButton('delete', 'relationDeleteButton' + userId, 'deleteUserRoleRelation', [userId]);

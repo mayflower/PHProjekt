@@ -20,7 +20,11 @@
         <td>
             <div align="center">
                 <input type="checkbox" dojotype="dijit.form.CheckBox" id="checkModuleRelation[{{module.id}}]"
-                name="checkModuleRelation[{{module.id}}]" checked="{{module.inProject}}" value="1" {{disabled}} />
+                name="checkModuleRelation[{{module.id}}]"
+                {% if module.inProject %}
+                checked
+                {% endif %}
+                value="1" {{disabled}} />
             </div>
         </td>
     </tr>

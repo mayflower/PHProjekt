@@ -1,0 +1,7 @@
+<input id="dataAccess[{{id}}]" name="dataAccess[{{id}}]" type="hidden" value="{{id}}"
+dojoType="dijit.form.TextBox" {{disabled}} />
+{% if currentUser %}
+<b>{{userDisplay}}</b>
+{% else %}
+{{userDisplay}}
+{% endif %}

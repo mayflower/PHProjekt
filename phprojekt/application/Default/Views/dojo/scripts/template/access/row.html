@@ -1,3 +1,7 @@
 <tr id="trAccessFor{{id}}">
-{{subRow|safe}}
+    <td>{{input|safe}}</td>
+    {% for checkBox in checkBoxs %}
+        <td>{{checkBox|safe}}</td>
+    {% endfor %}
+    <td>{{button|safe}}</td>
 </tr>
