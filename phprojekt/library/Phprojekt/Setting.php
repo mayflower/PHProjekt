@@ -81,6 +81,13 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
             $results[] = array('name'  => 'User',
                                'label' => Phprojekt::getInstance()->translate('User'));
         }
+
+        $modelNotification = Phprojekt_Loader::getModel('Core', 'Notification_Setting');
+        if ($modelNotification) {
+            $results[] = array('name'  => 'Notification',
+                               'label' => Phprojekt::getInstance()->translate('Notification'));
+        }
+
         // Module settings
         foreach (scandir(PHPR_CORE_PATH) as $dir) {
             $path = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $dir;
@@ -120,7 +127,8 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
     {
         if (null === $this->_object) {
             // System settings
-            if ($this->_module == 'User') {
+
+            if ($this->_module == 'User' || $this->_module == 'Notification') {
                 $this->_object = Phprojekt_Loader::getModel('Core', sprintf('%s_Setting', $this->_module));
             } else {
                 $this->_object = Phprojekt_Loader::getModel($this->_module, 'Setting');
@@ -165,11 +173,16 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
      *
      * @param integer $moduleId The current moduleId
      * @param array   $metadata Array with all the fields
+     * @param integer $userId   The user id, if is not setted, the current user is used
      *
      * @return array
      */
     public function getList($moduleId, $metadata, $userId = null)
     {
+        if (method_exists($this->getModel(), 'getList')) {
+            return $this->getModel()->getList($moduleId, $metadata, $userId = null);
+        }
+
         $settings = array();
 
         if ($userId === null) {

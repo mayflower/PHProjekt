@@ -110,6 +110,16 @@ class IndexController extends Zend_Controller_Action
     const TARGET_ACTION_MULTIPLE = 1;
 
     /**
+     * String to use on success in the action disableFrontendMessages.
+     */
+    const DISABLE_FRONTEND_MESSAGES_TRUE_TEXT = "All settings were disabled successfully!";
+
+    /**
+     * String to use on error in the action disableFrontendMessages.
+     */
+    const DISABLE_FRONTEND_MESSAGES_FALSE_TEXT = "No settings were disabled!";
+
+    /**
      * Init function
      *
      * Checks if it is a logged user, if not,
@@ -156,6 +166,10 @@ class IndexController extends Zend_Controller_Action
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->language       = $language;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
+        $this->view->frontendMsg    = (bool) Phprojekt::getInstance()->getConfig()->frontendMessages;
+
+        // Since the time for re-starting a poll to the server is in milliseconds, a multiple of 1000 is needed here.
+        $this->view->pollingLoop = Phprojekt::getInstance()->getConfig()->pollingLoop * 1000;
 
         $this->render('index');
     }
@@ -667,6 +681,59 @@ class IndexController extends Zend_Controller_Action
         $actions = array($delete, $export);
 
         Phprojekt_Converter_Json::echoConvert($actions);
+    }
+
+    /**
+     * Returns the frontend (realtime) notification(s) to a user. The return format is JSON.
+     *
+     * Note:
+     * At this point a Zend_Session::writeClose() is needed, to avoid blocking of other requests.
+     * See http://www.php.net/manual/en/function.session-write-close.php for more details.
+     *
+     * @return void
+     */
+    public function jsonGetFrontendMessageAction()
+    {
+        try {
+            Zend_Session::writeClose();
+        } catch (Exception $error) {
+            Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->message);
+        }
+
+        $notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification_FrontendMessage');
+        $userId       = (int) Phprojekt_Auth::getUserId();
+        $data         = $notification->getFrontendMessage($userId);
+
+        $return = array("data" => $data);
+
+        Phprojekt_Converter_Json::echoConvert($return);
+    }
+
+    /**
+     * Disables all frontend messages.
+     *
+     * @return void
+     */
+    public function jsonDisableFrontendMessagesAction()
+    {
+        $notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification');
+
+        try {
+            $notification->disableFrontendMessages();
+            $message    = Phprojekt::getInstance()->translate(self::DISABLE_FRONTEND_MESSAGES_TRUE_TEXT);
+            $resultType = 'success';
+        } catch (Exception $error) {
+            Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->message);
+            $message    = Phprojekt::getInstance()->translate(self::DISABLE_FRONTEND_MESSAGES_FALSE_TEXT);
+            $resultType = 'error';
+        }
+
+        $return = array('type'    => $resultType,
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => 0);
+
+        Phprojekt_Converter_Json::echoConvert($return);
     }
 
     /**

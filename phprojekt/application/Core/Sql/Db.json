@@ -41,6 +41,25 @@
             }
         },
 
+        "frontend_message":
+        {
+            "create":
+            {
+                "id":           "default",
+                "actor_id":     {"type": "int", "notNull": "true"},
+                "project_id":   {"type": "int", "notNull": "true"},
+                "process":      {"type": "varchar", "length": "255"},
+                "recipient_id": {"type": "int", "notNull": "true"},
+                "module_id":    {"type": "int", "notNull": "true"},
+                "item_id":      {"type": "int", "notNull": "true"},
+                "valid_until":  {"type": "datetime", "notNull": "true"},
+                "valid_from":   {"type": "datetime", "notNull": "true"},
+                "description":  {"type": "text", "notNull": "true"},
+                "details":      {"type": "text", "notNull": "true"},
+                "delivered":    {"type": "int", "length": "3", "notNull": "true", "default": "0"}
+            }
+        },
+
         "groups":
         {
             "create":

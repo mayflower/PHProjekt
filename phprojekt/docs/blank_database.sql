@@ -42,6 +42,7 @@ DROP TABLE IF EXISTS `contact`;
 DROP TABLE IF EXISTS `helpdesk`;
 DROP TABLE IF EXISTS `minutes`;
 DROP TABLE IF EXISTS `minutes_item`;
+DROP TABLE IF EXISTS `frontend_message`;
 
 --
 -- Table structure for table `database_manager`
@@ -514,6 +515,21 @@ CREATE TABLE `minutes_item` (
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
+CREATE TABLE  `frontend_message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `actor_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `process` varchar(255) NOT NULL,
+  `recipient_id` int(11) NOT NULL,
+  `module_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `valid_until` datetime NOT NULL,
+  `valid_from` datetime NOT NULL,
+  `description` text,
+  `delivered` int(3) NOT NULL DEFAULT '0',
+  `details` text,
+  PRIMARY KEY (`id`)
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 --
 -- INSERT DATA

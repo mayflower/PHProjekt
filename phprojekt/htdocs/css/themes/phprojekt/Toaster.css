@@ -68,3 +68,9 @@
     display: block;
     position: absolute;
 }
+
+#disableFrontendMessage {
+    border: 1px solid #DFDFDF;
+    width: 36em;
+    background: #EFEFEF;
+}

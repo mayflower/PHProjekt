@@ -128,6 +128,14 @@ final class Default_Helpers_Delete
         }
 
         if ($model instanceof Phprojekt_Model_Interface) {
+            if (Phprojekt::getInstance()->getConfig()->frontendMessages) {
+                if (method_exists($model, 'getNotification')) {
+                    $notificationModel = $model->getNotification();
+                    $notificationModel->setControllProcess(Phprojekt_Notification::LAST_ACTION_DELETE);
+                    $notificationModel->saveFrontendMessage();
+                }
+            }
+
             if ($model->getModelName() == 'Project') {
                 return self::_deleteTree($model);
             } else {

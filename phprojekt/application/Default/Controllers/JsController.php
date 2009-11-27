@@ -69,6 +69,7 @@ class JsController extends IndexController
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Store.js');
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Date.js');
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Url.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/FrontendMessage.js');
 
         // Default Folder
         $scripts = scandir(PHPR_CORE_PATH . '/Default/Views/dojo/scripts');
@@ -182,6 +183,7 @@ class JsController extends IndexController
                 phpr.TreeContent      = new phpr.TreeContent();
                 phpr.InitialScreen    = new phpr.InitialScreen();
                 phpr.BreadCrumb       = new phpr.BreadCrumb();
+                phpr.frontendMessage  = new phpr.FrontendMessage();
                 phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";
         ';
 

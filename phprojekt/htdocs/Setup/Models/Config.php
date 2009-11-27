@@ -69,6 +69,7 @@ class Setup_Models_Config
         $content .= $this->_getMail();
         $content .= $this->_getMisc();
         $content .= $this->_getFront();
+        $content .= $this->_getFrontendMessage();
 
         return $content;
     }
@@ -360,5 +361,42 @@ class Setup_Models_Config
         $content .= $this->_eol;
         $content .= '; Show internal javascript errors for debug' . $this->_eol;
         $content .= 'front.showInternalJsErrors = false' . $this->_eol;
+
+        return $content;
+    }
+
+    /**
+     * Return the frontend message text.
+     *
+     * @return string
+     */
+    private function _getFrontendMessage()
+    {
+        $content  = $this->_eol;
+        $content .= ';;;;;;;;;;;;;;;;;;;;;' . $this->_eol;
+        $content .= '; FRONTEND MESSAGES ;' . $this->_eol;
+        $content .= ';;;;;;;;;;;;;;;;;;;;;' . $this->_eol;
+        $content .= $this->_eol;
+        $content .= '; Show messages directely to the user if something will be changed on their data,' . $this->_eol;
+        $content .= '; projects, modules, items, etc...' . $this->_eol;
+        $content .= '; Options: true/ false' . $this->_eol;
+        $content .= 'frontendMessages = true' . $this->_eol;
+        $content .= $this->_eol;
+        $content .= '; Set how long a frontend messgae is valid in minutes.' . $this->_eol;
+        $content .= 'validPeriod = 2' . $this->_eol;
+        $content .= $this->_eol;
+        $content .= '; There is a notification to remind the user to a meeting she/he is invited in.' . $this->_eol;
+        $content .= '; Define here the minutes where the notification should appear' . $this->_eol;
+        $content .= '; before the meeting starts. This should be set in minutes!' . $this->_eol;
+        $content .= 'remindBefore = 15' . $this->_eol;
+        $content .= $this->_eol;
+        $content .= '; Define the long polling time in seconds. Max. value is 20s!' . $this->_eol;
+        $content .= 'pollingTime = 20' . $this->_eol;
+        $content .= $this->_eol;
+        $content .= '; Define the polling loops in seconds' . $this->_eol;
+        $content .= '; This is the interval after a new poll will be done.' . $this->_eol;
+        $content .= 'pollingLoop = 30' . $this->_eol;
+
+        return $content;
     }
 }

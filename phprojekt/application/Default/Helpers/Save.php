@@ -235,6 +235,10 @@ final class Default_Helpers_Save
                 }
             }
 
+            if (Phprojekt::getInstance()->getConfig()->frontendMessages) {
+                $model->getActiveRecord()->getNotification()->saveFrontendMessage();
+            }
+
             return $return;
         }
 
@@ -245,6 +249,12 @@ final class Default_Helpers_Save
             if (array_key_exists('sendNotification', $params)) {
                 if ($params['sendNotification'] == 'on' || $params['sendNotification'] == 1) {
                     $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
+                }
+            }
+
+            if (Phprojekt::getInstance()->getConfig()->frontendMessages) {
+                if (method_exists($model, 'getNotification')) {
+                    $model->getNotification()->saveFrontendMessage();
                 }
             }
 

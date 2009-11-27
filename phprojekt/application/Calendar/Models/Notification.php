@@ -209,4 +209,52 @@ class Calendar_Models_Notification extends Phprojekt_Notification
 
         return $bodyChanges;
     }
+
+    /**
+     * Define the datetime until the frontend message is valid
+     *
+     * @return string
+     */
+    public function getCalendarValidUntil()
+    {
+        $date = $this->_model->endDate;
+        $time = $this->_model->endTime;
+
+        return $date . ' ' . $time;
+    }
+
+    /**
+     * Defines the datetime from which the generated frontend message is valid.
+     *
+     * @return string
+     */
+    public function getCalendarValidFrom()
+    {
+        $date           = $this->_model->startDate;
+        $time           = $this->_model->startTime;
+        $configMin      = Phprojekt::getInstance()->getConfig()->remindBefore;
+        $configMinInSec = ($configMin * 60);
+
+        return date("Y-m-d H:i:s", (strtotime($date . ' ' . $time) - $configMinInSec));
+
+    }
+
+    /**
+     * Overwrites the existing saveFrontendMessage.
+     * Runs a regular save first and if successful,
+     * runs a second save for the alert befor a meeting starts.
+     *
+     * @return boolean
+     */
+    public function saveFrontendMessage()
+    {
+        if (true === parent::saveFrontendMessage()){
+            $this->_validFrom       = $this->getCalendarValidFrom();
+            $this->_validUntil      = $this->getCalendarValidUntil();
+            $this->_controllProcess = Phprojekt_Notification::LAST_ACTION_REMIND;
+            return parent::saveFrontendMessage();
+        }
+
+        return false;
+    }
 }

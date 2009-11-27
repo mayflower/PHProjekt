@@ -80,6 +80,13 @@
                 <div id="ServerFeedback" dojoType="dojox.widget.Toaster" messageTopic="ServerFeedback"
                 positionDirection="tr-left" duration="5000" separator="<hr style='margin: 0' />">
                 </div>
+                <div id="FrontendMessage" dojoType="dojox.widget.Toaster" messageTopic="FrontendMessage"
+                positionDirection="br-up" duration="10000" separator="<hr style='margin: 0' />">
+                    <button dojoType="dijit.form.Button" id="disableFrontendMessage" type="submit" iconClass="cross"
+                    onClick='phpr.frontendMessage.disableFrontendMessages()'
+                    baseClass="dijitButton, smallIcon">Never show this type of message again!
+                    </button>
+                </div>
             </div>
             <!-- Form buttons -->
             <div dojoType="dijit.layout.ContentPane" region="bottom" class="block" splitter="false"

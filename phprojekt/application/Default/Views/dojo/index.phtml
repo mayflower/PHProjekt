@@ -69,6 +69,27 @@
             }
         }
 
+        // This variable is needed to be able to clear an existing interval.
+        var interval;
+
+        function getFrontendMessage() {
+            <?php
+            if ($this->frontendMsg) {
+            ?>
+                var pollingLoop = <?php echo $this->pollingLoop; ?>;
+                phpr.frontendMessage.getFrontendMessage();
+                interval = setInterval(dojo.hitch(this, function() {
+                    phpr.frontendMessage.getFrontendMessage();
+                }), pollingLoop);
+            <?php
+            } else {
+            ?>
+                return;
+            <?php
+            }
+            ?>
+        }
+
         dojo.addOnLoad(function() {
             <?php
             if (true === $this->isLoggedIn) {
@@ -111,6 +132,10 @@
             if (true !== $this->isLoggedIn) {
             ?>
                 dojo.byId('username').focus();
+            <?php
+            } else {
+            ?>
+                getFrontendMessage();
             <?php
             }
             ?>

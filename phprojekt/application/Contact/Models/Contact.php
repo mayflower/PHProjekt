@@ -34,6 +34,20 @@
 class Contact_Models_Contact extends Phprojekt_Item_Abstract
 {
     /**
+     * Field for display in the search results
+     *
+     * @var string
+     */
+    public $searchFirstDisplayField = 'name';
+
+    /**
+     * Field for display in the search results
+     *
+     * @var string
+     */
+    public $searchSecondDisplayField = 'company';
+
+    /**
      * Rewrites parent fetchAll
      * only public records are shown
      *
