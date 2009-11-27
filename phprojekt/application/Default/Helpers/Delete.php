@@ -102,7 +102,7 @@ final class Default_Helpers_Delete
     protected static function _deleteModel(Phprojekt_Model_Interface $model)
     {
         // Checks
-        $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+        $moduleName = Phprojekt_Loader::getModuleFromObject($model);
         if (!self::_checkItemRights($model, $moduleName)) {
             throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
