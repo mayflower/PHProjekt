@@ -42,11 +42,11 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     gridLayout:    new Array(),
 
     // Filters
-    filterField:   new Array(),
-    _rules:        new Array(),
-    _filterCookie: null,
-    _listUrl:      null,
-
+    filterField:       new Array(),
+    _rules:            new Array(),
+    _filterCookie:     null,
+    _listUrl:          null,
+    _deleteAllFilters: null,
 
     // Constants
     MODE_XHR:        0,
@@ -746,17 +746,26 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             }
         }
 
-        if (filters.length > 0) {
-            html += this.render(["phpr.Default.template.filters", "display.html"], null, {
-                module:   phpr.module,
-                id:       'all',
-                operator: '  |  ',
-                field:    phpr.nls.get('Delete all filters'),
-                rule:     '',
-                value:    ''
-            });
-        }
         dijit.byId('filterDisplayDiv').attr('content', html);
+
+        if (filters.length > 0) {
+            if (this._deleteAllFilters === null) {
+                var params = {
+                    label:     phpr.nls.get('Delete all filters'),
+                    showLabel: true,
+                    baseClass: "positive",
+                    iconClass: "cross",
+                    disabled:  false,
+                    style:     'margin-left: 10px;'
+                };
+                this._deleteAllFilters = new dijit.form.Button(params);
+                dojo.byId("filterDisplayDelete").appendChild(this._deleteAllFilters.domNode);
+                dojo.connect(this._deleteAllFilters, "onClick", dojo.hitch(this, "deleteFilter", ['all']));
+            }
+        } else {
+            phpr.destroySubWidgets('filterDisplayDelete');
+            this._deleteAllFilters = null;
+        }
     },
 
     setSaveChangesButton:function(meta) {

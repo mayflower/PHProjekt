@@ -284,16 +284,6 @@
     vertical-align: top;
 }
 
-.phprojekt #filesList .closeButton .dijitButtonNode,
-.phprojekt #gridFiltersBox .closeButton .dijitButtonNode {
-    padding: 0px 0px 0px 0px;
-    margin: 0px 0px 0px 0px;
-    width: 13px;
-    border: none;
-    background: none;
-    vertical-align: middle;
-}
-
 .phprojekt .closeButton {
     margin: 0px 0px 0px 0px;
 }

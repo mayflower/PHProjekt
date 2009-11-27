@@ -5,9 +5,25 @@
     </div>
     {% endif %}
     <div class="displayFilter">
-        {{field}} {{rule}} {{value}}
-        <button dojoType="dijit.form.Button" showLabel="false" iconClass="close" class="closeFilter closeButton"}
+        <div class="displayLeftFilter">
+            &nbsp;
+        </div>
+        <div class="displayFilerField">
+            {{field}}
+        </div>
+        <div class="displayFilerRule">
+            <i>{{rule}}</i>
+        </div>
+        <div class="displayFilerValue">
+            <b>{{value}}</b>
+        </div>
+        <div class="displayFilerButton">
+            <button dojoType="dijit.form.Button" showLabel="false" iconClass="close" class="closeFilter closeButton"}
             onClick="dojo.publish('{{module}}.gridProxy', ['deleteFilter', '{{id}}'])";>
-        </button>
+            </button>
+        </div>
+        <div class="displayRightFilter">
+            &nbsp;
+        </div>
     </div>
 </div>

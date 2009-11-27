@@ -1,15 +1,53 @@
 .phprojekt .displayOperator {
     float: left;
-    padding: 4px 5px 1px;
+    padding: 1px 5px 1px;
     width: auto;
 }
 
 .phprojekt .displayFilter {
-    border: 1px solid #294064;
     float: left;
-    padding: 1px 5px;
-    width: auto;
-    margin-bottom: 2px;
+    height: 20px;
+    padding-top: 1px;
+}
+
+.phprojekt .displayLeftFilter {
+    background: url("../images/filter-left.gif") left center no-repeat;
+    float: left;
+    height: 20px;
+}
+
+.phprojekt .displayFilerField {
+    background: #a4c0e8;
+    padding: 0px 2px 0px 2px;
+    float: left;
+    height: 20px;
+}
+
+.phprojekt .displayFilerRule {
+    background: #a4c0e8;
+    padding: 0px 4px 0px 2px;
+    float: left;
+    height: 20px;
+}
+
+.phprojekt .displayFilerValue {
+    background: #a4c0e8;
+    padding: 0px 2px 0px 2px;
+    float: left;
+    height: 20px;
+}
+
+.phprojekt .displayFilerButton {
+    background: #a4c0e8;
+    padding: 0px 2px 0px 0px;
+    float: left;
+    height: 20px;
+}
+
+.phprojekt .displayRightFilter {
+    background: url("../images/filter-right.gif") right center no-repeat;
+    float: left;
+    height: 20px;
 }
 
 .dj_ie .phprojekt #filterForm {
@@ -26,10 +64,37 @@
     padding-right: 10px;
 }
 
+.phprojekt #filterDisplayDiv {
+    border-top: 1px solid #294064;
+    height: auto !important;
+    overflow: visible;
+    padding-top: 5px;
+    width: 87% !important;
+    margin-top: 2px;
+}
+
+.phprojekt #filterDisplayDiv,
+.phprojekt #filterDisplayDelete {
+    float: left;
+}
+
+.dj_ie .phprojekt #filterDisplayDiv {
+    padding-top: 0px;
+}
+
 .dj_ie .phprojekt .closeFilter {
     padding-bottom: 0px;
 }
 
-.dj_ie .phprojekt #filterDisplayDiv {
-    height: auto !important;
+.phprojekt #filesList .closeButton .dijitButtonNode,
+.phprojekt #gridFiltersBox .closeButton .dijitButtonNode {
+    width: 13px;
+    border: none;
+    background: none;
+    vertical-align: middle;
+}
+
+.phprojekt #filterDisplayDelete .dijitButtonNode,
+.phprojekt #filterButtonDiv .dijitButtonNode {
+    padding: 0px
 }
