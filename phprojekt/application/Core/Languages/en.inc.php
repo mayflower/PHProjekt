@@ -54,8 +54,8 @@ $lang["Here can be configured general settings of the site that affects all the 
 $lang["Please choose one of the tabs of above."] = "Please choose one of the tabs of above.";
 
 // General Help
-$lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Administration"] = "<br />
+$lang["Content Help Administration"]["General"] = "DEFAULT";
+$lang["Content Help Administration"]["Administration"] = "<br />
     This is the <b>General Help of Administration module</b><br />
     <br />
     This module is only accessible to users with Admin profile.<br />
@@ -76,7 +76,7 @@ $lang["Content Help"]["Administration"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Module"] = "<br />
+$lang["Content Help Administration"]["Module"] = "<br />
     <b>Module tab</b><br />
     <br />
     The Module Designer is a very easy-to-use visual drag & drop interface to create modules or modify the existing
@@ -179,7 +179,7 @@ $lang["Content Help"]["Module"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Tab"] = "<br />
+$lang["Content Help Administration"]["Tab"] = "<br />
     <b>TAB tab</b><br />
     <br />
     This section permits modifying the tabs of the modules.<br />
@@ -206,7 +206,7 @@ $lang["Content Help"]["Tab"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["User"] = "<br />
+$lang["Content Help Administration"]["User"] = "<br />
     <b>User tab</b><br />
     <br />
     This section is designed to manage all the users of the system.<br />
@@ -215,7 +215,7 @@ $lang["Content Help"]["User"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Role"] = "<br />
+$lang["Content Help Administration"]["Role"] = "<br />
     <b>Role tab</b><br />
     <br />
     This tab permits managing the Roles.<br />
@@ -276,8 +276,8 @@ $lang["Tooltip"]["datarecords"] = "This is to turn on/off system generated messa
     . "and EDIT an Item.";
 
 // General Help
-$lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Setting"] = "<br />
+$lang["Content Help Setting"]["General"] = "DEFAULT";
+$lang["Content Help Setting"]["Setting"] = "<br />
     This is the <b>General Help of Setting module</b><br />
     <br />
     This module is for the user to set and change specific configuration parameters of his/her profile.<br />
@@ -287,7 +287,7 @@ $lang["Content Help"]["Setting"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["User"] = "<br />
+$lang["Content Help Setting"]["User"] = "<br />
     <b>User tab</b><br />
     <br />
     Inside this tab the user basic settings are configured.<br />
@@ -297,7 +297,7 @@ $lang["Content Help"]["User"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Timecard"] = "<br />
+$lang["Content Help Setting"]["Timecard"] = "<br />
     <b>Timecard tab</b><br />
     <br />
     Here the user can configure the Projects where is working the most, so that they will appear for drag and drop
