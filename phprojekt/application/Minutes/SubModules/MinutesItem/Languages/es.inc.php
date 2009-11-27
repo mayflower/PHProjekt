@@ -7,7 +7,6 @@ $lang["Who"] = "Quién";
 $lang["Type"] = "Tipo";
 $lang["Date"] = "Fecha";
 $lang["Sort after"] = "Ubicar luego de";
-$lang["New"] = "Nuevo";
 
 // [Form.js] - Tab name
 $lang["MinutesItem"] = "Items";

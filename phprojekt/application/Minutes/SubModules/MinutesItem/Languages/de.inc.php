@@ -7,10 +7,9 @@ $lang["Who"] = "Wer";
 $lang["Type"] = "Typ";
 $lang["Date"] = "Datum";
 $lang["Sort after"] = "Einordnen nach";
-$lang["New"] = "Neu";
 
 // [Form.js] - Tab name
-$lang["Items"] = "Einträge";
+$lang["MinutesItem"] = "Einträge";
 
 // [Form.js] - Selectbox values
 $lang["Topic"] = "TOP"; // Short form of Tagesordnungspunkt

@@ -9,7 +9,7 @@ $lang["Date"] = "Date";
 $lang["Sort after"] = "Sort after";
 
 // [Form.js] - Tab name
-$lang["MenuItems"] = "Items";
+$lang["MinutesItem"] = "Items";
 
 // [Form.js] - Selectbox values
 $lang["Topic"] = "Topic";
