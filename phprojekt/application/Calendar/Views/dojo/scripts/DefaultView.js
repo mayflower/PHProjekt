@@ -1476,6 +1476,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 
         // Clean the repeated 'further events'. Copy the rest to the global variable
         if (furtherEventsTemp['show']) {
+            this._furtherEvents['events'] = new Array();
             for (var event in furtherEventsTemp['events']) {
                 var repeated = false;
                 for (var i in this._furtherEvents['events']) {
