@@ -28,7 +28,6 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     // Description:
     //    This Class provides the basic variables and functions for the class that takes care of displaying the list
     //    information we receive from our Server in a HTML table.
-
     main:                 null,
     id:                   0,
     url:                  null,
@@ -44,7 +43,6 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     _gridBoxWidthPrev:    null,
     _calenSchedWidthPrev: null,
     _saveChanges:         null,
-    eventDivMoved:        false,
     eventClickDisabled:   false,
     stepH:                null,
     stepY:                null,
@@ -407,7 +405,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    (not the background 'eventsArea' div)
         var widthDays = dojo.byId('scheduleBackground').offsetWidth - this._cellTimeWidth;
         if (this.main.weekList != null) {
-            var position  = day * widthDays / 7;
+            var position = day * widthDays / 7;
         } else if(this.main.dayListSelf != null) {
             var position = 0;
         }
@@ -531,7 +529,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    On startup and everytime it is called: activates or inactivates Y resize for each div.
         for (var i in this.events) {
             if (startup) {
-                var eventDiv          = new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
+                new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
                 var resizeDiv         = dijit.byId('eventResize' + i);
                 resizeDiv.parentClass = this;
                 // Minimum size:
@@ -1697,6 +1695,8 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
 });
 
 dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
+    eventDivMoved: false,
+
     constructor:function(node, params, parentClass) {
         this.parentClass = parentClass;
     },
@@ -1725,8 +1725,8 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
 
         // Calculate new left position
         if (movedEvent['simultWidth']) {
-            //  If event is concurrent and it is not the first one from left to right, attach its left side to column
-            // border
+            // If event is concurrent and it is not the first one from left to right,
+            // attach its left side to column border
             leftTop.l -= stepH / movedEvent['simultAmount'] * (movedEvent['simultOrder'] - 1);
             leftTop.l  = parseInt(leftTop.l);
         }
@@ -1772,7 +1772,7 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
             this.onMoved(mover, leftTop);
 
             // Following value will be checked by onMoveStop function of this class
-            this.parentClass.eventDivMoved = true;
+            this.eventDivMoved = true;
 
             // Update descriptive content of the event
             this.parentClass.eventMoved(this.node, false);
@@ -1789,11 +1789,11 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
 
         // Following code has been added for this view, it calls eventMoved view class function or opens the form with
         // the clicked event.
-        if (this.parentClass.eventDivMoved) {
+        if (this.eventDivMoved) {
             // The event has been dragged, update descriptive content of the event and internal array
             this.parentClass.eventMoved(this.node, true);
             // Allow the event to be just clicked to open it in the form, but wait a while first...
-            this.parentClass.eventDivMoved = false;
+            this.eventDivMoved = false;
             setTimeout('dojo.publish("Calendar.enableEventDivClick")', 500);
         } else {
             if (!this.parentClass.eventClickDisabled) {
