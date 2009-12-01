@@ -20,16 +20,16 @@
 dojo.provide("phpr.Calendar.Main");
 
 dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
-    _date:                 new Date(),
-    _usersSelectionMode:   false,
-    _usersSelected:        Array(),
-    _scrollLastDirection:  0,
-    _gridLastScrollTop:    0,
-    _scrollDelayed:        0,
-    _scrollConnection:     null,
-    _resizeConnection:     null,
-    _actionPending:        false,
-    _dateWheelChanged:     false, // Whether the current date has just changed using the mouse wheel
+    _date:                new Date(),
+    _usersSelectionMode:  false,
+    _usersSelected:       Array(),
+    _scrollLastDirection: 0,
+    _gridLastScrollTop:   0,
+    _scrollDelayed:       0,
+    _scrollConnection:    null,
+    _resizeConnection:    null,
+    _actionPending:       false,
+    _dateWheelChanged:    false, // Whether the current date has just changed using the mouse wheel
 
     SCROLL_UP:    1,
     SCROLL_DOWN: -1,
@@ -67,10 +67,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     reload:function() {
         // Summary:
         //    This function reloads the current module
-        // description:
+        // Description:
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
-        // important set the global phpr.module to the module which is currently loaded!!!
+        //    important set the global phpr.module to the module which is currently loaded!!!
         phpr.module       = this.module;
         phpr.submodule    = '';
         phpr.parentmodule = '';
@@ -206,7 +206,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         if (this.actionRequested()) {
             return;
         }
-
         this.loadGrid();
     },
 
@@ -216,11 +215,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
             dijit.byId('gridFiltersBox').toggle();
         }
-
         if (this.actionRequested()) {
             return;
         }
-
         if (!this._usersSelectionMode) {
             this.loadDayListSelf();
         } else {
@@ -234,11 +231,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
             dijit.byId('gridFiltersBox').toggle();
         }
-
         if (this.actionRequested()) {
             return;
         }
-
         this.loadWeekList();
     },
 
@@ -248,11 +243,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
             dijit.byId('gridFiltersBox').toggle();
         }
-
         if (this.actionRequested()) {
             return;
         }
-
         this.loadMonthList();
     },
 
@@ -651,6 +644,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         //    Returns the position in the year for the week we are working with
         var firstDayYear = new Date(this._date.getFullYear(),0,1);
         var week         = Math.ceil((((this._date - firstDayYear) / 86400000) + firstDayYear.getDay())/7);
+
         return week;
     },
 
@@ -658,6 +652,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Summary
         //    Capitalizes the first letter of a string
         result = str.slice(0,1).toUpperCase() + str.slice(1);
+
         return result;
     },
 

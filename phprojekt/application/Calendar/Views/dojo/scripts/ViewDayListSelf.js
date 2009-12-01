@@ -48,7 +48,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         //    This function is called when the request to the DB is received
         // Description:
         //    It parses that json info and prepares an apropriate array so that the template can render
-        // appropriately the TABLE html element.
+        //    appropriately the TABLE html element.
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
         // Render Export and Save buttons?

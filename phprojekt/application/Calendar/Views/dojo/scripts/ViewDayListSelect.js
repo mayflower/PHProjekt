@@ -22,7 +22,7 @@ dojo.provide("phpr.Calendar.ViewDayListSelect");
 dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
     // Summary:
     //    Class for displaying a Calendar Day List for a specific selection of users
-    // description:
+    // Description:
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
     _headerDataUrl: null,
     _header:        Array(),
@@ -105,14 +105,13 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
         //    This function fills the week days arrays with the rows for every half of hour.
         // Description:
         //    Fills the array with the users and all the possible points in time for this day view: 8:00, 8:30, 9:00
-        // and so on, until 19:30. Each of that rows will have as many columns as users plus simultaneous events exist.
-        // Also sets for every row whether it is even or not.
-
+        //    and so on, until 19:30. Each of that rows will have as many columns as users plus simultaneous
+        //    events exist.
+        //    Also sets for every row whether it is even or not.
         this._schedule = new Array(24);
-
         for (var hour = 8; hour < 20; hour++) {
             for (var half = 0; half < 2; half++) {
-                var minute = half * 30;
+                var minute = (half == 0) ? '00' : '30';
                 var row    = ((hour - 8) * 2) + half;
 
                 this._schedule[row] = new Array(this._users.length);
@@ -120,8 +119,9 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
                     this._schedule[row][user] = new Array();
                 }
 
-                this._schedule[row]['hour'] = this.formatTime(hour + ':' + minute);
-                if (Math.floor(row / 2) == (row / 2)) {
+                this._schedule[row]['hour'] = phpr.Date.getIsoTime(hour + ':' + minute);
+                var temp = (row / 2);
+                if (Math.floor(temp) == temp) {
                     // Even row
                     this._schedule[row]['even'] = true;
                 } else {
@@ -163,8 +163,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
             for (var event in content) {
                 var userId    = parseInt(content[event]['participantId']);
                 var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
-                                                  content[event]['endDate'], content[event]['endTime'],
-                                                  this._date, this._schedule[row]['hour']);
+                    content[event]['endDate'], content[event]['endTime'], this._date, this._schedule[row]['hour']);
                 if (eventInfo['type'] == this.EVENT_TIME_START || eventInfo['type'] == this.EVENT_TIME_INSIDE) {
                     currentEventsNow[row][this.getUserColumnPosition(userId)] ++;
                 }
@@ -215,11 +214,10 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
         //    Puts every event in the corresponding array and position.
         // Description:
         //    Receives the response from the DB and puts all the events of the selected users in the appropriate
-        // position inside the schedule array.
+        //    position inside the schedule array.
         for (var event in content) {
             var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
-                                              content[event]['endDate'], content[event]['endTime'],
-                                              this._date);
+                content[event]['endDate'], content[event]['endTime'], this._date);
             if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
                 var rowEventBegins   = eventInfo['halfBeginning'];
                 var rowEventFinishes = rowEventBegins + eventInfo['halvesDuration'];

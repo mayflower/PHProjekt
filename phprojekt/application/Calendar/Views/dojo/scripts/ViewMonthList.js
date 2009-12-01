@@ -57,7 +57,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         //    This function is called when the request to the DB is received
         // Description:
         //    It parses that json info and prepares an apropriate array so that the template can render
-        // appropriately the TABLE html element.
+        //    appropriately the TABLE html element.
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
         // Render export Button?
@@ -81,7 +81,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
     exportData:function() {
         // Summary:
         //    Opens a new window in CSV mode
-        var dateTemp = this.stringToDate();
+        var dateTemp = phpr.Date.isoDateTojsDate(this._date);
         dateTemp.setDate(1);
         var firstDayMonth = this.formatDate(dateTemp.getFullYear() + '-' + (dateTemp.getMonth() + 1) + '-'
             + dateTemp.getDate());
@@ -99,16 +99,15 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
     fillScheduleArrayPart1:function() {
         // Summary:
         //    Fills the schedule array with the basic structure and data of every day of the calendar month table.
-        // It includes not only the days of this month but the necessary days of the previous and next month in
-        // order to fill 4 or 6 week rows, from Monday to Sunday.
-
+        //    It includes not only the days of this month but the necessary days of the previous and next month in
+        //    order to fill 4 or 6 week rows, from Monday to Sunday.
         var today = new Date();
         today     = this.formatDate(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate());
 
         // First dimension is each row shown, the amount of rows depends on each month:
         this._schedule = new Array();
 
-        var dateTemp    = this.stringToDate();
+        var dateTemp    = phpr.Date.isoDateTojsDate(this._date);
         var daysInMonth = dojo.date.getDaysInMonth(dateTemp);
         dateTemp.setDate(1);
         var firstDayDiff = dateTemp.getDay() - 1;
@@ -165,8 +164,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
             for (var row in this._schedule) {
                 for (weekDay in this._schedule[row]) {
                     var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
-                                                      content[event]['endDate'], content[event]['endTime'],
-                                                      this._schedule[row][weekDay]['date']);
+                        content[event]['endDate'], content[event]['endTime'], this._schedule[row][weekDay]['date']);
                     if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
                         if (typeof(this._schedule[row][weekDay]['events']) == 'undefined') {
                             this._schedule[row][weekDay]['events'] = new Array();
@@ -188,27 +186,26 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
                           /*string*/ momentAskedDate) {
         // Summary:
         //    Returns useful data about an event, used to create the schedule table.
-
-        var result             = new Array();  // The variable that will be returned
-        var eventStart_Date    = new Date();   // Date and time the event starts
-        var eventEnd_Date      = new Date();   // Date and time the event ends
-        var momentAsked_Date   = new Date();   // momentAsked (with or without time)
-        var eventStartDay_Date = new Date();   // Just the year/month/day of the event start
-        var eventEndDay_Date   = new Date();   // Just the year/month/day of the event end
+        var result             = new Array(); // The variable that will be returned
+        var eventStart_Date    = new Date();  // Date and time the event starts
+        var eventEnd_Date      = new Date();  // Date and time the event ends
+        var momentAsked_Date   = new Date();  // momentAsked (with or without time)
+        var eventStartDay_Date = new Date();  // Just the year/month/day of the event start
+        var eventEndDay_Date   = new Date();  // Just the year/month/day of the event end
 
         // Convert strings variables into date ones
-        temp                  = eventStartDate_String.split('-');
-        var eventStartYear    = parseInt(temp[0], 10);
-        var eventStartMonth   = parseInt(temp[1], 10);
-        var eventStartDay     = parseInt(temp[2], 10);
-        temp                  = eventEndDate_String.split('-');
-        var eventEndYear      = parseInt(temp[0], 10);
-        var eventEndMonth     = parseInt(temp[1], 10);
-        var eventEndDay       = parseInt(temp[2], 10);
-        var temp              = momentAskedDate.split('-');
-        var momentAskedYear   = parseInt(temp[0], 10);
-        var momentAskedMonth  = parseInt(temp[1], 10);
-        var momentAskedDay    = parseInt(temp[2], 10);
+        temp                 = eventStartDate_String.split('-');
+        var eventStartYear   = parseInt(temp[0], 10);
+        var eventStartMonth  = parseInt(temp[1], 10);
+        var eventStartDay    = parseInt(temp[2], 10);
+        temp                 = eventEndDate_String.split('-');
+        var eventEndYear     = parseInt(temp[0], 10);
+        var eventEndMonth    = parseInt(temp[1], 10);
+        var eventEndDay      = parseInt(temp[2], 10);
+        var temp             = momentAskedDate.split('-');
+        var momentAskedYear  = parseInt(temp[0], 10);
+        var momentAskedMonth = parseInt(temp[1], 10);
+        var momentAskedDay   = parseInt(temp[2], 10);
 
         eventStartDay_Date.setFullYear(eventStartYear, eventStartMonth - 1, eventStartDay);
         eventStartDay_Date.setHours(0, 0, 0, 0);

@@ -47,8 +47,6 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     setUrl:function() {
         // Summary:
         //    Sets the url to get the data from
-        // Description:
-        //    Sets the url to get the data from
         this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonPeriodList/dateStart/" + this._weekDays[0]
             + "/dateEnd/" + this._weekDays[6];
     },
@@ -58,7 +56,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         //    This function is called when the request to the DB is received
         // Description:
         //    It parses that json info and prepares the appropriate arrays so that it can be rendered correctly the
-        // template and the events.
+        //    template and the events.
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
         // Render Export and Save buttons?
@@ -108,13 +106,12 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     setWeekDays:function() {
         // Summary:
         //    Fills the weekDays array with all the dates of the selected week in string format.
-        var selectedDate = this.stringToDate();
+        var selectedDate = phpr.Date.isoDateTojsDate(this._date);
         var dayTemp;
 
         for (var i = 0; i < 7; i ++) {
             dayTemp           = dojo.date.add(selectedDate, 'day', i + 1 - selectedDate.getDay());
-            this._weekDays[i] = this.formatDate(dayTemp.getFullYear() + '-' + (dayTemp.getMonth() + 1) + '-'
-                + dayTemp.getDate());
+            this._weekDays[i] = phpr.Date.getIsoDate(dayTemp);
         }
     },
 
@@ -122,19 +119,12 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         // Summary:
         //    Fills the header array with the main row of the table.
         this._header['columnsWidth'] = Math.floor((100 - this._widthHourColumn) / 7);
-        var daysAbbrev               = new Array(phpr.nls.get('Mo'),
-                                                 phpr.nls.get('Tu'),
-                                                 phpr.nls.get('We'),
-                                                 phpr.nls.get('Th'),
-                                                 phpr.nls.get('Fr'),
-                                                 phpr.nls.get('Sa'),
-                                                 phpr.nls.get('Su'));
-
-        this._header['days'] = new Array();
+        this._header['days']         = new Array();
         for (var i = 0; i < 7; i ++) {
-            this._header['days'][i]                 = new Array();
-            this._header['days'][i]['dayAbbrev']    = daysAbbrev[i];
-            this._header['days'][i]['date']         = this._weekDays[i];
+            var index                            = (i + 1) < 7 ? i + 1 : 0;
+            this._header['days'][i]              = new Array();
+            this._header['days'][i]['dayAbbrev'] = phpr.Date.getShortTranslateWeekDay(index);
+            this._header['days'][i]['date']      = this._weekDays[i];
         }
     },
 
@@ -151,9 +141,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
                 } else {
                     var mode = 'visible';
                 }
-                dojo.style(dojo.byId(this.EVENTS_MAIN_DIV_ID + i), {
-                    visibility: mode
-                });
+                dojo.style(dojo.byId(this.EVENTS_MAIN_DIV_ID + i), 'visibility', mode);
             }
         }
     }

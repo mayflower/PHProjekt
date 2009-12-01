@@ -34,14 +34,14 @@
 <div id="eventsArea" style="float: left; position: absolute;">
     {% for event in events %}
     <div id="{{eventsAttr.divIdPre}}{{event.order}}" class="eventsDivMain"
-    style="position: absolute; overflow: hidden; 
+    style="position: absolute; overflow: hidden;
         {% ifequal event.shown true %}
         visibility: visible;
         {% else %}
         visibility: hidden;
         {% endifequal %}
         ">
-        <div id="plainDiv{{event.order}}" class="eventsDivSecond" 
+        <div id="plainDiv{{event.order}}" class="eventsDivSecond"
         style="border-width: {{eventsAttr.borderWidth}}px; cursor: pointer;"></div>
         <div dojoType="phpr.Calendar.ResizeHandle" resizeAxis="y" activeResize="true" targetId="plainDiv{{event.order}}"
         id="eventResize{{event.order}}"

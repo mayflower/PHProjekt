@@ -47,14 +47,6 @@ $lang["Interval"] = "Interval";
 $lang["Until"] = "Until";
 $lang["Weekdays"] = "Weekdays";
 
-$lang["Mo"] = "Mo";
-$lang["Tu"] = "Tu";
-$lang["We"] = "We";
-$lang["Th"] = "Th";
-$lang["Fr"] = "Fr";
-$lang["Sa"] = "Sa";
-$lang["Su"] = "Su";
-
 // Messages
 $lang["Select users for the group view"] = "Select users for the group view";
 $lang["You have to select at least one user!"] = "You have to select at least one user!";
