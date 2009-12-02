@@ -83,12 +83,10 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         //    Opens a new window in CSV mode
         var dateTemp = phpr.Date.isoDateTojsDate(this._date);
         dateTemp.setDate(1);
-        var firstDayMonth = this.formatDate(dateTemp.getFullYear() + '-' + (dateTemp.getMonth() + 1) + '-'
-            + dateTemp.getDate());
-        var daysInMonth = dojo.date.getDaysInMonth(dateTemp);
+        var firstDayMonth = phpr.Date.getIsoDate(dateTemp);
+        var daysInMonth   = dojo.date.getDaysInMonth(dateTemp);
         dateTemp.setDate(daysInMonth);
-        var lastDayMonth = this.formatDate(dateTemp.getFullYear() + '-' + (dateTemp.getMonth() + 1) + '-'
-                + dateTemp.getDate());
+        var lastDayMonth = phpr.Date.isoDateTojsDate(dateTemp);
 
         window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvPeriodList" + "/dateStart/"
                + firstDayMonth + "/dateEnd/" + lastDayMonth);
@@ -102,7 +100,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         //    It includes not only the days of this month but the necessary days of the previous and next month in
         //    order to fill 4 or 6 week rows, from Monday to Sunday.
         var today = new Date();
-        today     = this.formatDate(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate());
+        today     = phpr.Date.getIsoDate(today);
 
         // First dimension is each row shown, the amount of rows depends on each month:
         this._schedule = new Array();
@@ -127,8 +125,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
                 this._schedule[i][j]         = new Array();
                 dateTemp                     = dojo.date.add(firstDayShown, 'day', (i * 7) + j);
                 this._schedule[i][j]['day']  = dateTemp.getDate();
-                this._schedule[i][j]['date'] = this.formatDate(dateTemp.getFullYear() + '-' + (dateTemp.getMonth() + 1)
-                        + '-' + dateTemp.getDate());
+                this._schedule[i][j]['date'] = phpr.Date.getIsoDate(dateTemp);
                 if (this._schedule[i][j]['date'] == today) {
                     this._schedule[i][j]['color'] = this.COLOR_TODAY;
                 } else if (((i == 0) && (this._schedule[i][j]['day'] > 22))

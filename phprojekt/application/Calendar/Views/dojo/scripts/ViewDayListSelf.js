@@ -79,6 +79,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         });
 
         dojo.publish('Calendar.connectMouseScroll');
+        dojo.publish('Calendar.connectViewResize');
 
         this.setVarsAndDivs();
         this.classesSetup(true);

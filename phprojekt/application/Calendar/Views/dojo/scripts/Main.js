@@ -139,7 +139,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('dayListSelf');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        var dateString = this.dateToString();
+        var dateString = phpr.Date.getIsoDate(this._date);
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.dayListSelf = new this.dayListSelfWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
@@ -155,7 +155,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('dayListSelect');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        var dateString = this.dateToString();
+        var dateString = phpr.Date.getIsoDate(this._date);
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.dayListSelect = new this.dayListSelectWidget(updateUrl, phpr.currentProjectId, dateString,
@@ -172,7 +172,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('weekList');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        var dateString = this.dateToString();
+        var dateString = phpr.Date.getIsoDate(this._date);
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.weekList = new this.weekListWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
@@ -188,7 +188,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('monthList');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        var dateString = this.dateToString();
+        var dateString = phpr.Date.getIsoDate(this._date);
         this.monthList = new this.monthListWidget(this, phpr.currentProjectId, dateString);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
@@ -579,8 +579,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             }
 
             if (this.isListActive('dayList')) {
-                var dateString  = this.dateToString();
-                var dateDescrip = this.dateDescripDay() + ', ' + this.formatDate(dateString);
+                var dateString  = phpr.Date.getIsoDate(this._date);
+                var dateDescrip = this.dateDescripDay() + ', ' + dateString;
             } else if (this.isListActive(this.weekList)) {
                 var dateDescrip = this.getWeek() + ' . ' + phpr.nls.get('Calendar week');
             } else if (this.isListActive(this.monthList)) {
@@ -602,12 +602,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         }
     },
 
-    dateToString:function() {
-        // Summary
-        //    Returns the date we are working with, in string format
-        return this._date.getFullYear() + '-' + (this._date.getMonth() + 1) + '-' + this._date.getDate();
-    },
-
     dateDescripDay:function() {
         // Summary:
         //    Returns the day of the week we are working with, in a descriptive string of the current language
@@ -624,19 +618,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         monthDescrip = months[this._date.getMonth()];
         monthDescrip = this.capitalizeFirstLetter(monthDescrip);
         return monthDescrip;
-    },
-
-    formatDate:function(date) {
-        // Summary:
-        //    Formats a date string. E.g. receives '2009-5-4' and returns '2009-05-04'
-        var temp   = date.split('-');
-        var year   = temp[0];
-        var month  = temp[1];
-        var day    = temp[2];
-        var result = year + '-' + dojo.number.format(month, {pattern: '00'}) + '-'
-            + dojo.number.format(day, {pattern: '00'});
-
-        return result;
     },
 
     getWeek:function() {
@@ -706,7 +687,11 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     gridResized:function() {
         // Summary:
         //    Receives the call of event of view resize and calls the appropriate function to update vars and divs.
-        if (this.weekList) {
+        if (this.dayListSelf) {
+            this.dayListSelf.setVarsAndDivs();
+        } else if (this.dayListSelect) {
+            this.dayListSelect.setVarsAndDivs();
+        } else if (this.weekList) {
             this.weekList.setVarsAndDivs();
         }
     },
@@ -714,7 +699,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     scrollDone:function(scrollValue) {
         // Summary
         //    Called whenever the user scrolls the mouse wheel over the grid. Detects whether to interpret it as a
-        // request for changing to previous or next month grid.
+        // request for changing to previous or next day/week/month grid.
         var grid   = dojo.byId('gridBox');
 
         // Scrolled UP or DOWN?
@@ -722,9 +707,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             // UP - Is this at least the second time user scrolls up, and the grid scrolling space has reached its top?
             if (this._scrollLastDirection == this.SCROLL_UP && this._gridLastScrollTop == grid.scrollTop) {
                 this._scrollDelayed ++;
-                // Wait for a specific amount of scroll movements, so that month change doesn't happen without intention
+                // Wait for a specific amount of scroll movements, so that day/week/month change doesn't happen without
+                // intention.
                 if (this._scrollDelayed >= this.SCROLL_DELAY) {
-                    // Delayed 'time' reached, reset variables and go previous month
+                    // Delayed 'time' reached, reset variables and go previous day/week/month
                     this._scrollLastDirection = 0;
                     this._scrollDelayed       = 0;
                     dojo.disconnect(this._scrollConnection);
@@ -742,9 +728,10 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             // bottom?
             if (this._scrollLastDirection == this.SCROLL_DOWN && this._gridLastScrollTop == grid.scrollTop) {
                 this._scrollDelayed ++;
-                // Wait for a specific amount of scroll movements, so that month change doesn't happen without intention
+                // Wait for a specific amount of scroll movements, so that day/week/month change doesn't happen without
+                // intention.
                 if (this._scrollDelayed >= this.SCROLL_DELAY) {
-                    // Delayed 'time' reached, reset variables and go next month
+                    // Delayed 'time' reached, reset variables and go next day/week/month
                     this._scrollLastDirection = 0;
                     this._scrollDelayed       = 0;
                     dojo.disconnect(this._scrollConnection);

@@ -9,15 +9,13 @@
             onClick="dojo.publish('Calendar.openForm', [null, null, '{{date}}', '{{row.hour}}']);">
             </button> &nbsp;
         </td>
-        {% for day in row %}
-            {% ifequal row.even true %}
+        {% ifequal row.even true %}
         <td class="emptyCellEven">
         </td>
-            {% else %}
+        {% else %}
         <td class="emptyCellOdd">
         </td>
-            {% endifequal %}
-        {% endfor %}
+        {% endifequal %}
     </tr>
     {% endfor %}
     </table>
