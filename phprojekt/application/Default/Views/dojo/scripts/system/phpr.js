@@ -1175,7 +1175,7 @@ dojo.declare("phpr.FilteringSelect", dijit.form.FilteringSelect, {
             var query = dojo.clone(this.query); // #6196: populate query with user-specifics
             // Escape meta characters of dojo.data.util.filter.patternToRegExp().
             if (this._lastSelectedId != null) {
-                this._lastSelectedId = this.attr('value');
+                this._lastQuery = query['value'] = this._lastSelectedId;
             } else {
                 this._lastQuery = query[this.searchAttr] = label.replace(/([\\\*\?])/g, "\\$1");
             }
