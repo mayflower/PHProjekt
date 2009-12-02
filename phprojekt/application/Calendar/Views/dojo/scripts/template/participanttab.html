@@ -12,8 +12,8 @@
     </tr>
     <tr>
         <td>
-            <select id="dataParticipantAdd" name="dataParticipantAdd" dojoType="dijit.form.FilteringSelect"
-            required="true" autocomplete="true" value="" invalidMessage="" >
+            <select id="dataParticipantAdd" name="dataParticipantAdd" dojoType="phpr.FilteringSelect"
+            required="true" autocomplete="false" value="" invalidMessage="" >
                 {% for user in users %}
                 <option value="{{user.id}}" >{{user.name}}</option>
                 {% endfor %}

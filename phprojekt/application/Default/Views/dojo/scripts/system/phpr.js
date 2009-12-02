@@ -1126,3 +1126,97 @@ phpr.inArray = function(needle, haystack) {
 
     return false;
 };
+
+dojo.declare("phpr.FilteringSelect", dijit.form.FilteringSelect, {
+    // Summary:
+    //    Extend the dojo FilteringSelect for fix some bugs.
+    // Description:
+    //    The dojo select do not allow two or more labels with the same name,
+    //    for select users that is a problem (users with the same name),
+    //    See: http://trac.dojotoolkit.org/ticket/7279
+    //    Also change the query options and highlight for work with trees in select.
+
+    // Highlight any occurrence
+    highlightMatch: "all",
+
+    // `${0}*` means "starts with", `*${0}*` means "contains", `${0}` means "is"
+    queryExpr: "*${0}*",
+
+    // Internal var for fix the bug of items with the same display
+    _lastSelectedId: null,
+
+    _doSelect:function(/*Event*/ tgt) {
+        // Summary:
+        //    Overrides ComboBox._doSelect(), the method called when an item in the menu is selected.
+        //	Description:
+        //    FilteringSelect overrides this to set both the visible and
+        //    hidden value from the information stored in the menu.
+        //    Also mark the last selected item.
+        this._setValueFromItem(tgt.item, true);
+        this._lastSelectedId = this.attr('value');
+    },
+
+    _setDisplayedValueAttr:function(/*String*/ label, /*Boolean?*/ priorityChange) {
+        // Summary:
+        //    Overrides dijit.form.FilteringSelect._setDisplayedValueAttr().
+        //	Description:
+        //    Change the query for search the id if an item is select,
+        //    or by the name is not (normal case)
+
+        // When this is called during initialization it'll ping the datastore
+        // for reverse lookup, and when that completes (after an XHR request)
+        // will call setValueAttr()... but that shouldn't trigger an onChange()
+        // event, even when it happens after creation has finished
+        if(!this._created){
+            priorityChange = false;
+        }
+
+        if(this.store) {
+            var query = dojo.clone(this.query); // #6196: populate query with user-specifics
+            // Escape meta characters of dojo.data.util.filter.patternToRegExp().
+            if (this._lastSelectedId != null) {
+                this._lastSelectedId = this.attr('value');
+            } else {
+                this._lastQuery = query[this.searchAttr] = label.replace(/([\\\*\?])/g, "\\$1");
+            }
+            this._lastSelectedId = null;
+
+            // If the label is not valid, the callback will never set it,
+            // so the last valid value will get the warning textbox set the
+            // textbox value now so that the impending warning will make
+            // sense to the user
+            this.textbox.value = label;
+            this._lastDisplayedValue = label;
+            var _this = this;
+            var fetch = {
+                query:        query,
+                queryOptions: {
+                    ignoreCase: this.ignoreCase,
+                    deep:       true
+                },
+                onComplete: function(result, dataObject) {
+                    dojo.hitch(_this, "_callbackSetLabel")(result, dataObject, priorityChange);
+                },
+                onError: function(errText) {
+                    dojo.hitch(_this, "_setValue")("", label, false);
+                }
+            };
+            dojo.mixin(fetch, this.fetchProperties);
+            this.store.fetch(fetch);
+        }
+    },
+
+    doHighlight: function(/*String*/label, /*String*/find) {
+        // Summary:
+        //    Highlights the string entered by the user in the menu.
+        //    Change the function for Highlights all the occurences
+
+        // Add greedy when this.highlightMatch=="all"
+        var modifiers = "i"+(this.highlightMatch=="all"?"g":"");
+        var escapedLabel = this._escapeHtml(label);
+        find = dojo.regexp.escapeString(find); // escape regexp special chars
+        var ret = escapedLabel.replace(new RegExp("(^|\\s|\\w)("+ find +")", modifiers),
+            '$1<span class="dijitComboBoxHighlightMatch">$2</span>');
+        return ret; // Returns String, (almost) valid HTML (entities encoded)
+    }
+});

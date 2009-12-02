@@ -505,8 +505,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
         case 'selectValues':
             formLabel = params['formLabel'] || 'Select';
             labelFor  = 'select';
-            inputTxt = '<select dojoType="dijit.form.FilteringSelect" autocomplete="true" searchAttr="name"'
-                + ' invalidMessage="" >';
+            inputTxt  = '<select dojoType="phpr.FilteringSelect" autocomplete="false" invalidMessage="" >';
 
             if (selectType == 'project') {
                 inputTxt += '<option value="1">Example Project 1</option>';

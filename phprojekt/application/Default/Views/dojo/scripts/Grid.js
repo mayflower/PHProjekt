@@ -518,7 +518,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             if (this.filterField[i].key == field) {
                 switch(this.filterField[i].type) {
                     case 'selectbox':
-                        var input = '<select name="filterValue" dojoType="dijit.form.FilteringSelect">';
+                        var input = '<select name="filterValue" dojoType="phpr.FilteringSelect" autocomplete="false">';
                         for (var j in this.filterField[i].options) {
                             input += '<option value="' + this.filterField[i].options[j].id + '">'
                                 + this.filterField[i].options[j].name + '</option>';
@@ -543,7 +543,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         break;
                 }
 
-                var rule = '<select name="filterRule" dojoType="dijit.form.FilteringSelect" style="width: 100px;">';
+                var rule = '<select name="filterRule" dojoType="phpr.FilteringSelect" autocomplete="false" '
+                    + 'style="width: 100px;">';
                 for (var j in rulesOptions) {
                     rule += '<option value="' + rulesOptions[j] + '">' + this._rules[rulesOptions[j]] +  '</option>';
                 }
@@ -675,9 +676,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         if (fieldDiv = dojo.byId('filterFieldDiv')) {
             if (fieldDiv.style.display == 'none') {
                 if (this.filterField.length > 0) {
-                    var fieldSelect = '<select name="filterField" dojoType="dijit.form.FilteringSelect" '
-                        + 'onchange="dojo.publish(\'' + phpr.module + '.gridProxy\', [\'changeInputFilter\', '
-                        + 'this.value]); return false;">';
+                    var fieldSelect = '<select name="filterField" dojoType="phpr.FilteringSelect" '
+                        + 'autocomplete="false" onchange="dojo.publish(\'' + phpr.module + '.gridProxy\', '
+                        + '[\'changeInputFilter\', this.value]); return false;">';
                     fieldSelect += '<option value=""></option>';
                     for (var i in this.filterField) {
                         fieldSelect += '<option value="' + this.filterField[i].key + '">'
