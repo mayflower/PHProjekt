@@ -541,13 +541,32 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // Description:
         //    Add all the SubModules that have the current module
         if (this.id > 0) {
+            // Set the sub modules data
+            var subModules   = new Array();
+            var nextPosition = 0;
             for (var index in this.main.subModules) {
                 var subModuleName  = this.main.subModules[index];
                 var subModuleClass = 'phpr.' + subModuleName + '.Main';
+                var subModule      = eval('new ' + subModuleClass + '(' + this.id + ')');
+                var sort           = (subModule.sortPosition) ? subModule.sortPosition : nextPosition++;
+                subModules.push({
+                    'sort':  sort,
+                    'name':  subModuleName,
+                    'class': subModule
+                });
+            }
+
+            // Sort the sub modules
+            subModules.sort(function(a, b) {
+                return a['sort'] - b['sort'];
+            });
+
+            // Add the tabs
+            for (var index in subModules) {
+                var subModuleName = subModules[index]['name'];
                 this.addTab('', 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
                     subModuleName + 'FormTab');
-                var subModule = eval('new ' + subModuleClass + '(' + this.id + ')');
-                subModule.fillTab('tab' + subModuleName);
+                subModules[index]['class'].fillTab('tab' + subModuleName);
             }
         }
     },

@@ -23,14 +23,15 @@ dojo.provide("phpr.Default.SubModule.Form");
 
 dojo.declare("phpr.Default.SubModule", phpr.Component, {
     // Internal vars
-    gridBox:    null,
-    detailsBox: null,
-    subForm:    null,
-    subGrid:    null,
-    module:     null,
-    parentId:   null,
-    gridWidget: null,
-    formWidget: null,
+    gridBox:      null,
+    detailsBox:   null,
+    subForm:      null,
+    subGrid:      null,
+    module:       null,
+    parentId:     null,
+    gridWidget:   null,
+    formWidget:   null,
+    sortPosition: 1,
 
     constructor:function(parentId) {
         // Summary:
