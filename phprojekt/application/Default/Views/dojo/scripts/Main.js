@@ -359,9 +359,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 var modules        = phpr.DataStore.getData({url: subModuleUrl});
                 var foundBasicData = false;
                 for (var i = 0; i < modules.length; i++) {
-                    var moduleName  = modules[i].name;
                     if (modules[i].label == 'Basic Data') {
                         foundBasicData = true;
+                        break;
                     }
                 }
 

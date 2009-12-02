@@ -53,6 +53,7 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
             $modules['data'][$module->id]['label']     = Phprojekt::getInstance()->translate($module->label);
             $modules['data'][$module->id]['inProject'] = false;
         }
+
         $where  = sprintf('project_module_permissions.project_id = %d AND module.active = 1', (int) $projectId);
         $select = ' module.id AS module_id ';
         $join   = ' RIGHT JOIN module ON ( module.id = project_module_permissions.module_id ';
@@ -60,6 +61,7 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
         foreach ($this->fetchAll($where, 'module.name ASC', null, null, $select, $join) as $right) {
             $modules['data'][$right->moduleId]['inProject'] = true;
         }
+
         return $modules;
     }
 

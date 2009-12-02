@@ -573,7 +573,6 @@ class IndexController extends Zend_Controller_Action
             $allowedModules = array();
             $rights         = new Phprojekt_RoleRights($projectId);
             foreach ($modules['data'] as $module) {
-
                 if ($module['inProject']) {
                     $tmpPermission = Phprojekt_Acl::NONE;
                     if ($rights->hasRight('admin', $module['id'])) {
@@ -588,8 +587,12 @@ class IndexController extends Zend_Controller_Action
                     if ($rights->hasRight('read', $module['id'])) {
                         $tmpPermission = $tmpPermission | Phprojekt_Acl::READ;
                     }
-                    $module['rights'] = Phprojekt_Acl::convertBitmaskToArray($tmpPermission);
-                    $allowedModules[] = $module;
+
+                    // Return modules with at least one access
+                    if ($tmpPermission != Phprojekt_Acl::NONE) {
+                        $module['rights'] = Phprojekt_Acl::convertBitmaskToArray($tmpPermission);
+                        $allowedModules[] = $module;
+                    }
                 }
             }
             $data = $allowedModules;
