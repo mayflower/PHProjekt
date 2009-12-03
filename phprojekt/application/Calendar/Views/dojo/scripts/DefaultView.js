@@ -140,7 +140,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    Sets the export button
         // Description:
         //    If there is any row, render export Button
-        if (meta.length > 0 && this._exportButton === null) {
+        if (meta.length > 0 && this._exportButton === undefined) {
             var params = {
                 label:     phpr.nls.get('Export all items to a CSV file'),
                 showLabel: false,

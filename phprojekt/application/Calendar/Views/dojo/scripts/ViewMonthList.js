@@ -86,7 +86,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         var firstDayMonth = phpr.Date.getIsoDate(dateTemp);
         var daysInMonth   = dojo.date.getDaysInMonth(dateTemp);
         dateTemp.setDate(daysInMonth);
-        var lastDayMonth = phpr.Date.isoDateTojsDate(dateTemp);
+        var lastDayMonth = phpr.Date.getIsoDate(dateTemp);
 
         window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvPeriodList" + "/dateStart/"
                + firstDayMonth + "/dateEnd/" + lastDayMonth);
