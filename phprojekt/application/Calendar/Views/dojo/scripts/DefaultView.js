@@ -530,24 +530,26 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    variable to this class, establishes the cell height as the minimum height for the events.
         //    On startup and everytime it is called: activates or inactivates Y resize for each div.
         for (var i in this.events) {
-            if (startup) {
-                new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
-                var resizeDiv         = dijit.byId('eventResize' + i);
-                resizeDiv.parentClass = this;
-                // Minimum size:
-                var minWidth      = this.cellColumnWidth - (2 * this.EVENTS_BORDER_WIDTH);
-                var minHeight     = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
-                resizeDiv.minSize = {w: minWidth, h: minHeight};
-            }
-
-            if (this.events[i] != null && this.events[i]['shown']) {
-                var resizeDivPlain = dojo.byId('eventResize' + i);
-                if (this.events[i]['hasResizeHandler']) {
-                    var displayMode = 'inline';
-                } else {
-                    var displayMode = 'none';
+            if (this.events[i]['editable']) {
+                if (startup) {
+                    new phpr.Calendar.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
+                    var resizeDiv         = dijit.byId('eventResize' + i);
+                    resizeDiv.parentClass = this;
+                    // Minimum size:
+                    var minWidth      = this.cellColumnWidth - (2 * this.EVENTS_BORDER_WIDTH);
+                    var minHeight     = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
+                    resizeDiv.minSize = {w: minWidth, h: minHeight};
                 }
-                dojo.style(resizeDivPlain, 'display', displayMode);
+
+                if (this.events[i] != null && this.events[i]['shown']) {
+                    var resizeDivPlain = dojo.byId('eventResize' + i);
+                    if (this.events[i]['hasResizeHandler']) {
+                        var displayMode = 'inline';
+                    } else {
+                        var displayMode = 'none';
+                    }
+                    dojo.style(resizeDivPlain, 'display', displayMode);
+                }
             }
         }
     },
@@ -1465,6 +1467,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         }
         var newEventDiv            = new Array();
         newEventDiv['shown']       = eventInfo['shown'];
+        newEventDiv['editable']    = true;
         newEventDiv['order']       = nextEvent; // For Django template
         newEventDiv['id']          = id;
         newEventDiv['title']       = title;
@@ -1477,10 +1480,15 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         // To check whether the event is pending to be saved - The last position where it was dropped, so if
         // user drags it and leaves it in the same position, it doesn't need to be saved.
         newEventDiv['posEventDB'] = eventInfo['date'] + '-' + eventInfo['startTime'] + '-' + eventInfo['endTime'];
+
         if (this.main.dayListSelf != null || this.main.weekList != null) {
             newEventDiv['column'] = this.getColumn(eventInfo['date']);
         } else if (this.main.dayListSelect != null) {
             newEventDiv['column'] = column;
+            // In the 'Selection' mode of the views, only the logged user column events are editable
+            if (this.getUserColumnPosition(phpr.currentUserId) != column) {
+                newEventDiv['editable'] = false;
+            }
         }
 
         // Multiple day event? Set position among rest of divs of same event, also set if this div has to

@@ -26,7 +26,7 @@
 <div id="eventsArea" style="float: left; position: absolute;">
     {% for event in events %}
     <div id="{{eventsAttr.divIdPre}}{{event.order}}" class="eventsDivMain"
-    style="position: absolute; overflow: hidden; 
+    style="position: absolute; overflow: hidden;
         {% ifequal event.shown true %}
         visibility: visible;
         {% else %}
@@ -34,10 +34,16 @@
         {% endifequal %}
         ">
         <div id="plainDiv{{event.order}}" class="eventsDivSecond" 
-        style="border-width: {{eventsAttr.borderWidth}}px; cursor: pointer;"></div>
+        style="border-width: {{eventsAttr.borderWidth}}px;
+        {% ifequal event.editable true %}
+        cursor: pointer;
+        {% endifequal %}
+        "></div>
+        {% ifequal event.editable true %}
         <div dojoType="phpr.Calendar.ResizeHandle" resizeAxis="y" activeResize="true" targetId="plainDiv{{event.order}}"
         id="eventResize{{event.order}}"
         style="bottom: 0; width: 100%; position: absolute;"></div>
+        {% endifequal %}
     </div>
     {% endfor %}
 </div>
