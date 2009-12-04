@@ -1,8 +1,6 @@
 <?php
 // Grid headers - field names from DatabaseDesigner
-$lang["Date of Meeting"] = "Meeting-Datum";
 $lang["Description"] = "Beschreibung";
-$lang["Start Time"] = "Startzeit";
 $lang["Place"] = "Ort";
 $lang["Status"] = "Status";
 
@@ -14,7 +12,6 @@ $lang["Final"]   = "Fixiert";
 
 // Field labels from DatabaseDesigner
 $lang["Moderator"] = "Moderator";
-$lang["End time"] = "Endzeit";
 $lang["Tag"] = "Tag";
 $lang["Invited"] = "Eingeladen";
 $lang["Attending"] = "Teilnehmer";

@@ -77,12 +77,10 @@ final class Minutes_Helpers_Pdf
 
         $page->addFreetext(array(
                            'lines'    => array_merge(explode("\n\n", $minutesModel->description),
-                                            array($phpr->translate('Date of Meeting') . ': '
-                                                . $minutesModel->meetingDate . ' ' . $phpr->translate('Start time')
-                                                . ': ' . $minutesModel->startTime . ', ' . $phpr->translate('End time')
-                                                . ': ' . $minutesModel->endTime,
-                                                $phpr->translate('Place') . ': ' . $minutesModel->place,
-                                                $phpr->translate('Moderator') . ': ' . $minutesModel->moderator)),
+                                            array($phpr->translate('Start') . ': ' . $minutesModel->meetingDatetime,
+                                                  $phpr->translate('End') . ': ' . $minutesModel->endTime,
+                                                  $phpr->translate('Place') . ': ' . $minutesModel->place,
+                                                  $phpr->translate('Moderator') . ': ' . $minutesModel->moderator)),
                            'fontSize' => 12));
 
         $invited    = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsInvited);

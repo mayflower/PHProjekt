@@ -81,8 +81,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'TestTitle');
         $this->request->setParam('description', 'TestDescription');
-        $this->request->setParam('meetingDate', date('Y-m-d', $tomorrow));
-        $this->request->setParam('startTime', strtotime('03:00'));
+        $this->request->setParam('meetingDatetime', date('Y-m-d H:i:s', $tomorrow));
         $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('place', 'TestPlace');
         $this->request->setParam('moderator', 'TestModerator');
@@ -118,8 +117,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'SecondTestTitle');
         $this->request->setParam('description', 'SecondTestDescription');
-        $this->request->setParam('meetingDate', date('Y-m-d', $yesterday));
-        $this->request->setParam('startTime', strtotime('03:00'));
+        $this->request->setParam('meetingDatetime', date('Y-m-d H:i:s', $yesterday));
         $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('place', 'SecondTestPlace');
         $this->request->setParam('moderator', 'SecondTestModerator');

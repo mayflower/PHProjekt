@@ -72,8 +72,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'SecondTestTitle');
         $this->request->setParam('description', 'SecondTestDescription');
-        $this->request->setParam('meetingDate', date('Y-m-d'));
-        $this->request->setParam('startTime', strtotime('03:00'));
+        $this->request->setParam('meetingDatetime', date('Y-m-d H:i:s'));
         $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('place', 'SecondTestPlace');
         $this->request->setParam('moderator', 'SecondTestModerator');
@@ -550,8 +549,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'ReadOnly');
         $this->request->setParam('description', 'ReadOnly');
-        $this->request->setParam('meetingDate', '2009-06-09');
-        $this->request->setParam('startTime', strtotime('03:00'));
+        $this->request->setParam('meetingDatetime', '2009-06-09 03:00:00');
         $this->request->setParam('endTime', strtotime('03:00'));
         $this->request->setParam('place', 'ReadOnly');
         $this->request->setParam('moderator', 'ReadOnly');

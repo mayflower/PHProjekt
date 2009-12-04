@@ -80,21 +80,17 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertPart2()
     {
-        $model           = Phprojekt_Loader::getModel('Calendar', 'Calendar');
+        $model           = Phprojekt_Loader::getModel('Minutes', 'Minutes');
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $model->getInformation()->getFieldDefinition($order);
 
-        $model->title         = 'test';
-        $model->projectId     = 1;
-        $model->startDate     = '2009-05-12';
-        $model->endDate       = '2009-05-12';
-        $model->startTime     = '12:00:00';
-        $model->endTime       = '13:00:00';
-        $model->uid           = '2342342342342323';
-        $model->participantId = 1;
+        $model->title           = 'test';
+        $model->projectId       = 1;
+        $model->meetingDatetime = '2009-05-12 11:00:00';
+        $model->endTime         = '12:00:00';
         foreach ($fieldDefinition as $info) {
             // Time
-            if ($info['key'] == 'startTime') {
+            if ($info['key'] == 'endTime') {
                 $value = Phprojekt_Converter_Text::convert($model, $info);
                 $this->assertEquals('12:00', $value);
             }

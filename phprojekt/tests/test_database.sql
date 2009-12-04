@@ -486,8 +486,7 @@ CREATE TABLE IF NOT EXISTS `minutes` (
   `project_id` int(11) default NULL,
   `title` varchar(255) default NULL,
   `description` text,
-  `meeting_date` date default NULL,
-  `start_time` time default NULL,
+  `meeting_datetime` datetime default NULL,
   `end_time` time default NULL,
   `place` varchar(255) default NULL,
   `moderator` varchar(255) default NULL,
@@ -628,18 +627,17 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Helpdesk', 'contact_id', 1, 'Contact', 'selectValues', 13, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 0, '1', 1, 0, 0),
 
 (0, 'Minutes', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 3, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Minutes', 'meeting_date', 1, 'Date of Meeting', 'date', 2, 1, NULL, NULL, NULL, 1, 'center', 1, 0, '1', 0, 1, 0),
-(0, 'Minutes', 'project_id', 1, 'Project', 'selectValues', 3, 1, NULL, 'Project#id#title', NULL, 0, NULL, 1, 0, '1', 1, 1, 0),
-(0, 'Minutes', 'description', 1, 'Description', 'textarea', 4, 1, NULL, NULL, NULL, 4, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'start_time', 1, 'Start Time', 'time', 5, 1, NULL, NULL, NULL, 2, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'end_time', 1, 'End Time', 'time', 6, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'place', 1, 'Place', 'text', 7, 1, NULL, NULL, NULL, 5, 'center', 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'moderator', 1, 'Moderator', 'text', 8, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participants_invited', 2, 'Invited', 'multipleSelectValues', 9, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participants_attending', 2, 'Attending', 'multipleSelectValues', 10, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'participants_excused', 2, 'Excused', 'multipleSelectValues', 11, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'recipients', 2, 'Recipients', 'multipleSelectValues', 12, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 13, 1, NULL, '1#Planned|2#Created|3#Filled|4#Final', '1', 6, 'center', 1, 0, '1', 1, 0, 0);
+(0, 'Minutes', 'meeting_datetime', 1, 'Start', 'datetime', 2, 1, NULL, NULL, NULL, 1, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Minutes', 'end_time', 1, 'End', 'time', 3, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'project_id', 1, 'Project', 'selectValues', 4, 1, NULL, 'Project#id#title', NULL, 0, NULL, 1, 0, '1', 1, 1, 0),
+(0, 'Minutes', 'description', 1, 'Description', 'textarea', 5, 1, NULL, NULL, NULL, 4, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'place', 1, 'Place', 'text', 6, 1, NULL, NULL, NULL, 5, 'center', 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'moderator', 1, 'Moderator', 'text', 7, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participants_invited', 2, 'Invited', 'multipleSelectValues', 8, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participants_attending', 2, 'Attending', 'multipleSelectValues', 9, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'participants_excused', 2, 'Excused', 'multipleSelectValues', 10, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'recipients', 2, 'Recipients', 'multipleSelectValues', 11, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
+(0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 12, 1, NULL, '1#Planned|2#Created|3#Filled|4#Final', '1', 6, 'center', 1, 0, '1', 1, 0, 0);
 
 
 INSERT INTO `user` (`id`, `username`, `firstname`, `lastname`, `status`, `admin`) VALUES

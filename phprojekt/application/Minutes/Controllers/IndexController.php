@@ -242,7 +242,7 @@ class Minutes_IndexController extends IndexController
 
             // Set subject
             $subject = sprintf('%s "%s", %s', Phprojekt::getInstance()->translate('Meeting minutes for'),
-                $minutes->title, $minutes->startTime);
+                $minutes->title, $minutes->meetingDatetime);
             $mail->setSubject($subject);
 
             // Set mail content

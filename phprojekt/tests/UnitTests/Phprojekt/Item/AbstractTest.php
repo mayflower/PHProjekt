@@ -385,10 +385,10 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testTime()
     {
-        $item            = new Calendar_Models_Calendar(array('db' => $this->sharedFixture));
-        $item->startTime = '12:00:00';
+        $item          = new Minutes_Models_Minutes(array('db' => $this->sharedFixture));
+        $item->endTime = '12:00:00';
         $this->assertEquals(array(), $item->getError());
-        $this->assertEquals('12:00:00', $item->startTime);
+        $this->assertEquals('12:00:00', $item->endTime);
     }
 
     /**

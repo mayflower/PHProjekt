@@ -84,11 +84,11 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
      */
     protected function _calcStatus(Phprojekt_Item_Abstract &$minutes)
     {
-        $meetingDate = strtotime($minutes->meetingDate);
-        $now         = strtotime("now");
+        $meetingDatetime = strtotime($minutes->meetingDatetime);
+        $now             = strtotime("now");
 
         $status = 0;
-        if ($meetingDate > $now) {
+        if ($meetingDatetime > $now) {
             $status = 1;
         } else {
             $status = 2;
