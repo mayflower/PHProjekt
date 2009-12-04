@@ -70,43 +70,6 @@ class Calendar_IndexController extends IndexController
         $where   = $this->getFilterWhere($where);
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
-        // Set dates depending on the times
-        foreach ($records as $record) {
-            $timeZoneComplement = (int) Phprojekt_User_User::getSetting("timeZone", 'UTC');
-
-            $startDate = strtotime($record->startDate);
-            $startTime = strtotime($record->startTime);
-            $endDate   = strtotime($record->endDate);
-            $endTime   = strtotime($record->endTime);
-
-            // Get the database values without convertions
-            $startHour = date("H", $startTime) + ($timeZoneComplement * -1);
-            if ($startHour > 24) {
-                $startHour = $startHour - 24;
-            } else if ($startHour < 0) {
-                $startHour = 24 + $startHour;
-            }
-
-            $endHour = date("H", $endTime) + ($timeZoneComplement * -1);
-            if ($endHour > 24) {
-                $endHour = $endHour - 24;
-            } else if ($endHour < 0) {
-                $endHour = 24 + $endHour;
-            }
-
-            // Convert again the values
-            $startHour = $startHour + $timeZoneComplement;
-            $endHour   = $endHour + $timeZoneComplement;
-
-            // Set the new dates
-            $valueStartTime = mktime($startHour, date("i", $startTime), 0, date("m", $startDate), date("d", $startDate),
-                date("Y", $startDate));
-            $valueEndTime = mktime($endHour, date("i", $endTime), 0, date("m", $endDate), date("d", $endDate),
-                date("Y", $endDate));
-            $record->startDate = date("Y-m-d", $valueStartTime);
-            $record->endDate   = date("Y-m-d", $valueEndTime);
-        }
-
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
@@ -139,7 +102,7 @@ class Calendar_IndexController extends IndexController
         $db     = Phprojekt::getInstance()->getDb();
         $date   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
 
-        $where = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+        $where = sprintf('participant_id = %d AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
             (int) PHprojekt_Auth::getUserId(), $date, $date);
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
@@ -212,9 +175,9 @@ class Calendar_IndexController extends IndexController
         $dateStart = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d"))));
         $dateEnd   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d"))));
 
-        $where     = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+        $where     = sprintf('participant_id = %d AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
             (int) PHprojekt_Auth::getUserId(), $dateEnd, $dateStart);
-        $records = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
+        $records = $this->getModelObject()->fetchAll($where, "start_datetime", $count, $offset);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
@@ -228,7 +191,8 @@ class Calendar_IndexController extends IndexController
      * OPTIONAL request parameters:
      * <pre>
      *  - integer <b>id</b>                      id of the item to save.
-     *  - string  <b>startDate</b>               Start Date of the item or recurring.
+     *  - string  <b>startDatetime</b>           Start datetime of the item or recurring.
+     *  - string  <b>endDatetime</b>             End datetime of the item or recurring.
      *  - string  <b>rrule</b>                   Recurring rule.
      *  - array   <b>dataParticipant</b>         Array with users id involved in the event.
      *  - boolean <b>multipleEvents</b>          Aply the save for one item or multiple events.
@@ -250,20 +214,26 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $message              = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
-        $id                   = (int) $this->getRequest()->getParam('id');
-        $startDate            = Cleaner::sanitize('date', $this->getRequest()->getParam('startDate', date("Y-m-d")));
-        $endDate              = Cleaner::sanitize('date', $this->getRequest()->getParam('endDate', date("Y-m-d")));
-        $startTime            = Cleaner::sanitize('time', $this->getRequest()->getParam('startTime', date("H-i-s")));
-        $endTime              = Cleaner::sanitize('time', $this->getRequest()->getParam('endTime', date("H-i-s")));
+        $message       = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+        $id            = (int) $this->getRequest()->getParam('id');
+        $startDatetime = Cleaner::sanitize('timestamp', $this->getRequest()->getParam('startDatetime',
+            date("Y-m-d H:i:s")));
+        $endDatetime = Cleaner::sanitize('timestamp', $this->getRequest()->getParam('endDatetime',
+            date("Y-m-d H:i:s")));
         $rrule                = (string) $this->getRequest()->getParam('rrule', null);
         $participants         = (array) $this->getRequest()->getParam('dataParticipant');
         $multipleEvents       = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleEvents'));
         $multipleParticipants = Cleaner::sanitize('boolean', $this->getRequest()->getParam('multipleParticipants'));
         $modification         = false;
+        $startDate            = date('Y-m-d', strtotime($startDatetime));
+        $endDate              = date('Y-m-d', strtotime($endDatetime));
 
-        $this->getRequest()->setParam('endTime', $endTime);
-        $this->getRequest()->setParam('startTime', $startTime);
+        $this->getRequest()->setParam('startDate', $startDate);
+        $this->getRequest()->setParam('startTime', date('H:i:s', strtotime($startDatetime)));
+        $this->getRequest()->setParam('endDate', $endDate);
+        $this->getRequest()->setParam('endTime', date('H:i:s', strtotime($endDatetime)));
+        $this->getRequest()->setParam('startDatetime', $startDatetime);
+        $this->getRequest()->setParam('endDatetime', $endDatetime);
 
         if (!empty($id)) {
             $message      = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
@@ -440,7 +410,7 @@ class Calendar_IndexController extends IndexController
         $db      = Phprojekt::getInstance()->getDb();
         $date    = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
 
-        $where = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+        $where = sprintf('participant_id = %d AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
             (int) PHprojekt_Auth::getUserId(), $date, $date);
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
@@ -481,7 +451,7 @@ class Calendar_IndexController extends IndexController
             $ids[] = (int) PHprojekt_Auth::getUserId();
         }
 
-        $where = sprintf('participant_id IN (%s) AND start_date <= %s AND end_date >= %s',
+        $where = sprintf('participant_id IN (%s) AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
             implode(", ", $ids), $date, $date);
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
@@ -514,9 +484,9 @@ class Calendar_IndexController extends IndexController
         $dateStart = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d"))));
         $dateEnd   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d"))));
 
-        $where     = sprintf('participant_id = %d AND start_date <= %s AND end_date >= %s',
+        $where     = sprintf('participant_id = %d AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
             (int) PHprojekt_Auth::getUserId(), $dateEnd, $dateStart);
-        $records = $this->getModelObject()->fetchAll($where, "start_date", $count, $offset);
+        $records = $this->getModelObject()->fetchAll($where, "start_datetime", $count, $offset);
 
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }

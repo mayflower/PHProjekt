@@ -297,11 +297,13 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         if (!dojo.byId('detailsBox')) {
             this.reload();
         }
+
         if (id == undefined || id == 0) {
             var params           = new Array();
             var today            = new Date();
             var addDay           = false;
             var startDateIsToday = false;
+            var endTime          = null;
 
             if (startTime == undefined) {
                 if (startDate == undefined) {
@@ -332,39 +334,32 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                     startHour = 8;
                 }
 
-                params['startTime'] = dojo.number.format(startHour, {pattern: '00'}) + ':' + '00';
-                params['endTime']   = dojo.number.format(startHour + 1, {pattern: '00'}) + ':' + '00';
-
+                startTime = dojo.number.format(startHour, {pattern: '00'}) + ':' + '00';
+                endTime   = dojo.number.format(startHour + 1, {pattern: '00'}) + ':' + '00';
             } else {
-                params['startTime'] = startTime;
                 // Generate the End Time, 1 hour after Start Time
                 var temp          = startTime.split(':');
                 var startHour     = parseInt(temp[0], 10);
                 var startMinutes  = parseInt(temp[1], 10);
                 startHour        += 1;
-                params['endTime'] = dojo.number.format(startHour, {pattern: '00'}) + ':'
-                                  + dojo.number.format(startMinutes, {pattern: '00'});
+                endTime = dojo.number.format(startHour, {pattern: '00'}) + ':'
+                    + dojo.number.format(startMinutes, {pattern: '00'});
             }
 
             if (startDate != undefined) {
+                startDate = dojo.date.stamp.fromISOString(startDate);
                 if (addDay) {
-                    startDate           = dojo.date.stamp.fromISOString(startDate);
-                    startDate           = dojo.date.add(startDate, 'day', 1);
-                    params['startDate'] = dojo.date.stamp.toISOString(startDate);
-                    params['startDate'] = params['startDate'].substr(0, 10);
-                } else {
-                    params['startDate'] = startDate;
+                    startDate = dojo.date.add(startDate, 'day', 1);
                 }
             } else {
                 if (addDay) {
-                    startDate           = dojo.date.add(today, 'day', 1);
-                    params['startDate'] = dojo.date.stamp.toISOString(startDate);
+                    startDate = dojo.date.add(today, 'day', 1);
                 } else {
-                    params['startDate'] = dojo.date.stamp.toISOString(today);
+                    startDate = today;
                 }
-                params['startDate'] = params['startDate'].substr(0, 10);
             }
-            params['endDate'] = params['startDate'];
+            params['startDatetime'] = phpr.Date.getIsoDatetime(startDate, startTime);
+            params['endDatetime']   = phpr.Date.getIsoDatetime(startDate, endTime);
         }
 
         this.form = new this.formWidget(this, id, module, params);

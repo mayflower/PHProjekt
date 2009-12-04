@@ -158,6 +158,15 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         // Summary:
         //    Puts every event in the corresponding array position.
         for (var event in content) {
+
+            // Split datetime in date and time
+            var dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['startDatetime']);
+            content[event]['startDate'] = phpr.Date.getIsoDate(dateTime);
+            content[event]['startTime'] = phpr.Date.getIsoTime(dateTime);
+            dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['endDatetime']);
+            content[event]['endDate'] = phpr.Date.getIsoDate(dateTime);
+            content[event]['endTime'] = phpr.Date.getIsoTime(dateTime);
+
             for (var row in this._schedule) {
                 for (weekDay in this._schedule[row]) {
                     var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],

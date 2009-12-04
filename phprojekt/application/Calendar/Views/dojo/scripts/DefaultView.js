@@ -717,10 +717,10 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
                 // Is it a multiple days event?
                 if (!this.events[i]['multDay']) {
                     // No
-                    content['data[' + id + '][startDate]'] = this.events[i]['date'];
-                    content['data[' + id + '][endDate]']   = this.events[i]['date'];
-                    content['data[' + id + '][startTime]'] = this.events[i]['startTime'];
-                    content['data[' + id + '][endTime]']   = this.events[i]['endTime'];
+                    content['data[' + id + '][startDatetime]'] = this.events[i]['date'] + ' '
+                        + this.events[i]['startTime'];
+                    content['data[' + id + '][endDatetime]']   = this.events[i]['date'] + ' '
+                        + this.events[i]['endTime'];
                 } else {
                     // Yes
                     // Was this event id already processed?
@@ -730,10 +730,10 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
                         var parent      = this.events[i]['multDayParent'];
                         var multDayData = this.events[parent]['multDayData'];
 
-                        content['data[' + id + '][startDate]'] = multDayData['startDate'];
-                        content['data[' + id + '][endDate]']   = multDayData['endDate'];
-                        content['data[' + id + '][startTime]'] = multDayData['startTime'];
-                        content['data[' + id + '][endTime]']   = multDayData['endTime'];
+                        content['data[' + id + '][startDatetime]'] = multDayData['startDate'] + ' '
+                            + multDayData['startTime']
+                        content['data[' + id + '][endDatetime]'] = multDayData['endDate'] + ' '
+                            + multDayData['endTime'];
                         // Add this event id to the list of processed ones:
                         processedIds.push(id);
                     }
@@ -1350,6 +1350,14 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             var eventsInfo     = new Array();
             var id             = content[event]['id'];
             var singleDayEvent = false;
+
+            // Split datetime in date and time
+            var dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['startDatetime']);
+            content[event]['startDate'] = phpr.Date.getIsoDate(dateTime);
+            content[event]['startTime'] = phpr.Date.getIsoTime(dateTime);
+            dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['endDatetime']);
+            content[event]['endDate'] = phpr.Date.getIsoDate(dateTime);
+            content[event]['endTime'] = phpr.Date.getIsoTime(dateTime);
 
             // Process title and note
             var title = this.htmlEntities(content[event]['title']);

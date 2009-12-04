@@ -58,20 +58,12 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     },
 
     prepareSubmission:function() {
-        this.sendData = new Array();
-
-        for (var i = 0; i < this.formsWidget.length; i++) {
-            if (!this.formsWidget[i].isValid()) {
-                var parent = this.formsWidget[i].containerNode.parentNode.id;
-                this.form.selectChild(parent);
-                this.formsWidget[i].validate();
-                return false;
-            }
-            this.sendData = dojo.mixin(this.sendData, this.formsWidget[i].attr('value'));
+        if (!this.inherited(arguments)) {
+            return false;
         }
 
         if (this.id > 0) {
-            if (this.sendData.rruleFreq && null === this._multipleEvents) {
+            if (this.sendData['rruleFreq'] && null === this._multipleEvents) {
                 // If the event has recurrence ask what to modify
                 this.showEventSelector('Edit', "submitForm");
                 return false;
@@ -90,35 +82,35 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             }
         }
 
-        // check if rule for recurrence is set
+        // Check if rule for recurrence is set
         if (this.id > 0 && false === this._multipleEvents) {
-            this.sendData.rrule = null;
-        } else if (this.sendData.rruleFreq) {
-            // set frequence
-            var rrule = 'FREQ=' + this.sendData.rruleFreq;
+            this.sendData['rrule'] = null;
+        } else if (this.sendData['rruleFreq']) {
+            // Set frequence
+            var rrule = 'FREQ=' + this.sendData['rruleFreq'];
 
-            // set until value if available
-            if (this.sendData.rruleUntil) {
-                until = this.sendData.rruleUntil;
+            // Set until value if available
+            if (this.sendData['rruleUntil']) {
+                until = this.sendData['rruleUntil'];
                 if (!until.setHours) {
                     until = phpr.Date.isoDateTojsDate(until);
                 }
-                until.setHours(this.sendData.startTime.getHours());
-                until.setMinutes(this.sendData.startTime.getMinutes());
-                until.setSeconds(this.sendData.startTime.getSeconds());
+                until.setHours(this.sendData['startDatetime_forTime'].getHours());
+                until.setMinutes(this.sendData['startDatetime_forTime'].getMinutes());
+                until.setSeconds(this.sendData['startDatetime_forTime'].getSeconds());
                 until = dojo.date.add(until, 'minute', until.getTimezoneOffset());
                 rrule += ';UNTIL=' + dojo.date.locale.format(until, {datePattern: 'yyyyMMdd\'T\'HHmmss\'Z\'',
                     selector: 'date'});
-                this.sendData.rruleUntil = null;
+                this.sendData['rruleUntil'] = null;
             }
 
-            // set interval if available
-            if (this.sendData.rruleInterval) {
-                rrule += ';INTERVAL=' + this.sendData.rruleInterval;
-                this.sendData.rruleInterval = null;
+            // Set interval if available
+            if (this.sendData['rruleInterval']) {
+                rrule += ';INTERVAL=' + this.sendData['rruleInterval'];
+                this.sendData['rruleInterval'] = null;
             }
 
-            // set weekdays if available
+            // Set weekdays if available
             if (this.sendData['rruleByDay[]']) {
                 rrule += ';BYDAY=' + this.sendData['rruleByDay[]'];
                 this.sendData['rruleByDay[]'] = null;
@@ -126,15 +118,15 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
                 rrule += ';BYDAY=' + this.sendData['rruleByDay'];
                 this.sendData['rruleByDay'] = null;
             }
-            this.sendData.rruleFreq = null;
+            this.sendData['rruleFreq'] = null;
 
-            this.sendData.rrule = rrule;
+            this.sendData['rrule'] = rrule;
         } else {
-            this.sendData.rrule = null;
+            this.sendData['rrule'] = null;
         }
 
-        this.sendData.multipleEvents       = this._multipleEvents;
-        this.sendData.multipleParticipants = this._multipleParticipants;
+        this.sendData['multipleEvents']       = this._multipleEvents;
+        this.sendData['multipleParticipants'] = this._multipleParticipants;
 
         return true;
     },
@@ -159,10 +151,10 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         //    User functions after render the form
         // Description:
         //    Apply for special events on the fields
-        this._currentDate = dijit.byId('startDate').value;
-        this._currentTime = dijit.byId('startTime').value;
-        dojo.connect(dojo.byId('startDate'), "onblur", this, 'startDateBlur');
-        dojo.connect(dojo.byId('startTime'), "onblur", this, 'startTimeBlur');
+        this._currentDate = dijit.byId('startDatetime_forDate').value;
+        this._currentTime = dijit.byId('startDatetime_forTime').value;
+        dojo.connect(dojo.byId('startDatetime_forDate'), "onblur", this, 'startDateBlur');
+        dojo.connect(dojo.byId('startDatetime_forTime'), "onblur", this, 'startTimeBlur');
     },
 
     startDateBlur:function() {
@@ -171,11 +163,12 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         // Description:
         //   If it has changed to a valid date, then add or substract the difference between previous and current value
         // to the End date
-        if (this._currentDate != dijit.byId('startDate').value) {
-            if (dijit.byId('startDate').isValid()) {
-                diff = dojo.date.difference(this._currentDate, dijit.byId('startDate').value, 'day');
-                dijit.byId('endDate').setValue(dojo.date.add(dijit.byId('endDate').value, 'day', diff));
-                this._currentDate = dijit.byId('startDate').value;
+        if (this._currentDate != dijit.byId('startDatetime_forDate').value) {
+            if (dijit.byId('startDatetime_forDate').isValid()) {
+                diff = dojo.date.difference(this._currentDate, dijit.byId('startDatetime_forDate').value, 'day');
+                dijit.byId('endDatetime_forDate').setValue(dojo.date.add(dijit.byId('endDatetime_forDate').value,
+                    'day', diff));
+                this._currentDate = dijit.byId('startDatetime_forDate').value;
             }
         }
     },
@@ -186,11 +179,12 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         // Description:
         //    If it has changed to a valid time, then add or substract the difference between previous and current value
         // to the End time
-        if (this._currentTime != dijit.byId('startTime').value) {
-            if (dijit.byId('startTime').isValid()) {
-                diff = dojo.date.difference(this._currentTime, dijit.byId('startTime').value, 'minute');
-                dijit.byId('endTime').setValue(dojo.date.add(dijit.byId('endTime').value, 'minute', diff));
-                this._currentTime = dijit.byId('startTime').value;
+        if (this._currentTime != dijit.byId('startDatetime_forTime').value) {
+            if (dijit.byId('startDatetime_forTime').isValid()) {
+                diff = dojo.date.difference(this._currentTime, dijit.byId('startDatetime_forTime').value, 'minute');
+                dijit.byId('endDatetime_forTime').setValue(dojo.date.add(dijit.byId('endDatetime_forTime').value,
+                    'minute', diff));
+                this._currentTime = dijit.byId('startDatetime_forTime').value;
             }
         }
     },

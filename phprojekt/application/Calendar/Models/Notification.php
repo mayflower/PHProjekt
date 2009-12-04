@@ -57,14 +57,12 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                               'value' => $this->_model->place);
         $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Notes'),
                               'value' => $this->_model->notes);
-        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Start date'),
-                              'value' => $this->_model->translateDate($this->_model->startDateNotif));
-        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Start time'),
-                              'value' => substr($this->_model->startTime, 0, 5));
-        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('End date'),
-                              'value' => $this->_model->translateDate($this->_model->endDateNotif));
-        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('End time'),
-                              'value' => substr($this->_model->endTime, 0, 5));
+        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Start'),
+                              'value' => $this->_model->translateDate($this->_model->startDateNotif) . ' '
+                              . substr($this->_model->startDatetime, 11, 5));
+        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('End'),
+                              'value' => $this->_model->translateDate($this->_model->endDateNotif)) . ' '
+                              . substr($this->_model->startDatetime, 11, 5);
 
         $phpUser           = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $participants      = $this->_model->notifParticipants;
@@ -91,7 +89,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
 
         if ($this->_model->rrule !== null) {
             $bodyFields = array_merge($this->_bodyFields,
-                $this->_model->_getRruleDescriptive($this->_model->rrule));
+                $this->_model->getRruleDescriptive($this->_model->rrule));
         }
 
         return $bodyFields;
@@ -125,12 +123,12 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                 $oldRruleEmpty = false;
                 $newRruleEmpty = false;
                 if ($bodyChanges[$i]['oldValue'] !== null) {
-                    $oldRrule = $this->_model->_getRruleDescriptive($bodyChanges[$i]['oldValue']);
+                    $oldRrule = $this->_model->getRruleDescriptive($bodyChanges[$i]['oldValue']);
                 } else {
                     $oldRruleEmpty = true;
                 }
                 if ($bodyChanges[$i]['newValue'] !== null) {
-                    $newRrule = $this->_model->_getRruleDescriptive($bodyChanges[$i]['newValue']);
+                    $newRrule = $this->_model->getRruleDescriptive($bodyChanges[$i]['newValue']);
                 } else {
                     $newRruleEmpty = true;
                 }
@@ -194,9 +192,13 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                                                'newValue' => $fieldNewValue);
                     }
                 }
-            } else if ($bodyChanges[$i]['field'] == 'startDate') {
-                $bodyChanges[$i]['oldValue'] = $this->_model->translateDate($bodyChanges[$i]['oldValue']);
-                $bodyChanges[$i]['newValue'] = $this->_model->translateDate($bodyChanges[$i]['newValue']);
+            } else if ($bodyChanges[$i]['field'] == 'startDatetime') {
+                $bodyChanges[$i]['oldValue'] = $this->_model->translateDate(
+                    $this->_model->getDate($bodyChanges[$i]['oldValue'])) . ' '
+                    . substr($bodyChanges[$i]['oldValue'], 11, 5);
+                $bodyChanges[$i]['newValue'] = $this->_model->translateDate(
+                    $this->_model->getDate($bodyChanges[$i]['newValue'])) . ' '
+                    . substr($bodyChanges[$i]['newValue'], 11, 5);
             }
         }
 
@@ -217,10 +219,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
      */
     public function getCalendarValidUntil()
     {
-        $date = $this->_model->endDate;
-        $time = $this->_model->endTime;
-
-        return $date . ' ' . $time;
+        return $this->_model->endDatetime;
     }
 
     /**
@@ -230,13 +229,11 @@ class Calendar_Models_Notification extends Phprojekt_Notification
      */
     public function getCalendarValidFrom()
     {
-        $date           = $this->_model->startDate;
-        $time           = $this->_model->startTime;
+        $date           = $this->_model->startDatetime;
         $configMin      = Phprojekt::getInstance()->getConfig()->remindBefore;
         $configMinInSec = ($configMin * 60);
 
-        return date("Y-m-d H:i:s", (strtotime($date . ' ' . $time) - $configMinInSec));
-
+        return date("Y-m-d H:i:s", (strtotime($date) - $configMinInSec));
     }
 
     /**

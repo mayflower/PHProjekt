@@ -99,8 +99,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $model = clone($this);
                 $model->find($id);
                 // If the startDate has changed, apply that difference of days to all the events of recurrence
-                if ($startDate != $model->startDate) {
-                    $diffSeconds    = strtotime($startDate) - strtotime($model->startDate);
+                if ($startDate != $this->getDate($model->startDatetime)) {
+                    $diffSeconds    = strtotime($startDate) - strtotime($this->getDate($model->startDatetime));
                     $startDateTemp  = $this->getRecursionStartDate($id, $startDate);
                     $startDateTemp  = strtotime($startDate) + $diffSeconds;
                     $startDate      = date("Y-m-d", $startDateTemp);
@@ -196,18 +196,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             $this->projectId = 1;
         }
 
-        if (strlen($this->startDate) < 10 || strlen($this->startTime) < 5) {
-            return false;
-        }
-        // Check that the end moment is after start moment
-        $startDate = explode('-', $this->startDate);
-        $startTime = explode(':', $this->startTime);
-        $start     = mktime($startTime[0], $startTime[1], $startTime[2], $startDate[1], $startDate[2], $startDate[0]);
-        $endDate   = explode('-', $this->endDate);
-        $endTime   = explode(':', $this->endTime);
-        $end       = mktime($endTime[0], $endTime[1], $endTime[2], $endDate[1], $endDate[2], $endDate[0]);
-
-        if ($start >= $end) {
+        if (strtotime($this->startDatetime) >= strtotime($this->endDatetime)) {
             $this->_validate->error->addError(array(
                 'field'   => "Event duration",
                 'label'   => Phprojekt::getInstance()->translate('Event duration'),
@@ -230,13 +219,13 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $participants     = array();
 
         if (!empty($this->id)) {
-            $rootEventId  = $this->getRootEventId($this);
-            $where        = sprintf('(parent_id = %d OR id = %d) AND start_date = %s', (int) $rootEventId,
-                (int) $rootEventId, $this->getAdapter()->quote($this->startDate));
-            $records      = $this->fetchAll($where);
+            $rootEventId = $this->getRootEventId($this);
+            $where       = sprintf('(parent_id = %d OR id = %d) AND start_datetime = %s', (int) $rootEventId,
+                (int) $rootEventId, $this->getAdapter()->quote($this->applyTimeZone($this->startDatetime)));
+            $records = $this->fetchAll($where);
             foreach ($records as $record) {
                 if (null === $record->rrule) {
-                    if ($record->startDate == $this->startDate) {
+                    if ($record->startDatetime == $this->startDatetime) {
                         $participantsList[$record->participantId] = $record->participantId;
                     }
                 } else {
@@ -266,12 +255,12 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $rootEventId = $this->getRootEventId($model);
         $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d', (int) $rootEventId,
             (int) $rootEventId, (int) $model->participantId);
-        $records = $model->fetchAll($where, 'start_date ASC');
+        $records = $model->fetchAll($where, 'start_datetime ASC');
 
         $startDate = null;
         // Always use the minimal value for startDate
         if (isset($records[0])) {
-            $startDate = $records[0]->startDate;
+            $startDate = $this->getDate($records[0]->startDatetime);
         }
 
         return $startDate;
@@ -302,7 +291,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 Default_Helpers_Delete::delete($this);
                 $alreadyDeleted = true;
             } else {
-                $where .= sprintf(' AND start_date = %s', $this->getAdapter()->quote($this->startDate));
+                $where .= sprintf(' AND start_datetime = %s',
+                    $this->getAdapter()->quote($this->applyTimeZone($this->startDatetime)));
             }
         }
 
@@ -329,7 +319,8 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     {
         $db    = Phprojekt::getInstance()->getDb();
         $date  = $db->quote($date);
-        $where = sprintf('participant_id IN (%s) AND start_date <= %s AND end_date >= %s', $usersId, $date, $date);
+        $where = sprintf('participant_id IN (%s) AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
+            $usersId, $date, $date);
 
         return Phprojekt_ActiveRecord_Abstract::fetchAll($where, null, $count, $offset);
     }
@@ -429,7 +420,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             }
             foreach ($eventDates as $oneDate) {
                 $date = date("Y-m-d", $oneDate);
-                if (!$found && $date == $record->startDate) {
+                if (!$found && $date == $this->getDate($record->startDatetime)) {
                     // Update old entry of recurrence
                     $this->_saveEvent($request, $record, $oneDate, $daysDuration, $record->participantId,
                         $record->parentId);
@@ -455,7 +446,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $newEntry = true;
                 $date     = date("Y-m-d", $oneDate);
                 foreach ($records as $record) {
-                    if ($date == $record->startDate) {
+                    if ($date == $this->getDate($record->startDatetime)) {
                         $newEntry = false;
                         break;
                     }
@@ -513,7 +504,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                                 $parentId       = $this->getRootEventId($this);
                                 $addParticipant = false;
                                 foreach ($records as $record) {
-                                    if (strtotime($record->startDate) == $oneDate) {
+                                    if (strtotime($this->getDate($record->startDatetime)) == $oneDate) {
                                         $addParticipant = true;
                                         break;
                                     }
@@ -561,7 +552,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             $request['sendNotification'] = '';
 
             $rootEventId = $this->getRootEventId($this);
-            $where       = sprintf('(parent_id = %d OR id = %d) AND start_date = %s', (int) $rootEventId,
+            $where       = sprintf('(parent_id = %d OR id = %d) AND DATE(start_datetime) = %s', (int) $rootEventId,
                 (int) $rootEventId, $this->getAdapter()->quote(date("Y-m-d", $oneDate)));
 
             $currentParticipants = array();
@@ -585,9 +576,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                     // Delete removed participant
                     $removeModel = clone($this);
                     $rootEventId = $this->getRootEventId($this);
-                    $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d AND start_date = %s',
-                        (int) $rootEventId, (int) $rootEventId, (int) $currentParticipantId,
-                        $this->getAdapter()->quote(date("Y-m-d", $oneDate)));
+                    $where       = sprintf('(parent_id = %d OR id = %d) AND participant_id = %d '
+                        . 'AND DATE(start_datetime) = %s', (int) $rootEventId, (int) $rootEventId,
+                        (int) $currentParticipantId, $this->getAdapter()->quote(date("Y-m-d", $oneDate)));
                     $records = $removeModel->fetchAll($where);
                     foreach ($records as $record) {
                         Default_Helpers_Delete::delete($record);
@@ -627,9 +618,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     private function _saveEvent($request, $model, $oneDate, $daysDuration, $participantId, $parentId)
     {
-        $date                     = date("Y-m-d", $oneDate);
-        $request['startDate']     = $date;
-        $request['endDate']       = date("Y-m-d", strtotime($date) + ($daysDuration * 24 * 60 * 60));
+        $request['startDatetime'] = date("Y-m-d", $oneDate) . ' ' . $request['startTime'];
+        $request['endDatetime']   = date("Y-m-d", $oneDate + ($daysDuration * 24 * 60 * 60)) . ' '
+            . $request['endTime'];
         $request['participantId'] = $participantId;
         $request['parentId']      = $parentId;
 
@@ -645,21 +636,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $ownerId = Phprojekt_Auth::getUserId();
             }
             $request = Default_Helpers_Right::allowAll($request, $ownerId);
-
-            // Set dates depending on the times
-            $timeZoneComplement = (int) Phprojekt_User_User::getSetting("timeZone", 'UTC') * -1;
-
-            $startDate = strtotime($request['startDate']);
-            $startTime = strtotime($request['startTime']);
-            $endDate   = strtotime($request['endDate']);
-            $endTime   = strtotime($request['endTime']);
-
-            $valueStartTime = mktime(date("H", $startTime) + $timeZoneComplement, date("i", $startTime), 0,
-                date("m", $startDate), date("d", $startDate), date("Y", $startDate));
-            $valueEndTime = mktime(date("H", $endTime) + $timeZoneComplement, date("i", $endTime), 0,
-                date("m", $endDate), date("d", $endDate), date("Y", $endDate));
-            $request['startDate'] = date("Y-m-d", $valueStartTime);
-            $request['endDate']   = date("Y-m-d", $valueEndTime);
 
             Default_Helpers_Save::save($model, $request);
         }
@@ -678,7 +654,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      *
      * @return array
      */
-    private function _getRruleDescriptive($rrule)
+    public function getRruleDescriptive($rrule)
     {
         $tmp1     = explode(";", $rrule);
         $tmp2     = explode("=", $tmp1[0]);
@@ -927,5 +903,29 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $notification->setModel($this);
 
         return $notification;
+    }
+
+    /**
+     * Return only the date from a datetime
+     *
+     * @param string $datetime The datetime to get
+     *
+     * @return string
+     */
+    public function getDate($datetime)
+    {
+        return substr($datetime, 0, 10);
+    }
+
+    /**
+     * Apply the timezone to one datetime for use it in the database
+     *
+     * @param string $datetime The datetime to transform
+     *
+     * @return string
+     */
+    public function applyTimeZone($dateTime)
+    {
+        return date("Y-m-d H:i:s", Phprojekt_Converter_Time::userToUtc($dateTime));
     }
 }
