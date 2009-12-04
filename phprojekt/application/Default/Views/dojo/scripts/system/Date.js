@@ -42,10 +42,15 @@ dojo.declare("phpr.Date", null, {
         //    Convert a js time into ISO time
         // Description:
         //    Convert a js time into ISO time
-        var value   = time.toString().replace(/\D/g, "");
-        value       = value.substr(0, 4);
-        var minutes = value.substr(value.length - 2);
-        var hour    = value.substr(0, value.length - 2);
+        if (typeof(time) == 'object') {
+            var hour    = time.getHours();
+            var minutes = time.getMinutes();
+        } else {
+            var value   = time.toString().replace(/\D/g, "");
+            value       = value.substr(0, 4);
+            var minutes = value.substr(value.length - 2);
+            var hour    = value.substr(0, value.length - 2);
+        }
 
         if (isNaN(hour) || hour > 24 || hour < 0) {
             hour = '00';
@@ -53,7 +58,23 @@ dojo.declare("phpr.Date", null, {
         if (isNaN(minutes) || minutes > 60 || minutes < 0) {
             minutes = '00';
         }
+
         return dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
+    },
+
+    getIsoDatetime:function(date, time) {
+        // Summary:
+        //    Convert a js date and time into ISO datetime
+        // Description:
+        //    Convert a js date and time into ISO datetime
+        if (date == null) {
+            date = new Date();
+        }
+        if (time == null) {
+            time = '0000';
+        }
+
+        return this.getIsoDate(date) + ' ' + this.getIsoTime(time);
     },
 
     convertMinutesToTime:function(minutes) {
@@ -95,6 +116,21 @@ dojo.declare("phpr.Date", null, {
         var year  = date.substr(0, 4);
 
         return new Date(year, month - 1, day);
+    },
+
+    isoDatetimeTojsDate:function(datetime) {
+        // Summary:
+        //    Convert a iso string of a date into a js object date
+        // Description:
+        //    Convert a iso string of a date into a js object date
+        var day   = datetime.substr(8, 2);
+        var month = datetime.substr(5, 2);
+        var year  = datetime.substr(0, 4);
+
+        var hour    = datetime.substr(11, 2);
+        var minutes = datetime.substr(14, 2);
+
+        return new Date(year, month - 1, day, hour, minutes, 0);
     },
 
     getLongTranslateMonth:function(month) {
