@@ -370,6 +370,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                         this.formdata[itemtab] += this.fieldTemplate.timeRender(itemlabel, itemid, itemvalue,
                                                     itemrequired, itemdisabled, itemhint);
                         break;
+                    case'datetime':
+                        this.formdata[itemtab] += this.fieldTemplate.datetimeRender(itemlabel, itemid, itemvalue,
+                                                    itemrequired, itemdisabled, itemhint);
+                        break;
                     case 'textarea':
                         //this.formdata[itemtab] += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue,
                         //                            itemrequired, itemdisabled, itemhint);

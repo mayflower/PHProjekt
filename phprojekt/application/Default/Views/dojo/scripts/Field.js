@@ -206,6 +206,28 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         return html + this.disabledField(itemlabel, itemid, itemvalue, itemrequired, itemdisabled);
     },
 
+    datetimeRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
+        phpr.destroyWidget(itemid);
+        phpr.destroyWidget(itemid + "_disabled");
+        var date         = phpr.Date.isoDatetimeTojsDate(itemvalue);
+        var valueForDate = phpr.Date.getIsoDate(date);
+        var valueForTime = phpr.Date.getIsoTime(date);
+        var html = this.render(["phpr.Default.template", "formdatetime.html"], null, {
+                            label:        itemlabel,
+                            labelfor:     (itemdisabled) ? itemid + "_disabled" : itemid,
+                            id:           (itemdisabled) ? itemid + "_disabled" : itemid,
+                            idForDate:    (itemdisabled) ? itemid + "_disabled_forDate" : itemid + '_forDate',
+                            idForTime:    (itemdisabled) ? itemid + "_disabled_forTime" : itemid + '_forTime',
+                            value:        itemvalue,
+                            valueForDate: valueForDate,
+                            valueForTime: valueForTime,
+                            required:     itemrequired,
+                            disabled:     (itemdisabled) ? "disabled" : '',
+                            tooltip:      this.getTooltip(itemhint)
+                });
+        return html + this.disabledField(itemlabel, itemid, itemvalue, itemrequired, itemdisabled);
+    },
+
     selectRender:function(range, itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
