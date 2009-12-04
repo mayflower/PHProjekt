@@ -160,6 +160,7 @@ class Phprojekt_Model_Validate
                     // $valid = Cleaner::validate('timestamp', $value, false);
                     break;
                 case 'timestamp':
+                case 'datetime';
                     $valid = Cleaner::validate('timestamp', $value, false);
                     break;
                 default:

@@ -136,7 +136,7 @@ class Cleaner_Validator
             return true;
         }
 
-        // otherwise, must be numeric, and must be same as when cast to float
+        // Otherwise, must be numeric, and must be same as when cast to float
         $valid = is_numeric($value) && $value == (float) $value;
 
         if (!$valid) {
@@ -160,7 +160,7 @@ class Cleaner_Validator
             return true;
         }
 
-        // otherwise, must be numeric, and must be same as when cast to int
+        // Otherwise, must be numeric, and must be same as when cast to int
         $valid = (is_numeric($value) && $value == (int) $value);
 
         if (!$valid) {
@@ -200,13 +200,12 @@ class Cleaner_Validator
      */
     public function validateIsoDate($value, $messages)
     {
-        // basic date format
+        // Basic date format
         // yyyy-mm-dd
         $expr = '/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/D';
 
-        // validate
-        if (preg_match($expr, $value, $match) &&
-            checkdate($match[2], $match[3], $match[1])) {
+        // Validate
+        if (preg_match($expr, $value, $match) && checkdate($match[2], $match[3], $match[1])) {
             return true;
         } else {
             $messages->add('INVALID_ISODATE');
@@ -226,15 +225,12 @@ class Cleaner_Validator
     {
         $expr = '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/D';
 
-        $valid = $this->_filter->validatePregMatch($value, $expr) ||
-               ($value == '24:00:00');
-
-
-        if (!$valid) {
+        if (preg_match($expr, $value) || ($value == '24:00:00')) {
+            return true;
+        } else {
             $messages->add('INVALID_ISOTIME');
+            return false;
         }
-
-        return $valid;
     }
 
     /**
@@ -248,34 +244,34 @@ class Cleaner_Validator
     public function validateIsoTimestamp($value, $messages)
     {
 
-        // correct length?
+        // Correct length?
         if (strlen($value) != 19) {
             $messages->add('INVALID_ISOTIMESTAMP');
             return false;
         }
 
-        // valid date?
+        // Valid date?
         $date = substr($value, 0, 10);
-        if (! $this->_filter->validateIsoDate($date)) {
+        if (!$this->validateIsoDate($date, $messages)) {
             $messages->add('INVALID_ISOTIMESTAMP');
             return false;
         }
 
-        // valid separator?
+        // Valid separator?
         $sep = substr($value, 10, 1);
         if ($sep != 'T' && $sep != ' ') {
             $messages->add('INVALID_ISOTIMESTAMP');
             return false;
         }
 
-        // valid time?
+        // Valid time?
         $time = substr($value, 11, 8);
-        if (! $this->_filter->validateIsoTime($time)) {
+        if (!$this->validateIsoTime($time, $messages)) {
             $messages->add('INVALID_ISOTIMESTAMP');
             return false;
         }
 
-        // must be ok
+        // Must be ok
         return true;
     }
 
@@ -328,10 +324,11 @@ class Cleaner_Validator
     public function validateWord($value, $messages)
     {
         $expr = '/^\w+$/D';
-        $valid = $this->_filter->validatePregMatch($value, $expr);
-
-        if (!$valid) {
-            $messages->add('INVALID_WORD');
+        if (preg_match($expr, $value)) {
+            return true;
+        } else {
+            $messages->add('INVALID_ISOTIME');
+            return false;
         }
 
         return $valid;

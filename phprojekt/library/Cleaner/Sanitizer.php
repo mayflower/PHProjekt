@@ -107,7 +107,9 @@ class Cleaner_Sanitizer
         if (is_int($value)) {
             return date($format, $value);
         } else {
-            $time = strtotime($value);
+            // Remove GMT declaration if exists
+            $value = preg_replace('/ GMT([-+0-9])+ \((\D)*\)/', '', $value);
+            $time  = strtotime($value);
             if ($time === false) {
                 return null;
             }

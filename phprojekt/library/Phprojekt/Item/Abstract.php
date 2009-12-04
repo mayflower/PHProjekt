@@ -105,7 +105,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_history   = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
         $this->_search    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
         $this->_rights    = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-        $this->_timezone  = (int)Phprojekt_User_User::getSetting("timeZone", 'UTC');
+        $this->_timezone  = (int) Phprojekt_User_User::getSetting("timeZone", 'UTC');
     }
 
     /**
@@ -191,7 +191,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
                     // moving the value to UTC
                     $timeZoneComplement = (int) $this->_timezone * -1;
-                    $u = strtotime($value);
+                    $u                  = strtotime($value);
 
                     $value = mktime(date("H", $u) + $timeZoneComplement, date("i", $u),
                              date("s", $u), date("m"), date("d"), date("Y"));
@@ -204,7 +204,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
                     // moving the value to UTC
                     $timeZoneComplement = (int) $this->_timezone * -1;
-                    $u = strtotime($value);
+                    $u                  = strtotime($value);
 
                     $value = mktime(date("H", $u) + $timeZoneComplement, date("i", $u),
                              date("s", $u), date("m", $u), date("d", $u), date("Y", $u));
@@ -281,11 +281,12 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                 case 'datetime':
                 case 'timestamp':
                     if (!empty($value)) {
-                        $timeZone = (int) $this->_timezone * -1;
+                        $timeZone = (int) $this->_timezone;
                         $u        = strtotime($value);
 
                         $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u), date("m", $u),
                             date("d", $u), date("Y", $u));
+                        $value = date("Y-m-d H:i:s", $value);
                     }
                     break;
             }
