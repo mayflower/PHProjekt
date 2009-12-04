@@ -40,6 +40,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     comboActions:  new Array(),
     firstExtraCol: null,
     gridLayout:    new Array(),
+    splitFields:   new Array(),
 
     // Filters
     filterField:       new Array(),
@@ -233,6 +234,37 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         key:   meta[i]["key"],
                         label: meta[i]["label"],
                         type:  'date'
+                    });
+                    break;
+
+                case 'datetime':
+                    this.gridLayout.push({
+                        width:         '90px',
+                        name:          meta[i]["label"] + ' (' + phpr.nls.get('Date') + ')',
+                        field:         meta[i]["key"] + '_forDate',
+                        styles:        "text-align: center;",
+                        type:          phpr.grid.cells.DateTextBox,
+                        promptMessage: 'yyyy-MM-dd',
+                        constraint:    {formatLength: 'short', selector: "date", datePattern:'yyyy-MM-dd'},
+                        editable:      meta[i]['readOnly'] ? false : true
+                    });
+                    this.gridLayout.push({
+                        width:    '90px',
+                        name:     meta[i]["label"] + ' (' + phpr.nls.get('Hour') + ')',
+                        field:    meta[i]["key"] + '_forTime',
+                        styles:   "text-align: center;",
+                        type:     phpr.grid.cells.Time,
+                        editable: meta[i]['readOnly'] ? false : true
+                    });
+                    this.filterField.push({
+                        key:   meta[i]["key"] + '_forDate',
+                        label: meta[i]["label"] + ' (' + phpr.nls.get('Date') + ')',
+                        type:  'date'
+                    });
+                    this.filterField.push({
+                        key:   meta[i]["key"] + '_forTime',
+                        label: meta[i]["label"] + ' (' + phpr.nls.get('Hour') + ')',
+                        type:  'time'
                     });
                     break;
 
@@ -544,7 +576,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 }
 
                 var rule = '<select name="filterRule" dojoType="phpr.FilteringSelect" autocomplete="false" '
-                    + 'style="width: 100px;">';
+                    + 'style="width: 120px;">';
                 for (var j in rulesOptions) {
                     rule += '<option value="' + rulesOptions[j] + '">' + this._rules[rulesOptions[j]] +  '</option>';
                 }
@@ -571,7 +603,37 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         var filters   = this.getFilters();
         var found     = 0;
         var sendData  = dijit.byId('filterForm').attr('value');
-        var data      = new Array(sendData['filterOperator'] || 'AND', sendData['filterField'], sendData['filterRule'],
+
+        if (sendData['filterField'].indexOf('_forDate') > 0) {
+            // Convert date
+            sendData['filterValue'] = phpr.Date.getIsoDate(sendData['filterValue']);
+            sendData['filterField'] = sendData['filterField'].replace('_forDate', '');
+        } else if (sendData['filterField'].indexOf('_forTime') > 0) {
+            // Convert time
+            sendData['filterValue'] = phpr.Date.getIsoTime(sendData['filterValue']);
+            sendData['filterField'] = sendData['filterField'].replace('_forTime', '');
+        } else {
+            // Check for other date or times values
+            var type = null;
+            for (var i in this.filterField) {
+                if (this.filterField[i].key == sendData['filterField']) {
+                    type = this.filterField[i].type;
+                    break;
+                }
+            }
+            switch (type) {
+                case 'date':
+                    sendData['filterValue'] = phpr.Date.getIsoDate(sendData['filterValue']);
+                    break;
+                case 'time':
+                    sendData['filterValue'] = phpr.Date.getIsoTime(sendData['filterValue']);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        var data = new Array(sendData['filterOperator'] || 'AND', sendData['filterField'], sendData['filterRule'],
             sendData['filterValue']);
         var newFilter = data.join(separator);
 
@@ -807,9 +869,35 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 items: []
             };
             var content = dojo.clone(phpr.DataStore.getData({url: this.url}));
+
+            // Get datetime keys
+            this.splitFields = new Array();
+            for (var i = 0; i < meta.length; i++) {
+                if (meta[i]['type'] == 'datetime') {
+                    if (!this.splitFields['datetime']) {
+                        this.splitFields['datetime'] = new Array();
+                    }
+                    this.splitFields['datetime'].push(meta[i]['key']);
+                }
+            }
+
             for (var i in content) {
                 if (this.usePencilForEdit()) {
                     content[i]['gridEdit'] = 'editButton || ' + phpr.nls.get('Open this item in the form to edit it');
+                }
+
+                // Split a value in two values
+                for (var index in content[i]) {
+                    // For datetime values
+                    if (phpr.inArray(index, this.splitFields['datetime'])) {
+                        var key         = index + '_forDate';
+                        var value       = content[i][index].substr(0, 10);
+                        content[i][key] = value;
+
+                        var key         = index + '_forTime';
+                        var value       = content[i][index].substr(11, 5);
+                        content[i][key] = value;
+                    }
                 }
 
                 // Extra Columns for current module
@@ -1007,7 +1095,28 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             if (!this._newRowValues[inRowIndex]) {
                 this._newRowValues[inRowIndex] = {};
             }
-            this._newRowValues[inRowIndex][inFieldIndex] = inValue;
+
+            if (inFieldIndex.indexOf('_forDate') > 0) {
+                // Convert date to datetime
+                var item             = this.grid.getItem(inRowIndex);
+                var key              = inFieldIndex.replace('_forDate', '');
+                inFieldIndexConvined = key + '_forTime';
+                inValue              = inValue + ' ' + this.grid.store.getValue(item, inFieldIndexConvined);
+
+                this._newRowValues[inRowIndex][key] = inValue;
+            } else if (inFieldIndex.indexOf('_forTime') > 0) {
+                // Convert time to datetime
+                var item             = this.grid.getItem(inRowIndex);
+                var key              = inFieldIndex.replace('_forTime', '');
+                inFieldIndexConvined = key + '_forDate';
+                inValue              = inValue + ' ' + this.grid.store.getValue(item, inFieldIndexConvined);
+
+                this._newRowValues[inRowIndex][key] = inValue;
+            } else {
+                // Normal widgets
+                this._newRowValues[inRowIndex][inFieldIndex] = inValue;
+            }
+
             this.toggleSaveButton();
         }
     },

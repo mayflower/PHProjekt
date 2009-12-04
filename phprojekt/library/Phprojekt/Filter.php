@@ -147,17 +147,31 @@ class Phprojekt_Filter
         // Sanitize values
         if ($this->_info['metadata'][$identifier]['DATA_TYPE'] == 'time') {
             // Moving the value to UTC
-            $value    = Cleaner::sanitize('time', $keyword);
-            $timeZone = (int) Phprojekt_User_User::getSetting("timeZone", 'UTC') * -1;
-            $u        = strtotime($value);
-            $value    = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u), date("m"), date("d"),
-                date("Y"));
-            $k = date("H:i:s", $value);
+            $identifier = Phprojekt::getInstance()->getDb()->quoteIdentifier($identifier);
+            $value      = Cleaner::sanitize('time', $keyword);
+            $k          = date("H:i:s", Phprojekt_Converter_Time::userToUtc($value));
+            //$identifier = 'TIME(' . $identifier . ')';
+        } else if ($this->_info['metadata'][$identifier]['DATA_TYPE'] == 'datetime') {
+            $identifier = Phprojekt::getInstance()->getDb()->quoteIdentifier($identifier);
+            if (strstr($keyword, '-')) {
+                // Use it as date
+                $k          = Cleaner::sanitize('date', $keyword);
+                $identifier = 'DATE(' . $identifier . ')';
+            } else if (strstr($keyword, ':')) {
+                // Use it as time
+                $value      = Cleaner::sanitize('time', $keyword);
+                $k          = date("H:i:s", Phprojekt_Converter_Time::userToUtc($value));
+                $identifier = 'TIME(' . $identifier . ')';
+            } else {
+                // Use it as datetime
+                $value = Cleaner::sanitize('timestamp', $keyword);
+                $k     = date("Y-m-s H:i:s", Phprojekt_Converter_Time::userToUtc($value));
+            }
         } else {
             $this->_record->$field = $keyword;
             $k                     = $this->_record->$field;
+            $identifier            = Phprojekt::getInstance()->getDb()->quoteIdentifier($identifier);
         }
-        $identifier = Phprojekt::getInstance()->getDb()->quoteIdentifier($identifier);
 
         switch ($rule) {
             case 'equal':

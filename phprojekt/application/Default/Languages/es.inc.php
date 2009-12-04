@@ -19,6 +19,7 @@ $lang["notes"] = "Notas";
 $lang["Notes"] = "Notas";
 $lang["date"] = "Fecha";
 $lang["Date"] = "Fecha";
+$lang["Hour"] = "Hora";
 $lang["name"] = "Nombre";
 $lang["Name"] = "Nombre";
 $lang["label"] = "Etiqueta";
