@@ -85,13 +85,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public $searchSecondDisplayField = 'notes';
 
     /**
-     * Field for user timezone to be used on time conversion
-     *
-     * @var string
-     */
-    private $_timezone = null;
-
-    /**
      * Initialize new object
      *
      * @param array $db Configuration for Zend_Db_Table
@@ -105,7 +98,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_history   = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
         $this->_search    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
         $this->_rights    = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-        $this->_timezone  = (int) Phprojekt_User_User::getSetting("timeZone", 'UTC');
     }
 
     /**
@@ -188,29 +180,12 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     break;
                 case 'time':
                     $value = Cleaner::sanitize('time', $value);
-
-                    // moving the value to UTC
-                    $timeZoneComplement = (int) $this->_timezone * -1;
-                    $u                  = strtotime($value);
-
-                    $value = mktime(date("H", $u) + $timeZoneComplement, date("i", $u),
-                             date("s", $u), date("m"), date("d"), date("Y"));
-
-                    $value = date("H:i:s", $value);
+                    $value = date("H:i:s", Phprojekt_Converter_Time::userToUtc($value));
                     break;
                 case 'datetime':
                 case 'timestamp':
                     $value = Cleaner::sanitize('timestamp', $value);
-
-                    // moving the value to UTC
-                    $timeZoneComplement = (int) $this->_timezone * -1;
-                    $u                  = strtotime($value);
-
-                    $value = mktime(date("H", $u) + $timeZoneComplement, date("i", $u),
-                             date("s", $u), date("m", $u), date("d", $u), date("Y", $u));
-
-                    // running again the sanitizer to normalize the format
-                    $value = Cleaner::sanitize('timestamp', $value);
+                    $value = date("Y-m-d H:i:s", Phprojekt_Converter_Time::userToUtc($value));
                     break;
                 case 'text':
                     if (is_array($value)) {
@@ -270,23 +245,13 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     break;
                 case 'time':
                     if (!empty($value)) {
-                        $timeZone = (int) $this->_timezone;
-                        $u        = strtotime($value);
-
-                        $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u), date("m"), date("d"),
-                            date("Y"));
-                        $value = date("H:i:s", $value);
+                        $value = date("H:i:s", Phprojekt_Converter_Time::utcToUser($value));
                     }
                     break;
                 case 'datetime':
                 case 'timestamp':
                     if (!empty($value)) {
-                        $timeZone = (int) $this->_timezone;
-                        $u        = strtotime($value);
-
-                        $value = mktime(date("H", $u) + $timeZone, date("i", $u), date("s", $u), date("m", $u),
-                            date("d", $u), date("Y", $u));
-                        $value = date("Y-m-d H:i:s", $value);
+                        $value = date("Y-m-d H:i:s", Phprojekt_Converter_Time::utcToUser($value));
                     }
                     break;
             }
