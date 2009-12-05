@@ -802,8 +802,8 @@ class Setup_Models_Migration
             }
 
             // Multiple inserts
-            $dbFields = array('parent_id', 'owner_id', 'project_id', 'title', 'place', 'notes', 'uid' , 'start_date',
-                'start_time', 'end_date', 'end_time', 'timezone', 'location', 'categories', 'priority', 'rrule',
+            $dbFields = array('parent_id', 'owner_id', 'project_id', 'title', 'place', 'notes', 'uid' ,
+                'start_datetime', 'end_datetime', 'timezone', 'location', 'categories', 'priority', 'rrule',
                 'properties', 'participant_id');
             $dbValues = array();
 
@@ -871,9 +871,9 @@ class Setup_Models_Migration
                     // it will be done when implemented P6 ical
                     $dbValues[] = array($parentId, $calendar['von'], self::PROJECT_ROOT,
                         utf8_encode($calendar['event']), utf8_encode($calendar['ort']),
-                        utf8_encode($calendar['remark']), null, $date, $calendar['anfang'], $date, $calendar['ende'],
-                        $timezone, utf8_encode($calendar['ort']), "", $calendar['priority'], $rrule, "",
-                        $participantId);
+                        utf8_encode($calendar['remark']), null, $date . " " . $calendar['anfang'],
+                        $date . " " . $calendar['ende'], $timezone, utf8_encode($calendar['ort']), "",
+                        $calendar['priority'], $rrule, "", $participantId);
                 } else {
                     unset($events[$index]);
                 }
