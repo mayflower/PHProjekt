@@ -569,7 +569,7 @@ class Phprojekt_Table
             return $ids;
         } catch (Exception $error) {
             echo $error . '<br\>';
-            return 0;
+            return array();
         }
     }
 
