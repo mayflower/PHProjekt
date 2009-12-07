@@ -52,6 +52,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     // Constants
     MODE_XHR:        0,
     MODE_WINDOW:     1,
+    MODE_CLIENT:     2,
     TARGET_SINGLE:   0,
     TARGET_MULTIPLE: 1,
 
@@ -1291,7 +1292,11 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 })
             });
         } else if (mode == this.MODE_WINDOW) {
+            // Call the requested action with the selected ids in a new windows
             window.open(actionUrl);
+        } else if (mode == this.MODE_CLIENT) {
+            // Call the requested action with the selected ids in the main
+            eval("this.main." + action + "('" + ids + "')");
         }
 
         if (this.useCheckbox()) {

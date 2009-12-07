@@ -98,6 +98,11 @@ class IndexController extends Zend_Controller_Action
     const MODE_ACTION_WINDOW = 1;
 
     /**
+     * The action will be executed in the client.
+     */
+    const MODE_ACTION_CLIENT = 2;
+
+    /**
      * The action is for one id,
      * used in the grid for one row.
      */
@@ -236,6 +241,38 @@ class IndexController extends Zend_Controller_Action
         }
 
         return $where;
+    }
+
+    /**
+     * Returns the default extra actions to perform for multiple or singles ids.
+     * (Delete and Export)
+     *
+     * Each action defines in the array:
+     * <pre>
+     *  - target: {@link TARGET_ACTION_MULTIPLE} or {@link TARGET_ACTION_SIMPLE}.
+     *  - action: Name of the action that will process ids.
+     *  - label:  Display for the action.
+     *  - mode:   {@link MODE_ACTION_XHR} or {@link MODE_ACTION_WINDOW}.
+     *  - class:  Name of the class for display the icon.
+     * </pre>
+     *
+     * @return array
+     */
+    public function getDefaultExtraActions()
+    {
+        $delete = array('target' => self::TARGET_ACTION_MULTIPLE,
+                        'action' => 'jsonDeleteMultiple',
+                        'label'  => Phprojekt::getInstance()->translate('Delete'),
+                        'mode'   => self::MODE_ACTION_XHR,
+                        'class'  => 'deleteOption');
+
+        $export = array('target' => self::TARGET_ACTION_MULTIPLE,
+                        'action' => 'csvExportMultiple',
+                        'label'  => Phprojekt::getInstance()->translate('Export'),
+                        'mode'   => self::MODE_ACTION_WINDOW,
+                        'class'  => 'exportOption');
+
+        return array($delete, $export);
     }
 
     /**
@@ -669,19 +706,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonGetExtraActionsAction()
     {
-        $delete = array('target' => self::TARGET_ACTION_MULTIPLE,
-                        'action' => 'jsonDeleteMultiple',
-                        'label'  => Phprojekt::getInstance()->translate('Delete'),
-                        'mode'   => self::MODE_ACTION_XHR,
-                        'class'  => 'deleteOption');
-
-        $export = array('target' => self::TARGET_ACTION_MULTIPLE,
-                        'action' => 'csvExportMultiple',
-                        'label'  => Phprojekt::getInstance()->translate('Export'),
-                        'mode'   => self::MODE_ACTION_WINDOW,
-                        'class'  => 'exportOption');
-
-        $actions = array($delete, $export);
+        $actions = $this->getDefaultExtraActions();
 
         Phprojekt_Converter_Json::echoConvert($actions);
     }
