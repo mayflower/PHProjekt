@@ -48,6 +48,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     _filterCookie:     null,
     _listUrl:          null,
     _deleteAllFilters: null,
+    _filterSeparator:  ';',
 
     // Constants
     MODE_XHR:        0,
@@ -180,7 +181,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 editable: false
             });
             this.filterField.push({
-                key:   'id',
+                key:   '_fixedId',
                 label: 'ID',
                 type:  'text'
             });
@@ -600,10 +601,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             dijit.byId('filterForm').validate();
             return false;
         }
-        var separator = ";";
-        var filters   = this.getFilters();
-        var found     = 0;
-        var sendData  = dijit.byId('filterForm').attr('value');
+        var filters  = this.getFilters();
+        var found    = 0;
+        var sendData = dijit.byId('filterForm').attr('value');
 
         if (sendData['filterField'].indexOf('_forDate') > 0) {
             // Convert date
@@ -636,7 +636,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
         var data = new Array(sendData['filterOperator'] || 'AND', sendData['filterField'], sendData['filterRule'],
             sendData['filterValue']);
-        var newFilter = data.join(separator);
+        var newFilter = data.join(this._filterSeparator);
 
         // Don't save the same filter two times
         for (var i in filters) {
@@ -674,8 +674,14 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Save the used filters in the cookie
         this.setUrl();
 
+        // Fix id
+        var filterUrl = new Array();
+        for (var f in filters) {
+            filterUrl.push(filters[f].replace('_fixedId', 'id'));
+        }
+
         this._listUrl = this.url;
-        this.url      = this.url + '/filters/' + filters;
+        this.url      = this.url + '/filters/' + filterUrl;
 
         if (filters != dojo.cookie(this._filterCookie)) {
             dojo.cookie(this._filterCookie, filters, {expire: 500});
@@ -705,7 +711,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         } else {
             filters = filters.split(",");
             for (var i in filters) {
-                var data  = filters[i].split(";", 4);
+                var data  = filters[i].split(this._filterSeparator, 4);
                 if (!data[0] || !data[1] || !data[2] || !data[3]) {
                     filters.splice(i, 1);
                 }
@@ -760,7 +766,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }
 
         for (var i in filters) {
-            var data  = filters[i].split(";", 4);
+            var data  = filters[i].split(this._filterSeparator, 4);
             if (data[0] && data[1] && data[2] && data[3]) {
                 // Operator
                 if (first) {
