@@ -31,34 +31,23 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         dojo.subscribe("Statistic.changeDate", this, "changeDate");
     },
 
-    reload:function() {
-        // summary:
-        //    Reload function for Statistics
-        // description:
-        //    Reload function for Statistics
-        phpr.module       = this.module;
-        phpr.submodule    = '';
-        phpr.parentmodule = '';
+    _renderTemplate:function() {
+        // Summary:
+        //   Custom _renderTemplate for statistic
         this.render(["phpr.Statistic.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             webpath:            phpr.webpath,
             selectedPeriodText: phpr.nls.get('Selected Statistic Period'),
             selectedPeriodHelp: phpr.nls.get('Choose here the period for the statistics to be calculated.')
         });
-        this.cleanPage();
-        if (this._isGlobalModule(this.module)) {
-            phpr.TreeContent.fadeOut();
-            this.setSubGlobalModulesNavigation();
-        } else {
-            phpr.TreeContent.fadeIn();
-            this.setSubmoduleNavigation();
-        }
-        this.hideSuggest();
-        this.setSearchForm();
-        this.tree  = new this.treeWidget(this);
+    },
 
-        var today = new Date();
-        var start = new Date(today.getFullYear(), today.getMonth(), 1);
-        var end   = new Date(today.getFullYear(), today.getMonth(), 31);
+    _setWidgets:function() {
+        // Summary:
+        //   Custom _setWidgets for statistic
+        this.tree  = new this.treeWidget(this);
+        var today  = new Date();
+        var start  = new Date(today.getFullYear(), today.getMonth(), 1);
+        var end    = new Date(today.getFullYear(), today.getMonth(), 31);
         while (end.getMonth() != start.getMonth()) {
             var end = new Date(start.getFullYear(), start.getMonth(), end.getDate() - 1);
         }

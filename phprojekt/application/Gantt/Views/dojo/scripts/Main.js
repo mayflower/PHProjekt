@@ -37,10 +37,9 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         dojo.subscribe("Gantt.revertSlider", this, "revertSlider");
     },
 
-    reload:function() {
-        phpr.module           = this.module;
-        phpr.submodule        = '';
-        phpr.parentmodule     = '';
+    _renderTemplate:function() {
+        // Summary:
+        //   Custom _renderTemplate for gantt
         var projectPeriodHelp = phpr.nls.get('Click on a Project timeline and see and/or change here the Start and End '
             + 'dates.');
         this.render(["phpr.Gantt.template", "mainContent.html"], dojo.byId('centerMainContent'), {
@@ -48,21 +47,14 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             selectedProjectTimelineText: phpr.nls.get('Selected Project Timeline'),
             projectPeriodHelp:           projectPeriodHelp
         });
-        this.cleanPage();
-        if (this._isGlobalModule(this.module)) {
-            phpr.TreeContent.fadeOut();
-            this.setSubGlobalModulesNavigation();
-        } else {
-            phpr.TreeContent.fadeIn();
-            this.setSubmoduleNavigation();
-        }
-        this.hideSuggest();
-        this.setSearchForm();
+    },
+
+    _setWidgets:function() {
+        // Summary:
+        //   Custom _setWidgets for gantt
         this.tree  = new this.treeWidget(this);
-
         this.gantt = new phpr.Project.GanttBase(this);
-
-        this._url = phpr.webpath + "index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId;
+        this._url  = phpr.webpath + "index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId;
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
         phpr.DataStore.requestData({'url': this._url, 'processData': dojo.hitch(this, 'prepareData')});
     },

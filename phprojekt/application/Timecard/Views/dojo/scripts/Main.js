@@ -33,16 +33,15 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         dojo.subscribe("Timecard.changeDate", this, "changeDate");
     },
 
-    reload:function() {
-        phpr.module       = this.module;
-        phpr.submodule    = '';
-        phpr.parentmodule = '';
+    _renderTemplate:function() {
+        // Summary:
+        //   Custom _renderTemplate for timecard
         this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent'));
-        this.cleanPage();
-        phpr.TreeContent.fadeOut();
-        this.setSubGlobalModulesNavigation();
-        this.hideSuggest();
-        this.setSearchForm();
+    },
+
+    _setWidgets:function() {
+        // Summary:
+        //   Custom _setWidgets for timecard
         this.tree = new this.treeWidget(this);
         this.grid = new this.gridWidget(this, this._date);
         this.form = new this.formWidget(this, this._date);

@@ -64,17 +64,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.treeWidget          = phpr.Calendar.Tree;
     },
 
-    reload:function() {
+    _renderTemplate:function() {
         // Summary:
-        //    This function reloads the current module
-        // Description:
-        //    This function initializes a module that might have been called before.
-        //    It only reloads those parts of the page which might change during a PHProjekt session
-        //    important set the global phpr.module to the module which is currently loaded!!!
-        phpr.module       = this.module;
-        phpr.submodule    = '';
-        phpr.parentmodule = '';
-
+        //   Custom _renderTemplate for calendar
         this.render(["phpr.Calendar.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             changeDate: phpr.nls.get('Change date'),
             today:      phpr.nls.get('Today'),
@@ -82,17 +74,11 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             self:       phpr.nls.get('Self'),
             selection:  phpr.nls.get('Selection')
         });
+    },
 
-        this.cleanPage();
-        if (this._isGlobalModule(this.module)) {
-            phpr.TreeContent.fadeOut();
-            this.setSubGlobalModulesNavigation();
-        } else {
-            phpr.TreeContent.fadeIn();
-            this.setSubmoduleNavigation();
-        }
-        this.hideSuggest();
-        this.setSearchForm();
+    _setWidgets:function() {
+        // Summary:
+        //   Custom _setWidgets for calendar
         this.tree = new this.treeWidget(this);
         this.loadAppropriateList();
     },

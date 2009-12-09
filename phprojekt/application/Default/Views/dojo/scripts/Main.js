@@ -217,12 +217,37 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Description:
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
+        //    The function is splitted in four for customize it
+        this._setGlobalVars();
+        this._renderTemplate();
+        this._setNavigations();
+        this._setWidgets();
+    },
 
-        // important set the global phpr.module to the module which is currently loaded!!!
+    _setGlobalVars:function() {
+        // Summary:
+        //    Set the current module vars
+        // Description:
+        //    Set current parent and children modules
         phpr.module       = this.module;
         phpr.submodule    = '';
         phpr.parentmodule = '';
+    },
+
+    _renderTemplate:function() {
+        // Summary:
+        //    Render the module
+        // Description:
+        //    Call the template that the module use and render it
         this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
+    },
+
+    _setNavigations:function() {
+        // Summary:
+        //    Set some navigation stuff
+        // Description:
+        //    Clean buttons, set the navigation bar,
+        //    prepare the search box and fade out/in the tree
         this.cleanPage();
         if (this._isGlobalModule(this.module)) {
             phpr.TreeContent.fadeOut();
@@ -233,6 +258,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
         this.hideSuggest();
         this.setSearchForm();
+    },
+
+    _setWidgets:function() {
+        // Summary:
+        //    Set and start the widgets of the module
+        // Description:
+        //    Set and start the widgets of the module
         this.tree     = new this.treeWidget(this);
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
