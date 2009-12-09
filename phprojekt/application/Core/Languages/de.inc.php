@@ -4,23 +4,23 @@ $lang['Company Name'] = "Firmenname";
 
 // Words and phrases
 // Visual Module Editor
-$lang["Open Dialog"] =   "Maske öffnen";
+$lang["Editor"] =   "Herausgeber";
 $lang["Designer"]    = "Desinger";
-$lang["Table"] = "Tisch";
-$lang["Field Name"] = "Feldname";
-$lang["Field Type"] = "Feld Typ";
-$lang["Field Lenght"] = "Feld Länge";
+$lang["Database"] = "Datenbank";
+$lang["Field name"] = "Feldname";
+$lang["Field type"] = "Feld typ";
+$lang["Field lenght"] = "Feld länge";
 $lang["Form"] = "Form";
 $lang["Label"] = "Label";
 $lang["Project List"] = "Project List";
 $lang["User List"] = "Benutzer-Liste";
 $lang["Custom Values"] = "Benutzerdefinierte Werte";
 $lang["Select Type"] = "Wählen Sie Typ";
-$lang["Range"] = "Bereich";
-$lang["Default Value"] = "Standardeinstellung";
-$lang["List"] = "List";
+$lang["Values"] = "Werte";
+$lang["Default Value"] = "Default";
+$lang["Grid"] = "Gitter";
 $lang["List Position"] = "List Position";
-$lang["General"] = "Allgemeine";
+$lang["General"] = "Allgemeine Einstellungen";
 $lang["Status"] = "Status";
 $lang["Inactive"] = "Inaktive";
 $lang["Required Field"] = "Pflichtfeld";
@@ -48,4 +48,3 @@ $lang["Email"] = "Email";
 $lang["Time Zone"] = "Zeitzone";
 $lang["Favorite projects"] = "Angezeigte Projekte";
 $lang["Max Number of favorites projects"] = "Max. Nummer von angezeigten Projekten";
-

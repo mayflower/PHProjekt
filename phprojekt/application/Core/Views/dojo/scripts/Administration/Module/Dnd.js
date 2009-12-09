@@ -56,9 +56,12 @@ phpr.makeModuleDesignerSource = function() {
     //    Draw the source fields
     //    Cache the html result
     var element = dojo.byId('moduleDesignerSource');
-    var html    = '';
-    var types   = new Array('text', 'date', 'time', 'selectValues', 'checkbox',
-                            'percentage', 'textarea', 'upload')
+    var html    = '<div style="text-align: center; padding-bottom: 2px;">' +
+        phpr.nls.get('Drag a field from this side, and drop it in the right panel.') + '<br />'
+        + phpr.nls.get('Edit the field in the bottom panel when this appear after the drop.')
+        + '</div>';
+    var types = new Array('text', 'date', 'time', 'datetime', 'selectValues', 'checkbox',
+                          'percentage', 'textarea', 'upload')
 
     for (i in types) {
         var id = dojo.dnd.getUniqueId();
@@ -88,7 +91,10 @@ phpr.makeModuleDesignerTarget = function(jsonData, tabs) {
         for (var j in tabs) {
             var tab     = eval("moduleDesignerTarget" + tabs[j]['nameId']);
             var element = dojo.byId('moduleDesignerTarget' + tabs[j]['nameId']);
-            var html    = '';
+            var html    = '<div style="text-align: center; padding-bottom: 2px;">' +
+                phpr.nls.get('Drop in this panel all the fields that you want to have in this tab.') + '<br />'
+                + phpr.nls.get('For sort the fields, just drag and drop it in the correct position.')
+                + '</div>';
 
             for (var i in data) {
                 if (data[i]['formTab'] == tabs[j]['id']) {
@@ -205,48 +211,55 @@ phpr.editModuleDesignerField = function(nodeId) {
     var render        = new phpr.Component();
 
     // Table
-    fieldsTable += template.textFieldRender(phpr.nls.get('Field Name'), 'tableField', tableField, 50, true, false);
+    fieldsTable += template.textFieldRender(phpr.nls.get('Field name'), 'tableField', tableField, 50, true,
+        false);
     var tableTypeRange = new Array();
     switch (formType) {
         case 'text':
         case 'selectValues':
             tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
             tableTypeRange.push({'id': 'int', 'name': 'INT'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', tableType,
-                true, false);
-            fieldsTable += template.textFieldRender(phpr.nls.get('Field Lenght'), 'tableLength', tableLength,
-                3, true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                tableType, true, false);
+            fieldsTable += template.textFieldRender(phpr.nls.get('Field lenght'), 'tableLength',
+                tableLength, 3, true, false);
             break;
         case 'checkbox':
             tableTypeRange.push({'id': 'int', 'name': 'INT'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', tableType,
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                tableType, true, false);
+            fieldsTable += template.textFieldRender(phpr.nls.get('Field lenght'), 'tableLength', 1, 1,
                 true, false);
-            fieldsTable += template.textFieldRender(phpr.nls.get('Field Lenght'), 'tableLength', 1, 1, true, false);
             break;
         case 'date':
             tableTypeRange.push({'id': 'date', 'name': 'DATE'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'date',
-                true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'date', true, false);
             break;
         case 'time':
             tableTypeRange.push({'id': 'time', 'name': 'TIME'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'time',
-                true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'time', true, false);
+            break;
+        case 'datetime':
+            tableTypeRange.push({'id': 'datetime', 'name': 'DATETIME'});
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'datetime', true, false);
             break;
         case 'percentage':
             tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'varchar',
-                true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'varchar', true, false);
             break;
         case 'textarea':
             tableTypeRange.push({'id': 'text', 'name': 'TEXT'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'text',
-                true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'text', true, false);
             break;
         case 'upload':
             tableTypeRange.push({'id': 'text', 'name': 'TEXT'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field Type'), 'tableType', 'text',
-                true, false);
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'text', true, false);
             break;
     }
 
@@ -279,10 +292,16 @@ phpr.editModuleDesignerField = function(nodeId) {
             if (!formRange) {
                 formRange = 'id1 # value1 | id2 # value2';
             }
-            fieldsForm += template.textAreaRender(phpr.nls.get('Range'), 'formRange', formRange, true, false);
+            fieldsForm += template.textAreaRender(phpr.nls.get('Values'), 'formRange', formRange, true, false,
+                phpr.nls.get('Each option have the key, and the value to display, separated by #.') + '<br />'
+                + phpr.nls.get('Separate the diferent options with \'|\'.') + '<br />'
+                + phpr.nls.get('For Modules queries, use Module#keyField#displayField.') + '<br />'
+                + phpr.nls.get('The API will get all the keyField of the module and will use the displayField for '
+                + 'show it.'));
             break;
     }
-    fieldsForm += template.textFieldRender(phpr.nls.get('Default Value'), 'defaultValue', defaultValue, 0, true, false);
+    fieldsForm += template.textFieldRender(phpr.nls.get('Default Value'), 'defaultValue', defaultValue, 0, false,
+        false);
 
     fieldsForm += '<tr><td class="label">';
     fieldsForm += '<label for="moduleDesignerSubmitButtonForm">&nbsp;</label>';
@@ -292,7 +311,8 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsForm += '</td></tr>';
 
     // List
-    fieldsList += template.textFieldRender(phpr.nls.get('List Position'), 'listPosition', listPosition, 4, true, false);
+    fieldsList += template.textFieldRender(phpr.nls.get('List Position'), 'listPosition', listPosition, 4, true, false,
+        phpr.nls.get('Defines the position of the field in the grid. Starts with 1 in the left.'));
 
     fieldsList += '<tr><td class="label">';
     fieldsList += '<label for="moduleDesignerSubmitButtonList">&nbsp;</label>';
@@ -502,6 +522,16 @@ phpr.makeModuleDesignerField = function(formType, params) {
             inputTxt = '<input type="text" dojoType="dijit.form.TimeTextBox"'
                 + ' constraints="{formatLength:\'short\', timePattern:\'HH:mm\'}" />';
             break;
+        case 'datetime':
+            formLabel = params['formLabel'] || 'Datetime';
+            labelFor = 'datetime';
+            inputTxt = '<div class="twoFields">';
+            inputTxt += '<input type="text" dojoType="phpr.DateTextBox" constraints="{datePattern:\'yyyy-MM-dd\'}"'
+                + ' promptMessage="dd.mm.yy" />';
+            inputTxt += '<input type="text" dojoType="dijit.form.TimeTextBox"'
+                + ' constraints="{formatLength:\'short\', timePattern:\'HH:mm\'}" />';
+            inputTxt += '</div>';
+            break;
         case 'selectValues':
             formLabel = params['formLabel'] || 'Select';
             labelFor  = 'select';
@@ -603,17 +633,15 @@ phpr.makeModuleDesignerField = function(formType, params) {
         + id + '" />';
 
     html += '</td><td>';
-    html += '<button dojoType="dijit.form.Button" baseClass="positive" iconClass="tick"';
+    html += '<button dojoType="dijit.form.Button" baseClass="positive smallIcon" iconClass="edit"';
     html += ' onClick="'
         + 'phpr.editModuleDesignerField(this.domNode.parentNode.parentNode.parentNode.parentNode.parentNode.id);"';
     html += ' margin-bottom: 5px;">';
-    html += phpr.nls.get('Edit');
-    html += '</button>&nbsp;&nbsp;'
-    html += '<button dojoType="dijit.form.Button" baseClass="positive" iconClass="cross"';
+    html += '</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+    html += '<button dojoType="dijit.form.Button" baseClass="positive smallIcon" iconClass="cross"';
     html += ' onClick="'
         + 'phpr.deleteModuleDesignerField(this.domNode.parentNode.parentNode.parentNode.parentNode.parentNode.id);"';
     html += ' margin-bottom: 5px;">';
-    html += phpr.nls.get('Delete');
     html += '</button>'
     html += '</td></tr></table>';
 

@@ -6,21 +6,21 @@ $lang['Company Name'] = "Nombre de la companía";
 
 // Words and phrases
 // Visual Module Editor
-$lang["Open Dialog"]    = "Abrir Diseñador";
+$lang["Editor"]         = "Editor";
 $lang["Designer"]       = "Diseñador";
-$lang["Table"]          = "Tabla";
-$lang["Field Name"]     = "Nombre del campo";
-$lang["Field Type"]     = "Tipo de campo";
-$lang["Field Lenght"]   = "Largo del campo";
+$lang["Database"]       = "Base de datos";
+$lang["Field name"]     = "Nombre del campo";
+$lang["Field type"]     = "Tipo del campo";
+$lang["Field lenght"]   = "Largo del campo";
 $lang["Form"]           = "Formulario";
 $lang["Label"]          = "Etiqueta";
 $lang["Project List"]   = "Lista de Proyectos";
 $lang["User List"]      = "Lista de Usuarios";
 $lang["Custom Values"]  = "Valores Específicos";
 $lang["Select Type"]    = "Tipo de Select";
-$lang["Range"]          = "Rango";
-$lang["Default Value"]  = "Valor predeterminado";
-$lang["List"]           = "Lista";
+$lang["Values"]         = "Valores";
+$lang["Default Value"]  = "Valor por defecto";
+$lang["Grid"]           = "Grilla";
 $lang["List Position"]  = "Posición";
 $lang["General"]        = "General";
 $lang["Status"]         = "Estado";
@@ -53,6 +53,25 @@ $lang["Already exists, choose another one please"] = "Ya existente, elija otro p
 $lang["Here can be configured general settings of the site that affects all the users."] = "Aquí pueden configurarse "
     . "parámetros generales del sitio que afectan a todos los usuarios.";
 $lang["Please choose one of the tabs of above."] = "Por favor, elija una de las solapa de arriba.";
+$lang["Open a dialog where you can drag and drop many fields for create the form as you want."] = "Abrir un cuadro de "
+    . "diálogo donde usted puede arrastrar y soltar muchos campos para crear el formulario como usted desea.";
+$lang["Each option have the key, and the value to display, separated by #."] = "Cada opción tiene la clave, y el "
+    . "valor para mostrar, separados por #.";
+$lang["Separate the diferent options with '|'."] = "Separe a las distintas opciones con '|'.";
+$lang["For Modules queries, use Module#keyField#displayField."] = "Para consultas sobre los módulos, use "
+    . "Módulo#campoClave#campoParaMostrar";
+$lang["The API will get all the keyField of the module and will use the displayField for show it."] = "La API "
+    . "obtendrá todos los campoClaves del módulos y utilizará el campoParaMostrar para mostrarlos.";
+$lang["Defines the position of the field in the grid. Starts with 1 in the left."] = "Define la posición del campo en "
+    . "la grilla. Empieza con 1 en la izquierda";
+$lang["Drag a field from this side, and drop it in the right panel."] = "Arrastre un campo de este lado, y suéltelo "
+    . "en el panel derecho.";
+$lang["Edit the field in the bottom panel when this appear after the drop."] = "Edite el campo en el panel inferior "
+    . "cuando este aparezca después de soltarlo.";
+$lang["Drop in this panel all the fields that you want to have in this tab."] = "Suelte en este panel todos los campos "
+    . "que desea incluir en esta solapa.";
+$lang["For sort the fields, just drag and drop it in the correct position."] = "Para ordenar los campos, sólo "
+     . "arrastre y suéltelo en la posición correcta.";
 
 // General Help
 $lang["Content Help Administration"]["General"] = "DEFAULT";
@@ -117,9 +136,9 @@ $lang["Content Help Administration"]["Modulo"] = "<br />
             campo, un panel aparece para modificar sus valores y parámetros.<br />
             Posee 4 solapas:<br />
             <ul>
-                <li><b>Tabla:</b> para editar lo concerniente a la base de datos.<br />
+                <li><b>Base de datos:</b> para editar lo concerniente a la base de datos.<br />
                 <li><b>Formulario:</b> para editar los datos mostrados en el formulario.<br />
-                <li><b>Lista:</b> para editar si el campo se muestra o no en la lista y su posición dentro de
+                <li><b>Grilla:</b> para editar si el campo se muestra o no en la grilla y su posición dentro de
                     ella.<br />
                 <li><b>General:</b> parámetros generales.<br />
             </ul>

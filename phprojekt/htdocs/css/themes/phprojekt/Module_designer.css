@@ -15,7 +15,7 @@
 }
 
 #moduleDesignerContent .dojoDndItem {
-    padding: 3px;
+    padding: 0 3px;
 }
 
 .dj_ff2 #moduleDesignerContent .dojoDndItem {
@@ -66,6 +66,10 @@
 .phprojekt #moduleDesignerContent .dijitTextBox {
     width: 209px;
 }
+.phprojekt #moduleDesignerContent .twoFields .dijitInputField INPUT,
+.phprojekt #moduleDesignerContent .twoFields .dijitTextBox {
+    width: 98px;
+}
 
 .phprojekt #moduleDesignerContent .dijitMultiSelect,
 .phprojekt #moduleDesignerContent select,
@@ -76,7 +80,7 @@
 }
 
 .phprojekt #moduleDesignerContent .dijitTextArea{
-    width: 211px;
+    width: 218px;
 }
 
 .phprojekt #moduleDesignerContent .form {

@@ -33,7 +33,8 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         // Button for open the dialog
         if (designerData && (typeof designerData === 'object')) {
             this.formdata[1] += this.fieldTemplate.buttonActionRender(phpr.nls.get('Designer'), 'designerButton',
-                phpr.nls.get('Open Dialog'), '', 'dojo.publish(\'Module.openDialog\');');
+                phpr.nls.get('Editor'), '', 'dojo.publish(\'Module.openDialog\');',
+                phpr.nls.get('Open a dialog where you can drag and drop many fields for create the form as you want.'));
         }
 
         // Hidden field for the MD data
@@ -101,9 +102,9 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         }
         this.render(["phpr.Core.Module.template", "moduleDesigner.html"], dialog.domNode, {
             webpath:     phpr.webpath,
-            tableText:   phpr.nls.get('Table'),
+            tableText:   phpr.nls.get('Database'),
             formText:    phpr.nls.get('Form'),
-            listText:    phpr.nls.get('List'),
+            listText:    phpr.nls.get('Grid'),
             generalText: phpr.nls.get('General'),
             saveText:    phpr.nls.get('Close'),
             tabs:        tabs

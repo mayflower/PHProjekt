@@ -4,21 +4,21 @@ $lang['Company Name'] = "Company Name";
 
 // Words and phrases
 // Visual Module Editor
-$lang["Open Dialog"]    = "Open Dialog";
+$lang["Editor"]         = "Editor";
 $lang["Designer"]       = "Designer";
-$lang["Table"]          = "Table";
-$lang["Field Name"]     = "Field Name";
-$lang["Field Type"]     = "Field Type";
-$lang["Field Lenght"]   = "Field Lenght";
+$lang["Database"]       = "Database";
+$lang["Field name"]     = "Field name";
+$lang["Field type"]     = "Field type";
+$lang["Field lenght"]   = "Field lenght";
 $lang["Form"]           = "Form";
 $lang["Label"]          = "Label";
 $lang["Project List"]   = "Project List";
 $lang["User List"]      = "User List";
 $lang["Custom Values"]  = "Custom Values";
 $lang["Select Type"]    = "Select Type";
-$lang["Range"]          = "Range";
+$lang["Values"]         = "Values";
 $lang["Default Value"]  = "Default Value";
-$lang["List"]           = "List";
+$lang["Grid"]           = "Grid";
 $lang["List Position"]  = "List Position";
 $lang["General"]        = "General";
 $lang["Status"]         = "Status";
@@ -52,6 +52,25 @@ $lang["Already exists, choose another one please"] = "Already exists, choose ano
 $lang["Here can be configured general settings of the site that affects all the users."] = "Here can be configured "
     . "general settings of the site that affects all the users.";
 $lang["Please choose one of the tabs of above."] = "Please choose one of the tabs of above.";
+$lang["Open a dialog where you can drag and drop many fields for create the form as you want."] = "Open a dialog where "
+    . "you can drag and drop many fields for create the form as you want.";
+$lang["Each option have the key, and the value to display, separated by #."] = "Each option have the key, and the "
+    . "value to display, separated by #.";
+$lang["Separate the diferent options with '|'."] = "Separate the diferent options with '|'.";
+$lang["For Modules queries, use Module#keyField#displayField."] = "For Modules queries, use "
+    . "Module#keyField#displayField.";
+$lang["The API will get all the keyField of the module and will use the displayField for show it."] = "The API will "
+    . "get all the keyField of the module and will use the displayField for show it.";
+$lang["Defines the position of the field in the grid. Starts with 1 in the left."] = "Defines the position of the "
+    . "field in the grid. Starts with 1 in the left.";
+$lang["Drag a field from this side, and drop it in the right panel."] = "Drag a field from this side, and drop it in "
+    . "the right panel.";
+$lang["Edit the field in the bottom panel when this appear after the drop."] = "Edit the field in the bottom panel "
+    . "when this appear after the drop.";
+$lang["Drop in this panel all the fields that you want to have in this tab."] = "Drop in this panel all the fields "
+    . "that you want to have in this tab.";
+$lang["For sort the fields, just drag and drop it in the correct position."] = "For sort the fields, just drag and "
+    . "drop it in the correct position.";
 
 // General Help
 $lang["Content Help Administration"]["General"] = "DEFAULT";
@@ -117,9 +136,9 @@ $lang["Content Help Administration"]["Module"] = "<br />
             window appears to modify its values and parameters.<br />
             It has 4 tabs:<br />
             <ul>
-                <li><b>Table:</b> to edit the data of the database.<br />
+                <li><b>Databse:</b> to edit the data of the database.<br />
                 <li><b>Form:</b> to edit the data shown in the form.<br />
-                <li><b>List:</b> to edit whether the field is shown in the list or not, and its position inside it.
+                <li><b>Grid:</b> to edit whether the field is shown in the grid or not, and its position inside it.
                 <br />
                 <li><b>General:</b> general parameters.<br />
             </ul>
