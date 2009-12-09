@@ -2,10 +2,13 @@
     <td class="label">
         <label for="{{labelfor}}">{{label}}</label>
     </td>
-    <td colspan="2">
+    <td>
         <button dojoType="dijit.form.Button" baseClass="negative" id="{{id}}" type="button" iconClass="{{icon}}"
         onclick="{{action}}">
             {{text}}
         </button>
+    </td>
+    <td>
+        {{tooltip|safe}}
     </td>
 </tr>

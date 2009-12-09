@@ -256,34 +256,6 @@
     height: 20px;
 }
 
-.phprojekt #detailsBox .tooltip .dijitButtonNode {
-    width: 20px;
-    border: none;
-    background: none;
-    vertical-align: top;
-}
-
-.phprojekt #changeView .tooltip .dijitButtonNode {
-    width: 20px;
-    border: none;
-    background: none;
-    vertical-align: top;
-}
-
-.phprojekt #ganttChart .tooltip .dijitButtonNode {
-    width: 20px;
-    border: none;
-    background: none;
-    vertical-align: top;
-}
-
-.phprojekt #statisticChart .tooltip .dijitButtonNode {
-    width: 20px;
-    border: none;
-    background: none;
-    vertical-align: top;
-}
-
 .phprojekt .closeButton {
     margin: 0px 0px 0px 0px;
 }

@@ -20,7 +20,7 @@
                     constraints="{datePattern: 'yyyy-MM-dd', strict: true}" value="{endDate}"
                     style="width: 85px;">
                     &nbsp;
-                    <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
+                    <button dojoType="dijit.form.Button" baseClass="positive smallIcon" type="button" iconClass="tick"
                     onClick="
                         if (dijit.byId('startDate').attr('value') != null
                             && dijit.byId('endDate').attr('value') != null) {
@@ -28,8 +28,9 @@
                                 dijit.byId('endDate').attr('value')]);
                         }">
                     </button>
-                    &nbsp;
-                    <button dojoType="dijit.form.DropDownButton" showLabel="false" iconClass="help" class="tooltip">
+                    &nbsp;&nbsp;
+                    <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon"
+                    iconClass="help">
                         <div dojoType="dijit.TooltipDialog">
                             <div
                             style="white-space: nowrap;">
