@@ -12,6 +12,7 @@ $lang["Yes"] = "Si";
 $lang["Count"] = "Cantidad";
 $lang["Help"] = "Ayuda";
 $lang["Projects"] = "Proyectos";
+$lang["Type"] = "Tipo";
 
 // General Fields
 $lang["project"] = "Proyecto";
@@ -227,39 +228,6 @@ $lang["Tag results"] = "Tags";
 $lang["Hours"] = "Horas";
 $lang["Change date"] = "Cambiar día";
 $lang["Total"] = "Total";
-
-// Originally from Setting module
-$lang["keyValue"] = "Configuración";
-$lang["value"] = "Valor";
-$lang["Confirm Password"] = "Confirmar contraseña";
-$lang["Old Password"] = "Contraseña anterior";
-$lang["Language"] = "Idioma";
-$lang["Email"] = "Dirección de correo";
-$lang["Time Zone"] = "Huso Horario";
-$lang["Favorite projects"] = "Proyectos favoritos";
-
-// Originally from Administration module
-// Visual Module Editor
-$lang["Open Dialog"]    = "Abrir Diseñador";
-$lang["Designer"]       = "Diseñador";
-$lang["Table"]          = "Tabla";
-$lang["Field Name"]     = "Nombre del campo";
-$lang["Field Type"]     = "Tipo de campo";
-$lang["Field Lenght"]   = "Largo del campo";
-$lang["Form"]           = "Formulario";
-$lang["Label"]          = "Etiqueta";
-$lang["Project List"]   = "Lista de Proyectos";
-$lang["User List"]      = "Lista de Usuarios";
-$lang["Custom Values"]  = "Valores Específicos";
-$lang["Select Type"]    = "Tipo de Select";
-$lang["Range"]          = "Rango";
-$lang["Default Value"]  = "Valor predeterminado";
-$lang["List"]           = "Lista";
-$lang["List Position"]  = "Posición";
-$lang["General"]        = "General";
-$lang["Status"]         = "Estado";
-$lang["Inactive"]       = "Inactivo";
-$lang["Required Field"] = "Campo requerido";
 
 // Notification tab
 $lang["Send Notification"] = "Enviar notificación";
