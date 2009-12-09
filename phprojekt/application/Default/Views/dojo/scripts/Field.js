@@ -218,7 +218,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             id:           (itemdisabled) ? itemid + "_disabled" : itemid,
                             idForDate:    (itemdisabled) ? itemid + "_disabled_forDate" : itemid + '_forDate',
                             idForTime:    (itemdisabled) ? itemid + "_disabled_forTime" : itemid + '_forTime',
-                            value:        itemvalue,
+                            value:        itemvalue || valueForDate + ' ' + valueForTime,
                             valueForDate: valueForDate,
                             valueForTime: valueForTime,
                             required:     itemrequired,
