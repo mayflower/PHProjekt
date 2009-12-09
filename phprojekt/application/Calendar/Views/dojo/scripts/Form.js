@@ -242,7 +242,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         var params = {
             label:     '',
             iconClass: 'add',
-            alt:       'Add'
+            alt:       'Add',
+            baseClass: 'smallIcon'
         };
         newParticipant = new dijit.form.Button(params);
         dojo.byId("participantAddButton").appendChild(newParticipant.domNode);
@@ -255,7 +256,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             var params = {
                 label:     '',
                 iconClass: 'cross',
-                alt:       'Delete'
+                alt:       'Delete',
+                baseClass: 'smallIcon'
             };
 
             var tmp = new dijit.form.Button(params);
@@ -291,7 +293,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             var params = {
                 label:     '',
                 iconClass: 'cross',
-                alt:       'Delete'
+                alt:       'Delete',
+                baseClass: 'smallIcon'
             };
             var tmp = new dijit.form.Button(params);
             dojo.byId(buttonName).appendChild(tmp.domNode);
