@@ -29,30 +29,6 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         this.treeWidget = phpr.Core.Tree;
     },
 
-    getSystemModules:function() {
-        // Summary:
-        //    Return the modules that are like normal modules instead of just a form
-        // Description:
-        //    All this modules will have Grid and Form like normal modules
-        //    Add here other modules if you add them into the Administration section
-        return new Array("Module","Tab","User","Role");
-    },
-
-    isSystemModule:function(module) {
-        // Summary:
-        //    Return if the module is like a system one or not
-        // Description:
-        //    Return if the module is like a system one or not
-        var modules = this.getSystemModules();
-        for (key in modules) {
-            if (modules[key] === module) {
-                return true;
-            }
-        }
-
-        return false;
-    },
-
     getSummary:function() {
         // Summary:
         //    Function for be rewritten
