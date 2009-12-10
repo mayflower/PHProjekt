@@ -1281,12 +1281,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         } else if (target == this.TARGET_MULTIPLE) {
             var idUrl = 'ids';
         }
-
-        if (this.main.isSystemModule(phpr.module)) {
-            var actionUrl = phpr.webpath + "index.php/Core/" + phpr.module + "/" + action + '/' + idUrl + '/' + ids;
-        } else {
-            var actionUrl = phpr.webpath + "index.php/" + phpr.module + "/index/" + action + '/' + idUrl + '/' + ids;
-        }
+        var actionUrl = phpr.webpath + "index.php/" + phpr.module + "/index/" + action + '/' + idUrl + '/' + ids;
 
         if (mode == this.MODE_XHR) {
             // Call the requested action with the selected ids and wait for a response
