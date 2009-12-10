@@ -1281,7 +1281,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         } else if (target == this.TARGET_MULTIPLE) {
             var idUrl = 'ids';
         }
-        var actionUrl = phpr.webpath + "index.php/" + phpr.module + "/index/" + action + '/' + idUrl + '/' + ids;
+
+        var actionUrl = this.getDoActionUrl(action, idUrl, ids);
 
         if (mode == this.MODE_XHR) {
             // Call the requested action with the selected ids and wait for a response
@@ -1308,5 +1309,12 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         if (this.useCheckbox()) {
             dojo.byId("gridComboAction").selectedIndex = 0;
         }
+    },
+
+    getDoActionUrl:function(action, idUrl, ids) {
+        // Summary:
+        //    Isolated code for easy customization, this function returns the URL to be called for the requested action.
+
+        return phpr.webpath + "index.php/" + phpr.module + "/index/" + action + '/' + idUrl + '/' + ids;
     }
 });
