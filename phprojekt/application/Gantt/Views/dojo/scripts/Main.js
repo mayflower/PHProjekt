@@ -118,7 +118,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                     caption:  caption,
                     value:    projectValues,
                     display:  display,
-                    disabled: !writeAccess
+                    disabled: (!writeAccess) ? 'disabled="disabled"' : ''
                 });
             }
 
