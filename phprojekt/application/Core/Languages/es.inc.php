@@ -45,6 +45,7 @@ $lang["The length of the int fields must be between 1 and 11"] = "El largo de lo
 $lang["Invalid form Range for the select field"] = "Rango invalido para el campo Select";
 $lang["The module must have a project selector called project_id"] = "El módulo debe tener un selector de proyecto "
     . "llamado project_id";
+$lang["Project module must be a normal module"] = "Módulo de Proyecto debe ser un módulo normal";
 
 // User submodule
 $lang["Already exists, choose another one please"] = "Ya existente, elija otro por favor";

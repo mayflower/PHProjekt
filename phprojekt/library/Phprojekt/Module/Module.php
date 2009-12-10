@@ -151,7 +151,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
             return $this->id;
         } else {
             $errors = $this->getError();
-            $error  = array_pop($error);
+            $error  = array_pop($errors);
             throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
         }
     }
@@ -165,6 +165,14 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     {
         $data   = $this->_data;
         $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+
+        if ($this->_data['id'] == 1 && $this->_data['saveType'] != 0) {
+            $this->_validate->error->addError(array(
+                'field'   => 'Module',
+                'label'   => Phprojekt::getInstance()->translate('Module'),
+                'message' => Phprojekt::getInstance()->translate('Project module must be a normal module')));
+                return false;
+        }
 
         return $this->_validate->recordValidate($this, $data, $fields);
     }
