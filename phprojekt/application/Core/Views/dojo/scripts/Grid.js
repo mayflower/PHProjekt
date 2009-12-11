@@ -48,8 +48,7 @@ dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
 
     getDoActionUrl:function(action, idUrl, ids) {
         // Summary:
-        //    Isolated code for easy customization, this function returns the URL to be called for the requested action.
-
-        return phpr.webpath + "index.php/Core/" + phpr.module + "/" + action + '/' + idUrl + '/' + ids;
+        //    Custom getDoActionUrl for Core
+        return phpr.webpath + "index.php/Core/" + phpr.module.toLowerCase() + "/" + action + '/' + idUrl + '/' + ids;
     }
 });
