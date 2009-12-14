@@ -524,6 +524,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 // Module,projectId,id,xx (Open form for edit in normal modules)
                 var url = new Array([module, phpr.currentProjectId, "id", id]);
             } else {
+                phpr.currentProjectId = phpr.rootProjectId;
                 if (params && params.length > 0) {
                     // GlobalModule,Module,id,xx (Open form for edit in Adminisration)
                     var url = new Array([module, params.shift(), "id", id]);
@@ -537,6 +538,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 // Module,projectId,id,0 (Open form for add in normal modules)
                 var url = new Array([module, phpr.currentProjectId, "id", 0]);
             } else {
+                phpr.currentProjectId = phpr.rootProjectId;
                 if (params && params.length > 0) {
                     // GlobalModule,Module,id,xx (Open form for add in Adminisration)
                     var url = new Array([module, params.shift(), "id", 0]);
@@ -553,6 +555,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 // Module,projectId (Reload a module -> List view)
                 var url = new Array([module, phpr.currentProjectId]);
             } else {
+                phpr.currentProjectId = phpr.rootProjectId;
                 // GlobalModule (Reload a global module -> List view)
                 var url = new Array([module]);
             }
@@ -599,6 +602,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 projectId = 1;
             }
             phpr.currentProjectId = projectId;
+        } else if (this._isGlobalModule(module)) {
+            phpr.currentProjectId = phpr.rootProjectId;
         }
 
         // The second paremater (for global)
