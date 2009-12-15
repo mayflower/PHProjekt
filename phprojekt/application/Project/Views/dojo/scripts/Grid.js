@@ -24,7 +24,7 @@ dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
         this.inherited(arguments);
 
         // Delete parent cache
-        var parentId = this.main.tree.getParentId(phpr.currentProjectId);
+        var parentId = phpr.Tree.getParentId(phpr.currentProjectId);
         var url      = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList/nodeId/" + parentId;
         phpr.DataStore.deleteData({url: url});
 

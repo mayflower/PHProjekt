@@ -28,7 +28,6 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
         this.gridWidget = phpr.Timecard.Grid;
         this.formWidget = phpr.Timecard.Form;
-        this.treeWidget = phpr.Timecard.Tree;
 
         dojo.subscribe("Timecard.changeDate", this, "changeDate");
     },
@@ -42,7 +41,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     _setWidgets:function() {
         // Summary:
         //   Custom _setWidgets for timecard
-        this.tree = new this.treeWidget(this);
+        phpr.Tree.loadTree();
         this.grid = new this.gridWidget(this, this._date);
         this.form = new this.formWidget(this, this._date);
     },

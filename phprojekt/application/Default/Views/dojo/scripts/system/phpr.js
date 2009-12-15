@@ -742,24 +742,6 @@ dojo.declare("phpr.Dialog", [dijit.Dialog], {
     }
 });
 
-dojo.declare("phpr.TreeContent", null, {
-    // Summary:
-    //     Manage the visibility of the tree panel
-    // Description:
-    //     Manage the visibility of the tree panel
-    fadeOut:function() {
-        if (dojo.style("treeBox", "opacity") != 0.5) {
-            dojo.style("treeBox", "opacity", 0.5);
-        }
-    },
-
-    fadeIn:function() {
-        if (dojo.style("treeBox", "opacity") != 1) {
-            dojo.style("treeBox", "opacity", 1);
-        }
-    }
-});
-
 dojo.declare("phpr.InitialScreen", null, {
     // Summary:
     //     Manage the visibility of the page on init

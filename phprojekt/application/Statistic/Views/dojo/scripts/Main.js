@@ -26,7 +26,6 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
 
         this.gridWidget = phpr.Statistic.Grid;
         this.formWidget = phpr.Statistic.Form;
-        this.treeWidget = phpr.Statistic.Tree;
 
         dojo.subscribe("Statistic.changeDate", this, "changeDate");
     },
@@ -44,7 +43,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
     _setWidgets:function() {
         // Summary:
         //   Custom _setWidgets for statistic
-        this.tree  = new this.treeWidget(this);
+        phpr.Tree.loadTree();
         var today  = new Date();
         var start  = new Date(today.getFullYear(), today.getMonth(), 1);
         var end    = new Date(today.getFullYear(), today.getMonth(), 31);

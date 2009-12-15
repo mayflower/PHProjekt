@@ -61,7 +61,6 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.weekListWidget      = phpr.Calendar.ViewWeekList;
         this.monthListWidget     = phpr.Calendar.ViewMonthList;
         this.formWidget          = phpr.Calendar.Form;
-        this.treeWidget          = phpr.Calendar.Tree;
     },
 
     _renderTemplate:function() {
@@ -79,7 +78,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     _setWidgets:function() {
         // Summary:
         //   Custom _setWidgets for calendar
-        this.tree = new this.treeWidget(this);
+        phpr.Tree.loadTree();
         this.loadAppropriateList();
     },
 

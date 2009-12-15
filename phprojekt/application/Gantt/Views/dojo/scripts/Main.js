@@ -30,7 +30,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
 
         this.gridWidget = phpr.Gantt.Grid;
         this.formWidget = phpr.Gantt.Form;
-        this.treeWidget = phpr.Gantt.Tree;
 
         dojo.subscribe("Gantt.dialogCallback", this, "dialogCallback");
         dojo.subscribe("Gantt.toggle", this, "toggle");
@@ -52,7 +51,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     _setWidgets:function() {
         // Summary:
         //   Custom _setWidgets for gantt
-        this.tree  = new this.treeWidget(this);
+        phpr.Tree.loadTree();
         this.gantt = new phpr.Project.GanttBase(this);
         this._url  = phpr.webpath + "index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId;
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
@@ -463,7 +462,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             phpr.DataStore.deleteData({url: listUrl});
 
             // Delete parent cache
-            var parentId = this.tree.getParentId(ids[i]);
+            var parentId = phpr.Tree.getParentId(ids[i]);
             var listUrl  = phpr.webpath + "index.php/Project/index/jsonList/nodeId/" + parentId;
             phpr.DataStore.deleteData({url: listUrl});
 

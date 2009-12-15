@@ -17,12 +17,12 @@
  * @since      File available since Release 6.0
  */
 
-dojo.provide("phpr.Default.Tree");
+dojo.provide("phpr.Tree");
 
 phpr.treePaths               = new Array();
 phpr.treeLastProjectSelected = null;
 
-dojo.declare("phpr.Default.Tree", phpr.Component, {
+dojo.declare("phpr.Tree", phpr.Component, {
     // Summary: This class is responsible for rendering the Tree of a default module
     _treeNode: null,
     _url:      null,
@@ -30,17 +30,14 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
     _store:    null,
     _model:    null,
 
-    constructor:function(main) {
-        // Summary: The tree is rendere on construction
-        this.main = main;
+    constructor:function() {
         this.setUrl();
         this.setId();
-        this.setNode();
-        this.loadTree();
     },
 
     loadTree:function() {
         if (!dijit.byId(this._idName)) {
+            this.setNode();
             // Data of the tree
             var _this = this;
             phpr.DataStore.addStore({url: this._url, noCache: true});
@@ -49,7 +46,6 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
                 _this._store = new dojo.data.ItemFileWriteStore({data: content});
                 _this.getModel();
                 _this.tree = _this.getTree();
-
                 _this._treeNode.attr('content', _this.tree.domNode);
                 _this.tree.startup();
                 dojo.connect(_this.tree, "onClick", dojo.hitch(this, "onItemClick"));
@@ -87,6 +83,14 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
             showRoot: false,
             persist:  false
         }, document.createElement('div'));
+    },
+
+    getUrl:function() {
+        // Summary:
+        //    Return the url for get the tree
+        // Description:
+        //    Return the url for get the tree
+        return this._url;
     },
 
     setUrl:function() {
@@ -249,5 +253,21 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         }
         phpr.BreadCrumb.setModule();
         phpr.BreadCrumb.draw();
+    },
+
+    fadeOut:function() {
+        // Summary:
+        //     Manage the visibility of the tree panel
+        if (dojo.style("treeBox", "opacity") != 0.5) {
+            dojo.style("treeBox", "opacity", 0.5);
+        }
+    },
+
+    fadeIn:function() {
+        // Summary:
+        //     Manage the visibility of the tree panel
+        if (dojo.style("treeBox", "opacity") != 1) {
+            dojo.style("treeBox", "opacity", 1);
+        }
     }
 });

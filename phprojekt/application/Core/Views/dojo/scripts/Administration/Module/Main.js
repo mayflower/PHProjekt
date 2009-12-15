@@ -26,7 +26,6 @@ dojo.declare("phpr.Module.Main", phpr.Core.Main, {
 
         this.gridWidget = phpr.Module.Grid;
         this.formWidget = phpr.Module.Form;
-        this.treeWidget = phpr.Module.Tree;
 
         dojo.subscribe("Module.openDialog", this, "openDialog");
         dojo.subscribe("Module.submitForm", this, "submitForm");

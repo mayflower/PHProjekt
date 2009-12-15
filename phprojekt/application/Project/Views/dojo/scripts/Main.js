@@ -29,13 +29,12 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.gridWidget          = phpr.Project.Grid;
         this.formWidget          = phpr.Project.Form;
         this.formBasicDataWidget = phpr.Project.FormBasicData;
-        this.treeWidget          = phpr.Project.Tree;
     },
 
     loadResult:function(id, module, projectId) {
         this.cleanPage();
         phpr.currentProjectId = id;
-        phpr.TreeContent.fadeIn();
+        phpr.Tree.fadeIn();
         this.setUrlHash(module, null, ["basicData"]);
     },
 
@@ -46,8 +45,8 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.setSubmoduleNavigation('BasicData');
         this.hideSuggest();
         this.setSearchForm();
-        phpr.TreeContent.fadeIn();
-        this.tree = new this.treeWidget(this);
+        phpr.Tree.fadeIn();
+        phpr.Tree.loadTree();
         if (!dojo.byId('detailsBox')) {
             this.reload();
         }
@@ -55,9 +54,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
     },
 
     updateCacheData:function() {
-        if (this.tree) {
-            this.tree.updateData();
-        }
+        phpr.Tree.updateData();
         if (this.grid) {
             this.grid.updateData();
         }

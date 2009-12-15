@@ -26,7 +26,6 @@ dojo.declare("phpr.Administration.Main", phpr.Core.Main, {
 
         this.gridWidget = phpr.Administration.Grid;
         this.formWidget = phpr.Administration.Form;
-        this.treeWidget = phpr.Administration.Tree;
     },
 
     getSummary:function() {
@@ -45,9 +44,8 @@ dojo.declare("phpr.Administration.Main", phpr.Core.Main, {
 
     updateCacheData:function() {
         phpr.DataStore.deleteAllCache();
-        if (this.tree) {
-            this.tree.updateData();
-        }
+        phpr.Tree.updateData();
+        phpr.treeLastProjectSelected = null;
         if (this.form) {
             this.form.updateData();
         }

@@ -26,6 +26,5 @@ dojo.declare("phpr.Filemanager.Main", phpr.Default.Main, {
 
         this.gridWidget = phpr.Filemanager.Grid;
         this.formWidget = phpr.Filemanager.Form;
-        this.treeWidget = phpr.Filemanager.Tree;
     }
 });

@@ -79,9 +79,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.cleanPage();
         phpr.currentProjectId = projectId;
         if (phpr.isGlobalModule(module)) {
-            phpr.TreeContent.fadeOut();
+            phpr.Tree.fadeOut();
         } else {
-            phpr.TreeContent.fadeIn();
+            phpr.Tree.fadeIn();
         }
         this.setUrlHash(module, id);
     },
@@ -249,10 +249,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    prepare the search box and fade out/in the tree
         this.cleanPage();
         if (phpr.isGlobalModule(this.module)) {
-            phpr.TreeContent.fadeOut();
+            phpr.Tree.fadeOut();
             this.setSubGlobalModulesNavigation();
         } else {
-            phpr.TreeContent.fadeIn();
+            phpr.Tree.fadeIn();
             this.setSubmoduleNavigation();
         }
         this.hideSuggest();
@@ -264,7 +264,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    Set and start the widgets of the module
         // Description:
         //    Set and start the widgets of the module
-        this.tree     = new this.treeWidget(this);
+        phpr.Tree.loadTree();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
@@ -847,12 +847,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // Clean the navigation and forms buttons
         this.cleanPage();
-        phpr.TreeContent.fadeIn();
+        phpr.Tree.fadeIn();
         this.hideSuggest();
         this.setSearchForm();
-        if (!this.tree) {
-            this.tree = new this.treeWidget(this);
-        }
+        phpr.Tree.loadTree();
 
         phpr.send({
             url:       getDataUrl,

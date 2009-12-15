@@ -26,6 +26,5 @@ dojo.declare("phpr.Helpdesk.Main", phpr.Default.Main, {
 
         this.gridWidget = phpr.Helpdesk.Grid;
         this.formWidget = phpr.Helpdesk.Form;
-        this.treeWidget = phpr.Helpdesk.Tree;
     }
 });

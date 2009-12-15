@@ -26,7 +26,6 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
 
         this.gridWidget = phpr.Core.Grid;
         this.formWidget = phpr.Core.Form;
-        this.treeWidget = phpr.Core.Tree;
     },
 
     getSystemModules:function() {
@@ -94,11 +93,11 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
             });
         }
         this.cleanPage();
-        phpr.TreeContent.fadeOut();
+        phpr.Tree.fadeOut();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
-        this.tree = new this.treeWidget(this);
+        phpr.Tree.loadTree();
         if (this.isSystemModule(this.module)) {
             var updateUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSaveMultiple/nodeId/'
                 + phpr.currentProjectId;
