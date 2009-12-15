@@ -497,7 +497,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //      "id", and the next value a number
         //    After that, add all the params
         if (id && module) {
-            if (!this._isGlobalModule(module)) {
+            if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,xx (Open form for edit in normal modules)
                 var url = new Array([module, phpr.currentProjectId, "id", id]);
             } else {
