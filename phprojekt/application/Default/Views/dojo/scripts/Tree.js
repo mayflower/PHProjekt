@@ -221,7 +221,7 @@ dojo.declare("phpr.Default.Tree", phpr.Component, {
         var projects = new Array();
         var _this    = this;
 
-        if (!this.main._isGlobalModule(phpr.module)) {
+        if (!phpr.isGlobalModule(phpr.module)) {
             if (phpr.treeLastProjectSelected != phpr.currentProjectId || phpr.currentProjectId == 1) {
                 this.tree.model.store.fetchItemByIdentity({identity: phpr.currentProjectId,
                     onItem:function(item) {

@@ -1220,3 +1220,25 @@ dojo.declare("phpr.FilteringSelect", dijit.form.FilteringSelect, {
         return ret; // Returns String, (almost) valid HTML (entities encoded)
     }
 });
+
+phpr.isGlobalModule = function(module) {
+    // Summary:
+    //    Return if the module is global or per project
+    // Description:
+    //    Return if the module is global or per project
+    var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
+
+    // System Global Modules
+    if (module == 'Administration' || module == 'Setting') {
+        return true;
+    } else if (phpr.parentmodule == 'Administration' || phpr.parentmodule == 'Setting') {
+        return true;
+    } else {
+        for (index in globalModules) {
+            if (globalModules[index]['name'] == module) {
+                return true;
+            }
+        }
+    }
+    return false;
+};

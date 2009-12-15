@@ -56,7 +56,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.subscribe(module + ".loadResult", this, "loadResult");
         dojo.subscribe(module + ".setLanguage", this, "setLanguage");
         dojo.subscribe(module + ".showHelp", this, "showHelp");
-        dojo.subscribe(module + "._isGlobalModule", this, "_isGlobalModule");
         dojo.subscribe(module + ".processUrlHash", this, "processUrlHash");
         dojo.subscribe(module + ".processActionFromUrlHash", this, "processActionFromUrlHash");
         dojo.subscribe(module + ".setUrlHash", this, "setUrlHash");
@@ -79,7 +78,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     loadResult:function(/*int*/id, /*String*/module, /*int*/projectId) {
         this.cleanPage();
         phpr.currentProjectId = projectId;
-        if (this._isGlobalModule(module)) {
+        if (phpr.isGlobalModule(module)) {
             phpr.TreeContent.fadeOut();
         } else {
             phpr.TreeContent.fadeIn();
@@ -98,7 +97,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         if (!phpr.currentProjectId) {
             phpr.currentProjectId = phpr.rootProjectId;
         }
-        if (this._isGlobalModule(this.module)) {
+        if (phpr.isGlobalModule(this.module)) {
             // System Global Modules
             if (this.module == 'Administration' ||
                 this.module == 'Setting' ||
@@ -249,7 +248,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    Clean buttons, set the navigation bar,
         //    prepare the search box and fade out/in the tree
         this.cleanPage();
-        if (this._isGlobalModule(this.module)) {
+        if (phpr.isGlobalModule(this.module)) {
             phpr.TreeContent.fadeOut();
             this.setSubGlobalModulesNavigation();
         } else {
@@ -350,28 +349,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             });
             systemToolbar.addChild(button);
         }
-    },
-
-    _isGlobalModule:function(module) {
-        // Summary:
-        //    Return if the module is global or per project
-        // Description:
-        //    Return if the module is global or per project
-        var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
-
-        // System Global Modules
-        if (module == 'Administration' || module == 'Setting') {
-            return true;
-        } else if (phpr.parentmodule == 'Administration' || phpr.parentmodule == 'Setting') {
-            return true;
-        } else {
-            for (index in globalModules) {
-                if (globalModules[index]['name'] == module) {
-                    return true;
-                }
-            }
-        }
-        return false;
     },
 
     setSubmoduleNavigation:function(currentModule) {
@@ -534,7 +511,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 }
             }
         } else if (module && id == 0) {
-            if (!this._isGlobalModule(module)) {
+            if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,0 (Open form for add in normal modules)
                 var url = new Array([module, phpr.currentProjectId, "id", 0]);
             } else {
@@ -551,7 +528,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             if (!module) {
                 var module = this.module;
             }
-            if (!this._isGlobalModule(module)) {
+            if (!phpr.isGlobalModule(module)) {
                 // Module,projectId (Reload a module -> List view)
                 var url = new Array([module, phpr.currentProjectId]);
             } else {
@@ -596,13 +573,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
 
         // Normal modules use the project as second parameter
-        if (data[0] && !this._isGlobalModule(module)) {
+        if (data[0] && !phpr.isGlobalModule(module)) {
             var projectId = data.shift();
             if (projectId < 1) {
                 projectId = 1;
             }
             phpr.currentProjectId = projectId;
-        } else if (this._isGlobalModule(module)) {
+        } else if (phpr.isGlobalModule(module)) {
             phpr.currentProjectId = phpr.rootProjectId;
         }
 

@@ -244,7 +244,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // Description:
         //    Get the permission for the current user on the item
         if (this.id > 0) {
-            if (this.main._isGlobalModule(phpr.module)) {
+            if (phpr.isGlobalModule(phpr.module)) {
                 this._writePermissions  = true;
                 this._deletePermissions = true;
                 this._accessPermissions = false;
