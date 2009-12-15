@@ -21,12 +21,10 @@ dojo.provide("phpr.Default.Main");
 
 dojo.declare("phpr.Default.Main", phpr.Component, {
     // Summary: class for initialilzing a default module
-    tree:       null,
     grid:       null,
     module:     null,
     gridWidget: null,
     formWidget: null,
-    treeWidget: null,
     _langUrl:   null,
     userStore:  null,
     subModules: new Array(),

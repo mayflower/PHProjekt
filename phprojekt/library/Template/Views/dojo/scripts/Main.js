@@ -26,6 +26,5 @@ dojo.declare("phpr.##TEMPLATE##.Main", phpr.Default.Main, {
 
         this.gridWidget = phpr.##TEMPLATE##.Grid;
         this.formWidget = phpr.##TEMPLATE##.Form;
-        this.treeWidget = phpr.##TEMPLATE##.Tree;
     }
 });
