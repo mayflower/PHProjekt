@@ -489,7 +489,7 @@ class Setup_Models_Migration
                     'path'             => $paths[$parentId],
                     'project_id'       => $parentId,
                     'title'            => utf8_encode($project['name']),
-                    'notes'            => utf8_encode($project['note']),
+                    'notes'            => substr(utf8_encode($project['note']), 0, 65500),
                     'owner_id'         => $project['von'],
                     'start_date'       => $startDate,
                     'end_date'         => $endDate,
@@ -586,8 +586,9 @@ class Setup_Models_Migration
                     $endDate = null;
                 }
 
-                $dbValues[] = array($projectId, utf8_encode($todo['remark']), utf8_encode($todo['note']), $todo['von'],
-                    $todo['priority'], $todo['status'], $todo['ext'], $startDate, $endDate);
+                $dbValues[] = array($projectId, utf8_encode($todo['remark']),
+                    substr(utf8_encode($todo['note']), 0, 65500), $todo['von'], $todo['priority'], $todo['status'],
+                    $todo['ext'], $startDate, $endDate);
             }
 
             // Run the multiple inserts
@@ -636,7 +637,8 @@ class Setup_Models_Migration
                 $projectId   = $this->_processParentProjId($note['projekt']);
                 $note['von'] = $this->_processOwner($note['von']);
 
-                $dbValues[] = array($projectId, utf8_encode($note['name']), utf8_encode($note['remark']), $note['von']);
+                $dbValues[] = array($projectId, utf8_encode($note['name']),
+                    substr(utf8_encode($note['remark']), 0, 65500), $note['von']);
             }
 
             // Run the multiple inserts
@@ -742,7 +744,8 @@ class Setup_Models_Migration
                             list($moduleId, $itemId) = $this->_getItemAndModule($timeproj);
 
                             $dbValues[] = array($this->_users[$userId], $timeproj['datum'], $starTime, $endTime,
-                                $minutes, $timeproj['projekt'], utf8_encode($timeproj['note']), $moduleId, $itemId);
+                                $minutes, $timeproj['projekt'], substr(utf8_encode($timeproj['note']), 0, 65500),
+                                $moduleId, $itemId);
 
                             $tmpMinutes = ((24 - $lastHour)* 60);
                             if ($lastMinutes > 0) {
@@ -763,7 +766,7 @@ class Setup_Models_Migration
                         list($moduleId, $itemId) = $this->_getItemAndModule($timeproj);
 
                         $dbValues[] = array($this->_users[$userId], $timeproj['datum'], $starTime, $endTime, $minutes,
-                            $timeproj['projekt'], utf8_encode($timeproj['note']), $moduleId, $itemId);
+                            $timeproj['projekt'], substr(utf8_encode($timeproj['note']), 0, 65500), $moduleId, $itemId);
                     }
                 }
             }
@@ -871,7 +874,7 @@ class Setup_Models_Migration
                     // it will be done when implemented P6 ical
                     $dbValues[] = array($parentId, $calendar['von'], self::PROJECT_ROOT,
                         utf8_encode($calendar['event']), utf8_encode($calendar['ort']),
-                        utf8_encode($calendar['remark']), null, $date . " " . $calendar['anfang'],
+                        substr(utf8_encode($calendar['remark']), 0, 65500), null, $date . " " . $calendar['anfang'],
                         $date . " " . $calendar['ende'], $timezone, utf8_encode($calendar['ort']), "",
                         $calendar['priority'], $rrule, "", $participantId);
                 } else {
@@ -953,8 +956,8 @@ class Setup_Models_Migration
                             copy($originPath, $targetPath);
                         }
 
-                        $dbValues[] = array($file['von'], $title, utf8_encode($file['remark']), $file['div2'],
-                            utf8_encode($newFilename . "|" . $file['filename']));
+                        $dbValues[] = array($file['von'], $title, substr(utf8_encode($file['remark']), 0, 65500),
+                            $file['div2'], utf8_encode($newFilename . "|" . $file['filename']));
                     } else {
                         unset($files[$index]);
                     }
@@ -1090,7 +1093,7 @@ class Setup_Models_Migration
                     // It is apparently an email - Search for the Id
                     $query   = sprintf("SELECT ID FROM " . PHPR_DB_PREFIX . "users WHERE email = '%s'", $owner);
                     $userIds = $this->_dbOrig->query($query)->fetchAll();
-                    if (count($userIds > 0)) {
+                    if (isset($userIds[0]['ID'])) {
                         $oldOwnerId = $userIds[0]['ID'];
                         if (isset($this->_users[$oldOwnerId])) {
                             $ownerId = $this->_users[$oldOwnerId];
@@ -1170,7 +1173,7 @@ class Setup_Models_Migration
                 }
 
                 // Process description
-                $description  = utf8_encode($item['note']) . chr(10) . chr(10);
+                $description  = substr(utf8_encode($item['note']), 0, 65500) . chr(10) . chr(10);
                 $description .= $item['solution'];
 
                 // Process status
