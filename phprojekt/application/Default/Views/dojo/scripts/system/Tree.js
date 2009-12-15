@@ -40,7 +40,7 @@ dojo.declare("phpr.Tree", phpr.Component, {
             this.setNode();
             // Data of the tree
             var _this = this;
-            phpr.DataStore.addStore({url: this._url, noCache: true});
+            phpr.DataStore.addStore({url: this._url});
             phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
                 var content = _this.processData(dojo.clone(phpr.DataStore.getData({url: _this._url})));
                 _this._store = new dojo.data.ItemFileWriteStore({data: content});
@@ -50,7 +50,6 @@ dojo.declare("phpr.Tree", phpr.Component, {
                 _this.tree.startup();
                 dojo.connect(_this.tree, "onClick", dojo.hitch(this, "onItemClick"));
                 dojo.byId("navigation-container-title").innerHTML = phpr.nls.get('Projects');
-                phpr.InitialScreen.end();
                 _this.finishDraw();
             })});
         } else {
@@ -119,6 +118,7 @@ dojo.declare("phpr.Tree", phpr.Component, {
 
     updateData:function() {
         phpr.destroyWidget(this._idName);
+        phpr.DataStore.deleteData({url: this._url});
     },
 
     onItemClick:function(item) {

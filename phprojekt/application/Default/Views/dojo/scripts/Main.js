@@ -177,34 +177,43 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             phpr.config        = config.getList();
             phpr.currentUserId = phpr.config.currentUserId ? phpr.config.currentUserId : 0;
 
-            // Get all the tabs
-            var tabStore = new phpr.Store.Tab();
-            tabStore.fetch(dojo.hitch(this, function() {
-
-                // Get all the active users
-                this.userStore = new phpr.Store.User();
-                this.userStore.fetch(
-                    dojo.hitch(this, function() {
-                    this.addLogoTooltip();
-                    this._langUrl = phpr.webpath + "index.php/Default/index/jsonGetTranslatedStrings/language/" + phpr.language;
-                    phpr.DataStore.addStore({url: this._langUrl});
+            // Get translated strings
+            this._langUrl = phpr.webpath + "index.php/Default/index/jsonGetTranslatedStrings/language/" + phpr.language;
+            phpr.DataStore.addStore({url: this._langUrl});
+            phpr.DataStore.requestData({
+                url:         this._langUrl,
+                processData: dojo.hitch(this, function() {
+                    phpr.nls = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
+                    // Get global modules
+                    phpr.DataStore.addStore({url: phpr.globalModuleUrl});
                     phpr.DataStore.requestData({
-                        url:         this._langUrl,
+                        url:         phpr.globalModuleUrl,
                         processData: dojo.hitch(this, function() {
-                            // Load the components, tree, list and details.
-                            phpr.nls = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
-                            phpr.DataStore.addStore({url: phpr.globalModuleUrl});
+                            // Get projects
+                            phpr.DataStore.addStore({url: phpr.Tree.getUrl()});
                             phpr.DataStore.requestData({
-                                url:         phpr.globalModuleUrl,
+                                url:         phpr.Tree.getUrl(),
                                 processData: dojo.hitch(this, function() {
-                                    this.setGlobalModulesNavigation();
-                                    this.processUrlHash(window.location.hash);
+                                    phpr.Tree.loadTree();
+                                    // Get all the tabs
+                                    var tabStore = new phpr.Store.Tab();
+                                    tabStore.fetch(dojo.hitch(this, function() {
+                                        // Get all the active users
+                                        this.userStore = new phpr.Store.User();
+                                        this.userStore.fetch(dojo.hitch(this, function() {
+                                            this.addLogoTooltip();
+                                            // Load the module
+                                            this.setGlobalModulesNavigation();
+                                            this.processUrlHash(window.location.hash);
+                                            phpr.InitialScreen.end();
+                                        }));
+                                    }));
                                 })
                             });
                         })
                     });
-                }));
-            }));
+                })
+            });
         }));
     },
 
