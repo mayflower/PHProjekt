@@ -392,7 +392,7 @@ class Phprojekt_Notification
             return $this->_controllProcess;
         }
 
-        if ($this->_lastHistory[0]['action'] === self::LAST_ACTION_ADD) {
+        if (isset($this->_lastHistory[0]) && $this->_lastHistory[0]['action'] === self::LAST_ACTION_ADD) {
             return self::LAST_ACTION_ADD;
         } else {
             return self::LAST_ACTION_EDIT;
