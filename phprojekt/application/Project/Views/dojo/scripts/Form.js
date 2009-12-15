@@ -105,7 +105,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             accessUserText:   phpr.nls.get('User'),
             accessRoleText:   phpr.nls.get('Role'),
             accessActionText: phpr.nls.get('Action'),
-            disabled:         (!this._accessPermissions) ? 'disabled="disabled"' : '',
+            disabled:         (users.length == 0 || !this._accessPermissions) ? 'disabled="disabled"' : '',
             users:            users,
             roles:            this.roleStore.getList(),
             rows:             rows
@@ -114,7 +114,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.addTab(rolesData, 'tabRoles', 'Role', 'roleFormTab');
 
         // Add "add" button for role-user relation
-        if (this._accessPermissions) {
+        if (this._accessPermissions && users.length > 0) {
             this.addTinyButton('add', 'relationAddButton', 'newRoleUser');
         }
 

@@ -195,7 +195,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             accessDownloadText: phpr.nls.get('Download'),
             accessAdminText:    phpr.nls.get('Admin'),
             accessActionText:   phpr.nls.get('Action'),
-            accessPermissions:  this._accessPermissions,
+            accessPermissions:  (users.length > 0) ? this._accessPermissions : false,
             users:              users,
             rows:               rows
         });
@@ -203,7 +203,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.addTab(accessData, 'tabAccess', 'Access', 'accessFormTab');
 
         // Add "add" button for access
-        if (this._accessPermissions) {
+        if (this._accessPermissions && users.length > 0) {
             this.addTinyButton('add', 'accessAddButton', 'newAccess');
             dojo.connect(dijit.byId("checkAdminAccessAdd"), "onClick", dojo.hitch(this, "checkAllAccess", "Add"));
         }
