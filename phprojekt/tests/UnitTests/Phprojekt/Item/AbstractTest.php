@@ -334,6 +334,21 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $item->priority  = 1;
         $this->assertTrue($item->recordValidate());
 
+        $item     = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $result   = array();
+        $result[] = array('field'    => 'currentStatus',
+                          'label'    => 'Status',
+                          'message'  => 'Value out of range');
+        $item->projectId     = 1;
+        $item->title         = 'TEST';
+        $item->notes         = 'TEST';
+        $item->startDate     = '1981-05-12';
+        $item->endDate       = '1981-05-12';
+        $item->priority      = 1;
+        $item->currentStatus = 10;
+        $this->assertFalse($item->recordValidate());
+        $this->assertEquals($result, $item->getError());
+
         $item            = new Customized_Project(array('db' => $this->sharedFixture));
         $item->projectId = 1;
         $item->title     = 'TEST';

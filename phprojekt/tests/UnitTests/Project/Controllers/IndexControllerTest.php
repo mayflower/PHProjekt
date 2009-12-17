@@ -46,6 +46,7 @@ class Project_IndexController_Test extends FrontInit
         $this->request->setParam('endDate', '2020-08-31');
         $this->request->setParam('priority', 2);
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Project_IndexController::ADD_TRUE_TEXT, $response);
     }
@@ -57,6 +58,7 @@ class Project_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/jsonSaveMultiple/');
         $this->request->setParam('data[1][notes]', 'test');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Project_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
     }
@@ -91,6 +93,7 @@ class Project_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonSaveMultiple');
         $items = array(2 => array('projectId' => '2'));
         $this->request->setParam('data', $items);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '{"type":"error","message":"ID 2. Project: The project can not be saved under itself","code":0,'
             . '"id":"2"}';

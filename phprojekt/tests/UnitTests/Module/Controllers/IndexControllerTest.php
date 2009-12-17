@@ -51,6 +51,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('designerData', $designerData);
         $this->request->setParam('name', 'test');
         $this->request->setParam('label', 'test');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('The table module was created correctly', $response, 'Response was: ' . $response);
     }
@@ -67,6 +68,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('label', 'test');
         $this->request->setParam('saveType', 0);
         $this->request->setParam('active', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('The module was added correctly', $response, 'Response was: ' . $response);
 
@@ -93,6 +95,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('label', 'test');
         $this->request->setParam('saveType', 0);
         $this->request->setParam('active', 0);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('The module was edited correctly', $response, 'Response was: ' . $response);
 
@@ -109,6 +112,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('label', 'test');
         $this->request->setParam('saveType', 0);
         $this->request->setParam('active', 0);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('The module was edited correctly', $response, 'Response was: ' . $response);
     }
@@ -139,6 +143,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('id', Zend_Registry::get('moduleId'));
         $this->request->setParam('name', 'test');
         $this->request->setParam('label', 'test');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('The table module was edited correctly', $response, 'Response was: ' . $response);
     }
@@ -161,6 +166,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('id', Zend_Registry::get('moduleId'));
         $this->request->setParam('name', 'test');
         $this->request->setParam('label', 'test');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('The table module was edited correctly', $response, 'Response was: ' . $response);
     }
@@ -178,6 +184,7 @@ class Module_IndexController_Test extends FrontInit
         $this->request->setParam('id', Zend_Registry::get('moduleId'));
         $this->request->setParam('name', 'test');
         $this->request->setParam('label', 'test');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('The table module was edited correctly', $response, 'Response was: ' . $response);
     }
@@ -189,6 +196,7 @@ class Module_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Core/module/jsonDetail');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"name":"Project"', $response);
     }
@@ -199,6 +207,7 @@ class Module_IndexController_Test extends FrontInit
     public function testJsonDetailNewItem()
     {
         $this->setRequestUrl('Core/module/jsonDetail');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"name":"Project"', $response);
     }
@@ -223,6 +232,7 @@ class Module_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Core/moduleDesigner/jsonDetail');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"tableName":"Project","id":1', $response);
     }

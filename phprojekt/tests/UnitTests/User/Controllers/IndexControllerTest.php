@@ -40,6 +40,7 @@ class User_IndexController_Test extends FrontInit
     public function testGetUsersAction()
     {
         $this->setRequestUrl('Core/user/jsonGetUsers');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '{"id":2,"display":"Solt, Gustavo","current":false},{"id":1,"display":"Soria Parra, David",'
             . '"current":true}';
@@ -54,6 +55,7 @@ class User_IndexController_Test extends FrontInit
         $this->setRequestUrl('Core/user/jsonSaveMultiple');
         $items = array(2 => array('username' => 'david'));
         $this->request->setParam('data', $items);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '{"type":"error","message":"ID 2. Username: Already exists, choose another one please","code":0,'
             . '"id":"2"}';
@@ -69,6 +71,7 @@ class User_IndexController_Test extends FrontInit
         $items = array(2 => array('admin'     => '1'),
                        3 => array('firstname' => 'Yo'));
         $this->request->setParam('data', $items);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '{"type":"error","message":"ID 3. Last Name: Is a required field","code":0,"id":"3"}';
         $this->assertContains($expected, $response);

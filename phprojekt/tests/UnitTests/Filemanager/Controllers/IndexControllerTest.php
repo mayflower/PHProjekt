@@ -57,6 +57,7 @@ class Filemanager_IndexController_Test extends FrontInit
         $this->request->setParam('title', 'test title');
         $this->request->setParam('comments', 'comment test');
         $this->request->setParam('files', '966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Filemanager_IndexController::ADD_TRUE_TEXT, $response);
     }
@@ -72,6 +73,7 @@ class Filemanager_IndexController_Test extends FrontInit
         $this->request->setParam('title', 'test title 2');
         $this->request->setParam('comments', 'comment test 2');
         $this->request->setParam('files', 'tdyrgdbfa01ec4a2a3fa6282bb8fa8d5|stuff.txt');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Filemanager_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -92,6 +94,7 @@ class Filemanager_IndexController_Test extends FrontInit
         $this->request->setParam('title', 'test title MODIF');
         $this->request->setParam('comments', 'comment test MODIF');
         $this->request->setParam('files', 'a66f9bfa01ec4a2a3fa6282bb8fa8d56|articles2.txt');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Filemanager_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -114,6 +117,7 @@ class Filemanager_IndexController_Test extends FrontInit
                        2 => array('title' => 'test title 2 MODIFIED',
                                   'comments' => 'comment test 2 MODIFIED'));
         $this->request->setParam('data', $items);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Filemanager_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
 
@@ -135,6 +139,7 @@ class Filemanager_IndexController_Test extends FrontInit
     public function testJsonList()
     {
         $this->setRequestUrl('Filemanager/index/jsonList');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":2', $response);
@@ -147,6 +152,7 @@ class Filemanager_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Filemanager/index/jsonList');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":1', $response);
@@ -159,6 +165,7 @@ class Filemanager_IndexController_Test extends FrontInit
     {
         // New item data request
         $this->setRequestUrl('Filemanager/index/jsonDetail/');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":7,"itemId":0,"userId":1,'
             . '"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
@@ -174,6 +181,7 @@ class Filemanager_IndexController_Test extends FrontInit
         // Existing item
         $this->setRequestUrl('Filemanager/index/jsonDetail/');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"title":"test title MODIFIED AGAIN","rights":{"currentUser":{'
             . '"moduleId":7,"itemId":1,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,'

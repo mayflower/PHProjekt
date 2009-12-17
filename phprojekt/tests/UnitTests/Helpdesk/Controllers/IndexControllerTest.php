@@ -54,14 +54,15 @@ class Helpdesk_IndexController_Test extends FrontInit
         // INSERT
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
         $this->request->setParam('title', 'My Helpdesk task');
-        $this->request->setParam('assigned', '2');
-        $this->request->setParam('contactId', '0');
+        $this->request->setParam('assigned', 2);
+        $this->request->setParam('contactId', 0);
         $this->request->setParam('dueDate', '2009-05-30');
-        $this->request->setParam('projectId', '1');
-        $this->request->setParam('priority', '5');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('priority', 5);
         $this->request->setParam('attachments', '');
         $this->request->setParam('description', 'This is the description');
-        $this->request->setParam('status', '1');
+        $this->request->setParam('status', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::ADD_TRUE_TEXT, $response);
     }
@@ -74,16 +75,17 @@ class Helpdesk_IndexController_Test extends FrontInit
         // INSERT. Send notification
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
         $this->request->setParam('title', 'My Helpdesk task 2');
-        $this->request->setParam('assigned', '0');
-        $this->request->setParam('contactId', '0');
+        $this->request->setParam('assigned', 0);
+        $this->request->setParam('contactId', 0);
         $this->request->setParam('dueDate', '2009-05-17');
-        $this->request->setParam('projectId', '1');
-        $this->request->setParam('priority', '5');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('priority', 5);
         $this->request->setParam('attachments', '');
         $this->request->setParam('description', 'This is the description 2');
-        $this->request->setParam('status', '2');
+        $this->request->setParam('status', 2);
         $this->request->setParam('string', '');
         $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -101,15 +103,16 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
         $this->request->setParam('id', 1);
         $this->request->setParam('title', 'My Helpdesk task MODIFIED');
-        $this->request->setParam('assigned', '2');
-        $this->request->setParam('contactId', '0');
+        $this->request->setParam('assigned', 2);
+        $this->request->setParam('contactId', 0);
         $this->request->setParam('dueDate', '2009-05-30');
-        $this->request->setParam('projectId', '1');
-        $this->request->setParam('priority', '2');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('priority', 2);
         $this->request->setParam('attachments', '');
         $this->request->setParam('description', 'This is the description MODIFIED');
-        $this->request->setParam('status', '3');
+        $this->request->setParam('status', 3);
         $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -133,14 +136,15 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
         $this->request->setParam('id', 1);
         $this->request->setParam('title', 'My Helpdesk task MODIFIED');
-        $this->request->setParam('assigned', '2');
-        $this->request->setParam('contactId', '0');
+        $this->request->setParam('assigned', 2);
+        $this->request->setParam('contactId', 0);
         $this->request->setParam('dueDate', '2009-05-30');
-        $this->request->setParam('projectId', '1');
-        $this->request->setParam('priority', '2');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('priority', 2);
         $this->request->setParam('attachments', '');
         $this->request->setParam('description', 'This is the description MODIFIED');
-        $this->request->setParam('status', '3');
+        $this->request->setParam('status', 3);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::EDIT_TRUE_TEXT, $response);
     }
@@ -154,15 +158,16 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
         $this->request->setParam('id', 1);
         $this->request->setParam('title', 'My Helpdesk task MODIFIED');
-        $this->request->setParam('assigned', '1');
-        $this->request->setParam('contactId', '0');
+        $this->request->setParam('assigned', 1);
+        $this->request->setParam('contactId', 0);
         $this->request->setParam('dueDate', '2009-05-30');
-        $this->request->setParam('projectId', '1');
-        $this->request->setParam('priority', '2');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('priority', 2);
         $this->request->setParam('attachments', '');
         $this->request->setParam('description', 'This is the description MODIFIED');
-        $this->request->setParam('status', '4');
+        $this->request->setParam('status', 4);
         $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -181,15 +186,16 @@ class Helpdesk_IndexController_Test extends FrontInit
         // INSERT. Solved status
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
         $this->request->setParam('title', 'My Helpdesk task 3');
-        $this->request->setParam('assigned', '2');
+        $this->request->setParam('assigned', 2);
         $this->request->setParam('dueDate', '2009-05-31');
-        $this->request->setParam('projectId', '1');
-        $this->request->setParam('priority', '3');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('priority', 3);
         $this->request->setParam('attachments', '');
         $this->request->setParam('description', 'My Helpdesk description 3');
-        $this->request->setParam('status', '3');
-        $this->request->setParam('contactId', '0');
+        $this->request->setParam('status', 3);
+        $this->request->setParam('contactId', 0);
         $this->request->setParam('sendNotification', '');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -201,8 +207,8 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->assertEquals(2, $model->assigned);
         $this->assertEquals(date("Y-m-d"), $model->date);
         $this->assertEquals('2009-05-31', $model->dueDate);
-        $this->assertEquals('1', $model->projectId);
-        $this->assertEquals('3', $model->priority);
+        $this->assertEquals(1, $model->projectId);
+        $this->assertEquals(3, $model->priority);
         $this->assertEquals('', $model->attachments);
         $this->assertEquals(1, $model->solvedBy);
         $this->assertEquals(date("Y-m-d"), $model->solvedDate);
@@ -220,14 +226,15 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->setRequestUrl('Helpdesk/index/jsonSave/');
         $this->request->setParam('id', 50);
         $this->request->setParam('title', 'My Helpdesk task MODIFIED');
-        $this->request->setParam('assigned', '2');
-        $this->request->setParam('contactId', '0');
+        $this->request->setParam('assigned', 2);
+        $this->request->setParam('contactId', 0);
         $this->request->setParam('dueDate', '2009-05-30');
-        $this->request->setParam('projectId', '1');
-        $this->request->setParam('priority', '2');
+        $this->request->setParam('projectId', 1);
+        $this->request->setParam('priority', 2);
         $this->request->setParam('attachments', '');
         $this->request->setParam('description', 'This is the description MODIFIED');
-        $this->request->setParam('status', '4');
+        $this->request->setParam('status', 4);
+        $this->request->setParam('nodeId', 1);
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
@@ -251,6 +258,7 @@ class Helpdesk_IndexController_Test extends FrontInit
                        2 => array('title' => 'My completely new title 2',
                                   'status' => 4));
         $this->request->setParam('data', $items);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
 
@@ -273,6 +281,7 @@ class Helpdesk_IndexController_Test extends FrontInit
     public function testJsonList()
     {
         $this->setRequestUrl('Helpdesk/index/jsonList');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":3', $response);
@@ -285,6 +294,7 @@ class Helpdesk_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Helpdesk/index/jsonList');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":1', $response);
@@ -297,6 +307,7 @@ class Helpdesk_IndexController_Test extends FrontInit
     {
         // New item data request
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":10,"itemId":0,'
             . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
@@ -314,6 +325,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         // Existing item
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"title":"My completely new title","rights":{"currentUser":{"moduleId":10,'
             . '"itemId":1,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,'
@@ -332,6 +344,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         // Existing item
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
         $this->request->setParam('id', 2);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":2,"title":"My completely new title 2","rights":{"currentUser":{"moduleId":10,'
             . '"itemId":2,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,'

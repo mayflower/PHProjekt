@@ -53,6 +53,7 @@ class Contact_IndexController_Test extends FrontInit
         $this->request->setParam('country', 'Argentina');
         $this->request->setParam('comment', 'Very intelligent');
         $this->request->setParam('private', 0);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Contact_IndexController::ADD_TRUE_TEXT, $response);
     }
@@ -64,6 +65,7 @@ class Contact_IndexController_Test extends FrontInit
     {
         // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"name":"Mariano","rights":{"currentUser":{"moduleId":9,"itemId":1,'
             . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
@@ -80,6 +82,7 @@ class Contact_IndexController_Test extends FrontInit
         // Check it
         $this->setRequestUrl('Contact/index/jsonDetail/');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"name":"Mariano","rights":{"currentUser":{"moduleId":9,"itemId":1,'
             . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
@@ -110,6 +113,7 @@ class Contact_IndexController_Test extends FrontInit
         $this->request->setParam('country', 'Argentina2');
         $this->request->setParam('comment', 'Very intelligent2');
         $this->request->setParam('private', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Contact_IndexController::EDIT_TRUE_TEXT, $response);
     }
@@ -121,6 +125,7 @@ class Contact_IndexController_Test extends FrontInit
     {
         // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"name":"Mariano2","rights":{"currentUser":{"moduleId":9,"itemId":1,'
             . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
@@ -137,6 +142,7 @@ class Contact_IndexController_Test extends FrontInit
         // Check it
         $this->setRequestUrl('Contact/index/jsonDetail/');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"name":"Mariano2","rights":{"currentUser":{"moduleId":9,"itemId":1,'
             . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
@@ -165,6 +171,7 @@ class Contact_IndexController_Test extends FrontInit
     public function testJsonDeleteCheck() {
         // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('{}&&({"metadata":[]})', $response);
     }

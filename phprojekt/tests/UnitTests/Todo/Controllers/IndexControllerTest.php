@@ -55,13 +55,14 @@ class Todo_IndexController_Test extends FrontInit
         $this->setRequestUrl('Todo/index/jsonSave/');
         $this->request->setParam('title', 'My todo task');
         $this->request->setParam('notes', 'My note');
-        $this->request->setParam('projectId', '2');
+        $this->request->setParam('projectId', 2);
         $this->request->setParam('startDate', '2009-05-15');
         $this->request->setParam('endDate', '2009-05-17');
         $this->request->setParam('priority', 5);
-        $this->request->setParam('currentStatus', '1');
-        $this->request->setParam('userId', '2');
+        $this->request->setParam('currentStatus', 1);
+        $this->request->setParam('userId', 2);
         $this->request->setParam('string', 'My todo tag');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
     }
@@ -75,14 +76,15 @@ class Todo_IndexController_Test extends FrontInit
         $this->setRequestUrl('Todo/index/jsonSave/');
         $this->request->setParam('title', 'My todo task 2');
         $this->request->setParam('notes', 'My note 2');
-        $this->request->setParam('projectId', '2');
+        $this->request->setParam('projectId', 2);
         $this->request->setParam('startDate', '2009-07-15');
         $this->request->setParam('endDate', '2009-07-17');
         $this->request->setParam('priority', 2);
-        $this->request->setParam('currentStatus', '3');
-        $this->request->setParam('userId', '1');
+        $this->request->setParam('currentStatus', 3);
+        $this->request->setParam('userId', 1);
         $this->request->setParam('string', 'My todo tag2');
         $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
     }
@@ -97,13 +99,14 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('id', 2);
         $this->request->setParam('title', 'My todo task MODIFIED');
         $this->request->setParam('notes', 'My note');
-        $this->request->setParam('projectId', '3');
+        $this->request->setParam('projectId', 2);
         $this->request->setParam('startDate', '2009-05-16');
         $this->request->setParam('endDate', '2009-05-17');
         $this->request->setParam('priority', 7);
-        $this->request->setParam('currentStatus', '2');
-        $this->request->setParam('userId', '1');
+        $this->request->setParam('currentStatus', 2);
+        $this->request->setParam('userId', 1);
         $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Todo_IndexController::EDIT_TRUE_TEXT, $response);
     }
@@ -118,7 +121,7 @@ class Todo_IndexController_Test extends FrontInit
         $model->find(2);
         $this->assertEquals('My todo task MODIFIED', $model->title);
         $this->assertEquals('My note', $model->notes);
-        $this->assertEquals(3, $model->projectId);
+        $this->assertEquals(2, $model->projectId);
         $this->assertEquals('2009-05-16', $model->startDate);
         $this->assertEquals('2009-05-17', $model->endDate);
         $this->assertEquals(7, $model->priority);
@@ -136,12 +139,13 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('id', 50);
         $this->request->setParam('title', 'My todo 2');
         $this->request->setParam('notes', 'My note');
-        $this->request->setParam('projectId', '3');
+        $this->request->setParam('projectId', 3);
         $this->request->setParam('startDate', '2009-05-16');
         $this->request->setParam('endDate', '2009-05-17');
         $this->request->setParam('priority', 7);
-        $this->request->setParam('currentStatus', '2');
-        $this->request->setParam('userId', '2');
+        $this->request->setParam('currentStatus', 2);
+        $this->request->setParam('userId', 2);
+        $this->request->setParam('nodeId', 1);
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
@@ -163,6 +167,7 @@ class Todo_IndexController_Test extends FrontInit
                        3 => array('title' => 'My todo task 2 CHANGED',
                                   'currentStatus' => 4));
         $this->request->setParam('data', $items);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Todo_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
 
@@ -184,9 +189,10 @@ class Todo_IndexController_Test extends FrontInit
     public function testJsonList()
     {
         $this->setRequestUrl('Todo/index/jsonList');
+        $this->request->setParam('nodeId', 2);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
-        $this->assertContains('"numRows":3', $response);
+        $this->assertContains('"numRows":2', $response);
     }
 
     /**
@@ -196,6 +202,7 @@ class Todo_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Todo/index/jsonList');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":1', $response);

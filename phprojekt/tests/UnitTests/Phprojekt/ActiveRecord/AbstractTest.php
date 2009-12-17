@@ -155,14 +155,11 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * Test create an user
      */
     public function testCreateUser()
     {
-        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
-        $keepUser = $authNamespace->userId;
         try {
-            $authNamespace->userId = 0;
             $user = new Phprojekt_User_User(array('db'=>$this->sharedFixture));
             $user->username  = 'gustavo';
             $user->firstname = 'Gustavo';
@@ -174,10 +171,8 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
             $gustavo->find($user->id);
             $this->assertEquals('gustavo', $gustavo->username);
         } catch (Exception $e) {
-            $authNamespace->userId = $keepUser;
             $this->fail($e->getMessage());
         }
-        $authNamespace->userId = $keepUser;
     }
 
     /**

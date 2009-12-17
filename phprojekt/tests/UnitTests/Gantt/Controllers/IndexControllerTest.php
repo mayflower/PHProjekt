@@ -90,6 +90,7 @@ class Gantt_IndexController_Test extends FrontInit
         $projects = array('5,2009-06-01,2009-06-25',
                           '13,2008-01-01,2008-12-31');
         $this->request->setParam('projects', $projects);
+        $this->request->setParam('nodeId', 5);
         $response = $this->getResponse();
         $this->assertContains(Gantt_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
     }

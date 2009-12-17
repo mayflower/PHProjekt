@@ -46,6 +46,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', '13:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
     }
@@ -61,6 +62,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', '18:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
     }
@@ -92,6 +94,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', '');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
     }
@@ -122,6 +125,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', '19:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::EDIT_TRUE_TEXT, $response);
     }
@@ -152,6 +156,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', '12:30');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::EDIT_TRUE_TEXT, $response);
     }
@@ -183,6 +188,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', '12:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
@@ -202,6 +208,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('startTime', '11:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
@@ -222,6 +229,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('startTime', '09:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -246,6 +254,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('startTime', '');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
@@ -266,6 +275,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', '08:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
@@ -286,6 +296,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('endTime', '12:60');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('nodeId', 1);
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
@@ -387,6 +398,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/csvList/');
         $this->request->setParam('year', 2009);
         $this->request->setParam('month', '05');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"Date","Start Time","End Time","Minutes","Project","Notes"'."\n"
             .'"2009-05-16","10:30","12:30","120","Invisible Root","My note"'."\n"
@@ -401,6 +413,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/csvList/');
         $this->request->setParam('year', 2009);
         $this->request->setParam('month', '9');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertEquals(2, strlen($response));
     }

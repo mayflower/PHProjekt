@@ -692,6 +692,7 @@ INSERT INTO `role_module_permissions` (`role_id`, `module_id`, `access`) VALUES
 
 INSERT INTO `item_rights` (`module_id`, `item_id`, `user_id`, `access`) VALUES
 (1, 1, 1, 255),
+(1, 1, 2, 255),
 (1, 1, 3, 255),
 (1, 2, 1, 255),
 (1, 2, 3, 255),

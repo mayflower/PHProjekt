@@ -42,6 +42,7 @@ class History_IndexController_Test extends FrontInit
         $this->setRequestUrl('Core/history/jsonList/');
         $this->request->setParam('moduleId', 1);
         $this->request->setParam('itemId', 5);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '{"userId":1,"moduleId":1,"itemId":5,"field":"title","label":"Title","oldValue"';
         $this->assertContains($expected, $response);
@@ -55,6 +56,7 @@ class History_IndexController_Test extends FrontInit
         $this->setRequestUrl('Core/history/jsonList/');
         $this->request->setParam('moduleName', 'Project');
         $this->request->setParam('itemId', 5);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '{"userId":1,"moduleId":1,"itemId":5,"field":"title","label":"Title","oldValue":';
         $this->assertContains($expected, $response);
@@ -68,6 +70,7 @@ class History_IndexController_Test extends FrontInit
         $this->setRequestUrl('Core/history/jsonList/');
         $this->request->setParam('moduleId', 2);
         $this->request->setParam('itemId', null);
+        $this->request->setParam('nodeId', 1);
         $this->getResponse();
         $this->assertTrue($this->error);
     }

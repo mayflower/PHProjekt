@@ -52,8 +52,15 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/jsonList/');
         $this->request->setParam('nodeId', null);
-        $response = $this->getResponse();
-        $this->assertContains('"numRows":4}', $response);
+
+        try {
+            $this->front->dispatch($this->request, $this->response);
+        } catch (Phprojekt_PublishedException $error) {
+            $this->assertEquals(IndexController::NODEID_REQUIRED_TEXT, $error->getMessage());
+            return;
+        }
+
+        $this->fail('Error on Get the list');
     }
 
     /**
@@ -74,6 +81,7 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/jsonDetail/');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1';
         $this->assertContains($expected, $response);
@@ -86,6 +94,7 @@ class Phprojekt_IndexController_Test extends FrontInit
     public function testJsonDetailActionWithoutId()
     {
         $this->setRequestUrl('Project/index/jsonDetail');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('[{"id":1,"name":"Invisible Root"}', $response);
         $this->assertContains('{"id":2,"name":"....Project 1"}', $response);
@@ -167,6 +176,7 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/csvList/');
         $this->request->setParam('id', '1');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"Title","Start Date","End Date","Priority","Status","Percentage Completed"'."\n"
             . '"Invisible Root","","","","Offered","0.00"'."\n", $response);
@@ -179,6 +189,7 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/csvExportMultiple/');
         $this->request->setParam('ids', '1,2');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"Title","Start Date","End Date","Priority","Status","Percentage Completed"'."\n"
             . '"Invisible Root","","","","Offered","0.00"'."\n"

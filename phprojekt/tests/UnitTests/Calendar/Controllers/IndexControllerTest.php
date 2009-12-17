@@ -60,6 +60,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('endDatetime', '2009-06-02 10:00:00');
         $this->request->setParam('dataParticipant', 1);
         $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
     }
@@ -78,6 +79,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startDatetime', '2009-06-03 10:00:00');
         $this->request->setParam('endDatetime', '2009-06-03 11:00:00');
         $this->request->setParam('dataParticipant', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
     }
@@ -114,6 +116,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startDatetime', '2009-04-30 22:00:00');
         $this->request->setParam('endDatetime', '2009-04-30 23:00:00');
         $this->request->setParam('dataParticipant', array(2 => 2));
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -140,6 +143,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('endDatetime', '2009-04-30 23:00:00');
         $this->request->setParam('participantId', 1);
         $this->request->setParam('multipleParticipants', true);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -161,6 +165,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startDatetime', '2009-06-03 09:00:00');
         $this->request->setParam('endDatetime', '2009-06-02 10:00:00');
         $this->request->setParam('dataParticipant', 1);
+        $this->request->setParam('nodeId', 1);
 
         try {
             $this->front->dispatch($this->request, $this->response);
@@ -185,6 +190,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startDatetime', '2009-06-02 11:00:00');
         $this->request->setParam('endDatetime', '2009-06-02 10:00:00');
         $this->request->setParam('dataParticipant', 1);
+        $this->request->setParam('nodeId', 1);
 
         try {
             $this->front->dispatch($this->request, $this->response);
@@ -214,6 +220,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('dataParticipant', 1);
         $this->request->setParam('rrule', 'FREQ=MONTHLY;UNTIL=20090601T040000Z;INTERVAL=1;BYDAY=');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -239,6 +246,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('endDatetime', '2008-12-01 13:00:00');
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081202T040000Z;INTERVAL=1;BYDAY=');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -269,6 +277,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081204T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('sendNotification', 'on');
         $this->request->setParam('multipleParticipants', true);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -298,6 +307,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081203T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('multipleEvents', true);
         $this->request->setParam('multipleParticipants', true);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -323,6 +333,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('endDatetime', '2009-02-01 22:00:00');
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('rrule', 'FREQ=WEEKLY;UNTIL=20090208T040000Z;INTERVAL=1;BYDAY=');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -346,6 +357,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('participantId', 1);
         $this->request->setParam('multipleEvents', false);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -387,6 +399,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('rrule', 'FREQ=WEEKLY;UNTIL=20090208T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('multipleEvents', true);
         $this->request->setParam('multipleParticipants', true);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -412,6 +425,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('endDatetime', '2009-03-01 18:00:00');
         $this->request->setParam('participantId', 1);
         $this->request->setParam('rrule', 'FREQ=MONTHLY;UNTIL=20090901T040000Z;INTERVAL=2;BYDAY=');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -442,6 +456,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('rrule', 'FREQ=MONTHLY;UNTIL=20090901T040000Z;INTERVAL=2;BYDAY=');
         $this->request->setParam('multipleEvents', true);
         $this->request->setParam('multipleParticipants', true);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -466,6 +481,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('endDatetime', '2009-06-12 10:00:00');
         $this->request->setParam('participantId', 1);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20090613T040000Z;INTERVAL=1;BYDAY=');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -494,6 +510,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('multipleEvents', true);
         $this->request->setParam('multipleParticipants', true);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY=');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -520,6 +537,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('participantId', 1);
         $this->request->setParam('multipleEvents', false);
         $this->request->setParam('multipleParticipants', true);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -547,6 +565,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('multipleEvents', true);
         $this->request->setParam('multipleParticipants', false);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY=');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -562,6 +581,7 @@ class Calendar_IndexController_Test extends FrontInit
     {
         // New event data request
         $this->setRequestUrl('Calendar/index/jsonDetail/');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":5,"itemId":0,"userId":1,'
             . '"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
@@ -578,6 +598,7 @@ class Calendar_IndexController_Test extends FrontInit
         // Existing event
         $this->setRequestUrl('Calendar/index/jsonDetail/');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"title":"test edited","rights":{"currentUser":{"moduleId":5,"itemId":1,'
             . '"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,"delete":true,'
@@ -593,6 +614,7 @@ class Calendar_IndexController_Test extends FrontInit
     public function testJsonListAction()
     {
         $this->setRequestUrl('Calendar/index/jsonList/');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":17}', $response);
@@ -606,6 +628,7 @@ class Calendar_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Calendar/index/jsonList/');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":1}', $response);
@@ -829,6 +852,7 @@ class Calendar_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Calendar/index/csvDayListSelf/');
         $this->request->setParam('date', '2009-06-14');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"Title","Start","End"' . "\n"
             . '"Multiple5","2009-06-14 08:00:00","2009-06-14 10:00:00"' . "\n", $response);
@@ -842,6 +866,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/csvDayListSelect/');
         $this->request->setParam('date', '2009-06-14');
         $this->request->setParam('users', '1,2,3');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"Title","Place","Notes","Start","End","Participant",'
             . '"Rrule"' . "\n"
@@ -859,6 +884,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/csvPeriodList/');
         $this->request->setParam('dateStart', '2009-06-01');
         $this->request->setParam('dateEnd', '2009-06-25');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"Title","Place","Notes","Start","End","Participant",'
             . '"Rrule"' . "\n"

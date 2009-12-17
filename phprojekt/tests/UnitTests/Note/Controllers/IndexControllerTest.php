@@ -56,6 +56,7 @@ class Note_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'test title');
         $this->request->setParam('comments', 'comment test');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::ADD_TRUE_TEXT, $response);
     }
@@ -70,6 +71,7 @@ class Note_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'test title 2');
         $this->request->setParam('comments', 'comment test 2');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::ADD_TRUE_TEXT, $response);
 
@@ -89,6 +91,7 @@ class Note_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'test title MODIFIED');
         $this->request->setParam('comments', 'comment test MODIFIED');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::EDIT_TRUE_TEXT, $response);
 
@@ -110,6 +113,7 @@ class Note_IndexController_Test extends FrontInit
                        2 => array('title' => 'test title 2 MODIFIED',
                                   'comments' => 'comment test 2 MODIFIED'));
         $this->request->setParam('data', $items);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Note_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
 
@@ -131,6 +135,7 @@ class Note_IndexController_Test extends FrontInit
     public function testJsonList()
     {
         $this->setRequestUrl('Note/index/jsonList');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":2', $response);
@@ -143,6 +148,7 @@ class Note_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Note/index/jsonList');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response);
         $this->assertContains('"numRows":1', $response);
@@ -155,6 +161,7 @@ class Note_IndexController_Test extends FrontInit
     {
         // New item data request
         $this->setRequestUrl('Note/index/jsonDetail/');
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":3,"itemId":0,"userId":1,'
             . '"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
@@ -170,6 +177,7 @@ class Note_IndexController_Test extends FrontInit
         // Existing item
         $this->setRequestUrl('Note/index/jsonDetail/');
         $this->request->setParam('id', 1);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"title":"test title MODIFIED AGAIN","rights":{"currentUser":{"moduleId":3,'
             . '"itemId":1,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,'
