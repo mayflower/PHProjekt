@@ -225,24 +225,6 @@ final class Default_Helpers_Right
         $right  = array();
         $rights = array();
 
-        $right['none']     = true;
-        $right['read']     = true;
-        $right['write']    = true;
-        $right['access']   = true;
-        $right['create']   = true;
-        $right['copy']     = true;
-        $right['delete']   = true;
-        $right['download'] = true;
-        $right['admin']    = true;
-
-        // Only set the full access if is a new item
-        if ($newItem) {
-            if ($ownerId == 0) {
-                $ownerId = Phprojekt_Auth::getUserId();
-            }
-            $rights[$ownerId] = Phprojekt_Acl::convertArrayToBitmask($right);
-        }
-
         if (isset($params['dataAccess'])) {
             $ids = array_keys($params['dataAccess']);
             foreach ($ids as $accessId) {
@@ -258,6 +240,23 @@ final class Default_Helpers_Right
                 $right['admin']    = (isset($params['checkAdminAccess'][$accessId])) ? true : false;
                 $rights[$accessId] = Phprojekt_Acl::convertArrayToBitmask($right);
             }
+        }
+
+        // Only set the full access if is a new item
+        if ($newItem) {
+            if ($ownerId == 0) {
+                $ownerId = Phprojekt_Auth::getUserId();
+            }
+            $right['none']     = true;
+            $right['read']     = true;
+            $right['write']    = true;
+            $right['access']   = true;
+            $right['create']   = true;
+            $right['copy']     = true;
+            $right['delete']   = true;
+            $right['download'] = true;
+            $right['admin']    = true;
+            $rights[$ownerId]  = Phprojekt_Acl::convertArrayToBitmask($right);
         }
 
         return $rights;
