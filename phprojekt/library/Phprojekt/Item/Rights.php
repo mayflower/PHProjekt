@@ -78,10 +78,22 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             $rightPerUserNamespace->unsetAll();
         }
 
-        // Reset cache
+        // Reset access by module-item
         $sessionName    = 'Phprojekt_Item_Rights-getRights' . '-' . $moduleId . '-' . $itemId;
         $rightNamespace = new Zend_Session_Namespace($sessionName);
         $rightNamespace->unsetAll();
+
+        // Reset users by module-item
+        $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-' . $moduleId . '-' . $itemId;
+        $rightNamespace = new Zend_Session_Namespace($sessionName);
+        $rightNamespace->unsetAll();
+
+        // Reset users by project
+        if ($moduleId == 1) {
+            $sessionName    = 'Phprojekt_User_User-getAllowedUsers' . '-' . $itemId;
+            $rightNamespace = new Zend_Session_Namespace($sessionName);
+            $rightNamespace->unsetAll();
+        }
     }
 
     /**
@@ -211,5 +223,32 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $data['user_id']   = (int) $userId;
         $data['access']    = (int) Phprojekt_Acl::WRITE;
         $this->insert($data);
+    }
+
+    /**
+     * Return all the users with at least one right for a moduleId-ItemId pair
+     *
+     * @param string  $moduleId The module Id
+     * @param integer $itemId   The item Id
+     *
+     * @return array
+     */
+    public function getUsersWithRight($moduleId, $itemId)
+    {
+        // Cache the query
+        $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-' . $moduleId . '-' . $itemId;
+        $rightNamespace = new Zend_Session_Namespace($sessionName);
+
+        if (!isset($rightNamespace->right)) {
+            $values = array();
+            $where  = sprintf('module_id = %d AND item_id = %d AND access > 0', (int) $moduleId, (int) $itemId);
+            $rows   = $this->fetchAll($where)->toArray();
+            foreach ($rows as $row) {
+                $values[] = $row['user_id'];
+            }
+            $rightNamespace->right = $values;
+        }
+
+        return $rightNamespace->right;
     }
 }

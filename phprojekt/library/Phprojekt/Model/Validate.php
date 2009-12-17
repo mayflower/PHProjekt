@@ -72,9 +72,9 @@ class Phprojekt_Model_Validate
                 // Validate with the database_manager stuff
                 foreach ($fields as $field) {
                     if ($field['key'] == $varname) {
-                        $validations = $field;
 
-                        if (true === $validations['required']) {
+                        // Check required
+                        if (true === $field['required']) {
                             $error = $this->validateIsRequired($value);
                             if (null !== $error) {
                                 $valid = false;
@@ -86,6 +86,7 @@ class Phprojekt_Model_Validate
                             }
                         }
 
+                        // Check value length
                         if (isset($field['length']) && $field['length'] > 0) {
                             if (strlen($value) > $field['length']) {
                                 $valid = false;
@@ -98,6 +99,33 @@ class Phprojekt_Model_Validate
                             }
                         }
 
+                        // Check value in range
+                        if (!empty($value)) {
+                            $emptyRange = array('id' => '', 'name' => '');
+                            $nullRange  = array('id' => null, 'name' => null);
+                            if ($field['range'] !== $emptyRange
+                                && $field['range'] !== $nullRange
+                                && $field['range'] !== array($emptyRange)
+                                && $field['range'] !== array($nullRange)) {
+                                $found = false;
+                                foreach ($field['range'] as $range) {
+                                    if ($range['id'] == $value) {
+                                        $found = true;
+                                        break;
+                                    }
+                                }
+                                if (!$found) {
+                                    $valid = false;
+                                    $this->error->addError(array(
+                                        'field'   => $varname,
+                                        'label'   => Phprojekt::getInstance()->translate($field['label']),
+                                        'message' => Phprojekt::getInstance()->translate('Value out of range')));
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Check value by type
                         $error = $this->validateValue($class, $varname, $value);
                         if (false === $error) {
                             $valid = false;

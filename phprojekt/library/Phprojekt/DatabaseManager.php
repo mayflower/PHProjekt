@@ -430,17 +430,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 break;
             case 'User':
                 $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-                $where        = sprintf('status = %s', $this->_db->quote('A'));
-                $displayName  = $activeRecord->getDisplay();
-                $result       = $activeRecord->fetchAll($where, $displayName);
+                $result       = $activeRecord->getAllowedUsers();
                 if (!$field->isRequired) {
                     $options[] = array('id'   => 0,
                                        'name' => '');
                 }
-                foreach ($result as $node) {
-                    $options[] = array('id'   => (int) $node->id,
-                                       'name' => $node->applyDisplay($displayName, $node));
-                }
+                $options = array_merge($options, $result);
                 break;
             default:
                 $activeRecord = Phprojekt_Loader::getModel($module, $module);

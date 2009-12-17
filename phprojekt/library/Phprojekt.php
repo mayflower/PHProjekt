@@ -56,6 +56,11 @@ class Phprojekt
     const VERSION_EXTRA = null;
 
     /**
+     * Name of the Registry for current project.
+     */
+    const CURRENT_PROJECT = 'currentProjectId';
+
+    /**
      * Singleton instance
      *
      * @var Phprojekt
@@ -249,6 +254,28 @@ class Phprojekt
         }
 
         return $translate;
+    }
+
+    /**
+     * Set the current project id
+     *
+     * @param integer $projectId Current project Id
+     *
+     * @return void
+     */
+    public static function setCurrentProjectId($projectId)
+    {
+        Zend_Registry::set(self::CURRENT_PROJECT, (int) $projectId);
+    }
+
+    /**
+     * Return the current project id
+     *
+     * @return integer
+     */
+    public static function getCurrentProjectId()
+    {
+        return Zend_Registry::get(self::CURRENT_PROJECT);
     }
 
     /**

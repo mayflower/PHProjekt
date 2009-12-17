@@ -167,6 +167,18 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function save()
     {
+        // Reset users by project cache
+        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+        $tree         = $tree->setup();
+        foreach ($tree as $node) {
+            $sessionName = 'Phprojekt_User_User-getAllowedUsers' . '-' . (int) $node->id;
+            $namespace   = new Zend_Session_Namespace($sessionName);
+            if (isset($namespace->users)) {
+                $namespace->unsetAll();
+            }
+        }
+
         if ($this->id == 0) {
             if (parent::save()) {
                 // adding default values
@@ -325,5 +337,39 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         }
 
         return implode(', ', $showValue);
+    }
+
+    /**
+     * Return all the users that have at least read access on the current project
+     *
+     * This function needs that Phprojekt::setCurrentProjectId is called before
+     *
+     * @return array
+     */
+    public function getAllowedUsers()
+    {
+        // Cache the query
+        $sessionName    = 'Phprojekt_User_User-getAllowedUsers' . '-' . (int) Phprojekt::getCurrentProjectId();
+        $usersNamespace = new Zend_Session_Namespace($sessionName);
+
+        if (!isset($usersNamespace->users)) {
+            $displayName = $this->getDisplay();
+            $rights      = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+            $ids         = $rights->getUsersWithRight(1, (int) Phprojekt::getCurrentProjectId());
+            $where = sprintf('status = %s', $this->getAdapter()->quote('A'));
+            if (!empty($ids)) {
+                $where .= sprintf(' AND id IN (%s) ', implode(',', $ids));
+            }
+
+            $result = $this->fetchAll($where, $displayName);
+            $values = array();
+            foreach ($result as $node) {
+                $values[] = array('id'   => (int) $node->id,
+                                  'name' => $node->applyDisplay($displayName, $node));
+            }
+            $usersNamespace->users = $values;
+        }
+
+        return $usersNamespace->users;
     }
 }
