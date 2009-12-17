@@ -83,6 +83,11 @@ class IndexController extends Zend_Controller_Action
     const ID_REQUIRED_TEXT = "ID parameter required";
 
     /**
+     * String for use if the nodeId is not in the request parameters.
+     */
+    const NODEID_REQUIRED_TEXT = "Node Id parameter required";
+
+    /**
      * Internal number for the root project.
      */
     const INVISIBLE_ROOT = 1;
@@ -218,6 +223,22 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
+     * Keep in the registry the current project id
+     *
+     * @return void
+     */
+    public function setCurrentProjectId()
+    {
+        $projectId = (int) $this->getRequest()->getParam("nodeId");
+
+        if (empty($projectId)) {
+            throw new Phprojekt_PublishedException(self::NODEID_REQUIRED_TEXT);
+        } else {
+            Phprojekt::setCurrentProjectId($projectId);
+        }
+    }
+
+    /**
      * Add to the internal where, the filters set by the user.
      *
      * @param string $where Internal where clause.
@@ -324,10 +345,11 @@ class IndexController extends Zend_Controller_Action
         $projectId = (int) $this->getRequest()->getParam('nodeId', null);
         $count     = (int) $this->getRequest()->getParam('count', null);
         $offset    = (int) $this->getRequest()->getParam('start', null);
+        $this->setCurrentProjectId();
 
         if (!empty($itemId)) {
             $where = sprintf('id = %d', (int) $itemId);
-        } else if (!empty($projectId)) {
+        } else if (!empty($projectId) && isset($this->getModelObject()->projectId)) {
             $where = sprintf('project_id = %d', (int) $projectId);
         } else {
             $where = null;
@@ -364,6 +386,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonDetailAction()
     {
         $id = (int) $this->getRequest()->getParam('id');
+        $this->setCurrentProjectId();
 
         if (empty($id)) {
             $record = $this->getModelObject();
@@ -402,6 +425,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonSaveAction()
     {
         $id = (int) $this->getRequest()->getParam('id');
+        $this->setCurrentProjectId();
 
         if (empty($id)) {
             $model   = $this->getModelObject();
@@ -454,6 +478,7 @@ class IndexController extends Zend_Controller_Action
         $showId  = array();
         $model   = $this->getModelObject();
         $success = true;
+        $this->setCurrentProjectId();
 
         foreach ($data as $id => $fields) {
             $model->find((int) $id);
@@ -783,6 +808,7 @@ class IndexController extends Zend_Controller_Action
     {
         $projectId = (int) $this->getRequest()->getParam('nodeId', null);
         $itemId    = (int) $this->getRequest()->getParam('id', null);
+        $this->setCurrentProjectId();
 
         if (!empty($itemId)) {
             $where = sprintf('id = %d', (int) $itemId);
@@ -814,6 +840,7 @@ class IndexController extends Zend_Controller_Action
     public function csvExportMultipleAction()
     {
         $ids = $this->getRequest()->getParam('ids', null);
+        $this->setCurrentProjectId();
 
         if (!empty($ids)) {
             $idsArray = explode(",", $ids);

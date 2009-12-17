@@ -68,6 +68,7 @@ class Core_ModuleController extends Core_IndexController
     public function jsonSaveAction()
     {
         $id = (int) $this->getRequest()->getParam('id');
+        $this->setCurrentProjectId();
 
         if (empty($id)) {
             $model   = $this->getModelObject();

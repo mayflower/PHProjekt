@@ -48,8 +48,8 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
     setUrl:function() {
         // Summary:
         //    Sets the url to get the data from
-        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonPeriodList/dateStart/"
-            + this._schedule[0][0]['date'] + "/dateEnd/" + this._schedule[this._schedule.length - 1][6]['date'];
+        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonPeriodList/dateStart/'
+            + this._schedule[0][0]['date'] + '/dateEnd/' + this._schedule[this._schedule.length - 1][6]['date'];
     },
 
     onLoaded:function(dataContent) {
@@ -88,8 +88,8 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         dateTemp.setDate(daysInMonth);
         var lastDayMonth = phpr.Date.getIsoDate(dateTemp);
 
-        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvPeriodList" + "/dateStart/"
-               + firstDayMonth + "/dateEnd/" + lastDayMonth);
+        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/'
+            + firstDayMonth + '/dateEnd/' + lastDayMonth);
 
         return false;
     },

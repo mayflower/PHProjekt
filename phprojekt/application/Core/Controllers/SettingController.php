@@ -113,7 +113,9 @@ class Core_SettingController extends Core_IndexController
      */
     public function jsonSaveAction()
     {
-        $module  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
+        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
+        $this->setCurrentProjectId();
+
         $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
         $setting->setModule($module);
 

@@ -62,6 +62,7 @@ class Helpdesk_IndexController extends IndexController
     public function jsonDetailAction()
     {
         $id = (int) $this->getRequest()->getParam('id');
+        $this->setCurrentProjectId();
 
         if (empty($id)) {
             // New item - Adds the author and the date of creation

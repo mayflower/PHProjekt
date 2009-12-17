@@ -71,10 +71,10 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         dijit.byId("startDate").attr('value', new Date(start.getFullYear(), start.getMonth(), start.getDate()));
         dijit.byId("endDate").attr('value', new Date(end.getFullYear(), end.getMonth(), end.getDate()));
 
-        this._url = phpr.webpath + "index.php/Statistic/index/jsonGetStatistic"
-            + "/nodeId/" + phpr.currentProjectId
-            + "/startDate/" + phpr.Date.getIsoDate(start)
-            + "/endDate/" + phpr.Date.getIsoDate(end);
+        this._url = phpr.webpath + 'index.php/Statistic/index/jsonGetStatistic'
+            + '/nodeId/' + phpr.currentProjectId
+            + '/startDate/' + phpr.Date.getIsoDate(start)
+            + '/endDate/' + phpr.Date.getIsoDate(end);
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
         phpr.DataStore.requestData({'url': this._url, 'processData': dojo.hitch(this, 'prepareData')});
     },
@@ -145,10 +145,10 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         var start = dijit.byId("startDate").attr('value');
         var end   = dijit.byId("endDate").attr('value');
 
-        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvList"
-            + "/nodeId/" + phpr.currentProjectId
-            + "/startDate/" + phpr.Date.getIsoDate(start)
-            + "/endDate/" + phpr.Date.getIsoDate(end));
+        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList'
+            + '/nodeId/' + phpr.currentProjectId
+            + '/startDate/' + phpr.Date.getIsoDate(start)
+            + '/endDate/' + phpr.Date.getIsoDate(end));
         return false;
     },
 

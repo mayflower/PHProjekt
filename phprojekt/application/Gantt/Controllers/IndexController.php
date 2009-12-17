@@ -180,6 +180,7 @@ class Gantt_IndexController extends IndexController
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
         $userId       = Phprojekt_Auth::getUserId();
+        $this->setCurrentProjectId();
 
         // Error check: no project received
         if (empty($projects)) {

@@ -26,10 +26,11 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         // Description:
         //    Rewritten the function for work like a system module and like a form
         if (this.main.isSystemModule(this.main.module)) {
-            this._url = phpr.webpath + "index.php/Core/" + phpr.module.toLowerCase() + "/jsonDetail/id/" + this.id;
+            this._url = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDetail/nodeId/1/id/'
+                + this.id;
         } else {
-            this._url = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDetail/moduleName/'
-                + phpr.submodule;
+            this._url = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDetail/nodeId/1/'
+                + 'moduleName/' + phpr.submodule;
         }
     },
 
@@ -68,9 +69,9 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
             return false;
         }
         if (this.main.isSystemModule(this.main.module)) {
-            var url = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSave/id/' + this.id;
+            var url = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSave/nodeId/1/id/' + this.id;
         } else {
-            var url = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSave/moduleName/'
+            var url = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSave/nodeId/1/moduleName/'
                 + phpr.submodule;
         }
         phpr.send({

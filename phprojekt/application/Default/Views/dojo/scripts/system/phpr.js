@@ -262,7 +262,7 @@ phpr.send = function(/*Object*/paramsIn) {
         try {
             // 500 is the error code for logut
             if (data.code && data.code == 500) {
-                location = phpr.webpath + "index.php/Login/logout";
+                location = phpr.webpath + 'index.php/Login/logout';
                 return;
             } else {
                 if (params.onSuccess) {
@@ -538,7 +538,7 @@ dojo.declare("phpr.DataStore", null, {
         //    Delete all the cache
         for (var i in this._internalCache) {
             // Special case for global modules since are not reloaded
-            if (this._internalCache[i] && i != phpr.webpath + "index.php/Core/module/jsonGetGlobalModules") {
+            if (this._internalCache[i] && i != phpr.webpath + 'index.php/Core/module/jsonGetGlobalModules') {
                 this._internalCache[i]['data'] = new Array();
             }
         }
@@ -565,7 +565,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
             phpr.handleError(this.url, 'exception');
         } else if (data.code && data.code == 500) {
             // 500 is the error code for logut
-            location = phpr.webpath + "index.php/Login/logout";
+            location = phpr.webpath + 'index.php/Login/logout';
         } else if (data.type && data.type == "error") {
             phpr.handleError(this.url, 'error', data.message);
         } else {

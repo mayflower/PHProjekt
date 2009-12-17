@@ -110,4 +110,14 @@ class Core_IndexController extends IndexController
 
         return $object;
     }
+
+    /**
+     * Keep in the session the current project id
+     *
+     * @return void
+     */
+    public function setCurrentProjectId()
+    {
+        Phprojekt::setCurrentProjectId(self::INVISIBLE_ROOT);
+    }
 }

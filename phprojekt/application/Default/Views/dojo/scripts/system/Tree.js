@@ -97,7 +97,7 @@ dojo.declare("phpr.Tree", phpr.Component, {
         //    Set the url for get the tree
         // Description:
         //    Set the url for get the tree
-        this._url = phpr.webpath + "index.php/Project/index/jsonTree";
+        this._url = phpr.webpath + 'index.php/Project/index/jsonTree';
     },
 
     setNode:function() {

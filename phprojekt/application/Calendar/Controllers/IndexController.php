@@ -61,6 +61,7 @@ class Calendar_IndexController extends IndexController
         $count  = (int) $this->getRequest()->getParam('count', null);
         $offset = (int) $this->getRequest()->getParam('start', null);
         $itemId = (int) $this->getRequest()->getParam('id', null);
+        $this->setCurrentProjectId();
 
         if (!empty($itemId)) {
             $where = 'id = ' . (int) $itemId;
@@ -234,6 +235,7 @@ class Calendar_IndexController extends IndexController
         $this->getRequest()->setParam('endTime', date('H:i:s', strtotime($endDatetime)));
         $this->getRequest()->setParam('startDatetime', $startDatetime);
         $this->getRequest()->setParam('endDatetime', $endDatetime);
+        $this->setCurrentProjectId();
 
         if (!empty($id)) {
             $message      = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
@@ -409,6 +411,7 @@ class Calendar_IndexController extends IndexController
         $offset  = (int) $this->getRequest()->getParam('start', null);
         $db      = Phprojekt::getInstance()->getDb();
         $date    = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
+        $this->setCurrentProjectId();
 
         $where = sprintf('participant_id = %d AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
             (int) PHprojekt_Auth::getUserId(), $date, $date);
@@ -442,6 +445,7 @@ class Calendar_IndexController extends IndexController
         $db     = Phprojekt::getInstance()->getDb();
         $date   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
         $users  = explode(",", $this->getRequest()->getParam('users', null));
+        $this->setCurrentProjectId();
 
         $ids = array();
         foreach ($users as $users) {
@@ -483,8 +487,9 @@ class Calendar_IndexController extends IndexController
         $db        = Phprojekt::getInstance()->getDb();
         $dateStart = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart', date("Y-m-d"))));
         $dateEnd   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd', date("Y-m-d"))));
+        $this->setCurrentProjectId();
 
-        $where     = sprintf('participant_id = %d AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
+        $where = sprintf('participant_id = %d AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
             (int) PHprojekt_Auth::getUserId(), $dateEnd, $dateStart);
         $records = $this->getModelObject()->fetchAll($where, "start_datetime", $count, $offset);
 

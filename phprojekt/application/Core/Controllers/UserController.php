@@ -51,18 +51,17 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonGetUsersAction()
     {
+        IndexController::setCurrentProjectId();
         $db      = Phprojekt::getInstance()->getDb();
-        $where   = $db->quoteInto('status = ?', 'A');
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $display = $user->getDisplay();
-        $records = $user->fetchAll($where, $display);
+        $records = $user->getAllowedUsers();
         $current = Phprojekt_Auth::getUserId();
 
         $data = array();
         foreach ($records as $record) {
-            $data['data'][] = array('id'      => (int) $record->id,
-                                    'display' => $record->applyDisplay($display, $record),
-                                    'current' => $current == $record->id);
+            $data['data'][] = array('id'      => (int) $record['id'],
+                                    'display' => $record['name'],
+                                    'current' => $current == $record['id']);
         }
 
         Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);
@@ -172,6 +171,7 @@ class Core_UserController extends Core_IndexController
     public function jsonSaveAction()
     {
         $id = (int) $this->getRequest()->getParam('id');
+        $this->setCurrentProjectId();
 
         // Settings
         $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');

@@ -259,7 +259,17 @@ final class Default_Helpers_Right
             $rights[$ownerId]  = Phprojekt_Acl::convertArrayToBitmask($right);
         }
 
-        return $rights;
+        // Return access only for allowed users
+        $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $result       = $activeRecord->getAllowedUsers();
+        $resultRights = array();
+        foreach ($result as $node) {
+            if (isset($rights[$node['id']])) {
+                $resultRights[$node['id']] = $rights[$node['id']];
+            }
+        }
+
+        return $resultRights;
     }
 
     /**

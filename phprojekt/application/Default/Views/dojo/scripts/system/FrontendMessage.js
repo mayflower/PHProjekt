@@ -23,7 +23,7 @@ dojo.declare("phpr.FrontendMessage", null, {
     url: null,
 
     constructor:function() {
-        this.url = phpr.webpath + "index.php/Default/index/jsonGetFrontendMessage";
+        this.url = phpr.webpath + 'index.php/Default/index/jsonGetFrontendMessage';
     },
 
     getFrontendMessage:function() {
@@ -53,7 +53,7 @@ dojo.declare("phpr.FrontendMessage", null, {
         // Description:
         //    Disables all the frontend messages by calling the disableFrontendMessages action
         //    from the indexController
-        var url = phpr.webpath + "index.php/Default/index/jsonDisableFrontendMessages";
+        var url = phpr.webpath + 'index.php/Default/index/jsonDisableFrontendMessages';
         phpr.send({
             url:       url,
             onSuccess: dojo.hitch(this, function(data) {

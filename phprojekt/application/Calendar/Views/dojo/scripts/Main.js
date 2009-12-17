@@ -623,12 +623,12 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 
         // As the 'grid' object may not exist, it is not called always updateData function but deleted the cache
         // manually - Note: preUrl may be used later to make the url of other views
-        var preUrl = phpr.webpath + "index.php/" + phpr.module + "/index/";
+        var preUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/';
         if (this.grid) {
             this.grid.updateData();
         } else {
-            var gridUrl = preUrl + "jsonList/nodeId/" + phpr.currentProjectId + '/filters/';
-            var tagUrl  = phpr.webpath + "index.php/Default/Tag/jsonGetTags";
+            var gridUrl = preUrl + 'jsonList/nodeId/' + phpr.currentProjectId + '/filters/';
+            var tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
             phpr.DataStore.deleteDataPartialString({url: gridUrl});
             phpr.DataStore.deleteData({url: tagUrl});
         }

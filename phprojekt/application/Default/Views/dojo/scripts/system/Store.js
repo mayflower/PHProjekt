@@ -70,8 +70,11 @@ dojo.declare("phpr.Store", phpr.Component, {
 });
 
 dojo.declare("phpr.Store.User", phpr.Store, {
-    constructor:function() {
-        this._url = phpr.webpath + "index.php/Core/user/jsonGetUsers";
+    constructor:function(projectId) {
+        if (!projectId) {
+            projectId = phpr.currentProjectId;
+        }
+        this._url = phpr.webpath + 'index.php/Core/user/jsonGetUsers/nodeId/' + projectId;
     },
 
     makeSelect:function() {
@@ -92,7 +95,7 @@ dojo.declare("phpr.Store.User", phpr.Store, {
 
 dojo.declare("phpr.Store.Module", phpr.Store, {
     constructor:function(id) {
-        this._url = phpr.webpath + "index.php/Project/index/jsonGetModulesProjectRelation/id/" + id
+        this._url = phpr.webpath + 'index.php/Project/index/jsonGetModulesProjectRelation/id/' + id
     },
 
     makeSelect:function() {
@@ -116,7 +119,7 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
     _relationList: null,
 
     constructor:function(id) {
-        this._url = phpr.webpath + "index.php/Project/index/jsonGetProjectRoleUserRelation/id/" + id
+        this._url = phpr.webpath + 'index.php/Project/index/jsonGetProjectRoleUserRelation/id/' + id
     },
 
     makeSelect:function() {
@@ -145,7 +148,7 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
 
 dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
     constructor:function(id) {
-        this._url = phpr.webpath + "index.php/Core/role/jsonGetModulesAccess/id/" + id;
+        this._url = phpr.webpath + 'index.php/Core/role/jsonGetModulesAccess/id/' + id;
     },
 
     makeSelect:function() {
@@ -169,7 +172,7 @@ dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
 
 dojo.declare("phpr.Store.Tab", phpr.Store, {
     constructor:function(id) {
-        this._url = phpr.webpath + "index.php/Core/tab/jsonList";
+        this._url = phpr.webpath + 'index.php/Core/tab/jsonList/nodeId/1';
     },
 
     makeSelect:function() {
@@ -190,7 +193,7 @@ dojo.declare("phpr.Store.Tab", phpr.Store, {
 
 dojo.declare("phpr.Store.Config", phpr.Store, {
     constructor:function(id) {
-        this._url = phpr.webpath + "index.php/Default/index/jsonGetConfigurations/"
+        this._url = phpr.webpath + 'index.php/Default/index/jsonGetConfigurations/'
     },
 
     makeSelect:function() {

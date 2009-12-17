@@ -63,6 +63,7 @@ class Project_IndexController extends IndexController
     public function jsonSaveAction()
     {
         $id = (int) $this->getRequest()->getParam('id');
+        $this->setCurrentProjectId();
 
         if (empty($id)) {
             $model     = $this->getModelObject();
@@ -122,6 +123,7 @@ class Project_IndexController extends IndexController
         $showId  = array();
         $model   = $this->getModelObject();
         $success = true;
+        $this->setCurrentProjectId();
 
         foreach ($data as $id => $fields) {
             $model->find($id);

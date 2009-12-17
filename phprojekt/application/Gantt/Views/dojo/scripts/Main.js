@@ -53,7 +53,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //   Custom _setWidgets for gantt
         phpr.Tree.loadTree();
         this.gantt = new phpr.Project.GanttBase(this);
-        this._url  = phpr.webpath + "index.php/Gantt/index/jsonGetProjects/nodeId/" + phpr.currentProjectId;
+        this._url  = phpr.webpath + 'index.php/Gantt/index/jsonGetProjects/nodeId/' + phpr.currentProjectId;
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
         phpr.DataStore.requestData({'url': this._url, 'processData': dojo.hitch(this, 'prepareData')});
     },
@@ -439,7 +439,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         }
         sendData['projects[]'] = projects;
         phpr.send({
-            url:       phpr.webpath + 'index.php/Gantt/index/jsonSave/',
+            url:       phpr.webpath + 'index.php/Gantt/index/jsonSave/nodeId/' + phpr.currentProjectId,
             content:   sendData,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
@@ -457,17 +457,16 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // Description:
         //    Update list, parent and form cached for the changed projects
         for (var i in ids) {
-            // List
-            var listUrl = phpr.webpath + "index.php/Project/index/jsonList/nodeId/" + ids[i];
-            phpr.DataStore.deleteData({url: listUrl});
-
-            // Delete parent cache
             var parentId = phpr.Tree.getParentId(ids[i]);
-            var listUrl  = phpr.webpath + "index.php/Project/index/jsonList/nodeId/" + parentId;
-            phpr.DataStore.deleteData({url: listUrl});
-
+            // List
+            var listUrl = phpr.webpath + 'index.php/Project/index/jsonList/nodeId/' + ids[i];
+            phpr.DataStore.deleteDataPartialString({url: listUrl});
+            // Parent List
+            var listUrl  = phpr.webpath + 'index.php/Project/index/jsonList/nodeId/' + parentId;
+            phpr.DataStore.deleteDataPartialString({url: listUrl});
             // Form
-            var formUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + ids[i];
+            var formUrl = phpr.webpath + 'index.php/Project/index/jsonDetail/nodeId/' + parentId
+                + "/id/" + ids[i];
             phpr.DataStore.deleteData({url: formUrl});
         }
     },

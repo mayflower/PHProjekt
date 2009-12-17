@@ -99,6 +99,8 @@ class Core_ModuleDesignerController extends Core_IndexController
         $saveType = (int) $this->getRequest()->getParam('saveType');
         $model    = null;
         $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
+        $this->setCurrentProjectId();
+
         if (empty($module)) {
             $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('label'));
         }

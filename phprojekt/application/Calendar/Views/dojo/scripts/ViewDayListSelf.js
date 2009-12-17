@@ -40,7 +40,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
     setUrl:function() {
         // Summary:
         //    Sets the url to get the data from
-        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDayListSelf/date/" + this._date;
+        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDayListSelf/date/' + this._date;
     },
 
     onLoaded:function(dataContent) {
@@ -88,7 +88,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
     exportData:function() {
         // Summary:
         //    Open a new window in CSV mode
-        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvDayListSelf/date/" + this._date);
+        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvDayListSelf/nodeId/1/date/' + this._date);
 
         return false;
     }

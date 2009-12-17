@@ -99,8 +99,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         this.setSearchForm();
         phpr.Tree.loadTree();
         if (this.isSystemModule(this.module)) {
-            var updateUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSaveMultiple/nodeId/'
-                + phpr.currentProjectId;
+            var updateUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSaveMultiple/nodeId/1';
             this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
         } else if (module) {
             this.form = new this.formWidget(this, 0, this.module);

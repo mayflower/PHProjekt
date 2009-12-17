@@ -95,6 +95,7 @@ class Statistic_IndexController extends IndexController
         $startDate = Cleaner::sanitize('date', $this->getRequest()->getParam('startDate', date("Y-m-d")));
         $endDate   = Cleaner::sanitize('date', $this->getRequest()->getParam('endDate', date("Y-m-d")));
         $projectId = (int) $this->getRequest()->getParam('nodeId', null);
+        $this->setCurrentProjectId();
 
         $data = $this->getModelObject()->getStatistics($startDate, $endDate, $projectId);
         $data = $data['data'];

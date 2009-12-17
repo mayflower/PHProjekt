@@ -57,25 +57,28 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
         //    Set all the urls
         // Description:
         //    Set all the urls
-        var url = phpr.webpath + "index.php/" + this.module + "/" + this.getController();
+        var url = phpr.webpath + 'index.php/' + this.module + '/' + this.getController();
         switch (type) {
             case 'grid':
-                url += "/jsonList/";
+                url += '/jsonList/';
                 break;
             case 'form':
-                url += "/jsonDetail/";
+                url += '/jsonDetail/';
                 break;
             case 'save':
-                url += "/jsonSave/";
+                url += '/jsonSave/';
                 break;
             case 'delete':
-                url += "/jsonDelete/";
+                url += '/jsonDelete/';
                 break;
         }
-        url += phpr.module.toLowerCase() + "Id/" + this.parentId;
+        if (type != 'delete') {
+            url += 'nodeId/' + phpr.currentProjectId;
+        }
         if (type != 'grid') {
             url += '/id/' + id;
         }
+        url += '/' + phpr.module.toLowerCase() + 'Id/' + this.parentId;
 
         return url;
     },

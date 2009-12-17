@@ -35,7 +35,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    The form will wait for all the data are loaded.
         this.inherited(arguments);
         if (this.id > 0) {
-            this._peopleUrl = phpr.webpath + "index.php/Minutes/index/jsonListUser/id/" + this.id;
+            this._peopleUrl = phpr.webpath + 'index.php/Minutes/index/jsonListUser/id/' + this.id;
             this._initData.push({'url': this._peopleUrl});
         }
     },

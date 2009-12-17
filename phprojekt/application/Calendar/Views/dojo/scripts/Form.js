@@ -541,8 +541,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         //    This function deletes the cache of the 3 urls for the ids stored in _updateCacheIds
         for (idPos in this._updateCacheIds) {
             var id         = this._updateCacheIds[idPos];
-            var url        = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + id;
-            var relatedUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonGetRelatedData/id/" + id;
+            var url        = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + id;
+            var relatedUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetRelatedData/id/' + id;
             var tagUrl     = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
                 + '/id/' + id;
             phpr.DataStore.deleteData({url: url});

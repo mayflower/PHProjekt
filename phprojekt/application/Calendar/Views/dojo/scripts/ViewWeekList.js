@@ -47,8 +47,8 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     setUrl:function() {
         // Summary:
         //    Sets the url to get the data from
-        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonPeriodList/dateStart/" + this._weekDays[0]
-            + "/dateEnd/" + this._weekDays[6];
+        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonPeriodList/dateStart/' + this._weekDays[0]
+            + '/dateEnd/' + this._weekDays[6];
     },
 
     onLoaded:function(dataContent) {
@@ -97,8 +97,8 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
     exportData:function() {
         // Summary:
         //    Opens a new window in CSV mode
-        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvPeriodList" + "/dateStart/"
-            + this._weekDays[0] + "/dateEnd/" + this._weekDays[6]);
+        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/'
+            + this._weekDays[0] + '/dateEnd/' + this._weekDays[6]);
 
         return false;
     },

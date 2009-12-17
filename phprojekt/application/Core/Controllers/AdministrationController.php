@@ -139,7 +139,9 @@ class Core_AdministrationController extends Core_IndexController
      */
     public function jsonSaveAction()
     {
-        $module        = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
+        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
+        $this->setCurrentProjectId();
+
         $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
         $configuration->setModule($module);
 

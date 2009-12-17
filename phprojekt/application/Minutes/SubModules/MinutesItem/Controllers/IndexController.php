@@ -62,6 +62,8 @@ class MinutesItem_IndexController extends IndexController
     public function jsonListAction()
     {
         $minutesId = (int) $this->getRequest()->getParam('minutesId', 0);
+        $this->setCurrentProjectId();
+
         if (!empty($minutesId)) {
             $itemModel = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem');
             $itemModel->init($minutesId);
@@ -104,6 +106,7 @@ class MinutesItem_IndexController extends IndexController
         $itemModel = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem');
         $itemModel->init((int) $this->getRequest()->getParam('minutesId', 0));
         $id = (int) $this->getRequest()->getParam('id');
+        $this->setCurrentProjectId();
 
         if (empty($id)) {
             $record = $itemModel;
@@ -147,6 +150,7 @@ class MinutesItem_IndexController extends IndexController
     public function jsonSaveAction()
     {
         $minutesId = (int) $this->getRequest()->getParam('minutesId');
+        $this->setCurrentProjectId();
 
         $minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes');
         $minutes->find($minutesId);

@@ -94,6 +94,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Empty
     public function getTopicType($topicTypeValue)
     {
         $types = $this->_getTopicTypeList();
+
         return (isset($types[$topicTypeValue])? $types[$topicTypeValue] : NULL);
     }
 
@@ -106,13 +107,13 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Empty
     {
         if (array() === self::$_userIdList) {
             /* @var $user Phprojekt_User_User */
-            $user        = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-            $displayname = $user->getDisplay();
-            $users       = $user->fetchAll(null, $displayname);
+            $user  = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $users = $user->getAllowedUsers();
             foreach ($users as $node) {
-                self::$_userIdList[$node->id] = $node->applyDisplay($displayname, $node);
+                self::$_userIdList[$node['id']] = $node['name'];
             }
         }
+
         return self::$_userIdList;
     }
 
@@ -126,6 +127,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Empty
     public function getUserName($userId)
     {
         $users = $this->_getUserIdList();
+
         return (isset($users[$userId])? $users[$userId] : NULL);
     }
 
@@ -144,6 +146,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Empty
         foreach ($array as $key => $value) {
             $result[] = array($keyname => $key, $valuename => $value);
         }
+
         return $result;
     }
 

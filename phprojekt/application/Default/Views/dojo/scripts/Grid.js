@@ -92,7 +92,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Set the url for getting the data
         // Description:
         //    Set the url for getting the data
-        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonList/nodeId/" + this.id;
+        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonList/nodeId/' + this.id;
     },
 
     setNode:function() {
@@ -1185,7 +1185,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Open a new window in CSV mode
         // Description:
         //    Open a new window in CSV mode
-        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvList/nodeId/" + this.id);
+        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList/nodeId/' + this.id);
         return false;
     },
 
@@ -1201,7 +1201,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     setGetExtraActionsUrl:function() {
         // Summary:
         //    Sets the url where to get the grid actions data from
-        this.getActionsUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonGetExtraActions";
+        this.getActionsUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetExtraActions';
     },
 
     itemsCheck:function(state) {
@@ -1315,6 +1315,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // Summary:
         //    Isolated code for easy customization, this function returns the URL to be called for the requested action.
 
-        return phpr.webpath + "index.php/" + phpr.module + "/index/" + action + '/' + idUrl + '/' + ids;
+        return phpr.webpath + 'index.php/' + phpr.module + '/index/' + action + '/nodeId/' + phpr.currentProjectId
+            + '/' + idUrl + '/' + ids;
     }
 });

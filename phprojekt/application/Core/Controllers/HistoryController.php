@@ -66,6 +66,7 @@ class Core_HistoryController extends Core_IndexController
         $moduleName = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Default'));
         $startDate  = Cleaner::sanitize('date', $this->getRequest()->getParam('startDate', null));
         $endDate    = Cleaner::sanitize('date', $this->getRequest()->getParam('endDate', null));
+        $this->setCurrentProjectId();
 
         if (empty($moduleId)) {
             $moduleId = Phprojekt_Module::getId($moduleName);

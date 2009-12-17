@@ -91,8 +91,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Load all the form views
         // Description:
         //    Load all the form views
-        this._favoritesUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonGetFavoritesProjects";
-        this._url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + this.id;
+        this._favoritesUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetFavoritesProjects';
+        this._url          = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + this.id;
         phpr.DataStore.addStore({url: this._favoritesUrl});
         phpr.DataStore.requestData({url: this._favoritesUrl, processData: dojo.hitch(this, function() {
             phpr.DataStore.addStore({url: this._url});
@@ -109,7 +109,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Render the Day View
         // Description:
         //    Render the Day View
-        this._bookUrl = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDayList/date/" + this._date
+        this._bookUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDayList/date/' + this._date
         phpr.DataStore.addStore({url: this._bookUrl});
         phpr.DataStore.requestData({url: this._bookUrl, processData: dojo.hitch(this, function() {
             var data       = phpr.DataStore.getData({url: this._bookUrl});
@@ -266,7 +266,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         }
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/Timecard/index/jsonSave/id/' + this.id,
+            url: phpr.webpath + 'index.php/Timecard/index/jsonSave/nodeId/' + phpr.currentProjectId
+                + '/id/' + this.id,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
@@ -408,7 +409,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // Description:
         //    Fill the form with the data from a saved item
         this.id   = id;
-        this._url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonDetail/id/" + this.id;
+        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + this.id;
         phpr.DataStore.addStore({url: this._url});
         phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
             var data      = phpr.DataStore.getData({url: this._url});

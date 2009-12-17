@@ -49,8 +49,8 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         //    Set the url for getting the data
         // Description:
         //    Set the url for getting the data
-        this.url = phpr.webpath + "index.php/" + phpr.module + "/index/jsonMonthList" + "/year/" + this._year
-            + "/month/" + (this._month + 1);
+        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonMonthList/year/' + this._year + '/month/'
+            + (this._month + 1);
     },
 
     setNode:function() {
@@ -133,11 +133,11 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
 
     exportData:function() {
         // summary:
-        //    Open a new widnows in CVS mode
+        //    Open a new widnows in CSV mode
         // description:
         //    Export all the bookings of the month
-        window.open(phpr.webpath + "index.php/" + phpr.module + "/index/csvList" + "/year/" + this._year + "/month/"
-            + (this._month + 1));
+        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList/nodeId/1/year/'
+            + this._year + '/month/' + (this._month + 1));
         return false;
     }
 });

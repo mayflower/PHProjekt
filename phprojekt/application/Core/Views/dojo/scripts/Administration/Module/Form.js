@@ -22,7 +22,7 @@ dojo.provide("phpr.Module.Form");
 dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     initData:function() {
         // Get all the active users
-        this._moduleDesignerUrl  = phpr.webpath + 'index.php/Core/moduleDesigner/jsonDetail/id/' + this.id;
+        this._moduleDesignerUrl  = phpr.webpath + 'index.php/Core/moduleDesigner/jsonDetail/nodeId/1/id/' + this.id;
         this._initData.push({'url': this._moduleDesignerUrl});
     },
 
@@ -244,13 +244,13 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         }
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/Core/moduleDesigner/jsonSave/id/' + this.id,
+            url:       phpr.webpath + 'index.php/Core/moduleDesigner/jsonSave/nodeId/1/id/' + this.id,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
                if (data.type == 'success') {
                    phpr.send({
-                        url: phpr.webpath + 'index.php/Core/module/jsonSave/id/' + this.id,
+                        url: phpr.webpath + 'index.php/Core/module/jsonSave/nodeId/1/id/' + this.id,
                         content:   this.sendData,
                         onSuccess: dojo.hitch(this, function(data) {
                             new phpr.handleResponse('serverFeedback', data);

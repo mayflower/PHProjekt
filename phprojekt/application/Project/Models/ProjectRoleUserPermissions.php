@@ -82,17 +82,25 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
         foreach ($this->fetchAll($where) as $relation) {
             $relation->delete();
         }
-        foreach ($users as $userId) {
-            $clone = clone $this;
-            $clone->roleId    = $roles[$userId];
-            $clone->userId    = $userId;
-            $clone->projectId = $projectId;
-            $clone->save();
 
-            // Reset cache
-            $sessionName   = 'Project_Models_ProjectRoleUserPermissions-fetchUserRole-' . $projectId . '-' . $userId;
-            $roleNamespace = new Zend_Session_Namespace($sessionName);
-            $roleNamespace->unsetAll();
+        // Save roles only for allowed users
+        $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $result       = $activeRecord->getAllowedUsers();
+        foreach ($result as $user) {
+            $userId = $user['id'];
+            if (in_array($userId, $users)) {
+                $clone = clone $this;
+                $clone->roleId    = $roles[$userId];
+                $clone->userId    = $userId;
+                $clone->projectId = $projectId;
+                $clone->save();
+
+                // Reset cache
+                $sessionName = 'Project_Models_ProjectRoleUserPermissions-fetchUserRole-' . $projectId . '-'
+                    . $userId;
+                $roleNamespace = new Zend_Session_Namespace($sessionName);
+                $roleNamespace->unsetAll();
+            }
         }
     }
 

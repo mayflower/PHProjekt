@@ -36,6 +36,16 @@
 class Timecard_IndexController extends IndexController
 {
     /**
+     * Keep in the session the current project id
+     *
+     * @return void
+     */
+    public function setCurrentProjectId()
+    {
+        Phprojekt::setCurrentProjectId(self::INVISIBLE_ROOT);
+    }
+
+    /**
      * Returns a list of the days in the month with the sum of bookings per day.
      *
      * For each day in the return, the data have:
@@ -207,6 +217,7 @@ class Timecard_IndexController extends IndexController
     public function jsonSaveAction()
     {
         $id = (int) $this->getRequest()->getParam('id');
+        $this->setCurrentProjectId();
 
         if (empty($id)) {
             $model   = $this->getModelObject();
@@ -286,6 +297,7 @@ class Timecard_IndexController extends IndexController
             $month = '0' . $month;
         }
         $where   = sprintf('(owner_id = %d AND date LIKE %s)', (int) $userId, $db->quote($year . '-' . $month . '-%'));
+        $this->setCurrentProjectId();
         $records = $this->getModelObject()->fetchAll($where, 'date ASC');
 
         Phprojekt_Converter_Csv::echoConvert($records);
