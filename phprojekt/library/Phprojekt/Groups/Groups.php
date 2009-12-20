@@ -149,16 +149,6 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Get the rigths for other users
-     *
-     * @return array
-     */
-    public function getRights()
-    {
-        return array();
-    }
-
-    /**
      * Validate the current record
      *
      * @return boolean
