@@ -630,7 +630,7 @@ class IndexController extends Zend_Controller_Action
         $modules   = $relation->getProjectModulePermissionsById($projectId);
 
         if ($projectId == 0) {
-            $data = array(); // there is no rights on invalid projects
+            $data = array(); // there is no rights or invalid project
         } else {
             $allowedModules = array();
             $rights         = new Phprojekt_RoleRights($projectId);

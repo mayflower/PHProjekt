@@ -64,8 +64,17 @@ class Phprojekt_Acl extends Zend_Acl
     public static function getInstance()
     {
         if (null === self::$_instance) {
-            self::$_instance = new self();
+            // Save the class in the session
+            $sessionName  = 'Phprojekt_Acl';
+            $aclNamespace = new Zend_Session_Namespace($sessionName);
+            if (!isset($aclNamespace->class)) {
+                self::$_instance     = new self();
+                $aclNamespace->class = self::$_instance;
+            } else {
+                self::$_instance = $aclNamespace->class;
+            }
         }
+
         return self::$_instance;
     }
 
