@@ -167,9 +167,9 @@ class Filemanager_IndexController_Test extends FrontInit
         $this->setRequestUrl('Filemanager/index/jsonDetail/');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":7,"itemId":0,"userId":1,'
-            . '"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
-            . '"download":true,"admin":true}},"comments":"","projectId":0,"files":""}],"numRows":1})';
+        $expected = '"data":[{"id":0,"title":"","comments":"","projectId":0,"files":"","rights":{"currentUser":'
+            . '{"moduleId":7,"itemId":0,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,'
+            . '"copy":true,"delete":true,"download":true,"admin":true}}}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 
@@ -183,10 +183,10 @@ class Filemanager_IndexController_Test extends FrontInit
         $this->request->setParam('id', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '"data":[{"id":1,"title":"test title MODIFIED AGAIN","rights":{"currentUser":{'
-            . '"moduleId":7,"itemId":1,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,'
-            . '"copy":true,"delete":true,"download":true,"admin":true}},"comments":"comment test MODIFIED AGAIN",'
-            . '"projectId":1,"files":"a66f9bfa01ec4a2a3fa6282bb8fa8d56|articles2.txt"}],"numRows":1})';
+        $expected = '"data":[{"id":1,"title":"test title MODIFIED AGAIN","comments":"comment test MODIFIED AGAIN",'
+            . '"projectId":1,"files":"a66f9bfa01ec4a2a3fa6282bb8fa8d56|articles2.txt","rights":{"currentUser":{'
+            . '"moduleId":7,"itemId":1,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,'
+            . '"copy":true,"delete":true,"download":true,"admin":true}}}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 

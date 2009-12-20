@@ -309,11 +309,11 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->setRequestUrl('Helpdesk/index/jsonDetail/');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":10,"itemId":0,'
-            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
-            . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":0,"date":"' . date("Y-m-d") . '",'
+        $expected = '"data":[{"id":0,"title":"","author":1,"assigned":0,"date":"' . date("Y-m-d") . '",'
             . '"dueDate":"","projectId":0,"priority":5,"attachments":"","solvedBy":0,"solvedDate":"",'
-            . '"description":"","status":1,"contactId":0}],"numRows":1})';
+            . '"description":"","status":1,"contactId":0,"rights":{"currentUser":{"moduleId":10,"itemId":0,'
+            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
+            . '"delete":true,"download":true,"admin":true}}}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 
@@ -327,12 +327,12 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('id', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '"data":[{"id":1,"title":"My completely new title","rights":{"currentUser":{"moduleId":10,'
-            . '"itemId":1,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,'
-            . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":1,'
+        $expected = '"data":[{"id":1,"title":"My completely new title","author":1,"assigned":1,'
             . '"date":"' . date("Y-m-d") . '","dueDate":"2009-05-30","projectId":1,"priority":2,"attachments":"",'
             . '"solvedBy":1,"solvedDate":"' . date("Y-m-d") . '","description":"This is the description MODIFIED",'
-            . '"status":3,"contactId":0}],"numRows":1}';
+            . '"status":3,"contactId":0,"rights":{"currentUser":{"moduleId":10,"itemId":1,"userId":1,"none":false,'
+            . '"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"download":true,'
+            . '"admin":true}}}],"numRows":1}';
         $this->assertContains($expected, $response);
     }
 
@@ -346,12 +346,11 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('id', 2);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '"data":[{"id":2,"title":"My completely new title 2","rights":{"currentUser":{"moduleId":10,'
-            . '"itemId":2,"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,'
-            . '"delete":true,"download":true,"admin":true}},"author":1,"assigned":0,'
+        $expected = '"data":[{"id":2,"title":"My completely new title 2","author":1,"assigned":0,'
             . '"date":"' . date("Y-m-d") . '","dueDate":"2009-05-17","projectId":1,"priority":5,"attachments":"",'
-            . '"solvedBy":0,"solvedDate":"","description":"This is the description 2","status":4,"contactId":0}],'
-            . '"numRows":1}';
+            . '"solvedBy":0,"solvedDate":"","description":"This is the description 2","status":4,"contactId":0,'
+            . '"rights":{"currentUser":{"moduleId":10,"itemId":2,"userId":1,"none":false,"read":true,"write":true,'
+            . '"access":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}}}],"numRows":1}';
         $this->assertContains($expected, $response);
     }
 }

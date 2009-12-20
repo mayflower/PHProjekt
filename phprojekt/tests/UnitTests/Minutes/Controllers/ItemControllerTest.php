@@ -148,10 +148,10 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
 
-        $this->assertContains('"data":[{"id":0,"projectId":0,"rights":{"currentUser":{"moduleId":11,"itemId":0,'
-            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
-            . '"download":true,"admin":true}},"minutesId":0,"topicId":0,"sortOrder":0,"title":"","topicType":0,'
-            . '"comment":"","topicDate":"","userId":""}]', $response);
+        $this->assertContains('"data":[{"id":0,"projectId":0,"minutesId":0,"topicId":0,"sortOrder":0,'
+            . '"title":"","topicType":0,"comment":"","topicDate":"","userId":"","rights":{"currentUser":'
+            . '{"moduleId":11,"itemId":0,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,'
+            . '"copy":true,"delete":true,"download":true,"admin":true}}}]', $response);
     }
 
     /**

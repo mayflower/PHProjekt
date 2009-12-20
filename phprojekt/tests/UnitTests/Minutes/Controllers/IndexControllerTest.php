@@ -57,7 +57,10 @@ class Minutes_IndexController_Test extends FrontInit
         $expected = '{"metadata":[{"key":"title","label":"Title","type":"text",';
         $this->assertContains($expected, $response, "Response was: '$response'");
 
-        $expected = ',"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":11,"itemId":0';
+        $expected = ',"data":[{"id":0,"title":"","meetingDatetime":"","endTime":"","projectId":0';
+        $this->assertContains($expected, $response, "Response was: '$response'");
+
+        $expected = ',"itemStatus":1,"rights":{"currentUser":{"moduleId":11,"itemId":0';
         $this->assertContains($expected, $response, "Response was: '$response'");
     }
 

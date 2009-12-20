@@ -583,10 +583,10 @@ class Calendar_IndexController_Test extends FrontInit
         $this->setRequestUrl('Calendar/index/jsonDetail/');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '"data":[{"id":0,"title":"","rights":{"currentUser":{"moduleId":5,"itemId":0,"userId":1,'
+        $expected = '"data":[{"id":0,"title":"","place":"","notes":"","startDatetime":"","endDatetime":"",'
+            . '"participantId":0,"rrule":"","rights":{"currentUser":{"moduleId":5,"itemId":0,"userId":1,'
             . '"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
-            . '"download":true,"admin":true}},"place":"","notes":"","startDatetime":"","endDatetime":"",'
-            . '"participantId":0,"rrule":""}],"numRows":1})';
+            . '"download":true,"admin":true}}}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 
@@ -600,11 +600,11 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('id', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '"data":[{"id":1,"title":"test edited","rights":{"currentUser":{"moduleId":5,"itemId":1,'
-            . '"userId":1,"access":true,"none":false,"read":true,"write":true,"create":true,"copy":true,"delete":true,'
-            . '"download":true,"admin":true}},"place":"Bariloche","notes":"test note edited",'
+        $expected = '"data":[{"id":1,"title":"test edited","place":"Bariloche","notes":"test note edited",'
             . '"startDatetime":"2009-06-03 10:00:00","endDatetime":"2009-06-03 11:00:00","participantId":1,'
-            . '"rrule":""}],"numRows":1})';
+            . '"rrule":"","rights":{"currentUser":{"moduleId":5,"itemId":1,"userId":1,"none":false,"read":true,'
+            . '"write":true,"access":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}}}],'
+            . '"numRows":1})';
         $this->assertContains($expected, $response);
     }
 

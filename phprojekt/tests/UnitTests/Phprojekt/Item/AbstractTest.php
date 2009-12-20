@@ -441,12 +441,12 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     /**
      * Test getRights function
      */
-    public function testGetRights()
+    public function testGetUsersRights()
     {
         $module = new Project_Models_Project(array('db' => $this->sharedFixture));
         $module->find(2);
 
-        $getRights = $module->getRights();
+        $getRights = $module->getUsersRights();
         $this->assertTrue($getRights['currentUser']['admin']);
         $this->assertEquals($getRights['currentUser']['userId'], '1');
         $this->assertEquals($getRights['currentUser']['write'], true);
@@ -454,7 +454,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($getRights[3]['write'], true);
 
         $module = new Timecard_Models_Timecard(array('db' => $this->sharedFixture));
-        $this->assertEquals(array(), $module->getRights());
+        $this->assertEquals(array(), $module->getUsersRights());
     }
 
     /**
