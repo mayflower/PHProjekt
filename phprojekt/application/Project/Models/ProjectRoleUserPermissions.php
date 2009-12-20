@@ -128,7 +128,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
                 $row   = $this->fetchall($where);
 
                 if (!empty($row)) {
-                    $role = $row[0]->roleId;
+                    $role                = $row[0]->roleId;
                     $roleNamespace->role = $row[0]->roleId;
                 } else {
                     // Fix Root Project
@@ -137,7 +137,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
                         $parent  = $project->find($projectId);
                         if (!is_null($parent) && !empty($parent) && $parent->projectId > 0) {
                             $sessionName = 'Project_Models_ProjectRoleUserPermissions-fetchUserRole-'
-                                         . $parent->projectId . '-' . $userId;
+                                . $parent->projectId . '-' . $userId;
                             $roleParentNamespace = new Zend_Session_Namespace($sessionName);
                             if (isset($roleParentNamespace->role)) {
                                 $role = $roleParentNamespace->role;
@@ -146,6 +146,10 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
                             }
                             $roleNamespace->role = $role;
                         }
+                    } else {
+                        // Default Role
+                        $role                = 1;
+                        $roleNamespace->role = 1;
                     }
                 }
             }
