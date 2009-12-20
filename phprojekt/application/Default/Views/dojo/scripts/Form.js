@@ -35,6 +35,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     _accessPermissions: true,
     _initData:          new Array(),
     _tagUrl:            null,
+    _accessUrl:         null,
     _historyUrl:        null,
     _presetValues:      null,
     _htmlEditorWidget:  null,
@@ -115,6 +116,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    The form will wait for all the data are loaded.
         //    Each module can overwrite this function for load the own data
 
+        // Get the rights for other users
+        this._accessUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetUsersRights/id/' + this.id;
+        this._initData.push({'url': this._accessUrl});
+
         // Get all the active users
         this.userStore = new phpr.Store.User();
         this._initData.push({'store': this.userStore});
@@ -132,13 +137,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Display all the users and the acces
         //    The user can assign to each user different access on the item
         var userList      = this.userStore.getList();
-        var accessContent = data[0]["rights"];
+        var accessContent = phpr.DataStore.getData({url: this._accessUrl});
         var currentUser   = data[0]["rights"]["currentUser"]["userId"] || 0;
         var users         = new Array();
 
         if (userList) {
             for (var i in userList) {
-                // Make an array with the users expect the current one
+                // Make an array with the users except the current one
                 if (userList[i].id != currentUser) {
                     users.push({'id': userList[i].id, 'display': userList[i].display});
                 }
@@ -154,34 +159,37 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
         var rows = '';
         for (var id in accessContent) {
-            var checkBoxs = new Array();
-            var userId    = (id == 'currentUser') ? currentUser : accessContent[id]['userId'];
-            for (var i in this._rights) {
-                var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
-                checkBoxs.push(this.render(["phpr.Default.template.access", "checkbox.html"], null, {
-                    fieldId:  fieldId,
-                    checked:  accessContent[id][this._rights[i].toLowerCase()] ? 'checked' : '',
-                    hidden:   (id == 'currentUser' && this._accessPermissions),
-                    value:    (accessContent[id][this._rights[i].toLowerCase()]) ? 1 : 0,
-                    disabled: (id == 'currentUser' || !this._accessPermissions) ? 'disabled="disabled"' : ''
-                }));
+            if (accessContent[id]['userDisplay']) {
+                var isCurrentUser = (id == 'currentUser');
+                var checkBoxs     = new Array();
+                var userId        = isCurrentUser ? currentUser : accessContent[id]['userId'];
+                for (var i in this._rights) {
+                    var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
+                    checkBoxs.push(this.render(["phpr.Default.template.access", "checkbox.html"], null, {
+                        fieldId:  fieldId,
+                        checked:  accessContent[id][this._rights[i].toLowerCase()] ? 'checked' : '',
+                        hidden:   (isCurrentUser && this._accessPermissions),
+                        value:    (accessContent[id][this._rights[i].toLowerCase()]) ? 1 : 0,
+                        disabled: (isCurrentUser || !this._accessPermissions) ? 'disabled="disabled"' : ''
+                    }));
+                }
+                var input = this.render(["phpr.Default.template.access", "input.html"], null, {
+                    id:          userId,
+                    disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
+                    userDisplay: accessContent[id]['userDisplay'],
+                    currentUser: isCurrentUser
+                });
+                var button = this.render(["phpr.Default.template.access", "button.html"], null, {
+                    id:        userId,
+                    useDelete: !isCurrentUser
+                });
+                rows += this.render(["phpr.Default.template.access", "row.html"], null, {
+                    id:        userId,
+                    input:     input,
+                    checkBoxs: checkBoxs,
+                    button:    button
+                });
             }
-            var input = this.render(["phpr.Default.template.access", "input.html"], null, {
-                id:          userId,
-                disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
-                userDisplay: accessContent[id]['userDisplay'],
-                currentUser: (id == 'currentUser')
-            });
-            var button = this.render(["phpr.Default.template.access", "button.html"], null, {
-                id:        userId,
-                useDelete: (id != 'currentUser')
-            });
-            rows += this.render(["phpr.Default.template.access", "row.html"], null, {
-                id:        userId,
-                input:     input,
-                checkBoxs: checkBoxs,
-                button:    button
-            });
         }
 
         // Template for the access tab
@@ -213,11 +221,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             // Add "delete" buttons for access
             // Add "check all" functions
             for (i in accessContent) {
-                var userId = accessContent[i]["userId"];
-                if (userId != currentUser) {
-                    this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
-                    dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick",
-                        dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
+                if (accessContent[i]['userDisplay']) {
+                    var userId = accessContent[i]["userId"];
+                    if (userId != currentUser) {
+                        this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
+                        dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick",
+                            dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
+                    }
                 }
             }
         }
@@ -894,6 +904,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Delete the cache for this form
         phpr.DataStore.deleteData({url: this._url});
         phpr.DataStore.deleteData({url: this._tagUrl});
+        phpr.DataStore.deleteData({url: this._accessUrl});
     },
 
     addNotificationTab:function(data) {

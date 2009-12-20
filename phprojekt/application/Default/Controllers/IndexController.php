@@ -790,6 +790,32 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
+     * Returns the rights for all the users of one item
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the item to consult.
+     * </pre>
+     *
+     * The return is an array like ('#userID' => {'admin': true/false, 'read': true/false, etc})
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonGetUsersRightsAction()
+    {
+        $id = (int) $this->getRequest()->getParam('id');
+
+        if (empty($id)) {
+            $record = $this->getModelObject();
+        } else {
+            $record = $this->getModelObject()->find($id);
+        }
+
+        Phprojekt_Converter_Json::echoConvert($record->getUsersRights());
+    }
+
+    /**
      * Returns the list of items for one model.
      *
      * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
