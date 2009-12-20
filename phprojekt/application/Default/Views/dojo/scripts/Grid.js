@@ -42,6 +42,11 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     gridLayout:    new Array(),
     splitFields:   new Array(),
 
+    // Grid cookies
+    _sortColumnCookie: null,
+    _sortAscCookie:    null,
+    _scrollTopCookie:  null,
+
     // Filters
     filterField:       new Array(),
     _rules:            new Array(),
@@ -72,9 +77,20 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.getActionsUrl = null;
         this.extraColumns  = new Array();
         this.comboActions  = new Array();
-        this._filterCookie = 'p6.' + phpr.Url.getHashForCookie() + ".filters";
-        this.gridLayout    = new Array();
-        this.filterField   = new Array();
+
+        // Set cookies urls
+        if (phpr.isGlobalModule(phpr.module)) {
+            var getHashForCookie = phpr.module;
+        } else {
+            var getHashForCookie = phpr.module + '.' + phpr.currentProjectId;
+        }
+        this._filterCookie     = getHashForCookie + '.filters';
+        this._sortColumnCookie = getHashForCookie + ".grid.sortColumn";
+        this._sortAscCookie    = getHashForCookie + ".grid.sortAsc";
+        this._scrollTopCookie  = getHashForCookie + ".grid.scroll";
+
+        this.gridLayout  = new Array();
+        this.filterField = new Array();
 
         this.setFilterUrl(this.getFilters());
         this.setGetExtraActionsUrl();
@@ -683,8 +699,21 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this._listUrl = this.url;
         this.url      = this.url + '/filters/' + filterUrl;
 
-        if (filters != dojo.cookie(this._filterCookie)) {
-            dojo.cookie(this._filterCookie, filters, {expire: 500});
+        var currentCookie = dojo.cookie(this._filterCookie);
+        if (typeof(currentCookie) == 'undefined') {
+            // New cookie
+            if (filters.length > 0) {
+                dojo.cookie(this._filterCookie, filters, {expires: 365});
+            }
+        } else {
+            // Existing cookie
+            if (filters != currentCookie) {
+                if (filters.length > 0) {
+                    dojo.cookie(this._filterCookie, filters, {expires: 365});
+                } else {
+                    dojo.cookie(this._filterCookie, filters);
+                }
+            }
         }
     },
 
@@ -975,15 +1004,14 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // Summary:
         //    Stores in cookies the new scroll position for the current grid
         //    Use the hash for identify the cookie
-        var cookie = 'p6.' + phpr.Url.getHashForCookie() + ".grid.scroll";
-        dojo.cookie(cookie, this.grid.scrollTop, {expires: 500});
+        dojo.cookie(this._scrollTopCookie, this.grid.scrollTop, {expires: 365});
     },
 
     loadGridScroll:function() {
         // Summary:
         //    Retrieves from cookies the scroll position for the current grid, if there is one
         //    Use the hash for identify the module grid
-        var scrollTop = dojo.cookie('p6.' + phpr.Url.getHashForCookie() + ".grid.scroll");
+        var scrollTop = dojo.cookie(this._scrollTopCookie);
         if (scrollTop != undefined) {
             this.grid.scrollTop = scrollTop;
         }
@@ -996,19 +1024,16 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         var sortColumn = this.grid.getSortIndex();
         var sortAsc    = this.grid.getSortAsc();
 
-        var cookie = 'p6.' + phpr.Url.getHashForCookie() + ".grid.sortColumn";
-        dojo.cookie(cookie, sortColumn, {expires: 500});
-
-        cookie = 'p6.' + phpr.Url.getHashForCookie() + ".grid.sortAsc";
-        dojo.cookie(cookie, sortAsc, {expires: 500});
+        dojo.cookie(this._sortColumnCookie, sortColumn, {expires: 365});
+        dojo.cookie(this._sortAscCookie, sortAsc, {expires: 365});
     },
 
     loadGridSorting:function() {
         // Summary:
         //    Retrieves from cookies the sorting criterion for the current grid if any
         //    Use the hash for identify the cookie
-        var sortColumn = dojo.cookie('p6.' + phpr.Url.getHashForCookie() + ".grid.sortColumn");
-        var sortAsc    = dojo.cookie('p6.' + phpr.Url.getHashForCookie() + ".grid.sortAsc");
+        var sortColumn = dojo.cookie(this._sortColumnCookie);
+        var sortAsc    = dojo.cookie(this._sortAscCookie);
         if (sortColumn != undefined && sortAsc != undefined) {
             this.grid.setSortIndex(parseInt(sortColumn), eval(sortAsc));
         }

@@ -554,7 +554,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         if (hash.indexOf('Administration') < 0) {
             // Stores the hash in a browser cookie (Only normal url, no Administration one)
-            dojo.cookie('p6.location.hash', hash, {expires: 500});
+            dojo.cookie('location.hash', hash, {expires: 365});
         }
     },
 
