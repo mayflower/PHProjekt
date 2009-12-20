@@ -21,10 +21,6 @@ dojo.provide("phpr.Project.Form");
 
 dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     initData:function() {
-        // Get all the active users
-        this.userStore = new phpr.Store.User();
-        this._initData.push({'store': this.userStore});
-
         // Get roles
         this.roleStore = new phpr.Store.Role(this.id);
         this._initData.push({'store': this.roleStore});
@@ -33,10 +29,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.moduleStore = new phpr.Store.Module(this.id);
         this._initData.push({'store': this.moduleStore});
 
-        // Get the tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
-            + '/id/' + this.id;
-        this._initData.push({'url': this._tagUrl});
+        this.inherited(arguments);
     },
 
     addModuleTab:function(data) {
@@ -221,12 +214,12 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     },
 
     updateData:function() {
-        phpr.DataStore.deleteData({url: this._url});
+        this.inherited(arguments);
+
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
         phpr.DataStore.deleteData({url: subModuleUrl});
         this.moduleStore.update();
         this.roleStore.update();
-        phpr.DataStore.deleteData({url: this._tagUrl});
 
         // Delete cache for Timecard on places where Projects are shown
         phpr.DataStore.deleteData({url: phpr.webpath + 'index.php/Timecard/index/jsonGetFavoritesProjects'});

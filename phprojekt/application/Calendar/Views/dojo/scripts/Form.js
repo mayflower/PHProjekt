@@ -521,8 +521,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     },
 
     updateData:function() {
-        phpr.DataStore.deleteData({url: this._url});
-        phpr.DataStore.deleteData({url: this._tagUrl});
+        this.inherited(arguments);
 
         // Delete the cache of the 3 urls for every related event?
         var urlRelatedData = phpr.DataStore.getData({url: this._relatedDataUrl});
