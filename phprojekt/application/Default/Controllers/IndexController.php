@@ -812,7 +812,11 @@ class IndexController extends Zend_Controller_Action
             $record = $this->getModelObject()->find($id);
         }
 
-        Phprojekt_Converter_Json::echoConvert($record->getUsersRights());
+        if ($record instanceof Phprojekt_Model_Interface) {
+            Phprojekt_Converter_Json::echoConvert($record->getUsersRights());
+        } else {
+            Phprojekt_Converter_Json::echoConvert(array());
+        }
     }
 
     /**
