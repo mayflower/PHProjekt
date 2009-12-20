@@ -217,8 +217,8 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         }
 
         foreach ($rows as $row) {
-            $access                                = Phprojekt_Acl::convertBitmaskToArray($row['access']);
-            $values[$row['itemId']]['currentUser'] = array_merge($values[$row['itemId']]['currentUser'], $access);
+            $access                                 = Phprojekt_Acl::convertBitmaskToArray($row['access']);
+            $values[$row['item_id']]['currentUser'] = array_merge($values[$row['item_id']]['currentUser'], $access);
         }
 
         return $values;
