@@ -21,7 +21,7 @@ dojo.provide("phpr.Gantt.Main");
 
 dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     gantt:   null,
-    scale:   1,
+    scale:   1.8,
     toggled: 0,
 
     constructor:function() {
@@ -360,9 +360,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         }
 
         var maxWidth  = 268 + (365 * 2 * years);
-
-        // Make the scale
-        this.scale = 2;
 
         // Change the width to the maxWidth
         dojo.style(dojo.byId('ganttChart'), "width", maxWidth + "px");
