@@ -247,22 +247,19 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             $where    = sprintf("module_id = %d AND user_id = %d AND access > 0",
                 Phprojekt_Module::getId($this->getActiveRecord()->getModelName()), Phprojekt_Auth::getUserId());
             $select = $database->select();
-            $select->from('item_rights')
+            $select->from('item_rights', 'item_id')
                    ->where($where);
-            $rights = $select->query()->fetchAll(Zend_Db::FETCH_CLASS);
+            $results = $select->query()->fetchAll();
+            $rights  = array();
+            foreach ($results as $result) {
+                $rights[] = $result['item_id'];
+            }
             $rightsNamespace->rights = $rights;
         }
 
         // Delete the projects where the user don't have access
         foreach ($object as $index => $tree) {
-            $found = false;
-            foreach ($rights as $right) {
-                if ($right->item_id == $tree->id) {
-                    $found = true;
-                    break;
-                }
-            }
-            if (!$found) {
+            if (!in_array($tree->id, $rights)) {
                 if ($tree->isRootNodeForCurrentTree()) {
                     throw new Phprojekt_Tree_Node_Exception('Requested node not found');
                 } else {
