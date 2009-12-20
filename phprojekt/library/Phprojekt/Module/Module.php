@@ -93,16 +93,6 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Get the rigths for other users
-     *
-     * @return array
-     */
-    public function getRights()
-    {
-        return array();
-    }
-
-    /**
      * Help to save a model by setting the models properties.
      * Validation is based on the ModelInformation implementation
      *

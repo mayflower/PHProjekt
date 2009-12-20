@@ -95,16 +95,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     }
 
     /**
-     * Get the rigths
-     *
-     * @return array
-     */
-    public function getRights()
-    {
-        return array();
-    }
-
-    /**
      * Save the rigths
      *
      * @return void

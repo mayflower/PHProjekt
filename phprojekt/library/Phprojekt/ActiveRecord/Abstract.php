@@ -1262,4 +1262,41 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         return (array) $this->_data;
     }
+
+    /**
+     * Gets the rights of the item for the current user
+     *
+     * @return array
+     */
+    public function getRights()
+    {
+        return array();
+    }
+
+    /**
+     * Gets the rights of various items for the current user
+     *
+     * @param array $ids Array with various itemId
+     *
+     * @return array
+     */
+    public function getMultipleRights($ids)
+    {
+        $return = array();
+        foreach ($ids as $id) {
+            $return[$id] = array();
+        }
+
+        return $return;
+    }
+
+    /**
+     * Gets the rights of the item for other users
+     *
+     * @return array
+     */
+    public function getUsersRights()
+    {
+        return array();
+    }
 }

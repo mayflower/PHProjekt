@@ -135,13 +135,35 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Get the rights.
+     * Gets the rights of the item for the current user
      *
      * @return array
      */
     public function getRights()
     {
         return $this->_minutes->getRights();
+    }
+
+    /**
+     * Gets the rights of various items for the current user
+     *
+     * @param array $ids Array with various itemId
+     *
+     * @return array
+     */
+    public function getMultipleRights($ids)
+    {
+        return $this->_minutes->getMultipleRights($ids);
+    }
+
+    /**
+     * Gets the rights of the item for other users
+     *
+     * @return array
+     */
+    public function getUsersRights()
+    {
+        return $this->_minutes->getUsersRights();
     }
 
     /**

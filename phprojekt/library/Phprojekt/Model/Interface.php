@@ -79,9 +79,25 @@ interface Phprojekt_Model_Interface extends Iterator
     public function recordValidate();
 
     /**
-     * Get the rigths for other users
+     * Gets the rights of the item for the current user
      *
      * @return array
      */
     public function getRights();
+
+    /**
+     * Gets the rights of various items for the current user
+     *
+     * @param array $ids Array with various itemId
+     *
+     * @return array
+     */
+    public function getMultipleRights($ids);
+
+    /**
+     * Gets the rights of the item for other users
+     *
+     * @return array
+     */
+    public function getUsersRights();
 }

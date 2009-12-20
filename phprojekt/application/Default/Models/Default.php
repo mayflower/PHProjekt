@@ -144,11 +144,38 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Get rights.
+     * Gets the rights of the item for the current user
      *
-     * @return string
+     * @return array
      */
     public function getRights()
+    {
+        return array();
+    }
+
+    /**
+     * Gets the rights of various items for the current user
+     *
+     * @param array $ids Array with various itemId
+     *
+     * @return array
+     */
+    public function getMultipleRights($ids)
+    {
+        $return = array();
+        foreach ($ids as $ids) {
+            $return[$id] = array();
+        }
+
+        return $return;
+    }
+
+    /**
+     * Gets the rights of the item for other users
+     *
+     * @return array
+     */
+    public function getUsersRights()
     {
         return array();
     }

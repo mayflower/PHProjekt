@@ -388,17 +388,59 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Returns the right for each user has on a Phprojekt item
+     * Returns the rights merged with the role for the current user
      *
      * @return array
      */
     public function getRights()
     {
-        $rights   = $this->_rights->getRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
-        $saveType = Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->getModelName()));
+        $rights = $this->_rights->getRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
+
+        return $this->_mergeRightsAndRole($rights);
+    }
+
+    /**
+     * Returns the rights merged with the role for the current user for each item
+     *
+     * @param array $ids An array with all the ids for check
+     *
+     * @return array
+     */
+    public function getMultipleRights($ids)
+    {
+        $allRights = $this->_rights->getMultipleRights(Phprojekt_Module::getId($this->getModelName()), $ids);
+
+        $return = array();
+        foreach ($allRights as $user => $rights) {
+            $return[$user] = $this->_mergeRightsAndRole($rights);
+        }
+
+        return $return;
+    }
+
+    /**
+     * Returns the rights merged with the role for each user has on a Phprojekt item
+     *
+     * @return array
+     */
+    public function getUsersRights()
+    {
+        $rights = $this->_rights->getUsersRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
+
+        return $this->_mergeRightsAndRole($rights);
+    }
+
+    /**
+     * Returns the right merged with the role for each user has on a Phprojekt item
+     *
+     * @return array
+     */
+    public function _mergeRightsAndRole($rights)
+    {
+        $moduleId = Phprojekt_Module::getId($this->getModelName());
+        $saveType = Phprojekt_Module::getSaveType($moduleId);
         switch ($saveType) {
             case 0:
-                $moduleId        = Phprojekt_Module::getId($this->getModelName());
                 $roleRights      = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
                 $roleRightRead   = $roleRights->hasRight('read');
                 $roleRightWrite  = $roleRights->hasRight('write');

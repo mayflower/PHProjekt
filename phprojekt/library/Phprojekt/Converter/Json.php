@@ -148,10 +148,11 @@ class Phprojekt_Converter_Json
                         }
                     }
                 }
-                $data['rights'] = $model->getRights();
             }
-            $datas[] = $data;
+            $data['rights'] = $models->getRights();
+            $datas[]        = $data;
         } else {
+            $ids = array();
             foreach ($models as $cmodel) {
                 $data['id'] = (int) $cmodel->id;
                 foreach ($fieldDefinition as $field) {
@@ -176,16 +177,23 @@ class Phprojekt_Converter_Json
                             }
                         }
                     }
-                    $data['rights'] = $cmodel->getRights();
                 }
-                $datas[] = $data;
+                $ids[]          = $data['id'];
+                $data['rights'] = array();
+                $datas[]        = $data;
+            }
+
+            // Use the last model for get all the rights
+            $rights = $cmodel->getMultipleRights($ids);
+            foreach ($datas as $index => $data) {
+                $datas[$index]['rights'] = $rights[$datas[$index]['id']];
+                unset($rights[$datas[$index]['id']]);
             }
         }
 
-        $numRows = count($datas);
-        $data    = array('metadata' => $fieldDefinition,
-                         'data'     => $datas,
-                         'numRows'  => (int) $numRows);
+        $data = array('metadata' => $fieldDefinition,
+                      'data'     => $datas,
+                      'numRows'  => (int) count($datas));
 
         return self::_makeJsonString($data);
     }

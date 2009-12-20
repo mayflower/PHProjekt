@@ -214,16 +214,6 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Get the rigths for other users
-     *
-     * @return array
-     */
-    public function getRights()
-    {
-        return array();
-    }
-
-    /**
      * Save the rigths
      *
      * @return void

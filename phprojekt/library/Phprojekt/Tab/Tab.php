@@ -93,16 +93,6 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
     }
 
     /**
-     * Get the rigths for other users
-     *
-     * @return array
-     */
-    public function getRights()
-    {
-        return array();
-    }
-
-    /**
      * Save the rigths
      *
      * @return void

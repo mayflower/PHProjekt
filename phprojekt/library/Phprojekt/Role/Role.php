@@ -103,16 +103,6 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Get the rigths for other users
-     *
-     * @return array
-     */
-    public function getRights()
-    {
-        return array();
-    }
-
-    /**
      * Save the rights for each modules
      *
      * @param array $rights Array with the modules and the bitmask access
