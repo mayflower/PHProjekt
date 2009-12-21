@@ -73,12 +73,12 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
                 break;
         }
         if (type != 'delete') {
-            url += 'nodeId/' + phpr.currentProjectId;
+            url += 'nodeId/' + phpr.currentProjectId + '/';
         }
         if (type != 'grid') {
-            url += '/id/' + id;
+            url += 'id/' + id + '/';
         }
-        url += '/' + phpr.module.toLowerCase() + 'Id/' + this.parentId;
+        url += phpr.module.toLowerCase() + 'Id/' + this.parentId;
 
         return url;
     },
