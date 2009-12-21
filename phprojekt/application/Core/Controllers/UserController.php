@@ -191,7 +191,8 @@ class Core_UserController extends Core_IndexController
                 $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
             }
 
-            Default_Helpers_Save::save($model, $this->getRequest()->getParams());
+            $params = $this->setParams($this->getRequest()->getParams(), $model);
+            Default_Helpers_Save::save($model, $params);
 
             if (empty($id)) {
                 $id = $model->id;
