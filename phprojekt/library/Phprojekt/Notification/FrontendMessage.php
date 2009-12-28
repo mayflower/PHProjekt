@@ -46,7 +46,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     public function getMessageData($userId)
     {
         $where   = $this->getAdapter()->quoteInto('recipient_id = ?', $userId);
-        $now     = date('Y-m-d H:i:s');
+        $now     = gmdate('Y-m-d H:i:s');
         $where  .= " AND (valid_from <= '" . $now . "' AND '" . $now . "' <= valid_until)";
         $where  .= " AND delivered = 0";
         $order   = "valid_from DESC"; // order by valid_from, to always have the newest notification first
@@ -54,7 +54,25 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
         $data    = array();
 
         foreach ($records as $row) {
-            $row->details = unserialize($row->details);
+            $tmpDetails = unserialize($row->details);
+            if (is_array($tmpDetails) && false === empty($tmpDetails)) {
+                foreach ($tmpDetails as $key => $details) {
+                    // Convert times to user times
+                    if ($details['type'] == 'datetime') {
+                        $tmpDetails[$key]['oldValue'] = date("Y-m-d H:i:s",
+                        Phprojekt_Converter_Time::utcToUser($details['oldValue']));
+                        $tmpDetails[$key]['newValue'] = date("Y-m-d H:i:s",
+                        Phprojekt_Converter_Time::utcToUser($details['newValue']));
+                    } else if ($details['type'] == 'time') {
+                        $tmpDetails[$key]['oldValue'] = date("H:i:s",
+                        Phprojekt_Converter_Time::utcToUser($details['oldValue']));
+                        $tmpDetails[$key]['newValue'] = date("H:i:s",
+                        Phprojekt_Converter_Time::utcToUser($details['newValue']));
+
+                    }
+                }
+            }
+            $row->details = $tmpDetails;
             $data[]       = $row;
 
             $deliverd['delivered'] = 1;
@@ -86,12 +104,17 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
         $displaySetting = $userObject->getDisplay();
 
         $data['user']        = $userObject->applyDisplay($displaySetting, $userObject);
-        $data['module']      = Phprojekt_Module::getModuleName($messageData[0]->moduleId);
+        $data['module']      = ucfirst(Phprojekt_Module::getModuleName($messageData[0]->moduleId));
         $data['process']     = $messageData[0]->process;
-        $data['description'] = $messageData[0]->description;
+        $data['description'] = Phprojekt::getInstance()->translate($messageData[0]->description);
         $data['itemId']      = $messageData[0]->itemId;
+        $data['item']        = $messageData[0]->itemName;
         $data['projectId']   = $messageData[0]->projectId;
         $data['details']     = $messageData[0]->details;
+        $data['time']        = substr($messageData[0]->validUntil, 11, 5);
+
+        $project             = Phprojekt_Loader::getModel('Project', 'Project');
+        $data['project']     = $project->find($data['projectId'])->title;
 
         return $data;
     }
@@ -118,7 +141,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
         while ($counter != 4) {
             $counter++;
             $data = $this->getMessage($userId);
-            if (!empty($data)) {
+            if (false === empty($data)) {
                 return $data;
             }
             sleep(5);
@@ -256,6 +279,16 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     }
 
     /**
+     * Sets the item_name field.
+     *
+     * @param string $itemName
+     */
+    public function setCustomItemName($itemName)
+    {
+        $this->itemName = $itemName;
+    }
+
+    /**
      * Deletes no longer valid messages.
      *
      * @param int $userId
@@ -264,7 +297,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
      */
     private function _deleteOutdatedMessages()
     {
-        $now     = date('Y-m-d H:i:s');
+        $now     = gmdate('Y-m-d H:i:s');
         $where   = "'" . $now . "' > valid_until";
         $records = $this->fetchAll($where);
 
@@ -290,17 +323,18 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
             $recipient = $this->recipientId;
 
             foreach ($recipient as $id) {
-                $model                = clone($this);
-                $model->actorId       = $this->actorId;
-                $model->projectId     = $this->projectId;
-                $model->itemId        = $this->itemId;
-                $model->process       = $this->process;
-                $model->validUntil    = $this->validUntil;
-                $model->validFrom     = $this->validFrom;
-                $model->moduleId      = $this->moduleId;
-                $model->description   = $this->description;
-                $model->details       = $this->details;
-                $model->recipientId   = $id;
+                $model              = clone($this);
+                $model->actorId     = $this->actorId;
+                $model->projectId   = $this->projectId;
+                $model->itemId      = $this->itemId;
+                $model->process     = $this->process;
+                $model->validUntil  = $this->validUntil;
+                $model->validFrom   = $this->validFrom;
+                $model->moduleId    = $this->moduleId;
+                $model->description = $this->description;
+                $model->details     = $this->details;
+                $model->recipientId = $id;
+                $model->itemName    = $this->itemName;
 
                 $return = $model->save();
             }

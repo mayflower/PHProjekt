@@ -111,6 +111,7 @@ $lang["Cancel"] = "Cancel";
 $lang["Close"]  = "Close";
 $lang["Edit"]   = "Edit";
 $lang["New"]    = "New";
+$lang["Disable Frontend Messages"] = "Disable all Frontend Messages!";
 
 // Alt text
 $lang["Export all items to a CSV file"] = "Export all items to a CSV file";
@@ -322,6 +323,8 @@ $lang["Filter_OR"] = "OR";
 // 'Notification' checkbox
 $lang["Check this box to send an email notification to the participants"] = "Check this box to send an email "
     . "notification to the participants";
+// Tooltip Grid
+$lang["Double click to edit"] = "Double click to edit";
 
 // General Help
 $lang["Content Help"]["General"] = "<br />
@@ -434,3 +437,13 @@ $lang["Content Help"]["History"] = "<br />
     <br />
     It shows a listing of the changes made to the item since its creation.<br />
     It has five columns: <i>date</i>, <i>user</i>, <i>field</i>, <i>old value</i> and <i>new value</i>.";
+
+// Toaster
+$lang["has created the new entry"]          = " has created the new entry ";
+$lang["has deleted the entry"]              = " has deleted the entry ";
+$lang["has edit the existing entry"]        = " has edit the existing entry ";
+$lang["has logged in"]                      = " has logged in.";
+$lang["has logged out"]                     = " has logged out.";
+$lang["Your event starts at"]               = "Your event starts at ";
+$lang["has executed a not defined process"] = " has executed a not defined process.";
+$lang["in Project"]                         = " in Project ";

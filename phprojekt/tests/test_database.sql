@@ -532,6 +532,7 @@ CREATE TABLE  `frontend_message` (
   `recipient_id` int(11) NOT NULL,
   `module_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
+  `item_name` varchar(255) NOT NULL,
   `valid_until` datetime NOT NULL,
   `valid_from` datetime NOT NULL,
   `description` text,

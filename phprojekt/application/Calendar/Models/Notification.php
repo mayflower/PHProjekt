@@ -96,13 +96,15 @@ class Calendar_Models_Notification extends Phprojekt_Notification
     }
 
     /**
-     * Goes into the contents of the 'changes' part of the Notification body (internal variable _lastHistory) and
-     * parses, translates and orders it using a custom criterion for the Calendar Notification. Then returns the final
-     * array.
+     * Goes into the contents of the 'changes' part of the Notification body (internal variable _lastHistory)
+     * and parses, translates and orders it using a custom criterion for the Calendar Notification.
+     * Then returns the final array.
+     *
+     * @param boolean $translate Translate the fields or not
      *
      * @return array
      */
-    public function getBodyChanges()
+    public function getBodyChanges($translate = true)
     {
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition($order);
@@ -114,7 +116,9 @@ class Calendar_Models_Notification extends Phprojekt_Notification
             foreach ($fieldDefinition as $field) {
                 // Find the field definition for the field that has been modified
                 if ($field['key'] == $bodyChanges[$i]['field']) {
-                    $bodyChanges[$i]['field'] = $field['label'];
+                    $bodyChanges[$i]['label'] = $field['label'];
+                    $bodyChanges[$i]['field'] = $field['key'];
+                    $bodyChanges[$i]['type']  = $field['type'];
                 }
             }
 
@@ -122,36 +126,38 @@ class Calendar_Models_Notification extends Phprojekt_Notification
             if (strtolower($bodyChanges[$i]['field']) == 'rrule') {
                 $oldRruleEmpty = false;
                 $newRruleEmpty = false;
-                if ($bodyChanges[$i]['oldValue'] !== null) {
+                if (false === empty($bodyChanges[$i]['oldValue'])) {
                     $oldRrule = $this->_model->getRruleDescriptive($bodyChanges[$i]['oldValue']);
                 } else {
                     $oldRruleEmpty = true;
                 }
-                if ($bodyChanges[$i]['newValue'] !== null) {
+                if (false === empty($bodyChanges[$i]['newValue'])) {
                     $newRrule = $this->_model->getRruleDescriptive($bodyChanges[$i]['newValue']);
                 } else {
                     $newRruleEmpty = true;
                 }
 
                 // FIELDS: Repeats, Interval and Until
-                for ($i = 0; $i < 3; $i++) {
+                for ($k = 0; $k < 3; $k++) {
                     if (!$oldRruleEmpty) {
-                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " . $oldRrule[$i]['label'];
+                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " . $oldRrule[$k]['label'];
                     } else {
-                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " . $newRrule[$i]['label'];
+                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " . $newRrule[$k]['label'];
                     }
                     if (!$oldRruleEmpty) {
-                        $fieldOldValue = $oldRrule[$i]['value'];
+                        $fieldOldValue = $oldRrule[$k]['value'];
                     } else {
                         $fieldOldValue = "";
                     }
                     if (!$newRruleEmpty) {
-                        $fieldNewValue = $newRrule[$i]['value'];
+                        $fieldNewValue = $newRrule[$k]['value'];
                     } else {
                         $fieldNewValue = "";
                     }
                     if ($fieldOldValue != $fieldNewValue) {
-                        $bodyChanges[] = array('field'    => $fieldName,
+                        $bodyChanges[] = array('label'    => $fieldName,
+                                               'field'    => $fieldName,
+                                               'type'     => 'hidden',
                                                'oldValue' => $fieldOldValue,
                                                'newValue' => $fieldNewValue);
                     }
@@ -187,15 +193,20 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                     }
 
                     if ($fieldOldValue != $fieldNewValue) {
-                        $bodyChanges[] = array('field'    => $fieldName,
+                        $bodyChanges[] = array('label'    => $fieldName,
+                                               'field'    => $fieldName,
+                                               'type'     => 'hidden',
                                                'oldValue' => $fieldOldValue,
                                                'newValue' => $fieldNewValue);
                     }
                 }
             } else if ($bodyChanges[$i]['field'] == 'startDatetime') {
-                $bodyChanges[$i]['oldValue'] = $this->_model->translateDate(
-                    $this->_model->getDate($bodyChanges[$i]['oldValue'])) . ' '
-                    . substr($bodyChanges[$i]['oldValue'], 11, 5);
+                // Doing the date translation only if something has changed
+                if (false === empty($bodyChanges[$i]['oldValue'])) {
+                    $bodyChanges[$i]['oldValue'] = $this->_model->translateDate(
+                        $this->_model->getDate($bodyChanges[$i]['oldValue'])) . ' '
+                        . substr($bodyChanges[$i]['oldValue'], 11, 5);
+                }
                 $bodyChanges[$i]['newValue'] = $this->_model->translateDate(
                     $this->_model->getDate($bodyChanges[$i]['newValue'])) . ' '
                     . substr($bodyChanges[$i]['newValue'], 11, 5);
@@ -219,7 +230,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
      */
     public function getCalendarValidUntil()
     {
-        return $this->_model->endDatetime;
+        return date("Y-m-d H:i:s", Phprojekt_Converter_Time::userToUtc($this->_model->endDatetime));
     }
 
     /**
@@ -229,29 +240,69 @@ class Calendar_Models_Notification extends Phprojekt_Notification
      */
     public function getCalendarValidFrom()
     {
-        $date           = $this->_model->startDatetime;
+        $date           = Phprojekt_Converter_Time::userToUtc($this->_model->startDatetime);
         $configMin      = Phprojekt::getInstance()->getConfig()->remindBefore;
         $configMinInSec = ($configMin * 60);
 
-        return date("Y-m-d H:i:s", (strtotime($date) - $configMinInSec));
+        return date("Y-m-d H:i:s", ($date - $configMinInSec));
+    }
+
+    /**
+     * Gets the participants of a calendar item.
+     * Does a distinction between the processes 'delete' and 'add' or 'edit' because for the 'delete' process an
+     * additional query to the database is needed. Checks if the recipient has the right settings and if the recipient
+     * is the owner of the calendar item. Returns at least an empty array.
+     *
+     * @return array
+     */
+    public function getRecipients()
+    {
+        if ($this->_controllProcess == Phprojekt_Notification::LAST_ACTION_REMIND) {
+            $recipients = array($this->_model->participantId);
+        } else {
+            $recipients = parent::getRecipients();
+        }
+
+        return $this->filterRecipientsToSettings($recipients);
     }
 
     /**
      * Overwrites the existing saveFrontendMessage.
-     * Runs a regular save first and if successful,
-     * runs a second save for the alert befor a meeting starts.
+     * Runs a regular save first and if successful, runs a second save for the alert before a meeting starts.
      *
      * @return boolean
      */
     public function saveFrontendMessage()
     {
-        if (true === parent::saveFrontendMessage()){
-            $this->_validFrom       = $this->getCalendarValidFrom();
-            $this->_validUntil      = $this->getCalendarValidUntil();
-            $this->_controllProcess = Phprojekt_Notification::LAST_ACTION_REMIND;
-            return parent::saveFrontendMessage();
+        $this->_validFrom       = null;
+        $this->_validUntil      = null;
+        $this->_controllProcess = null;
+        if (null === $this->_model->rrule || empty($this->_model->rrule)) {
+            // Single events
+            parent::saveFrontendMessage();
+        } else {
+            // Multiple events
+            // Check if is already saved
+            if (Zend_Registry::isRegistered('keepSavedIds')) {
+                $keepSavedIds = Zend_Registry::get('keepSavedIds');
+                $isSaved = (isset($keepSavedIds[$this->_model->participantId]));
+            } else {
+                $isSaved      = false;
+                $keepSavedIds = array();
+            }
+
+            // Only save the first one
+            if ($this->_model->parentId != 0 && !$isSaved) {
+                $keepSavedIds[$this->_model->participantId] = true;
+                Zend_Registry::set('keepSavedIds', $keepSavedIds);
+                parent::saveFrontendMessage();
+            }
         }
 
-        return false;
+        $this->_validFrom       = $this->getCalendarValidFrom();
+        $this->_validUntil      = $this->getCalendarValidUntil();
+        $this->_controllProcess = Phprojekt_Notification::LAST_ACTION_REMIND;
+
+        return parent::saveFrontendMessage();
     }
 }

@@ -52,6 +52,7 @@
                 "recipient_id": {"type": "int", "notNull": "true"},
                 "module_id":    {"type": "int", "notNull": "true"},
                 "item_id":      {"type": "int", "notNull": "true"},
+                "item_name":    {"type": "varchar", "notNull": "true"},
                 "valid_until":  {"type": "datetime", "notNull": "true"},
                 "valid_from":   {"type": "datetime", "notNull": "true"},
                 "description":  {"type": "text", "notNull": "true"},

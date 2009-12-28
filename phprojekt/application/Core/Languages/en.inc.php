@@ -328,3 +328,13 @@ $lang["Content Help Setting"]["Timecard"] = "<br />
     <br />
     <br />";
 
+// Notification:
+// Frontend Messages
+// Settings stuff: Tooltip
+$lang["Tooltip"]["alerts"] = "This is to turn on/off the alerts, e.g some minutes an event of you starts.";
+$lang["Tooltip"]["loginLogout"] = "Enable/disable this and messages about the login/logout of other user will (not)"
+    . " disappear.";
+$lang["Tooltip"]["usergenerated"] = "This is to turn on/off messages from another user to you.";
+$lang["Tooltip"]["datarecords"] = "This is to turn on/off system generated messages.<br />"
+    . "Events that trigger this message: CREATE a new Item (e.g. a Project, Note or Todo), DELETE an existing Item, "
+    . "and EDIT an Item.";

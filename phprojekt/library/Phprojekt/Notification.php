@@ -50,6 +50,7 @@ class Phprojekt_Notification
     protected $_model           = null;
     protected $_validUntil      = null;
     protected $_validFrom       = null;
+    protected $_recipients      = null;
 
     /**
      * Initialize new object
@@ -140,7 +141,7 @@ class Phprojekt_Notification
      */
     public function getTo()
     {
-        $userIds    = $this->_model->getRights();
+        $userIds    = $this->_model->getUsersRights();
         $recipients = array();
 
         if (is_array($userIds) && !empty($userIds)) {
@@ -220,6 +221,7 @@ class Phprojekt_Notification
         foreach ($fieldDefinition as $key => $field) {
             $value        = Phprojekt_Converter_Text::convert($this->_model, $field);
             $bodyFields[] = array('label' => $field['label'],
+                                  'field' => $field['key'],
                                   'value' => $value);
         }
 
@@ -227,15 +229,17 @@ class Phprojekt_Notification
     }
 
     /**
-     * Goes into the contents of the 'changes' part of the Notification body (from internal variable _lastHistory) and
-     * checks for contents that have to be translated, then returns the final array.
+     * Goes into the contents of the 'changes' part of the Notification body (from internal variable _lastHistory)
+     * and checks for contents that have to be translated if the $translate option is true,
+     * then returns the final array.
+     *
+     * @param boolean $translate Translate the fields or not
      *
      * @return array
      */
-    public function getBodyChanges()
+    public function getBodyChanges($translate = true)
     {
         // The following algorithm loops inside $this->_lastHistory and prepares $bodyChanges while:
-        // * Translates the name of the fields
         // * Searches Integer values that should be converted into Strings and converts them
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $this->_model->getInformation()->getFieldDefinition($order);
@@ -247,31 +251,35 @@ class Phprojekt_Notification
                 // Find the field definition for the field that has been modified
                 if ($field['key'] == $bodyChanges[$i]['field']) {
 
-                    $bodyChanges[$i]['field'] = $field['label'];
+                    $bodyChanges[$i]['label'] = $field['label'];
+                    $bodyChanges[$i]['field'] = $field['key'];
+                    $bodyChanges[$i]['type']  = $field['type'];
 
-                    // Is the field of a type that should be translated from an Id into a descriptive String?
-                    $convertToString = false;
-                    if ($field['type'] == 'selectbox') {
-                        $convertToString = true;
-                    } else if ($field['type'] == 'display' && is_array($field['range'])) {
-                        foreach ($field['range'] as $range) {
-                            if (is_array($range)) {
-                                $convertToString = true;
-                                break;
+                    if ($translate) {
+                        // Is the field of a type that should be translated from an Id into a descriptive String?
+                        $convertToString = false;
+                        if ($field['type'] == 'selectbox') {
+                            $convertToString = true;
+                        } else if ($field['type'] == 'display' && is_array($field['range'])) {
+                            foreach ($field['range'] as $range) {
+                                if (is_array($range)) {
+                                    $convertToString = true;
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    if ($convertToString) {
-                        // Yes, so translate it into the appropriate meaning
-                        foreach ($field['range'] as $range) {
-                            // Try to replace oldValue Integer with the String
-                            if ($range['id'] == $bodyChanges[$i]['oldValue']) {
-                                $bodyChanges[$i]['oldValue'] = trim($range['name']);
-                            }
-                            // Try to replace newValue Integer with the String
-                            if ($range['id'] == $bodyChanges[$i]['newValue']) {
-                                $bodyChanges[$i]['newValue'] = trim($range['name']);
+                        if ($convertToString) {
+                            // Yes, so translate it into the appropriate meaning
+                            foreach ($field['range'] as $range) {
+                                // Try to replace oldValue Integer with the String
+                                if ($range['id'] == $bodyChanges[$i]['oldValue']) {
+                                    $bodyChanges[$i]['oldValue'] = trim($range['name']);
+                                }
+                                // Try to replace newValue Integer with the String
+                                if ($range['id'] == $bodyChanges[$i]['newValue']) {
+                                    $bodyChanges[$i]['newValue'] = trim($range['name']);
+                                }
                             }
                         }
                     }
@@ -298,7 +306,7 @@ class Phprojekt_Notification
             $history            = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
             $this->_lastHistory = $history->getLastHistoryData($this->_model);
 
-            $bodyChanges = (false === empty($this->_controllProcess)) ? array() : $this->getBodyChanges();
+            $bodyChanges = (false === empty($this->_controllProcess)) ? array() : $this->getBodyChanges(false);
 
             // If no recipients were added, return immediately
             // allthough a check in FrontendMessage saveFrontendMessage is performed too,
@@ -320,6 +328,7 @@ class Phprojekt_Notification
         $this->_frontendMessage->setCustomProcess($process);
         $this->_frontendMessage->setCustomDescription($description);
         $this->_frontendMessage->setCustomDetails($bodyChanges);
+        $this->_frontendMessage->setCustomItemName($this->getItemName());
 
         $return = $this->_frontendMessage->saveFrontendMessage();
 
@@ -334,35 +343,29 @@ class Phprojekt_Notification
     public function getDescription()
     {
         // Map process
-        $process     = $this->getProcess();
-        $project     = Phprojekt_Loader::getModel('Project', 'Project');
-        $projectName = $project->find($this->getProjectId())->title;
+        $process = $this->getProcess();
 
         switch ($process) {
             case (self::LAST_ACTION_ADD):
-                $description = ' has created the new ' . $this->_model->getModelName() . ' entry "'
-                    . $this->_model->{$this->_model->searchFirstDisplayField} . '" in Project "' . $projectName .'"';
+                $description = 'has created the new entry';
                 break;
             case (self::LAST_ACTION_DELETE):
-                $description = ' has delete the ' . $this->_model->getModelName() . ' entry "'
-                    . $this->_model->{$this->_model->searchFirstDisplayField} . '" in Project "' . $projectName . '"';
+                $description = 'has deleted the entry';
                 break;
             case (self::LAST_ACTION_EDIT):
-                $description = ' has edit the existing ' . $this->_model->getModelName() . ' entry "'
-                    . $this->_model->{$this->_model->searchFirstDisplayField} . '" in Project "' . $projectName . '"';
+                $description = 'has edit the existing entry';
                 break;
             case (self::LAST_ACTION_LOGIN):
-                $description = ' has logged in.';
+                $description = 'has logged in';
                 break;
             case (self::LAST_ACTION_LOGOUT):
-                $description = ' has logged out.';
+                $description = 'has logged out';
                 break;
             case (self::LAST_ACTION_REMIND):
-                $description = ' your event "' . $this->_model->{$this->_model->searchFirstDisplayField}
-                    . '" starts in ' . Phprojekt::getInstance()->getConfig()->remindBefore . ' minutes.';
+                $description = 'Your event starts at';
                 break;
             default:
-                $description = ' has executed a not defined process.';
+                $description = 'has executed a not defined process';
                 break;
         }
 
@@ -436,6 +439,22 @@ class Phprojekt_Notification
     }
 
     /**
+     * Gets the item name.
+     *
+     * @return string
+     */
+    public function getItemName()
+    {
+        $itemName = "";
+
+        if (false === empty($this->_model)) {
+            $itemName = $this->_model->{$this->_model->searchFirstDisplayField};
+        }
+
+        return $itemName;
+    }
+
+    /**
      * Gets the item id.
      *
      * @return int
@@ -464,7 +483,7 @@ class Phprojekt_Notification
             return $this->_validFrom;
         }
 
-        return date("Y-m-d H:i:s", time());
+        return gmdate("Y-m-d H:i:s");
     }
 
     /**
@@ -484,7 +503,7 @@ class Phprojekt_Notification
         $validPeriod = Phprojekt::getInstance()->getConfig()->validPeriod;
         $validUntil  = time() + (60 * $validPeriod);
 
-        return date("Y-m-d H:i:s", $validUntil);
+        return gmdate("Y-m-d H:i:s", $validUntil);
     }
 
     /**
@@ -496,12 +515,15 @@ class Phprojekt_Notification
      */
     public function getRecipients()
     {
+        if (false === empty($this->_recipients)) {
+            return $this->_recipients;
+        }
         $recipients = array();
 
         if (($this->_model instanceof Phprojekt_Tree_Node_Database) ||
             ($this->_model instanceof Phprojekt_Model_Interface)) {
 
-            $userIds = $this->_model->getRights();
+            $userIds = $this->_model->getUsersRights();
 
             if (is_array($userIds) && !empty($userIds)) {
                 foreach ($userIds as $right) {
@@ -524,23 +546,7 @@ class Phprojekt_Notification
             }
         }
 
-        // Last but not least filter the recipients with their settings.
-        $settingKey = $this->mapProcessToSettings();
-
-        foreach ($recipients as $recipient) {
-            $setting = $this->getSetting($settingKey, $recipient);
-            // Since the checkboxes doesn´t have a propper default value,
-            // only users who realy have disabled the setting will be removed from the recipients array.
-            // Users with no saved setting will be stay on the recipients list too,
-            // because a user has to uncheck the setting to disable the frontend message.
-            if ($setting === 0) {
-                if (false !== ($key = array_search($recipient,$recipients))){
-                    unset($recipients[$key]);
-                }
-            }
-        }
-
-        return $recipients;
+        return $this->filterRecipientsToSettings($recipients);
     }
 
     /**
@@ -605,5 +611,35 @@ class Phprojekt_Notification
         $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
         $setting->setModule('Notification');
         $setting->setSettings($defaultSettings);
+    }
+
+    /**
+     * Filters the users from the recipients list without the settings for receiving one of the frontend messages.
+     *
+     * @param array $recipients
+     *
+     * @return array
+     */
+    public function filterRecipientsToSettings(array $recipients)
+    {
+        $users = $recipients;
+
+        // get the setting to the process.
+        $settingKey = $this->mapProcessToSettings();
+
+        foreach ($users as $user) {
+            $setting = $this->getSetting($settingKey, $user);
+            // Since the checkboxes doesnï¿½t have a propper default value,
+            // only users who realy have disabled the setting will be removed from the recipients array.
+            // Users with no saved setting will be stay on the recipients list too,
+            // because a user has to uncheck the setting to disable the frontend message.
+            if ($setting === 0) {
+                if (false !== ($key = array_search($user,$users))){
+                    unset($users[$key]);
+                }
+            }
+        }
+
+        return $users;
     }
 }

@@ -107,6 +107,10 @@ $lang["Cancel"] = "Abbrechen";
 $lang["Close"]  = "Schließen";
 $lang["Edit"]   = "Editieren";
 $lang["New"]    = "Neu";
+$lang["Disable Frontend Messages"] = "Alle Benachrichtigungen dieser Art abschalten!";
+
+// Alt Text
+$lang["Open an empty form to add a new item"] = "Neues Element";
 
 // Messages
 $lang["There are no entries on this level"] = "Keine Element auf dieser Ebene vorhanden, bitte über [+] eines
@@ -299,3 +303,15 @@ $lang["The module must have a project selector called project_id"] = "Das Modul 
 // 'Notification' checkbox
 $lang["Check this box to send an email notification to the participants"] = "Klicken Sie diese checkbox an, um den "
     . "Teilnehmern eine Benachrichtigungsmail zu schicken";
+// Tooltip Grid
+$lang["Double click to edit"] = "Doppel-Klick zum editieren";
+
+// Toaster
+$lang["has created the new entry"]          = " erstellte gerade den Eintrag ";
+$lang["has deleted the entry"]              = " löschte gerade den Eintrag ";
+$lang["has edit the existing entry"]        = " bearbeitete gerade den Eintrag ";
+$lang["has logged in"]                      = " hat sich gerade angemeldet.";
+$lang["has logged out"]                     = " hat sich gerade abgemeldet.";
+$lang["Your event starts at"]               = "Dein Termin startet um ";
+$lang["has executed a not defined process"] = " hat gerade einen nicht definierten Prozess ausgeführt.";
+$lang["in Project"]                         = " im Projekt ";
