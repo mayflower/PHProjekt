@@ -806,6 +806,10 @@ phpr.handleError = function(url, type, message) {
             response.message += phpr.nls.get('Internal javascript error') + '<br />';
             response.message += message;
             break;
+        case 'silence':
+            console.log(phpr.nls.get('Server unreachable! ') + message);
+            return;
+            break;
         default:
             response.message += phpr.nls.get('Unexpected error');
             break;
