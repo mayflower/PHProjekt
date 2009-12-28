@@ -36,7 +36,7 @@ dojo.declare("phpr.FrontendMessage", null, {
         dojo.xhrPost({
             url:   this.url,
             error: function(error, handle) {
-                phpr.handleError(this.url, 'js', error);
+                phpr.handleError(this.url, 'silence', error);
             },
             load: function(response) {
                 if (false != response.data) {
@@ -70,6 +70,54 @@ dojo.declare("phpr.FrontendMessage", null, {
         //    In addition, starts a new interval loop.
         clearInterval(window.interval);
         window.getFrontendMessage();
+
+        var moduleUrl  = "#" + data.module + "," + data.projectId + ",id," + data.itemId;
+        var currentUrl = window.location.hash;
+
+        // Be fault tolerant and catch any error if the highlighting of a field does not run.
+        try {
+            if ('edit' == data.process) {
+                // Check urls
+                if (moduleUrl == currentUrl) {
+                    dojo.publish(phpr.module + '.highlightChanges', [data]);
+                }
+            }
+        } catch (err) {
+            phpr.handleError(this.url, 'silence', "Can not highlight changes. " + err);
+        }
+
+        // Delete caches
+        if (data.process == 'add' || data.process == 'delete' || data.process == 'edit') {
+            // Delete all links of this module
+            var url = phpr.webpath + 'index.php/' + data.module;
+            phpr.DataStore.deleteDataPartialString({url: url});
+
+            // Delete all links related of this module
+            var url = 'moduleName/' + data.module;
+            phpr.DataStore.deleteDataPartialString({url: url});
+
+            // Delete general tags
+            var url = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
+            phpr.DataStore.deleteData({url: url});
+
+            if (data.module == 'Project') {
+                // Update for projects
+                var url = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + data.project;
+                phpr.DataStore.deleteData({url: url});
+
+                var url = phpr.webpath + 'index.php/Timecard';
+                phpr.DataStore.deleteDataPartialString({url: url});
+
+                phpr.Tree.updateData();
+            }
+
+            // Restore the views
+            if (data.module == phpr.module) {
+                dojo.publish(phpr.module + '.setNavigations');
+                dojo.publish(phpr.module + '.setWidgets');
+            }
+        }
+
         var template = this._templateString(data);
         dojo.publish("FrontendMessage", [{
             message:  template,
@@ -86,32 +134,46 @@ dojo.declare("phpr.FrontendMessage", null, {
         // Description:
         //    Returns a string with the given data and html tags for the toaster.
         var template = '';
+        var project  = phpr.nls.get("in Project");
+
+        if (phpr.isGlobalModule(data.module)) {
+            data.projectId = "";
+        } else {
+            data.projectId = data.projectId + ",";
+        }
+
         switch (data.process) {
             case 'add':
                 template = "<br /><a href='" + phpr.webpath + "index.php#" + data.module + "," + data.projectId
-                    + ",id," + data.itemId + "'>" + data.user + " " + data.description; + ".</a><br />&nbsp;"
+                    + "id," + data.itemId + "'><i>" + data.module + "</i>: <b>" + data.user + "</b> "
+                    + data.description + "<i>" + data.item + "</i>" + project + "<i><b>"
+                    + data.project +"</b></i>.</a><br />&nbsp;"
                 break;
             case 'delete':
-                template = "<br />" + data.user + " " + data.description + ". <br />&nbsp;";
+                template = "<br /><i>" + data.module + "</i>: <b>" + data.user + "</b> "
+                    + data.description + "<i>" + data.item + "</i>" + project + "<i><b>"
+                    + data.project +"</b></i>.<br />&nbsp;";
                 break;
             case 'edit':
                 template = "<br /><a href='" + phpr.webpath + "index.php#" + data.module + "," + data.projectId
-                    + ",id," + data.itemId + "'>" + data.user + " " + data.description + ".</a><br />&nbsp;";
+                    + "id," + data.itemId + "'><i>" + data.module + "</i>: <b>" + data.user + "</b> "
+                    + data.description + "<i>" + data.item + "</i>" + project + "<i><b>"
+                    + data.project +"</b></i>.</a><br />&nbsp;";
                 break;
             case 'login':
-                template = "<br />" + data.user + " " + data.description + "<br />&nbsp;";
+                template = "<br /><b>" + data.user + "</b> " + data.description + "<br />&nbsp;";
                 break;
             case 'logout':
-                template = "<br />" + data.user + " " + data.description + "<br />&nbsp;";
+                template = "<br /><b>" + data.user + "</b> " + data.description + "<br />&nbsp;";
                 break;
             case 'remind':
-                template = "<br />" + data.user + " " + data.description + "<br />&nbsp;";
+                template = "<br />" + data.description + data.time + ": <br /><i><b>"
+                    + data.item + "</b></i>";
                 break;
             default:
                 template = "<br />" + data.user + " " + data.description + "<br />&nbsp;";
                 break;
         }
-
         return template;
     }
 });

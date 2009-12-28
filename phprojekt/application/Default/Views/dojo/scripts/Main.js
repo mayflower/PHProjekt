@@ -61,6 +61,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.subscribe(module + ".renderTemplate", this, "renderTemplate");
         dojo.subscribe(module + ".setNavigations", this, "setNavigations");
         dojo.subscribe(module + ".setWidgets", this, "setWidgets");
+        dojo.subscribe(module + ".highlightChanges", this, "highlightChanges");
 
         // Grid
         dojo.subscribe(module + ".gridProxy", this, "gridProxy");
@@ -188,6 +189,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 url:         this._langUrl,
                 processData: dojo.hitch(this, function() {
                     phpr.nls = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
+
+                    translatedText = phpr.nls.get("Disable Frontend Messages");
+                    dijit.byId('disableFrontendMessage').attr('label', translatedText);
+
                     // Get global modules
                     phpr.DataStore.addStore({url: phpr.globalModuleUrl});
                     phpr.DataStore.requestData({
@@ -1110,6 +1115,17 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    Proxy for run form functions
         if (this.form) {
             eval("this.form." + functionName + "('" + params + "')");
+        }
+    },
+
+    highlightChanges:function(params) {
+        // Summary:
+        //    Proxy for the highlightChanges function
+        // Description:
+        //    Since formProxy do not allow object params,
+        //    this function is needed
+        if (this.form) {
+            this.form.highlightChanges(params);
         }
     }
 });

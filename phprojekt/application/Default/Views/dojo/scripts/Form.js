@@ -941,5 +941,110 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // Description:
         //    Set the Breadcrumb with the first item value
         phpr.BreadCrumb.setItem(itemValue);
+    },
+
+    highlightChanges:function(data) {
+        // Summary:
+        //    Highlights changes done by any other user with a style comming from the CSS class "highlightChanges".
+        // Description:
+        //    Checks if I am on the same data record as the user who changes something.
+        //    If so, adds the CSS class "highlightChanges" to the form element
+        //    (typicall border: 3px solid #ff0000) and overwrites the given value with the new one.
+        var details    = data.details;
+        var detailsLen = details.length;
+        var meta       = phpr.DataStore.getMetaData({url: this._url});
+        for (var i = 0; i < detailsLen; i++) {
+            var field = details[i].field;
+            var value = details[i].newValue;
+
+            // Search the field
+            for (var k = 0; k < meta.length; k++) {
+                if (meta[k]['key'] == field) {
+                    switch (meta[k]['type']) {
+                        case 'datetime':
+                            // Split the value to two values
+                            var dateTime = value.split(" ");
+                            var time     = dateTime[1].slice(0,5);
+
+                            var key          = field + '_forDate';
+                            var displayfield = 'widget_' + key;
+                            if (fieldWidget = dijit.byId(key)) {
+                                fieldWidget.attr("displayedValue", dateTime[0]);
+                                dojo.addClass(dojo.byId(displayfield), "highlightChanges");
+                            }
+
+                            var key          = field + '_forTime';
+                            var displayfield = 'widget_' + key;
+                            if (fieldWidget = dijit.byId(key)) {
+                                fieldWidget.attr("displayedValue", time);
+                                dojo.addClass(dojo.byId(displayfield), "highlightChanges");
+                            }
+                            break;
+                        case 'selectbox':
+                            var displayfield = 'widget_' + field;
+                            if (fieldWidget = dijit.byId(field)) {
+                                fieldWidget.attr("value", value);
+                                dojo.addClass(dojo.byId(displayfield), "highlightChanges");
+                            }
+                            break;
+                        case 'date':
+                            var displayfield = 'widget_' + field;
+                            if (fieldWidget = dojo.byId(field)) {
+                                fieldWidget.value = value;
+                                dojo.addClass(dojo.byId(displayfield), "highlightChanges");
+                            }
+                            break;
+                        case 'time':
+                            var displayfield = 'widget_' + field;
+                            if (fieldWidget = dojo.byId(field)) {
+                                fieldWidget.value = value.slice(0,5);
+                                dojo.addClass(dojo.byId(displayfield), "highlightChanges");
+                            }
+                            break;
+                        case 'percentage':
+                            var displayfield = field;
+                            if (fieldWidget = dijit.byId(field)) {
+                                fieldWidget.attr('value', value);
+                                dojo.addClass(dojo.byId(displayfield), "highlightChanges");
+                            }
+                            break;
+                        case 'upload':
+                            var displayfield = 'filesIframe_' + field;
+                            if (fieldWidget = dijit.byId(field)) {
+                                fieldWidget.attr('value', value);
+                                dojo.byId('filesIframe_files').contentDocument.location.href = phpr.webpath
+                                    + 'index.php/Default/File/fileForm/moduleName/' + phpr.module + '/id/'
+                                    + this.id + '/field/' + field + '/value/' + value;
+                                dojo.addClass(dojo.byId(displayfield), "highlightChanges");
+                            }
+                            break;
+                        case 'checkbox':
+                            var displayfield = field;
+                            if (fieldWidget = dijit.byId(field)) {
+                                value = (value || value == 'on') ? true : false;
+                                fieldWidget.attr('checked', value);
+                                dojo.addClass(dojo.byId(displayfield).parentNode, "highlightChanges");
+                            }
+                            break;
+                        case 'multipleselectbox':
+                            var displayfield = field + '[]';
+                            if (fieldWidget = dijit.byId(displayfield)) {
+                                value = value.split(',');
+                                fieldWidget.attr("value", value);
+                                dojo.addClass(dojo.byId(displayfield), "highlightChanges");
+                            }
+                            break;
+                        default:
+                            var displayfield = field;
+                            if (fieldWidget = dijit.byId(field)) {
+                               fieldWidget.attr("displayedValue", value);
+                                dojo.addClass(dojo.byId(displayfield), "highlightChanges");
+                            }
+                            break;
+                    }
+                    break;
+                }
+            }
+        }
     }
 });
