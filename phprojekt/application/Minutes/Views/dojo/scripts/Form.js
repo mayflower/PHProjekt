@@ -27,6 +27,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     // Global flag needed for confirm dialogs
     _allowSubmit: false,
 
+    // Internal var for keep the itemStatus value
+    _itemStatus: 0,
+
     initData:function() {
         // Summary:
         //    Init all the data before draw the form
@@ -89,6 +92,13 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         }));
     },
 
+    postRenderForm:function() {
+        // Summary:
+        //    Keep the itemStatus value for future use
+        var data         = phpr.DataStore.getData({url: this._url});
+        this._itemStatus = data[0].itemStatus;
+    },
+
     prepareSubmission: function() {
         // Summary:
         //    Gathers data for form submission and displays confirm dialogs if needed
@@ -99,11 +109,10 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    when a save action is attempted while status remains at 4 (not possible).
         var result = this.inherited(arguments);
         if (result) {
-            var data = phpr.DataStore.getData({url: this._url});
-            // check for status. possible states are:
+            // Check for status. possible states are:
             // 1#Planned|2#Created|3#Filled|4#Final
-            if (data[0].itemStatus == 4 && this.sendData.itemStatus != 4) {
-                // finalized form is about to be made writeable again,
+            if (this._itemStatus == 4 && this.sendData.itemStatus != 4) {
+                // Finalized form is about to be made writeable again,
                 // check for write rights and ask permission:
                 if (!this._allowSubmit) {
                     this.displayConfirmDialog({
@@ -113,8 +122,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                     });
                     result = false;
                 }
-            } else if (data[0].itemStatus != 4 && this.sendData.itemStatus == 4) {
-                // writeable form is about to be finalized,
+            } else if (this._itemStatus != 4 && this.sendData.itemStatus == 4) {
+                // Writeable form is about to be finalized,
                 // ask for sanity check and permission:
                 if (!this._allowSubmit) {
                     this.displayConfirmDialog({
@@ -124,8 +133,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                     });
                     result = false;
                 }
-            } else if (data[0].itemStatus == 4 && this.sendData.itemStatus == 4) {
-                // form is finalized and settings have not changed, display
+            } else if (this._itemStatus == 4 && this.sendData.itemStatus == 4) {
+                // Form is finalized and settings have not changed, display
                 // informal message that form can't be saved.
                 this.displayConfirmDialog({
                     title:   phpr.nls.get('Minutes are finalized'),
@@ -136,12 +145,13 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 });
                 result = false;
             } else {
-                // all is well, proceed with submission
+                // All is well, proceed with submission
                 result = true;
             }
         }
-        // reset flag to initial value of false for next run
+        // Reset flag to initial value of false for next run
         this._allowSubmit = false;
+
         return result;
     },
 
@@ -153,7 +163,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    'confirmDialog.html'. No return value as dialog runs asynchronously.
         //    User input must be processed using event handlers "callbackOk" and
         //    "callbackCancel".
-
         if (!options) {
             options = [];
         }

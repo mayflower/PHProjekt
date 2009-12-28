@@ -21,6 +21,7 @@ dojo.provide("phpr.Calendar.Form");
 
 dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     _relatedDataUrl:       null,
+    _relatedData:          null,
     _multipleEvents:       null,
     _multipleParticipants: null,
     _owner:                null,
@@ -166,7 +167,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         if (this._currentDate != dijit.byId('startDatetime_forDate').value) {
             if (dijit.byId('startDatetime_forDate').isValid()) {
                 diff = dojo.date.difference(this._currentDate, dijit.byId('startDatetime_forDate').value, 'day');
-                dijit.byId('endDatetime_forDate').setValue(dojo.date.add(dijit.byId('endDatetime_forDate').value,
+                dijit.byId('endDatetime_forDate').attr('value', dojo.date.add(dijit.byId('endDatetime_forDate').value,
                     'day', diff));
                 this._currentDate = dijit.byId('startDatetime_forDate').value;
             }
@@ -182,7 +183,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         if (this._currentTime != dijit.byId('startDatetime_forTime').value) {
             if (dijit.byId('startDatetime_forTime').isValid()) {
                 diff = dojo.date.difference(this._currentTime, dijit.byId('startDatetime_forTime').value, 'minute');
-                dijit.byId('endDatetime_forTime').setValue(dojo.date.add(dijit.byId('endDatetime_forTime').value,
+                dijit.byId('endDatetime_forTime').attr('value', dojo.date.add(dijit.byId('endDatetime_forTime').value,
                     'minute', diff));
                 this._currentTime = dijit.byId('startDatetime_forTime').value;
             }
@@ -195,10 +196,10 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         // Description:
         //    Display all the users for add into the event
         var userList       = this.userStore.getList();
-        var urlRelatedData = phpr.DataStore.getData({url: this._relatedDataUrl});
-        var currentUser    = data[0]["rights"]["currentUser"]["userId"] || 0;
-        var participants   = new Array();
-        var users          = new Array();
+        this._relatedData = phpr.DataStore.getData({url: this._relatedDataUrl});
+        var currentUser   = data[0]["rights"]["currentUser"]["userId"] || 0;
+        var participants  = new Array();
+        var users         = new Array();
 
         if (userList) {
             for (var i in userList) {
@@ -210,8 +211,8 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         }
 
         // Make an array with the current participants
-        if (urlRelatedData.participants && urlRelatedData.participants.length > 0) {
-            var temp = urlRelatedData.participants.split(',');
+        if (this._relatedData.participants && this._relatedData.participants.length > 0) {
+            var temp = this._relatedData.participants.split(',');
             for (var i in temp) {
                 if (temp[i] != currentUser) {
                     for (var j in userList) {
@@ -524,10 +525,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         this.inherited(arguments);
 
         // Delete the cache of the 3 urls for every related event?
-        var urlRelatedData = phpr.DataStore.getData({url: this._relatedDataUrl});
-        if (urlRelatedData.relatedEvents) {
+        if (this._relatedData && this._relatedData.relatedEvents) {
             // Make an array with the related events
-            this._updateCacheIds = urlRelatedData.relatedEvents.split(',');
+            this._updateCacheIds = this._relatedData.relatedEvents.split(',');
             if (this._updateCacheIds.length > 0 && this.useCache) {
                 this.updateCacheIds();
             }
