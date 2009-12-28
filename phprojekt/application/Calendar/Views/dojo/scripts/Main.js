@@ -63,9 +63,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.formWidget          = phpr.Calendar.Form;
     },
 
-    _renderTemplate:function() {
+    renderTemplate:function() {
         // Summary:
-        //   Custom _renderTemplate for calendar
+        //   Custom renderTemplate for calendar
         this.render(["phpr.Calendar.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             changeDate: phpr.nls.get('Change date'),
             today:      phpr.nls.get('Today'),
@@ -75,9 +75,9 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         });
     },
 
-    _setWidgets:function() {
+    setWidgets:function() {
         // Summary:
-        //   Custom _setWidgets for calendar
+        //   Custom setWidgets for calendar
         phpr.Tree.loadTree();
         this.loadAppropriateList();
     },

@@ -36,9 +36,9 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         dojo.subscribe("Gantt.revertSlider", this, "revertSlider");
     },
 
-    _renderTemplate:function() {
+    renderTemplate:function() {
         // Summary:
-        //   Custom _renderTemplate for gantt
+        //   Custom renderTemplate for gantt
         var projectPeriodHelp = phpr.nls.get('Click on a Project timeline and see and/or change here the Start and End '
             + 'dates.');
         this.render(["phpr.Gantt.template", "mainContent.html"], dojo.byId('centerMainContent'), {
@@ -48,9 +48,9 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         });
     },
 
-    _setWidgets:function() {
+    setWidgets:function() {
         // Summary:
-        //   Custom _setWidgets for gantt
+        //   Custom setWidgets for gantt
         phpr.Tree.loadTree();
         this.gantt = new phpr.Project.GanttBase(this);
         this._url  = phpr.webpath + 'index.php/Gantt/index/jsonGetProjects/nodeId/' + phpr.currentProjectId;
@@ -102,8 +102,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                     this.gantt.convertStampToIndex(1000 * this.gantt.projectDataBuffer[j].start),
                     this.gantt.convertStampToIndex(1000 * this.gantt.projectDataBuffer[j].end)
                 );
-                var projectName   = new String(this.buildProjectName(j));
-                var projectChilds = new String(this.gantt.projectDataBuffer[j].childs)
+                var projectName   = this.buildProjectName(j).toString();
+                var projectChilds = this.gantt.projectDataBuffer[j].childs.toString();
                 var projectLevel  = this.gantt.projectDataBuffer[j].level;
                 var display       = (projectLevel == 10) ? 'block' : 'none';
                 var writeAccess   = data["rights"]["currentUser"][this.gantt.projectDataBuffer[j].id] || false;

@@ -30,9 +30,9 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         dojo.subscribe("Statistic.changeDate", this, "changeDate");
     },
 
-    _renderTemplate:function() {
+    renderTemplate:function() {
         // Summary:
-        //   Custom _renderTemplate for statistic
+        //   Custom renderTemplate for statistic
         this.render(["phpr.Statistic.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             webpath:            phpr.webpath,
             selectedPeriodText: phpr.nls.get('Selected Statistic Period'),
@@ -40,9 +40,9 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         });
     },
 
-    _setWidgets:function() {
+    setWidgets:function() {
         // Summary:
-        //   Custom _setWidgets for statistic
+        //   Custom setWidgets for statistic
         phpr.Tree.loadTree();
         var today  = new Date();
         var start  = new Date(today.getFullYear(), today.getMonth(), 1);

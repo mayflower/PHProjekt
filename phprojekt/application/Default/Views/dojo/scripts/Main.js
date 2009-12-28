@@ -57,6 +57,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.subscribe(module + ".processUrlHash", this, "processUrlHash");
         dojo.subscribe(module + ".processActionFromUrlHash", this, "processActionFromUrlHash");
         dojo.subscribe(module + ".setUrlHash", this, "setUrlHash");
+        dojo.subscribe(module + ".setGlobalVars", this, "setGlobalVars");
+        dojo.subscribe(module + ".renderTemplate", this, "renderTemplate");
+        dojo.subscribe(module + ".setNavigations", this, "setNavigations");
+        dojo.subscribe(module + ".setWidgets", this, "setWidgets");
 
         // Grid
         dojo.subscribe(module + ".gridProxy", this, "gridProxy");
@@ -224,13 +228,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
         //    The function is splitted in four for customize it
-        this._setGlobalVars();
-        this._renderTemplate();
-        this._setNavigations();
-        this._setWidgets();
+        this.setGlobalVars();
+        this.renderTemplate();
+        this.setNavigations();
+        this.setWidgets();
     },
 
-    _setGlobalVars:function() {
+    setGlobalVars:function() {
         // Summary:
         //    Set the current module vars
         // Description:
@@ -240,7 +244,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         phpr.parentmodule = '';
     },
 
-    _renderTemplate:function() {
+    renderTemplate:function() {
         // Summary:
         //    Render the module
         // Description:
@@ -248,7 +252,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
     },
 
-    _setNavigations:function() {
+    setNavigations:function() {
         // Summary:
         //    Set some navigation stuff
         // Description:
@@ -266,7 +270,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.setSearchForm();
     },
 
-    _setWidgets:function() {
+    setWidgets:function() {
         // Summary:
         //    Set and start the widgets of the module
         // Description:
