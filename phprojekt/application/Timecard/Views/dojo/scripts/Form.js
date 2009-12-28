@@ -416,14 +416,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             var endTime   = data[0]['endTime'].substr(0,5);
             var startTime = data[0]['startTime'].substr(0,5);
             if (endTime == 0 || endTime == null) {
-                var hour = parseInt(startTime) + 1;
-                if (hour < 10) {
-                    hour = '0' + hour;
-                }
-                var endTime = hour + ':00';
+                var hour    = parseInt(startTime) + 1;
+                var endTime = phpr.Date.getIsoTime(hour + '00');
             }
-            this.updateForm(this.dateObject, startTime, endTime, data[0]['projectId'],
-                data[0]['notes']);
+            this.updateForm(this.dateObject, startTime, endTime, data[0]['projectId'], data[0]['notes']);
             dojo.byId('notes').focus();
         })});
     },
@@ -436,14 +432,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         this.id = 0;
         start   = parseInt(start);
         var hour = start + 1;
-        if (hour < 10) {
-            hour = '0' + hour;
-        }
-        var end  = hour + ':00';
-        if (start < 10) {
-            start = '0' + start;
-        }
-        start = start + ':00';
+        var end  = phpr.Date.getIsoTime(hour + '00');
+        start    = phpr.Date.getIsoTime(start + '00');
         this.updateForm(this.dateObject, start, end, '', "\n");
         dojo.byId('projectId').focus();
     },
@@ -482,15 +472,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Return the current HH:mm
         // Description:
         //    Return the current HH:mm
-        var now    = new Date();
-        var hour   = now.getHours();
-        var minute = now.getMinutes();
-        if (hour < 10) {
-            hour   = "0" + hour;
-        }
-        if (minute < 10) {
-            minute = "0" + minute;
-        }
-        return phpr.Date.getIsoTime(hour + ':' + minute);
+        return phpr.Date.getIsoTime(new Date());
     }
 });

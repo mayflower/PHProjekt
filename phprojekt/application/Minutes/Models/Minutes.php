@@ -107,19 +107,4 @@ class Minutes_Models_Minutes extends Phprojekt_Item_Abstract
 
         return $minutes;
     }
-
-    /**
-     * Customized save, forces status field to be zero - is calculated on loading
-     *
-     * @return void
-     */
-    public function save()
-    {
-        // Force status=0 if not status==4 (FINAL)
-        if (4 != $this->itemStatus) {
-            $this->itemStatus = 0;
-        }
-
-        return parent::save();
-    }
 }

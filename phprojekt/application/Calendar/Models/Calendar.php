@@ -672,7 +672,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Interval'),
                                'value' => Phprojekt::getInstance()->translate($interval));
 
-        if ($until !== null) {
+        if (false === empty($until)) {
             $year      = substr($until, 0, 4);
             $month     = substr($until, 4, 2);
             $dayNum    = substr($until, 6, 2);
@@ -685,7 +685,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                                    'value' => $this->translateDate($untilDesc));
         }
 
-        if ($byday !== null) {
+        if (false === empty($byday)) {
             switch ($byday) {
                 case 'MO':
                     $weekDay = "Monday";
@@ -901,7 +901,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     {
         $notification = Phprojekt_Loader::getModel('Calendar', 'Notification');
         $notification->setModel($this);
-
         return $notification;
     }
 

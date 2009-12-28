@@ -210,8 +210,8 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
         var date         = (itemvalue) ? phpr.Date.isoDatetimeTojsDate(itemvalue) : new Date();
-        var valueForDate = phpr.Date.getIsoDate(date);
-        var valueForTime = phpr.Date.getIsoTime(date);
+        var valueForDate = phpr.Date.getIsoDate(date) || '';
+        var valueForTime = phpr.Date.getIsoTime(date) || '';
         var html = this.render(["phpr.Default.template", "formdatetime.html"], null, {
                             label:        itemlabel,
                             labelfor:     (itemdisabled) ? itemid + "_disabled" : itemid,

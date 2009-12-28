@@ -365,15 +365,15 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                         this.formdata[itemtab] += this.fieldTemplate.checkRender(itemlabel, itemid, itemvalue,
                                                     itemdisabled, itemhint);
                         break;
-                    case'selectbox':
+                    case 'selectbox':
                         this.formdata[itemtab] += this.fieldTemplate.selectRender(itemrange, itemlabel, itemid,
                                                     itemvalue, itemrequired, itemdisabled, itemhint);
                         break;
-                    case'multipleselectbox':
+                    case 'multipleselectbox':
                         this.formdata[itemtab] += this.fieldTemplate.multipleSelectRender(itemrange, itemlabel, itemid,
                                                     itemvalue, itemrequired, itemdisabled, 5, "multiple", itemhint);
                         break;
-                    case'date':
+                    case 'date':
                         this.formdata[itemtab] += this.fieldTemplate.dateRender(itemlabel, itemid, itemvalue,
                                                     itemrequired, itemdisabled, itemhint);
                         break;
@@ -381,7 +381,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                         this.formdata[itemtab] += this.fieldTemplate.timeRender(itemlabel, itemid, itemvalue,
                                                     itemrequired, itemdisabled, itemhint);
                         break;
-                    case'datetime':
+                    case 'datetime':
                         this.formdata[itemtab] += this.fieldTemplate.datetimeRender(itemlabel, itemid, itemvalue,
                                                     itemrequired, itemdisabled, itemhint);
                         break;
