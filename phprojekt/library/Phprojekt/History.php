@@ -71,7 +71,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                 $history->oldValue = $difference['oldValue'];
                 $history->newValue = $difference['newValue'];
                 $history->action   = $action;
-                $history->datetime = date("Y-m-d H:i:s");
+                $history->datetime = gmdate("Y-m-d H:i:s");
                 $history->save();
             }
         } else {
@@ -118,8 +118,11 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                     $cloneFieldName  = $clone->$fieldName;
                 }
                 if ($objectFieldName != $cloneFieldName) {
-                    $differences[$fieldName] = array('oldValue' => $clone->$fieldName,
-                                                     'newValue' => $object->$fieldName);
+                    $oldValue = $this->_convertDateTimes($clone->$fieldName, $value['type'], 'userToUtc');
+                    $newValue = $this->_convertDateTimes($object->$fieldName, $value['type'], 'userToUtc');
+
+                    $differences[$fieldName] = array('oldValue' => $oldValue,
+                                                     'newValue' => $newValue);
                 }
             }
         } else if ($action == 'add') {
@@ -131,6 +134,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                     $objectFieldName = $object->$fieldName;
                 }
                 if (!empty($objectFieldName)) {
+                    $newValue = $this->_convertDateTimes($object->$fieldName, $value['type'], 'userToUtc');
+
                     $differences[$fieldName] = array('oldValue' => '',
                                                      'newValue' => $object->$fieldName);
                 }
@@ -138,6 +143,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         } else if ($action == 'delete') {
             foreach ($fields as $value) {
                 $fieldName = $value['key'];
+                $oldValue  = $this->_convertDateTimes($clone->$fieldName, $value['type'], 'userToUtc');
+
                 $differences[$fieldName] = array('oldValue' => $clone->$fieldName,
                                                  'newValue' => '');
             }
@@ -207,6 +214,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                 $newValue = $row->newValue;
                 $label    = $row->field;
             }
+            $oldValue = $this->_convertDateTimes($oldValue, $fields[$row->field]['type'], 'utcToUser');
+            $newValue = $this->_convertDateTimes($newValue, $fields[$row->field]['type'], 'utcToUser');
 
             if ($oldValue != $newValue) {
                 $result[] = array('userId'   => (int) $row->userId,
@@ -217,7 +226,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                                   'oldValue' => $oldValue,
                                   'newValue' => $newValue,
                                   'action'   => $row->action,
-                                  'datetime' => $row->datetime);
+                                  'datetime' => $this->_convertDateTimes($row->datetime, 'datetime', 'utcToUser'));
             }
         }
 
@@ -299,5 +308,25 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         }
 
         return 0;
+    }
+
+    /**
+     * Convert time and datetimes values into uset or utc values
+     *
+     * @param mix    $value Current value
+     * @param string $type  Type of the field
+     * @param string $side  utcToUser or userToUtc, used for convert times
+
+     * @return mix
+     */
+    private function _convertDateTimes($value, $type, $side)
+    {
+        if ($type == 'datetime') {
+            $value = date("Y-m-d H:i:s", Phprojekt_Converter_Time::$side($value));
+        } else if ($type == 'time') {
+            $value = date("H:i:s", Phprojekt_Converter_Time::$side($value));
+        }
+
+        return $value;
     }
 }
