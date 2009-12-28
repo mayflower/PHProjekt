@@ -217,9 +217,9 @@ class Calendar_IndexController extends IndexController
     {
         $message       = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
         $id            = (int) $this->getRequest()->getParam('id');
-        $startDatetime = Cleaner::sanitize('timestamp', $this->getRequest()->getParam('startDatetime',
+        $startDatetime = Cleaner::sanitize('datetime', $this->getRequest()->getParam('startDatetime',
             date("Y-m-d H:i:s")));
-        $endDatetime = Cleaner::sanitize('timestamp', $this->getRequest()->getParam('endDatetime',
+        $endDatetime = Cleaner::sanitize('datetime', $this->getRequest()->getParam('endDatetime',
             date("Y-m-d H:i:s")));
         $rrule                = (string) $this->getRequest()->getParam('rrule', null);
         $participants         = (array) $this->getRequest()->getParam('dataParticipant');

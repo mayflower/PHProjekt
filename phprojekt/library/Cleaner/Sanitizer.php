@@ -47,6 +47,7 @@ class Cleaner_Sanitizer
         'isodate'      => 'IsoDate',
         'time'         => 'IsoTime',
         'isotime'      => 'IsoTime',
+        'datetime'     => 'IsoTimestamp',
         'timestamp'    => 'IsoTimestamp',
         'isotimestamp' => 'IsoTimestamp',
         'numeric'      => 'Numeric',
