@@ -524,7 +524,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // Description:
         //    Set the Container
         var tabContainer = new dijit.layout.TabContainer({
-            style: 'height:100%;'
+            style:   'height: 100%;',
+            useMenu: false
         }, document.createElement('div'));
         dojo.connect(tabContainer, 'selectChild', dojo.hitch(this, function() {
             dojo.byId('completeContent').focus();

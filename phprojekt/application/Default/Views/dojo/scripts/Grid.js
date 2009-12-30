@@ -971,6 +971,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             this.setClickEdit();
 
             this._node.attr('content', this.grid.domNode);
+            this.grid.startup();
             this.loadGridSorting();
             this.loadGridScroll();
 

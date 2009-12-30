@@ -26,6 +26,10 @@
     font-weight: 600;
 }
 
+.phprojekt .dijitTabButtonIcon {
+    display: none;
+}
+
 .phprojekt .dijitTab {
     line-height: normal;
     margin:0 2px 0 0; /* space between one tab and the next in top/bottom mode */
@@ -33,11 +37,18 @@
     color: #243C5F;
 }
 
+.phprojekt .dijitTabListContainer-top {
+    height: 25px !important;
+}
+
+.phprojekt .dijitTabContainer .dijitTabListWrapper {
+    height: 25px !important;
+}
+
 .phprojekt .dijitTabInnerDiv .dijitTabContent {
     color: #CBCBCB;
-    padding: 5px 3px 4px 4px;
+    padding: 5px 7px 4px 2px;
     position: relative;
-    padding-right: 7px;
 }
 
 .dijitTabSpacer {
@@ -85,7 +96,7 @@
     color: white;
     background: #294064;
     text-decoration: none;
-    background: url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat
+    background: url("../images/nav_main/tab-left-hover.gif") left bottom no-repeat;
 }
 
 .phprojekt .dijitTabChecked .dijitTabInnerDiv .dijitTabContent {

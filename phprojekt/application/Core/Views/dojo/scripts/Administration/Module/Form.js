@@ -110,9 +110,18 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             tabs:        tabs
         });
         dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
-        dijit.byId('moduleDesignerEditor').startup();
         phpr.makeModuleDesignerSource();
         phpr.makeModuleDesignerTarget(dijit.byId('designerData').attr('value'), this.tabStore.getList());
+
+        // Select the first tab, since the tabs in the dialog don't work on dojo 1.4
+        dijit.byId('moduleDesignerEditor').startup();
+        var parent = dijit.byId('moduleDesignerTarget');
+        parent._showChild(dijit.byId(parent.containerNode.children[0].id));
+
+        dijit.byId('moduleDesignerTarget').startup();
+        var parent = dijit.byId('moduleDesignerEditor');
+        parent._showChild(dijit.byId(parent.containerNode.children[0].id));
+
         dialog.show();
 
         dojo.connect(dijit.byId('moduleManagerDialog'), "hide",  dojo.hitch(this, "processDialogData"));

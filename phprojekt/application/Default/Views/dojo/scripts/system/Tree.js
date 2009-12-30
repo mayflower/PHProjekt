@@ -138,37 +138,49 @@ dojo.declare("phpr.Tree", phpr.Component, {
         var _this = this;
 
         // Remove last bold
-        this.tree.model.store.fetchItemByIdentity({identity: phpr.treeLastProjectSelected,
-            onItem:function(item) {
-                if (item) {
-                    var node = _tree._itemNodeMap[item.id];
-                    if (node) {
-                        dojo.removeClass(node.labelNode, "selected");
-                    }
-                }
-        }});
+        var node = _this.getNodeByidentity(phpr.treeLastProjectSelected);
+        if (node) {
+            dojo.removeClass(node.labelNode, "selected");
+        }
 
         if (id > 1) {
-            // Add new bold
+            // Expan the parents
             this.tree.model.store.fetchItemByIdentity({identity: id,
                 onItem:function(item) {
                     if (item) {
                         var paths = item.path.toString().split("\/");
                         for (i in paths) {
                             if (Math.abs(paths[i]) > 1) {
-                                node = _tree._itemNodeMap[paths[i]];
-                                _tree._expandNode(node);
+                                _tree._expandNode(_this.getNodeByidentity(paths[i]));
                             }
-                        }
-                        var node = _tree._itemNodeMap[item.id];
-                        if (node) {
-                            _tree.focusNode(node);
-                            dojo.addClass(node.labelNode, "selected");
-                            phpr.treeLastProjectSelected = item.id;
                         }
                     }
             }});
+
+            // Add new bold
+            var node = _this.getNodeByidentity(id);
+            if (node) {
+                _tree.focusNode(node);
+                dojo.addClass(node.labelNode, "selected");
+                phpr.treeLastProjectSelected = id;
+            }
         }
+    },
+
+    getNodeByidentity:function(identity) {
+        // Summary:
+        //    Return the node by identity
+        // Description:
+        //    Return the node by identity
+        var nodes = this.tree._itemNodesMap[identity];
+        if (nodes && nodes.length){
+            // Select the first item
+            node = nodes[0];
+        } else {
+            node = nodes;
+        }
+
+        return node;
     },
 
     processData:function(data) {
