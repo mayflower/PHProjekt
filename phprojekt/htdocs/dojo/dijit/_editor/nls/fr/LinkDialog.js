@@ -1,0 +1,1 @@
+({"set":"Définir","text":"Description :","insertImageTitle":"Propriétés de l'image","url":"URL :","createLinkTitle":"Propriétés du lien","newWindow":"New Window","topWindow":"Topmost Window","target":"Target:","parentWindow":"Parent Window","currentWindow":"Current Window"})
