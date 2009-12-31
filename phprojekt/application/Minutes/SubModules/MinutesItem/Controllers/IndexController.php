@@ -271,7 +271,8 @@ class MinutesItem_IndexController extends IndexController
         $minutesId = (int) $this->getRequest()->getParam('minutesId');
         $items     = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem')->init($minutesId)->fetchAll();
 
-        $return = array('data' => array());
+        $return = array('data' => array(array('id'   => 0,
+                                              'name' => '')));
         foreach ($items as $item) {
             $return['data'][] = array('id'   => $item->sortOrder,
                                       'name' => $item->title);

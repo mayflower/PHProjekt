@@ -106,11 +106,11 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
         }, document.createElement('div'));
         this.detailsBox = new dijit.layout.ContentPane({
             region: 'center',
-            style:  'height: auto;'
+            style:  'height: 85%;'
         }, document.createElement('div'));
         this.buttonsBox = new dijit.layout.ContentPane({
             region:    'bottom',
-            style:     'height: auto; padding-left: 15.6%;',
+            style:     'height: 10%; padding-left: 15.6%;',
             baseClass: 'footer'
         }, document.createElement('div'));
 

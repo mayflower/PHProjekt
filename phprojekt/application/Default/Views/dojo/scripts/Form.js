@@ -283,9 +283,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             id:    id,
             title: phpr.nls.get(title)
         });
-        dojo.addOnLoad(function(){
-            dijit.byId(id).resize();
-        });
         tab.attr('content', html);
         this.form.addChild(tab);
         if (typeof formId != "undefined") {

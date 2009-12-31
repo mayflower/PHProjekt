@@ -848,7 +848,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         dijit.byId('filterDisplayDiv').attr('content', html);
 
         if (filters.length > 0) {
-            if (this._deleteAllFilters === null) {
+            if (this._deleteAllFilters === null && dojo.byId("filterDisplayDelete").children.length == 0) {
                 var params = {
                     label:     phpr.nls.get('Delete all filters'),
                     showLabel: true,
