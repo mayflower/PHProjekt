@@ -322,7 +322,7 @@ final class Default_Helpers_Right
                 // Add already existing rights of the item,
                 // except for the new assignedUser
                 // except for the old assignedUser
-                $currentRights = $model->getRights();
+                $currentRights = $model->getUsersRights();
                 $rightsType    = array('access', 'read', 'write', 'create', 'copy', 'delete', 'download', 'admin');
                 foreach ($currentRights as $userRights) {
                     $userId = $userRights['userId'];
