@@ -274,7 +274,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                                     url:         phpr.globalModuleUrl,
                                     processData: dojo.hitch(this, function() {
                                         this.main.setGlobalModulesNavigation();
-                                        this.publish("setUrlHash", [phpr.module]);
+                                        this.publish("setUrlHash", [phpr.parentmodule, null, [phpr.module]]);
                                     })
                                 });
                             }
