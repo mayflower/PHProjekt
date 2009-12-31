@@ -824,11 +824,12 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // Description:
         //    This function renders the history data
         if (this.id > 0) {
+            dojo.byId('historyContent').innerHTML = '';
             this._historyUrl = phpr.webpath + 'index.php/Core/history/jsonList/nodeId/1/moduleName/' + phpr.module
                 + '/itemId/' + this.id
             phpr.DataStore.addStore({'url': this._historyUrl, 'noCache': true});
             phpr.DataStore.requestData({'url': this._historyUrl, 'processData': dojo.hitch(this, function() {
-                var content = this.render(["phpr.Default.template.history", "data.html"], dojo.byId('historyContent'), {
+                this.render(["phpr.Default.template.history", "data.html"], dojo.byId('historyContent'), {
                     dateTxt:     phpr.nls.get('Date'),
                     userTxt:     phpr.nls.get('User'),
                     fieldTxt:    phpr.nls.get('Field'),
