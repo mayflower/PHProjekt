@@ -274,7 +274,7 @@ class MinutesItem_IndexController extends IndexController
         $return = array('data' => array(array('id'   => 0,
                                               'name' => '')));
         foreach ($items as $item) {
-            $return['data'][] = array('id'   => $item->sortOrder,
+            $return['data'][] = array('id'   => (int) $item->sortOrder,
                                       'name' => $item->title);
         }
 

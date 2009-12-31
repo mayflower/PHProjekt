@@ -198,7 +198,7 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('minutesId', 3);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '[{"id":"1","name":"DerTitel"},{"id":"2","name":"SecondTitle"}]';
+        $expected = '[{"id":0,"name":""},{"id":1,"name":"DerTitel"},{"id":2,"name":"SecondTitle"}]';
         $this->assertContains($expected, $response);
     }
 
@@ -319,8 +319,8 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
 
-        $this->assertContains('[{"id":"1","name":"DerTitel"},'
-            . '{"id":"2","name":"StatementTitle"},{"id":"3","name":"SecondTitleSecondSave"}',
+        $this->assertContains('[{"id":0,"name":""},{"id":1,"name":"DerTitel"},'
+            . '{"id":2,"name":"StatementTitle"},{"id":3,"name":"SecondTitleSecondSave"}',
             $response);
     }
 
