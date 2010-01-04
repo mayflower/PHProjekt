@@ -69,10 +69,18 @@ class Phprojekt_Converter_Time
      */
     public static function convert($value, $side)
     {
-        $timeZoneComplement = (int) Phprojekt_User_User::getSetting("timeZone", 'UTC') * $side;
-        $u                  = strtotime($value);
+        $timeZone = Phprojekt_User_User::getSetting("timeZone", 'UTC');
+        if (strstr($timeZone, "_")) {
+            list ($hours, $minutes) = explode("_", $timeZone);
+        } else {
+            $hours   = (int) $timeZone;
+            $minutes = 0;
+        }
+        $hoursComplement   = $hours * $side;
+        $minutesComplement = $minutes * $side;
+        $u                 = strtotime($value);
 
-        return mktime(date("H", $u) + $timeZoneComplement, date("i", $u),
+        return mktime(date("H", $u) + $hoursComplement, date("i", $u) + $minutesComplement,
             date("s", $u), date("m", $u), date("d", $u), date("Y", $u));
     }
 }
