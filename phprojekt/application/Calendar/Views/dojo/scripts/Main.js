@@ -91,11 +91,11 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             this.loadDayListSelect();
         } else if (this.weekList) {
             this.loadWeekList();
-        } else if (this.monthList) {
-            this.loadMonthList();
-        } else {
-            // Nothing else loaded? Then loads the default one
+        } else if (this.grid) {
             this.loadGrid();
+        } else {
+            // Nothing else loaded? Then loads the default one (Month)
+            this.loadMonthList();
         }
     },
 
