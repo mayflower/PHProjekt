@@ -153,8 +153,7 @@ final class Minutes_Helpers_Pdf
         $owner                           = Minutes_Helpers_Userlist::expandIdList($minutesModel->ownerId);
         $pdf->properties['Author']       = $owner[0]['display'];
         $pdf->properties['Producer']     = 'PHProjekt version ' . Phprojekt::getVersion();
-        $pdf->properties['CreationDate'] = 'D:' . gmdate('YmdHis') . sprintf("%+02d'00'",
-            (int) Phprojekt_User_User::getSetting("timeZone", 'UTC'));
+        $pdf->properties['CreationDate'] = 'D:' . gmdate('YmdHis');
         $pdf->properties['Keywords'] = $minutesModel->description;
 
         return $pdf->render();
