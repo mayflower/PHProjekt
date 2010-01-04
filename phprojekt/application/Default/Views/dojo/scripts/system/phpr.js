@@ -1228,3 +1228,30 @@ phpr.isGlobalModule = function(module) {
     }
     return false;
 };
+
+dojo.declare("phpr.ItemCache", null, {
+    // Summary:
+    //    Keep and return the last item per module per project
+    _internalCache: new Array(),
+
+    addItem:function(project, module, id) {
+        // Summary:
+        //    Add the last item of one module for one project
+        if (typeof this._internalCache[project] == 'undefined') {
+            this._internalCache[project] = new Array();
+        }
+        this._internalCache[project][module] = id;
+    },
+
+    getItem:function(project, module) {
+        // Summary:
+        //    Get the last item of one module for one project
+        if (typeof this._internalCache[project] != 'undefined') {
+            if (this._internalCache[project][module]) {
+                return this._internalCache[project][module];
+            }
+        }
+
+        return null;
+    }
+});

@@ -185,6 +185,7 @@ class JsController extends IndexController
                 phpr.BreadCrumb       = new phpr.BreadCrumb();
                 phpr.frontendMessage  = new phpr.FrontendMessage();
                 phpr.Tree             = new phpr.Tree();
+                phpr.ItemCache        = new phpr.ItemCache();
                 phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";
         ';
 

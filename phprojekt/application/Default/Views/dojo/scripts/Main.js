@@ -526,6 +526,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     var url = new Array([module, "id", id]);
                 }
             }
+            // Save the last item
+            phpr.ItemCache.addItem(phpr.currentProjectId, module, id);
         } else if (module && id == 0) {
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,0 (Open form for add in normal modules)
@@ -546,11 +548,21 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             }
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId (Reload a module -> List view)
-                var url = new Array([module, phpr.currentProjectId]);
+                var lastId = phpr.ItemCache.getItem(phpr.currentProjectId, module);
+                if (null !== lastId) {
+                    var url = new Array([module, phpr.currentProjectId, "id", lastId]);
+                } else {
+                    var url = new Array([module, phpr.currentProjectId]);
+                }
             } else {
-                phpr.currentProjectId = phpr.rootProjectId;
                 // GlobalModule (Reload a global module -> List view)
-                var url = new Array([module]);
+                phpr.currentProjectId = phpr.rootProjectId;
+                var lastId = phpr.ItemCache.getItem(phpr.currentProjectId, module);
+                if (null !== lastId) {
+                    var url = new Array([module, "id", lastId]);
+                } else {
+                    var url = new Array([module]);
+                }
             }
         }
 
