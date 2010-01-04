@@ -516,6 +516,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,xx (Open form for edit in normal modules)
                 var url = new Array([module, phpr.currentProjectId, "id", id]);
+                // Save the last item
+                phpr.ItemCache.addItem(phpr.currentProjectId, module, id);
             } else {
                 phpr.currentProjectId = phpr.rootProjectId;
                 if (params && params.length > 0) {
@@ -524,10 +526,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 } else {
                     // GlobalModule,id,xx (Open form for edit in global modules)
                     var url = new Array([module, "id", id]);
+                    // Save the last item
+                    phpr.ItemCache.addItem(phpr.currentProjectId, module, id);
                 }
             }
-            // Save the last item
-            phpr.ItemCache.addItem(phpr.currentProjectId, module, id);
         } else if (module && id == 0) {
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,0 (Open form for add in normal modules)
@@ -558,7 +560,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 // GlobalModule (Reload a global module -> List view)
                 phpr.currentProjectId = phpr.rootProjectId;
                 var lastId = phpr.ItemCache.getItem(phpr.currentProjectId, module);
-                if (null !== lastId) {
+                if (null !== lastId && module != 'Adminisration') {
                     var url = new Array([module, "id", lastId]);
                 } else {
                     var url = new Array([module]);
