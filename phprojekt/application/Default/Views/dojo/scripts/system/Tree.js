@@ -140,7 +140,7 @@ dojo.declare("phpr.Tree", phpr.Component, {
         // Remove last bold
         var node = _this.getNodeByidentity(phpr.treeLastProjectSelected);
         if (node) {
-            dojo.removeClass(node.labelNode, "selected");
+            dojo.removeClass(node.rowNode, "selected");
         }
 
         if (id > 1) {
@@ -161,7 +161,7 @@ dojo.declare("phpr.Tree", phpr.Component, {
             var node = _this.getNodeByidentity(id);
             if (node) {
                 _tree.focusNode(node);
-                dojo.addClass(node.labelNode, "selected");
+                dojo.addClass(node.rowNode, "selected");
                 phpr.treeLastProjectSelected = id;
             }
         }

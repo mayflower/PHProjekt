@@ -1,209 +1,71 @@
 /* Tree */
 
 .phprojekt .dijitTreeNode {
-    background-color: #F8F8F8;
+    background : url('images/treeI.gif') no-repeat;
+    background-position : top left;
+    background-repeat : repeat-y;
+    zoom: 1;    /* MOW: what the heck is this doing in here? */
 }
+
+.phprojekt .dijitTreeNodeHover {
+    /* using a transparent png so that we can still see grid lines, which are (unfortunately) behind the dijitRowNode that we are hovering over */
+    background-image: url('images/treeHover.png');
+    background-repeat: repeat;
+    background-color: none !important;
+}
+
 
 /* left vertical line (grid) for all nodes */
 .phprojekt .dijitTreeIsLast {
+    background: url('images/treeI_half.gif') no-repeat;
 }
 
 .phprojekt .dijitTreeLabel {
-    margin-left: 0px;
+    font-weight: normal;
+    margin-left: 3px;
 }
 
 .phprojekt .dijitTreeIsRoot {
-    color: #fff;
-    background-color: #F8F8F8;
-    border-bottom: 4px #F8F8F8 solid;
-    text-transform: uppercase;
-    margin-left: 0px;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeIsRoot .dijitTreeContent {
-    color: #fff;
-    background-color: #F1CE47;
-    margin-left: 0px;
+    margin-left: 0;
+    background-image: none;
 }
 
 .phprojekt .dijitTreeExpando {
     width: 18px;
     height: 18px;
-    margin-left: 0px;
-    cursor: pointer;
 }
 
-/**** Level 1 ****/
-.phprojekt .dijitTreeNode .dijitTreeExpando {
-    margin-left: 0px;
-    background-color: #F1CE47;
+.phprojekt .dijitTreeRow {
+    /* so insert line shows up on IE when dropping after a target element */
+    padding-bottom: 2px;
 }
 
-.phprojekt .dijitTreeNode .dijitTreeRow {
-    background-color: #F1CE47;
-    height: 20px;
-}
-
-.phprojek .dijitTreeNode .dijitTreeNodeHover {
-    color: #4b4b4b;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeContent {
-    margin-left: 0px;
+.phprojekt .dijitTreeContent {
     min-height: 18px;
     min-width: 18px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #F1CE47;
-    border-bottom: 3px #F1CE47 solid;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
+    padding-left:1px;
 }
 
-.phprojekt .dijitTreeNode .dijitTreeContent .selected {
-    color: #000;
-}
 
-/**** Level 2 ****/
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeExpando  {
-    margin-left: 0px;
-    background-color: #F1CE47;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeRow {
-    background-color: #F1CE47;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {
-    color: #4b4b4b;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeContent {
-    margin-left: 0px;
-    min-height: 18px;
-    min-width: 18px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #F1CE47;
-    border-bottom: 3px #F1CE47 solid;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeContent .selected {
-    color: #000;
-}
-
-/**** Level 3 ****/
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando {
-    margin-left: 12px;
-    background-color: #F8F8F8;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeRow {
-    background-color: #F8F8F8;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {
-    color: #4b4b4b;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent {
-    min-height: 18px;
-    min-width: 18px;
-    color: #000;
-    font-weight: normal;
-    background-color: #F8F8F8;
-    border-bottom: 3px #f3f3f3 solid;
-    text-transform: none;
-    text-decoration: none;
-    margin-left: 0px;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent .selected {
-    font-weight: bold;
-}
-
-/**** Level 4 ****/
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando {
-    margin-left: 24px;
-    background-color: #F8F8F8;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeRow {
-    background-color: #F8F8F8;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {
-    color: #4b4b4b;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent {
-    min-height: 18px;
-    min-width: 18px;
-    color: #000;
-    font-weight: normal;
-    background-color: #F8F8F8;
-    border-bottom: 3px #f3f3f3 solid;
-    text-transform: none;
-    text-decoration: none;
-    margin-left: 0px;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent .selected {
-    font-weight: bold;
-}
-
-/**** Level 5 ****/
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeExpando {
-    margin-left: 36px;
-    background-color: #F8F8F8;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode.dijitTreeNode .dijitTreeNode  .dijitTreeRow {
-    background-color: #F8F8F8;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNodeHover {
-    color: #4b4b4b;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent {
-    min-height: 18px;
-    min-width: 18px;
-    color: #000;
-    font-weight: normal;
-    background-color: #F8F8F8;
-    border-bottom: 3px #f3f3f3 solid;
-    text-transform: none;
-    text-decoration: none;
-    margin-left: 0px;
-}
-
-.phprojekt .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeNode .dijitTreeContent .selected {
-    font-weight: bold;
+.phprojekt .dijitTreeExpand {
+    width: 18px;
+    height: 18px;
+    background-repeat : no-repeat;
 }
 
 /* same style as IE selection */
-.phprojekt .dijitTreeNode .dijitTreeNodeEmphasized {
+.phprojekt .dijitTreeNodeEmphasized {
     background-color: Highlight;
     color: HighlightText;
 }
 
 /* don't use :focus due to opera and IE's lack of support on div's */
-.phprojekt .dijitTreeNode .dijitTreeLabelFocused {
+.phprojekt .dijitTreeLabelFocused {
     outline: 1px invert dotted;
-    background: #dde7f2;
-    color: #fff;
 }
 
-/* don't use :focus due to opera and IE's lack of support on div's */
-.phprojekt .dijitTreeNode .dijitTreeContentFocused {
-    outline: 1px dotted;
-    background-color: #8392AB;
-    color: #fff;
+.phprojekt #treeNode .selected {
+    background:#b8cbec;
 }
 
 .phprojekt .dijitTreeExpandoOpened {
@@ -223,15 +85,39 @@
 }
 
 .phprojekt .dijitTreeIcon {
-    width: 5px;
+    # width: 16px;
+    # height: 16px;
 }
 
-/**** Genereal styles ****/
-.phprojekt .dijitTreeExpand {
-    width: 18px;
-    height: 18px;
-    background-repeat: no-repeat;
+.phprojekt .dijitFolderOpened {
+    # background: url('images/spriteDivIcons.gif') no-repeat -16px top;
+}
+
+.phprojekt .dijitFolderClosed {
+    # background: url('images/spriteDivIcons.gif') no-repeat top left;
 }
 
 .phprojekt .dijitLeaf {
+    background: url('images/spriteDivIcons.gif') no-repeat -32px top;
+}
+
+/* Drag and Drop on TreeNodes
+ * Put insert line on dijitTreeContent node so it's aligned w/
+ * (ie, indented equally with) target element, even
+ * though dijitTreeRowNode is the actual "drag object"
+ */
+.phprojekt .dijitTreeNode .dojoDndItemBefore,
+.phprojekt .dijitTreeNode .dojoDndItemAfter {
+    border-bottom: none;
+    border-top: none;
+}
+
+.phprojekt .dijitTreeNode .dojoDndItemBefore .dijitTreeContent {
+    /* copied from Common.css */
+    border-top: 2px solid #369;
+}
+
+.phprojekt .dijitTreeNode .dojoDndItemAfter .dijitTreeContent {
+    /* copied from Common.css */
+    border-bottom: 2px solid #369;
 }

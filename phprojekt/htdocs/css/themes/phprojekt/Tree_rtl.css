@@ -1,19 +1,8 @@
+
+
 /* Tree */
 .dijitRtl .phprojekt .dijitTreeContainer .dijitTreeNode {
-    background-image: url('images/treeI_rtl.gif');
-    background-position: top right;
-    margin-left: auto;
-    margin-right: 19px;
-}
-
-.dijitRtl .phprojekt .dijitTreeContainer .dijitTreeIsRoot {
-    margin-left: auto;
-    margin-right: 0;
-    background-image: none;
-}
-
-.dijitRtl .phprojekt .dijitTreeContainer .dijitTreeIsLast {
-    background-image: url('images/treeI_half_rtl.gif');
+    background-image : none;
 }
 
 .dijitRtl .phprojekt .dijitTreeContainer .dijitTreeContent {
@@ -30,5 +19,5 @@
 }
 
 .dijitRtl .phprojekt .dijitTreeContainer .dijitTreeExpandoLeaf {
-    background: url('images/spriteTree_rtl.gif') no-repeat -36px top;
+    background: none;
 }

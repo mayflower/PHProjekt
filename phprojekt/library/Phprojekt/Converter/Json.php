@@ -208,16 +208,20 @@ class Phprojekt_Converter_Json
     private static function _convertTree(Phprojekt_Tree_Node_Database $tree)
     {
         $treeNodes = array();
+        $index     = 0;
         foreach ($tree as $node) {
             $references = array();
             foreach ($node->getChildren() as $child) {
                 $references[] = array('_reference' => $child->id);
             }
-            $treeNodes[] = array('name'     => $node->title,
-                                 'id'       => $node->id,
-                                 'parent'   => $node->projectId,
-                                 'path'     => $node->path,
-                                 'children' => $references);
+            $treeNodes[$index] = array('name'     => $node->title,
+                                       'id'       => $node->id,
+                                       'parent'   => $node->projectId,
+                                       'path'     => $node->path);
+            if (!empty($references)) {
+                $treeNodes[$index]['children'] = $references;
+            }
+            $index++;
         }
 
         $data               = array();

@@ -108,7 +108,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonTree');
         $response = $this->getResponse();
         $this->assertContains('"identifier":"id","label":"name","items":[{"name":"Invisible Root"', $response);
-        $this->assertContains('"parent":"1","path":"/1/","children":[]}]}', $response);
+        $this->assertContains('"parent":"1","path":"/1/"}]}', $response);
     }
 
     /**
