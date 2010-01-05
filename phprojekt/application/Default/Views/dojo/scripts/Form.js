@@ -425,10 +425,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             this.form        = this.setFormContent();
             this.formsWidget = new Array();
 
+            var firstTab = true;
             for (t in tabs) {
                 if (this.formdata[tabs[t].id]) {
-                    this.formdata[tabs[t].id] += this.fieldTemplate.displayFieldRender('', 'requiredField' + tabs[t].id,
-                        '(*) ' + phpr.nls.get('Required Field'), '');
+                    if (firstTab) {
+                        this.setFormButtons(tabs[t].id);
+                        firstTab = false;
+                    }
                     this.addTab(this.formdata[tabs[t].id], 'tabBasicData' + tabs[t].id, tabs[t].name,
                         'dataFormTab' + tabs[t].id);
                 }
@@ -436,8 +439,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
             this._formNode.attr('content', this.form.domNode);
 
-            this.setFormButtons();
-
+            this.setActionFormButtons();
             this.addModuleTabs(data);
             this.addSubModulesTab();
 
@@ -490,19 +492,22 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         return fieldValues;
     },
 
-    setFormButtons:function() {
+    setFormButtons:function(tabId) {
         // Summary:
         //    Render the save and delete buttons
         // Description:
         //    Render the save and delete buttons
-        this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"), {
+        this.formdata[tabId] += this.render(["phpr.Default.template", "formbuttons.html"], null, {
             writePermissions:  this._writePermissions,
             deletePermissions: this._deletePermissions,
             saveText:          phpr.nls.get('Save'),
             deleteText:        phpr.nls.get('Delete')
         });
+    },
 
-        // Action buttons for the form
+    setActionFormButtons:function() {
+        // Summary:
+        //    Connect the buttons to the actions
         dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
         dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
     },

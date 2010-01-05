@@ -140,11 +140,9 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             dojo.byId('projectList').innerHTML = phpr.drawEmptyMessage('There are no valid projects');
         }
 
-        this.render(["phpr.Default.template", "formbuttons.html"], dojo.byId("bottomContent"), {
-            writePermissions:  data["rights"]["currentUser"]["write"],
-            deletePermissions: false,
-            saveText:          phpr.nls.get('Save'),
-            deleteText:        phpr.nls.get('Delete')
+        this.render(["phpr.Gantt.template", "formbuttons.html"], dojo.byId("bottomContent"), {
+            writePermissions: data["rights"]["currentUser"]["write"],
+            saveText:         phpr.nls.get('Save')
         });
 
         // Action buttons for the form

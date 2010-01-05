@@ -481,7 +481,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Summary:
         //     Clean the submodule div and destroy all the buttons
         phpr.destroySubWidgets('buttonRow');
-        phpr.destroySubWidgets('formButtons');
 
         // Remove all children from element
         phpr.destroySubWidgets("subModuleNavigation");

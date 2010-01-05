@@ -100,25 +100,13 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
             region: 'center'
         }, document.createElement('div'));
 
-        var tmpContent = new dijit.layout.ContentPane({
-            region: 'right',
-            style:  'width: 50%;'
-        }, document.createElement('div'));
         this.detailsBox = new dijit.layout.ContentPane({
-            region: 'center',
-            style:  'height: 85%;'
+            region: 'right',
+            style:  'width: 50%; height: 100%;'
         }, document.createElement('div'));
-        this.buttonsBox = new dijit.layout.ContentPane({
-            region:    'bottom',
-            style:     'height: 10%; padding-left: 15.6%;',
-            baseClass: 'footer'
-        }, document.createElement('div'));
-
-        tmpContent.domNode.appendChild(this.detailsBox.domNode);
-        tmpContent.domNode.appendChild(this.buttonsBox.domNode);
 
         borderContainer.addChild(this.gridBox);
-        borderContainer.addChild(tmpContent);
+        borderContainer.addChild(this.detailsBox);
         content.attr("content", borderContainer.domNode);
 
         dijit.byId(nodeId).attr('content', content);
@@ -293,51 +281,27 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
                           "nameId": 'subModuleTab' + this._tabNumber})
     },
 
-    setFormButtons:function() {
+    setFormButtons:function(tabId) {
         // Summary:
         //    Display buttons for the sub module instead of the default
         // Description:
         //    Display buttons for the sub module instead of the default
-        phpr.destroySubWidgets(this.main.buttonsBox.domNode.id);
-        this.main.buttonsBox.domNode.innerHTML = '';
+        this.formdata[tabId] += this.render(["phpr.Default.template", "formsubmodulebuttons.html"], null, {
+            saveText:   phpr.nls.get('Save'),
+            deleteText: phpr.nls.get('Delete'),
+            newText:    phpr.nls.get('New'),
+            id:         this.id
+        });
+    },
 
-        var params = {
-            label:     phpr.nls.get('Save'),
-            showLabel: true,
-            baseClass: 'positive',
-            iconClass: 'tick',
-            style:     'padding-right: 7px',
-            disabled:  false
-        };
-        this._submoduleSaveButton = new dijit.form.Button(params);
-        this.main.buttonsBox.domNode.appendChild(this._submoduleSaveButton.domNode);
-        dojo.connect(this._submoduleSaveButton, "onClick", dojo.hitch(this, "submitForm"));
-
+    setActionFormButtons:function() {
+        // Summary:
+        //    Connect the buttons to the actions
+        dojo.connect(dijit.byId("subModuleSubmitButton"), "onClick", dojo.hitch(this, "submitForm"));
         if (this.id > 0) {
-            var params = {
-                label:     phpr.nls.get('Delete'),
-                showLabel: true,
-                baseClass: 'positive',
-                iconClass: 'cross',
-                style:     'padding-right: 7px',
-                disabled:  false
-            };
-            this._submoduleDeleteButton = new dijit.form.Button(params);
-            this.main.buttonsBox.domNode.appendChild(this._submoduleDeleteButton.domNode);
-            dojo.connect(this._submoduleDeleteButton, 'onClick', dojo.hitch(this, "deleteForm"));
+            dojo.connect(dijit.byId("subModuleDeleteButton"), 'onClick', dojo.hitch(this, "deleteForm"));
         }
-
-        var params = {
-            label:     phpr.nls.get('New'),
-            showLabel: true,
-            baseClass: 'positive',
-            iconClass: 'add',
-            style:     'padding-right: 7px',
-            disabled:  false
-        };
-        this._submoduleNewButton = new dijit.form.Button(params);
-        this.main.buttonsBox.domNode.appendChild(this._submoduleNewButton.domNode);
-        dojo.connect(this._submoduleNewButton, 'onClick', dojo.hitch(this, function() {
+        dojo.connect(dijit.byId("subModuleNewButton"), 'onClick', dojo.hitch(this, function() {
             this.main.subForm = new this.main.formWidget(this.main, 0, phpr.module);
         }));
     },
