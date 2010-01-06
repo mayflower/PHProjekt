@@ -135,6 +135,9 @@ dojo.require("dijit.Editor");
 // Dojox base
 dojo.require("dojox.data.QueryReadStore");
 
+// Dojox form
+dojo.require("dojox.form.Rating");
+
 // Dojox grid
 dojo.require("dojox.grid._EditManager");
 dojo.require("dojox.grid._Events");

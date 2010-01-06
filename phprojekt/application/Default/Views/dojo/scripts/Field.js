@@ -326,6 +326,21 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         return html + this.disabledField(itemlabel, itemid, itemvalue, false, true);
     },
 
+    ratingFieldRender:function(itemlabel, itemid, itemvalue, itemdisabled, itemhint, itemrange) {
+        phpr.destroyWidget(itemid);
+        phpr.destroyWidget(itemid + "_disabled");
+        var html = this.render(["phpr.Default.template", "formrating.html"], null, {
+                            label:     itemlabel,
+                            labelfor:  (itemdisabled) ? itemid + "_disabled" : itemid,
+                            id:        (itemdisabled) ? itemid + "_disabled" : itemid,
+                            value:     itemvalue,
+                            numStars:  itemrange.id,
+                            disabled:  (itemdisabled) ? "disabled" : '',
+                            tooltip:   this.getTooltip(itemhint)
+                });
+        return html + this.disabledField(itemlabel, itemid, itemvalue, true, itemdisabled);
+    },
+
     disabledField:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         if (itemdisabled) {
             return this.hiddenFieldRender(itemlabel, itemid, itemvalue, itemrequired, false);

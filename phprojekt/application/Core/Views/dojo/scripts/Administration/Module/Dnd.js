@@ -61,7 +61,7 @@ phpr.makeModuleDesignerSource = function() {
         + phpr.nls.get('Edit the field in the bottom panel when this appear after the drop.')
         + '</div>';
     var types = new Array('text', 'date', 'time', 'datetime', 'selectValues', 'checkbox',
-                          'percentage', 'textarea', 'upload')
+                          'percentage', 'rating', 'textarea', 'upload')
 
     for (i in types) {
         var id = dojo.dnd.getUniqueId();
@@ -251,6 +251,11 @@ phpr.editModuleDesignerField = function(nodeId) {
             fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
                 'varchar', true, false);
             break;
+        case 'rating':
+            tableTypeRange.push({'id': 'int', 'name': 'INT'});
+            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'int', true, false);
+            break;
         case 'textarea':
             tableTypeRange.push({'id': 'text', 'name': 'TEXT'});
             fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
@@ -298,6 +303,13 @@ phpr.editModuleDesignerField = function(nodeId) {
                 + phpr.nls.get('For Modules queries, use Module#keyField#displayField.') + '<br />'
                 + phpr.nls.get('The API will get all the keyField of the module and will use the displayField for '
                 + 'show it.'));
+            break;
+        case 'rating':
+            if (!formRange) {
+                formRange = '10';
+            }
+            fieldsForm += template.textAreaRender(phpr.nls.get('Values'), 'formRange', formRange, true, false,
+                phpr.nls.get('Number of stars'));
             break;
     }
     fieldsForm += template.textFieldRender(phpr.nls.get('Default Value'), 'defaultValue', defaultValue, 0, false,
@@ -580,6 +592,12 @@ phpr.makeModuleDesignerField = function(formType, params) {
             inputTxt += '<div dojoType="dijit.form.HorizontalRule" container="bottomDecoration"';
             inputTxt += ' count="11" style="height:5px;"></div>';
             inputTxt += '</div>';
+            break;
+        case 'rating':
+            var numStars = params['formRange'] || 10;
+            formLabel = params['formLabel'] || 'Rating';
+            labelFor = 'rating';
+            inputTxt = '<div name="rating" dojoType="phpr.form.Rating" numStars="' + numStars + '"></div>';
             break;
         case 'textarea':
             formLabel = params['formLabel'] || 'Textarea';

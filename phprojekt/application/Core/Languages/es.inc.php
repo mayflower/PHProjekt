@@ -73,6 +73,7 @@ $lang["Drop in this panel all the fields that you want to have in this tab."] = 
     . "que desea incluir en esta solapa.";
 $lang["For sort the fields, just drag and drop it in the correct position."] = "Para ordenar los campos, sólo "
      . "arrastre y suéltelo en la posición correcta.";
+$lang["Number of stars"] = "Número de estrellas";
 
 // General Help
 $lang["Content Help Administration"]["General"] = "DEFAULT";

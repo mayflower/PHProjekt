@@ -100,28 +100,31 @@ class Phprojekt_Model_Validate
                         }
 
                         // Check value in range
-                        if (!empty($value)) {
-                            $emptyRange = array('id' => '', 'name' => '');
-                            $nullRange  = array('id' => null, 'name' => null);
-                            if ($field['range'] !== $emptyRange
-                                && $field['range'] !== $nullRange
-                                && $field['range'] !== array($emptyRange)
-                                && $field['range'] !== array($nullRange)) {
-                                $found = false;
-                                foreach ($field['range'] as $range) {
-                                    if ($range['id'] == $value) {
-                                        $found = true;
-                                        break;
-                                    }
-                                }
-                                if (!$found) {
-                                    $valid = false;
-                                    $this->error->addError(array(
-                                        'field'   => $varname,
-                                        'label'   => Phprojekt::getInstance()->translate($field['label']),
-                                        'message' => Phprojekt::getInstance()->translate('Value out of range')));
+                        if (($field['type'] == 'selectbox' || $field['type'] == 'multipleselectbox')
+                        && !empty($value)) {
+                            $found = false;
+                            foreach ($field['range'] as $range) {
+                                if ($range['id'] == $value) {
+                                    $found = true;
                                     break;
                                 }
+                            }
+                            if (!$found) {
+                                $valid = false;
+                                $this->error->addError(array(
+                                    'field'   => $varname,
+                                    'label'   => Phprojekt::getInstance()->translate($field['label']),
+                                    'message' => Phprojekt::getInstance()->translate('Value out of range')));
+                                break;
+                            }
+                        } else if ($field['type'] == 'rating' && !empty($value)) {
+                            if ($value > $field['range']['id'] || $value < 1) {
+                                $valid = false;
+                                $this->error->addError(array(
+                                    'field'   => $varname,
+                                    'label'   => Phprojekt::getInstance()->translate($field['label']),
+                                    'message' => Phprojekt::getInstance()->translate('Value out of range')));
+                                break;
                             }
                         }
 

@@ -39,6 +39,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     _historyUrl:        null,
     _presetValues:      null,
     _htmlEditorWidget:  null,
+    _meta:              null,
     _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
 
     constructor:function(main, id, module, params) {
@@ -310,8 +311,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.formdata    = new Array();
         this.formdata[0] = new Array();
 
-        var meta = phpr.DataStore.getMetaData({url: this._url});
-        var data = phpr.DataStore.getData({url: this._url});
+        this._meta = phpr.DataStore.getMetaData({url: this._url});
+        var data   = phpr.DataStore.getData({url: this._url});
         if (data.length == 0) {
             this._formNode.attr('content', phpr.drawEmptyMessage('The Item was not found'));
         } else {
@@ -322,8 +323,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             this.presetValues(data);
             this.fieldTemplate = new phpr.Default.Field();
 
-            for (var i = 0; i < meta.length; i++) {
-                var fieldValues  = this.setFieldValues(meta[i], data[0]);
+            for (var i = 0; i < this._meta.length; i++) {
+                var fieldValues  = this.setFieldValues(this._meta[i], data[0]);
                 var itemtype     = fieldValues['type'];
                 var itemid       = fieldValues['id'];
                 var itemlabel    = fieldValues['label'];
@@ -411,6 +412,10 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                     case 'display':
                         this.formdata[itemtab] += this.fieldTemplate.displayFieldRender(itemlabel, itemid, itemvalue,
                                                     itemhint, itemrange);
+                        break;
+                    case 'rating':
+                        this.formdata[itemtab] += this.fieldTemplate.ratingFieldRender(itemlabel, itemid, itemvalue,
+                            itemdisabled, itemhint, itemrange);
                         break;
                     default:
                         this.formdata[itemtab] += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue,
@@ -956,15 +961,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    (typicall border: 3px solid #ff0000) and overwrites the given value with the new one.
         var details    = data.details;
         var detailsLen = details.length;
-        var meta       = phpr.DataStore.getMetaData({url: this._url});
         for (var i = 0; i < detailsLen; i++) {
             var field = details[i].field;
             var value = details[i].newValue;
 
             // Search the field
-            for (var k = 0; k < meta.length; k++) {
-                if (meta[k]['key'] == field) {
-                    switch (meta[k]['type']) {
+            for (var k = 0; k < this._meta.length; k++) {
+                if (this._meta[k]['key'] == field) {
+                    switch (this._meta[k]['type']) {
                         case 'datetime':
                             // Split the value to two values
                             var dateTime = value.split(" ");
@@ -1038,10 +1042,17 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;
+                        case 'rating':
+                            var displayfield = field;
+                            if (fieldWidget = dijit.byId(field)) {
+                                fieldWidget.setAttribute('value', value);
+                                dojo.addClass(dojo.byId(displayfield).parentNode, "highlightChanges");
+                            }
+                            break;
                         default:
                             var displayfield = field;
                             if (fieldWidget = dijit.byId(field)) {
-                               fieldWidget.attr("displayedValue", value);
+                                fieldWidget.attr("displayedValue", value);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;
