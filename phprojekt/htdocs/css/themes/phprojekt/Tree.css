@@ -85,20 +85,22 @@
 }
 
 .phprojekt .dijitTreeIcon {
-    # width: 16px;
-    # height: 16px;
+    /*
+    width: 16px;
+    height: 16px;
+    */
 }
 
 .phprojekt .dijitFolderOpened {
-    # background: url('images/spriteDivIcons.gif') no-repeat -16px top;
+    /* background: url('images/spriteDivIcons.gif') no-repeat -16px top; */
 }
 
 .phprojekt .dijitFolderClosed {
-    # background: url('images/spriteDivIcons.gif') no-repeat top left;
+    /* background: url('images/spriteDivIcons.gif') no-repeat top left; */
 }
 
 .phprojekt .dijitLeaf {
-    background: url('images/spriteDivIcons.gif') no-repeat -32px top;
+    /* background: url('images/spriteDivIcons.gif') no-repeat -32px top; */
 }
 
 /* Drag and Drop on TreeNodes
