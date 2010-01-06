@@ -84,7 +84,7 @@
      FF doesn't clip images used as CSS bgs if you specify a border
      radius. If you use a solid color, it does. Webkit gets it right.
      */
-    background-color: #fff;
+    background-color: #ffffce;
     border: 1px solid #cbcbcb;
     padding: 0.45em;
 }
@@ -108,30 +108,30 @@
     /* the arrow piece for tooltips below an element */
     top: 0px;
     left: 6px;
-    background: url("images/tooltipConnectorUp.png") no-repeat top left;
+    background: url("images/tooltipConnectorUp_ffffce.png") no-repeat top left;
     width: 17px;
     height: 11px;
 }
 
 .dj_ie .phprojekt .dijitTooltipBelow .dijitTooltipConnector {
-    background-image: url("images/tooltipConnectorUp.gif");
+    background-image: url("images/tooltipConnectorUp_ffffce.gif");
 }
 
 .phprojekt .dijitTooltipAbove .dijitTooltipConnector {
     /* the arrow piece for tooltips above an element */
     bottom: 0px;
     left: 6px;
-    background: url("images/tooltipConnectorDown.png") no-repeat top left;
+    background: url("images/tooltipConnectorDown_ffffce.png") no-repeat top left;
     width: 17px;
     height: 11px;
 }
 
 .dj_ie .phprojekt .dijitTooltipAbove .dijitTooltipConnector {
-    background-image: url("images/tooltipConnectorDown.gif");
+    background-image: url("images/tooltipConnectorDown_ffffce.gif");
 }
 
 .dj_ie6 .phprojekt .dijitTooltipAbove .dijitTooltipConnector {
-    background-image: url("images/tooltipConnectorDown.gif");
+    background-image: url("images/tooltipConnectorDown_ffffce.gif");
     bottom: -5px;
 }
 
@@ -145,13 +145,13 @@
     /* the arrow piece for tooltips to the left of an element, bottom borders aligned */
     right: 0px;
     bottom: 3px;
-    background: url("images/tooltipConnectorRight.png") no-repeat top left;
+    background: url("images/tooltipConnectorRight_ffffce.png") no-repeat top left;
     width: 11px;
     height: 17px;
 }
 
 .dj_ie .phprojekt .dijitTooltipLeft .dijitTooltipConnector {
-    background-image: url("images/tooltipConnectorRight.gif");
+    background-image: url("images/tooltipConnectorRight_ffffce.gif");
 }
 
 .phprojekt .dijitTooltipRight {
@@ -162,11 +162,11 @@
     /* the arrow piece for tooltips to the right of an element, bottom borders aligned */
     left: 0px;
     bottom: 3px;
-    background: url("images/tooltipConnectorLeft.png") no-repeat top left;
+    background: url("images/tooltipConnectorLeft_ffffce.png") no-repeat top left;
     width: 11px;
     height: 17px;
 }
 
 .dj_ie .phprojekt .dijitTooltipRight .dijitTooltipConnector {
-    background-image: url("images/tooltipConnectorLeft.gif");
+    background-image: url("images/tooltipConnectorLeft_ffffce.gif");
 }
