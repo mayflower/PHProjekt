@@ -148,29 +148,28 @@
 }
 
 .phprojekt #subModuleNavigation {
-    margin-top: 0px;
+    margin-top: 2px;
     height: 30px;
-}
-
-.dj_ie .phprojekt #subModuleNavigation {
-    margin-top: -2px;
 }
 
 .phprojekt #nav_main a,
 .phprojekt #nav_sub a {
-    color: #CBCBCB;
     text-decoration: none;
     padding-left: 7px;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     font-family: Verdana;
     font-size: 12px;
     font-weight: 600;
+    color: #A9A098;
+    padding-left: 7px;
+    background: #F0F0F0;
+    border: 1px solid #294064;
 }
 
 .phprojekt #nav_main a span,
 .phprojekt #nav_sub a span {
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     padding-right: 7px;
     margin-top: 0px;
 }
@@ -192,16 +191,16 @@
 
 .phprojekt #nav_main a:hover,
 .phprojekt #nav_sub a:hover {
-    color: #ffffff;
-    background: #294064 url("images/nav_main/tab-left-hover.gif") left bottom no-repeat;
+    background: #fff;
     text-decoration: none;
     padding-left: 7px;
 }
 
 .phprojekt #nav_main a:hover span,
 .phprojekt #nav_sub a:hover span {
-    background: url("images/nav_main/tab-right-hover.gif") right bottom no-repeat;
+    background: #fff;
     padding-right: 7px;
+    color: #999;
 }
 
 .phprojekt #nav_main li,
@@ -212,14 +211,10 @@
     padding: 0 4px 0 0;
 }
 
-.phprojekt #nav_main td {
+.phprojekt #nav_main td,
+.phprojekt #nav_sub td {
     margin: 0;
     padding: 0 3px 0 0;
-}
-
-.dj_ieaa .phprojekt #nav_main td {
-    margin: 0;
-    padding: 0 1px 0 0;
 }
 
 /* Tabs ACTIVE */
@@ -230,15 +225,15 @@
 
 .phprojekt #nav_main .active a,
 .phprojekt #nav_sub .active a {
-    color: #ffffff;
-    background: #294064 url("images/nav_main/tab-left-hover.gif") left bottom no-repeat;
+    color: #000;
+    background: #fff;
     text-decoration: none;
-    padding-left: 7px
+    padding-left: 7px;
 }
 
 .phprojekt #nav_main .active a span,
 .phprojekt #nav_sub .active a span {
-    background: url("images/nav_main/tab-right-hover.gif") right bottom no-repeat;
+    background: #fff;
     padding-right: 7px;
 }
 
