@@ -430,6 +430,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             this.form        = this.setFormContent();
             this.formsWidget = new Array();
 
+            this._formNode.attr('content', this.form.domNode);
+
             var firstTab = true;
             for (t in tabs) {
                 if (this.formdata[tabs[t].id]) {
@@ -441,8 +443,6 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                         'dataFormTab' + tabs[t].id);
                 }
             }
-
-            this._formNode.attr('content', this.form.domNode);
 
             this.setActionFormButtons();
             this.addModuleTabs(data);
