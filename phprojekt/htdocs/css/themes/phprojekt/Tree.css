@@ -65,7 +65,12 @@
 }
 
 .phprojekt #treeNode .selected {
-    background:#b8cbec;
+    background: #294064;
+}
+
+.phprojekt #treeNode .selected .dijitTreeLabel {
+    font-weight: 600;
+    color: #fff;
 }
 
 .phprojekt .dijitTreeExpandoOpened {
