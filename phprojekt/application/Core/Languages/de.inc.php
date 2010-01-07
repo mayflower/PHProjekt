@@ -4,8 +4,7 @@ $lang['Company Name'] = "Firmenname";
 
 // Words and phrases
 // Visual Module Editor
-$lang["Editor"] =   "Herausgeber";
-$lang["Designer"]    = "Desinger";
+$lang["Open Editor"] =   "Open Editor";
 $lang["Database"] = "Datenbank";
 $lang["Field name"] = "Feldname";
 $lang["Field type"] = "Feld typ";

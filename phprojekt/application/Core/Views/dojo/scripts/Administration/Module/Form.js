@@ -32,8 +32,8 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
 
         // Button for open the dialog
         if (designerData && (typeof designerData === 'object')) {
-            this.formdata[1] += this.fieldTemplate.buttonActionRender(phpr.nls.get('Designer'), 'designerButton',
-                phpr.nls.get('Editor'), '', 'dojo.publish(\'Module.openDialog\');',
+            this.formdata[1] += this.fieldTemplate.buttonActionRender(phpr.nls.get('Form'), 'designerButton',
+                phpr.nls.get('Open Editor'), '', 'dojo.publish(\'Module.openDialog\');',
                 phpr.nls.get('Open a dialog where you can drag and drop many fields for create the form as you want.'));
         }
 
