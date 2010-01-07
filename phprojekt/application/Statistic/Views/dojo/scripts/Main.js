@@ -53,11 +53,13 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         this.changeDate(start, end);
 
         var params = {
+            label:     phpr.nls.get('Export to CSV'),
+            showLabel: true,
             baseClass: "positive",
             iconClass: "export",
-            alt:       "Export",
             disabled:  false
         };
+
         var exportButton = new dijit.form.Button(params);
         dojo.byId("buttonRow").appendChild(exportButton.domNode);
         dojo.connect(exportButton, "onClick", dojo.hitch(this, "exportData"));
