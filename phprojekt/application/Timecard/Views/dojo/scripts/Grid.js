@@ -120,8 +120,8 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         // Description:
         //    Set the export button
         var params = {
-            label:     phpr.nls.get('Export all items to a CSV file'),
-            showLabel: false,
+            label:     phpr.nls.get('Export to CSV'),
+            showLabel: true,
             baseClass: "positive",
             iconClass: "export",
             disabled:  false

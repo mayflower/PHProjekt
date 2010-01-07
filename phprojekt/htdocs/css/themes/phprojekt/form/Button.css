@@ -117,7 +117,7 @@
     /* enabled state - inner */
     border: 1px solid #8ba0bd;
     border-bottom: 1px solid #657c9c;
-    padding: 0.1em 0.2em 0.2em 0.2em;
+    /* padding: 0.1em 0.2em 0.2em 0.2em; */
     background: #bcd5f0 url("../images/buttonEnabled.png") repeat-x top left;
 }
 
@@ -309,4 +309,8 @@
 
 .phprojekt .addButton {
     margin: 0px 0px 0px 0px;
+}
+
+.phprojekt #buttonRow .dijitLeft {
+    margin-right: 5px;
 }

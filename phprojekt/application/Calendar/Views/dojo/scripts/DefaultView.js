@@ -142,8 +142,8 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    If there is any row, render export Button
         if (meta.length > 0 && this._exportButton === undefined) {
             var params = {
-                label:     phpr.nls.get('Export all items to a CSV file'),
-                showLabel: false,
+                label:     phpr.nls.get('Export to CSV'),
+                showLabel: true,
                 baseClass: "positive",
                 iconClass: "export",
                 disabled:  false
@@ -161,8 +161,8 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
         //    If there is any row, render Save changes button
         if (meta.length > 0 && this._saveChanges === null) {
             var params = {
-                label:     phpr.nls.get('Save changes made to the grid through in-place editing'),
-                showLabel: false,
+                label:     phpr.nls.get('Save'),
+                showLabel: true,
                 baseClass: "positive",
                 iconClass: "disk",
                 disabled:  true

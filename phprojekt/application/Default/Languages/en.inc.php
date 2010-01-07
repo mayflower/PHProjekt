@@ -114,9 +114,8 @@ $lang["New"]    = "New";
 $lang["Disable Frontend Messages"] = "Disable all Frontend Messages!";
 
 // Alt text
-$lang["Export all items to a CSV file"] = "Export all items to a CSV file";
-$lang["Save changes made to the grid through inline editing"] = "Save changes made to the grid through inline editing";
-$lang["Open an empty form to add a new item"] = "Open an empty form to add a new item";
+$lang["Export to CSV"] = "Export to CSV";
+$lang["Add a new item"] = "Add a new item";
 $lang["Open this item in the form to edit it"] = "Open this item in the form to edit it";
 
 // Messages
@@ -301,7 +300,6 @@ $lang["Accepted"] = "Accepted";
 
 // Filters
 $lang["Filters"] = "Filters";
-$lang["Manage filters for the list view"] = "Manage filters for the list view";
 $lang["Delete all filters"] = "Delete all filters";
 $lang["Add a filter"] = "Add a filter";
 $lang["Please, delete some filters for get a correct result set."] = "Please, delete some filters for get a correct "

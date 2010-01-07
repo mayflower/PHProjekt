@@ -453,8 +453,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Summary:
         //    Create the Add button
         var params = {
-            label:     phpr.nls.get('Open an empty form to add a new item'),
-            showLabel: false,
+            label:     phpr.nls.get('Add a new item'),
+            showLabel: true,
             baseClass: "positive",
             iconClass: 'add'
         };

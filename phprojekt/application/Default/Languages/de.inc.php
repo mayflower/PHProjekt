@@ -110,7 +110,7 @@ $lang["New"]    = "Neu";
 $lang["Disable Frontend Messages"] = "Alle Benachrichtigungen dieser Art abschalten!";
 
 // Alt Text
-$lang["Open an empty form to add a new item"] = "Neues Element";
+$lang["Add a new item"] = "Neues Element";
 
 // Messages
 $lang["There are no entries on this level"] = "Keine Element auf dieser Ebene vorhanden, bitte über [+] eines
@@ -267,7 +267,6 @@ $lang["Accepted"] = "Akzeptiert";
 
 // Filters
 $lang["Filters"] = "Filter";
-$lang["Manage filters for the list view"] = "Verwalten von Filtern für die Listenansicht";
 $lang["Delete all filters"] = "Löschen Sie alle Filter";
 $lang["Add a filter"] = "Filter hinzufügen";
 $lang["Please, delete some filters for get a correct result set."] = "Bitte, löschen Sie einige Filter für Sie eine "

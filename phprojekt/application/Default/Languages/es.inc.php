@@ -113,9 +113,8 @@ $lang["Edit"]   = "Editar";
 $lang["New"]    = "Nuevo";
 
 // Alt text
-$lang["Export all items to a CSV file"] = "Exportar todos los ítems a un archivo CSV";
-$lang["Save changes made to the grid through in-place editing"] = "Guardar modificaciones hechas sobre la grilla";
-$lang["Open an empty form to add a new item"] = "Abrir un formulario vacío para agregar un nuevo ítem";
+$lang["Export to CSV"] = "Exportar a CSV";
+$lang["Add a new item"] = "Agregar un nuevo ítem";
 $lang["Open this item in the form to edit it"] = "Abrir este ítem en el formulario para editarlo";
 
 // Messages
@@ -300,7 +299,6 @@ $lang["Accepted"] = "Aceptado";
 
 // Filters
 $lang["Filters"] = "Filtros";
-$lang["Manage filters for the list view"] = "Administrar los filtros para la grilla";
 $lang["Delete all filters"] = "Borrar todos los filtros";
 $lang["Add a filter"] = "Agregar un filtro";
 $lang["Please, delete some filters for get a correct result set."] = "Por favor, elimine algunos filtros para obtener "
