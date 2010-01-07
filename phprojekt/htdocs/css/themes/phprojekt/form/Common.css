@@ -98,7 +98,6 @@
 
 .phprojekt .dijitTextBoxFocused,
 .phprojekt .dijitComboBoxFocused,
-.phprojekt select,
 .phprojekt .dijitSpinnerFocused,
 .phprojekt .dijitTextAreaFocused {
     /* input field when focused (ie: typing affects it) */

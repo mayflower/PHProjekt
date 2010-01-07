@@ -214,7 +214,7 @@
     border: 1px solid;
     border-color: #EBEADB;
     border-right-color: #D5CDB5;
-    padding: 3px 3px 3px 3px;
+    padding: 1px;
     text-align: left;
     overflow: hidden;
 }
@@ -346,4 +346,9 @@
     background-image: url("images/dndCopy.png");
     background-repeat: no-repeat;
     background-position: center center;
+}
+
+.phprojekt .addButtonText {
+    text-align: center;
+    margin: 10px;
 }

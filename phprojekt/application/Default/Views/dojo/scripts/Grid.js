@@ -193,7 +193,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             this.gridLayout.push({
                 name:     "ID",
                 field:    "id",
-                width:    "40px",
+                width:    "45px",
                 editable: false
             });
             this.filterField.push({
