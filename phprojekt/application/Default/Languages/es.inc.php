@@ -320,6 +320,8 @@ $lang["Filter_OR"] = "O";
 // 'Notification' checkbox
 $lang["Check this box to send an email notification to the participants"] = "Active este casillero para enviar un "
     . "correo electrónico notificando a los participantes";
+// Tooltip Grid
+$lang["Double click to edit"] = "Doble click para editar";
 
 // General Help
 $lang["Content Help"]["General"] = "<br />

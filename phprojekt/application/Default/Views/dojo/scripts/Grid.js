@@ -41,6 +41,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     firstExtraCol: null,
     gridLayout:    new Array(),
     splitFields:   new Array(),
+    _lastTime:     null,
 
     // Grid cookies
     _sortColumnCookie: null,
@@ -146,7 +147,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Draw the pencil icon for edit the row
         // Description:
         //    Draw the pencil icon for edit the row
-        return true;
+        return false;
     },
 
     useCheckbox:function() {
@@ -467,7 +468,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Set the edit type
         // Description:
         //    Set if each field is ediatable with one or two clicks
-        this.grid.singleClickEdit = true;
+        this.grid.singleClickEdit = false;
     },
 
     setExportButton:function(meta) {
@@ -995,6 +996,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             dojo.connect(this.grid, "onStartEdit", dojo.hitch(this, "checkCanEdit"));
             dojo.connect(this.grid, "onHeaderCellClick", this, "saveGridSorting");
             dojo.connect(this.grid.views.views[0].scrollboxNode, "onscroll", this, "saveGridScroll");
+            dojo.connect(this.grid, "onCellMouseOver", dojo.hitch(this, "showTooltip"));
+            dojo.connect(this.grid, "onCellMouseOut", dojo.hitch(this, "hideTooltip"));
 
             if (this.useCheckbox()) {
                 this.render(["phpr.Default.template", "gridActions.html"], this.grid.views.views[0].gridActions, {
@@ -1060,23 +1063,73 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    This function process a 'row' action
         // Description:
         //    As soon as a Pencil icon or an extra action cell is clicked the corresponding action is processed
+        //    If the click is on other cell, just open the form
+        if (window.gridTimeOut) {
+            window.clearTimeout(window.gridTimeOut);
+        }
+        var date = new Date();
+        if (null === this._lastTime) {
+            this._lastTime = date.getMilliseconds();
+            window.gridTimeOut = window.setTimeout(dojo.hitch(this, "cellClick", e), 500);
+            return;
+        }
+        var newTime     = date.getMilliseconds();
+        var singleClick = false;
+        var doubleClick = false;
+        if (newTime > this._lastTime) {
+            // Same second
+            if ((newTime - this._lastTime) < 300) {
+                doubleClick = true;
+            } else {
+                singleClick = true;
+            }
+        } else if (newTime <= this._lastTime) {
+            // Other second
+            if ((newTime + (1000 - this._lastTime)) < 300) {
+                doubleClick = true;
+            } else {
+                singleClick = true;
+            }
+        }
+
+        this._lastTime = null;
+        if (doubleClick) {
+            // Return since is a double click
+            return;
+        }
+
         var useCheckBox      = this.useCheckbox();
         var usePencilForEdit = this.usePencilForEdit();
         var index            = e.cellIndex;
+        var openForm         = false;
         if ((useCheckBox && usePencilForEdit && index == 1) ||
             (!useCheckBox && usePencilForEdit && index == 0) ||
             (this.firstExtraCol && index >= this.firstExtraCol)) {
-            var item  = this.grid.getItem(e.rowIndex);
-            var rowId = this.grid.store.getValue(item, 'id');
             if ((useCheckBox && index == 1) || (!useCheckBox && index == 0)) {
-                this.getLinkForEdit(rowId);
+                // Click on the pencil
+                openForm = true;
             } else {
                 var key    = e['cell']['field'];
                 var temp   = key.split('|');
                 var action = temp[0];
                 var mode   = parseInt(temp[1]);
+                // Click on an extra action button
                 this.doAction(action, rowId, mode, this.TARGET_SINGLE);
             }
+        } else if (useCheckBox && index == 0) {
+            // Click on the checkbox, do nothing
+        } else {
+            // Click on the row
+            if (!this.grid.edit.isEditing()) {
+                openForm = true;
+            }
+        }
+
+        // Open the form
+        if (openForm) {
+            var item  = this.grid.getItem(e.rowIndex);
+            var rowId = this.grid.store.getValue(item, 'id');
+            this.getLinkForEdit(rowId);
         }
     },
 
@@ -1094,6 +1147,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // Description:
         //    If the user can't edit the item keep the current value to restore it later
         //    We can't stop the edition, but we can restore the value
+        this.hideTooltip(null, inCell.getNode(inRowIndex));
         if (!this.canEdit(inRowIndex)) {
             // Keep the old value if the user can't edit
             if (!this._oldRowValues[inRowIndex]) {
@@ -1358,5 +1412,28 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
         return phpr.webpath + 'index.php/' + phpr.module + '/index/' + action + '/nodeId/' + phpr.currentProjectId
             + '/' + idUrl + '/' + ids;
+    },
+
+    showTooltip:function(e) {
+        // Summary:
+        //    This function shows the tooltip
+        // Description:
+        //    Uses the dijit function 'showTooltip' to show the tooltip.
+        if (!this.grid.edit.isEditing()) {
+            if (e.cell.editable) {
+                dijit.showTooltip(phpr.nls.get("Double click to edit"), e.cellNode, 'above');
+            }
+        }
+    },
+
+    hideTooltip:function(e, cellNode) {
+        // Summary:
+        //    Hides the tooltip.
+        // Description:
+        //    Uses the dijit function 'hideTooltip' to hide the tooltip.
+        if (e) {
+            cellNode = e.cellNode;
+        }
+        dijit.hideTooltip(cellNode);
     }
 });

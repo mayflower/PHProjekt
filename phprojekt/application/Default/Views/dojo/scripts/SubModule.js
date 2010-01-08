@@ -149,7 +149,7 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
     },
 
     usePencilForEdit:function() {
-        return true;
+        return false;
     },
 
     useIdInGrid:function() {
