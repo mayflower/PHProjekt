@@ -154,7 +154,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
 dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
     setValue:function(inRowIndex, inValue) {
         if (this.widget && this.widget.setValue) {
-            this.widget.setValue(inValue);
+            this.widget.attr('value', inValue);
         } else {
             this.inherited(arguments);
         }
@@ -282,7 +282,7 @@ dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
     setValue:function(inRowIndex, inValue) {
         inValue = phpr.Date.getIsoTime(inValue);
         if (this.widget && this.widget.setValue) {
-            this.widget.setValue(inValue);
+            this.widget.attr('value', inValue);
         } else {
             this.inherited(arguments);
         }

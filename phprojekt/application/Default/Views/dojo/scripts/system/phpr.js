@@ -76,13 +76,13 @@ dojo.require("dijit._base.sniff");
 dojo.require("dijit._base.typematic");
 dojo.require("dijit._base.wai");
 dojo.require("dijit._base.window");
-dojo.require("dijit._Calendar");
 dojo.require("dijit._Container");
 dojo.require("dijit._Templated");
 dojo.require("dijit._TimePicker");
 dojo.require("dijit._Widget");
 
 // Dijit Misc
+dojo.require("dijit.Calendar");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.Menu");
 dojo.require("dijit.TitlePane");
