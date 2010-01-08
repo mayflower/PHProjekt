@@ -51,9 +51,8 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
         //    appropriately the TABLE html element.
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
-        // Render Export and Save buttons?
+        // Render Export buttons?
         this.setExportButton(meta);
-        this.setSaveChangesButton(meta);
 
         var content = phpr.DataStore.getData({url: this.url});
 

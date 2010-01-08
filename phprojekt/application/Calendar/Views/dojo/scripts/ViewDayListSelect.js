@@ -64,9 +64,8 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
 
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
-        // Render Export and Save buttons?
+        // Render Export buttons?
         this.setExportButton(meta);
-        this.setSaveChangesButton(meta);
 
         var content = phpr.DataStore.getData({url: this.url});
 

@@ -59,9 +59,8 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         //    template and the events.
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
-        // Render Export and Save buttons?
+        // Render Export buttons?
         this.setExportButton(meta);
-        this.setSaveChangesButton(meta);
 
         var content = phpr.DataStore.getData({url: this.url});
 

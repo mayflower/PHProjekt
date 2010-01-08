@@ -42,7 +42,6 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
     cellTimeHeight:       null,
     _gridBoxWidthPrev:    null,
     _calenSchedWidthPrev: null,
-    _saveChanges:         null,
     eventClickDisabled:   false,
     stepH:                null,
     stepY:                null,
@@ -151,25 +150,6 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             this._exportButton = new dijit.form.Button(params);
             dojo.byId("buttonRow").appendChild(this._exportButton.domNode);
             dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"));
-        }
-    },
-
-    setSaveChangesButton:function(meta) {
-        // Summary:
-        //    Sets the Save changes button
-        // Description:
-        //    If there is any row, render Save changes button
-        if (meta.length > 0 && this._saveChanges === null) {
-            var params = {
-                label:     phpr.nls.get('Save'),
-                showLabel: true,
-                baseClass: "positive",
-                iconClass: "disk",
-                disabled:  true
-            };
-            this._saveChanges = new dijit.form.Button(params);
-            dojo.byId("buttonRow").appendChild(this._saveChanges.domNode);
-            dojo.connect(this._saveChanges, "onClick", dojo.hitch(this, "saveChanges"));
         }
     },
 
@@ -643,7 +623,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
             if (posEventCurrent != movedEvent['posEventDB']) {
                 // Yes
                 this.events[movedEventIndex]['hasChanged'] = true;
-                this.enableSaveButton();
+                this.saveChanges();
             } else {
                 this.events[movedEventIndex]['hasChanged'] = false;
             }
@@ -747,32 +727,16 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
                 url:       this.updateUrl,
                 content:   content,
                 onSuccess: dojo.hitch(this, function(response) {
-                    new phpr.handleResponse('serverFeedback', response);
-                    if (response.type == 'success') {
+                    if (response.type != 'success') {
+                        new phpr.handleResponse('serverFeedback', response);
+                    } else {
                         this._newRowValues = {};
                         this._oldRowValues = {};
                         this.publish("updateCacheData");
-                        this.publish("reload");
                     }
                 })
             });
         }
-    },
-
-    enableSaveButton:function() {
-        // Summary:
-        //    Enables Save button if it was disabled
-        if (this._saveChanges.disabled == true) {
-            dojox.fx.highlight({
-                node:     this._saveChanges.id,
-                color:    '#ffff99',
-                duration: 1600
-            }).play();
-        }
-
-        this._saveChanges.disabled = false;
-        var saveButton             = dojo.byId(this._saveChanges.id);
-        saveButton.disabled        = false;
     },
 
     isSharingSpace:function(currentEvent) {
