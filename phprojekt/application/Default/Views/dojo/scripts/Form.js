@@ -61,6 +61,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.setUrl();
         this.setNode();
 
+        // Put loading
+        this.render(["phpr.Default.template", "formloading.html"], this._formNode.domNode, {
+            webpath: phpr.webpath
+        });
+
         this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
         this.tabStore = new phpr.Store.Tab();
         this._initData.push({'store': this.tabStore});

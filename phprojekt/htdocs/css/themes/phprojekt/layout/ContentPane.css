@@ -25,3 +25,7 @@
     background-color: #fff;
     padding: 0px;
 }
+
+.phprojekt #detailsBox {
+    overflow-x: hidden
+}
