@@ -33,7 +33,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     url:           null,
     getActionsUrl: null,
     _tagUrl:       null,
-    _saveChanges:  null,
     _exportButton: null,
     _filterButton: null,
     extraColumns:  new Array(),
@@ -42,6 +41,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     gridLayout:    new Array(),
     splitFields:   new Array(),
     _lastTime:     null,
+    _active:       false,
 
     // Grid cookies
     _sortColumnCookie: null,
@@ -868,25 +868,6 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }
     },
 
-    setSaveChangesButton:function(meta) {
-        // Summary:
-        //    Set the Save changes button
-        // Description:
-        //    If there is any row, render Save changes button
-        if (meta.length > 0 && this._saveChanges === null) {
-            var params = {
-                label:     phpr.nls.get('Save'),
-                showLabel: true,
-                baseClass: "positive",
-                iconClass: "disk",
-                disabled:  true
-            };
-            this._saveChanges = new dijit.form.Button(params);
-            dojo.byId("buttonRow").appendChild(this._saveChanges.domNode);
-            dojo.connect(this._saveChanges, "onClick", dojo.hitch(this, "saveChanges"));
-        }
-    },
-
     onLoaded:function(dataContent) {
         // Summary:
         //    This function is called when the grid is loaded
@@ -963,16 +944,14 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             }
             var store = new dojo.data.ItemFileWriteStore({data: this.gridData});
 
-            // Render save Button
-            this.setSaveChangesButton(meta);
-
             // Render export Button
             this.setExportButton(meta);
 
             this.setGridLayout(meta);
 
-            var type  = this.useCheckbox() ? "phpr.grid._View" : "dojox.grid._View";
-            this.grid = new dojox.grid.DataGrid({
+            var type   = this.useCheckbox() ? "phpr.grid._View" : "dojox.grid._View";
+            var p6Grid = this;
+            this.grid  = new dojox.grid.DataGrid({
                 store:     store,
                 structure: [{type: type,
                             defaultCell: {
@@ -981,7 +960,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                                 styles:   'text-align: left;'
                             },
                             rows: this.gridLayout
-                }]
+                }],
+                doclick:    function(e) { p6Grid.doClick(e); },
+                dodblclick: function(e) { p6Grid.doDblClick(e); }
             }, document.createElement('div'));
 
             this.setClickEdit();
@@ -1058,21 +1039,38 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }
     },
 
-    cellClick:function(e) {
+    doClick:function(e) {
         // Summary:
-        //    This function process a 'row' action
+        //    Re-write the function for allow single and double clicks with different functions
         // Description:
-        //    As soon as a Pencil icon or an extra action cell is clicked the corresponding action is processed
-        //    If the click is on other cell, just open the form
+        //    On one click, wait 500 milliseconds and process it.
+        //    If there is other click meanwhile, is a double click.
+        //    We use 300 milliseconds as a difference between one click and the second in a double-click.
         if (window.gridTimeOut) {
             window.clearTimeout(window.gridTimeOut);
         }
         var date = new Date();
-        if (null === this._lastTime) {
-            this._lastTime = date.getMilliseconds();
-            window.gridTimeOut = window.setTimeout(dojo.hitch(this, "cellClick", e), 500);
+
+        if (this.grid.edit.isEditing()) {
+            if (!this.grid.edit.isEditCell(e.rowIndex, e.cellIndex)) {
+                // Click outside the current edit widget
+                // Just apply the changes, and do not process it as rowClick (open a form)
+                this.grid.edit.apply();
+                this._lastTime = date.getMilliseconds();
+            } else {
+                this._lastTime = null;
+            }
             return;
         }
+
+        // Set a new time for wait
+        if (null === this._lastTime) {
+            this._lastTime = date.getMilliseconds();
+            window.gridTimeOut = window.setTimeout(dojo.hitch(this, "doClick", e), 500);
+            return;
+        }
+
+        // Check the times between the 2 clicks
         var newTime     = date.getMilliseconds();
         var singleClick = false;
         var doubleClick = false;
@@ -1094,10 +1092,34 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
         this._lastTime = null;
         if (doubleClick) {
-            // Return since is a double click
-            return;
+            // Process a double click
+            if (e.cellNode) {
+                this.grid.edit.setEditCell(e.cell, e.rowIndex);
+        		this.grid.onRowDblClick(e);
+            } else {
+                this.grid.onRowDblClick(e);
+            }
+        } else {
+            // Process a single click
+            if (e.cellNode) {
+                this.grid.onCellClick(e);
+            } else {
+                this.grid.onRowClick(e);
+			}
         }
+    },
 
+	doDblClick:function(e) {
+        // Summary:
+        //    Empry function for disable the double click, since is processes by the doClick
+    },
+
+    cellClick:function(e) {
+        // Summary:
+        //    This function process a 'row' action
+        // Description:
+        //    As soon as a Pencil icon or an extra action cell is clicked the corresponding action is processed
+        //    If the click is on other cell, just open the form
         var useCheckBox      = this.useCheckbox();
         var usePencilForEdit = this.usePencilForEdit();
         var index            = e.cellIndex;
@@ -1120,9 +1142,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             // Click on the checkbox, do nothing
         } else {
             // Click on the row
-            if (!this.grid.edit.isEditing()) {
-                openForm = true;
-            }
+            openForm = true;
         }
 
         // Open the form
@@ -1145,18 +1165,15 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // Summary:
         //    Check the access of the item for the user
         // Description:
-        //    If the user can't edit the item keep the current value to restore it later
+        //    Keep the current value to restore or check it later
         //    We can't stop the edition, but we can restore the value
         this.hideTooltip(null, inCell.getNode(inRowIndex));
-        if (!this.canEdit(inRowIndex)) {
-            // Keep the old value if the user can't edit
-            if (!this._oldRowValues[inRowIndex]) {
-                this._oldRowValues[inRowIndex] = {};
-            }
-            var item  = this.grid.getItem(inRowIndex);
-            var value = this.grid.store.getValue(item, inCell.field);
-            this._oldRowValues[inRowIndex][inCell.field] = value;
+        if (!this._oldRowValues[inRowIndex]) {
+            this._oldRowValues[inRowIndex] = {};
         }
+        var item  = this.grid.getItem(inRowIndex);
+        var value = this.grid.store.getValue(item, inCell.field);
+        this._oldRowValues[inRowIndex][inCell.field] = value;
     },
 
     canEdit:function(inRowIndex) {
@@ -1205,7 +1222,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 inFieldIndexConvined = key + '_forTime';
                 inValue              = inValue + ' ' + this.grid.store.getValue(item, inFieldIndexConvined);
 
-                this._newRowValues[inRowIndex][key] = inValue;
+                if (inValue != this._oldRowValues[inRowIndex][key]) {
+                    this._newRowValues[inRowIndex][key] = inValue;
+                }
             } else if (inFieldIndex.indexOf('_forTime') > 0) {
                 // Convert time to datetime
                 var item             = this.grid.getItem(inRowIndex);
@@ -1213,32 +1232,31 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 inFieldIndexConvined = key + '_forDate';
                 inValue              = inValue + ' ' + this.grid.store.getValue(item, inFieldIndexConvined);
 
-                this._newRowValues[inRowIndex][key] = inValue;
+                if (inValue != this._oldRowValues[inRowIndex][key]) {
+                    this._newRowValues[inRowIndex][key] = inValue;
+                }
             } else {
                 // Normal widgets
-                this._newRowValues[inRowIndex][inFieldIndex] = inValue;
+                if (inValue != this._oldRowValues[inRowIndex][inFieldIndex]) {
+                    this._newRowValues[inRowIndex][inFieldIndex] = inValue;
+                }
             }
 
-            this.toggleSaveButton();
+            this.applyChanges();
         }
     },
 
-    toggleSaveButton:function() {
+    applyChanges:function() {
         // Summary:
-        //    highlight when button gets activated
+        //    Call the saveChanges function
         // Description:
-        //    highlight when button gets activated
-        if (this._saveChanges.disabled == true) {
-            dojox.fx.highlight({
-                node:     this._saveChanges.id,
-                color:    '#ffff99',
-                duration: 1600
-            }).play();
+        //    Wait until the last call is finished
+        if (this._active == true) {
+            setTimeout(dojo.hitch(this, "applyChanges"), 500);
+        } else {
+            this._active = true;
+            this.saveChanges();
         }
-        // Activate/Deactivate "save changes" buttons.
-        this._saveChanges.disabled = false;
-        var saveButton = dojo.byId(this._saveChanges.id);
-        saveButton.disabled = false;
     },
 
     saveChanges:function() {
@@ -1247,32 +1265,51 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // Description:
         //    Get all the new values into the _newRowValues
         //    and send them to the server
-        this.grid.edit.apply();
 
         // Get all the IDs for the data sets.
+
+        var changed = false;
         var content = new Array();
+        var ids     = new Array();
         for (var i in this._newRowValues) {
             var item  = this.grid.getItem(i);
             var curId = this.grid.store.getValue(item, 'id');
             for (var j in this._newRowValues[i]) {
+                changed = true;
                 content['data[' + curId + '][' + j + ']'] = this._newRowValues[i][j];
+                ids[i] = j;
             }
         }
 
-        // post the content of all changed forms
-        phpr.send({
-            url:       this.updateUrl,
-            content:   content,
-            onSuccess: dojo.hitch(this, function(response) {
-                new phpr.handleResponse('serverFeedback', response);
-                if (response.type == 'success') {
-                    this._newRowValues = {};
-                    this._oldRowValues = {};
-                    this.publish("updateCacheData");
-                    this.publish("reload");
-                }
-            })
-        });
+        // Post the content of all changed forms
+        // Only if there are changes
+        if (changed) {
+            phpr.send({
+                url:       this.updateUrl,
+                content:   content,
+                onSuccess: dojo.hitch(this, function(response) {
+                    this._active = false;
+                    if (response.type == 'error') {
+                        new phpr.handleResponse('serverFeedback', response);
+                    }
+                    if (response.type == 'success') {
+                        this.updateAfterSaveChanges();
+                    }
+                    // Delete the changes that are already saved
+                    for (var i in ids) {
+                        delete this._newRowValues[i][ids[i]];
+                    }
+                })
+            });
+        } else {
+            this._active = false;
+        }
+    },
+
+    updateAfterSaveChanges:function() {
+        // Summary:
+        //    Actions after the saveChanges call returns success
+        this.publish("updateCacheData");
     },
 
     exportData:function() {

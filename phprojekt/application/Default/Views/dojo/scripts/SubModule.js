@@ -207,9 +207,6 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
     setExportButton:function(meta) {
     },
 
-    setSaveChangesButton:function(meta) {
-    },
-
     loadGridSorting:function() {
     },
 
