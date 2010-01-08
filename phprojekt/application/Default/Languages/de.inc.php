@@ -113,8 +113,7 @@ $lang["Disable Frontend Messages"] = "Alle Benachrichtigungen dieser Art abschal
 $lang["Add a new item"] = "Neues Element";
 
 // Messages
-$lang["There are no entries on this level"] = "Keine Element auf dieser Ebene vorhanden, bitte über [+] eines
-    hinzufügen";
+$lang["There are no entries on this level"] = "Ein neues element hinzufügen";
 $lang["You do not have access to edit this item"] = "Sie haben keinen Zugriff auf diesen Datensatz";
 $lang["The Item was added correctly"] = "Der Datensatz wurde angelegt";
 $lang["The Item was edited correctly"] = "Der Datensatz wurde geändert";

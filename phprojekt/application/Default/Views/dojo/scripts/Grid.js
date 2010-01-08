@@ -896,7 +896,22 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
         if (meta.length == 0) {
-            this._node.attr('content', phpr.drawEmptyMessage('There are no entries on this level'));
+            // Create a "ADD" button
+            var params = {
+                label:     phpr.nls.get('Add a new item'),
+                showLabel: true,
+                baseClass: "positive",
+                iconClass: 'add'
+            };
+
+            var newEntry = new dijit.form.Button(params);
+			this._node.attr('content', phpr.drawEmptyMessage('There are no entries on this level'));
+            dojo.addClass(this._node.domNode, 'addButtonText');
+            this._node.domNode.appendChild(newEntry.domNode);
+
+            dojo.connect(newEntry, "onClick", dojo.hitch(this, function() {
+                this.main.newEntry();
+            }));
         } else {
             this.processActions();
 
