@@ -318,7 +318,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
                 phpr.currentProjectId = phpr.rootProjectId;
-                this.setUrlHash("Setting");
+                this.setUrlHash("Setting", null, ["User"]);
             })
         });
         toolbar.addChild(button);
