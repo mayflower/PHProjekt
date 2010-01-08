@@ -244,7 +244,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
             }
             options.push(range[j]);
         }
-        if (!found && first) {
+        if (!found && (null !== first)) {
             itemvalue = first;
         }
         var html = this.render(["phpr.Default.template", "formfilterselect.html"], null, {
