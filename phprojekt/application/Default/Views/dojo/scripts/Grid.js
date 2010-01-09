@@ -42,6 +42,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     splitFields:   new Array(),
     _lastTime:     null,
     _active:       false,
+    _doubleClick:  false,
 
     // Grid cookies
     _sortColumnCookie: null,
@@ -887,7 +888,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             };
 
             var newEntry = new dijit.form.Button(params);
-			this._node.attr('content', phpr.drawEmptyMessage('There are no entries on this level'));
+            this._node.attr('content', phpr.drawEmptyMessage('There are no entries on this level'));
             dojo.addClass(this._node.domNode, 'addButtonText');
             this._node.domNode.appendChild(newEntry.domNode);
 
@@ -962,7 +963,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                             rows: this.gridLayout
                 }],
                 doclick:    function(e) { p6Grid.doClick(e); },
-                dodblclick: function(e) { p6Grid.doDblClick(e); }
+                dodblclick: function(e) { p6Grid.doDblClick(e); },
+                onRowClick: function(e) { }
             }, document.createElement('div'));
 
             this.setClickEdit();
@@ -1056,10 +1058,19 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 // Click outside the current edit widget
                 // Just apply the changes, and do not process it as rowClick (open a form)
                 this.grid.edit.apply();
-                this._lastTime = date.getMilliseconds();
+                if (dojo.isIE) {
+                    this._lastTime = null;
+                } else {
+                    this._lastTime = date.getMilliseconds();
+                }
             } else {
                 this._lastTime = null;
             }
+
+            if (dojo.isIE) {
+                this._doubleClick = false;
+            }
+
             return;
         }
 
@@ -1092,26 +1103,46 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
         this._lastTime = null;
         if (doubleClick) {
-            // Process a double click
-            if (e.cellNode) {
-                this.grid.edit.setEditCell(e.cell, e.rowIndex);
-        		this.grid.onRowDblClick(e);
-            } else {
-                this.grid.onRowDblClick(e);
+            if (!dojo.isIE) {
+                // Works for FF
+                // Process a double click
+                if (e.cellNode) {
+                    this.grid.edit.setEditCell(e.cell, e.rowIndex);
+                    this.grid.onRowDblClick(e);
+                } else {
+                    this.grid.onRowDblClick(e);
+                }
             }
         } else {
+            if (dojo.isIE) {
+                if (this._doubleClick) {
+                    // Restore value
+                    this._doubleClick = false;
+                    return;
+                }
+            }
             // Process a single click
             if (e.cellNode) {
                 this.grid.onCellClick(e);
             } else {
                 this.grid.onRowClick(e);
-			}
+            }
         }
     },
 
 	doDblClick:function(e) {
         // Summary:
         //    Empry function for disable the double click, since is processes by the doClick
+        if (dojo.isIE) {
+            this._doubleClick = true;
+            // Process a double click
+            if (e.cellNode) {
+                this.grid.edit.setEditCell(e.cell, e.rowIndex);
+                this.grid.onRowDblClick(e);
+            } else {
+                this.grid.onRowDblClick(e);
+            }
+        }
     },
 
     cellClick:function(e) {
@@ -1200,6 +1231,10 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // Skip for combobox
         if (inFieldIndex == 'gridComboBox') {
             return;
+        }
+
+        if (dojo.isIE) {
+            this._doubleClick = false;
         }
 
         if (!this.canEdit(inRowIndex)) {
