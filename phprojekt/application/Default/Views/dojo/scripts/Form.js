@@ -737,8 +737,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             if (typeof(sendData) != 'object') {
                 sendData = new Array(sendData);
             }
-            this.sendData = dojo.mixin(this.sendData, sendData);
+            dojo.mixin(this.sendData, sendData);
         }
+
         return true;
     },
 

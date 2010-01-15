@@ -339,7 +339,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
             if (typeof(data) != 'object') {
                 data = new Array(data);
             }
-            this.sendData = dojo.mixin(this.sendData, data);
+            dojo.mixin(this.sendData, data);
         }
 
         return true;
