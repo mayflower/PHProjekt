@@ -72,7 +72,7 @@ class Phprojekt_LoginController_Test extends FrontInit
     }
 
     /**
-     * Tests login action on login controller, with Keep Logged set to 'on'
+     * Tests login action on login controller, with Keep Logged set to 1
      */
     public function testLoginLoginKeepLoggedAction()
     {
@@ -81,7 +81,7 @@ class Phprojekt_LoginController_Test extends FrontInit
         // This is the only way I found to set POST values on request
         $_POST['username']   = 'david';
         $_POST['password']   = 'test';
-        $_POST['keepLogged'] = 'on';
+        $_POST['keepLogged'] = 1;
 
         try {
             $this->front->dispatch($this->request, $this->response);

@@ -66,7 +66,7 @@ class LoginController extends Zend_Controller_Action
      *  - string <b>username</b>   Username for login.
      *  - string <b>password</b>   Password for login.
      *  - string <b>hash</b>       Hash URL for redirect after the login.
-     *  - string <b>keepLogged</b> "on" if the user clicks on the checkbox.
+     *  - string <b>keepLogged</b> 1 if the user clicks on the checkbox.
      * </pre>
      *
      * @return void
@@ -76,13 +76,8 @@ class LoginController extends Zend_Controller_Action
         $username   = (string) $this->getRequest()->getParam('username', null);
         $password   = (string) $this->getRequest()->getParam('password', null);
         $hash       = (string) $this->getRequest()->getParam('hash', null);
-        $keepLogged = (string) $this->getRequest()->getParam('keepLogged', null);
-
-        if ($keepLogged == "on" || $keepLogged == 1) {
-            $keepLogged = true;
-        } else {
-            $keepLogged = false;
-        }
+        $keepLogged = (int) $this->getRequest()->getParam('keepLogged', 0);
+        $keepLogged = ($keepLogged == 1) ? true : false;
 
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
