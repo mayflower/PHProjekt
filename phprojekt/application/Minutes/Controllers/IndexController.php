@@ -185,6 +185,7 @@ class Minutes_IndexController extends IndexController
     {
         $errors = array();
         $params = $this->getRequest()->getParams();
+        $this->setCurrentProjectId();
 
         // Sanity check
         if (empty($params['id']) || !is_numeric($params['id'])) {
@@ -295,6 +296,7 @@ class Minutes_IndexController extends IndexController
     public function pdfAction()
     {
         $id = (int) $this->getRequest()->getParam('id');
+        $this->setCurrentProjectId();
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
@@ -303,9 +305,20 @@ class Minutes_IndexController extends IndexController
         $minutes = $this->getModelObject()->find($id);
 
         if ($minutes instanceof Phprojekt_Model_Interface) {
-            $this->getResponse()->setHeader("Content-Disposition", "inline; filename=minutes-" . $minutes->id . ".pdf");
-            $this->getResponse()->setHeader("Content-type", "application/x-pdf; charset=utf-8");
-            echo Minutes_Helpers_Pdf::getPdf($minutes);
+            $outputString = Minutes_Helpers_Pdf::getPdf($minutes);
+
+            if (!headers_sent()) {
+                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+                header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+                header("Cache-Control: must-revalidate");
+                header("Cache-Control: post-check=0, pre-check=0", false);
+                header("Pragma: no-cache");
+                header('Content-Length: ' . strlen($outputString));
+                header("Content-Disposition: attachment; filename=\"minutes-" . $minutes->id . ".pdf\"");
+                header("Content-type: application/x-pdf; charset=utf-8");
+            }
+
+            echo $outputString;
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }

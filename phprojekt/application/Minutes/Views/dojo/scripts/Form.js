@@ -77,18 +77,20 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
 
         this.addTab(mailForm, 'tabMail', 'Mail', 'mailFormTab');
 
-        dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick', function() {
+        dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick', dojo.hitch(this, function() {
             phpr.send({
-                url:       phpr.webpath + 'index.php/Minutes/index/jsonSendMail/',
-                content:   dojo.formToObject('mailFormTab'),
+                url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId
+                    + '/id/' + this.id,
+                content:   dijit.byId('mailFormTab').attr('value'),
                 onSuccess: dojo.hitch(this, function(data) {
                     new phpr.handleResponse('serverFeedback', data);
                 })
             })
-        });
+        }));
 
         dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', dojo.hitch(this, function() {
-            window.open(phpr.webpath + 'index.php/Minutes/index/pdf/id/' + this.id, 'pdf');
+            window.open(phpr.webpath + 'index.php/Minutes/index/pdf/nodeId/' + phpr.currentProjectId
+                + '/id/' + this.id, 'pdf');
         }));
     },
 
