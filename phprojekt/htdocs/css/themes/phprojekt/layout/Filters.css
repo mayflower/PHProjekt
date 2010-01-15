@@ -76,6 +76,7 @@
 .phprojekt #filterDisplayDiv,
 .phprojekt #filterDisplayDelete {
     float: left;
+    overflow: hidden;
 }
 
 .dj_ie .phprojekt #filterDisplayDiv {

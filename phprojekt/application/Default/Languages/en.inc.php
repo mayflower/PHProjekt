@@ -300,7 +300,7 @@ $lang["Accepted"] = "Accepted";
 
 // Filters
 $lang["Filters"] = "Filters";
-$lang["Delete all filters"] = "Delete all filters";
+$lang["Delete all"] = "Delete all";
 $lang["Add a filter"] = "Add a filter";
 $lang["Please, delete some filters for get a correct result set."] = "Please, delete some filters for get a correct "
     . "result set.";

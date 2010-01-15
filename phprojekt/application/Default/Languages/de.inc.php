@@ -266,7 +266,7 @@ $lang["Accepted"] = "Akzeptiert";
 
 // Filters
 $lang["Filters"] = "Filter";
-$lang["Delete all filters"] = "Löschen Sie alle Filter";
+$lang["Delete all"] = "Löschen Sie alle";
 $lang["Add a filter"] = "Filter hinzufügen";
 $lang["Please, delete some filters for get a correct result set."] = "Bitte, löschen Sie einige Filter für Sie eine "
     . " richtige.";
