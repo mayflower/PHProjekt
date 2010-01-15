@@ -330,6 +330,7 @@ class Minutes_ItemController_Test extends FrontInit
     public function testPdfNoId()
     {
         $this->setRequestUrl('Minutes/index/pdf');
+        $this->request->setParam('nodeId', 1);
         $this->getResponse();
 
         $this->assertTrue($this->error);
@@ -342,6 +343,7 @@ class Minutes_ItemController_Test extends FrontInit
     public function testPdfWrongId()
     {
         $this->setRequestUrl('Minutes/index/pdf/');
+        $this->request->setParam('nodeId', 1);
         $this->request->setParam('id', 1);
         $this->getResponse();
 
@@ -355,6 +357,7 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonSendMailNoId()
     {
         $this->setRequestUrl('Minutes/index/jsonSendMail');
+        $this->request->setParam('nodeId', 1);
         $this->getResponse();
 
         $this->assertTrue($this->error);
@@ -367,6 +370,7 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonSendMailWrongId()
     {
         $this->setRequestUrl('Minutes/index/jsonSendMail');
+        $this->request->setParam('nodeId', 1);
         $this->request->setParam('id', 1);
         $this->getResponse();
 
@@ -380,6 +384,7 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonSendMailNoRecipients()
     {
         $this->setRequestUrl('Minutes/index/jsonSendMail');
+        $this->request->setParam('nodeId', 1);
         $this->request->setParam('id', 3);
         $response = $this->getResponse();
 
@@ -394,6 +399,7 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonSendMailWithRecipientsIds()
     {
         $this->setRequestUrl('Minutes/index/jsonSendMail');
+        $this->request->setParam('nodeId', 1);
         $this->request->setParam('id', 3);
         $this->request->setParam('recipients', array(1, 2));
         $response = $this->getResponse();
@@ -408,6 +414,7 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonSendMailWithRecipientsIdsAndAdditional()
     {
         $this->setRequestUrl('Minutes/index/jsonSendMail');
+        $this->request->setParam('nodeId', 1);
         $this->request->setParam('id', 3);
         $this->request->setParam('recipients', array(1, 2));
         $this->request->setParam('additional', 'test@example.com, foobar@example.com');
@@ -423,6 +430,7 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonSendMailWithRecipientsIdsAndAdditionalWithPdfAttached()
     {
         $this->setRequestUrl('Minutes/index/jsonSendMail');
+        $this->request->setParam('nodeId', 1);
         $this->request->setParam('id', 3);
         $this->request->setParam('recipients', array(1, 2));
         $this->request->setParam('additional', 'test@example.com, foobar@example.com');
@@ -439,6 +447,7 @@ class Minutes_ItemController_Test extends FrontInit
     public function testJsonSendMailWithRecipientsIdsAndAdditionalWrongFormat()
     {
         $this->setRequestUrl('Minutes/index/jsonSendMail');
+        $this->request->setParam('nodeId', 1);
         $this->request->setParam('id', 3);
         $this->request->setParam('recipients', array(1, 2));
         $this->request->setParam('additional', 'Test User <test@example.com>, '

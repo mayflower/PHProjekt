@@ -125,9 +125,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         if ($id == 0) {
             $sendNotification = false;
             if (array_key_exists('sendNotification', $request)) {
-                if ($request['sendNotification'] == 'on' || $request['sendNotification'] == 1) {
+                if ($request['sendNotification'] == 1) {
                     $sendNotification            = true;
-                    $request['sendNotification'] = '';
+                    $request['sendNotification'] = 0;
                 }
             }
 
@@ -370,7 +370,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 $lastEvent = true;
             }
             if ($lastParticipant & $lastEvent & $sendNotification) {
-                $request['sendNotification'] = 'on';
+                $request['sendNotification'] = 1;
             }
 
             $clone    = clone($this);
@@ -426,7 +426,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                         $record->parentId);
 
                     // If notification email was requested, then send it just once
-                    $request['sendNotification'] = '';
+                    $request['sendNotification'] = 0;
 
                     $found = true;
                     break;
@@ -459,7 +459,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                                 $this->getRootEventId($this));
 
                             // If notification email was requested, then send it just once
-                            $request['sendNotification'] = '';
+                            $request['sendNotification'] = 0;
                         }
                     }
                 }
@@ -513,7 +513,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                                     $this->_saveEvent($request, $newModel, $oneDate, $daysDuration, $participantId,
                                         $parentId);
                                     // If notification email was requested, then send it just once
-                                    $request['sendNotification'] = '';
+                                    $request['sendNotification'] = 0;
                                 }
                             }
                         }
@@ -549,7 +549,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         // Edit the rest of participants?
         if ($this->_isOwner($this) && $multipleParticipants) {
             // If notification email was requested, then send it just once
-            $request['sendNotification'] = '';
+            $request['sendNotification'] = 0;
 
             $rootEventId = $this->getRootEventId($this);
             $where       = sprintf('(parent_id = %d OR id = %d) AND DATE(start_datetime) = %s', (int) $rootEventId,

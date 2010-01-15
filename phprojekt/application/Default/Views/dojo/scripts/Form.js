@@ -929,7 +929,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Adds a tab for sending a notification to the users with read access, telling them about the item added
         //    or modified. It has a "Send Notification" checkbox.
         // Default value
-        var defaultValue = (phpr.config.notificationEnabledByDefault) ? '1' : '';
+        var defaultValue = (phpr.config.notificationEnabledByDefault) ? 1 : 0;
         // Add field
         var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification',
             defaultValue, false, phpr.nls.get('Check this box to send an email notification to the participants'));
@@ -1035,7 +1035,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                         case 'checkbox':
                             var displayfield = field;
                             if (fieldWidget = dijit.byId(field)) {
-                                value = (value || value == 'on') ? true : false;
+                                value = (value == 1) ? true : false;
                                 fieldWidget.attr('checked', value);
                                 dojo.addClass(dojo.byId(displayfield).parentNode, "highlightChanges");
                             }

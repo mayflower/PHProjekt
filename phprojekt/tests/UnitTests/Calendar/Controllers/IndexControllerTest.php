@@ -59,7 +59,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startDatetime', '2009-06-02 09:00:00');
         $this->request->setParam('endDatetime', '2009-06-02 10:00:00');
         $this->request->setParam('dataParticipant', 1);
-        $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('sendNotification', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Calendar_IndexController::ADD_TRUE_TEXT, $response);
@@ -275,7 +275,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('multipleEvents', true);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081204T040000Z;INTERVAL=1;BYDAY=');
-        $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('sendNotification', 1);
         $this->request->setParam('multipleParticipants', true);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();

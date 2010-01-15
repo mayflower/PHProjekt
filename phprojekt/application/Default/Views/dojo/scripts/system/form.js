@@ -17,7 +17,30 @@
  * @since      File available since Release 6.0
  */
 
+dojo.provide("phpr.form.CheckBox");
+dojo.provide("phpr.form.HorizontalSlider");
 dojo.provide("phpr.form.Rating");
+
+dojo.declare("phpr.form.CheckBox", dijit.form.CheckBox, {
+    // Summary:
+    //    Re-write the widget for return 0 on no-checked
+
+    _getValueAttr: function(){
+        // Summary:
+        //    Hook so attr('value') works.
+        // Description:
+        //    If the CheckBox is checked, returns the value attribute.
+        //    Otherwise returns 0.
+        return (this.checked ? this.value : 0);
+    }
+});
+
+dojo.declare("phpr.form.HorizontalSlider", dijit.form.HorizontalSlider, {
+    _layoutHackIE7: function() {
+        // Summary:
+        //    Disable work around table sizing bugs on IE7 by forcing redraw
+    }
+});
 
 dojo.declare("phpr.form.Rating", [dojox.form.Rating], {
     // Summary:

@@ -28,11 +28,11 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     checkRender:function(itemlabel, itemid, itemvalue, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         var itemchecked = false;
-        if (itemvalue == "on" || itemvalue == "1") {
+        if (itemvalue == 1) {
             itemchecked = true;
         }
 
-        if (itemdisabled && ((itemvalue == "on" || itemvalue == "1"))) {
+        if (itemdisabled && (itemvalue == 1)) {
             var useDisableField = true;
         } else {
             var useDisableField = false;

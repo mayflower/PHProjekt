@@ -520,7 +520,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
         case 'checkbox':
             formLabel = params['formLabel'] || 'Checkbox';
             labelFor = 'checkbox';
-            inputTxt = '<input type="checkbox" dojotype="dijit.form.CheckBox" value="1" />'
+            inputTxt = '<input type="checkbox" dojotype="phpr.form.CheckBox" value="1" />'
             break;
         case 'date':
             formLabel = params['formLabel'] || 'Date';
@@ -583,7 +583,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
         case 'percentage':
             formLabel = params['formLabel'] || 'Percentage';
             labelFor = 'percentage';
-            inputTxt = '<div dojoType="dijit.form.HorizontalSlider" maximum="100" minimum="0"';
+            inputTxt = '<div dojoType="phpr.form.HorizontalSlider" maximum="100" minimum="0"';
             inputTxt += ' pageIncrement="100" showButtons="false" intermediateChanges="true" style="height: 20px;">';
             inputTxt += '<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration"';
             inputTxt += ' style="height:1.2em;font-size:75%;color:gray;" count="5" numericMargin="1"></ol>';

@@ -34,6 +34,12 @@
 final class Default_Helpers_Right
 {
     /**
+     * Strings to use for the type of access
+     */
+    const ITEM_TYPE   = "item";
+    const MODULE_TYPE = "module";
+
+    /**
      * Add the user into the dataAccess array
      *
      * @param array   $params The Post values
@@ -220,7 +226,34 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public static function getRights($params, $newItem, $ownerId = 0)
+    public static function getItemRights($params, $newItem, $ownerId = 0)
+    {
+        return self::getRights($params, self::ITEM_TYPE, $newItem, $ownerId);
+    }
+
+    /**
+     * Parse the rights for all the modules and return it into a bitmask per module
+     *
+     * @param array $params The post values
+     *
+     * @return array
+     */
+    public static function getModuleRights($params)
+    {
+        return self::getRights($params, self::MODULE_TYPE);
+    }
+
+    /**
+     * Parse the rights for all the users and return it into a bitmask per user
+     *
+     * @param array   $params  The post values
+     * @param string  $type    Type of right, for users or modules
+     * @param boolean $newItem If is a new item or not
+     * @param integer $ownerId The owner id or 0 for the current user
+     *
+     * @return array
+     */
+    private static function getRights($params, $type, $newItem = false, $ownerId = 0)
     {
         $right  = array();
         $rights = array();
@@ -229,44 +262,49 @@ final class Default_Helpers_Right
             $ids = array_keys($params['dataAccess']);
             foreach ($ids as $accessId) {
                 $right = array();
-                $right['none']     = (isset($params['checkNoneAccess'][$accessId])) ? true : false;
-                $right['read']     = (isset($params['checkReadAccess'][$accessId])) ? true : false;
-                $right['write']    = (isset($params['checkWriteAccess'][$accessId])) ? true : false;
-                $right['access']   = (isset($params['checkAccessAccess'][$accessId])) ? true : false;
-                $right['create']   = (isset($params['checkCreateAccess'][$accessId])) ? true : false;
-                $right['copy']     = (isset($params['checkCopyAccess'][$accessId])) ? true : false;
-                $right['delete']   = (isset($params['checkDeleteAccess'][$accessId])) ? true : false;
-                $right['download'] = (isset($params['checkDownloadAccess'][$accessId])) ? true : false;
-                $right['admin']    = (isset($params['checkAdminAccess'][$accessId])) ? true : false;
+                $right['none']     = self::_checked($params,'checkNoneAccess', $accessId);
+                $right['read']     = self::_checked($params,'checkReadAccess', $accessId);
+                $right['write']    = self::_checked($params,'checkWriteAccess', $accessId);
+                $right['access']   = self::_checked($params,'checkAccessAccess', $accessId);
+                $right['create']   = self::_checked($params,'checkCreateAccess', $accessId);
+                $right['copy']     = self::_checked($params,'checkCopyAccess', $accessId);
+                $right['delete']   = self::_checked($params,'checkDeleteAccess', $accessId);
+                $right['download'] = self::_checked($params,'checkDownloadAccess', $accessId);
+                $right['admin']    = self::_checked($params,'checkAdminAccess', $accessId);
                 $rights[$accessId] = Phprojekt_Acl::convertArrayToBitmask($right);
             }
         }
 
-        // Only set the full access if is a new item
-        if ($newItem) {
-            if ($ownerId == 0) {
-                $ownerId = Phprojekt_Auth::getUserId();
+        if ($type == self::ITEM_TYPE) {
+            // Only set the full access if is a new item
+            if ($newItem) {
+                if ($ownerId == 0) {
+                    $ownerId = Phprojekt_Auth::getUserId();
+                }
+                $right['none']     = true;
+                $right['read']     = true;
+                $right['write']    = true;
+                $right['access']   = true;
+                $right['create']   = true;
+                $right['copy']     = true;
+                $right['delete']   = true;
+                $right['download'] = true;
+                $right['admin']    = true;
+                $rights[$ownerId]  = Phprojekt_Acl::convertArrayToBitmask($right);
             }
-            $right['none']     = true;
-            $right['read']     = true;
-            $right['write']    = true;
-            $right['access']   = true;
-            $right['create']   = true;
-            $right['copy']     = true;
-            $right['delete']   = true;
-            $right['download'] = true;
-            $right['admin']    = true;
-            $rights[$ownerId]  = Phprojekt_Acl::convertArrayToBitmask($right);
-        }
 
-        // Return access only for allowed users
-        $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $result       = $activeRecord->getAllowedUsers();
-        $resultRights = array();
-        foreach ($result as $node) {
-            if (isset($rights[$node['id']])) {
-                $resultRights[$node['id']] = $rights[$node['id']];
+            // Return access only for allowed users
+            $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $result       = $activeRecord->getAllowedUsers();
+            $resultRights = array();
+            foreach ($result as $node) {
+                if (isset($rights[$node['id']])) {
+                    $resultRights[$node['id']] = $rights[$node['id']];
+                }
             }
+
+        } else {
+            $resultRights = $rights;
         }
 
         return $resultRights;
@@ -353,5 +391,25 @@ final class Default_Helpers_Right
         }
 
         return $params;
+    }
+
+    /**
+     * Return true or false if the checkbox is checked
+     *
+     * @param array $params  The post value
+     * @param string $string The key of the field
+     * @param int $accessId  The user Id
+     *
+     * @return boolean
+     */
+    private static function _checked($params, $string, $accessId)
+    {
+        if (isset($params[$string][$accessId])) {
+            if ($params[$string][$accessId] == 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

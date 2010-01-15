@@ -100,7 +100,7 @@ final class Default_Helpers_Save
             $itemRights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
             $check      = $itemRights->getRights(1, $node->getActiveRecord()->id);
             if ($check['currentUser']['access']) {
-                $rights = Default_Helpers_Right::getRights($params, $newItem);
+                $rights = Default_Helpers_Right::getItemRights($params, $newItem);
 
                 if (count($rights) > 0) {
                     $node->getActiveRecord()->saveRights($rights);
@@ -111,7 +111,13 @@ final class Default_Helpers_Save
                     if (!isset($params['checkModuleRelation'])) {
                         $params['checkModuleRelation'] = array();
                     }
-                    $node->getActiveRecord()->saveModules(array_keys($params['checkModuleRelation']));
+                    $saveModules = array();
+                    foreach ($params['checkModuleRelation'] as $checkModule => $checkValue) {
+                        if ($checkValue == 1) {
+                            $saveModules[] = $checkModule;
+                        }
+                    }
+                    $node->getActiveRecord()->saveModules($saveModules);
                 }
 
                 // Save the role-user-project relation
@@ -183,7 +189,11 @@ final class Default_Helpers_Save
             $itemRights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
             $check      = $itemRights->getRights(Phprojekt_Module::getId($moduleName), $model->id);
             if ($check['currentUser']['access']) {
-                $rights = Default_Helpers_Right::getRights($params, $newItem);
+                if ($moduleName == 'Core') {
+                    $rights = Default_Helpers_Right::getModuleRights($params);
+                } else {
+                    $rights = Default_Helpers_Right::getItemRights($params, $newItem);
+                }
 
                 if (count($rights) > 0) {
                     $model->saveRights($rights);
@@ -230,7 +240,7 @@ final class Default_Helpers_Save
 
             // Send mail notification?
             if (array_key_exists('sendNotification', $params)) {
-                if ($params['sendNotification'] == 'on' || $params['sendNotification'] == 1) {
+                if ($params['sendNotification'] == 1) {
                     $model->getActiveRecord()->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
                 }
             }
@@ -247,7 +257,7 @@ final class Default_Helpers_Save
 
             // Send mail notification?
             if (array_key_exists('sendNotification', $params)) {
-                if ($params['sendNotification'] == 'on' || $params['sendNotification'] == 1) {
+                if ($params['sendNotification'] == 1) {
                     $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
                 }
             }

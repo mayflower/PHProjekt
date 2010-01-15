@@ -83,7 +83,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('currentStatus', 3);
         $this->request->setParam('userId', 1);
         $this->request->setParam('string', 'My todo tag2');
-        $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('sendNotification', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
@@ -105,7 +105,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('priority', 7);
         $this->request->setParam('currentStatus', 2);
         $this->request->setParam('userId', 1);
-        $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('sendNotification', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Todo_IndexController::EDIT_TRUE_TEXT, $response);

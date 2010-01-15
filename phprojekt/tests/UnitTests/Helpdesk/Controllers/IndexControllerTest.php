@@ -84,7 +84,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('description', 'This is the description 2');
         $this->request->setParam('status', 2);
         $this->request->setParam('string', '');
-        $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('sendNotification', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::ADD_TRUE_TEXT, $response);
@@ -111,7 +111,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('attachments', '');
         $this->request->setParam('description', 'This is the description MODIFIED');
         $this->request->setParam('status', 3);
-        $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('sendNotification', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::EDIT_TRUE_TEXT, $response);
@@ -166,7 +166,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('attachments', '');
         $this->request->setParam('description', 'This is the description MODIFIED');
         $this->request->setParam('status', 4);
-        $this->request->setParam('sendNotification', 'on');
+        $this->request->setParam('sendNotification', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Helpdesk_IndexController::EDIT_TRUE_TEXT, $response);

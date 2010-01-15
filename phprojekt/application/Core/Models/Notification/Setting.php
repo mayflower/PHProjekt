@@ -138,65 +138,6 @@ class Core_Models_Notification_Setting
     }
 
     /**
-     * Save the settings into the table
-     *
-     * @param array   $params $_POST fields
-     * @param integer $userId The user id, if is not setted, the current user is used.
-     *
-     * @return void
-     */
-    public function setSettings($params, $userId = 0)
-    {
-        if (!$userId) {
-            $userId = Phprojekt_Auth::getUserId();
-        }
-
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
-        $setting->setModule('Notification');
-
-        $namespace = new Zend_Session_Namespace(Phprojekt_Setting::IDENTIFIER, $userId);
-        $fields    = $this->getFieldDefinition();
-        $allboxes  = array();
-
-        foreach ($fields as $data) {
-            foreach ($params as $key => $value) {
-                // This is needed because the value of any unchecked checkboxes won´t be in the $_POST,
-                // therefore fill every not in the $_POST field with 0
-                if (!array_key_exists($data['key'], $params)){
-                    $allboxes[$data['key']] = 0;
-                }
-
-                // The regular way: assign the key to the value of $_POST
-                if ($key == $data['key']) {
-                    $allboxes[$data['key']] = $value;
-                }
-            }
-        }
-
-        // Run into this to save the values (even the unchecked boxes)
-        foreach ($allboxes as $boxKey => $boxValue) {
-            $where = sprintf('user_id = %d AND key_value = %s AND module_id = %d', (int) $userId,
-                $setting->_db->quote($boxKey), 0);
-            $record = $setting->fetchAll($where);
-
-            if (isset($record[0])) {
-                $record[0]->keyValue = $boxKey;
-                $record[0]->value    = $boxValue;
-                $record[0]->save();
-            } else {
-                $setting->userId     = $userId;
-                $setting->moduleId   = 0;
-                $setting->keyValue   = $boxKey;
-                $setting->value      = $boxValue;
-                $setting->identifier = 'Core';
-                $setting->save();
-            }
-
-            $namespace->$boxKey = $boxValue;
-        }
-    }
-
-    /**
      * Collect all the values of the settings and return it in one row
      *
      * @param integer $moduleId The current moduleId
