@@ -699,7 +699,7 @@
                                     "user_id":    "##id##",
                                     "module_id":  "0",
                                     "key_value":  "timeZone",
-                                    "value":      "2",
+                                    "value":      "000",
                                     "identifier": "Core"
                                 }
                             ]
@@ -758,7 +758,7 @@
                                     "user_id":    "##id##",
                                     "module_id":  "0",
                                     "key_value":  "timeZone",
-                                    "value":      "2",
+                                    "value":      "000",
                                     "identifier": "Core"
                                 }
                             ]

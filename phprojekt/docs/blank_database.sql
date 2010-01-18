@@ -634,11 +634,11 @@ INSERT INTO `setting` (`id`, `user_id`, `module_id`, `key_value`, `value`, `iden
 (1, 1, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
 (2, 1, 0, 'email','test@example.com', 'Core'),
 (3, 1, 0, 'language','en', 'Core'),
-(4, 1, 0, 'timeZone','2', 'Core'),
+(4, 1, 0, 'timeZone','000', 'Core'),
 (5, 2, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
 (6, 2, 0, 'email','test@example.com', 'Core'),
 (7, 2, 0, 'language','en', 'Core'),
-(8, 2, 0, 'timeZone','2', 'Core');
+(8, 2, 0, 'timeZone','000', 'Core');
 
 INSERT INTO `project` (`id`, `project_id`, `path`, `title`, `notes`, `owner_id`, `start_date`, `end_date`, `priority`, `current_status`, `complete_percent`, `hourly_wage_rate`, `budget`) VALUES
 (1, NULL, '/', 'PHProjekt', 'Test', 1, '2009-05-12', '2009-07-28', 1, 3, 0, NULL, NULL),
