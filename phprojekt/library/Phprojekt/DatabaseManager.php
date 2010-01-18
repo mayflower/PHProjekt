@@ -614,7 +614,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 }
             }
 
-            if ($field['listPosition'] > 0) {
+            if (isset($field['listPosition']) && $field['listPosition'] > 0) {
                 $foundListPosition = true;
             }
         }
