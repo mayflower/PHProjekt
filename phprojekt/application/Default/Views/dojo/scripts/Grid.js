@@ -195,8 +195,10 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             this.gridLayout.push({
                 name:     "ID",
                 field:    "id",
-                width:    "45px",
-                editable: false
+                width:    "40px",
+                type:      dojox.grid.cells.Cell,
+                editable: false,
+                styles:   "text-align: right;"
             });
             this.filterField.push({
                 key:   '_fixedId',
