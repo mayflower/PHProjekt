@@ -231,6 +231,16 @@ class Setup_Models_Setup
         } else if (!is_writable($cacheDir)) {
             $this->_error[] = 'Please set permission to allow use the cache in ' . $cacheDir;
             $valid = false;
+        } else if (is_dir($cacheDir)) {
+            // Remove old data if exists
+            if ($directory = opendir($cacheDir)) {
+                while (($file = readdir($directory)) !== false) {
+                    if ($file == '.' || $file == '..') {
+                        continue;
+                    }
+                    unlink($cacheDir . DIRECTORY_SEPARATOR . $file);
+                }
+            }
         }
 
         // Migration
@@ -306,5 +316,12 @@ class Setup_Models_Setup
         $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
         $configFile = $baseDir . "configuration.ini";
         file_put_contents($configFile, $content);
+
+        // Delete a session if exists
+        $_SESSION = array();
+        foreach ($_COOKIE as $key => $value) {
+            setcookie($key, "", 1);
+        }
+        Zend_Session::writeClose();
     }
 }
