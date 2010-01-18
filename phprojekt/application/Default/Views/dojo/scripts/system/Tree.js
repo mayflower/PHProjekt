@@ -32,11 +32,11 @@ dojo.declare("phpr.Tree", phpr.Component, {
 
     constructor:function() {
         this.setUrl();
-        this.setId();
+        this.setId(null);
     },
 
     loadTree:function() {
-        if (!dijit.byId(this._idName)) {
+        if (!this._idName || !dijit.byId(this._idName)) {
             this.setNode();
             // Data of the tree
             var _this = this;
@@ -46,6 +46,7 @@ dojo.declare("phpr.Tree", phpr.Component, {
                 _this._store = new dojo.data.ItemFileWriteStore({data: content});
                 _this.getModel();
                 _this.tree = _this.getTree();
+                _this.setId(_this.tree.id);
                 _this._treeNode.attr('content', _this.tree.domNode);
                 _this.tree.startup();
                 dojo.connect(_this.tree, "onClick", dojo.hitch(this, "onItemClick"));
@@ -77,7 +78,6 @@ dojo.declare("phpr.Tree", phpr.Component, {
 
     getTree:function() {
         return new dijit.Tree({
-            id:       this._idName,
             model:    this._model,
             showRoot: false,
             persist:  false
@@ -108,12 +108,12 @@ dojo.declare("phpr.Tree", phpr.Component, {
         this._treeNode = dijit.byId("treeBox");
     },
 
-    setId:function() {
+    setId:function(id) {
         // Summary:
         //    Set the id of the widget
         // Description:
         //    Set the id of the widget
-        this._idName = 'treeNode';
+        this._idName = id;
     },
 
     updateData:function() {
