@@ -36,6 +36,13 @@ B. License
     register_globals     = 0
     safe_mode            = 0
 
+    If you don't have access to the php.ini for change these values,
+    you can try creating a .htaccess file with for example, the following content:
+
+        php_flag magic_quotes_gpc off
+
+    and put it into the root folder of the app.
+
     Note: Phprojekt 6 has been tested with:
 
     * Apache HTTP Server 2.2
@@ -44,16 +51,17 @@ B. License
 
 2. Installation
 
- 1. Download the compressed package file and decompress it into an appropriate
-    folder outside the ones accessed by your HTTP server.
+ 1. Download the compressed package file and decompress it into an appropriate folder
+    outside the ones accessed by your HTTP server.
 
      $ tar xzvpf phprojekt-6.X.tar.gz
      $ cp -R phprojekt/* /srv/www/
 
     Use your favorite packaging tool on Windows under an appropriate path "C:\phprojekt\"
 
- 2. Phprojekt separates both the document root from the rest of the application, so you want to point
-    your server host to the 'htdocs' folder. In the example given, would be:
+ 2. Phprojekt separates both the document root from the rest of the application,
+    so you want to point your server host to the 'htdocs' folder.
+    In the example given, would be:
 
     UNIX        /srv/www/htdocs/
     WINDOWS     C:\phprojekt\htdocs\
@@ -78,8 +86,8 @@ B. License
     UNIX        /srv/www/docs/blank_database.sql
     WINDOWS     c:\phprojekt\docs\blank_database.sql
 
-    and load it into the database. You might want to use MySQL Administration tools
-    or PHPMyAdmin. You can also use the command line to do so:
+    Load it into the database. You might want to use MySQL Administration tools or PHPMyAdmin.
+    You can also use the command line to do so:
 
     UNIX
       $ mysql -u phprojekt -p
@@ -92,9 +100,8 @@ B. License
 
 3. Configuration
 
- 1. Make a copy of configuration.ini-dist in the same folder, name it
-    configuration.ini and set its parameters according to the explanations and
-    examples inside it.
+ 1. Make a copy of configuration.ini-dist in the same folder,
+    name it configuration.ini and set its parameters according to the explanations and examples inside it.
 
     UNIX     /srv/www/configuration.ini-dist
              to /srv/www/configuration.ini
@@ -103,8 +110,8 @@ B. License
 
 4. Permission
 
-    Make sure that the webserver or the webserver group can write to the
-    tmp/ and logs/ directories. You can set these permission using the chmod(1) command.
+    Make sure that the webserver or the webserver group can write to the tmp/ and logs/ directories.
+    You can set these permission using the chmod(1) command.
     Assuming your webserver runs on the group "www-data":
 
     UNIX
@@ -116,16 +123,14 @@ B. License
 
 5. Logs
 
-    If the logs do not exist, please, create them
-    /logs/err.log and /logs/debug.log
+    If the logs do not exist, please, create them /logs/err.log and /logs/debug.log
 
 6. Finalize
 
-    Enter the site from your browser (see Browser notes in the Notes section of
-    this document).
-    Log in using the admin user (See Users notes in the Notes section of this
-    document). It is suggested to change the password, entering to 'Setting'
-    option on the top menu -> Tab 'User' -> Password fields.
+    Enter the site from your browser (see Browser notes in the Notes section of this document).
+    Log in using the admin user (See Users notes in the Notes section of this document).
+    It is suggested to change the password,
+    entering to 'Setting' option on the top menu -> Tab 'User' -> Password fields.
 
 DONE
 
