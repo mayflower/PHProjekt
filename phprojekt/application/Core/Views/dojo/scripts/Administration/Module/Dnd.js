@@ -324,7 +324,8 @@ phpr.editModuleDesignerField = function(nodeId) {
 
     // List
     fieldsList += template.textFieldRender(phpr.nls.get('List Position'), 'listPosition', listPosition, 4, true, false,
-        phpr.nls.get('Defines the position of the field in the grid. Starts with 1 in the left.'));
+        phpr.nls.get('Defines the position of the field in the grid. Starts with 1 in the left. '
+        + '0 for do not show it.'));
 
     fieldsList += '<tr><td class="label">';
     fieldsList += '<label for="moduleDesignerSubmitButtonList">&nbsp;</label>';
@@ -491,10 +492,13 @@ phpr.makeModuleDesignerField = function(formType, params) {
     var tableField   = params['tableField'] || '';
     var formRange    = params['formRange'] || '';
     var defaultValue = params['defaultValue'] || '';
-    var listPosition = params['listPosition'] || 1;
-    var status       = params['status'] || 1;
-    var isRequired   = params['isRequired'] || 0;
-    var id           = params['id'] || 0;
+    var listPosition = parseInt(params['listPosition']);
+    if  (isNaN(listPosition)) {
+        listPosition = 0;
+    }
+    var status     = params['status'] || 1;
+    var isRequired = params['isRequired'] || 0;
+    var id         = params['id'] || 0;
 
     if (formType == 'selectValues') {
         var options = formRange.split("|");

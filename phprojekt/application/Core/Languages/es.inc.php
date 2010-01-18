@@ -45,6 +45,8 @@ $lang["Invalid form Range for the select field"] = "Rango invalido para el campo
 $lang["The module must have a project selector called project_id"] = "El módulo debe tener un selector de proyecto "
     . "llamado project_id";
 $lang["Project module must be a normal module"] = "Módulo de Proyecto debe ser un módulo normal";
+$lang["The module must have at least one field with the list position greater than 0"] = "El módulo debe tener al "
+    . "menos un campo con la posición en la lista mayor a 0";
 
 // User submodule
 $lang["Already exists, choose another one please"] = "Ya existente, elija otro por favor";
@@ -62,8 +64,8 @@ $lang["For Modules queries, use Module#keyField#displayField."] = "Para consulta
     . "Módulo#campoClave#campoParaMostrar";
 $lang["The API will get all the keyField of the module and will use the displayField for show it."] = "La API "
     . "obtendrá todos los campoClaves del módulos y utilizará el campoParaMostrar para mostrarlos.";
-$lang["Defines the position of the field in the grid. Starts with 1 in the left."] = "Define la posición del campo en "
-    . "la grilla. Empieza con 1 en la izquierda";
+$lang["Defines the position of the field in the grid. Starts with 1 in the left. 0 for do not show it."] = "Define la posición del campo en "
+    . "la grilla. Empieza con 1 en la izquierda. 0 para no mostrarlo.";
 $lang["Drag a field from this side, and drop it in the right panel."] = "Arrastre un campo de este lado, y suéltelo "
     . "en el panel derecho.";
 $lang["Edit the field in the bottom panel when this appear after the drop."] = "Edite el campo en el panel inferior "

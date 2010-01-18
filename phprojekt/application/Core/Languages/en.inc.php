@@ -44,6 +44,8 @@ $lang["Invalid form Range for the select field"] = "Invalid form Range for the s
 $lang["The module must have a project selector called project_id"] = "The module must have a project selector called "
     . "project_id";
 $lang["Project module must be a normal module"] = "Project module must be a normal module";
+$lang["The module must have at least one field with the list position greater than 0"] = "The module must have at "
+    . "least one field with the list position greater than 0";
 
 // User submodule
 $lang["Already exists, choose another one please"] = "Already exists, choose another one please";
@@ -61,8 +63,8 @@ $lang["For Modules queries, use Module#keyField#displayField."] = "For Modules q
     . "Module#keyField#displayField.";
 $lang["The API will get all the keyField of the module and will use the displayField for show it."] = "The API will "
     . "get all the keyField of the module and will use the displayField for show it.";
-$lang["Defines the position of the field in the grid. Starts with 1 in the left."] = "Defines the position of the "
-    . "field in the grid. Starts with 1 in the left.";
+$lang["Defines the position of the field in the grid. Starts with 1 in the left. 0 for do not show it."] = "Defines "
+    . "the position of the field in the grid. Starts with 1 in the left. 0 for do not show it.";
 $lang["Drag a field from this side, and drop it in the right panel."] = "Drag a field from this side, and drop it in "
     . "the right panel.";
 $lang["Edit the field in the bottom panel when this appear after the drop."] = "Edit the field in the bottom panel "
