@@ -488,8 +488,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             }
         }
 
-        $foundFields    = array();
-        $foundProjectId = false;
+        $foundFields       = array();
+        $foundProjectId    = false;
+        $foundListPosition = false;
         foreach ($data as $field) {
             if ($valid && (!isset($field['tableLength']) || !isset($field['tableField']) ||
                 !isset($field['tableType']) || !isset($field['formType']))) {
@@ -612,6 +613,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $foundProjectId = true;
                 }
             }
+
+            if ($field['listPosition'] > 0) {
+                $foundListPosition = true;
+            }
         }
 
         if ($valid && !$foundProjectId && $saveType != 1) {
@@ -621,6 +626,15 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                 'message' => Phprojekt::getInstance()->translate('The module must have a project selector called '
                     . 'project_id')));
+        }
+
+        if ($valid && !$foundListPosition) {
+            $valid = false;
+            $this->_error->addError(array(
+                'field'   => 'Module Designer',
+                'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                'message' => Phprojekt::getInstance()->translate('The module must have at least one field with the '
+                    . ' list position greater than 0')));
         }
 
         return $valid;
