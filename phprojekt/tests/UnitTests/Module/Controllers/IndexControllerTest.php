@@ -44,7 +44,7 @@ class Module_IndexController_Test extends FrontInit
             . '"formRegexp":null,'
             . '"listAlign":"center","listUseFilter":1,"altPosition":0,"isInteger":0,"isUnique":0,"tableField":'
             . '"project_id","selectType":"project","tableType":"int","tableLength":11,"formLabel":"Project","formType"'
-            . ':"selectValues","formRange":"Project # id # title","defaultValue":1,"listPosition":0,"status":1,'
+            . ':"selectValues","formRange":"Project # id # title","defaultValue":1,"listPosition":1,"status":1,'
             . '"isRequired":1}}';
         $this->setRequestUrl('Core/moduleDesigner/jsonSave');
         $this->request->setParam('id', null);
@@ -137,7 +137,7 @@ class Module_IndexController_Test extends FrontInit
             . '"formColumns":1,"formRegexp":null,"listAlign":"center","listUseFilter":1,"altPosition":0,"isInteger":0,'
             . '"isUnique":0,"tableField":"project_id","selectType":"project","tableType":"int","tableLength":5,'
             . '"formLabel":"Project","formType":"selectValues","formRange":"Project # id # title","defaultValue":1,'
-            . '"listPosition":0,"status":1,"isRequired":1}}';
+            . '"listPosition":1,"status":1,"isRequired":1}}';
         $this->setRequestUrl('Core/moduleDesigner/jsonSave');
         $this->request->setParam('designerData', $designerData);
         $this->request->setParam('id', Zend_Registry::get('moduleId'));
@@ -155,12 +155,12 @@ class Module_IndexController_Test extends FrontInit
             . '"formColumns":1,"formRegexp":null,"listAlign":"center","listUseFilter":1,"altPosition":0,"isInteger":0,'
             . '"isUnique":0,"tableField":"project_id","selectType":"project","tableType":"int","tableLength":5,'
             . '"formLabel":"Project","formType":"selectValues","formRange":"Project # id # title","defaultValue":1,'
-            . '"listPosition":0,"status":1,"isRequired":1},'
+            . '"listPosition":1,"status":1,"isRequired":1},'
             . '"1":{"id":0,"tableName":"Test","formPosition":1,"formTab":1,"formColumns":1,'
             . '"formRegexp":null,"listAlign":"center","listUseFilter":1,"altPosition":0,"isInteger":0,"isUnique":0,'
             . '"tableField":"test_field","selectType":"custom","tableType":"varchar","tableLength":10,'
             . '"formLabel":"Project","formType":"text","formRange":"","defaultValue":1,'
-            . '"listPosition":0,"status":1,"isRequired":1}}';
+            . '"listPosition":2,"status":1,"isRequired":1}}';
         $this->setRequestUrl('Core/moduleDesigner/jsonSave');
         $this->request->setParam('designerData', $designerData);
         $this->request->setParam('id', Zend_Registry::get('moduleId'));
@@ -178,7 +178,7 @@ class Module_IndexController_Test extends FrontInit
             . '"formColumns":1,"formRegexp":null,"listAlign":"center","listUseFilter":1,"altPosition":0,"isInteger":0,'
             . '"isUnique":0,"tableField":"project_id","selectType":"project","tableType":"int","tableLength":5,'
             . '"formLabel":"Project","formType":"selectValues","formRange":"Project # id # title","defaultValue":1,'
-            . '"listPosition":0,"status":1,"isRequired":1}}';
+            . '"listPosition":1,"status":1,"isRequired":1}}';
         $this->setRequestUrl('Core/moduleDesigner/jsonSave');
         $this->request->setParam('designerData', $designerData);
         $this->request->setParam('id', Zend_Registry::get('moduleId'));

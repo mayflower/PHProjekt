@@ -261,6 +261,19 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
                   'selectType'  => 'custom'))));
         $error = $db->getError();
         $this->assertEquals($message, $error['message']);
+
+        $message = 'The module must have at least one field with the  list position greater than 0';
+        $this->assertFalse($db->recordValidate(array(
+            array('tableName'    => 'Project',
+                  'tableType'    => 'int',
+                  'tableField'   => 'project_id',
+                  'tableLength'  => 11,
+                  'formType'     => 'selectValues',
+                  'formRange'    => '1#Gustavo | 2#Solt',
+                  'selectType'   => 'custom',
+                  'listPosition' => 0))));
+        $error = $db->getError();
+        $this->assertEquals($message, $error['message']);
     }
 
     /**
