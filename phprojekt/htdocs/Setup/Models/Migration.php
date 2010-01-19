@@ -220,8 +220,8 @@ class Setup_Models_Migration
 
         foreach ($users as $user) {
             $loginName = $user['loginname'];
-            $firstName = utf8_encode($user['vorname']);
-            $lastName  = utf8_encode($user['nachname']);
+            $firstName = $this->_fix($user['vorname'], 255);
+            $lastName  = $this->_fix($user['nachname'], 255);
 
             if ($loginName != "root" && $loginName != "test") {
                 switch (PHPR_LOGIN_SHORT) {
@@ -248,7 +248,7 @@ class Setup_Models_Migration
                 }
 
                 $userId = $this->_tableManager->insertRow('user', array(
-                    'username'  => utf8_encode($username),
+                    'username'  => $this->_fix($username),
                     'firstname' => $firstName,
                     'lastname'  => $lastName,
                     'status'    => $status,
@@ -297,13 +297,13 @@ class Setup_Models_Migration
             $oldUserId                      = $user['ID'];
             $this->_users[$oldUserId]       = $userId;
             $this->_userKurz[$user['kurz']] = $userId;
-            $this->_timeZone[$userId]       = 2;
+            $this->_timeZone[$userId]       = "000";
             $language                       = 'en';
 
             @$settings = unserialize($user['settings']);
             if (is_array($settings)) {
                 if (isset($settings['timezone'])) {
-                    $this->_timeZone[$userId] = $settings['timezone'];
+                    $this->_timeZone[$userId] = $this->_getP6TimeZone($settings['timezone']);
                 }
                 if (isset($settings['langua'])) {
                     $language = $settings['langua'];
@@ -373,7 +373,7 @@ class Setup_Models_Migration
             $projectId = $this->_tableManager->insertRow('project', array(
                 'path'             => "/1/",
                 'project_id'       => 1,
-                'title'            => utf8_encode($project['name']),
+                'title'            => $this->_fix($project['name']),
                 'notes'            => null,
                 'owner_id'         => self::USER_ADMIN,
                 'start_date'       => null,
@@ -511,16 +511,16 @@ class Setup_Models_Migration
                 $projectId = $this->_tableManager->insertRow('project', array(
                     'path'             => $paths[$parentId],
                     'project_id'       => $parentId,
-                    'title'            => utf8_encode($project['name']),
-                    'notes'            => substr(utf8_encode($project['note']), 0, 65500),
+                    'title'            => $this->_fix($project['name'], 255),
+                    'notes'            => $this->_fix($project['note'], 65500),
                     'owner_id'         => $project['von'],
                     'start_date'       => $startDate,
                     'end_date'         => $endDate,
                     'priority'         => (int) $project['wichtung'],
                     'current_status'   => (int) $project['kategorie'],
                     'complete_percent' => $project['status'],
-                    'hourly_wage_rate' => utf8_encode($project['stundensatz']),
-                    'budget'           => utf8_encode($project['budget'])));
+                    'hourly_wage_rate' => $this->_fix($project['stundensatz'], 10),
+                    'budget'           => $this->_fix($project['budget'], 10)));
 
                 $this->_projects[$oldProjectId] = $projectId;
                 $path                           = $paths[$parentId] . $projectId . "/";
@@ -609,8 +609,8 @@ class Setup_Models_Migration
                     $endDate = null;
                 }
 
-                $dbValues[] = array($projectId, utf8_encode($todo['remark']),
-                    substr(utf8_encode($todo['note']), 0, 65500), $todo['von'], $todo['priority'], $todo['status'],
+                $dbValues[] = array($projectId, $this->_fix($todo['remark']),
+                    $this->_fix($todo['note'], 65500), $todo['von'], $todo['priority'], $todo['status'],
                     $todo['ext'], $startDate, $endDate);
             }
 
@@ -660,8 +660,8 @@ class Setup_Models_Migration
                 $projectId   = $this->_processParentProjId($note['projekt'], $note['gruppe']);
                 $note['von'] = $this->_processOwner($note['von']);
 
-                $dbValues[] = array($projectId, utf8_encode($note['name']),
-                    substr(utf8_encode($note['remark']), 0, 65500), $note['von']);
+                $dbValues[] = array($projectId, $this->_fix($note['name'], 255), $this->_fix($note['remark'], 65500),
+                    $note['von']);
             }
 
             // Run the multiple inserts
@@ -767,7 +767,7 @@ class Setup_Models_Migration
                             list($moduleId, $itemId) = $this->_getItemAndModule($timeproj);
 
                             $dbValues[] = array($this->_users[$userId], $timeproj['datum'], $starTime, $endTime,
-                                $minutes, $timeproj['projekt'], substr(utf8_encode($timeproj['note']), 0, 65500),
+                                $minutes, $timeproj['projekt'], $this->_fix($timeproj['note'], 65500),
                                 $moduleId, $itemId);
 
                             $tmpMinutes = ((24 - $lastHour)* 60);
@@ -789,7 +789,7 @@ class Setup_Models_Migration
                         list($moduleId, $itemId) = $this->_getItemAndModule($timeproj);
 
                         $dbValues[] = array($this->_users[$userId], $timeproj['datum'], $starTime, $endTime, $minutes,
-                            $timeproj['projekt'], substr(utf8_encode($timeproj['note']), 0, 65500), $moduleId, $itemId);
+                            $timeproj['projekt'], $this->_fix($timeproj['note'], 65500), $moduleId, $itemId);
                     }
                 }
             }
@@ -896,9 +896,9 @@ class Setup_Models_Migration
                     // @todo: 'ical_ID' field is not being migrated to 'uid' field,
                     // it will be done when implemented P6 ical
                     $dbValues[] = array($parentId, $calendar['von'], self::PROJECT_ROOT,
-                        utf8_encode($calendar['event']), utf8_encode($calendar['ort']),
-                        substr(utf8_encode($calendar['remark']), 0, 65500), null, $date . " " . $calendar['anfang'],
-                        $date . " " . $calendar['ende'], $timezone, utf8_encode($calendar['ort']), "",
+                        $this->_fix($calendar['event'], 255), $this->_fix($calendar['ort']),
+                        $this->_fix($calendar['remark'], 65500), null, $date . " " . $calendar['anfang'],
+                        $date . " " . $calendar['ende'], $timezone, $this->_fix($calendar['ort']), "",
                         $calendar['priority'], $rrule, "", $participantId);
                 } else {
                     unset($events[$index]);
@@ -969,8 +969,7 @@ class Setup_Models_Migration
 
                     // All the required data is filled?
                     if (!empty($file['tempname']) && !empty($file['filename'])) {
-                        $title = utf8_encode($file['filename']);
-                        $title = substr($title, 0, 100);
+                        $title = $this->_fix($file['filename'], 100);
 
                         // Copy file, if it is there
                         $originPath = PHPR_FILE_PATH . "\\" . $file['tempname'];
@@ -979,8 +978,8 @@ class Setup_Models_Migration
                             copy($originPath, $targetPath);
                         }
 
-                        $dbValues[] = array($file['von'], $title, substr(utf8_encode($file['remark']), 0, 65500),
-                            $file['div2'], utf8_encode($newFilename . "|" . $file['filename']));
+                        $dbValues[] = array($file['von'], $title, $this->_fix($file['remark'], 65500),
+                            $file['div2'], $this->_fix($newFilename . "|" . $file['filename']));
                     } else {
                         unset($files[$index]);
                     }
@@ -1053,11 +1052,11 @@ class Setup_Models_Migration
                     $comment .= chr(10) . 'User defined field 2: ' . $contact['div2'];
                 }
 
-                $dbValues[] = array(self::PROJECT_ROOT, utf8_encode($contact['vorname'] . ' ' . $contact['nachname']),
-                    utf8_encode($contact['email']), utf8_encode($contact['firma']), utf8_encode($contact['tel1']),
-                    utf8_encode($contact['tel2']), utf8_encode($contact['mobil']), utf8_encode($contact['strasse']),
-                    utf8_encode($contact['stadt']), utf8_encode($contact['plz']), utf8_encode($contact['land']),
-                    utf8_encode($comment), $contact['von'], 1);
+                $dbValues[] = array(self::PROJECT_ROOT, $this->_fix($contact['vorname'] . ' ' . $contact['nachname']),
+                    $this->_fix($contact['email']), $this->_fix($contact['firma']), $this->_fix($contact['tel1']),
+                    $this->_fix($contact['tel2']), $this->_fix($contact['mobil']), $this->_fix($contact['strasse']),
+                    $this->_fix($contact['stadt']), $this->_fix($contact['plz']), $this->_fix($contact['land']),
+                    $this->_fix($comment), $contact['von'], 1);
             }
 
             // Run the multiple inserts
@@ -1195,7 +1194,7 @@ class Setup_Models_Migration
                 }
 
                 // Process description
-                $description  = substr(utf8_encode($item['note']), 0, 65500) . chr(10) . chr(10);
+                $description  = $this->_fix($item['note'], 65500) . chr(10) . chr(10);
                 $description .= $item['solution'];
 
                 // Process status
@@ -1277,9 +1276,9 @@ class Setup_Models_Migration
                     $contact = null;
                 }
 
-                $dbValues[] = array($projectId, $ownerId, utf8_encode($item['name']), $assignedId, $date, $priority,
-                    $attachmentField, $description, $statusNumber, $dueDate, $authorId, $solvedBy, $solvedDate,
-                    $contact);
+                $dbValues[] = array($projectId, $ownerId, $this->_fix($item['name'], 255), $assignedId,
+                    $date, $priority, $attachmentField, $description, $statusNumber, $dueDate, $authorId, $solvedBy,
+                    $solvedDate, $contact);
             }
 
             // Run the multiple inserts
@@ -1769,5 +1768,38 @@ class Setup_Models_Migration
         }
 
         return array($moduleId, $itemId);
+    }
+
+    /**
+     * Fix timeZone with the P6 values
+     *
+     * @param int $timeZone +/- TimeZone
+     *
+     * @return string
+     */
+    private function _getP6TimeZone($timeZone)
+    {
+        if ($timeZone == 0 || $timeZone > 12 || $timeZone < -12) {
+            return "000";
+        } else {
+            return $timeZone;
+        }
+    }
+
+    /**
+     * Fix string witn utf8 encode and limit the characters
+     *
+     * @param string $string Normal string
+     * @param int    $length Limit if characters
+     *
+     * @return string
+     */
+    private function _fix($string, $length = 0)
+    {
+        if ($length == 0) {
+            return utf8_encode($string);
+        } else {
+            return substr(utf8_encode($string), 0, $length);
+        }
     }
 }
