@@ -306,7 +306,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     },
 
     displayFieldRender:function(itemlabel, itemid, itemvalue, itemhint, range) {
-        if (range != undefined) {
+        if (null !== range.id) {
             // The Id must be translated into a descriptive String
             for (var j in range) {
                 if (range[j]) {
