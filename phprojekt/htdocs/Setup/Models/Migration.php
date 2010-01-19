@@ -153,8 +153,8 @@ class Setup_Models_Migration
      */
     public function migrateTables()
     {
-        $this->_migrateGroups();
         $this->_migrateUsers();
+        $this->_migrateGroups();
         $this->_migrateGroupsUserRelations();
         $this->_migrateProjects();
         $this->_migrateTodos();
@@ -195,37 +195,6 @@ class Setup_Models_Migration
         } catch (Exception $error) {
             throw new Exception('Can not connect to server at ' . PHPR_DB_HOST
                 . ' using ' . PHPR_DB_USER . ' user ' . '(' . $error->getMessage() . ')');
-        }
-    }
-
-    /**
-     * Collect all the P5 groups and migrate them
-     *
-     * @return void
-     */
-    private function _migrateGroups()
-    {
-        $p5Groups = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "gruppen")->fetchAll();
-        $p6Groups = $this->_db->query("SELECT * FROM groups")->fetchAll();
-
-        foreach ($p5Groups as $p5Group) {
-            $found = false;
-            foreach ($p6Groups as $p6Group) {
-                if ($p6Group['id'] == $p5Group['ID']) {
-                    $found = true;
-                    break;
-                }
-            }
-            $this->_groupsUsers[$p5Group['ID']] = array();
-            if (!$found) {
-                $id = $this->_tableManager->insertRow('groups', array(
-                    'id'   => null,
-                    'name' => $p5Group['name']
-                ));
-            } else {
-                $id = $p5Group['ID'];
-            }
-            $this->_groups[$p5Group['ID']] = $id;
         }
     }
 
@@ -388,46 +357,97 @@ class Setup_Models_Migration
     }
 
     /**
+     * Collect all the P5 groups and migrate them
+     *
+     * @return void
+     */
+    private function _migrateGroups()
+    {
+        $groups = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "gruppen")->fetchAll();
+
+        // Multiple inserts
+        $dbFields = array('module_id', 'project_id');
+        $dbValues = array();
+
+        foreach ($groups as $project) {
+            $projectId = $this->_tableManager->insertRow('project', array(
+                'path'             => "/1/",
+                'project_id'       => 1,
+                'title'            => utf8_encode($project['name']),
+                'notes'            => null,
+                'owner_id'         => self::USER_ADMIN,
+                'start_date'       => null,
+                'end_date'         => null,
+                'priority'         => 1,
+                'current_status'   => 1,
+                'complete_percent' => 0,
+                'hourly_wage_rate' => 0,
+                'budget'           => 0));
+
+            $this->_groupsUsers[$project['ID']] = array();
+            $this->_groups[$project['ID']]      = $projectId;
+
+            foreach ($this->_modules as $moduleId) {
+                $dbValues[] = array($moduleId, $projectId);
+            }
+        }
+
+        // Run the multiple inserts
+        if (!empty($dbValues)) {
+            $this->_tableManager->insertMultipleRows('project_module_permissions', $dbFields, $dbValues);
+        }
+    }
+
+    /**
      * Migrates P5 group-users relations and creates a two-dimensional array with a list of groups of P5 as the first
-     * dimension and users as the second one: _groups
+     * dimension and users as the second one: _groupsUsers
      *
      * @return void
      */
     private function _migrateGroupsUserRelations()
     {
         // User group
-        $userGroups = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "grup_user")->fetchAll();
+        $userGroups = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "grup_user "
+            . "ORDER BY grup_ID")->fetchAll();
 
-        // Multiple inserts
-        $dbFields = array('groups_id', 'user_id');
-        $dbValues = array();
-
+        $lastGroup = 0;
+        $first     = true;
         foreach ($userGroups as $userGroup) {
-            $oldUserId = $userGroup['user_ID'];
+            $oldUserId  = $userGroup['user_ID'];
+            $oldGroupId = $userGroup['grup_ID'];
 
+            if ($lastGroup != $oldGroupId) {
+                if (!$first) {
+                    // Migrate each permission
+                    $moduleId = $this->_getModuleId('Project');
+                    $itemId   = $this->_groups[$lastGroup];
+                    $this->_addItemRights($moduleId, $itemId, $userRightsAdd);
+                }
+
+                // New group
+                $userRightsAdd = array();
+
+                // Just in case group wasn't in 'gruppen' table (it should be),
+                if (!isset($this->_groupsUsers[$oldGroupId])) {
+                    $this->_groupsUsers[$oldGroupId] = array();
+                }
+
+                $lastGroup = $oldGroupId;
+            }
+
+            $first = false;
             // User exists?
             if (isset($this->_users[$oldUserId])) {
                 $userId = $this->_users[$oldUserId];
-                $group  = $userGroup['grup_ID'];
-
-                $dbValues[] = array($this->_groups[$userGroup['grup_ID']], $userId);
-
-                // Just in case group wasn't in 'gruppen' table (it should be),
-                if (!isset($this->_groupsUsers[$group])) {
-                    $this->_groupsUsers[$group] = array();
-                }
 
                 // Avoid duplicate entries
-                if (!in_array($userId, $this->_groupsUsers[$group])) {
+                if (!in_array($userId, $this->_groupsUsers[$oldGroupId])) {
                     // Add user to internal groupsUsers variable
-                    $this->_groupsUsers[$group][] = $userId;
+                    $this->_groupsUsers[$oldGroupId][] = $userId;
                 }
-            }
-        }
 
-        // Run the multiple inserts
-        if (!empty($dbValues)) {
-            $this->_tableManager->insertMultipleRows('groups_user_relation', $dbFields, $dbValues);
+                $userRightsAdd[$userId] = $this->_accessAdmin;
+            }
         }
     }
 
@@ -465,7 +485,10 @@ class Setup_Models_Migration
             foreach ($projects as $index => $project) {
                 $oldProjectId = $project['ID'];
                 if (empty($project['parent'])) {
-                    $parentId = self::PROJECT_ROOT;
+                    $parentId = $this->_groups[$project['gruppe']];
+                    if (!isset($paths[$parentId])) {
+                        $paths[$parentId] = $paths[self::PROJECT_ROOT] . $parentId . "/";
+                    }
                 } else {
                     // Has parent project been processed?
                     $oldParentId = $project['parent'];
@@ -550,7 +573,7 @@ class Setup_Models_Migration
             $dbValues = array();
 
             foreach ($todos as $todo) {
-                $projectId   = $this->_processParentProjId($todo['project']);
+                $projectId   = $this->_processParentProjId($todo['project'], $todo['gruppe']);
                 $todo['von'] = $this->_processOwner($todo['von']);
 
                 $todo['status'] = (int) $todo['status'];
@@ -634,7 +657,7 @@ class Setup_Models_Migration
             $dbValues = array();
 
             foreach ($notes as $note) {
-                $projectId   = $this->_processParentProjId($note['projekt']);
+                $projectId   = $this->_processParentProjId($note['projekt'], $note['gruppe']);
                 $note['von'] = $this->_processOwner($note['von']);
 
                 $dbValues[] = array($projectId, utf8_encode($note['name']),
@@ -702,7 +725,7 @@ class Setup_Models_Migration
                         $currentUser = $userId;
                     }
 
-                    $timeproj['projekt'] = $this->_processParentProjId($timeproj['projekt']);
+                    $timeproj['projekt'] = $this->_processParentProjId($timeproj['projekt'], 0);
 
                     // Fix wrong values the way P5 would show it to the users
                     if (empty($timeproj['h']) || $timeproj['h'] < 0) {
@@ -940,7 +963,7 @@ class Setup_Models_Migration
                 // Is it a file? (not a folder)
                 if ($file['typ'] == "f") {
                     $file['von']  = $this->_processOwner($file['von']);
-                    $file['div2'] = $this->_processParentProjId($file['div2']);
+                    $file['div2'] = $this->_processParentProjId($file['div2'], $file['gruppe']);
                     $newFilename  = md5(uniqid(rand(), 1));
                     $uploadDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
 
@@ -1080,7 +1103,7 @@ class Setup_Models_Migration
             $dbValues = array();
 
             foreach ($incidents as $item) {
-                $projectId = $this->_processParentProjId($item['proj']);
+                $projectId = $this->_processParentProjId($item['proj'], $item['gruppe']);
 
                 // Process owner - Id, email or wrong value
                 $owner = $item['von'];
@@ -1100,7 +1123,6 @@ class Setup_Models_Migration
                         }
                     }
                 }
-                $ownerIdRelation[$item['ID']] = $ownerId;
 
                 // Process assigned user
                 $oldAssignedId = (int) $item['assigned'];
@@ -1232,6 +1254,7 @@ class Setup_Models_Migration
                         }
                     }
                 }
+                $ownerIdRelation[$item['ID']] = $authorId;
 
                 // Process P5 'solving' fields: 'solved' and 'solve_date'
                 $solvedBy = $item['solved'];
@@ -1685,17 +1708,22 @@ class Setup_Models_Migration
      * Process the received parent project Id for an item, if it is a non-existing one, returns the root project id,
      * otherwise returns the matching P6 project Id for this P5 one.
      *
-     * @param int $oldId  Id of the P5 parent project Id as it is in the original P5 item.
+     * @param int $oldProjectId Id of the P5 parent project Id as it is in the original P5 item.
+     * @param int $oldGroupId   Id of the P5 group Id as it is in the original P5 item.
      *
      * @return int  User id to insert in P6 field 'project_id'
      */
-    private function _processParentProjId($oldId)
+    private function _processParentProjId($oldProjectId, $oldGroupId)
     {
-        if (!isset($this->_projects[$oldId])) {
+        if (isset($this->_projects[$oldProjectId])) {
+            // Parent project
+            $projectId = $this->_projects[$oldProjectId];
+        } else if (isset($this->_groups[$oldGroupId])) {
+            // Group Root project
+            $projectId = $this->_groups[$oldGroupId];
+        } else {
             // Non existing projects will be migrated as root one
             $projectId = self::PROJECT_ROOT;
-        } else {
-            $projectId = $this->_projects[$oldId];
         }
 
         return $projectId;

@@ -1,0 +1,37 @@
+<h3>Notes about the migration</h3>
+
+<b>Versions</b>
+
+<ul>
+    <li>The migration is compatible with version 5.1 or a superior one.</li>
+    <li>User passwords will be migrated from version 5.2.1 or better.<br />
+    All previous versions migration will have the same username and password.</li>
+</ul>
+
+<b>Users</b>
+<ul>
+    <li>Root user will not be migrated. Please use the 'admin' user instead.<br />
+    This 'admin' user is just another regular user, but of 'admin' type which provides access to 'Administration'
+    module, won't have access to everything.</li>
+</ul>
+
+<b> Access</b>
+<ul>
+    <li>Since in PHProjekt 6 there is only projects, the groups of PHProjekt 5 will be migrated as root projects,
+    using the user relation for create the access.<br >
+    This means that if a group have only 2 users, these two users will be the only ones that will have access to all
+    the items and projects under this root project.</li>
+    <li>All the users that have access to the group in PHProjekt 5 will have full access to the equivalent root
+    project in PHProjekt 6.</li>
+    <li>If one item is assigned for example to the user "A", and this user is not in the group / root project,
+    then the assigned field will be empty, since this user is not allowed under the project.<br />
+    Add him, to all the tree path for see the correct value.</li>
+</ul>
+
+<b>Modules</b>
+
+<ul>
+    <li>The modules to be migrated are: Calendar, Projects, Notes, Todos, Timeproj, Contacts, Helpdesk
+    and Filemanager.</li>
+    <li>Customized module fields will not be migrated.</li>
+</ul>
