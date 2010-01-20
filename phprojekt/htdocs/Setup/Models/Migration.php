@@ -97,11 +97,26 @@ class Setup_Models_Migration
     private $_dbItemRightValues = array();
 
     /**
+     * Keep the project permissions values
+     *
+     * @var array
+     */
+    private $_dbProjectItemRightValues = array();
+
+    /**
      * Root path, taken out from the config file path
      *
      * @var string
      */
     private $_p5RootPath = null;
+
+    /**
+     * Search vlaues
+     *
+     * @var array
+     */
+    private $_searchWord    = array();
+    private $_searchDisplay = array();
 
     // Phproject 6 Ids
     const USER_ADMIN   = 1;
@@ -166,6 +181,8 @@ class Setup_Models_Migration
         $this->_migrateTimeCard();
 
         $this->_executeItemRightsInsert();
+        $this->_executeSearchDisplayInsert();
+        $this->_executeSearchWordsInsert();
     }
 
     /**
@@ -387,6 +404,12 @@ class Setup_Models_Migration
             $this->_groupsUsers[$project['ID']] = array();
             $this->_groups[$project['ID']]      = $projectId;
 
+            // Add search values
+            $words  = array($this->_fix($project['name'], 255));
+            $itemId = $project['ID'];
+            $this->_addSearchDisplay(1, $itemId, 1, $words[0], '');
+            $this->_addSearchWords(implode(" ", $words), 1, $itemId);
+
             foreach ($this->_modules as $moduleId) {
                 $dbValues[] = array($moduleId, $projectId);
             }
@@ -527,8 +550,15 @@ class Setup_Models_Migration
                 $paths[$projectId]              = $path;
 
                 // Migrate permissions
-                $project['ID'] = $projectId;
+                $project['ID']          = $projectId;
+                $project['p6ProjectId'] = $parentId;
                 $this->_migratePermissions('Project', $project);
+
+                // Add search values
+                $words  = array($this->_fix($project['name'], 255), $this->_fix($project['note'], 65500));
+                $itemId = $project['ID'];
+                $this->_addSearchDisplay(1, $itemId, $project['p6ProjectId'], $words[0], $words[1]);
+                $this->_addSearchWords(implode(" ", $words), 1, $itemId);
 
                 foreach ($this->_modules as $moduleId) {
                     $dbValues[] = array($moduleId, $projectId);
@@ -616,17 +646,24 @@ class Setup_Models_Migration
 
             // Run the multiple inserts
             if (!empty($dbValues)) {
-                $ids = $this->_tableManager->insertMultipleRows('todo', $dbFields, $dbValues, true);
-
+                $ids      = $this->_tableManager->insertMultipleRows('todo', $dbFields, $dbValues, true);
+                $moduleId = $this->_getModuleId('Todo');
                 foreach ($todos as $todo) {
                     // Migrate permissions
-                    $oldTodoId   = $todo['ID'];
-                    $todo['ID']  = array_shift($ids);
-                    $todo['von'] = $this->_processOwner($todo['von']);
-                    $todo['ext'] = $userIdRelation[$oldTodoId];
+                    $oldTodoId           = $todo['ID'];
+                    $todo['ID']          = array_shift($ids);
+                    $todo['von']         = $this->_processOwner($todo['von']);
+                    $todo['ext']         = $userIdRelation[$oldTodoId];
+                    $todo['p6ProjectId'] = $this->_processParentProjId($todo['project'], $todo['gruppe']);
 
                     $this->_todos[$oldTodoId] = $todo['ID'];
                     $this->_migratePermissions('Todo', $todo);
+
+                    // Add search values
+                    $words  = array($this->_fix($todo['remark']), $this->_fix($todo['note'], 65500));
+                    $itemId = $todo['ID'];
+                    $this->_addSearchDisplay($moduleId, $itemId, $todo['p6ProjectId'], $words[0], $words[1]);
+                    $this->_addSearchWords(implode(" ", $words), $moduleId, $itemId);
                 }
             }
         }
@@ -670,10 +707,17 @@ class Setup_Models_Migration
 
                 foreach ($notes as $note) {
                     // Migrate permissions
-                    $note['von'] = $this->_processOwner($note['von']);
-                    $note['ID']  = array_shift($ids);
-
+                    $note['von']         = $this->_processOwner($note['von']);
+                    $note['ID']          = array_shift($ids);
+                    $note['p6ProjectId'] = $this->_processParentProjId($note['projekt'], $note['gruppe']);
                     $this->_migratePermissions('Note', $note);
+
+                    // Add search values
+                    $moduleId = $this->_getModuleId('Note');
+                    $words    = array($this->_fix($note['name'], 255), $this->_fix($note['remark'], 65500));
+                    $itemId   = $note['ID'];
+                    $this->_addSearchDisplay($moduleId, $itemId, $note['p6ProjectId'], $words[0], $words[1]);
+                    $this->_addSearchWords(implode(" ", $words), $moduleId, $itemId);
                 }
             }
         }
@@ -799,6 +843,10 @@ class Setup_Models_Migration
         if (!empty($dbValues)) {
             $this->_tableManager->insertMultipleRows('timecard', $dbFields, $dbValues);
         }
+
+        // Clean memory
+        $this->_todos    = array();
+        $this->_helpdesk = array();
     }
 
     /**
@@ -929,9 +977,19 @@ class Setup_Models_Migration
 
                     // Save permissions according to P6 criterion
                     $this->_addItemRights($moduleId, $calendarId, $userRightsAdd);
+
+                    // Add search values
+                    $words = array($this->_fix($calendar['event'], 255), $this->_fix($calendar['ort']),
+                        $this->_fix($calendar['remark'], 65500));
+                    $itemId = $calendarId;
+                    $this->_addSearchDisplay($moduleId, $itemId, 1, $words[0], $words[2]);
+                    $this->_addSearchWords(implode(" ", $words), $moduleId, $itemId);
                 }
             }
         }
+
+        // Clean Memory
+        $this->_calendars = array();
     }
 
     /**
@@ -994,10 +1052,17 @@ class Setup_Models_Migration
 
                 foreach ($files as $file) {
                     // Migrate permissions
-                    $file['von'] = $this->_processOwner($file['von']);
-                    $file['ID']  = array_shift($ids);
-
+                    $file['von']         = $this->_processOwner($file['von']);
+                    $file['ID']          = array_shift($ids);
+                    $file['p6ProjectId'] = $this->_processParentProjId($file['div2'], $file['gruppe']);
                     $this->_migratePermissions('Filemanager', $file);
+
+                    // Add search values
+                    $moduleId = $this->_getModuleId('Filemanager');
+                    $words    = array($this->_fix($file['filename'], 100), $this->_fix($file['remark'], 65500));
+                    $itemId   = $file['ID'];
+                    $this->_addSearchDisplay($moduleId, $itemId, $file['p6ProjectId'], $words[0], $words[1]);
+                    $this->_addSearchWords(implode(" ", $words), $moduleId, $itemId);
                 }
             }
         }
@@ -1287,16 +1352,26 @@ class Setup_Models_Migration
 
                 foreach ($incidents as $item) {
                     // Migrate permissions
-                    $oldHelpdeskId    = $item['ID'];
-                    $item['ID']       = array_shift($ids);
-                    $item['von']      = $ownerIdRelation[$oldHelpdeskId];
-                    $item['assigned'] = $assignedRelation[$oldHelpdeskId];
-
+                    $oldHelpdeskId       = $item['ID'];
+                    $item['ID']          = array_shift($ids);
+                    $item['von']         = $ownerIdRelation[$oldHelpdeskId];
+                    $item['assigned']    = $assignedRelation[$oldHelpdeskId];
+                    $item['p6ProjectId'] = $this->_processParentProjId($item['proj'], $item['gruppe']);
                     $this->_helpdesk[$oldHelpdeskId] = $item['ID'];
                     $this->_migratePermissions('Helpdesk', $item);
+
+                    // Add search values
+                    $moduleId = $this->_getModuleId('Helpdesk');
+                    $words    = array($this->_fix($item['name'], 255), $this->_fix($item['note'], 65500));
+                    $itemId   = $item['ID'];
+                    $this->_addSearchDisplay($moduleId, $itemId, $item['p6ProjectId'], $words[0], $words[1]);
+                    $this->_addSearchWords(implode(" ", $words), $moduleId, $itemId);
                 }
             }
         }
+
+        // Clean memory
+        $this->_contacts = array();
     }
 
     /**
@@ -1414,20 +1489,16 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrates the permission from PHProjekt 5.x version to PHProjekt 6.0 according to a criteria sent by email
-     * and approved by the team
+     * Migrates the permission from PHProjekt 5.x version to PHProjekt 6.0
      *
-     * @param string $module  Module to grant permissions to: Project / Note / Todo / Filemanager (P5 dateien)
-     * @param array  $item    Item data
+     * @param string $module Module to grant permissions to: Project / Note / Todo / Filemanager, Helpdesk
+     * @param array  $item   Item data
      *
      * @return void
      */
     private function _migratePermissions($module, $item)
     {
-        // @todo: Permission migration for big DBs has just been tested for Project module.
-
-        $projectPermFound = false;
-        $userRightsAdd    = array();
+        $userRightsAdd = array();
 
         // The given permissions accord with the content of 'acc_write' field of 'projekte' table
         if ($item['acc_write'] == 'w') {
@@ -1435,58 +1506,34 @@ class Setup_Models_Migration
         } else {
             $access = $this->_accessRead;
         }
-
-        if ($module == 'Project') {
-            // 1 - Fetch user permissions from 'project_users_rel'
-            $query = sprintf("SELECT * FROM %sproject_users_rel WHERE project_ID = %d ORDER BY id", PHPR_DB_PREFIX,
-                $item['ID']);
-            $projUserRels = $this->_dbOrig->query($query)->fetchAll();
-
-            foreach ($projUserRels as $projUserRel) {
-                // Discard rows with wrong or non-existing user_ID values
-                $oldUserId = $projUserRel['user_ID'];
-                if (empty($oldUserId) || !isset($this->_users[$oldUserId])) {
-                    continue;
-                }
-                $userId = $this->_users[$oldUserId];
-
-                // Discard repeated users
-                if (!array_key_exists($userId, $userRightsAdd)) {
-                    $projectPermFound       = true;
-                    $userRightsAdd[$userId] = $access;
-                }
-            }
-        }
-
-        // If module is not Project, or if it is so and no permissions were found in table 'project_users_rel' then use
-        // the contents of field 'acc' of the module
-        if ($module != 'Project' || !$projectPermFound) {
-            $userIds = $this->_getUsersFromAccField($item);
-            foreach ($userIds as $userId) {
-                // Avoid duplicate entries
-                if (!array_key_exists($userId, $userRightsAdd)) {
-                    $userRightsAdd[$userId] = $access;
-                }
-            }
-        }
-
         $userVon = (int) $item['von'];
 
-        if ($module == 'Todo') {
-            // Assigned user: 'ext' field -  Give write access to assigned user, if any
-            if (!empty($item['ext'])) {
-                $assignedId                 = $item['ext'];
-                $userRightsAdd[$assignedId] = $this->_accessWrite;
-            }
-        } elseif ($module == 'Helpdesk') {
-            // Give write access to assigned user, if any. 'assigned' field
-            if (!empty($item['assigned'])) {
-                $oldAssignedId = $item['assigned'];
-                if (isset($this->_users[$oldAssignedId])) {
-                    $assignedId                 = $this->_users[$oldAssignedId];
+        // Process the 'acc' field
+        $userIds = $this->_getUsersFromAccField($item);
+        foreach ($userIds as $userId) {
+            $userRightsAdd[$userId] = $access;
+        }
+
+        switch ($module) {
+            case 'Todo':
+                // Assigned user: 'ext' field - Give write access to assigned user, if any
+                if (!empty($item['ext'])) {
+                    $assignedId                 = $item['ext'];
                     $userRightsAdd[$assignedId] = $this->_accessWrite;
                 }
-            }
+                break;
+            case 'Helpdesk':
+                // Give write access to assigned user, if any. 'assigned' field
+                if (!empty($item['assigned'])) {
+                    $oldAssignedId = $item['assigned'];
+                    if (isset($this->_users[$oldAssignedId])) {
+                        $assignedId                 = $this->_users[$oldAssignedId];
+                        $userRightsAdd[$assignedId] = $this->_accessWrite;
+                    }
+                }
+                break;
+            default:
+                break;
         }
 
         // Add owner with Admin access. This may overwrite previous right assignment for owner, that's ok.
@@ -1494,10 +1541,19 @@ class Setup_Models_Migration
             $userRightsAdd[$userVon] = $this->_accessAdmin;
         }
 
+        // Filter only the user that have access to the parent project too
+        $filterUserList = array();
+        foreach ($userRightsAdd as $user => $data) {
+            $index = "1-" . $item['p6ProjectId'] . "-" . $user;
+            if (isset($this->_dbProjectItemRightValues[$index])) {
+                $filterUserList[$user] = $data;
+            }
+        }
+
         // Migrate each permission
         $moduleId = $this->_getModuleId($module);
         $itemId   = $item['ID'];
-        $this->_addItemRights($moduleId, $itemId, $userRightsAdd);
+        $this->_addItemRights($moduleId, $itemId, $filterUserList);
     }
 
     /**
@@ -1666,7 +1722,16 @@ class Setup_Models_Migration
     private function _addItemRights($moduleId, $itemId, $userRights)
     {
         foreach ($userRights as $user => $rights) {
+            if ($moduleId == 1) {
+                $index = $moduleId . "-" . $itemId . "-" . $user;
+                $this->_dbProjectItemRightValues[$index] = 1;
+            }
             $this->_dbItemRightValues[] = array($moduleId, $itemId, $user, $rights);
+
+            // Clean memory on each 200.000 rows
+            if (count($this->_dbItemRightValues) > 200000) {
+                $this->_executeItemRightsInsert();
+            }
         }
     }
 
@@ -1680,6 +1745,7 @@ class Setup_Models_Migration
         $dbFields = array('module_id', 'item_id', 'user_id', 'access');
         if (!empty($this->_dbItemRightValues)) {
             $this->_tableManager->insertMultipleRows('item_rights', $dbFields, $this->_dbItemRightValues);
+            $this->_dbItemRightValues = array();
         }
     }
 
@@ -1800,6 +1866,118 @@ class Setup_Models_Migration
             return utf8_encode($string);
         } else {
             return substr(utf8_encode($string), 0, $length);
+        }
+    }
+
+    /**
+     * Keep the display data of each item
+     *
+     * @param int    $moduleId      Module id
+     * @param int    $itemId        Item Id
+     * @param int    $projectId     Parent project id
+     * @param string $firstDisplay  First display string
+     * @param string $secondDisplay Second display string
+     *
+     * @return void
+     */
+    private function _addSearchDisplay($moduleId, $itemId, $projectId, $firstDisplay, $secondDisplay)
+    {
+        if (strlen($secondDisplay) > 100) {
+            $secondDisplay = substr($secondDisplay, 0, 100) . "...";
+        }
+        $this->_searchDisplay[] = array((int) $moduleId, (int) $itemId, (int) $projectId, $firstDisplay,
+            $secondDisplay);
+
+        // Clean memory on each 5.000 rows
+        if (count($this->_searchDisplay) > 5000) {
+            $this->_executeSearchDisplayInsert();
+        }
+    }
+
+    /**
+     * Process the data of the item into the search words
+     * The return array have per word, the count of ocurrences,
+     * and the pair moduleId-itemId where is it.
+     *
+     * @param string $string   All the string data of the item
+     * @param int    $moduleId Module Id
+     * @param int    $itemId   Item id
+     *
+     * @return array
+     */
+    private function _addSearchWords($string, $moduleId, $itemId)
+    {
+        // Clean up the string
+        $string = Phprojekt_Converter_String::cleanupString($string);
+        // Split the string into an array
+        $tempArray = explode(" ", $string);
+        // Strip off short or long words
+        $tempArray = array_filter($tempArray, array("Phprojekt_Converter_String", "stripLengthWords"));
+        // Strip off stop words
+        if (!empty($this->_stopWords)) {
+            $tempArray = array_filter($tempArray, array($this, "_stripStops"));
+        }
+        // Remove duplicate entries
+        $tempArray = array_unique($tempArray);
+
+        foreach ($tempArray as $word) {
+            if (!isset($this->_searchWord[$word])) {
+                $this->_searchWord[$word] = array('count' => 0,
+                                                  'pair'  => array());
+            }
+            $this->_searchWord[$word]['count']++;
+            $this->_searchWord[$word]['pair'][] = array($itemId, $moduleId);
+        }
+
+        return $tempArray;
+    }
+
+    /**
+     * Insert all the search_display values
+     *
+     * @return void
+     */
+    private function _executeSearchDisplayInsert()
+    {
+        // Display
+        $dbFields = array('module_id', 'item_id', 'project_id', 'first_display', 'second_display');
+        if (!empty($this->_searchDisplay)) {
+            $this->_tableManager->insertMultipleRows('search_display', $dbFields, $this->_searchDisplay);
+            $this->_searchDisplay = array();
+        }
+    }
+
+    /**
+     * Insert all the searc_words and search_word_module values
+     *
+     * @return void
+     */
+    private function _executeSearchWordsInsert()
+    {
+        // Words
+        $dbFields = array('word', 'count');
+        $dbValues = array();
+        foreach ($this->_searchWord as $word => $data) {
+            $dbValues[] = array($word, $data['count']);
+        }
+        $ids = $this->_tableManager->insertMultipleRows('search_words', $dbFields, $dbValues, true);
+
+        // Relations
+        $dbFields = array('item_id', 'module_id', 'word_id');
+        $dbValues = array();
+        foreach ($this->_searchWord as $word => $data) {
+            $id = array_shift($ids);
+            foreach ($data['pair'] as $pair) {
+                $dbValues[] = array($pair[0], $pair[1], $id);
+            }
+
+            if (count($dbValues) > 100000) {
+                $this->_tableManager->insertMultipleRows('search_word_module', $dbFields, $dbValues);
+                $dbValues = array();
+            }
+        }
+        if (!empty($dbValues)) {
+            $this->_tableManager->insertMultipleRows('search_word_module', $dbFields, $dbValues);
         }
     }
 }
