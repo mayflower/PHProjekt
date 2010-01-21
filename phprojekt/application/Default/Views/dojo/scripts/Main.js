@@ -550,7 +550,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId (Reload a module -> List view)
                 var lastId = phpr.ItemCache.getItem(phpr.currentProjectId, module);
-                if (null !== lastId) {
+                if (null !== lastId && !phpr.inArray('Search', params) && !phpr.inArray('Tag', params)) {
                     var url = new Array([module, phpr.currentProjectId, "id", lastId]);
                 } else {
                     var url = new Array([module, phpr.currentProjectId]);
@@ -559,7 +559,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 // GlobalModule (Reload a global module -> List view)
                 phpr.currentProjectId = phpr.rootProjectId;
                 var lastId = phpr.ItemCache.getItem(phpr.currentProjectId, module);
-                if (null !== lastId && module != 'Adminisration') {
+                if (null !== lastId && module != 'Adminisration' && !phpr.inArray('Search', params)
+                && !phpr.inArray('Tag', params)) {
                     var url = new Array([module, "id", lastId]);
                 } else {
                     var url = new Array([module]);
