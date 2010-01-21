@@ -101,28 +101,87 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     /**
      * Get all the modules-item with the wordId
      *
-     * @param array   $words  Array with words Ids
-     * @param integer $count  Limit query
-     * @param integer $offset Query offset
+     * @param array   $words    Array with words Ids
+     * @param string  $operator Query operator
+     * @param integer $count    Limit query
      *
      * @return array
      */
-    public function searchModuleByWordId($words, $count = null, $offset = null)
+    public function searchModuleByWordId($words, $operator = 'AND', $count = 0)
     {
         $ids    = array();
         $result = array();
+        $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $userId = Phprojekt_Auth::getUserId();
+        $db     = Phprojekt::getInstance()->getDb();
 
         foreach ($words as $content) {
             $ids[] = (int) $content['id'];
         }
 
         if (!empty($ids)) {
-            $where     = 'word_id IN (' . implode(', ', $ids) . ')';
-            $order     = array('module_id ASC', 'item_id DESC');
-            $tmpResult = $this->fetchAll($where, $order, $count, $offset)->toArray();
+            // Search by AND
+            if ($operator == 'AND') {
+                $sqlString = '';
+                $selects = array();
+                $first   = true;
+
+                while (!empty($ids)) {
+                    $id = array_pop($ids);
+                    if ($first) {
+                        $first     = false;
+                        if (!empty($ids)) {
+                            $selects[] = $db->select()
+                                            ->from('search_word_module', array('item_id'))
+                                            ->where('word_id = ' . (int) $id);
+                        } else {
+                            $selects[] = $db->select()
+                                            ->from('search_word_module')
+                                            ->where('word_id = ' . (int) $id);
+                        }
+                    } else {
+                        if (!empty($ids)) {
+                            $selects[] = $db->select()
+                                            ->from('search_word_module', array('item_id'))
+                                            ->where('word_id = ' . (int) $id . ' AND item_id IN (%s)');
+                        } else {
+                            $selects[] = $db->select()
+                                            ->from('search_word_module')
+                                            ->where('word_id = ' . (int) $id . ' AND item_id IN (%s)');
+                        }
+                    }
+                }
+
+                $first = true;
+                while (!empty($selects)) {
+                    $select = array_shift($selects)->__toString();
+                    if ($first) {
+                        $sqlString = $select;
+                        $first     = false;
+                    } else {
+                        $sqlString = sprintf($select, $sqlString);
+                    }
+                }
+
+                $stmt      = $db->query($sqlString);
+                $tmpResult = $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
+            } else {
+                // Search By OR
+                $where = 'word_id IN (' . implode(', ', $ids) . ')';
+                $order = array('module_id ASC', 'item_id DESC');
+                $tmpResult = $this->fetchAll($where, $order)->toArray();
+            }
 
             foreach ($tmpResult as $data) {
-                $result[$data['module_id'] . '-' . $data['item_id']] = $data;
+                // Limit to $count results
+                if ((int) $count > 0 && count($result) >= $count) {
+                    break;
+                }
+
+                // Only fetch records with read access
+                if ($rights->getItemRight($data['module_id'], $data['item_id'], $userId) > 0) {
+                    $result[$data['module_id'] . '-' . $data['item_id']] = $data;
+                }
             }
         }
 

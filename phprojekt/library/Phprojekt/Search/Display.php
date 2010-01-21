@@ -69,7 +69,7 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
         $results = array();
 
         foreach ($data as $moduleId => $content) {
-            $ids    = array();
+            $ids = array();
             foreach ($content as $id) {
                 $ids[] = (int) $id;
             }
@@ -132,6 +132,9 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
 
         if (isset($object->$secondField)) {
             $secondDisplay = $object->$secondField;
+            if (strlen($secondDisplay) > 100) {
+                $secondDisplay = substr($secondDisplay, 0, 100) . "...";
+            }
         }
 
         if (!$this->_exists($moduleId, $itemId)) {

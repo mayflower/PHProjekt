@@ -92,16 +92,16 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
 
     /**
      * Do the search looking for the words
-     * The operator work like: and => the item must contain all the words.
-     *                         or  => the item can contain any word.
+     * The operator work like: equal => look for the exact words.
+     *                         like  => look for words that contain the word.
      *
      * @param string  $words    Some words separated by space
+     * @param string  $operator Query operator
      * @param integer $count    Limit query
-     * @param integer $offset   Query offset
      *
      * @return array
      */
-    public function searchWords($words, $count = null, $offset = null)
+    public function searchWords($words, $operator = 'equal', $count = null)
     {
         $words = $this->_stringToArray($words);
 
@@ -111,11 +111,15 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
             $where = array();
 
             foreach ($words as $word) {
-                $where[] = '(word LIKE ' . $this->getAdapter()->quote('%' . $word . '%') . ')';
+                if ($operator == 'like') {
+                    $where[] = '(word LIKE ' . $this->getAdapter()->quote('%' . $word . '%') . ')';
+                } else {
+                    $where[] = '(word = ' . $this->getAdapter()->quote($word) . ')';
+                }
             }
             $where = implode('OR', $where);
 
-            return $this->fetchAll($where, 'count DESC', $count, $offset)->toArray();
+            return $this->fetchAll($where, 'count DESC', $count)->toArray();
         }
     }
 

@@ -156,52 +156,49 @@ class Phprojekt_Search
 
     /**
      * Do the search itself
-     * The operator work like: and => the item must contain all the words.
-     *                         or  => the item can contain any word.
      * Only the items with readAccess are returned
      *
-     * @param string  $words    Some words separated by space
-     * @param integer $count    Limit query
-     * @param integer $offset   Query offset
+     * @param string  $words Some words separated by space
+     * @param integer $count Limit query
      *
      * @uses:
      *      $db = Phprojekt::getInstance()->getDb();
      *      $search = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
-     *      $search->search('text1 text2 text3','OR');
+     *      $search->search('text1 text2 text3', 10);
      *
      * @return array
      */
-    public function search($words, $count = null, $offset = null)
+    public function search($words, $count = null)
     {
-        $rights          = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-        $result          = $this->_words->searchWords($words, $count, $offset);
-        $userId          = Phprojekt_Auth::getUserId();
-        $tmpFoundResults = $this->_wordModule->searchModuleByWordId($result, $count, $offset);
+        if (strstr($words, " ")) {
+            $wordOperator     = 'equal';
+            $wordCount        = 0;
+            $relationOperator = 'AND';
+        } else {
+            $wordOperator     = 'like';
+            $wordCount        = $count;
+            $relationOperator = 'OR';
+        }
 
-        // Limit the number of ocurrences per module to $count
+        $result          = $this->_words->searchWords($words, $wordOperator, $wordCount);
+        $tmpFoundResults = $this->_wordModule->searchModuleByWordId($result, $relationOperator, $count);
+        $dataForDisplay  = array();
+
+        // Limit the number of ocurrences per module to 3
         if ($count > 0) {
             $results = array();
-            $limitedFoundResults = array();
             foreach ($tmpFoundResults as $moduleData) {
                 if (!isset($results[$moduleData['module_id']])) {
                     $results[$moduleData['module_id']] = 0;
                 }
                 $results[$moduleData['module_id']]++;
-                if ($results[$moduleData['module_id']] <= $count) {
-                    if (count($limitedFoundResults) < 10) {
-                        $limitedFoundResults[] = $moduleData;
-                    }
+                if ($results[$moduleData['module_id']] <= 3) {
+                    $dataForDisplay[$moduleData['module_id']][] = $moduleData['item_id'];
                 }
             }
         } else {
-            $limitedFoundResults = $tmpFoundResults;
-        }
-
-        // Convert result to array and add the display data
-        // only fetch records with read access
-        $dataForDisplay = array();
-        foreach ($limitedFoundResults as $moduleData) {
-            if ($rights->getItemRight($moduleData['module_id'], $moduleData['item_id'], $userId) > 0) {
+            // Convert result to array and add the display data
+            foreach ($tmpFoundResults as $moduleData) {
                 $dataForDisplay[$moduleData['module_id']][] = $moduleData['item_id'];
             }
         }

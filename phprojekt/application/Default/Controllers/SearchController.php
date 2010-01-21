@@ -58,8 +58,7 @@ class SearchController extends IndexController
      *
      * OPTIONAL request parameters:
      * <pre>
-     *  - integer <b>count</b>  Number of results.
-     *  - integer <b>offset</b> Number of page.
+     *  - integer <b>count</b> Number of results.
      * </pre>
      *
      * The return is in JSON format.
@@ -73,7 +72,7 @@ class SearchController extends IndexController
         $offset = (int) $this->getRequest()->getParam('start', null);
 
         $search  = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
-        $results = $search->search($words, $count, $offset);
+        $results = $search->search($words, $count);
 
         Phprojekt_Converter_Json::echoConvert($results);
     }
