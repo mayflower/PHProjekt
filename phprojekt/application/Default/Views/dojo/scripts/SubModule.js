@@ -283,7 +283,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
         //    Display buttons for the sub module instead of the default
         // Description:
         //    Display buttons for the sub module instead of the default
-        this.formdata[tabId] += this.render(["phpr.Default.template", "formsubmodulebuttons.html"], null, {
+        this.formdata[tabId] += this.render(["phpr.Default.template.form", "subModuleButtons.html"], null, {
             saveText:   phpr.nls.get('Save'),
             deleteText: phpr.nls.get('Delete'),
             newText:    phpr.nls.get('New'),

@@ -62,7 +62,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this.setNode();
 
         // Put loading
-        this.render(["phpr.Default.template", "formloading.html"], this._formNode.domNode, {
+        this.render(["phpr.Default.template.form", "loading.html"], this._formNode.domNode, {
             webpath: phpr.webpath
         });
 
@@ -281,7 +281,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    to the array of values for save it later
         phpr.destroyWidget(id);
         phpr.destroyWidget(formId);
-        var html = this.render(["phpr.Default.template", "tabs.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "tabs.html"], null, {
             innerTabs: innerTabs,
             formId:    formId || ''
         });
@@ -507,7 +507,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Render the save and delete buttons
         // Description:
         //    Render the save and delete buttons
-        this.formdata[tabId] += this.render(["phpr.Default.template", "formbuttons.html"], null, {
+        this.formdata[tabId] += this.render(["phpr.Default.template.form", "buttons.html"], null, {
             writePermissions:  this._writePermissions,
             deletePermissions: this._deletePermissions,
             saveText:          phpr.nls.get('Save'),

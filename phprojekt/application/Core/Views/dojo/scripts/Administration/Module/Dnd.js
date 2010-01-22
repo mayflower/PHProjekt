@@ -354,28 +354,28 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsGeneral += '</td></tr>';
 
     var formId = 'formTable' + '_' + nodeId;
-    var html   = render.render(["phpr.Default.template", "tabs.html"], null, {
+    var html   = render.render(["phpr.Default.template.form", "tabs.html"], null, {
         innerTabs: fieldsTable,
         formId:    formId
     });
     dijit.byId('moduleDesignerEditorTable').attr('content', html);
 
     var formId = 'formForm' + '_' + nodeId;
-    var html   = render.render(["phpr.Default.template", "tabs.html"], null, {
+    var html   = render.render(["phpr.Default.template.form", "tabs.html"], null, {
         innerTabs: fieldsForm,
         formId:    formId
     });
     dijit.byId('moduleDesignerEditorForm').attr('content', html);
 
     var formId = 'formList' + '_' + nodeId;
-    var html   = render.render(["phpr.Default.template", "tabs.html"], null, {
+    var html   = render.render(["phpr.Default.template.form", "tabs.html"], null, {
         innerTabs: fieldsList,
         formId:    formId
     });
     dijit.byId('moduleDesignerEditorList').attr('content', html);
 
     var formId = 'formGeneral' + '_' + nodeId;
-    var html   = render.render(["phpr.Default.template", "tabs.html"], null, {
+    var html   = render.render(["phpr.Default.template.form", "tabs.html"], null, {
         innerTabs: fieldsGeneral,
         formId:    formId
     });

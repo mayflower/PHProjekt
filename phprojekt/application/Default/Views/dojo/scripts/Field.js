@@ -38,7 +38,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
             var useDisableField = false;
         }
 
-        var html = this.render(["phpr.Default.template", "formcheck.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "check.html"], null, {
                         label:    itemlabel,
                         labelfor: (useDisableField) ? itemid + "_disabled" : itemid,
                         id:       (useDisableField) ? itemid + "_disabled" : itemid,
@@ -57,7 +57,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     textFieldRender:function(itemlabel, itemid, itemvalue, itemlength, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
-        var html = this.render(["phpr.Default.template", "formtext.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "text.html"], null, {
                             label:     itemlabel,
                             labelfor:  (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:        (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -73,7 +73,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
 
     hiddenFieldRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled) {
         phpr.destroyWidget(itemid);
-        return this.render(["phpr.Default.template", "formhidden.html"], null, {
+        return this.render(["phpr.Default.template.form", "hidden.html"], null, {
                             label:    itemlabel,
                             labelfor: itemid,
                             id:       itemid,
@@ -87,7 +87,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     passwordFieldRender:function(itemlabel, itemid, itemvalue, itemlength, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
-        var html = this.render(["phpr.Default.template", "formtext.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "text.html"], null, {
                             label:     itemlabel,
                             labelfor:  (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:        (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -104,7 +104,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     uploadFieldRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, iFramePath, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
-        var html = this.render(["phpr.Default.template", "formupload.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "upload.html"], null, {
                             label:      itemlabel,
                             labelfor:   (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:         (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -123,7 +123,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         if (!itemvalue || isNaN(itemvalue)) {
             itemvalue = 0;
         }
-        var html = this.render(["phpr.Default.template", "formpercentage.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "percentage.html"], null, {
                             label:    itemlabel,
                             labelfor: (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:       (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -138,7 +138,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     textAreaRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
-        var html = this.render(["phpr.Default.template", "formtextarea.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "textarea.html"], null, {
                             label:      itemlabel,
                             labelfor:   (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:         (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -156,7 +156,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         phpr.destroyWidget(itemid + "_disabled");
         var eregHtml = /([\<])([^\>]{1,})*([\>])/i;
         var isHtml   = itemvalue.match(eregHtml);
-        var html     = this.render(["phpr.Default.template", "formHtmlTextarea.html"], null, {
+        var html     = this.render(["phpr.Default.template.form", "htmlTextarea.html"], null, {
                             label:       itemlabel,
                             labelfor:    (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:          (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -179,7 +179,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     dateRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
-        var html = this.render(["phpr.Default.template", "formdate.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "date.html"], null, {
                             label:    itemlabel,
                             labelfor: (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:       (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -194,7 +194,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     timeRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
-        var html = this.render(["phpr.Default.template", "formtime.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "time.html"], null, {
                             label:    itemlabel,
                             labelfor: (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:       (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -212,7 +212,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         var date         = (itemvalue) ? phpr.Date.isoDatetimeTojsDate(itemvalue) : new Date();
         var valueForDate = phpr.Date.getIsoDate(date) || '';
         var valueForTime = phpr.Date.getIsoTime(date) || '';
-        var html = this.render(["phpr.Default.template", "formdatetime.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "datetime.html"], null, {
                             label:        itemlabel,
                             labelfor:     (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:           (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -247,7 +247,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         if (!found && (null !== first)) {
             itemvalue = first;
         }
-        var html = this.render(["phpr.Default.template", "formfilterselect.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "filterSelect.html"], null, {
                             label:    itemlabel,
                             labelfor: (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:       (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -275,7 +275,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
             }
             options.push(range[j]);
         }
-        var html = this.render(["phpr.Default.template", "formselect.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "multipleSelect.html"], null, {
                             label:    itemlabel,
                             labelfor: (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:       (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -290,7 +290,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
 
     buttonActionRender:function(itemlabel, itemid, itemtext, icon, action, itemhint) {
         phpr.destroyWidget(itemid);
-        var html = this.render(["phpr.Default.template", "formactionbutton.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "actionButton.html"], null, {
                             label:    itemlabel,
                             labelfor: itemid,
                             id:       itemid,
@@ -315,7 +315,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
             }
         }
         phpr.destroyWidget(itemid + "_disabled");
-        var html = this.render(["phpr.Default.template", "formdisplay.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "display.html"], null, {
                             label:   itemlabel,
                             value:   itemvalue,
                             tooltip: this.getTooltip(itemhint)
@@ -326,7 +326,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     ratingFieldRender:function(itemlabel, itemid, itemvalue, itemdisabled, itemhint, itemrange) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
-        var html = this.render(["phpr.Default.template", "formrating.html"], null, {
+        var html = this.render(["phpr.Default.template.form", "rating.html"], null, {
                             label:     itemlabel,
                             labelfor:  (itemdisabled) ? itemid + "_disabled" : itemid,
                             id:        (itemdisabled) ? itemid + "_disabled" : itemid,
@@ -347,7 +347,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     },
 
     getTooltip:function(itemhint) {
-        return this.render(["phpr.Default.template", "formTooltip.html"], null, {
+        return this.render(["phpr.Default.template.form", "tooltip.html"], null, {
                             hint: itemhint
                 });
     }
