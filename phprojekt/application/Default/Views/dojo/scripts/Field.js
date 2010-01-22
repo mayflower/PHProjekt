@@ -260,8 +260,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
         return html + this.disabledField(itemlabel, itemid, itemvalue, itemrequired, itemdisabled);
     },
 
-    multipleSelectRender:function(range, itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemsize,
-                                  itemmultiple, itemhint) {
+    multipleSelectRender:function(range, itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
         var options = new Array();
@@ -270,7 +269,7 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
             for (var k in tmp) {
                 range[j].selected = '';
                 if (tmp[k] == range[j].id) {
-                    range[j].selected = 'selected';
+                    range[j].selected = 'selected="selected"';
                     break;
                 }
             }
@@ -283,8 +282,6 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
                             values:   itemvalue,
                             required: itemrequired,
                             disabled: (itemdisabled) ? "disabled" : '',
-                            multiple: itemmultiple,
-                            size:     itemsize,
                             options:  options,
                             tooltip:  this.getTooltip(itemhint)
                 });

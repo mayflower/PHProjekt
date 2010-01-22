@@ -390,7 +390,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         recurrenceTab += this.fieldTemplate.dateRender(phpr.nls.get('Until'), 'rruleUntil', values.UNTIL, false,
             disabled, untilHelp);
         recurrenceTab += this.fieldTemplate.multipleSelectRender(rangeByday, phpr.nls.get('Weekdays'), 'rruleByDay',
-            values.BYDAY, false, disabled, 7, true);
+            values.BYDAY, false, disabled);
 
         // Add the tab to the form
         this.addTab(recurrenceTab, 'tabRecurrence', 'Recurrence', 'recurrenceTab');

@@ -4,7 +4,8 @@
         <label for="minutesMailFormRecipients">{{lblRecipients}}</label>
     </td>
     <td>
-        <select dojoType="dijit.form.MultiSelect" id="minutesMailFormRecipients" name="recipients[]" size="4">
+        <select dojoType="dojox.form.CheckedMultiSelect" id="minutesMailFormRecipients" name="recipients[]"
+        multiple="true">
             {% for recipient in people %}
                 <option value="{{recipient.id}}">
                 {{recipient.display}}

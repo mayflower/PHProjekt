@@ -137,6 +137,7 @@ dojo.require("dojox.data.QueryReadStore");
 
 // Dojox form
 dojo.require("dojox.form.Rating");
+dojo.require("dojox.form.CheckedMultiSelect");
 
 // Dojox grid
 dojo.require("dojox.grid._EditManager");

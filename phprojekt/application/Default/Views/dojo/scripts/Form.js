@@ -374,7 +374,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                         break;
                     case 'multipleselectbox':
                         this.formdata[itemtab] += this.fieldTemplate.multipleSelectRender(itemrange, itemlabel, itemid,
-                                                    itemvalue, itemrequired, itemdisabled, 5, "multiple", itemhint);
+                                                    itemvalue, itemrequired, itemdisabled, itemhint);
                         break;
                     case 'date':
                         this.formdata[itemtab] += this.fieldTemplate.dateRender(itemlabel, itemid, itemvalue,
@@ -1045,7 +1045,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                             if (fieldWidget = dijit.byId(displayfield)) {
                                 value = value.split(',');
                                 fieldWidget.attr("value", value);
-                                dojo.addClass(dojo.byId(displayfield), "highlightChanges");
+                                dojo.addClass(dojo.byId(displayfield).parentNode, "highlightChanges");
                             }
                             break;
                         case 'rating':

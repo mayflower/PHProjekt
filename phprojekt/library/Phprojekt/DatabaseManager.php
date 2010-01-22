@@ -431,7 +431,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             case 'User':
                 $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
                 $result       = $activeRecord->getAllowedUsers();
-                if (!$field->isRequired) {
+                if (!$field->isRequired && $field->formType == 'selectValues') {
                     $options[] = array('id'   => 0,
                                        'name' => '');
                 }
