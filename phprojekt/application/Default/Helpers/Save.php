@@ -100,7 +100,7 @@ final class Default_Helpers_Save
             $itemRights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
             $check      = $itemRights->getRights(1, $node->getActiveRecord()->id);
             if ($check['currentUser']['access']) {
-                $rights = Default_Helpers_Right::getItemRights($params, $newItem);
+                $rights = Default_Helpers_Right::getItemRights($params, 1, $newItem);
 
                 if (count($rights) > 0) {
                     $node->getActiveRecord()->saveRights($rights);
@@ -174,11 +174,12 @@ final class Default_Helpers_Save
 
         // Checks
         $moduleName = Phprojekt_Loader::getModuleFromObject($model);
+        $moduleId   = Phprojekt_Module::getId($moduleName);
         if (!$model->recordValidate()) {
             $errors = $model->getError();
             $error  = array_pop($errors);
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
-        } else if (!self::_checkModule(Phprojekt_Module::getId($moduleName), $projectId)) {
+        } else if (!self::_checkModule($moduleId, $projectId)) {
             throw new Phprojekt_PublishedException('The parent project do not have enabled this module');
         } else if (!self::_checkItemRights($model, $moduleName)) {
             throw new Phprojekt_PublishedException('You do not have access to do this action');
@@ -187,12 +188,12 @@ final class Default_Helpers_Save
 
             // Save access only if the user have "access" right
             $itemRights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-            $check      = $itemRights->getRights(Phprojekt_Module::getId($moduleName), $model->id);
+            $check      = $itemRights->getRights($moduleId, $model->id);
             if ($check['currentUser']['access']) {
                 if ($moduleName == 'Core') {
                     $rights = Default_Helpers_Right::getModuleRights($params);
                 } else {
-                    $rights = Default_Helpers_Right::getItemRights($params, $newItem);
+                    $rights = Default_Helpers_Right::getItemRights($params, $moduleId, $newItem);
                 }
 
                 if (count($rights) > 0) {

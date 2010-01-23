@@ -10,9 +10,9 @@
 
 <b>Users</b>
 <ul>
-    <li>Root user will not be migrated. Please use the 'admin' user instead.<br />
-    This 'admin' user is just another regular user, but of 'admin' type which provides access to 'Administration'
-    module, won't have access to everything.</li>
+    <li>Root user will be migrated as 'admin'.<br />
+    This 'admin' user has 'admin' type which provides access to 'Administration' module
+    and has access to any item under a project, including the projects itself.</li>
 </ul>
 
 <b> Access</b>
@@ -24,7 +24,7 @@
     <li>All the users that have access to the group in PHProjekt 5 will have full access to the equivalent root
     project in PHProjekt 6.</li>
     <li>If one item is assigned for example to the user "A", and this user is not in the group / root project,
-    then the assigned field will be empty, since this user is not allowed under the project.<br />
+    then the assigned field will show only the user Id number, since this user is not allowed under the project.<br />
     Add him, to all the tree path for see the correct value.</li>
 </ul>
 

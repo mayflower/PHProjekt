@@ -226,9 +226,9 @@ final class Default_Helpers_Right
      *
      * @return array
      */
-    public static function getItemRights($params, $newItem, $ownerId = 0)
+    public static function getItemRights($params, $moduleId, $newItem, $ownerId = 0)
     {
-        return self::getRights($params, self::ITEM_TYPE, $newItem, $ownerId);
+        return self::getRights($params, self::ITEM_TYPE, $moduleId, $newItem, $ownerId);
     }
 
     /**
@@ -246,14 +246,15 @@ final class Default_Helpers_Right
     /**
      * Parse the rights for all the users and return it into a bitmask per user
      *
-     * @param array   $params  The post values
-     * @param string  $type    Type of right, for users or modules
-     * @param boolean $newItem If is a new item or not
-     * @param integer $ownerId The owner id or 0 for the current user
+     * @param array   $params   The post values
+     * @param string  $type     Type of right, for users or modules
+     * @param string  $moduleId The module id
+     * @param boolean $newItem  If is a new item or not
+     * @param integer $ownerId  The owner id or 0 for the current user
      *
      * @return array
      */
-    private static function getRights($params, $type, $newItem = false, $ownerId = 0)
+    private static function getRights($params, $type, $moduleId = 0, $newItem = false, $ownerId = 0)
     {
         $right  = array();
         $rights = array();
@@ -281,16 +282,7 @@ final class Default_Helpers_Right
                 if ($ownerId == 0) {
                     $ownerId = Phprojekt_Auth::getUserId();
                 }
-                $right['none']     = true;
-                $right['read']     = true;
-                $right['write']    = true;
-                $right['access']   = true;
-                $right['create']   = true;
-                $right['copy']     = true;
-                $right['delete']   = true;
-                $right['download'] = true;
-                $right['admin']    = true;
-                $rights[$ownerId]  = Phprojekt_Acl::convertArrayToBitmask($right);
+                $rights[$ownerId] = Phprojekt_Acl::ALL;
             }
 
             // Return access only for allowed users
@@ -303,6 +295,11 @@ final class Default_Helpers_Right
                 }
             }
 
+            $moduleType = Phprojekt_Module::getSaveType($moduleId);
+            if ($moduleType != 1) {
+                // Items under a project => add admin with full access
+                $resultRights[1] = Phprojekt_Acl::ALL;
+            }
         } else {
             $resultRights = $rights;
         }

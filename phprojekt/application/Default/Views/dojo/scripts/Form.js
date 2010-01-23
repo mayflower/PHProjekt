@@ -149,8 +149,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
 
         if (userList) {
             for (var i in userList) {
-                // Make an array with the users except the current one
-                if (userList[i].id != currentUser) {
+                // Make an array with the users except the current one and the admin
+                if (userList[i].id != currentUser && userList[i].id != 1) {
                     users.push({'id': userList[i].id, 'display': userList[i].display});
                 }
                 // Found the name of each user
@@ -169,6 +169,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 var isCurrentUser = (id == 'currentUser');
                 var checkBoxs     = new Array();
                 var userId        = isCurrentUser ? currentUser : accessContent[id]['userId'];
+                if (userId == 1) {
+                    continue;
+                }
                 for (var i in this._rights) {
                     var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
                     checkBoxs.push(this.render(["phpr.Default.template.access", "checkbox.html"], null, {
@@ -229,7 +232,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             for (i in accessContent) {
                 if (accessContent[i]['userDisplay']) {
                     var userId = accessContent[i]["userId"];
-                    if (userId != currentUser) {
+                    if (userId != currentUser && userId != 1) {
                         this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
                         dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick",
                             dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));

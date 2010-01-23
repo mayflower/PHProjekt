@@ -444,6 +444,10 @@ class Setup_Models_Migration
                     // Migrate each permission
                     $moduleId = $this->_getModuleId('Project');
                     $itemId   = $this->_groups[$lastGroup];
+
+                    // Add admin user
+                    $userRightsAdd[self::USER_ADMIN] = $this->_accessAdmin;
+
                     $this->_addItemRights($moduleId, $itemId, $userRightsAdd);
                 }
 
@@ -1553,6 +1557,10 @@ class Setup_Models_Migration
         // Migrate each permission
         $moduleId = $this->_getModuleId($module);
         $itemId   = $item['ID'];
+
+        // Add admin user
+        $filterUserList[self::USER_ADMIN] = $this->_accessAdmin;
+
         $this->_addItemRights($moduleId, $itemId, $filterUserList);
     }
 
