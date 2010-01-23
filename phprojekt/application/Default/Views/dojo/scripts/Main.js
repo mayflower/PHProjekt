@@ -86,6 +86,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         } else {
             phpr.Tree.fadeIn();
         }
+        dojo.publish(module + ".reload");
         this.setUrlHash(module, id);
     },
 
@@ -515,8 +516,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,xx (Open form for edit in normal modules)
                 var url = new Array([module, phpr.currentProjectId, "id", id]);
-                // Save the last item
-                phpr.ItemCache.addItem(phpr.currentProjectId, module, id);
             } else {
                 phpr.currentProjectId = phpr.rootProjectId;
                 if (params && params.length > 0) {
@@ -525,8 +524,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 } else {
                     // GlobalModule,id,xx (Open form for edit in global modules)
                     var url = new Array([module, "id", id]);
-                    // Save the last item
-                    phpr.ItemCache.addItem(phpr.currentProjectId, module, id);
                 }
             }
         } else if (module && id == 0) {
@@ -549,22 +546,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             }
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId (Reload a module -> List view)
-                var lastId = phpr.ItemCache.getItem(phpr.currentProjectId, module);
-                if (null !== lastId && !phpr.inArray('Search', params) && !phpr.inArray('Tag', params)) {
-                    var url = new Array([module, phpr.currentProjectId, "id", lastId]);
-                } else {
-                    var url = new Array([module, phpr.currentProjectId]);
-                }
+                var url = new Array([module, phpr.currentProjectId]);
             } else {
                 // GlobalModule (Reload a global module -> List view)
                 phpr.currentProjectId = phpr.rootProjectId;
-                var lastId = phpr.ItemCache.getItem(phpr.currentProjectId, module);
-                if (null !== lastId && module != 'Adminisration' && !phpr.inArray('Search', params)
-                && !phpr.inArray('Tag', params)) {
-                    var url = new Array([module, "id", lastId]);
-                } else {
-                    var url = new Array([module]);
-                }
+                var url = new Array([module]);
             }
         }
 
@@ -619,7 +605,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             // If is an id, open a form
             var id = parseInt(data[1]);
             if (module && (id > 0 || id == 0)) {
-                dojo.publish(module + ".reload");
                 dojo.publish(module + ".openForm", [id, module]);
             }
         } else if (data[0]) {
