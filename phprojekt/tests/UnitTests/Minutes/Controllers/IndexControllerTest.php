@@ -95,7 +95,6 @@ class Minutes_IndexController_Test extends FrontInit
         $this->request->setParam('participantsInvited', array(2, 1));
         $this->request->setParam('participantsAttending', array());
         $this->request->setParam('participantsExcused', array());
-        $this->request->setParam('recipients', array());
         $this->request->setParam('itemStatus', 4);
         $this->request->setParam('string', '');
         $this->request->setParam('nodeId', 1);
@@ -132,7 +131,6 @@ class Minutes_IndexController_Test extends FrontInit
         $this->request->setParam('participantsInvited', array(1, 2));
         $this->request->setParam('participantsAttending', array());
         $this->request->setParam('participantsExcused', array());
-        $this->request->setParam('recipients', array());
         $this->request->setParam('itemStatus', 1);
         $this->request->setParam('string', '');
         $this->request->setParam('nodeId', 1);

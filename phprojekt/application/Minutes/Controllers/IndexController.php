@@ -146,7 +146,7 @@ class Minutes_IndexController extends IndexController
         if (!empty($minutes->id)) {
             $data         = array();
             $data['data'] = Minutes_Helpers_Userlist::expandIdList($minutes->participantsInvited,
-                $minutes->participantsExcused, $minutes->participantsAttending, $minutes->recipients);
+                $minutes->participantsExcused, $minutes->participantsAttending);
             $data['numRows'] = count($data['data']);
             Phprojekt_Converter_Json::echoConvert($data);
         } else {

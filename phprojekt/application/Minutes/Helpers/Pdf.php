@@ -83,10 +83,9 @@ final class Minutes_Helpers_Pdf
                                                   $phpr->translate('Moderator') . ': ' . $minutesModel->moderator)),
                            'fontSize' => 12));
 
-        $invited    = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsInvited);
-        $attending  = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsAttending);
-        $excused    = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsExcused);
-        $recipients = Minutes_Helpers_Userlist::expandIdList($minutesModel->recipients);
+        $invited   = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsInvited);
+        $attending = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsAttending);
+        $excused   = Minutes_Helpers_Userlist::expandIdList($minutesModel->participantsExcused);
 
         $pages += $page->addTable(array(
                         'fontSize' => 12,
@@ -107,12 +106,6 @@ final class Minutes_Helpers_Pdf
                                               array('text'  => $phpr->translate('Excused'),
                                                     'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
                                               array('text'  => array_reduce($excused, array('self', '_concat')),
-                                                    'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                                ),
-                                          array(
-                                              array('text'  => $phpr->translate('recipients'),
-                                                    'width' => 4.7 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                              array('text'  => array_reduce($recipients, array('self', '_concat')),
                                                     'width' => 12.0 * Phprojekt_Pdf_Page::PT_PER_CM),
                                                 ),
                                         )));

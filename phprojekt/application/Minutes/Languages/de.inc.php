@@ -6,7 +6,7 @@ $lang["Status"] = "Status";
 
 // Grid values - from DatabaseDesigner
 $lang["Planned"] = "Geplant";
-$lang["Created"] = "Noch leer";
+$lang["Empty"] = "Noch leer";
 $lang["Filled"] = "Ausgefüllt";
 $lang["Final"]   = "Fixiert";
 
@@ -16,9 +16,9 @@ $lang["Tag"] = "Tag";
 $lang["Invited"] = "Eingeladen";
 $lang["Attending"] = "Teilnehmer";
 $lang["Excused"] = "Entschuldigt";
-$lang["Recipients"] = "Empfänger";
 
 // Mail tab
+$lang["Recipients"] = "Empfänger";
 $lang["Additional Recipients"] = "Weitere Empfänger";
 $lang["Options"] = "Optionen";
 $lang["Include PDF attachment"] = "PDF als Anhang hinzufügen";

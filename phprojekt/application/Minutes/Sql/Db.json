@@ -20,7 +20,6 @@
                 "participants_invited":   {"type": "text"},
                 "participants_attending": {"type": "text"},
                 "participants_excused":   {"type": "text"},
-                "recipients":             {"type": "text"},
                 "item_status":            {"type": "int"}
             }
         }
@@ -244,35 +243,14 @@
 
                 {
                     "table_name":      "Minutes",
-                    "table_field":     "recipients",
-                    "form_tab":        "2",
-                    "form_label":      "Recipients",
-                    "form_type":       "multipleSelectValues",
-                    "form_position":   "11",
-                    "form_columns":    "1",
-                    "form_regexp":     "NULL",
-                    "form_range":      "User#id#username",
-                    "default_value":   "NULL",
-                    "list_position":   "0",
-                    "list_align":      "NULL",
-                    "list_use_filter": "1",
-                    "alt_position":    "0",
-                    "status":          "1",
-                    "is_integer":      "0",
-                    "is_required":     "0",
-                    "is_unique":       "0"
-                },
-
-                {
-                    "table_name":      "Minutes",
                     "table_field":     "item_status",
                     "form_tab":        "1",
                     "form_label":      "Status",
                     "form_type":       "selectValues",
-                    "form_position":   "12",
+                    "form_position":   "11",
                     "form_columns":    "1",
                     "form_regexp":     "NULL",
-                    "form_range":      "1#Planned|2#Created|3#Filled|4#Final",
+                    "form_range":      "1#Planned|2#Empty|3#Filled|4#Final",
                     "default_value":   "1",
                     "list_position":   "6",
                     "list_align":      "center",

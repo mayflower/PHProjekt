@@ -490,7 +490,6 @@ CREATE TABLE IF NOT EXISTS `minutes` (
   `participants_invited` text,
   `participants_attending` text,
   `participants_excused` text,
-  `recipients` text,
   `item_status` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -621,8 +620,7 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Minutes', 'participants_invited', 2, 'Invited', 'multipleSelectValues', 8, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'participants_attending', 2, 'Attending', 'multipleSelectValues', 9, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Minutes', 'participants_excused', 2, 'Excused', 'multipleSelectValues', 10, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'recipients', 2, 'Recipients', 'multipleSelectValues', 11, 1, NULL, 'User#id#username', NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
-(0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 12, 1, NULL, '1#Planned|2#Created|3#Filled|4#Final', '1', 6, 'center', 1, 0, '1', 1, 0, 0);
+(0, 'Minutes', 'item_status', 1, 'Status', 'selectValues', 11, 1, NULL, '1#Planned|2#Empty|3#Filled|4#Final', '1', 6, 'center', 1, 0, '1', 1, 0, 0);
 
 
 INSERT INTO `user` (`id`, `username`,`firstname`, `lastname`,`status`, `admin`) VALUES
