@@ -140,14 +140,16 @@ class Timecard_IndexController extends IndexController
         $tree         = $tree->setup();
 
         $datas = array();
-        foreach ($favorites as $projectId) {
-            foreach ($tree as $node) {
-                if ($node->id == $projectId) {
-                    $data            = array();
-                    $data['id']      = $projectId;
-                    $data['display'] = $node->getDepthDisplay('title');
+        if (is_array($favorites)) {
+            foreach ($favorites as $projectId) {
+                foreach ($tree as $node) {
+                    if ($node->id == $projectId) {
+                        $data            = array();
+                        $data['id']      = $projectId;
+                        $data['display'] = $node->getDepthDisplay('title');
 
-                    $datas[] = $data;
+                        $datas[] = $data;
+                    }
                 }
             }
         }

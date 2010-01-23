@@ -708,10 +708,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
                 case 'SU':
                     $weekDay = "Sunday";
                     break;
-            }
 
-            $rruleFields[] = array('label' => 'Weekdays',
-                                   'value' => Phprojekt::getInstance()->translate($weekDay));
+                $rruleFields[] = array('label' => 'Weekdays',
+                                       'value' => Phprojekt::getInstance()->translate($weekDay));
+            }
         }
 
         return $rruleFields;
