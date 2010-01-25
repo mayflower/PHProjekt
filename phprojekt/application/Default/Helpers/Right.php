@@ -295,10 +295,12 @@ final class Default_Helpers_Right
                 }
             }
 
-            $moduleType = Phprojekt_Module::getSaveType($moduleId);
-            if ($moduleType != 1) {
-                // Items under a project => add admin with full access
-                $resultRights[1] = Phprojekt_Acl::ALL;
+            if (isset($params['dataAccess'])) {
+                $moduleType = Phprojekt_Module::getSaveType($moduleId);
+                if ($moduleType != 1) {
+                    // Items under a project => add admin with full access
+                    $resultRights[1] = Phprojekt_Acl::ALL;
+                }
             }
         } else {
             $resultRights = $rights;
