@@ -588,14 +588,21 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             var module = data.shift().replace(/.*#(.*)/, "$1");
         }
 
+        var newProject = false;
         // Normal modules use the project as second parameter
         if (data[0] && !phpr.isGlobalModule(module)) {
             var projectId = data.shift();
             if (projectId < 1) {
                 projectId = 1;
             }
+            if (phpr.currentProjectId != projectId) {
+                newProject = true;
+            }
             phpr.currentProjectId = projectId;
         } else if (phpr.isGlobalModule(module)) {
+            if (phpr.currentProjectId != phpr.rootProjectId) {
+                newProject = true;
+            }
             phpr.currentProjectId = phpr.rootProjectId;
         }
 
@@ -605,6 +612,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             // If is an id, open a form
             var id = parseInt(data[1]);
             if (module && (id > 0 || id == 0)) {
+                if (module !== phpr.module || newProject) {
+                    dojo.publish(module + ".reload");
+                }
                 dojo.publish(module + ".openForm", [id, module]);
             }
         } else if (data[0]) {
