@@ -7,8 +7,9 @@
     <tr>
         <td
         style="text-align: center;">
-            <select id="userList" dojoType="dijit.form.MultiSelect" required="true" autocomplete="true"
-            searchAttr="name" invalidMessage="" multiple="true" size="10">
+            <select id="userList" name="userList" dojoType="dojox.form.CheckedMultiSelect" required="true"
+            invalidMessage="" multiple="true"
+            style="text-align: left;">
                 {% for user in userList %}
                 <option value ="{{user.id}}" {{user.selected}}>{{user.display}}</option>
                 {% endfor %}
