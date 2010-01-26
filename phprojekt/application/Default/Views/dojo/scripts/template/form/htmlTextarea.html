@@ -10,7 +10,7 @@
     <td>
         <div id="displayText_{{id}}"
         style="display: {{displayText}};">
-            <textarea dojoType="dijit.form.Textarea" id="{{id}}" name="{{id}}" onchange="
+            <textarea dojoType="dijit.form.Textarea" id="{{id}}" name="{{id}}" {{disabled}} onchange="
             dojo.byId('displayHtml_{{id}}').innerHTML = this.value;">{{value}}</textarea>
         </div>
         <div id="displayHtml_{{id}}"
@@ -30,7 +30,7 @@
                 'strikethrough', 'subscript', 'superscript', 'removeFormat','|', 'justifyCenter',
                 'justifyFull', 'justifyLeft', 'justifyRight', 'delete', '|', 'insertOrderedList',
                 'insertUnorderedList', 'indent', 'outdent', '|', 'insertHorizontalRule', 'createLink', 'insertImage',
-                '|', 'foreColor', 'hiliteColor', '|', 'fontName', 'fontSize']"
+                '|', 'foreColor', 'hiliteColor', '|', 'fontName', 'fontSize']" {{disabled}}
             style="width: 99%; height: 99%; border: 1px solid;">
             </div>
             <button dojoType="dijit.form.Button" iconClass="tick" type="submit"
