@@ -75,6 +75,14 @@
     color: gray;
 }
 
+.phprojekt .dijitTextBoxDisabled,
+.phprojekt .dijitComboBoxDisabled,
+.phprojekt .dijitSpinnerDisabled,
+.phprojekt .dijitTextAreaDisabled {
+    background: #C3D3E5 url('../images/buttonDisabled.png') repeat-x scroll center top;
+    opacity: 0.6;
+}
+
 .dj_safari .phprojekt .dijitTextBoxDisabled,
 .dj_safari .phprojekt .dijitComboBoxDisabled,
 .dj_safari .phprojekt .dijitSpinnerDisabled,

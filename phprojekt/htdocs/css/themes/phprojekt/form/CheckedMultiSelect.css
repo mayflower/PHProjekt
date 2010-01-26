@@ -29,6 +29,8 @@
 .dojoxMultiSelectDisabled *,
 .dojoxMultiSelectReadOnly * {
     color:gray !important;
+    background: #C3D3E5 url('../images/buttonDisabled.png') repeat-x scroll center top;
+    opacity: 0.6;
 }
 
 .dojoxMultiSelectItemLabel {
