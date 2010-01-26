@@ -96,9 +96,10 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
                 if (!until.setHours) {
                     until = phpr.Date.isoDateTojsDate(until);
                 }
-                until.setHours(this.sendData['startDatetime_forTime'].getHours());
-                until.setMinutes(this.sendData['startDatetime_forTime'].getMinutes());
-                until.setSeconds(this.sendData['startDatetime_forTime'].getSeconds());
+                var startDatetime = phpr.Date.isoDatetimeTojsDate(this.sendData['startDatetime']);
+                until.setHours(startDatetime.getHours());
+                until.setMinutes(startDatetime.getMinutes());
+                until.setSeconds(startDatetime.getSeconds());
                 until = dojo.date.add(until, 'minute', until.getTimezoneOffset());
                 rrule += ';UNTIL=' + dojo.date.locale.format(until, {datePattern: 'yyyyMMdd\'T\'HHmmss\'Z\'',
                     selector: 'date'});
