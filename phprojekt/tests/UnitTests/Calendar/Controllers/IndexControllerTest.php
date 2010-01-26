@@ -584,9 +584,9 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":0,"title":"","place":"","notes":"","startDatetime":"","endDatetime":"",'
-            . '"participantId":0,"rrule":"","rights":{"currentUser":{"moduleId":5,"itemId":0,"userId":1,'
-            . '"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,'
-            . '"download":true,"admin":true}}}],"numRows":1})';
+            . '"visibility":0,"status":1,"participantId":0,"rrule":"","rights":{"currentUser":{'
+            . '"moduleId":5,"itemId":0,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,'
+            . '"copy":true,"delete":true,"download":true,"admin":true}}}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 
@@ -601,10 +601,10 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"title":"test edited","place":"Bariloche","notes":"test note edited",'
-            . '"startDatetime":"2009-06-03 10:00:00","endDatetime":"2009-06-03 11:00:00","participantId":1,'
-            . '"rrule":"","rights":{"currentUser":{"moduleId":5,"itemId":1,"userId":1,"none":false,"read":true,'
-            . '"write":true,"access":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}}}],'
-            . '"numRows":1})';
+            . '"startDatetime":"2009-06-03 10:00:00","endDatetime":"2009-06-03 11:00:00","visibility":0,"status":0,'
+            . '"participantId":1,"rrule":"","rights":{"currentUser":{"moduleId":5,"itemId":1,"userId":1,"none":false,'
+            . '"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"download":true,'
+            . '"admin":true}}}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 
@@ -854,8 +854,8 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('date', '2009-06-14');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains('"Title","Start","End"' . "\n"
-            . '"Multiple5","2009-06-14 08:00:00","2009-06-14 10:00:00"' . "\n", $response);
+        $this->assertContains('"Title","Start","End","Status"' . "\n"
+            . '"Multiple5","2009-06-14 08:00:00","2009-06-14 10:00:00","Pending"' . "\n", $response);
     }
 
     /**
@@ -868,12 +868,12 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('users', '1,2,3');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains('"Title","Place","Notes","Start","End","Participant",'
+        $this->assertContains('"Title","Place","Notes","Start","End","Visibility","Status","Participant",'
             . '"Rrule"' . "\n"
-            . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","1",'
-            . '"FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n"
-            . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","2",'
-            . '"FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n", $response);
+            . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","Public","Pending",'
+            . '"1","FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n"
+            . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","Public","Accepted",'
+            . '"2","FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n", $response);
     }
 
     /**
@@ -886,15 +886,15 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('dateEnd', '2009-06-25');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains('"Title","Place","Notes","Start","End","Participant",'
+        $this->assertContains('"Title","Place","Notes","Start","End","Visibility","Status","Participant",'
             . '"Rrule"' . "\n"
-            . '"Multiple5","Buenos Aires","test note","2009-06-11 08:00:00","2009-06-11 10:00:00","1",'
-            . '"FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n"
-            . '"Multiple5","Buenos Aires","test note","2009-06-12 08:00:00","2009-06-12 10:00:00","1",'
-            . '"FREQ=DAILY;UNTIL=20090613T040000Z;INTERVAL=1;BYDAY="' . "\n"
-            . '"Multiple5","Buenos Aires","test note","2009-06-13 08:00:00","2009-06-13 10:00:00","1",'
-            . '"FREQ=DAILY;UNTIL=20090613T040000Z;INTERVAL=1;BYDAY="' . "\n"
-            . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","1",'
-            . '"FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n", $response);
+            . '"Multiple5","Buenos Aires","test note","2009-06-11 08:00:00","2009-06-11 10:00:00","Public","Pending",'
+            . '"1","FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n"
+            . '"Multiple5","Buenos Aires","test note","2009-06-12 08:00:00","2009-06-12 10:00:00","Public","Pending",'
+            . '"1","FREQ=DAILY;UNTIL=20090613T040000Z;INTERVAL=1;BYDAY="' . "\n"
+            . '"Multiple5","Buenos Aires","test note","2009-06-13 08:00:00","2009-06-13 10:00:00","Public","Pending",'
+            . '"1","FREQ=DAILY;UNTIL=20090613T040000Z;INTERVAL=1;BYDAY="' . "\n"
+            . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","Public","Pending",'
+            . '"1","FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n", $response);
     }
 }

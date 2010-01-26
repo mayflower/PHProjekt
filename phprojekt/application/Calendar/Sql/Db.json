@@ -24,12 +24,13 @@
                 "location":       {"type": "varchar"},
                 "categories":     {"type": "text"},
                 "attendee":       {"type": "text"},
-                "status":         {"type": "int", "length": "1"},
+                "status":         {"type": "int", "length": "1", "default": "0"},
                 "priority":       {"type": "int", "length": "1"},
                 "class":          {"type": "int", "length": "1"},
                 "transparent":    {"type": "int", "length": "1"},
                 "rrule":          {"type": "text"},
                 "properties":     {"type": "text"},
+                "visibility":     {"type": "int", "length": "1", "default": "0"},
                 "participant_id": {"type": "int", "notNull": "true"}
             }
         }
@@ -131,7 +132,7 @@
                     "form_tab":        "1",
                     "form_label":      "End",
                     "form_type":       "datetime",
-                    "form_position":   "6",
+                    "form_position":   "5",
                     "form_columns":    "1",
                     "form_regexp":     "NULL",
                     "form_range":      "NULL",
@@ -143,6 +144,48 @@
                     "status":          "1",
                     "is_integer":      "0",
                     "is_required":     "1",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Calendar",
+                    "table_field":     "visibility",
+                    "form_tab":        "1",
+                    "form_label":      "Visibility",
+                    "form_type":       "selectValues",
+                    "form_position":   "6",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "0#Public|1#Private",
+                    "default_value":   "0",
+                    "list_position":   "0",
+                    "list_align":      "NULL",
+                    "list_use_filter": "1",
+                    "alt_position":    "0",
+                    "status":          "1",
+                    "is_integer":      "1",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+
+                {
+                    "table_name":      "Calendar",
+                    "table_field":     "status",
+                    "form_tab":        "1",
+                    "form_label":      "Status",
+                    "form_type":       "selectValues",
+                    "form_position":   "7",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "0#Pending|1#Accepted|2#Rejected",
+                    "default_value":   "1",
+                    "list_position":   "7",
+                    "list_align":      "left",
+                    "list_use_filter": "1",
+                    "alt_position":    "0",
+                    "status":          "1",
+                    "is_integer":      "1",
+                    "is_required":     "0",
                     "is_unique":       "0"
                 },
 

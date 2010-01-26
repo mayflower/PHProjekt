@@ -67,6 +67,21 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     public $startDateNotif;
     public $endDateNotif;
 
+
+    /**
+     * Constructor initializes additional Infomanager.
+     *
+     * @param array $db Configuration for Zend_Db_Table
+     *
+     * @return void
+     */
+    public function __construct($db = null)
+    {
+        parent::__construct($db);
+
+        $this->_dbManager = new Calendar_Models_CalendarInformation($this, $db);
+    }
+
     /**
      * Save or inserts an event. It inserts one envent by participant
      *
@@ -322,7 +337,19 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $where = sprintf('participant_id IN (%s) AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
             $usersId, $date, $date);
 
-        return Phprojekt_ActiveRecord_Abstract::fetchAll($where, null, $count, $offset);
+        $records = Phprojekt_ActiveRecord_Abstract::fetchAll($where, null, $count, $offset);
+
+        // Hide the title, place and note from the private events
+        $userId = Phprojekt_Auth::getUserId();
+        foreach ($records as $key => $record) {
+            if ($record->visibility == 1 && $record->participantId != $userId) {
+                $record->title = "-";
+                $record->notes = "-";
+                $record->place = "-";
+            }
+        }
+
+        return $records;
     }
 
     /**
@@ -635,6 +662,12 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
             } else {
                 $ownerId = Phprojekt_Auth::getUserId();
             }
+
+            // Set the status to "Pending" if there is any change and the event is for other user
+            if ($participantId != $ownerId) {
+                $request['status'] = 1;
+            }
+
             $request = Default_Helpers_Right::allowAll($request, $ownerId);
 
             Default_Helpers_Save::save($model, $request);

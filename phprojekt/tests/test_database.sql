@@ -45,6 +45,7 @@ DROP TABLE IF EXISTS `minutes`;
 DROP TABLE IF EXISTS `minutes_item`;
 DROP TABLE IF EXISTS `test`;
 DROP TABLE IF EXISTS `frontend_message`;
+
 --
 -- Table structure for table `database_manager`
 --
@@ -404,12 +405,13 @@ CREATE TABLE `calendar` (
   `location` varchar(255) default NULL,
   `categories` text default NULL,
   `attendee` text default NULL,
-  `status` int(1) default NULL,
+  `status` int(1) default 0,
   `priority` int(1) default NULL,
   `class` int(1) default NULL,
   `transparent` int(1)  default NULL,
   `rrule` text default NULL,
   `properties` text default NULL,
+  `visibility` int(1) default 0,
   `participant_id` int(11) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uid` (`uid`)
@@ -586,7 +588,9 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Calendar', 'place', 1, 'Place', 'text', 2, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'notes', 1, 'Notes', 'textarea', 3, 2, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 (0, 'Calendar', 'start_datetime', 1, 'Start', 'datetime', 4, 1, NULL, NULL, NULL, 2, 'center', 1, 3, '1', 0, 1, 0),
-(0, 'Calendar', 'end_datetime', 1, 'End', 'datetime', 6, 1, NULL, NULL, NULL, 4, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'end_datetime', 1, 'End', 'datetime', 5, 1, NULL, NULL, NULL, 4, 'center', 1, 0, '1', 0, 1, 0),
+(0, 'Calendar', 'visibility', 1, 'Visibility', 'selectValues', 6, 1, NULL, '0#Public|1#Private', 0, 0, NULL, 1, 0, '1', 1, 0, 0),
+(0, 'Calendar', 'status', 1, 'Status', 'selectValues', 7, 1, NULL, '0#Pending|1#Accepted|2#Rejected', 1, 7, 'left', 1, 0, '1', 1, 0, 0),
 (0, 'Calendar', 'participant_id', 1, 'Participant', 'hidden', 8, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 1, 1, 0),
 (0, 'Calendar', 'rrule', 1, 'Rrule', 'hidden', 9, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
 

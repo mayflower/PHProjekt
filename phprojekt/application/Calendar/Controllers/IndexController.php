@@ -459,6 +459,16 @@ class Calendar_IndexController extends IndexController
             implode(", ", $ids), $date, $date);
         $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
+        // Hide the title, place and note from the private events
+        $userId = Phprojekt_Auth::getUserId();
+        foreach ($records as $key => $record) {
+            if ($record->visibility == 1 && $record->participantId != $userId) {
+                $record->title = "-";
+                $record->notes = "-";
+                $record->place = "-";
+            }
+        }
+
         Phprojekt_Converter_Csv::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 

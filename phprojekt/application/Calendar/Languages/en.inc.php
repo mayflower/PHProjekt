@@ -47,6 +47,14 @@ $lang["Interval"] = "Interval";
 $lang["Until"] = "Until";
 $lang["Weekdays"] = "Weekdays";
 
+$lang["Visibility"] = "Visibility";
+$lang["Public"] = "Public";
+$lang["Private"] = "Private";
+$lang["Status"] = "Status";
+$lang["Pending"] = "Pending";
+$lang["Accepted"] = "Accepted";
+$lang["Rejected"] = "Rejected";
+
 // Messages
 $lang["Select users for the group view"] = "Select users for the group view";
 $lang["You have to select at least one user!"] = "You have to select at least one user!";
