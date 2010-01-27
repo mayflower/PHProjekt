@@ -665,7 +665,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
             // Set the status to "Pending" if there is any change and the event is for other user
             if ($participantId != $ownerId) {
-                $request['status'] = 1;
+                $request['status'] = 0;
             }
 
             $request = Default_Helpers_Right::allowAll($request, $ownerId);
