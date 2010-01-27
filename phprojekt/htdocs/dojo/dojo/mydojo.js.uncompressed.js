@@ -10654,6 +10654,149 @@ dojo.provide("dijit._base");
 
 }
 
+if(!dojo._hasResource["dijit._Container"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit._Container"] = true;
+dojo.provide("dijit._Container");
+
+dojo.declare("dijit._Container",
+	null,
+	{
+		// summary:
+		//		Mixin for widgets that contain a set of widget children.
+		// description:
+		//		Use this mixin for widgets that needs to know about and
+		//		keep track of their widget children. Suitable for widgets like BorderContainer
+		//		and TabContainer which contain (only) a set of child widgets.
+		//
+		//		It's not suitable for widgets like ContentPane
+		//		which contains mixed HTML (plain DOM nodes in addition to widgets),
+		//		and where contained widgets are not necessarily directly below
+		//		this.containerNode.   In that case calls like addChild(node, position)
+		//		wouldn't make sense.
+
+		// isContainer: [protected] Boolean
+		//		Indicates that this widget acts as a "parent" to the descendant widgets.
+		//		When the parent is started it will call startup() on the child widgets.
+		//		See also `isLayoutContainer`.
+		isContainer: true,
+
+		buildRendering: function(){
+			this.inherited(arguments);
+			if(!this.containerNode){
+				// all widgets with descendants must set containerNode
+	 				this.containerNode = this.domNode;
+			}
+		},
+
+		addChild: function(/*dijit._Widget*/ widget, /*int?*/ insertIndex){
+			// summary:
+			//		Makes the given widget a child of this widget.
+			// description:
+			//		Inserts specified child widget's dom node as a child of this widget's
+			//		container node, and possibly does other processing (such as layout).
+
+			var refNode = this.containerNode;
+			if(insertIndex && typeof insertIndex == "number"){
+				var children = this.getChildren();
+				if(children && children.length >= insertIndex){
+					refNode = children[insertIndex-1].domNode;
+					insertIndex = "after";
+				}
+			}
+			dojo.place(widget.domNode, refNode, insertIndex);
+
+			// If I've been started but the child widget hasn't been started,
+			// start it now.  Make sure to do this after widget has been
+			// inserted into the DOM tree, so it can see that it's being controlled by me,
+			// so it doesn't try to size itself.
+			if(this._started && !widget._started){
+				widget.startup();
+			}
+		},
+
+		removeChild: function(/*Widget or int*/ widget){
+			// summary:
+			//		Removes the passed widget instance from this widget but does
+			//		not destroy it.  You can also pass in an integer indicating
+			//		the index within the container to remove
+
+			if(typeof widget == "number" && widget > 0){
+				widget = this.getChildren()[widget];
+			}
+
+			if(widget && widget.domNode){
+				var node = widget.domNode;
+				node.parentNode.removeChild(node); // detach but don't destroy
+			}
+		},
+
+		getChildren: function(){
+			// summary:
+			//		Returns array of children widgets.
+			// description:
+			//		Returns the widgets that are directly under this.containerNode.
+			return dojo.query("> [widgetId]", this.containerNode).map(dijit.byNode); // Widget[]
+		},
+
+		hasChildren: function(){
+			// summary:
+			//		Returns true if widget has children, i.e. if this.containerNode contains something.
+			return dojo.query("> [widgetId]", this.containerNode).length > 0;	// Boolean
+		},
+
+		destroyDescendants: function(/*Boolean*/ preserveDom){
+			// summary:
+			//      Destroys all the widgets inside this.containerNode,
+			//      but not this widget itself
+			dojo.forEach(this.getChildren(), function(child){ child.destroyRecursive(preserveDom); });
+		},
+
+		_getSiblingOfChild: function(/*dijit._Widget*/ child, /*int*/ dir){
+			// summary:
+			//		Get the next or previous widget sibling of child
+			// dir:
+			//		if 1, get the next sibling
+			//		if -1, get the previous sibling
+			// tags:
+			//      private
+			var node = child.domNode,
+				which = (dir>0 ? "nextSibling" : "previousSibling");
+			do{
+				node = node[which];
+			}while(node && (node.nodeType != 1 || !dijit.byNode(node)));
+			return node && dijit.byNode(node);	// dijit._Widget
+		},
+
+		getIndexOfChild: function(/*dijit._Widget*/ child){
+			// summary:
+			//		Gets the index of the child in this container or -1 if not found
+			return dojo.indexOf(this.getChildren(), child);	// int
+		},
+
+		startup: function(){
+			// summary:
+			//		Called after all the widgets have been instantiated and their
+			//		dom nodes have been inserted somewhere under dojo.doc.body.
+			//
+			//		Widgets should override this method to do any initialization
+			//		dependent on other widgets existing, and then call
+			//		this superclass method to finish things off.
+			//
+			//		startup() in subclasses shouldn't do anything
+			//		size related because the size of the widget hasn't been set yet.
+
+			if(this._started){ return; }
+
+			// Startup all children of this widget
+			dojo.forEach(this.getChildren(), function(child){ child.startup(); });
+
+			this.inherited(arguments);
+		}
+	}
+);
+
+}
+
 if(!dojo._hasResource["dijit._Widget"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit._Widget"] = true;
 dojo.provide("dijit._Widget");
@@ -12243,635 +12386,6 @@ dojo.extend(dijit._Widget,{
 
 }
 
-if(!dojo._hasResource["dijit.Calendar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.Calendar"] = true;
-dojo.provide("dijit.Calendar");
-
-
-
-
-
-
-
-
-dojo.declare(
-	"dijit.Calendar",
-	[dijit._Widget, dijit._Templated],
-	{
-		// summary:
-		//		A simple GUI for choosing a date in the context of a monthly calendar.
-		//
-		// description:
-		//		A simple GUI for choosing a date in the context of a monthly calendar.
-		//		This widget can't be used in a form because it doesn't serialize the date to an
-		//		`<input>` field.  For a form element, use dijit.form.DateTextBox instead.
-		//
-		//		Note that the parser takes all dates attributes passed in the
-		//		[RFC 3339 format](http://www.faqs.org/rfcs/rfc3339.html), e.g. `2005-06-30T08:05:00-07:00`
-		//		so that they are serializable and locale-independent.
-		//
-		// example:
-		//	|	var calendar = new dijit.Calendar({}, dojo.byId("calendarNode"));
-		//
-		// example:
-		//	|	<div dojoType="dijit.Calendar"></div>
-
-		templateString: dojo.cache("dijit", "templates/Calendar.html", "<table cellspacing=\"0\" cellpadding=\"0\" class=\"dijitCalendarContainer\" role=\"grid\" dojoAttachEvent=\"onkeypress: _onKeyPress\">\r\n\t<thead>\r\n\t\t<tr class=\"dijitReset dijitCalendarMonthContainer\" valign=\"top\">\r\n\t\t\t<th class='dijitReset' dojoAttachPoint=\"decrementMonth\">\r\n\t\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarDecrease\" waiRole=\"presentation\">\r\n\t\t\t\t<span dojoAttachPoint=\"decreaseArrowNode\" class=\"dijitA11ySideArrow\">-</span>\r\n\t\t\t</th>\r\n\t\t\t<th class='dijitReset' colspan=\"5\">\r\n\t\t\t\t<div class=\"dijitVisible\">\r\n\t\t\t\t\t<div class=\"dijitPopup dijitMenu dijitMenuPassive dijitHidden\" dojoAttachPoint=\"monthDropDown\" dojoAttachEvent=\"onmouseup: _onMonthSelect, onmouseover: _onMenuHover, onmouseout: _onMenuHover\">\r\n\t\t\t\t\t\t<div class=\"dijitCalendarMonthLabelTemplate dijitCalendarMonthLabel\"></div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div dojoAttachPoint=\"monthLabelSpacer\" class=\"dijitSpacer\"></div>\r\n\t\t\t\t<div dojoAttachPoint=\"monthLabelNode\" class=\"dijitCalendarMonthLabel dijitInline dijitVisible\" dojoAttachEvent=\"onmousedown: _onMonthToggle\"></div>\r\n\t\t\t</th>\r\n\t\t\t<th class='dijitReset' dojoAttachPoint=\"incrementMonth\">\r\n\t\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarIncrease\" waiRole=\"presentation\">\r\n\t\t\t\t<span dojoAttachPoint=\"increaseArrowNode\" class=\"dijitA11ySideArrow\">+</span>\r\n\t\t\t</th>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<th class=\"dijitReset dijitCalendarDayLabelTemplate\" role=\"columnheader\"><span class=\"dijitCalendarDayLabel\"></span></th>\r\n\t\t</tr>\r\n\t</thead>\r\n\t<tbody dojoAttachEvent=\"onclick: _onDayClick, onmouseover: _onDayMouseOver, onmouseout: _onDayMouseOut\" class=\"dijitReset dijitCalendarBodyContainer\">\r\n\t\t<tr class=\"dijitReset dijitCalendarWeekTemplate\" role=\"row\">\r\n\t\t\t<td class=\"dijitReset dijitCalendarDateTemplate\" role=\"gridcell\"><span class=\"dijitCalendarDateLabel\"></span></td>\r\n\t\t</tr>\r\n\t</tbody>\r\n\t<tfoot class=\"dijitReset dijitCalendarYearContainer\">\r\n\t\t<tr>\r\n\t\t\t<td class='dijitReset' valign=\"top\" colspan=\"7\">\r\n\t\t\t\t<h3 class=\"dijitCalendarYearLabel\">\r\n\t\t\t\t\t<span dojoAttachPoint=\"previousYearLabelNode\" class=\"dijitInline dijitCalendarPreviousYear\"></span>\r\n\t\t\t\t\t<span dojoAttachPoint=\"currentYearLabelNode\" class=\"dijitInline dijitCalendarSelectedYear\"></span>\r\n\t\t\t\t\t<span dojoAttachPoint=\"nextYearLabelNode\" class=\"dijitInline dijitCalendarNextYear\"></span>\r\n\t\t\t\t</h3>\r\n\t\t\t</td>\r\n\t\t</tr>\r\n\t</tfoot>\r\n</table>\r\n"),
-
-		// value: Date
-		//		The currently selected Date
-		value: new Date(),
-
-		// datePackage: String
-		//		JavaScript namespace to find Calendar routines.  Uses Gregorian Calendar routines
-		//		at dojo.date by default.
-		datePackage: "dojo.date",
-
-		// dayWidth: String
-		//		How to represent the days of the week in the calendar header. See dojo.date.locale
-		dayWidth: "narrow",
-
-		// tabIndex: Integer
-		//		Order fields are traversed when user hits the tab key
-		tabIndex: "0",
-
-		attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
-			tabIndex: "domNode"
- 		}),
-
-		setValue: function(/*Date*/ value){
-			// summary:
-			//      Deprecated.   Used attr('value', ...) instead.
-			// tags:
-			//      deprecated
-			dojo.deprecated("dijit.Calendar:setValue() is deprecated.  Use attr('value', ...) instead.", "", "2.0");
-			this.attr('value', value);
-		},
-
-		_getValueAttr: function(){
-			// summary:
-			//		Support getter attr('value')
-			var value = new this.dateClassObj(this.value);
-			value.setHours(0, 0, 0, 0); // return midnight, local time for back-compat
-
-			// If daylight savings pushes midnight to the previous date, fix the Date
-			// object to point at 1am so it will represent the correct day. See #9366
-			if(value.getDate() < this.value.getDate()){
-				value = this.dateFuncObj.add(value, "hour", 1);
-			}
-			return value;
-		},
-
-		_setValueAttr: function(/*Date*/ value){
-			// summary:
-			//		Support setter attr("value", ...)
-			// description:
-			// 		Set the current date and update the UI.  If the date is disabled, the value will
-			//		not change, but the display will change to the corresponding month.
-			// tags:
-			//      protected
-			if(!this.value || this.dateFuncObj.compare(value, this.value)){
-				value = new this.dateClassObj(value);
-				value.setHours(1); // to avoid issues when DST shift occurs at midnight, see #8521, #9366
-				this.displayMonth = new this.dateClassObj(value);
-				if(!this.isDisabledDate(value, this.lang)){
-					this.value = value;
-					this.onChange(this.attr('value'));
-				}
-				dojo.attr(this.domNode, "aria-label",
-					this.dateLocaleModule.format(value,
-						{selector:"date", formatLength:"full"}));
-				this._populateGrid();
-			}
-		},
-
-		_setText: function(node, text){
-			// summary:
-			//		This just sets the content of node to the specified text.
-			//		Can't do "node.innerHTML=text" because of an IE bug w/tables, see #3434.
-			// tags:
-			//      private
-			while(node.firstChild){
-				node.removeChild(node.firstChild);
-			}
-			node.appendChild(dojo.doc.createTextNode(text));
-		},
-
-		_populateGrid: function(){
-			// summary:
-			//      Fills in the calendar grid with each day (1-31)
-			// tags:
-			//      private
-			var month = this.displayMonth;
-			month.setDate(1);
-			var firstDay = month.getDay(),
-				daysInMonth = this.dateFuncObj.getDaysInMonth(month),
-				daysInPreviousMonth = this.dateFuncObj.getDaysInMonth(this.dateFuncObj.add(month, "month", -1)),
-				today = new this.dateClassObj(),
-				dayOffset = dojo.cldr.supplemental.getFirstDayOfWeek(this.lang);
-			if(dayOffset > firstDay){ dayOffset -= 7; }
-
-			// Iterate through dates in the calendar and fill in date numbers and style info
-			dojo.query(".dijitCalendarDateTemplate", this.domNode).forEach(function(template, i){
-				i += dayOffset;
-				var date = new this.dateClassObj(month),
-					number, clazz = "dijitCalendar", adj = 0;
-
-				if(i < firstDay){
-					number = daysInPreviousMonth - firstDay + i + 1;
-					adj = -1;
-					clazz += "Previous";
-				}else if(i >= (firstDay + daysInMonth)){
-					number = i - firstDay - daysInMonth + 1;
-					adj = 1;
-					clazz += "Next";
-				}else{
-					number = i - firstDay + 1;
-					clazz += "Current";
-				}
-
-				if(adj){
-					date = this.dateFuncObj.add(date, "month", adj);
-				}
-				date.setDate(number);
-
-				if(!this.dateFuncObj.compare(date, today, "date")){
-					clazz = "dijitCalendarCurrentDate " + clazz;
-				}
-
-				if(this._isSelectedDate(date, this.lang)){
-					clazz = "dijitCalendarSelectedDate " + clazz;
-				}
-
-				if(this.isDisabledDate(date, this.lang)){
-					clazz = "dijitCalendarDisabledDate " + clazz;
-				}
-
-				var clazz2 = this.getClassForDate(date, this.lang);
-				if(clazz2){
-					clazz = clazz2 + " " + clazz;
-				}
-
-				template.className = clazz + "Month dijitCalendarDateTemplate";
-				template.dijitDateValue = date.valueOf();
-				var label = dojo.query(".dijitCalendarDateLabel", template)[0],
-					text = date.getDateLocalized ? date.getDateLocalized(this.lang) : date.getDate();
-				this._setText(label, text);
-			}, this);
-
-			// Fill in localized month name
-			var monthNames = this.dateLocaleModule.getNames('months', 'wide', 'standAlone', this.lang);
-			this._setText(this.monthLabelNode, monthNames[month.getMonth()]);
-
-			// Fill in localized prev/current/next years
-			var y = month.getFullYear() - 1;
-			var d = new this.dateClassObj();
-			dojo.forEach(["previous", "current", "next"], function(name){
-				d.setFullYear(y++);
-				this._setText(this[name+"YearLabelNode"],
-					this.dateLocaleModule.format(d, {selector:'year', locale:this.lang}));
-			}, this);
-
-			// Set up repeating mouse behavior
-			var _this = this;
-			var typematic = function(nodeProp, dateProp, adj){
-//FIXME: leaks (collects) listeners if populateGrid is called multiple times.  Do this once?
-				_this._connects.push(
-					dijit.typematic.addMouseListener(_this[nodeProp], _this, function(count){
-						if(count >= 0){ _this._adjustDisplay(dateProp, adj); }
-					}, 0.8, 500)
-				);
-			};
-			typematic("incrementMonth", "month", 1);
-			typematic("decrementMonth", "month", -1);
-			typematic("nextYearLabelNode", "year", 1);
-			typematic("previousYearLabelNode", "year", -1);
-		},
-
-		goToToday: function(){
-			// summary:
-			//      Sets calendar's value to today's date
-			this.attr('value', this.dateClassObj());
-		},
-
-		constructor: function(/*Object*/args){
-			var dateClass = (args.datePackage && (args.datePackage != "dojo.date"))? args.datePackage + ".Date" : "Date";
-			this.dateClassObj = dojo.getObject(dateClass, false);
-			this.datePackage = args.datePackage || this.datePackage;
-			this.dateFuncObj = dojo.getObject(this.datePackage, false);
-			this.dateLocaleModule = dojo.getObject(this.datePackage + ".locale", false);
-		},
-
-		postMixInProperties: function(){
-			// parser.instantiate sometimes passes in NaN for IE.  Use default value in prototype instead.
-			if(isNaN(this.value)){ delete this.value; }
-			this.inherited(arguments);
-		},
-
-		postCreate: function(){
-			this.inherited(arguments);
-			dojo.setSelectable(this.domNode, false);
-
-			var cloneClass = dojo.hitch(this, function(clazz, n){
-				var template = dojo.query(clazz, this.domNode)[0];
-	 			for(var i=0; i<n; i++){
-					template.parentNode.appendChild(template.cloneNode(true));
-				}
-			});
-
-			// clone the day label and calendar day templates 6 times to make 7 columns
-			cloneClass(".dijitCalendarDayLabelTemplate", 6);
-			cloneClass(".dijitCalendarDateTemplate", 6);
-
-			// now make 6 week rows
-			cloneClass(".dijitCalendarWeekTemplate", 5);
-
-			// insert localized day names in the header
-			var dayNames = this.dateLocaleModule.getNames('days', this.dayWidth, 'standAlone', this.lang);
-			var dayOffset = dojo.cldr.supplemental.getFirstDayOfWeek(this.lang);
-			dojo.query(".dijitCalendarDayLabel", this.domNode).forEach(function(label, i){
-				this._setText(label, dayNames[(i + dayOffset) % 7]);
-			}, this);
-
-			// Fill in spacer/month dropdown element with all the month names (invisible) so that the maximum width will affect layout
-			var monthNames = this.dateLocaleModule.getNames('months', 'wide', 'standAlone', this.lang);
-			cloneClass(".dijitCalendarMonthLabelTemplate", monthNames.length-1);
-			dojo.query(".dijitCalendarMonthLabelTemplate", this.domNode).forEach(function(node, i){
-				dojo.attr(node, "month", i);
-				this._setText(node, monthNames[i]);
-				dojo.place(node.cloneNode(true), this.monthLabelSpacer);
-			}, this);
-
-			var value = this.value;
-			this.value = null;
-			this.attr('value', new this.dateClassObj(value));
-		},
-
-		_onMenuHover: function(e){
-			dojo.stopEvent(e);
-			dojo.toggleClass(e.target, "dijitMenuItemHover");
-		},
-
-		_adjustDisplay: function(/*String*/ part, /*int*/ amount){
-			// summary:
-			//      Moves calendar forwards or backwards by months or years
-			// part:
-			//      "month" or "year"
-			// amount:
-			//      Number of months or years
-			// tags:
-			//      private
-			this.displayMonth = this.dateFuncObj.add(this.displayMonth, part, amount);
-			this._populateGrid();
-		},
-
-		_onMonthToggle: function(/*Event*/ evt){
-			// summary:
-			//      Handler for when user triggers or dismisses the month list
-			// tags:
-			//      protected
-			dojo.stopEvent(evt);
-
-			if(evt.type == "mousedown"){
-				var coords = dojo.position(this.monthLabelNode);
-//				coords.y -= dojo.position(this.domNode, true).y;
-				// Size the dropdown's width to match the label in the widget
-				// so that they are horizontally aligned
-				var dim = {
-					width: coords.w + "px",
-					top: -this.displayMonth.getMonth() * coords.h + "px"
-				};
-				if((dojo.isIE && dojo.isQuirks) || dojo.isIE < 7){
-					dim.left = -coords.w/2 + "px";
-				}
-				dojo.style(this.monthDropDown, dim);
-				this._popupHandler = this.connect(document, "onmouseup", "_onMonthToggle");
-			}else{
-				this.disconnect(this._popupHandler);
-				delete this._popupHandler;
-			}
-
-			dojo.toggleClass(this.monthDropDown, "dijitHidden");
-			dojo.toggleClass(this.monthLabelNode, "dijitVisible");
-		},
-
-		_onMonthSelect: function(/*Event*/ evt){
-			// summary:
-			//      Handler for when user selects a month from a list
-			// tags:
-			//      protected
-			this._onMonthToggle(evt);
-			this.displayMonth.setMonth(dojo.attr(evt.target, "month"));
-			this._populateGrid();
-		},
-
-		_onDayClick: function(/*Event*/ evt){
-			// summary:
-			//      Handler for day clicks, selects the date if appropriate
-			// tags:
-			//      protected
-			dojo.stopEvent(evt);
-			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
-			if(node && !dojo.hasClass(node, "dijitCalendarDisabledDate")){
-				this.attr('value', node.dijitDateValue);
-				this.onValueSelected(this.attr('value'));
-			}
-		},
-
-		_onDayMouseOver: function(/*Event*/ evt){
-			// summary:
-			//      Handler for mouse over events on days, sets up hovered style
-			// tags:
-			//      protected
-			var node = evt.target;
-			if(node && (node.dijitDateValue || node == this.previousYearLabelNode || node == this.nextYearLabelNode) ){
-				dojo.addClass(node, "dijitCalendarHoveredDate");
-				this._currentNode = node;
-			}
-		},
-
-		_onDayMouseOut: function(/*Event*/ evt){
-			// summary:
-			//      Handler for mouse out events on days, clears hovered style
-			// tags:
-			//      protected
-			if(!this._currentNode){ return; }
-			for(var node = evt.relatedTarget; node;){
-				if(node == this._currentNode){ return; }
-				try{
-					node = node.parentNode;
-				}catch(x){
-					node = null;
-				}
-			}
-			dojo.removeClass(this._currentNode, "dijitCalendarHoveredDate");
-			this._currentNode = null;
-		},
-
-//TODO: use typematic
-//TODO: skip disabled dates without ending up in a loop
-//TODO: could optimize by avoiding populate grid when month does not change
-		_onKeyPress: function(/*Event*/evt){
-			// summary:
-			//		Provides keyboard navigation of calendar
-			// tags:
-			//		protected
-			var dk = dojo.keys,
-				increment = -1,
-				interval,
-				newValue = this.value;
-			switch(evt.keyCode){
-				case dk.RIGHT_ARROW:
-					increment = 1;
-					//fallthrough...
-				case dk.LEFT_ARROW:
-					interval = "day";
-					if(!this.isLeftToRight()){ increment *= -1; }
-					break;
-				case dk.DOWN_ARROW:
-					increment = 1;
-					//fallthrough...
-				case dk.UP_ARROW:
-					interval = "week";
-					break;
-				case dk.PAGE_DOWN:
-					increment = 1;
-					//fallthrough...
-				case dk.PAGE_UP:
-					interval = evt.ctrlKey ? "year" : "month";
-					break;
-				case dk.END:
-					// go to the next month
-					newValue = this.dateFuncObj.add(newValue, "month", 1);
-					// subtract a day from the result when we're done
-					interval = "day";
-					//fallthrough...
-				case dk.HOME:
-					newValue = new Date(newValue).setDate(1);
-					break;
-				case dk.ENTER:
-					this.onValueSelected(this.attr('value'));
-					break;
-				case dk.ESCAPE:
-					//TODO
-				default:
-					return;
-			}
-			dojo.stopEvent(evt);
-
-			if(interval){
-				newValue = this.dateFuncObj.add(newValue, interval, increment);
-			}
-
-			this.attr("value", newValue);
-		},
-
-		onValueSelected: function(/*Date*/ date){
-			// summary:
-			//		Notification that a date cell was selected.  It may be the same as the previous value.
-			// description:
-			//      Used by `dijit.form._DateTimeTextBox` (and thus `dijit.form.DateTextBox`)
-			//      to get notification when the user has clicked a date.
-			// tags:
-			//      protected
-		},
-
-		onChange: function(/*Date*/ date){
-			// summary:
-			//		Called only when the selected date has changed
-		},
-
-		_isSelectedDate: function(/*Date*/ dateObject, /*String?*/ locale){
-			// summary:
-			//		Extension point so developers can subclass Calendar to
-			//		support multiple (concurrently) selected dates
-			// tags:
-			//		protected extension
-			return !this.dateFuncObj.compare(dateObject, this.value, "date")
-		},
-
-		isDisabledDate: function(/*Date*/ dateObject, /*String?*/ locale){
-			// summary:
-			//		May be overridden to disable certain dates in the calendar e.g. `isDisabledDate=dojo.date.locale.isWeekend`
-			// tags:
-			//      extension
-/*=====
-			return false; // Boolean
-=====*/
-		},
-
-		getClassForDate: function(/*Date*/ dateObject, /*String?*/ locale){
-			// summary:
-			//		May be overridden to return CSS classes to associate with the date entry for the given dateObject,
-			//		for example to indicate a holiday in specified locale.
-			// tags:
-			//      extension
-
-/*=====
-			return ""; // String
-=====*/
-		}
-	}
-);
-
-}
-
-if(!dojo._hasResource["dijit._Calendar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit._Calendar"] = true;
-dojo.provide("dijit._Calendar");
-
-
-dojo.deprecated("dijit._Calendar is deprecated", "dijit._Calendar moved to dijit.Calendar", 1.5);
-
-// dijit._Calendar had an underscore all this time merely because it did
-// not satisfy dijit's a11y policy.
-dijit._Calendar = dijit.Calendar;
-
-}
-
-if(!dojo._hasResource["dijit._Container"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit._Container"] = true;
-dojo.provide("dijit._Container");
-
-dojo.declare("dijit._Container",
-	null,
-	{
-		// summary:
-		//		Mixin for widgets that contain a set of widget children.
-		// description:
-		//		Use this mixin for widgets that needs to know about and
-		//		keep track of their widget children. Suitable for widgets like BorderContainer
-		//		and TabContainer which contain (only) a set of child widgets.
-		//
-		//		It's not suitable for widgets like ContentPane
-		//		which contains mixed HTML (plain DOM nodes in addition to widgets),
-		//		and where contained widgets are not necessarily directly below
-		//		this.containerNode.   In that case calls like addChild(node, position)
-		//		wouldn't make sense.
-
-		// isContainer: [protected] Boolean
-		//		Indicates that this widget acts as a "parent" to the descendant widgets.
-		//		When the parent is started it will call startup() on the child widgets.
-		//		See also `isLayoutContainer`.
-		isContainer: true,
-
-		buildRendering: function(){
-			this.inherited(arguments);
-			if(!this.containerNode){
-				// all widgets with descendants must set containerNode
-	 				this.containerNode = this.domNode;
-			}
-		},
-
-		addChild: function(/*dijit._Widget*/ widget, /*int?*/ insertIndex){
-			// summary:
-			//		Makes the given widget a child of this widget.
-			// description:
-			//		Inserts specified child widget's dom node as a child of this widget's
-			//		container node, and possibly does other processing (such as layout).
-
-			var refNode = this.containerNode;
-			if(insertIndex && typeof insertIndex == "number"){
-				var children = this.getChildren();
-				if(children && children.length >= insertIndex){
-					refNode = children[insertIndex-1].domNode;
-					insertIndex = "after";
-				}
-			}
-			dojo.place(widget.domNode, refNode, insertIndex);
-
-			// If I've been started but the child widget hasn't been started,
-			// start it now.  Make sure to do this after widget has been
-			// inserted into the DOM tree, so it can see that it's being controlled by me,
-			// so it doesn't try to size itself.
-			if(this._started && !widget._started){
-				widget.startup();
-			}
-		},
-
-		removeChild: function(/*Widget or int*/ widget){
-			// summary:
-			//		Removes the passed widget instance from this widget but does
-			//		not destroy it.  You can also pass in an integer indicating
-			//		the index within the container to remove
-
-			if(typeof widget == "number" && widget > 0){
-				widget = this.getChildren()[widget];
-			}
-
-			if(widget && widget.domNode){
-				var node = widget.domNode;
-				node.parentNode.removeChild(node); // detach but don't destroy
-			}
-		},
-
-		getChildren: function(){
-			// summary:
-			//		Returns array of children widgets.
-			// description:
-			//		Returns the widgets that are directly under this.containerNode.
-			return dojo.query("> [widgetId]", this.containerNode).map(dijit.byNode); // Widget[]
-		},
-
-		hasChildren: function(){
-			// summary:
-			//		Returns true if widget has children, i.e. if this.containerNode contains something.
-			return dojo.query("> [widgetId]", this.containerNode).length > 0;	// Boolean
-		},
-
-		destroyDescendants: function(/*Boolean*/ preserveDom){
-			// summary:
-			//      Destroys all the widgets inside this.containerNode,
-			//      but not this widget itself
-			dojo.forEach(this.getChildren(), function(child){ child.destroyRecursive(preserveDom); });
-		},
-
-		_getSiblingOfChild: function(/*dijit._Widget*/ child, /*int*/ dir){
-			// summary:
-			//		Get the next or previous widget sibling of child
-			// dir:
-			//		if 1, get the next sibling
-			//		if -1, get the previous sibling
-			// tags:
-			//      private
-			var node = child.domNode,
-				which = (dir>0 ? "nextSibling" : "previousSibling");
-			do{
-				node = node[which];
-			}while(node && (node.nodeType != 1 || !dijit.byNode(node)));
-			return node && dijit.byNode(node);	// dijit._Widget
-		},
-
-		getIndexOfChild: function(/*dijit._Widget*/ child){
-			// summary:
-			//		Gets the index of the child in this container or -1 if not found
-			return dojo.indexOf(this.getChildren(), child);	// int
-		},
-
-		startup: function(){
-			// summary:
-			//		Called after all the widgets have been instantiated and their
-			//		dom nodes have been inserted somewhere under dojo.doc.body.
-			//
-			//		Widgets should override this method to do any initialization
-			//		dependent on other widgets existing, and then call
-			//		this superclass method to finish things off.
-			//
-			//		startup() in subclasses shouldn't do anything
-			//		size related because the size of the widget hasn't been set yet.
-
-			if(this._started){ return; }
-
-			// Startup all children of this widget
-			dojo.forEach(this.getChildren(), function(child){ child.startup(); });
-
-			this.inherited(arguments);
-		}
-	}
-);
-
-}
-
 if(!dojo._hasResource["dijit.form._FormWidget"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit.form._FormWidget"] = true;
 dojo.provide("dijit.form._FormWidget");
@@ -13823,6 +13337,479 @@ dojo.declare("dijit._TimePicker",
 				if(e.charOrCode == dk.ENTER){dojo.stopEvent(e);}
 				this._onOptionSelected({target: this._highlighted_option});
 			}
+		}
+	}
+);
+
+}
+
+if(!dojo._hasResource["dijit.Calendar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit.Calendar"] = true;
+dojo.provide("dijit.Calendar");
+
+
+
+
+
+
+
+
+dojo.declare(
+	"dijit.Calendar",
+	[dijit._Widget, dijit._Templated],
+	{
+		// summary:
+		//		A simple GUI for choosing a date in the context of a monthly calendar.
+		//
+		// description:
+		//		A simple GUI for choosing a date in the context of a monthly calendar.
+		//		This widget can't be used in a form because it doesn't serialize the date to an
+		//		`<input>` field.  For a form element, use dijit.form.DateTextBox instead.
+		//
+		//		Note that the parser takes all dates attributes passed in the
+		//		[RFC 3339 format](http://www.faqs.org/rfcs/rfc3339.html), e.g. `2005-06-30T08:05:00-07:00`
+		//		so that they are serializable and locale-independent.
+		//
+		// example:
+		//	|	var calendar = new dijit.Calendar({}, dojo.byId("calendarNode"));
+		//
+		// example:
+		//	|	<div dojoType="dijit.Calendar"></div>
+
+		templateString: dojo.cache("dijit", "templates/Calendar.html", "<table cellspacing=\"0\" cellpadding=\"0\" class=\"dijitCalendarContainer\" role=\"grid\" dojoAttachEvent=\"onkeypress: _onKeyPress\">\r\n\t<thead>\r\n\t\t<tr class=\"dijitReset dijitCalendarMonthContainer\" valign=\"top\">\r\n\t\t\t<th class='dijitReset' dojoAttachPoint=\"decrementMonth\">\r\n\t\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarDecrease\" waiRole=\"presentation\">\r\n\t\t\t\t<span dojoAttachPoint=\"decreaseArrowNode\" class=\"dijitA11ySideArrow\">-</span>\r\n\t\t\t</th>\r\n\t\t\t<th class='dijitReset' colspan=\"5\">\r\n\t\t\t\t<div class=\"dijitVisible\">\r\n\t\t\t\t\t<div class=\"dijitPopup dijitMenu dijitMenuPassive dijitHidden\" dojoAttachPoint=\"monthDropDown\" dojoAttachEvent=\"onmouseup: _onMonthSelect, onmouseover: _onMenuHover, onmouseout: _onMenuHover\">\r\n\t\t\t\t\t\t<div class=\"dijitCalendarMonthLabelTemplate dijitCalendarMonthLabel\"></div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div dojoAttachPoint=\"monthLabelSpacer\" class=\"dijitSpacer\"></div>\r\n\t\t\t\t<div dojoAttachPoint=\"monthLabelNode\" class=\"dijitCalendarMonthLabel dijitInline dijitVisible\" dojoAttachEvent=\"onmousedown: _onMonthToggle\"></div>\r\n\t\t\t</th>\r\n\t\t\t<th class='dijitReset' dojoAttachPoint=\"incrementMonth\">\r\n\t\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarIncrease\" waiRole=\"presentation\">\r\n\t\t\t\t<span dojoAttachPoint=\"increaseArrowNode\" class=\"dijitA11ySideArrow\">+</span>\r\n\t\t\t</th>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<th class=\"dijitReset dijitCalendarDayLabelTemplate\" role=\"columnheader\"><span class=\"dijitCalendarDayLabel\"></span></th>\r\n\t\t</tr>\r\n\t</thead>\r\n\t<tbody dojoAttachEvent=\"onclick: _onDayClick, onmouseover: _onDayMouseOver, onmouseout: _onDayMouseOut\" class=\"dijitReset dijitCalendarBodyContainer\">\r\n\t\t<tr class=\"dijitReset dijitCalendarWeekTemplate\" role=\"row\">\r\n\t\t\t<td class=\"dijitReset dijitCalendarDateTemplate\" role=\"gridcell\"><span class=\"dijitCalendarDateLabel\"></span></td>\r\n\t\t</tr>\r\n\t</tbody>\r\n\t<tfoot class=\"dijitReset dijitCalendarYearContainer\">\r\n\t\t<tr>\r\n\t\t\t<td class='dijitReset' valign=\"top\" colspan=\"7\">\r\n\t\t\t\t<h3 class=\"dijitCalendarYearLabel\">\r\n\t\t\t\t\t<span dojoAttachPoint=\"previousYearLabelNode\" class=\"dijitInline dijitCalendarPreviousYear\"></span>\r\n\t\t\t\t\t<span dojoAttachPoint=\"currentYearLabelNode\" class=\"dijitInline dijitCalendarSelectedYear\"></span>\r\n\t\t\t\t\t<span dojoAttachPoint=\"nextYearLabelNode\" class=\"dijitInline dijitCalendarNextYear\"></span>\r\n\t\t\t\t</h3>\r\n\t\t\t</td>\r\n\t\t</tr>\r\n\t</tfoot>\r\n</table>\r\n"),
+
+		// value: Date
+		//		The currently selected Date
+		value: new Date(),
+
+		// datePackage: String
+		//		JavaScript namespace to find Calendar routines.  Uses Gregorian Calendar routines
+		//		at dojo.date by default.
+		datePackage: "dojo.date",
+
+		// dayWidth: String
+		//		How to represent the days of the week in the calendar header. See dojo.date.locale
+		dayWidth: "narrow",
+
+		// tabIndex: Integer
+		//		Order fields are traversed when user hits the tab key
+		tabIndex: "0",
+
+		attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
+			tabIndex: "domNode"
+ 		}),
+
+		setValue: function(/*Date*/ value){
+			// summary:
+			//      Deprecated.   Used attr('value', ...) instead.
+			// tags:
+			//      deprecated
+			dojo.deprecated("dijit.Calendar:setValue() is deprecated.  Use attr('value', ...) instead.", "", "2.0");
+			this.attr('value', value);
+		},
+
+		_getValueAttr: function(){
+			// summary:
+			//		Support getter attr('value')
+			var value = new this.dateClassObj(this.value);
+			value.setHours(0, 0, 0, 0); // return midnight, local time for back-compat
+
+			// If daylight savings pushes midnight to the previous date, fix the Date
+			// object to point at 1am so it will represent the correct day. See #9366
+			if(value.getDate() < this.value.getDate()){
+				value = this.dateFuncObj.add(value, "hour", 1);
+			}
+			return value;
+		},
+
+		_setValueAttr: function(/*Date*/ value){
+			// summary:
+			//		Support setter attr("value", ...)
+			// description:
+			// 		Set the current date and update the UI.  If the date is disabled, the value will
+			//		not change, but the display will change to the corresponding month.
+			// tags:
+			//      protected
+			if(!this.value || this.dateFuncObj.compare(value, this.value)){
+				value = new this.dateClassObj(value);
+				value.setHours(1); // to avoid issues when DST shift occurs at midnight, see #8521, #9366
+				this.displayMonth = new this.dateClassObj(value);
+				if(!this.isDisabledDate(value, this.lang)){
+					this.value = value;
+					this.onChange(this.attr('value'));
+				}
+				dojo.attr(this.domNode, "aria-label",
+					this.dateLocaleModule.format(value,
+						{selector:"date", formatLength:"full"}));
+				this._populateGrid();
+			}
+		},
+
+		_setText: function(node, text){
+			// summary:
+			//		This just sets the content of node to the specified text.
+			//		Can't do "node.innerHTML=text" because of an IE bug w/tables, see #3434.
+			// tags:
+			//      private
+			while(node.firstChild){
+				node.removeChild(node.firstChild);
+			}
+			node.appendChild(dojo.doc.createTextNode(text));
+		},
+
+		_populateGrid: function(){
+			// summary:
+			//      Fills in the calendar grid with each day (1-31)
+			// tags:
+			//      private
+			var month = this.displayMonth;
+			month.setDate(1);
+			var firstDay = month.getDay(),
+				daysInMonth = this.dateFuncObj.getDaysInMonth(month),
+				daysInPreviousMonth = this.dateFuncObj.getDaysInMonth(this.dateFuncObj.add(month, "month", -1)),
+				today = new this.dateClassObj(),
+				dayOffset = dojo.cldr.supplemental.getFirstDayOfWeek(this.lang);
+			if(dayOffset > firstDay){ dayOffset -= 7; }
+
+			// Iterate through dates in the calendar and fill in date numbers and style info
+			dojo.query(".dijitCalendarDateTemplate", this.domNode).forEach(function(template, i){
+				i += dayOffset;
+				var date = new this.dateClassObj(month),
+					number, clazz = "dijitCalendar", adj = 0;
+
+				if(i < firstDay){
+					number = daysInPreviousMonth - firstDay + i + 1;
+					adj = -1;
+					clazz += "Previous";
+				}else if(i >= (firstDay + daysInMonth)){
+					number = i - firstDay - daysInMonth + 1;
+					adj = 1;
+					clazz += "Next";
+				}else{
+					number = i - firstDay + 1;
+					clazz += "Current";
+				}
+
+				if(adj){
+					date = this.dateFuncObj.add(date, "month", adj);
+				}
+				date.setDate(number);
+
+				if(!this.dateFuncObj.compare(date, today, "date")){
+					clazz = "dijitCalendarCurrentDate " + clazz;
+				}
+
+				if(this._isSelectedDate(date, this.lang)){
+					clazz = "dijitCalendarSelectedDate " + clazz;
+				}
+
+				if(this.isDisabledDate(date, this.lang)){
+					clazz = "dijitCalendarDisabledDate " + clazz;
+				}
+
+				var clazz2 = this.getClassForDate(date, this.lang);
+				if(clazz2){
+					clazz = clazz2 + " " + clazz;
+				}
+
+				template.className = clazz + "Month dijitCalendarDateTemplate";
+				template.dijitDateValue = date.valueOf();
+				var label = dojo.query(".dijitCalendarDateLabel", template)[0],
+					text = date.getDateLocalized ? date.getDateLocalized(this.lang) : date.getDate();
+				this._setText(label, text);
+			}, this);
+
+			// Fill in localized month name
+			var monthNames = this.dateLocaleModule.getNames('months', 'wide', 'standAlone', this.lang);
+			this._setText(this.monthLabelNode, monthNames[month.getMonth()]);
+
+			// Fill in localized prev/current/next years
+			var y = month.getFullYear() - 1;
+			var d = new this.dateClassObj();
+			dojo.forEach(["previous", "current", "next"], function(name){
+				d.setFullYear(y++);
+				this._setText(this[name+"YearLabelNode"],
+					this.dateLocaleModule.format(d, {selector:'year', locale:this.lang}));
+			}, this);
+
+			// Set up repeating mouse behavior
+			var _this = this;
+			var typematic = function(nodeProp, dateProp, adj){
+//FIXME: leaks (collects) listeners if populateGrid is called multiple times.  Do this once?
+				_this._connects.push(
+					dijit.typematic.addMouseListener(_this[nodeProp], _this, function(count){
+						if(count >= 0){ _this._adjustDisplay(dateProp, adj); }
+					}, 0.8, 500)
+				);
+			};
+			typematic("incrementMonth", "month", 1);
+			typematic("decrementMonth", "month", -1);
+			typematic("nextYearLabelNode", "year", 1);
+			typematic("previousYearLabelNode", "year", -1);
+		},
+
+		goToToday: function(){
+			// summary:
+			//      Sets calendar's value to today's date
+			this.attr('value', this.dateClassObj());
+		},
+
+		constructor: function(/*Object*/args){
+			var dateClass = (args.datePackage && (args.datePackage != "dojo.date"))? args.datePackage + ".Date" : "Date";
+			this.dateClassObj = dojo.getObject(dateClass, false);
+			this.datePackage = args.datePackage || this.datePackage;
+			this.dateFuncObj = dojo.getObject(this.datePackage, false);
+			this.dateLocaleModule = dojo.getObject(this.datePackage + ".locale", false);
+		},
+
+		postMixInProperties: function(){
+			// parser.instantiate sometimes passes in NaN for IE.  Use default value in prototype instead.
+			if(isNaN(this.value)){ delete this.value; }
+			this.inherited(arguments);
+		},
+
+		postCreate: function(){
+			this.inherited(arguments);
+			dojo.setSelectable(this.domNode, false);
+
+			var cloneClass = dojo.hitch(this, function(clazz, n){
+				var template = dojo.query(clazz, this.domNode)[0];
+	 			for(var i=0; i<n; i++){
+					template.parentNode.appendChild(template.cloneNode(true));
+				}
+			});
+
+			// clone the day label and calendar day templates 6 times to make 7 columns
+			cloneClass(".dijitCalendarDayLabelTemplate", 6);
+			cloneClass(".dijitCalendarDateTemplate", 6);
+
+			// now make 6 week rows
+			cloneClass(".dijitCalendarWeekTemplate", 5);
+
+			// insert localized day names in the header
+			var dayNames = this.dateLocaleModule.getNames('days', this.dayWidth, 'standAlone', this.lang);
+			var dayOffset = dojo.cldr.supplemental.getFirstDayOfWeek(this.lang);
+			dojo.query(".dijitCalendarDayLabel", this.domNode).forEach(function(label, i){
+				this._setText(label, dayNames[(i + dayOffset) % 7]);
+			}, this);
+
+			// Fill in spacer/month dropdown element with all the month names (invisible) so that the maximum width will affect layout
+			var monthNames = this.dateLocaleModule.getNames('months', 'wide', 'standAlone', this.lang);
+			cloneClass(".dijitCalendarMonthLabelTemplate", monthNames.length-1);
+			dojo.query(".dijitCalendarMonthLabelTemplate", this.domNode).forEach(function(node, i){
+				dojo.attr(node, "month", i);
+				this._setText(node, monthNames[i]);
+				dojo.place(node.cloneNode(true), this.monthLabelSpacer);
+			}, this);
+
+			var value = this.value;
+			this.value = null;
+			this.attr('value', new this.dateClassObj(value));
+		},
+
+		_onMenuHover: function(e){
+			dojo.stopEvent(e);
+			dojo.toggleClass(e.target, "dijitMenuItemHover");
+		},
+
+		_adjustDisplay: function(/*String*/ part, /*int*/ amount){
+			// summary:
+			//      Moves calendar forwards or backwards by months or years
+			// part:
+			//      "month" or "year"
+			// amount:
+			//      Number of months or years
+			// tags:
+			//      private
+			this.displayMonth = this.dateFuncObj.add(this.displayMonth, part, amount);
+			this._populateGrid();
+		},
+
+		_onMonthToggle: function(/*Event*/ evt){
+			// summary:
+			//      Handler for when user triggers or dismisses the month list
+			// tags:
+			//      protected
+			dojo.stopEvent(evt);
+
+			if(evt.type == "mousedown"){
+				var coords = dojo.position(this.monthLabelNode);
+//				coords.y -= dojo.position(this.domNode, true).y;
+				// Size the dropdown's width to match the label in the widget
+				// so that they are horizontally aligned
+				var dim = {
+					width: coords.w + "px",
+					top: -this.displayMonth.getMonth() * coords.h + "px"
+				};
+				if((dojo.isIE && dojo.isQuirks) || dojo.isIE < 7){
+					dim.left = -coords.w/2 + "px";
+				}
+				dojo.style(this.monthDropDown, dim);
+				this._popupHandler = this.connect(document, "onmouseup", "_onMonthToggle");
+			}else{
+				this.disconnect(this._popupHandler);
+				delete this._popupHandler;
+			}
+
+			dojo.toggleClass(this.monthDropDown, "dijitHidden");
+			dojo.toggleClass(this.monthLabelNode, "dijitVisible");
+		},
+
+		_onMonthSelect: function(/*Event*/ evt){
+			// summary:
+			//      Handler for when user selects a month from a list
+			// tags:
+			//      protected
+			this._onMonthToggle(evt);
+			this.displayMonth.setMonth(dojo.attr(evt.target, "month"));
+			this._populateGrid();
+		},
+
+		_onDayClick: function(/*Event*/ evt){
+			// summary:
+			//      Handler for day clicks, selects the date if appropriate
+			// tags:
+			//      protected
+			dojo.stopEvent(evt);
+			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
+			if(node && !dojo.hasClass(node, "dijitCalendarDisabledDate")){
+				this.attr('value', node.dijitDateValue);
+				this.onValueSelected(this.attr('value'));
+			}
+		},
+
+		_onDayMouseOver: function(/*Event*/ evt){
+			// summary:
+			//      Handler for mouse over events on days, sets up hovered style
+			// tags:
+			//      protected
+			var node = evt.target;
+			if(node && (node.dijitDateValue || node == this.previousYearLabelNode || node == this.nextYearLabelNode) ){
+				dojo.addClass(node, "dijitCalendarHoveredDate");
+				this._currentNode = node;
+			}
+		},
+
+		_onDayMouseOut: function(/*Event*/ evt){
+			// summary:
+			//      Handler for mouse out events on days, clears hovered style
+			// tags:
+			//      protected
+			if(!this._currentNode){ return; }
+			for(var node = evt.relatedTarget; node;){
+				if(node == this._currentNode){ return; }
+				try{
+					node = node.parentNode;
+				}catch(x){
+					node = null;
+				}
+			}
+			dojo.removeClass(this._currentNode, "dijitCalendarHoveredDate");
+			this._currentNode = null;
+		},
+
+//TODO: use typematic
+//TODO: skip disabled dates without ending up in a loop
+//TODO: could optimize by avoiding populate grid when month does not change
+		_onKeyPress: function(/*Event*/evt){
+			// summary:
+			//		Provides keyboard navigation of calendar
+			// tags:
+			//		protected
+			var dk = dojo.keys,
+				increment = -1,
+				interval,
+				newValue = this.value;
+			switch(evt.keyCode){
+				case dk.RIGHT_ARROW:
+					increment = 1;
+					//fallthrough...
+				case dk.LEFT_ARROW:
+					interval = "day";
+					if(!this.isLeftToRight()){ increment *= -1; }
+					break;
+				case dk.DOWN_ARROW:
+					increment = 1;
+					//fallthrough...
+				case dk.UP_ARROW:
+					interval = "week";
+					break;
+				case dk.PAGE_DOWN:
+					increment = 1;
+					//fallthrough...
+				case dk.PAGE_UP:
+					interval = evt.ctrlKey ? "year" : "month";
+					break;
+				case dk.END:
+					// go to the next month
+					newValue = this.dateFuncObj.add(newValue, "month", 1);
+					// subtract a day from the result when we're done
+					interval = "day";
+					//fallthrough...
+				case dk.HOME:
+					newValue = new Date(newValue).setDate(1);
+					break;
+				case dk.ENTER:
+					this.onValueSelected(this.attr('value'));
+					break;
+				case dk.ESCAPE:
+					//TODO
+				default:
+					return;
+			}
+			dojo.stopEvent(evt);
+
+			if(interval){
+				newValue = this.dateFuncObj.add(newValue, interval, increment);
+			}
+
+			this.attr("value", newValue);
+		},
+
+		onValueSelected: function(/*Date*/ date){
+			// summary:
+			//		Notification that a date cell was selected.  It may be the same as the previous value.
+			// description:
+			//      Used by `dijit.form._DateTimeTextBox` (and thus `dijit.form.DateTextBox`)
+			//      to get notification when the user has clicked a date.
+			// tags:
+			//      protected
+		},
+
+		onChange: function(/*Date*/ date){
+			// summary:
+			//		Called only when the selected date has changed
+		},
+
+		_isSelectedDate: function(/*Date*/ dateObject, /*String?*/ locale){
+			// summary:
+			//		Extension point so developers can subclass Calendar to
+			//		support multiple (concurrently) selected dates
+			// tags:
+			//		protected extension
+			return !this.dateFuncObj.compare(dateObject, this.value, "date")
+		},
+
+		isDisabledDate: function(/*Date*/ dateObject, /*String?*/ locale){
+			// summary:
+			//		May be overridden to disable certain dates in the calendar e.g. `isDisabledDate=dojo.date.locale.isWeekend`
+			// tags:
+			//      extension
+/*=====
+			return false; // Boolean
+=====*/
+		},
+
+		getClassForDate: function(/*Date*/ dateObject, /*String?*/ locale){
+			// summary:
+			//		May be overridden to return CSS classes to associate with the date entry for the given dateObject,
+			//		for example to indicate a holiday in specified locale.
+			// tags:
+			//      extension
+
+/*=====
+			return ""; // String
+=====*/
 		}
 	}
 );
@@ -34444,6 +34431,301 @@ dojo.declare("dojox.data.QueryReadStore",
 		}
 	}
 );
+
+}
+
+if(!dojo._hasResource["dojox.form.Rating"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dojox.form.Rating"] = true;
+dojo.provide("dojox.form.Rating");
+
+
+
+dojo.declare("dojox.form.Rating",
+	dijit.form._FormWidget,{
+	// summary:
+	//		A widget for rating using stars.
+	//
+	// required: Boolean
+	//		TODO: Can be true or false, default is false.
+	// required: false,
+
+	templateString: null,
+	
+	// numStars: Integer/Float
+	//		The number of stars to show, default is 3.
+	numStars: 3,
+	// value: Integer/Float
+	//		The current value of the Rating
+	value: 0,
+
+	constructor:function(/*Object*/params){
+		// Build the templateString. The number of stars is given by this.numStars,
+		// which is normally an attribute to the widget node.
+		dojo.mixin(this, params);
+		
+		// TODO actually "dijitInline" should be applied to the surrounding div, but FF2
+		// screws up when we dojo.query() for the star nodes, it orders them randomly, because of the use
+		// of display:--moz-inline-box ... very strange bug
+		// Since using ul and li in combintaion with dijitInline this problem doesnt exist anymore.
+		
+		// The focusNode is normally used to store the value, i dont know if that is right here, but seems standard for _FormWidgets
+		var tpl = '<div dojoAttachPoint="domNode" class="dojoxRating dijitInline">' +
+					'<input type="hidden" value="0" dojoAttachPoint="focusNode" /><ul>${stars}</ul>' +
+				'</div>';
+		// The value-attribute is used to "read" the value for processing in the widget class
+		var starTpl = '<li class="dojoxRatingStar dijitInline" dojoAttachEvent="onclick:onStarClick,onmouseover:_onMouse,onmouseout:_onMouse" value="${value}"></li>';
+		var rendered = "";
+		for(var i = 0; i < this.numStars; i++){
+			rendered += dojo.string.substitute(starTpl, {value:i+1});
+		}
+		this.templateString = dojo.string.substitute(tpl, {stars:rendered});
+	},
+
+	postCreate: function(){
+		this.inherited(arguments);
+		this._renderStars(this.value);
+	},
+
+	_onMouse: function(evt){
+		this.inherited(arguments);
+		if(this._hovering){
+			var hoverValue = +dojo.attr(evt.target, "value");
+			this.onMouseOver(evt, hoverValue);
+			this._renderStars(hoverValue, true);
+		}else{
+			this._renderStars(this.value);
+		}
+	},
+
+	_renderStars: function(value, hover){
+		// summary: Render the stars depending on the value.
+		dojo.query(".dojoxRatingStar", this.domNode).forEach(function(star, i){
+			if(i + 1 > value){
+				dojo.removeClass(star, "dojoxRatingStarHover");
+				dojo.removeClass(star, "dojoxRatingStarChecked");
+			}else{
+				dojo.removeClass(star, "dojoxRatingStar" + (hover ? "Checked" : "Hover"));
+				dojo.addClass(star, "dojoxRatingStar" + (hover ? "Hover" : "Checked"));
+			}
+		});
+	},
+
+	onStarClick:function(/* Event */evt){
+		// summary: Connect on this method to get noticed when a star was clicked.
+		// example: dojo.connect(widget, "onStarClick", function(event){ ... })
+		var newVal = +dojo.attr(evt.target, "value");
+		this.setAttribute("value", newVal == this.value ? 0 : newVal);
+		this._renderStars(this.value);
+		this.onChange(this.value); // Do I have to call this by hand?
+	},
+	
+	onMouseOver: function(/*evt, value*/){
+		// summary: Connect here, the value is passed to this function as the second parameter!
+	},
+	
+	setAttribute: function(/*String*/key, /**/value){
+		// summary: When calling setAttribute("value", 4), set the value and render the stars accordingly.
+		this.inherited("setAttribute", arguments);
+		if (key=="value"){
+			this._renderStars(this.value);
+			this.onChange(this.value); // Do I really have to call this by hand? :-(
+		}
+	}
+});
+
+}
+
+if(!dojo._hasResource["dojox.form.CheckedMultiSelect"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dojox.form.CheckedMultiSelect"] = true;
+dojo.provide("dojox.form.CheckedMultiSelect");
+
+
+
+
+dojo.declare("dojox.form._CheckedMultiSelectItem", 
+	[dijit._Widget, dijit._Templated],
+	{
+	// summary:
+	//		The individual items for a CheckedMultiSelect
+
+	widgetsInTemplate: true,
+	templateString: dojo.cache("dojox.form", "resources/_CheckedMultiSelectItem.html", "<div class=\"dijitReset ${baseClass}\"\r\n\t><input class=\"${baseClass}Box\" dojoType=\"dijit.form.CheckBox\" dojoAttachPoint=\"checkBox\" \r\n\t\tdojoAttachEvent=\"_onClick:_changeBox\" type=\"${_type.type}\" baseClass=\"${_type.baseClass}\"\r\n\t><div class=\"dijitInline ${baseClass}Label\" dojoAttachPoint=\"labelNode\" dojoAttachEvent=\"onmousedown:_onMouse,onmouseover:_onMouse,onmouseout:_onMouse,onclick:_onClick\"></div\r\n></div>\r\n"),
+
+	baseClass: "dojoxMultiSelectItem",
+
+	// option: dojox.form.__SelectOption
+	//		The option that is associated with this item
+	option: null,
+	parent: null,
+	
+	// disabled: boolean
+	//		Whether or not this widget is disabled
+	disabled: false,
+
+	// readOnly: boolean
+	//		Whether or not this widget is readOnly
+	readOnly: false,
+
+	postMixInProperties: function(){
+		// summary:
+		//		Set the appropriate _subClass value - based on if we are multi-
+		//		or single-select
+		if(this.parent.multiple){
+			this._type = {type: "checkbox", baseClass: "dijitCheckBox"};
+		}else{
+			this._type = {type: "radio", baseClass: "dijitRadio"};
+		}
+		this.disabled = this.option.disabled = this.option.disabled||false;
+		this.inherited(arguments);
+	},
+
+	postCreate: function(){
+		// summary:
+		//		Set innerHTML here - since the template gets messed up sometimes
+		//		with rich text
+		this.inherited(arguments);
+		this.labelNode.innerHTML = this.option.label;
+	},
+
+	_changeBox: function(){
+		// summary:
+		//		Called to force the select to match the state of the check box
+		//		(only on click of the checkbox)  Radio-based calls _setValueAttr
+		//		instead.
+		if(this.attr("disabled") || this.attr("readOnly")){ return; }
+		if(this.parent.multiple){
+			this.option.selected = this.checkBox.attr('value') && true;
+		}else{
+			this.parent.attr('value', this.option.value);
+		}
+		// fire the parent's change
+		this.parent._updateSelection();
+		
+		// refocus the parent
+		this.parent.focus();
+	},
+
+	_onMouse: function(e){
+		// summary:
+		//		Sets the hover state depending on mouse state (passes through
+		//		to the check box)
+		if(this.attr("disabled") || this.attr("readOnly")){
+			dojo.stopEvent(e);
+		}else{
+			this.checkBox._onMouse(e);
+		}
+	},
+	
+	_onClick: function(e){
+		// summary:
+		//		Sets the click state (passes through to the check box)
+		if(this.attr("disabled") || this.attr("readOnly")){
+			dojo.stopEvent(e);
+		}else{
+			this.checkBox._onClick(e);
+		}
+	},
+	
+	_updateBox: function(){
+		// summary:
+		//		Called to force the box to match the state of the select
+		this.checkBox.attr('value', this.option.selected);
+	},
+	
+	_setDisabledAttr: function(value){
+		// summary:
+		//		Disables (or enables) all the children as well
+		this.disabled = value||this.option.disabled;
+		this.checkBox.attr("disabled", this.disabled);
+		dojo.toggleClass(this.domNode, "dojoxMultiSelectDisabled", this.disabled);
+	},
+	
+	_setReadOnlyAttr: function(value){
+		// summary:
+		//		Sets read only (or unsets) all the children as well
+		this.checkBox.attr("readOnly", value);
+		this.checkBox._setStateClass();
+		this.readOnly = value;
+	}
+});
+
+dojo.declare("dojox.form.CheckedMultiSelect", dijit.form._FormSelectWidget, {
+	// summary:
+	//		Extends the core dijit MultiSelect to provide a "checkbox" selector
+
+	templateString: dojo.cache("dojox.form", "resources/CheckedMultiSelect.html", "<div class=\"dijit dijitReset dijitInline\" dojoAttachEvent=\"onmousedown:_mouseDown,onclick:focus\"\r\n\t><select class=\"${baseClass}Select\" multiple=\"true\" dojoAttachPoint=\"containerNode,focusNode\"></select\r\n\t><div dojoAttachPoint=\"wrapperDiv\"></div\r\n></div>\r\n"),
+
+	baseClass: "dojoxMultiSelect",
+
+	_mouseDown: function(e){
+		// summary:
+		//		Cancels the mousedown event to prevent others from stealing
+		//		focus
+		dojo.stopEvent(e);
+	},
+	
+	_addOptionItem: function(/* dojox.form.__SelectOption */ option){
+		this.wrapperDiv.appendChild(new dojox.form._CheckedMultiSelectItem({
+			option: option,
+			parent: this
+		}).domNode);
+	},
+	
+	_updateSelection: function(){
+		this.inherited(arguments);
+		dojo.forEach(this._getChildren(), function(c){ c._updateBox(); });
+	},
+	
+	_getChildren: function(){
+		return dojo.map(this.wrapperDiv.childNodes, function(n){
+			return dijit.byNode(n);
+		});
+	},
+
+	invertSelection: function(onChange){
+		// summary: Invert the selection
+		// onChange: Boolean
+		//		If null, onChange is not fired.
+		dojo.forEach(this.options, function(i){
+			i.selected = !i.selected;
+		});
+		this._updateSelection();
+	},
+
+	_setDisabledAttr: function(value){
+		// summary:
+		//		Disable (or enable) all the children as well
+		this.inherited(arguments);
+		dojo.forEach(this._getChildren(), function(node){
+			if(node && node.attr){
+				node.attr("disabled", value);
+			}
+		});
+	},
+	
+	_setReadOnlyAttr: function(value){
+		// summary:
+		//		Sets read only (or unsets) all the children as well
+		if("readOnly" in this.attributeMap){
+			this._attrToDom("readOnly", value);
+		}
+		this.readOnly = value;
+		dojo.forEach(this._getChildren(), function(node){
+			if(node && node.attr){
+				node.attr("readOnly", value);
+			}
+		});
+		this._setStateClass();
+	},
+
+	uninitialize: function(){
+		// Make sure these children are destroyed
+		dojo.forEach(this._getChildren(), function(child){
+			child.destroyRecursive();
+		});
+		this.inherited(arguments);
+	}
+});
 
 }
 

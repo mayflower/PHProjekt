@@ -67,14 +67,13 @@ mydojo.js:
 ./../../release/dojo/dijit/_base/typematic.js
 ./../../release/dojo/dijit/_base/wai.js
 ./../../release/dojo/dijit/_base.js
+./../../release/dojo/dijit/_Container.js
 ./../../release/dojo/dijit/_Widget.js
 ./../../release/dojo/dojo/cache.js
 ./../../release/dojo/dijit/_Templated.js
-./../../release/dojo/dijit/Calendar.js
-./../../release/dojo/dijit/_Calendar.js
-./../../release/dojo/dijit/_Container.js
 ./../../release/dojo/dijit/form/_FormWidget.js
 ./../../release/dojo/dijit/_TimePicker.js
+./../../release/dojo/dijit/Calendar.js
 ./../../release/dojo/dijit/form/_FormMixin.js
 ./../../release/dojo/dijit/_DialogMixin.js
 ./../../release/dojo/dijit/DialogUnderlay.js
@@ -140,6 +139,8 @@ mydojo.js:
 ./../../release/dojo/dijit/_editor/plugins/LinkDialog.js
 ./../../release/dojo/dijit/_editor/plugins/TextColor.js
 ./../../release/dojo/dojox/data/QueryReadStore.js
+./../../release/dojo/dojox/form/Rating.js
+./../../release/dojo/dojox/form/CheckedMultiSelect.js
 ./../../release/dojo/dojox/grid/util.js
 ./../../release/dojo/dojox/grid/_EditManager.js
 ./../../release/dojo/dojox/grid/_Events.js
