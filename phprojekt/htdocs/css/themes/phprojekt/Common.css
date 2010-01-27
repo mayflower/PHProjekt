@@ -147,9 +147,24 @@
     overflow: none;
 }
 
+.phprojekt #containSubModuleNavigation {
+    height: 25px;
+    width: 100%;
+    border-bottom: 1px solid #294064;
+}
+
+.dj_ie .phprojekt #containSubModuleNavigation {
+    height: 27px;
+}
+
+.phprojekt #containSubModuleNavigation .left img {
+    height: 25px;
+}
+
 .phprojekt #subModuleNavigation {
     margin-top: 2px;
     height: 30px;
+    width: 98%;
 }
 
 .phprojekt #nav_main a,
@@ -214,7 +229,7 @@
 .phprojekt #nav_main td,
 .phprojekt #nav_sub td {
     margin: 0;
-    padding: 0 3px 0 0;
+    padding: 0 4px 0 0;
 }
 
 /* Tabs ACTIVE */
@@ -229,6 +244,7 @@
     background: #fff;
     text-decoration: none;
     padding-left: 7px;
+    border-bottom: 1px solid #FFF;
 }
 
 .phprojekt #nav_main .active a span,
@@ -247,7 +263,7 @@
 .phprojekt .phprScrollArrowRight {
     width: 2%;
     float: left;
-    height: 24px;
+    height: 23px;
     background-color: #fff;
     background-repeat: no-repeat;
 }
@@ -592,7 +608,12 @@ h1,h2,h3,h4,h5,h6 {
     font-weight: 600;
     color: #CBCBCB;
     margin-left: 1%;
-    margin-top: 8px;
+    margin-top: 10px;
+}
+
+.dj_ie .phprojekt #breadCrumb,
+.dj_ie .phprojekt #breadCrumb a {
+    margin-top: 9px;
 }
 
 .phprojekt #breadCrumb a {

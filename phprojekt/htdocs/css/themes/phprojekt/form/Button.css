@@ -311,6 +311,15 @@
     margin: 0px 0px 0px 0px;
 }
 
+.phprojekt #buttonRow {
+    padding-left: 5px;
+    padding-top: 7px;
+}
+
 .phprojekt #buttonRow .dijitLeft {
     margin-right: 5px;
+}
+
+.dj_ie .phprojekt #buttonRow {
+    padding-top: 6px;
 }
