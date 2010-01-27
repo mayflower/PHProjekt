@@ -1014,9 +1014,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    Continuation of showHelp function
 
         var container = new dijit.layout.TabContainer({
-            style: 'height:100%;',
-            id:    'helpContent'
+            style:     'height: 100%;',
+            id:        'helpContent',
+            useMenu:   false,
+            useSlider: false
         }, document.createElement('div'));
+        dijit.byId('helpContainer').attr("content", container);
+        dijit.byId('helpDialog').show();
 
         for (var tab in helpData) {
             var text = helpData[tab];
@@ -1037,13 +1041,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
             container.addChild(new dijit.layout.ContentPane({
                 title:   tab,
-                content: text
+                content: text,
+                style:   'width: 100%; padding-left: 10px;'
             }));
         }
-
-        dijit.byId('helpContainer').attr("content", container);
-        container.startup();
-        dijit.byId('helpDialog').show();
     },
 
     addLogoTooltip:function() {
