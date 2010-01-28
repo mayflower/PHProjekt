@@ -4,28 +4,39 @@
 
 <ul>
     <li>The migration is compatible with version 5.1 or a superior one.</li>
-    <li>User passwords will be migrated from version 5.2.1 or better.<br />
-    All previous versions migration will have the same username and password.</li>
+    <li>Important: user passwords will be migrated from version 5.2.1 or later one.<br /> 
+    If your Phprojekt origin version is previous to 5.2.1 then it will be created a new password for each user: it will 
+    be the same than the username. Each user should change it later by a new secret one.</li>
+
 </ul>
 
 <b>Users</b>
 <ul>
     <li>Root user will be migrated as 'admin'.<br />
-    This 'admin' user has 'admin' type which provides access to 'Administration' module
-    and has access to any item under a project, including the projects itself.</li>
+    This 'admin' user has 'admin' type which provides him with access to 'Administration' module.<br />
+    This user will have an additional advantage: it will be able to access any item under any project, including the 
+    projects themselves. No other admin type user will be able to do this. Anyway, its permissions have less scope than 
+    in P5: it has not right to see those items that don't depend on a Project and he/she is not related to, e.g.: events
+    and timecard of other people.</li>
 </ul>
 
 <b> Access</b>
 <ul>
-    <li>Since in PHProjekt 6 there is only projects, the groups of PHProjekt 5 will be migrated as root projects,
-    using the user relation for create the access.<br >
-    This means that if a group have only 2 users, these two users will be the only ones that will have access to all
-    the items and projects under this root project.</li>
-    <li>All the users that have access to the group in PHProjekt 5 will have full access to the equivalent root
-    project in PHProjekt 6.</li>
-    <li>If one item is assigned for example to the user "A", and this user is not in the group / root project,
-    then the assigned field will show only the user Id number, since this user is not allowed under the project.<br />
-    Add him, to all the tree path for see the correct value.</li>
+    <li>Since in PHProjekt 6 there are no groups, the groups of PHProjekt 5 are migrated as root projects, using the 
+    user relations to create rights.<br />
+    This means that if a P5 group have only 2 users, then it will be created a P6 root project having the name of the 
+    group and all users of that group will have full access to that project. That root project will have as childs all 
+    the projects from P5 that were related to the group.</li> 
+    <li>All the users that have access to the group in PHProjekt 5 will have full access to the equivalent root project 
+    in PHProjekt 6.</li>
+    <li>For every Project and other modules items that were related to the migrated group (migrated as a root project), 
+    only the users that belong to the root project will be listed in the user-list alike select fields, and they are the 
+    ones that will be able to have any rights. If you want a specific user to have any access kind to a child project, 
+    you have to give him/her access to all the parent projects first. The same for other modules items.</li>
+    <li>If one item is assigned for example to the user "John Doe", and this user was not in the P5 group, then the 
+    assigned field will show only the user Id number, since this user has no access to the root project. Add him to all 
+    the parent projects of the tree path to see the correct username in the item instead of the Id, so that the user 
+    will have access to the item.</li>
 </ul>
 
 <b>Modules</b>
@@ -34,4 +45,11 @@
     <li>The modules to be migrated are: Calendar, Projects, Notes, Todos, Timeproj, Contacts, Helpdesk
     and Filemanager.</li>
     <li>Customized module fields will not be migrated.</li>
+</ul>
+
+<b>Errors</b>
+
+<ul>
+    <li>If Filemanager files do not work after migration please try moving manually the uploaded files (e.g. move the 
+    files on /phprojekt5.x/uploads to /phprojekt6/uploads).</li>
 </ul>
