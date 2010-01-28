@@ -11,7 +11,31 @@ $lang["Content Help"]["Note"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Basic data"] = "DEFAULT";
+$lang["Content Help"]["Basic data"] = "<br />
+    <b>Basic Data tab</b><br />
+    <br />
+    Fields:<br />
+    <br />
+    <b>Title</b><br />
+    Text: the title of the item, e.g.: 'How to choose a notebook'.<br />
+    * Required field<br />
+    <br />
+    <b>Comment</b><br />
+    Textarea: some descriptive comment.<br />
+    E.g.:<br />
+    1 - Compare quality and prices<br />
+    2 - Test it<br />
+    3 - Consult the team<br />
+    <br />
+    <b>Project</b><br />
+    Select: parent Project which contains the note, if none then select PHProjekt.<br />
+    * Required field<br />
+    <br />
+    <b>Tag</b><br />
+    The tag field that synchronizes the item with Tags panel.<br />
+    <br />
+    <br />";
+
 $lang["Content Help"]["Access"] = "DEFAULT";
 $lang["Content Help"]["Notification"] = "DEFAULT";
 $lang["Content Help"]["History"] = "DEFAULT";

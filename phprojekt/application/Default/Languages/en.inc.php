@@ -369,22 +369,26 @@ $lang["Content Help"]["General"] = "<br />
         <br />
         This section varies depending on the module selected. Generally it has:<br />
         <ol>
-            <li>A <b>top bar</b> with tabs at the left and some buttons at the right side:<br />
+            <li>A <b>top tabs bar</b>, some <b>action buttons</b> and a <b>breadcrumb trail</b>:<br />
             <ol>
-                <li>The <b>left tabs</b> could represent modules or submodules.<br />
-                <li>Generally the right buttons are three:<br />
+                <li>The <b>tabs</b> represent modules or submodules for you to click them open it.<br />
+                <li>The buttons are usually three:<br />
                 <ol>
-                    <li><b>Add:</b> to create a new item in the active module.<br />
-                    <li><b>Save:</b> to save the changes made to the grid below (in-line editing).<br />
-                    <li><b>Export:</b> to export the items that are being shown in the grid, to a file in CSV
+                    <li><b>Add a new item:</b> to create a new item in the active module.<br />
+                    <li><b>Export to CSV:</b> to export the items that are being shown in the grid, to a file in CSV
                         format.<br />
+                    <li><b>Filter:</b> activates an optional panel over the grid that lets you create a set of specific
+                        searching criteria to filter the grid items and see only the ones you want.
                 </ol>
+                <li><b>Breadcrumb trail</b>: it shows you the specific dependency structure of the selected module
+                and/or Project: all its parent Projects, if any, and the selected module and item.<br />
+                Its main purpose is to show you where you are, and what you are looking at.<br />
             </ol>
             <li>A <b>grid</b> with the listing of the items of the module. Depending on the user rights they can be
-                edited simply clicking on a cell and modifying it.<br />
+                edited double clicking on a cell and modifying it.<br />
                 Clicking on the headers of each column the list is rearranged alphabetically according to that column
                 contents.<br />
-                When an item is clicked on its Id, it is opened in the form below.<br />
+                When an item row is clicked on any cell, the item gets opened in the form below.<br />
             <li>A <b>form</b> that is shown whenever it is being created a new item or it is open an existing one.<br />
         </ol>
     </ul><br />
@@ -401,24 +405,33 @@ $lang["Content Help"]["Basic data"] = "<br />
 $lang["Content Help"]["Access"] = "<br />
     <b>Access tab</b><br />
     <br />
-    This tab allows to establish the individual rights for every user for the item being created or edited.<br />
-    The users that can be worked with, in this tab, are all but the logged one. The aim of this section is to select
-    what users do you want to give access to the item, and what kind of access.<br />
-    For example, you create an item and choose some users to give them 'read' access and if you want you can choose
-    another user and give him/her 'write' access (apart from the creator that naturally has admin access).<br />
+    Here the individual rights for each item are defined.<br />
+    <br />
+    The rights are: Read, Write, Access, Create, Copy, Delete, Download and Admin.<br />
+    The users that have access to this tab for a specific item, like the owner (creator) of it, can assign these rights
+    to other users for this item.<br />
+    <br />
+    The users that appear in the select list of this tab, that are the ones you can assign rights to, are all the users
+    that have access to the parent Project, except for the logged user who is seeing the tab. If you want an unlisted
+    user to be listed in the select field, you have to give him/her access to all parent projects.<br />
+    The aim of that tab is to select what users you want to give access to the item and what kind of access.<br />
+    For example, you create an item and choose some users to give them 'Read' access and if you want you can choose
+    another user and give him/her 'Write' access.<br />
     <br />
     The different permissions are:<br />
-    <b>Read:</b> see the item.<br />
-    <b>Write:</b> modify the item.<br />
-    <b>Access:</b> pass through the item (e.g.: see the sub projects but not to see the project itself).<br />
-    <b>Create:</b> create sub items.<br />
-    <b>Copy:</b> copy the item to create other one.<br />
-    <b>Delete:</b> delete the item.<br />
-    <b>Download:</b> download files (for example in the <b>Filemanager</b> module).<br />
-    <b>Admin:</b> allows to do all, including editing the access of the item.<br />
-    <b>None:</b> the user can't even see the item.<br />
     <br />
-    <u>Note:</u> the owner (creator) of the item has by default all the permissions.<br />";
+    <b>Read</b>: see the item.<br />
+    <b>Write</b>: modify the item.<br />
+    <b>Access</b>: pass through the item (e.g.: see the sub projects but not to see the project itself).<br />
+    <b>Create</b>: create sub items.<br />
+    <b>Copy</b>: copy the item to create other one.<br />
+    <b>Delete</b>: delete the item.<br />
+    <b>Download</b>: download files (for example in the Filemanager module).<br />
+    <b>Admin</b>: allows to do all, including editing the access of the item.<br />
+    <br />
+    Note: the owner (creator) of the item has by default all the permissions.<br />
+    <br />
+    <br />";
 
 $lang["Content Help"]["Notification"] = "<br />
     <b>Notification tab</b><br />

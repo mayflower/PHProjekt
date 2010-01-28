@@ -13,7 +13,35 @@ $lang["Content Help"]["Filemanager"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Basic data"] = "DEFAULT";
+$lang["Content Help"]["Basic data"] = "<br />
+    <b>Basic Data tab</b><br />
+    <br />
+    Fields:<br />
+    <br />
+    <b>Title</b><br />
+    Text: the title of the item, e.g.: 'Nice poems to relax at lunch time'.<br />
+    * Required field<br />
+    <br />
+    <b>Comments</b><br />
+    Textarea: some descriptive note.<br />
+    E.g.: Both files are in UTF-8 mode, open them with an appropriate reader.<br />
+    <br />
+    <b>Project</b><br />
+    Select: parent Project which contains the Filemanager item, if none then select PHProjekt.<br />
+    * Required field<br />
+    <br />
+    <b>Upload</b><br />
+    This field allows you to upload one or more files.<br />
+    Its way of work is absolutely intuitive: press the button at the right of the field, choose a file from your
+    computer and the file is sent.<br />
+    Then the uploaded file appears behind the field with a cross button at its right side to delete it. The file itself
+    is a link to download it.<br />
+    <br />
+    <b>Tag</b><br />
+    The tag field that synchronizes the item with Tags panel.<br />
+    <br />
+    <br />";
+
 $lang["Content Help"]["Access"] = "DEFAULT";
 $lang["Content Help"]["Notification"] = "DEFAULT";
 $lang["Content Help"]["History"] = "DEFAULT";

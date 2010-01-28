@@ -81,20 +81,30 @@ $lang["Content Help Administration"]["Administration"] = "<br />
     This is the <b>General Help of Administration module</b><br />
     <br />
     This module is only accessible to users with Admin profile.<br />
-    Here can be configured general settings of the site that affects <b>all the users</b>.<br />
+    It is located at the top right global modules, the last one.<br />
     <br />
-    It is divided into 4 tabs:<br />
+    Here, general settings of the site that affect all users or specific ones in case of User submodule, can be set and
+    modified.<br />
     <br />
-    <ul>
-        <li><b>Module:</b> this is the Module Designer, a very easy-to-use visual drag & drop interface to create
-            modules or modify the existing ones.<br />
-        <li><b>Tab:</b> here you can create additional tabs to be shown in the modules.<br />
-        <li><b>User:</b> for adding, modifying and deleting users of the system.<br />
-        <li><b>Role:</b> to edit roles; a role is a set of permissions for the modules that is assigned to
-            users.<br />
-    </ul>
+    It is formed by 5 tabs:<br />
     <br />
-    To see their help, click on the respective tab inside this window.<br />
+    <b>Module</b><br />
+    This is the Module Designer, a very easy-to-use visual drag & drop interface to create modules or modify many
+    existing ones.<br />
+    <br />
+    <b>Tab</b><br />
+    Here additional tabs for modules can be created and modified.<br />
+    <br />
+    <b>User</b><br />
+    To administer users of the system: their main info and settings.<br />
+    <br />
+    <b>Role</b><br />
+    To edit roles; a role is a set of permissions for the Project-modules (non Global ones) that is assigned to
+    users.<br />
+    <br />
+    <b>General</b><br />
+    This is a general configurations tab.<br />
+    Currently it has only one field: 'Company name'.<br />
     <br />
     <br />";
 
@@ -115,7 +125,8 @@ $lang["Content Help Administration"]["Module"] = "<br />
     <br />
     <ul>
         <li><b>The left fields panel:</b> here are all the field types; <i>text</i>, <i>date</i>, <i>time</i>,
-            <i>select</i>, <i>checkbox</i>, <i>percentage</i>, <i>textarea</i> and <i>upload</i>.<br />
+            <i>datetime</i>, <i>select</i>, <i>checkbox</i>, <i>percentage</i>, <i>rating</i>, <i>textarea</i> and
+            <i>upload</i>.<br />
             You can drag & drop fields to the right panel, that right panel is the tab of
             the module you are creating or modifying as it will be seen (but without buttons <b>Edit</b> and
             <b>Delete</b>).<br />
@@ -231,9 +242,71 @@ $lang["Content Help Administration"]["Tab"] = "<br />
 $lang["Content Help Administration"]["User"] = "<br />
     <b>User tab</b><br />
     <br />
-    This section is designed to manage all the users of the system.<br />
+    This sub-module allows modifying users main data and settings.<br />
+    Here all the users of the system will be seen.<br />
     <br />
-    Here could be added, modified and deleted the users of the site.<br />
+    It has a Grid and a Form like most of modules.<br />
+    <br />
+    <br />
+    <hr style='height: 2px;'>
+    <b>GRID</b><br />
+    <br />
+    Fields:<br />
+    <br />
+    <b>Username</b><br />
+    Text: the login name for the user.<br />
+    <br />
+    <b>First Name</b><br />
+    Text: first name of the user.<br />
+    <br />
+    <b>Last Name</b><br />
+    Text: last name of the user.<br />
+    <br />
+    <b>Status</b><br />
+    Select: whether this user is active in the system or not (if not, he/she can't log in).<br />
+    <br />
+    <b>Admin</b><br />
+    Select: whether this user has Admin access or not.<br />
+    <br />
+    <br />
+    <hr style='height: 2px;'>
+    <b>FORM</b><br />
+    <br />
+    Note:<br />
+    The users can be added and modified but not deleted, if you want to delete a user, set it to Inactive instead,
+    through Status field. He won't be able to log in and won't appear in the User Select fields.<br />
+    <br />
+    Fields:<br />
+    <br />
+    <b>Username</b><br />
+    Text: the login name for the user.<br />
+    <br />
+    <b>Password</b><br />
+    Text: if you want to change a password write here the NEW one. Black dots will be seen instead of typed characters.
+    If you don't want to change it leave this field blank.<br />
+    <br />
+    <b>First Name</b><br />
+    Text: first name of the user.<br />
+    <br />
+    <b>Last Name</b><br />
+    Text: last name of the user.<br />
+    <br />
+    <b>Email</b><br />
+    Text: the email of the user, mainly used to send Notifications.<br />
+    <br />
+    <b>Language</b><br />
+    Select: choose a language for the user to be shown site text and messages.<br />
+    <br />
+    <b>Time Zone</b><br />
+    Select: The Time Zone (UTC) for the region or country the user will be using Phprojekt. This is required for all
+    users but specially useful for international events time coordination, so that each participant of an event will see
+    the time (and eventually the date) converted to his/her local time.<br />
+    <br />
+    <b>Status</b><br />
+    Select: whether this user is active in the system or not (if not, he/she can't log in).<br />
+    <br />
+    <b>Admin</b><br />
+    Select: whether this user has Admin access or not.<br />
     <br />
     <br />";
 
@@ -263,6 +336,17 @@ $lang["Content Help Administration"]["Role"] = "<br />
         represents the Subprojects of Projects.<br />
     <br />
     <br />";
+
+$lang["Content Help Administration"]["General tab"] = "<br />
+    <b>General tab</b><br />
+    <br />
+    This is a general configurations tab.<br />
+    <br />
+    Currently it has only one field 'Company name' where you set the company name that will be seen in the beginning of
+    the breadcrumb trail when a Project related module is selected (Project, Gantt, Todo, etc).<br />
+    <br />
+    <br/>";
+
 
 // Words and phrases
 $lang["Please, log out and log in again to the application to apply the changes"] = "Please, "
@@ -302,31 +386,95 @@ $lang["Content Help Setting"]["General"] = "DEFAULT";
 $lang["Content Help Setting"]["Setting"] = "<br />
     This is the <b>General Help of Setting module</b><br />
     <br />
-    This module is for the user to set and change specific configuration parameters of his/her profile.<br />
+    Settings module allows logged user to modify personal information.<br />
     <br />
-    It has 2 tabs: <b>User</b> and <b>Timecard</b>.<br />
-    To see their help, click on the respective tab inside this window.<br />
+    It is formed by three sub-modules: User, Notification and Timecard. You can switch between them clicking their tabs
+    in the upper central tab bar.<br />
+    The first sub-module allows setting and changing Password, Email, Language and Time Zone, the second one corresponds
+    to the real-time notifications and server synchronization and the third one is for Timecard favorite Projects.<br />
+    <br />
+    All users including Admin type ones only can modify their own information here.<br />
+    Admin type users are able to modify other users information, but not here, they do it in Administration
+    module.<br />
     <br />
     <br />";
 
 $lang["Content Help Setting"]["User"] = "<br />
     <b>User tab</b><br />
     <br />
-    Inside this tab the user basic settings are configured.<br />
+    Here you will see logged user info.<br />
+    Password fields don't show anything for security reasons, if you want to change your password, fill the 3 fields as
+    explained here later and then press Save. If you leave them blank and press Save, password won't be modified.<br />
+    The rest of fields show current values and let you modify them.<br />
     <br />
-    The title of every field is self-descriptive about its content.<br />
-    It can be changed: <i>Password</i>, <i>Email</i>, <i>Language</i> y <i>Time zone</i>.<br />
+    Fields:<br />
+    <br />
+    <b>Password</b><br />
+    Text: if you want to change your password write here the NEW one. Black dots will be seen instead of typed
+    characters.<br />
+    <br />
+    <b>Confirm Password</b><br />
+    Text: if you want to change your password write here the NEW one again. Black dots will be seen instead of typed
+    characters.<br />
+    <br />
+    <b>Old password</b><br />
+    Text: if you want to change your password write here the OLD one that will be verified for security reasons. Black
+    dots will be seen instead of typed characters.<br />
+    <br />
+    <b>Email</b><br />
+    Text: your email registered in the system. It is mainly used to send you Notifications.<br />
+    <br />
+    <b>Language</b><br />
+    Select: choose a language for you to be shown site text and messages.<br />
+    <br />
+    <b>Time Zone</b><br />
+    Select: The Time Zone (UTC) for the region or country you will be using Phprojekt. This is required for all users
+    but specially useful for international events time coordination, so that each participant of an event will see the
+    time (and eventually the date) converted to his/her local time.<br />
+    Each option of the select field has a local time number and a descriptive earth location to help finding
+    yours.<br />
+    <br />
+    <br />";
+
+$lang["Content Help Setting"]["Notifications"] = "<br />
+    <b>Notifications tab</b><br />
+    <br />
+    Here you can configure the notifications and real-time connection with the server.<br />
+    This functionality tells you some actions of other users in little pop-up dialogs at the right bottom of the screen,
+    like logging in / out, alerts, modifications of items, etc.<br />
+    It also updates content on screen according to what you are seeing and what has been modified by other users.<br />
+    <br />
+    You can activate/inactivate this real-time synchronization through these check boxes:<br />
+    <br />
+    <b>Login / logout</b><br />
+    A pop-up dialog tells you when other users have logged in and out.<br />
+    <br />
+    <b>Data records</b><br />
+    If you check this box, then when some contents that you have access to are modified, you receive a message pointing
+    you that event.<br />
+    Also, if for example a Project name has been modified and you are editing it in the Form, the tree gets updated,
+    also the grid, and each modified form field gets updated and the field border gets thick and red coloured.<br />
+    <br />
+    <b>User Generated Messages</b><br />
+    It is not developed yet, the check box is disabled.<br />
+    <br />
+    <b>Alerts</b><br />
+    It is not developed yet, the check box is disabled.<br />
     <br />
     <br />";
 
 $lang["Content Help Setting"]["Timecard"] = "<br />
     <b>Timecard tab</b><br />
     <br />
-    Here the user can configure the Projects where is working the most, so that they will appear for drag and drop
-    inside the Timecard module.<br />
+    Here you will see and will be able to change the Favorite Projects of Timecard module.<br />
     <br />
-    The title of every field is self descriptive about its content.<br />
-    It can be changed: <i>Max Number of favorites projects</i> and which <i>Favorite projects</i> to choose.<br />
+    They are also shown at the right bottom of Timecard module and provide shortcuts to most booked Projects, or the
+    ones you want to put there. This list of Projects is independent for each user and its purpose is to shorten booking
+    process time.<br />
+    <br />
+    When you have finished doing the changes in this Multiple Select Box, press Save. The new Projects listing will
+    appear under the right Form of Timecard module, each Project is shown as a yellow ochre color rectangle with curved
+    ends.<br />
     <br />
     <br />";
 
