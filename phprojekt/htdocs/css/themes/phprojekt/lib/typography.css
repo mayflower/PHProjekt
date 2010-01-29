@@ -180,7 +180,7 @@ tt {
 .phprojekt .form label {
      color: #999999;
      font-weight: bold;
-     text-transform: uppercase;
+     /* text-transform: uppercase; */
      font-size: 96%;
      vertical-align: top;
 }

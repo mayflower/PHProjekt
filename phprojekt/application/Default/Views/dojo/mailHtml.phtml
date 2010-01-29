@@ -12,7 +12,7 @@
 foreach ($this->mainFields as $field)
 { ?><tr>
         <td><?php echo $field['label'] ?></td>
-        <td width=5></td>
+        <td width="5"></td>
         <td><i><?php echo $field['value'] ?></i></td>
     </tr>
 <?php } ?>
@@ -28,8 +28,8 @@ if (!empty($this->changes))
     <br />
     <table>
         <tr>
-            <th style="color: #888888; text-transform: uppercase;" width=120><?php echo $this->translate->translate('Field'); ?></th>
-            <th style="color: #888888; text-transform: uppercase;" width=120><?php echo $this->translate->translate('Old value'); ?></th>
+            <th style="color: #888888;" width="120"><?php echo $this->translate->translate('Field'); ?></th>
+            <th style="color: #888888;" width="120"><?php echo $this->translate->translate('Old value'); ?></th>
         </tr>
     <?php
     foreach ($this->changes as $change) { ?>
