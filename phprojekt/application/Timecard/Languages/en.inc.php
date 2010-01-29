@@ -26,6 +26,7 @@ $lang["Content Help"]["Timecard"] = "<br />
     involved in the Projects have worked in, and how much time have they spent on each thing.<br />
     These times will also impact on Statistic module.<br />
     <br />
+    <br />
     <b>Sections of the module</b><br />
     <br />
     It has a month section at the left which shows all days of selected month and booked time for each one for the
@@ -66,6 +67,7 @@ $lang["Content Help"]["Month"] = "<br />
     To change the listed month, select a date of any month in the Date field over the Day schedule and click its check
     button.<br />
     <br />
+    <br />
     <b>Colors</b><br />
     <br />
     The weekend days have red color, the rest of them are black.<br />
@@ -82,17 +84,20 @@ $lang["Content Help"]["Day"] = "<br />
     It has a Date field with a check button on top and a schedule showing all time of the day with its Project bookings
     inside, if any.<br />
     <br />
+    <br />
     <b>Date field</b><br />
     <br />
     The Date field allows selecting a day to show in the schedule. Also, the selected month will be loaded into the left
-    Month section, and the selected date in the Date field inside the right Form.<br />
+    Month section, and the selected date in the Start field inside the right Form.<br />
+    <br />
     <br />
     <b>Rows</b><br />
     <br />
     The schedule is formed by 24 rows; one per hour.<br />
     Each row has a (+) plus sign to add a booking for that time. If you press it the selected Date and Time will be
-    loaded into the Form at the right in fields Date and Start Time. The End Time will be filled automatically, its
-    value is one hour after Start Time.<br />
+    loaded into the Form at the right in field Start. The End Time will be filled automatically, its value is one hour
+    after Start Time.<br />
+    <br />
     <br />
     <b>Bookings</b><br />
     <br />
@@ -121,28 +126,22 @@ $lang["Content Help"]["Form"] = "<br />
     <br />
     Form fields:<br />
     <br />
-    <b>Date</b><br />
-    Date: the date for the booking.<br />
+    <b>Start</b><br />
+    Date/time: the date and time for the booking start.<br />
     This field is automatically filled in the following cases.<br />
-    1 - When you click on a date of the left Month section -> clicked date<br />
-    2 - When you select a date up the day schedule and press the check button -> selected date<br />
-    3 - When you click on a booking in the day schedule -> active date for schedule<br />
-    4 - When you click on a (+) plus button of a specific row of the day schedule -> active date for schedule<br />
-    5 - When you click a favorite Project -> active date for schedule<br />
-    <br />
-    <b>Start Time</b><br />
-    Time: start time for the booking.<br />
-    It is automatically filled in the following cases.<br />
-    1 - When you click on a booking in the day schedule -> the start time of it<br />
-    2 - When you click on a (+) plus button of a specific row of the day schedule -> clicked row time<br />
-    3 - When it is empty and you click a favorite Project -> current time<br />
+    1 - When you click on a date of the left Month section -> clicked date and current time<br />
+    2 - When you select a date up the day schedule and press the check button -> selected date and current time<br />
+    3 - When you click on a booking in the day schedule -> start date and time of booking<br />
+    4 - When you click on a (+) plus button of a specific row of the day schedule -> active date and clicked row
+    time<br />
+    5 - When you click a favorite Project -> active date and, if Start time is empty; current time<br />
     <br />
     <b>End Time</b><br />
     Time: end time for the booking.<br />
     It is automatically filled in the following cases.<br />
     1 - When you click on a booking in the day schedule -> the end time of it<br />
     2 - When you click on a (+) plus button of a specific row of the day schedule -> one hour after clicked row
-    time.<br />
+    time<br />
     <br />
     <b>Project</b><br />
     Select: the booked Project.<br />
@@ -160,12 +159,14 @@ $lang["Content Help"]["Favorite Projects"] = "<br />
     Favorite Projects section is located at the right bottom of the module and provides shortcuts to most booked
     Projects, or the ones you want to put there. This list of Projects is independent for each user.<br />
     <br />
-    When you click on any of the favorite Projects the Form is emptied and Project field is filled with clicked Project
-    and the Start Time is set to current time, then you are ready to fill the rest of fields and press Save to add the
+    When you click on any of the favorite Projects the Form is filled the following way: Project field is set to clicked
+    Project, the Start field date is set to active date, the time if empty is set to current time, End Time will be
+    leaved as it is and Notes will be emptied. Then you are ready to fill the rest of fields and press Save to add the
     booking.<br />
     <br />
     This listing of favorite Projects is located between the Form and the button 'Manage project list'. Projects
     available to be added to favorites list are those you have at least Read access to.<br />
+    <br />
     <br />
     <b>Managing favorite Projects list</b><br />
     <br />
@@ -191,24 +192,28 @@ $lang["Content Help"]["Booking times"] = "<br />
     automatically set in Add mode, but there are also some ways to pre-fill some fields while getting it into Add
     mode:<br />
     <br />
+    <br />
     <b>Clicking on a day in Month view or selecting a date in Date field</b><br />
     <br />
     If you click on any day of the Month section, the Day schedule will load all booked Projects for that day, if any,
     and the Date field on top of the schedule will be filled with that date. Also, it will be loaded the clicked date
-    into the Date field inside the right Form getting the Form in Add mode and the rest of fields will be emptied.<br />
+    and current time into the Start field inside the right Form getting the Form in Add mode and the rest of fields will
+    be emptied.<br />
     The same happens in the Form if a day is selected in the Date field over the center schedule.<br />
     <br />
     <br />
-    <b>Clicking a (+) plus sign in a schedule row</b><br />
+    <b>Clicking a (+) plus button in a schedule row</b><br />
     <br />
-    Each row of the schedule has a (+) plus sign to add a booking for that time. If you press it the selected Date and
-    Time will be loaded into the Form in fields Date and Start Time, and the Form will get into Add mode and the rest of
-    fields is emptied. The End Time will be filled automatically as one hour after Start Time.<br />
+    Each row of the schedule has a (+) plus button to add a booking for that time. If you press it the selected Date and
+    Time will be loaded into the Form in field Start, and the Form will get into Add mode and End Time will be filled
+    automatically as one hour after Start Time, Project and Notes fields will be emptied.<br />
     <br />
     <br />
     <b>Clicking on a favorite Project</b><br />
     <br />
-    When you click on any of the favorite Projects under the Form, this last one is emptied, set into Add mode, Project
-    field is filled with clicked Project and the Start Time is set to current time.<br />
+    When you click on any of the favorite Projects the Form is filled the following way: Project field is set to clicked
+    Project, the Start field date is set to active date, the time if empty is set to current time, End Time will be
+    leaved as it is and Notes will be emptied. Then you are ready to fill the rest of fields and press Save to add the
+    booking.<br />
     <br />
     <br />";

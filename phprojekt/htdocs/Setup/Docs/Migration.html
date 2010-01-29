@@ -23,12 +23,11 @@
 <b> Access</b>
 <ul>
     <li>Since in PHProjekt 6 there are no groups, the groups of PHProjekt 5 are migrated as root projects, using the 
-    user relations to create rights.<br />
-    This means that if a P5 group have only 2 users, then it will be created a P6 root project having the name of the 
-    group and all users of that group will have full access to that project. That root project will have as childs all 
-    the projects from P5 that were related to the group.</li> 
-    <li>All the users that have access to the group in PHProjekt 5 will have full access to the equivalent root project 
-    in PHProjekt 6.</li>
+    user relations to create rights. All the users that have access to the group in PHProjekt 5 will have a read set 
+    (read/access/download) of permissions to work on the equivalent root project in PHProjekt 6.<br />
+    This means that, for instance, if a P5 group have only 2 users, then it will be created a P6 root project having the 
+    name of the group and all users of that group will have a read set (read/access/download) of permissions to work on 
+    that project. That root project will have as childs all the projects from P5 that were related to the group.</li> 
     <li>For every Project and other modules items that were related to the migrated group (migrated as a root project), 
     only the users that belong to the root project will be listed in the user-list alike select fields, and they are the 
     ones that will be able to have any rights. If you want a specific user to have any access kind to a child project, 
