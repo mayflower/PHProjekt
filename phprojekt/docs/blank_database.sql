@@ -399,8 +399,7 @@ CREATE TABLE `calendar` (
   `rrule` text default NULL,
   `visibility` int(1) default 0,
   `participant_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uid` (`uid`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
