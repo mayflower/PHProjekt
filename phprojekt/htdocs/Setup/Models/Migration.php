@@ -473,7 +473,7 @@ class Setup_Models_Migration
                     $this->_groupsUsers[$oldGroupId][] = $userId;
                 }
 
-                $userRightsAdd[$userId] = $this->_accessAdmin;
+                $userRightsAdd[$userId] = $this->_accessRead;
             }
         }
     }
