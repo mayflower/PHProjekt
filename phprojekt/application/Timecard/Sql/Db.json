@@ -8,16 +8,15 @@
         {
             "create":
             {
-                "id":         "default",
-                "owner_id":   {"type": "int"},
-                "date":       {"type": "date"},
-                "start_time": {"type": "time"},
-                "end_time":   {"type": "time"},
-                "minutes":    {"type": "int"},
-                "project_id": {"type": "int"},
-                "notes":      {"type": "text"},
-                "module_id":  {"type": "int", "default": "1"},
-                "item_id":    {"type": "int"}
+                "id":             "default",
+                "owner_id":       {"type": "int"},
+                "start_datetime": {"type": "datetime"},
+                "end_time":       {"type": "time"},
+                "minutes":        {"type": "int"},
+                "project_id":     {"type": "int"},
+                "notes":          {"type": "text"},
+                "module_id":      {"type": "int", "default": "1"},
+                "item_id":        {"type": "int"}
             }
         }
     },

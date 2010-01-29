@@ -371,8 +371,7 @@ CREATE TABLE `item_rights` (
 CREATE TABLE `timecard` (
   `id` int(11) NOT NULL auto_increment,
   `owner_id` int(11) default NULL,
-  `date` date default NULL,
-  `start_time` time default NULL,
+  `start_datetime` datetime default NULL,
   `end_time` time default NULL,
   `minutes` int(11) default NULL,
   `project_id` int(11) default NULL,

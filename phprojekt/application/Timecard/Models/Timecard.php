@@ -113,8 +113,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $data   = $this->_data;
         $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
-        if (isset($data['startTime'])) {
-            $startTime = str_replace(":", "", $data['startTime']);
+        if (isset($data['startDatetime'])) {
+            $startTime = str_replace(":", "", substr($data['startDatetime'], 11));
             if (strlen($startTime) == 6) {
                 $startTime = substr($startTime, 0, 4);
             }
@@ -151,7 +151,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
 
         if (isset($data['endTime']) && !empty($data['endTime'])) {
-            if ($this->getDiffTime($data['endTime'], $data['startTime']) < 0) {
+            if ($this->getDiffTime($data['endTime'], substr($data['startDatetime'], 11)) < 0) {
                 if (($data['endTime'] != "00:00:00") && ($data['endTime'] != "00:00")) {
                     $this->_validate->error->addError(array(
                         'field'   => 'Hours',
@@ -183,7 +183,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 }
             }
 
-            if (empty($data['startTime']) || $data['startTime'] == ':') {
+            if (empty($data['startDatetime']) || $data['startDatetime'] == ':') {
                 $this->_validate->error->addError(array(
                     'field'   => 'Hours',
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
@@ -191,13 +191,12 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 return false;
             }
 
-            if (!empty($data['startTime'])) {
-                $startTime = str_replace(":", "", $data['startTime']);
+            if (!empty($data['startDatetime'])) {
+                $startTime = str_replace(":", "", substr($data['startDatetime'], 11));
                 if (strlen($startTime) == 6) {
                     $startTime = substr($startTime, 0, 4);
                 }
                 $startTime = (int) $startTime;
-
                 $showError = false;
                 $records   = $this->fetchAll($this->_getWhereForTimes());
                 if ($this->id != 0) {
@@ -245,19 +244,27 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     private function _getWhereForTimes()
     {
-        $startTime = $this->getAdapter()->quote($this->startTime);
-        $date      = $this->getAdapter()->quote($this->date);
+        $startTime = $this->getAdapter()->quote(substr($this->startDatetime, 11));
+        $date      = $this->getAdapter()->quote(substr($this->startDatetime, 0, 10));
         if (null !== $this->endTime) {
             $endTime = $this->getAdapter()->quote($this->endTime);
-            $where   = sprintf(" owner_id = %d AND date = %s AND "
-                . " ((start_time <= %s AND end_time > %s) OR (start_time < %s AND end_time >= %s) "
-                . " OR (start_time <= %s AND end_time >= %s) OR (start_time >= %s AND end_time <= %s) ) ",
+            $where   = sprintf(" owner_id = %d AND DATE(start_datetime) = %s AND "
+                . " ((TIME(start_datetime) <= %s AND end_time > %s) "
+                . " OR (TIME(start_datetime) < %s AND end_time >= %s) "
+                . " OR (TIME(start_datetime) <= %s AND end_time >= %s) "
+                . " OR (TIME(start_datetime) >= %s AND end_time <= %s) ) ",
                 (int) Phprojekt_Auth::getUserId(), $date,
-                $startTime, $startTime, $endTime, $endTime, $startTime, $endTime, $startTime, $endTime);
+                $startTime, $startTime,
+                $endTime, $endTime,
+                $startTime, $endTime,
+                $startTime, $endTime);
         } else {
-            $where = sprintf(" owner_id = %d AND date = %s AND ((start_time <= %s AND end_time > %s )"
-                . " OR (start_time <= %s AND end_time IS NULL)) ", (int) Phprojekt_Auth::getUserId(), $date,
-                $startTime, $startTime, $startTime);
+            $where = sprintf(" owner_id = %d AND DATE(start_datetime) = %s AND "
+                . " ((TIME(start_datetime) <= %s AND end_time > %s )"
+                . " OR (TIME(start_datetime) <= %s AND end_time IS NULL)) ",
+                (int) Phprojekt_Auth::getUserId(), $date,
+                $startTime, $startTime,
+                $startTime);
         }
 
         return $where;
@@ -290,20 +297,22 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
 
         $db    = Phprojekt::getInstance()->getDb();
-        $where = sprintf('(owner_id = %d AND date LIKE %s)', $userId, $db->quote($year . '-' . $month . '-%'));
-        $records = $this->fetchAll($where, 'date ASC');
+        $where = sprintf('(owner_id = %d AND DATE(start_datetime) LIKE %s)', $userId,
+            $db->quote($year . '-' . $month . '-%'));
+        $records = $this->fetchAll($where, 'start_datetime ASC');
 
         // Get all the hours for this month
         $sortRecords = array();
         foreach ($records as $record) {
-            if (!isset($sortRecords[$record->date])) {
-                $sortRecords[$record->date]['sum']        = 0;
-                $sortRecords[$record->date]['openPeriod'] = 0;
+            $date = date('Y-m-d', strtotime($record->startDatetime));
+            if (!isset($sortRecords[$date])) {
+                $sortRecords[$date]['sum']        = 0;
+                $sortRecords[$date]['openPeriod'] = 0;
             }
             if ($record->minutes == 0 && null === $record->endTime) {
-                $sortRecords[$record->date]['openPeriod'] = 1;
+                $sortRecords[$date]['openPeriod'] = 1;
             }
-            $sortRecords[$record->date]['sum'] += (int) $record->minutes;
+            $sortRecords[$date]['sum'] += (int) $record->minutes;
         }
 
         $endDayofTheMonth = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -343,9 +352,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function getDayRecords($date)
     {
-        $db      = Phprojekt::getInstance()->getDb();
-        $where   = sprintf('(owner_id = %d AND date = %s)', (int) Phprojekt_Auth::getUserId(), $db->quote($date));
-        $records = $this->fetchAll($where, 'start_time ASC');
+        $db    = Phprojekt::getInstance()->getDb();
+        $where = sprintf('(owner_id = %d AND DATE(start_datetime) = %s)', (int) Phprojekt_Auth::getUserId(),
+            $db->quote($date));
+        $records = $this->fetchAll($where, 'start_datetime ASC');
         $datas   = array();
 
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
@@ -356,7 +366,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $data = array();
             $data['id']        = $record->id;
             $data['projectId'] = $record->projectId;
-            $data['startTime'] = $record->startTime;
+            $data['startTime'] = substr($record->startDatetime, 11);
             $data['endTime']   = $record->endTime;
             $data['display']   = $tree->getNodeById($record->projectId)->getDepthDisplay('title');
 
@@ -421,7 +431,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function getRunningBookings($ownerId)
     {
-        $where = sprintf('date = %s AND (end_time = "" OR end_time IS NULL) AND owner_id = %d',
+        $where = sprintf('DATE(start_datetime) = %s AND (end_time = "" OR end_time IS NULL) AND owner_id = %d',
             $this->getAdapter()->quote(date('Y-m-d')), $ownerId);
         $records = $this->fetchAll($where, null, 1);
         return $records;

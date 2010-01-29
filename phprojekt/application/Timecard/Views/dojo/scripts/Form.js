@@ -183,22 +183,19 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 
         // Init formdata
         var formData = '';
-        // date
-        formData += this.fieldTemplate.dateRender(meta[0]["label"], meta[0]["key"], this._date, meta[0]["required"],
-            false, meta[0]["hint"]);
-        // startTime
-        formData += this.fieldTemplate.textFieldRender(meta[1]["label"], meta[1]["key"], '', 5, meta[1]["required"],
-            false, meta[1]["hint"]);
+        // startDatetime
+        formData += this.fieldTemplate.datetimeRender(meta[0]["label"], meta[0]["key"],
+            this._date + " " + this._getNow(), meta[0]["required"], false, meta[0]["hint"]);
         // endTime
-        formData += this.fieldTemplate.textFieldRender(phpr.nls.get('End Time'), 'endTime', '', 5, meta[2]["required"],
-            false, meta[2]["hint"]);
+        formData += this.fieldTemplate.timeRender(phpr.nls.get('End Time'), 'endTime', '', meta[1]["required"],
+            false, meta[1]["hint"]);
         // projectId
-        meta[4]['range'].push({'id': -1, 'name': ''});
-        formData += this.fieldTemplate.selectRender(meta[4]['range'], meta[4]["label"], meta[4]["key"], -1,
-            meta[4]["required"], false, meta[4]["hint"]);
+        meta[3]['range'].push({'id': -1, 'name': ''});
+        formData += this.fieldTemplate.selectRender(meta[3]['range'], meta[3]["label"], meta[3]["key"], -1,
+            meta[3]["required"], false, meta[3]["hint"]);
         // notes
-        formData += this.fieldTemplate.textAreaRender(meta[5]["label"], meta[5]["key"], '', meta[5]["required"],
-            false, meta[5]["hint"]);
+        formData += this.fieldTemplate.textAreaRender(meta[4]["label"], meta[4]["key"], '', meta[4]["required"],
+            false, meta[4]["hint"]);
 
         this.render(["phpr.Timecard.template", "formView.html"], dojo.byId('formView'), {
             formData:            formData,
@@ -207,6 +204,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             manageFavoritesText: phpr.nls.get('Manage project list'),
             favorites:           favorites
         });
+
         // Fix layout
         projectBookingSource.domNode.style.height = 'auto';
 
@@ -251,6 +249,12 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         if (this.sendData.notes == "\n") {
             this.sendData.notes = "";
         }
+
+        if (!dijit.byId('bookingForm').isValid()) {
+            dijit.byId('bookingForm').validate();
+            return false;
+        }
+
         return true;
     },
 
@@ -342,7 +346,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         if (dojo.byId("dialogContent").innerHTML.replace(/\s/g, "") == "") {
             var favorites = phpr.DataStore.getData({url: this._favoritesUrl});
             var meta      = phpr.DataStore.getMetaData({url: this._url});
-            var range     = meta[4]['range'];
+            var range     = meta[3]['range'];
 
             // Get Favorites
             var favoritesList = new Array();
@@ -391,9 +395,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Fill the form with some data
         // Description:
         //    Fill the form with some data
-        dijit.byId("date").attr('value', new Date(date.getFullYear(), date.getMonth(), date.getDate()));
-        dijit.byId('startTime').attr('value', start);
-        dijit.byId('endTime').attr('value', end);
+        dijit.byId("startDatetime_forDate").attr('displayedValue', phpr.Date.getIsoDate(date));
+        dijit.byId('startDatetime_forTime').attr('displayedValue', start);
+        dijit.byId('endTime').attr('displayedValue', end);
         dijit.byId('projectId').attr('value', project);
         dijit.byId('notes').attr('value', notes);
         if (parseInt(this.id) > 0) {
@@ -413,8 +417,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         phpr.DataStore.addStore({url: this._url});
         phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
             var data      = phpr.DataStore.getData({url: this._url});
-            var endTime   = data[0]['endTime'].substr(0,5);
-            var startTime = data[0]['startTime'].substr(0,5);
+            var endTime   = data[0]['endTime'].substr(0, 5);
+            var startTime = data[0]['startDatetime'].substr(11, 5);
             if (endTime == 0 || endTime == null) {
                 var hour    = parseInt(startTime) + 1;
                 var endTime = phpr.Date.getIsoTime(hour + '00');
@@ -444,13 +448,13 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // Description:
         //    Fill the form with one project
         this.id = 0;
-        if (dijit.byId('startTime').attr('value') != '') {
-            var start = dijit.byId('startTime').attr('value');
+        if (dijit.byId('startDatetime_forTime').attr('displayedValue') != '') {
+            var start = dijit.byId('startDatetime_forTime').attr('displayedValue');
         } else {
             var start = this._getNow();
         }
         if (dijit.byId('endTime').attr('value') != '') {
-            var end = dijit.byId('endTime').attr('value');
+            var end = dijit.byId('endTime').attr('displayedValue');
         } else {
             var end = '';
         }
@@ -464,7 +468,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // Description:
         //    Remove all the values of the form
         this.id = 0;
-        this.updateForm(this.dateObject, '', '', '', "\n");
+        this.updateForm(this.dateObject, this._getNow(), '', '', "\n");
     },
 
     _getNow:function() {

@@ -55,36 +55,15 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
 
         switch ($ordering) {
             default:
-                // date
+                // start_datetime
                 $data = array();
 
-                $data['key']      = 'date';
-                $data['label']    = Phprojekt::getInstance()->translate('Date');
-                $data['type']     = 'date';
-                $data['hint']     = Phprojekt::getInstance()->getTooltip('date');
+                $data['key']      = 'startDatetime';
+                $data['label']    = Phprojekt::getInstance()->translate('Start');
+                $data['type']     = 'datetime';
+                $data['hint']     = Phprojekt::getInstance()->getTooltip('startDatetime');
                 $data['order']    = 0;
                 $data['position'] = 1;
-                $data['fieldset'] = '';
-                $data['range']    = array('id'   => '',
-                                          'name' => '');
-                $data['required'] = true;
-                $data['readOnly'] = false;
-                $data['tab']      = 1;
-                $data['integer']  = false;
-                $data['length']   = 0;
-                $data['default']  = null;
-
-                $converted[] = $data;
-
-                // startTime
-                $data = array();
-
-                $data['key']      = 'startTime';
-                $data['label']    = Phprojekt::getInstance()->translate('Start Time');
-                $data['type']     = 'time';
-                $data['hint']     = Phprojekt::getInstance()->getTooltip('startTime');
-                $data['order']    = 0;
-                $data['position'] = 2;
                 $data['fieldset'] = '';
                 $data['range']    = array('id'   => '',
                                           'name' => '');
@@ -101,11 +80,11 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data = array();
 
                 $data['key']      = 'endTime';
-                $data['label']    = Phprojekt::getInstance()->translate('End Time');
+                $data['label']    = Phprojekt::getInstance()->translate('End');
                 $data['type']     = 'time';
                 $data['hint']     = Phprojekt::getInstance()->getTooltip('startTime');
                 $data['order']    = 0;
-                $data['position'] = 3;
+                $data['position'] = 2;
                 $data['fieldset'] = '';
                 $data['range']    = array('id'   => '',
                                           'name' => '');
@@ -126,7 +105,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['type']     = 'text';
                 $data['hint']     = Phprojekt::getInstance()->getTooltip('minutes');
                 $data['order']    = 0;
-                $data['position'] = 4;
+                $data['position'] = 3;
                 $data['fieldset'] = '';
                 $data['range']    = array('id'   => '',
                                           'name' => '');
@@ -147,7 +126,7 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['type']     = 'time';
                 $data['hint']     = Phprojekt::getInstance()->getTooltip('projectId');
                 $data['order']    = 0;
-                $data['position'] = 5;
+                $data['position'] = 4;
                 $data['fieldset'] = '';
                 $data['range']    = array();
                 $data['type']     = 'selectbox';
@@ -176,11 +155,11 @@ class Timecard_Models_Information extends EmptyIterator implements Phprojekt_Mod
                 $data['type']     = 'textarea';
                 $data['hint']     = Phprojekt::getInstance()->getTooltip('notes');
                 $data['order']    = 0;
-                $data['position'] = 6;
+                $data['position'] = 5;
                 $data['fieldset'] = '';
                 $data['range']    = array('id'   => '',
                                           'name' => '');
-                $data['required'] = true;
+                $data['required'] = false;
                 $data['readOnly'] = false;
                 $data['tab']      = 1;
                 $data['integer']  = false;

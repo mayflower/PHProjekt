@@ -373,8 +373,7 @@ CREATE TABLE `item_rights` (
 CREATE TABLE `timecard` (
   `id` int(11) NOT NULL auto_increment,
   `owner_id` int(11) default NULL,
-  `date` date default NULL,
-  `start_time` time default NULL,
+  `start_datetime` datetime default NULL,
   `end_time` time default NULL,
   `minutes` int(11) default NULL,
   `project_id` int(11) default NULL,
@@ -721,13 +720,13 @@ INSERT INTO `item_rights` (`module_id`, `item_id`, `user_id`, `access`) VALUES
 INSERT INTO `todo` (`id`, `title`, `notes`, `owner_id`, `project_id`, `start_date`, `end_date`, `priority`, `current_status`) VALUES
 (1,'Todo of Test Project','',1,1,'2007-12-12','2007-12-31',0,1);
 
-INSERT INTO `timecard` (`id`, `owner_id`, `date`, `start_time`, `end_time`, `minutes`, `project_id`, `notes`, `module_id`, `item_id`) VALUES
-(1, 1, '2008-04-29', '0800', '1300', 300, 1, 'TEST', 1, NULL),
-(2, 1, '2008-04-29', '1400', '1800', 240, 2, 'TEST', 1, NULL),
-(3, 1, '2008-04-30', '0800', '1300', 300, 1, 'TEST', 1, NULL),
-(4, 1, '2008-04-30', '1400', '1800', 240, 1, 'TEST', 1, NULL),
-(5, 1, '2008-05-02', '0800', '1300', 300, 2, 'TEST', 1, NULL),
-(6, 1, '2008-05-02', '1400', '1800', 240, 1, 'TEST', 1, NULL);
+INSERT INTO `timecard` (`id`, `owner_id`, `start_datetime`, `end_time`, `minutes`, `project_id`, `notes`, `module_id`, `item_id`) VALUES
+(1, 1, '2008-04-29 08:00:00', '13:00:00', 300, 1, 'TEST', 1, NULL),
+(2, 1, '2008-04-29 14:00:00', '18:00:00', 240, 2, 'TEST', 1, NULL),
+(3, 1, '2008-04-30 08:00:00', '13:00:00', 300, 1, 'TEST', 1, NULL),
+(4, 1, '2008-04-30 14:00:00', '18:00:00', 240, 1, 'TEST', 1, NULL),
+(5, 1, '2008-05-02 08:00:00', '13:00:00', 300, 2, 'TEST', 1, NULL),
+(6, 1, '2008-05-02 14:00:00', '18:00:00', 240, 1, 'TEST', 1, NULL);
 
 INSERT INTO `tags` (`id`, `word`, `crc32`) VALUES
 (1,'this',-17923545),

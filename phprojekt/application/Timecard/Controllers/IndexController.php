@@ -175,9 +175,8 @@ class Timecard_IndexController extends IndexController
     {
         $records = $this->getModelObject()->getRunningBookings(Phprojekt_Auth::getUserId());
         if (count($records) > 0) {
-            /* TODO: make sure we use phprojekt's default date/time format */
             $record = end($records);
-            $date   = $record->startTime . ' ' . $record->date;
+            $date   = $record->startDatetime;
         } else {
             $date = null;
         }
@@ -298,9 +297,10 @@ class Timecard_IndexController extends IndexController
         if (strlen($month) == 1) {
             $month = '0' . $month;
         }
-        $where   = sprintf('(owner_id = %d AND date LIKE %s)', (int) $userId, $db->quote($year . '-' . $month . '-%'));
+        $where = sprintf('(owner_id = %d AND DATE(start_datetime) LIKE %s)', (int) $userId,
+            $db->quote($year . '-' . $month . '-%'));
         $this->setCurrentProjectId();
-        $records = $this->getModelObject()->fetchAll($where, 'date ASC');
+        $records = $this->getModelObject()->fetchAll($where, 'start_datetime ASC');
 
         Phprojekt_Converter_Csv::echoConvert($records);
     }
@@ -319,11 +319,7 @@ class Timecard_IndexController extends IndexController
         $params = $args[0];
         $model  = $args[1];
 
-        $params['date']      = Cleaner::sanitize('date', $params['date']);
-        $params['startTime'] = Cleaner::sanitize('time', $params['startTime']);
-        if ($params['startTime'] == '') {
-            unset($params['startTime']);
-        }
+        $params['startDatetime'] = Cleaner::sanitize('datetime', $params['startDatetime']);
         if (isset($params['endTime'])) {
             $params['endTime'] = Cleaner::sanitize('time', $params['endTime']);
             if ($params['endTime'] == '') {
@@ -332,12 +328,15 @@ class Timecard_IndexController extends IndexController
         }
         $params['projectId'] = (int) $params['projectId'];
         $params['notes']     = Cleaner::sanitize('string', $params['notes']);
-        if (isset($params['endTime']) && isset($params['startTime'])) {
-            $params['minutes'] = Timecard_Models_Timecard::getDiffTime($params['endTime'], $params['startTime']);
+
+        if (isset($params['endTime']) && isset($params['startDatetime'])) {
+            $params['minutes'] = Timecard_Models_Timecard::getDiffTime($params['endTime'],
+                substr($params['startDatetime'], 11));
         } else if (!isset($params['endTime'])) {
             $params['minutes'] = 0;
         } else {
-            $params['minutes'] = Timecard_Models_Timecard::getDiffTime($params['endTime'], $model->startTime);
+            $params['minutes'] = Timecard_Models_Timecard::getDiffTime($params['endTime'],
+                substr($model->startDatetime, 11));
         }
 
         return $params;

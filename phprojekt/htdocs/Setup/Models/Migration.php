@@ -735,7 +735,7 @@ class Setup_Models_Migration
     private function _migrateTimeCard()
     {
         // Multiple inserts
-        $dbFields = array('owner_id', 'date', 'start_time', 'end_time', 'minutes', 'project_id', 'notes', 'module_id',
+        $dbFields = array('owner_id', 'start_datetime', 'end_time', 'minutes', 'project_id', 'notes', 'module_id',
             'item_id');
         $dbValues = array();
 
@@ -814,7 +814,7 @@ class Setup_Models_Migration
 
                             list($moduleId, $itemId) = $this->_getItemAndModule($timeproj);
 
-                            $dbValues[] = array($this->_users[$userId], $timeproj['datum'], $starTime, $endTime,
+                            $dbValues[] = array($this->_users[$userId], $timeproj['datum'] . " " . $starTime, $endTime,
                                 $minutes, $timeproj['projekt'], $this->_fix($timeproj['note'], 65500),
                                 $moduleId, $itemId);
 
@@ -836,8 +836,8 @@ class Setup_Models_Migration
                         $endTime     = $lastHour . ":" . $lastMinutes . ":00";
                         list($moduleId, $itemId) = $this->_getItemAndModule($timeproj);
 
-                        $dbValues[] = array($this->_users[$userId], $timeproj['datum'], $starTime, $endTime, $minutes,
-                            $timeproj['projekt'], $this->_fix($timeproj['note'], 65500), $moduleId, $itemId);
+                        $dbValues[] = array($this->_users[$userId], $timeproj['datum'] . " " . $starTime, $endTime,
+                            $minutes, $timeproj['projekt'], $this->_fix($timeproj['note'], 65500), $moduleId, $itemId);
                     }
                 }
             }

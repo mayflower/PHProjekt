@@ -41,9 +41,8 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // INSERT. Defined start and end time.
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('startTime', '09:00');
-        $this->request->setParam('endTime', '13:00');
+        $this->request->setParam('startDatetime', ' 2009-05-16 09:00:00');
+        $this->request->setParam('endTime', '13:00:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
@@ -57,8 +56,7 @@ class Timecard_IndexController_Test extends FrontInit
     public function testJsonSaveCommonPart2()
     {
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('startTime', '14:00');
+        $this->request->setParam('startDatetime', '2009-05-16 14:00:00');
         $this->request->setParam('endTime', '18:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
@@ -89,8 +87,7 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // INSERT. Just defined start time.
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-07-02');
-        $this->request->setParam('startTime', '10:00');
+        $this->request->setParam('startDatetime', '2009-07-02 10:00:00');
         $this->request->setParam('endTime', '');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
@@ -120,8 +117,7 @@ class Timecard_IndexController_Test extends FrontInit
         // INSERT. Just defined end time.
         $this->setRequestUrl('Timecard/index/jsonSave/');
         $this->request->setParam('id', 9);
-        $this->request->setParam('date', '2009-07-02');
-        $this->request->setParam('startTime', '');
+        $this->request->setParam('startDatetime', '2009-07-02');
         $this->request->setParam('endTime', '19:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
@@ -139,7 +135,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-07-02');
         $response = $this->getResponse();
-        $expected = '{"id":"9","projectId":"1","startTime":"10:00:00","endTime":"19:00:00","display":"Invisible Root"}';
+        $expected = '{"id":"9","projectId":"1","startTime":"00:00:00","endTime":"19:00:00","display":"Invisible Root"}';
         $this->assertContains($expected, $response);
     }
 
@@ -151,9 +147,8 @@ class Timecard_IndexController_Test extends FrontInit
         // EDIT. Sending id
         $this->setRequestUrl('Timecard/index/jsonSave/');
         $this->request->setParam('id', 7);
-        $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('startTime', '10:30');
-        $this->request->setParam('endTime', '12:30');
+        $this->request->setParam('startDatetime', '2009-05-16 10:30:00');
+        $this->request->setParam('endTime', '12:30:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
@@ -183,9 +178,8 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // Try to INSERT an overlapping period. Returns nothing here
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('startTime', '10:00');
-        $this->request->setParam('endTime', '12:00');
+        $this->request->setParam('startDatetime', '2009-05-16 10:00:00');
+        $this->request->setParam('endTime', '12:00:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
@@ -204,8 +198,7 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // Try to INSERT an overlapping period just with Start time. Returns nothing here
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('startTime', '11:00');
+        $this->request->setParam('startDatetime', '2009-05-16 11:00:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
@@ -225,16 +218,15 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // Try to INSERT an overlapping period just with End time. Returns nothing here
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('startTime', '09:00');
+        $this->request->setParam('startDatetime', '2009-05-16 09:00:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::ADD_TRUE_TEXT, $response);
 
-        $this->request->setParam('date', '2009-05-16');
-        $this->request->setParam('endTime', '12:00');
+        $this->request->setParam('startDatetime', '2009-05-16');
+        $this->request->setParam('endTime', '12:00:00');
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
@@ -250,15 +242,14 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // Try to INSERT a period with wrong start time. Returns nothing here
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-20');
-        $this->request->setParam('startTime', '');
+        $this->request->setParam('startDatetime', '');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
         try {
             $this->front->dispatch($this->request, $this->response);
         } catch (Phprojekt_PublishedException $error) {
-            $this->assertEquals("Start Time: Is a required field", $error->getMessage());
+            $this->assertEquals("Start: Is a required field", $error->getMessage());
             return;
         }
     }
@@ -270,9 +261,8 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // Try to INSERT a period with start time after end time. Returns nothing here
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-21');
-        $this->request->setParam('startTime', '17:00');
-        $this->request->setParam('endTime', '08:00');
+        $this->request->setParam('startDatetime', '2009-05-21 17:00:00');
+        $this->request->setParam('endTime', '08:00:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
@@ -291,9 +281,8 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // Try to INSERT a period with wrong end time. Returns nothing here
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('date', '2009-05-21');
-        $this->request->setParam('startTime', '17:00');
-        $this->request->setParam('endTime', '12:60');
+        $this->request->setParam('startDatetime', '2009-05-21 17:00:00');
+        $this->request->setParam('endTime', '12:60:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
@@ -400,9 +389,9 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('month', '05');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains('"Date","Start Time","End Time","Minutes","Project","Notes"'."\n"
-            .'"2009-05-16","10:30","12:30","120","Invisible Root","My note"'."\n"
-            .'"2009-05-16","09:00","","0","Invisible Root","My note"'."\n", $response);
+        $this->assertContains('"Start","End","Minutes","Project","Notes"'."\n"
+            .'"2009-05-16 09:00:00","","0","Invisible Root","My note"'."\n"
+            .'"2009-05-16 10:30:00","12:30","120","Invisible Root","My note"'."\n", $response);
     }
 
     /**
