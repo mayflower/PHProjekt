@@ -69,7 +69,7 @@ CREATE TABLE `database_manager` (
   `is_integer` int(4) default NULL,
   `is_required` int(4) default NULL,
   `is_unique` int(11) default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -100,7 +100,7 @@ CREATE TABLE `module` (
   `save_type` int(1) NOT NULL default 0,
   `version` varchar(20) default NULL,
   `active` int(1) NOT NULL default 1,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -110,7 +110,7 @@ CREATE TABLE `module` (
 CREATE TABLE `groups` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255),
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -121,7 +121,7 @@ CREATE TABLE `groups_user_relation` (
   `id` int NOT NULL AUTO_INCREMENT,
   `groups_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -206,7 +206,7 @@ CREATE TABLE `role_module_permissions` (
   `role_id` int(11) NOT NULL,
   `module_id` int(11) NOT NULL,
   `access` int(3) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -224,7 +224,7 @@ CREATE TABLE `todo` (
   `priority` int(11) default NULL,
   `current_status` int(2) NOT NULL default 1,
   `user_id` int(11) default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -249,7 +249,7 @@ CREATE TABLE `search_words` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `word` varchar(255) NOT NULL,
   `count` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -260,7 +260,7 @@ CREATE TABLE `search_word_module` (
   `module_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
   `word_id` int(11) NOT NULL,
-  PRIMARY KEY  (`item_id`,`module_id`,`word_id`)
+  PRIMARY KEY (`item_id`,`module_id`,`word_id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -273,7 +273,7 @@ CREATE TABLE `search_display` (
   `first_display` text,
   `second_display` text,
   `project_id` int(11) NOT NULL,
-  PRIMARY KEY  (`item_id`,`module_id`)
+  PRIMARY KEY (`item_id`,`module_id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -284,7 +284,7 @@ CREATE TABLE `tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `word` varchar(255) NOT NULL,
   `crc32` bigint NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -295,7 +295,7 @@ CREATE TABLE `tags_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -306,7 +306,7 @@ CREATE TABLE `tags_modules` (
   `module_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
   `tag_user_id` int(11) NOT NULL,
-  PRIMARY KEY  (`module_id`, `item_id`, `tag_user_id`)
+  PRIMARY KEY (`module_id`, `item_id`, `tag_user_id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -339,7 +339,7 @@ CREATE TABLE `note` (
   `title` varchar(255) NOT NULL,
   `comments` text default NULL,
   `owner_id` int(11) default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -351,7 +351,7 @@ CREATE TABLE `configuration` (
   `module_id` int(11) NOT NULL,
   `key_value` varchar(255) NOT NULL,
   `value` text default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -363,7 +363,7 @@ CREATE TABLE `item_rights` (
   `item_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `access` int(3) NOT NULL,
-  PRIMARY KEY  (`module_id`,`item_id`,`user_id`)
+  PRIMARY KEY (`module_id`,`item_id`,`user_id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -380,7 +380,7 @@ CREATE TABLE `timecard` (
   `notes` text default NULL,
   `module_id` int(11) default 1,
   `item_id` int(11) default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -395,24 +395,13 @@ CREATE TABLE `calendar` (
   `title` varchar(255) default NULL,
   `place` varchar(255) default NULL,
   `notes` text default NULL,
-  `uid` varchar(255) NULL,
   `start_datetime` datetime default NULL,
   `end_datetime` datetime default NULL,
-  `created` int(11) default NULL,
-  `modified` int(10) unsigned default NULL,
-  `timezone` varchar(50)  default NULL,
-  `location` varchar(255) default NULL,
-  `categories` text default NULL,
-  `attendee` text default NULL,
   `status` int(1) default 0,
-  `priority` int(1) default NULL,
-  `class` int(1) default NULL,
-  `transparent` int(1)  default NULL,
   `rrule` text default NULL,
-  `properties` text default NULL,
   `visibility` int(1) default 0,
   `participant_id` int(11) NOT NULL,
-  PRIMARY KEY  (`id`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `uid` (`uid`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -427,7 +416,7 @@ CREATE TABLE `filemanager` (
   `comments` text default NULL,
   `project_id` int(11) NOT NULL,
   `files` text NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -450,7 +439,7 @@ CREATE TABLE `contact` (
   `country` varchar(255) NOT NULL,
   `comment` text NOT NULL,
   `private` int(1) default 0,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
@@ -473,7 +462,7 @@ CREATE TABLE `helpdesk` (
   `solved_by` int(11) default NULL,
   `solved_date` date default NULL,
   `contact_id` int(11) default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 --
@@ -493,7 +482,7 @@ CREATE TABLE IF NOT EXISTS `minutes` (
   `participants_attending` text,
   `participants_excused` text,
   `item_status` int(11) default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 --
@@ -510,7 +499,7 @@ CREATE TABLE `minutes_item` (
   `comment` text NOT NULL,
   `topic_date` date default NULL,
   `user_id` int(11) default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 --
@@ -521,7 +510,7 @@ CREATE TABLE `module_instance` (
   `project_id` int(11) default NULL,
   `module` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 );
 
 CREATE TABLE  `frontend_message` (

@@ -880,9 +880,8 @@ class Setup_Models_Migration
             }
 
             // Multiple inserts
-            $dbFields = array('parent_id', 'owner_id', 'project_id', 'title', 'place', 'notes', 'uid' ,
-                'start_datetime', 'end_datetime', 'timezone', 'location', 'categories', 'priority', 'rrule',
-                'properties', 'visibility', 'status', 'participant_id');
+            $dbFields = array('parent_id', 'owner_id', 'project_id', 'title', 'place', 'notes', 'start_datetime',
+                'end_datetime', 'rrule', 'visibility', 'status', 'participant_id');
             $dbValues = array();
 
             foreach ($events as $index => $calendar) {
@@ -900,7 +899,6 @@ class Setup_Models_Migration
                     $calendar['ende'] = $this->_stringToTime($calendar['ende']);
                 }
 
-                $timezone        = (isset($this->_timeZone[$calendar['ID']])) ? $this->_timeZone[$calendar['ID']] : 2;
                 $date            = Cleaner::sanitize('date', $calendar['datum']);
                 $calendar['von'] = $this->_processOwner($calendar['von']);
 
@@ -964,9 +962,8 @@ class Setup_Models_Migration
                     // it will be done when implemented P6 ical
                     $dbValues[] = array($parentId, $calendar['von'], self::PROJECT_ROOT,
                         $this->_fix($calendar['event'], 255), $this->_fix($calendar['ort']),
-                        $this->_fix($calendar['remark'], 65500), null, $date . " " . $calendar['anfang'],
-                        $date . " " . $calendar['ende'], $timezone, $this->_fix($calendar['ort']), "",
-                        $calendar['priority'], $rrule, "", $visibility, $status, $participantId);
+                        $this->_fix($calendar['remark'], 65500), $date . " " . $calendar['anfang'],
+                        $date . " " . $calendar['ende'], $rrule, $visibility, $status, $participantId);
                 } else {
                     unset($events[$index]);
                 }

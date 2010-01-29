@@ -58,6 +58,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-06-02 09:00:00');
         $this->request->setParam('endDatetime', '2009-06-02 10:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('dataParticipant', 1);
         $this->request->setParam('sendNotification', 1);
         $this->request->setParam('nodeId', 1);
@@ -78,6 +79,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note edited');
         $this->request->setParam('startDatetime', '2009-06-03 10:00:00');
         $this->request->setParam('endDatetime', '2009-06-03 11:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('dataParticipant', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
@@ -115,6 +117,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-04-30 22:00:00');
         $this->request->setParam('endDatetime', '2009-04-30 23:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
@@ -141,6 +144,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-04-30 22:00:00');
         $this->request->setParam('endDatetime', '2009-04-30 23:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('participantId', 1);
         $this->request->setParam('multipleParticipants', true);
         $this->request->setParam('nodeId', 1);
@@ -164,6 +168,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-06-03 09:00:00');
         $this->request->setParam('endDatetime', '2009-06-02 10:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('dataParticipant', 1);
         $this->request->setParam('nodeId', 1);
 
@@ -189,6 +194,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-06-02 11:00:00');
         $this->request->setParam('endDatetime', '2009-06-02 10:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('dataParticipant', 1);
         $this->request->setParam('nodeId', 1);
 
@@ -218,6 +224,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startDatetime', '2009-05-01 09:00:00');
         $this->request->setParam('endDatetime', '2009-05-02 15:00:00');
         $this->request->setParam('projectId', 1);
+        $this->request->setParam('status', 1);
         $this->request->setParam('dataParticipant', 1);
         $this->request->setParam('rrule', 'FREQ=MONTHLY;UNTIL=20090601T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('nodeId', 1);
@@ -245,6 +252,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('startDatetime', '2008-12-01 12:00:00');
         $this->request->setParam('endDatetime', '2008-12-01 13:00:00');
         $this->request->setParam('dataParticipant', array(2 => 2));
+        $this->request->setParam('status', 1);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081202T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
@@ -272,6 +280,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2008-12-01 12:00:00');
         $this->request->setParam('endDatetime', '2008-12-01 13:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('multipleEvents', true);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081204T040000Z;INTERVAL=1;BYDAY=');
@@ -303,6 +312,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2008-12-01 12:00:00');
         $this->request->setParam('endDatetime', '2008-12-01 13:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20081203T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('multipleEvents', true);
@@ -331,6 +341,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-02-01 15:00:00');
         $this->request->setParam('endDatetime', '2009-02-01 22:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('rrule', 'FREQ=WEEKLY;UNTIL=20090208T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('nodeId', 1);
@@ -354,6 +365,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('place', 'Bariloche');
         $this->request->setParam('startDatetime', '2009-02-01 16:00:00');
         $this->request->setParam('endDatetime', '2009-02-01 21:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('participantId', 1);
         $this->request->setParam('multipleEvents', false);
@@ -395,6 +407,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-02-01 15:00:00');
         $this->request->setParam('endDatetime', '2009-02-01 20:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('participantId', 1);
         $this->request->setParam('rrule', 'FREQ=WEEKLY;UNTIL=20090208T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('multipleEvents', true);
@@ -423,6 +436,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-03-01 08:00:00');
         $this->request->setParam('endDatetime', '2009-03-01 18:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('participantId', 1);
         $this->request->setParam('rrule', 'FREQ=MONTHLY;UNTIL=20090901T040000Z;INTERVAL=2;BYDAY=');
         $this->request->setParam('nodeId', 1);
@@ -451,6 +465,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-03-01 08:00:00');
         $this->request->setParam('endDatetime', '2009-03-01 18:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('participantId', 1);
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('rrule', 'FREQ=MONTHLY;UNTIL=20090901T040000Z;INTERVAL=2;BYDAY=');
@@ -479,6 +494,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-06-12 08:00:00');
         $this->request->setParam('endDatetime', '2009-06-12 10:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('participantId', 1);
         $this->request->setParam('rrule', 'FREQ=DAILY;UNTIL=20090613T040000Z;INTERVAL=1;BYDAY=');
         $this->request->setParam('nodeId', 1);
@@ -505,6 +521,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-06-12 08:00:00');
         $this->request->setParam('endDatetime', '2009-06-12 10:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('participantId', 1);
         $this->request->setParam('dataParticipant', array(2 => 2));
         $this->request->setParam('multipleEvents', true);
@@ -534,6 +551,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-06-13 08:00:00');
         $this->request->setParam('endDatetime', '2009-06-13 10:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('participantId', 1);
         $this->request->setParam('multipleEvents', false);
         $this->request->setParam('multipleParticipants', true);
@@ -561,6 +579,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'test note');
         $this->request->setParam('startDatetime', '2009-06-12 08:00:00');
         $this->request->setParam('endDatetime', '2009-06-12 10:00:00');
+        $this->request->setParam('status', 1);
         $this->request->setParam('participantId', 1);
         $this->request->setParam('multipleEvents', true);
         $this->request->setParam('multipleParticipants', false);
@@ -601,7 +620,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"title":"test edited","place":"Bariloche","notes":"test note edited",'
-            . '"startDatetime":"2009-06-03 10:00:00","endDatetime":"2009-06-03 11:00:00","visibility":0,"status":0,'
+            . '"startDatetime":"2009-06-03 10:00:00","endDatetime":"2009-06-03 11:00:00","visibility":0,"status":1,'
             . '"participantId":1,"rrule":"","rights":{"currentUser":{"moduleId":5,"itemId":1,"userId":1,"none":false,'
             . '"read":true,"write":true,"access":true,"create":true,"copy":true,"delete":true,"download":true,'
             . '"admin":true}}}],"numRows":1})';
@@ -855,7 +874,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"Title","Start","End","Status"' . "\n"
-            . '"Multiple5","2009-06-14 08:00:00","2009-06-14 10:00:00","Pending"' . "\n", $response);
+            . '"Multiple5","2009-06-14 08:00:00","2009-06-14 10:00:00","Accepted"' . "\n", $response);
     }
 
     /**
@@ -870,9 +889,9 @@ class Calendar_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains('"Title","Place","Notes","Start","End","Visibility","Status","Participant",'
             . '"Rrule"' . "\n"
-            . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","Public","Pending",'
-            . '"1","FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n"
             . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","Public","Accepted",'
+            . '"1","FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n"
+            . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","Public","Pending",'
             . '"2","FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n", $response);
     }
 
@@ -888,13 +907,13 @@ class Calendar_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains('"Title","Place","Notes","Start","End","Visibility","Status","Participant",'
             . '"Rrule"' . "\n"
-            . '"Multiple5","Buenos Aires","test note","2009-06-11 08:00:00","2009-06-11 10:00:00","Public","Pending",'
+            . '"Multiple5","Buenos Aires","test note","2009-06-11 08:00:00","2009-06-11 10:00:00","Public","Accepted",'
             . '"1","FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n"
-            . '"Multiple5","Buenos Aires","test note","2009-06-12 08:00:00","2009-06-12 10:00:00","Public","Pending",'
+            . '"Multiple5","Buenos Aires","test note","2009-06-12 08:00:00","2009-06-12 10:00:00","Public","Accepted",'
             . '"1","FREQ=DAILY;UNTIL=20090613T040000Z;INTERVAL=1;BYDAY="' . "\n"
-            . '"Multiple5","Buenos Aires","test note","2009-06-13 08:00:00","2009-06-13 10:00:00","Public","Pending",'
+            . '"Multiple5","Buenos Aires","test note","2009-06-13 08:00:00","2009-06-13 10:00:00","Public","Accepted",'
             . '"1","FREQ=DAILY;UNTIL=20090613T040000Z;INTERVAL=1;BYDAY="' . "\n"
-            . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","Public","Pending",'
+            . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","Public","Accepted",'
             . '"1","FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n", $response);
     }
 }
