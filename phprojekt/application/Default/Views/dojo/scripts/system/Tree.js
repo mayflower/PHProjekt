@@ -80,7 +80,17 @@ dojo.declare("phpr.Tree", phpr.Component, {
         return new dijit.Tree({
             model:    this._model,
             showRoot: false,
-            persist:  false
+            persist:  false,
+           _onNodeMouseEnter: function(node) {
+               if (node.item.cut == 'true') {
+                   dijit.showTooltip(node.item.longName, node.domNode);
+               }
+           },
+           _onNodeMouseLeave: function(node) {
+                if (node.item.cut == 'true') {
+                    dijit.hideTooltip(node.domNode);
+                }
+            }
         }, document.createElement('div'));
     },
 
@@ -190,19 +200,19 @@ dojo.declare("phpr.Tree", phpr.Component, {
         //    Collect path and change the long names
         var width = dojo.byId('navigation-container').style.width.replace(/px/, "");
         for(var i in data.items) {
-            for(var j in data.items[i]) {
-                var name  = data.items[i]['name'].toString();
-                var depth = data.items[i]['path'].match(/\//g).length;
+            var name  = data.items[i]['name'].toString();
+            var depth = data.items[i]['path'].match(/\//g).length;
                 if (depth > 5) {
-                    depth = 5;
-                }
-                var maxLength = Math.round((width / 11) - (depth - 1));
-                if (name.length > maxLength) {
-                    var shortName = name.substr(0, maxLength) + '...';
-                    data.items[i]['name'] = shortName;
-                }
-                phpr.treePaths[data.items[i]['id']] = data.items[i]['path'];
+                depth = 5;
             }
+            var maxLength = Math.round((width / 11) - (depth - 1));
+            data.items[i]['cut'] = false;
+            if (name.length > maxLength) {
+                data.items[i]['longName'] = name;
+                data.items[i]['name']     = name.substr(0, maxLength) + '...';
+                data.items[i]['cut']      = true;
+            }
+            phpr.treePaths[data.items[i]['id']] = data.items[i]['path'];
         }
 
         return data;
