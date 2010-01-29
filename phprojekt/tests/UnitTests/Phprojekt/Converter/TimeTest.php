@@ -1,6 +1,6 @@
 <?php
 /**
- * Convert Dates between different formats and timezones
+ * Unit test
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -13,45 +13,37 @@
  *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
- * @package    PHProjekt
- * @subpackage Core
  * @version    $Id$
  * @link       http://www.phprojekt.com
- * @author     Michel Hartmann <michel.hartmann@mayflower.de>
  * @since      File available since Release 6.0
  */
+require_once 'PHPUnit/Framework.php';
 
 /**
+ * Tests Phprojekt Convert Time class
+ *
  * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
- * @package    PHProjekt
- * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @author     Michel Hartmann <michel.hartmann@mayflower.de>
+ * @author     Gustavo Solt <solt@mayflower.de>
+ * @group      phprojekt
+ * @group      converter
+ * @group      time
+ * @group      phprojekt-converter
+ * @group      phprojekt-converter-time
  */
-class Phprojekt_Date_Converter
+class Phprojekt_Converter_TimeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * Convert a number of minutes into HH:mm
-     *
-     * @param integer $minutes The number of minutes
-     *
-     * @return string
+     * Test convertMinutesToHours
      */
-    public static function convertMinutesToHours($minutes)
+    public function testConvertMinutesToHours()
     {
-        $hoursDiff   = floor($minutes / 60);
-        $minutesDiff = $minutes - ($hoursDiff * 60);
-
-        if ($hoursDiff == 0 || $hoursDiff < 10) {
-            $hoursDiff = '0' . $hoursDiff;
-        }
-        if ($minutesDiff == 0 || $minutesDiff < 10) {
-            $minutesDiff = '0' . $minutesDiff;
-        }
-
-        return $hoursDiff . ':' . $minutesDiff;
+        $converter = new Phprojekt_Converter_Time();
+        $this->assertEquals('00:20', $converter->convertMinutesToHours(20));
+        $this->assertEquals('01:20', $converter->convertMinutesToHours(80));
+        $this->assertEquals('10:05', $converter->convertMinutesToHours(605));
     }
 }

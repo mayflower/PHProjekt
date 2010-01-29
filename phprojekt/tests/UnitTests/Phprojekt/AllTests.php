@@ -46,6 +46,7 @@ require_once 'GroupTest.php';
 require_once 'Converter/JsonTest.php';
 require_once 'Converter/CsvTest.php';
 require_once 'Converter/TextTest.php';
+require_once 'Converter/TimeTest.php';
 require_once 'ModelInformation/DefaultTest.php';
 require_once 'LoaderTest.php';
 require_once 'TagsTest.php';
@@ -55,7 +56,6 @@ require_once 'ModuleTest.php';
 require_once 'TabsTest.php';
 require_once 'PhprojektTest.php';
 require_once 'Date/CollectionTest.php';
-require_once 'Date/ConverterTest.php';
 
 /**
  * Test suite for the default module
@@ -108,6 +108,7 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_Converter_JsonTest');
         $suite->addTestSuite('Phprojekt_Converter_CsvTest');
         $suite->addTestSuite('Phprojekt_Converter_TextTest');
+        $suite->addTestSuite('Phprojekt_Converter_TimeTest');
         $suite->addTestSuite('Phprojekt_ModelInformation_DefaultTest');
         $suite->addTestSuite('Phprojekt_TagsTest');
         $suite->addTestSuite('Phprojekt_Filter_ParseTreeTest');
@@ -115,7 +116,6 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_TabsTest');
         $suite->addTestSuite('Phprojekt_PhprojektTest');
         $suite->addTestSuite('Phprojekt_Date_CollectionTest');
-        $suite->addTestSuite('Phprojekt_Date_ConverterTest');
 
         return $suite;
     }
