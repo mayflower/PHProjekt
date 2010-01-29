@@ -47,11 +47,19 @@
         dojo.addOnLoad(function() {
             dojo.parser.parse();
             init();
+            hideLoading();
         });
 
         window.onresize = function() {
             init();
         };
+
+        hideLoading = function() {
+            if (dojo.byId('initLoading') && dojo.byId('completeContent')) {
+                dojo.style("initLoading", "display", "none");
+                dojo.style("completeContent", "opacity", 1);
+            }
+        }
     </script>
 </head>
 <body class="phprojekt">
@@ -98,16 +106,31 @@
                 <?php
                 if ($this->error) {
                     echo '<div class="error">' . $this->error . '</div>';
+                    ?>
+                    <script type="text/javascript">
+                        hideLoading();
+                    </script>
+                    <?php
                 }
                 ?>
                 <?php
                 if ($this->message) {
                     echo '<div class="error">' . $this->message . '</div>';
+                    ?>
+                    <script type="text/javascript">
+                        hideLoading();
+                    </script>
+                    <?php
                 }
                 ?>
                 <?php
                 if ($this->success) {
                     echo '<div class="success">' . $this->success . '</div>';
+                    ?>
+                    <script type="text/javascript">
+                        hideLoading();
+                    </script>
+                    <?php
                 }
                 ?>
                 </div>
@@ -125,6 +148,14 @@
         </div>
     </div>
 </div>
-
+<div id="initLoading"
+style="position: absolute; top: 45%; left: 45%; display: none;">
+    <center>
+    <img src="<?php echo $this->webPath; ?>img/ajax-init-loader.gif" alt="Loadding" />
+    <br /><br />
+    Installing PHProjekt 6<br />
+    The process could take several minutes, please wait...
+    </center>
+</div>
 </body>
 </html>
