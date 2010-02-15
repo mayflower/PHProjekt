@@ -1,8 +1,0 @@
-Minute is a big and organized module to track and report meetings and its contents.
-
-It has many tabs that can be filled with the needed information to register all contents in detail.
-
-It has a Grid and a Form, like most of the modules.
-
-There is a very particular tab called Items that allows to enter the content of each part of the meeting divided into 
-Topics, Statements, Todos, etc. This tab has a Grid inside.

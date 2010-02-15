@@ -1,7 +1,0 @@
-The normal process for example for get a list:
-
-- VIEW:       The view calls the list action.
-- CONTROLLER: The controller gets the action, and ask to the model the list of items.
-- MODEL:      The module makes the query in the database, and returns the data to the controller.
-- CONTROLLER: The controller gets the data, and send it to the view in JSON format.
-- VIEW:       The view receives the data and render it.

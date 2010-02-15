@@ -1,6 +1,0 @@
-This is a very simple module, it shows all the worked hours for each user on the Projects you have at least Read access 
-to, classifying them by Projects (and Sub-Projects) showing them in an organized chart table.
-Those worked hours correspond to the ones the users have charged using Timecard module.
-
-There is a panel over it, 'Selected Statistic Timeline' that allows you to specify the period for the module to 
-calculate the hours in.

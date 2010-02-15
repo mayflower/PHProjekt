@@ -1,4 +1,0 @@
-PHProjekt 6.0 is written using a so called Model-View-Controller concept (MVC).
-This concept, in general, splits an application into a model part, a view part and a controller part.
-
-PHProjekt uses the Zend Framework to provide a MVC framework.

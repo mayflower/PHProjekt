@@ -1,9 +1,0 @@
-Month section is a list of the days for the selected month which shows at the right side of each day the booked time for
-the logged user on that day. On top of all the booked amounts for each day, there is the total amount of the month.
-
-Each listed day is a link to load it onto the center Day section; if you click on any day of the list, the Day schedule 
-will load all booked Projects for that day, if any, and the Date field on top of the schedule will be filled with that
-date. Also, it will be loaded the clicked date into the Date field inside the right Form.
-
-To change the listed month, select a date of any month in the Date field over the Day schedule and click its check
-button.

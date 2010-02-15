@@ -1,6 +1,0 @@
-Filemanager module is designed to upload and download files from the system.
-
-Each item of the module may have many files uploaded but all them are supposed to share a subject or criteria because
-they will be stored inside the same item. For items that have not relation between them, use many items.
-
-It has a Grid and a Form, like most of the modules.
