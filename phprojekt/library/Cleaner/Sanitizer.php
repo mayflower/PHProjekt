@@ -245,6 +245,7 @@ class Cleaner_Sanitizer
         $allowedProperties = 'font-weight, font-style, text-align, text-decoration, color, font-size, '
             . 'background-color, font-family';
         $config->set('CSS','AllowedProperties', $allowedProperties);
+        $config->set('Cache', 'SerializerPath', PHPR_TEMP_PATH);
         $purifier = new HTMLPurifier($config);
 
         if (get_magic_quotes_gpc()) {
