@@ -104,7 +104,7 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
         //    Open a new window in CSV mode
         var users = this.users.join(",");
         window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvDayListSelect/nodeId/1/date/' + this._date
-            + '/users/' + users);
+            + '/users/' + users + '/csrfToken/' + phpr.csrfToken);
 
         return false;
     },

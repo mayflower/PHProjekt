@@ -89,7 +89,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         var lastDayMonth = phpr.Date.getIsoDate(dateTemp);
 
         window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/'
-            + firstDayMonth + '/dateEnd/' + lastDayMonth);
+            + firstDayMonth + '/dateEnd/' + lastDayMonth + '/csrfToken/' + phpr.csrfToken);
 
         return false;
     },

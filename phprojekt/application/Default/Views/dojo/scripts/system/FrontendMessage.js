@@ -34,7 +34,8 @@ dojo.declare("phpr.FrontendMessage", null, {
         phpr.loading.hide();
         var that = this;
         dojo.xhrPost({
-            url:   this.url,
+            url:     this.url,
+            content: {'csrfToken': phpr.csrfToken},
             error: function(error, handle) {
                 phpr.handleError(this.url, 'silence', error);
             },

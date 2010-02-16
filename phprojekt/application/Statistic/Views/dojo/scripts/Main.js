@@ -150,7 +150,8 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList'
             + '/nodeId/' + phpr.currentProjectId
             + '/startDate/' + phpr.Date.getIsoDate(start)
-            + '/endDate/' + phpr.Date.getIsoDate(end));
+            + '/endDate/' + phpr.Date.getIsoDate(end)
+            + '/csrfToken/' + phpr.csrfToken);
         return false;
     },
 

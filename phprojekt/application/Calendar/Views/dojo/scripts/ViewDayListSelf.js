@@ -87,7 +87,8 @@ dojo.declare("phpr.Calendar.ViewDayListSelf", phpr.Calendar.DefaultView, {
     exportData:function() {
         // Summary:
         //    Open a new window in CSV mode
-        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvDayListSelf/nodeId/1/date/' + this._date);
+        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvDayListSelf/nodeId/1/date/' + this._date
+            + '/csrfToken/' + phpr.csrfToken);
 
         return false;
     }

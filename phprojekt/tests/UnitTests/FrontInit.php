@@ -132,6 +132,8 @@ class FrontInit extends PHPUnit_Framework_TestCase
         $this->request->setBaseUrl($this->config->webpath . 'index.php/'. $url);
         $this->request->setPathInfo('/' . $url);
         $this->request->setRequestUri('/' . $url);
+
+        $this->request->setParam('csrfToken', Phprojekt::makeCsrfToken());
     }
 
     /**

@@ -97,7 +97,7 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
         // Summary:
         //    Opens a new window in CSV mode
         window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/'
-            + this._weekDays[0] + '/dateEnd/' + this._weekDays[6]);
+            + this._weekDays[0] + '/dateEnd/' + this._weekDays[6] + '/csrfToken/' + phpr.csrfToken);
 
         return false;
     },

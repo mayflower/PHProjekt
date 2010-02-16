@@ -182,6 +182,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         config.fetch(dojo.hitch(this, function() {
             phpr.config        = config.getList();
             phpr.currentUserId = phpr.config.currentUserId ? phpr.config.currentUserId : 0;
+            phpr.csrfToken     = phpr.config.csrfToken;
 
             // Get translated strings
             this._langUrl = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/' + phpr.language;

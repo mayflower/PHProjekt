@@ -283,6 +283,13 @@ phpr.send = function(/*Object*/paramsIn) {
         }
     };
 
+    // Add a token
+    if (params.content) {
+        dojo.mixin(params.content, {'csrfToken': phpr.csrfToken});
+    } else {
+        params.content = {'csrfToken': phpr.csrfToken};
+    }
+
     dojo.xhrPost({
         url:      params.url,
         content:  params.content,
@@ -559,6 +566,18 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     doClientPaging: false,
 
     _assertIsItem:function(item) {
+    },
+
+    _fetchItems:function(request, fetchHandler, errorHandler) {
+        if (request.serverQuery) {
+            request.serverQuery.csrfToken = phpr.csrfToken;
+        } else if (request.query) {
+            request.query.csrfToken = phpr.csrfToken;
+        } else {
+            request.serverQuery = {};
+            request.serverQuery.csrfToken = phpr.csrfToken;
+        }
+        this.inherited(arguments);
     },
 
     _filterResponse:function(data) {

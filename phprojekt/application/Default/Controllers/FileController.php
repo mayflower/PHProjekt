@@ -275,6 +275,8 @@ class FileController extends IndexController
      */
     private function _fileRenderView($linkBegin, $module, $itemId, $field, $value, $filesChanged)
     {
+        $sessionName                = 'Phprojekt_CsrfToken';
+        $csrfNamespace              = new Zend_Session_Namespace($sessionName);
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
         $this->view->formPath       = $linkBegin . 'fileUpload/moduleName/' . $module;
@@ -284,6 +286,7 @@ class FileController extends IndexController
         $this->view->field          = $field;
         $this->view->value          = $value;
         $this->view->filesChanged   = $filesChanged;
+        $this->view->csrfToken      = $csrfNamespace->token;
 
         $filesForView = array();
 
@@ -297,7 +300,7 @@ class FileController extends IndexController
             foreach ($files as $file) {
                 $fileName = strstr($file, '|');
                 $fileData = 'moduleName/' . $module . '/itemId/' . $itemId . '/field/' . $field . '/order/'
-                    . (string) ($i + 1);
+                    . (string) ($i + 1) . '/csrfToken/' . $csrfNamespace->token;
 
                 $filesForView[$i] = array('fileName' => substr($fileName, 1));
                 if ($rights['currentUser']['download']) {

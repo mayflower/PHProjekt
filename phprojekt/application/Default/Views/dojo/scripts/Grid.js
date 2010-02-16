@@ -1354,7 +1354,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Open a new window in CSV mode
         // Description:
         //    Open a new window in CSV mode
-        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList/nodeId/' + this.id);
+        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList/nodeId/' + this.id
+            + '/csrfToken/' + phpr.csrfToken);
         return false;
     },
 
@@ -1469,7 +1470,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             });
         } else if (mode == this.MODE_WINDOW) {
             // Call the requested action with the selected ids in a new windows
-            window.open(actionUrl);
+            window.open(actionUrl + '/csrfToken/' + phpr.csrfToken);
         } else if (mode == this.MODE_CLIENT) {
             // Call the requested action with the selected ids in the main
             eval("this.main." + action + "('" + ids + "')");

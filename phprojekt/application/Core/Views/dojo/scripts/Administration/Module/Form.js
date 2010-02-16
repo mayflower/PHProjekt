@@ -265,7 +265,8 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                             new phpr.handleResponse('serverFeedback', data);
                             if (data.type == 'success') {
                                 if (!this.id) {
-                                    phpr.loadJsFile(phpr.webpath + 'index.php/js/module/name/' + this.sendData['name']);
+                                    phpr.loadJsFile(phpr.webpath + 'index.php/js/module/name/' + this.sendData['name']
+                                     + '/csrfToken/' + phpr.csrfToken);
                                 }
                                 this.publish("updateCacheData");
                                 phpr.DataStore.deleteData({url: phpr.globalModuleUrl});

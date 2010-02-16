@@ -137,7 +137,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         // description:
         //    Export all the bookings of the month
         window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList/nodeId/1/year/'
-            + this._year + '/month/' + (this._month + 1));
+            + this._year + '/month/' + (this._month + 1) + '/csrfToken/' + phpr.csrfToken);
         return false;
     }
 });

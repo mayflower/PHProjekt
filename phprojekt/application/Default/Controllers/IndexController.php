@@ -146,6 +146,8 @@ class IndexController extends Zend_Controller_Action
         $isLoggedIn = true;
         try {
             Phprojekt_Auth::isLoggedIn();
+            // Check the CSRF token
+            $this->checkCsrfToken();
         } catch (Phprojekt_Auth_UserNotLoggedInException $error) {
             // User not logged in, display login page
             // If is a GET, show the index page with isLogged false
@@ -160,6 +162,45 @@ class IndexController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender();
         $this->view->clearVars();
         $this->view->isLoggedIn = $isLoggedIn;
+    }
+
+    /**
+     * Check if a token is in the SESSION
+     *
+     * @return boolean True or die the script
+     */
+    public function checkCsrfToken()
+    {
+        $controller = $this->getRequest()->getControllerName();
+        $action     = $this->getRequest()->getActionName();
+
+        // Skip initial request
+        // and jsonGetConfigurations since is the action that returns
+        // the valid token for use in the next request
+        if ($controller == 'index') {
+            if ($action == 'index' || $action == 'jsonGetConfigurations') {
+                return true;
+            }
+        }
+
+        $message       = "You are not allowed to do this!";
+        $sessionName   = 'Phprojekt_CsrfToken';
+        $csrfNamespace = new Zend_Session_Namespace($sessionName);
+
+        if (!isset($csrfNamespace->token)) {
+            die($message);
+        }
+
+        $token = (string) $this->getRequest()->getParam('csrfToken', null);
+        if (null === $token) {
+            die($message);
+        }
+
+        if (!$csrfNamespace->token == $token) {
+            die($message);
+        }
+
+        return true;
     }
 
     /**
@@ -709,6 +750,8 @@ class IndexController extends Zend_Controller_Action
                         'value' => Phprojekt::getVersion());
         $data[] = array('name'  => 'currentUserId',
                         'value' => Phprojekt_Auth::getUserId());
+        $data[] = array('name'  => 'csrfToken',
+                        'value' => Phprojekt::makeCsrfToken());
 
         Phprojekt_Converter_Json::echoConvert($data);
     }

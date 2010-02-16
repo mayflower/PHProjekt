@@ -707,4 +707,20 @@ class Phprojekt
         // Don't execute PHP internal error handler
         return true;
     }
+
+    /*
+     * Make a random token for check it on each page
+     *
+     * @return string Token generated
+     */
+    public static function makeCsrfToken()
+    {
+        $sessionName   = 'Phprojekt_CsrfToken';
+        $csrfNamespace = new Zend_Session_Namespace($sessionName);
+        $token         = md5(uniqid(rand()));
+
+        $csrfNamespace->token = $token;
+
+        return $token;
+    }
 }
