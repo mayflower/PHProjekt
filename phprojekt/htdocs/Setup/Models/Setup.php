@@ -99,8 +99,13 @@ class Setup_Models_Setup
         }
 
         if (!empty($missingRequirements)) {
-            $message = "Your PHP does not meet the requirements needed for P6.\n"
+            $message = "Your PHP does not meet the requirements needed for PHProjekt 6.\n"
                 . implode("\n", $missingRequirements);
+            throw new Exception($message);
+        }
+
+        if (strncmp($_SERVER['PHP_SELF'], '/setup.php', 10) < 0) {
+            $message = "PHProjekt 6 must be installed in a DocumentRoot directory.";
             throw new Exception($message);
         }
 
