@@ -112,6 +112,29 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
+     * Assign a value to a var using some validations from the table data
+     *
+     * @param string $varname Name of the var to assign
+     * @param mixed  $value   Value for assign to the var
+     *
+     * @return void
+     */
+    public function __set($varname, $value)
+    {
+        $var  = Phprojekt_ActiveRecord_Abstract::convertVarToSql($varname);
+        $info = $this->info();
+
+        if (true == isset($info['metadata'][$var])) {
+            $type  = $info['metadata'][$var]['DATA_TYPE'];
+            $value = Phprojekt_Converter_Value::set($type, $value);
+        } else {
+            $value = Cleaner::sanitize('string', $value);
+        }
+
+        parent::__set($varname, $value);
+    }
+
+    /**
      * Validate the current record
      *
      * @return boolean
@@ -122,6 +145,28 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
         $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         return $this->_validate->recordValidate($this, $data, $fields);
+    }
+
+    /**
+     * Get a value of a var.
+     * Is the var is a float, return the locale float
+     *
+     * @param string $varname Name of the var to assign
+     *
+     * @return mixed
+     */
+    public function __get($varname)
+    {
+        $info  = $this->info();
+        $value = parent::__get($varname);
+        $var   = Phprojekt_ActiveRecord_Abstract::convertVarToSql($varname);
+
+        if (true == isset($info['metadata'][$var])) {
+            $type  = $info['metadata'][$var]['DATA_TYPE'];
+            $value = Phprojekt_Converter_Value::get($type, $value);
+        }
+
+        return $value;
     }
 
     /**
