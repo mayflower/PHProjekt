@@ -73,9 +73,9 @@ class LoginController extends Zend_Controller_Action
      */
     public function loginAction()
     {
-        $username   = (string) $this->getRequest()->getParam('username', null);
-        $password   = (string) $this->getRequest()->getParam('password', null);
-        $hash       = (string) $this->getRequest()->getParam('hash', null);
+        $username   = Cleaner::sanitize('xss', $this->getRequest()->getParam('username', null));
+        $password   = Cleaner::sanitize('xss', $this->getRequest()->getParam('password', null));
+        $hash       = Cleaner::sanitize('xss', $this->getRequest()->getParam('hash', null));
         $keepLogged = (int) $this->getRequest()->getParam('keepLogged', 0);
         $keepLogged = ($keepLogged == 1) ? true : false;
 
@@ -120,8 +120,8 @@ class LoginController extends Zend_Controller_Action
      */
     public function jsonLoginAction()
     {
-        $username = (string) $this->getRequest()->getParam('username', null);
-        $password = (string) $this->getRequest()->getParam('password', null);
+        $username = Cleaner::sanitize('xss', $this->getRequest()->getParam('username', null));
+        $password = Cleaner::sanitize('xss', $this->getRequest()->getParam('password', null));
 
         try {
             $success = Phprojekt_Auth::login($username, $password);
