@@ -161,48 +161,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $varForInfo = Phprojekt_ActiveRecord_Abstract::convertVarToSql($varname);
         $info       = $this->info();
 
-        if (isset($info['metadata'][$varForInfo])) {
-            $type = $info['metadata'][$varForInfo]['DATA_TYPE'];
-            switch ($type) {
-                case 'int':
-                    $value = Cleaner::sanitize('integer', $value, 0);
-                    break;
-                case 'float':
-                    $value = Cleaner::sanitize('float', $value, 0);
-                    if ($value !== false) {
-                        $value = Zend_Locale_Format::getFloat($value, array('precision' => 2));
-                    } else {
-                        $value = 0;
-                    }
-                    break;
-                case 'date':
-                    $value = Cleaner::sanitize('date', $value);
-                    break;
-                case 'time':
-                    $value = Cleaner::sanitize('time', $value);
-                    $value = date("H:i:s", Phprojekt_Converter_Time::userToUtc($value));
-                    break;
-                case 'datetime':
-                case 'timestamp':
-                    $value = Cleaner::sanitize('timestamp', $value);
-                    $value = date("Y-m-d H:i:s", Phprojekt_Converter_Time::userToUtc($value));
-                    break;
-                case 'text':
-                    if (is_array($value)) {
-                        // if given value for a text field is an array, it's from a MultiSelect field
-                        $value = implode(',', $value);
-                    }
-                    // Run html sanitize only if the text contain some html code
-                    if (preg_match("/([\<])([^\>]{1,})*([\>])/i", $value)) {
-                        $value = Cleaner::sanitize('html', $value);
-                    } else {
-                        $value = Cleaner::sanitize('string', $value);
-                    }
-                    break;
-                default:
-                    $value = Cleaner::sanitize('string', $value);
-                    break;
-            }
+        if (true == isset($info['metadata'][$varForInfo])) {
+            $type  = $info['metadata'][$varForInfo]['DATA_TYPE'];
+            $value = Phprojekt_Converter_Value::set($type, $value);
         } else {
             $value = Cleaner::sanitize('string', $value);
         }
@@ -238,23 +199,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $varForInfo = Phprojekt_ActiveRecord_Abstract::convertVarToSql($varname);
 
         if (true == isset($info['metadata'][$varForInfo])) {
-            $type = $info['metadata'][$varForInfo]['DATA_TYPE'];
-            switch ($type) {
-                case 'float':
-                    $value = Zend_Locale_Format::toFloat($value, array('precision' => 2));
-                    break;
-                case 'time':
-                    if (!empty($value)) {
-                        $value = date("H:i:s", Phprojekt_Converter_Time::utcToUser($value));
-                    }
-                    break;
-                case 'datetime':
-                case 'timestamp':
-                    if (!empty($value)) {
-                        $value = date("Y-m-d H:i:s", Phprojekt_Converter_Time::utcToUser($value));
-                    }
-                    break;
-            }
+            $type  = $info['metadata'][$varForInfo]['DATA_TYPE'];
+            $value = Phprojekt_Converter_Value::get($type, $value);
         }
 
         return $value;
