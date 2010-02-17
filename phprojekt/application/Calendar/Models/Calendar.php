@@ -328,24 +328,28 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * @param integer $count   Count for the fetchall
      * @param integer $offset  Offset for the fetchall
      *
-     * @return unknown
+     * @return array
      */
     public function getUserSelectionRecords($usersId, $date, $count, $offset)
     {
-        $db    = Phprojekt::getInstance()->getDb();
-        $date  = $db->quote($date);
-        $where = sprintf('participant_id IN (%s) AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
-            $usersId, $date, $date);
+        $db      = Phprojekt::getInstance()->getDb();
+        $date    = $db->quote($date);
+        $records = array();
 
-        $records = Phprojekt_ActiveRecord_Abstract::fetchAll($where, null, $count, $offset);
+        if (count($usersId) > 0) {
+            $where = sprintf('participant_id IN (%s) AND DATE(start_datetime) <= %s AND DATE(end_datetime) >= %s',
+                implode(", ", $usersId), $date, $date);
 
-        // Hide the title, place and note from the private events
-        $userId = Phprojekt_Auth::getUserId();
-        foreach ($records as $key => $record) {
-            if ($record->visibility == 1 && $record->participantId != $userId) {
-                $record->title = "-";
-                $record->notes = "-";
-                $record->place = "-";
+            $records = Phprojekt_ActiveRecord_Abstract::fetchAll($where, null, $count, $offset);
+
+            // Hide the title, place and note from the private events
+            $userId = Phprojekt_Auth::getUserId();
+            foreach ($records as $key => $record) {
+                if ($record->visibility == 1 && $record->participantId != $userId) {
+                    $record->title = "-";
+                    $record->notes = "-";
+                    $record->place = "-";
+                }
             }
         }
 

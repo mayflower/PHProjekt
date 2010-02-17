@@ -135,10 +135,15 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonDayListSelectAction()
     {
-        $count   = (int) $this->getRequest()->getParam('count', null);
-        $offset  = (int) $this->getRequest()->getParam('start', null);
-        $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-        $usersId = $this->getRequest()->getParam('users', null);
+        $count  = (int) $this->getRequest()->getParam('count', null);
+        $offset = (int) $this->getRequest()->getParam('start', null);
+        $date   = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
+        $ids    = explode(",", $this->getRequest()->getParam('users', array()));
+
+        $usersId = array();
+        foreach ($ids as $user) {
+            $usersId[] = (int) $user;
+        }
 
         $records = $this->getModelObject()->getUserSelectionRecords($usersId, $date, $count, $offset);
 
