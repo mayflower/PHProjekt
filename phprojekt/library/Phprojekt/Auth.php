@@ -135,6 +135,11 @@ class Phprojekt_Auth extends Zend_Auth
             throw new Phprojekt_Auth_Exception('Invalid user or password', 3);
         }
 
+        // Regenerate the id if we are not in the unitTest
+        if (!headers_sent()) {
+            Zend_Session::regenerateId();
+        }
+
         // If the user was found we will save the user information on the session
         $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $authNamespace->userId = $user->id;

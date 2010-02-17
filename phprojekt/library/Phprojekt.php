@@ -402,7 +402,15 @@ class Phprojekt
         date_default_timezone_set('UTC');
 
         // Start zend session to handle all session stuff
-        Zend_Session::start();
+        try {
+            Zend_Session::start();
+        } catch (Zend_Search_Exception $error) {
+            Zend_Session::destroy();
+            Zend_Session::start();
+            Zend_Session::regenerateId();
+            error_log($error);
+        }
+        Zend_Session::registerValidator(new Zend_Session_Validator_HttpUserAgent());
 
         // Set a metadata cache and clean it
         $frontendOptions = array('automatic_serialization' => true);
