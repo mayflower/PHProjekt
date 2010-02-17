@@ -170,11 +170,17 @@ class Setup_Models_Setup
         $configFile = $baseDir . "configuration.ini";
 
         if (!file_exists($configFile)) {
-            if (!file_put_contents($configFile, "Test")) {
-                $this->_error[] = 'Error creating the configuration file at '. $configFile;
+            if (!is_writable($baseDir)) {
+                $this->_error[] = 'Error creating the configuration file at '. $configFile
+                    . ': Do not have write access.';
                 $valid = false;
             } else {
-                unlink($configFile);
+                if (!file_put_contents($configFile, "Test")) {
+                    $this->_error[] = 'Error creating the configuration file at '. $configFile;
+                    $valid = false;
+                } else {
+                    unlink($configFile);
+                }
             }
         }
 
@@ -182,17 +188,22 @@ class Setup_Models_Setup
         $logsDir = $baseDir . "logs";
 
         if (!file_exists($logsDir)) {
-            if (!mkdir($logsDir)) {
-                $this->_error[] = 'Please create the dir ' . $logsDir . ' to save the logs';
+            if (!is_writable($baseDir)) {
+                $this->_error[] = 'Error creating the logs folder: Do not have write access.';
                 $valid = false;
-            }
-            if (!@fopen($logsDir . DIRECTORY_SEPARATOR . 'debug.log', 'a', false)) {
-                $this->_error[] = 'The debug log cannot be created';
-                $valid = false;
-            }
-            if (!@fopen($logsDir . DIRECTORY_SEPARATOR . 'err.log', 'a', false)) {
-                $this->_error[] = 'The err log can not be created';
-                $valid = false;
+            } else {
+                if (!mkdir($logsDir)) {
+                    $this->_error[] = 'Please create the dir ' . $logsDir . ' to save the logs';
+                    $valid = false;
+                }
+                if (!@fopen($logsDir . DIRECTORY_SEPARATOR . 'debug.log', 'a', false)) {
+                    $this->_error[] = 'The debug log cannot be created';
+                    $valid = false;
+                }
+                if (!@fopen($logsDir . DIRECTORY_SEPARATOR . 'err.log', 'a', false)) {
+                    $this->_error[] = 'The err log can not be created';
+                    $valid = false;
+                }
             }
         } else if (!is_writable($logsDir)) {
             $this->_error[] = 'Please set permission to allow writing logs in ' . $logsDir;
@@ -203,7 +214,10 @@ class Setup_Models_Setup
         $uploadDir = $baseDir . "upload";
 
         if (!file_exists($uploadDir)) {
-            if (!mkdir($uploadDir)) {
+            if (!is_writable($baseDir)) {
+                $this->_error[] = 'Error creating the upload folder: Do not have write access.';
+                $valid = false;
+            } else if (!mkdir($uploadDir)) {
                 $this->_error[] = 'Please create the dir ' . $uploadDir . ' to upload files';
                 $valid = false;
             }
@@ -216,7 +230,10 @@ class Setup_Models_Setup
         $cacheDir = $baseDir . "tmp";
 
         if (!file_exists($cacheDir)) {
-            if (!mkdir($cacheDir)) {
+            if (!is_writable($baseDir)) {
+                $this->_error[] = 'Error creating the tmp folder: Do not have write access.';
+                $valid = false;
+            } else if (!mkdir($cacheDir)) {
                 $this->_error[] = 'Please create the dir ' . $cacheDir . ' to use the cache';
                 $valid = false;
             }
@@ -229,7 +246,11 @@ class Setup_Models_Setup
         $cacheDir = $baseDir . "tmp" . DIRECTORY_SEPARATOR . "zendCache";
 
         if (!file_exists($cacheDir)) {
-            if (!mkdir($cacheDir)) {
+            if (!is_writable($baseDir . "tmp")) {
+                $this->_error[] = 'Error creating the "tmp"' . DIRECTORY_SEPARATOR . '"zendCache" folder'
+                    . ': Do not have write access.';
+                $valid = false;
+            } else if (!mkdir($cacheDir)) {
                 $this->_error[] = 'Please create the dir ' . $cacheDir . ' to use the cache';
                 $valid = false;
             }
