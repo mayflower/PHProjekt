@@ -53,7 +53,8 @@ class Cleaner_Sanitizer
         'numeric'      => 'Numeric',
         'string'       => 'String',
         'word'         => 'Word',
-        'html'         => 'Html'
+        'html'         => 'Html',
+        'xss'          => 'Xss'
     );
 
     /**
@@ -378,5 +379,17 @@ class Cleaner_Sanitizer
         } else {
             return $result;
         }
+    }
+
+    /**
+     * Sanitize value to 'Xss'
+     *
+     * @param mixed $value Value to sanitizes
+     *
+     * @return mixed sanitized value
+     */
+    public function sanitizeXss($value)
+    {
+        return htmlentities(strip_tags((string) $value));
     }
 }
