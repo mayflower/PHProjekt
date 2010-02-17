@@ -55,7 +55,6 @@ class FileController extends IndexController
     public function fileFormAction()
     {
         $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
-        $value  = (string) $this->getRequest()->getParam('value', null);
         $itemId = (int) $this->getRequest()->getParam('id', null);
         $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
 
@@ -64,6 +63,14 @@ class FileController extends IndexController
 
         $linkBegin = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/Default/File/';
 
+        $model = Phprojekt_Loader::getModel($module, $module);
+        $this->_fileCheckParamField($model, $field);
+
+        $value = '';
+        if ($itemId > 0) {
+            $model->find($itemId);
+            $value = $model->$field;
+        }
         $_SESSION['uploadedFiles_' . $field] = $value;
 
         $this->_fileRenderView($linkBegin, $module, $itemId, $field, $value, false);
@@ -88,14 +95,21 @@ class FileController extends IndexController
     {
         $module     = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
         $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
-        $value      = $_SESSION['uploadedFiles_' . $field];
         $maxSize    = (int) $this->getRequest()->getParam('MAX_FILE_SIZE', null);
         $itemId     = (int) $this->getRequest()->getParam('itemId', null);
         $addedValue = '';
 
         $model = Phprojekt_Loader::getModel($module, $module);
+        $this->_fileCheckParamField($model, $field);
         $this->_fileCheckWritePermission($model, $itemId);
+        $value = $_SESSION['uploadedFiles_' . $field];
 
+        // Remove all the upload files that are not "uploadedFile"
+        foreach (array_keys($_FILES) as $key) {
+            if ($key != 'uploadedFile') {
+                unset($_FILES[$key]);
+            }
+        }
         // Fix name for save it as md5
         if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
             $md5name                        = md5(uniqid(rand(), 1));
@@ -168,13 +182,13 @@ class FileController extends IndexController
         } else {
             $files = $_SESSION['uploadedFiles_' . $field];
         }
-        $files = explode('||', $files);
 
+        $files = explode('||', $files);
         $this->_fileCheckParamOrder($order, count($files));
 
         list($md5Name, $fileName) = explode("|", $files[$order - 1]);
 
-        if (!empty($fileName)) {
+        if (!empty($fileName) && preg_match("/^[A-Fa-f0-9]{32,32}$/", $md5Name)) {
             $md5Name = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
             if (file_exists($md5Name)) {
                 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -187,7 +201,11 @@ class FileController extends IndexController
                 header('Content-Type: download');
                 $fh = fopen($md5Name, 'r');
                 fpassthru($fh);
+            } else {
+                die('The file does not exists');
             }
+        } else {
+            die('Wrong file');
         }
     }
 
@@ -246,7 +264,7 @@ class FileController extends IndexController
                 // Delete the file from the server
                 $md5Name          = substr($file, 0, strpos($file, '|'));
                 $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
-                if (file_exists($fileAbsolutePath)) {
+                if (preg_match("/^[A-Fa-f0-9]{32,32}$/", $md5Name) && file_exists($fileAbsolutePath)) {
                     unlink($fileAbsolutePath);
                 }
             }
@@ -331,16 +349,21 @@ class FileController extends IndexController
      */
     private function _fileCheckParamField($model, $field)
     {
-        $dbManager = $model->getInformation();
-        $dbField   = $dbManager->find($field);
-        $valid     = false;
+        $valid = false;
+        $info  = $model->info();
 
-        if (!empty($dbField)) {
-            $fieldType = $dbManager->getType($field);
-            if ($fieldType == 'upload') {
-                $valid = true;
+        if (in_array($field, $info['cols'])) {
+            $dbManager = $model->getInformation();
+            $dbField   = $dbManager->find($field);
+
+            if (!empty($dbField)) {
+                $fieldType = $dbManager->getType($field);
+                if ($fieldType == 'upload') {
+                    $valid = true;
+                }
             }
         }
+
         if (!$valid) {
             $error  = Phprojekt::getInstance()->translate('Error in received parameter, consult the admin. Parameter:');
             $error .= ' field';
