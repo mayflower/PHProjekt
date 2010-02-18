@@ -150,7 +150,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $sessionName           = 'Phprojekt_Item_Rights-getItemRight' . '-' . $moduleId . '-' . $itemId . '-' . $userId;
         $rightPerUserNamespace = new Zend_Session_Namespace($sessionName);
         if (!isset($rightPerUserNamespace->right)) {
-            $row = $this->find($moduleId, $itemId, $userId)->toArray();
+            $row = $this->find((int) $moduleId, (int) $itemId, (int) $userId)->toArray();
             if (isset($row[0])) {
                 $value = $row[0]['access'];
             } else {
