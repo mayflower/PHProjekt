@@ -1,3 +1,5 @@
 .buildpath
 .project
 .settings/*
+phprojekt/configuration.ini
+phprojekt/logs/*
