@@ -612,10 +612,7 @@ phpr.makeModuleDesignerField = function(formType, params) {
             var widgetId = dojo.dnd.getUniqueId();
             formLabel = params['formLabel'] || 'Upload';
             labelFor = 'upload';
-            inputTxt = '<input type="hidden" dojoType="dijit.form.TextBox" id="' + widgetId + '" />';
-            inputTxt += '<iframe id="filesIframe_' + widgetId + '" src="' + phpr.webpath
-                + 'index.php/Default/File/fileForm/moduleName/Project/field/' + widgetId
-                + '" height="25px" width="100%" frameborder="0" style="overflow: hidden; border: 0px;">></iframe>';
+            inputTxt = '<input type="file" />';
             break;
     }
     labelTxt = '<label for="' + labelFor + '">' + formLabel + '</label>';
