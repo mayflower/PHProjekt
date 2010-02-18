@@ -178,15 +178,18 @@ class FileController extends IndexController
                     + 'item.');
                 die($error);
             }
-            $files = $model->$field;
+            $files = array_merge(explode('||', $model->$field), explode('||', $_SESSION['uploadedFiles_' . $field]));
         } else {
-            $files = $_SESSION['uploadedFiles_' . $field];
+            $files = explode('||', $_SESSION['uploadedFiles_' . $field]);
         }
 
-        $files = explode('||', $files);
         $this->_fileCheckParamOrder($order, count($files));
 
-        list($md5Name, $fileName) = explode("|", $files[$order - 1]);
+        $md5Name  = '';
+        $fileName = '';
+        if (isset($files[$order - 1])) {
+            list($md5Name, $fileName) = explode("|", $files[$order - 1]);
+        }
 
         if (!empty($fileName) && preg_match("/^[A-Fa-f0-9]{32,32}$/", $md5Name)) {
             $md5Name = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
@@ -242,12 +245,10 @@ class FileController extends IndexController
 
         if ($itemId > 0) {
             $model->find($itemId);
-            $files = $model->$field;
+            $filesIn = array_merge(explode('||', $model->$field), explode('||', $_SESSION['uploadedFiles_' . $field]));
         } else {
-            $files = $_SESSION['uploadedFiles_' . $field];
+            $filesIn = explode('||', $_SESSION['uploadedFiles_' . $field]);
         }
-
-        $filesIn = explode('||', $files);
 
         $this->_fileCheckParamOrder($order, count($filesIn));
 
