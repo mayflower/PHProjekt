@@ -33,10 +33,11 @@ set_include_path('.' . PATH_SEPARATOR
     . PHPR_CORE_PATH . PATH_SEPARATOR
     . get_include_path());
 
-require_once 'Zend/Loader.php';
+require_once 'Zend/Loader/Autoloader.php';
 require_once 'Phprojekt/Loader.php';
 
-Zend_Loader::registerAutoload('Phprojekt_Loader');
+$autoloader = Zend_Loader_Autoloader::getInstance();
+$autoloader->pushAutoloader(array('Phprojekt_Loader', 'autoload'));
 
 ini_set('max_execution_time', 0);
 error_reporting(-1);

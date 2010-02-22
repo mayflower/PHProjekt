@@ -107,7 +107,7 @@ class Phprojekt_Log extends Zend_Log
      *
      * @return void
      */
-    public function log($message, $priority)
+    public function log($message, $priority, $extras = null)
     {
         if ($priority >= Zend_Log::DEBUG) {
             $btrace = debug_backtrace();
@@ -123,7 +123,7 @@ class Phprojekt_Log extends Zend_Log
             }
         }
         foreach ($this->_loggers as $logger) {
-            $logger->log($message, $priority);
+            $logger->log($message, $priority, $extras);
         }
     }
 }

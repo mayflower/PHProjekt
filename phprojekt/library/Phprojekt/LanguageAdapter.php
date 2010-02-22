@@ -97,7 +97,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     public function __construct($data, $locale = 'en')
     {
         $locale = self::_convertToZendLocale($locale);
-        parent::__construct($data, $locale, array());
+        parent::__construct($data, $locale, array('disableNotices' => true));
     }
 
     /**
@@ -125,7 +125,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     {
         $options = array_merge($this->_options, $options);
         if (true === $options['clear'] || false === isset($this->_translate[$locale])) {
-            $this->_translate[$locale] = array ();
+            $this->_translate[$locale] = array();
         }
 
         // Get the translated string from the cache if exists

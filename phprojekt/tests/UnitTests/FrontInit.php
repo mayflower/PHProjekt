@@ -55,7 +55,12 @@ class FrontInit extends PHPUnit_Framework_TestCase
 
         // Languages Set
         Zend_Loader::loadClass('Phprojekt_Language', PHPR_LIBRARY_PATH);
-        $translate = new Phprojekt_Language('en');
+
+        $cache = Phprojekt::getInstance()->getCache();
+        if (!($translate = $cache->load('Phprojekt_getTranslate_en'))) {
+            $translate = new Phprojekt_Language('en');
+            $cache->save($translate, 'Phprojekt_getTranslate_en', array('Language'));
+        }
         Zend_Registry::set('translate', $translate);
 
         $view = new Zend_View();

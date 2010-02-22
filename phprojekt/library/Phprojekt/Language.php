@@ -58,7 +58,7 @@ class Phprojekt_Language extends Zend_Translate
     public function __construct($locale)
     {
         $this->_loacale = $locale;
-        $this->_adapter = new Phprojekt_LanguageAdapter(null, $locale);
+        $this->_adapter = new Phprojekt_LanguageAdapter('', $locale);
     }
 
     /**

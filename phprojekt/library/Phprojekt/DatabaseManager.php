@@ -767,9 +767,14 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
 
         // Clean the metadata cache
         if (null !== $this->_model) {
-            $info    = $this->_model->info();
-            $cacheId = $info['schema'] . "." . $info['name'];
-            $cacheId = md5("$cacheId");
+            $info     = $this->_model->info();
+            $dbConfig = Phprojekt::getInstance()->getDb()->getConfig();
+
+            // Define the cache identifier where the metadata are saved
+            $cacheId = md5( // port:host/dbname:schema.table (based on availabilty)
+                (isset($dbConfig['options']['port']) ? ':' . $dbConfig['options']['port'] : null)
+                . (isset($dbConfig['options']['host']) ? ':' . $dbConfig['options']['host'] : null)
+                . '/' . $dbConfig['dbname'] . ':' . $info['schema'] . '.' . $info['name']);
             Zend_Db_Table_Abstract::getDefaultMetadataCache()->remove($cacheId);
         }
 
