@@ -62,32 +62,12 @@ dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
                     dojo.style('projectFavoritesSource', 'height', this.MIN_HEIGHT + 'px');
                 }
                 dojo.style('projectFavoritesTarget', 'height', '');
-
-                // Add a item
-                var id = nodes[0].id.replace(/favoritesTarget-/, "").replace(/favoritesSoruce-/, "");
-                dojo.byId('selectedProjectFavorites').value += id + ",";
-                dojo.byId('projectBookingSource').innerHTML += '<div class="dojoDndItem dndSource" '
-                    + 'id="projectSource' + id +'" onClick="dojo.publish(\'Timecard.formProxy\', [\'fillFormProject\', '
-                    + id + ']);">' + nodes[0].innerHTML + '</div><br />';
             } else if (source.node.id == 'projectFavoritesTarget') {
                 // If there are no projects in the box, don't let it reduce its height so much
                 if (projectFavoritesTarget && projectFavoritesTarget.getAllNodes().length == 0) {
                     dojo.style('projectFavoritesTarget', 'height', this.MIN_HEIGHT + 'px');
                 }
                 dojo.style('projectFavoritesSource', 'height', '');
-
-                // Delete a items
-                var tmp = '';
-                dojo.byId('projectBookingSource').innerHTML = '';
-                projectFavoritesTarget.getAllNodes().forEach(function(node){
-                    var id   = node.id.replace(/favoritesTarget-/, "").replace(/favoritesSoruce-/, "");
-                    var name = node.innerHTML;
-                    tmp += id + ',';
-                    dojo.byId('projectBookingSource').innerHTML += '<div class="dojoDndItem dndSource" '
-                    + 'id="' + id +'" onClick="dojo.publish(\'Timecard.formProxy\', [\'fillFormProject\', '
-                    + id + ']);">' + name + '</div><br />';
-                });
-                dojo.byId('selectedProjectFavorites').value = tmp;
             }
         } else {
             this.onDropInternal(nodes, copy);

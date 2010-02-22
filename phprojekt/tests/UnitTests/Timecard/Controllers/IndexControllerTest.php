@@ -75,8 +75,8 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('date', '2009-05-16');
         $response = $this->getResponse();
         $expected = '"data":[{"id":"7","projectId":"1","startTime":"09:00:00","endTime":"13:00:00",'
-            . '"display":"Invisible Root"},{"id":"8","projectId":"1","startTime":"14:00:00","endTime":"18:00:00",'
-            . '"display":"Invisible Root"}]';
+            . '"display":"Invisible Root [My note]"},{"id":"8","projectId":"1","startTime":"14:00:00",'
+            . '"endTime":"18:00:00","display":"Invisible Root [My note]"}]';
         $this->assertContains($expected, $response);
     }
 
@@ -105,7 +105,8 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-07-02');
         $response = $this->getResponse();
-        $expected = '{"id":"9","projectId":"1","startTime":"10:00:00","endTime":null,"display":"Invisible Root"}';
+        $expected = '{"id":"9","projectId":"1","startTime":"10:00:00","endTime":null,'
+            . '"display":"Invisible Root [My note]"}';
         $this->assertContains($expected, $response);
     }
 
@@ -135,7 +136,8 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-07-02');
         $response = $this->getResponse();
-        $expected = '{"id":"9","projectId":"1","startTime":"00:00:00","endTime":"19:00:00","display":"Invisible Root"}';
+        $expected = '{"id":"9","projectId":"1","startTime":"00:00:00","endTime":"19:00:00",'
+            . '"display":"Invisible Root [My note]"}';
         $this->assertContains($expected, $response);
     }
 
@@ -166,8 +168,8 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('date', '2009-05-16');
         $response = $this->getResponse();
         $expected = '"data":[{"id":"7","projectId":"1","startTime":"10:30:00","endTime":"12:30:00",'
-            . '"display":"Invisible Root"},{"id":"8","projectId":"1","startTime":"14:00:00","endTime":"18:00:00",'
-            . '"display":"Invisible Root"}]';
+            . '"display":"Invisible Root [My note]"},{"id":"8","projectId":"1","startTime":"14:00:00",'
+            . '"endTime":"18:00:00","display":"Invisible Root [My note]"}]';
         $this->assertContains($expected, $response);
     }
 
@@ -376,7 +378,8 @@ class Timecard_IndexController_Test extends FrontInit
         // INSERT
         $this->setRequestUrl('Timecard/index/jsonGetFavoritesProjects/');
         $response = $this->getResponse();
-        $this->assertContains('{"id":1,"display":"Invisible Root"},{"id":2,"display":"....Project 1"}', $response);
+        $this->assertContains('{"id":1,"display":"Invisible Root","name":"Invisible Root"},'
+            . '{"id":2,"display":"....Project 1","name":"Project 1"}', $response);
     }
 
     /**

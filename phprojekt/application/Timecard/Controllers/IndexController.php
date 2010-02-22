@@ -107,16 +107,11 @@ class Timecard_IndexController extends IndexController
     /**
      * Return a list of Project (Ids and Names) saved as "favorites"
      *
-     * @return void
-     */
-
-    /**
-     * Return a list of Project saved as "favorites".
-     *
      * For each one, the data have:
      * <pre>
      *  - id      => id of the project.
      *  - display => Display for the project.
+     *  - name    => Real name of the project.
      * </pre>
      *
      * The return is in JSON format.
@@ -147,6 +142,7 @@ class Timecard_IndexController extends IndexController
                         $data            = array();
                         $data['id']      = $projectId;
                         $data['display'] = $node->getDepthDisplay('title');
+                        $data['name']    = $node->title;
 
                         $datas[] = $data;
                     }

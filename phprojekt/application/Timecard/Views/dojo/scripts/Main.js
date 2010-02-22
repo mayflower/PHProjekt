@@ -35,7 +35,10 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     renderTemplate:function() {
         // Summary:
         //   Custom renderTemplate for timecard
-        this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent'));
+        this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+            manageFavoritesText: phpr.nls.get('Manage project list'),
+            monthTxt:            phpr.Date.getLongTranslateMonth(this._date.getMonth())
+        });
     },
 
     setWidgets:function() {
@@ -58,7 +61,6 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
         this.form.setDate(date);
         this.form.drawDayView();
-        this.form.resetForm();
 
         this.grid.reload(date);
     }

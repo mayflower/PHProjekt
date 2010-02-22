@@ -13,15 +13,15 @@
 }
 
 .phprojekt #tableMonthView .col1 {
-    width: 10%;
+    width: 15%;
 }
 
 .phprojekt #tableMonthView .col2 {
-    width: 50%;
+    width: 20%;
 }
 
 .phprojekt #tableMonthView .col3 {
-    width: 40%;
+    width: 65%;
 }
 
 .phprojekt #tableMonthView td {
@@ -33,14 +33,20 @@
 .phprojekt #tableMonthView .weekend,
 .phprojekt #tableMonthView .weekend a {
     color: #000;
+    text-decoration: none;
 }
 
 .phprojekt #tableMonthView .weekend,
 .phprojekt #tableMonthView .weekend a {
-    color: red;
+    color: #ccc;
 }
 
 /* DayView */
+.phprojekt #timecardDayView {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
 .phprojekt #timecardDayView .dayViewWhite,
 .phprojekt #timecardDayView .dayViewCelestial {
     background-color: white;
@@ -52,16 +58,41 @@
     overflow: hidden;
 }
 
+.phprojekt #timecardDayView .dayViewWhite .hourBox,
+.phprojekt #timecardDayView .dayViewCelestial .hourBox {
+    background-color: #D4DFEA;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    font-size: 10px;
+    text-align: center;
+    vertical-align: middle;
+    width: 6em;
+}
+
+
+.dj_ie .phprojekt #timecardDayView .dayViewWhite .hourBox,
+.dj_ie .phprojekt #timecardDayView .dayViewCelestial .hourBox {
+    padding: 0 0 0 7px;
+}
+
 .phprojekt #timecardDayView .dayViewCelestial {
     background-color: #e9f3ff;
 }
 
 .phprojekt #timecardDayView .addButton .dijitButtonNode {
-    padding: 0px 0px 0px 0px;
-    margin: 0 0 0.3em;
     width: 15px;
     border: none;
     background: none;
+    padding: 0 3px 0 0;
+}
+
+.dj_ie .phprojekt #timecardDayView .addButton .dijitButtonNode {
+    padding: 0 3px 0 5px;
+}
+
+.dj_ie .phprojekt #timecardDayView .addButton .dijitButtonContents {
+    height: 15px;
 }
 
 .phprojekt #timecardDayView .add {
@@ -70,23 +101,21 @@
 
 .phprojekt .dndTarget,
 .phprojekt .dndTargetOpen {
-    border: 3px solid #f4cc47;
-    -moz-border-radius: 8pt 8pt;
-    radius: 8pt;
     display: inline;
     position: absolute;
     left: 0px;
     width: 85%;
     float: left;
     cursor: pointer;
-    background: #F1CE47;
-    color: #000;
-    font-size: 8pt;
-    font-weight: bold;
-    padding-left: 10%;
-    filter: alpha(opacity=50);
-    opacity: .5;
-    line-height: 1.5;
+    color: #294064;
+    line-height: 1.1;
+    padding-left: 1%;
+    border-width: 3px;
+    background-color: white;
+    border-color: #263349;
+    border-style: solid solid solid;
+    filter: alpha(opacity=70);
+    opacity: .7;
 }
 
 .phprojekt .dndTargetOpen {
@@ -102,7 +131,7 @@
     cursor: pointer;
     padding-left: 10px;
     color: #000;
-    background-color: #F1CE47;
+    background-color: #ffcc33;
     width: 95%;
     font-size: 8pt;
     font-weight: bold;
@@ -112,10 +141,14 @@
 
 .phprojekt #projectBookingForm .formContainer {
     padding-left: 0px;
+    background: #fff;
+    margin: 0px;
+    width: 100%;
+    padding: 0px;
 }
 
 .phprojekt #projectBookingForm .col1 {
-    width: 30%;
+    width: 20%;
 }
 
 .phprojekt #projectBookingForm .col2 {
@@ -129,3 +162,35 @@
 .phprojekt #projectBookingForm span .dijitArrowButtonInner {
     display: none;
 }
+
+/* Tooltip */
+.phprojekt #timecardTooltipDialog {
+    width: 460px;
+    height: 165px;
+}
+
+.phprojekt #timecardTooltipDialog .dijitTooltipContainer {
+    background-color: #FFCC33;
+    border: 1px solid #294064;
+}
+
+.phprojekt #timecardTooltipDialog .dijitTooltipConnector {
+    background: url("images/tooltipConnectorLeft_ffcc33.png") no-repeat top left;
+}
+
+.dj_ie .phprojekt #timecardTooltipDialog .dijitTooltipConnector {
+    background-image: url("images/tooltipConnectorLeft_ffcc33.gif");
+}
+
+.phprojekt .hiddenTooltipPoint {
+    height: 20px;
+    left: 6.5em;
+    position: relative;
+    top: 0px;
+    width: 10px;
+}
+
+.dj_ie .phprojekt .hiddenTooltipPoint {
+    left: 4em;
+}
+

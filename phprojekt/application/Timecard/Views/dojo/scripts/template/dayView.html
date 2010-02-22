@@ -6,14 +6,29 @@ style="position: absolute; height: 480px; overflow: hidden;">
     {% else %}
     <div id="hours{{hour.hour}}" dojoType="dijit.layout.ContentPane" class="dayViewCelestial">
     {% endifequal %}
-    {{hour.display}}
-    <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
-    onClick="dojo.publish('Timecard.formProxy', ['fillFormTime', '{{hour.hour}}']);">
-    </button>
+        <div class="hourBox"
+        {% ifequal hour.hour 0 %}
+        style="border-top: 0px;"
+        {% else %}
+            {% ifequal hour.hour 23 %}
+        style="border-bottom: 0px;"
+            {% endifequal %}
+        {% endifequal %}
+        >
+            <span>{{hour.display}}</span>
+            <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
+            onClick="dojo.publish('Timecard.formProxy', ['fillFormTime', '{{hour.hour}}']);">
+            </button>
+            <div dojoType="dijit.Tooltip" connectId="buttonHours{{hour.hour}}"
+            label="{{tooltipHelpTxt}}">
+            </div>
+            <div id="buttonHours{{hour.hour}}" dojoType="dijit.layout.ContentPane" class="hiddenTooltipPoint">
+            </div>
+        </div>
     </div>
 {% endfor %}
     <div id="projectBookingContainer" dojoType="dijit.layout.ContentPane"
-    style="position: absolute; top: 0%; left: 15%; margin: 0px; height: 480px; padding-top: 0px;
+    style="position: absolute; top: 0%; left: 7em; margin: 0px; height: 480px; padding-top: 0px;
     overflow: hidden; width: 80%;">
     </div>
 </div>

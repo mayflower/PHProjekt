@@ -346,7 +346,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     /**
      * Return an array with all the bookings in the day
      *
-     * @param string  $date Date for the request
+     * @param string $date Date for the request
      *
      * @return array
      */
@@ -363,12 +363,20 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $tree         = $tree->setup();
 
         foreach ($records as $record) {
-            $data = array();
+            $data    = array();
+            $display = $tree->getNodeById($record->projectId)->getDepthDisplay('title');
+            if (!empty($record->notes)) {
+                if (strlen($record->notes) > 50) {
+                    $record->notes = substr($record->notes, 0, 50) . '...';
+                }
+                $display .= ' [' . $record->notes . ']';
+            }
+
             $data['id']        = $record->id;
             $data['projectId'] = $record->projectId;
             $data['startTime'] = substr($record->startDatetime, 11);
             $data['endTime']   = $record->endTime;
-            $data['display']   = $tree->getNodeById($record->projectId)->getDepthDisplay('title');
+            $data['display']   = $display;
 
             $datas[] = $data;
         }

@@ -20,10 +20,11 @@
 dojo.provide("phpr.Timecard.Grid");
 
 dojo.declare("phpr.Timecard.Grid", phpr.Component, {
-    main:   null,
-    _node:  null,
-    _month: null,
-    _year:  null,
+    main:          null,
+    _node:         null,
+    _month:        null,
+    _year:         null,
+    _exportButton: null,
 
     constructor:function(/*Object*/main, /*js Date object */date) {
         // Summary:
@@ -88,9 +89,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         }
 
         this.render(["phpr.Timecard.template", "monthView.html"], this._node.domNode, {
-            monthTxt:   phpr.Date.getLongTranslateMonth(this._month),
-            sumTxt:     phpr.nls.get('Sum'),
-            totalTxt:   phpr.nls.get('Total'),
+            totalTxt:   phpr.nls.get('Total hours'),
             total:      phpr.Date.convertMinutesToTime(total),
             totalClass: totalClass,
             dates:      dates
@@ -119,16 +118,18 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         //    Set the export button
         // Description:
         //    Set the export button
-        var params = {
-            label:     phpr.nls.get('Export to CSV'),
-            showLabel: true,
-            baseClass: "positive",
-            iconClass: "export",
-            disabled:  false
-        };
-        var exportButton = new dijit.form.Button(params);
-        dojo.byId("buttonRow").appendChild(exportButton.domNode);
-        dojo.connect(exportButton, "onClick", dojo.hitch(this, "exportData"));
+        if (this._exportButton === null) {
+            var params = {
+                label:     phpr.nls.get('Export to CSV'),
+                showLabel: true,
+                baseClass: "positive",
+                iconClass: "export",
+                disabled:  false
+            };
+            this._exportButton = new dijit.form.Button(params);
+            dojo.byId("buttonRow").appendChild(this._exportButton.domNode);
+            dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"));
+        }
     },
 
     exportData:function() {

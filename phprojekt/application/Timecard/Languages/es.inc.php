@@ -2,8 +2,7 @@
 // Words and phrases
 $lang["The end time must be after the start time"] = "El tiempo final debe ser mayor al tiempo inicial";
 $lang["Manage project list"] = "Admin. lista de proyectos";
-$lang["Total"] = "Total";
-$lang["Sum"] = "Suma";
+$lang["Total hours"] = "Total de horas";
 $lang["Start time has to be between 0:00 and 24:00"] = "La hora de inicio tiene que ser entre 0:00 y 24:00";
 $lang["End time has to be between 0:00 and 24:00"] = "La hora final tiene que ser entre 8:00 y 24:00";
 $lang["Time period"] = "Período de tiempo";
@@ -13,12 +12,7 @@ $lang["Can not Start Working Time because this moment is occupied by an existing
     . " Empezar Tiempo de Trabajo porque este momento está ocupado por un período existente o uno abierto";
 $lang["Can not End Working Time because this moment is occupied by an existing period"] = "No se puede Terminar "
     . "Tiempo de Trabajo porque este momento está ocupado por un período existente";
-
-// Tooltip Help
-$lang["Tooltip"]["startTime"] = "El formato de las horas "
-    . "puede ser con o sin símbolo separador:  08:00, 0800, 800, etc.";
-$lang["Tooltip"]["endTime"] = "El formato de las horas "
-    . "puede ser con o sin símbolo separador:  08:00, 0800, 800, etc.";
+$lang["Drag the projects from left to right"] = "Arrastre los proyectos de izquierda a derecha";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

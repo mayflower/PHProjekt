@@ -1,6 +1,5 @@
 <!-- Form -->
-<div dojoType="dijit.layout.ContentPane" id="projectBookingForm"
-style="width: 100%; height: 50%;">
+<div dojoType="dijit.layout.ContentPane" id="projectBookingForm">
     <form dojoType="dijit.form.Form" id="bookingForm" name="bookingForm" onsubmit="return false;"
     style="display: inline;">
     <table class="form formContainer">
@@ -28,32 +27,4 @@ style="width: 100%; height: 50%;">
     </tr>
     </table>
     </form>
-</div>
-
-<div dojoType="dijit.layout.ContentPane"
-style="width: 100%; height: 50%; overflow-x: hidden; overflow-y: auto;">
-    <!-- Projects -->
-    <div dojoType="dijit.layout.ContentPane" id="projectBookingSource" jsId="projectBookingSource"
-    style="margin: 4px; padding: 4px; height: auto !important; width: 98% !important;">
-        {% for project in favorites %}
-        <div class="dojoDndItem dndSource" id="projectSource{{project.id}}"
-        onClick="dojo.publish('Timecard.formProxy', ['fillFormProject', '{{project.id}}']);">
-            {{project.display}}
-        </div>
-        <br />
-        {% endfor %}
-    </div>
-
-    <!-- Favorites -->
-    <button dojoType="dijit.form.Button" id="buttonManageFavorites"
-    style="margin: 6px;">
-        {{manageFavoritesText}}
-    </button>
-</div>
-
-<!-- Dialog -->
-<div dojoType="dijit.Dialog" id="manageFavorites" title="{{manageFavoritesText}}" draggable="false"
-style="background-color: white; width: auto; height: auto;">
-    <div id="dialogContent">
-    </div>
 </div>

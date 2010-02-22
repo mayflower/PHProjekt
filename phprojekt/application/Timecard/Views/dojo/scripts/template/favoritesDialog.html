@@ -1,5 +1,11 @@
 <table width="100%">
 <tr>
+    <td colspan="2"
+    style="vertical-align: top; text-align: center;">
+    <b>{{titleTxt}}</b>
+    </td>
+</tr>
+<tr>
     <td
     style="width: 50%; text-align: top;">
         <div dojoType="phpr.Timecard.Favorites" id="projectFavoritesSource" jsId="projectFavoritesSource"
@@ -32,8 +38,6 @@
 <tr>
     <td colspan="2"
     style="vertical-align: top; text-align: center;">
-        <input id="selectedProjectFavorites" name="selectedProjectFavorites" type="hidden"
-        value="{% for item in favoritesList %}{{item.id}}, {% endfor %}" />
         <button dojoType="dijit.form.Button" onclick="dijit.byId('manageFavorites').hide();"
         baseClass="positive" iconClass="tick"
         style="float: center; padding-right: 10px; padding-left: 10px;">
