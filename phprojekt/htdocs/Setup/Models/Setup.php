@@ -104,7 +104,7 @@ class Setup_Models_Setup
             throw new Exception($message);
         }
 
-        if (strncmp($_SERVER['PHP_SELF'], '/setup.php', 10) < 0) {
+        if (strncmp($_SERVER['SCRIPT_NAME'], '/setup.php', 10) < 0) {
             $message = "PHProjekt 6 must be installed in a DocumentRoot directory.";
             throw new Exception($message);
         }

@@ -133,7 +133,7 @@ class FrontInit extends PHPUnit_Framework_TestCase
         $this->request->setPathInfo('/' . $url);
         $this->request->setRequestUri('/' . $url);
 
-        $this->request->setParam('csrfToken', Phprojekt::makeCsrfToken());
+        $this->request->setParam('csrfToken', Phprojekt::createCsrfToken());
     }
 
     /**

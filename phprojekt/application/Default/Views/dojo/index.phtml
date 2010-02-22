@@ -34,7 +34,7 @@
     if (true === $this->isLoggedIn) {
     ?>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>index.php/js/index/csrfToken/<?php
-        echo Phprojekt::makeCsrfToken(); ?>">
+        echo Phprojekt::createCsrfToken(); ?>">
     </script>
     <?php
     }

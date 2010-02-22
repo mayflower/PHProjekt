@@ -171,6 +171,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function checkCsrfToken()
     {
+        $error      = false;
         $controller = $this->getRequest()->getControllerName();
         $action     = $this->getRequest()->getActionName();
 
@@ -183,21 +184,24 @@ class IndexController extends Zend_Controller_Action
             }
         }
 
-        $message       = "You are not allowed to do this!";
         $sessionName   = 'Phprojekt_CsrfToken';
         $csrfNamespace = new Zend_Session_Namespace($sessionName);
 
         if (!isset($csrfNamespace->token)) {
-            die($message);
+            $error = true;
         }
 
         $token = (string) $this->getRequest()->getParam('csrfToken', null);
         if (null === $token) {
-            die($message);
+            $error = true;
         }
 
         if (!$csrfNamespace->token == $token) {
-            die($message);
+            $error = true;
+        }
+
+        if ($error) {
+            $this->getResponse()->setRawHeader('HTTP/1.1 403 Forbidden');
         }
 
         return true;
@@ -751,7 +755,7 @@ class IndexController extends Zend_Controller_Action
         $data[] = array('name'  => 'currentUserId',
                         'value' => Phprojekt_Auth::getUserId());
         $data[] = array('name'  => 'csrfToken',
-                        'value' => Phprojekt::makeCsrfToken());
+                        'value' => Phprojekt::createCsrfToken());
 
         Phprojekt_Converter_Json::echoConvert($data);
     }

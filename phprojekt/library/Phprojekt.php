@@ -721,11 +721,11 @@ class Phprojekt
      *
      * @return string Token generated
      */
-    public static function makeCsrfToken()
+    public static function createCsrfToken()
     {
         $sessionName   = 'Phprojekt_CsrfToken';
         $csrfNamespace = new Zend_Session_Namespace($sessionName);
-        $token         = md5(uniqid(rand()));
+        $token         = uniqid(mt_rand(), true);
 
         $csrfNamespace->token = $token;
 
