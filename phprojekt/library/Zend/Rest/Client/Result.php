@@ -15,15 +15,16 @@
  * @category   Zend
  * @package    Zend_Rest
  * @subpackage Client
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Result.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
  * @category   Zend
  * @package    Zend_Rest
  * @subpackage Client
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Rest_Client_Result implements IteratorAggregate {
@@ -33,6 +34,12 @@ class Zend_Rest_Client_Result implements IteratorAggregate {
     protected $_sxml;
 
     /**
+     * error information
+     * @var string
+     */
+    protected $_errstr;
+
+    /**
      * Constructor
      *
      * @param string $data XML Result
@@ -40,7 +47,35 @@ class Zend_Rest_Client_Result implements IteratorAggregate {
      */
     public function __construct($data)
     {
+        set_error_handler(array($this, 'handleXmlErrors'));
         $this->_sxml = simplexml_load_string($data);
+        restore_error_handler();
+        if($this->_sxml === false) {
+            if ($this->_errstr === null) {
+                $message = "An error occured while parsing the REST response with simplexml.";
+            } else {
+                $message = "REST Response Error: " . $this->_errstr;
+                $this->_errstr = null;
+            }
+            require_once "Zend/Rest/Client/Result/Exception.php";
+            throw new Zend_Rest_Client_Result_Exception($message);
+        }
+    }
+
+    /**
+     * Temporary error handler for parsing REST responses.
+     *
+     * @param int    $errno
+     * @param string $errstr
+     * @param string $errfile
+     * @param string $errline
+     * @param array  $errcontext
+     * @return true
+     */
+    public function handleXmlErrors($errno, $errstr, $errfile = null, $errline = null, array $errcontext = null)
+    {
+        $this->_errstr = $errstr;
+        return true;
     }
 
     /**

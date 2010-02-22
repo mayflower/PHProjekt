@@ -15,8 +15,9 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Analysis
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Text.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 
@@ -28,7 +29,7 @@ require_once 'Zend/Search/Lucene/Analysis/Analyzer/Common.php';
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Analysis
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -53,7 +54,9 @@ class Zend_Search_Lucene_Analysis_Analyzer_Common_Text extends Zend_Search_Lucen
         }
 
         // convert input into ascii
-        $this->_input = iconv($this->_encoding, 'ASCII//TRANSLIT', $this->_input);
+        if (PHP_OS != 'AIX') {
+            $this->_input = iconv($this->_encoding, 'ASCII//TRANSLIT', $this->_input);
+        }
         $this->_encoding = 'ASCII';
     }
 

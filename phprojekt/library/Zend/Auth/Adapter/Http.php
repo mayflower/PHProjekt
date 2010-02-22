@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Auth
  * @subpackage Zend_Auth_Adapter_Http
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Http.php 9404 2008-05-07 23:42:02Z doctorrock83 $
+ * @version    $Id: Http.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 
@@ -35,7 +35,7 @@ require_once 'Zend/Auth/Adapter/Interface.php';
  * @category   Zend
  * @package    Zend_Auth
  * @subpackage Zend_Auth_Adapter_Http
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @todo       Support auth-int
  * @todo       Track nonces, nonce-count, opaque for replay protection and stale support
@@ -403,7 +403,7 @@ class Zend_Auth_Adapter_Http implements Zend_Auth_Adapter_Interface
             // challenge again the client
             return $this->_challengeClient();
         }
-        
+
         switch ($clientScheme) {
             case 'basic':
                 $result = $this->_basicAuth($authHeader);
@@ -413,10 +413,10 @@ class Zend_Auth_Adapter_Http implements Zend_Auth_Adapter_Interface
             break;
             default:
                 /**
-                * @see Zend_Auth_Adapter_Exception
-                */
- 	            require_once 'Zend/Auth/Adapter/Exception.php';
- 	            throw new Zend_Auth_Adapter_Exception('Unsupported authentication scheme');
+                 * @see Zend_Auth_Adapter_Exception
+                 */
+                require_once 'Zend/Auth/Adapter/Exception.php';
+                throw new Zend_Auth_Adapter_Exception('Unsupported authentication scheme');
         }
 
         return $result;

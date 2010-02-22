@@ -15,8 +15,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage YouTube
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: CommentEntry.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -25,11 +27,12 @@
 require_once 'Zend/Gdata/Media/Feed.php';
 
 /**
- * The YouTube comments flavor of an Atom Entry 
+ * The YouTube comments flavor of an Atom Entry
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage YouTube
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_YouTube_CommentEntry extends Zend_Gdata_Entry
@@ -41,5 +44,16 @@ class Zend_Gdata_YouTube_CommentEntry extends Zend_Gdata_Entry
      * @var string
      */
     protected $_entryClassName = 'Zend_Gdata_YouTube_CommentEntry';
+
+    /**
+     * Constructs a new Zend_Gdata_YouTube_CommentEntry object.
+     * @param DOMElement $element (optional) The DOMElement on which to
+     * base this object.
+     */
+    public function __construct($element = null)
+    {
+        $this->registerAllNamespaces(Zend_Gdata_YouTube::$namespaces);
+        parent::__construct($element);
+    }
 
 }

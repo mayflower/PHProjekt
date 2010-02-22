@@ -15,8 +15,9 @@
  * @category   Zend
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Backend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Xcache.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 
@@ -34,11 +35,17 @@ require_once 'Zend/Cache/Backend.php';
 /**
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Backend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Cache_Backend_Xcache extends Zend_Cache_Backend implements Zend_Cache_Backend_Interface
 {
+
+    /**
+     * Log message
+     */
+    const TAGS_UNSUPPORTED_BY_CLEAN_OF_XCACHE_BACKEND = 'Zend_Cache_Backend_Xcache::clean() : tags are unsupported by the Xcache backend';
+    const TAGS_UNSUPPORTED_BY_SAVE_OF_XCACHE_BACKEND =  'Zend_Cache_Backend_Xcache::save() : tags are unsupported by the Xcache backend';
 
     /**
      * Available options
@@ -126,7 +133,7 @@ class Zend_Cache_Backend_Xcache extends Zend_Cache_Backend implements Zend_Cache
         $lifetime = $this->getLifetime($specificLifetime);
         $result = xcache_set($id, array($data, time()), $lifetime);
         if (count($tags) > 0) {
-            $this->_log("Zend_Cache_Backend_Xcache::save() : tags are unsupported by the Xcache backend");
+            $this->_log(self::TAGS_UNSUPPORTED_BY_SAVE_OF_XCACHE_BACKEND);
         }
         return $result;
     }
@@ -147,48 +154,52 @@ class Zend_Cache_Backend_Xcache extends Zend_Cache_Backend implements Zend_Cache
      *
      * Available modes are :
      * 'all' (default)  => remove all cache entries ($tags is not used)
-     * 'old'            => remove too old cache entries ($tags is not used)
-     * 'matchingTag'    => remove cache entries matching all given tags
-     *                     ($tags can be an array of strings or a single string)
-     * 'notMatchingTag' => remove cache entries not matching one of the given tags
-     *                     ($tags can be an array of strings or a single string)
+     * 'old'            => unsupported
+     * 'matchingTag'    => unsupported
+     * 'notMatchingTag' => unsupported
+     * 'matchingAnyTag' => unsupported
      *
      * @param  string $mode clean mode
      * @param  array  $tags array of tags
+     * @throws Zend_Cache_Exception
      * @return boolean true if no problem
      */
     public function clean($mode = Zend_Cache::CLEANING_MODE_ALL, $tags = array())
     {
-        if ($mode==Zend_Cache::CLEANING_MODE_ALL) {
-            // Necessary because xcache_clear_cache() need basic authentification
-            $backup = array();
-            if (isset($_SERVER['PHP_AUTH_USER'])) {
-                $backup['PHP_AUTH_USER'] = $_SERVER['PHP_AUTH_USER'];
-            }
-            if (isset($_SERVER['PHP_AUTH_PW'])) {
-                $backup['PHP_AUTH_PW'] = $_SERVER['PHP_AUTH_PW'];
-            }
-            if ($this->_options['user']) {
-                $_SERVER['PHP_AUTH_USER'] = $this->_options['user'];
-            }
-            if ($this->_options['password']) {
-                $_SERVER['PHP_AUTH_PW'] = $this->_options['password'];
-            }
-            xcache_clear_cache(XC_TYPE_VAR, 0);
-            if (isset($backup['PHP_AUTH_USER'])) {
-                $_SERVER['PHP_AUTH_USER'] = $backup['PHP_AUTH_USER'];
-                $_SERVER['PHP_AUTH_PW'] = $backup['PHP_AUTH_PW'];
-            }
-            return true;
-        }
-        if ($mode==Zend_Cache::CLEANING_MODE_OLD) {
-            $this->_log("Zend_Cache_Backend_Xcache::clean() : CLEANING_MODE_OLD is unsupported by the Xcache backend");
-        }
-        if ($mode==Zend_Cache::CLEANING_MODE_MATCHING_TAG) {
-            $this->_log("Zend_Cache_Backend_Xcache::clean() : tags are unsupported by the Xcache backend");
-        }
-        if ($mode==Zend_Cache::CLEANING_MODE_NOT_MATCHING_TAG) {
-            $this->_log("Zend_Cache_Backend_Xcache::clean() : tags are unsupported by the Xcache backend");
+        switch ($mode) {
+            case Zend_Cache::CLEANING_MODE_ALL:
+                // Necessary because xcache_clear_cache() need basic authentification
+                $backup = array();
+                if (isset($_SERVER['PHP_AUTH_USER'])) {
+                    $backup['PHP_AUTH_USER'] = $_SERVER['PHP_AUTH_USER'];
+                }
+                if (isset($_SERVER['PHP_AUTH_PW'])) {
+                    $backup['PHP_AUTH_PW'] = $_SERVER['PHP_AUTH_PW'];
+                }
+                if ($this->_options['user']) {
+                    $_SERVER['PHP_AUTH_USER'] = $this->_options['user'];
+                }
+                if ($this->_options['password']) {
+                    $_SERVER['PHP_AUTH_PW'] = $this->_options['password'];
+                }
+                xcache_clear_cache(XC_TYPE_VAR, 0);
+                if (isset($backup['PHP_AUTH_USER'])) {
+                    $_SERVER['PHP_AUTH_USER'] = $backup['PHP_AUTH_USER'];
+                    $_SERVER['PHP_AUTH_PW'] = $backup['PHP_AUTH_PW'];
+                }
+                return true;
+                break;
+            case Zend_Cache::CLEANING_MODE_OLD:
+                $this->_log("Zend_Cache_Backend_Xcache::clean() : CLEANING_MODE_OLD is unsupported by the Xcache backend");
+                break;
+            case Zend_Cache::CLEANING_MODE_MATCHING_TAG:
+            case Zend_Cache::CLEANING_MODE_NOT_MATCHING_TAG:
+            case Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG:
+                $this->_log(self::TAGS_UNSUPPORTED_BY_CLEAN_OF_XCACHE_BACKEND);
+                break;
+            default:
+                Zend_Cache::throwException('Invalid mode for clean() method');
+                break;
         }
     }
 

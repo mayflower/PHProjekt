@@ -14,12 +14,10 @@
  *
  * @category   Zend
  * @package    Zend_Controller
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Apache404.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
-
-/** Zend_Controller_Request_Exception */
-require_once 'Zend/Controller/Request/Exception.php';
 
 /** Zend_Controller_Request_Http */
 require_once 'Zend/Controller/Request/Http.php';
@@ -46,11 +44,15 @@ class Zend_Controller_Request_Apache404 extends Zend_Controller_Request_Http
 {
     public function setRequestUri($requestUri = null)
     {
+        $parseUriGetVars = false;
         if ($requestUri === null) {
             if (isset($_SERVER['HTTP_X_REWRITE_URL'])) { // check this first so IIS will catch
                 $requestUri = $_SERVER['HTTP_X_REWRITE_URL'];
             } elseif (isset($_SERVER['REDIRECT_URL'])) {  // Check if using mod_rewrite
                 $requestUri = $_SERVER['REDIRECT_URL'];
+                if (isset($_SERVER['REDIRECT_QUERYSTRING'])) {
+                    $parseUriGetVars = $_SERVER['REDIRECT_QUERYSTRING'];
+                }
             } elseif (isset($_SERVER['REQUEST_URI'])) {
                 $requestUri = $_SERVER['REQUEST_URI'];
             } elseif (isset($_SERVER['ORIG_PATH_INFO'])) { // IIS 5.0, PHP as CGI
@@ -64,14 +66,14 @@ class Zend_Controller_Request_Apache404 extends Zend_Controller_Request_Http
         } elseif (!is_string($requestUri)) {
             return $this;
         } else {
-            // Set GET items, if available
-            $_GET = array();
             if (false !== ($pos = strpos($requestUri, '?'))) {
-                // Get key => value pairs and set $_GET
-                $query = substr($requestUri, $pos + 1);
-                parse_str($query, $vars);
-                $_GET = $vars;
+                $parseUriGetVars = substr($requestUri, $pos + 1);
             }
+        }
+
+        if ($parseUriGetVars) {
+            // Set GET items, if available
+            parse_str($parseUriGetVars, $_GET);
         }
 
         $this->_requestUri = $requestUri;

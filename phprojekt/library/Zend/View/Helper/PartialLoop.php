@@ -15,8 +15,8 @@
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: PartialLoop.php 10281 2008-07-22 17:02:52Z matthew $
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: PartialLoop.php 20096 2010-01-06 02:05:09Z bkarwin $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -24,16 +24,23 @@
 require_once 'Zend/View/Helper/Partial.php';
 
 /**
- * Helper for rendering a template fragment in its own variable scope; iterates 
+ * Helper for rendering a template fragment in its own variable scope; iterates
  * over data provided and renders for each iteration.
  *
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_View_Helper_PartialLoop extends Zend_View_Helper_Partial 
+class Zend_View_Helper_PartialLoop extends Zend_View_Helper_Partial
 {
+
+    /**
+     * Marker to where the pointer is at in the loop
+     * @var integer
+     */
+    protected $partialCounter = 0;
+
     /**
      * Renders a template fragment within a variable scope distinct from the
      * calling View object.
@@ -42,11 +49,11 @@ class Zend_View_Helper_PartialLoop extends Zend_View_Helper_Partial
      *
      * @param  string $name Name of view script
      * @param  string|array $module If $model is empty, and $module is an array,
-     *                              these are the variables to populate in the 
-     *                              view. Otherwise, the module in which the 
+     *                              these are the variables to populate in the
+     *                              view. Otherwise, the module in which the
      *                              partial resides
      * @param  array $model Variables to populate in the view
-     * @return string 
+     * @return string
      */
     public function partialLoop($name = null, $module = null, $model = null)
     {
@@ -57,25 +64,32 @@ class Zend_View_Helper_PartialLoop extends Zend_View_Helper_Partial
         if ((null === $model) && (null !== $module)) {
             $model  = $module;
             $module = null;
-        } 
+        }
 
-        if (!is_array($model) 
-            && (!$model instanceof Traversable) 
+        if (!is_array($model)
+            && (!$model instanceof Traversable)
             && (is_object($model) && !method_exists($model, 'toArray'))
         ) {
             require_once 'Zend/View/Helper/Partial/Exception.php';
-            throw new Zend_View_Helper_Partial_Exception('PartialLoop helper requires iterable data');
+            $e = new Zend_View_Helper_Partial_Exception('PartialLoop helper requires iterable data');
+            $e->setView($this->view);
+            throw $e;
         }
 
-        if (is_object($model) 
-            && (!$model instanceof Traversable) 
+        if (is_object($model)
+            && (!$model instanceof Traversable)
             && method_exists($model, 'toArray')
         ) {
             $model = $model->toArray();
         }
 
         $content = '';
+        // reset the counter if it's call again
+        $this->partialCounter = 0;
         foreach ($model as $item) {
+            // increment the counter variable
+            $this->partialCounter++;
+
             $content .= $this->partial($name, $module, $item);
         }
 

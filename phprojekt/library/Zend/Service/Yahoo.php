@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Yahoo
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Yahoo.php 8064 2008-02-16 10:58:39Z thomas $
+ * @version    $Id: Yahoo.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 
@@ -26,7 +26,7 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage Yahoo
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Service_Yahoo
@@ -400,6 +400,7 @@ class Zend_Service_Yahoo
      * 'similar_ok' => bool  permit similar results in the result set
      * 'country'    => string  The country code for the content searched
      * 'license'    => (any|cc_any|cc_commercial|cc_modifiable)  The license of content being searched
+     * 'region'     => The regional search engine on which the service performs the search. default us.
      *
      * @param  string $query    the query being run
      * @param  array  $options  any optional parameters
@@ -410,7 +411,6 @@ class Zend_Service_Yahoo
     {
         static $defaultOptions = array('type'     => 'all',
                                        'start'    => 1,
-                                       'license'  => 'any',
                                        'results'  => 10,
                                        'format'   => 'any');
 
@@ -803,7 +803,7 @@ class Zend_Service_Yahoo
     protected function _validateWebSearch(array $options)
     {
         $validOptions = array('appid', 'query', 'results', 'start', 'language', 'type', 'format', 'adult_ok',
-                              'similar_ok', 'country', 'site', 'subscription', 'license');
+                              'similar_ok', 'country', 'site', 'subscription', 'license', 'region');
 
         $this->_compareOptions($options, $validOptions);
 
@@ -836,8 +836,17 @@ class Zend_Service_Yahoo
         $this->_validateInArray('type', $options['type'], array('all', 'any', 'phrase'));
         $this->_validateInArray('format', $options['format'], array('any', 'html', 'msword', 'pdf', 'ppt', 'rss',
                                                                     'txt', 'xls'));
-        $this->_validateInArray('license', $options['license'], array('any', 'cc_any', 'cc_commercial',
+        if (isset($options['license'])) {
+            $this->_validateInArray('license', $options['license'], array('any', 'cc_any', 'cc_commercial',
                                                                       'cc_modifiable'));
+        }
+
+        if (isset($options['region'])){
+            $this->_validateInArray('region', $options['region'], array('ar', 'au', 'at', 'br', 'ca', 'ct', 'dk', 'fi',
+                                                                          'fr', 'de', 'in', 'id', 'it', 'my', 'mx',
+                                                                          'nl', 'no', 'ph', 'ru', 'sg', 'es', 'se',
+                                                                          'ch', 'th', 'uk', 'us'));
+        }
     }
 
 

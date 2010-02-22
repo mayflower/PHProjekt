@@ -15,8 +15,9 @@
  * @category   Zend
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Frontend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Class.php 20379 2010-01-18 14:40:57Z mabe $
  */
 
 /**
@@ -28,7 +29,7 @@ require_once 'Zend/Cache/Core.php';
 /**
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Frontend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Cache_Frontend_Class extends Zend_Cache_Core
@@ -88,7 +89,14 @@ class Zend_Cache_Frontend_Class extends Zend_Cache_Core
       *
       * @var string
       */
-     private $_cachedEntityLabel = '';
+    private $_cachedEntityLabel = '';
+
+    /**
+     * Priority (used by some particular backends)
+     *
+     * @var int
+     */
+    private $_priority = 8;
 
     /**
      * Constructor
@@ -102,7 +110,7 @@ class Zend_Cache_Frontend_Class extends Zend_Cache_Core
         while (list($name, $value) = each($options)) {
             $this->setOption($name, $value);
         }
-        if (is_null($this->_specificOptions['cached_entity'])) {
+        if ($this->_specificOptions['cached_entity'] === null) {
             Zend_Cache::throwException('cached_entity must be set !');
         }
         $this->setCachedEntity($this->_specificOptions['cached_entity']);
@@ -118,9 +126,19 @@ class Zend_Cache_Frontend_Class extends Zend_Cache_Core
     public function setSpecificLifetime($specificLifetime = false)
     {
         $this->_specificLifetime = $specificLifetime;
-    }    
-        
-	/**
+    }
+
+    /**
+     * Set the priority (used by some particular backends)
+     *
+     * @param int $priority integer between 0 (very low priority) and 10 (maximum priority)
+     */
+    public function setPriority($priority)
+    {
+        $this->_priority = $priority;
+    }
+
+    /**
      * Public frontend to set an option
      *
      * Just a wrapper to get a specific behaviour for cached_entity
@@ -138,14 +156,14 @@ class Zend_Cache_Frontend_Class extends Zend_Cache_Core
             parent::setOption($name, $value);
         }
     }
-    
+
     /**
      * Specific method to set the cachedEntity
-     * 
+     *
      * if set to a class name, we will cache an abstract class and will use only static calls
      * if set to an object, we will cache this object methods
-     * 
-     * @param mixed $cachedEntity 
+     *
+     * @param mixed $cachedEntity
      */
     public function setCachedEntity($cachedEntity)
     {
@@ -190,22 +208,23 @@ class Zend_Cache_Frontend_Class extends Zend_Cache_Core
             // We do not have not cache
             return call_user_func_array(array($this->_cachedEntity, $name), $parameters);
         }
+
         $id = $this->_makeId($name, $parameters);
-        if ($this->test($id)) {
+        if ( ($rs = $this->load($id)) && isset($rs[0], $rs[1]) ) {
             // A cache is available
-            $result = $this->load($id);
-            $output = $result[0];
-            $return = $result[1];
+            $output = $rs[0];
+            $return = $rs[1];
         } else {
-            // A cache is not available
+            // A cache is not available (or not valid for this frontend)
             ob_start();
             ob_implicit_flush(false);
             $return = call_user_func_array(array($this->_cachedEntity, $name), $parameters);
             $output = ob_get_contents();
             ob_end_clean();
             $data = array($output, $return);
-            $this->save($data, $id, $this->_tags, $this->_specificLifetime);
+            $this->save($data, $id, $this->_tags, $this->_specificLifetime, $this->_priority);
         }
+
         echo $output;
         return $return;
     }

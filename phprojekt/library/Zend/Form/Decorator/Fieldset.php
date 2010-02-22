@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Decorator
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -26,13 +26,13 @@ require_once 'Zend/Form/Decorator/Abstract.php';
  * Zend_Form_Decorator_Fieldset
  *
  * Any options passed will be used as HTML attributes of the fieldset tag.
- * 
+ *
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Decorator
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Fieldset.php 10690 2008-08-05 17:01:30Z matthew $
+ * @version    $Id: Fieldset.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 class Zend_Form_Decorator_Fieldset extends Zend_Form_Decorator_Abstract
 {
@@ -64,7 +64,7 @@ class Zend_Form_Decorator_Fieldset extends Zend_Form_Decorator_Abstract
      * Get options
      *
      * Merges in element attributes as well.
-     * 
+     *
      * @return array
      */
     public function getOptions()
@@ -80,8 +80,8 @@ class Zend_Form_Decorator_Fieldset extends Zend_Form_Decorator_Abstract
 
     /**
      * Set legend
-     * 
-     * @param  string $value 
+     *
+     * @param  string $value
      * @return Zend_Form_Decorator_Fieldset
      */
     public function setLegend($value)
@@ -92,7 +92,7 @@ class Zend_Form_Decorator_Fieldset extends Zend_Form_Decorator_Abstract
 
     /**
      * Get legend
-     * 
+     *
      * @return string
      */
     public function getLegend()
@@ -114,8 +114,8 @@ class Zend_Form_Decorator_Fieldset extends Zend_Form_Decorator_Abstract
 
     /**
      * Render a fieldset
-     * 
-     * @param  string $content 
+     *
+     * @param  string $content
      * @return string
      */
     public function render($content)

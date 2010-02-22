@@ -15,8 +15,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage YouTube
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: MediaEntry.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -35,11 +37,12 @@ require_once 'Zend/Gdata/Media/Entry.php';
 require_once 'Zend/Gdata/YouTube/Extension/MediaGroup.php';
 
 /**
- * Represents the YouTube flavor of a GData Media Entry
+ * Represents the YouTube flavor of a Gdata Media Entry
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage YouTube
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_YouTube_MediaEntry extends Zend_Gdata_Media_Entry
@@ -62,7 +65,7 @@ class Zend_Gdata_YouTube_MediaEntry extends Zend_Gdata_Media_Entry
      */
     protected function takeChildFromDOM($child)
     {
-        $absoluteNodeName = $child->namespaceURI . ':' . $child->localName;	
+        $absoluteNodeName = $child->namespaceURI . ':' . $child->localName;
         switch ($absoluteNodeName) {
         case $this->lookupNamespace('media') . ':' . 'group':
             $mediaGroup = new Zend_Gdata_YouTube_Extension_MediaGroup();

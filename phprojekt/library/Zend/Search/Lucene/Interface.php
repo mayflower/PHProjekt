@@ -14,18 +14,35 @@
  *
  * @category   Zend
  * @package    Zend_Search_Lucene
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Interface.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
+
+
+/** Zend_Search_Lucene_Index_TermsStream_Interface */
+require_once 'Zend/Search/Lucene/Index/TermsStream/Interface.php';
+
+
+/** Classes used within Zend_Search_Lucene_Interface API */
+
+/** Zend_Search_Lucene_Document */
+require_once 'Zend/Search/Lucene/Document.php';
+
+/** Zend_Search_Lucene_Index_Term */
+require_once 'Zend/Search/Lucene/Index/Term.php';
+
+/** Zend_Search_Lucene_Index_DocsFilter */
+require_once 'Zend/Search/Lucene/Index/DocsFilter.php';
 
 
 /**
  * @category   Zend
  * @package    Zend_Search_Lucene
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface Zend_Search_Lucene_Interface
+interface Zend_Search_Lucene_Interface extends Zend_Search_Lucene_Index_TermsStream_Interface
 {
     /**
      * Get current generation number
@@ -64,7 +81,7 @@ interface Zend_Search_Lucene_Interface
      */
     public function setFormatVersion($formatVersion);
 
-	/**
+    /**
      * Returns the Zend_Search_Lucene_Storage_Directory instance for this index.
      *
      * @return Zend_Search_Lucene_Storage_Directory
@@ -273,27 +290,42 @@ interface Zend_Search_Lucene_Interface
      * Returns IDs of all the documents containing term.
      *
      * @param Zend_Search_Lucene_Index_Term $term
+     * @param Zend_Search_Lucene_Index_DocsFilter|null $docsFilter
      * @return array
      */
-    public function termDocs(Zend_Search_Lucene_Index_Term $term);
+    public function termDocs(Zend_Search_Lucene_Index_Term $term, $docsFilter = null);
+
+    /**
+     * Returns documents filter for all documents containing term.
+     *
+     * It performs the same operation as termDocs, but return result as
+     * Zend_Search_Lucene_Index_DocsFilter object
+     *
+     * @param Zend_Search_Lucene_Index_Term $term
+     * @param Zend_Search_Lucene_Index_DocsFilter|null $docsFilter
+     * @return Zend_Search_Lucene_Index_DocsFilter
+     */
+    public function termDocsFilter(Zend_Search_Lucene_Index_Term $term, $docsFilter = null);
 
     /**
      * Returns an array of all term freqs.
      * Return array structure: array( docId => freq, ...)
      *
      * @param Zend_Search_Lucene_Index_Term $term
+     * @param Zend_Search_Lucene_Index_DocsFilter|null $docsFilter
      * @return integer
      */
-    public function termFreqs(Zend_Search_Lucene_Index_Term $term);
+    public function termFreqs(Zend_Search_Lucene_Index_Term $term, $docsFilter = null);
 
     /**
      * Returns an array of all term positions in the documents.
      * Return array structure: array( docId => array( pos1, pos2, ...), ...)
      *
      * @param Zend_Search_Lucene_Index_Term $term
+     * @param Zend_Search_Lucene_Index_DocsFilter|null $docsFilter
      * @return array
      */
-    public function termPositions(Zend_Search_Lucene_Index_Term $term);
+    public function termPositions(Zend_Search_Lucene_Index_Term $term, $docsFilter = null);
 
     /**
      * Returns the number of documents in this index containing the $term.
@@ -360,43 +392,6 @@ interface Zend_Search_Lucene_Interface
      * @return array
      */
     public function terms();
-
-
-    /**
-     * Reset terms stream.
-     */
-    public function resetTermsStream();
-
-    /**
-     * Skip terms stream up to specified term preffix.
-     *
-     * Prefix contains fully specified field info and portion of searched term
-     *
-     * @param Zend_Search_Lucene_Index_Term $prefix
-     */
-    public function skipTo(Zend_Search_Lucene_Index_Term $prefix);
-
-    /**
-     * Scans terms dictionary and returns next term
-     *
-     * @return Zend_Search_Lucene_Index_Term|null
-     */
-    public function nextTerm();
-
-    /**
-     * Returns term in current position
-     *
-     * @return Zend_Search_Lucene_Index_Term|null
-     */
-    public function currentTerm();
-
-    /**
-     * Close terms stream
-     *
-     * Should be used for resources clean up if stream is not read up to the end
-     */
-    public function closeTermsStream();
-
 
     /**
      * Undeletes all documents currently marked as deleted in this index.

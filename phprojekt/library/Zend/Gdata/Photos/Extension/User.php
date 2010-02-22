@@ -15,8 +15,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Photos
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: User.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -35,7 +37,8 @@ require_once 'Zend/Gdata/Photos.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Photos
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Photos_Extension_User extends Zend_Gdata_Extension
@@ -43,17 +46,15 @@ class Zend_Gdata_Photos_Extension_User extends Zend_Gdata_Extension
 
     protected $_rootNamespace = 'gphoto';
     protected $_rootElement = 'user';
-    
+
     /**
      * Constructs a new Zend_Gdata_Photos_Extension_User object.
-     * 
+     *
      * @param string $text (optional) The username to represent.
      */
-    public function __construct($text = null) 
+    public function __construct($text = null)
     {
-        foreach (Zend_Gdata_Photos::$namespaces as $nsPrefix => $nsUri) {
-            $this->registerNamespace($nsPrefix, $nsUri);
-        }
+        $this->registerAllNamespaces(Zend_Gdata_Photos::$namespaces);
         parent::__construct();
         $this->setText($text);
     }

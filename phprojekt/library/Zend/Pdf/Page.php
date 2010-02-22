@@ -12,47 +12,30 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
  *
+ * @category   Zend
  * @package    Zend_Pdf
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Page.php 20470 2010-01-21 16:10:42Z alexander $
  */
 
-
-/** Zend_Pdf_Exception */
-require_once 'Zend/Pdf/Exception.php';
-
-/** Zend_Pdf_Resource_Font */
-require_once 'Zend/Pdf/Resource/Font.php';
-
-/** Zend_Pdf_Style */
-require_once 'Zend/Pdf/Style.php';
-
-/** Zend_Pdf_Element_Dictionary */
+/** Internally used classes */
+require_once 'Zend/Pdf/Element.php';
+require_once 'Zend/Pdf/Element/Array.php';
+require_once 'Zend/Pdf/Element/String/Binary.php';
+require_once 'Zend/Pdf/Element/Boolean.php';
 require_once 'Zend/Pdf/Element/Dictionary.php';
+require_once 'Zend/Pdf/Element/Name.php';
+require_once 'Zend/Pdf/Element/Null.php';
+require_once 'Zend/Pdf/Element/Numeric.php';
+require_once 'Zend/Pdf/Element/String.php';
 
-/** Zend_Pdf_Element_Reference */
-require_once 'Zend/Pdf/Element/Reference.php';
-
-/** Zend_Pdf_ElementFactory */
-require_once 'Zend/Pdf/ElementFactory.php';
-
-/** Zend_Pdf_Color */
-require_once 'Zend/Pdf/Color.php';
-
-/** Zend_Pdf_Color_GrayScale */
-require_once 'Zend/Pdf/Color/GrayScale.php';
-
-/** Zend_Pdf_Color_Rgb */
-require_once 'Zend/Pdf/Color/Rgb.php';
-
-/** Zend_Pdf_Color_Cmyk */
-require_once 'Zend/Pdf/Color/Cmyk.php';
 
 /**
  * PDF Page
  *
  * @package    Zend_Pdf
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Pdf_Page
@@ -124,18 +107,18 @@ class Zend_Pdf_Page
 
 
     /**
-     * Reference to the object with page dictionary.
+     * Page dictionary (refers to an inderect Zend_Pdf_Element_Dictionary object).
      *
-     * @var Zend_Pdf_Element_Reference
+     * @var Zend_Pdf_Element_Reference|Zend_Pdf_Element_Object
      */
-    private $_pageDictionary;
+    protected $_pageDictionary;
 
     /**
      * PDF objects factory.
      *
      * @var Zend_Pdf_ElementFactory_Interface
      */
-    private $_objFactory = null;
+    protected $_objFactory = null;
 
     /**
      * Flag which signals, that page is created separately from any PDF document or
@@ -143,53 +126,53 @@ class Zend_Pdf_Page
      *
      * @var boolean
      */
-    private $_attached;
+    protected $_attached;
 
     /**
-     * Stream of the drawing instractions.
+     * Stream of the drawing instructions.
      *
      * @var string
      */
-    private $_contents = '';
+    protected $_contents = '';
 
     /**
      * Current style
      *
      * @var Zend_Pdf_Style
      */
-    private $_style = null;
+    protected $_style = null;
 
     /**
      * Counter for the "Save" operations
      *
      * @var integer
      */
-    private $_saveCount = 0;
+    protected $_saveCount = 0;
 
     /**
      * Safe Graphics State semafore
-     * 
-     * If it's false, than we can't be sure Graphics State is restored withing 
+     *
+     * If it's false, than we can't be sure Graphics State is restored withing
      * context of previous contents stream (ex. drawing coordinate system may be rotated).
      * We should encompass existing content with save/restore GS operators
-     * 
-     * @var boolean 
+     *
+     * @var boolean
      */
-    private $_safeGS;
+    protected $_safeGS;
 
     /**
      * Current font
      *
      * @var Zend_Pdf_Resource_Font
      */
-    private $_font = null;
+    protected $_font = null;
 
     /**
      * Current font size
      *
      * @var float
      */
-    private $_fontSize;
+    protected $_fontSize;
 
     /**
      * Object constructor.
@@ -251,7 +234,7 @@ class Zend_Pdf_Page
             $this->_objFactory = $param1->_objFactory;
             $this->_attached   = &$param1->_attached;
             $this->_safeGS     = false;
-            
+
             $this->_pageDictionary = $this->_objFactory->newObject(new Zend_Pdf_Element_Dictionary());
 
             foreach ($param1->_pageDictionary->getKeys() as $key) {
@@ -278,7 +261,12 @@ class Zend_Pdf_Page
         } else if (is_string($param1) &&
                    ($param2 === null || $param2 instanceof Zend_Pdf_ElementFactory_Interface) &&
                    $param3 === null) {
-            $this->_objFactory = ($param2 !== null)? $param2 : Zend_Pdf_ElementFactory::createFactory(1);
+            if ($param2 !== null) {
+                $this->_objFactory = $param2;
+            } else {
+                require_once 'Zend/Pdf/ElementFactory.php';
+                $this->_objFactory = Zend_Pdf_ElementFactory::createFactory(1);
+            }
             $this->_attached   = false;
             $this->_safeGS     = true; /** New page created. That's users App responsibility to track GS changes */
 
@@ -296,11 +284,11 @@ class Zend_Pdf_Page
                     $param1 = Zend_Pdf_Page::SIZE_LETTER_LANDSCAPE;
                     break;
                 default:
-                    // should be in "x:y" form
+                    // should be in "x:y" or "x:y:" form
             }
 
             $pageDim = explode(':', $param1);
-            if(count($pageDim) == 3) {
+            if(count($pageDim) == 2  ||  count($pageDim) == 3) {
                 $pageWidth  = $pageDim[0];
                 $pageHeight = $pageDim[1];
             } else {
@@ -308,6 +296,7 @@ class Zend_Pdf_Page
                  * @todo support of user defined pagesize notations, like:
                  *       "210x297mm", "595x842", "8.5x11in", "612x792"
                  */
+                require_once 'Zend/Pdf/Exception.php';
                 throw new Zend_Pdf_Exception('Wrong pagesize notation.');
             }
             /**
@@ -316,18 +305,26 @@ class Zend_Pdf_Page
 
         } else if (is_numeric($param1) && is_numeric($param2) &&
                    ($param3 === null || $param3 instanceof Zend_Pdf_ElementFactory_Interface)) {
-            $this->_objFactory = ($param3 !== null)? $param3 : Zend_Pdf_ElementFactory::createFactory(1);
+            if ($param3 !== null) {
+                $this->_objFactory = $param3;
+            } else {
+                require_once 'Zend/Pdf/ElementFactory.php';
+                $this->_objFactory = Zend_Pdf_ElementFactory::createFactory(1);
+            }
+
             $this->_attached = false;
             $this->_safeGS   = true; /** New page created. That's users App responsibility to track GS changes */
             $pageWidth  = $param1;
             $pageHeight = $param2;
 
         } else {
+            require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception('Unrecognized method signature, wrong number of arguments or wrong argument types.');
         }
 
         $this->_pageDictionary = $this->_objFactory->newObject(new Zend_Pdf_Element_Dictionary());
         $this->_pageDictionary->Type         = new Zend_Pdf_Element_Name('Page');
+        require_once 'Zend/Pdf.php';
         $this->_pageDictionary->LastModified = new Zend_Pdf_Element_String(Zend_Pdf::pdfDate());
         $this->_pageDictionary->Resources    = new Zend_Pdf_Element_Dictionary();
         $this->_pageDictionary->MediaBox     = new Zend_Pdf_Element_Array();
@@ -346,6 +343,7 @@ class Zend_Pdf_Page
      */
     public function __clone()
     {
+        require_once 'Zend/Pdf/Exception.php';
         throw new Zend_Pdf_Exception('Cloning Zend_Pdf_Page object using \'clone\' keyword is not supported. Use \'new Zend_Pdf_Page($srcPage)\' syntax');
     }
 
@@ -356,7 +354,7 @@ class Zend_Pdf_Page
      * @param Zend_Pdf_Resource $resource
      * @return string
      */
-    private function _attachResource($type, Zend_Pdf_Resource $resource)
+    protected function _attachResource($type, Zend_Pdf_Resource $resource)
     {
         // Check that Resources dictionary contains appropriate resource set
         if ($this->_pageDictionary->Resources->$type === null) {
@@ -384,13 +382,13 @@ class Zend_Pdf_Page
 
         return $newResName;
     }
-    
+
     /**
      * Add procedureSet to the Page description
      *
      * @param string $procSetName
      */
-    private function _addProcSet($procSetName)
+    protected function _addProcSet($procSetName)
     {
         // Check that Resources dictionary contains ProcSet entry
         if ($this->_pageDictionary->Resources->ProcSet === null) {
@@ -413,6 +411,7 @@ class Zend_Pdf_Page
     /**
      * Retrive PDF file reference to the page
      *
+     * @internal
      * @return Zend_Pdf_Element_Dictionary
      */
     public function getPageDictionary()
@@ -430,6 +429,7 @@ class Zend_Pdf_Page
     public function flush()
     {
         if ($this->_saveCount != 0) {
+            require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception('Saved graphics state is not restored');
         }
 
@@ -452,26 +452,26 @@ class Zend_Pdf_Page
         }
 
         if ((!$this->_safeGS)  &&  (count($this->_pageDictionary->Contents->items) != 0)) {
-        	/**
-        	 * Page already has some content which is not treated as safe.
-        	 * 
-        	 * Add save/restore GS operators
-        	 */
+            /**
+             * Page already has some content which is not treated as safe.
+             *
+             * Add save/restore GS operators
+             */
             $this->_addProcSet('PDF');
-        	
-        	$newContentsArray = new Zend_Pdf_Element_Array();
-        	$newContentsArray->items[] = $this->_objFactory->newStreamObject(" q\n");
-        	foreach ($this->_pageDictionary->Contents->items as $contentStream) {
-        		$newContentsArray->items[] = $contentStream;
-        	}
+
+            $newContentsArray = new Zend_Pdf_Element_Array();
+            $newContentsArray->items[] = $this->_objFactory->newStreamObject(" q\n");
+            foreach ($this->_pageDictionary->Contents->items as $contentStream) {
+                $newContentsArray->items[] = $contentStream;
+            }
             $newContentsArray->items[] = $this->_objFactory->newStreamObject(" Q\n");
 
-        	$this->_pageDictionary->touch();
-        	$this->_pageDictionary->Contents = $newContentsArray;
-        	
-        	$this->_safeGS = true;
+            $this->_pageDictionary->touch();
+            $this->_pageDictionary->Contents = $newContentsArray;
+
+            $this->_safeGS = true;
         }
-        
+
         $this->_pageDictionary->Contents->items[] =
                 $this->_objFactory->newStreamObject($this->_contents);
 
@@ -496,6 +496,7 @@ class Zend_Pdf_Page
         }
 
         if ($this->_attached) {
+            require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception('Page is attached to one documen, but rendered in context of another.');
             /**
              * @todo Page cloning must be implemented here instead of exception.
@@ -508,7 +509,6 @@ class Zend_Pdf_Page
         } else {
             $objFactory->attach($this->_objFactory);
         }
-
     }
 
 
@@ -517,34 +517,43 @@ class Zend_Pdf_Page
      * Set fill color.
      *
      * @param Zend_Pdf_Color $color
+     * @return Zend_Pdf_Page
      */
     public function setFillColor(Zend_Pdf_Color $color)
     {
         $this->_addProcSet('PDF');
         $this->_contents .= $color->instructions(false);
+
+        return $this;
     }
 
     /**
      * Set line color.
      *
      * @param Zend_Pdf_Color $color
+     * @return Zend_Pdf_Page
      */
     public function setLineColor(Zend_Pdf_Color $color)
     {
         $this->_addProcSet('PDF');
         $this->_contents .= $color->instructions(true);
+
+        return $this;
     }
 
     /**
      * Set line width.
      *
      * @param float $width
+     * @return Zend_Pdf_Page
      */
     public function setLineWidth($width)
     {
         $this->_addProcSet('PDF');
         $widthObj = new Zend_Pdf_Element_Numeric($width);
         $this->_contents .= $widthObj->toString() . " w\n";
+
+        return $this;
     }
 
     /**
@@ -555,6 +564,7 @@ class Zend_Pdf_Page
      *
      * @param array $pattern
      * @param array $phase
+     * @return Zend_Pdf_Page
      */
     public function setLineDashingPattern($pattern, $phase = 0)
     {
@@ -575,6 +585,8 @@ class Zend_Pdf_Page
 
         $this->_contents .= $dashPattern->toString() . ' '
                          . $phaseEleemnt->toString() . " d\n";
+
+        return $this;
     }
 
     /**
@@ -582,6 +594,7 @@ class Zend_Pdf_Page
      *
      * @param Zend_Pdf_Resource_Font $font
      * @param float $fontSize
+     * @return Zend_Pdf_Page
      */
     public function setFont(Zend_Pdf_Resource_Font $font, $fontSize)
     {
@@ -594,12 +607,15 @@ class Zend_Pdf_Page
         $fontNameObj = new Zend_Pdf_Element_Name($fontName);
         $fontSizeObj = new Zend_Pdf_Element_Numeric($fontSize);
         $this->_contents .= $fontNameObj->toString() . ' ' . $fontSizeObj->toString() . " Tf\n";
+
+        return $this;
     }
 
     /**
      * Set the style to use for future drawing operations on this page
      *
      * @param Zend_Pdf_Style $style
+     * @return Zend_Pdf_Page
      */
     public function setStyle(Zend_Pdf_Style $style)
     {
@@ -611,6 +627,8 @@ class Zend_Pdf_Page
             $this->setFont($style->getFont(), $style->getFontSize());
         }
         $this->_contents .= $style->instructions($this->_pageDictionary->Resources);
+
+        return $this;
     }
 
     /**
@@ -626,16 +644,19 @@ class Zend_Pdf_Page
      * @param float $alpha
      * @param string $mode
      * @throws Zend_Pdf_Exception
+     * @return Zend_Pdf_Page
      */
     public function setAlpha($alpha, $mode = 'Normal')
     {
-    	if (!in_array($mode, array('Normal', 'Multiply', 'Screen', 'Overlay', 'Darken', 'Lighten', 'ColorDodge',
-    	                           'ColorBurn', 'HardLight', 'SoftLight', 'Difference', 'Exclusion'))) {
-    	   throw new Zend_Pdf_Exception('Unsupported transparency mode.');
-    	}
-    	if (!is_numeric($alpha)  ||  $alpha < 0  ||  $alpha > 1) {
-    		throw new Zend_Pdf_Exception('Alpha value must be numeric between 0 (transparent) and 1 (opaque).');
-    	}
+        if (!in_array($mode, array('Normal', 'Multiply', 'Screen', 'Overlay', 'Darken', 'Lighten', 'ColorDodge',
+                                   'ColorBurn', 'HardLight', 'SoftLight', 'Difference', 'Exclusion'))) {
+            require_once 'Zend/Pdf/Exception.php';
+            throw new Zend_Pdf_Exception('Unsupported transparency mode.');
+        }
+        if (!is_numeric($alpha)  ||  $alpha < 0  ||  $alpha > 1) {
+            require_once 'Zend/Pdf/Exception.php';
+            throw new Zend_Pdf_Exception('Alpha value must be numeric between 0 (transparent) and 1 (opaque).');
+        }
 
         $this->_addProcSet('Text');
         $this->_addProcSet('PDF');
@@ -666,6 +687,8 @@ class Zend_Pdf_Page
 
         $gStateNameObj = new Zend_Pdf_Element_Name($gStateName);
         $this->_contents .= $gStateNameObj->toString() . " gs\n";
+
+        return $this;
     }
 
 
@@ -683,23 +706,24 @@ class Zend_Pdf_Page
      * Extract resources attached to the page
      *
      * This method is not intended to be used in userland, but helps to optimize some document wide operations
-     * 
+     *
      * returns array of Zend_Pdf_Element_Dictionary objects
-     * 
-     * @internal 
+     *
+     * @internal
      * @return array
      */
     public function extractResources()
     {
         return $this->_pageDictionary->Resources;
     }
-    
+
     /**
      * Extract fonts attached to the page
      *
      * returns array of Zend_Pdf_Resource_Font_Extracted objects
-     * 
+     *
      * @return array
+     * @throws Zend_Pdf_Exception
      */
     public function extractFonts()
     {
@@ -708,7 +732,7 @@ class Zend_Pdf_Page
             // Return empty array
             return array();
         }
-        
+
         $fontResources = $this->_pageDictionary->Resources->Font;
 
         $fontResourcesUnique = array();
@@ -717,36 +741,39 @@ class Zend_Pdf_Page
 
             if (! ($fontDictionary instanceof Zend_Pdf_Element_Reference  ||
                    $fontDictionary instanceof Zend_Pdf_Element_Object) ) {
-                // Font dictionary has to be an indirect object or object reference
-                continue;
+                require_once 'Zend/Pdf/Exception.php';
+                throw new Zend_Pdf_Exception('Font dictionary has to be an indirect object or object reference.');
             }
 
-            $fontResourcesUnique[$fontDictionary->toString($this->_objFactory)] = $fontDictionary;
+            $fontResourcesUnique[spl_object_hash($fontDictionary->getObject())] = $fontDictionary;
         }
-        
+
         $fonts = array();
-        foreach ($fontResourcesUnique as $resourceReference => $fontDictionary) {
+        require_once 'Zend/Pdf/Exception.php';
+        foreach ($fontResourcesUnique as $resourceId => $fontDictionary) {
             try {
+                require_once 'Zend/Pdf/Resource/Font/Extracted.php';
                 // Try to extract font
                 $extractedFont = new Zend_Pdf_Resource_Font_Extracted($fontDictionary);
 
-                $fonts[$resourceReference] = $extractedFont; 
+                $fonts[$resourceId] = $extractedFont;
             } catch (Zend_Pdf_Exception $e) {
                 if ($e->getMessage() != 'Unsupported font type.') {
-                    throw $e;
+                    throw new Zend_Pdf_Exception($e->getMessage(), $e->getCode(), $e);
                 }
             }
         }
-        
+
         return $fonts;
-    } 
+    }
 
     /**
      * Extract font attached to the page by specific font name
-     * 
+     *
      * $fontName should be specified in UTF-8 encoding
      *
      * @return Zend_Pdf_Resource_Font_Extracted|null
+     * @throws Zend_Pdf_Exception
      */
     public function extractFont($fontName)
     {
@@ -754,36 +781,48 @@ class Zend_Pdf_Page
             // Page doesn't have any font attached
             return null;
         }
-        
+
         $fontResources = $this->_pageDictionary->Resources->Font;
 
+        $fontResourcesUnique = array();
+
+        require_once 'Zend/Pdf/Exception.php';
         foreach ($fontResources->getKeys() as $fontResourceName) {
             $fontDictionary = $fontResources->$fontResourceName;
-            
+
             if (! ($fontDictionary instanceof Zend_Pdf_Element_Reference  ||
                    $fontDictionary instanceof Zend_Pdf_Element_Object) ) {
-                // Font dictionary has to be an indirect object or object reference
-                continue;
+                require_once 'Zend/Pdf/Exception.php';
+                throw new Zend_Pdf_Exception('Font dictionary has to be an indirect object or object reference.');
             }
-            
+
+            $resourceId = spl_object_hash($fontDictionary->getObject());
+            if (isset($fontResourcesUnique[$resourceId])) {
+                continue;
+            } else {
+                // Mark resource as processed
+                $fontResourcesUnique[$resourceId] = 1;
+            }
+
             if ($fontDictionary->BaseFont->value != $fontName) {
                 continue;
             }
-            
+
             try {
                 // Try to extract font
-                return new Zend_Pdf_Resource_Font_Extracted($fontDictionary); 
+                require_once 'Zend/Pdf/Resource/Font/Extracted.php';
+                return new Zend_Pdf_Resource_Font_Extracted($fontDictionary);
             } catch (Zend_Pdf_Exception $e) {
                 if ($e->getMessage() != 'Unsupported font type.') {
-                    throw $e;
+                    throw new Zend_Pdf_Exception($e->getMessage(), $e->getCode(), $e);
                 }
-                
+
                 // Continue searhing font with specified name
             }
         }
-        
+
         return null;
-    } 
+    }
 
     /**
      * Get current font size
@@ -813,6 +852,7 @@ class Zend_Pdf_Page
      *
      * @todo check for the open paths
      * @throws Zend_Pdf_Exception    - if a save is performed with an open path
+     * @return Zend_Pdf_Page
      */
     public function saveGS()
     {
@@ -820,19 +860,25 @@ class Zend_Pdf_Page
 
         $this->_addProcSet('PDF');
         $this->_contents .= " q\n";
+
+        return $this;
     }
 
     /**
      * Restore the graphics state that was saved with the last call to saveGS().
      *
      * @throws Zend_Pdf_Exception   - if there is no previously saved state
+     * @return Zend_Pdf_Page
      */
     public function restoreGS()
     {
         if ($this->_saveCount-- <= 0) {
+            require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception('Restoring graphics state which is not saved');
         }
         $this->_contents .= " Q\n";
+
+        return $this;
     }
 
 
@@ -844,12 +890,15 @@ class Zend_Pdf_Page
      * @param float $radius
      * @param float $startAngle
      * @param float $endAngle
+     * @return Zend_Pdf_Page
      */
     public function clipCircle($x, $y, $radius, $startAngle = null, $endAngle = null)
     {
         $this->clipEllipse($x - $radius, $y - $radius,
                            $x + $radius, $y + $radius,
                            $startAngle, $endAngle);
+
+        return $this;
     }
 
     /**
@@ -867,6 +916,7 @@ class Zend_Pdf_Page
      * @param float $y2
      * @param float $startAngle
      * @param float $endAngle
+     * @return Zend_Pdf_Page
      */
     public function clipEllipse($x1, $y1, $x2, $y2, $startAngle = null, $endAngle = null)
     {
@@ -938,6 +988,8 @@ class Zend_Pdf_Page
                          .    $xl->toString() . ' ' . $yUp->toString() . ' '
                          .      $xC->toString() . ' ' . $yUp->toString() . " c\n"
                          .  "h\nW\nn\n";
+
+        return $this;
     }
 
 
@@ -947,6 +999,7 @@ class Zend_Pdf_Page
      * @param array $x  - array of float (the X co-ordinates of the vertices)
      * @param array $y  - array of float (the Y co-ordinates of the vertices)
      * @param integer $fillMethod
+     * @return Zend_Pdf_Page
      */
     public function clipPolygon($x, $y, $fillMethod = Zend_Pdf_Page::FILL_METHOD_NON_ZERO_WINDING)
     {
@@ -968,11 +1021,13 @@ class Zend_Pdf_Page
         $this->_contents .= $path;
 
         if ($fillMethod == Zend_Pdf_Page::FILL_METHOD_NON_ZERO_WINDING) {
-            $this->_contents .= " h\n W\n";
+            $this->_contents .= " h\n W\nn\n";
         } else {
             // Even-Odd fill method.
-            $this->_contents .= " h\n W*\n";
+            $this->_contents .= " h\n W*\nn\n";
         }
+
+        return $this;
     }
 
     /**
@@ -982,6 +1037,7 @@ class Zend_Pdf_Page
      * @param float $y1
      * @param float $x2
      * @param float $y2
+     * @return Zend_Pdf_Page
      */
     public function clipRectangle($x1, $y1, $x2, $y2)
     {
@@ -994,7 +1050,9 @@ class Zend_Pdf_Page
 
         $this->_contents .= $x1Obj->toString() . ' ' . $y1Obj->toString() . ' '
                          .      $widthObj->toString() . ' ' . $height2Obj->toString() . " re\n"
-                         .  " W\n";
+                         .  " W\nn\n";
+
+        return $this;
     }
 
     /**
@@ -1005,9 +1063,12 @@ class Zend_Pdf_Page
      * @param float $y1
      * @param float $x2
      * @param float $y2
+     * @return Zend_Pdf_Page
      */
     public function drawContentStream($cs, $x1, $y1, $x2, $y2)
     {
+        /** @todo implementation */
+        return $this;
     }
 
     /**
@@ -1032,12 +1093,15 @@ class Zend_Pdf_Page
      * @param mixed $param4
      * @param mixed $param5
      * @param mixed $param6
+     * @return Zend_Pdf_Page
      */
     public function  drawCircle($x, $y, $radius, $param4 = null, $param5 = null, $param6 = null)
     {
         $this->drawEllipse($x - $radius, $y - $radius,
                            $x + $radius, $y + $radius,
                            $param4, $param5, $param6);
+
+        return $this;
     }
 
     /**
@@ -1058,6 +1122,7 @@ class Zend_Pdf_Page
      * @param mixed $param5
      * @param mixed $param6
      * @param mixed $param7
+     * @return Zend_Pdf_Page
      */
     public function drawEllipse($x1, $y1, $x2, $y2, $param5 = null, $param6 = null, $param7 = null)
     {
@@ -1165,6 +1230,8 @@ class Zend_Pdf_Page
         if ($startAngle !== null) {
             $this->_contents .= "Q\n";
         }
+
+        return $this;
     }
 
     /**
@@ -1175,6 +1242,7 @@ class Zend_Pdf_Page
      * @param float $y1
      * @param float $x2
      * @param float $y2
+     * @return Zend_Pdf_Page
      */
     public function drawImage(Zend_Pdf_Resource_Image $image, $x1, $y1, $x2, $y2)
     {
@@ -1193,6 +1261,8 @@ class Zend_Pdf_Page
                          .  $widthObj->toString() . ' 0 0 ' . $heightObj->toString() . " 0 0 cm\n"
                          .  $imageNameObj->toString() . " Do\n"
                          .  "Q\n";
+
+        return $this;
     }
 
     /**
@@ -1201,9 +1271,12 @@ class Zend_Pdf_Page
      * @param Zend_Pdf_Element_LayoutBox $box
      * @param float $x
      * @param float $y
+     * @return Zend_Pdf_Page
      */
     public function drawLayoutBox($box, $x, $y)
     {
+        /** @todo implementation */
+        return $this;
     }
 
     /**
@@ -1213,6 +1286,7 @@ class Zend_Pdf_Page
      * @param float $y1
      * @param float $x2
      * @param float $y2
+     * @return Zend_Pdf_Page
      */
     public function drawLine($x1, $y1, $x2, $y2)
     {
@@ -1225,6 +1299,8 @@ class Zend_Pdf_Page
 
         $this->_contents .= $x1Obj->toString() . ' ' . $y1Obj->toString() . " m\n"
                          .  $x2Obj->toString() . ' ' . $y2Obj->toString() . " l\n S\n";
+
+        return $this;
     }
 
     /**
@@ -1239,6 +1315,7 @@ class Zend_Pdf_Page
      * @param array $y  - array of float (the Y co-ordinates of the vertices)
      * @param integer $fillType
      * @param integer $fillMethod
+     * @return Zend_Pdf_Page
      */
     public function drawPolygon($x, $y,
                                 $fillType = Zend_Pdf_Page::SHAPE_DRAW_FILL_AND_STROKE,
@@ -1282,6 +1359,8 @@ class Zend_Pdf_Page
                 $this->_contents .= " S\n";
                 break;
         }
+
+        return $this;
     }
 
     /**
@@ -1297,6 +1376,7 @@ class Zend_Pdf_Page
      * @param float $x2
      * @param float $y2
      * @param integer $fillType
+     * @return Zend_Pdf_Page
      */
     public function drawRectangle($x1, $y1, $x2, $y2, $fillType = Zend_Pdf_Page::SHAPE_DRAW_FILL_AND_STROKE)
     {
@@ -1321,6 +1401,147 @@ class Zend_Pdf_Page
                 $this->_contents .= " S\n";
                 break;
         }
+
+        return $this;
+    }
+
+    /**
+     * Draw a rounded rectangle.
+     *
+     * Fill types:
+     * Zend_Pdf_Page::SHAPE_DRAW_FILL_AND_STROKE - fill rectangle and stroke (default)
+     * Zend_Pdf_Page::SHAPE_DRAW_STROKE      - stroke rectangle
+     * Zend_Pdf_Page::SHAPE_DRAW_FILL        - fill rectangle
+     *
+     * radius is an integer representing radius of the four corners, or an array
+     * of four integers representing the radius starting at top left, going
+     * clockwise
+     *
+     * @param float $x1
+     * @param float $y1
+     * @param float $x2
+     * @param float $y2
+     * @param integer|array $radius
+     * @param integer $fillType
+     * @return Zend_Pdf_Page
+     */
+    public function drawRoundedRectangle($x1, $y1, $x2, $y2, $radius, 
+                                         $fillType = Zend_Pdf_Page::SHAPE_DRAW_FILL_AND_STROKE)
+    {
+
+        $this->_addProcSet('PDF');
+
+        if(!is_array($radius)) {
+            $radius = array($radius, $radius, $radius, $radius);
+        } else {
+            for ($i = 0; $i < 4; $i++) {
+                if(!isset($radius[$i])) {
+                    $radius[$i] = 0;
+                }
+            }
+        }
+
+        $topLeftX      = $x1;
+        $topLeftY      = $y2;
+        $topRightX     = $x2;
+        $topRightY     = $y2;
+        $bottomRightX  = $x2;
+        $bottomRightY  = $y1;
+        $bottomLeftX   = $x1;
+        $bottomLeftY   = $y1;
+        
+        //draw top side
+        $x1Obj = new Zend_Pdf_Element_Numeric($topLeftX + $radius[0]);
+        $y1Obj = new Zend_Pdf_Element_Numeric($topLeftY);
+        $this->_contents .= $x1Obj->toString() . ' ' . $y1Obj->toString() . " m\n";
+        $x1Obj = new Zend_Pdf_Element_Numeric($topRightX - $radius[1]);
+        $y1Obj = new Zend_Pdf_Element_Numeric($topRightY);
+        $this->_contents .= $x1Obj->toString() . ' ' . $y1Obj->toString() . " l\n";
+
+        //draw top right corner if needed
+        if ($radius[1] != 0) {        
+            $x1Obj = new Zend_Pdf_Element_Numeric($topRightX);
+            $y1Obj = new Zend_Pdf_Element_Numeric($topRightY);
+            $x2Obj = new Zend_Pdf_Element_Numeric($topRightX);
+            $y2Obj = new Zend_Pdf_Element_Numeric($topRightY);
+            $x3Obj = new Zend_Pdf_Element_Numeric($topRightX);
+            $y3Obj = new Zend_Pdf_Element_Numeric($topRightY - $radius[1]);
+            $this->_contents .= $x1Obj->toString() . ' ' . $y1Obj->toString() . ' '
+                              . $x2Obj->toString() . ' ' . $y2Obj->toString() . ' '
+                              . $x3Obj->toString() . ' ' . $y3Obj->toString() . ' '
+                              . " c\n";
+        }
+
+        //draw right side
+        $x1Obj = new Zend_Pdf_Element_Numeric($bottomRightX);
+        $y1Obj = new Zend_Pdf_Element_Numeric($bottomRightY + $radius[2]);
+        $this->_contents .= $x1Obj->toString() . ' ' . $y1Obj->toString() . " l\n";
+
+        //draw bottom right corner if needed
+        if ($radius[2] != 0) {        
+            $x1Obj = new Zend_Pdf_Element_Numeric($bottomRightX);
+            $y1Obj = new Zend_Pdf_Element_Numeric($bottomRightY);
+            $x2Obj = new Zend_Pdf_Element_Numeric($bottomRightX);
+            $y2Obj = new Zend_Pdf_Element_Numeric($bottomRightY);
+            $x3Obj = new Zend_Pdf_Element_Numeric($bottomRightX - $radius[2]);
+            $y3Obj = new Zend_Pdf_Element_Numeric($bottomRightY);
+            $this->_contents .= $x1Obj->toString() . ' ' . $y1Obj->toString() . ' '
+                              . $x2Obj->toString() . ' ' . $y2Obj->toString() . ' '
+                              . $x3Obj->toString() . ' ' . $y3Obj->toString() . ' '
+                              . " c\n";
+        }
+
+        //draw bottom side
+        $x1Obj = new Zend_Pdf_Element_Numeric($bottomLeftX + $radius[3]);
+        $y1Obj = new Zend_Pdf_Element_Numeric($bottomLeftY);
+        $this->_contents .= $x1Obj->toString() . ' ' . $y1Obj->toString() . " l\n";
+
+        //draw bottom left corner if needed
+        if ($radius[3] != 0) {        
+            $x1Obj = new Zend_Pdf_Element_Numeric($bottomLeftX);
+            $y1Obj = new Zend_Pdf_Element_Numeric($bottomLeftY);
+            $x2Obj = new Zend_Pdf_Element_Numeric($bottomLeftX);
+            $y2Obj = new Zend_Pdf_Element_Numeric($bottomLeftY);
+            $x3Obj = new Zend_Pdf_Element_Numeric($bottomLeftX);
+            $y3Obj = new Zend_Pdf_Element_Numeric($bottomLeftY + $radius[3]);
+            $this->_contents .= $x1Obj->toString() . ' ' . $y1Obj->toString() . ' '
+                              . $x2Obj->toString() . ' ' . $y2Obj->toString() . ' '
+                              . $x3Obj->toString() . ' ' . $y3Obj->toString() . ' '
+                              . " c\n";
+        }
+
+        //draw left side
+        $x1Obj = new Zend_Pdf_Element_Numeric($topLeftX);
+        $y1Obj = new Zend_Pdf_Element_Numeric($topLeftY - $radius[0]);
+        $this->_contents .= $x1Obj->toString() . ' ' . $y1Obj->toString() . " l\n";
+
+        //draw top left corner if needed
+        if ($radius[0] != 0) {        
+            $x1Obj = new Zend_Pdf_Element_Numeric($topLeftX);
+            $y1Obj = new Zend_Pdf_Element_Numeric($topLeftY);
+            $x2Obj = new Zend_Pdf_Element_Numeric($topLeftX);
+            $y2Obj = new Zend_Pdf_Element_Numeric($topLeftY);
+            $x3Obj = new Zend_Pdf_Element_Numeric($topLeftX + $radius[0]);
+            $y3Obj = new Zend_Pdf_Element_Numeric($topLeftY);
+            $this->_contents .= $x1Obj->toString() . ' ' . $y1Obj->toString() . ' '
+                              . $x2Obj->toString() . ' ' . $y2Obj->toString() . ' '
+                              . $x3Obj->toString() . ' ' . $y3Obj->toString() . ' '
+                              . " c\n";
+        }
+
+        switch ($fillType) {
+            case Zend_Pdf_Page::SHAPE_DRAW_FILL_AND_STROKE:
+                $this->_contents .= " B*\n";
+                break;
+            case Zend_Pdf_Page::SHAPE_DRAW_FILL:
+                $this->_contents .= " f*\n";
+                break;
+            case Zend_Pdf_Page::SHAPE_DRAW_STROKE:
+                $this->_contents .= " S\n";
+                break;
+        }
+
+        return $this;
     }
 
     /**
@@ -1332,10 +1553,12 @@ class Zend_Pdf_Page
      * @param string $charEncoding (optional) Character encoding of source text.
      *   Defaults to current locale.
      * @throws Zend_Pdf_Exception
+     * @return Zend_Pdf_Page
      */
     public function drawText($text, $x, $y, $charEncoding = '')
     {
         if ($this->_font === null) {
+            require_once 'Zend/Pdf/Exception.php';
             throw new Zend_Pdf_Exception('Font has not been set');
         }
 
@@ -1349,6 +1572,36 @@ class Zend_Pdf_Page
                          .  $xObj->toString() . ' ' . $yObj->toString() . " Td\n"
                          .  $textObj->toString() . " Tj\n"
                          .  "ET\n";
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param Zend_Pdf_Annotation $annotation
+     * @return Zend_Pdf_Page
+     */
+    public function attachAnnotation(Zend_Pdf_Annotation $annotation)
+    {
+        $annotationDictionary = $annotation->getResource();
+        if (!$annotationDictionary instanceof Zend_Pdf_Element_Object  &&
+            !$annotationDictionary instanceof Zend_Pdf_Element_Reference) {
+            $annotationDictionary = $this->_objFactory->newObject($annotationDictionary);
+        }
+
+        if ($this->_pageDictionary->Annots === null) {
+            $this->_pageDictionary->touch();
+            $this->_pageDictionary->Annots = new Zend_Pdf_Element_Array();
+        } else {
+            $this->_pageDictionary->Annots->touch();
+        }
+
+        $this->_pageDictionary->Annots->items[] = $annotationDictionary;
+
+        $annotationDictionary->touch();
+        $annotationDictionary->P = $this->_pageDictionary;
+
+        return $this;
     }
 
     /**
@@ -1377,9 +1630,12 @@ class Zend_Pdf_Page
      * Close the path by drawing a straight line back to it's beginning.
      *
      * @throws Zend_Pdf_Exception    - if a path hasn't been started with pathMove()
+     * @return Zend_Pdf_Page
      */
     public function pathClose()
     {
+        /** @todo implementation */
+        return $this;
     }
 
     /**
@@ -1387,9 +1643,12 @@ class Zend_Pdf_Page
      *
      * @param float $x  - the X co-ordinate to move to
      * @param float $y  - the Y co-ordinate to move to
+     * @return Zend_Pdf_Page
      */
     public function pathLine($x, $y)
     {
+        /** @todo implementation */
+        return $this;
     }
 
     /**
@@ -1398,24 +1657,41 @@ class Zend_Pdf_Page
      *
      * @param float $x  - the X co-ordinate to move to
      * @param float $y  - the Y co-ordinate to move to
+     * @return Zend_Pdf_Page
      */
     public function pathMove($x, $y)
     {
+        /** @todo implementation */
+        return $this;
     }
 
     /**
-     * Write raw PDF commands to the page.
+     * Writes the raw data to the page's content stream.
+     *
+     * Be sure to consult the PDF reference to ensure your syntax is correct. No
+     * attempt is made to ensure the validity of the stream data.
      *
      * @param string $data
+     * @param string $procSet (optional) Name of ProcSet to add.
+     * @return Zend_Pdf_Page
      */
-    public function rawWrite($data)
+    public function rawWrite($data, $procSet = null)
     {
+        if (! empty($procSet)) {
+            $this->_addProcSet($procSet);
+        }
+        $this->_contents .= $data;
+
+        return $this;
     }
 
     /**
      * Rotate the page.
      *
-     * @param float $angle
+     * @param float $x  - the X co-ordinate of rotation point
+     * @param float $y  - the Y co-ordinate of rotation point
+     * @param float $angle - rotation angle
+     * @return Zend_Pdf_Page
      */
     public function rotate($x, $y, $angle)
     {
@@ -1432,11 +1708,74 @@ class Zend_Pdf_Page
 
         $this->_addProcSet('PDF');
         $this->_contents .= '1 0 0 1 ' . $xObj->toString() . ' ' . $yObj->toString() . " cm\n"
-                         . $cos->toString() . ' ' . $sin->toString()
-                         . ' ' . $mSin->toString() . ' ' . $cos->toString() . " 0 0 cm\n"
-                         .'1 0 0 1 ' . $mXObj->toString() . ' ' . $mYObj->toString() . " cm\n";
+                         .  $cos->toString() . ' ' . $sin->toString() . ' ' . $mSin->toString() . ' ' . $cos->toString() . " 0 0 cm\n"
+                         .  '1 0 0 1 ' . $mXObj->toString() . ' ' . $mYObj->toString() . " cm\n";
+
+        return $this;
     }
 
+    /**
+     * Scale coordination system.
+     *
+     * @param float $xScale - X dimention scale factor
+     * @param float $yScale - Y dimention scale factor
+     * @return Zend_Pdf_Page
+     */
+    public function scale($xScale, $yScale)
+    {
+        $xScaleObj = new Zend_Pdf_Element_Numeric($xScale);
+        $yScaleObj = new Zend_Pdf_Element_Numeric($yScale);
 
+        $this->_addProcSet('PDF');
+        $this->_contents .= $xScaleObj->toString() . ' 0 0 ' . $yScaleObj->toString() . " 0 0 cm\n";
+
+        return $this;
+    }
+
+    /**
+     * Translate coordination system.
+     *
+     * @param float $xShift - X coordinate shift
+     * @param float $yShift - Y coordinate shift
+     * @return Zend_Pdf_Page
+     */
+    public function translate($xShift, $yShift)
+    {
+        $xShiftObj = new Zend_Pdf_Element_Numeric($xShift);
+        $yShiftObj = new Zend_Pdf_Element_Numeric($yShift);
+
+        $this->_addProcSet('PDF');
+        $this->_contents .= '1 0 0 1 ' . $xShiftObj->toString() . ' ' . $yShiftObj->toString() . " cm\n";
+
+        return $this;
+    }
+
+    /**
+     * Translate coordination system.
+     *
+     * @param float $x  - the X co-ordinate of axis skew point
+     * @param float $y  - the Y co-ordinate of axis skew point
+     * @param float $xAngle - X axis skew angle
+     * @param float $yAngle - Y axis skew angle
+     * @return Zend_Pdf_Page
+     */
+    public function skew($x, $y, $xAngle, $yAngle)
+    {
+        $tanXObj = new Zend_Pdf_Element_Numeric(tan($xAngle));
+        $tanYObj = new Zend_Pdf_Element_Numeric(-tan($yAngle));
+
+        $xObj = new Zend_Pdf_Element_Numeric($x);
+        $yObj = new Zend_Pdf_Element_Numeric($y);
+
+        $mXObj = new Zend_Pdf_Element_Numeric(-$x);
+        $mYObj = new Zend_Pdf_Element_Numeric(-$y);
+
+        $this->_addProcSet('PDF');
+        $this->_contents .= '1 0 0 1 ' . $xObj->toString() . ' ' . $yObj->toString() . " cm\n"
+                         .  '1 ' . $tanXObj->toString() . ' ' . $tanYObj->toString() . " 1 0 0 cm\n"
+                         .  '1 0 0 1 ' . $mXObj->toString() . ' ' . $mYObj->toString() . " cm\n";
+
+        return $this;
+    }
 }
 

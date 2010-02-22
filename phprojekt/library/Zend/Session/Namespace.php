@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Session
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Namespace.php 11004 2008-08-24 14:44:07Z matthew $
+ * @version    $Id: Namespace.php 20096 2010-01-06 02:05:09Z bkarwin $
  * @since      Preview Release 0.2
  */
 
@@ -38,7 +38,7 @@ require_once 'Zend/Session/Abstract.php';
  *
  * @category   Zend
  * @package    Zend_Session
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Session_Namespace extends Zend_Session_Abstract implements IteratorAggregate
@@ -71,6 +71,25 @@ class Zend_Session_Namespace extends Zend_Session_Abstract implements IteratorAg
     protected static $_singleInstances = array();
 
     /**
+     * resetSingleInstance()
+     *
+     * @param string $namespaceName
+     * @return null
+     */
+    public static function resetSingleInstance($namespaceName = null)
+    {
+        if ($namespaceName != null) {
+            if (array_key_exists($namespaceName, self::$_singleInstances)) {
+                unset(self::$_singleInstances[$namespaceName]);
+            }
+            return;
+        }
+
+        self::$_singleInstances = array();
+        return;
+    }
+
+    /**
      * __construct() - Returns an instance object bound to a particular, isolated section
      * of the session, identified by $namespace name (defaulting to 'Default').
      * The optional argument $singleInstance will prevent construction of additional
@@ -96,6 +115,14 @@ class Zend_Session_Namespace extends Zend_Session_Abstract implements IteratorAg
              */
             require_once 'Zend/Session/Exception.php';
             throw new Zend_Session_Exception('Session namespace must not start with an underscore.');
+        }
+
+        if (preg_match('#(^[0-9])#i', $namespace[0])) {
+            /**
+             * @see Zend_Session_Exception
+             */
+            require_once 'Zend/Session/Exception.php';
+            throw new Zend_Session_Exception('Session namespace must not start with a number.');
         }
 
         if (isset(self::$_singleInstances[$namespace])) {
@@ -140,7 +167,7 @@ class Zend_Session_Namespace extends Zend_Session_Abstract implements IteratorAg
                             self::$_expiringData[$namespace] = $_SESSION[$namespace];
                             unset($_SESSION[$namespace]);
                         }
-                        unset($_SESSION['__ZF'][$namespace]['ENNH']);
+                        unset($_SESSION['__ZF'][$namespace]);
                     }
                 }
 
@@ -156,6 +183,9 @@ class Zend_Session_Namespace extends Zend_Session_Abstract implements IteratorAg
                             }
                             unset($_SESSION['__ZF'][$namespace]['ENVNH'][$variable]);
                         }
+                    }
+                    if(empty($_SESSION['__ZF'][$namespace]['ENVNH'])) {
+                        unset($_SESSION['__ZF'][$namespace]['ENVNH']);
                     }
                 }
             }
@@ -487,4 +517,13 @@ class Zend_Session_Namespace extends Zend_Session_Abstract implements IteratorAg
         }
     }
 
+    /**
+     * Returns the namespace name
+     *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->_namespace;
+    }
 }

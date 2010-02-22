@@ -14,9 +14,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Spreadsheets
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Entry.php 3941 2007-03-14 21:36:13Z darby $
+ * @version    $Id: Cell.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -35,7 +36,8 @@ require_once 'Zend/Gdata/Extension.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Spreadsheets
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Spreadsheets_Extension_Cell extends Zend_Gdata_Extension
@@ -82,9 +84,7 @@ class Zend_Gdata_Spreadsheets_Extension_Cell extends Zend_Gdata_Extension
      */
     public function __construct($text = null, $row = null, $col = null, $inputValue = null, $numericValue = null)
     {
-        foreach (Zend_Gdata_Spreadsheets::$namespaces as $nsPrefix => $nsUri) {
-            $this->registerNamespace($nsPrefix, $nsUri);
-        }
+        $this->registerAllNamespaces(Zend_Gdata_Spreadsheets::$namespaces);
         parent::__construct();
         $this->_text = $text;
         $this->_row = $row;
@@ -93,9 +93,9 @@ class Zend_Gdata_Spreadsheets_Extension_Cell extends Zend_Gdata_Extension
         $this->_numericValue = $numericValue;
     }
 
-    public function getDOM($doc = null)
+    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
     {
-        $element = parent::getDOM($doc);
+        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
         $element->setAttribute('row', $this->_row);
         $element->setAttribute('col', $this->_col);
         if ($this->_inputValue) $element->setAttribute('inputValue', $this->_inputValue);

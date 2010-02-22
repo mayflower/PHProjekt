@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.60 $"/>
-		<generation date="$Date: 2007/07/21 17:23:34 $"/>
+		<version number="$Revision: 1.74 $"/>
+		<generation date="$Date: 2009/05/05 23:06:40 $"/>
 		<language type="sw"/>
 	</identity>
 	<localeDisplayNames>
@@ -199,6 +198,8 @@
 	</localeDisplayNames>
 	<characters>
 		<exemplarCharacters>[a-d {dh} e-n {ng} {ng'} {ny} o p r s {sh} t {th} u-w y z]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[q x]</exemplarCharacters>
+		<exemplarCharacters type="currencySymbol">[a-z]</exemplarCharacters>
 	</characters>
 	<delimiters>
 		<quotationStart>‘</quotationStart>
@@ -321,17 +322,17 @@
 				<dateFormats>
 					<dateFormatLength type="full">
 						<dateFormat>
-							<pattern>EEEE, yyyy MMMM dd</pattern>
+							<pattern>EEEE, y MMMM dd</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="long">
 						<dateFormat>
-							<pattern>yyyy MMMM d</pattern>
+							<pattern>y MMMM d</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="medium">
 						<dateFormat>
-							<pattern>yyyy MMM d</pattern>
+							<pattern>y MMM d</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="short">
@@ -343,7 +344,7 @@
 				<timeFormats>
 					<timeFormatLength type="full">
 						<timeFormat>
-							<pattern>HH:mm:ss v</pattern>
+							<pattern>HH:mm:ss zzzz</pattern>
 						</timeFormat>
 					</timeFormatLength>
 					<timeFormatLength type="long">
@@ -363,11 +364,6 @@
 					</timeFormatLength>
 				</timeFormats>
 				<dateTimeFormats>
-					<dateTimeFormatLength>
-						<dateTimeFormat>
-							<pattern>{1} {0}</pattern>
-						</dateTimeFormat>
-					</dateTimeFormatLength>
 					<availableFormats>
 						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
 					</availableFormats>
@@ -382,9 +378,6 @@
 				<long>
 					<standard>Saa za Africa Mashariki</standard>
 				</long>
-				<short>
-					<standard>EAT</standard>
-				</short>
 			</metazone>
 		</timeZoneNames>
 	</dates>
@@ -392,18 +385,15 @@
 		<currencyFormats>
 			<currencyFormatLength>
 				<currencyFormat>
-					<pattern>#,##0.00 ¤</pattern>
+					<pattern>#,##0.00 ¤</pattern>
 				</currencyFormat>
 			</currencyFormatLength>
 		</currencyFormats>
 		<currencies>
-			<currency type="KES">
-				<symbol>KSh</symbol>
-			</currency>
 			<currency type="TZS">
 				<displayName>Shilingi ya Tanzania</displayName>
-				<symbol>TSh</symbol>
 			</currency>
 		</currencies>
 	</numbers>
 </ldml>
+

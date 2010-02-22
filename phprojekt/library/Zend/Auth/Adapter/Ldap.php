@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Auth
  * @subpackage Zend_Auth_Adapter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Ldap.php 10171 2008-07-18 04:57:08Z miallen $
+ * @version    $Id: Ldap.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -29,7 +29,7 @@ require_once 'Zend/Auth/Adapter/Interface.php';
  * @category   Zend
  * @package    Zend_Auth
  * @subpackage Zend_Auth_Adapter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
@@ -62,6 +62,13 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
      * @var string
      */
     protected $_password = null;
+
+    /**
+     * The DN of the authenticated account. Used to retrieve the account entry on request.
+     *
+     * @var string
+     */
+    protected $_authenticatedDn = null;
 
     /**
      * Constructor
@@ -152,6 +159,36 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
     }
 
     /**
+     * setIdentity() - set the identity (username) to be used
+     *
+     * Proxies to {@see setUsername()}
+     *
+     * Closes ZF-6813
+     *
+     * @param  string $identity
+     * @return Zend_Auth_Adapter_Ldap Provides a fluent interface
+     */
+    public function setIdentity($identity)
+    {
+        return $this->setUsername($identity);
+    }
+
+    /**
+     * setCredential() - set the credential (password) value to be used
+     *
+     * Proxies to {@see setPassword()}
+     *
+     * Closes ZF-6813
+     *
+     * @param  string $credential
+     * @return Zend_Auth_Adapter_Ldap Provides a fluent interface
+     */
+    public function setCredential($credential)
+    {
+        return $this->setPassword($credential);
+    }
+
+    /**
      * Returns the LDAP Object
      *
      * @return Zend_Ldap The Zend_Ldap object used to authenticate the credentials
@@ -165,7 +202,38 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
             require_once 'Zend/Ldap.php';
             $this->_ldap = new Zend_Ldap();
         }
+
         return $this->_ldap;
+    }
+
+    /**
+     * Set an Ldap connection
+     *
+     * @param Zend_Ldap $ldap An existing Ldap object
+     * @return Zend_Auth_Adapter_Ldap Provides a fluent interface
+     */
+    public function setLdap(Zend_Ldap $ldap)
+    {
+        $this->_ldap = $ldap;
+
+        $this->setOptions(array($ldap->getOptions()));
+
+        return $this;
+    }
+
+    /**
+     * Returns a domain name for the current LDAP options. This is used
+     * for skipping redundant operations (e.g. authentications).
+     *
+     * @return string
+     */
+    protected function _getAuthorityName()
+    {
+        $options = $this->getLdap()->getOptions();
+        $name = $options['accountDomainName'];
+        if (!$name)
+            $name = $options['accountDomainNameShort'];
+        return $name ? $name : '';
     }
 
     /**
@@ -206,6 +274,7 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
 
         $code = Zend_Auth_Result::FAILURE;
         $messages[0] = "Authority not found: $username";
+        $failedAuthorities = array();
 
         /* Iterate through each server and try to authenticate the supplied
          * credentials against it.
@@ -219,24 +288,55 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
                 require_once 'Zend/Auth/Adapter/Exception.php';
                 throw new Zend_Auth_Adapter_Exception('Adapter options array not in array');
             }
-            $ldap->setOptions($options);
+            $adapterOptions = $this->_prepareOptions($ldap, $options);
+            $dname = '';
 
             try {
-
-                $canonicalName = $ldap->getCanonicalAccountName($username);
-
                 if ($messages[1])
                     $messages[] = $messages[1];
                 $messages[1] = '';
                 $messages[] = $this->_optionsToString($options);
 
+                $dname = $this->_getAuthorityName();
+                if (isset($failedAuthorities[$dname])) {
+                    /* If multiple sets of server options for the same domain
+                     * are supplied, we want to skip redundant authentications
+                     * where the identity or credentials where found to be
+                     * invalid with another server for the same domain. The
+                     * $failedAuthorities array tracks this condition (and also
+                     * serves to supply the original error message).
+                     * This fixes issue ZF-4093.
+                     */
+                    $messages[1] = $failedAuthorities[$dname];
+                    $messages[] = "Skipping previously failed authority: $dname";
+                    continue;
+                }
+
+                $canonicalName = $ldap->getCanonicalAccountName($username);
                 $ldap->bind($canonicalName, $password);
+                /*
+                 * Fixes problem when authenticated user is not allowed to retrieve
+                 * group-membership information or own account.
+                 * This requires that the user specified with "username" and "password"
+                 * in the Zend_Ldap options is able to retrieve the required information.
+                 */
+                $ldap->bind();
+                $dn = $ldap->getCanonicalAccountName($canonicalName, Zend_Ldap::ACCTNAME_FORM_DN);
 
-                $messages[0] = '';
-                $messages[1] = '';
-                $messages[] = "$canonicalName authentication successful";
-
-                return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $canonicalName, $messages);
+                $groupResult = $this->_checkGroupMembership($ldap, $canonicalName, $dn, $adapterOptions);
+                if ($groupResult === true) {
+                    $this->_authenticatedDn = $dn;
+                    $messages[0] = '';
+                    $messages[1] = '';
+                    $messages[] = "$canonicalName authentication successful";
+                    // rebinding with authenticated user
+                    $ldap->bind($dn, $password);
+                    return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $canonicalName, $messages);
+                } else {
+                    $messages[0] = 'Account is not a member of the specified group';
+                    $messages[1] = $groupResult;
+                    $failedAuthorities[$dname] = $groupResult;
+                }
             } catch (Zend_Ldap_Exception $zle) {
 
                 /* LDAP based authentication is notoriously difficult to diagnose. Therefore
@@ -256,9 +356,11 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
                 } else if ($err == Zend_Ldap_Exception::LDAP_NO_SUCH_OBJECT) {
                     $code = Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND;
                     $messages[0] = "Account not found: $username";
+                    $failedAuthorities[$dname] = $zle->getMessage();
                 } else if ($err == Zend_Ldap_Exception::LDAP_INVALID_CREDENTIALS) {
                     $code = Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID;
                     $messages[0] = 'Invalid credentials';
+                    $failedAuthorities[$dname] = $zle->getMessage();
                 } else {
                     $line = $zle->getLine();
                     $messages[] = $zle->getFile() . "($line): " . $zle->getMessage();
@@ -273,6 +375,127 @@ class Zend_Auth_Adapter_Ldap implements Zend_Auth_Adapter_Interface
         $messages[] = "$username authentication failed: $msg";
 
         return new Zend_Auth_Result($code, $username, $messages);
+    }
+
+    /**
+     * Sets the LDAP specific options on the Zend_Ldap instance
+     *
+     * @param  Zend_Ldap $ldap
+     * @param  array $options
+     * @return array of auth-adapter specific options
+     */
+    protected function _prepareOptions(Zend_Ldap $ldap, array $options)
+    {
+        $adapterOptions = array(
+            'group'       => null,
+            'groupDn'     => $ldap->getBaseDn(),
+            'groupScope'  => Zend_Ldap::SEARCH_SCOPE_SUB,
+            'groupAttr'   => 'cn',
+            'groupFilter' => 'objectClass=groupOfUniqueNames',
+            'memberAttr'  => 'uniqueMember',
+            'memberIsDn'  => true
+        );
+        foreach ($adapterOptions as $key => $value) {
+            if (array_key_exists($key, $options)) {
+                $value = $options[$key];
+                unset($options[$key]);
+                switch ($key) {
+                    case 'groupScope':
+                        $value = (int)$value;
+                        if (in_array($value, array(Zend_Ldap::SEARCH_SCOPE_BASE,
+                                Zend_Ldap::SEARCH_SCOPE_ONE, Zend_Ldap::SEARCH_SCOPE_SUB), true)) {
+                           $adapterOptions[$key] = $value;
+                        }
+                        break;
+                    case 'memberIsDn':
+                        $adapterOptions[$key] = ($value === true ||
+                                $value === '1' || strcasecmp($value, 'true') == 0);
+                        break;
+                    default:
+                        $adapterOptions[$key] = trim($value);
+                        break;
+                }
+            }
+        }
+        $ldap->setOptions($options);
+        return $adapterOptions;
+    }
+
+    /**
+     * Checks the group membership of the bound user
+     *
+     * @param  Zend_Ldap $ldap
+     * @param  string    $canonicalName
+     * @param  string    $dn
+     * @param  array     $adapterOptions
+     * @return string|true
+     */
+    protected function _checkGroupMembership(Zend_Ldap $ldap, $canonicalName, $dn, array $adapterOptions)
+    {
+        if ($adapterOptions['group'] === null) {
+            return true;
+        }
+
+        if ($adapterOptions['memberIsDn'] === false) {
+            $user = $canonicalName;
+        } else {
+            $user = $dn;
+        }
+
+        /**
+         * @see Zend_Ldap_Filter
+         */
+        require_once 'Zend/Ldap/Filter.php';
+        $groupName = Zend_Ldap_Filter::equals($adapterOptions['groupAttr'], $adapterOptions['group']);
+        $membership = Zend_Ldap_Filter::equals($adapterOptions['memberAttr'], $user);
+        $group = Zend_Ldap_Filter::andFilter($groupName, $membership);
+        $groupFilter = $adapterOptions['groupFilter'];
+        if (!empty($groupFilter)) {
+            $group = $group->addAnd($groupFilter);
+        }
+
+        $result = $ldap->count($group, $adapterOptions['groupDn'], $adapterOptions['groupScope']);
+
+        if ($result === 1) {
+            return true;
+        } else {
+            return 'Failed to verify group membership with ' . $group->toString();
+        }
+    }
+
+    /**
+     * getAccountObject() - Returns the result entry as a stdClass object
+     *
+     * This resembles the feature {@see Zend_Auth_Adapter_DbTable::getResultRowObject()}.
+     * Closes ZF-6813
+     *
+     * @param  array $returnAttribs
+     * @param  array $omitAttribs
+     * @return stdClass|boolean
+     */
+    public function getAccountObject(array $returnAttribs = array(), array $omitAttribs = array())
+    {
+        if (!$this->_authenticatedDn) {
+            return false;
+        }
+
+        $returnObject = new stdClass();
+
+        $omitAttribs = array_map('strtolower', $omitAttribs);
+
+        $entry = $this->getLdap()->getEntry($this->_authenticatedDn, $returnAttribs, true);
+        foreach ($entry as $attr => $value) {
+            if (in_array($attr, $omitAttribs)) {
+                // skip attributes marked to be omitted
+                continue;
+            }
+            if (is_array($value)) {
+                $returnObject->$attr = (count($value) > 1) ? $value : $value[0];
+            } else {
+                $returnObject->$attr = $value;
+            }
+        }
+        return $returnObject;
     }
 
     /**

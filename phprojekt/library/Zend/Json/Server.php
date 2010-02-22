@@ -1,11 +1,39 @@
 <?php
-require_once 'Zend/Server/Interface.php';
+/**
+ * Zend Framework
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://framework.zend.com/license/new-bsd
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@zend.com so we can send you a copy immediately.
+ *
+ * @category   Zend
+ * @package    Zend_Json
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Server.php 20096 2010-01-06 02:05:09Z bkarwin $
+ */
 
-class Zend_Json_Server implements Zend_Server_Interface
+/**
+ * @see Zend_Server_Abstract
+ */
+require_once 'Zend/Server/Abstract.php';
+
+/**
+ * @category   Zend
+ * @package    Zend_Json
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ */
+class Zend_Json_Server extends Zend_Server_Abstract
 {
     /**#@+
      * Version Constants
-     * @const string
      */
     const VERSION_1 = '1.0';
     const VERSION_2 = '2.0';
@@ -18,10 +46,9 @@ class Zend_Json_Server implements Zend_Server_Interface
     protected $_autoEmitResponse = true;
 
     /**
-     * Attached methods
-     * @var array
+     * @var bool Flag; allow overwriting existing methods when creating server definition
      */
-    protected $_methods = array();
+    protected $_overwriteExistingMethods = true;
 
     /**
      * Request object
@@ -48,8 +75,13 @@ class Zend_Json_Server implements Zend_Server_Interface
     protected $_smdMethods;
 
     /**
+     * @var Zend_Server_Description
+     */
+    protected $_table;
+
+    /**
      * Attach a function or callback to the server
-     * 
+     *
      * @param  string|array $function Valid PHP callback
      * @param  string $namespace  Ignored
      * @return Zend_Json_Server
@@ -66,13 +98,19 @@ class Zend_Json_Server implements Zend_Server_Interface
             throw new Zend_Json_Server_Exception('Unable to attach function; does not exist');
         }
 
+        $argv = null;
+        if (2 < func_num_args()) {
+            $argv = func_get_args();
+            $argv = array_slice($argv, 2);
+        }
+
         require_once 'Zend/Server/Reflection.php';
         if (is_string($function)) {
-            $method = Zend_Server_Reflection::reflectFunction($function);
+            $method = Zend_Server_Reflection::reflectFunction($function, $argv, $namespace);
         } else {
             $class  = array_shift($function);
             $action = array_shift($function);
-            $reflection = Zend_Server_Reflection::reflectClass($class);
+            $reflection = Zend_Server_Reflection::reflectClass($class, $argv, $namespace);
             $methods = $reflection->getMethods();
             $found   = false;
             foreach ($methods as $method) {
@@ -87,37 +125,43 @@ class Zend_Json_Server implements Zend_Server_Interface
             }
         }
 
-        $this->_methods[$method->getName()] = $method;
-
-        $this->_addMethodServiceMap($method);
+        $definition = $this->_buildSignature($method);
+        $this->_addMethodServiceMap($definition);
 
         return $this;
     }
 
     /**
      * Register a class with the server
-     * 
-     * @param  string $class 
+     *
+     * @param  string $class
      * @param  string $namespace Ignored
      * @param  mixed $argv Ignored
      * @return Zend_Json_Server
      */
     public function setClass($class, $namespace = '', $argv = null)
     {
+        $argv = null;
+        if (3 < func_num_args()) {
+            $argv = func_get_args();
+            $argv = array_slice($argv, 3);
+        }
+
         require_once 'Zend/Server/Reflection.php';
-        $reflection = Zend_Server_Reflection::reflectClass($class);
+        $reflection = Zend_Server_Reflection::reflectClass($class, $argv, $namespace);
+
         foreach ($reflection->getMethods() as $method) {
-            $this->_methods[$method->getName()] = $method;
-            $this->_addMethodServiceMap($method);
+            $definition = $this->_buildSignature($method, $class);
+            $this->_addMethodServiceMap($definition);
         }
         return $this;
     }
 
     /**
      * Indicate fault response
-     * 
-     * @param  string $fault 
-     * @param  int $code 
+     *
+     * @param  string $fault
+     * @param  int $code
      * @return false
      */
     public function fault($fault = null, $code = 404, $data = null)
@@ -130,8 +174,8 @@ class Zend_Json_Server implements Zend_Server_Interface
 
     /**
      * Handle request
-     * 
-     * @param  Zend_Json_Server_Request $request 
+     *
+     * @param  Zend_Json_Server_Request $request
      * @return null|Zend_Json_Server_Response
      */
     public function handle($request = false)
@@ -160,17 +204,22 @@ class Zend_Json_Server implements Zend_Server_Interface
     }
 
     /**
-     * Return list of attached methods
-     * 
-     * @return array
+     * Load function definitions
+     *
+     * @param  array|Zend_Server_Definition $definition
+     * @return void
      */
-    public function getFunctions()
-    {
-        return $this->_methods;
-    }
-
     public function loadFunctions($definition)
     {
+        if (!is_array($definition) && (!$definition instanceof Zend_Server_Definition)) {
+            require_once 'Zend/Json/Server/Exception.php';
+            throw new Zend_Json_Server_Exception('Invalid definition provided to loadFunctions()');
+        }
+
+        foreach ($definition as $key => $method) {
+            $this->_table->addMethod($method, $key);
+            $this->_addMethodServiceMap($method);
+        }
     }
 
     public function setPersistence($mode)
@@ -179,8 +228,8 @@ class Zend_Json_Server implements Zend_Server_Interface
 
     /**
      * Set request object
-     * 
-     * @param  Zend_Json_Server_Request $request 
+     *
+     * @param  Zend_Json_Server_Request $request
      * @return Zend_Json_Server
      */
     public function setRequest(Zend_Json_Server_Request $request)
@@ -191,7 +240,7 @@ class Zend_Json_Server implements Zend_Server_Interface
 
     /**
      * Get JSON-RPC request object
-     * 
+     *
      * @return Zend_Json_Server_Request
      */
     public function getRequest()
@@ -205,8 +254,8 @@ class Zend_Json_Server implements Zend_Server_Interface
 
     /**
      * Set response object
-     * 
-     * @param  Zend_Json_Server_Response $response 
+     *
+     * @param  Zend_Json_Server_Response $response
      * @return Zend_Json_Server
      */
     public function setResponse(Zend_Json_Server_Response $response)
@@ -217,7 +266,7 @@ class Zend_Json_Server implements Zend_Server_Interface
 
     /**
      * Get response object
-     * 
+     *
      * @return Zend_Json_Server_Response
      */
     public function getResponse()
@@ -231,8 +280,8 @@ class Zend_Json_Server implements Zend_Server_Interface
 
     /**
      * Set flag indicating whether or not to auto-emit response
-     * 
-     * @param  bool $flag 
+     *
+     * @param  bool $flag
      * @return Zend_Json_Server
      */
     public function setAutoEmitResponse($flag)
@@ -243,7 +292,7 @@ class Zend_Json_Server implements Zend_Server_Interface
 
     /**
      * Will we auto-emit the response?
-     * 
+     *
      * @return bool
      */
     public function autoEmitResponse()
@@ -254,9 +303,9 @@ class Zend_Json_Server implements Zend_Server_Interface
     // overloading for SMD metadata
     /**
      * Overload to accessors of SMD object
-     * 
-     * @param  string $method 
-     * @param  array $args 
+     *
+     * @param  string $method
+     * @param  array $args
      * @return mixed
      */
     public function __call($method, $args)
@@ -277,7 +326,7 @@ class Zend_Json_Server implements Zend_Server_Interface
 
     /**
      * Retrieve SMD object
-     * 
+     *
      * @return Zend_Json_Server_Smd
      */
     public function getServiceMap()
@@ -291,11 +340,11 @@ class Zend_Json_Server implements Zend_Server_Interface
 
     /**
      * Add service method to service map
-     * 
-     * @param  Zend_Server_Reflection_Function $method 
+     *
+     * @param  Zend_Server_Reflection_Function $method
      * @return void
      */
-    protected function _addMethodServiceMap(Zend_Server_Reflection_Function_Abstract $method)
+    protected function _addMethodServiceMap(Zend_Server_Method_Definition $method)
     {
         $serviceInfo = array(
             'name'   => $method->getName(),
@@ -311,25 +360,55 @@ class Zend_Json_Server implements Zend_Server_Interface
     }
 
     /**
+     * Translate PHP type to JSON type
+     *
+     * @param  string $type
+     * @return string
+     */
+    protected function _fixType($type)
+    {
+        return $type;
+    }
+
+    /**
+     * Get default params from signature
+     *
+     * @param  array $args
+     * @param  array $params
+     * @return array
+     */
+    protected function _getDefaultParams(array $args, array $params)
+    {
+        $defaultParams = array_slice($params, count($args));
+        foreach ($defaultParams as $param) {
+            $value = null;
+            if (array_key_exists('default', $param)) {
+                $value = $param['default'];
+            }
+            array_push($args, $value);
+        }
+        return $args;
+    }
+
+    /**
      * Get method param type
-     * 
-     * @param  Zend_Server_Reflection_Function_Abstract $method 
+     *
+     * @param  Zend_Server_Reflection_Function_Abstract $method
      * @return string|array
      */
-    protected function _getParams(Zend_Server_Reflection_Function_Abstract $method)
+    protected function _getParams(Zend_Server_Method_Definition $method)
     {
         $params = array();
         foreach ($method->getPrototypes() as $prototype) {
-            foreach ($prototype->getParameters() as $key => $parameter) {
+            foreach ($prototype->getParameterObjects() as $key => $parameter) {
                 if (!isset($params[$key])) {
                     $params[$key] = array(
                         'type'     => $parameter->getType(),
                         'name'     => $parameter->getName(),
                         'optional' => $parameter->isOptional(),
                     );
-                    if ($parameter->isDefaultValueAvailable()) {
-                        $params[$key]['default'] = $parameter->getDefaultValue();
-                    } else {
+                    if (null !== ($default = $parameter->getDefaultValue())) {
+                        $params[$key]['default'] = $default;
                     }
                     $description = $parameter->getDescription();
                     if (!empty($description)) {
@@ -353,12 +432,33 @@ class Zend_Json_Server implements Zend_Server_Interface
     }
 
     /**
+     * Set response state
+     *
+     * @return Zend_Json_Server_Response
+     */
+    protected function _getReadyResponse()
+    {
+        $request  = $this->getRequest();
+        $response = $this->getResponse();
+
+        $response->setServiceMap($this->getServiceMap());
+        if (null !== ($id = $request->getId())) {
+            $response->setId($id);
+        }
+        if (null !== ($version = $request->getVersion())) {
+            $response->setVersion($version);
+        }
+
+        return $response;
+    }
+
+    /**
      * Get method return type
-     * 
-     * @param  Zend_Server_Reflection_Function_Abstract $method 
+     *
+     * @param  Zend_Server_Reflection_Function_Abstract $method
      * @return string|array
      */
-    protected function _getReturnType(Zend_Server_Reflection_Function_Abstract $method)
+    protected function _getReturnType(Zend_Server_Method_Definition $method)
     {
         $return = array();
         foreach ($method->getPrototypes() as $prototype) {
@@ -372,7 +472,7 @@ class Zend_Json_Server implements Zend_Server_Interface
 
     /**
      * Retrieve list of allowed SMD methods for proxying
-     * 
+     *
      * @return array
      */
     protected function _getSmdMethods()
@@ -396,7 +496,7 @@ class Zend_Json_Server implements Zend_Server_Interface
 
     /**
      * Internal method for handling request
-     * 
+     *
      * @return void
      */
     protected function _handle()
@@ -412,12 +512,12 @@ class Zend_Json_Server implements Zend_Server_Interface
         }
 
         $method = $request->getMethod();
-        if (!array_key_exists($method, $this->_methods)) {
+        if (!$this->_table->hasMethod($method)) {
             return $this->fault('Method not found', -32601);
         }
 
         $params        = $request->getParams();
-        $invocable     = $this->_methods[$method];
+        $invocable     = $this->_table->getMethod($method);
         $serviceMap    = $this->getServiceMap();
         $service       = $serviceMap->getService($method);
         $serviceParams = $service->getParams();
@@ -429,69 +529,9 @@ class Zend_Json_Server implements Zend_Server_Interface
         try {
             $result = $this->_dispatch($invocable, $params);
         } catch (Exception $e) {
-            return $this->fault($e->getMessage(), $e->getCode());
+            return $this->fault($e->getMessage(), $e->getCode(), $e);
         }
 
         $this->getResponse()->setResult($result);
-    }
-
-    /**
-     * Get default params from signature
-     * 
-     * @param  array $args 
-     * @param  array $params 
-     * @return array
-     */
-    protected function _getDefaultParams(array $args, array $params)
-    {
-        $defaultParams = array_slice($params, count($args));
-        foreach ($defaultParams as $param) {
-            $value = null;
-            if (array_key_exists('default', $param)) {
-                $value = $param['default'];
-            }
-            array_push($args, $value);
-        }
-        return $args;
-    }
-
-    /**
-     * Dispatch method
-     * 
-     * @param  Zend_Server_Reflection_Function_Abstract $invocable 
-     * @param  array $params 
-     * @return mixed
-     */
-    protected function _dispatch(Zend_Server_Reflection_Function_Abstract $invocable, array $params)
-    {
-        if ($invocable instanceof Zend_Server_Reflection_Function) {
-            $function = $invocable->getName();
-            return call_user_func_array($function, $params);
-        }
-
-        $class = $invocable->getDeclaringClass();
-        $object = $class->newInstance();
-        return $invocable->invokeArgs($object, $params);
-    }
-
-    /**
-     * Set response state
-     * 
-     * @return Zend_Json_Server_Response
-     */
-    protected function _getReadyResponse()
-    {
-        $request  = $this->getRequest();
-        $response = $this->getResponse();
-
-        $response->setServiceMap($this->getServiceMap());
-        if (null !== ($id = $request->getId())) {
-            $response->setId($id);
-        }
-        if (null !== ($version = $request->getVersion())) {
-            $response->setVersion($version);
-        }
-
-        return $response;
     }
 }

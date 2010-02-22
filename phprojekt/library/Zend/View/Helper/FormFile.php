@@ -15,8 +15,9 @@
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: FormFile.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 
@@ -32,7 +33,7 @@ require_once 'Zend/View/Helper/FormElement.php';
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_View_Helper_FormFile extends Zend_View_Helper_FormElement
@@ -46,23 +47,21 @@ class Zend_View_Helper_FormFile extends Zend_View_Helper_FormElement
      * array, all other parameters are ignored, and the array elements
      * are extracted in place of added parameters.
      *
-     * @param mixed $value The element value.
-     *
      * @param array $attribs Attributes for the element tag.
      *
      * @return string The element XHTML.
      */
-    public function formFile($name, $value = null, $attribs = null)
+    public function formFile($name, $attribs = null)
     {
-        $info = $this->_getInfo($name, $value, $attribs);
+        $info = $this->_getInfo($name, null, $attribs);
         extract($info); // name, id, value, attribs, options, listsep, disable
 
         // is it disabled?
         $disabled = '';
         if ($disable) {
             $disabled = ' disabled="disabled"';
-        } 
-        
+        }
+
         // XHTML or HTML end tag?
         $endTag = ' />';
         if (($this->view instanceof Zend_View_Abstract) && !$this->view->doctype()->isXhtml()) {
@@ -73,9 +72,8 @@ class Zend_View_Helper_FormFile extends Zend_View_Helper_FormElement
         $xhtml = '<input type="file"'
                 . ' name="' . $this->view->escape($name) . '"'
                 . ' id="' . $this->view->escape($id) . '"'
-                . ' value="' . $this->view->escape($value) . '"'
                 . $disabled
-                . $this->_htmlAttribs($attribs) 
+                . $this->_htmlAttribs($attribs)
                 . $endTag;
 
         return $xhtml;

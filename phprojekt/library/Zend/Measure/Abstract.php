@@ -14,13 +14,24 @@
  *
  * @category  Zend
  * @package   Zend_Measure
- * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Abstract.php 9795 2008-06-26 20:54:38Z thomas $
+ * @version   $Id: Abstract.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
+/**
+ * @see Zend_Locale
+ */
 require_once 'Zend/Locale.php';
+
+/**
+ * @see Zend_Locale_Math
+ */
 require_once 'Zend/Locale/Math.php';
+
+/**
+ * @see Zend_Locale_Format
+ */
 require_once 'Zend/Locale/Format.php';
 
 /**
@@ -29,7 +40,7 @@ require_once 'Zend/Locale/Format.php';
  * @category   Zend
  * @package    Zend_Measure
  * @subpackage Zend_Measure_Abstract
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Measure_Abstract
@@ -64,32 +75,18 @@ abstract class Zend_Measure_Abstract
      * Zend_Measure_Abstract is an abstract class for the different measurement types
      *
      * @param  $value  mixed  - Value as string, integer, real or float
-     * @param  $type   type   - OPTIONAL a Zend_Measure_Area Type
+     * @param  $type   type   - OPTIONAL a measure type f.e. Zend_Measure_Length::METER
      * @param  $locale locale - OPTIONAL a Zend_Locale Type
      * @throws Zend_Measure_Exception
      */
     public function __construct($value, $type = null, $locale = null)
     {
-        if (Zend_Locale::isLocale($type)) {
+        if (($type !== null) and (Zend_Locale::isLocale($type, null, false))) {
             $locale = $type;
             $type = null;
         }
 
-        if ($locale === null) {
-            $locale = new Zend_Locale();
-        }
-
-        if ($locale instanceof Zend_Locale) {
-            $locale = $locale->toString();
-        }
-
-        if (!$this->_locale = Zend_Locale::isLocale($locale, true)) {
-            require_once 'Zend/Measure/Exception.php';
-            throw new Zend_Measure_Exception("Language ($locale) is unknown");
-        }
-
-        $this->_locale = $locale;
-
+        $this->setLocale($locale);
         if ($type === null) {
             $type = $this->_units['STANDARD'];
         }
@@ -103,31 +100,86 @@ abstract class Zend_Measure_Abstract
     }
 
     /**
-     * Returns the internal value
+     * Returns the actual set locale
      *
-     * @param integer $round (Optional) Rounds the value to an given precision,
-     *                                  Default is 2, -1 returns without rounding
+     * @return string
      */
-    public function getValue($round = 2)
+    public function getLocale()
     {
-        if ($round < 0) {
-            return $this->_value;
+        return $this->_locale;
+    }
+
+    /**
+     * Sets a new locale for the value representation
+     *
+     * @param string|Zend_Locale $locale (Optional) New locale to set
+     * @param boolean            $check  False, check but don't set; True, set the new locale
+     * @return Zend_Measure_Abstract
+     */
+    public function setLocale($locale = null, $check = false)
+    {
+        if (empty($locale)) {
+            require_once 'Zend/Registry.php';
+            if (Zend_Registry::isRegistered('Zend_Locale') === true) {
+                $locale = Zend_Registry::get('Zend_Locale');
+            }
         }
 
-        return Zend_Locale_Math::round($this->_value, $round);
+        if ($locale === null) {
+            $locale = new Zend_Locale();
+        }
+
+        if (!Zend_Locale::isLocale($locale, true, false)) {
+            if (!Zend_Locale::isLocale($locale, false, false)) {
+                require_once 'Zend/Measure/Exception.php';
+                throw new Zend_Measure_Exception("Language (" . (string) $locale . ") is unknown");
+            }
+
+            $locale = new Zend_Locale($locale);
+        }
+
+        if (!$check) {
+            $this->_locale = (string) $locale;
+        }
+        return $this;
+    }
+
+    /**
+     * Returns the internal value
+     *
+     * @param integer            $round  (Optional) Rounds the value to an given precision,
+     *                                              Default is -1 which returns without rounding
+     * @param string|Zend_Locale $locale (Optional) Locale for number representation
+     * @return integer|string
+     */
+    public function getValue($round = -1, $locale = null)
+    {
+        if ($round < 0) {
+            $return = $this->_value;
+        } else {
+            $return = Zend_Locale_Math::round($this->_value, $round);
+        }
+
+        if ($locale !== null) {
+            $this->setLocale($locale, true);
+            return Zend_Locale_Format::toNumber($return, array('locale' => $locale));
+        }
+
+        return $return;
     }
 
     /**
      * Set a new value
      *
      * @param  integer|string      $value   Value as string, integer, real or float
-     * @param  string              $type    OPTIONAL A Zend_Measure_Acceleration Type
+     * @param  string              $type    OPTIONAL A measure type f.e. Zend_Measure_Length::METER
      * @param  string|Zend_Locale  $locale  OPTIONAL Locale for parsing numbers
      * @throws Zend_Measure_Exception
+     * @return Zend_Measure_Abstract
      */
     public function setValue($value, $type = null, $locale = null)
     {
-        if (Zend_Locale::isLocale($type)) {
+        if (($type !== null) and (Zend_Locale::isLocale($type, null, false))) {
             $locale = $type;
             $type = null;
         }
@@ -136,15 +188,7 @@ abstract class Zend_Measure_Abstract
             $locale = $this->_locale;
         }
 
-        if ($locale instanceof Zend_Locale) {
-            $locale = $locale->toString();
-        }
-
-        if (!Zend_Locale::isLocale($locale)) {
-            require_once 'Zend/Measure/Exception.php';
-            throw new Zend_Measure_Exception("Language ($locale) is unknown");
-        }
-
+        $this->setLocale($locale, true);
         if ($type === null) {
             $type = $this->_units['STANDARD'];
         }
@@ -158,11 +202,12 @@ abstract class Zend_Measure_Abstract
             $value = Zend_Locale_Format::getNumber($value, array('locale' => $locale));
         } catch(Exception $e) {
             require_once 'Zend/Measure/Exception.php';
-            throw new Zend_Measure_Exception($e->getMessage());
+            throw new Zend_Measure_Exception($e->getMessage(), $e->getCode(), $e);
         }
 
         $this->_value = $value;
         $this->setType($type);
+        return $this;
     }
 
     /**
@@ -178,8 +223,9 @@ abstract class Zend_Measure_Abstract
     /**
      * Set a new type, and convert the value
      *
-     * @param  string  $type  New type to set
+     * @param  string $type New type to set
      * @throws Zend_Measure_Exception
+     * @return Zend_Measure_Abstract
      */
     public function setType($type)
     {
@@ -193,7 +239,7 @@ abstract class Zend_Measure_Abstract
         } else {
 
             // Convert to standard value
-            $value = $this->getValue(-1);
+            $value = $this->_value;
             if (is_array($this->_units[$this->getType()][0])) {
                 foreach ($this->_units[$this->getType()][0] as $key => $found) {
                     switch ($key) {
@@ -216,7 +262,7 @@ abstract class Zend_Measure_Abstract
             } else {
                 $value = call_user_func(Zend_Locale_Math::$mul, $value, $this->_units[$this->getType()][0], 25);
             }
-            
+
             // Convert to expected value
             if (is_array($this->_units[$type][0])) {
                 foreach (array_reverse($this->_units[$type][0]) as $key => $found) {
@@ -241,20 +287,30 @@ abstract class Zend_Measure_Abstract
                 $value = @call_user_func(Zend_Locale_Math::$div, $value, $this->_units[$type][0], 25);
             }
 
-            $this->_value = $value;
-            $this->_type = $type;
+            $slength = strlen($value);
+            $length  = 0;
+            for($i = 1; $i <= 25; ++$i) {
+                if ($value[$slength - $i] != '0') {
+                    $length = 26 - $i;
+                    break;
+                }
+            }
+
+            $this->_value = Zend_Locale_Math::round($value, $length);
+            $this->_type  = $type;
         }
+        return $this;
     }
 
     /**
      * Compare if the value and type is equal
      *
-     * @param  Zend_Measure_Detailtype  $object  object to compare
+     * @param  Zend_Measure_Abstract $object object to compare
      * @return boolean
      */
     public function equals($object)
     {
-        if ($object->toString() == $this->toString()) {
+        if ((string) $object == $this->toString()) {
             return true;
         }
 
@@ -264,12 +320,17 @@ abstract class Zend_Measure_Abstract
     /**
      * Returns a string representation
      *
-     * @param  integer  $round  OPTIONAL rounds the value to an given exception
+     * @param  integer            $round  (Optional) Runds the value to an given exception
+     * @param  string|Zend_Locale $locale (Optional) Locale to set for the number
      * @return string
      */
-    public function toString($round = -1)
+    public function toString($round = -1, $locale = null)
     {
-        return $this->getValue($round) . ' ' . $this->_units[$this->getType()][1];
+        if ($locale === null) {
+            $locale = $this->_locale;
+        }
+
+        return $this->getValue($round, $locale) . ' ' . $this->_units[$this->getType()][1];
     }
 
     /**
@@ -295,21 +356,22 @@ abstract class Zend_Measure_Abstract
     /**
      * Alias function for setType returning the converted unit
      *
-     * @param $type   type
-     * @param $round  integer  OPTIONAL rounds the value to a given precision
+     * @param  string             $type   Constant Type
+     * @param  integer            $round  (Optional) Rounds the value to a given precision
+     * @param  string|Zend_Locale $locale (Optional) Locale to set for the number
      * @return string
      */
-    public function convertTo($type, $round = 2)
+    public function convertTo($type, $round = 2, $locale = null)
     {
         $this->setType($type);
-        return $this->toString($round);
+        return $this->toString($round, $locale);
     }
 
     /**
      * Adds an unit to another one
      *
-     * @param $object  object of same unit type
-     * @return  Zend_Measure object
+     * @param  Zend_Measure_Abstract $object object of same unit type
+     * @return Zend_Measure_Abstract
      */
     public function add($object)
     {
@@ -323,8 +385,8 @@ abstract class Zend_Measure_Abstract
     /**
      * Substracts an unit from another one
      *
-     * @param $object  object of same unit type
-     * @return  Zend_Measure object
+     * @param  Zend_Measure_Abstract $object object of same unit type
+     * @return Zend_Measure_Abstract
      */
     public function sub($object)
     {
@@ -338,7 +400,7 @@ abstract class Zend_Measure_Abstract
     /**
      * Compares two units
      *
-     * @param $object  object of same unit type
+     * @param  Zend_Measure_Abstract $object object of same unit type
      * @return boolean
      */
     public function compare($object)

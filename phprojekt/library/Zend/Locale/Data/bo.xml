@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.6 $"/>
-		<generation date="$Date: 2007/07/19 22:31:38 $"/>
+		<version number="$Revision: 1.15 $"/>
+		<generation date="$Date: 2009/06/15 04:15:33 $"/>
 		<language type="bo"/>
 	</identity>
 	<localeDisplayNames>
@@ -124,6 +123,7 @@
 			<territory type="GT">གྷོ་ཊེ་མ་ལ།</territory>
 			<territory type="GW">གྷི་ནི་ཡ་བིས྄་སོ།</territory>
 			<territory type="GY">གྷུ་ཡཱ་ན།</territory>
+			<territory type="HK">ཧོང་ཀོང༌།</territory>
 			<territory type="HN">ཧོན་དུ་རས྄།</territory>
 			<territory type="HR">ཀུརོ་ཤི་ཡ།</territory>
 			<territory type="HT">ཧེ་ཏི།</territory>
@@ -166,6 +166,7 @@
 			<territory type="ML">མ་ལི།</territory>
 			<territory type="MM">འབར་མ།</territory>
 			<territory type="MN">སོག་ཡུལ།</territory>
+			<territory type="MO">མེ་ཀའོ།</territory>
 			<territory type="MR">མཽ་རི་ཏ་ནི་ཡ།</territory>
 			<territory type="MT">མལ་ཊ།</territory>
 			<territory type="MU">མཽ་རིཤས྄།</territory>
@@ -234,16 +235,12 @@
 			<territory type="ZW">ཛིམ་བྷཱ་བེ།</territory>
 			<territory type="ZZ">མིའི་ཤེས་རྟོགས་མ་བྱུང་བའི་ཁོར་ཡུག</territory>
 		</territories>
-		<types>
-			<type type="gregorian" key="calendar">gregorian</type>
-		</types>
 		<measurementSystemNames>
 			<measurementSystemName type="US">ཨ་མེ་རི་ཀའི།</measurementSystemName>
-			<measurementSystemName type="metric">Metric</measurementSystemName>
 		</measurementSystemNames>
 	</localeDisplayNames>
 	<characters>
-		<exemplarCharacters>[ཾ ཿ ་ ། ༎ ༠-༩ ཀ {ཀྵ} ྐ {ྐྵ} ཁ ྑ ག {གྷ} ྒ {ྒྷ} ང ྔ ཅ ྕ ཆ ྖ ཇ ྗ ཉ ྙ ཊ ྚ ཋ ྛ ཌ {ཌྷ} ྜ {ྜྷ} ཎ ྞ ཏ ྟ ཐ ྠ ད {དྷ} ྡ {ྡྷ} ན ྣ པ ྤ ཕ ྥ བ {བྷ} ྦ {ྦྷ} མ ྨ ཙ ྩ ཚ ྪ ཛ {ཛྷ} ྫ {ྫྷ} ཝ ྭ ྺ ཞ ྮ ཟ ྯ འ ྰ ཡ ྱ ྻ ར ཪ ྲ ྼ ལ ླ ཤ ྴ ཥ ྵ ས ྶ ཧ ྷ ཨ ྸ ཱ ི {ཱི} ྀ {ཱྀ} ུ {ཱུ} {ྲྀ} ཷ {ླྀ} ཹ-ཽ ྄ \u0F70]</exemplarCharacters>
+		<exemplarCharacters>[\u0F7E ཿ ་ ། ༎ ༠-༩ ཀ {ཀ\u0FB5} \u0F90 {\u0F90\u0FB5} ཁ \u0F91 ག {ག\u0FB7} \u0F92 {\u0F92\u0FB7} ང \u0F94 ཅ \u0F95 ཆ \u0F96 ཇ \u0F97 ཉ \u0F99 ཊ \u0F9A ཋ \u0F9B ཌ {ཌ\u0FB7} \u0F9C {\u0F9C\u0FB7} ཎ \u0F9E ཏ \u0F9F ཐ \u0FA0 ད {ད\u0FB7} \u0FA1 {\u0FA1\u0FB7} ན \u0FA3 པ \u0FA4 ཕ \u0FA5 བ {བ\u0FB7} \u0FA6 {\u0FA6\u0FB7} མ \u0FA8 ཙ \u0FA9 ཚ \u0FAA ཛ {ཛ\u0FB7} \u0FAB {\u0FAB\u0FB7} ཝ \u0FAD \u0FBA ཞ \u0FAE ཟ \u0FAF འ \u0FB0 ཡ \u0FB1 \u0FBB ར ཪ \u0FB2 \u0FBC ལ \u0FB3 ཤ \u0FB4 ཥ \u0FB5 ས \u0FB6 ཧ \u0FB7 ཨ \u0FB8 \u0F71 \u0F72 {\u0F71\u0F72} \u0F80 {\u0F71\u0F80} \u0F74 {\u0F71\u0F74} {\u0FB2\u0F80} \u0F77 {\u0FB3\u0F80} \u0F79-\u0F7D \u0F84]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[ༀ]</exemplarCharacters>
 	</characters>
 	<dates>
@@ -280,22 +277,6 @@
 							<month type="12">ཟླ་བ་བཅུ་གཉིས་པ་</month>
 						</monthWidth>
 					</monthContext>
-					<monthContext type="stand-alone">
-						<monthWidth type="wide">
-							<month type="1">ཟླ་བ་དང་པོ།</month>
-							<month type="2">ཟླ་བ་གཉིས་པ།</month>
-							<month type="3">ཟླ་བ་སུམ་པ།</month>
-							<month type="4">ཟླ་བ་བཞི་པ།</month>
-							<month type="5">ཟླ་བ་ལྔ་པ།</month>
-							<month type="6">ཟླ་བ་དྲུག་པ།</month>
-							<month type="7">ཟླ་བ་བདུན་པ།</month>
-							<month type="8">ཟླ་བ་བརྒྱད་པ།</month>
-							<month type="9">ཟླ་བ་དགུ་པ།</month>
-							<month type="10">ཟླ་བ་བཅུ་པ་</month>
-							<month type="11">ཟླ་བ་བཅུ་གཅིག་པ།</month>
-							<month type="12">ཟླ་བ་བཅུ་གཉིས་།</month>
-						</monthWidth>
-					</monthContext>
 				</months>
 				<days>
 					<dayContext type="format">
@@ -307,15 +288,6 @@
 							<day type="thu">ཕུར་བུ་</day>
 							<day type="fri">སངས་</day>
 							<day type="sat">སྤེན་པ་</day>
-						</dayWidth>
-						<dayWidth type="narrow">
-							<day type="sun">ཉི</day>
-							<day type="mon">ཟླ</day>
-							<day type="tue">མི</day>
-							<day type="wed">ཧླ</day>
-							<day type="thu">ཕུ</day>
-							<day type="fri">ས</day>
-							<day type="sat">སྤེ</day>
 						</dayWidth>
 						<dayWidth type="wide">
 							<day type="sun">གཟའ་ཉི་མ་</day>
@@ -337,41 +309,10 @@
 							<day type="fri">ས</day>
 							<day type="sat">སྤེ</day>
 						</dayWidth>
-						<dayWidth type="wide">
-							<day type="sun">གཟའ་ཉི་མ་</day>
-							<day type="mon">གཟའ་ཟླ་བ་</day>
-							<day type="tue">གཟའ་མིག་དམར་</day>
-							<day type="wed">གཟའ་ཧླག་པ་</day>
-							<day type="thu">གཟའ་ཕུར་བུ་</day>
-							<day type="fri">གཟའ་སངས་</day>
-							<day type="sat">གཟའ་སྤེན་པ་</day>
-						</dayWidth>
 					</dayContext>
 				</days>
 				<quarters>
 					<quarterContext type="format">
-						<quarterWidth type="abbreviated">
-							<quarter type="1">དུས་ཚིགས་དང་པོ།</quarter>
-							<quarter type="2">དུས་ཚིགས་གཉིས་པ།</quarter>
-							<quarter type="3">་དུས་ཚིགས་གསུམ་པ།</quarter>
-							<quarter type="4">དུས་ཚིགས་བཞི་པ།</quarter>
-						</quarterWidth>
-						<quarterWidth type="narrow">
-						</quarterWidth>
-						<quarterWidth type="wide">
-							<quarter type="1">དུས་ཚིགས་དང་པོ།</quarter>
-							<quarter type="2">དུས་ཚིགས་གཉིས་པ།</quarter>
-							<quarter type="3">་དུས་ཚིགས་གསུམ་པ།</quarter>
-							<quarter type="4">དུས་ཚིགས་བཞི་པ།</quarter>
-						</quarterWidth>
-					</quarterContext>
-					<quarterContext type="stand-alone">
-						<quarterWidth type="narrow">
-							<quarter type="1">1</quarter>
-							<quarter type="2">2</quarter>
-							<quarter type="3">3</quarter>
-							<quarter type="4">4</quarter>
-						</quarterWidth>
 						<quarterWidth type="wide">
 							<quarter type="1">དུས་ཚིགས་དང་པོ།</quarter>
 							<quarter type="2">དུས་ཚིགས་གཉིས་པ།</quarter>
@@ -383,28 +324,20 @@
 				<am>སྔ་དྲོ་</am>
 				<pm>ཕྱི་དྲོ་</pm>
 				<eras>
-					<eraNames>
-						<era type="0">སྤྱི་ལོ་སྔོན།</era>
-						<era type="1">སྤྱི་ལོ།</era>
-					</eraNames>
 					<eraAbbr>
 						<era type="0">སྤྱི་ལོ་སྔོན།</era>
 						<era type="1">སྤྱི་ལོ།</era>
 					</eraAbbr>
-					<eraNarrow>
-						<era type="0">སྤྱི་ལོ་སྔོན།</era>
-						<era type="1">སྤྱི་ལོ།</era>
-					</eraNarrow>
 				</eras>
 				<dateFormats>
 					<dateFormatLength type="long">
 						<dateFormat>
-							<pattern>སྦྱི་ལོ་yyyy MMMMའི་ཙེས་dད</pattern>
+							<pattern>སྦྱི་ལོ་y MMMMའི་ཙེས་dད</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="medium">
 						<dateFormat>
-							<pattern>yyyy ལོ་འི་MMMཙེས་d</pattern>
+							<pattern>y ལོ་འི་MMMཙེས་d</pattern>
 						</dateFormat>
 					</dateFormatLength>
 				</dateFormats>
@@ -423,11 +356,11 @@
 					</field>
 					<field type="day">
 						<displayName>ཉིན།</displayName>
+						<relative type="-2">ཁས་ཉིན་ཀ་</relative>
+						<relative type="-1">ཁས་ས་</relative>
 						<relative type="0">དེ་རིང་</relative>
 						<relative type="1">སང་ཉིན་</relative>
 						<relative type="2">གནངས་ཉིན་ཀ་</relative>
-						<relative type="-1">ཁས་ས་</relative>
-						<relative type="-2">ཁས་ཉིན་ཀ་</relative>
 					</field>
 					<field type="weekday">
 						<displayName>གཟའ་འཁོར་གཅིག</displayName>
@@ -457,11 +390,12 @@
 		</timeZoneNames>
 	</dates>
 	<numbers>
+		<defaultNumberingSystem>tibt</defaultNumberingSystem>
 		<symbols>
 			<decimal>.</decimal>
 			<group>,</group>
-			<nativeZeroDigit>༠</nativeZeroDigit>
-			<nan>ཨང་མེན་</nan>
+			<nativeZeroDigit>0</nativeZeroDigit>
+			<nan>NaN</nan>
 		</symbols>
 		<decimalFormats>
 			<decimalFormatLength>
@@ -480,7 +414,7 @@
 		<currencyFormats>
 			<currencyFormatLength>
 				<currencyFormat>
-					<pattern>¤ #,##0.00</pattern>
+					<pattern>¤ #,##0.00</pattern>
 				</currencyFormat>
 			</currencyFormatLength>
 		</currencyFormats>
@@ -493,7 +427,6 @@
 			</currency>
 			<currency type="XXX">
 				<displayName>མ་རྟོགས་པའི་ནུས་མེད་དངུལ་ལོར</displayName>
-				<symbol>སྒོར་</symbol>
 			</currency>
 		</currencies>
 	</numbers>
@@ -504,3 +437,4 @@
 		</messages>
 	</posix>
 </ldml>
+

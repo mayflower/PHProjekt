@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Decorator
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -31,13 +31,13 @@ require_once 'Zend/Form/Decorator/Abstract.php';
  * - separator: Separator to use between elements
  *
  * Any other options passed will be used as HTML attributes of the form tag.
- * 
+ *
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Decorator
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: FormElements.php 10277 2008-07-22 15:24:18Z matthew $
+ * @version    $Id: FormElements.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 class Zend_Form_Decorator_FormElements extends Zend_Form_Decorator_Abstract
 {
@@ -48,7 +48,7 @@ class Zend_Form_Decorator_FormElements extends Zend_Form_Decorator_Abstract
      * @param  string $belongsTo
      * @return string
      */
-    protected function _mergeBelongsTo($baseBelongsTo, $belongsTo)
+    public function mergeBelongsTo($baseBelongsTo, $belongsTo)
     {
         $endOfArrayName = strpos($belongsTo, '[');
 
@@ -64,7 +64,7 @@ class Zend_Form_Decorator_FormElements extends Zend_Form_Decorator_Abstract
     /**
      * Render form elements
      *
-     * @param  string $content 
+     * @param  string $content
      * @return string
      */
     public function render($content)
@@ -87,7 +87,7 @@ class Zend_Form_Decorator_FormElements extends Zend_Form_Decorator_Abstract
                 $item->setBelongsTo($belongsTo);
             } elseif (!empty($belongsTo) && ($item instanceof Zend_Form)) {
                 if ($item->isArray()) {
-                    $name = $this->_mergeBelongsTo($belongsTo, $item->getElementsBelongTo());
+                    $name = $this->mergeBelongsTo($belongsTo, $item->getElementsBelongTo());
                     $item->setElementsBelongTo($name, true);
                 } else {
                     $item->setElementsBelongTo($belongsTo, true);
@@ -97,7 +97,21 @@ class Zend_Form_Decorator_FormElements extends Zend_Form_Decorator_Abstract
                     $element->setBelongsTo($belongsTo);
                 }
             }
+
             $items[] = $item->render();
+
+            if (($item instanceof Zend_Form_Element_File)
+                || (($item instanceof Zend_Form)
+                    && (Zend_Form::ENCTYPE_MULTIPART == $item->getEnctype()))
+                || (($item instanceof Zend_Form_DisplayGroup)
+                    && (Zend_Form::ENCTYPE_MULTIPART == $item->getAttrib('enctype')))
+            ) {
+                if ($form instanceof Zend_Form) {
+                    $form->setEnctype(Zend_Form::ENCTYPE_MULTIPART);
+                } elseif ($form instanceof Zend_Form_DisplayGroup) {
+                    $form->setAttrib('enctype', Zend_Form::ENCTYPE_MULTIPART);
+                }
+            }
         }
         $elementContent = implode($separator, $items);
 

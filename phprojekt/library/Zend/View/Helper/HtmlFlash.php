@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: HtmlFlash.php 10192 2008-07-18 20:14:57Z matthew $
+ * @version    $Id: HtmlFlash.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -29,7 +29,7 @@ require_once 'Zend/View/Helper/HtmlObject.php';
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_View_Helper_HtmlFlash extends Zend_View_Helper_HtmlObject
@@ -41,25 +41,6 @@ class Zend_View_Helper_HtmlFlash extends Zend_View_Helper_HtmlObject
     const TYPE = 'application/x-shockwave-flash';
 
     /**
-     * Object classid
-     *
-     */
-    const ATTRIB_CLASSID  = 'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000';
-
-    /**
-     * Object Codebase
-     *
-     */
-    const ATTRIB_CODEBASE = 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab';
-
-    /**
-     * Default attributes
-     *
-     * @var array
-     */
-    protected $_attribs = array('classid'  => self::ATTRIB_CLASSID,
-                                'codebase' => self::ATTRIB_CODEBASE);
-    /**
      * Output a flash movie object tag
      *
      * @param string $data The flash file
@@ -70,11 +51,9 @@ class Zend_View_Helper_HtmlFlash extends Zend_View_Helper_HtmlObject
      */
     public function htmlFlash($data, array $attribs = array(), array $params = array(), $content = null)
     {
-        // Attrs
-        $attribs = array_merge($this->_attribs, $attribs);
-
         // Params
-        $params = array_merge(array('movie' => $data), $params);
+        $params = array_merge(array('movie'   => $data,
+                                    'quality' => 'high'), $params);
 
         return $this->htmlObject($data, self::TYPE, $attribs, $params, $content);
     }

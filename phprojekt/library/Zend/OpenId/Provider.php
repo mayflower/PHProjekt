@@ -16,9 +16,9 @@
  * @category   Zend
  * @package    Zend_OpenId
  * @subpackage Zend_OpenId_Provider
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Provider.php 10105 2008-07-15 16:56:48Z dmitry $
+ * @version    $Id: Provider.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -37,7 +37,7 @@ require_once "Zend/OpenId/Extension.php";
  * @category   Zend
  * @package    Zend_OpenId
  * @subpackage Zend_OpenId_Provider
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_OpenId_Provider
@@ -77,6 +77,13 @@ class Zend_OpenId_Provider
      * @var string $_trustUrl
      */
     private $_trustUrl;
+
+    /**
+     * The OP Endpoint URL
+     *
+     * @var string $_opEndpoint
+     */
+    private $_opEndpoint;
 
     /**
      * Constructs a Zend_OpenId_Provider object with given parameters.
@@ -128,6 +135,17 @@ class Zend_OpenId_Provider
             $this->_storage = $storage;
         }
         $this->_sessionTtl = $sessionTtl;
+    }
+
+    /**
+     * Sets the OP Endpoint URL
+     *
+     * @param string $url the OP Endpoint URL
+     * @return null
+     */
+    public function setOpEndpoint($url)
+    {
+        $this->_opEndpoint = $url;
     }
 
     /**
@@ -528,7 +546,7 @@ class Zend_OpenId_Provider
             }
             if ($immediate) {
                 $params2['openid.mode'] = 'checkid_setup';
-                $ret['openid.mode'] = ($version >= 2.0) ? 'setup_needed': 'cancel';
+                $ret['openid.mode'] = ($version >= 2.0) ? 'setup_needed': 'id_res';
                 $ret['openid.user_setup_url'] = $this->_loginUrl
                     . (strpos($this->_loginUrl, '?') === false ? '?' : '&')
                     . Zend_OpenId::paramsToQuery($params2);
@@ -585,7 +603,7 @@ class Zend_OpenId_Provider
         if ($trusted === false) {
             $ret['openid.mode'] = 'cancel';
             return $ret;
-        } else if (is_null($trusted)) {
+        } else if ($trusted === null) {
             /* Redirect to Server Trust Screen */
             $params2 = array();
             foreach ($params as $key => $val) {
@@ -600,7 +618,7 @@ class Zend_OpenId_Provider
             }
             if ($immediate) {
                 $params2['openid.mode'] = 'checkid_setup';
-                $ret['openid.mode'] = ($version >= 2.0) ? 'setup_needed': 'cancel';
+                $ret['openid.mode'] = ($version >= 2.0) ? 'setup_needed': 'id_res';
                 $ret['openid.user_setup_url'] = $this->_trustUrl
                     . (strpos($this->_trustUrl, '?') === false ? '?' : '&')
                     . Zend_OpenId::paramsToQuery($params2);
@@ -683,7 +701,11 @@ class Zend_OpenId_Provider
         }
 
         if ($version >= 2.0) {
-            $ret['openid.op_endpoint'] = Zend_OpenId::selfUrl();
+            if (!empty($this->_opEndpoint)) {
+                $ret['openid.op_endpoint'] = $this->_opEndpoint;
+            } else {
+                $ret['openid.op_endpoint'] = Zend_OpenId::selfUrl();
+            }
         }
         $ret['openid.response_nonce'] = gmdate('Y-m-d\TH:i:s\Z') . uniqid();
         $ret['openid.mode'] = 'id_res';

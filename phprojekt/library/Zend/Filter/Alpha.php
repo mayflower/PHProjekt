@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Zend Framework
  *
@@ -15,11 +14,10 @@
  *
  * @category   Zend
  * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Alpha.php 9266 2008-04-21 06:13:27Z yoshida@zend.co.jp $
+ * @version    $Id: Alpha.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
-
 
 /**
  * @see Zend_Filter_Interface
@@ -33,7 +31,7 @@ require_once 'Zend/Locale.php';
 /**
  * @category   Zend
  * @package    Zend_Filter
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Filter_Alpha implements Zend_Filter_Interface
@@ -42,6 +40,7 @@ class Zend_Filter_Alpha implements Zend_Filter_Interface
      * Whether to allow white space characters; off by default
      *
      * @var boolean
+     * @deprecated
      */
     public $allowWhiteSpace;
 
@@ -54,14 +53,14 @@ class Zend_Filter_Alpha implements Zend_Filter_Interface
 
     /**
      * Locale in browser.
-     * 
+     *
      * @var Zend_Locale object
      */
     protected $_locale;
-    
+
     /**
      * The Alphabet means english alphabet.
-     * 
+     *
      * @var boolean
      */
     protected static $_meansEnglishAlphabet;
@@ -74,18 +73,50 @@ class Zend_Filter_Alpha implements Zend_Filter_Interface
      */
     public function __construct($allowWhiteSpace = false)
     {
+        if ($allowWhiteSpace instanceof Zend_Config) {
+            $allowWhiteSpace = $allowWhiteSpace->toArray();
+        } else if (is_array($allowWhiteSpace)) {
+            if (array_key_exists('allowwhitespace', $allowWhiteSpace)) {
+                $allowWhiteSpace = $allowWhiteSpace['allowwhitespace'];
+            } else {
+                $allowWhiteSpace = false;
+            }
+        }
+
         $this->allowWhiteSpace = (boolean) $allowWhiteSpace;
         if (null === self::$_unicodeEnabled) {
             self::$_unicodeEnabled = (@preg_match('/\pL/u', 'a')) ? true : false;
         }
 
         if (null === self::$_meansEnglishAlphabet) {
-        	$this->_locale = new Zend_Locale(Zend_Locale::BROWSER);
-        	self::$_meansEnglishAlphabet = in_array($this->_locale->getLanguage(),
-        											array('ja')
-									                );
+            $this->_locale = new Zend_Locale('auto');
+            self::$_meansEnglishAlphabet = in_array($this->_locale->getLanguage(),
+                                                    array('ja', 'ko', 'zh')
+                                                    );
         }
-        
+
+    }
+
+    /**
+     * Returns the allowWhiteSpace option
+     *
+     * @return boolean
+     */
+    public function getAllowWhiteSpace()
+    {
+        return $this->allowWhiteSpace;
+    }
+
+    /**
+     * Sets the allowWhiteSpace option
+     *
+     * @param boolean $allowWhiteSpace
+     * @return Zend_Filter_Alpha Provides a fluent interface
+     */
+    public function setAllowWhiteSpace($allowWhiteSpace)
+    {
+        $this->allowWhiteSpace = (boolean) $allowWhiteSpace;
+        return $this;
     }
 
     /**
@@ -103,11 +134,11 @@ class Zend_Filter_Alpha implements Zend_Filter_Interface
             // POSIX named classes are not supported, use alternative a-zA-Z match
             $pattern = '/[^a-zA-Z' . $whiteSpace . ']/';
         } else if (self::$_meansEnglishAlphabet) {
-        	//The Alphabet means english alphabet.
+            //The Alphabet means english alphabet.
             $pattern = '/[^a-zA-Z'  . $whiteSpace . ']/u';
         } else {
-        	//The Alphabet means each language's alphabet.
-        	$pattern = '/[^\p{L}' . $whiteSpace . ']/u';
+            //The Alphabet means each language's alphabet.
+            $pattern = '/[^\p{L}' . $whiteSpace . ']/u';
         }
 
         return preg_replace($pattern, '', (string) $value);

@@ -15,8 +15,8 @@
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Zend_Controller_Action
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Layout.php 9098 2008-03-30 19:29:10Z thomas $
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: Layout.php 20096 2010-01-06 02:05:09Z bkarwin $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -30,7 +30,7 @@ require_once 'Zend/Controller/Action/Helper/Abstract.php';
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Zend_Controller_Action
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Layout_Controller_Action_Helper_Layout extends Zend_Controller_Action_Helper_Abstract
@@ -49,11 +49,11 @@ class Zend_Layout_Controller_Action_Helper_Layout extends Zend_Controller_Action
      * @var bool
      */
     protected $_isActionControllerSuccessful = false;
-    
+
     /**
      * Constructor
-     * 
-     * @param  Zend_Layout $layout 
+     *
+     * @param  Zend_Layout $layout
      * @return void
      */
     public function __construct(Zend_Layout $layout = null)
@@ -61,9 +61,13 @@ class Zend_Layout_Controller_Action_Helper_Layout extends Zend_Controller_Action
         if (null !== $layout) {
             $this->setLayoutInstance($layout);
         } else {
+            /**
+             * @see Zend_Layout
+             */
+            require_once 'Zend/Layout.php';
             $layout = Zend_Layout::getMvcInstance();
         }
-        
+
         if (null !== $layout) {
             $pluginClass = $layout->getPluginClass();
             $front = $this->getFrontController();
@@ -81,27 +85,33 @@ class Zend_Layout_Controller_Action_Helper_Layout extends Zend_Controller_Action
 
     /**
      * Get front controller instance
-     * 
+     *
      * @return Zend_Controller_Front
      */
     public function getFrontController()
     {
         if (null === $this->_frontController) {
+            /**
+             * @see Zend_Controller_Front
+             */
             require_once 'Zend/Controller/Front.php';
             $this->_frontController = Zend_Controller_Front::getInstance();
         }
 
         return $this->_frontController;
     }
-    
+
     /**
      * Get layout object
-     * 
+     *
      * @return Zend_Layout
      */
     public function getLayoutInstance()
     {
         if (null === $this->_layout) {
+            /**
+             * @see Zend_Layout
+             */
             require_once 'Zend/Layout.php';
             if (null === ($this->_layout = Zend_Layout::getMvcInstance())) {
                 $this->_layout = new Zend_Layout();
@@ -113,8 +123,8 @@ class Zend_Layout_Controller_Action_Helper_Layout extends Zend_Controller_Action
 
     /**
      * Set layout object
-     * 
-     * @param  Zend_Layout $layout 
+     *
+     * @param  Zend_Layout $layout
      * @return Zend_Layout_Controller_Action_Helper_Layout
      */
     public function setLayoutInstance(Zend_Layout $layout)
@@ -133,7 +143,7 @@ class Zend_Layout_Controller_Action_Helper_Layout extends Zend_Controller_Action
         $this->_isActionControllerSuccessful = true;
         return $this;
     }
-    
+
     /**
      * Did the previous action successfully complete?
      *
@@ -143,12 +153,12 @@ class Zend_Layout_Controller_Action_Helper_Layout extends Zend_Controller_Action
     {
         return $this->_isActionControllerSuccessful;
     }
-    
+
     /**
      * Strategy pattern; call object as method
      *
      * Returns layout object
-     * 
+     *
      * @return Zend_Layout
      */
     public function direct()
@@ -158,9 +168,9 @@ class Zend_Layout_Controller_Action_Helper_Layout extends Zend_Controller_Action
 
     /**
      * Proxy method calls to layout object
-     * 
-     * @param  string $method 
-     * @param  array $args 
+     *
+     * @param  string $method
+     * @param  array $args
      * @return mixed
      */
     public function __call($method, $args)

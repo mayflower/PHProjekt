@@ -15,8 +15,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Media
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Feed.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -35,11 +37,12 @@ require_once 'Zend/Gdata/Media.php';
 require_once 'Zend/Gdata/Media/Entry.php';
 
 /**
- * The GData flavor of an Atom Feed with media support
+ * The Gdata flavor of an Atom Feed with media support
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Media
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Media_Feed extends Zend_Gdata_Feed
@@ -54,15 +57,13 @@ class Zend_Gdata_Media_Feed extends Zend_Gdata_Feed
 
     /**
      * Create a new instance.
-     * 
+     *
      * @param DOMElement $element (optional) DOMElement from which this
      *          object should be constructed.
      */
     public function __construct($element = null)
     {
-        foreach (Zend_Gdata_Media::$namespaces as $nsPrefix => $nsUri) {
-            $this->registerNamespace($nsPrefix, $nsUri);
-        }
+        $this->registerAllNamespaces(Zend_Gdata_Media::$namespaces);
         parent::__construct($element);
     }
 

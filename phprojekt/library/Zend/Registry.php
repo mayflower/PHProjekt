@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Registry
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Registry.php 8064 2008-02-16 10:58:39Z thomas $
+ * @version    $Id: Registry.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -24,7 +24,7 @@
  *
  * @category   Zend
  * @package    Zend_Registry
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Registry extends ArrayObject
@@ -109,8 +109,10 @@ class Zend_Registry extends ArrayObject
         /**
          * @see Zend_Loader
          */
-        require_once 'Zend/Loader.php';
-        Zend_Loader::loadClass($registryClassName);
+        if (!class_exists($registryClassName)) {
+            require_once 'Zend/Loader.php';
+            Zend_Loader::loadClass($registryClassName);
+        }
 
         self::$_registryClassName = $registryClassName;
     }
@@ -179,6 +181,18 @@ class Zend_Registry extends ArrayObject
             return false;
         }
         return self::$_registry->offsetExists($index);
+    }
+
+    /**
+     * Constructs a parent ArrayObject with default
+     * ARRAY_AS_PROPS to allow acces as an object
+     *
+     * @param array $array data array
+     * @param integer $flags ArrayObject flags
+     */
+    public function __construct($array = array(), $flags = parent::ARRAY_AS_PROPS)
+    {
+        parent::__construct($array, $flags);
     }
 
     /**

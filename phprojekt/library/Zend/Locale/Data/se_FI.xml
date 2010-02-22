@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.19 $"/>
-		<generation date="$Date: 2007/07/19 22:31:40 $"/>
+		<version number="$Revision: 1.26 $"/>
+		<generation date="$Date: 2009/05/05 23:06:40 $"/>
 		<language type="se"/>
 		<territory type="FI"/>
 	</identity>
-	<fallback>fi-FI</fallback>
+	<fallback>fi_FI</fallback>
 	<localeDisplayNames>
 		<languages>
 			<language type="ang">ang</language>
@@ -172,7 +171,6 @@
 							<day type="wed">G</day>
 							<day type="thu">D</day>
 							<day type="fri">B</day>
-							<day type="sat">L</day>
 						</dayWidth>
 					</dayContext>
 				</days>
@@ -215,15 +213,11 @@
 				</fields>
 			</calendar>
 		</calendars>
+		<timeZoneNames>
+			<gmtZeroFormat>GMT</gmtZeroFormat>
+		</timeZoneNames>
 	</dates>
 	<numbers>
-		<percentFormats>
-			<percentFormatLength>
-				<percentFormat>
-					<pattern>#,##0 %</pattern>
-				</percentFormat>
-			</percentFormatLength>
-		</percentFormats>
 		<currencies>
 			<currency type="FIM">
 				<displayName>FIM</displayName>

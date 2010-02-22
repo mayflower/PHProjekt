@@ -14,16 +14,16 @@
  *
  * @category   Zend
  * @package    Zend_Auth
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Auth.php 9101 2008-03-30 19:54:38Z thomas $
+ * @version    $Id: Auth.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 
 /**
  * @category   Zend
  * @package    Zend_Auth
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Auth
@@ -47,7 +47,7 @@ class Zend_Auth
      *
      * @return void
      */
-    private function __construct()
+    protected function __construct()
     {}
 
     /**
@@ -55,7 +55,7 @@ class Zend_Auth
      *
      * @return void
      */
-    private function __clone()
+    protected function __clone()
     {}
 
     /**
@@ -115,6 +115,14 @@ class Zend_Auth
     public function authenticate(Zend_Auth_Adapter_Interface $adapter)
     {
         $result = $adapter->authenticate();
+
+        /**
+         * ZF-7546 - prevent multiple succesive calls from storing inconsistent results
+         * Ensure storage has clean state
+         */
+        if ($this->hasIdentity()) {
+            $this->clearIdentity();
+        }
 
         if ($result->isValid()) {
             $this->getStorage()->write($result->getIdentity());
