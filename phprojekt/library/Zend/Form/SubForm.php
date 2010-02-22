@@ -14,7 +14,7 @@
  *
  * @category   Zend
  * @package    Zend_Form
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -23,12 +23,12 @@ require_once 'Zend/Form.php';
 
 /**
  * Zend_Form_SubForm
- * 
+ *
  * @category   Zend
  * @package    Zend_Form
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: SubForm.php 8585 2008-03-06 19:32:34Z matthew $
+ * @version    $Id: SubForm.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 class Zend_Form_SubForm extends Zend_Form
 {
@@ -40,7 +40,7 @@ class Zend_Form_SubForm extends Zend_Form
 
     /**
      * Load the default decorators
-     * 
+     *
      * @return void
      */
     public function loadDefaultDecorators()

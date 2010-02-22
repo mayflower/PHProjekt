@@ -15,23 +15,26 @@
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Index
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: SegmentWriter.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 
-/** Zend_Search_Lucene_Exception */
-require_once 'Zend/Search/Lucene/Exception.php';
+/** Zend_Search_Lucene_Index_FieldInfo */
+require_once 'Zend/Search/Lucene/Index/FieldInfo.php';
 
-/** Zend_Search_Lucene_Index_SegmentInfo */
-require_once 'Zend/Search/Lucene/Index/SegmentInfo.php';
+/** Zend_Search_Lucene_Index_Term */
+require_once 'Zend/Search/Lucene/Index/Term.php';
 
+/** Zend_Search_Lucene_Index_TermInfo */
+require_once 'Zend/Search/Lucene/Index/TermInfo.php';
 
 /**
  * @category   Zend
  * @package    Zend_Search_Lucene
  * @subpackage Index
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Search_Lucene_Index_SegmentWriter
@@ -493,7 +496,8 @@ abstract class Zend_Search_Lucene_Index_SegmentWriter
         $this->_tisFile->writeLong($this->_termCount);
 
         $this->_tiiFile->seek(4);
-        $this->_tiiFile->writeLong(ceil(($this->_termCount + 2)/self::$indexInterval));
+        // + 1 is used to count an additional special index entry (empty term at the start of the list)
+        $this->_tiiFile->writeLong(($this->_termCount - $this->_termCount % self::$indexInterval)/self::$indexInterval + 1);
     }
 
 

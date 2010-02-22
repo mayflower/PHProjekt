@@ -15,8 +15,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Gdata
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Comments.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -34,7 +36,8 @@ require_once 'Zend/Gdata/Extension/FeedLink.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Gdata
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Extension_Comments extends Zend_Gdata_Extension
@@ -51,13 +54,13 @@ class Zend_Gdata_Extension_Comments extends Zend_Gdata_Extension
         $this->_feedLink = $feedLink;
     }
 
-    public function getDOM($doc = null)
+    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
     {
-        $element = parent::getDOM($doc);
-        if ($this->_rel != null) {
+        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
+        if ($this->_rel !== null) {
             $element->setAttribute('rel', $this->_rel);
         }
-        if ($this->_feedLink != null) {
+        if ($this->_feedLink !== null) {
             $element->appendChild($this->_feedLink->getDOM($element->ownerDocument));
         }
         return $element;

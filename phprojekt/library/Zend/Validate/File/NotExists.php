@@ -14,9 +14,9 @@
  *
  * @category  Zend
  * @package   Zend_Validate
- * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: $
+ * @version   $Id: NotExists.php 20358 2010-01-17 19:03:49Z thomas $
  */
 
 /**
@@ -29,7 +29,7 @@ require_once 'Zend/Validate/File/Exists.php';
  *
  * @category  Zend
  * @package   Zend_Validate
- * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Validate_File_NotExists extends Zend_Validate_File_Exists
@@ -43,7 +43,7 @@ class Zend_Validate_File_NotExists extends Zend_Validate_File_Exists
      * @var array Error message templates
      */
     protected $_messageTemplates = array(
-        self::DOES_EXIST => "The file '%value%' does exist"
+        self::DOES_EXIST => "File '%value%' exists",
     );
 
     /**
@@ -71,14 +71,12 @@ class Zend_Validate_File_NotExists extends Zend_Validate_File_Exists
 
             $check = true;
             if (file_exists($directory . DIRECTORY_SEPARATOR . $file['name'])) {
-                $this->_throw($file, self::DOES_EXIST);
-                return false; 
+                return $this->_throw($file, self::DOES_EXIST);
             }
         }
 
         if (!isset($check)) {
-            $this->_throw($file, self::DOES_EXIST);
-            return false; 
+            return $this->_throw($file, self::DOES_EXIST);
         }
 
         return true;

@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: ActionStack.php 9098 2008-03-30 19:29:10Z thomas $
+ * @version    $Id: ActionStack.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -26,18 +26,13 @@
 require_once 'Zend/Controller/Action/Helper/Abstract.php';
 
 /**
- * @see Zend_Registry
- */
-require_once 'Zend/Registry.php';
-
-/**
  * Add to action stack
  *
  * @uses       Zend_Controller_Action_Helper_Abstract
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Controller_Action_Helper_ActionStack extends Zend_Controller_Action_Helper_Abstract
@@ -51,7 +46,7 @@ class Zend_Controller_Action_Helper_ActionStack extends Zend_Controller_Action_H
      * Constructor
      *
      * Register action stack plugin
-     * 
+     *
      * @return void
      */
     public function __construct()
@@ -70,9 +65,9 @@ class Zend_Controller_Action_Helper_ActionStack extends Zend_Controller_Action_H
     }
 
     /**
-     * Push onto the stack 
-     * 
-     * @param  Zend_Controller_Request_Abstract $next 
+     * Push onto the stack
+     *
+     * @param  Zend_Controller_Request_Abstract $next
      * @return Zend_Controller_Action_Helper_ActionStack Provides a fluent interface
      */
     public function pushStack(Zend_Controller_Request_Abstract $next)
@@ -83,12 +78,12 @@ class Zend_Controller_Action_Helper_ActionStack extends Zend_Controller_Action_H
 
     /**
      * Push a new action onto the stack
-     * 
-     * @param  string $action 
-     * @param  string $controller 
-     * @param  string $module 
+     *
+     * @param  string $action
+     * @param  string $controller
+     * @param  string $module
      * @param  array  $params
-     * @throws Zend_Controller_Action_Exception 
+     * @throws Zend_Controller_Action_Exception
      * @return Zend_Controller_Action_Helper_ActionStack
      */
     public function actionToStack($action, $controller = null, $module = null, array $params = array())
@@ -112,7 +107,7 @@ class Zend_Controller_Action_Helper_ActionStack extends Zend_Controller_Action_H
             require_once 'Zend/Controller/Action/Exception.php';
             throw new Zend_Controller_Action_Exception('Request object not set yet');
         }
-        
+
         $controller = (null === $controller) ? $request->getControllerName() : $controller;
         $module = (null === $module) ? $request->getModuleName() : $module;
 

@@ -15,8 +15,9 @@
  * @category   Zend
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Backend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: ZendPlatform.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -35,7 +36,7 @@ require_once 'Zend/Cache/Backend/Interface.php';
  *
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Backend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Cache_Backend_ZendPlatform extends Zend_Cache_Backend implements Zend_Cache_Backend_Interface
@@ -172,48 +173,79 @@ class Zend_Cache_Backend_ZendPlatform extends Zend_Cache_Backend implements Zend
      *                                               This mode is not supported in this backend
      * Zend_Cache::CLEANING_MODE_MATCHING_TAG     => remove cache entries matching all given tags
      *                                               ($tags can be an array of strings or a single string)
-     *                                               This mode is not supported in this backend
-     * Zend_Cache::CLEANING_MODE_NOT_MATCHING_TAG => remove cache entries not matching one of the given tags
+     * Zend_Cache::CLEANING_MODE_NOT_MATCHING_TAG => unsupported
+     * Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG => remove cache entries matching any given tags
      *                                               ($tags can be an array of strings or a single string)
-     *                                               This mode is not supported in this backend
      *
      * @param  string $mode Clean mode
      * @param  array  $tags Array of tags
+     * @throws Zend_Cache_Exception
      * @return boolean True if no problem
      */
     public function clean($mode = Zend_Cache::CLEANING_MODE_ALL, $tags = array())
     {
-        if ($mode==Zend_Cache::CLEANING_MODE_MATCHING_TAG) {
-            $idlist = null;
-            foreach ($tags as $tag) {
-                $next_idlist = output_cache_get(self::TAGS_PREFIX.$tag, $this->_directives['lifetime']);
+        switch ($mode) {
+            case Zend_Cache::CLEANING_MODE_ALL:
+            case Zend_Cache::CLEANING_MODE_OLD:
+                $cache_dir = ini_get('zend_accelerator.output_cache_dir');
+                if (!$cache_dir) {
+                    return false;
+                }
+                $cache_dir .= '/.php_cache_api/';
+                return $this->_clean($cache_dir, $mode);
+                break;
+            case Zend_Cache::CLEANING_MODE_MATCHING_TAG:
+                $idlist = null;
+                foreach ($tags as $tag) {
+                    $next_idlist = output_cache_get(self::TAGS_PREFIX.$tag, $this->_directives['lifetime']);
+                    if ($idlist) {
+                        $idlist = array_intersect_assoc($idlist, $next_idlist);
+                    } else {
+                        $idlist = $next_idlist;
+                    }
+                    if (count($idlist) == 0) {
+                        // if ID list is already empty - we may skip checking other IDs
+                        $idlist = null;
+                        break;
+                    }
+                }
                 if ($idlist) {
-                    $idlist = array_intersect_assoc($idlist, $next_idlist);
-                } else {
-                    $idlist = $next_idlist;
+                    foreach ($idlist as $id) {
+                        output_cache_remove_key($id);
+                    }
                 }
-                if (count($idlist) == 0) {
-                    // if ID list is already empty - we may skip checking other IDs
-                    $idlist = null;
-                    break;
+                return true;
+                break;
+            case Zend_Cache::CLEANING_MODE_NOT_MATCHING_TAG:
+                $this->_log("Zend_Cache_Backend_ZendPlatform::clean() : CLEANING_MODE_NOT_MATCHING_TAG is not supported by the Zend Platform backend");
+                return false;
+                break;
+            case Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG:
+                $idlist = null;
+                foreach ($tags as $tag) {
+                    $next_idlist = output_cache_get(self::TAGS_PREFIX.$tag, $this->_directives['lifetime']);
+                    if ($idlist) {
+                        $idlist = array_merge_recursive($idlist, $next_idlist);
+                    } else {
+                        $idlist = $next_idlist;
+                    }
+                    if (count($idlist) == 0) {
+                        // if ID list is already empty - we may skip checking other IDs
+                        $idlist = null;
+                        break;
+                    }
                 }
-            }
-            if ($idlist) {
-                foreach ($idlist as $id) {
-                    output_cache_remove_key($id);
+                if ($idlist) {
+                    foreach ($idlist as $id) {
+                        output_cache_remove_key($id);
+                    }
                 }
-            }
-            return true;
+                return true;
+                break;
+            default:
+                Zend_Cache::throwException('Invalid mode for clean() method');
+                break;
         }
-        if ($mode==Zend_Cache::CLEANING_MODE_NOT_MATCHING_TAG) {
-            $this->_log("Zend_Cache_Backend_ZendPlatform::clean() : CLEANING_MODE_NOT_MATCHING_TAG is not supported by the Zend Platform backend");
-        }
-        $cache_dir = ini_get('zend_accelerator.output_cache_dir');
-        if (!$cache_dir) {
-            return false;
-        }
-        $cache_dir .= '/.php_cache_api/';
-        return $this->_clean($cache_dir, $mode);
     }
 
     /**
@@ -244,7 +276,7 @@ class Zend_Cache_Backend_ZendPlatform extends Zend_Cache_Backend implements Zend
                     $result = ($this->_remove($file)) && ($result);
                 } else if ($mode == Zend_Cache::CLEANING_MODE_OLD) {
                     // Files older than lifetime get deleted from cache
-                    if (!is_null($this->_directives['lifetime'])) {
+                    if ($this->_directives['lifetime'] !== null) {
                         if ((time() - @filemtime($file)) > $this->_directives['lifetime']) {
                             $result = ($this->_remove($file)) && ($result);
                         }
@@ -271,7 +303,7 @@ class Zend_Cache_Backend_ZendPlatform extends Zend_Cache_Backend implements Zend
             # If we can't remove the file (because of locks or any problem), we will touch
             # the file to invalidate it
             $this->_log("Zend_Cache_Backend_ZendPlatform::_remove() : we can't remove $file => we are going to try to invalidate it");
-            if (is_null($this->_directives['lifetime'])) {
+            if ($this->_directives['lifetime'] === null) {
                 return false;
             }
             if (!file_exists($file)) {

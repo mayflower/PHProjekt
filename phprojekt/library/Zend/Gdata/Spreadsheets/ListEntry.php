@@ -15,8 +15,10 @@
  *
  * @category     Zend
  * @package      Zend_Gdata
- * @copyright    Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage   Spreadsheets
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: ListEntry.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -33,8 +35,9 @@ require_once 'Zend/Gdata/Spreadsheets/Extension/Custom.php';
  * Concrete class for working with List entries.
  *
  * @category     Zend
- * @package        Zend_Gdata
- * @copyright    Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @package      Zend_Gdata
+ * @subpackage   Spreadsheets
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Spreadsheets_ListEntry extends Zend_Gdata_Entry
@@ -48,7 +51,7 @@ class Zend_Gdata_Spreadsheets_ListEntry extends Zend_Gdata_Entry
      * @var array
      */
     protected $_custom = array();
-    
+
     /**
      * List of custom row elements (Zend_Gdata_Spreadsheets_Extension_Custom),
      * indexed by element name.
@@ -62,15 +65,13 @@ class Zend_Gdata_Spreadsheets_ListEntry extends Zend_Gdata_Entry
      */
     public function __construct($element = null)
     {
-        foreach (Zend_Gdata_Spreadsheets::$namespaces as $nsPrefix => $nsUri) {
-            $this->registerNamespace($nsPrefix, $nsUri);
-        }
+        $this->registerAllNamespaces(Zend_Gdata_Spreadsheets::$namespaces);
         parent::__construct($element);
     }
 
-    public function getDOM($doc = null)
+    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
     {
-        $element = parent::getDOM($doc);
+        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
         if (!empty($this->_custom)) {
             foreach ($this->_custom as $custom) {
                 $element->appendChild($custom->getDOM($element->ownerDocument));
@@ -127,7 +128,7 @@ class Zend_Gdata_Spreadsheets_ListEntry extends Zend_Gdata_Entry
     }
 
     /**
-     * Sets the row elements contained by this list entry. If any 
+     * Sets the row elements contained by this list entry. If any
      * custom row elements were previously stored, they will be overwritten.
      * @param array $custom The custom row elements to be contained in this
      *          list entry.

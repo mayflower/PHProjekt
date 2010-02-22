@@ -14,8 +14,8 @@
  *
  * @category   Zend
  * @package    Zend_Translate
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Date.php 2498 2006-12-23 22:13:38Z thomas $
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: Csv.php 20096 2010-01-06 02:05:09Z bkarwin $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -30,20 +30,22 @@ require_once 'Zend/Translate/Adapter.php';
 /**
  * @category   Zend
  * @package    Zend_Translate
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Translate_Adapter_Csv extends Zend_Translate_Adapter {
+class Zend_Translate_Adapter_Csv extends Zend_Translate_Adapter
+{
+    private $_data    = array();
 
     /**
      * Generates the adapter
      *
-     * @param  string              $data     Translation data
+     * @param  string              $data     OPTIONAL Translation data
      * @param  string|Zend_Locale  $locale   OPTIONAL Locale/Language to set, identical with locale identifier,
      *                                       see Zend_Locale for more information
-     * @param  array               $options  Options for this adapter
+     * @param  array               $options  OPTIONAL Options for this adapter
      */
-    public function __construct($data, $locale = null, array $options = array())
+    public function __construct($data = null, $locale = null, array $options = array())
     {
         $this->_options['delimiter'] = ";";
         $this->_options['length']    = 0;
@@ -58,15 +60,12 @@ class Zend_Translate_Adapter_Csv extends Zend_Translate_Adapter {
      * @param  string        $locale    Locale/Language to add data for, identical with locale identifier,
      *                                  see Zend_Locale for more information
      * @param  array         $option    OPTIONAL Options to use
+     * @return array
      */
     protected function _loadTranslationData($filename, $locale, array $options = array())
     {
-        $options = $options + $this->_options;
-
-        if ($options['clear']  ||  !isset($this->_translate[$locale])) {
-            $this->_translate[$locale] = array();
-        }
-
+        $this->_data = array();
+        $options     = $options + $this->_options;
         $this->_file = @fopen($filename, 'rb');
         if (!$this->_file) {
             require_once 'Zend/Translate/Exception.php';
@@ -78,12 +77,19 @@ class Zend_Translate_Adapter_Csv extends Zend_Translate_Adapter {
                 continue;
             }
 
-            if (isset($data[1]) !== true) {
+            if (!isset($data[1])) {
                 continue;
             }
 
-            $this->_translate[$locale][$data[0]] = $data[1];
+            if (count($data) == 2) {
+                $this->_data[$locale][$data[0]] = $data[1];
+            } else {
+                $singular = array_shift($data);
+                $this->_data[$locale][$singular] = $data;
+            }
         }
+
+        return $this->_data;
     }
 
     /**

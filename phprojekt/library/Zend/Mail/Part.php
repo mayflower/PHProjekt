@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Mail
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Part.php 9099 2008-03-30 19:35:47Z thomas $
+ * @version    $Id: Part.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 
@@ -34,7 +34,7 @@ require_once 'Zend/Mail/Part/Interface.php';
 /**
  * @category   Zend
  * @package    Zend_Mail
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface
@@ -189,7 +189,7 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface
      * @return int size
      */
     public function getSize() {
-    	return strlen($this->getContent());
+        return strlen($this->getContent());
     }
 
 
@@ -220,6 +220,9 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface
             throw new Zend_Mail_Exception('no boundary found in content type to split message');
         }
         $parts = Zend_Mime_Decode::splitMessageStruct($this->_content, $boundary);
+        if ($parts === null) {
+            return;
+        }
         $counter = 1;
         foreach ($parts as $part) {
             $this->_parts[$counter++] = new self(array('headers' => $part['header'], 'content' => $part['body']));
@@ -334,14 +337,14 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface
 
         $lowerName = strtolower($name);
 
-        if (!isset($this->_headers[$lowerName])) {
+        if ($this->headerExists($name) == false) {
             $lowerName = strtolower(preg_replace('%([a-z])([A-Z])%', '\1-\2', $name));
-            if (!isset($this->_headers[$lowerName])) {
+            if($this->headerExists($lowerName) == false) {
                 /**
                  * @see Zend_Mail_Exception
                  */
                 require_once 'Zend/Mail/Exception.php';
-                throw new Zend_Mail_Exception("no Header with Name $name found");
+                throw new Zend_Mail_Exception("no Header with Name $name or $lowerName found");
             }
         }
         $name = $lowerName;
@@ -362,7 +365,23 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface
 
         return $header;
     }
-    
+
+    /**
+     * Check wheater the Mail part has a specific header.
+     *
+     * @param  string $name
+     * @return boolean
+     */
+    public function headerExists($name)
+    {
+        $name = strtolower($name);
+        if(isset($this->_headers[$name])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Get a specific field from a header like content type or all fields as array
      *
@@ -379,7 +398,7 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface
      * @throws Zend_Exception, Zend_Mail_Exception
      */
     public function getHeaderField($name, $wantedPart = 0, $firstName = 0) {
-    	return Zend_Mime_Decode::splitHeaderField(current($this->getHeader($name, 'array')), $wantedPart, $firstName);
+        return Zend_Mime_Decode::splitHeaderField(current($this->getHeader($name, 'array')), $wantedPart, $firstName);
     }
 
 
@@ -397,6 +416,21 @@ class Zend_Mail_Part implements RecursiveIterator, Zend_Mail_Part_Interface
     public function __get($name)
     {
         return $this->getHeader($name, 'string');
+    }
+
+    /**
+     * Isset magic method proxy to hasHeader
+     *
+     * This method is short syntax for Zend_Mail_Part::hasHeader($name);
+     *
+     * @see Zend_Mail_Part::hasHeader
+     *
+     * @param  string
+     * @return boolean
+     */
+    public function __isset($name)
+    {
+        return $this->headerExists($name);
     }
 
     /**

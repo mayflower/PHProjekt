@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -24,13 +24,13 @@ require_once 'Zend/Form/Element/Xhtml.php';
 
 /**
  * Submit form element
- * 
+ *
  * @category   Zend
  * @package    Zend_Form
  * @subpackage Element
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Submit.php 8585 2008-03-06 19:32:34Z matthew $
+ * @version    $Id: Submit.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 class Zend_Form_Element_Submit extends Zend_Form_Element_Xhtml
 {
@@ -42,7 +42,7 @@ class Zend_Form_Element_Submit extends Zend_Form_Element_Xhtml
 
     /**
      * Constructor
-     * 
+     *
      * @param  string|array|Zend_Config $spec Element name or configuration
      * @param  string|array|Zend_Config $options Element value or configuration
      * @return void
@@ -51,6 +51,10 @@ class Zend_Form_Element_Submit extends Zend_Form_Element_Xhtml
     {
         if (is_string($spec) && ((null !== $options) && is_string($options))) {
             $options = array('label' => $options);
+        }
+        
+        if (!isset($options['ignore'])) {
+            $options['ignore'] = true;
         }
 
         parent::__construct($spec, $options);
@@ -62,7 +66,7 @@ class Zend_Form_Element_Submit extends Zend_Form_Element_Xhtml
      * If no label is present, returns the currently set name.
      *
      * If a translator is present, returns the translated label.
-     * 
+     *
      * @return string
      */
     public function getLabel()
@@ -82,7 +86,7 @@ class Zend_Form_Element_Submit extends Zend_Form_Element_Xhtml
 
     /**
      * Has this submit button been selected?
-     * 
+     *
      * @return bool
      */
     public function isChecked()
@@ -103,7 +107,7 @@ class Zend_Form_Element_Submit extends Zend_Form_Element_Xhtml
      * Default decorators
      *
      * Uses only 'Submit' and 'DtDdWrapper' decorators by default.
-     * 
+     *
      * @return void
      */
     public function loadDefaultDecorators()
@@ -114,7 +118,8 @@ class Zend_Form_Element_Submit extends Zend_Form_Element_Xhtml
 
         $decorators = $this->getDecorators();
         if (empty($decorators)) {
-            $this->addDecorator('ViewHelper')
+            $this->addDecorator('Tooltip')
+                 ->addDecorator('ViewHelper')
                  ->addDecorator('DtDdWrapper');
         }
     }

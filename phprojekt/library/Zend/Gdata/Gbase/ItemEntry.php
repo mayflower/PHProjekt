@@ -15,8 +15,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Gbase
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: ItemEntry.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -31,7 +33,8 @@ require_once 'Zend/Gdata/Gbase/Entry.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Gbase
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Gbase_ItemEntry extends Zend_Gdata_Gbase_Entry
@@ -46,7 +49,7 @@ class Zend_Gdata_Gbase_ItemEntry extends Zend_Gdata_Gbase_Entry
     /**
      * Set the value of the itme_type
      *
-     * @param Zend_Gdata_Gbase_Extension_ItemType $value The desired value for the item_type 
+     * @param Zend_Gdata_Gbase_Extension_ItemType $value The desired value for the item_type
      * @return Zend_Gdata_Gbase_ItemEntry Provides a fluent interface
      */
     public function setItemType($value)
@@ -57,7 +60,7 @@ class Zend_Gdata_Gbase_ItemEntry extends Zend_Gdata_Gbase_Entry
 
     /**
      * Adds a custom attribute to the entry in the following format:
-     * &lt;g:[$name] type='[$type]'&gt;[$value]&lt;/g:[$name]&gt;      
+     * &lt;g:[$name] type='[$type]'&gt;[$value]&lt;/g:[$name]&gt;
      *
      * @param string $name The name of the attribute
      * @param string $value The text value of the attribute
@@ -73,7 +76,7 @@ class Zend_Gdata_Gbase_ItemEntry extends Zend_Gdata_Gbase_Entry
 
     /**
      * Removes a Base attribute from the current list of Base attributes
-     * 
+     *
      * @param Zend_Gdata_Gbase_Extension_BaseAttribute $baseAttribute The attribute to be removed
      * @return Zend_Gdata_Gbase_ItemEntry Provides a fluent interface
      */
@@ -92,17 +95,25 @@ class Zend_Gdata_Gbase_ItemEntry extends Zend_Gdata_Gbase_Entry
     /**
      * Uploads changes in this entry to the server using Zend_Gdata_App
      *
-     * @param boolean $dryRun Whether the transaction is dry run or not
+     * @param boolean $dryRun Whether the transaction is dry run or not.
+     * @param string|null $uri The URI to send requests to, or null if $data
+     *        contains the URI.
+     * @param string|null $className The name of the class that should we
+     *        deserializing the server response. If null, then
+     *        'Zend_Gdata_App_Entry' will be used.
+     * @param array $extraHeaders Extra headers to add to the request, as an
+     *        array of string-based key/value pairs.
      * @return Zend_Gdata_App_Entry The updated entry
      * @throws Zend_Gdata_App_Exception
      */
-    public function save($dryRun = false)
+    public function save($dryRun = false,
+                         $uri = null,
+                         $className = null,
+                         $extraHeaders = array())
     {
-        $uri = null;
-
         if ($dryRun == true) {
             $editLink = $this->getEditLink();
-            if ($editLink !== null) {
+            if ($uri == null && $editLink !== null) {
                 $uri = $editLink->getHref() . '?dry-run=true';
             }
             if ($uri === null) {
@@ -110,9 +121,12 @@ class Zend_Gdata_Gbase_ItemEntry extends Zend_Gdata_Gbase_Entry
                 throw new Zend_Gdata_App_InvalidArgumentException('You must specify an URI which needs deleted.');
             }
             $service = new Zend_Gdata_App($this->getHttpClient());
-            return $service->updateEntry($this, $uri);
+            return $service->updateEntry($this,
+                                         $uri,
+                                         $className,
+                                         $extraHeaders);
         } else {
-            parent::save();
+            parent::save($uri, $className, $extraHeaders);
         }
     }
 

@@ -15,8 +15,9 @@
  * @category   Zend
  * @package    Zend_Rest
  * @subpackage Client
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Client.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 
@@ -33,7 +34,7 @@ require_once 'Zend/Uri.php';
  * @category   Zend
  * @package    Zend_Rest
  * @subpackage Client
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Rest_Client extends Zend_Service_Abstract
@@ -125,6 +126,7 @@ class Zend_Rest_Client extends Zend_Service_Abstract
      *
      * @param string $path
      * @param array  $query Array of GET parameters
+     * @throws Zend_Http_Client_Exception
      * @return Zend_Http_Response
      */
     final public function restGet($path, array $query = null)
@@ -162,6 +164,7 @@ class Zend_Rest_Client extends Zend_Service_Abstract
      *
      * @param string $path
      * @param mixed $data Raw data to send
+     * @throws Zend_Http_Client_Exception
      * @return Zend_Http_Response
      */
     final public function restPost($path, $data = null)
@@ -175,6 +178,7 @@ class Zend_Rest_Client extends Zend_Service_Abstract
      *
      * @param string $path
      * @param mixed $data Raw data to send in request
+     * @throws Zend_Http_Client_Exception
      * @return Zend_Http_Response
      */
     final public function restPut($path, $data = null)
@@ -187,6 +191,7 @@ class Zend_Rest_Client extends Zend_Service_Abstract
      * Performs an HTTP DELETE request to $path.
      *
      * @param string $path
+     * @throws Zend_Http_Client_Exception
      * @return Zend_Http_Response
      */
     final public function restDelete($path)
@@ -203,12 +208,6 @@ class Zend_Rest_Client extends Zend_Service_Abstract
      * method (post, get, delete, put):
      * <code>
      * $response = $rest->sayHello('Foo', 'Manchu')->get();
-     * </code>
-     *
-     * You can also use an HTTP request method as a calling method, using the
-     * path as the first argument:
-     * <code>
-     * $rest->get('/sayHello', 'Foo', 'Manchu');
      * </code>
      *
      * Or use them together, but in sequential calls:
@@ -233,12 +232,17 @@ class Zend_Rest_Client extends Zend_Service_Abstract
             $this->_data['rest'] = 1;
             $data = array_slice($args, 1) + $this->_data;
             $response = $this->{'rest' . $method}($args[0], $data);
+            $this->_data = array();//Initializes for next Rest method.
             return new Zend_Rest_Client_Result($response->getBody());
         } else {
             // More than one arg means it's definitely a Zend_Rest_Server
             if (sizeof($args) == 1) {
-                $this->_data[$method] = $args[0];
-                $this->_data['arg1']  = $args[0];
+                // Uses first called function name as method name
+                if (!isset($this->_data['method'])) {
+                    $this->_data['method'] = $method;
+                    $this->_data['arg1']  = $args[0];
+                }
+                $this->_data[$method]  = $args[0];
             } else {
                 $this->_data['method'] = $method;
                 if (sizeof($args) > 0) {

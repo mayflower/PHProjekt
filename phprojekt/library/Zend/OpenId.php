@@ -15,15 +15,10 @@
  *
  * @category   Zend
  * @package    Zend_OpenId
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: OpenId.php 9240 2008-04-18 13:06:29Z dmitry $
+ * @version    $Id: OpenId.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
-
-/**
- * @see Zend_OpenId_Exception
- */
-require_once "Zend/OpenId/Exception.php";
 
 /**
  * @see Zend_Controller_Response_Abstract
@@ -40,7 +35,7 @@ require_once "Zend/Controller/Response/Abstract.php";
  *
  * @category   Zend
  * @package    Zend_OpenId
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_OpenId
@@ -67,13 +62,35 @@ class Zend_OpenId
     static public $exitOnRedirect = true;
 
     /**
+     * Alternative request URL that can be used to override the default
+     * selfUrl() response
+     */
+    static public $selfUrl = null;
+
+    /**
+     * Sets alternative request URL that can be used to override the default
+     * selfUrl() response
+     *
+     * @param string $selfUrl the URL to be set
+     * @return string the old value of overriding URL
+     */
+    static public function setSelfUrl($selfUrl = null)
+    {
+        $ret = self::$selfUrl;
+        self::$selfUrl = $selfUrl;
+        return $ret;
+    }
+
+    /**
      * Returns a full URL that was requested on current HTTP request.
      *
      * @return string
      */
     static public function selfUrl()
     {
-        if (isset($_SERVER['SCRIPT_URI'])) {
+        if (self::$selfUrl !== null) {
+            return self::$selfUrl;
+        } if (isset($_SERVER['SCRIPT_URI'])) {
             return $_SERVER['SCRIPT_URI'];
         }
         $url = '';
@@ -485,6 +502,7 @@ class Zend_OpenId
                 return mhash(MHASH_SHA256 , $data);
             }
         }
+        require_once "Zend/OpenId/Exception.php";
         throw new Zend_OpenId_Exception(
             'Unsupported digest algorithm "' . $func . '".',
             Zend_OpenId_Exception::UNSUPPORTED_DIGEST);
@@ -508,7 +526,7 @@ class Zend_OpenId
         if (function_exists('hash_hmac')) {
             return hash_hmac($macFunc, $data, $secret, 1);
         } else {
-            if (strlen($secret) > 64) {
+            if (Zend_OpenId::strlen($secret) > 64) {
                 $secret = self::digest($macFunc, $secret);
             }
             $secret = str_pad($secret, 64, chr(0x00));
@@ -533,13 +551,14 @@ class Zend_OpenId
             return gmp_init(bin2hex($bin), 16);
         } else if (extension_loaded('bcmath')) {
             $bn = 0;
-            $len = strlen($bin);
+            $len = Zend_OpenId::strlen($bin);
             for ($i = 0; $i < $len; $i++) {
                 $bn = bcmul($bn, 256);
                 $bn = bcadd($bn, ord($bin[$i]));
             }
             return $bn;
         }
+        require_once "Zend/OpenId/Exception.php";
         throw new Zend_OpenId_Exception(
             'The system doesn\'t have proper big integer extension',
             Zend_OpenId_Exception::UNSUPPORTED_LONG_MATH);
@@ -568,6 +587,7 @@ class Zend_OpenId
             if ($cmp == 0) {
                 return (chr(0));
             } else if ($cmp < 0) {
+                require_once "Zend/OpenId/Exception.php";
                 throw new Zend_OpenId_Exception(
                     'Big integer arithmetic error',
                     Zend_OpenId_Exception::ERROR_LONG_MATH);
@@ -582,6 +602,7 @@ class Zend_OpenId
             }
             return $bin;
         }
+        require_once "Zend/OpenId/Exception.php";
         throw new Zend_OpenId_Exception(
             'The system doesn\'t have proper big integer extension',
             Zend_OpenId_Exception::UNSUPPORTED_LONG_MATH);
@@ -606,15 +627,15 @@ class Zend_OpenId
                     'p' => $p,
                     'g' => $g
                 );
-            if (!is_null($priv_key)) {
+            if ($priv_key !== null) {
                 $dh_details['priv_key'] = $priv_key;
             }
             return openssl_pkey_new(array('dh'=>$dh_details));
         } else {
             $bn_p        = self::binToBigNum($p);
             $bn_g        = self::binToBigNum($g);
-            if (is_null($priv_key)) {
-                $priv_key    = self::randomBytes(strlen($p));
+            if ($priv_key === null) {
+                $priv_key    = self::randomBytes(Zend_OpenId::strlen($p));
             }
             $bn_priv_key = self::binToBigNum($priv_key);
             if (extension_loaded('gmp')) {
@@ -684,6 +705,7 @@ class Zend_OpenId
             $bn_secret  = bcpowmod($bn_pub_key, $dh['priv_key'], $dh['p']);
             return self::bigNumToBin($bn_secret);
         }
+        require_once "Zend/OpenId/Exception.php";
         throw new Zend_OpenId_Exception(
             'The system doesn\'t have proper big integer extension',
             Zend_OpenId_Exception::UNSUPPORTED_LONG_MATH);
@@ -710,6 +732,22 @@ class Zend_OpenId
             return chr(0) . $str;
         }
         return $str;
+    }
+
+    /**
+     * Returns lenght of binary string in bytes
+     *
+     * @param string $str
+     * @return int the string lenght
+     */
+    static public function strlen($str)
+    {
+        if (extension_loaded('mbstring') &&
+            (((int)ini_get('mbstring.func_overload')) & 2)) {
+            return mb_strlen($str, 'latin1');
+        } else {
+            return strlen($str);
+        }
     }
 
 }

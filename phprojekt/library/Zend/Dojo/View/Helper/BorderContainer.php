@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Dojo
  * @subpackage View
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: BorderContainer.php 10067 2008-07-12 21:05:32Z matthew $
+ * @version    $Id: BorderContainer.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /** Zend_Dojo_View_Helper_DijitContainer */
@@ -25,11 +25,11 @@ require_once 'Zend/Dojo/View/Helper/DijitContainer.php';
 
 /**
  * Dojo BorderContainer dijit
- * 
+ *
  * @uses       Zend_Dojo_View_Helper_DijitContainer
  * @package    Zend_Dojo
  * @subpackage View
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
   */
 class Zend_Dojo_View_Helper_BorderContainer extends Zend_Dojo_View_Helper_DijitContainer
@@ -47,10 +47,16 @@ class Zend_Dojo_View_Helper_BorderContainer extends Zend_Dojo_View_Helper_DijitC
     protected $_module = 'dijit.layout.BorderContainer';
 
     /**
+     * Ensure style is only registered once
+     * @var bool
+     */
+    protected $_styleIsRegistered = false;
+
+    /**
      * dijit.layout.BorderContainer
-     * 
-     * @param  string $id 
-     * @param  string $content 
+     *
+     * @param  string $id
+     * @param  string $content
      * @param  array $params  Parameters to use for dijit creation
      * @param  array $attribs HTML attributes
      * @return string
@@ -62,7 +68,10 @@ class Zend_Dojo_View_Helper_BorderContainer extends Zend_Dojo_View_Helper_DijitC
         }
 
         // this will ensure that the border container is viewable:
-        $this->view->headStyle()->appendStyle('html, body { height: 100%; width: 100%; margin: 0; padding: 0; }');
+        if (!$this->_styleIsRegistered) {
+            $this->view->headStyle()->appendStyle('html, body { height: 100%; width: 100%; margin: 0; padding: 0; }');
+            $this->_styleIsRegistered = true;
+        }
 
         // and now we create it:
         return $this->_createLayoutContainer($id, $content, $params, $attribs);

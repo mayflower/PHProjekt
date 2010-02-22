@@ -15,8 +15,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Gdata
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Reminder.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -29,7 +31,8 @@ require_once 'Zend/Gdata/Extension.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Gdata
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Extension_Reminder extends Zend_Gdata_Extension
@@ -53,22 +56,22 @@ class Zend_Gdata_Extension_Reminder extends Zend_Gdata_Extension
         $this->_minutes = $minutes;
     }
 
-    public function getDOM($doc = null)
+    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
     {
-        $element = parent::getDOM($doc);
-        if ($this->_absoluteTime != null) {
+        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
+        if ($this->_absoluteTime !== null) {
             $element->setAttribute('absoluteTime', $this->_absoluteTime);
         }
-        if ($this->_method != null) {
+        if ($this->_method !== null) {
             $element->setAttribute('method', $this->_method);
         }
-        if ($this->_days != null) {
+        if ($this->_days !== null) {
             $element->setAttribute('days', $this->_days);
         }
-        if ($this->_hours != null) {
+        if ($this->_hours !== null) {
             $element->setAttribute('hours', $this->_hours);
         }
-        if ($this->_minutes != null) {
+        if ($this->_minutes !== null) {
             $element->setAttribute('minutes', $this->_minutes);
         }
         return $element;
@@ -99,16 +102,16 @@ class Zend_Gdata_Extension_Reminder extends Zend_Gdata_Extension
 
     public function __toString()
     {
-        $s;
-        if ($absoluteTime)
-            $s = "at" . $absoluteTime;
-        else if ($days)
-            $s = "in" . $days . "days";
-        else if ($hours)
-            $s = "in" . $hours . "hours";
-        else if ($minutes)
-            $s = "in" . $minutes . "minutes";
-        return $method . $s;
+        $s = '';
+        if ($this->_absoluteTime)
+            $s = " at " . $this->_absoluteTime;
+        else if ($this->_days)
+            $s = " in " . $this->_days . " days";
+        else if ($this->_hours)
+            $s = " in " . $this->_hours . " hours";
+        else if ($this->_minutes)
+            $s = " in " . $this->_minutes . " minutes";
+        return $this->_method . $s;
     }
 
     public function getAbsoluteTime()

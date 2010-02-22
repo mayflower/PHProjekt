@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 10387 2008-07-24 20:14:26Z matthew $
+ * @version    $Id: Abstract.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 
@@ -37,10 +37,10 @@ require_once 'Zend/Feed/Element.php';
  *
  * @category   Zend
  * @package    Zend_Feed
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator
+abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator, Countable
 {
     /**
      * Current index on the collection of feed entries for the
@@ -77,11 +77,11 @@ abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator
             $client->setUri($uri);
             $response = $client->request('GET');
             if ($response->getStatus() !== 200) {
-                /** 
+                /**
                  * @see Zend_Feed_Exception
                  */
                 require_once 'Zend/Feed/Exception.php';
-            	throw new Zend_Feed_Exception('Feed failed to load, got response code ' . $response->getStatus());
+                throw new Zend_Feed_Exception('Feed failed to load, got response code ' . $response->getStatus());
             }
             $this->_element = $response->getBody();
             $this->__wakeup();
@@ -123,8 +123,8 @@ abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator
                     $php_errormsg = '(error message not available)';
                 }
             }
-            
-            /** 
+
+            /**
              * @see Zend_Feed_Exception
              */
             require_once 'Zend/Feed/Exception.php';

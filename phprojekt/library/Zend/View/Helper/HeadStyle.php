@@ -12,10 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
  *
+ * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Placeholder.php 7078 2007-12-11 14:29:33Z matthew $
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: HeadStyle.php 20104 2010-01-06 21:26:01Z matthew $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -28,7 +29,7 @@ require_once 'Zend/View/Helper/Placeholder/Container/Standalone.php';
  * @uses       Zend_View_Helper_Placeholder_Container_Standalone
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_Standalone
@@ -50,7 +51,7 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
      * @var array
      */
     protected $_mediaTypes = array(
-        'all', 'aural', 'braille', 'handheld', 'print', 
+        'all', 'aural', 'braille', 'handheld', 'print',
         'projection', 'screen', 'tty', 'tv'
     );
 
@@ -76,7 +77,7 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
      * Constructor
      *
      * Set separator to PHP_EOL.
-     * 
+     *
      * @return void
      */
     public function __construct()
@@ -84,11 +85,11 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
         parent::__construct();
         $this->setSeparator(PHP_EOL);
     }
-    
+
     /**
      * Return headStyle object
      *
-     * Returns headStyle helper object; optionally, allows specifying 
+     * Returns headStyle helper object; optionally, allows specifying
      *
      * @param  string $content Stylesheet contents
      * @param  string $placement Append, prepend, or set
@@ -124,9 +125,9 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
      * - offsetSetStyle($index, $content, $attributes = array())
      * - prependStyle($content, $attributes = array())
      * - setStyle($content, $attributes = array())
-     * 
-     * @param  string $method 
-     * @param  array $args 
+     *
+     * @param  string $method
+     * @param  array $args
      * @return void
      * @throws Zend_View_Exception When no $content provided or invalid method
      */
@@ -146,7 +147,9 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
 
             if (1 > $argc) {
                 require_once 'Zend/View/Exception.php';
-                throw new Zend_View_Exception(sprintf('Method "%s" requires minimally content for the stylesheet', $method));
+                $e = new Zend_View_Exception(sprintf('Method "%s" requires minimally content for the stylesheet', $method));
+                $e->setView($this->view);
+                throw $e;
             }
 
             $content = $args[0];
@@ -171,9 +174,9 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
 
     /**
      * Determine if a value is a valid style tag
-     * 
-     * @param  mixed $value 
-     * @param  string $method 
+     *
+     * @param  mixed $value
+     * @param  string $method
      * @return boolean
      */
     protected function _isValid($value)
@@ -190,32 +193,36 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
 
     /**
      * Override append to enforce style creation
-     * 
-     * @param  mixed $value 
+     *
+     * @param  mixed $value
      * @return void
      */
     public function append($value)
     {
         if (!$this->_isValid($value)) {
             require_once 'Zend/View/Exception.php';
-            throw new Zend_View_Exception('Invalid value passed to append; please use appendStyle()');
+            $e = new Zend_View_Exception('Invalid value passed to append; please use appendStyle()');
+            $e->setView($this->view);
+            throw $e;
         }
 
         return $this->getContainer()->append($value);
     }
-   
+
     /**
      * Override offsetSet to enforce style creation
-     * 
+     *
      * @param  string|int $index
-     * @param  mixed $value 
+     * @param  mixed $value
      * @return void
      */
     public function offsetSet($index, $value)
     {
         if (!$this->_isValid($value)) {
             require_once 'Zend/View/Exception.php';
-            throw new Zend_View_Exception('Invalid value passed to offsetSet; please use offsetSetStyle()');
+            $e = new Zend_View_Exception('Invalid value passed to offsetSet; please use offsetSetStyle()');
+            $e->setView($this->view);
+            throw $e;
         }
 
         return $this->getContainer()->offsetSet($index, $value);
@@ -223,15 +230,17 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
 
     /**
      * Override prepend to enforce style creation
-     * 
-     * @param  mixed $value 
+     *
+     * @param  mixed $value
      * @return void
      */
     public function prepend($value)
     {
         if (!$this->_isValid($value)) {
             require_once 'Zend/View/Exception.php';
-            throw new Zend_View_Exception('Invalid value passed to prepend; please use prependStyle()');
+            $e = new Zend_View_Exception('Invalid value passed to prepend; please use prependStyle()');
+            $e->setView($this->view);
+            throw $e;
         }
 
         return $this->getContainer()->prepend($value);
@@ -239,15 +248,17 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
 
     /**
      * Override set to enforce style creation
-     * 
-     * @param  mixed $value 
+     *
+     * @param  mixed $value
      * @return void
      */
     public function set($value)
     {
         if (!$this->_isValid($value)) {
             require_once 'Zend/View/Exception.php';
-            throw new Zend_View_Exception('Invalid value passed to set; please use setStyle()');
+            $e = new Zend_View_Exception('Invalid value passed to set; please use setStyle()');
+            $e->setView($this->view);
+            throw $e;
         }
 
         return $this->getContainer()->set($value);
@@ -255,16 +266,18 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
 
     /**
      * Start capture action
-     * 
-     * @param  mixed $captureType 
-     * @param  string $typeOrAttrs 
+     *
+     * @param  mixed $captureType
+     * @param  string $typeOrAttrs
      * @return void
      */
     public function captureStart($type = Zend_View_Helper_Placeholder_Container_Abstract::APPEND, $attrs = null)
     {
         if ($this->_captureLock) {
             require_once 'Zend/View/Helper/Placeholder/Container/Exception.php';
-            throw new Zend_View_Helper_Placeholder_Container_Exception('Cannot nest headStyle captures');
+            $e = new Zend_View_Helper_Placeholder_Container_Exception('Cannot nest headStyle captures');
+            $e->setView($this->view);
+            throw $e;
         }
 
         $this->_captureLock        = true;
@@ -272,10 +285,10 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
         $this->_captureType        = $type;
         ob_start();
     }
-    
+
     /**
      * End capture action and store
-     * 
+     *
      * @return void
      */
     public function captureEnd()
@@ -301,25 +314,44 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
 
     /**
      * Convert content and attributes into valid style tag
-     * 
+     *
      * @param  stdClass $item Item to render
-     * @param  string $indent Indentation to use 
+     * @param  string $indent Indentation to use
      * @return string
      */
     public function itemToString(stdClass $item, $indent)
     {
         $attrString = '';
         if (!empty($item->attributes)) {
+            $enc = 'UTF-8';
+            if ($this->view instanceof Zend_View_Interface
+                && method_exists($this->view, 'getEncoding')
+            ) {
+                $enc = $this->view->getEncoding();
+            }
             foreach ($item->attributes as $key => $value) {
                 if (!in_array($key, $this->_optionalAttributes)) {
                     continue;
                 }
                 if ('media' == $key) {
-                    if (!in_array($value, $this->_mediaTypes)) {
-                        continue;
+                    if(false === strpos($value, ',')) {
+                        if (!in_array($value, $this->_mediaTypes)) {
+                            continue;
+                        }
+                    } else {
+                        $media_types = explode(',', $value);
+                        $value = '';
+                        foreach($media_types as $type) {
+                            $type = trim($type);
+                            if (!in_array($type, $this->_mediaTypes)) {
+                                continue;
+                            }
+                            $value .= $type .',';
+                        }
+                        $value = substr($value, 0, -1);
                     }
                 }
-                $attrString .= sprintf(' %s="%s"', $key, htmlspecialchars($value));
+                $attrString .= sprintf(' %s="%s"', $key, htmlspecialchars($value, ENT_COMPAT, $enc));
             }
         }
 
@@ -327,13 +359,20 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
               . $indent . '<!--' . PHP_EOL . $indent . $item->content . PHP_EOL . $indent . '-->' . PHP_EOL
               . '</style>';
 
+        if (isset($item->attributes['conditional'])
+            && !empty($item->attributes['conditional'])
+            && is_string($item->attributes['conditional']))
+        {
+            $html = '<!--[if ' . $item->attributes['conditional'] . ']> ' . $html . '<![endif]-->';
+        }
+
         return $html;
     }
 
     /**
      * Create string representation of placeholder
-     * 
-     * @param  string|int $indent 
+     *
+     * @param  string|int $indent
      * @return string
      */
     public function toString($indent = null)
@@ -343,6 +382,7 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
                 : $this->getIndent();
 
         $items = array();
+        $this->getContainer()->ksort();
         foreach ($this as $item) {
             if (!$this->_isValid($item)) {
                 continue;
@@ -357,15 +397,17 @@ class Zend_View_Helper_HeadStyle extends Zend_View_Helper_Placeholder_Container_
 
     /**
      * Create data item for use in stack
-     * 
-     * @param  string $content 
-     * @param  array $attributes 
+     *
+     * @param  string $content
+     * @param  array $attributes
      * @return stdClass
      */
     public function createData($content, array $attributes)
     {
         if (!isset($attributes['media'])) {
             $attributes['media'] = 'screen';
+        } else if(is_array($attributes['media'])) {
+            $attributes['media'] = implode(',', $attributes['media']);
         }
 
         $data = new stdClass();

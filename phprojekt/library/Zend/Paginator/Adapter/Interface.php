@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Paginator
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Interface.php 10013 2008-07-09 21:08:06Z norm2782 $
+ * @version    $Id: Interface.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -24,7 +24,7 @@
  *
  * @category   Zend
  * @package    Zend_Paginator
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 interface Zend_Paginator_Adapter_Interface extends Countable
@@ -37,11 +37,11 @@ interface Zend_Paginator_Adapter_Interface extends Countable
     //public function count();
 
     /**
-     * Returns a collection of items for a page.
+     * Returns an collection of items for a page.
      *
-     * @param  integer $pageNumber Page number
+     * @param  integer $offset Page offset
      * @param  integer $itemCountPerPage Number of items per page
-     * @return mixed
+     * @return array
      */
-    public function getItems($pageNumber, $itemCountPerPage);
+    public function getItems($offset, $itemCountPerPage);
 }

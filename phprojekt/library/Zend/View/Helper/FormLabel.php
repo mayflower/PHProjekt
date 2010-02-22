@@ -15,8 +15,9 @@
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: FormLabel.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /** Zend_View_Helper_FormElement **/
@@ -28,7 +29,7 @@ require_once 'Zend/View/Helper/FormElement.php';
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_View_Helper_FormLabel extends Zend_View_Helper_FormElement
@@ -48,16 +49,23 @@ class Zend_View_Helper_FormLabel extends Zend_View_Helper_FormElement
 
         // build the element
         if ($disable) {
-            // disabled; do nothing
-        } else {
-            $value = ($escape) ? $this->view->escape($value) : $value;
-
-            // enabled; display label
-            $xhtml = '<label'
-                   . ' for="' . $this->view->escape($id) . '"'
-                   . $this->_htmlAttribs($attribs)
-                   . '>' . $value . '</label>';
+            // disabled; display nothing
+            return  '';
         }
+
+        $value = ($escape) ? $this->view->escape($value) : $value;
+        $for   = (empty($attribs['disableFor']) || !$attribs['disableFor'])
+               ? ' for="' . $this->view->escape($id) . '"'
+               : '';
+        if (array_key_exists('disableFor', $attribs)) {
+            unset($attribs['disableFor']);
+        }
+
+        // enabled; display label
+        $xhtml = '<label'
+                . $for
+                . $this->_htmlAttribs($attribs)
+                . '>' . $value . '</label>';
 
         return $xhtml;
     }

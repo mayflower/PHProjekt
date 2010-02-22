@@ -14,8 +14,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage YouTube
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Control.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -34,7 +36,8 @@ require_once 'Zend/Gdata/YouTube/Extension/State.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage YouTube
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_YouTube_Extension_Control extends Zend_Gdata_App_Extension_Control
@@ -50,9 +53,7 @@ class Zend_Gdata_YouTube_Extension_Control extends Zend_Gdata_App_Extension_Cont
      */
     public function __construct($draft = null, $state = null)
     {
-        foreach (Zend_Gdata_YouTube::$namespaces as $nsPrefix => $nsUri) {
-            $this->registerNamespace($nsPrefix, $nsUri);
-        }
+        $this->registerAllNamespaces(Zend_Gdata_YouTube::$namespaces);
         parent::__construct($draft);
         $this->_state = $state;
     }
@@ -67,9 +68,9 @@ class Zend_Gdata_YouTube_Extension_Control extends Zend_Gdata_App_Extension_Cont
      * @return DOMElement The DOMElement representing this element and all
      * child properties.
      */
-    public function getDOM($doc = null)
+    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
     {
-        $element = parent::getDOM($doc);
+        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
         if ($this->_state != null) {
             $element->appendChild($this->_state->getDOM($element->ownerDocument));
         }
@@ -119,7 +120,7 @@ class Zend_Gdata_YouTube_Extension_Control extends Zend_Gdata_App_Extension_Cont
         return $this;
     }
 
-    /** 
+    /**
     * Get the value of this element's state attribute.
     *
     * @return string The state's text value

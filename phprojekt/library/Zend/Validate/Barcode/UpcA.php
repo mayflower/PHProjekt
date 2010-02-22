@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Zend Framework
  *
@@ -15,86 +14,39 @@
  *
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: UpcA.php 8210 2008-02-20 14:09:05Z andries $
+ * @version    $Id: Upca.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
-
 
 /**
- * @see Zend_Validate_Abstract
+ * @see Zend_Validate_Barcode_AdapterAbstract
  */
-require_once 'Zend/Validate/Abstract.php';
-
+require_once 'Zend/Validate/Barcode/AdapterAbstract.php';
 
 /**
  * @category   Zend
  * @package    Zend_Validate
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Validate_Barcode_UpcA extends Zend_Validate_Abstract
+class Zend_Validate_Barcode_Upca extends Zend_Validate_Barcode_AdapterAbstract
 {
     /**
-     * Validation failure message key for when the value is
-     * an invalid barcode
+     * Allowed barcode lengths
+     * @var integer
      */
-    const INVALID = 'invalid';
+    protected $_length = 12;
 
     /**
-     * Validation failure message key for when the value is
-     * not 12 characters long
+     * Allowed barcode characters
+     * @var string
      */
-    const INVALID_LENGTH = 'invalidLength';
+    protected $_characters = '0123456789';
 
     /**
-     * Validation failure message template definitions
-     *
-     * @var array
+     * Checksum function
+     * @var string
      */
-    protected $_messageTemplates = array(
-        self::INVALID        => "'%value%' is an invalid UPC-A barcode",
-        self::INVALID_LENGTH => "'%value%' should be 12 characters",
-    );
-
-    /**
-     * Defined by Zend_Validate_Interface
-     *
-     * Returns true if and only if $value contains a valid barcode
-     *
-     * @param  string $value
-     * @return boolean
-     */
-    public function isValid($value)
-    {
-        $valueString = (string) $value;
-        $this->_setValue($valueString);
-
-        if (strlen($valueString) !== 12) {
-            $this->_error(self::INVALID_LENGTH);
-            return false;
-        }
-
-        $barcode = substr($valueString, 0, -1);
-        $oddSum  = 0;
-        $evenSum = 0;
-
-        for ($i = 0; $i < 11; $i++) {
-            if ($i % 2 === 0) {
-                $oddSum += $barcode[$i] * 3;
-            } elseif ($i % 2 === 1) {
-                $evenSum += $barcode[$i];
-            }
-        }
-
-        $calculation = ($oddSum + $evenSum) % 10;
-        $checksum    = ($calculation === 0) ? 0 : 10 - $calculation;
-
-        if ($valueString[11] != $checksum) {
-            $this->_error(self::INVALID);
-            return false;
-        }
-
-        return true;
-    }
+    protected $_checksum = '_gtin';
 }

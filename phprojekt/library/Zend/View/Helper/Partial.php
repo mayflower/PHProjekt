@@ -15,8 +15,8 @@
  * @category   Zend
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Partial.php 10665 2008-08-05 10:57:18Z matthew $
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: Partial.php 20096 2010-01-06 02:05:09Z bkarwin $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -28,7 +28,7 @@ require_once 'Zend/View/Helper/Abstract.php';
  *
  * @package    Zend_View
  * @subpackage Helper
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_View_Helper_Partial extends Zend_View_Helper_Abstract
@@ -68,11 +68,17 @@ class Zend_View_Helper_Partial extends Zend_View_Helper_Abstract
         }
 
         $view = $this->cloneView();
+        if (isset($this->partialCounter)) {
+            $view->partialCounter = $this->partialCounter;
+        }
         if ((null !== $module) && is_string($module)) {
+            require_once 'Zend/Controller/Front.php';
             $moduleDir = Zend_Controller_Front::getInstance()->getControllerDirectory($module);
             if (null === $moduleDir) {
                 require_once 'Zend/View/Helper/Partial/Exception.php';
-                throw new Zend_View_Helper_Partial_Exception('Cannot render partial; module does not exist');
+                $e = new Zend_View_Helper_Partial_Exception('Cannot render partial; module does not exist');
+                $e->setView($this->view);
+                throw $e;
             }
             $viewsDir = dirname($moduleDir) . '/views';
             $view->addBasePath($viewsDir);

@@ -15,8 +15,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Geo
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: GmlPos.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -34,7 +36,8 @@ require_once 'Zend/Gdata/Geo.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Geo
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Geo_Extension_GmlPos extends Zend_Gdata_Extension
@@ -42,17 +45,15 @@ class Zend_Gdata_Geo_Extension_GmlPos extends Zend_Gdata_Extension
 
     protected $_rootNamespace = 'gml';
     protected $_rootElement = 'pos';
-    
+
     /**
      * Constructs a new Zend_Gdata_Geo_Extension_GmlPos object.
-     * 
+     *
      * @param string $text (optional) The value to use for this element.
      */
-    public function __construct($text = null) 
+    public function __construct($text = null)
     {
-        foreach (Zend_Gdata_Geo::$namespaces as $nsPrefix => $nsUri) {
-            $this->registerNamespace($nsPrefix, $nsUri);
-        }
+        $this->registerAllNamespaces(Zend_Gdata_Geo::$namespaces);
         parent::__construct();
         $this->setText($text);
     }

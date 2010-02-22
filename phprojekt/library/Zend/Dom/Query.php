@@ -14,8 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Dom
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Query.php 20908 2010-02-04 19:00:54Z matthew $
  */
 
 /**
@@ -30,16 +31,16 @@ require_once 'Zend/Dom/Query/Result.php';
 
 /**
  * Query DOM structures based on CSS selectors and/or XPath
- * 
+ *
  * @package    Zend_Dom
  * @subpackage Query
- * @copyright  Copyright (C) 2008 - Present, Zend Technologies, Inc.
- * @license    New BSD {@link http://framework.zend.com/license/new-bsd}
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Dom_Query
 {
     /**#@+
-     * @const string Document types
+     * Document types
      */
     const DOC_XML   = 'docXml';
     const DOC_HTML  = 'docHtml';
@@ -59,25 +60,26 @@ class Zend_Dom_Query
 
     /**
      * Constructor
-     * 
-     * @param  null|string $document 
+     *
+     * @param  null|string $document
      * @return void
      */
     public function __construct($document = null)
     {
-        if (null !== $document) {
-            $this->setDocument($document);
-        }
+        $this->setDocument($document);
     }
 
     /**
      * Set document to query
-     * 
-     * @param  string $document 
+     *
+     * @param  string $document
      * @return Zend_Dom_Query
      */
     public function setDocument($document)
     {
+        if (0 === strlen($document)) {
+            return $this;
+        }
         if ('<?xml' == substr(trim($document), 0, 5)) {
             return $this->setDocumentXml($document);
         }
@@ -88,9 +90,9 @@ class Zend_Dom_Query
     }
 
     /**
-     * Register HTML document 
-     * 
-     * @param  string $document 
+     * Register HTML document
+     *
+     * @param  string $document
      * @return Zend_Dom_Query
      */
     public function setDocumentHtml($document)
@@ -102,8 +104,8 @@ class Zend_Dom_Query
 
     /**
      * Register XHTML document
-     * 
-     * @param  string $document 
+     *
+     * @param  string $document
      * @return Zend_Dom_Query
      */
     public function setDocumentXhtml($document)
@@ -115,8 +117,8 @@ class Zend_Dom_Query
 
     /**
      * Register XML document
-     * 
-     * @param  string $document 
+     *
+     * @param  string $document
      * @return Zend_Dom_Query
      */
     public function setDocumentXml($document)
@@ -128,7 +130,7 @@ class Zend_Dom_Query
 
     /**
      * Retrieve current document
-     * 
+     *
      * @return string
      */
     public function getDocument()
@@ -138,7 +140,7 @@ class Zend_Dom_Query
 
     /**
      * Get document type
-     * 
+     *
      * @return string
      */
     public function getDocumentType()
@@ -148,8 +150,8 @@ class Zend_Dom_Query
 
     /**
      * Perform a CSS selector query
-     * 
-     * @param  string $query 
+     *
+     * @param  string $query
      * @return Zend_Dom_Query_Result
      */
     public function query($query)
@@ -160,8 +162,8 @@ class Zend_Dom_Query
 
     /**
      * Perform an XPath query
-     * 
-     * @param  string $xpathQuery
+     *
+     * @param  string|array $xpathQuery
      * @param  string $query CSS selector query
      * @return Zend_Dom_Query_Result
      */
@@ -176,12 +178,12 @@ class Zend_Dom_Query
         $type   = $this->getDocumentType();
         switch ($type) {
             case self::DOC_XML:
-                $success = @$domDoc->loadXML($document);
+                $success = $domDoc->loadXML($document);
                 break;
             case self::DOC_HTML:
             case self::DOC_XHTML:
             default:
-                $success = @$domDoc->loadHTML($document);
+                $success = $domDoc->loadHTML($document);
                 break;
         }
 
@@ -196,7 +198,7 @@ class Zend_Dom_Query
 
     /**
      * Prepare node list
-     * 
+     *
      * @param  DOMDocument $document
      * @param  string|array $xpathQuery
      * @return array

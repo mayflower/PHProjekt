@@ -12,10 +12,11 @@
  * obtain it through the world-wide-web, please send an email
  * to license@zend.com so we can send you a copy immediately.
  *
+ * @category   Zend
  * @package    Zend_Controller
  * @subpackage Router
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Route.php 9581 2008-06-01 14:08:03Z martel $
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: Hostname.php 20096 2010-01-06 02:05:09Z bkarwin $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -27,7 +28,7 @@ require_once 'Zend/Controller/Router/Route/Abstract.php';
  *
  * @package    Zend_Controller
  * @subpackage Router
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @see        http://manuals.rubyonrails.com/read/chapter/65
  */
@@ -65,12 +66,18 @@ class Zend_Controller_Router_Route_Hostname extends Zend_Controller_Router_Route
     protected $_requirements = array();
 
     /**
+     * Default scheme
+     * @var string
+     */
+    protected $_scheme = null;
+
+    /**
      * Associative array filled on match() that holds matched path values
      * for given variable names.
      * @var array
      */
     protected $_values = array();
-    
+
     /**
      * Current request object
      *
@@ -87,18 +94,18 @@ class Zend_Controller_Router_Route_Hostname extends Zend_Controller_Router_Route
 
     /**
      * Set the request object
-     * 
+     *
      * @param  Zend_Controller_Request_Abstract|null $request
      * @return void
      */
-    public function setRequest($request)
+    public function setRequest(Zend_Controller_Request_Abstract $request = null)
     {
         $this->_request = $request;
     }
-    
+
     /**
      * Get the request object
-     * 
+     *
      * @return Zend_Controller_Request_Abstract $request
      */
     public function getRequest()
@@ -107,10 +114,10 @@ class Zend_Controller_Router_Route_Hostname extends Zend_Controller_Router_Route
             require_once 'Zend/Controller/Front.php';
             $this->_request = Zend_Controller_Front::getInstance()->getRequest();
         }
-        
+
         return $this->_request;
     }
-    
+
     /**
      * Instantiates route based on passed Zend_Config structure
      *
@@ -118,9 +125,10 @@ class Zend_Controller_Router_Route_Hostname extends Zend_Controller_Router_Route
      */
     public static function getInstance(Zend_Config $config)
     {
-        $reqs = ($config->reqs instanceof Zend_Config) ? $config->reqs->toArray() : array();
-        $defs = ($config->defaults instanceof Zend_Config) ? $config->defaults->toArray() : array();
-        return new self($config->route, $defs, $reqs);
+        $reqs   = ($config->reqs instanceof Zend_Config) ? $config->reqs->toArray() : array();
+        $defs   = ($config->defaults instanceof Zend_Config) ? $config->defaults->toArray() : array();
+        $scheme = (isset($config->scheme)) ? $config->scheme : null;
+        return new self($config->route, $defs, $reqs, $scheme);
     }
 
     /**
@@ -129,14 +137,16 @@ class Zend_Controller_Router_Route_Hostname extends Zend_Controller_Router_Route
      * a position which is later used for matching and preparing values.
      *
      * @param string $route Map used to match with later submitted hostname
-     * @param array $defaults Defaults for map variables with keys as variable names
-     * @param array $reqs Regular expression requirements for variables (keys as variable names)
+     * @param array  $defaults Defaults for map variables with keys as variable names
+     * @param array  $reqs Regular expression requirements for variables (keys as variable names)
+     * @param string $scheme
      */
-    public function __construct($route, $defaults = array(), $reqs = array())
+    public function __construct($route, $defaults = array(), $reqs = array(), $scheme = null)
     {
-        $route = trim($route, '.');
-        $this->_defaults = (array) $defaults;
+        $route               = trim($route, '.');
+        $this->_defaults     = (array) $defaults;
         $this->_requirements = (array) $reqs;
+        $this->_scheme       = $scheme;
 
         if ($route != '') {
             foreach (explode('.', $route) as $pos => $part) {
@@ -161,12 +171,21 @@ class Zend_Controller_Router_Route_Hostname extends Zend_Controller_Router_Route
      */
     public function match($request)
     {
+        // Check the scheme if required
+        if ($this->_scheme !== null) {
+            $scheme = $request->getScheme();
+
+            if ($scheme !== $this->_scheme) {
+                return false;
+            }
+        }
+
         // Get the host and remove unnecessary port information
         $host = $request->getHttpHost();
         if (preg_match('#:\d+$#', $host, $result) === 1) {
             $host = substr($host, 0, -strlen($result[0]));
         }
-        
+
         $hostStaticCount = 0;
         $values = array();
 
@@ -230,7 +249,7 @@ class Zend_Controller_Router_Route_Hostname extends Zend_Controller_Router_Route
      * @param  boolean $reset Whether or not to set route defaults with those provided in $data
      * @return string Route path with user submitted parameters
      */
-    public function assemble($data = array(), $reset = false, $encode = false)
+    public function assemble($data = array(), $reset = false, $encode = false, $partial = false)
     {
         $host = array();
         $flag = false;
@@ -263,7 +282,7 @@ class Zend_Controller_Router_Route_Hostname extends Zend_Controller_Router_Route
         $return = '';
 
         foreach (array_reverse($host, true) as $key => $value) {
-            if ($flag || !isset($this->_variables[$key]) || $value !== $this->getDefault($this->_variables[$key])) {
+            if ($flag || !isset($this->_variables[$key]) || $value !== $this->getDefault($this->_variables[$key]) || $partial) {
                 if ($encode) $value = urlencode($value);
                 $return = '.' . $value . $return;
                 $flag = true;
@@ -271,16 +290,21 @@ class Zend_Controller_Router_Route_Hostname extends Zend_Controller_Router_Route
         }
 
         $url = trim($return, '.');
-        
-        $request = $this->getRequest();
-        if ($request instanceof Zend_Controller_Request_Http) {
-            $scheme = $request->getScheme();
+
+        if ($this->_scheme !== null) {
+            $scheme = $this->_scheme;
         } else {
-            $scheme = 'http';
-        } 
-        
-        $url = $scheme . '://' . $url;
-        
+            $request = $this->getRequest();
+            if ($request instanceof Zend_Controller_Request_Http) {
+                $scheme = $request->getScheme();
+            } else {
+                $scheme = 'http';
+            }
+        }
+
+        $hostname = implode('.', $host);
+        $url      = $scheme . '://' . $url;
+
         return $url;
     }
 
@@ -304,5 +328,15 @@ class Zend_Controller_Router_Route_Hostname extends Zend_Controller_Router_Route
      */
     public function getDefaults() {
         return $this->_defaults;
+    }
+
+    /**
+     * Get all variables which are used by the route
+     *
+     * @return array
+     */
+    public function getVariables()
+    {
+        return $this->_variables;
     }
 }

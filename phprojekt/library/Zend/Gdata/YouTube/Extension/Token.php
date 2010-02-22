@@ -15,8 +15,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage YouTube
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Token.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -29,7 +31,8 @@ require_once 'Zend/Gdata/Extension.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage YouTube
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_YouTube_Extension_Token extends Zend_Gdata_App_Extension
@@ -43,14 +46,12 @@ class Zend_Gdata_YouTube_Extension_Token extends Zend_Gdata_App_Extension
      */
     public function __construct($text = null)
     {
-        foreach (Zend_Gdata_YouTube::$namespaces as $nsPrefix => $nsUri) {
-            $this->registerNamespace($nsPrefix, $nsUri);
-        }
+        $this->registerAllNamespaces(Zend_Gdata_YouTube::$namespaces);
         parent::__construct();
         $this->_text = $text;
     }
 
-    /** 
+    /**
      * Retrieves a DOMElement which corresponds to this element and all
      * child properties.  This is used to build an entry back into a DOM
      * and eventually XML text for sending to the server upon updates, or
@@ -60,9 +61,9 @@ class Zend_Gdata_YouTube_Extension_Token extends Zend_Gdata_App_Extension
      * @return DOMElement The DOMElement representing this element and all
      * child properties.
      */
-    public function getDOM($doc = null)
+    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
     {
-        $element = parent::getDOM($doc);
+        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
         return $element;
     }
 

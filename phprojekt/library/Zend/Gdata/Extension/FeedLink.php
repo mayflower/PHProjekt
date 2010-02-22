@@ -15,8 +15,10 @@
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Gdata
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: FeedLink.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 /**
@@ -34,7 +36,8 @@ require_once 'Zend/Gdata/Feed.php';
  *
  * @category   Zend
  * @package    Zend_Gdata
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Gdata
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Gdata_Extension_FeedLink extends Zend_Gdata_Extension
@@ -58,22 +61,22 @@ class Zend_Gdata_Extension_FeedLink extends Zend_Gdata_Extension
         $this->_feed = $feed;
     }
 
-    public function getDOM($doc = null)
+    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
     {
-        $element = parent::getDOM($doc);
-        if ($this->_countHint != null) {
+        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
+        if ($this->_countHint !== null) {
             $element->setAttribute('countHint', $this->_countHint);
         }
-        if ($this->_href != null) {
+        if ($this->_href !== null) {
             $element->setAttribute('href', $this->_href);
         }
-        if ($this->_readOnly != null) {
+        if ($this->_readOnly !== null) {
             $element->setAttribute('readOnly', ($this->_readOnly ? "true" : "false"));
         }
-        if ($this->_rel != null) {
+        if ($this->_rel !== null) {
             $element->setAttribute('rel', $this->_rel);
         }
-        if ($this->_feed != null) {
+        if ($this->_feed !== null) {
             $element->appendChild($this->_feed->getDOM($element->ownerDocument));
         }
         return $element;

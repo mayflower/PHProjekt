@@ -14,8 +14,10 @@
  *
  * @category   Zend
  * @package    Zend_Soap
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @subpackage Client
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Common.php 20096 2010-01-06 02:05:09Z bkarwin $
  */
 
 
@@ -24,6 +26,7 @@ if (extension_loaded('soap')) {
 /**
  * @category   Zend
  * @package    Zend_Soap
+ * @subpackage Client
  */
 class Zend_Soap_Client_Common extends SoapClient
 {
@@ -62,7 +65,7 @@ class Zend_Soap_Client_Common extends SoapClient
     function __doRequest($request, $location, $action, $version, $one_way = null)
     {
         if ($one_way === null) {
-   	        return call_user_func($this->_doRequestCallback, $this, $request, $location, $action, $version);
+            return call_user_func($this->_doRequestCallback, $this, $request, $location, $action, $version);
         } else {
             return call_user_func($this->_doRequestCallback, $this, $request, $location, $action, $version, $one_way);
         }
