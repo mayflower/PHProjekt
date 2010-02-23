@@ -301,7 +301,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             phpr.destroyWidget("globalModule" + globalModules[i].id);
             var button = new dijit.form.Button({
                 id:        "globalModule" + globalModules[i].id,
-                label:     phpr.nls.get(globalModules[i].label),
+                label:     globalModules[i].label,
                 name:      globalModules[i].name,
                 showLabel: true,
                 onClick:   dojo.hitch(this, function(e) {

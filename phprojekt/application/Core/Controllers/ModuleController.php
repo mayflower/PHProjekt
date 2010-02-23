@@ -120,7 +120,7 @@ class Core_ModuleController extends Core_IndexController
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']    = $module->id;
             $modules['data'][$module->id]['name']  = $module->name;
-            $modules['data'][$module->id]['label'] = $module->name;
+            $modules['data'][$module->id]['label'] = Phprojekt::getInstance()->translate($module->label);
         }
         $modules['metadata'] = Phprojekt_Auth::isAdminUser();
 
