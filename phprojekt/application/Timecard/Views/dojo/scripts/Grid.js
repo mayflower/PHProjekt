@@ -21,6 +21,7 @@ dojo.provide("phpr.Timecard.Grid");
 
 dojo.declare("phpr.Timecard.Grid", phpr.Component, {
     main:          null,
+    _date:         null,
     _node:         null,
     _month:        null,
     _year:         null,
@@ -32,6 +33,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         // Description:
         //    Render the list of dates in the month
         this.main   = main;
+        this._date  = date;
         this._month = date.getMonth();
         this._year  = date.getFullYear();
 
@@ -73,27 +75,31 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         var dates      = new Array();
         var totalClass = 'weekday';
         for (var i in content) {
+            var weekClass = (content[i]['week'] == 0 || content[i]['week'] == 6) ? 'weekend' : 'weekday';
             dates.push({
                 week:      phpr.Date.getShortTranslateWeekDay(content[i]['week']),
-                weekClass: (content[i]['week'] == 0 || content[i]['week'] == 6) ? 'weekend' : 'weekday',
+                weekClass: weekClass,
                 date:      content[i]['date'],
                 sum:       (content[i]['sumInHours'] != '0') ? content[i]['sumInHours'] : "-",
-                sumClass:  (content[i]['openPeriod'] == 1) ? 'weekend' : 'weekday'
+                sumClass:  (content[i]['openPeriod'] == 1) ? 'open' : weekClass
             });
             if (content[i]['sumInMinutes'] != '0') {
                 total += content[i]['sumInMinutes'];
             }
             if (content[i]['openPeriod'] == 1) {
-                totalClass = 'weekend';
+                totalClass = 'open';
             }
         }
 
         this.render(["phpr.Timecard.template", "monthView.html"], this._node.domNode, {
+            monthTxt:   phpr.Date.getLongTranslateMonth(this._month) + ' ' + this._year,
             totalTxt:   phpr.nls.get('Total hours'),
             total:      phpr.Date.convertMinutesToTime(total),
             totalClass: totalClass,
             dates:      dates
         });
+        dijit.byId("selectDate").attr('value', new Date(this._date.getFullYear(), this._date.getMonth(),
+                this._date.getDate()));
     },
 
     reload:function(date, forceReload) {
@@ -105,6 +111,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         var newYear  = date.getFullYear();
         if (forceReload || newMonth != this._month || newYear != this._year) {
             phpr.DataStore.deleteData({url: this.url});
+            this._date  = date,
             this._month = date.getMonth();
             this._year  = date.getFullYear();
             this.setUrl();

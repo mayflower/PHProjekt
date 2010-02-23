@@ -17,11 +17,11 @@
 }
 
 .phprojekt #tableMonthView .col2 {
-    width: 20%;
+    width: 30%;
 }
 
 .phprojekt #tableMonthView .col3 {
-    width: 65%;
+    width: 55%;
 }
 
 .phprojekt #tableMonthView td {
@@ -39,6 +39,20 @@
 .phprojekt #tableMonthView .weekend,
 .phprojekt #tableMonthView .weekend a {
     color: #ccc;
+}
+
+.phprojekt #tableMonthView .open,
+.phprojekt #tableMonthView .open a {
+    color: red;
+}
+
+.phprojekt .timecardSeparator {
+    background-color: #fff;
+    height: 5px;
+}
+
+.dj_ie .phprojekt #tableMonthView .dijitButtonNode {
+    padding: 0 0 0 5px;
 }
 
 /* DayView */
