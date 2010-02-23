@@ -125,11 +125,9 @@
     line-height: 1.1;
     padding-left: 1%;
     border-width: 3px;
-    background-color: white;
+    background-color: linen;
     border-color: #263349;
     border-style: solid solid solid;
-    filter: alpha(opacity=70);
-    opacity: .7;
 }
 
 .phprojekt .dndTargetOpen {
