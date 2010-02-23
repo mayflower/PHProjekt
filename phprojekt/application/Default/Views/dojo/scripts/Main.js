@@ -351,8 +351,6 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 })
             });
             systemToolbar.addChild(button);
-            var separator = new dijit.ToolbarSeparator();
-            systemToolbar.addChild(separator);
         }
 
         // Logout

@@ -216,39 +216,28 @@
     float: left;
 }
 
-.phprojekt #mainNavigation {
-    background: transparent url(images/globalModule.gif) repeat-x scroll left top
-}
-
 .phprojekt #mainNavigation .dijitButtonContents,
 .phprojekt #systemNavigation .dijitButtonContents {
     font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
     color: #ffffff;
     font-size: 12px;
-    font-weight: bold;
-}
-
-.phprojekt #mainNavigation .active {
-    background: transparent url("../images/globalModule.gif") no-repeat scroll left bottom;
+    font-weight: normal;
 }
 
 .phprojekt #mainNavigation .selected {
-    background: transparent url("../images/globalModuleLeft.gif") no-repeat scroll left 80%;
-    color: #294064;
-    margin-left: 5px;
+    color: #ffcc33;
+}
+
+.phprojekt #mainNavigation button::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="file"] > input[type="button"]::-moz-focus-inner {
+    border: none;
 }
 
 .dj_ie .phprojekt #systemNavigation {
-    margin: 0;
-}
-.dj_ie .phprojekt #mainNavigation .selected {
-    background: transparent url("../images/globalModuleLeft.gif") no-repeat scroll left 40%;
-    margin-left: 4px;
-}
-
-.phprojekt #mainNavigation .selected .dijitButtonText {
-    background: #ffffff url("../images/globalModuleRight.gif") no-repeat scroll right bottom;
-    padding-left: 3px;
+    margin: 3px 0px 0px;
 }
 
 .phprojekt #detailsBox .dijitDropDownButton {

@@ -28,7 +28,7 @@
 }
 
 .phprojekt #header {
-    background: url("images/headerbg.png");
+    background: #294064 url("images/headerbg.png");
     background-repeat: repeat-x;
     width: 100%;
 }
