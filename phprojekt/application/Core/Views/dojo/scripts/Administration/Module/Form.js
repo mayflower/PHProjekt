@@ -284,5 +284,26 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                }
             })
         });
+    },
+
+    deleteForm:function() {
+        phpr.send({
+            url:       phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDelete/id/' + this.id,
+            onSuccess: dojo.hitch(this, function(data) {
+                new phpr.handleResponse('serverFeedback', data);
+                if (data.type == 'success') {
+                    this.publish("updateCacheData");
+                    phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
+                    phpr.DataStore.addStore({url: phpr.globalModuleUrl});
+                    phpr.DataStore.requestData({
+                        url:         phpr.globalModuleUrl,
+                        processData: dojo.hitch(this, function() {
+                            this.main.setGlobalModulesNavigation();
+                            this.publish("setUrlHash", [phpr.parentmodule, null, [phpr.module]]);
+                        })
+                    });
+                }
+            })
+        });
     }
 });
