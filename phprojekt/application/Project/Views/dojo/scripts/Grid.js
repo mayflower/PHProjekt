@@ -29,8 +29,9 @@ dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
         phpr.DataStore.deleteData({url: url});
 
         // Delete cache for Timecard on places where Projects are shown
+        phpr.destroyWidget('timecardTooltipDialog');
         phpr.DataStore.deleteData({url: phpr.webpath + 'index.php/Timecard/index/jsonGetFavoritesProjects'});
-        phpr.DataStore.deleteDataPartialString({url: phpr.webpath + 'index.php/Timecard/index/jsonBookingDetail/'});
+        phpr.DataStore.deleteDataPartialString({url: phpr.webpath + 'index.php/Timecard/index/jsonDetail/'});
     },
 
     updateAfterSaveChanges:function() {

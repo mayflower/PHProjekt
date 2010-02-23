@@ -222,7 +222,8 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.roleStore.update();
 
         // Delete cache for Timecard on places where Projects are shown
+        phpr.destroyWidget('timecardTooltipDialog');
         phpr.DataStore.deleteData({url: phpr.webpath + 'index.php/Timecard/index/jsonGetFavoritesProjects'});
-        phpr.DataStore.deleteDataPartialString({url: phpr.webpath + 'index.php/Timecard/index/jsonBookingDetail/'});
+        phpr.DataStore.deleteDataPartialString({url: phpr.webpath + 'index.php/Timecard/index/jsonDetail/'});
     }
 });
