@@ -230,6 +230,14 @@ class Core_Models_User_Setting
             $message = Phprojekt::getInstance()->translate('The Language value do not exists');
         }
 
+        // Email
+        if (!empty($params['email'])) {
+            $validator = new Zend_Validate_EmailAddress();
+            if (!$validator->isValid($params['email'])) {
+                $message = Phprojekt::getInstance()->translate('Invalid email address');
+            }
+        }
+
         return $message;
     }
 

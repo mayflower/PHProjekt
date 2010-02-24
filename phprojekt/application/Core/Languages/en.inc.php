@@ -357,6 +357,7 @@ $lang["The password and confirmation are different or one of them is empty"] = "
 $lang["The old password provided is invalid"] = "The old password provided is invalid";
 $lang["The Time Zone value is out of range"] = "The Time Zone value is out of range";
 $lang["The Language value do not exists"] = "The Language value do not exists";
+$lang["Invalid email address"] = "Invalid email address";
 $lang["keyValue"] = "Configuration";
 $lang["value"] = "value";
 $lang["Confirm Password"] = "confirm password";
