@@ -863,12 +863,14 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                                 }
                                 break;
                             case 'date':
-                                value = new Date(value);
+                                value = new Date(phpr.Date.isoDateTojsDate(value));
                                 value = dojo.date.locale.format(value, {datePattern: 'yyyy-MM-dd', selector: 'date'});
                                 break;
                             case 'time':
-                                value = new Date(value);
+                                value = new Date(phpr.Date.isoTimeTojsDate(value));
                                 value = dojo.date.locale.format(value, {datePattern: 'HH:mm', selector: 'time'});
+                                break;
+                            default:
                                 break;
                         }
                     }
