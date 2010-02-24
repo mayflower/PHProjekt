@@ -355,6 +355,8 @@ $lang["The value for the setting is incorrect"] = "The value for the setting is 
 $lang["The password and confirmation are different or one of them is empty"] = "The password and confirmation are "
     . "different or one of them is empty";
 $lang["The old password provided is invalid"] = "The old password provided is invalid";
+$lang["The Time Zone value is out of range"] = "The Time Zone value is out of range";
+$lang["The Language value do not exists"] = "The Language value do not exists";
 $lang["keyValue"] = "Configuration";
 $lang["value"] = "value";
 $lang["Confirm Password"] = "confirm password";
