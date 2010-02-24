@@ -173,7 +173,7 @@ $lang["Start date invalid"] = "Fecha de inicio inválida";
 $lang["End date invalid"] = "Fecha final inválida";
 $lang["Start date can not be after End date"] = "La fecha de inicio no puede ser posterior a la de fin";
 $lang["Maximum length exceeded for field"] = "Largo máximo de campo excedido";
-$lang["The file 'uploadedFile' exceeds the defined form size"] = "El archivo excede el tamaño máximo";
+$lang["File 'uploadedFile' exceeds the defined form size"] = "El archivo excede el tamaño máximo";
 $lang["You don't have permission for downloading on this item."] = "Ud. no tiene permiso para bajar archivos en este "
     . "ítem.";
 $lang["You don't have permission for modifying this item."] = "Ud. no tiene permiso para modificar este ítem.";
