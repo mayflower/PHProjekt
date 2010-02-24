@@ -298,6 +298,8 @@ $lang["Tooltip"]["amount"] = "Proyectos que serán vistos en Asistencia y estar�
 $lang["Tooltip"]["timeZone"] = "El Huso Horario (UTC) para la región o país donde usará usted Phprojekt.<br /> "
     . "Es un dato requerido para todos los usuarios pero especialmente útil para coordinación temporal de eventos "
     . "internacionales.";
+$lang["Tooltip"]["password"] = "Para los usuarios nuevos, este es un campo obligatorio. "
+    . "Para los usuarios existentes, deje este campo en blanco si no desea cambiar la contraseña.";
 $lang["This module is for the user to set and change specific configuration parameters of his/her profile."] = "Este "
     . "módulo permite al usuario cambiar atributos específicos de configuración de su perfil.";
 $lang["Please choose one of the tabs of above."] = "Por favor, elija una de las solapa de arriba.";
