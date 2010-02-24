@@ -421,6 +421,33 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     });
                     break;
 
+                case 'rating':
+                    var max       = parseInt(meta[i]["range"]["id"]);
+                    var opts      = new Array();
+                    var vals      = new Array();
+                    var maxLength = meta[i]["key"].length;
+                    for (var j = 1; j <= max; j++){
+                        vals.push(j);
+                        opts.push(j);
+                    }
+                    this.gridLayout.push({
+                        name:     meta[i]["label"],
+                        field:    meta[i]["key"],
+                        styles:   "text-align: center;",
+                        type:     phpr.grid.cells.Select,
+                        width:    (maxLength * 8) + 'px',
+                        options:  opts,
+                        values:   vals,
+                        editable: meta[i]['readOnly'] ? false : true
+                    });
+                    this.filterField.push({
+                        key:     meta[i]["key"],
+                        label:   meta[i]["label"],
+                        type:    'rating',
+                        max:     max
+                    });
+                    break;
+
                 default:
                     this.gridLayout.push({
                         width:    'auto',
@@ -579,7 +606,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         }
                         input       += '</select>';
                         rulesOptions = new Array('equal', 'notEqual');
-                    break;
+                        break;
                     case 'date':
                         var input = '<input type="text" name="filterValue" dojoType="phpr.DateTextBox" '
                             + 'constraints="{datePattern: \'yyyy-MM-dd\'}" promptMessage="yyyy-MM-dd" />';
@@ -589,6 +616,14 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                         var input = '<input type="text" name="filterValue" dojoType="dijit.form.TimeTextBox" '
                             + 'constraints="{formatLength: \'short\', timePattern: \'HH:mm\'}" />';
                         rulesOptions = new Array('equal', 'notEqual');
+                        break;
+                    case 'rating':
+                        var input = '<select name="filterValue" dojoType="phpr.FilteringSelect" autocomplete="false">';
+                        for (var j = 1; j <= this.filterField[i].max; j++) {
+                            input += '<option value="' + j + '">' + j + '</option>';
+                        }
+                        input       += '</select>';
+                        rulesOptions = new Array('equal', 'notEqual', 'major', 'majorEqual', 'minor', 'minorEqual');
                         break;
                     default:
                         var input    = '<input type="text" name="filterValue" dojoType="dijit.form.TextBox" />'
