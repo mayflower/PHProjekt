@@ -118,6 +118,21 @@ dojo.declare("phpr.Date", null, {
         return new Date(year, month - 1, day);
     },
 
+    isoTimeTojsDate:function(time) {
+        // Summary:
+        //    Convert a iso string of a time into a js object date
+        // Description:
+        //    Convert a iso string of a time into a js object date
+        var hours   = time.substr(0, 2);
+        var minutes = time.substr(3, 2);
+
+        var date = new Date();
+        date.setHours(hours);
+        date.setMinutes(minutes);
+
+        return date;
+    },
+
     isoDatetimeTojsDate:function(datetime) {
         // Summary:
         //    Convert a iso string of a date into a js object date
