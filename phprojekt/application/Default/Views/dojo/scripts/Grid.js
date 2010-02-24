@@ -935,6 +935,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 this.main.newEntry();
             }));
         } else {
+            dojo.removeClass(this._node.domNode, 'addButtonText');
             this.processActions();
 
             // Data of the grid
