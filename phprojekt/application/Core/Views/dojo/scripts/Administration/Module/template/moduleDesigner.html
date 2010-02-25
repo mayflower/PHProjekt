@@ -25,9 +25,15 @@
         <br />
         <div id="moduleDesignerSaveButton"
         style="width: 100%; margin: 4px; display: inline">
-            <button dojoType="dijit.form.Button" onclick="dijit.byId('moduleManagerDialog').hide();"
+            <button dojoType="dijit.form.Button" onclick="
+            dijit.byId('moduleManagerDialog').hide();
+            dojo.publish('Module.formProxy', ['processDialogData']);"
             baseClass="positive" iconClass="tick">
                 {{saveText}}
+            </button>
+            <button dojoType="dijit.form.Button" onclick="dijit.byId('moduleManagerDialog').hide();"
+            baseClass="positive" iconClass="cancel">
+                {{cancelText}}
             </button>
         </div>
     </div>

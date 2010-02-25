@@ -35,6 +35,11 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
 
                     // Open the edit form
                     var t = this._normalizedCreator(nodes[0]);
+                    if (dojo.isIE) {
+                        dojo.style(t.node.childNodes[0].childNodes[1].childNodes[0].childNodes[2], 'display', 'inline');
+                    } else {
+                        dojo.style(t.node.childNodes[0].childNodes[3].childNodes[0].childNodes[2], 'display', 'inline');
+                    }
                     phpr.editModuleDesignerField(t.node.id);
                 }
             }
@@ -56,9 +61,9 @@ phpr.makeModuleDesignerSource = function() {
     //    Draw the source fields
     //    Cache the html result
     var element = dojo.byId('moduleDesignerSource');
-    var html    = '<div style="text-align: center; padding-bottom: 2px;">' +
-        phpr.nls.get('Drag a field from this side, and drop it in the right panel.') + '<br />'
-        + phpr.nls.get('Edit the field in the bottom panel when this appear after the drop.')
+    var html    = '<div style="text-align: center; padding-bottom: 2px;">'
+        + phpr.nls.get('1. Drag a field into the right pane.') + '<br />'
+        + phpr.nls.get('2. Edit the parameters of the field in the lower left pane.')
         + '</div>';
     var types = new Array('text', 'date', 'time', 'datetime', 'selectValues', 'checkbox',
                           'percentage', 'rating', 'textarea', 'upload')
@@ -66,10 +71,10 @@ phpr.makeModuleDesignerSource = function() {
     for (i in types) {
         var id = dojo.dnd.getUniqueId();
         if (!contentModuleDesignerSource[types[i]]) {
-            contentModuleDesignerSource[types[i]] = phpr.makeModuleDesignerField(types[i]);
+            contentModuleDesignerSource[types[i]] = phpr.makeModuleDesignerField(types[i], 'source');
         }
         if (types[i] == 'upload') {
-            contentModuleDesignerSource[types[i]] = phpr.makeModuleDesignerField(types[i]);
+            contentModuleDesignerSource[types[i]] = phpr.makeModuleDesignerField(types[i], 'source');
         }
         html += '<div id="' + id + '" class="dojoDndItem" style="cursor: move;">';
         html += contentModuleDesignerSource[types[i]];
@@ -100,7 +105,7 @@ phpr.makeModuleDesignerTarget = function(jsonData, tabs) {
                 if (data[i]['formTab'] == tabs[j]['id']) {
                     var id = dojo.dnd.getUniqueId();
                     html += '<div id="' + id + '" class="dojoDndItem" style="cursor: move;">';
-                    html += phpr.makeModuleDesignerField(data[i]['formType'], data[i]);
+                    html += phpr.makeModuleDesignerField(data[i]['formType'], 'target', data[i]);
                     html += '</div>';
                 }
             }
@@ -287,6 +292,9 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsTable += '</td><td>';
     fieldsTable += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonTable" baseClass="positive"';
     fieldsTable += ' type="button" iconClass="tick"></button>';
+    fieldsTable += '&nbsp;';
+    fieldsTable += '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonTable" baseClass="positive"';
+    fieldsTable += ' type="button" iconClass="cancel"></button>';
     fieldsTable += '</td></tr>';
 
     // Form
@@ -320,6 +328,9 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsForm += '</td><td>';
     fieldsForm += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonForm" baseClass="positive"';
     fieldsForm += ' type="button" iconClass="tick"></button>';
+    fieldsForm += '&nbsp;';
+    fieldsForm += '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonForm" baseClass="positive"';
+    fieldsForm += ' type="button" iconClass="cancel"></button>';
     fieldsForm += '</td></tr>';
 
     // List
@@ -332,6 +343,9 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsList += '</td><td>';
     fieldsList += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonList" baseClass="positive"';
     fieldsList += ' type="button" iconClass="tick"></button>';
+    fieldsList += '&nbsp;';
+    fieldsList += '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonList" baseClass="positive"';
+    fieldsList += ' type="button" iconClass="cancel"></button>';
     fieldsList += '</td></tr>';
 
     // General
@@ -351,6 +365,9 @@ phpr.editModuleDesignerField = function(nodeId) {
     fieldsGeneral += '</td><td>';
     fieldsGeneral += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonGeneral"';
     fieldsGeneral += ' baseClass="positive" type="button" iconClass="tick"></button>';
+    fieldsGeneral += '&nbsp;';
+    fieldsGeneral += '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonGeneral" baseClass="positive"';
+    fieldsGeneral += ' type="button" iconClass="cancel"></button>';
     fieldsGeneral += '</td></tr>';
 
     var formId = 'formTable' + '_' + nodeId;
@@ -408,6 +425,7 @@ phpr.editModuleDesignerField = function(nodeId) {
         }
     });
 
+    // Save
     dojo.connect(dijit.byId('moduleDesignerSubmitButtonTable'), "onClick", function() {
         phpr.saveModuleDesignerField(nodeId, formType);
     });
@@ -421,6 +439,20 @@ phpr.editModuleDesignerField = function(nodeId) {
         phpr.saveModuleDesignerField(nodeId, formType);
     });
 
+    // Cancel
+    dojo.connect(dijit.byId('moduleDesignerCancelButtonTable'), "onClick", function() {
+        phpr.switchOkButton('save');
+    });
+    dojo.connect(dijit.byId('moduleDesignerCancelButtonForm'), "onClick", function() {
+        phpr.switchOkButton('save');
+    });
+    dojo.connect(dijit.byId('moduleDesignerCancelButtonList'), "onClick", function() {
+        phpr.switchOkButton('save');
+    });
+    dojo.connect(dijit.byId('moduleDesignerCancelButtonGeneral'), "onClick", function() {
+        phpr.switchOkButton('save');
+    });
+
     phpr.switchOkButton('editor');
 };
 
@@ -430,6 +462,7 @@ phpr.saveModuleDesignerField = function(nodeId, formType) {
     // Description:
     //    Mix the form data and make a new field with the data
     var params = new Array();
+
     params = dojo.mixin(params, dijit.byId('formTable' + '_' + nodeId).attr('value'));
     params = dojo.mixin(params, dijit.byId('formForm' + '_' + nodeId).attr('value'));
     params = dojo.mixin(params, dijit.byId('formList' + '_' + nodeId).attr('value'));
@@ -437,7 +470,7 @@ phpr.saveModuleDesignerField = function(nodeId, formType) {
 
     phpr.switchOkButton('save');
 
-    dojo.byId(nodeId).innerHTML = phpr.makeModuleDesignerField(formType, params);
+    dojo.byId(nodeId).innerHTML = phpr.makeModuleDesignerField(formType, 'target', params);
     dojo.parser.parse(nodeId);
 };
 
@@ -465,7 +498,7 @@ phpr.switchOkButton = function(type) {
     }
 };
 
-phpr.makeModuleDesignerField = function(formType, params) {
+phpr.makeModuleDesignerField = function(formType, target, params) {
     // Summary:
     //    Draw a field using the params and the formType
     // Description:
@@ -651,7 +684,12 @@ phpr.makeModuleDesignerField = function(formType, params) {
     html += '<input type="hidden" name="id" class="hiddenValue" dojoType="dijit.form.TextBox" value="'
         + id + '" />';
 
-    html += '</td><td>';
+    if (target == 'source') {
+        var display = 'none';
+    } else {
+        var display = 'inline';
+    }
+    html += '</td><td style="display: ' + display + '">';
     html += '<button dojoType="dijit.form.Button" baseClass="positive smallIcon" iconClass="edit"';
     html += ' onClick="'
         + 'phpr.editModuleDesignerField(this.domNode.parentNode.parentNode.parentNode.parentNode.parentNode.id);"';

@@ -64,12 +64,11 @@ $lang["For Modules queries, use Module#keyField#displayField."] = "Para consulta
     . "Módulo#campoClave#campoParaMostrar";
 $lang["The API will get all the keyField of the module and will use the displayField for show it."] = "La API "
     . "obtendrá todos los campoClaves del módulos y utilizará el campoParaMostrar para mostrarlos.";
-$lang["Defines the position of the field in the grid. Starts with 1 in the left. 0 for do not show it."] = "Define la posición del campo en "
-    . "la grilla. Empieza con 1 en la izquierda. 0 para no mostrarlo.";
-$lang["Drag a field from this side, and drop it in the right panel."] = "Arrastre un campo de este lado, y suéltelo "
-    . "en el panel derecho.";
-$lang["Edit the field in the bottom panel when this appear after the drop."] = "Edite el campo en el panel inferior "
-    . "cuando este aparezca después de soltarlo.";
+$lang["Defines the position of the field in the grid. Starts with 1 in the left. 0 for do not show it."] = "Define la "
+    . "posición del campo en la grilla. Empieza con 1 en la izquierda. 0 para no mostrarlo.";
+$lang["1. Drag a field into the right pane."] = "1. Arrastre un campo en el panel derecho.";
+$lang["2. Edit the parameters of the field in the lower left pane."] = "2. Edite los parámetros del campo en el "
+    . "panel inferior izquierdo.";
 $lang["Drop in this panel all the fields that you want to have in this tab."] = "Suelte en este panel todos los campos "
     . "que desea incluir en esta solapa.";
 $lang["For sort the fields, just drag and drop it in the correct position."] = "Para ordenar los campos, sólo "

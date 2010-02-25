@@ -125,3 +125,8 @@
 .phprojekt #moduleDesignerContent .dijitComboButton {
     margin: 0;
 }
+
+.phprojekt #moduleDesignerTarget .edit,
+.phprojekt #moduleDesignerTarget .cross {
+    margin-left: -4px;
+}
