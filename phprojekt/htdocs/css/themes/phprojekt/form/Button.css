@@ -164,6 +164,20 @@
     left: 1px;
 }
 
+.phprojekt .cancel {
+    background-image: url("../images/cancel.png");
+    background-repeat: no-repeat;
+    margin-left: 6px;
+    margin-right: 0px;
+    width: 16px;
+    height: 16px;
+}
+
+.dj_ie .phprojekt span .cancel {
+    width: 16px;
+    left: 6px;
+}
+
 .phprojekt .smallIcon .dijitButtonNode {
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
