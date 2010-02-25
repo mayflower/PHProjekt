@@ -41,8 +41,9 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
 
         // Hidden field for the MD data
         if (!designerData.length) {
-            designerData = new Object();
+            designerData    = new Object();
             designerData[0] = new Object();
+
             designerData[0]['id']            = 0;
             designerData[0]['tableName']     = '';
             designerData[0]['formPosition']  = 1;
@@ -67,6 +68,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             designerData[0]['isRequired']    = 1;
         }
         var jsonDesignerData = dojo.toJson(designerData);
+
         this.formdata[1] += this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData,
             true, false);
     },
@@ -78,32 +80,22 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
 
     openDialog:function() {
         // Create the dialog
-        if (null == this._dialog) {
-            this._dialog = new dijit.Dialog({
-                title: "created",
-                id:    "moduleManagerDialog",
-                style: "width:95%; height:" + (getMaxHeight() - 10) + "px; background: #fff;"
-            });
-            dojo.body().appendChild(this._dialog.domNode);
-
-            // Disconnect onExecute
-            for (var i = 0; i < this._dialog._connects.length; i++) {
-                var handle = this._dialog._connects[i];
-                var event  = handle[0][1];
-                if (event == 'onExecute') {
-                    this._dialog.disconnect(handle);
-                    break;
-                }
-            }
-            this._dialog.startup();
-        }
+        phpr.destroyWidget('moduleManagerDialog');
+        this._dialog = new dijit.Dialog({
+            title:     phpr.nls.get('Module Designer') + ' [' + dijit.byId('label').value + ']',
+            id:        "moduleManagerDialog",
+            style:     "width:95%; height:" + (getMaxHeight() - 28) + "px;",
+            baseClass: 'moduleManagerDialog'
+        });
+        dojo.body().appendChild(this._dialog.domNode);
+        this._dialog.startup();
 
         // Add translations
         var tabs = this.tabStore.getList();
         for (t in tabs) {
             tabs[t].name = phpr.nls.get(tabs[t].name);
         }
-        this.render(["phpr.Core.Module.template", "moduleDesigner.html"], this._dialog.domNode, {
+        this.render(["phpr.Core.Module.template", "moduleDesigner.html"], this._dialog.containerNode, {
             webpath:     phpr.webpath,
             tableText:   phpr.nls.get('Database'),
             formText:    phpr.nls.get('Form'),
@@ -113,7 +105,6 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             cancelText:  phpr.nls.get('Cancel'),
             tabs:        tabs
         });
-        dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
         phpr.makeModuleDesignerSource();
         phpr.makeModuleDesignerTarget(dijit.byId('designerData').attr('value'), this.tabStore.getList());
 
@@ -127,6 +118,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         parent._showChild(dijit.byId(parent.containerNode.children[0].id));
 
         this._dialog.show();
+        dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
     },
 
     processDialogData:function() {

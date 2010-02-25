@@ -61,10 +61,18 @@ phpr.makeModuleDesignerSource = function() {
     //    Draw the source fields
     //    Cache the html result
     var element = dojo.byId('moduleDesignerSource');
-    var html    = '<div style="text-align: center; padding-bottom: 2px;">'
+    var html    = '<div style="text-align: center; padding: 5px 0 2px;">'
+        + phpr.nls.get('Repository of available field types')
+        + '<button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help" '
+        + 'tabindex="-1">'
+        + '<div dojoType="dijit.TooltipDialog">'
+        + '<div style="white-space: nowrap;">'
         + phpr.nls.get('1. Drag a field into the right pane.') + '<br />'
         + phpr.nls.get('2. Edit the parameters of the field in the lower left pane.')
-        + '</div>';
+        + '</div>'
+        + '</div>'
+        + '</button>'
+        + '</div>'
     var types = new Array('text', 'date', 'time', 'datetime', 'selectValues', 'checkbox',
                           'percentage', 'rating', 'textarea', 'upload')
 
@@ -96,9 +104,17 @@ phpr.makeModuleDesignerTarget = function(jsonData, tabs) {
         for (var j in tabs) {
             var tab     = eval("moduleDesignerTarget" + tabs[j]['nameId']);
             var element = dojo.byId('moduleDesignerTarget' + tabs[j]['nameId']);
-            var html    = '<div style="text-align: center; padding-bottom: 2px;">' +
-                phpr.nls.get('Drop in this panel all the fields that you want to have in this tab.') + '<br />'
+            var html    = '<div style="text-align: center; padding-bottom: 2px;">'
+                + phpr.nls.get('Active fields in the module')
+                + '<button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" '
+                + 'tabindex="-1" iconClass="help">'
+                + '<div dojoType="dijit.TooltipDialog">'
+                + '<div style="white-space: nowrap;">'
+                + phpr.nls.get('Drop in this panel all the fields that you want to have in this tab.') + '<br />'
                 + phpr.nls.get('For sort the fields, just drag and drop it in the correct position.')
+                + '</div>'
+                + '</div>'
+                + '</button>'
                 + '</div>';
 
             for (var i in data) {
@@ -494,7 +510,7 @@ phpr.switchOkButton = function(type) {
         }).play();
     } else {
         dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
-        dojo.style(dojo.byId('moduleDesignerSaveButton'), "display", "inline");
+        dojo.style(dojo.byId('moduleDesignerSaveButton'), "display", "block");
     }
 };
 
@@ -645,7 +661,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
             var widgetId = dojo.dnd.getUniqueId();
             formLabel = params['formLabel'] || 'Upload';
             labelFor = 'upload';
-            inputTxt = '<input type="file" />';
+            inputTxt = '<input type="file" class="file" />';
             break;
     }
     labelTxt = '<label for="' + labelFor + '">' + formLabel + '</label>';

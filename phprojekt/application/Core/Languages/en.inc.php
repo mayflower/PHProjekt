@@ -65,9 +65,11 @@ $lang["The API will get all the keyField of the module and will use the displayF
     . "get all the keyField of the module and will use the displayField for show it.";
 $lang["Defines the position of the field in the grid. Starts with 1 in the left. 0 for do not show it."] = "Defines "
     . "the position of the field in the grid. Starts with 1 in the left. 0 for do not show it.";
+$lang["Repository of available field types"] = "Repository of available field types";
 $lang["1. Drag a field into the right pane."] = "1. Drag a field into the right pane.";
 $lang["2. Edit the parameters of the field in the lower left pane."] = "2. Edit the parameters of the field in the "
     . "lower left pane.";
+$lang["Active fields in the module"] = "Active fields in the module";
 $lang["Drop in this panel all the fields that you want to have in this tab."] = "Drop in this panel all the fields "
     . "that you want to have in this tab.";
 $lang["For sort the fields, just drag and drop it in the correct position."] = "For sort the fields, just drag and "

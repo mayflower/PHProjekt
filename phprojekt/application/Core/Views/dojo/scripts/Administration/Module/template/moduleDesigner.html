@@ -1,14 +1,13 @@
 <div id="moduleDesignerContent"
  style="width: 100%; height: 100%; background-color: #294064;">
     <div
-    style="background-color: #294064; height: 98%; width: 48%; float: left; margin: 4px;">
+    style="background-color: #294064; height: 98%; width: 48%; float: left;">
         <div dojoType="phpr.Module.Designer" id="moduleDesignerSource" jsId="moduleDesignerSource" copyOnly="false"
         skipForm="true" selfAccept="false"
         style="background-color: #fff; height: 65%; width: 100%; margin: 4px; overflow: auto;">
         </div>
-        <br />
         <div dojoType="dijit.layout.TabContainer" id="moduleDesignerEditor" useMenu="false" useSlider="false"
-        style="display: block; background-color: #fff; height: 30%; width: 100%; margin: 0px;">
+        style="display: block; background-color: #fff; height: 32%; width: 100%; margin: 4px;">
             <div dojoType="dijit.layout.ContentPane" id="moduleDesignerEditorTable" title="{{tableText}}"
             style="width: 100%; height: 95%;">
             </div>
@@ -22,29 +21,29 @@
             style="width: 100%; height: 95%;">
             </div>
         </div>
-        <br />
         <div id="moduleDesignerSaveButton"
-        style="width: 100%; margin: 4px; display: inline">
-            <button dojoType="dijit.form.Button" onclick="
-            dijit.byId('moduleManagerDialog').hide();
+        style="width: 100%; margin: 4px; display: block;">
+            <br />
+            <button dojoType="dijit.form.Button" type="submit" onclick="
             dojo.publish('Module.formProxy', ['processDialogData']);"
             baseClass="positive" iconClass="tick">
                 {{saveText}}
             </button>
-            <button dojoType="dijit.form.Button" onclick="dijit.byId('moduleManagerDialog').hide();"
+            &nbsp;&nbsp;
+            <button dojoType="dijit.form.Button"  type="submit"
             baseClass="positive" iconClass="cancel">
                 {{cancelText}}
             </button>
         </div>
     </div>
     <div dojoType="dijit.layout.ContentPane"
-    style="background-color: #fff; height: 98%; width: 48%; float: right; margin: 4px;">
+    style="background-color: #fff; height: 95.62%; width: 48%; float: right; margin: 4px;">
         <div dojoType="dijit.layout.TabContainer" id="moduleDesignerTarget" useMenu="false" useSlider="false">
             {% for tab in tabs %}
             <div dojoType="dijit.layout.ContentPane" title="{{tab.name}}">
                 <div dojoType="phpr.Module.Designer" id="moduleDesignerTarget{{tab.nameId}}"
                 jsId="moduleDesignerTarget{{tab.nameId}}" skipForm="true" selfAccept="true"
-                style="background-color: #fff; width: 100%; height: 95%; margin: 0px; padding-top: 5px;">
+                style="background-color: #fff; width: 100%; height: 95%; margin: 0px;">
                 </div>
             </div>
             {% endfor %}

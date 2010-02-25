@@ -66,9 +66,14 @@
 .phprojekt #moduleDesignerContent .dijitTextBox {
     width: 209px;
 }
+
 .phprojekt #moduleDesignerContent .twoFields .dijitInputField INPUT,
 .phprojekt #moduleDesignerContent .twoFields .dijitTextBox {
     width: 98px;
+}
+
+.dj_ie .phprojekt #moduleDesignerContent .file {
+    width: 220px;
 }
 
 .phprojekt #moduleDesignerContent .dijitMultiSelect,
@@ -79,8 +84,12 @@
     width: 217px;
 }
 
-.phprojekt #moduleDesignerContent .dijitTextArea{
+.phprojekt #moduleDesignerContent .dijitTextArea {
     width: 218px;
+}
+
+.dj_ie .phprojekt #moduleDesignerContent .dijitTextArea {
+    width: 209px;
 }
 
 .phprojekt #moduleDesignerContent .form {
@@ -129,4 +138,16 @@
 .phprojekt #moduleDesignerTarget .edit,
 .phprojekt #moduleDesignerTarget .cross {
     margin-left: -4px;
+}
+
+/* Dialog */
+.phprojekt .moduleManagerDialog {
+    background: #294064;
+}
+
+.phprojekt .moduleManagerDialog .dijitDialogPaneContent {
+    background: #294064;
+    padding: 0px;
+    border: 0px;
+    height: 98% !important;
 }
