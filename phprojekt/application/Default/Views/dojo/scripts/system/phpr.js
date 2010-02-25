@@ -441,7 +441,8 @@ dojo.declare("phpr.DataStore", null, {
             } else {
                 this._active = true;
                 this._internalCache[params.url]['store'].fetch({
-                    onComplete: dojo.hitch(this, "saveData", {
+                    serverQuery: params.serverQuery || {},
+                    onComplete:  dojo.hitch(this, "saveData", {
                         url:         params.url,
                         processData: params.processData
                     }),
