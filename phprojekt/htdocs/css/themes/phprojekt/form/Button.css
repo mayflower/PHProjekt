@@ -15,12 +15,22 @@
     height: 16px;
 }
 
+.dj_ie .phprojekt span .cross {
+    width: 16px;
+    left: 5px;
+}
+
 .phprojekt .tick {
     background-image: url("../images/tick.gif");
     background-repeat: no-repeat;
     margin-left: 5px;
     width: 16px;
     height: 16px;
+}
+
+.dj_ie .phprojekt span .tick {
+    width: 16px;
+    left: 5px;
 }
 
 .phprojekt .tinytick {
@@ -31,12 +41,22 @@
     height: 8px;
 }
 
+.dj_ie .phprojekt span .tinytick {
+    width: 8px;
+    left: 5px;
+}
+
 .phprojekt .disk {
     background-image: url("../images/disk.png");
     background-repeat: no-repeat;
     margin-left: 5px;
     width: 20px;
     height: 16px;
+}
+
+.dj_ie .phprojekt span .disk {
+    width: 20px;
+    left: 5px;
 }
 
 .phprojekt .export {
@@ -47,12 +67,22 @@
     height: 16px;
 }
 
+.dj_ie .phprojekt span .export {
+    width: 20px;
+    left: 5px;
+}
+
 .phprojekt .add {
     background-image: url("../images/add.gif");
     background-repeat: no-repeat;
     margin-left: 5px;
     width: 20px;
     height: 16px;
+}
+
+.dj_ie .phprojekt span .add {
+    width: 20px;
+    left: 5px;
 }
 
 .phprojekt .start {
@@ -63,12 +93,22 @@
     height: 16px;
 }
 
+.dj_ie .phprojekt span .start {
+    width: 16px;
+    left: 5px;
+}
+
 .phprojekt .stop {
     background-image: url("../images/clock_stop.gif");
     background-repeat: no-repeat;
     margin-left: 5px;
     width: 16px;
     height: 16px;
+}
+
+.dj_ie .phprojekt span .stop {
+    width: 16px;
+    left: 5px;
 }
 
 .phprojekt .help {
@@ -79,12 +119,22 @@
     height: 16px;
 }
 
+.dj_ie .phprojekt span .help {
+    width: 16px;
+    left: 5px;
+}
+
 .phprojekt .close {
     background-image: url("../images/close.png");
     background-repeat: no-repeat;
     margin-left: 5px;
     width: 13px;
     height: 13px;
+}
+
+.dj_ie .phprojekt span .close {
+    width: 13px;
+    left: 5px;
 }
 
 .phprojekt .edit {
@@ -95,6 +145,11 @@
     height: 16px;
 }
 
+.dj_ie .phprojekt span .edit {
+    width: 16px;
+    left: 5px;
+}
+
 .phprojekt .filter {
     background-image: url("../images/filter.png");
     background-repeat: no-repeat;
@@ -102,6 +157,11 @@
     margin-right: 1px;
     width: 16px;
     height: 16px;
+}
+
+.dj_ie .phprojekt span .filter {
+    width: 16px;
+    left: 1px;
 }
 
 .phprojekt .smallIcon .dijitButtonNode {
