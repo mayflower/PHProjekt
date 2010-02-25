@@ -53,9 +53,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
     filterField:       new Array(),
     _rules:            new Array(),
     _filterCookie:     null,
-    _listUrl:          null,
     _deleteAllFilters: null,
     _filterSeparator:  ';',
+    _filterData:       new Array(),
 
     // Constants
     MODE_XHR:        0,
@@ -94,15 +94,17 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.gridLayout  = new Array();
         this.filterField = new Array();
 
-        this.setFilterUrl(this.getFilters());
+        this.setFilterQuery(this.getFilters());
         this.setGetExtraActionsUrl();
         this.setNode();
 
         phpr.DataStore.addStore({url: this.url});
-        phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, function() {
-            phpr.DataStore.addStore({url: this.getActionsUrl});
-            phpr.DataStore.requestData({url: this.getActionsUrl, processData: dojo.hitch(this, "onLoaded")});
-        })});
+        phpr.DataStore.requestData({url: this.url, serverQuery: {'filters[]': this._filterData},
+            processData: dojo.hitch(this, function() {
+                phpr.DataStore.addStore({url: this.getActionsUrl});
+                phpr.DataStore.requestData({url: this.getActionsUrl, processData: dojo.hitch(this, "onLoaded")});
+            })
+        });
     },
 
     setUrl:function() {
@@ -721,22 +723,19 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         this.sendFilterRequest(filters);
     },
 
-    setFilterUrl:function(filters) {
+    setFilterQuery:function(filters) {
         // Summary:
-        //    Make the url for request to the server
+        //    Make the POST values of the filters
         // Description:
-        //    Make the normal url and add the filters if there are any
+        //    Make the POST values of the filters if there are any
         //    Save the used filters in the cookie
         this.setUrl();
 
         // Fix id
-        var filterUrl = new Array();
+        this._filterData = new Array();
         for (var f in filters) {
-            filterUrl.push(filters[f].replace('_fixedId', 'id'));
+            this._filterData.push(filters[f].replace('_fixedId', 'id'));
         }
-
-        this._listUrl = this.url;
-        this.url      = this.url + '/filters/' + filterUrl;
 
         var currentCookie = dojo.cookie(this._filterCookie);
         if (typeof(currentCookie) == 'undefined') {
@@ -761,10 +760,12 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Make the request to the server
         // Description:
         //    Make the request to the server
-        this.setFilterUrl(filters);
+        this.setFilterQuery(filters);
 
+        phpr.DataStore.deleteData({url: this.url});
         phpr.DataStore.addStore({url: this.url});
-        phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
+        phpr.DataStore.requestData({url: this.url, serverQuery: {'filters[]': this._filterData},
+            processData: dojo.hitch(this, "onLoaded")});
     },
 
     getFilters:function() {
@@ -1402,7 +1403,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Delete the cache for this grid
         // Description:
         //    Delete the cache for this grid
-        phpr.DataStore.deleteDataPartialString({url: this._listUrl});
+        phpr.DataStore.deleteData({url: this.url});
         phpr.DataStore.deleteData({url: this._tagUrl});
     },
 

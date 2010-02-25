@@ -292,11 +292,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function getFilterWhere($where)
     {
-        $filters = (string) $this->getRequest()->getParam('filters', null);
+        $filters = $this->getRequest()->getParam('filters', array());
 
         if (!empty($filters)) {
             $filterClass = new Phprojekt_Filter($this->getModelObject(), $where);
-            $filters = explode(",", $filters);
             foreach ($filters as $filter) {
                 list($filterOperator, $filterField, $filterRule, $filterValue) = explode(";", $filter);
                 if (isset($filterOperator) && isset($filterField) &&  isset($filterRule) && isset($filterValue)) {

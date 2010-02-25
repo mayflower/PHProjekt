@@ -197,8 +197,7 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
         return false;
     },
 
-    setFilterUrl:function(filters) {
-        this.setUrl();
+    setFilterQuery:function(filters) {
     },
 
     processActions:function() {
