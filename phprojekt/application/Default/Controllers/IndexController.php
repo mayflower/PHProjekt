@@ -298,6 +298,10 @@ class IndexController extends Zend_Controller_Action
             $filterClass = new Phprojekt_Filter($this->getModelObject(), $where);
             foreach ($filters as $filter) {
                 list($filterOperator, $filterField, $filterRule, $filterValue) = explode(";", $filter);
+                $filterOperator = Cleaner::sanitize('alpha', $filterOperator, null);
+                $filterField    = Cleaner::sanitize('alpha', $filterField, null);
+                $filterRule     = Cleaner::sanitize('alpha', $filterRule, null);
+                $filterValue    = Cleaner::sanitize('filter', $filterValue, null);
                 if (isset($filterOperator) && isset($filterField) &&  isset($filterRule) && isset($filterValue)) {
                     $filterClass->addFilter($filterField, $filterRule, $filterValue, $filterOperator);
                 }
