@@ -665,6 +665,8 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         // Summary:
         //    Add the onkeyup to the search field
         if (_searchEvent == null) {
+            dijit.byId("searchfield").regExp         = phpr.regExpForFilter.getExp();
+            dijit.byId("searchfield").invalidMessage = phpr.regExpForFilter.getMsg();
             _searchEvent = dojo.connect(dojo.byId("searchfield"), "onkeyup",
                 dojo.hitch(this, "waitForSubmitSearchForm"));
         }
@@ -690,7 +692,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             if (window.mytimeout) {
                 window.clearTimeout(window.mytimeout);
             }
-            window.mytimeout = window.setTimeout(dojo.hitch(this, "showSearchSuggest"), 500);
+            if (dijit.byId("searchfield").isValid()) {
+                window.mytimeout = window.setTimeout(dojo.hitch(this, "showSearchSuggest"), 500);
+            }
         }
     },
 

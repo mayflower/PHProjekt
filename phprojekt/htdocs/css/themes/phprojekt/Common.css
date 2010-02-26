@@ -54,6 +54,16 @@
     padding-top: 1px;
 }
 
+.phprojekt #header #search-bar .dijitTextBox {
+    background: transparent !important;
+    width: 95px !important;
+    border: 0px !important;
+    margin-top: 2px;
+    margin-right: 10px;
+    margin-left: 20px;
+    padding-top: 1px;
+}
+
 .phprojekt #header #search-bar input {
     background: url("images/searchfield_bg.png");
     width: 80px;
@@ -82,6 +92,9 @@
 }
 .dj_ie7 .phprojekt #header #search-bar input {
     padding-top: 0;
+}
+.dj_ie .phprojekt #header #search-bar .dijitTextBox {
+    margin-top: 4px !important;
 }
 
 .phprojekt #header #toolbar {
