@@ -707,10 +707,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         if (words.length >= 3) {
             // hide the suggestBox
-            var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch/words/' + words + '/count/10';
-            var self = this;
+            var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch';
+            var self       = this;
             phpr.send({
                 url:       getDataUrl,
+                content:   new Object({words: words, count: 10}),
                 onSuccess: dojo.hitch(this, function(data) {
                     var search        = '';
                     var results       = {};
@@ -774,9 +775,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             words = dojo.byId("searchfield").value;
         }
         if (words.length >= 3) {
-            var getDataUrl   = phpr.webpath + 'index.php/Default/Search/jsonSearch/words/' + words;
+            var getDataUrl   = phpr.webpath + 'index.php/Default/Search/jsonSearch';
             var resultsTitle = phpr.nls.get('Search results');
-            this.showResults(getDataUrl, resultsTitle);
+            var content      = new Object({words: words});
+            this.showResults(getDataUrl, content, resultsTitle);
         }
     },
 
@@ -867,12 +869,13 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    This function reload the grid place with the result of the tag search
         // Description:
         //    The server return the found records and the function display it
-        var getDataUrl   = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag/tag/' + tag;
+        var getDataUrl   = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag';
         var resultsTitle = phpr.nls.get('Tag results');
-        this.showResults(getDataUrl, resultsTitle);
+        var content      = new Object({tag: tag});
+        this.showResults(getDataUrl, content, resultsTitle);
     },
 
-    showResults:function(/*String*/getDataUrl, /*String*/resultsTitle) {
+    showResults:function(/*String*/getDataUrl, /*Object*/content, /*String*/resultsTitle) {
         // Summary:
         //    This function reload the grid place with the result of a search or a tagt
         // Description:
@@ -888,6 +891,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         phpr.send({
             url:       getDataUrl,
+            content:   content,
             onSuccess: dojo.hitch(this, function(data) {
                 this.render(["phpr.Default.template.results", "mainContentResults.html"],
                     dojo.byId('centerMainContent'), {
