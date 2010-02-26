@@ -19,6 +19,9 @@
 
 dojo.provide("phpr.Default.Main");
 
+// Event handler
+_searchEvent = null;
+
 dojo.declare("phpr.Default.Main", phpr.Component, {
     // Summary: class for initialilzing a default module
     grid:       null,
@@ -661,7 +664,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
     setSearchForm:function() {
         // Summary:
         //    Add the onkeyup to the search field
-        dojo.connect(dojo.byId("searchfield"), "onkeyup", dojo.hitch(this, "waitForSubmitSearchForm"));
+        if (_searchEvent == null) {
+            _searchEvent = dojo.connect(dojo.byId("searchfield"), "onkeyup",
+                dojo.hitch(this, "waitForSubmitSearchForm"));
+        }
     },
 
     waitForSubmitSearchForm:function(event) {
