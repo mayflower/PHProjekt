@@ -286,7 +286,7 @@
 }
 
 .phprojekt #systemNavigation {
-    margin: 5px auto 0;
+    margin: 2px auto 0;
     float: left;
 }
 
@@ -311,7 +311,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 }
 
 .dj_ie .phprojekt #systemNavigation {
-    margin: 3px 0px 0px;
+    margin: 0px 0px 0px;
 }
 
 .phprojekt #detailsBox .dijitDropDownButton {
