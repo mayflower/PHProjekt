@@ -545,7 +545,10 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
     if  (isNaN(listPosition)) {
         listPosition = 0;
     }
-    var status     = params['status'] || 1;
+    var status = parseInt(params['status']);
+    if  (isNaN(status)) {
+        status = 1;
+    }
     var isRequired = params['isRequired'] || 0;
     var id         = params['id'] || 0;
 

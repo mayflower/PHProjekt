@@ -161,7 +161,7 @@ class Core_ModuleDesignerController extends Core_IndexController
         $tableData = array();
 
         foreach ($data as $field) {
-            $field['tableField'] = preg_replace('/[^a-zA-Z0-9_]/i', '', $field['tableField']);
+            $field['tableField'] = Phprojekt_DatabaseManager::convertTableField($field['tableField']);
 
             $tableData[$field['tableField']]            = array();
             $tableData[$field['tableField']]['null']    = true;

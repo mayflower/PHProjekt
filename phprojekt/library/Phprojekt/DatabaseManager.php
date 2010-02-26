@@ -148,25 +148,31 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * if not, it gets the new order fields and saves it too.
      * This is for make the query to the database only once and not for each request.
      *
-     * @param string $order Sort string
+     * @param string  $order Sort string
+     * @param boolean $all   Return all or only the avtive one
      *
-     * @return array        Array with the data of all the fields
+     * @return array Array with the data of all the fields
      */
-    protected function _getFields($order)
+    protected function _getFields($order, $all = false)
     {
         $result = array();
 
-        if (!empty($this->_dbFields[$order])) {
+        if (!$all && !empty($this->_dbFields[$order])) {
             $result = $this->_dbFields[$order];
         } else {
             if (null !== $this->_model) {
                 $table = $this->_model->getModelName();
 
                 if (in_array($order, $this->_mapping)) {
-                    $where  = $this->getAdapter()->quoteInto('table_name = ? AND ' . $order . ' > 0', $table);
-                    $result = $this->fetchAll($where, $order);
+                    $sqlString = 'table_name = ? AND ' . $order . ' > 0';
+                    if (!$all) {
+                        $sqlString .= ' AND status = 1';
+                    }
+                    $result = $this->fetchAll($this->getAdapter()->quoteInto($sqlString, $table), $order);
 
-                    $this->_dbFields[$order] = $result;
+                    if (!$all) {
+                        $this->_dbFields[$order] = $result;
+                    }
                 }
             } else {
                 $this->_dbFields[$order] = array();
@@ -187,8 +193,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $table     = $this->_model->getModelName();
 
         return parent::fetchRow($this->_db->quoteInto('table_name = ?', $table)
-                                . ' AND '
-                                . $this->_db->quoteInto('table_field = ?', $fieldname));
+            . ' AND ' . $this->_db->quoteInto('table_field = ?', $fieldname));
     }
 
     /**
@@ -671,6 +676,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         foreach ($data as $values) {
             $databaseManager = clone($this);
             foreach ($values as $key => $value) {
+
                 if (isset($databaseManager->$key)) {
                     switch ($key) {
                         case 'formRegexp':
@@ -681,9 +687,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                             }
                             break;
                         case 'isInteger':
-                            if ($tableData[$values['tableField']]['type'] == 'int') {
+                            if ($tableData[self::convertTableField($values['tableField'])]['type'] == 'int') {
                                 $value = 1;
                             }
+                            break;
+                        case 'tableField':
+                            $value = self::convertTableField($value);
                             break;
                     }
 
@@ -705,7 +714,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function getDataDefinition()
     {
-        $fields = $this->_getFields('form_position');
+        $fields = $this->_getFields('form_position', true);
         $data   = array();
         $i      = 0;
         if (null !== $this->_model) {
@@ -730,7 +739,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     }
                     $field->next();
                 }
-                $index = Phprojekt_ActiveRecord_Abstract::convertVarToSql($field->tableField);
+                $index = self::convertTableField($field->tableField);
                 $data[$i]['tableType'] = $info['metadata'][$index]['DATA_TYPE'];
                 if (null === $info['metadata'][$index]['LENGTH']) {
                     switch ($info['metadata'][$index]['DATA_TYPE']) {
@@ -788,7 +797,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                                                       'length' => 11);
         }
         array_merge($tableDataForCreate, $tableData);
-        $tableName   = strtolower(Phprojekt_ActiveRecord_Abstract::convertVarToSql($tableName));
+        $tableName   = strtolower(self::convertTableField($tableName));
         $tableFields = $tableManager->getTableFields($tableName, $tableDataForCreate);
 
         // Search for Modify and Delete
@@ -797,9 +806,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $found = false;
             foreach ($newFields as $newValues) {
                 if ($oldValues['id'] == $newValues['id']) {
-                    $newValues['tableField']    = preg_replace('/[^a-zA-Z0-9_]/i', '', $newValues['tableField']);
-                    $fieldDefinition            = $tableData[$newValues['tableField']];
-                    $fieldDefinition['name']    = $newValues['tableField'];
+                    $newValues['tableField'] = self::convertTableField($newValues['tableField']);
+                    $fieldDefinition         = $tableData[$newValues['tableField']];
+                    $fieldDefinition['name'] = $newValues['tableField'];
                     if (!in_array($fieldDefinition['name'], $systemFields)) {
                         if ($oldValues['tableField'] == $newValues['tableField']) {
                             if (!$tableManager->modifyField($tableName, $fieldDefinition)) {
@@ -830,7 +839,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         // Search for Add
         foreach ($newFields as $newValues) {
             if ($newValues['id'] == 0) {
-                $newValues['tableField'] = preg_replace('/[^a-zA-Z0-9_]/i', '', $newValues['tableField']);
+                $newValues['tableField'] = self::convertTableField($newValues['tableField']);
                 $fieldDefinition         = $tableData[$newValues['tableField']];
                 $fieldDefinition['name'] = $newValues['tableField'];
                 if (!in_array($fieldDefinition['name'], $systemFields)) {
@@ -902,5 +911,17 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         }
 
         return $options;
+    }
+
+    /**
+     * Apply rules for tableField
+     *
+     * @param string $value Name of the field in the table
+     *
+     * @return string
+     */
+    static public function convertTableField($value)
+    {
+        return Phprojekt_ActiveRecord_Abstract::convertVarToSql($value);
     }
 }
