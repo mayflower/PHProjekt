@@ -183,6 +183,9 @@ $lang["Error in received parameter, consult the admin. Parameter:"] = "Error in 
 $lang["If you have problems or questions with PHProjekt, please write an email to"] = "If you have problems or "
     . "questions with PHProjekt, please write an email to";
 $lang["Support address:"] = "Support address:";
+$lang["Invalid string"] = "Invalid string";
+$lang["Allowed values are: Letters, numbers, space, dash, underscore and colon"] = "Allowed values are: Letters, "
+    . "numbers, space, dash, underscore and colon";
 
 // Error handler messages
 $lang["Run-time notice. The script encountered something that could indicate an error, but could also happen in the "

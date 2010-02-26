@@ -182,6 +182,9 @@ $lang["Error in received parameter, consult the admin. Parameter:"] = "Error en 
 $lang["If you have problems or questions with PHProjekt, please write an email to"] = "Si tiene problemas o preguntas "
     . "sobre Phprojekt, por favor escriba un correo electrónico a";
 $lang["Support address:"] = "Dirección de soporte:";
+$lang["Invalid string"] = "Cadena inválida";
+$lang["Allowed values are: Letters, numbers, space, dash, underscore and colon"] = "Los valores permitidos son: "
+    . "letras, números, espacio, guión, subrayado y dos puntos";
 
 // Error handler messages
 $lang["Run-time notice. The script encountered something that could indicate an error, but could also happen in the "
