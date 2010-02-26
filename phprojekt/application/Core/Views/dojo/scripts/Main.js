@@ -210,6 +210,17 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         }
     },
 
+    newEntry:function() {
+        // Summary:
+        //     This function is responsible for displaying the form for a new entry in the
+        //     current Module
+        if (this.isSystemModule(this.module)) {
+            this.publish("setUrlHash", [phpr.parentmodule, 0, [phpr.module]]);
+        } else {
+            this.publish("setUrlHash", [phpr.parentmodule, 0]);
+        }
+    },
+
     customSetSubmoduleNavigation:function() {
         // Summary:
         //    Function for be rewritten
