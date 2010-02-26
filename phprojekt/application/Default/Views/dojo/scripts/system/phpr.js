@@ -1252,3 +1252,23 @@ phpr.isGlobalModule = function(module) {
     }
     return false;
 };
+
+dojo.declare("phpr.regExpForFilter", null, {
+    // Summary:
+    //    Return the regular expresion used for parse filter values
+    // Description:
+    //    Reject all the characters except letters, numbers, dash, underscore and colon
+    getExp:function() {
+        return '[^\\x21\\x22\\x23\\x24\\x25\\x26\\x27\\x28\\x29\\x2A\\x2B\\x2C\\x2E\\x2F\\x3B'
+            + '\\x3C\\x3D\\x3E\\x3F\\x5B\\x5C\\x5D\\x5E\\x60\\x7B\\x7C\\x7D\\x7E\\x82\\x83\\x84\\x85'
+            + '\\x86\\x87\\x88\\x89\\x8B\\x91\\x92\\x93\\x94\\x95\\x98\\x99\\x9B\\xA1\\xA6\\xAC\\xAE'
+            + '\\xAF\xA8\\xB0\\xB1\\xB2\\xB3\\xB4\\xB6\\xB7\\xB8\\xB9\\xBA\\xBB\\xBC\\xBD\\xBE\\xBF]*';
+    },
+
+    // Summary:
+    //    Return the message used for invalid values
+    getMsg:function() {
+        return '<b>' + phpr.nls.get('Invalid string') + '</b><br />'
+            + phpr.nls.get('Allowed values are: Letters, numbers, space, dash, underscore and colon');
+    }
+});

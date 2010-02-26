@@ -54,7 +54,8 @@ class Cleaner_Sanitizer
         'string'       => 'String',
         'word'         => 'Word',
         'html'         => 'Html',
-        'xss'          => 'Xss'
+        'xss'          => 'Xss',
+        'filter'       => 'Filter'
     );
 
     /**
@@ -391,5 +392,25 @@ class Cleaner_Sanitizer
     public function sanitizeXss($value)
     {
         return htmlentities(strip_tags((string) $value));
+    }
+
+
+    /**
+     * Sanitize value for use in a filter like search
+     *
+     * @param mixed $value Value to sanitizes
+     *
+     * @return mixed sanitized value
+     */
+    public function sanitizeFilter($value)
+    {
+        // Allow letters, numbers, '-', ':' and '_'
+        $result = preg_replace('/[^\w\s\-\:]/', '', $value);
+
+        if ($result == '') {
+            return null;
+        } else {
+            return $result;
+        }
     }
 }
