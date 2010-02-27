@@ -175,7 +175,7 @@ class FileController extends IndexController
             $rights = $model->getRights();
             if (!$rights['currentUser']['download']) {
                 $error = Phprojekt::getInstance()->translate('You don\'t have permission for downloading on this '
-                    + 'item.');
+                    . 'item.');
                 die($error);
             }
             $files = array_merge(explode('||', $model->$field), explode('||', $_SESSION['uploadedFiles_' . $field]));
@@ -195,7 +195,7 @@ class FileController extends IndexController
             $md5Name = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
             if (file_exists($md5Name)) {
                 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-                header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+                header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
                 header("Cache-Control: no-store, no-cache, must-revalidate");
                 header("Cache-Control: post-check=0, pre-check=0", false);
                 header("Pragma: no-cache");
