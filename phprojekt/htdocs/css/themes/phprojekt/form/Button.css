@@ -179,8 +179,8 @@
 }
 
 .phprojekt .smallIcon .dijitButtonNode {
-    padding: 0px 0px 0px 0px;
-    margin: 0px 0px 0px 0px;
+    padding: 0 10px 0 0;
+    margin: 0;
     width: 13px;
     border: none;
     background: none;
