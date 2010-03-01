@@ -318,15 +318,17 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
                 $maxSort = 0;
             }
             $this->sortOrder = $maxSort + 1;
-        } elseif (is_numeric($this->sortOrder) && ($this->sortOrder > 0) &&
-            isset($this->_history['sortOrder']) && ($this->_history['sortOrder'] != $this->sortOrder)) {
-            // A sort order was given and differs from the initial value. We need to increment
-            // all sort order values equal or above the new value by one, and then update this
-            // record with the new value. That should ensure order value consistency.
-            $data  = array('sort_order' => new Zend_Db_Expr($this->_db->quoteIdentifier('sort_order') . ' + 1'));
-            $where = sprintf('%s = %d and %s >= %d', $this->_db->quoteIdentifier('minutes_id'), $this->_minutesId,
-                $this->_db->quoteIdentifier('sort_order'), $this->sortOrder);
-            $this->update($data, $where);
+        } elseif (is_numeric($this->sortOrder) && ($this->sortOrder > 0)) {
+            if ((!isset($this->_history['sortOrder']))
+                || (isset($this->_history['sortOrder']) && ($this->_history['sortOrder'] != $this->sortOrder))) {
+                // A sort order was given and differs from the initial value. We need to increment
+                // all sort order values equal or above the new value by one, and then update this
+                // record with the new value. That should ensure order value consistency.
+                $data  = array('sort_order' => new Zend_Db_Expr($this->_db->quoteIdentifier('sort_order') . ' + 1'));
+                $where = sprintf('%s = %d and %s >= %d', $this->_db->quoteIdentifier('minutes_id'), $this->_minutesId,
+                    $this->_db->quoteIdentifier('sort_order'), $this->sortOrder);
+                $this->update($data, $where);
+            }
         }
 
         return parent::save();
