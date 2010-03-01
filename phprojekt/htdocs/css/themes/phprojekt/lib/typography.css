@@ -230,6 +230,24 @@ tt {
      width: 46%;
 }
 
+/* Sub Modules Form Tables */
+
+.phprojekt .subModuleDiv .form {
+    width: 99%;
+}
+
+.phprojekt .subModuleDiv .form .col1 {
+    width: 13%;
+}
+
+.phprojekt .subModuleDiv .form .col2 {
+    width: 1%;
+}
+
+.phprojekt .subModuleDiv .form .col3 {
+    width: 11%;
+}
+
 /* Use this if you use span-x classes on th/td. */
 table .last {
     padding-right: 0;

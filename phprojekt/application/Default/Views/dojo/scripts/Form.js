@@ -600,6 +600,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 var subModuleName = subModules[index]['name'];
                 this.addTab('', 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
                     subModuleName + 'FormTab');
+                dojo.addClass('tab' + subModuleName, 'subModuleDiv');
                 subModules[index]['class'].fillTab('tab' + subModuleName);
             }
         }

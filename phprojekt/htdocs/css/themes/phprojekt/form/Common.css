@@ -45,7 +45,7 @@
     width: 307px;
 }
 
-.dj_ie7 .phprojekt .dijitComboBox{
+.dj_ie7 .phprojekt .dijitComboBox {
     width: 308px;
 }
 
@@ -167,4 +167,43 @@
 .phprojekt .twoFields .dijitSpinner,
 .phprojekt .twoFields .dijitSlider {
     width: 142px;
+}
+
+/* Sub Modules Form Fields */
+.phprojekt .subModuleDiv .dijitInputField input,
+.phprojekt .subModuleDiv .dijitTextBox {
+    width: 230px;
+}
+
+.phprojekt .subModuleDiv .dijitMultiSelect,
+.phprojekt .subModuleDiv .dojoxMultiSelect,
+.phprojekt .subModuleDiv .dijitComboBox,
+.phprojekt .subModuleDiv .dijitSpinner,
+.phprojekt .subModuleDiv .dijitSlider {
+    width: 237px;
+}
+
+.dj_ie .phprojekt .subModuleDiv .dojoxMultiSelect {
+    width: 224px;
+}
+
+.dj_ie7 .phprojekt .subModuleDiv .dijitComboBox {
+    width: 238px;
+}
+
+.phprojekt .subModuleDiv .twoFields .dijitInputField input,
+.phprojekt .subModuleDiv .twoFields .dijitTextBox,
+.phprojekt .subModuleDiv .twoFields .dijitMultiSelect,
+.phprojekt .subModuleDiv .twoFields .dijitComboBox,
+.phprojekt .subModuleDiv .twoFields .dijitSpinner,
+.phprojekt .subModuleDiv .twoFields .dijitSlider {
+    width: 107px;
+}
+
+.phprojekt .subModuleDiv .dijitTextArea {
+    width: 240px;
+}
+
+.dj_ie7 .phprojekt .subModuleDiv .dijitTextArea {
+    width: 230px;
 }
