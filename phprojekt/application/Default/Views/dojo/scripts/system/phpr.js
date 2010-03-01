@@ -619,6 +619,15 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
 });
 
 dojo.declare("phpr.DateTextBox", [dijit.form.DateTextBox], {
+    _blankValue: '',	// used by filter() when the textbox is blank
+
+    parse:function(value, constraints) {
+        // Summary:
+        //		Parses as string as a Date, according to constraints
+        // Date
+        return this.dateLocaleModule.parse(value, constraints) || (this._isEmpty(value) ? '' : undefined);
+    },
+
     serialize:function(d, options) {
         // Summary:
         //     This function overwrites the dijit.form.DateTextBox display
