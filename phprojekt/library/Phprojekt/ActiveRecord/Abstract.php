@@ -822,11 +822,15 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     public function save()
     {
         $data = array();
+        $info = $this->info();
 
         foreach ($this->_data as $k => $v) {
             $k = self::convertVarToSql($k);
             if (in_array($k, $this->_colInfo) && is_scalar($v)) {
                 $data[$k] = $v;
+            } else if ($v === null && isset($info['metadata'][$k]['NULLABLE']) && $info['metadata'][$k]['NULLABLE']) {
+                // Use null value only if the field allow it
+                $data[$k] = null;
             }
         }
 
