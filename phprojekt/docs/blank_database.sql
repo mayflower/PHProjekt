@@ -543,7 +543,8 @@ INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `
 (0, 'Project', 'current_status', 1, 'Current status', 'selectValues', 7, 1, NULL, '1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting', '1', 6, 'center', 1, 6, '1', 1, 0, 0),
 (0, 'Project', 'complete_percent', 1, 'Complete percent', 'percentage', 8, 1, NULL, NULL, NULL, 7, 'center', 1, 7, '1', 0, 0, 0),
 (0, 'Project', 'budget', 1, 'Budget', 'text', 9, 1, NULL, NULL, NULL, 0, NULL, 1, 8, '1', 0, 0, 0),
-(0, 'Project', 'contact_id', 1, 'Contact', 'selectValues', 10, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 9, '1', 1, 0, 0),
+(0, 'Project', 'hourly_wage_rate', 1, 'Hourly wage rate', 'text', 10, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '0', 0, 0, 0),
+(0, 'Project', 'contact_id', 1, 'Contact', 'selectValues', 11, 1, NULL, 'Contact#id#name', NULL, 0, NULL, 1, 9, '1', 1, 0, 0),
 
 (0, 'Todo', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'left', 1, 2, '1', 0, 1, 0),
 (0, 'Todo', 'notes', 1, 'Notes', 'textarea', 2, 1, NULL, NULL, NULL, 0, NULL, 1, 0, '1', 0, 0, 0),
