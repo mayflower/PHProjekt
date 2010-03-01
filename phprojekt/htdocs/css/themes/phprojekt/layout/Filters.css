@@ -64,12 +64,20 @@
     padding-right: 10px;
 }
 
+
+.phprojekt #filterForm .dijitComboBox,
+.phprojekt #filterForm .dijitTextBox,
+.dj_ie .phprojekt #filterForm .dijitComboBox,
+.dj_ie .phprojekt #filterForm .dijitTextBox {
+    width: 14em;
+}
+
 .phprojekt #filterDisplayDiv {
     border-top: 1px solid #294064;
     height: auto !important;
     overflow: visible;
     padding-top: 5px;
-    width: 85% !important;
+    width: 82% !important;
     margin-top: 2px;
 }
 
