@@ -1114,6 +1114,11 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 this._doubleClick = false;
             }
 
+            // Disable edit for checkbox
+            if (this.useCheckbox() && e.cellIndex == 0) {
+                this.grid.edit.cancel();
+            }
+
             return;
         }
 
@@ -1536,7 +1541,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // Description:
         //    Uses the dijit function 'showTooltip' to show the tooltip.
         if (!this.grid.edit.isEditing()) {
-            if (e.cell.editable) {
+            var useCheckBox = this.useCheckbox();
+            var index       = e.cellIndex;
+            if ((!useCheckBox || (useCheckBox && index != 0)) && e.cell.editable) {
                 dijit.showTooltip(phpr.nls.get("Double click to edit"), e.cellNode, 'above');
             }
         }
