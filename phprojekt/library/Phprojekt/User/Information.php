@@ -199,7 +199,7 @@ class Phprojekt_User_Information extends EmptyIterator implements Phprojekt_Mode
             $data['tab']      = 1;
             $data['integer']  = false;
             $data['length']   = 0;
-            $data['default']  = 0;
+            $data['default']  = '000';
 
             $converted[] = $data;
         }
