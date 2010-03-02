@@ -230,6 +230,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     formData += this.fieldTemplate.textAreaRender(meta[4]["label"], meta[4]["key"], '',
                         meta[4]["required"], false, meta[4]["hint"]);
 
+                    // timecardId
+                    formData += this.fieldTemplate.hiddenFieldRender('', 'timecardId', this.id, true, false);
+
                     var content = this.render(["phpr.Timecard.template", "formView.html"], null, {
                         formData:   formData,
                         saveText:   phpr.nls.get('Save'),
@@ -255,6 +258,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     dojo.connect(dijit.byId("saveBookingButton"), "onClick", dojo.hitch(this, "submitForm"));
                 } else {
                     tooltipDialog = dijit.byId('timecardTooltipDialog');
+                    dijit.byId('timecardId').attr('value', this.id);
                 }
 
                 dijit.popup.open({
@@ -322,6 +326,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Save the booking form
         // Description:
         //    Save the booking form and reload the views
+        this.id       = dijit.byId('timecardId').attr('value');
         this.sendData = new Array();
         this.sendData = dojo.mixin(this.sendData, dijit.byId('bookingForm').attr('value'));
         if (!this.prepareSubmission()) {
@@ -347,6 +352,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Delete a booking
         // Description:
         //    Delete a bookinh and reload the views
+        this.id = dijit.byId('timecardId').attr('value');
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
             onSuccess: dojo.hitch(this, function(data) {
@@ -506,14 +512,17 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 
             var temp  = startTime.split(':');
             var start = parseInt(temp[0]);
-            var end   = parseInt(temp[1]);
+            if (start == 0) {
+                var start = parseInt(temp[0].substr(1, 1));
+            }
+            var end = parseInt(temp[1]);
 
             if (end > 0 && end < 30) {
-                var index = phpr.Date.getIsoTime(start + ':00');
+                var index = start + ':00';
             } else if (end > 30) {
-                var index = phpr.Date.getIsoTime(start + ':30');
+                var index = start + ':30';
             } else {
-                var index = phpr.Date.getIsoTime(start + ':' + temp[1]);
+                var index = start + ':' + temp[1];
             }
 
             this.drawFormView(dojo.byId("buttonHours" + index), this.dateObject, startTime, endTime,
