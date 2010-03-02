@@ -157,11 +157,27 @@ class Setup_Models_Setup
             }
         }
 
+        // Admin pass
         if (!isset($params['adminPass']) || empty($params['adminPass'])) {
             $this->_error[] = 'The admin password cannot be empty';
             $valid = false;
         } else if ($params['adminPassConfirm'] != $params['adminPass']) {
             $this->_error[] = 'The admin password and confirmation are different';
+            $valid = false;
+        }
+
+        // Test pass
+        if (!isset($params['testPass']) || empty($params['testPass'])) {
+            $this->_error[] = 'The test password cannot be empty';
+            $valid = false;
+        } else if ($params['testPassConfirm'] != $params['testPass']) {
+            $this->_error[] = 'The test password and confirmation are different';
+            $valid = false;
+        }
+
+        // Test pass
+        if ($params['adminPass'] == $params['testPass']) {
+            $this->_error[] = 'The password for the users "admin" and "test" should be different';
             $valid = false;
         }
 
@@ -323,6 +339,10 @@ class Setup_Models_Setup
 
         // Update admin Pass
         $this->_db->update('setting', array('value' => md5('phprojektmd5' . $params['adminPass'])), 'id = 1');
+
+        // Update test Pass
+        $this->_db->update('setting', array('value' => md5('phprojektmd5' . $params['testPass'])),
+            'user_id = 2 AND key_value = \'password\'');
 
         // Migration
         if (file_exists($params['migrationConfigFile'])) {

@@ -291,8 +291,8 @@ class Setup_Models_Migration
                 $this->_tableManager->updateRows('user', $data, $where);
             }
 
-            // Migrate password for all users except for P5 'root'
-            if ($loginName != 'root') {
+            // Migrate password for all users except for P5 'root' and 'test'
+            if ($loginName != 'root' && $loginName != 'test') {
                 if (defined("PHPR_VERSION") && PHPR_VERSION >= '5.2.1') {
                     $password = $user['pw'];
                 } else {
@@ -350,7 +350,6 @@ class Setup_Models_Migration
                 $where = sprintf("user_id = %d AND module_id = 0 and key_value = 'timeZone' AND identifier = 'Core'",
                     $userId);
                 $this->_tableManager->updateRows('setting', $data, $where);
-
             } else {
                 // Insert them
                 // Email

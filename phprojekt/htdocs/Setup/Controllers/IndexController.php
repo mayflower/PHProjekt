@@ -70,6 +70,8 @@ class IndexController extends Zend_Controller_Action
         $this->view->dbName           = 'phprojekt';
         $this->view->adminPass        = '';
         $this->view->adminPassConfirm = '';
+        $this->view->testPass         = '';
+        $this->view->testPassConfirm  = '';
         $this->view->useExtraData     = 1;
     }
 
@@ -102,6 +104,8 @@ class IndexController extends Zend_Controller_Action
         $this->view->dbName              = $params['dbName'];
         $this->view->adminPass           = $params['adminPass'];
         $this->view->adminPassConfirm    = $params['adminPassConfirm'];
+        $this->view->testPass            = $params['testPass'];
+        $this->view->testPassConfirm     = $params['testPassConfirm'];
         $this->view->useExtraData        = $params['useExtraData'];
         $this->view->migrationConfigFile = $params['migrationConfigFile'];
     }
@@ -120,6 +124,8 @@ class IndexController extends Zend_Controller_Action
             'dbName'              => Cleaner::sanitize('string', $this->getRequest()->getParam('dbName')),
             'adminPass'           => Cleaner::sanitize('string', $this->getRequest()->getParam('adminPass')),
             'adminPassConfirm'    => Cleaner::sanitize('string', $this->getRequest()->getParam('adminPassConfirm')),
+            'testPass'            => Cleaner::sanitize('string', $this->getRequest()->getParam('testPass')),
+            'testPassConfirm'     => Cleaner::sanitize('string', $this->getRequest()->getParam('testPassConfirm')),
             'migrationConfigFile' => Cleaner::sanitize('string', $this->getRequest()->getParam('migrationConfigFile')),
             'useExtraData'        => (int) $this->getRequest()->getParam('useExtraData'),
         );
