@@ -111,10 +111,18 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
         $data['item']        = $messageData[0]->itemName;
         $data['projectId']   = $messageData[0]->projectId;
         $data['details']     = $messageData[0]->details;
-        $data['time']        = substr($messageData[0]->validUntil, 11, 5);
 
-        $project             = Phprojekt_Loader::getModel('Project', 'Project');
-        $data['project']     = $project->find($data['projectId'])->title;
+        // Convert time to user timezone
+        if ($messageData[0]->process == Phprojekt_Notification::LAST_ACTION_REMIND) {
+            $addTime = (Phprojekt::getInstance()->getConfig()->remindBefore * 60);
+        } else {
+            $addTime = 0;
+        }
+        $data['time'] = date("H:i", Phprojekt_Converter_Time::utcToUser($messageData[0]->validFrom) + $addTime);
+
+        // Convert project name
+        $project         = Phprojekt_Loader::getModel('Project', 'Project');
+        $data['project'] = $project->find($data['projectId'])->title;
 
         return $data;
     }
