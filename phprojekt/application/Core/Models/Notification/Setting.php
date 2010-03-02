@@ -91,28 +91,26 @@ class Core_Models_Notification_Setting
 
         $converted[] = $data;
 
-        // @TODO The user generated messages and alerts before are event starts are not implemented yet, therefore
-        // they are set to readOnly. The checkbox is not checked.
-
+        // @TODO The user generated messages is not implemented yet
         // User generated messages
-        $data             = array();
-        $data['key']      = self::FIELD_USERGENERATED;
-        $data['label']    = Phprojekt::getInstance()->translate('User generated messages');
-        $data['type']     = 'checkbox';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('usergenerated');
-        $data['order']    = 0;
-        $data['position'] = 3;
-        $data['fieldset'] = '';
-        $data['range'][]  = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = false;
-        $data['readOnly'] = true;
-        $data['tab']      = 1;
-        $data['integer']  = true;
-        $data['length']   = 0;
-        $data['default']  = 0;
+        //$data             = array();
+        //$data['key']      = self::FIELD_USERGENERATED;
+        //$data['label']    = Phprojekt::getInstance()->translate('User generated messages');
+        //$data['type']     = 'checkbox';
+        //$data['hint']     = Phprojekt::getInstance()->getTooltip('usergenerated');
+        //$data['order']    = 0;
+        //$data['position'] = 3;
+        //$data['fieldset'] = '';
+        //$data['range'][]  = array('id'   => '',
+        //                          'name' => '');
+        //$data['required'] = false;
+        //$data['readOnly'] = true;
+        //$data['tab']      = 1;
+        //$data['integer']  = true;
+        //$data['length']   = 0;
+        //$data['default']  = 0;
 
-        $converted[] = $data;
+        //$converted[] = $data;
 
         // Alerts (event deadlines)
         $data             = array();
@@ -126,11 +124,11 @@ class Core_Models_Notification_Setting
         $data['range'][]  = array('id'   => '',
                                   'name' => '');
         $data['required'] = false;
-        $data['readOnly'] = true;
+        $data['readOnly'] = false;
         $data['tab']      = 1;
         $data['integer']  = true;
         $data['length']   = 0;
-        $data['default']  = 0;
+        $data['default']  = 1;
 
         $converted[] = $data;
 
