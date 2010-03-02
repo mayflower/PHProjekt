@@ -929,14 +929,21 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 iconClass: 'add'
             };
 
-            var newEntry = new dijit.form.Button(params);
             this._node.attr('content', phpr.drawEmptyMessage('There are no entries on this level'));
-            dojo.addClass(this._node.domNode, 'addButtonText');
-            this._node.domNode.appendChild(newEntry.domNode);
+            var buttonRow = dojo.byId('buttonRow');
+            if (buttonRow.children.length != 0) {
+                var button = buttonRow.children[0].children[0].children[0].children[0].children[0];
+                if (button.className == 'dijitReset dijitInline add') {
+                    // There is an 'add' button, so the user have create access
+                    var newEntry = new dijit.form.Button(params);
+                    dojo.addClass(this._node.domNode, 'addButtonText');
+                    this._node.domNode.appendChild(newEntry.domNode);
 
-            dojo.connect(newEntry, "onClick", dojo.hitch(this, function() {
-                this.main.newEntry();
-            }));
+                    dojo.connect(newEntry, "onClick", dojo.hitch(this, function() {
+                        this.main.newEntry();
+                    }));
+                }
+            }
         } else {
             dojo.removeClass(this._node.domNode, 'addButtonText');
             this.processActions();
