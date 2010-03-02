@@ -62,7 +62,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             designerData[0]['formLabel']     = 'Project';
             designerData[0]['formType']      = 'selectValues';
             designerData[0]['formRange']     = 'Project # id # title';
-            designerData[0]['defaultValue']  = 1;
+            designerData[0]['defaultValue']  = null;
             designerData[0]['listPosition']  = 0;
             designerData[0]['status']        = 1;
             designerData[0]['isRequired']    = 1;
