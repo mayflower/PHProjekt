@@ -135,15 +135,10 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonDayListSelectAction()
     {
-        $count  = (int) $this->getRequest()->getParam('count', null);
-        $offset = (int) $this->getRequest()->getParam('start', null);
-        $date   = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
-        $ids    = explode(",", $this->getRequest()->getParam('users', array()));
-
-        $usersId = array();
-        foreach ($ids as $user) {
-            $usersId[] = (int) $user;
-        }
+        $count   = (int) $this->getRequest()->getParam('count', null);
+        $offset  = (int) $this->getRequest()->getParam('start', null);
+        $date    = Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d")));
+        $usersId = Cleaner::sanitize('arrayofint', $this->getRequest()->getParam('users', array()));
 
         $records = $this->getModelObject()->getUserSelectionRecords($usersId, $date, $count, $offset);
 
@@ -368,12 +363,8 @@ class Calendar_IndexController extends IndexController
      */
     public function jsonGetSpecificUsersAction()
     {
-        $users = explode(",", $this->getRequest()->getParam('users', null));
+        $ids = Cleaner::sanitize('arrayofint', $this->getRequest()->getParam('users', array()));
 
-        $ids = array();
-        foreach ($users as $users) {
-            $ids[] = (int) $users;
-        }
         if (empty($ids)) {
             $ids[] = (int) PHprojekt_Auth::getUserId();
         }
@@ -449,13 +440,9 @@ class Calendar_IndexController extends IndexController
         $offset = (int) $this->getRequest()->getParam('start', null);
         $db     = Phprojekt::getInstance()->getDb();
         $date   = $db->quote(Cleaner::sanitize('date', $this->getRequest()->getParam('date', date("Y-m-d"))));
-        $users  = explode(",", $this->getRequest()->getParam('users', null));
+        $ids    = Cleaner::sanitize('arrayofint', $this->getRequest()->getParam('users', array()));
         $this->setCurrentProjectId();
 
-        $ids = array();
-        foreach ($users as $users) {
-            $ids[] = (int) $users;
-        }
         if (empty($ids)) {
             $ids[] = (int) PHprojekt_Auth::getUserId();
         }
