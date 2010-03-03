@@ -169,7 +169,7 @@ dojo.declare("phpr.FrontendMessage", null, {
                 template = "<br /><b>" + data.user + "</b> " + data.description + "<br />&nbsp;";
                 break;
             case 'remind':
-                template = "<br />" + data.description + data.time + ": <br /><i><b>"
+                template = "<br />" + data.description + " " + data.time + ": <br /><i><b>"
                     + data.item + "</b></i>";
                 break;
             default:
