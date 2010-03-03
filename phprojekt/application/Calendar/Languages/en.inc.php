@@ -218,7 +218,7 @@ $lang["Content Help"]["Participants"] = "<br />
     will receive a Notification if the checkbox of Notification tab is checked to send it.<br />
     <br />
     <br />
-    <b>Pop-up Dialog: To whom will this apply</b><br />
+    <b>Pop-up Dialog: To whom will this apply (Edit)</b><br />
     <br />
     When the owner (creator) of an event that has participants in this tab modifies the content of any tab of the event,
     a pop-up dialog will appear when he/she presses Save button. That dialog asks what events will these modifications
@@ -245,7 +245,7 @@ $lang["Content Help"]["Participants"] = "<br />
     possible scope for the changes.<br />
     <br />
     <br />
-    <b>Pop-up Dialog: Delete for Who</b><br />
+    <b>Pop-up Dialog: To whom will this apply (Delete)</b><br />
     <br />
     When the owner (creator) of an event that has participants in this tab tries to delete it, a pop-up dialog will
     appear when he/she presses Delete button. That dialog asks what events will this deletion apply to. Available
