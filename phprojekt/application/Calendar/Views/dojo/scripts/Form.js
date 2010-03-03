@@ -490,7 +490,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
         dojo.byId("eventSelectorContainer").innerHTML = '';
 
-        dojo.byId('eventSelectorTitle').innerHTML = phpr.nls.get(action + ' for who');
+        dojo.byId('eventSelectorTitle').innerHTML = phpr.nls.get('To whom will this apply');
         dijit.byId('eventSelectorDialog').attr('title', phpr.nls.get('Calendar'));
 
         // Add button for one Participant
