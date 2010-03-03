@@ -55,7 +55,8 @@ class Cleaner_Sanitizer
         'word'         => 'Word',
         'html'         => 'Html',
         'xss'          => 'Xss',
-        'filter'       => 'Filter'
+        'filter'       => 'Filter',
+        'arrayofint'   => 'ArrayOfInt'
     );
 
     /**
@@ -394,7 +395,6 @@ class Cleaner_Sanitizer
         return htmlentities(strip_tags((string) $value));
     }
 
-
     /**
      * Sanitize value for use in a filter like search
      *
@@ -412,5 +412,43 @@ class Cleaner_Sanitizer
         } else {
             return $result;
         }
+    }
+
+    /**
+     * Sanitize an array of int using a comma separator
+     *
+     * @param mixed $value Value to sanitizes
+     *
+     * @return mixed sanitized value
+     */
+    public function sanitizeArrayOfInt($value)
+    {
+        return self::sanitizeToArray($value, ',');
+    }
+
+    /**
+     * Sanitize an array using a separator and a type for cast the values
+     *
+     * @param mixed  $value     Value to sanitizes
+     * @param string $separator Separator
+     * @param string $cast      Type of cast
+     *
+     * @return mixed sanitized value
+     */
+    public function sanitizeToArray($value, $separator, $cast = 'int')
+    {
+        $array = explode($separator, $value);
+
+        $return = array();
+        foreach ($array as $v) {
+            switch ($cast) {
+                case 'int':
+                default:
+                    $return[] = (int) $v;
+                    break;
+            }
+        }
+
+        return $return;
     }
 }
