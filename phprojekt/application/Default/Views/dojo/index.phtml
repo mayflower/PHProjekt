@@ -12,14 +12,27 @@
         var djConfig = {isDebug: false, parseOnLoad: false, bindEncoding: "utf-8",
                         locale: '<?php echo $this->language; ?>'};
     </script>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
     <?php
-    if ($this->compressedDojo) {
+    if (true === $this->isLoggedIn) {
+        if ($this->compressedDojo) {
     ?>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/mydojo.js"></script>
     <?php
-    } else if (false === $this->isLoggedIn) {
+        } else {
     ?>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js.uncompressed.js"></script>
+    <?php
+        }
+    ?>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>index.php/js/index/csrfToken/<?php
+        echo Phprojekt::createCsrfToken(); ?>">
+    </script>
+    <?php
+    } else {
+    ?>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
+    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/mydojo.js"></script>
     <script type="text/javascript">
     dojo.require("dojo.parser");
     dojo.require("dijit.layout.BorderContainer");
@@ -28,13 +41,6 @@
     dojo.require("dijit.form.Form");
     dojo.require("dijit.form.TextBox");
     dojo.require("dijit.form.CheckBox");
-    </script>
-    <?php
-    }
-    if (true === $this->isLoggedIn) {
-    ?>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>index.php/js/index/csrfToken/<?php
-        echo Phprojekt::createCsrfToken(); ?>">
     </script>
     <?php
     }
