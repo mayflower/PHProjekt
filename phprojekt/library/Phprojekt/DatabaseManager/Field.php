@@ -59,7 +59,7 @@ class Phprojekt_DatabaseManager_Field
      * @param string                    $name  Name of the field
      * @param mixed                     $value Value of the field
      */
-    public function __construct(Phprojekt_DatabaseManager $dbm, $name, $value)
+    public function __construct(Phprojekt_DatabaseManager $dbm, $name, $value = null)
     {
         $this->value     = (string) $value;
         $this->_metadata = $dbm->find($name);

@@ -136,7 +136,7 @@ class Contact_Models_Contact_Test extends PHPUnit_Framework_TestCase
         $contactModel = clone($this->_model);
         $projectModel = new Project_Models_Project();
         $projectModel->find(1);
-        $field    = new Phprojekt_DatabaseManager_Field($projectModel->getInformation(), 'contactId', '');
+        $field    = new Phprojekt_DatabaseManager_Field($projectModel->getInformation(), 'contactId');
         $response = $contactModel->getRangeFromModel($field);
         $expected = array(array('id' => 0,
                                 'name' => ''),

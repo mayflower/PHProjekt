@@ -42,7 +42,7 @@ class Phprojekt_DatabaseManager_FieldTest extends PHPUnit_Framework_TestCase
     public function testGetField()
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $dbField = new Phprojekt_DatabaseManager_Field($project->getInformation(), 'title', '');
+        $dbField = new Phprojekt_DatabaseManager_Field($project->getInformation(), 'title');
 
         $this->assertEquals(1, $dbField->isRequired);
         $this->assertNull($dbField->title);
