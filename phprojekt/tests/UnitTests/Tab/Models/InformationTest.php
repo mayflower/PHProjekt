@@ -46,16 +46,17 @@ class Phprojekt_TabModelInformation_Test extends PHPUnit_Framework_TestCase
         $expected  = array();
 
         // name
-        $data = array();
-        $data['key']      = 'label';
-        $data['label']    = Phprojekt::getInstance()->translate('Label');
-        $data['type']     = 'text';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('label');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
+        $data                  = array();
+        $data['key']           = 'label';
+        $data['label']         = Phprojekt::getInstance()->translate('Label');
+        $data['originalLabel'] = 'Label';
+        $data['type']          = 'text';
+        $data['hint']          = Phprojekt::getInstance()->getTooltip('label');
+        $data['listPosition']  = 1;
+        $data['formPosition']  = 1;
+        $data['fieldset']      = '';
+        $data['range']         = array('id'   => '',
+                                       'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;

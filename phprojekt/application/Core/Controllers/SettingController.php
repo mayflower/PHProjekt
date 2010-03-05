@@ -80,7 +80,7 @@ class Core_SettingController extends Core_IndexController
 
         $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
         $setting->setModule($module);
-        $metadata = $setting->getModel()->getFieldDefinition();
+        $metadata = $setting->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $records  = $setting->getList($moduleId, $metadata);
 
         $data = array("metadata" => $metadata,

@@ -33,40 +33,19 @@
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Core_Models_General_Configuration
+class Core_Models_General_Configuration extends Phprojekt_ModelInformation_Default
 {
     /**
-     * Return an array of field information.
+     * Sets a fields definitions for each field
      *
-     * @param integer $ordering An ordering constant
-     *
-     * @return array
+     * @return void
      */
-    public function getFieldDefinition()
+    public function setFields()
     {
-        $converted = array();
-
-        // Company name
-        $data = array();
-        $data['key']      = 'companyName';
-        $data['label']    = Phprojekt::getInstance()->translate('Company Name');
-        $data['type']     = 'text';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('companyName');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 255;
-        $data['default']  = null;
-
-        $converted[] = $data;
-
-        return $converted;
+        // companyName
+        $this->fillField('companyName', 'Company Name', 'text', 1, 1, array(
+            'required' => true,
+            'length'   => 255));
     }
 
     public function validateConfigurations($params)
@@ -91,7 +70,7 @@ class Core_Models_General_Configuration
      */
     public function setConfigurations($params)
     {
-        $fields = $this->getFieldDefinition();
+        $fields = $this->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
         $configuration->setModule('General');

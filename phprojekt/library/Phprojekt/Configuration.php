@@ -212,7 +212,7 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
         if (method_exists($this->getModel(), 'setConfigurations')) {
             call_user_func(array($this->getModel(), 'setConfigurations'), $params);
         } else {
-            $fields = $this->getModel()->getFieldDefinition();
+            $fields = $this->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
             foreach ($fields as $data) {
                 foreach ($params as $key => $value) {
                     if ($key == $data['key']) {

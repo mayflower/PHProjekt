@@ -33,7 +33,7 @@
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Core_Models_User_Setting
+class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
 {
     /**
      * Range of dates language setting
@@ -56,139 +56,47 @@ class Core_Models_User_Setting
     }
 
     /**
-     * Return an array of field information.
+     * Sets a fields definitions for each field
      *
-     * @param integer $ordering An ordering constant
-     *
-     * @return array
+     * @return void
      */
-    public function getFieldDefinition()
+    public function setFields()
     {
-        $converted = array();
-
         // password
-        $data = array();
-        $data['key']      = 'password';
-        $data['label']    = Phprojekt::getInstance()->translate('Password');
-        $data['type']     = 'password';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('password');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = false;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 50;
-        $data['default']  = null;
+        $this->fillField('password', 'Password', 'password', 0, 1, array(
+            'length' => 50));
 
-        $converted[] = $data;
+        // confirmValue
+        $this->fillField('confirmValue', 'Confirm Password', 'password', 0, 2, array(
+            'length' => 50));
 
-        $data = array();
-        $data['key']      = 'confirmValue';
-        $data['label']    = Phprojekt::getInstance()->translate('Confirm Password');
-        $data['type']     = 'password';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('confirmValue');
-        $data['order']    = 0;
-        $data['position'] = 2;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = false;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 50;
-        $data['default']  = null;
-
-        $converted[] = $data;
-
-        $data = array();
-        $data['key']      = 'oldValue';
-        $data['label']    = Phprojekt::getInstance()->translate('Old Password');
-        $data['type']     = 'password';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('oldValue');
-        $data['order']    = 0;
-        $data['position'] = 3;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = false;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 50;
-        $data['default']  = null;
-
-        $converted[] = $data;
+        // oldValue
+        $this->fillField('oldValue', 'Old Password', 'password', 0, 3, array(
+            'length' => 50));
 
         // email
-        $data = array();
-        $data['key']      = 'email';
-        $data['label']    = Phprojekt::getInstance()->translate('Email');
-        $data['type']     = 'text';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('email');
-        $data['order']    = 0;
-        $data['position'] = 2;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = false;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 255;
-        $data['default']  = null;
-
-        $converted[] = $data;
+        $this->fillField('email', 'Email', 'text', 0, 4, array(
+            'length' => 255));
 
         // language
-        $data = array();
-        $data['key']      = 'language';
-        $data['label']    = Phprojekt::getInstance()->translate('Language');
-        $data['type']     = 'selectbox';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('language');
-        $data['order']    = 0;
-        $data['position'] = 3;
-        $data['fieldset'] = '';
+        $range = array();
         foreach ($this->_languageRange as $key => $value) {
-            $data['range'][] = array('id'   => $key,
-                                     'name' => $value);
+            $range[] = $this->getRangeValues($key, $value);
         }
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 0;
-        $data['default']  = 'en';
-
-        $converted[] = $data;
+        $this->fillField('language', 'Language', 'selectbox', 0, 5, array(
+            'range'    => $range,
+            'required' => true,
+            'default'  => 'en'));
 
         // timeZone
-        $data = array();
-        $data['key']      = 'timeZone';
-        $data['label']    = Phprojekt::getInstance()->translate('Time Zone');
-        $data['type']     = 'selectbox';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('timeZone');
-        $data['order']    = 0;
-        $data['position'] = 2;
-        $data['fieldset'] = '';
+        $range = array();
         foreach ($this->_timeZoneRange as $key => $value) {
-            $data['range'][] = array('id'   => $key,
-                                     'name' => $value);
+            $range[] = $this->getRangeValues($key, $value);
         }
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 0;
-        $data['default']  = '000';
-
-        $converted[] = $data;
-
-        return $converted;
+        $this->fillField('timeZone', 'Time Zone', 'selectbox', 0, 6, array(
+            'range'    => $range,
+            'required' => true,
+            'default'  => '000'));
     }
 
     public function getPassword()
@@ -263,7 +171,7 @@ class Core_Models_User_Setting
         }
 
         $namespace = new Zend_Session_Namespace(Phprojekt_Setting::IDENTIFIER, $userId);
-        $fields    = $this->getFieldDefinition();
+        $fields    = $this->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         foreach ($fields as $data) {
             foreach ($params as $key => $value) {
                 if ($key == $data['key'] && $key != 'oldValue' && $key != 'confirmValue') {

@@ -63,18 +63,11 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     const ORDERING_DEFAULT = Phprojekt_ModelInformation_Default::ORDERING_LIST;
 
     /**
-     * Array that contains the form field values
+     * Array that contains the field values
      *
      * @var array
      */
-    protected $_formFields;
-
-    /**
-     * Array that contains the list field values
-     *
-     * @var array
-     */
-    protected $_listFields;
+    protected $_fields = null;
 
     /**
      * An array that defines the default values used when
@@ -83,105 +76,82 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      * @var array
      */
     protected $_defaultValues = array (
-                                'key'      => '',
-                                'label'    => '',
-                                'type'     => 'string',
-                                'hint'     => '',
-                                'order'    => 0,
-                                'position' => 0,
-                                'fieldset' => null,
-                                'range'    => '',
+                                'key'           => '',
+                                'label'         => '',
+                                'originalLabel' => '',
+                                'type'          => '',
+                                'hint'          => '',
+                                'listPosition'  => 0,
+                                'formPosition'  => 0,
+                                'fieldset'      => null,
+                                'range'         => array('id'   => '',
+                                                         'name' => ''),
                                 'required' => false,
-                                'right'    => 'write',
-                                'readOnly' => false);
-    /**
-     * Initialize
-     *
-     * @param array $listFields array with field definitions
-     * @param array $formFields array with field definitions
-     */
-    public function __construct($listFields = null, $formFields = null)
-    {
-        if (!is_array($formFields) && !is_array($listFields)) {
-            $this->setFormFields(array());
-            $this->setListFields(array());
-        } else if (null === $formFields) {
-            $this->setFormFields($listFields);
-            $this->setListFields($listFields);
-        } else if (null === $listFields) {
-            $this->setListFields($formFields);
-            $this->setFormFields($formFields);
-        } else {
-            $this->setFormFields($formFields);
-            $this->setListFields($listFields);
-        }
-    }
+                                'readOnly' => false,
+                                'tab'      => 1,
+                                'integer'  => false,
+                                'length'   => 0,
+                                'default'  => null);
 
     /**
-     * Return a sorted array that should be used
-     * to display the form view
+     * Fills the _field array with mandatory data and optional keys. Undefined keys are stripped.
+     *
+     * @param string $key          Name of the model property
+     * @param string $label        Label of the form field (will get translated)
+     * @param string $type         Type of the form control
+     * @param int    $listPosition Position of the field in the list
+     * @param int    $formPosition Position of the field in the form
+     * @param array  $data         Optional additional keys
      *
      * @return array
      */
-    public function getFormFields()
+    public function fillField($key, $label, $type, $listPosition, $formPosition, array $data = array())
     {
-        return $this->_formFields;
+        $result = $this->_defaultValues;
+
+        foreach ($data as $index => $value) {
+            if (isset($result[$index]) || (null === $result[$index] && null !== $value)) {
+                $result[$index] = $value;
+            }
+        }
+
+        $result['key']           = $key;
+        $result['label']         = Phprojekt::getInstance()->translate($label);
+        $result['originalLabel'] = $label;
+        $result['type']          = $type;
+        $result['hint']          = Phprojekt::getInstance()->getTooltip($key);
+        $result['listPosition']  = (int) $listPosition;
+        $result['formPosition']  = (int) $formPosition;
+
+        $this->_fields[] = $result;
     }
 
     /**
-     * Return a sorted array that should be used
-     * to display the list view
+     * Set all the module fields with the data of each one
+     *
+     * @return void
+     */
+    public function setFields()
+    {
+        $this->_fields = array();
+    }
+
+    /**
+     * Return the fields array
      *
      * @return array
      */
-    public function getListFields()
+    protected function _getFields()
     {
-        return $this->_listFields;
+        if (null === $this->_fields) {
+            $this->setFields();
+        }
+
+        return $this->_fields;
     }
 
     /**
-     * Sets a fields definitions for the form view
-     *
-     * @param array $formFields All the field's data for the form
-     *
-     * @return void
-     */
-    public function setFormFields(array $formFields)
-    {
-        $this->_formFields = array();
-
-        if (!is_array(current($formFields))) {
-            $formFields = array($formFields);
-        }
-
-        foreach ($formFields as $fields) {
-            $this->_formFields[] = array_merge($this->_defaultValues, $fields);
-        }
-    }
-
-    /**
-     * Sets a fields definitions for the list view
-     *
-     * @param array $listFields All the field's data for the list
-     *
-     * @return void
-     */
-    public function setListFields(array $listFields)
-    {
-        $this->_listFields = array();
-
-        if (!is_array(current($listFields))) {
-            $listFields = array($listFields);
-        }
-
-        foreach ($listFields as $fields) {
-            $this->_listFields[] = array_merge($this->_defaultValues, $fields);
-        }
-    }
-
-    /**
-     * Returns a the necessary field definitions based on the ordering
-     * const that's given
+     * Returns all the necessary field definitions based on the ordering const that's given
      *
      * @param integer $ordering Type of order
      *
@@ -191,16 +161,112 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      */
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
-        $definition = null;
+        $definition = array();
+        $fields     = $this->_getFields();
+
         switch ($ordering) {
             case Phprojekt_ModelInformation_Default::ORDERING_FILTER:
             case Phprojekt_ModelInformation_Default::ORDERING_LIST:
-                $definition = $this->_listFields;
+                usort($fields, array("Phprojekt_ModelInformation_Default", "sortByListPosition"));
+                $sort = 'listPosition';
                 break;
+            default:
             case Phprojekt_ModelInformation_Default::ORDERING_FORM:
-                $definition = $this->_formFields;
+                usort($fields, array("Phprojekt_ModelInformation_Default", "sortByFormPosition"));
+                $sort = 'formPosition';
                 break;
         }
-        return $definition;
+
+        foreach ($fields as $key => $field) {
+            if ($field[$sort] == 0) {
+                unset($fields[$key]);
+            }
+        }
+        $fields = array_values($fields);
+
+        return $fields;
+    }
+
+    /**
+     * Return the pair in a range format
+     * The value is trasnlated and the originalName is returned also
+     *
+     * @param mix $key   Key value
+     * @param mix $value Value value
+     *
+     * @return array
+     */
+    public function getFullRangeValues($key, $value)
+    {
+        return array('id'           => $key,
+                     'name'         => Phprojekt::getInstance()->translate($value),
+                     'originalName' => $value);
+    }
+
+
+    /**
+     * Return the pair in a range format
+     *
+     * @param mix $key   Key value
+     * @param mix $value Value value
+     *
+     * @return array
+     */
+    public function getRangeValues($key, $value)
+    {
+        return array('id'   => $key,
+                     'name' => $value);
+    }
+
+    /**
+     * Return the project list converted to range format
+     *
+     * @return array
+     */
+    public function getProjectRange()
+    {
+        $range        = array();
+        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+        $tree         = $tree->setup();
+        foreach ($tree as $node) {
+            $range[] = $this->getRangeValues((int) $node->id, $node->getDepthDisplay('title'));
+        }
+
+        return $range;
+    }
+
+    /**
+     * Sort the array using the listPosition value
+     *
+     * @param array $a First array
+     * @param array $b Second array
+     *
+     * @return integer
+     */
+    public function sortByListPosition($a, $b)
+    {
+        if ($a['listPosition'] == $b['listPosition']) {
+            return 0;
+        }
+
+        return ($a['listPosition'] < $b['listPosition']) ? -1 : 1;
+    }
+
+    /**
+     * Sort the array using the formPosition value
+     *
+     * @param array $a First array
+     * @param array $b Second array
+     *
+     * @return integer
+     */
+    public function sortByFormPosition($a, $b)
+    {
+        if ($a['formPosition'] == $b['formPosition']) {
+            return 0;
+        }
+
+        return ($a['formPosition'] < $b['formPosition']) ? -1 : 1;
     }
 }

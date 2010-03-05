@@ -40,39 +40,18 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
-class Phprojekt_Tab_Information extends EmptyIterator implements Phprojekt_ModelInformation_Interface
+class Phprojekt_Tab_Information extends Phprojekt_ModelInformation_Default
 {
     /**
-     * Return an array of field information.
+     * Sets a fields definitions for each field
      *
-     * @param integer $ordering An ordering constant
-     *
-     * @return array
+     * @return void
      */
-    public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    public function setFields()
     {
-        $converted = array();
-
-        // name
-        $data = array();
-        $data['key']      = 'label';
-        $data['label']    = Phprojekt::getInstance()->translate('Label');
-        $data['type']     = 'text';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('label');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 255;
-        $data['default']  = null;
-
-        $converted[] = $data;
-
-        return $converted;
+        // label
+        $this->fillField('label', 'Label', 'text', 1, 1, array(
+            'required' => true,
+            'length'   => 255));
     }
 }

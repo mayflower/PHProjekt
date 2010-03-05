@@ -35,7 +35,7 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
-class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends EmptyIterator implements Phprojekt_ModelInformation_Interface
+class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Phprojekt_ModelInformation_Default
 {
     /**
      * @var array List of available topic types.
@@ -60,14 +60,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Empty
      *
      * @var array
      */
-    protected static $_userIdList    = array();
-
-    /**
-     * Stores the list of projects
-     *
-     * @var array
-     */
-    protected static $_projectList   = array();
+    protected static $_userIdList = array();
 
     /**
      * Lazy load the topicType translation list.
@@ -78,7 +71,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Empty
     {
         if (array() === self::$_topicTypeList) {
             foreach (self::$_topicTypeListTemplate as $key => $value) {
-                self::$_topicTypeList[(int) $key] = Phprojekt::getInstance()->translate($value);
+                self::$_topicTypeList[(int) $key] = $this->getFullRangeValues((int) $key, $value);
             }
         }
         return self::$_topicTypeList;
@@ -95,7 +88,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Empty
     {
         $types = $this->_getTopicTypeList();
 
-        return (isset($types[$topicTypeValue])? $types[$topicTypeValue] : NULL);
+        return (isset($types[$topicTypeValue]['name'])? $types[$topicTypeValue]['name'] : NULL);
     }
 
     /**
@@ -110,7 +103,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Empty
             $user  = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
             $users = $user->getAllowedUsers();
             foreach ($users as $node) {
-                self::$_userIdList[$node['id']] = $node['name'];
+                self::$_userIdList[$node['id']] = $this->getRangeValues($node['id'], $node['name']);
             }
         }
 
@@ -128,134 +121,56 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Empty
     {
         $users = $this->_getUserIdList();
 
-        return (isset($users[$userId])? $users[$userId] : NULL);
+        return (isset($users[$userId]['name'])? $users[$userId]['name'] : NULL);
     }
 
     /**
-     * Converts array into form used by json
+     * Sets a fields definitions for each field
      *
-     * @param array  $array     The array to be converted
-     * @param string $keyname   The identifier to be used for key values
-     * @param string $valuename The identifier to be used for value names
-     *
-     * @return array
+     * @return void
      */
-    public function convertArray(array $array, $keyname = 'id', $valuename = 'name')
+    public function setFields()
     {
-        $result = array();
-        foreach ($array as $key => $value) {
-            $result[] = array($keyname => $key, $valuename => $value);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns an array with empty default values for a model field
-     *
-     * @return array
-     */
-    protected function _getFieldTemplate()
-    {
-        return array(
-            'key'      => '',
-            'label'    => '',
-            'type'     => '',
-            'hint'     => '',
-            'order'    => 0,
-            'position' => 0,
-            'fieldset' => '',
-            'range'    => $this->convertarray(array('' => '')),
-            'required' => false,
-            'readOnly' => false,
-            'tab'      => 1,
-            'integer'  => false,
-            'length'   => 0,
-            'default'  => null);
-    }
-
-    /**
-     * Returns an array filled with mandatory data and optional keys. Undefined keys are stripped.
-     *
-     * @param string $key      Name of the model property
-     * @param string $label    Label of the form field (will get translated)
-     * @param string $type     Type of the form control
-     * @param string $hint     Tooltip text index (will get translated)
-     * @param int    $position Position of the field in the form
-     * @param array  $data     Optional additional keys
-     *
-     * @return array
-     */
-    protected function _fillTemplate($key, $label, $type, $hint, $position, array $data = array())
-    {
-        $result = $this->_getFieldTemplate();
-
-        foreach ($data as $index => $value) {
-            if (isset($result[$index])) {
-                $result[$index] = $value;
-            }
-        }
-
-        $result['key']      = $key;
-        $result['label']    = Phprojekt::getInstance()->translate($label);
-        $result['type']     = $type;
-        $result['hint']     = Phprojekt::getInstance()->getTooltip($hint);
-        $result['position'] = (int) $position;
-
-        return $result;
-    }
-
-    /**
-     * Return an array of field information.
-     *
-     * @return array
-     */
-    public function getFieldDefinition()
-    {
-        $converted = array();
-
         // projectId
-        $converted[] = $this->_fillTemplate('projectId', 'Project', 'hidden', 'projectId', 0, array(
+        $this->fillField('projectId', 'Project', 'hidden', 1, 0, array(
             'required' => true,
             'readOnly' => true,
             'integer'  => true));
 
         // minutesId
-        $converted[] = $this->_fillTemplate('minutesId', 'minutesId', 'hidden', 'minutesId', 0, array(
+        $this->fillField('minutesId', 'minutesId', 'hidden', 2, 0, array(
             'required' => true,
             'readOnly' => true,
             'integer'  => true));
 
         // topicId
-        $converted[] = $this->_fillTemplate('topicId', 'Id', 'hidden', 'topicId', 0, array(
+        $this->fillField('topicId', 'Id', 'hidden', 3, 0, array(
             'readOnly' => true,
             'integer'  => false));
 
         // sortOrder
-        $converted[] = $this->_fillTemplate('sortOrder', 'Sort after', 'hidden', 'sortOrder', 1, array(
+        $this->fillField('sortOrder', 'Sort after', 'hidden', 4, 1, array(
             'integer'  => true));
 
         // title
-        $converted[] = $this->_fillTemplate('title', 'Title', 'text', 'title', 2, array(
+        $this->fillField('title', 'Title', 'text', 5, 2, array(
             'length'   => 255,
             'required' => true));
 
         // topicType
-        $converted[] = $this->_fillTemplate('topicType', 'Type', 'selectbox', 'topicType', 3, array(
-            'range'    => $this->convertArray($this->_getTopicTypeList()),
+        $this->fillField('topicType', 'Type', 'selectbox', 6, 3, array(
+            'range'    => array_values($this->_getTopicTypeList()),
             'required' => true,
             'integer'  => true));
 
         // comment
-        $converted[] = $this->_fillTemplate('comment', 'Comment', 'textarea', 'comment', 4);
+        $this->fillField('comment', 'Comment', 'textarea', 7, 4);
 
         // topicDate
-        $converted[] = $this->_fillTemplate('topicDate', 'Date', 'date', 'topicDate', 5);
+        $this->fillField('topicDate', 'Date', 'date', 8, 5);
 
         // userId
-        $converted[] = $this->_fillTemplate('userId', 'Who', 'selectbox', 'userId', 6, array(
-            'range' => $this->convertArray($this->_getUserIdList())));
-
-        return $converted;
+        $this->fillField('userId', 'Who', 'selectbox', 9, 6, array(
+            'range' => array_values($this->_getUserIdList())));
     }
 }

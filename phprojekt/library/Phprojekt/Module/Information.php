@@ -40,103 +40,37 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
-class Phprojekt_Module_Information extends EmptyIterator implements Phprojekt_ModelInformation_Interface
+class Phprojekt_Module_Information extends Phprojekt_ModelInformation_Default
 {
     /**
-     * Return an array of field information.
+     * Sets a fields definitions for each field
      *
-     * @param integer $ordering An ordering constant
-     *
-     * @return array
+     * @return void
      */
-    public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    public function setFields()
     {
-        $converted = array();
-
         // name
-        $data = array();
-        $data['key']      = 'name';
-        $data['label']    = Phprojekt::getInstance()->translate('Name');
-        $data['type']     = 'hidden';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('name');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 255;
-        $data['default']  = null;
-
-        $converted[] = $data;
+        $this->fillField('name', 'Name', 'hidden', 1, 1, array(
+            'required' => true,
+            'length'   => 255));
 
         // label
-        $data = array();
-        $data['key']      = 'label';
-        $data['label']    = Phprojekt::getInstance()->translate('Label');
-        $data['type']     = 'text';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('label');
-        $data['order']    = 0;
-        $data['position'] = 2;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 255;
-        $data['default']  = null;
-
-        $converted[] = $data;
+        $this->fillField('label', 'Label', 'text', 2, 2, array(
+            'required' => true,
+            'length'   => 255));
 
         // saveType
-        $data = array();
-        $data['key']      = 'saveType';
-        $data['label']    = Phprojekt::getInstance()->translate('Type');
-        $data['type']     = 'selectbox';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('saveType');
-        $data['order']    = 0;
-        $data['position'] = 3;
-        $data['fieldset'] = '';
-        $data['range'][]  = array('id'   => '0',
-                                  'name' => Phprojekt::getInstance()->translate('Normal'));
-        $data['range'][]  = array('id'   => '1',
-                                  'name' => Phprojekt::getInstance()->translate('Global'));
-        $data['required'] = false;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = true;
-        $data['length']   = 0;
-        $data['default']  = 0;
-
-        $converted[] = $data;
+        $this->fillField('saveType', 'Type', 'selectbox', 3, 3, array(
+            'range'   => array($this->getFullRangeValues(0, 'Normal'),
+                               $this->getFullRangeValues(1, 'Global')),
+            'integer' => true,
+            'default' => '0'));
 
         // active
-        $data = array();
-        $data['key']      = 'active';
-        $data['label']    = Phprojekt::getInstance()->translate('Active');
-        $data['type']     = 'selectbox';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('active');
-        $data['order']    = 0;
-        $data['position'] = 4;
-        $data['fieldset'] = '';
-        $data['range'][]  = array('id'   => '0',
-                                  'name' => Phprojekt::getInstance()->translate('No'));
-        $data['range'][]  = array('id'   => '1',
-                                  'name' => Phprojekt::getInstance()->translate('Yes'));
-        $data['required'] = false;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = true;
-        $data['length']   = 0;
-        $data['default']  = 1;
-
-        $converted[] = $data;
-
-        return $converted;
+        $this->fillField('active', 'Active', 'selectbox', 4, 4, array(
+            'range'   => array($this->getFullRangeValues(0, 'No'),
+                               $this->getFullRangeValues(1, 'Yes')),
+            'integer' => true,
+            'default' => '1'));
     }
 }

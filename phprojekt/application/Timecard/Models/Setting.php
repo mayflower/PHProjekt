@@ -33,43 +33,19 @@
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Timecard_Models_Setting
+class Timecard_Models_Setting extends Phprojekt_ModelInformation_Default
 {
     /**
-     * Return an array of field information.
+     * Sets a fields definitions for each field
      *
-     * @return array
+     * @return void
      */
-    public function getFieldDefinition()
+    public function setFields()
     {
-        $converted = array();
-
-        // Favorites
-        $data = array();
-        $data['key']      = 'favorites';
-        $data['label']    = Phprojekt::getInstance()->translate('Favorite projects');
-        $data['type']     = 'multipleselectbox';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('favorites');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
-        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
-        $tree = $tree->setup();
-        foreach ($tree as $node) {
-            $data['range'][] = array('id'   => (int) $node->id,
-                                     'name' => $node->getDepthDisplay('title'));
-        }
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 0;
-        $data['default']  = null;
-
-        $converted[] = $data;
-
-        return $converted;
+        // favorites
+        $this->fillField('favorites', 'Favorite projects', 'multipleselectbox', 1, 1, array(
+            'range'    => $this->getProjectRange(),
+            'required' => true));
     }
 
     /**
@@ -94,7 +70,7 @@ class Timecard_Models_Setting
     public function setSettings($params)
     {
         $namespace = new Zend_Session_Namespace(Phprojekt_Setting::IDENTIFIER . Phprojekt_Auth::getUserId());
-        $fields    = $this->getFieldDefinition();
+        $fields    = $this->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         foreach ($fields as $data) {
             foreach ($params as $key => $value) {
                 if ($key == $data['key']) {

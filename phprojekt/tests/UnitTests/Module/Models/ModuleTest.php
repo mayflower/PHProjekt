@@ -40,16 +40,17 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $converted = array();
 
         // name
-        $data = array();
-        $data['key']      = 'name';
-        $data['label']    = Phprojekt::getInstance()->translate('Name');
-        $data['type']     = 'hidden';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('name');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
+        $data                  = array();
+        $data['key']           = 'name';
+        $data['label']         = Phprojekt::getInstance()->translate('Name');
+        $data['originalLabel'] = 'Name';
+        $data['type']          = 'hidden';
+        $data['hint']          = Phprojekt::getInstance()->getTooltip('name');
+        $data['listPosition']  = 1;
+        $data['formPosition']  = 1;
+        $data['fieldset']      = '';
+        $data['range']         = array('id'   => '',
+                                       'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
@@ -61,16 +62,17 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
 
 
         // label
-        $data = array();
-        $data['key']      = 'label';
-        $data['label']    = Phprojekt::getInstance()->translate('Label');
-        $data['type']     = 'text';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('label');
-        $data['order']    = 0;
-        $data['position'] = 2;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
+        $data                  = array();
+        $data['key']           = 'label';
+        $data['label']         = Phprojekt::getInstance()->translate('Label');
+        $data['originalLabel'] = 'Label';
+        $data['type']          = 'text';
+        $data['hint']          = Phprojekt::getInstance()->getTooltip('label');
+        $data['listPosition']  = 2;
+        $data['formPosition']  = 2;
+        $data['fieldset']      = '';
+        $data['range']         = array('id'   => '',
+                                       'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;
@@ -81,18 +83,21 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $converted[] = $data;
 
         // saveType
-        $data = array();
-        $data['key']      = 'saveType';
-        $data['label']    = Phprojekt::getInstance()->translate('Type');
-        $data['type']     = 'selectbox';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('saveType');
-        $data['order']    = 0;
-        $data['position'] = 3;
-        $data['fieldset'] = '';
-        $data['range'][]  = array('id'   => '0',
-                                  'name' => Phprojekt::getInstance()->translate('Normal'));
-        $data['range'][]  = array('id'   => '1',
-                                  'name' => Phprojekt::getInstance()->translate('Global'));
+        $data                  = array();
+        $data['key']           = 'saveType';
+        $data['label']         = Phprojekt::getInstance()->translate('Type');
+        $data['originalLabel'] = 'Type';
+        $data['type']          = 'selectbox';
+        $data['hint']          = Phprojekt::getInstance()->getTooltip('saveType');
+        $data['listPosition']  = 3;
+        $data['formPosition']  = 3;
+        $data['fieldset']      = '';
+        $data['range'][]       = array('id'          => '0',
+                                      'name'         => Phprojekt::getInstance()->translate('Normal'),
+                                      'originalName' => 'Normal');
+        $data['range'][]       = array('id'          => '1',
+                                      'name'         => Phprojekt::getInstance()->translate('Global'),
+                                      'originalName' => 'Global');
         $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
@@ -103,18 +108,21 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $converted[] = $data;
 
         // active
-        $data = array();
-        $data['key']      = 'active';
-        $data['label']    = Phprojekt::getInstance()->translate('Active');
-        $data['type']     = 'selectbox';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('active');
-        $data['order']    = 0;
-        $data['position'] = 4;
-        $data['fieldset'] = '';
-        $data['range'][]  = array('id'   => '0',
-                                  'name' => Phprojekt::getInstance()->translate('No'));
-        $data['range'][]  = array('id'   => '1',
-                                  'name' => Phprojekt::getInstance()->translate('Yes'));
+        $data                  = array();
+        $data['key']           = 'active';
+        $data['label']         = Phprojekt::getInstance()->translate('Active');
+        $data['originalLabel'] = 'Active';
+        $data['type']          = 'selectbox';
+        $data['hint']          = Phprojekt::getInstance()->getTooltip('active');
+        $data['listPosition']  = 4;
+        $data['formPosition']  = 4;
+        $data['fieldset']      = '';
+        $data['range'][]       = array('id'           => '0',
+                                       'name'         => Phprojekt::getInstance()->translate('No'),
+                                       'originalName' => 'No');
+        $data['range'][]       = array('id'           => '1',
+                                       'name'         => Phprojekt::getInstance()->translate('Yes'),
+                                       'originalName' => 'Yes');
         $data['required'] = false;
         $data['readOnly'] = false;
         $data['tab']      = 1;
@@ -123,7 +131,6 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $data['default']  = 1;
 
         $converted[] = $data;
-
         $this->assertEquals($converted, $module->getInformation()->getFieldDefinition());
     }
 

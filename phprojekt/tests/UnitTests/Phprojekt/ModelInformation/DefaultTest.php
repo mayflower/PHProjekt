@@ -37,98 +37,117 @@ require_once 'PHPUnit/Framework.php';
  */
 class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
 {
-    private $_defaultForm = array (
-            0 => array (
-                'key'      => '',
-                'label'    => '',
-                'type'     => 'string',
-                'hint'     => '',
-                'order'    => 0,
-                'position' => 0,
-                'fieldset' => null,
-                'range'    => '',
-                'required' => false,
-                'right'    => 'write',
-                'readOnly' => false),
-        );
-
-    private $_testForm = array (
-            0 => array (
-                'key'      => 'test',
-                'label'    => '',
-                'type'     => 'string',
-                'hint'     => '',
-                'order'    => 0,
-                'position' => 0,
-                'fieldset' => null,
-                'range'    => '',
-                'required' => false,
-                'right'    => 'write',
-                'readOnly' => false),
-        );
-
-    private $_testList = array (
-            0 => array (
-                'key'      => 'test list',
-                'label'    => '',
-                'type'     => 'string',
-                'hint'     => '',
-                'order'    => 0,
-                'position' => 0,
-                'fieldset' => null,
-                'range'    => '',
-                'required' => false,
-                'right'    => 'write',
-                'readOnly' => false),
-        );
+    private $_model    = null;
+    private $_testData = array();
 
     /**
-     * Test get field definition
+     * setUp method for PHPUnit
+     */
+    public function setUp()
+    {
+        $this->_model      = new Phprojekt_ModelInformation_Default();
+        $this->_testData[] = array(
+                'key'           => 'startDatetime',
+                'label'         => Phprojekt::getInstance()->translate('Start'),
+                'originalLabel' => 'Start',
+                'type'          => 'datetime',
+                'hint'          => Phprojekt::getInstance()->getTooltip('startDatetime'),
+                'listPosition'  => 1,
+                'formPosition'  => 1,
+                'fieldset'      => '',
+                'range'         => array('id'   => '',
+                                         'name' => ''),
+                'required' => true,
+                'readOnly' => false,
+                'tab'      => 1,
+                'integer'  => false,
+                'length'   => 0,
+                'default'  => null);
+        $this->_testData[] = array(
+                'key'           => 'notes',
+                'label'         => Phprojekt::getInstance()->translate('Notes'),
+                'originalLabel' => 'Notes',
+                'type'          => 'textarea',
+                'hint'          => Phprojekt::getInstance()->getTooltip('notes'),
+                'listPosition'  => 0,
+                'formPosition'  => 2,
+                'fieldset'      => '',
+                'range'         => array('id'   => '',
+                                         'name' => ''),
+                'required' => false,
+                'readOnly' => false,
+                'tab'      => 1,
+                'integer'  => false,
+                'length'   => 255,
+                'default'  => '--');
+    }
+
+    /**
+     * Test fillField
+     */
+    public function testFillField()
+    {
+        $this->_model->fillField('startDatetime', 'Start', 'datetime', 1, 1, array(
+            'required' => true));
+        $this->_model->fillField('notes', 'Notes', 'textarea', 0, 2, array(
+            'length'  => 255,
+            'default' => '--'));
+
+        $order = Phprojekt_ModelInformation_Default::ORDERING_FORM;
+        $this->assertEquals($this->_testData, $this->_model->getFieldDefinition($order));
+    }
+
+    /**
+     * Test fieldDefinition
      */
     public function testGetFieldDefinition()
     {
-        $object  = new Phprojekt_ModelInformation_Default();
-        $records = $object->getFormFields();
-        $this->assertEquals($records, $this->_defaultForm);
+        $model = new Phprojekt_ModelInformation_Default();
+        $order = Phprojekt_ModelInformation_Default::ORDERING_FORM;
+        $this->assertEquals(array(), $model->getFieldDefinition($order));
 
-        $records = $object->getListFields();
-        $this->assertEquals($records, $this->_defaultForm);
+        $model->fillField('startDatetime', 'Start', 'datetime', 1, 1, array(
+            'required' => true));
+        $model->fillField('notes', 'Notes', 'textarea', 0, 2, array(
+            'length'  => 255,
+            'default' => '--'));
+
+        $order = Phprojekt_ModelInformation_Default::ORDERING_FORM;
+        $this->assertEquals($this->_testData, $model->getFieldDefinition($order));
+
+        $order  = Phprojekt_ModelInformation_Default::ORDERING_LIST;
+        $result = $model->getFieldDefinition($order);
+        $this->assertEquals($this->_testData[0], $result[0]);
     }
 
     /**
-     * Test fieldDefinition function
+     * Test testGetFullRangeValues
      */
-    public function testFieldDefinition()
+    public function testGetFullRangeValues()
     {
-        $object  = new Phprojekt_ModelInformation_Default();
-        $records = $object->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_LIST);
-        $this->assertEquals($records, $this->_defaultForm);
-
-        $records = $object->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        $this->assertEquals($records, $this->_defaultForm);
+        $records = $this->_model->getFullRangeValues('8', 'Title');
+        $this->assertEquals($records, array('id'           => 8,
+                                            'name'         => 'Title',
+                                            'originalName' => 'Title'));
     }
 
-    public function testConstuct()
+    /**
+     * Test getRangeValues
+     */
+    public function testGetRangeValues()
     {
-        $object  = new Phprojekt_ModelInformation_Default($this->_testList);
-        $records = $object->getListFields();
-        $this->assertEquals($records, $this->_testList);
+        $records = $this->_model->getRangeValues('8', 'Title');
+        $this->assertEquals($records, array('id'   => 8,
+                                            'name' => 'Title'));
+    }
 
-        $records = $object->getFormFields();
-        $this->assertEquals($records, $this->_testList);
-
-        $object  = new Phprojekt_ModelInformation_Default(null, $this->_testForm);
-        $records = $object->getListFields();
-        $this->assertEquals($records, $this->_testForm);
-
-        $records = $object->getFormFields();
-        $this->assertEquals($records, $this->_testForm);
-
-        $object  = new Phprojekt_ModelInformation_Default($this->_testList, $this->_testForm);
-        $records = $object->getListFields();
-        $this->assertEquals($records, $this->_testList);
-
-        $records = $object->getFormFields();
-        $this->assertEquals($records, $this->_testForm);
+    /**
+     * Test getProjectRange
+     */
+    public function testGetProjectRange()
+    {
+        $records = $this->_model->getProjectRange();
+        $this->assertEquals($records[0]['id'], 1);
+        $this->assertEquals($records[0]['name'], "Invisible Root");
     }
 }

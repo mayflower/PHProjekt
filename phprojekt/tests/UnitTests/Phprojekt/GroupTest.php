@@ -82,16 +82,17 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
         $group     = new Phprojekt_Groups_Groups($this->sharedFixture);
         $converted = array();
 
-        $data             = array();
-        $data['key']      = 'name';
-        $data['label']    = Phprojekt::getInstance()->translate('Name');
-        $data['type']     = 'text';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('name');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
+        $data                  = array();
+        $data['key']           = 'name';
+        $data['label']         = Phprojekt::getInstance()->translate('Name');
+        $data['originalLabel'] = 'Name';
+        $data['type']          = 'text';
+        $data['hint']          = Phprojekt::getInstance()->getTooltip('name');
+        $data['listPosition']  = 1;
+        $data['formPosition']  = 1;
+        $data['fieldset']      = '';
+        $data['range']         = array('id'   => '',
+                                       'name' => '');
         $data['required'] = true;
         $data['readOnly'] = false;
         $data['tab']      = 1;

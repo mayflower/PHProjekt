@@ -40,136 +40,33 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
-class Timecard_Models_Information extends EmptyIterator implements Phprojekt_ModelInformation_Interface
+class Timecard_Models_Information extends Phprojekt_ModelInformation_Default
 {
     /**
-     * Return an array of field information.
+     * Sets a fields definitions for each field
      *
-     * @param string $ordering Type of view
-     *
-     * @return array
+     * @return void
      */
-    public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    public function setFields()
     {
-        $converted = array();
+        // startDatetime
+        $this->fillField('startDatetime', 'Start', 'datetime', 1, 1, array(
+            'required' => true));
 
-        switch ($ordering) {
-            default:
-                // start_datetime
-                $data = array();
+        // endTime
+        $this->fillField('endTime', 'End', 'time', 2, 2);
 
-                $data['key']      = 'startDatetime';
-                $data['label']    = Phprojekt::getInstance()->translate('Start');
-                $data['type']     = 'datetime';
-                $data['hint']     = Phprojekt::getInstance()->getTooltip('startDatetime');
-                $data['order']    = 0;
-                $data['position'] = 1;
-                $data['fieldset'] = '';
-                $data['range']    = array('id'   => '',
-                                          'name' => '');
-                $data['required'] = true;
-                $data['readOnly'] = false;
-                $data['tab']      = 1;
-                $data['integer']  = false;
-                $data['length']   = 0;
-                $data['default']  = null;
+        // minutes
+        $this->fillField('minutes', 'Minutes', 'text', 3, 3, array(
+            'integer' => true));
 
-                $converted[] = $data;
+        // projectId
+        $this->fillField('projectId', 'Project', 'selectbox', 4, 4, array(
+            'range'    => $this->getProjectRange(),
+            'required' => true,
+            'integer'  => true));
 
-                // endTime
-                $data = array();
-
-                $data['key']      = 'endTime';
-                $data['label']    = Phprojekt::getInstance()->translate('End');
-                $data['type']     = 'time';
-                $data['hint']     = Phprojekt::getInstance()->getTooltip('startTime');
-                $data['order']    = 0;
-                $data['position'] = 2;
-                $data['fieldset'] = '';
-                $data['range']    = array('id'   => '',
-                                          'name' => '');
-                $data['required'] = false;
-                $data['readOnly'] = false;
-                $data['tab']      = 1;
-                $data['integer']  = false;
-                $data['length']   = 0;
-                $data['default']  = null;
-
-                $converted[] = $data;
-
-                // minutes
-                $data = array();
-
-                $data['key']      = 'minutes';
-                $data['label']    = Phprojekt::getInstance()->translate('Minutes');
-                $data['type']     = 'text';
-                $data['hint']     = Phprojekt::getInstance()->getTooltip('minutes');
-                $data['order']    = 0;
-                $data['position'] = 3;
-                $data['fieldset'] = '';
-                $data['range']    = array('id'   => '',
-                                          'name' => '');
-                $data['required'] = false;
-                $data['readOnly'] = false;
-                $data['tab']      = 1;
-                $data['integer']  = true;
-                $data['length']   = 0;
-                $data['default']  = null;
-
-                $converted[] = $data;
-
-                // projectId
-                $data = array();
-
-                $data['key']      = 'projectId';
-                $data['label']    = Phprojekt::getInstance()->translate('Project');
-                $data['type']     = 'time';
-                $data['hint']     = Phprojekt::getInstance()->getTooltip('projectId');
-                $data['order']    = 0;
-                $data['position'] = 4;
-                $data['fieldset'] = '';
-                $data['range']    = array();
-                $data['type']     = 'selectbox';
-
-                $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
-                $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
-                $tree         = $tree->setup();
-                foreach ($tree as $node) {
-                    $data['range'][] = array('id'   => (int) $node->id,
-                                             'name' => $node->getDepthDisplay('title'));
-                }
-                $data['required'] = true;
-                $data['readOnly'] = false;
-                $data['tab']      = 1;
-                $data['integer']  = true;
-                $data['length']   = 0;
-                $data['default']  = null;
-
-                $converted[] = $data;
-
-                // notes
-                $data = array();
-
-                $data['key']      = 'notes';
-                $data['label']    = Phprojekt::getInstance()->translate('Notes');
-                $data['type']     = 'textarea';
-                $data['hint']     = Phprojekt::getInstance()->getTooltip('notes');
-                $data['order']    = 0;
-                $data['position'] = 5;
-                $data['fieldset'] = '';
-                $data['range']    = array('id'   => '',
-                                          'name' => '');
-                $data['required'] = false;
-                $data['readOnly'] = false;
-                $data['tab']      = 1;
-                $data['integer']  = false;
-                $data['length']   = 0;
-                $data['default']  = null;
-
-                $converted[] = $data;
-                break;
-        }
-
-        return $converted;
+        // notes
+        $this->fillField('notes', 'Notes', 'textarea', 5, 5);
     }
 }

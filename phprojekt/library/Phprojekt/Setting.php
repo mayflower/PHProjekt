@@ -249,7 +249,7 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
             call_user_func(array($this->getModel(), 'setSettings'), $params, $userId);
         } else {
             $namespace = new Zend_Session_Namespace(self::IDENTIFIER . $userId);
-            $fields    = $this->getModel()->getFieldDefinition();
+            $fields    = $this->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
             foreach ($fields as $data) {
                 foreach ($params as $key => $value) {
                     if ($key == $data['key']) {

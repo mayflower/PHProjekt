@@ -33,7 +33,7 @@
  * @since      File available since Release 6.0
  * @author     Martin Ruprecht <martin.ruprecht@mayflower.de>
  */
-class Core_Models_Notification_Setting
+class Core_Models_Notification_Setting extends Phprojekt_ModelInformation_Default
 {
     const FIELD_LOGIN_LOGOUT  = 'loginlogout';
     const FIELD_DATARECORDS   = 'datarecords';
@@ -41,98 +41,33 @@ class Core_Models_Notification_Setting
     const FIELD_ALERTS        = 'alerts';
 
     /**
-     * Return an array of field information.
+     * Sets a fields definitions for each field
      *
-     * @param integer $ordering An ordering constant
-     *
-     * @return array
+     * @return void
      */
-    public static function getFieldDefinition()
+    public function setFields()
     {
-        $converted = array();
-
         // Login/Logout
-        $data             = array();
-        $data['key']      = self::FIELD_LOGIN_LOGOUT;
-        $data['label']    = Phprojekt::getInstance()->translate('Login / Logout');
-        $data['type']     = 'checkbox';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('loginLogout');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = false;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = true;
-        $data['length']   = 0;
-        $data['default']  = 1;
-
-        $converted[] = $data;
+        $this->fillField(self::FIELD_LOGIN_LOGOUT, 'Login / Logout', 'checkbox', 1, 1, array(
+            'integer' => true,
+            'default' => 1));
 
         // Data records
-        $data             = array();
-        $data['key']      = self::FIELD_DATARECORDS;
-        $data['label']    = Phprojekt::getInstance()->translate('Data Records');
-        $data['type']     = 'checkbox';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('datarecords');
-        $data['order']    = 0;
-        $data['position'] = 2;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = false;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = true;
-        $data['length']   = 0;
-        $data['default']  = 1;
-
-        $converted[] = $data;
+        $this->fillField(self::FIELD_DATARECORDS, 'Data Records', 'checkbox', 2, 2, array(
+            'integer' => true,
+            'default' => 1));
 
         // @TODO The user generated messages is not implemented yet
         // User generated messages
-        //$data             = array();
-        //$data['key']      = self::FIELD_USERGENERATED;
-        //$data['label']    = Phprojekt::getInstance()->translate('User generated messages');
-        //$data['type']     = 'checkbox';
-        //$data['hint']     = Phprojekt::getInstance()->getTooltip('usergenerated');
-        //$data['order']    = 0;
-        //$data['position'] = 3;
-        //$data['fieldset'] = '';
-        //$data['range'][]  = array('id'   => '',
-        //                          'name' => '');
-        //$data['required'] = false;
-        //$data['readOnly'] = true;
-        //$data['tab']      = 1;
-        //$data['integer']  = true;
-        //$data['length']   = 0;
-        //$data['default']  = 0;
-
-        //$converted[] = $data;
+        //$this->fillField(self::FIELD_USERGENERATED, 'User generated messages', 'checkbox', 3, 3, array(
+        //    'readOnly' => true,
+        //    'integer'  => true,
+        //    'default'  => 0));
 
         // Alerts (event deadlines)
-        $data             = array();
-        $data['key']      = self::FIELD_ALERTS;
-        $data['label']    = Phprojekt::getInstance()->translate('Alerts');
-        $data['type']     = 'checkbox';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('alerts');
-        $data['order']    = 0;
-        $data['position'] = 4;
-        $data['fieldset'] = '';
-        $data['range'][]  = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = false;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = true;
-        $data['length']   = 0;
-        $data['default']  = 1;
-
-        $converted[] = $data;
-
-        return $converted;
+        $this->fillField(self::FIELD_ALERTS, 'Alerts', 'checkbox', 4, 4, array(
+            'integer' => true,
+            'default' => 1));
     }
 
     /**

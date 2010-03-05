@@ -45,10 +45,13 @@ class Minutes_ItemController_Test extends FrontInit
         $response = $this->getResponse();
 
         $this->assertContains('{"metadata":[{"key":', $response);
-        $this->assertContains('"Type","type":"selectbox"', $response);
+        $this->assertContains('"Type","originalLabel":"Type","type":"selectbox"', $response);
 
-        $expected = '"range":[{"id":1,"name":"Topic"},{"id":2,"name":"Statement"},{"id":3,"name":"Todo"},'
-            . '{"id":4,"name":"Decision"},{"id":5,"name":"Date"}]';
+        $expected = '"range":[{"id":1,"name":"Topic","originalName":"Topic"},'
+            . '{"id":2,"name":"Statement","originalName":"Statement"},'
+            . '{"id":3,"name":"Todo","originalName":"Todo"},'
+            . '{"id":4,"name":"Decision","originalName":"Decision"},'
+            . '{"id":5,"name":"Date","originalName":"Date"}]';
         $this->assertContains($expected, $response);
         $this->assertContains('"numRows":0}', $response);
     }
@@ -147,9 +150,9 @@ class Minutes_ItemController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
 
-        $this->assertContains('"data":[{"id":0,"projectId":0,"minutesId":0,"topicId":0,"sortOrder":0,'
-            . '"title":"","topicType":0,"comment":"","topicDate":"","userId":"","rights":{"currentUser":'
-            . '{"moduleId":11,"itemId":0,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,'
+        $this->assertContains('"data":[{"id":0,"sortOrder":0,"title":"","topicType":0,'
+            . '"comment":"","topicDate":"","userId":"","rights":{"currentUser":{"moduleId":11,"'
+            . 'itemId":0,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,'
             . '"copy":true,"delete":true,"download":true,"admin":true}}}]', $response);
     }
 

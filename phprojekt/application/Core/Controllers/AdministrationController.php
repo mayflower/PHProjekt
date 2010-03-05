@@ -106,7 +106,7 @@ class Core_AdministrationController extends Core_IndexController
 
         $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
         $configuration->setModule($module);
-        $metadata = $configuration->getModel()->getFieldDefinition();
+        $metadata = $configuration->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $records  = $configuration->getList($moduleId, $metadata);
 
         $data = array("metadata" => $metadata,

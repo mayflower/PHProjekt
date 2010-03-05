@@ -50,7 +50,7 @@ class Timecard_Models_Setting_Test extends PHPUnit_Framework_TestCase
     public function testGetFieldDefinition()
     {
         $timecardSetting = clone($this->_model);
-        $response        = $timecardSetting->getFieldDefinition();
+        $response        = $timecardSetting->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $key             = $response[0]['key'];
         $total           = count($response[0]['range']);
         $this->assertEquals("favorites", $key);

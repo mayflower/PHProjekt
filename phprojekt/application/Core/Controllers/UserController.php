@@ -105,7 +105,7 @@ class Core_UserController extends Core_IndexController
         $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
         $setting->setModule('User');
 
-        $fields = $setting->getModel()->getFieldDefinition();
+        $fields = $setting->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $tmp    = $setting->getList(0, $fields, $user->id);
 
         foreach ($tmp as $values) {

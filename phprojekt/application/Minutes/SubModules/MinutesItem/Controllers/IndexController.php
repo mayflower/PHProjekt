@@ -74,8 +74,9 @@ class MinutesItem_IndexController extends IndexController
 
         if (array() === $result && isset($itemModel)) {
             // Inject metadata for correct filling of topicType select field
-            $result = array('metadata' => $itemModel->getInformation()->getFieldDefinition(),
-                            'numRows'  => 0);
+            $ordering = Phprojekt_ModelInformation_Default::ORDERING_LIST;
+            $result   = array('metadata' => $itemModel->getInformation()->getFieldDefinition($ordering),
+                              'numRows'  => 0);
         }
 
         Phprojekt_Converter_Json::echoConvert($result, Phprojekt_ModelInformation_Default::ORDERING_LIST);

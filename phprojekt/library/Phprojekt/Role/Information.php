@@ -40,39 +40,18 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  */
-class Phprojekt_Role_Information extends EmptyIterator implements Phprojekt_ModelInformation_Interface
+class Phprojekt_Role_Information extends Phprojekt_ModelInformation_Default
 {
     /**
-     * Return an array of field information.
+     * Sets a fields definitions for each field
      *
-     * @param integer $ordering An ordering constant
-     *
-     * @return array
+     * @return void
      */
-    public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    public function setFields()
     {
-        $converted = array();
-
         // name
-        $data = array();
-        $data['key']      = 'name';
-        $data['label']    = Phprojekt::getInstance()->translate('Name');
-        $data['type']     = 'text';
-        $data['hint']     = Phprojekt::getInstance()->getTooltip('name');
-        $data['order']    = 0;
-        $data['position'] = 1;
-        $data['fieldset'] = '';
-        $data['range']    = array('id'   => '',
-                                  'name' => '');
-        $data['required'] = true;
-        $data['readOnly'] = false;
-        $data['tab']      = 1;
-        $data['integer']  = false;
-        $data['length']   = 255;
-        $data['default']  = null;
-
-        $converted[] = $data;
-
-        return $converted;
+        $this->fillField('name', 'Name', 'text', 1, 1, array(
+            'required' => true,
+            'length'   => 255));
     }
 }
