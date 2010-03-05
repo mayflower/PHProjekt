@@ -61,6 +61,11 @@ class Phprojekt
     const CURRENT_PROJECT = 'currentProjectId';
 
     /**
+     * Copyright
+     */
+    const COPYRIGHT = 'PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH';
+
+    /**
      * Singleton instance
      *
      * @var Phprojekt

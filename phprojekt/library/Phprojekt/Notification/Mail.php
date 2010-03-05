@@ -134,7 +134,7 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
         $view->changesDone = $phproject->translate('Changes done', $lang);
         $view->field       = $phproject->translate('Field', $lang);
         $view->oldValue    = $phproject->translate('Old value', $lang);
-        $view->copyright   = $phproject->translate('PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH', $lang);
+        $view->copyright   = Phprojekt::COPYRIGHT;
         $view->url         = $params['url'];
 
         if ($this->_bodyMode == self::MODE_TEXT) {

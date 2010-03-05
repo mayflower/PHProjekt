@@ -55,7 +55,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
         $freq     = ucfirst(strtolower($freq));
 
         $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Repeats', $lang),
-                               'value' => Phprojekt::getInstance()->translate($freq));
+                               'value' => Phprojekt::getInstance()->translate($freq, $lang));
         $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Interval', $lang),
                                'value' => $interval);
 
@@ -69,7 +69,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
             $untilDesc = $dayDesc . " " . $monthDesc . " " . $dayNum . " " . $year;
 
             $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Until', $lang),
-                                   'value' => $this->translateDate($untilDesc));
+                                   'value' => $this->translateDate($untilDesc, $lang));
         }
 
         if (false === empty($byday)) {
@@ -108,11 +108,12 @@ class Calendar_Models_Notification extends Phprojekt_Notification
      * Converts the date format and language, from an english '2009-04-25' or 'Sat Apr 25 2009' to
      * 'Wednesday - March 24 2009' in the according language.
      *
-     * @param string $date String with the original date in english
+     * @param string      $date String with the original date in english
+     * @param Zend_Locale $lang Locale for use in translations*
      *
      * @return string
      */
-    public function translateDate($date)
+    public function translateDate($date, $lang)
     {
         if (strlen($date) == 10) {
             // '2009-04-25' style
@@ -165,8 +166,8 @@ class Calendar_Models_Notification extends Phprojekt_Notification
             }
         }
         $dateUnix   = mktime(0, 0, 0, $month, $day, $year);
-        $dayDesc    = Phprojekt::getInstance()->translate(date("l", $dateUnix));
-        $monthDesc  = Phprojekt::getInstance()->translate(date("F", $dateUnix));
+        $dayDesc    = Phprojekt::getInstance()->translate(date("l", $dateUnix), $lang);
+        $monthDesc  = Phprojekt::getInstance()->translate(date("F", $dateUnix), $lang);
         $dateString = $dayDesc . " - " . $monthDesc . " " . $day . " " . $year;
 
         return $dateString;
@@ -199,11 +200,11 @@ class Calendar_Models_Notification extends Phprojekt_Notification
         $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Notes', $lang),
                               'value' => $this->_model->notes);
         $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Start', $lang),
-                              'value' => $this->translateDate($this->_model->startDateNotif) . ' '
+                              'value' => $this->translateDate($this->_model->startDateNotif, $lang) . ' '
                               . substr($this->_model->startDatetime, 11, 5));
         $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('End', $lang),
-                              'value' => $this->translateDate($this->_model->endDateNotif)) . ' '
-                              . substr($this->_model->startDatetime, 11, 5);
+                              'value' => $this->translateDate($this->_model->endDateNotif, $lang) . ' '
+                              . substr($this->_model->startDatetime, 11, 5));
 
         $phpUser           = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $participants      = $this->_model->notifParticipants;
@@ -229,8 +230,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                               'value' => $participantsValue);
 
         if ($this->_model->rrule !== null) {
-            $bodyFields = array_merge($this->_bodyFields,
-                $this->getRruleDescriptive($this->_model->rrule, $lang));
+            $bodyFields = array_merge($bodyFields, $this->getRruleDescriptive($this->_model->rrule, $lang));
         }
 
         return $bodyFields;
@@ -249,7 +249,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
     public function getBodyChanges($lang = null, $translate = true)
     {
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
-        $fieldDefinition = $this->_model->getInformation()->getShortFieldDefinition($order);
+        $fieldDefinition = $this->_model->getInformation()->getFieldDefinition($order);
         $bodyChanges     = $this->_lastHistory;
 
         // Iterate in every change done
@@ -258,11 +258,8 @@ class Calendar_Models_Notification extends Phprojekt_Notification
             foreach ($fieldDefinition as $field) {
                 // Find the field definition for the field that has been modified
                 if ($field['key'] == $bodyChanges[$i]['field']) {
-                    $dbmKey    = Phprojekt_ActiveRecord_Abstract::convertVarToSql($field['key']);
-                    $dbmField  = new Phprojekt_DatabaseManager_Field($this->_model->getInformation(), $dbmKey);
-
                     $bodyChanges[$i]['field'] = $field['key'];
-                    $bodyChanges[$i]['label'] = Phprojekt::getInstance()->translate($dbmField->formLabel, $lang);
+                    $bodyChanges[$i]['label'] = Phprojekt::getInstance()->translate($field['originalLabel'], $lang);
                     $bodyChanges[$i]['type']  = $field['type'];
                 }
             }
@@ -351,11 +348,11 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                 // Doing the date translation only if something has changed
                 if (false === empty($bodyChanges[$i]['oldValue'])) {
                     $bodyChanges[$i]['oldValue'] = $this->translateDate(
-                        $this->_model->getDate($bodyChanges[$i]['oldValue']))
+                        $this->_model->getDate($bodyChanges[$i]['oldValue']), $lang)
                         . ' ' . substr($bodyChanges[$i]['oldValue'], 11, 5);
                 }
                 $bodyChanges[$i]['newValue'] = $this->translateDate(
-                    $this->_model->getDate($bodyChanges[$i]['newValue']))
+                    $this->_model->getDate($bodyChanges[$i]['newValue']), $lang)
                     . ' ' . substr($bodyChanges[$i]['newValue'], 11, 5);
             }
         }

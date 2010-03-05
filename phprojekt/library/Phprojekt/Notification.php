@@ -238,28 +238,38 @@ class Phprojekt_Notification
     public function getBodyFields($lang)
     {
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
-        $fieldDefinition = $this->_model->getInformation()->getShortFieldDefinition($order);
+        $fieldDefinition = $this->_model->getInformation()->getFieldDefinition($order);
         $bodyFields      = array();
 
         foreach ($fieldDefinition as $key => $field) {
-            $dbmKey    = Phprojekt_ActiveRecord_Abstract::convertVarToSql($field['key']);
-            $dbmField  = new Phprojekt_DatabaseManager_Field($this->_model->getInformation(), $dbmKey);
-
             switch ($field['type']) {
                 case 'selectbox':
                 case 'multipleselectbox':
-                case 'display':
-                    $checkRange = $dbmField->formRange;
-                    if ($field['type'] == 'display' && (null === $checkRange || empty($checkRange))) {
-                        $field['range'] = array();
-                        $value          = Phprojekt_Converter_Text::convert($this->_model, $field);
-                    } else {
-                        $fieldRange     = $this->_model->getInformation()->convertSelect($dbmField, false);
-                        $field['range'] = $fieldRange['range'];
-                        $value          = Phprojekt_Converter_Text::convert($this->_model, $field);
-                        if (strpos($dbmField->formRange, "|") > 0) {
-                            $value = Phprojekt::getInstance()->translate($value, $lang);
+                    // Search the value
+                    foreach ($field['range'] as $range) {
+                        if ($range['id'] == $this->_model->$field['key']) {
+                            $value = isset($range['originalName'])
+                            ? Phprojekt::getInstance()->translate($range['originalName'], $lang)
+                            : $range['name'];
+                            break;
                         }
+                    }
+                    break;
+                case 'display':
+                    // Search if there is an Id value that should be translated into a descriptive String
+                    $value = null;
+                    foreach ($field['range'] as $range) {
+                        if (is_array($range)) {
+                            if ($range['id'] == $this->_model->$field['key']) {
+                                $value = isset($range['originalName'])
+                                ? Phprojekt::getInstance()->translate($range['originalName'], $lang)
+                                : $range['name'];
+                                break 2;
+                            }
+                        }
+                    }
+                    if (null === $value) {
+                        $value = $this->_model->$field['key'];
                     }
                     break;
                 default:
@@ -268,7 +278,7 @@ class Phprojekt_Notification
             }
 
             $bodyFields[] = array('field' => $field['key'],
-                                  'label' => Phprojekt::getInstance()->translate($dbmField->formLabel, $lang),
+                                  'label' => Phprojekt::getInstance()->translate($field['originalLabel'], $lang),
                                   'value' => $value);
         }
 
@@ -290,52 +300,49 @@ class Phprojekt_Notification
         // The following algorithm loops inside $this->_lastHistory and prepares $bodyChanges while:
         // * Searches Integer values that should be converted into Strings and converts them
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
-        $fieldDefinition = $this->_model->getInformation()->getShortFieldDefinition($order);
+        $fieldDefinition = $this->_model->getInformation()->getFieldDefinition($order);
         $bodyChanges     = $this->_lastHistory;
 
         // Iterate in every change done
         for ($i = 0; $i < count($bodyChanges); $i++) {
             foreach ($fieldDefinition as $field) {
-                $field['key'] = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field['key']);
                 // Find the field definition for the field that has been modified
                 if ($field['key'] == $bodyChanges[$i]['field']) {
-                    $dbmKey    = Phprojekt_ActiveRecord_Abstract::convertVarToSql($field['key']);
-                    $dbmField  = new Phprojekt_DatabaseManager_Field($this->_model->getInformation(), $dbmKey);
-
                     $bodyChanges[$i]['field'] = $field['key'];
-                    $bodyChanges[$i]['label'] = Phprojekt::getInstance()->translate($dbmField->formLabel, $lang);
+                    $bodyChanges[$i]['label'] = Phprojekt::getInstance()->translate($field['originalLabel'], $lang);
                     $bodyChanges[$i]['type']  = $field['type'];
 
                     if ($translate && in_array($field['type'], array('selectbox', 'display', 'multipleselectbox'))) {
                         // Is the field of a type that should be translated from an Id into a descriptive String?
                         $convertToString = true;
 
-                        $checkRange = $dbmField->formRange;
-                        if ($field['type'] == 'display' && (null === $checkRange || empty($checkRange))) {
-                            $convertToString = false;
+                        if ($field['type'] == 'display') {
+                            if (!is_array($field['range'])) {
+                                $convertToString = false;
+                            } else {
+                                foreach ($field['range'] as $range) {
+                                    if (!is_array($range)) {
+                                        $convertToString = false;
+                                        break;
+                                    }
+                                }
+                            }
                         }
 
                         if ($convertToString) {
                             // Yes, so translate it into the appropriate meaning
-                            $fieldRange = $this->_model->getInformation()->convertSelect($dbmField, false);
-                            foreach ($fieldRange['range'] as $range) {
+                            foreach ($field['range'] as $range) {
                                 // Try to replace oldValue Integer with the String
                                 if ($range['id'] == $bodyChanges[$i]['oldValue']) {
-                                    if (strpos($dbmField->formRange, "|") > 0) {
-                                        $value = Phprojekt::getInstance()->translate($range['name'], $lang);
-                                    } else {
-                                        $value = trim($range['name']);
-                                    }
-                                    $bodyChanges[$i]['oldValue'] = $value;
+                                    $bodyChanges[$i]['oldValue'] = isset($range['originalName'])
+                                        ? Phprojekt::getInstance()->translate($range['originalName'], $lang)
+                                        : $range['name'];
                                 }
-                                // Try to replace newValue Integer with the String
+                                // Try to replace oldValue Integer with the String
                                 if ($range['id'] == $bodyChanges[$i]['newValue']) {
-                                    if (strpos($dbmField->formRange, "|") > 0) {
-                                        $value = Phprojekt::getInstance()->translate($range['name'], $lang);
-                                    } else {
-                                        $value = trim($range['name']);
-                                    }
-                                    $bodyChanges[$i]['newValue'] = $value;
+                                    $bodyChanges[$i]['newValue'] = isset($range['originalName'])
+                                        ? Phprojekt::getInstance()->translate($range['originalName'], $lang)
+                                        : $range['name'];
                                 }
                             }
                         }
