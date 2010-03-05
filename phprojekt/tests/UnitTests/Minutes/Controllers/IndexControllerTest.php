@@ -54,7 +54,7 @@ class Minutes_IndexController_Test extends FrontInit
         $this->request->setParam('id', 0);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '{"metadata":[{"key":"title","label":"Title","type":"text",';
+        $expected = '{"metadata":[{"key":"title","label":"Title","originalLabel":"Title","type":"text",';
         $this->assertContains($expected, $response, "Response was: '$response'");
 
         $expected = ',"data":[{"id":0,"title":"","meetingDatetime":"","endTime":"","projectId":0';

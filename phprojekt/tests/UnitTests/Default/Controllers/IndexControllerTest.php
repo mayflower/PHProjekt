@@ -83,7 +83,8 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->request->setParam('id', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1';
+        $expected = '{"key":"title","label":"Title","originalLabel":"Title","type":"text","hint":"","listPosition":1,'
+            . '"formPosition":1';
         $this->assertContains($expected, $response);
         $this->assertContains('"numRows":1}', $response);
     }

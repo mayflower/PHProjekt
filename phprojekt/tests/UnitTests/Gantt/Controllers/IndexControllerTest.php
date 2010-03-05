@@ -34,15 +34,16 @@ require_once 'PHPUnit/Framework.php';
  */
 class Gantt_IndexController_Test extends FrontInit
 {
-    private $_listingExpectedString = '{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1';
-
-    private $_model = null;
+    private $_listingExpectedString = null;
+    private $_model                 = null;
 
     /**
      * setUp method for PHPUnit
      */
     public function setUp()
     {
+        $this->_listingExpectedString = '{"key":"title","label":"Title","originalLabel":"Title","type":"text",'
+            . '"hint":"","listPosition":1,"formPosition":1';
         $this->_model = new Gantt_Models_Gantt();
     }
 

@@ -229,7 +229,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $entry['type'] = $field->formType;
                     break;
             }
-            $converted[]   = $entry;
+            $converted[] = $entry;
         }
 
         return $converted;
@@ -251,10 +251,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         foreach ($fields as $field) {
             switch ($field->formType) {
                 case 'selectValues':
-                    $converted[] = $this->convertSelect($field);
+                    $converted[] = $this->_convertSelect($field);
                     break;
                 case 'multipleSelectValues':
-                    $entry         = $this->convertSelect($field);
+                    $entry         = $this->_convertSelect($field);
                     $entry['type'] = 'multipleselectbox';
                     $converted[]   = $entry;
                     break;
@@ -265,7 +265,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                         $entry = $this->_convertStandard($field);
                     } else {
                         // Yes
-                        $entry = $this->convertSelect($field);
+                        $entry = $this->_convertSelect($field);
                     }
                     $entry['type']     = 'display';
                     $entry['readOnly'] = true;
@@ -288,12 +288,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     /**
      * Convert to a a selectbox
      *
-     * @param Phprojekt_ModelInformation_Interface|Phprojekt_DatabaseManager_Field $field     Class with data of the field
-     * @param boolean                                                              $translate Translate the label or not
+     * @param Phprojekt_ModelInformation_Interface $field Class with data of the field
      *
      * @return array
      */
-    public function convertSelect($field, $translate = true)
+    protected function _convertSelect(Phprojekt_ModelInformation_Interface $field)
     {
         $converted          = $this->_convertStandard($field);
         $converted['range'] = array();
@@ -306,9 +305,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $key = (int) $key;
                 }
                 $value = trim($value);
-                $value = ($translate) ? Phprojekt::getInstance()->translate($value) : $value;
-                $converted['range'][] = array('id'   => $key,
-                                              'name' => $value);
+                $converted['range'][] = array('id'           => $key,
+                                              'name'         => Phprojekt::getInstance()->translate($value),
+                                              'originalName' => $value);
             }
         } else {
             $converted['range'] = $this->getRangeFromModel($field);
@@ -321,24 +320,25 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * Fields from the database manager have a complete different
      * type than those that should be propagated into the PHProjekt core
      *
-     * @param Phprojekt_ModelInformation_Interface|Phprojekt_DatabaseManager_Field $field Class with data of the field
+     * @param Phprojekt_ModelInformation_Interface $field Class with data of the field
      *
      * @return array
      */
-    protected function _convertStandard($field)
+    protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
     {
         $converted = array();
         $key       = $index = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field->tableField);
 
-        $converted['key']      = $key;
-        $converted['label']    = Phprojekt::getInstance()->translate($field->formLabel);
-        $converted['type']     = $field->formType;
-        $converted['hint']     = Phprojekt::getInstance()->getTooltip($key);
-        $converted['order']    = 0;
-        $converted['position'] = (int) $field->formPosition;
-        $converted['fieldset'] = '';
-        $converted['range']    = array('id'   => $field->formRange,
-                                       'name' => $field->formRange);
+        $converted['key']           = $key;
+        $converted['label']         = Phprojekt::getInstance()->translate($field->formLabel);
+        $converted['originalLabel'] = $field->formLabel;
+        $converted['type']          = $field->formType;
+        $converted['hint']          = Phprojekt::getInstance()->getTooltip($key);
+        $converted['listPosition']  = (int) $field->listPosition;
+        $converted['formPosition']  = (int) $field->formPosition;
+        $converted['fieldset']      = '';
+        $converted['range']         = array('id'   => $field->formRange,
+                                            'name' => $field->formRange);
         $converted['required'] = (boolean) $field->isRequired;
         $converted['readOnly'] = false;
         $converted['tab']      = $field->formTab;
@@ -414,11 +414,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     /**
      * Gets the data range for a select using a model
      *
-     * @param Phprojekt_ModelInformation_Interface|Phprojekt_DatabaseManager_Field $field Class with data of the field
+     * @param Phprojekt_ModelInformation_Interface $field Class with data of the field
      *
      * @return an array with key and value to be used as datarange
      */
-    public function getRangeFromModel($field)
+    public function getRangeFromModel(Phprojekt_ModelInformation_Interface $field)
     {
         $options                    = array();
         list($module, $key, $value) = explode('#', $field->formRange);

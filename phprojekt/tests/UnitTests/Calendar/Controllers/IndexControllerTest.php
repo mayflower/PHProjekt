@@ -34,15 +34,16 @@ require_once 'PHPUnit/Framework.php';
  */
 class Calendar_IndexController_Test extends FrontInit
 {
-    private $_listingExpectedString = '{"key":"title","label":"Title","type":"text","hint":"","order":0,"position":1';
-
-    private $_model = null;
+    private $_listingExpectedString = null;
+    private $_model                 = null;
 
     /**
      * setUp method for PHPUnit
      */
     public function setUp()
     {
+        $this->_listingExpectedString = '{"key":"title","label":"Title","originalLabel":"Title","type":"text",'
+            . '"hint":"","listPosition":1,"formPosition":1';
         $this->_model = new Calendar_Models_Calendar();
     }
 
@@ -888,7 +889,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"Title","Place","Notes","Start","End","Visibility","Status","Participant",'
-            . '"Rrule"' . "\n"
+            . '"Recurrence rule"' . "\n"
             . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","Public","Accepted",'
             . '"1","FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n"
             . '"Multiple5","Buenos Aires","test note","2009-06-14 08:00:00","2009-06-14 10:00:00","Public","Pending",'
@@ -906,7 +907,7 @@ class Calendar_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"Title","Place","Notes","Start","End","Visibility","Status","Participant",'
-            . '"Rrule"' . "\n"
+            . '"Recurrence rule"' . "\n"
             . '"Multiple5","Buenos Aires","test note","2009-06-11 08:00:00","2009-06-11 10:00:00","Public","Accepted",'
             . '"1","FREQ=DAILY;UNTIL=20090614T040000Z;INTERVAL=1;BYDAY="' . "\n"
             . '"Multiple5","Buenos Aires","test note","2009-06-12 08:00:00","2009-06-12 10:00:00","Public","Accepted",'
