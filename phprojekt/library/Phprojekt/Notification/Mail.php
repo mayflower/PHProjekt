@@ -115,22 +115,27 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
      *
      * @return void
      */
-    public function setCustomBody($params, $fields, $changes = null)
+    public function setCustomBody($params, $fields, $changes, $lang)
     {
-        $view             = Phprojekt::getInstance()->getView();
+        $phproject        = Phprojekt::getInstance();
+        $view             = $phproject->getView();
         $view->mainFields = $fields;
 
         if ($changes !== null) {
             $view->changes = $changes;
         }
 
-        $view->title = Phprojekt::getInstance()->translate('A ')
-            . Phprojekt::getInstance()->translate($params['moduleTable'])
-            . Phprojekt::getInstance()->translate(' item has been ')
-            . Phprojekt::getInstance()->translate($params['actionLabel']);
+        $view->title = $phproject->translate('A', $lang) . " "
+            . '"' . $phproject->translate($params['moduleTable'], $lang) . '" '
+            . $phproject->translate('item has been', $lang) . " "
+            . $phproject->translate($params['actionLabel'], $lang);
 
-        $view->url       = $params['url'];
-        $view->translate = Phprojekt::getInstance()->getTranslate();
+        $view->currentData = $phproject->translate('Current data', $lang);
+        $view->changesDone = $phproject->translate('Changes done', $lang);
+        $view->field       = $phproject->translate('Field', $lang);
+        $view->oldValue    = $phproject->translate('Old value', $lang);
+        $view->copyright   = $phproject->translate('PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH', $lang);
+        $view->url         = $params['url'];
 
         if ($this->_bodyMode == self::MODE_TEXT) {
             $view->endOfLine = $this->getEndOfLine();

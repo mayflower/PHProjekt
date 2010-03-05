@@ -34,6 +34,145 @@
 class Calendar_Models_Notification extends Phprojekt_Notification
 {
     /**
+     * Returns the rrule in descriptive mode
+     *
+     * @param string      $rrule String with the recurrence 'rrule' field, as it is saved in the DB.
+     * @param Zend_Locale $lang Locale for use in translations
+     *
+     * @return array
+     */
+    public function getRruleDescriptive($rrule, $lang)
+    {
+        $tmp1     = explode(";", $rrule);
+        $tmp2     = explode("=", $tmp1[0]);
+        $freq     = $tmp2[1];
+        $tmp2     = explode("=", $tmp1[1]);
+        $until    = $tmp2[1];
+        $tmp2     = explode("=", $tmp1[2]);
+        $interval = (int) $tmp2[1];
+        $tmp2     = explode("=", $tmp1[3]);
+        $byday    = $tmp2[1];
+        $freq     = ucfirst(strtolower($freq));
+
+        $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Repeats', $lang),
+                               'value' => Phprojekt::getInstance()->translate($freq));
+        $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Interval', $lang),
+                               'value' => $interval);
+
+        if (false === empty($until)) {
+            $year      = substr($until, 0, 4);
+            $month     = substr($until, 4, 2);
+            $dayNum    = substr($until, 6, 2);
+            $untilDate = mktime(0, 0, 0, $month, $dayNum, $year);
+            $dayDesc   = date("D", $untilDate);
+            $monthDesc = date("M", $untilDate);
+            $untilDesc = $dayDesc . " " . $monthDesc . " " . $dayNum . " " . $year;
+
+            $rruleFields[] = array('label' => Phprojekt::getInstance()->translate('Until', $lang),
+                                   'value' => $this->translateDate($untilDesc));
+        }
+
+        if (false === empty($byday)) {
+            switch ($byday) {
+                case 'MO':
+                    $weekDay = "Monday";
+                    break;
+                case 'TU':
+                    $weekDay = "Tuesday";
+                    break;
+                case 'WE':
+                    $weekDay = "Wednesday";
+                    break;
+                case 'TH':
+                    $weekDay = "Thursday";
+                    break;
+                case 'FR':
+                    $weekDay = "Friday";
+                    break;
+                case 'SA':
+                    $weekDay = "Saturday";
+                    break;
+                case 'SU':
+                    $weekDay = "Sunday";
+                    break;
+
+                $rruleFields[] = array('label' => 'Weekdays',
+                                       'value' => Phprojekt::getInstance()->translate($weekDay, $lang));
+            }
+        }
+
+        return $rruleFields;
+    }
+
+    /**
+     * Converts the date format and language, from an english '2009-04-25' or 'Sat Apr 25 2009' to
+     * 'Wednesday - March 24 2009' in the according language.
+     *
+     * @param string $date String with the original date in english
+     *
+     * @return string
+     */
+    public function translateDate($date)
+    {
+        if (strlen($date) == 10) {
+            // '2009-04-25' style
+            $year  = (int) substr($date, 0, 4);
+            $month = (int) substr($date, 5, 2);
+            $day   = (int) substr($date, 8, 2);
+        } else {
+            // 'Sat Apr 25 2009' style
+            $monthShort = substr($date, 4, 3);
+            $day        = (int) substr($date, 8, 2);
+            $year       = (int) substr($date, 11, 4);
+
+            switch ($monthShort) {
+                case 'Jan':
+                    $month = 1;
+                    break;
+                case 'Feb':
+                    $month = 2;
+                    break;
+                case 'Mar':
+                    $month = 3;
+                    break;
+                case 'Apr':
+                    $month = 4;
+                    break;
+                case 'May':
+                    $month = 5;
+                    break;
+                case 'Jun':
+                    $month = 6;
+                    break;
+                case 'Jul':
+                    $month = 7;
+                    break;
+                case 'Ago':
+                    $month = 8;
+                    break;
+                case 'Sep':
+                    $month = 9;
+                    break;
+                case 'Oct':
+                    $month = 10;
+                    break;
+                case 'Nov':
+                    $month = 11;
+                    break;
+                case 'Dec':
+                    $month = 12;
+                    break;
+            }
+        }
+        $dateUnix   = mktime(0, 0, 0, $month, $day, $year);
+        $dayDesc    = Phprojekt::getInstance()->translate(date("l", $dateUnix));
+        $monthDesc  = Phprojekt::getInstance()->translate(date("F", $dateUnix));
+        $dateString = $dayDesc . " - " . $monthDesc . " " . $day . " " . $year;
+
+        return $dateString;
+    }
+
+    /**
      * Returns the recipients for this Calendar item
      *
      * @return array
@@ -46,22 +185,24 @@ class Calendar_Models_Notification extends Phprojekt_Notification
     /**
      * Returns the fields part of the Notification body using a custom criterion for the Calendar module.
      *
+     * @param Zend_Locale $lang Locale for use in translations
+     *
      * @return array
      */
-    public function getBodyFields()
+    public function getBodyFields($lang)
     {
         $bodyFields   = array();
-        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Title'),
+        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Title', $lang),
                               'value' => $this->_model->title);
-        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Place'),
+        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Place', $lang),
                               'value' => $this->_model->place);
-        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Notes'),
+        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Notes', $lang),
                               'value' => $this->_model->notes);
-        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Start'),
-                              'value' => $this->_model->translateDate($this->_model->startDateNotif) . ' '
+        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Start', $lang),
+                              'value' => $this->translateDate($this->_model->startDateNotif) . ' '
                               . substr($this->_model->startDatetime, 11, 5));
-        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('End'),
-                              'value' => $this->_model->translateDate($this->_model->endDateNotif)) . ' '
+        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('End', $lang),
+                              'value' => $this->translateDate($this->_model->endDateNotif)) . ' '
                               . substr($this->_model->startDatetime, 11, 5);
 
         $phpUser           = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
@@ -84,12 +225,12 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                 $participantsValue .= ", ";
             }
         }
-        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Participants'),
+        $bodyFields[] = array('label' => Phprojekt::getInstance()->translate('Participants', $lang),
                               'value' => $participantsValue);
 
         if ($this->_model->rrule !== null) {
             $bodyFields = array_merge($this->_bodyFields,
-                $this->_model->getRruleDescriptive($this->_model->rrule));
+                $this->getRruleDescriptive($this->_model->rrule, $lang));
         }
 
         return $bodyFields;
@@ -100,14 +241,15 @@ class Calendar_Models_Notification extends Phprojekt_Notification
      * and parses, translates and orders it using a custom criterion for the Calendar Notification.
      * Then returns the final array.
      *
-     * @param boolean $translate Translate the fields or not
+     * @param Zend_Locale $lang Locale for use in translations
+     * @param boolean     $translate Translate the fields or not
      *
      * @return array
      */
-    public function getBodyChanges($translate = true)
+    public function getBodyChanges($lang = null, $translate = true)
     {
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
-        $fieldDefinition = $this->_model->getInformation()->getFieldDefinition($order);
+        $fieldDefinition = $this->_model->getInformation()->getShortFieldDefinition($order);
         $bodyChanges     = $this->_lastHistory;
 
         // Iterate in every change done
@@ -116,8 +258,11 @@ class Calendar_Models_Notification extends Phprojekt_Notification
             foreach ($fieldDefinition as $field) {
                 // Find the field definition for the field that has been modified
                 if ($field['key'] == $bodyChanges[$i]['field']) {
-                    $bodyChanges[$i]['label'] = $field['label'];
+                    $dbmKey    = Phprojekt_ActiveRecord_Abstract::convertVarToSql($field['key']);
+                    $dbmField  = new Phprojekt_DatabaseManager_Field($this->_model->getInformation(), $dbmKey);
+
                     $bodyChanges[$i]['field'] = $field['key'];
+                    $bodyChanges[$i]['label'] = Phprojekt::getInstance()->translate($dbmField->formLabel, $lang);
                     $bodyChanges[$i]['type']  = $field['type'];
                 }
             }
@@ -127,12 +272,12 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                 $oldRruleEmpty = false;
                 $newRruleEmpty = false;
                 if (false === empty($bodyChanges[$i]['oldValue'])) {
-                    $oldRrule = $this->_model->getRruleDescriptive($bodyChanges[$i]['oldValue']);
+                    $oldRrule = $this->getRruleDescriptive($bodyChanges[$i]['oldValue'], $lang);
                 } else {
                     $oldRruleEmpty = true;
                 }
                 if (false === empty($bodyChanges[$i]['newValue'])) {
-                    $newRrule = $this->_model->getRruleDescriptive($bodyChanges[$i]['newValue']);
+                    $newRrule = $this->getRruleDescriptive($bodyChanges[$i]['newValue'], $lang);
                 } else {
                     $newRruleEmpty = true;
                 }
@@ -140,9 +285,11 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                 // FIELDS: Repeats, Interval and Until
                 for ($k = 0; $k < 3; $k++) {
                     if (!$oldRruleEmpty) {
-                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " . $oldRrule[$k]['label'];
+                        $fieldName = Phprojekt::getInstance()->translate('Recurrence', $lang)
+                            . " - " . $oldRrule[$k]['label'];
                     } else {
-                        $fieldName = Phprojekt::getInstance()->translate('Recurrence') . " - " . $newRrule[$k]['label'];
+                        $fieldName = Phprojekt::getInstance()->translate('Recurrence', $lang)
+                            . " - " . $newRrule[$k]['label'];
                     }
                     if (!$oldRruleEmpty) {
                         $fieldOldValue = $oldRrule[$k]['value'];
@@ -178,14 +325,14 @@ class Calendar_Models_Notification extends Phprojekt_Notification
                 }
                 if ($oldWeekDayExists || $newWeekDayExists) {
                     if (!$oldRruleEmpty) {
-                        $fieldName = Phprojekt::getInstance()->translate('Recurrence')
+                        $fieldName = Phprojekt::getInstance()->translate('Recurrence', $lang)
                             . " - " . $oldRrule[3]['label'];
                         $fieldOldValue = $oldRrule[3]['value'];
                     } else {
                         $fieldOldValue = "";
                     }
                     if (!$newRruleEmpty) {
-                        $fieldName = Phprojekt::getInstance()->translate('Recurrence')
+                        $fieldName = Phprojekt::getInstance()->translate('Recurrence', $lang)
                             . " - " . $newRrule[3]['label'];
                         $fieldNewValue = $newRrule[3]['value'];
                     } else {
@@ -203,13 +350,13 @@ class Calendar_Models_Notification extends Phprojekt_Notification
             } else if ($bodyChanges[$i]['field'] == 'startDatetime') {
                 // Doing the date translation only if something has changed
                 if (false === empty($bodyChanges[$i]['oldValue'])) {
-                    $bodyChanges[$i]['oldValue'] = $this->_model->translateDate(
-                        $this->_model->getDate($bodyChanges[$i]['oldValue'])) . ' '
-                        . substr($bodyChanges[$i]['oldValue'], 11, 5);
+                    $bodyChanges[$i]['oldValue'] = $this->translateDate(
+                        $this->_model->getDate($bodyChanges[$i]['oldValue']))
+                        . ' ' . substr($bodyChanges[$i]['oldValue'], 11, 5);
                 }
-                $bodyChanges[$i]['newValue'] = $this->_model->translateDate(
-                    $this->_model->getDate($bodyChanges[$i]['newValue'])) . ' '
-                    . substr($bodyChanges[$i]['newValue'], 11, 5);
+                $bodyChanges[$i]['newValue'] = $this->translateDate(
+                    $this->_model->getDate($bodyChanges[$i]['newValue']))
+                    . ' ' . substr($bodyChanges[$i]['newValue'], 11, 5);
             }
         }
 

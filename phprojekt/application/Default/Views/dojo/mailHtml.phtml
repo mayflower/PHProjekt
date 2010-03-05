@@ -3,12 +3,12 @@
 <br />
 <a href="<?php echo $this->url?>"><?php echo $this->url?></a><br />
 <br />
-<b><?php echo $this->translate->translate('Current data'); ?>:</b><br />
+<b><?php echo $this->currentData; ?>:</b><br />
 <br />
 
 <table>
 <?php
-//All the fields of the item
+// All the fields of the item
 foreach ($this->mainFields as $field)
 { ?><tr>
         <td><?php echo $field['label'] ?></td>
@@ -21,20 +21,20 @@ foreach ($this->mainFields as $field)
 <br />
 
 <?php
-//If it is a modification, then the changes are showed
+// If it is a modification, then the changes are showed
 if (!empty($this->changes))
 { ?>
-    <b><?php echo $this->translate->translate('Changes done'); ?>:</b><br />
+    <b><?php echo $this->changesDone; ?>:</b><br />
     <br />
     <table>
         <tr>
-            <th style="color: #888888;" width="120"><?php echo $this->translate->translate('Field'); ?></th>
-            <th style="color: #888888;" width="120"><?php echo $this->translate->translate('Old value'); ?></th>
+            <th style="color: #888888;" width="120"><?php echo $this->field; ?></th>
+            <th style="color: #888888;" width="120"><?php echo $this->oldValue; ?></th>
         </tr>
     <?php
     foreach ($this->changes as $change) { ?>
         <tr>
-            <td><i><?php echo $change['field'] ?></i></td>
+            <td><i><?php echo $change['label'] ?></i></td>
             <td><i><?php echo $change['oldValue'] ?></i></td>
         </tr>
     <?php } ?>
@@ -42,5 +42,5 @@ if (!empty($this->changes))
 <?php } ?>
 <br />
 <br />
-<?php echo $this->translate->translate('PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH'); ?><br />
+<?php echo $this->copyright; ?><br />
 </div>

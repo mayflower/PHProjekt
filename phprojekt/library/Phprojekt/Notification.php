@@ -104,21 +104,41 @@ class Phprojekt_Notification
                 }
                 break;
         }
-        $adapter = new $adapterName($params);
-        $adapter->setCustomFrom($this->getFrom());
+
+        $from       = $this->getFrom();
         $recipients = $this->getTo();
+        $subject    = $this->getSubject();
+        $bodyParams = $this->getBodyParams();
+
         if (!empty($recipients)) {
-            $adapter->setTo($recipients);
-            if ($showSubject) {
-                $adapter->setCustomSubject($this->getSubject());
+            $recipientsPerLang = array();
+            $setting           = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+            foreach ($recipients as $recipient) {
+                $lang = $setting->getSetting('language', (int) $recipient);
+                if (null === $lang) {
+                    $lang = Phprojekt::getInstance()->getConfig()->language;
+                }
+                $recipientsPerLang[$lang][] = $recipient;
             }
-            if ($this->_lastHistory[0]['action'] == self::LAST_ACTION_EDIT) {
-                $changes = $this->getBodyChanges();
-                $adapter->setCustomBody($this->getBodyParams(), $this->getBodyFields(), $changes);
-            } else {
-                $adapter->setCustomBody($this->getBodyParams(), $this->getBodyFields());
+
+            // Send one mail per language
+            foreach ($recipientsPerLang as $lang => $recipients) {
+                $bodyFields = $this->getBodyFields($lang);
+                if ($this->_lastHistory[0]['action'] == self::LAST_ACTION_EDIT) {
+                    $changes = $this->getBodyChanges($lang);
+                } else {
+                    $changes = null;
+                }
+
+                $adapter = new $adapterName($params);
+                $adapter->setCustomFrom($from);
+                $adapter->setTo($recipients);
+                if ($showSubject) {
+                    $adapter->setCustomSubject($subject);
+                }
+                $adapter->setCustomBody($bodyParams, $bodyFields, $changes, $lang);
+                $adapter->sendNotification();
             }
-            $adapter->sendNotification();
         }
     }
 
@@ -190,6 +210,7 @@ class Phprojekt_Notification
             case self::LAST_ACTION_EDIT:
             default:
                 $bodyParams['actionLabel'] = "modified";
+                break;
         }
 
         // Module
@@ -210,18 +231,44 @@ class Phprojekt_Notification
     /**
      * Returns the fields part of the Notification body
      *
+     * @param Zend_Locale $lang Locale for use in translations
+     *
      * @return array
      */
-    public function getBodyFields()
+    public function getBodyFields($lang)
     {
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
-        $fieldDefinition = $this->_model->getInformation()->getFieldDefinition($order);
+        $fieldDefinition = $this->_model->getInformation()->getShortFieldDefinition($order);
         $bodyFields      = array();
 
         foreach ($fieldDefinition as $key => $field) {
-            $value        = Phprojekt_Converter_Text::convert($this->_model, $field);
-            $bodyFields[] = array('label' => $field['label'],
-                                  'field' => $field['key'],
+            $dbmKey    = Phprojekt_ActiveRecord_Abstract::convertVarToSql($field['key']);
+            $dbmField  = new Phprojekt_DatabaseManager_Field($this->_model->getInformation(), $dbmKey);
+
+            switch ($field['type']) {
+                case 'selectbox':
+                case 'multipleselectbox':
+                case 'display':
+                    $checkRange = $dbmField->formRange;
+                    if ($field['type'] == 'display' && (null === $checkRange || empty($checkRange))) {
+                        $field['range'] = array();
+                        $value          = Phprojekt_Converter_Text::convert($this->_model, $field);
+                    } else {
+                        $fieldRange     = $this->_model->getInformation()->convertSelect($dbmField, false);
+                        $field['range'] = $fieldRange['range'];
+                        $value          = Phprojekt_Converter_Text::convert($this->_model, $field);
+                        if (strpos($dbmField->formRange, "|") > 0) {
+                            $value = Phprojekt::getInstance()->translate($value, $lang);
+                        }
+                    }
+                    break;
+                default:
+                    $value = Phprojekt_Converter_Text::convert($this->_model, $field);
+                    break;
+            }
+
+            $bodyFields[] = array('field' => $field['key'],
+                                  'label' => Phprojekt::getInstance()->translate($dbmField->formLabel, $lang),
                                   'value' => $value);
         }
 
@@ -233,52 +280,62 @@ class Phprojekt_Notification
      * and checks for contents that have to be translated if the $translate option is true,
      * then returns the final array.
      *
-     * @param boolean $translate Translate the fields or not
+     * @param Zend_Locale $lang Locale for use in translations
+     * @param boolean     $translate Translate the fields or not
      *
      * @return array
      */
-    public function getBodyChanges($translate = true)
+    public function getBodyChanges($lang = null, $translate = true)
     {
         // The following algorithm loops inside $this->_lastHistory and prepares $bodyChanges while:
         // * Searches Integer values that should be converted into Strings and converts them
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
-        $fieldDefinition = $this->_model->getInformation()->getFieldDefinition($order);
+        $fieldDefinition = $this->_model->getInformation()->getShortFieldDefinition($order);
         $bodyChanges     = $this->_lastHistory;
 
         // Iterate in every change done
         for ($i = 0; $i < count($bodyChanges); $i++) {
             foreach ($fieldDefinition as $field) {
+                $field['key'] = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field['key']);
                 // Find the field definition for the field that has been modified
                 if ($field['key'] == $bodyChanges[$i]['field']) {
+                    $dbmKey    = Phprojekt_ActiveRecord_Abstract::convertVarToSql($field['key']);
+                    $dbmField  = new Phprojekt_DatabaseManager_Field($this->_model->getInformation(), $dbmKey);
 
-                    $bodyChanges[$i]['label'] = $field['label'];
                     $bodyChanges[$i]['field'] = $field['key'];
+                    $bodyChanges[$i]['label'] = Phprojekt::getInstance()->translate($dbmField->formLabel, $lang);
                     $bodyChanges[$i]['type']  = $field['type'];
 
-                    if ($translate) {
+                    if ($translate && in_array($field['type'], array('selectbox', 'display', 'multipleselectbox'))) {
                         // Is the field of a type that should be translated from an Id into a descriptive String?
-                        $convertToString = false;
-                        if ($field['type'] == 'selectbox') {
-                            $convertToString = true;
-                        } else if ($field['type'] == 'display' && is_array($field['range'])) {
-                            foreach ($field['range'] as $range) {
-                                if (is_array($range)) {
-                                    $convertToString = true;
-                                    break;
-                                }
-                            }
+                        $convertToString = true;
+
+                        $checkRange = $dbmField->formRange;
+                        if ($field['type'] == 'display' && (null === $checkRange || empty($checkRange))) {
+                            $convertToString = false;
                         }
 
                         if ($convertToString) {
                             // Yes, so translate it into the appropriate meaning
-                            foreach ($field['range'] as $range) {
+                            $fieldRange = $this->_model->getInformation()->convertSelect($dbmField, false);
+                            foreach ($fieldRange['range'] as $range) {
                                 // Try to replace oldValue Integer with the String
                                 if ($range['id'] == $bodyChanges[$i]['oldValue']) {
-                                    $bodyChanges[$i]['oldValue'] = trim($range['name']);
+                                    if (strpos($dbmField->formRange, "|") > 0) {
+                                        $value = Phprojekt::getInstance()->translate($range['name'], $lang);
+                                    } else {
+                                        $value = trim($range['name']);
+                                    }
+                                    $bodyChanges[$i]['oldValue'] = $value;
                                 }
                                 // Try to replace newValue Integer with the String
                                 if ($range['id'] == $bodyChanges[$i]['newValue']) {
-                                    $bodyChanges[$i]['newValue'] = trim($range['name']);
+                                    if (strpos($dbmField->formRange, "|") > 0) {
+                                        $value = Phprojekt::getInstance()->translate($range['name'], $lang);
+                                    } else {
+                                        $value = trim($range['name']);
+                                    }
+                                    $bodyChanges[$i]['newValue'] = $value;
                                 }
                             }
                         }
@@ -306,7 +363,7 @@ class Phprojekt_Notification
             $history            = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
             $this->_lastHistory = $history->getLastHistoryData($this->_model);
 
-            $bodyChanges = (false === empty($this->_controllProcess)) ? array() : $this->getBodyChanges(false);
+            $bodyChanges = (false === empty($this->_controllProcess)) ? array() : $this->getBodyChanges(null, false);
 
             // If no recipients were added, return immediately
             // allthough a check in FrontendMessage saveFrontendMessage is performed too,

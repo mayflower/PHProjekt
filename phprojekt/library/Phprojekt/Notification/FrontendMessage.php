@@ -68,7 +68,6 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
                         Phprojekt_Converter_Time::utcToUser($details['oldValue']));
                         $tmpDetails[$key]['newValue'] = date("H:i:s",
                         Phprojekt_Converter_Time::utcToUser($details['newValue']));
-
                     }
                 }
             }
