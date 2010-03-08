@@ -412,8 +412,8 @@ class Phprojekt
         // Start zend session to handle all session stuff
         try {
             Zend_Session::start();
-        } catch (Zend_Search_Exception $error) {
-            Zend_Session::destroy();
+        } catch (Zend_Session_Exception $error) {
+            Zend_Session::writeClose();
             Zend_Session::start();
             Zend_Session::regenerateId();
             error_log($error);

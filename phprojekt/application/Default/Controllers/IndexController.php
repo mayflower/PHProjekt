@@ -798,7 +798,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonGetFrontendMessageAction()
     {
         try {
-            Zend_Session::writeClose();
+            Zend_Session::writeClose(false);
         } catch (Exception $error) {
             Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->message);
         }
