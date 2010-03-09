@@ -147,19 +147,19 @@ dojo.declare("phpr.FrontendMessage", null, {
         switch (data.process) {
             case 'add':
                 template = "<br /><a href='" + phpr.webpath + "index.php#" + data.module + "," + data.projectId
-                    + "id," + data.itemId + "'><i>" + data.module + "</i>: <b>" + data.user + "</b> "
-                    + data.description + "<i>" + data.item + "</i>" + project + "<i><b>"
+                    + "id," + data.itemId + "'><i>" + phpr.nls.get(data.module, data.module) + "</i>: <b>"
+                    + data.user + "</b> " + data.description + " <i>" + data.item + "</i> " + project + " <i><b>"
                     + data.project +"</b></i>.</a><br />&nbsp;"
                 break;
             case 'delete':
-                template = "<br /><i>" + data.module + "</i>: <b>" + data.user + "</b> "
-                    + data.description + "<i>" + data.item + "</i>" + project + "<i><b>"
+                template = "<br /><i>" + phpr.nls.get(data.module, data.module) + "</i>: <b>" + data.user + "</b> "
+                    + data.description + " <i>" + data.item + "</i> " + project + " <i><b>"
                     + data.project +"</b></i>.<br />&nbsp;";
                 break;
             case 'edit':
                 template = "<br /><a href='" + phpr.webpath + "index.php#" + data.module + "," + data.projectId
-                    + "id," + data.itemId + "'><i>" + data.module + "</i>: <b>" + data.user + "</b> "
-                    + data.description + "<i>" + data.item + "</i>" + project + "<i><b>"
+                    + "id," + data.itemId + "'><i>" + phpr.nls.get(data.module, data.module) + "</i>: <b>"
+                    + data.user + "</b> " + data.description + " <i>" + data.item + "</i> " + project + " <i><b>"
                     + data.project +"</b></i>.</a><br />&nbsp;";
                 break;
             case 'login':

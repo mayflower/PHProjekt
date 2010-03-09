@@ -88,7 +88,7 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
                 $configClass = Phprojekt_Loader::getModelClassname($dir, 'Configuration');
                 if (Phprojekt_Loader::tryToLoadClass($configClass)) {
                     $results[] = array('name'  => $dir,
-                                       'label' => Phprojekt::getInstance()->translate($dir));
+                                       'label' => Phprojekt::getInstance()->translate($dir, null, $dir));
                 }
             }
         }

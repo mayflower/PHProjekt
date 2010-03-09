@@ -606,14 +606,14 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
             inputTxt  = '<select dojoType="phpr.FilteringSelect" autocomplete="false" invalidMessage="" >';
 
             if (selectType == 'project') {
-                inputTxt += '<option value="1">Example Project 1</option>';
-                inputTxt += '<option value="2">Example Project 2</option>';
+                inputTxt += '<option value="1">' + phpr.nls.get('Example Project 1') + '</option>';
+                inputTxt += '<option value="2">' + phpr.nls.get('Example Project 2') + '</option>';
             } else if (selectType == 'user') {
-                inputTxt += '<option value="1">Example User 1</option>';
-                inputTxt += '<option value="2">Example User 2</option>';
+                inputTxt += '<option value="1">' + phpr.nls.get('Example User 1') + '</option>';
+                inputTxt += '<option value="2">' + phpr.nls.get('Example User 2') + '</option>';
             } else if (selectType == 'contact') {
-                inputTxt += '<option value="1">Example Contact 1</option>';
-                inputTxt += '<option value="2">Example Contact 2</option>';
+                inputTxt += '<option value="1">' + phpr.nls.get('Example Contact 1') + '</option>';
+                inputTxt += '<option value="2">' + phpr.nls.get('Example Contact 2') + '</option>';
             } else {
                 if (!formRange) {
                     formRange = 'id1 # value1 | id2 # value2';
@@ -625,7 +625,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
                         if (values[0] && values[1]) {
                             formRangeOptions.push({
                                 'id':   values[0],
-                                'name': values[1]
+                                'name': phpr.nls.get(values[1], dijit.byId('name').value)
                         });
                     }
                 }
@@ -667,7 +667,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
             inputTxt = '<input type="file" class="file" />';
             break;
     }
-    labelTxt = '<label for="' + labelFor + '">' + formLabel + '</label>';
+    labelTxt = '<label for="' + labelFor + '">' + phpr.nls.get(formLabel, dijit.byId('name').value) + '</label>';
 
     html += '<table class="form"><col class="col1" /><col class="col2" /><col class="col3" />';
     html += '<tr><td class="label">';

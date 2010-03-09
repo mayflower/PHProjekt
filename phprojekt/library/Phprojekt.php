@@ -286,23 +286,25 @@ class Phprojekt
     /**
      * Translate a string using the current module
      *
-     * @param string             $message Message to translate
-     * @param string|Zend_Locale $locale  Locale/Language to set
+     * @param string             $message    Message to translate
+     * @param string|Zend_Locale $locale     Locale/Language to set
+     * @param string             $moduleName Module where search the string
      *
      * @return string
      */
-    public function translate($message, $locale = null)
+    public function translate($message, $locale = null, $moduleName = null)
     {
-        $translate  = Phprojekt::getInstance()->getTranslate($locale);
-        $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+        $translate = Phprojekt::getInstance()->getTranslate($locale);
+        if (null === $moduleName) {
+            $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+        }
 
-        // Fix for request to the core (Like History)
+        // Fix for request to the core
         if ($moduleName == 'Core') {
-            if (Zend_Controller_Front::getInstance()->getRequest()->getControllerName() == 'history') {
-                $paramModule = Zend_Controller_Front::getInstance()->getRequest()->getParam('moduleName', null);
-                if (null !== $paramModule) {
-                    $moduleName = $paramModule;
-                }
+            $paramModule = Zend_Controller_Front::getInstance()->getRequest()->getParam('moduleName', null);
+            // Use a $moduleName param if is not a system Setting or Configuration
+            if (null !== $paramModule && !in_array($paramModule, array('General', 'User', 'Notification'))) {
+                $moduleName = $paramModule;
             }
         }
 

@@ -98,7 +98,7 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
                 $settingClass = Phprojekt_Loader::getModelClassname($dir, 'Setting');
                 if (Phprojekt_Loader::tryToLoadClass($settingClass)) {
                     $results[] = array('name'  => $dir,
-                                       'label' => Phprojekt::getInstance()->translate($dir));
+                                       'label' => Phprojekt::getInstance()->translate($dir, null, $dir));
                 }
             }
         }

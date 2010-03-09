@@ -84,6 +84,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     protected $_modelInfo = array();
 
     /**
+     * The module name
+     *
+     * @var string
+     */
+    protected $_moduleName = null;
+
+    /**
      * Cache
      *
      * @var array
@@ -137,6 +144,20 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
+     * Get the module name of the current model
+     *
+     * @return string
+     */
+    protected function _getModuleName()
+    {
+        if (null === $this->_moduleName) {
+            $this->_moduleName = $this->getModel()->getModelName();
+        }
+
+        return $this->_moduleName;
+    }
+
+    /**
      * Get all the fields from the databaseManager
      * And collect all the values
      *
@@ -161,7 +182,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $result = $this->_dbFields[$order];
         } else {
             if (null !== $this->_model) {
-                $table = $this->_model->getModelName();
+                $table = $this->_getModuleName();
 
                 if (in_array($order, $this->_mapping)) {
                     $sqlString = 'table_name = ? AND ' . $order . ' > 0';
@@ -190,7 +211,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     public function find()
     {
         $fieldname = func_get_arg(0);
-        $table     = $this->_model->getModelName();
+        $table     = $this->_getModuleName();
 
         return parent::fetchRow($this->_db->quoteInto('table_name = ?', $table)
             . ' AND ' . $this->_db->quoteInto('table_field = ?', $fieldname));
@@ -294,6 +315,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected function _convertSelect(Phprojekt_ModelInformation_Interface $field)
     {
+        $module             = $this->_getModuleName();
         $converted          = $this->_convertStandard($field);
         $converted['range'] = array();
         $converted['type']  = 'selectbox';
@@ -305,8 +327,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                     $key = (int) $key;
                 }
                 $value = trim($value);
+                $name  = Phprojekt::getInstance()->translate($value, null, $module);
                 $converted['range'][] = array('id'           => $key,
-                                              'name'         => Phprojekt::getInstance()->translate($value),
+                                              'name'         => $name,
                                               'originalName' => $value);
             }
         } else {
@@ -328,9 +351,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $converted = array();
         $key       = $index = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field->tableField);
+        $module    = $this->_getModuleName();
 
         $converted['key']           = $key;
-        $converted['label']         = Phprojekt::getInstance()->translate($field->formLabel);
+        $converted['label']         = Phprojekt::getInstance()->translate($field->formLabel, null, $module);
         $converted['originalLabel'] = $field->formLabel;
         $converted['type']          = $field->formType;
         $converted['hint']          = Phprojekt::getInstance()->getTooltip($key);
@@ -642,7 +666,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 'field'   => 'Module Designer',
                 'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                 'message' => Phprojekt::getInstance()->translate('The module must have at least one field with the '
-                    . ' list position greater than 0')));
+                    . 'list position greater than 0')));
         }
 
         return $valid;
@@ -864,7 +888,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     public function deleteModule()
     {
-        $table  = $this->_model->getModelName();
+        $table  = $this->_getModuleName();
         $where  = $this->getAdapter()->quoteInto('table_name = ?', $table);
         $result = $this->fetchAll($where);
 

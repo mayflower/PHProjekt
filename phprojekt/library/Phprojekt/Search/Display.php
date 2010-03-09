@@ -78,13 +78,15 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
                 $where = sprintf('module_id = %d AND item_id IN (%s)', (int) $moduleId, implode(', ', $ids));
 
                 $tmpResult   = $this->fetchAll($where)->toArray();
-                $moduleLabel = Phprojekt::getInstance()->translate(Phprojekt_Module::getModuleLabel($moduleId));
+                $moduleName  = Phprojekt_Module::getModuleName($moduleId);
+                $moduleLabel = Phprojekt::getInstance()->translate(Phprojekt_Module::getModuleLabel($moduleId), null,
+                    $moduleName);
 
                 foreach ($tmpResult as $result) {
                     $index           = $moduleId . '-' . $result['item_id'];
                     $results[$index] = array('id'            => (int) $result['item_id'],
                                              'moduleId'      => (int) $moduleId,
-                                             'moduleName'    => Phprojekt_Module::getModuleName($moduleId),
+                                             'moduleName'    => $moduleName,
                                              'moduleLabel'   => $moduleLabel,
                                              'firstDisplay'  => $result['first_display'],
                                              'secondDisplay' => $result['second_display'],

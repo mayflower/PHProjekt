@@ -707,12 +707,12 @@ dojo.declare("phpr.translator", null, {
         // Current module
         } else if (this._strings[phpr.module] && this._strings[phpr.module][string]) {
             returnValue = this._strings[phpr.module][string];
-        // Default module
-        } else if (this._strings['Default'] && this._strings['Default'][string]) {
-            returnValue = this._strings['Default'][string];
         // Core module
         } else if (this._strings['Core'] && this._strings['Core'][string]) {
             returnValue = this._strings['Core'][string];
+        // Default module
+        } else if (this._strings['Default'] && this._strings['Default'][string]) {
+            returnValue = this._strings['Default'][string];
         } else {
             // Unstranslated string
             returnValue = string;

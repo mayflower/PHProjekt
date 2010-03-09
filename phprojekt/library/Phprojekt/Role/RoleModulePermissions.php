@@ -51,8 +51,9 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']    = $module->id;
             $modules['data'][$module->id]['name']  = $module->name;
-            $modules['data'][$module->id]['label'] = Phprojekt::getInstance()->translate($module->label);
-            $modules['data'][$module->id]          = array_merge($modules['data'][$module->id],
+            $modules['data'][$module->id]['label'] = Phprojekt::getInstance()->translate($module->label, null,
+                $module->name);
+            $modules['data'][$module->id] = array_merge($modules['data'][$module->id],
                 Phprojekt_Acl::convertBitmaskToArray(0));
         }
 
