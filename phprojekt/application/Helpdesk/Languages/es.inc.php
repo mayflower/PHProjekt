@@ -42,7 +42,7 @@ $lang["Content Help"]["Incidencia"] = "<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Basic data"] = "DEFAULT";
-$lang["Content Help"]["Access"] = "DEFAULT";
-$lang["Content Help"]["Notification"] = "DEFAULT";
-$lang["Content Help"]["History"] = "DEFAULT";
+$lang["Content Help"]["Datos Básicos"] = "DEFAULT";
+$lang["Content Help"]["Accesos"] = "DEFAULT";
+$lang["Content Help"]["Notificación"] = "DEFAULT";
+$lang["Content Help"]["Historial"] = "DEFAULT";
