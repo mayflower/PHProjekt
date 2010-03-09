@@ -41,7 +41,7 @@ class Phprojekt_Converter_CsvTest extends PHPUnit_Framework_TestCase
      */
     public function testConvert()
     {
-        $convertedFields = '"Title","Start Date","End Date","Priority","Status","Percentage Completed"';
+        $convertedFields = '"Title","Start date","End date","Priority","Status","Complete percent"';
         $convertedValues = '"Invisible Root","","","","Offered","0.00"';
         $object          = Phprojekt_Loader::getModel('Project', 'Project');
         $records         = $object->fetchAll();

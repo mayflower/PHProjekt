@@ -198,6 +198,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     translatedText = phpr.nls.get("Disable Frontend Messages");
                     dijit.byId('disableFrontendMessage').attr('label', translatedText);
 
+                    translatedText = phpr.nls.get("Tags");
+                    dijit.byId('tagsbox').titleNode.innerHTML = translatedText;
+
                     // Get global modules
                     phpr.DataStore.addStore({url: phpr.globalModuleUrl});
                     phpr.DataStore.requestData({

@@ -80,8 +80,8 @@ class Phprojekt_Model_Validate
                                 $valid = false;
                                 $this->error->addError(array(
                                     'field'   => $varname,
-                                    'label'   => Phprojekt::getInstance()->translate($field['label']),
-                                    'message' => Phprojekt::getInstance()->translate($error)));
+                                    'label'   => $field['label'],
+                                    'message' => $error));
                                 break;
                             }
                         }
@@ -92,7 +92,7 @@ class Phprojekt_Model_Validate
                                 $valid = false;
                                 $this->error->addError(array(
                                     'field'   => $varname,
-                                    'label'   => Phprojekt::getInstance()->translate($field['label']),
+                                    'label'   => $field['label'],
                                     'message' => Phprojekt::getInstance()->translate('Maximum length exceeded for '
                                         . 'field')));
                                 break;
@@ -113,7 +113,7 @@ class Phprojekt_Model_Validate
                                 $valid = false;
                                 $this->error->addError(array(
                                     'field'   => $varname,
-                                    'label'   => Phprojekt::getInstance()->translate($field['label']),
+                                    'label'   => $field['label'],
                                     'message' => Phprojekt::getInstance()->translate('Value out of range')));
                                 break;
                             }
@@ -122,7 +122,7 @@ class Phprojekt_Model_Validate
                                 $valid = false;
                                 $this->error->addError(array(
                                     'field'   => $varname,
-                                    'label'   => Phprojekt::getInstance()->translate($field['label']),
+                                    'label'   => $field['label'],
                                     'message' => Phprojekt::getInstance()->translate('Value out of range')));
                                 break;
                             }
@@ -134,7 +134,7 @@ class Phprojekt_Model_Validate
                             $valid = false;
                             $this->error->addError(array(
                                 'field'   => $varname,
-                                'label'   => Phprojekt::getInstance()->translate($field['label']),
+                                'label'   => $field['label'],
                                 'message' => Phprojekt::getInstance()->translate('Invalid Format')));
                         }
                         break;
@@ -150,8 +150,8 @@ class Phprojekt_Model_Validate
                             $valid = false;
                             $this->error->addError(array(
                                 'field'   => $varname,
-                                'label'   => Phprojekt::getInstance()->translate($field['label']),
-                                'message' => Phprojekt::getInstance()->translate($error)));
+                                'label'   => $field['label'],
+                                'message' => $error));
                         }
                     }
                 }
@@ -215,7 +215,7 @@ class Phprojekt_Model_Validate
     {
         $error = null;
         if (empty($value)) {
-            $error = 'Is a required field';
+            $error = Phprojekt::getInstance()->translate('Is a required field');
         }
 
         return $error;

@@ -122,7 +122,6 @@ class Core_SettingController extends Core_IndexController
         $message = $setting->validateSettings($this->getRequest()->getParams());
 
         if (!empty($message)) {
-            $message = Phprojekt::getInstance()->translate($message);
             $type = "error";
         } else {
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);

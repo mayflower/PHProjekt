@@ -179,9 +179,8 @@ class Core_UserController extends Core_IndexController
         $message = $setting->validateSettings($this->getRequest()->getParams());
 
         if (!empty($message)) {
-            $message = Phprojekt::getInstance()->translate($message);
-            $type    = "error";
-            $id      = 0;
+            $type = "error";
+            $id   = 0;
         } else {
             if (empty($id)) {
                 $model   = $this->getModelObject();

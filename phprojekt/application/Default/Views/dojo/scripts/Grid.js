@@ -529,7 +529,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         //    Render filter Button
         if (meta.length > 0 && this._filterButton === null) {
             var params = {
-                label:     phpr.nls.get('Filter'),
+                label:     phpr.nls.get('Filters'),
                 showLabel: true,
                 baseClass: "positive",
                 iconClass: "filter",

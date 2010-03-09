@@ -93,7 +93,7 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
         foreach ($this->_timeZoneRange as $key => $value) {
             $range[] = $this->getRangeValues($key, $value);
         }
-        $this->fillField('timeZone', 'Time Zone', 'selectbox', 0, 6, array(
+        $this->fillField('timeZone', 'Time zone', 'selectbox', 0, 6, array(
             'range'    => $range,
             'required' => true,
             'default'  => '000'));
@@ -130,7 +130,7 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
 
         // TimeZone
         if (!array_key_exists($params['timeZone'], $this->_timeZoneRange)) {
-            $message = Phprojekt::getInstance()->translate('The Time Zone value is out of range');
+            $message = Phprojekt::getInstance()->translate('The Time zone value is out of range');
         }
 
         // Language

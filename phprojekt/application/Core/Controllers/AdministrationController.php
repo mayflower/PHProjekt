@@ -148,8 +148,7 @@ class Core_AdministrationController extends Core_IndexController
         $message = $configuration->validateConfigurations($this->getRequest()->getParams());
 
         if (!empty($message)) {
-            $message = Phprojekt::getInstance()->translate($message);
-            $type    = "error";
+            $type = "error";
         } else {
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
             $configuration->setConfigurations($this->getRequest()->getParams());

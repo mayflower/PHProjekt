@@ -55,8 +55,8 @@ class Phprojekt_User_Information extends Phprojekt_ModelInformation_Default
             'length'   => 255));
 
         // password
-        $this->fillField('username', 'Username', 'text', 0, 2, array(
-            'length'   => 50));
+        $this->fillField('password', 'Password', 'password', 0, 2, array(
+            'length' => 50));
 
         // firstname
         $this->fillField('firstname', 'First name', 'text', 2, 3, array(
@@ -89,7 +89,7 @@ class Phprojekt_User_Information extends Phprojekt_ModelInformation_Default
         foreach ($timeZoneRange as $key => $value) {
             $range[] = $this->getRangeValues($key, $value);
         }
-        $this->fillField('timeZone', 'Time Zone', 'selectbox', 0, 7, array(
+        $this->fillField('timeZone', 'Time zone', 'selectbox', 0, 7, array(
             'range'    => $range,
             'required' => true,
             'default'  => '000'));

@@ -68,7 +68,6 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             'lblRecipients': phpr.nls.get('Recipients'),
             'lblAdditional': phpr.nls.get('Additional Recipients'),
             'lblTooltip':    phpr.nls.get('Email addresses of unlisted recipients, comma-separated.'),
-            'lblComment':    phpr.nls.get('Comment'),
             'lblOptions':    phpr.nls.get('Options'),
             'lblAttachPdf':  phpr.nls.get('Include PDF attachment'),
             'lblSendMail':   phpr.nls.get('Send mail'),
