@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
@@ -25,7 +25,7 @@
  * This class manage the rights for each item per user.
  * Return and save the rights using the moduleId-itemId relation.
  *
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @author     Gustavo Solt <solt@mayflower.de>

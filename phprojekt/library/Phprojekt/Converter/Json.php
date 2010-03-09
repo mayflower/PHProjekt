@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    $Id$
  * @author     David Soria Parra <soria_parra@mayflower.de>
@@ -28,7 +28,7 @@
  * The Phprojekt_Convert_Json takes care that a apporpriate structure
  * is made from the given model.
  *
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license    LGPL 2.1 (See LICENSE file)
  * @author     David Soria PArra <soria_parra@mayflower.de>

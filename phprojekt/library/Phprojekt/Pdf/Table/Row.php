@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    $Id$
  * @author     Alesia Khizhko <alesia.khizhko@mayflower.de>
@@ -24,7 +24,7 @@
 /**
  * Phprojekt Class for creation of row in PDF table
  *
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)

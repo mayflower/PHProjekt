@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    $Id$
@@ -25,7 +25,7 @@
  * Meta information about the Calendar model. Acts as a layer over
  * database manager to filter readonly fields to yes if the event is from other participant
  *
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @license    LGPL 2.1 (See LICENSE file)
  * @version    Release: @package_version@

@@ -3,7 +3,7 @@
  * Escaper class
  *
  * @author     Peter Voringer <peter.voringer@mayflower.de>
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @version    $Id$
  * @license
  * @package    Cleaner
@@ -17,7 +17,7 @@
  *
  * Contains escaping methods
  *
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @version    Release: @package_version@
  * @license
  * @package    Cleaner

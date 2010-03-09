@@ -13,7 +13,7 @@
  *
  * @category   Htdocs
  * @package    Htdocs
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @version    $Id$
  * @license    LGPL 2.1 (See LICENSE file)
  * @author     David Soria Parra <david.soria_parra@mayflower.de>

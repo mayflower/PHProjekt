@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
@@ -25,7 +25,7 @@
  * This class recive some fields, the data and one class for check,
  * and will validate each field deppend on the type and other restrictions
  *
- * @copyright  Copyright (c) 2008 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @package    PHProjekt
  * @subpackage Core
  * @license    LGPL 2.1 (See LICENSE file)
