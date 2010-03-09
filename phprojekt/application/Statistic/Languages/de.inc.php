@@ -1,9 +1,9 @@
 <?php
 // System
-$lang["Statistic"] = "Statistic";
+$lang["Statistic"] = "Statistiken";
 
 // Fields
-$lang["Project"] = "Project";
+$lang["Project"] = "Projekt";
 $lang["Sum"] = "Sum";
 $lang["Total"] = "Total";
 

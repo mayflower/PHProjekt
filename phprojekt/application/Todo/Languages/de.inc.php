@@ -1,10 +1,10 @@
 <?php
 // System
-$lang["Todo"] = "Todo";
+$lang["Todo"] = "Aufgaben";
 
 // Fields
  // Basic Data
-$lang["Title"] = "Title";
+$lang["Title"] = "Titel";
 $lang["Notes"] = "Notes";
 $lang["Start date"] = "Start date";
 $lang["End date"] = "End date";
@@ -15,7 +15,7 @@ $lang["Accepted"] = "Accepted";
 $lang["Working"] = "Working";
 $lang["Stopped"] = "Stopped";
 $lang["Ended"] = "Ended";
-$lang["Project"] = "Project";
+$lang["Project"] = "Projekt";
 $lang["User"] = "User";
 
 // Tooltip Help

@@ -1,27 +1,27 @@
 <?php
 // System
-$lang["Project"] = "Project";
+$lang["Project"] = "Projekt";
 
 // Fields
  // Basic Data
-$lang["Title"] = "Title";
-$lang["Notes"] = "Notes";
-$lang["Parent"] = "Project";
-$lang["Start date"] = "Start date";
-$lang["End date"] = "End date";
-$lang["Priority"] = "Priority";
+$lang["Title"] = "Titel";
+$lang["Notes"] = "Notiz";
+$lang["Parent"] = "Oberprojekt";
+$lang["Start date"] = "Beginn";
+$lang["End date"] = "Ende";
+$lang["Priority"] = "Priorität";
 $lang["Current status"] = "Status";
-$lang["Offered"] = "Offered";
-$lang["Ordered"] = "Ordered";
-$lang["Working"] = "Working";
-$lang["Ended"] = "Ended";
+$lang["Offered"] = "Angebotene";
+$lang["Ordered"] = "Bestellt";
+$lang["Working"] = "In bearbeitung";
+$lang["Ended"] = "Beendet";
 $lang["Stopped"] = "Stopped";
-$lang["Re-Opened"] = "Re-Opened";
-$lang["Waiting"] = "Waiting";
-$lang["Complete percent"] = "Complete percent";
+$lang["Re-Opened"] = "Wieder geöffnet";
+$lang["Waiting"] = "Warten";
+$lang["Complete percent"] = "Fortschritt";
 $lang["Budget"] = "Budget";
-$lang["Hourly wage rate"] = "Hourly wage rate";
-$lang["Contact"] = "Contact";
+$lang["Hourly wage rate"] = "Stundensatz";
+$lang["Contact"] = "Kontakte";
 
 // Messages
   // View

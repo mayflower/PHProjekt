@@ -1,37 +1,79 @@
 <?php
-// Administration
+// Core
+  // Fields
+$lang["Label"]= "Etiqueta";
+  // System
+$lang["Setting"] = "Configuración";
+$lang["Administration"] = "Administración";
+  // Messages
+$lang["Admin section is only for admin users"] = "Sección de Administración es sólo para usuarios admin";
+  // View
+$lang["This module is for the user to set and change specific configuration parameters of his/her profile."] = "Este "
+    . "módulo permite al usuario cambiar atributos específicos de configuración de su perfil.";
+$lang["Here can be configured general settings of the site that affects all the users."] = "Aquí pueden configurarse "
+    . "parámetros generales del sitio que afectan a todos los usuarios.";
+$lang["Please choose one of the tabs of above."] = "Por favor, elija una de las solapa de arriba.";
 
-// General Tab
-$lang['Company Name'] = "Nombre de la companía";
+// User
+  // System
+$lang["User"] = "Usuario";
+  // Fields
+$lang["Confirm Password"] = "Confirmar contraseña";
+$lang["Old Password"] = "Contraseña anterior";
+$lang["Admin"] = "Admin";
+  // Messages
+    // System
+$lang["Already exists, choose another one please"] = "Ya existente, elija otro por favor";
+$lang["The value for the setting is incorrect"] = "El valor elegido para la configuración es inválido";
+$lang["The password and confirmation are different or one of them is empty"] = "La contraseña y su confirmación son "
+    . "diferentes o una de ellas está vacía";
+$lang["The old password provided is invalid"] = "La contraseña anterior no es correcta";
+$lang["The Time zone value is out of range"] = "El valor de la zona horaria está fuera de rango";
+$lang["The Language value do not exists"] = "El valor del idioma no existe";
+$lang["Invalid email address"] = "Dirección de correo electrónico inválida";
+$lang["You need to log out and log in again in order to let changes have effect"] = "You need to log out and log in "
+    . "again in order to let changes have effect";
+  // Tooltip Help
+$lang["Tooltip"]["timeZone"] = "El Huso Horario (UTC) para la región o país donde usará usted Phprojekt.<br /> "
+    . "Es un dato requerido para todos los usuarios pero especialmente útil para coordinación temporal de eventos "
+    . "internacionales.";
+$lang["Tooltip"]["password"] = "Para los usuarios nuevos, este es un campo obligatorio. "
+    . "Para los usuarios existentes, deje este campo en blanco si no desea cambiar la contraseña.";
 
-// Words and phrases
-// Visual Module Editor
-$lang["Open Editor"]    = "Abrir Editor";
-$lang["Database"]       = "Base de datos";
-$lang["Field name"]     = "Nombre del campo";
-$lang["Field type"]     = "Tipo del campo";
-$lang["Field lenght"]   = "Largo del campo";
-$lang["Form"]           = "Formulario";
-$lang["Label"]          = "Etiqueta";
-$lang["Project List"]   = "Lista de Proyectos";
-$lang["User List"]      = "Lista de Usuarios";
-$lang["Custom Values"]  = "Valores Específicos";
-$lang["Select Type"]    = "Tipo de Select";
-$lang["Values"]         = "Valores";
-$lang["Default Value"]  = "Valor por defecto";
-$lang["Grid"]           = "Grilla";
-$lang["List Position"]  = "Posición";
-$lang["General"]        = "General";
-$lang["Status"]         = "Estado";
-$lang["Inactive"]       = "Inactivo";
+// Module
+  // System
+$lang["Module"] = "Módulo";
+  // Fields
+$lang["Form"] = "Formulario";
+$lang["Normal"] = "Normal";
+$lang["Global"] = "Global";
+$lang["Open Editor"] = "Abrir Editor";
+  // Tooltip help
+$lang["Open a dialog where you can drag and drop many fields for create the form as you want."] = "Abrir un cuadro de "
+    . "diálogo donde usted puede arrastrar y soltar muchos campos para crear el formulario como usted desea.";
+  // Module Designer
+    // Fields
+$lang["Database"] = "Base de datos";
+$lang["Field name"] = "Nombre del campo";
+$lang["Field type"] = "Tipo del campo";
+$lang["Field lenght"] = "Longitud del campo";
+$lang["Select Type"] = "Tipo de Select";
+$lang["Custom Values"] = "Valores Específicos";
+$lang["Values"] = "Valores";
+$lang["Default Value"] = "Valor por defecto";
+$lang["Grid"] = "Grilla";
+$lang["List Position"] = "Posición";
+$lang["General"] = "General";
 $lang["Required Field"] = "Campo requerido";
-
-// Search
-$lang["View all"] = "Ver todos";
-$lang["There are no Results"] = "No se encontraron resultados";
-
-// Error messages from Module Designer
-$lang["Module Designer"] = "Diseñador de Módulos";
+    // Messages
+      // System
+$lang["The module was added correctly"] = "El módulo se agregó correctamente";
+$lang["The module was edited correctly"] = "El módulo se editó correctamente";
+$lang["The module can not be deleted"] = "El módulo no pudo ser borrado";
+$lang["The module was deleted correctly"] = "El módulo fue borrado correctamente";
+$lang["There was an error writing the table"] = "Hubo un error al escribir la tabla";
+$lang["The table module was created correctly"] = "La tabla del módulo se agregó correctamente";
+$lang["The table module was edited correctly"] = "La tabla del módulo se editó correctamente";
 $lang["Invalid parameters"] = "Parámetros inválidos";
 $lang["The Module must contain at least one field"] = "El módulo debe contener al menos un campo";
 $lang["Please enter a name for this module"] = "Por favor ingrese un nombre para este módulo";
@@ -47,16 +89,17 @@ $lang["The module must have a project selector called project_id"] = "El módulo
 $lang["Project module must be a normal module"] = "Módulo de Proyecto debe ser un módulo normal";
 $lang["The module must have at least one field with the list position greater than 0"] = "El módulo debe tener al "
     . "menos un campo con la posición en la lista mayor a 0";
-
-// User submodule
-$lang["Already exists, choose another one please"] = "Ya existente, elija otro por favor";
-
-// Tooltip Help
-$lang["Here can be configured general settings of the site that affects all the users."] = "Aquí pueden configurarse "
-    . "parámetros generales del sitio que afectan a todos los usuarios.";
-$lang["Please choose one of the tabs of above."] = "Por favor, elija una de las solapa de arriba.";
-$lang["Open a dialog where you can drag and drop many fields for create the form as you want."] = "Abrir un cuadro de "
-    . "diálogo donde usted puede arrastrar y soltar muchos campos para crear el formulario como usted desea.";
+    // View
+$lang["Module Designer"] = "Diseñador de Módulos";
+$lang["Repository of available field types"] = "Repositorio de los tipos de campo disponibles";
+$lang["Active fields in the module"] = "Campos activos en el módulo";
+$lang["Example Project 1"] = "Ejemplo projecto 1";
+$lang["Example Project 2"] = "Ejemplo projecto 2";
+$lang["Example User 1"] = "Ejemplo usuario 1";
+$lang["Example User 2"] = "Ejemplo usuario 2";
+$lang["Example Contact 1"] = "Ejemplo conacto 1";
+$lang["Example Contact 2"] = "Ejemplo conacto 1";
+    // Tooltip Help
 $lang["Each option have the key, and the value to display, separated by #."] = "Cada opción tiene la clave, y el "
     . "valor para mostrar, separados por #.";
 $lang["Separate the diferent options with '|'."] = "Separe a las distintas opciones con '|'.";
@@ -66,18 +109,50 @@ $lang["The API will get all the keyField of the module and will use the displayF
     . "obtendrá todos los campoClaves del módulos y utilizará el campoParaMostrar para mostrarlos.";
 $lang["Defines the position of the field in the grid. Starts with 1 in the left. 0 for do not show it."] = "Define la "
     . "posición del campo en la grilla. Empieza con 1 en la izquierda. 0 para no mostrarlo.";
-$lang["Repository of available field types"] = "Repositorio de los tipos de campo disponibles";
 $lang["1. Drag a field into the right pane."] = "1. Arrastre un campo en el panel derecho.";
 $lang["2. Edit the parameters of the field in the lower left pane."] = "2. Edite los parámetros del campo en el "
     . "panel inferior izquierdo.";
-$lang["Active fields in the module"] = "Campos activos en el módulo";
 $lang["Drop in this panel all the fields that you want to have in this tab."] = "Suelte en este panel todos los campos "
     . "que desea incluir en esta solapa.";
 $lang["For sort the fields, just drag and drop it in the correct position."] = "Para ordenar los campos, sólo "
      . "arrastre y suéltelo en la posición correcta.";
 $lang["Number of stars"] = "Número de estrellas";
 
-// General Help
+// Tab
+  // System
+$lang["Tab"] = "Solapa";
+  // Labels
+$lang["Basic Data"] = "Datos Básicos";
+$lang['People'] = "Personas";
+
+// Role
+  // System
+$lang["Role"] = "Rol";
+
+// General
+  // Fields
+$lang["Company Name"] = "Nombre de la compañía";
+  // Messages
+$lang["The Company name is empty"] = "El nombre de la compañía está vacío";
+
+// Notification
+  // Fields
+$lang["Login / Logout"] = "Iniciar sesión / Cerrar sesión ";
+$lang["Data Records"] = "Datos de los ítems";
+$lang["Alerts"] = "Alertas";
+  // System
+$lang["Notification"] = "Notificaciones";
+  // Tooltip Help
+$lang["Tooltip"]["alerts"] = "Esto es para activar/desactivar las alertas, por ejemplo, algunos minutos antes de que "
+    . "un evento comience.";
+$lang["Tooltip"]["loginLogout"] = "Activar/desactivar esta opción para ver o no los mensajes sobre el inicio de "
+    . "sesión/cierre de sesión de otros usuarios";
+$lang["Tooltip"]["usergenerated"] = "Esto es para activar/desactivar los mensajes de otros usuarios para usted.";
+$lang["Tooltip"]["datarecords"] = "Esto es para activar/desactivar los mensajes generados por el sistema.<br />"
+    . "Eventos que desencadenan este mensaje: crear un nuevo ítem por ejemplo, un proyecto, Nota o Todo), eliminar "
+    . "un ítem existente y editar un ítem.";
+
+// General Help (Administration)
 $lang["Content Help Administration"]["General"] = "DEFAULT";
 $lang["Content Help Administration"]["Administración"] = "<br />
     Esta es la <b>Ayuda General del módulo Administración</b><br />
@@ -274,41 +349,8 @@ $lang["Content Help Administration"]["Rol"] = "<br />
     <br />
     <br />";
 
-// Settings
 
-// Words and phrases
-$lang["Please, log out and log in again to the application to apply the changes"] = "Por favor, "
-    . "salga e ingrese nuevamente a la aplicación para guardar los cambios";
-$lang["The value for the setting is incorrect"] = "El valor elegido para la configuración es inválido";
-$lang["The password and confirmation are different or one of them is empty"] = "La contraseña y su confirmación son "
-    . "diferentes o una de ellas está vacía";
-$lang["The password and confirmation are different or empty"] = "La contraseña y su confirmación son diferentes";
-$lang["The old password provided is invalid"] = "La contraseña anterior no es correcta";
-$lang["The Time Zone value is out of range"] = "El valor de la zona horaria está fuera de rango";
-$lang["The Language value do not exists"] = "El valor del idioma no existe";
-$lang["Invalid email address"] = "Dirección de correo electrónico inválida";
-$lang["keyValue"] = "Configuración";
-$lang["value"] = "Valor";
-$lang["Confirm Password"] = "Confirmar contraseña";
-$lang["Old Password"] = "Contraseña anterior";
-$lang["Language"] = "Idioma";
-$lang["Email"] = "Dirección de correo";
-$lang["Time Zone"] = "Huso Horario";
-$lang["Favorite projects"] = "Proyectos favoritos";
-$lang["Max Number of favorites projects"] = "Max. Número de Proyectos favoritos";
-
-// Tooltip Help
-$lang["Tooltip"]["amount"] = "Proyectos que serán vistos en Asistencia y estarán listos para Arrastrar y Soltar.";
-$lang["Tooltip"]["timeZone"] = "El Huso Horario (UTC) para la región o país donde usará usted Phprojekt.<br /> "
-    . "Es un dato requerido para todos los usuarios pero especialmente útil para coordinación temporal de eventos "
-    . "internacionales.";
-$lang["Tooltip"]["password"] = "Para los usuarios nuevos, este es un campo obligatorio. "
-    . "Para los usuarios existentes, deje este campo en blanco si no desea cambiar la contraseña.";
-$lang["This module is for the user to set and change specific configuration parameters of his/her profile."] = "Este "
-    . "módulo permite al usuario cambiar atributos específicos de configuración de su perfil.";
-$lang["Please choose one of the tabs of above."] = "Por favor, elija una de las solapa de arriba.";
-
-// General Help
+// General Help (Setting)
 $lang["Content Help Setting"]["General"] = "DEFAULT";
 $lang["Content Help Setting"]["Configuración"] = "<br />
     Esta es la <b>Ayuda General del módulo Configuración</b><br />

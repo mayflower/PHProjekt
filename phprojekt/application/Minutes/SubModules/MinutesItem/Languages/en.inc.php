@@ -1,22 +1,24 @@
 <?php
-// General translation strings:
-// [Form.js] - Form labels
-$lang["Title"] = "Title";
-$lang["Comment"] = "Comment";
-$lang["Who"] = "Who";
-$lang["Type"] = "Type";
-$lang["Date"] = "Date";
-$lang["Sort after"] = "Sort after";
-
-// [Form.js] - Tab name
+// System
 $lang["MinutesItem"] = "Items";
 
-// [Form.js] - Selectbox values
+// Fields
+ // Basic Data
+$lang["Title"] = "Title";
+$lang["Type"] = "Type";
 $lang["Topic"] = "Topic";
 $lang["Statement"] = "Statement";
 $lang["Todo"] = "Todo";
 $lang["Decision"] = "Decision";
+$lang["Comment"] = "Comment";
 $lang["Date"] = "Date";
+$lang["Who"] = "Who";
+$lang["Sort after"] = "Sort after";
+
+// Messages
+  // System
+$lang["This minutes is final and cannot be edited."] = "This minutes is final and cannot be edited.";
+$lang["Undefined topicType"] = "Undefined topicType";
 
 // General Help
 $lang["Content Help"]["Items"] = "<br />
@@ -48,4 +50,3 @@ $lang["Content Help"]["Items"] = "<br />
     The grid orders and shows automatically all the items added.<br />
     <br />
     <br />";
-

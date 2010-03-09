@@ -1,8 +1,19 @@
 <?php
-// General
-$lang["Selected Statistic Period"] = "Período de Estadística Seleccionado";
+// System
+$lang["Statistic"] = "Estadística";
+
+// Fields
+$lang["Project"] = "Projecto";
+$lang["Sum"] = "Suma";
+$lang["Total"] = "Total";
+
+// Messages
+  // System
 $lang["Period"] = "Período";
 $lang["End time can not be before Start time"] = "La Fecha de fin no puede ser anterior a la Fecha de comienzo";
+
+// View
+$lang["Selected Statistic Period"] = "Período de Estadística Seleccionado";
 
 // Tooltip Help
 $lang["Choose here the period for the statistics to be calculated."] = "Elija aquí el período que quiere que abarque "
@@ -23,4 +34,3 @@ $lang["Content Help"]["Estadística"] = "<br />
     Los <b>Proyectos</b> y <b>Subproyectos</b> mostrados son en los que el usuario está envuelto.<br />
     <br />
     <br />";
-

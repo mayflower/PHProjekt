@@ -1,4 +1,23 @@
 <?php
+// System
+$lang["Todo"] = "Tarea";
+
+// Fields
+ // Basic Data
+$lang["Title"] = "Título";
+$lang["Notes"] = "Notas";
+$lang["Start date"] = "Inicio";
+$lang["End date"] = "Fin";
+$lang["Priority"] = "Prioridad";
+$lang["Current status"] = "Estado actual";
+$lang["Waiting"] = "Esperando";
+$lang["Accepted"] = "Aceptado";
+$lang["Working"] = "Trabajando";
+$lang["Stopped"] = "Parado";
+$lang["Ended"] = "Finalizado";
+$lang["Project"] = "Projecto";
+$lang["User"] = "Usuario";
+
 // Tooltip Help
 $lang["Tooltip"]["projectId"] = "El proyecto padre, si no tiene padre elegir PHProjekt.";
 

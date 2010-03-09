@@ -1,56 +1,43 @@
 <?php
-// Grid headers - field names from DatabaseDesigner
+// System
+$lang["Minute"] = "Minute";
+
+// Fields
+ // Basic Data
+$lang["Title"] = "Title";
+$lang["Start"] = "Start";
+$lang["End"] = "End";
+$lang["Project"] = "Project";
 $lang["Description"] = "Description";
 $lang["Place"] = "Place";
+$lang["Moderator"] = "Moderator";
+$lang["Invited"] = "Invited";
+$lang["Attending"] = "Attending";
+$lang["Excused"] = "Excused";
 $lang["Status"] = "Status";
-
-// Grid values - from DatabaseDesigner
 $lang["Planned"] = "Planned";
 $lang["Empty"] = "Empty";
 $lang["Filled"] = "Filled";
 $lang["Final"]   = "Final";
 
-// Field labels from DatabaseDesigner
-$lang["Moderator"] = "Moderator";
-$lang["Tag"] = "Tag";
-$lang["Invited"] = "Invited";
-$lang["Attending"] = "Attending";
-$lang["Excused"] = "Excused";
-
-// Mail tab
+ // Mail tab
+$lang["Mail"] = "Mail";
 $lang["Recipients"] = "Recipients";
 $lang["Additional Recipients"] = "Additional Recipients";
 $lang["Options"] = "Options";
 $lang["Include PDF attachment"] = "Include PDF attachment";
-$lang["Email addresses of unlisted recipients, comma-separated."] = "Email addresses of unlisted recipients,
-    comma-separated.";
 $lang["Send mail"] = "Send mail";
 $lang["Preview"] = "Preview";
-$lang["Mail"] = "Mail";
 
-// Mail functions
-$lang["Meeting minutes for"] = "Meeting minutes for";
-$lang["The mail could not be sent"] = "The mail could not be sent";
-$lang["The mail was sent successfully"] = "The mail was sent successfully";
-$lang["Invalid email address detected:"] = "Invalid email address detected:";
-$lang["No recipient addresses have been specified"] = "No recipient addresses have been specified";
-
-// PDF formatting strings
-$lang["Undefined topicType"] = "Undefined Type";
-$lang["No."] = "No.";
-$lang["Item"] = "Item";
-
-// Confirmation dialogs
-$lang["Confirm"] = "Confirm";
-$lang["Are you sure?"] = "Are you sure?";
-$lang["OK"] = "OK";
-$lang["Cancel"] = "Cancel";
-$lang["Unfinalize Minutes"] = "Unfinalize Minutes";
+// Messages
+  // System
+$lang["The currently logged-in user is not owner of the given minutes entry"] = "The currently logged-in user is not "
+    . "owner of the given minutes entry";
+  // View
 $lang["Are you sure this Minutes entry should no longer be finalized?"] = "Are you sure this Minutes entry should no "
     . "longer be finalized?";
 $lang["After proceeding, changes to the data will be possible again."] = "After proceeding, changes to the data will "
     . "be possible again.";
-$lang["Finalize Minutes"] = "Finalize Minutes";
 $lang["Are you sure this Minutes entry should be finalized?"] = "Are you sure this Minutes entry should be finalized?";
 $lang["Write access will be prohibited!"] =  "Write access will be prohibited!";
 $lang["Minutes are finalized"] = "Minutes are finalized";
@@ -58,9 +45,31 @@ $lang["This Minutes entry is finalized."] = "This Minutes entry is finalized.";
 $lang["Editing data is no longer possible."] = "Editing data is no longer possible.";
 $lang["Your changes have not been saved."] = "Your changes have not been saved.";
 
-// Messages
-$lang["The currently logged-in user is not owner of the given minutes entry"] = "The currently logged-in user is not "
-    . "owner of the given minutes entry";
+// Mail
+  // Messages
+$lang["The mail was sent successfully"] = "The mail was sent successfully";
+$lang["The mail could not be sent"] = "The mail could not be sent";
+$lang["No recipient addresses have been specified"] = "No recipient addresses have been specified";
+$lang["Invalid email address detected:"] = "Invalid email address detected:";
+  // Content
+$lang["Meeting minutes for"] = "Meeting minutes for";
+
+// PDF
+  // Content
+$lang["No."] = "No.";
+$lang["Type"] = "Type";
+$lang["Item"] = "Item";
+
+// View
+$lang["Unfinalize Minutes"] = "Unfinalize Minutes";
+$lang["Finalize Minutes"] = "Finalize Minutes";
+$lang["Confirm"] = "Confirm";
+$lang["Are you sure?"] = "Are you sure?";
+
+// Tooltip Help
+  // Mail tab
+$lang["Email addresses of unlisted recipients, comma-separated."] = "Email addresses of unlisted recipients,
+    comma-separated.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

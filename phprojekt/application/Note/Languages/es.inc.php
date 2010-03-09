@@ -1,4 +1,13 @@
 <?php
+// System
+$lang["Note"] = "Nota";
+
+// Fields
+ // Basic Data
+$lang["Title"] = "Título";
+$lang["Comments"] = "Commentarios";
+$lang["Project"] = "Projecto";
+
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
 $lang["Content Help"]["Nota"] = "<br />

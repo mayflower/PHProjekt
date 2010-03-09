@@ -1,4 +1,22 @@
 <?php
+// System
+$lang["Contact"] = "Contacto";
+
+// Fields
+ // Basic Data
+$lang["Name"] = "Nombre";
+$lang["E-Mail"] = "E-Mail";
+$lang["Company"] = "Compañía";
+$lang["First phone"] = "Teléfono 1";
+$lang["Second phone"] = "Teléfono 2";
+$lang["Mobile phone"] = "Tel. celular";
+$lang["Street"] = "Calle";
+$lang["City"] = "Ciudad";
+$lang["Zip code"] = "Código postal";
+$lang["Country"] = "País";
+$lang["Comment"] = "Comentario";
+$lang["Private"] = "Privado";
+
 // Tooltip Help
 $lang["Tooltip"]["private"] = "No: todos los usuarios pueden verlo - Si: sólo el creador puede verlo.";
 

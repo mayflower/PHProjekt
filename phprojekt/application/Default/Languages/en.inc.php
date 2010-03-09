@@ -1,103 +1,37 @@
 <?php
 // General
-$lang["Module"] = "Module";
-$lang["Active"] = "Active";
-$lang["Role"] = "Role";
-$lang["Start"] = "Start";
-$lang["End"] = "End";
+$lang["Projects"] = "Projects";
 $lang["Project"] = "Project";
+$lang["Users"] = "Users";
+$lang["Contact"] = "Contact";
+$lang["Contacts"] = "Contacts";
 $lang["Tag"] = "Tag";
 $lang["No"] = "No";
 $lang["Yes"] = "Yes";
 $lang["Count"] = "Count";
-$lang["Help"] = "Help";
-$lang["Projects"] = "Projects";
-$lang["Type"] = "Type";
-
-// General Fields
-$lang["project"] = "Project";
-$lang["notes"] = "Notes";
-$lang["Notes"] = "Notes";
-$lang["date"] = "Date";
-$lang["Date"] = "Date";
-$lang["Hour"] = "Hour";
-$lang["name"] = "Name";
-$lang["Name"] = "Name";
-$lang["label"] = "Label";
-$lang["active"] = "Active";
-$lang["username"] = "Username";
-$lang["Username"] = "Username";
-$lang["password"] = "Password";
-$lang["Password"] = "Password";
-$lang["firstname"] = "Firstname";
-$lang["First Name"] = "First Name";
-$lang["First name"] = "First Name";
-$lang["lastname"] = "Lastname";
-$lang["Last Name"] = "Last Name";
-$lang["Last name"] = "Last Name";
-$lang["Email"] = "Email";
-$lang["email"] = "Email";
-$lang["E-Mail"] = "E-Mail";
-$lang["language"] = "Language";
-$lang["status"] = "Status";
-$lang["admin"] = "Admin";
-$lang["Time Zone"] = "Timezone";
-$lang["timeZone"] = "Timezone";
-$lang["Title"] = "Title";
-$lang["title"] = "Title";
-$lang["parent"] = "Project";
-$lang["Parent"] = "Project";
-$lang["projectId"] = "Project";
-$lang["Start date"] = "Start Date";
-$lang["End date"] = "End Date";
-$lang["Priority"] = "Priority";
-$lang["Current status"] = "Status";
-$lang["Complete percent"] = "Percentage Completed";
-$lang["Budget"] = "Budget";
-$lang["User"] = "User";
-$lang["ItemId"] = "Item";
-$lang["Field"] = "Field";
-$lang["Old value"] = "Old value";
-$lang["New value"] = "New value";
-$lang["Datetime"] = "Datetime";
-$lang["Comments"] = "Comments";
-$lang["comments"] = "Comments";
-$lang["Comment"] = "Comment";
-$lang["Category"] = "Category";
-$lang["category"] = "Category";
-$lang["participantId"] = "Participant";
-$lang["startTime"] = "Start Time";
-$lang["Start time"] = "Start Time";
-$lang["endTime"] = "End Time";
-$lang["End time"] = "End Time";
-$lang["Sum"] = "Sum";
-$lang["sum"] = "Sum";
-$lang["bookings"] = "Bookings";
-$lang["amount"] = "Amount";
-$lang["Amount"] = "Amount";
-$lang["serialType"] = "Serial Type";
-$lang["serialDays"] = "Serial Days";
-$lang["Upload"] = "Upload";
-$lang["Company"] = "Company";
-$lang["First phone"] = "First phone";
-$lang["Second phone"] = "Second phone";
-$lang["Mobile phone"] = "Mobile phone";
-$lang["Street"] = "Street";
-$lang["City"] = "City";
-$lang["Zip Code"] = "Zip Code";
-$lang["Country"] = "Country";
-$lang["Private"] = "Private";
 $lang["With selected"] = "With selected";
 $lang["Export"] = "Export";
 $lang["Check All"] = "Check All";
 $lang["Uncheck All"] = "Uncheck All";
+$lang["ItemId"] = "Item";
+$lang["Field"] = "Field";
+$lang["Old value"] = "Old value";
+$lang["New value"] = "New value";
+$lang["Search results"] = "Search results";
+$lang["Tag results"] = "Tag results";
+$lang["Help"] = "Help";
+$lang["Logout"] = "Logout";
+$lang["Tags"] = "Tags";
+
+// Tabs
+$lang["Access"] = "Access";
+$lang["Notification"] = "Notification";
+$lang["History"] = "History";
 
 // Access
-$lang["User"] = "User";
 $lang["Read"] = "Read";
 $lang["Write"] = "Write";
 $lang["Create"] = "Create";
-$lang["Access"] = "Access";
 $lang["Copy"] = "Copy";
 $lang["Download"] = "Download";
 $lang["Admin"] = "Admin";
@@ -105,21 +39,30 @@ $lang["None"] = "None";
 $lang["Action"] = "Action";
 
 // Buttons
-$lang["Save"]   = "Save";
+$lang["Add"] = "Add";
+$lang["Save"] = "Save";
 $lang["Delete"] = "Delete";
 $lang["Cancel"] = "Cancel";
-$lang["Close"]  = "Close";
-$lang["Edit"]   = "Edit";
-$lang["New"]    = "New";
+$lang["Close"] = "Close";
+$lang["Edit"] = "Edit";
+$lang["New"] = "New";
 $lang["Disable Frontend Messages"] = "Disable all Frontend Messages!";
+$lang["OK"] = "OK";
+$lang["Reset"] = "Reset";
 
 // Alt text
 $lang["Export to CSV"] = "Export to CSV";
 $lang["Add a new item"] = "Add a new item";
 $lang["Open this item in the form to edit it"] = "Open this item in the form to edit it";
+$lang["Double click to edit"] = "Double click to edit";
+$lang["To Text Mode"] = "To Text Mode";
+$lang["To HTML Mode"] = "To HTML Mode";
 
 // Messages
+$lang["User not logged in"] = "User not logged in";
+$lang["Missing arguments in setParams function"] = "Missing arguments in setParams function";
 $lang["There are no entries on this level"] = "There are no entries on this level";
+$lang["There are no Tags"] = "There are no Tags";
 $lang["You do not have access to edit this item"] = "You do not have access to edit this item";
 $lang["The Item was added correctly"] = "The Item was added correctly";
 $lang["The Item was edited correctly"] = "The Item was edited correctly";
@@ -128,6 +71,7 @@ $lang["The Item can't be deleted"] = "The Item can't be deleted";
 $lang["The Item was deleted correctly"] = "The Item was deleted correctly";
 $lang["The Items were deleted correctly"] = "The Items were deleted correctly";
 $lang["Is a required field"] = "Is a required field";
+$lang["Value out of range"] = "Value out of range";
 $lang["Invalid format for date"] = "Invalid format for date";
 $lang["Invalid Format"] = "Invalid Format";
 $lang["The Tags were added correctly"] = "The Tags were added correctly";
@@ -140,21 +84,12 @@ $lang["You do not have access to add projects on the parent project"] = "You do 
 $lang["The parent project do not have enabled this module"] = "The parent project do not have enabled this module";
 $lang["The project can not be saved under itself"] = "The project can not be saved under itself";
 $lang["The project can not be saved under its children"] = "The project can not be saved under its children";
-
 $lang["ID parameter required"] = "ID parameter required";
+$lang["Node Id parameter required"] = "Node Id parameter required";
 $lang["Invalid module or item"] = "Invalid module or item";
-$lang["Module not given"] = "Module not given";
-$lang["Module not found"] = "Module not found";
 $lang["Two arguments expected"] = "Two arguments expected";
 $lang["Second parameter needs to be an array"] = "Second parameter needs to be an array";
 $lang["No parent id found in parameters or passed"] = "No parent id found in parameters or passed";
-$lang["There was an error writing the table"] = "There was an error writing the table";
-$lang["The table module was created correctly"] = "The table module was created correctly";
-$lang["The table module was edited correctly"] = "The table module was edited correctly";
-$lang["The module was added correctly"] = "The module was added correctly";
-$lang["The module was edited correctly"] = "The module was edited correctly";
-$lang["The module can not be deleted"] = "The module can not be deleted";
-$lang["The module was deleted correctly"] = "The module was deleted correctly";
 $lang["No help available"] = "No help available";
 $lang["You do not have access to do this action"] = "You do not have access to do this action";
 $lang["Internal exception"] = "Internal exception";
@@ -163,16 +98,8 @@ $lang["Please contact the administrator and check the error logs"] = "Please con
 $lang["Invalid json format"] = "Invalid json format";
 $lang["User error"] = "User error";
 $lang["Internal javascript error"] = "Internal javascript error";
+$lang["Server unreachable!"] = "Server unreachable!";
 $lang["Unexpected error"] = "Unexpected error";
-$lang["You need to log out and log in again in order to let changes have effect"] = "You need to log out and log in "
-    . "again in order to let changes have effect";
-$lang["No project info was received"] = "No project info was received";
-$lang["Incomplete data received"] = "Incomplete data received";
-$lang["Id not found #"] = "Id not found #";
-$lang["Project id #"] = "Project id #";
-$lang["Start date invalid"] = "Start date invalid";
-$lang["End date invalid"] = "End date invalid";
-$lang["Start date can not be after End date"] = "Start date can not be after End date";
 $lang["Maximum length exceeded for field"] = "Maximum length exceeded for field";
 $lang["File 'uploadedFile' exceeds the defined form size"] = "File exceeds maximum allowed size";
 $lang["You don't have permission for downloading on this item."] = "You don't have permission for downloading on this "
@@ -186,6 +113,10 @@ $lang["Support address:"] = "Support address:";
 $lang["Invalid string"] = "Invalid string";
 $lang["Allowed values are: Letters, numbers, space, dash, underscore and colon"] = "Allowed values are: Letters, "
     . "numbers, space, dash, underscore and colon";
+$lang["All settings were disabled successfully!"] = "All settings were disabled successfully!";
+$lang["No settings were disabled!"] = "No settings were disabled!";
+$lang["You can not delete the root project"] = "You can not delete the root project";
+$lang["The model argument is expected"] = "The model argument is expected";
 
 // Error handler messages
 $lang["Run-time notice. The script encountered something that could indicate an error, but could also happen in the "
@@ -197,68 +128,24 @@ $lang["Catchable fatal error. Probably a dangerous error occured."] = "Catchable
     . "error occured.";
 $lang["Unknown error type."] = "Unknown error type.";
 
-// System Modules
-$lang["Administration"] = "Administration";
-$lang["Calendar"] = "Calendar";
-$lang["Note"] = "Note";
-$lang["Setting"] = "Setting";
-$lang["Timecard"] = "Timecard";
-$lang["Todo"] = "Todo";
-$lang["Help"] = "Help";
-$lang["Logout"] = "Logout";
-$lang["Groups"] = "Group";
-$lang["Role"] = "Role";
-$lang["Tab"] = "Tab";
-$lang["User"] = "User";
-$lang["History"] = "History";
-$lang["Basic Data"] = "Basic Data";
-$lang["Notification"] = "Notification";
-$lang["Filemanager"] = "Filemanager";
-$lang["Gantt"] = "Gantt";
-$lang["Statistic"] = "Statistic";
-$lang["Contact"] = "Contact";
-$lang["Module Designer"] = "Module Designer";
-$lang["Helpdesk"] = "Helpdesk";
-$lang["Minute"] = "Minute";
-$lang['People'] = "People";
+// Search
+$lang["View all"] = "View all";
+$lang["There are no Results"] = "There are no Results";
 
-// Titles
-$lang["Search results"] = "Search results";
-$lang["Tag results"] = "Tag results";
-
-// Special System words of the modules
-// Originally from Timecard
-$lang["Hours"] = "Hours";
-$lang["Change date"] = "Change date";
-$lang["Total"] = "Total";
-
-// Notification tab
+// Notification
 $lang["Send Notification"] = "Send Notification";
-
-// Notification email
-$lang["A "] = "A ";
-$lang[" item has been "] = " item has been ";
+  // Mail
+$lang["A"] = "A";
+$lang["item has been "] = "item has been";
 $lang["modified"] = "modified";
 $lang["created"] = "created";
 $lang["Current data"] = "Current data";
 $lang["Changes done"] = "Changes done";
-$lang["PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH"] = "PHProjekt 6.0 - Copyright (c) 2008 Mayflower GmbH";
+  // Tooltip Help
+$lang["Check this box to send an email notification to the participants"] = "Check this box to send an email "
+    . "notification to the participants";
 
-// Tags
-$lang["There are no Tags"] = "There are no Tags";
-
-// Originally from Calendar
-$lang["View"] = "View";
-$lang["Day"] = "Day";
-$lang["Week"] = "Week";
-$lang["Month"] = "Month";
-$lang["Self"] = "Self";
-$lang["Selection"] = "Selection";
-$lang["Once"] = "Once";
-$lang["Daily"] = "Daily";
-$lang["Weekly"] = "Weekly";
-$lang["Monthly"] = "Monthly";
-$lang["Yearly"] = "Yearly";
+// Week days
 $lang["Monday"] = "Monday";
 $lang["Tuesday"] = "Tuesday";
 $lang["Wednesday"] = "Wednesday";
@@ -266,12 +153,8 @@ $lang["Thursday"] = "Thursday";
 $lang["Friday"] = "Friday";
 $lang["Saturday"] = "Saturday";
 $lang["Sunday"] = "Sunday";
-$lang["Further events"] = "Further events";
-$lang["Today"] = "Today";
-$lang["Done"] = "Done";
-$lang["User selection"] = "User selection";
-$lang["place"] = "Place";
 
+// Months
 $lang["January"] = "January";
 $lang["February"] = "February";
 $lang["March"] = "March";
@@ -285,12 +168,6 @@ $lang["October"] = "October";
 $lang["November"] = "November";
 $lang["December"] = "December";
 
-$lang["Recurrence"] = "Recurrence";
-$lang["Repeats"] = "Repeats";
-$lang["Interval"] = "Interval";
-$lang["Until"] = "Until";
-$lang["Weekdays"] = "Weekdays";
-
 // Common status
 $lang["Offered"] = "Offered";
 $lang["Ordered"] = "Ordered";
@@ -300,6 +177,8 @@ $lang["Stopped"] = "Stopped";
 $lang["Re-Opened"] = "Re-Opened";
 $lang["Waiting"] = "Waiting";
 $lang["Accepted"] = "Accepted";
+$lang["Active"] = "Active";
+$lang["Inactive"] = "Inactive";
 
 // Filters
 $lang["Filters"] = "Filters";
@@ -320,12 +199,74 @@ $lang["Filter_ends_rule"] = "Ends";
 $lang["Filter_AND"] = "AND";
 $lang["Filter_OR"] = "OR";
 
-// Tooltip Help
-// 'Notification' checkbox
-$lang["Check this box to send an email notification to the participants"] = "Check this box to send an email "
-    . "notification to the participants";
-// Tooltip Grid
-$lang["Double click to edit"] = "Double click to edit";
+// Toaster
+$lang["has created the new entry"] = "has created the new entry";
+$lang["has deleted the entry"] = "has deleted the entry";
+$lang["has edit the existing entry"] = "has edit the existing entry";
+$lang["has logged in"] = "has logged in";
+$lang["has logged out"] = "has logged out";
+$lang["Your event starts at"] = "Your event starts at";
+$lang["has executed a not defined process"] = "has executed a not defined process";
+$lang["in Project"] = "in Project";
+
+// General Fields
+  // Types
+$lang["Text"] = "Text";
+$lang["Date"] = "Date";
+$lang["Time"] = "Time";
+$lang["Datetime"] = "Datetime";
+$lang["Select"] = "Select";
+$lang["Checkbox"] = "Checkbox";
+$lang["Percentage"] = "Percentage";
+$lang["Rating"] = "Rating";
+$lang["Textarea"] = "Textarea";
+$lang["Upload"] = "Upload";
+  // Dates
+$lang["Start"] = "Start";
+$lang["End"] = "End";
+$lang["Hour"] = "Hour";
+$lang["Start date"] = "Start date";
+$lang["End date"] = "End date";
+$lang["Start time"] = "Start time";
+$lang["End time"] = "End time";
+  // Notes
+$lang["Notes"] = "Notes";
+$lang["Comments"] = "Comments";
+$lang["Comment"] = "Comment";
+  // User
+$lang["Name"] = "Name";
+$lang["Username"] = "Username";
+$lang["Password"] = "Password";
+$lang["First name"] = "First name";
+$lang["Last name"] = "Last name";
+$lang["Email"] = "Email";
+$lang["E-Mail"] = "E-Mail";
+$lang["Language"] = "Language";
+$lang["Time zone"] = "Time zone";
+$lang["Company"] = "Company";
+$lang["First phone"] = "First phone";
+$lang["Second phone"] = "Second phone";
+$lang["Mobile phone"] = "Mobile phone";
+$lang["Street"] = "Street";
+$lang["City"] = "City";
+$lang["Zip code"] = "Zip code";
+$lang["Country"] = "Country";
+  // Project
+$lang["Title"] = "Title";
+$lang["Parent"] = "Project";
+  // Others
+$lang["Type"] = "Type";
+$lang["Status"] = "Status";
+$lang["Current status"] = "Status";
+$lang["Percent"] = "Percentage";
+$lang["Complete percent"] = "Complete percent";
+$lang["Budget"] = "Budget";
+$lang["Priority"] = "Priority";
+$lang["Category"] = "Category";
+$lang["Sum"] = "Sum";
+$lang["Total"] = "Total";
+$lang["Amount"] = "Amount";
+$lang["Private"] = "Private";
 
 // General Help
 $lang["Content Help"]["General"] = "<br />
@@ -451,13 +392,3 @@ $lang["Content Help"]["History"] = "<br />
     <br />
     It shows a listing of the changes made to the item since its creation.<br />
     It has five columns: <i>date</i>, <i>user</i>, <i>field</i>, <i>old value</i> and <i>new value</i>.";
-
-// Toaster
-$lang["has created the new entry"]          = " has created the new entry ";
-$lang["has deleted the entry"]              = " has deleted the entry ";
-$lang["has edit the existing entry"]        = " has edit the existing entry ";
-$lang["has logged in"]                      = " has logged in.";
-$lang["has logged out"]                     = " has logged out.";
-$lang["Your event starts at"]               = "Your event starts at ";
-$lang["has executed a not defined process"] = " has executed a not defined process.";
-$lang["in Project"]                         = " in Project ";

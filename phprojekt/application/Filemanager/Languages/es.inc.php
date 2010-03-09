@@ -1,4 +1,14 @@
 <?php
+// System
+$lang["Filemanager"] = "Archivo";
+
+// Fields
+ // Basic Data
+$lang["Title"] = "Título";
+$lang["Comments"] = "Comentarios";
+$lang["Project"] = "Projecto";
+$lang["Upload"] = "Archivos";
+
 // Tooltip help
 $lang["Tooltip"]["files"] = "Puede subir tantos archivos como desee.";
 

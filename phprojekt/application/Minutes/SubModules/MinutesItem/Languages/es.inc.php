@@ -1,22 +1,24 @@
 <?php
-// General translation strings:
-// [Form.js] - Form labels
-$lang["Title"] = "Título";
-$lang["Comment"] = "Comentario";
-$lang["Who"] = "Quién";
-$lang["Type"] = "Tipo";
-$lang["Date"] = "Fecha";
-$lang["Sort after"] = "Ubicar luego de";
-
-// [Form.js] - Tab name
+// System
 $lang["MinutesItem"] = "Items";
 
-// [Form.js] - Selectbox values
+// Fields
+ // Basic Data
+$lang["Title"] = "Título";
+$lang["Type"] = "Tipo";
 $lang["Topic"] = "Tópico";
 $lang["Statement"] = "Declaración";
 $lang["Todo"] = "Pendiente";
-$lang["Decision"] = "Decision";
+$lang["Decision"] = "Decisión";
+$lang["Comment"] = "Comentario";
 $lang["Date"] = "Fecha";
+$lang["Who"] = "Quién";
+$lang["Sort after"] = "Ubicar luego de";
+
+// Messages
+  // System
+$lang["This minutes is final and cannot be edited."] = "Esta minuta es final y no puede ser editada.";
+$lang["Undefined topicType"] = "Tipo no definido";
 
 // General Help
 $lang["Content Help"]["Items"] = "<br />
@@ -50,4 +52,3 @@ $lang["Content Help"]["Items"] = "<br />
     La grilla ordena y muestra automáticamente todos los ítems agregados.<br />
     <br />
     <br />";
-

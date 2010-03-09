@@ -1,12 +1,12 @@
 <?php
 // System
-$lang["Note"] = "Note";
+$lang["Note"] = "Notizen";
 
 // Fields
  // Basic Data
-$lang["Title"] = "Title";
-$lang["Comments"] = "Comments";
-$lang["Project"] = "Project";
+$lang["Title"] = "Titel";
+$lang["Comments"] = "Kommentar";
+$lang["Project"] = "Projekt";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

@@ -3,8 +3,8 @@
 $lang["Gantt"] = "Gantt";
 
 // Fields
-$lang["Projects"] = "Projects";
-$lang["Project"] = "Project";
+$lang["Projects"] = "Projekte";
+$lang["Project"] = "Projekt";
 
 // Messages
   // System

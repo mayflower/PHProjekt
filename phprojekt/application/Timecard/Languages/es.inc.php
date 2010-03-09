@@ -1,18 +1,42 @@
 <?php
-// Words and phrases
-$lang["The end time must be after the start time"] = "El tiempo final debe ser mayor al tiempo inicial";
-$lang["Manage project list"] = "Admin. lista de proyectos";
-$lang["Total hours"] = "Total de horas";
-$lang["Start time has to be between 0:00 and 24:00"] = "La hora de inicio tiene que ser entre 0:00 y 24:00";
-$lang["End time has to be between 0:00 and 24:00"] = "La hora final tiene que ser entre 8:00 y 24:00";
+// System
+$lang["Timecard"] = "Asistencia";
+
+// Fields
+$lang["Start"] = "Comienzo";
+$lang["End"] = "Fin";
+$lang["Minutes"] = "Minutos";
+$lang["Project"] = "Projecto";
+$lang["Notes"] = "Notas";
+$lang["Hours"] = "Horas";
 $lang["Time period"] = "Período de tiempo";
-$lang["Can not save it because it overlaps existing one"] = "No puede grabarse porque se superpone con un período "
-    . "existente";
+
+// Messages
+  // System
+$lang["Start time has to be between 0:00 and 24:00"] = "La hora de inicio tiene que ser entre 0:00 y 24:00";
+$lang["The start time is invalid"] = "La hora de inicio es inválida";
 $lang["Can not Start Working Time because this moment is occupied by an existing period or an open one"] = "No se puede"
     . " Empezar Tiempo de Trabajo porque este momento está ocupado por un período existente o uno abierto";
+$lang["The end time must be after the start time"] = "La hora final debe ser mayor a la hora inicial";
+$lang["End time has to be between 0:00 and 24:00"] = "La hora final tiene que ser entre 8:00 y 24:00";
+$lang["The end time is invalid"] = "La hora final es inválida";
 $lang["Can not End Working Time because this moment is occupied by an existing period"] = "No se puede Terminar "
     . "Tiempo de Trabajo porque este momento está ocupado por un período existente";
+$lang["Can not save it because it overlaps existing one"] = "No puede grabarse porque se superpone con un período "
+    . "existente";
+
+// View
+$lang["Manage project list"] = "Admin. lista de proyectos";
 $lang["Drag the projects from left to right"] = "Arrastre los proyectos de izquierda a derecha";
+$lang["Total hours"] = "Total de horas";
+
+// Tooltip Help
+$lang["Click for open the form"] = "Click for open the form";
+$lang["Favorite projects appear first in the select box of the form"] = "Favorite projects appear first in the select "
+    . "box of the form";
+
+// Setting
+$lang["Favorite projects"] = "Proyectos favoritos";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

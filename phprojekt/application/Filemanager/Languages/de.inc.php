@@ -1,12 +1,12 @@
 <?php
 // System
-$lang["Filemanager"] = "Filemanager";
+$lang["Filemanager"] = "Dateien";
 
 // Fields
  // Basic Data
 $lang["Title"] = "Title";
-$lang["Comments"] = "Comments";
-$lang["Project"] = "Project";
+$lang["Comments"] = "Kommentar";
+$lang["Project"] = "Projekt";
 $lang["Upload"] = "Upload";
 
 // Tooltip help

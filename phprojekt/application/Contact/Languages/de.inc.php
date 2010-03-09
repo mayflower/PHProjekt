@@ -1,21 +1,21 @@
 <?php
 // System
-$lang["Contact"] = "Contact";
+$lang["Contact"] = "Kontakte";
 
 // Fields
  // Basic Data
 $lang["Name"] = "Name";
-$lang["E-Mail"] = "E-Mail";
-$lang["Company"] = "Company";
-$lang["First phone"] = "First phone";
-$lang["Second phone"] = "Second phone";
-$lang["Mobile phone"] = "Mobile phone";
-$lang["Street"] = "Street";
-$lang["City"] = "City";
-$lang["Zip code"] = "Zip code";
-$lang["Country"] = "Country";
-$lang["Comment"] = "Comment";
-$lang["Private"] = "Private";
+$lang["E-Mail"] = "Email";
+$lang["Company"] = "Firma";
+$lang["First phone"] = "Fon 1";
+$lang["Second phone"] = "Fon 2";
+$lang["Mobile phone"] = "Mobiltelefon";
+$lang["Street"] = "Straße";
+$lang["City"] = "Stadt";
+$lang["Zip code"] = "Postleitzahl";
+$lang["Country"] = "Land";
+$lang["Comment"] = "Kommentar";
+$lang["Private"] = "Privat";
 
 // Tooltip Help
 $lang["Tooltip"]["private"] = "No: all users can see it - Yes: only the creator can see it.";

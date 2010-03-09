@@ -1,35 +1,78 @@
 <?php
-// General Tab
-$lang['Company Name'] = "Company Name";
+// Core
+  // Fields
+$lang["Label"] = "Label";
+  // System
+$lang["Setting"] = "Setting";
+$lang["Administration"] = "Administration";
+  // Messages
+$lang["Admin section is only for admin users"] = "Admin section is only for admin users";
+  // View
+$lang["This module is for the user to set and change specific configuration parameters of his/her profile."] = "This "
+    . "module is for the user to set and change specific configuration parameters of his/her profile.";
+$lang["Here can be configured general settings of the site that affects all the users."] = "Here can be configured "
+    . "general settings of the site that affects all the users.";
+$lang["Please choose one of the tabs of above."] = "Please choose one of the tabs of above.";
 
-// Words and phrases
-// Visual Module Editor
-$lang["Open Editor"]    = "Open Editor";
-$lang["Database"]       = "Database";
-$lang["Field name"]     = "Field name";
-$lang["Field type"]     = "Field type";
-$lang["Field lenght"]   = "Field lenght";
-$lang["Form"]           = "Form";
-$lang["Label"]          = "Label";
-$lang["Project List"]   = "Project List";
-$lang["User List"]      = "User List";
-$lang["Custom Values"]  = "Custom Values";
-$lang["Select Type"]    = "Select Type";
-$lang["Values"]         = "Values";
-$lang["Default Value"]  = "Default Value";
-$lang["Grid"]           = "Grid";
-$lang["List Position"]  = "List Position";
-$lang["General"]        = "General";
-$lang["Status"]         = "Status";
-$lang["Inactive"]       = "Inactive";
+// User
+  // System
+$lang["User"] = "User";
+  // Fields
+$lang["Confirm Password"] = "Confirm Password";
+$lang["Old Password"] = "Old Password";
+$lang["Admin"] = "Admin";
+  // Messages
+    // System
+$lang["Already exists, choose another one please"] = "Already exists, choose another one please";
+$lang["The value for the setting is incorrect"] = "The value for the setting is incorrect";
+$lang["The password and confirmation are different or one of them is empty"] = "The password and confirmation are "
+    . "different or one of them is empty";
+$lang["The old password provided is invalid"] = "The old password provided is invalid";
+$lang["The Time zone value is out of range"] = "The Time zone value is out of range";
+$lang["The Language value do not exists"] = "The Language value do not exists";
+$lang["Invalid email address"] = "Invalid email address";
+$lang["You need to log out and log in again in order to let changes have effect"] = "You need to log out and log in "
+    . "again in order to let changes have effect";
+  // Tooltip Help
+$lang["Tooltip"]["timeZone"] = "The Time zone (UTC) for the region or country you will be using Phprojekt.<br />"
+    . "This is required for all users but specially useful for international events time coordination.";
+$lang["Tooltip"]["password"] = "For new users, this is a required field. "
+    . "For existing users, leave this field blank if you don't want to change the password";
+
+// Module
+  // System
+$lang["Module"] = "Module";
+  // Fields
+$lang["Form"] = "Form";
+$lang["Normal"] = "Normal";
+$lang["Global"] = "Global";
+$lang["Open Editor"] = "Open Editor";
+  // Tooltip help
+$lang["Open a dialog where you can drag and drop many fields for create the form as you want."] = "Open a dialog where "
+    . "you can drag and drop many fields for create the form as you want.";
+  // Module Designer
+    // Fields
+$lang["Database"] = "Database";
+$lang["Field name"] = "Field name";
+$lang["Field type"] = "Field type";
+$lang["Field lenght"] = "Field lenght";
+$lang["Select Type"] = "Select Type";
+$lang["Custom Values"] = "Custom Values";
+$lang["Values"] = "Values";
+$lang["Default Value"] = "Default Value";
+$lang["Grid"] = "Grid";
+$lang["List Position"] = "List Position";
+$lang["General"] = "General";
 $lang["Required Field"] = "Required Field";
-
-// Search
-$lang["View all"] = "View all";
-$lang["There are no Results"] = "There are no Results";
-
-// Error messages from Module Designer
-$lang["Module Designer"] = "Module Designer";
+    // Messages
+      // System
+$lang["The module was added correctly"] = "The module was added correctly";
+$lang["The module was edited correctly"] = "The module was edited correctly";
+$lang["The module can not be deleted"] = "The module can not be deleted";
+$lang["The module was deleted correctly"] = "The module was deleted correctly";
+$lang["There was an error writing the table"] = "There was an error writing the table";
+$lang["The table module was created correctly"] = "The table module was created correctly";
+$lang["The table module was edited correctly"] = "The table module was edited correctly";
 $lang["Invalid parameters"] = "Invalid parameters";
 $lang["The Module must contain at least one field"] = "The Module must contain at least one field";
 $lang["Please enter a name for this module"] = "Please enter a name for this module";
@@ -46,16 +89,17 @@ $lang["The module must have a project selector called project_id"] = "The module
 $lang["Project module must be a normal module"] = "Project module must be a normal module";
 $lang["The module must have at least one field with the list position greater than 0"] = "The module must have at "
     . "least one field with the list position greater than 0";
-
-// User submodule
-$lang["Already exists, choose another one please"] = "Already exists, choose another one please";
-
-// Tooltip Help
-$lang["Here can be configured general settings of the site that affects all the users."] = "Here can be configured "
-    . "general settings of the site that affects all the users.";
-$lang["Please choose one of the tabs of above."] = "Please choose one of the tabs of above.";
-$lang["Open a dialog where you can drag and drop many fields for create the form as you want."] = "Open a dialog where "
-    . "you can drag and drop many fields for create the form as you want.";
+    // View
+$lang["Module Designer"] = "Module Designer";
+$lang["Repository of available field types"] = "Repository of available field types";
+$lang["Active fields in the module"] = "Active fields in the module";
+$lang["Example Project 1"] = "Example Project 1";
+$lang["Example Project 2"] = "Example Project 2";
+$lang["Example User 1"] = "Example User 1";
+$lang["Example User 2"] = "Example User 2";
+$lang["Example Contact 1"] = "Example Contact 1";
+$lang["Example Contact 2"] = "Example Contact 2";
+    // Tooltip Help
 $lang["Each option have the key, and the value to display, separated by #."] = "Each option have the key, and the "
     . "value to display, separated by #.";
 $lang["Separate the diferent options with '|'."] = "Separate the diferent options with '|'.";
@@ -65,18 +109,49 @@ $lang["The API will get all the keyField of the module and will use the displayF
     . "get all the keyField of the module and will use the displayField for show it.";
 $lang["Defines the position of the field in the grid. Starts with 1 in the left. 0 for do not show it."] = "Defines "
     . "the position of the field in the grid. Starts with 1 in the left. 0 for do not show it.";
-$lang["Repository of available field types"] = "Repository of available field types";
 $lang["1. Drag a field into the right pane."] = "1. Drag a field into the right pane.";
 $lang["2. Edit the parameters of the field in the lower left pane."] = "2. Edit the parameters of the field in the "
     . "lower left pane.";
-$lang["Active fields in the module"] = "Active fields in the module";
 $lang["Drop in this panel all the fields that you want to have in this tab."] = "Drop in this panel all the fields "
     . "that you want to have in this tab.";
 $lang["For sort the fields, just drag and drop it in the correct position."] = "For sort the fields, just drag and "
     . "drop it in the correct position.";
 $lang["Number of stars"] = "Number of stars";
 
-// General Help
+// Tab
+  // System
+$lang["Tab"] = "Tab";
+  // Labels
+$lang["Basic Data"] = "Basic Data";
+$lang['People'] = "People";
+
+// Role
+  // System
+$lang["Role"] = "Role";
+
+// General
+  // Fields
+$lang["Company Name"] = "Company Name";
+  // Messages
+$lang["The Company name is empty"] = "The Company name is empty";
+
+// Notification
+  // Fields
+$lang["Login / Logout"] = "Login / Logout";
+$lang["Data Records"] = "Data Records";
+$lang["Alerts"] = "Alerts";
+  // System
+$lang["Notification"] = "Notification";
+  // Tooltip Help
+$lang["Tooltip"]["alerts"] = "This is to turn on/off the alerts, e.g some minutes an event of you starts.";
+$lang["Tooltip"]["loginLogout"] = "Enable/disable this and messages about the login/logout of other user will (not)"
+    . " disappear.";
+$lang["Tooltip"]["usergenerated"] = "This is to turn on/off messages from another user to you.";
+$lang["Tooltip"]["datarecords"] = "This is to turn on/off system generated messages.<br />"
+    . "Events that trigger this message: CREATE a new Item (e.g. a Project, Note or Todo), DELETE an existing Item, "
+    . "and EDIT an Item.";
+
+// General Help (Administration)
 $lang["Content Help Administration"]["General"] = "DEFAULT";
 $lang["Content Help Administration"]["Administration"] = "<br />
     This is the <b>General Help of Administration module</b><br />
@@ -257,10 +332,10 @@ $lang["Content Help Administration"]["User"] = "<br />
     <b>Username</b><br />
     Text: the login name for the user.<br />
     <br />
-    <b>First Name</b><br />
+    <b>First name</b><br />
     Text: first name of the user.<br />
     <br />
-    <b>Last Name</b><br />
+    <b>Last name</b><br />
     Text: last name of the user.<br />
     <br />
     <b>Status</b><br />
@@ -286,10 +361,10 @@ $lang["Content Help Administration"]["User"] = "<br />
     Text: if you want to change a password write here the NEW one. Black dots will be seen instead of typed characters.
     If you don't want to change it leave this field blank.<br />
     <br />
-    <b>First Name</b><br />
+    <b>First name</b><br />
     Text: first name of the user.<br />
     <br />
-    <b>Last Name</b><br />
+    <b>Last name</b><br />
     Text: last name of the user.<br />
     <br />
     <b>Email</b><br />
@@ -298,8 +373,8 @@ $lang["Content Help Administration"]["User"] = "<br />
     <b>Language</b><br />
     Select: choose a language for the user to be shown site text and messages.<br />
     <br />
-    <b>Time Zone</b><br />
-    Select: The Time Zone (UTC) for the region or country the user will be using Phprojekt. This is required for all
+    <b>Time zone</b><br />
+    Select: The Time zone (UTC) for the region or country the user will be using Phprojekt. This is required for all
     users but specially useful for international events time coordination, so that each participant of an event will see
     the time (and eventually the date) converted to his/her local time.<br />
     <br />
@@ -348,46 +423,7 @@ $lang["Content Help Administration"]["General tab"] = "<br />
     <br />
     <br/>";
 
-
-// Words and phrases
-$lang["Please, log out and log in again to the application to apply the changes"] = "Please, "
-    . "log out and log in again to the application to apply the changes";
-$lang["The value for the setting is incorrect"] = "The value for the setting is incorrect";
-$lang["The password and confirmation are different or one of them is empty"] = "The password and confirmation are "
-    . "different or one of them is empty";
-$lang["The old password provided is invalid"] = "The old password provided is invalid";
-$lang["The Time Zone value is out of range"] = "The Time Zone value is out of range";
-$lang["The Language value do not exists"] = "The Language value do not exists";
-$lang["Invalid email address"] = "Invalid email address";
-$lang["keyValue"] = "Configuration";
-$lang["value"] = "value";
-$lang["Confirm Password"] = "confirm password";
-$lang["Old Password"] = "Old Password";
-$lang["Language"] = "language";
-$lang["Email"] = "Email";
-$lang["Time Zone"] = "Time Zone";
-$lang["Favorite projects"] = "Favorite projects";
-$lang["Max Number of favorites projects"] = "Max Number of favorites projects";
-
-// Tooltip Help
-$lang["Tooltip"]["amount"] = "Projects that will be allowed to be seen in Timecard and will be ready to Drag and Drop.";
-$lang["Tooltip"]["timeZone"] = "The Time Zone (UTC) for the region or country you will be using Phprojekt.<br />"
-    . "This is required for all users but specially useful for international events time coordination.";
-$lang["Tooltip"]["password"] = "For new users, this is a required field. "
-    . "For existing users, leave this field blank if you don't want to change the password";
-$lang["This module is for the user to set and change specific configuration parameters of his/her profile."] = "This "
-    . "module is for the user to set and change specific configuration parameters of his/her profile.";
-$lang["Please choose one of the tabs of above."] = "Please choose one of the tabs of above.";
-// Tooltip for Notifications: Settings stuff
-$lang["Tooltip"]["alerts"] = "This is to turn on/off the alerts, e.g some minutes an event of you starts.";
-$lang["Tooltip"]["loginLogout"] = "Enable/disable this and messages about the login/logout of other user will (not)"
-    . " disappear.";
-$lang["Tooltip"]["usergenerated"] = "This is to turn on/off messages from another user to you.";
-$lang["Tooltip"]["datarecords"] = "This is to turn on/off system generated messages.<br />"
-    . "Events that trigger this message: CREATE a new Item (e.g. a Project, Note or Todo), DELETE an existing Item, "
-    . "and EDIT an Item.";
-
-// General Help
+// General Help (Setting)
 $lang["Content Help Setting"]["General"] = "DEFAULT";
 $lang["Content Help Setting"]["Setting"] = "<br />
     This is the <b>General Help of Setting module</b><br />
@@ -396,7 +432,7 @@ $lang["Content Help Setting"]["Setting"] = "<br />
     <br />
     It is formed by three sub-modules: User, Notification and Timecard. You can switch between them clicking their tabs
     in the upper central tab bar.<br />
-    The first sub-module allows setting and changing Password, Email, Language and Time Zone, the second one corresponds
+    The first sub-module allows setting and changing Password, Email, Language and Time zone, the second one corresponds
     to the real-time notifications and server synchronization and the third one is for Timecard favorite Projects.<br />
     <br />
     All users including Admin type ones only can modify their own information here.<br />
@@ -433,8 +469,8 @@ $lang["Content Help Setting"]["User"] = "<br />
     <b>Language</b><br />
     Select: choose a language for you to be shown site text and messages.<br />
     <br />
-    <b>Time Zone</b><br />
-    Select: The Time Zone (UTC) for the region or country you will be using Phprojekt. This is required for all users
+    <b>Time zone</b><br />
+    Select: The Time zone (UTC) for the region or country you will be using Phprojekt. This is required for all users
     but specially useful for international events time coordination, so that each participant of an event will see the
     time (and eventually the date) converted to his/her local time.<br />
     Each option of the select field has a local time number and a descriptive earth location to help finding

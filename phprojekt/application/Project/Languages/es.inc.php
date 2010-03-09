@@ -1,4 +1,30 @@
 <?php
+// System
+$lang["Project"] = "Projecto";
+
+// Fields
+ // Basic Data
+$lang["Title"] = "Título";
+$lang["Notes"] = "Notas";
+$lang["Parent"] = "Proyecto";
+$lang["Start date"] = "Fecha de Inicio";
+$lang["End date"] = "Fecha final";
+$lang["Priority"] = "Prioridad";
+$lang["Current status"] = "Estado";
+$lang["Offered"] = "Ofrecido";
+$lang["Ordered"] = "Ordenado";
+$lang["Working"] = "Trabajando";
+$lang["Ended"] = "Finalizado";
+$lang["Stopped"] = "Parado";
+$lang["Re-Opened"] = "Re-Abierto";
+$lang["Waiting"] = "Esperando";
+$lang["Complete percent"] = "Porcentaje completado";
+$lang["Budget"] = "Presupuesto";
+$lang["Hourly wage rate"] = "Salario por hora";
+$lang["Contact"] = "Contacto";
+
+// Messages
+  // View
 $lang["The deletion of a project and its subprojects might take a while"] = "La supresión de un proyecto y sus "
     . "subproyectos podría tomar un tiempo";
 

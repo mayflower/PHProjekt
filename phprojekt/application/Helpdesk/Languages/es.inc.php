@@ -1,13 +1,27 @@
 <?php
-// General
-$lang["Author"] = "Autor";
+// System
+$lang["Helpdesk"] = "Incidencia";
+
+// Fields
+ // Basic Data
+$lang["Title"] = "Título";
 $lang["Assigned"] = "Asignado";
-$lang["Due date"] = "Fecha límite";
+$lang["Date"] = "Fecha";
+$lang["Project"] = "Projecto";
 $lang["Priority"] = "Prioridad";
 $lang["Attachments"] = "Adjuntar";
+$lang["Description"] = "Descripción";
+$lang["Status"] = "Estado";
+$lang["Open"] = "Abierto";
+$lang["Assigned"] = "Asignado";
+$lang["Solved"] = "Resuelto";
+$lang["Verified"] = "Verificado";
+$lang["Closed"] = "Cerrado";
+$lang["Due date"] = "Fecha límite";
+$lang["Author"] = "Autor";
 $lang["Solved by"] = "Solucionado por";
 $lang["Solved date"] = "Fecha de solución";
-$lang["Description"] = "Descripción";
+$lang["Contact"] = "Contacto";
 
 // Tooltip Help
 $lang["Tooltip"]["projectId"] = "El proyecto padre, si no tiene padre elegir PHProjekt.";
