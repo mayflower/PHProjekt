@@ -31,9 +31,9 @@ $lang["Drag the projects from left to right"] = "Arrastre los proyectos de izqui
 $lang["Total hours"] = "Total de horas";
 
 // Tooltip Help
-$lang["Click for open the form"] = "Click for open the form";
-$lang["Favorite projects appear first in the select box of the form"] = "Favorite projects appear first in the select "
-    . "box of the form";
+$lang["Click for open the form"] = "Haga clic para abrir el formulario";
+$lang["Favorite projects appear first in the select box of the form"] = "Proyectos favoritos aparecen primero en el "
+    . "selector de proyectos";
 
 // Setting
 $lang["Favorite projects"] = "Proyectos favoritos";

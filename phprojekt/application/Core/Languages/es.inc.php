@@ -31,8 +31,8 @@ $lang["The old password provided is invalid"] = "La contraseña anterior no es c
 $lang["The Time zone value is out of range"] = "El valor de la zona horaria está fuera de rango";
 $lang["The Language value do not exists"] = "El valor del idioma no existe";
 $lang["Invalid email address"] = "Dirección de correo electrónico inválida";
-$lang["You need to log out and log in again in order to let changes have effect"] = "You need to log out and log in "
-    . "again in order to let changes have effect";
+$lang["You need to log out and log in again in order to let changes have effect"] = "Tiene que salir y entrar otra "
+    . "vez para que los cambios se realicen";
   // Tooltip Help
 $lang["Tooltip"]["timeZone"] = "El Huso Horario (UTC) para la región o país donde usará usted Phprojekt.<br /> "
     . "Es un dato requerido para todos los usuarios pero especialmente útil para coordinación temporal de eventos "

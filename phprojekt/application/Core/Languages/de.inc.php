@@ -41,7 +41,7 @@ $lang["Tooltip"]["password"] = "For new users, this is a required field. "
 
 // Module
   // System
-$lang["Module"] = "Modl";
+$lang["Module"] = "Modul";
   // Fields
 $lang["Form"] = "Form";
 $lang["Normal"] = "Normal";
