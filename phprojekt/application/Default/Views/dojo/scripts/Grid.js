@@ -1221,6 +1221,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 var temp   = key.split('|');
                 var action = temp[0];
                 var mode   = parseInt(temp[1]);
+                var item   = this.grid.getItem(e.rowIndex);
+                var rowId  = this.grid.store.getValue(item, 'id');
                 // Click on an extra action button
                 this.doAction(action, rowId, mode, this.TARGET_SINGLE);
             }
