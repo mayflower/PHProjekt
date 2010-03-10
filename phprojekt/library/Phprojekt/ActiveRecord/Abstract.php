@@ -98,7 +98,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * related model. CLASSNAME is the model name while IDENTIFIER
      * is the name of the attribute of *this* class, that is used to
      * access the relation.
-     * @example
+     * @uses
      *  $hasMany = array('usersettings'=> array('module'=>'Users',
      *                                          'model' =>'UserModuleSetting');
      * @var array $hasMany
@@ -721,7 +721,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @param string $className Name of the class
      *
-     * @example
+     * @uses
      *  Class name: 'Phprojekt_Project'
      *  will be translated to
      *  Table name: 'projects'

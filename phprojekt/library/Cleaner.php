@@ -23,14 +23,23 @@
 
 set_include_path(dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
 
+/** Cleaner_Cage */
 require_once 'Cleaner/Cage.php';
+/** Cleaner_Engine */
 require_once 'Cleaner/Engine.php';
+/** Cleaner_Exception */
 require_once 'Cleaner/Exception.php';
+/** Cleaner_Messages */
 require_once 'Cleaner/Messages.php';
+/** Cleaner_Parameter */
 require_once 'Cleaner/Parameter.php';
+/** Cleaner_Sanitizer */
 require_once 'Cleaner/Sanitizer.php';
+/** Cleaner_Validator */
 require_once 'Cleaner/Validator.php';
+/** Cleaner_Escaper */
 require_once 'Cleaner/Escaper.php';
+/** Cleaner_Util */
 require_once 'Cleaner/Util.php';
 
 /**

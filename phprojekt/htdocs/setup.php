@@ -21,8 +21,15 @@
  * @version    Release: @package_version@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
+
+/**
+ * @ignore
+ */
 define('PHPR_CONFIG_SECTION', 'production');
 
+/**
+ * @ignore
+ */
 define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
 define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'htdocs');
 define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');

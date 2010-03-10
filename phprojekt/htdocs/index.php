@@ -20,8 +20,15 @@
  * @version   Release: @package_version@
  * @author    David Soria Parra <david.soria_parra@mayflower.de>
  */
+
+/**
+* Section to use from configuration.ini
+ */
 define('PHPR_CONFIG_SECTION', 'production');
 
+/**
+ * Root path
+ */
 define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
 
 require_once PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'Phprojekt.php';

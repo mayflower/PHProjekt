@@ -58,9 +58,6 @@ class Phprojekt_Module
      *  array( MODULENAME => MODULEID,
      *         MODULENAME => MODULEID );
      *
-     * @todo: Provide a ActiveRecord like interface, but actually don't do
-     *        ActiveRecord
-     *
      * @return array
      */
     protected static function _getCachedIds()

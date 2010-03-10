@@ -163,7 +163,7 @@ class Phprojekt_Search
      * @param string  $words Some words separated by space
      * @param integer $count Limit query
      *
-     * @uses:
+     * @uses
      *      $db = Phprojekt::getInstance()->getDb();
      *      $search = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
      *      $search->search('text1 text2 text3', 10);
