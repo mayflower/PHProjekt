@@ -11,26 +11,28 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    Application
+ * @subpackage Project
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
- * @author     Gustavo Solt <solt@mayflower.de>
- * @package    PHProjekt
- * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * Manage the relation between the Projects and the active modules
  *
+ * @category   PHProjekt
+ * @package    Application
+ * @subpackage Project
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: @package_version@
  * @license    LGPL v3 (See LICENSE file)
- * @package    PHProjekt
- * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abstract

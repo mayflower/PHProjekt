@@ -11,11 +11,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    UnitTests
+ * @subpackage Filemanager
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
 */
 
 if (!defined('PHPUnit_MAIN_METHOD')) {
@@ -31,11 +35,14 @@ require_once 'Models/FilemanagerTest.php';
 /**
  * Test suite for the Filemanager module
  *
+ * @category   PHProjekt
+ * @package    UnitTests
+ * @subpackage Filemanager
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 class Filemanager_AllTests

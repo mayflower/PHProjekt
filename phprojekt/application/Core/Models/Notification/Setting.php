@@ -11,26 +11,28 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    Application
+ * @subpackage Core
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
- * @package    PHProjekt
- * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
  * @author     Martin Ruprecht <martin.ruprecht@mayflower.de>
  */
 
 /**
  * Settings for the notifications
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: @package_version@
- * @license    LGPL v3 (See LICENSE file)
- * @package    PHProjekt
+ * @category   PHProjekt
+ * @package    Application
  * @subpackage Core
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
  * @author     Martin Ruprecht <martin.ruprecht@mayflower.de>
  */
 class Core_Models_Notification_Setting extends Phprojekt_ModelInformation_Default

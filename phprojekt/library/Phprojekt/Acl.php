@@ -11,27 +11,29 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    Phprojekt
+ * @subpackage Core
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
- * @author     Nina Schmitt <schmitt@mayflower.de>
- * @package    PHProjekt
- * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     Nina Schmitt <schmitt@mayflower.de>
  */
 
 /**
  * Phprojekt_ACL for PHProjekt 6.0
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: @package_version@
- * @license    LGPL v3 (See LICENSE file)
- * @author     Nina Schmitt <schmitt@mayflower.de>
- * @package    PHProjekt
+ * @category   PHProjekt
+ * @package    Phprojekt
  * @subpackage Core
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     Nina Schmitt <schmitt@mayflower.de>
  */
 class Phprojekt_Acl extends Zend_Acl
 {

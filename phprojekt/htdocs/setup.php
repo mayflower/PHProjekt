@@ -11,13 +11,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   Setup
- * @package    Setup
+ * @category   PHProjekt
+ * @package    Htdocs
+ * @subpackage Setup
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @version    $Id$
  * @license    LGPL v3 (See LICENSE file)
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     Gustavo Solt <solt@mayflower.de>
  */
 define('PHPR_CONFIG_SECTION', 'production');
 

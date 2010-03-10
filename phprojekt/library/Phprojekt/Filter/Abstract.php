@@ -11,27 +11,29 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    Phprojekt
+ * @subpackage Filter
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @package    PHProjekt
- * @subpackage Core
- * @version    $Id$
  * @link       http://www.phprojekt.com
- * @author     David Soria Parra <david.soria_parra@mayflower.de>
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 
 /**
  * Filter provide a easy, chainable way to do pre filtering for databases.
  * It does the pre filtering by modifing a select statement.
  *
+ * @category   PHProjekt
+ * @package    Phprojekt
+ * @subpackage Filter
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: @package_version@
  * @license    LGPL v3 (See LICENSE file)
- * @package    PHProjekt
- * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 abstract class Phprojekt_Filter_Abstract

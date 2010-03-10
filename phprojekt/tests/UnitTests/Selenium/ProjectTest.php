@@ -22,7 +22,6 @@
 
 require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
 
-
 /**
  * Selenium Test for PHProjekt
  *

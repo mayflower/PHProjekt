@@ -11,13 +11,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    UnitTests
+ * @subpackage Selenium
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
- * @author     Johann-Peter Hartmann <johann-peter.hartmann@mayflower.de>
- * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @author     Johann-Peter Hartmann <johann-peter.hartmann@mayflower.de>
  */
 
 if (!defined('PHPUnit_MAIN_METHOD')) {
@@ -34,10 +35,11 @@ require_once 'TodoTest.php';
 /**
  * Static test suite.
  *
+ * @category   PHProjekt
+ * @package    UnitTests
+ * @subpackage Selenium
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: @package_version@
  * @license    LGPL v3 (See LICENSE file)
- * @package    PHProjekt
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @author     Johann-Peter Hartmann <johann-peter.hartmann@mayflower.de>

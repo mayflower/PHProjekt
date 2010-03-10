@@ -11,24 +11,28 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    Application
+ * @subpackage Minutes
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @package    PHProjekt
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
  * @link       http://www.phprojekt.com
- * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
 
 /**
  * Helper for set the rights of the user in one item
  *
+ * @category   PHProjekt
+ * @package    Application
+ * @subpackage Minutes
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @package    PHProjekt
  * @license    LGPL v3 (See LICENSE file)
- * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
 final class Minutes_Helpers_Userlist

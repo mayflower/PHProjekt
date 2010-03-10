@@ -11,11 +11,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    UnitTests
+ * @subpackage Default
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
 if (!defined('PHPUnit_MAIN_METHOD')) {
@@ -25,7 +29,6 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
-// require_once 'Controllers/BaseTest.php';
 require_once 'Controllers/IndexControllerTest.php';
 require_once 'Controllers/LoginControllerTest.php';
 require_once 'Controllers/TagControllerTest.php';
@@ -35,11 +38,14 @@ require_once 'Models/DefaultTest.php';
 /**
  * Test suite for the default module
  *
+ * @category   PHProjekt
+ * @package    UnitTests
+ * @subpackage Default
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class Default_AllTests

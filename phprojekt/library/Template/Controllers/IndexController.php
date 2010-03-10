@@ -11,25 +11,27 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @version    $Id:$
- * @author     Gustavo Solt <solt@mayflower.de>
- * @package    PHProjekt
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
+ * @category  PHProjekt
+ * @package   Template
+ * @copyright Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @license   LGPL v3 (See LICENSE file)
+ * @link      http://www.phprojekt.com
+ * @since     File available since Release 6.0
+ * @version   Release: @package_version@
+ * @author    Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * ##TEMPLATE## Module Controller for PHProjekt 6.0
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: @package_version@
- * @license    LGPL v3 (See LICENSE file)
- * @package    PHProjekt
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @category  PHProjekt
+ * @package   Template
+ * @copyright Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @license   LGPL v3 (See LICENSE file)
+ * @link      http://www.phprojekt.com
+ * @since     File available since Release 6.0
+ * @version   Release: @package_version@
+ * @author    Gustavo Solt <solt@mayflower.de>
  */
 class ##TEMPLATE##_IndexController extends IndexController
 {

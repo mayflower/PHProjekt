@@ -11,27 +11,29 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    Phprojekt
+ * @subpackage Groups
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
- * @author     Eduardo Polidor <polidor@mayflower.de>
- * @package    PHProjekt
- * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
 /**
  * Phprojekt_Group for PHProjekt 6.0
  *
+ * @category   PHProjekt
+ * @package    Phprojekt
+ * @subpackage Groups
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: @package_version@
  * @license    LGPL v3 (See LICENSE file)
- * @author     Eduardo Polidor <polidor@mayflower.de>
- * @package    PHProjekt
- * @subpackage Core
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {

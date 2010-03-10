@@ -11,26 +11,28 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    Phprojekt
+ * @subpackage Auth
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @package    PHProjekt
- * @subpackage Core
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
  * @link       http://www.phprojekt.com
- * @author     Eduardo Polidor <polidor@mayflower.de>
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
 /**
  * Exception class for User not logged in
  *
+ * @category   PHProjekt
+ * @package    Phprojekt
+ * @subpackage Auth
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @package    PHProjekt
- * @subpackage Core
  * @license    LGPL v3 (See LICENSE file)
- * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Phprojekt_Auth_UserNotLoggedInException extends Phprojekt_PublishedException

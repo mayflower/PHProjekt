@@ -12,11 +12,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    UnitTests
+ * @subpackage Note
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
 if (!defined('PHPUnit_MAIN_METHOD')) {
@@ -32,11 +36,14 @@ require_once 'Models/NoteTest.php';
 /**
  * Test suite for the note module
  *
+ * @category   PHProjekt
+ * @package    UnitTests
+ * @subpackage Note
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Note_AllTests

@@ -11,26 +11,28 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
+ * @category   PHProjekt
+ * @package    Phprojekt
+ * @subpackage ActiveRecord
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @package    PHProjekt
- * @subpackage Core
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
  * @link       http://www.phprojekt.com
- * @author     David Soria Parra <soria_parra@mayflower.de>
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
+ * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
 /**
  * Exception class for ActiveRecord pattern
  *
+ * @category   PHProjekt
+ * @package    Phprojekt
+ * @subpackage ActiveRecord
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @package    PHProjekt
- * @subpackage Core
  * @license    LGPL v3 (See LICENSE file)
- * @version    Release: @package_version@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
+ * @version    Release: @package_version@
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class Phprojekt_ActiveRecord_Exception extends Exception
