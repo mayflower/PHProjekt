@@ -1,6 +1,7 @@
 <?php
 /**
- * Item Rights Class for PHProjekt 6.0
+ * This class manage the rights for each item per user.
+ * Return and save the rights using the moduleId-itemId relation.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,16 +40,16 @@
 class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
 {
     /**
-     * Name of the table
+     * Name of the table.
      *
      * @var string
      */
     protected $_name = 'item_rights';
 
     /**
-     * Change the tablename for use with the Zend db class
+     * Constructor.
      *
-     * @param array $config The config array for the database
+     * @return void
      */
     public function __construct()
     {
@@ -58,12 +59,13 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Save all the access for each user
-     * The function will re-order the user and access for save it
+     * Save all the access for each user.
      *
-     * @param string  $moduleId   The module Id to store
-     * @param integer $itemId     The item Id
-     * @param array   $rights     Array of userIds with the bitmask access
+     * The function will re-order the user and access for save it.
+     *
+     * @param string  $moduleId The module ID to store.
+     * @param integer $itemId   The item ID.
+     * @param array   $rights   Array of user IDs with the bitmask access.
      *
      * @return void
      */
@@ -99,14 +101,14 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Save an access right
+     * Save an access right.
      *
-     * This function use the Zend_DB insert
+     * This function use the Zend_Db insert.
      *
-     * @param string  $moduleId The module Id to store
-     * @param integer $itemId   The item ID
-     * @param integer $userId   The user to save
-     * @param integer $access   Bitmask of the access
+     * @param string  $moduleId The module ID to store.
+     * @param integer $itemId   The item ID.
+     * @param integer $userId   The user to save.
+     * @param integer $access   Bitmask of the access.
      *
      * @return void
      */
@@ -120,10 +122,10 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Delete all the users for one object
+     * Delete all the users for one object.
      *
-     * @param string  $moduleId The moduleId to delete
-     * @param integer $itemId   The item ID
+     * @param string  $moduleId The module ID to delete.
+     * @param integer $itemId   The item ID.
      *
      * @return void
      */
@@ -138,13 +140,13 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Return the right for a individual module-item-user pair
+     * Return the right for a individual module-item-user pair.
      *
-     * @param string  $moduleId The module Id
-     * @param integer $itemId   The item Id
-     * @param integer $userId   The user Id
+     * @param string  $moduleId The module ID.
+     * @param integer $itemId   The item ID.
+     * @param integer $userId   The user ID.
      *
-     * @return integer
+     * @return integer Bitmask for the module-item-user pair.
      */
     public function getItemRight($moduleId, $itemId, $userId)
     {
@@ -165,12 +167,12 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Returns the rights for the current user of a moduleId-ItemId pair
+     * Returns the rights for the current user of a moduleId-ItemId pair.
      *
-     * @param string  $moduleId The module Id
-     * @param integer $itemId   The item Id
+     * @param string  $moduleId The module ID.
+     * @param integer $itemId   The item ID.
      *
-     * @return array
+     * @return array Array with 'moduleId', 'itemId', 'userId' and all the access key.
      */
     public function getRights($moduleId, $itemId)
     {
@@ -192,12 +194,12 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Returns the rights for the current user of each moduleId-ItemId pair
+     * Returns the rights for the current user of each moduleId-ItemId pair.
      *
-     * @param string $moduleId The module Id
-     * @param array  $ids      An array with all the ids
+     * @param string $moduleId The module ID.
+     * @param array  $ids      An array with all the IDs.
      *
-     * @return array
+     * @return array Array with 'moduleId', 'itemId', 'userId' and all the access key.
      */
     public function getMultipleRights($moduleId, $ids)
     {
@@ -227,12 +229,12 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Returns the rights for all the users of a moduleId-ItemId pair
+     * Returns the rights for all the users of a moduleId-ItemId pair.
      *
-     * @param string  $moduleId The module Id
-     * @param integer $itemId   The item Id
+     * @param string  $moduleId The module ID.
+     * @param integer $itemId   The item ID.
      *
-     * @return array
+     * @return array Array with 'moduleId', 'itemId', 'userId' and all the access key.
      */
     public function getUsersRights($moduleId, $itemId)
     {
@@ -272,9 +274,9 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Save default permission for the provided user in root project
+     * Save default permission for the provided user in root project.
      *
-     * @param integer $userId   The user to save default permission
+     * @param integer $userId The user to save default permission.
      *
      * @return void
      */
@@ -289,12 +291,12 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Return all the users with at least one right for a moduleId-ItemId pair
+     * Return all the users with at least one right for a moduleId-ItemId pair.
      *
-     * @param string  $moduleId The module Id
-     * @param integer $itemId   The item Id
+     * @param string  $moduleId The module ID.
+     * @param integer $itemId   The item ID.
      *
-     * @return array
+     * @return array Array of user IDs.
      */
     public function getUsersWithRight($moduleId, $itemId)
     {

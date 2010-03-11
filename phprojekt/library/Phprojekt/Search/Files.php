@@ -1,6 +1,9 @@
 <?php
 /**
- * Class for get the words from a file
+ * Class for get the words from a file.
+ *
+ * The class provide the functions for read different type of files
+ * and get all the words for save.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +26,10 @@
  */
 
 /**
+ * Class for get the words from a file.
+ *
  * The class provide the functions for read different type of files
- * and get all the words for save
+ * and get all the words for save.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -39,12 +44,12 @@
 class Phprojekt_Search_Files
 {
     /**
-     * Get all the words from a file into an array
+     * Get all the words from a file.
      *
-     * @param string $file     The name of the file
-     * @param string $fileType The filetype
+     * @param string $file     The name of the file.
+     * @param string $fileType The filetype.
      *
-     * @return array
+     * @return string All the words found.
      */
     public function getWordsFromFile($file)
     {
@@ -67,11 +72,11 @@ class Phprojekt_Search_Files
     }
 
     /**
-     * Get the FileType by its extension
+     * Get the FileType by its extension.
      *
-     * @param string $filename The name of the file
+     * @param string $filename The name of the file.
      *
-     * @return string
+     * @return string Extension.
      */
     private function _getFileType($filename)
     {

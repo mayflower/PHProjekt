@@ -1,7 +1,6 @@
 <?php
 /**
- * Represents a module in PHProjekt and coordinates it's mapping
- * to a database
+ * Represents a module in PHProjekt and coordinates it's mapping to a database.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,8 +23,7 @@
  */
 
 /**
- * Represents a module in PHProjekt and coordinates it's mapping
- * to a database
+ * Represents a module in PHProjekt and coordinates it's mapping to a database.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -40,8 +38,7 @@
 class Phprojekt_Module
 {
     /**
-     * Saves the cache for our module entries, to minimize
-     * database lookups
+     * Saves the cache for our module entries, to minimize database lookups.
      *
      * @var array
      */
@@ -50,15 +47,15 @@ class Phprojekt_Module
     /**
      * Receives all module <-> id combinations from the database.
      *
-     * This is somewhat a pretty stupid caching mechanism, but
-     * as the module id itself is used often, we try not to do it
-     * using active record.
+     * This is somewhat a pretty stupid caching mechanism,
+     * but as the module id itself is used often,
+     * we try not to do it using active record.
      *
-     * The method returns an array of the following format
+     * The method returns an array of the following format:
      *  array( MODULENAME => MODULEID,
      *         MODULENAME => MODULEID );
      *
-     * @return array
+     * @return array Array with 'id', 'label' and 'saveType'.
      */
     protected static function _getCachedIds()
     {
@@ -92,11 +89,11 @@ class Phprojekt_Module
     }
 
     /**
-     * Returns the id for a given module
+     * Returns the ID for a given module.
      *
-     * @param string $name The Module name
+     * @param string $name The Module name.
      *
-     * @return integer
+     * @return integer Module ID.
      */
     public static function getId($name)
     {
@@ -110,11 +107,11 @@ class Phprojekt_Module
     }
 
     /**
-     * Returns the name for a given module id
+     * Returns the name for a given module ID
      *
-     * @param integer $id The module id
+     * @param integer $id The module ID.
      *
-     * @return string
+     * @return string The module name.
      */
     public static function getModuleName($id)
     {
@@ -130,11 +127,11 @@ class Phprojekt_Module
     }
 
     /**
-     * Returns the label for a given module id
+     * Returns the label for a given module ID
      *
-     * @param integer $id The module id
+     * @param integer $id The module ID.
      *
-     * @return string
+     * @return string The module label.
      */
     public static function getModuleLabel($id)
     {
@@ -150,11 +147,11 @@ class Phprojekt_Module
     }
 
     /**
-     * Returns the saveType for a given module
+     * Returns the saveType for a given module.
      *
-     * @param string $name The Module name
+     * @param string $name The Module name.
      *
-     * @return integer
+     * @return integer The module saveType.
      */
     public static function getSaveType($id)
     {

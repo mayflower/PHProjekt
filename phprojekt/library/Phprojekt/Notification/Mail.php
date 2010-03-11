@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification Mail class for PHProjekt 6.0
+ * Notification Mail class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Notification Mail class for PHProjekt 6.0
+ * Notification Mail class.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -37,11 +37,33 @@
  */
 class Phprojekt_Notification_Mail extends Phprojekt_Mail
 {
-    const MODE_HTML           = 'Html';
-    const MODE_TEXT           = 'Text';
-    const PARAMS_CHARSET      = 0;
-    const PARAMS_BODYMODE     = 2;
+    /**
+     * HTML mode.
+     */
+    const MODE_HTML = 'Html';
 
+    /**
+     * Text mode.
+     */
+    const MODE_TEXT = 'Text';
+
+    /**
+     * Index in the option for Charset.
+     */
+    const PARAMS_CHARSET = 0;
+
+    /**
+     * Index in the option for body type.
+     */
+    const PARAMS_BODYMODE = 2;
+
+    /**
+     * Constructor.
+     *
+     * @param array $params Array with parameters.
+     *
+     * @return void
+     */
     public function __construct($params)
     {
         parent::__construct($params[self::PARAMS_CHARSET]);
@@ -50,9 +72,11 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
     }
 
     /**
-     * Sets the name and email of the sender
+     * Sets the name and email of the sender.
      *
      * @see Phprojekt_User_User()
+     *
+     * @param integer $from ID of the user who send the mail.
      *
      * @return void
      */
@@ -74,7 +98,9 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
     }
 
     /**
-     * Sets the recipients according to the received ids
+     * Sets the recipients according to the received IDs.
+     *
+     * @param array $recipients Array with user IDs.
      *
      * @return void
      */
@@ -103,7 +129,9 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
     }
 
     /**
-     * Sets the subject of the email according to the string received
+     * Sets the subject of the email according to the string received.
+     *
+     * @param string $subject The subject to use in the mail.
      *
      * @return void
      */
@@ -114,6 +142,11 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
 
     /**
      * Sets the body of the email according to the data received from Notification class
+     *
+     * @param array       $params  Array with options.
+     * @param array       $fields  Array with the fields of the model.
+     * @param array       $changes Array with changes done in the model.
+     * @param Zend_Locale $lang Locale for use in translations.
      *
      * @return void
      */
@@ -159,8 +192,8 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
     }
 
     /**
-     * Sends an email notification in Html/Text mode using the inherited method send(), with
-     * the contents according to a specific module and a specific event.
+     * Sends an email notification in Html/Text mode using the inherited method send(),
+     * with the contents according to a specific module and a specific event.
      * Previous to calling this function, there has to be called all the set* methods.
      *
      * @return void

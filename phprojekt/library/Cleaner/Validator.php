@@ -1,6 +1,8 @@
 <?php
 /**
- * Validation class
+ * Validation class.
+ *
+ * Contains validation methods.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +24,9 @@
  */
 
 /**
- * Contains validation methods
+ * Validation class.
+ *
+ * Contains validation methods.
  *
  * @category  PHProjekt
  * @package   Cleaner
@@ -36,7 +40,7 @@
 class Cleaner_Validator
 {
     /**
-     * Registered Validator types
+     * Registered Validator types.
      *
      * @var array
      */
@@ -63,12 +67,12 @@ class Cleaner_Validator
     );
 
     /**
-     * Validates if value is of type 'Alnum'
+     * Validates if value is of type 'Alnum'.
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateAlnum($value, $messages)
     {
@@ -82,12 +86,12 @@ class Cleaner_Validator
     }
 
     /**
-     * Validates if value is of type 'Alpha'
+     * Validates if value is of type 'Alpha'.
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateAlpha($value, $messages)
     {
@@ -101,12 +105,12 @@ class Cleaner_Validator
     }
 
     /**
-     * Validates if value is of type 'Bool'
+     * Validates if value is of type 'Bool'.
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateBool($value, $messages)
     {
@@ -131,12 +135,12 @@ class Cleaner_Validator
     }
 
     /**
-     * Validates if value is of type 'Float'
+     * Validates if value is of type 'Float'.
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateFloat($value, $messages)
     {
@@ -155,12 +159,12 @@ class Cleaner_Validator
     }
 
     /**
-     * Validates if value is of type 'Int'
+     * Validates if value is of type 'Int'.
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateInt($value, $messages)
     {
@@ -181,10 +185,10 @@ class Cleaner_Validator
     /**
      * Validates if value is of type 'Ipv4'
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateIpv4($value, $messages)
     {
@@ -199,12 +203,12 @@ class Cleaner_Validator
     }
 
     /**
-     * Validates if value is of type 'IsoDate'
+     * Validates if value is of type 'IsoDate'.
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateIsoDate($value, $messages)
     {
@@ -222,12 +226,12 @@ class Cleaner_Validator
     }
 
     /**
-     * Validates if value is of type 'IsoTime'
+     * Validates if value is of type 'IsoTime'.
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateIsoTime($value, $messages)
     {
@@ -242,12 +246,12 @@ class Cleaner_Validator
     }
 
     /**
-     * Validates if value is of type 'IsoTimestamp'
+     * Validates if value is of type 'IsoTimestamp'.
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateIsoTimestamp($value, $messages)
     {
@@ -284,12 +288,12 @@ class Cleaner_Validator
     }
 
     /**
-     * Validates if value is of type 'Numeric'
+     * Validates if value is of type 'Numeric'.
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateNumeric($value, $messages)
     {
@@ -303,12 +307,12 @@ class Cleaner_Validator
     }
 
     /**
-     * Validates if value is of type 'String'
+     * Validates if value is of type 'String'.
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateString($value, $messages)
     {
@@ -322,12 +326,12 @@ class Cleaner_Validator
     }
 
     /**
-     * Validates if value is of type 'Word'
+     * Validates if value is of type 'Word'.
      *
-     * @param mixed $value    Value to validate
-     * @param mixed $messages Messages generated while validation
+     * @param mixed $value    Value to validate.
+     * @param mixed $messages Messages generated while validation.
      *
-     * @return bool sanitized value
+     * @return boolean True for valid.
      */
     public function validateWord($value, $messages)
     {

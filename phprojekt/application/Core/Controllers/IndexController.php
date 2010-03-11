@@ -1,6 +1,6 @@
 <?php
 /**
- * Core Controller for PHProjekt 6.0
+ * Core Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Core Controller for PHProjekt 6.0
+ * Core Controller.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,7 +38,7 @@
 class Core_IndexController extends IndexController
 {
     /**
-     * Init function
+     * Init function.
      *
      * There are only a few actions that a normal user can do requesting the Core controller.
      * The function check them, and allow the acction or not,
@@ -90,7 +90,7 @@ class Core_IndexController extends IndexController
     /**
      * Gets the core class model of the module or the default one.
      *
-     * @return Phprojekt_Model_Interface
+     * @return Phprojekt_Model_Interface An instance of Phprojekt_Model_Interface.
      */
     public function getModelObject()
     {
@@ -114,7 +114,7 @@ class Core_IndexController extends IndexController
     }
 
     /**
-     * Keep in the session the current project id
+     * Keep in the session the current project ID.
      *
      * @return void
      */

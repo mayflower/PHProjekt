@@ -1,6 +1,6 @@
 <?php
 /**
- * User setting model
+ * Settings on a per user base.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Settings on a per user base
+ * Settings on a per user base.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,19 +38,24 @@
 class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
 {
     /**
-     * Range of dates language setting
+     * Range of dates language setting.
      *
      * @var array
      */
     private $_languageRange = array();
 
     /**
-     * Range of available timezones
+     * Range of available timezones.
      *
      * @var array
      */
     private $_timeZoneRange = array();
 
+    /**
+     * Constructor.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->_languageRange = Phprojekt_LanguageAdapter::getLanguageList();
@@ -58,7 +63,7 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
     }
 
     /**
-     * Sets a fields definitions for each field
+     * Sets a fields definitions for each field.
      *
      * @return void
      */
@@ -101,11 +106,23 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
             'default'  => '000'));
     }
 
+    /**
+     * Getter for password field.
+     *
+     * @return string Empty string.
+     */
     public function getPassword()
     {
         return '';
     }
 
+    /**
+     * Validate the settings.
+     *
+     * @param array $params Array with values to save.
+     *
+     * @return string|null Error message.
+     */
     public function validateSettings($params)
     {
         $message = null;
@@ -152,10 +169,10 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
     }
 
     /**
-     * Save the settings into the table
+     * Save the settings into the table.
      *
-     * @param array   $params $_POST fields
-     * @param integer $userId The user id, if is not setted, the current user is used.
+     * @param array   $params $_POST fields.
+     * @param integer $userId The user ID, if is not setted, the current user is used.
      *
      * @return void
      */

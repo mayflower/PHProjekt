@@ -1,6 +1,6 @@
 <?php
 /**
- * Class for manage system configurations from different modules
+ * Class for manage system configurations from different modules.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Class for manage system configurations from different modules
+ * Class for manage system configurations from different modules.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,21 +38,21 @@
 class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
 {
     /**
-     * The name of a module
+     * The name of a module.
      *
      * @var string
      */
     protected $_module = '';
 
     /**
-     * The module Id
+     * The module ID.
      *
      * @var integer
      */
     protected $_moduleId = 0;
 
     /**
-     * Class of the Configuration module
+     * Class of the Configuration module.
      *
      * @var Object class
      */
@@ -60,16 +60,16 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
 
     /**
      * A list of directories that are not included in the search.
-     * Usually Default and Administration
+     * Usually Default and Core.
      *
      * @var array
      */
     protected static $_excludePaths = array('Default', 'Core', '.svn');
 
     /**
-     * Returns a set of modules available and have Configuration sections
+     * Returns a set of modules available and have Configuration sections.
      *
-     * @return array
+     * @return array Array with 'name' and 'label'.
      */
     public function getModules()
     {
@@ -101,9 +101,9 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Define the current module to use in the Configuration
+     * Define the current module to use in the Configuration.
      *
-     * @param string $module The module name
+     * @param string $module The module name.
      *
      * @return void
      */
@@ -114,9 +114,9 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Get the object class to use for manage the Configuration
+     * Get the object class to use for manage the Configuration.
      *
-     * @return Object class
+     * @return mix Configuration class.
      */
     public function getModel()
     {
@@ -133,11 +133,11 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Return the value of one Configuration
+     * Return the value of one configuration.
      *
-     * @param string  $configName The name of the Configuration
+     * @param string $configName The name of the configuration.
      *
-     * @return mix
+     * @return mix Value of the configuration.
      */
     public function getAdministration($configName)
     {
@@ -153,12 +153,12 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Collect all the values of the Configuration and return it in one row
+     * Collect all the values of the configuration and return it in one row.
      *
-     * @param integer $moduleId The current moduleId
-     * @param array   $metadata Array with all the fields
+     * @param integer $moduleId The current module ID.
+     * @param array   $metadata Array with all the fields.
      *
-     * @return array
+     * @return array Array with all the configurations.
      */
     public function getList($moduleId, $metadata)
     {
@@ -187,11 +187,11 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Validation functions for all the values
+     * Validation functions for all the values.
      *
-     * @param array $params $_POST fields
+     * @param array $params $_POST fields.
      *
-     * @return string
+     * @return string|null Error message.
      */
     public function validateConfigurations($params)
     {
@@ -205,7 +205,7 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Save the Configurations into the table
+     * Save the Configurations into the table.
      *
      * @param array $params $_POST fields
      *

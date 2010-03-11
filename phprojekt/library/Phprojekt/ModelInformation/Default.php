@@ -41,31 +41,30 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
 {
     /**
      * The fields given by the ModelInformation interface
-     * are used by a list view and therefore ordered in that way
+     * are used by a list view and therefore ordered in that way.
      */
     const ORDERING_LIST = 1;
 
     /**
      * The fields given by the ModelInformation interface
-     * are used by a form and therefore ordered in that way
+     * are used by a form and therefore ordered in that way.
      */
     const ORDERING_FORM = 2;
 
     /**
      * The fields given by the ModelInformation interface
-     * are used by a filter and therefore ordered in that way
+     * are used by a filter and therefore ordered in that way.
      */
     const ORDERING_FILTER = 3;
 
     /**
      * The fields given by the ModelInformation interface
-     * are used by something undeclared, therefore we must use a
-     * default value.
+     * are used by something undeclared, therefore we must use a default value.
      */
     const ORDERING_DEFAULT = Phprojekt_ModelInformation_Default::ORDERING_LIST;
 
     /**
-     * Array that contains the field values
+     * Array that contains the field values.
      *
      * @var array
      */
@@ -73,7 +72,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
 
     /**
      * An array that defines the default values used when
-     * setting the form or list fields if they are not given
+     * setting the form or list fields if they are not given.
      *
      * @var array
      */
@@ -96,16 +95,17 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
                                 'default'  => null);
 
     /**
-     * Fills the _field array with mandatory data and optional keys. Undefined keys are stripped.
+     * Fills the _field array with mandatory data and optional keys.
+     * Undefined keys are stripped.
      *
-     * @param string $key          Name of the model property
-     * @param string $label        Label of the form field (will get translated)
-     * @param string $type         Type of the form control
-     * @param int    $listPosition Position of the field in the list
-     * @param int    $formPosition Position of the field in the form
-     * @param array  $data         Optional additional keys
+     * @param string  $key          Name of the model property.
+     * @param string  $label        Label of the form field (will get translated).
+     * @param string  $type         Type of the form control.
+     * @param integer $listPosition Position of the field in the list.
+     * @param integer $formPosition Position of the field in the form.
+     * @param array   $data         Optional additional keys.
      *
-     * @return array
+     * @return void
      */
     public function fillField($key, $label, $type, $listPosition, $formPosition, array $data = array())
     {
@@ -129,7 +129,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
 
     /**
-     * Set all the module fields with the data of each one
+     * Set all the module fields with the data of each one.
      *
      * @return void
      */
@@ -139,9 +139,9 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
 
     /**
-     * Return the fields array
+     * Return the fields array.
      *
-     * @return array
+     * @return array Array with all the fields definitions.
      */
     protected function _getFields()
     {
@@ -153,13 +153,13 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
 
     /**
-     * Returns all the necessary field definitions based on the ordering const that's given
+     * Returns all the necessary field definitions based on the ordering const that's given.
      *
-     * @param integer $ordering Type of order
+     * @param integer $ordering Type of order.
      *
      * @see Phprojekt_ModelInformation_Interface::getFieldDefinition()
      *
-     * @return array
+     * @return array Array with all the fields definitions, sorted.
      */
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
@@ -190,13 +190,14 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
 
     /**
-     * Return the pair in a range format
-     * The value is trasnlated and the originalName is returned also
+     * Return the pair in a range format.
      *
-     * @param mix $key   Key value
-     * @param mix $value Value value
+     * The value is trasnlated and the originalName is returned also.
      *
-     * @return array
+     * @param mix $key   Key value.
+     * @param mix $value Value value.
+     *
+     * @return array Array with 'id', 'name' and 'originalName'.
      */
     public function getFullRangeValues($key, $value)
     {
@@ -207,12 +208,12 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
 
 
     /**
-     * Return the pair in a range format
+     * Return the pair in a range format.
      *
-     * @param mix $key   Key value
-     * @param mix $value Value value
+     * @param mix $key   Key value.
+     * @param mix $value Value value.
      *
-     * @return array
+     * @return array Array with 'id' and 'name'.
      */
     public function getRangeValues($key, $value)
     {
@@ -221,9 +222,9 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
 
     /**
-     * Return the project list converted to range format
+     * Return the project list converted to range format.
      *
-     * @return array
+     * @return array Array with 'id' and 'name'.
      */
     public function getProjectRange()
     {
@@ -239,12 +240,12 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
 
     /**
-     * Sort the array using the listPosition value
+     * Sort the array using the listPosition value.
      *
-     * @param array $a First array
-     * @param array $b Second array
+     * @param array $a First array.
+     * @param array $b Second array.
      *
-     * @return integer
+     * @return integer Comparation value.
      */
     public function sortByListPosition($a, $b)
     {
@@ -256,12 +257,12 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
 
     /**
-     * Sort the array using the formPosition value
+     * Sort the array using the formPosition value.
      *
-     * @param array $a First array
-     * @param array $b Second array
+     * @param array $a First array.
+     * @param array $b Second array.
      *
-     * @return integer
+     * @return integer Comparation value.
      */
     public function sortByFormPosition($a, $b)
     {

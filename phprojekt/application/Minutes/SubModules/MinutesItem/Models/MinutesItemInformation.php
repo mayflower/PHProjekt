@@ -40,7 +40,9 @@
 class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Phprojekt_ModelInformation_Default
 {
     /**
-     * @var array List of available topic types.
+     * List of available topic types.
+     *
+     * @var array
      */
     protected static $_topicTypeListTemplate = array(
             1 => 'Topic',
@@ -51,14 +53,14 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Phpro
         );
 
     /**
-     * Stores the translated list of topic types
+     * Stores the translated list of topic types.
      *
      * @var array
      */
     protected static $_topicTypeList = array();
 
     /**
-     * Stores the list of user names in display format
+     * Stores the list of user names in display format.
      *
      * @var array
      */
@@ -67,7 +69,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Phpro
     /**
      * Lazy load the topicType translation list.
      *
-     * @return array _topicTypeList
+     * @return array $_topicTypeList
      */
     protected function _getTopicTypeList()
     {
@@ -82,21 +84,21 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Phpro
     /**
      * Returns the translated text of a given topicType id, or NULL if undefined.
      *
-     * @param int $topicTypeValue
+     * @param integer $topicTypeValue Topic type.
      *
-     * @return mixed
+     * @return string|null Display of the topic type.
      */
     public function getTopicType($topicTypeValue)
     {
         $types = $this->_getTopicTypeList();
 
-        return (isset($types[$topicTypeValue]['name'])? $types[$topicTypeValue]['name'] : NULL);
+        return (isset($types[$topicTypeValue]['name'])? $types[$topicTypeValue]['name'] : null);
     }
 
     /**
-     * Lazy load the userId list
+     * Lazy load the userId list.
      *
-     * @return array _userIdList
+     * @return array $_userIdList
      */
     protected function _getUserIdList()
     {
@@ -113,21 +115,21 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Phpro
     }
 
     /**
-     * Returns the displayName of a given user id, or NULL if undefined.
+     * Returns the displayName of a given user id, or null if undefined.
      *
-     * @param int $userId
+     * @param integer $userId The user ID.
      *
-     * @return mixed
+     * @return string|null User display.
      */
     public function getUserName($userId)
     {
         $users = $this->_getUserIdList();
 
-        return (isset($users[$userId]['name'])? $users[$userId]['name'] : NULL);
+        return (isset($users[$userId]['name'])? $users[$userId]['name'] : null);
     }
 
     /**
-     * Sets a fields definitions for each field
+     * Sets a fields definitions for each field.
      *
      * @return void
      */

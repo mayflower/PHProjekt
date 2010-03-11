@@ -1,7 +1,7 @@
 <?php
 /**
- * Meta information about the Minutes model. Acts as a layer over
- * database manager to filter readonly fields to yes if minutes is final.
+ * Meta information about the Calendar model. Acts as a layer over
+ * database manager to filter readonly fields to yes if the event is from other participant.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@
 
 /**
  * Meta information about the Calendar model. Acts as a layer over
- * database manager to filter readonly fields to yes if the event is from other participant
+ * database manager to filter readonly fields to yes if the event is from other participant.
  *
  * @category   PHProjekt
  * @package    Application
@@ -41,10 +41,10 @@ class Calendar_Models_CalendarInformation extends Phprojekt_DatabaseManager
     implements Phprojekt_ModelInformation_Interface
 {
     /**
-     * Set the db table name to use to this fixed value. The database used by the parent
-     * class must be used here as well, independent of the class name.
+     * Set the db table name to use to this fixed value.
+     * The database used by the parent class must be used here as well, independent of the class name.
      *
-     * @return string
+     * @return string The table name.
      */
     public function getTableName()
     {
@@ -54,9 +54,9 @@ class Calendar_Models_CalendarInformation extends Phprojekt_DatabaseManager
     /**
      * Return an array of field information.
      *
-     * @param int $ordering
+     * @param integer $ordering An ordering constant.
      *
-     * @return array
+     * @return array Array with fields definitions.
      */
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {

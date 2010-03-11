@@ -1,6 +1,6 @@
 <?php
 /**
- * User class for PHProjekt 6.0
+ * ACL class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Phprojekt_ACL for PHProjekt 6.0
+ * ACL class.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,7 +38,7 @@
 class Phprojekt_Acl extends Zend_Acl
 {
     /**
-     * Fixed permission values for items and modules
+     * Fixed permission values for items and modules.
      */
     const NONE     = 0;
     const READ     = 1;
@@ -52,16 +52,16 @@ class Phprojekt_Acl extends Zend_Acl
     const ALL      = 255;
 
     /**
-     * Singleton instance
+     * Singleton instance.
      *
      * @var PHProjekt_Acl
      */
     protected static $_instance = null;
 
     /**
-     * Return this class only one time
+     * Return this class only one time.
      *
-     * @return PHProjekt_Acl
+     * @return PHProjekt_Acl An instance of PHProjekt_Acl.
      */
     public static function getInstance()
     {
@@ -81,7 +81,9 @@ class Phprojekt_Acl extends Zend_Acl
     }
 
     /**
-     * Constructs a Phprojekt ACL
+     * Constructs a Phprojekt ACL.
+     *
+     * @return void
      */
     private function __construct()
     {
@@ -92,7 +94,7 @@ class Phprojekt_Acl extends Zend_Acl
     }
 
     /**
-     * This function adds all Roles to Zend_Acl
+     * Add all Roles to Zend_Acl.
      *
      * @return void
      */
@@ -108,7 +110,7 @@ class Phprojekt_Acl extends Zend_Acl
     }
 
     /**
-     * This function assigns all rights to Zend_Acls
+     * Assign all rights to Zend_Acls.
      *
      * @return void
      */
@@ -139,11 +141,11 @@ class Phprojekt_Acl extends Zend_Acl
     }
 
     /**
-     * Convert a bitmask into an array with each access
+     * Convert a bitmask into an array with each access.
      *
-     * @param int $right The number of the bitmask
+     * @param integer $right The number of the bitmask.
      *
-     * @return array
+     * @return array Array with boolean values for each accees.
      */
     public static function convertBitmaskToArray($right)
     {
@@ -163,11 +165,11 @@ class Phprojekt_Acl extends Zend_Acl
     }
 
     /**
-     * Convert an array with boolean values into a bitmask
+     * Convert an array with boolean values into a bitmask.
      *
-     * @param array $rights Array with boolean values for each accees
+     * @param array $rights Array with boolean values for each accees.
      *
-     * @return int
+     * @return integer The number of the bitmask.
      */
     public static function convertArrayToBitmask($rights)
     {

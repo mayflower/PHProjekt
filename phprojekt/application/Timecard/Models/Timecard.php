@@ -53,11 +53,9 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     protected $_validate = null;
 
     /**
-     * Initialize new user
-     * If is seted the user id in the session,
-     * the class will get all the values of these user
+     * Constructor initializes additional Infomanager.
      *
-     * @param array $db Configuration for Zend_Db_Table
+     * @param array $db Configuration for Zend_Db_Table.
      *
      * @return void
      */

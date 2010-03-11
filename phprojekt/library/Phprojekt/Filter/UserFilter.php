@@ -1,6 +1,9 @@
 <?php
 /**
- * Filter by for columns that is defined by a user
+ * Filter by for columns that is defined by a user.
+ *
+ * Represents a where user where clause filter and provides
+ * furthermore chaining abilities from the abstract.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +26,8 @@
  */
 
 /**
+ * Filter by for columns that is defined by a user.
+ *
  * Represents a where user where clause filter and provides
  * furthermore chaining abilities from the abstract.
  *
@@ -39,26 +44,28 @@
 class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
 {
     /**
-     * Holds the actual identifier
+     * Holds the actual identifier.
      *
      * @var string
      */
     protected $_identifier = null;
 
     /**
-     * Holds the actual value
+     * Holds the actual value.
      *
      * @var mixed
      */
     protected $_value = null;
 
     /**
-     * Initialize a new user filter on an active record. It uses the
-     * table name and the database adapter from the Active Record.
+     * Initialize a new user filter on an active record.
+     * It uses the table name and the database adapter from the Active Record.
      *
-     * @param Phprojekt_ActiveRecord_Abstract $record     An active record
-     * @param string                          $identifier The identifier usually the column to filter
-     * @param mixed                           $value      The value to filter
+     * @param Phprojekt_ActiveRecord_Abstract $record     An active record.
+     * @param string                          $identifier The identifier usually the column to filter.
+     * @param mixed                           $value      The value to filter.
+     *
+     * @return void
      */
     public function __construct(Phprojekt_ActiveRecord_Abstract $record, $identifier, $value)
     {
@@ -76,9 +83,9 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
     }
 
     /**
-     * Set the value for which we are filtering
+     * Set the value for which we are filtering.
      *
-     * @param mixed $value The value to filter for
+     * @param mixed $value The value to filter for.
      *
      * @return void
      */
@@ -88,11 +95,11 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
     }
 
     /**
-     * Filters a select using a simple where clause. This might
-     * get more complex in upcoming versions. After running the filter()
-     * method you can easily run the database query with the modified query.
+     * Filters a select using a simple where clause.
+     * This might get more complex in upcoming versions.
+     * After running the filter() method you can easily run the database query with the modified query.
      *
-     * @param Zend_Db_Select $select The select to update
+     * @param Zend_Db_Select $select The select to update.
      *
      * @return void
      */
@@ -103,9 +110,9 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
     }
 
     /**
-     * Backing store pair to safe to database
+     * Backing store pair to safe to database.
      *
-     * @return array
+     * @return array Array with 'key' and 'value'.
      */
     protected function _getBackingStorePair()
     {

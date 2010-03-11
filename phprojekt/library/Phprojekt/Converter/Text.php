@@ -1,6 +1,6 @@
 <?php
 /**
- * Convert a field type into a readable format for users
+ * Convert a field type into a readable format for users.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Convert a field type into a readable format for users
+ * Convert a field type into a readable format for users.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,12 +38,12 @@
 class Phprojekt_Converter_Text
 {
     /**
-     * Convert a value of the field in a readable format for users
+     * Convert a value of the field in a readable format for users.
      *
-     * @param Phprojekt_Model_Interface $model The record model
-     * @param array                     $field Array with the field data
+     * @param Phprojekt_Model_Interface $model The record model.
+     * @param array                     $field Array with the field data.
      *
-     * @return string
+     * @return string User readable value.
      */
     public static function convert($model, $field)
     {

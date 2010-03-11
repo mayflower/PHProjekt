@@ -1,6 +1,6 @@
 <?php
 /**
- * Helpdesk model class
+ * Helpdesk model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Helpdesk model class
+ * Helpdesk model class.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,18 +38,14 @@
 class Helpdesk_Models_Helpdesk extends Phprojekt_Item_Abstract
 {
     /**
-     * Status values
+     * Solved status value
      */
-    const STATUS_OPEN     = 1;
-    const STATUS_ASSIGNED = 2;
-    const STATUS_SOLVED   = 3;
-    const STATUS_VERIFIED = 4;
-    const STATUS_CLOSED   = 5;
+    const STATUS_SOLVED = 3;
 
     /**
-     * Returns an instance of notification class for this module
+     * Returns an instance of notification class for this module.
      *
-     * @return Phprojekt_Notification
+     * @return Phprojekt_Notification An instance of Phprojekt_Notification.
      */
     public function getNotification()
     {

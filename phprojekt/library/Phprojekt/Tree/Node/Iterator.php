@@ -1,6 +1,12 @@
 <?php
 /**
- * Tree node iterator
+ * Tree node iterator.
+ *
+ * Iterates over a set of tree nodes.
+ * You can use foreach statements to iterate over a tree and its child nodes.
+ * As it impelements a recursive iterator, the tree node iterator always iterates over
+ * the children nodes.
+ * See PHP-SPL for more information about the Iterator interfaces in PHP 5.2.x and above.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,12 +29,13 @@
  */
 
 /**
- * Iterates over a set of tree nodes. You can use foreach statements
- * to iterate over a tree and its child nodes. As it impelements a
- * recursive iterator, the tree node iterator always iterates over
+ * Tree node iterator.
+ *
+ * Iterates over a set of tree nodes.
+ * You can use foreach statements to iterate over a tree and its child nodes.
+ * As it impelements a recursive iterator, the tree node iterator always iterates over
  * the children nodes.
- * See PHP-SPL for more information about the Iterator interfaces in
- * PHP 5.2.x and above.
+ * See PHP-SPL for more information about the Iterator interfaces in PHP 5.2.x and above.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -43,9 +50,11 @@
 class Phprojekt_Tree_Node_Iterator implements RecursiveIterator
 {
     /**
-     * Initialize
+     * Initialize.
      *
      * @param array $children An array of children iterated by the iterator.
+     *
+     * @return void
      */
     function __construct($children)
     {
@@ -57,11 +66,11 @@ class Phprojekt_Tree_Node_Iterator implements RecursiveIterator
     }
 
     /**
-     * Returns the current item
+     * Returns the current item.
      *
      * @see Iterator::current()
      *
-     * @return Phprojekt_Tree_Node
+     * @return Phprojekt_Tree_Node An instance of Phprojekt_Tree_Node.
      */
     public function current()
     {
@@ -69,7 +78,7 @@ class Phprojekt_Tree_Node_Iterator implements RecursiveIterator
     }
 
     /**
-     * Returns the id/key for the current entry
+     * Returns the id/key for the current entry.
      *
      * @see Iterator::key()
      *
@@ -81,7 +90,7 @@ class Phprojekt_Tree_Node_Iterator implements RecursiveIterator
     }
 
     /**
-     * Move forward to the next item
+     * Move forward to the next item.
      *
      * @see Iterator::next()
      *
@@ -93,7 +102,7 @@ class Phprojekt_Tree_Node_Iterator implements RecursiveIterator
     }
 
     /**
-     * Reset to the first element
+     * Reset to the first element.
      *
      * @see Iterator::rewind()
      *
@@ -105,11 +114,11 @@ class Phprojekt_Tree_Node_Iterator implements RecursiveIterator
     }
 
     /**
-     * Checks if the current entry is valid
+     * Checks if the current entry is valid.
      *
      * @see Iterator::valid()
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function valid()
     {
@@ -118,7 +127,7 @@ class Phprojekt_Tree_Node_Iterator implements RecursiveIterator
 
     /**
      * Checks if the node has children to move forward to receive them
-     * using getChildren() if it has children
+     * using getChildren() if it has children.
      *
      * @see RecursiveIterator::hasChildren()
      *
@@ -130,7 +139,7 @@ class Phprojekt_Tree_Node_Iterator implements RecursiveIterator
     }
 
     /**
-     * Returns an new iterator for the children of the current node
+     * Returns an new iterator for the children of the current node.
      *
      * @see RecursiveIterator::getChildren()
      *

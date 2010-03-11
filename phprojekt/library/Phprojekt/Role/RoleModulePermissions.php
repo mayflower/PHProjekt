@@ -1,6 +1,7 @@
 <?php
 /**
- * User model
+ * Role-Module Relation.
+ * Manage the relation between the Roles and Modules.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +24,8 @@
  */
 
 /**
- * Settings on a per user base
+ * Role-Module Relation.
+ * Manage the relation between the Roles and Modules.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,11 +40,11 @@
 class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstract
 {
     /**
-     * Return all the modules in an array and the access if exists
+     * Return all the modules in an array and the access if exists.
      *
-     * @param int $roleId The role id
+     * @param integer $roleId The role ID.
      *
-     * @return array
+     * @return array Array with 'id', 'name', 'label' and the access.
      */
     public function getRoleModulePermissionsById($roleId)
     {
@@ -71,10 +73,10 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
     }
 
     /**
-     * Add a new relation module-role without delete any entry
-     * Used for add modules to the role 1
+     * Add a new relation module-role without delete any entry.
+     * Used for add modules to the role 1.
      *
-     * @param int $moduleId  The Module Id to add
+     * @param integer $moduleId The Module ID to add.
      *
      * @return void
      */
@@ -87,9 +89,9 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
     }
 
     /**
-     * Delete a role-module relation
+     * Delete a role-module relation.
      *
-     * @param int $moduleId  The Module Id to delete
+     * @param integer $moduleId The Module ID to delete.
      *
      * @return void
      */

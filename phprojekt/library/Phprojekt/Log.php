@@ -1,6 +1,6 @@
 <?php
 /**
- * The file contains the log functions
+ * The file contains the log functions.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,27 +23,26 @@
  */
 
 /**
- * Manage an array with Zend_Log objects
- * for loging each type of log in one distinct file.
+ * Manage an array with Zend_Log objects for loging each type of log in one distinct file.
  *
  * Since the Zend_Log use only one file for log everything in one big file,
  * we create an array with various Zend_Log objects,
  * each one, defined with a own log file and a own filter.
  *
  * The path to the log file is defined in the configuration.ini file in the way:
- * log.debug.filename is for log DEBUG stuffs
- * log.crit.filename  is for log CRIT stuffs
+ * log.debug.filename is for log DEBUG stuffs.
+ * log.crit.filename  is for log CRIT stuffs.
  * etc.
  *
  * The type defined for use are:
- * EMERG   = Emergency: system is unusable
- * ALERT   = Alert: action must be taken immediately
- * CRIT    = Critical: critical conditions
- * ERR     = Error: error conditions
- * WARN    = Warning: warning conditions
- * NOTICE  = Notice: normal but significant condition
- * INFO    = Informational: informational messages
- * DEBUG   = Debug: debug messages
+ * EMERG   = Emergency: system is unusable.
+ * ALERT   = Alert: action must be taken immediately.
+ * CRIT    = Critical: critical conditions.
+ * ERR     = Error: error conditions.
+ * WARN    = Warning: warning conditions.
+ * NOTICE  = Notice: normal but significant condition.
+ * INFO    = Informational: informational messages.
+ * DEBUG   = Debug: debug messages.
  *
  * You can add in the configuration.ini all of these types.
  * If the path to a log file is not defined, the class just drop the log.
@@ -61,20 +60,22 @@
 class Phprojekt_Log extends Zend_Log
 {
     /**
-     * An array of Zend_Log with priority filtering
+     * An array of Zend_Log with priority filtering.
      *
      * @var array
      */
     protected $_loggers = array();
 
     /**
-     * Constructor function
+     * Constructor function.
      *
      * For all the defined filenames for log constant,
      * will create a Zend_Log object
      * with the path to the filename and a filter for these log.
      *
-     * @param Zend_Config $config Object contain the user configuration
+     * @param Zend_Config $config Object contain the user configuration.
+     *
+     * @return void
      */
     public function __construct(Zend_Config $config)
     {
@@ -102,10 +103,10 @@ class Phprojekt_Log extends Zend_Log
      *
      * The message is passed to all Zend_Log instances saved in _loggers,
      * but they have priority filtering and therefore decide themself
-     * if they pass the message to the file
+     * if they pass the message to the file.
      *
-     * @param string $message  Text to write
-     * @param string $priority Type of log
+     * @param string $message  Text to write.
+     * @param string $priority Type of log.
      *
      * @return void
      */

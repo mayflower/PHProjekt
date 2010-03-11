@@ -114,7 +114,7 @@ class Calendar_Models_Calendar_Test extends PHPUnit_Framework_TestCase
         $calendarModel = clone($this->_model);
         $calendarModel->find(50);
         $return   = $calendarModel->getAllParticipants();
-        $expected = array();
+        $expected = '';
         $this->assertEquals($expected, $return);
     }
 

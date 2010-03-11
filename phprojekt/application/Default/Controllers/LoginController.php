@@ -1,6 +1,6 @@
 <?php
 /**
- * Login handling
+ * Login handling.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Login handling
+ * Login handling.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,7 +38,7 @@
 class LoginController extends Zend_Controller_Action
 {
     /**
-     * Default action
+     * Default action.
      *
      * The function sets up the template index.phtml and renders it.
      *
@@ -56,7 +56,7 @@ class LoginController extends Zend_Controller_Action
     }
 
     /**
-     * Executes the login using the username and password provided on login form
+     * Executes the login using the username and password provided on login form.
      *
      * If it works fine, redirect the user to homepage,
      * if not, show the error message.
@@ -143,7 +143,7 @@ class LoginController extends Zend_Controller_Action
     }
 
     /**
-     * Logout action
+     * Logout action.
      *
      * Logout the user, and redirect them to the login page.
      *

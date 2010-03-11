@@ -1,6 +1,8 @@
 <?php
 /**
- * Our own class loader.
+ * An own class loader that reads the class files from the
+ * /application directory or from the Zend library directory depending
+ * on the name of the class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,39 +42,38 @@
 class Phprojekt_Loader extends Zend_Loader
 {
     /**
-     * Identifier for views
-     * It's normaly only needed by the internals
+     * Identifier for views.
+     * It's normaly only needed by the internals.
      *
      * @see _getClass
      */
     const VIEW = 'Views';
 
     /**
-     * Identifier for models
-     * It's normaly only needed by the internals
+     * Identifier for models.
+     * It's normaly only needed by the internals.
      *
      * @see _getClass
      */
     const MODEL = 'Models';
 
     /**
-     * Directories
+     * Directories.
      *
      * @var array
      */
     protected static $_directories = array(PHPR_CORE_PATH, PHPR_LIBRARY_PATH);
 
     /**
-     * Define the set of allowed characters for classes.
-     *
+     * Define the set of allowed characters for classes..
      */
     const CLASS_PATTERN = '[A-Za-z0-9_]+';
 
     /**
      * Load a class
      *
-     * @param string       $class Name of the class
-     * @param string|array $dirs  Directories to search
+     * @param string       $class Name of the class.
+     * @param string|array $dirs  Directories to search.
      *
      * @return void
      */
@@ -103,13 +104,12 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * The autoload method used to load classes on demand
-     * Returns either the name of the class or false, if
-     * loading failed.
+     * The autoload method used to load classes on demand.
+     * Returns either the name of the class or false, if loading failed.
      *
-     * @param string $class The name of the class
+     * @param string $class The name of the class.
      *
-     * @return string|false Class name on success; false on failure
+     * @return string|false Class name on success; false on failure.
      */
     public static function autoload($class)
     {
@@ -125,19 +125,18 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * Instantiate a given class name. We asume that it's allready loaded.
+     * Instantiate a given class name.
+     * We asume that it's allready loaded.
      *
-     * @param string $name Name of the class
-     * @param array  $args Argument list
+     * @param string $name Name of the class.
+     * @param array  $args Argument list.
      *
      * @return object
      */
     protected static function _newInstance($name, $args)
     {
-        /*
-         * We have to use the reflection here, as expanding arguments
-         * to an array is not possible without reflection.
-         */
+        // We have to use the reflection here, as expanding arguments
+        // to an array is not possible without reflection.
         $class = new ReflectionClass($name);
         if (null !== $class->getConstructor()) {
             return $class->newInstanceArgs($args);
@@ -147,17 +146,17 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * Finds a class. If a customized class is available in the Customized/
-     * directory, it's loaded and the name is returned, instead of the
-     * normal class.
+     * Finds a class.
+     * If a customized class is available in the Customized/directory,
+     * it's loaded and the name is returned, instead of the normal class.
      *
-     * @param string $module Name of the module
-     * @param string $item   Name of the class to be loaded
-     * @param string $ident  Ident, might be 'Models', 'Controllers' or 'Views'
+     * @param string $module Name of the module.
+     * @param string $item   Name of the class to be loaded.
+     * @param string $ident  Ident, might be 'Models', 'Controllers' or 'Views'.
      *
-     * @throws Zend_Exception If class not found
+     * @throws Zend_Exception If class not found.
      *
-     * @return string
+     * @return string Identifier class name.
      */
     protected static function _getClass($module, $item, $ident)
     {
@@ -173,17 +172,18 @@ class Phprojekt_Loader extends Zend_Loader
 
     /**
      * Load the class of a model and return the name of the class.
-     * Always use the returned name to instantiate a class, a customized
-     * class name might be loaded and returned by this method
      *
-     * @param string $module Name of the module
-     * @param string $model  Name of the class to be loaded
+     * Always use the returned name to instantiate a class, a customized
+     * class name might be loaded and returned by this method.
+     *
+     * @param string $module Name of the module.
+     * @param string $model  Name of the class to be loaded.
      *
      * @see _getClass
      *
-     * @throws Zend_Exception If class not found
+     * @throws Zend_Exception If class not found.
      *
-     * @return string
+     * @return string Identifier class name.
      */
     public static function getModelClassname($module, $model)
     {
@@ -192,17 +192,18 @@ class Phprojekt_Loader extends Zend_Loader
 
     /**
      * Load the class of a model and return an instance of the class.
+     *
      * Always use the returned name to instantiate a class, a customized
      * class name might be loaded and returned by this method
      *
-     * @param string $module Name of the module
-     * @param string $view   Name of the class to be loaded
+     * @param string $module Name of the module.
+     * @param string $view   Name of the class to be loaded.
      *
      * @see _getClass
      *
-     * @throws Zend_Exception If class not found
+     * @throws Zend_Exception If class not found.
      *
-     * @return string
+     * @return string Identifier class name.
      */
     public static function getViewClassname($module, $view)
     {
@@ -211,20 +212,22 @@ class Phprojekt_Loader extends Zend_Loader
 
     /**
      * Load the class of a model and return an new instance of the class.
+     *
      * Always use the returned name to instantiate a class, a customized
      * class name might be loaded and returned by this method.
-     * This method can take more than the two arguments. Every other argument
-     * is passed to the constructor.
      *
-     * The class is temporally cached in the Registry for the next calls
+     * This method can take more than the two arguments.
+     * Every other argument is passed to the constructor.
+     *
+     * The class is temporally cached in the Registry for the next calls.
      * Only is cached if don't have any arguments
      *
      * Be sure that the class have the correct "__clone" function defined
      * if it have some internal variables with other classes for prevent
      * the same point to the object.
      *
-     * @param string $module Name of the module
-     * @param string $model  Name of the model
+     * @param string $module Name of the module.
+     * @param string $model  Name of the model.
      *
      * @return Object
      */
@@ -250,17 +253,18 @@ class Phprojekt_Loader extends Zend_Loader
 
     /**
      * Load a class from the library and return an new instance of the class.
-     * This method can take more than the two arguments. Every other argument
-     * is passed to the constructor.
      *
-     * The class is temporally cached in the Registry for the next calls
-     * Only is cached if don't have any arguments
+     * This method can take more than the two arguments.
+     * Every other argument is passed to the constructor.
+     *
+     * The class is temporally cached in the Registry for the next calls.
+     * Only is cached if don't have any arguments.
      *
      * Be sure that the class have the correct "__clone" function defined
      * if it have some internal variables with other classes for prevent
      * the same point to the object.
      *
-     * @param string $name Name of the class
+     * @param string $name Name of the class.
      *
      * @return Object
      */
@@ -284,9 +288,9 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * Returns the name of the model for a given object
+     * Returns the name of the model for a given object.
      *
-     * @param Phprojekt_Model_Interface $object An active record
+     * @param Phprojekt_Model_Interface $object An active record.
      *
      * @return string|boolean
      */
@@ -302,9 +306,9 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * Returns the name of the modul for a given object
+     * Returns the name of the modul for a given object.
      *
-     * @param Phprojekt_ActiveRecord_Abstract $object An active record
+     * @param Phprojekt_ActiveRecord_Abstract $object An active record.
      *
      * @return string|boolean
      */
@@ -325,6 +329,7 @@ class Phprojekt_Loader extends Zend_Loader
 
     /**
      * Load the class of a view and return an new instance of the class.
+     *
      * Always use the returned name to instantiate a class, a customized
      * class name might be loaded and returned by this method
      *
@@ -342,10 +347,10 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * Try to include a file by the class name
+     * Try to include a file by the class name.
      *
-     * @param string  $class          The name of the class
-     * @param boolean $isLibraryClass True if the class is in the library dir
+     * @param string  $class          The name of the class.
+     * @param boolean $isLibraryClass True if the class is in the library dir.
      *
      * @return boolean
      */
@@ -373,9 +378,9 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * Try to include a library file by the class name
+     * Try to include a library file by the class name.
      *
-     * @param string $class The name of the class
+     * @param string $class The name of the class.
      *
      * @return boolean
      */
@@ -385,7 +390,9 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * Add the module path for load customs templates
+     * Add the module path for load customs templates.
+     *
+     * @param Zend_View|null $view View class.
      *
      * @return void;
      */

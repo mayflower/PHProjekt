@@ -1,6 +1,6 @@
 <?php
 /**
- * Class for manage user setting from different modules
+ * Class for manage user setting from different modules.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Class for manage user setting from different modules
+ * Class for manage user setting from different modules.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,26 +38,26 @@
 class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
 {
     /**
-     * Name for use with the session
+     * Name for use with the session.
      */
     const IDENTIFIER = 'Phprojekt_Setting-getSetting-';
 
     /**
-     * The name of a module
+     * The name of a module.
      *
      * @var string
      */
     protected $_module = 'User';
 
     /**
-     * The module Id
+     * The module ID.
      *
      * @var integer
      */
     protected $_moduleId = 0;
 
     /**
-     * Class of the setting module
+     * Class of the setting module.
      *
      * @var Object class
      */
@@ -65,16 +65,16 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
 
     /**
      * A list of directories that are not included in the search.
-     * Usually Default and Administration
+     * Usually Default and Core.
      *
      * @var array
      */
     protected static $_excludePaths = array('Default', 'Core', '.svn');
 
     /**
-     * Returns a set of modules available that have Setting.php files
+     * Returns a set of modules available that have Setting.php files.
      *
-     * @return array
+     * @return array Array with 'name' and 'label'.
      */
     public function getModules()
     {
@@ -110,9 +110,9 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Define the current module to use in the settings
+     * Define the current module to use in the settings.
      *
-     * @param string $module The module name
+     * @param string $module The module name.
      *
      * @return void
      */
@@ -123,9 +123,9 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Get the object class to use for manage the settings
+     * Get the object class to use for manage the settings.
      *
-     * @return Object class
+     * @return Object Class.
      */
     public function getModel()
     {
@@ -138,16 +138,17 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
                 $this->_object = Phprojekt_Loader::getModel($this->_module, 'Setting');
             }
         }
+
         return $this->_object;
     }
 
     /**
-     * Return the value of one setting
+     * Return the value of one setting.
      *
-     * @param string  $settingName The name of the setting
-     * @param integer $userId      The user id, if is not setted, the current user is used.
+     * @param string  $settingName The name of the setting.
+     * @param integer $userId      The user ID, if is not setted, the current user is used.
      *
-     * @return mix
+     * @return mix Value of the setting.
      */
     public function getSetting($settingName, $userId = 0)
     {
@@ -173,13 +174,13 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Collect all the values of the settings and return it in one row
+     * Collect all the values of the settings and return it in one row.
      *
-     * @param integer $moduleId The current moduleId
-     * @param array   $metadata Array with all the fields
-     * @param integer $userId   The user id, if is not setted, the current user is used
+     * @param integer $moduleId The current module ID.
+     * @param array   $metadata Array with all the fields.
+     * @param integer $userId   The user ID, if is not setted, the current user is used.
      *
-     * @return array
+     * @return array Array with all the settings.
      */
     public function getList($moduleId, $metadata, $userId = null)
     {
@@ -218,11 +219,11 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Validation functions for all the values
+     * Validation functions for all the values.
      *
-     * @param array $params $_POST fields
+     * @param array $params $_POST fields.
      *
-     * @return string
+     * @return string Error message.
      */
     public function validateSettings($params)
     {
@@ -236,10 +237,10 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Save the settings into the table
+     * Save the settings into the table.
      *
-     * @param array   $params $_POST fields
-     * @param integer $userId The user id, if is not setted, the current user is used.
+     * @param array   $params $_POST fields.
+     * @param integer $userId The user ID, if is not setted, the current user is used.
      *
      * @return void
      */

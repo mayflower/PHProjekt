@@ -1,6 +1,6 @@
 <?php
 /**
- * Statistic model class
+ * Statistic model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Statistic model class
+ * Statistic model class.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,17 +38,16 @@
 class Statistic_Models_Statistic
 {
     /**
-     * Get all the values for the current project and sub-projects
-     * and return 3 array
-     * 1. With Projects names
-     * 2. With users names
-     * 3. Relations Projects-User-Bookings
+     * Get all the values for the current project and sub-projects and return 3 array:
+     * 1. With Projects names.
+     * 2. With users names.
+     * 3. Relations Projects-User-Bookings.
      *
-     * @param string  $startDate Start date for make the query
-     * @param string  $endDate   End date for make the query
-     * @param integer $projectId Current Project
+     * @param string  $startDate Start date for make the query.
+     * @param string  $endDate   End date for make the query.
+     * @param integer $projectId Current Project ID.
      *
-     * @return array
+     * @return array Array with 'users', 'projects' and 'rows'.
      */
     public function getStatistics($startDate, $endDate, $projectId)
     {
@@ -92,9 +91,9 @@ class Statistic_Models_Statistic
     }
 
     /**
-     * Implement fetchAll for delete projects
+     * Implement fetchAll for delete projects.
      *
-     * @return array
+     * @return array Empty array.
      */
     public function fetchAll()
     {

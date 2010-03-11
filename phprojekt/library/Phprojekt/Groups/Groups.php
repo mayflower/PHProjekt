@@ -1,6 +1,6 @@
 <?php
 /**
- * Group class for PHProjekt 6.0
+ * Group model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Phprojekt_Group for PHProjekt 6.0
+ * Group model class.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,7 +38,7 @@
 class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
-     * Has many and belongs to many declrations
+     * Has many and belongs to many declrations.
      *
      * @var array
      */
@@ -47,21 +47,23 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
                                                               'model'     => 'User'));
 
     /**
-     * user
-     * @var integer $_user
+     * Current user ID
+     *
+     * @var integer
      */
     private $_userId = null;
 
     /**
-     * The standard information manager with hardcoded
-     * field definitions
+     * The standard information manager with hardcoded field definitions
      *
      * @var Phprojekt_ModelInformation_Interface
      */
     protected $_informationManager;
 
     /**
-     * Constructor for Groups
+     * Constructor initializes additional Infomanager.
+     *
+     * @return void
      */
     public function __construct()
     {
@@ -83,7 +85,7 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Returns the user id thats checked
+     * Returns the user ID thats checked.
      *
      * @return integer
      */
@@ -93,11 +95,11 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Checks whether user is in Group
+     * Checks whether user is in Group.
      *
-     * @param integer $group Id of group
+     * @param integer $group ID of group.
      *
-     * @return boolean
+     * @return boolean True if the use is in the group.
      */
     public function isUserInGroup($group)
     {
@@ -116,9 +118,9 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Returns all groups user belongs to
+     * Returns all groups user belongs to.
      *
-     * @return array $group Id of group;
+     * @return array Array with group IDs;
      */
     public function getUserGroups()
     {
@@ -139,11 +141,11 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Get the information manager
+     * Get the information manager.
      *
-     * @see Phprojekt_Model_Interface::getInformation()
+     * @see Phprojekt_Model_Interface::getInformation().
      *
-     * @return Phprojekt_ModelInformation_Interface
+     * @return Phprojekt_ModelInformation_Interface An instance of Phprojekt_ModelInformation_Interface.
      */
     public function getInformation()
     {
@@ -151,9 +153,9 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Validate the current record
+     * Validate the current record.
      *
-     * @return boolean
+     * @return boolean Always true.
      */
     public function recordValidate()
     {

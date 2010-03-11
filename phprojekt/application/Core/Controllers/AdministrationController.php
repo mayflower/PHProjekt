@@ -1,6 +1,6 @@
 <?php
 /**
- * Administration Module Controller for PHProjekt 6.0
+ * Administration Module Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Administration Module Controller for PHProjekt 6.0
+ * Administration Module Controller.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,7 +38,7 @@
 class Core_AdministrationController extends Core_IndexController
 {
     /**
-     * Init function
+     * Init function.
      *
      * Only admin users can access to these actions,
      * if the user is not an admin, is redirected to the login form or throws an exception.
@@ -64,7 +64,7 @@ class Core_AdministrationController extends Core_IndexController
     }
 
     /**
-     * Returns all the modules that contain Configuration.php file
+     * Returns all the modules that contain Configuration.php file.
      *
      * Returns a list of modules that have a Configuration class, with:
      * <pre>

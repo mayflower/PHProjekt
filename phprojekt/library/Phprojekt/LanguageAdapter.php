@@ -41,7 +41,9 @@
  */
 class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 {
-    // Define all the lang files
+    /**
+     * Define all the lang files.
+     */
     const LANG_AL = 'al.inc.php';
     const LANG_BG = 'bg.inc.php';
     const LANG_BR = 'br.inc.php';
@@ -80,19 +82,19 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     const LANG_ZH = 'zh.inc.php';
 
     /**
-     * Contain all the already loaded locales
+     * Contain all the already loaded locales.
      *
      * @var array
      */
     protected $_langLoaded = array();
 
     /**
-     * Generates the adapter
+     * Generates the adapter.
      *
-     * Convert some PHProject lang shortname to the Zend locale names
+     * Convert some PHProject lang shortname to the Zend locale names.
      *
-     * @param string $data   Path to the default lang file
-     * @param string $locale PHProjekt locale string
+     * @param string $data   Path to the default lang file.
+     * @param string $locale PHProjekt locale string.
      *
      * @return void
      */
@@ -112,14 +114,12 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      *
      * Since is not nessesary load the file in each request,
      * we use sessions for save the langs translations.
-     * And also have an array with the already loaded languages
-     * for not load a same file two times.
+     * And also have an array with the already loaded languages for not load a same file two times.
      *
-     * @param string             $data    Path to the default translation file
-     * @param string|Zend_Locale $locale  Locale/Language to set,
-     *                                    identical with Locale identifiers
-     *                                    see Zend_Locale for more information
-     * @param string|array       $options Options for the adaptor
+     * @param string             $data    Path to the default translation file.
+     * @param string|Zend_Locale $locale  Locale/Language to set, identical with Locale identifiers
+     *                                    see Zend_Locale for more information.
+     * @param string|array       $options Options for the adaptor.
      *
      * @return void
      */
@@ -185,13 +185,12 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     }
 
     /**
-     * Collect the data and create the array translation set for SubModules folders
+     * Collect the data and create the array translation set for SubModules folders.
      *
-     * @param string|Zend_Locale $locale   Locale/Language to set,
-     *                                     identical with Locale identifiers
-     *                                     see Zend_Locale for more information
-     * @param string             $langFile Current lang file for get
-     * @param string             $module   Folder name of the module
+     * @param string|Zend_Locale $locale   Locale/Language to set, identical with Locale identifiers
+     *                                     see Zend_Locale for more information.
+     * @param string             $langFile Current lang file for get.
+     * @param string             $module   Folder name of the module.
      *
      * @return void
      */
@@ -239,13 +238,12 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     }
 
     /**
-     * Return the correct file for the current locale
+     * Return the correct file for the current locale.
      *
-     * @param string|Zend_Locale $locale Locale/Language to set,
-     *                                   identical with Locale identifiers
-     *                                   see Zend_Locale for more information
+     * @param string|Zend_Locale $locale Locale/Language to set, identical with Locale identifiers
+     *                                   see Zend_Locale for more information.
      *
-     * @return string
+     * @return string File to use.
      */
     private function _getLangFile($locale)
     {
@@ -366,13 +364,12 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     }
 
     /**
-     * Return all the trasnlated strings for the $locale
+     * Return all the trasnlated strings for the $locale.
      *
-     * @param string|Zend_Locale $locale Locale/Language to set,
-     *                                   identical with Locale identifiers
-     *                                   see Zend_Locale for more information
+     * @param string|Zend_Locale $locale Locale/Language to set, identical with Locale identifiers
+     *                                   see Zend_Locale for more information.
      *
-     * @return array
+     * @return array Array with all the translated strings.
      */
     public function getTranslatedStrings($locale)
     {
@@ -387,18 +384,17 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     }
 
     /**
-     * Return the message translated
+     * Return the message translated.
      *
-     * Search first in the Module translations
-     * Then in the Default translations
-     * Then return the message
+     * Search first in the Module translations.
+     * Then in the Default translations.
+     * Then return the untranslated message.
      *
-     * @param string             $message    Message to translate
-     * @param string             $moduleName Module where search the translation
-     * @param string|Zend_Locale $locale     Locale/Language to set,
-     *                                       identical with Locale identifiers
-     *                                       see Zend_Locale for more information
-     * @return string
+     * @param string             $message    Message to translate.
+     * @param string             $moduleName Module where search the translation.
+     * @param string|Zend_Locale $locale     Locale/Language to set, identical with Locale identifiers
+     *                                       see Zend_Locale for more information.
+     * @return string Translated string.
      */
     public function get($message, $moduleName, $locale = null)
     {
@@ -417,11 +413,11 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     }
 
     /**
-     * Returns the adapters name
+     * Return the adapters name.
      *
-     * Just a redefined fucntion from the abstract Adapter
+     * Just a redefined function from the abstract Adapter.
      *
-     * @return string
+     * @return string "Phprojekt".
      */
     public function toString()
     {
@@ -432,9 +428,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * Return if is loaded the lang file or not.
      * This is for do not read the same file two times.
      *
-     * @param string|Zend_Locale $locale Locale/Language to set,
-     *                                   identical with Locale identifiers
-     *                                   see Zend_Locale for more information
+     * @param string|Zend_Locale $locale Locale/Language to set, identical with Locale identifiers
+     *                                   see Zend_Locale for more information.
      *
      * @return boolean
      */
@@ -451,9 +446,9 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     /**
      * Transform the PHProjekt locale shortname to Zend locale shortname.
      *
-     * @param string $locale PHProjekt locale
+     * @param string $locale PHProjekt locale.
      *
-     * @return string Zend locale
+     * @return string Zend_Locale string.
      */
     protected static function _convertToZendLocale($locale)
     {
@@ -500,9 +495,9 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     }
 
     /**
-     * Return an array with all the languages name in English
+     * Return an array with all the languages name in English.
      *
-     * @return array
+     * @return array Array with all the languages.
      */
     public static function getLanguageList()
     {

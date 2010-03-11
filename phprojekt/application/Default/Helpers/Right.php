@@ -1,6 +1,6 @@
 <?php
 /**
- * Helper for set the rights of the user in one item
+ * Helper for set the rights of the user in one item.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Helper for set the rights of the user in one item
+ * Helper for set the rights of the user in one item.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,18 +38,22 @@
 final class Default_Helpers_Right
 {
     /**
-     * Strings to use for the type of access
+     * Type: item
      */
     const ITEM_TYPE   = "item";
+
+    /**
+     * Type: module
+     */
     const MODULE_TYPE = "module";
 
     /**
-     * Add the user into the dataAccess array
+     * Add the user into the dataAccess array.
      *
-     * @param array   $params The Post values
-     * @param integer $user   The user to add
+     * @param array   $params The Post values.
+     * @param integer $user   The user ID to add.
      *
-     * @return array
+     * @return array Array with users IDs.
      */
     public static function addUser($params, $user)
     {
@@ -65,12 +69,12 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set the none access for the user
+     * Set the none access for the user.
      *
-     * @param array   $params The post values
-     * @param integer $user   The user to set
+     * @param array   $params The post values.
+     * @param integer $user   The user ID to set.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function allowNone($params, $user)
     {
@@ -78,12 +82,12 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set the read access for the user
+     * Set the read access for the user.
      *
-     * @param array   $params The post values
-     * @param integer $user   The user to set
+     * @param array   $params The post values.
+     * @param integer $user   The user ID to set.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function allowRead($params, $user)
     {
@@ -91,12 +95,12 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set the write access for the user
+     * Set the write access for the user.
      *
-     * @param array   $params The post values
-     * @param integer $user   The user to set
+     * @param array   $params The post values.
+     * @param integer $user   The user ID to set.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function allowWrite($params, $user)
     {
@@ -104,12 +108,12 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set the access access for the user
+     * Set the access access for the user.
      *
-     * @param array   $params The post values
-     * @param integer $user   The user to set
+     * @param array   $params The post values.
+     * @param integer $user   The user ID to set.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function allowAccess($params, $user)
     {
@@ -117,12 +121,12 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set the create access for the user
+     * Set the create access for the user.
      *
-     * @param array   $params The post values
-     * @param integer $user   The user to set
+     * @param array   $params The post values.
+     * @param integer $user   The user ID to set.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function allowCreate($params, $user)
     {
@@ -130,12 +134,12 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set the copy access for the user
+     * Set the copy access for the user.
      *
-     * @param array   $params The post values
-     * @param integer $user   The user to set
+     * @param array   $params The post values.
+     * @param integer $user   The user ID to set.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function allowCopy($params, $user)
     {
@@ -143,12 +147,12 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set the delete access for the user
+     * Set the delete access for the user.
      *
-     * @param array   $params The post values
-     * @param integer $user   The user to set
+     * @param array   $params The post values.
+     * @param integer $user   The user ID to set.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function allowDelete($params, $user)
     {
@@ -156,12 +160,12 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set the download access for the user
+     * Set the download access for the user.
      *
-     * @param array   $params The post values
-     * @param integer $user   The user to set
+     * @param array   $params The post values.
+     * @param integer $user   The user ID to set.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function allowDownload($params, $user)
     {
@@ -169,12 +173,12 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set the admin access for the user
+     * Set the admin access for the user.
      *
-     * @param array   $params The post values
-     * @param integer $user   The user to set
+     * @param array   $params The post values.
+     * @param integer $user   The user ID to set.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function allowAdmin($params, $user)
     {
@@ -182,12 +186,12 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set read, write, delete and download access for the user
+     * Set read, write, delete and download access for the user.
      *
-     * @param array   $params The post values
-     * @param integer $user   The user to set
+     * @param array   $params The post values.
+     * @param integer $user   The user ID to set.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function allowReadWriteDownloadDelete($params, $user)
     {
@@ -200,12 +204,12 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Set full access for the user
+     * Set full access for the user.
      *
-     * @param array   $params The post values
-     * @param integer $user   The user to set
+     * @param array   $params The post values.
+     * @param integer $user   The user ID to set.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function allowAll($params, $user)
     {
@@ -222,13 +226,13 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Parse the rights for all the users and return it into a bitmask per user
+     * Parse the rights for all the users and return it into a bitmask per user.
      *
-     * @param array   $params  The post values
-     * @param boolean $newItem If is a new item or not
-     * @param integer $ownerId The owner id or 0 for the current user
+     * @param array   $params  The post values.
+     * @param boolean $newItem If is a new item or not.
+     * @param integer $ownerId The owner ID or 0 for the current user.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function getItemRights($params, $moduleId, $newItem, $ownerId = 0)
     {
@@ -236,11 +240,11 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Parse the rights for all the modules and return it into a bitmask per module
+     * Parse the rights for all the modules and return it into a bitmask per module.
      *
-     * @param array $params The post values
+     * @param array $params The post values.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function getModuleRights($params)
     {
@@ -248,15 +252,15 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Parse the rights for all the users and return it into a bitmask per user
+     * Parse the rights for all the users and return it into a bitmask per user.
      *
-     * @param array   $params   The post values
-     * @param string  $type     Type of right, for users or modules
-     * @param string  $moduleId The module id
-     * @param boolean $newItem  If is a new item or not
-     * @param integer $ownerId  The owner id or 0 for the current user
+     * @param array   $params   The post values.
+     * @param string  $type     Type of right, for users or modules.
+     * @param string  $moduleId The module ID.
+     * @param boolean $newItem  If is a new item or not.
+     * @param integer $ownerId  The owner ID or 0 for the current user.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     private static function getRights($params, $type, $moduleId = 0, $newItem = false, $ownerId = 0)
     {
@@ -314,13 +318,13 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Adds specific right to the params
+     * Adds specific right to the params.
      *
-     * @param array   $params The post value
-     * @param string  $right  The right to add
-     * @param integer $user   The user for the right
+     * @param array   $params The post value.
+     * @param string  $right  The right to add.
+     * @param integer $user   The user ID for the right.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     private static function _addRight($params, $user, $right)
     {
@@ -337,14 +341,14 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Add read, write and delete access to the assigned user in an item
+     * Add read, write and delete access to the assigned user in an item.
      *
-     * @param string                    $key     The name of the user field
-     * @param array                     $params  The post values
-     * @param Phprojekt_Model_Interface $model   The current module to save
-     * @param boolean                   $newItem If is new item or not
+     * @param string                    $key     The name of the user field.
+     * @param array                     $params  The post values.
+     * @param Phprojekt_Model_Interface $model   The current module to save.
+     * @param boolean                   $newItem If is new item or not.
      *
-     * @return array
+     * @return array Array with user IDs per access.
      */
     public static function addRightsToAssignedUser($key, $params, $model, $newItem)
     {
@@ -397,13 +401,13 @@ final class Default_Helpers_Right
     }
 
     /**
-     * Return true or false if the checkbox is checked
+     * Return true or false if the checkbox is checked.
      *
-     * @param array $params  The post value
-     * @param string $string The key of the field
-     * @param int $accessId  The user Id
+     * @param array   $params   The post value.
+     * @param string  $string   The key of the field.
+     * @param integer $accessId The user ID.
      *
-     * @return boolean
+     * @return boolean True for checked.
      */
     private static function _checked($params, $string, $accessId)
     {

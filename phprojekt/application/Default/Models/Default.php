@@ -1,6 +1,6 @@
 <?php
 /**
- * Default model class
+ * Default model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Default model class
+ * Default model class.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,15 +38,16 @@
 class Default_Models_Default implements Phprojekt_Model_Interface
 {
     /**
-     * Construct class
+     * Constructor.
      *
+     * @return void
      */
     public function __construct()
     {
     }
 
     /**
-     * Information about the fields
+     * Information about the fields.
      *
      * @see Phprojekt_Item_Abstract
      *
@@ -57,7 +58,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Empty iterator implementation as a model must be iteratable
+     * Empty iterator implementation as a model must be iteratable.
      *
      * @see Iterator::next()
      *
@@ -68,7 +69,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Empty iterator implementation as a model must be iteratable
+     * Empty iterator implementation as a model must be iteratable.
      *
      * @see Iterator::rewind()
      *
@@ -79,7 +80,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Empty iterator implementation as a model must be iteratable
+     * Empty iterator implementation as a model must be iteratable.
      *
      * @see Iterator::current()
      *
@@ -90,7 +91,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Empty iterator implementation as a model must be iteratable
+     * Empty iterator implementation as a model must be iteratable.
      *
      * @see Iterator::valid()
      *
@@ -102,7 +103,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Empty iterator implementation as a model must be iteratable
+     * Empty iterator implementation as a model must be iteratable.
      *
      * @see Iterator::key()
      *
@@ -113,7 +114,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Default fetchall - needs to be implemented
+     * Default fetchall - needs to be implemented.
      *
      * @return void
      */
@@ -122,7 +123,7 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Default find - needs to be implemented
+     * Default find - needs to be implemented.
      *
      * @return void
      */
@@ -137,9 +138,9 @@ class Default_Models_Default implements Phprojekt_Model_Interface
      * active record and this default model cannot be used as an active record,
      * as no database table exists for this model, all the calls to the
      * active record provided methods will fail.
-     * To avoid this, we just suck all the calls and don't spit warnings
+     * To avoid this, we just suck all the calls and don't spit warnings.
      *
-     * @return void
+     * @return boolean False.
      */
     public function save()
     {
@@ -147,9 +148,9 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Gets the rights of the item for the current user
+     * Gets the rights of the item for the current user.
      *
-     * @return array
+     * @return array Empty array,
      */
     public function getRights()
     {
@@ -157,11 +158,11 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Gets the rights of various items for the current user
+     * Gets the rights of various items for the current user.
      *
-     * @param array $ids Array with various itemId
+     * @param array $ids Array with various item IDs.
      *
-     * @return array
+     * @return array Empty array per ID.
      */
     public function getMultipleRights($ids)
     {
@@ -174,9 +175,9 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Gets the rights of the item for other users
+     * Gets the rights of the item for other users.
      *
-     * @return array
+     * @return array Empty array.
      */
     public function getUsersRights()
     {
@@ -184,9 +185,9 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Validate the data of the current record
+     * Validate the data of the current record.
      *
-     * @return boolean
+     * @return boolean Always true.
      */
     public function recordValidate()
     {
@@ -194,9 +195,9 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     }
 
     /**
-     * Get an array with all the fields for make the filter select
+     * Get an array with all the fields for make the filter select.
      *
-     * @return array
+     * @return array Empty array.
      */
     public function getFieldsForFilter()
     {

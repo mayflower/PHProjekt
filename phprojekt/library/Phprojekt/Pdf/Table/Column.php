@@ -1,6 +1,6 @@
 <?php
 /**
- * Phprojekt Class for creation of column in PDF table row
+ * Phprojekt Class for creation of column in PDF table row.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Phprojekt Class for creation of column in PDF table row
+ * Phprojekt Class for creation of column in PDF table row.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,47 +38,47 @@
 class Phprojekt_Pdf_Table_Column
 {
     /**
-     * Height of the column
+     * Height of the column.
      *
      * @var int
      */
     protected $_height;
 
     /**
-     * Width of the column
+     * Width of the column.
      *
      * @var int
      */
     protected $_width;
 
     /**
-     * Text in the column
+     * Text in the column.
      *
      * @var unknown_type
      */
     protected $_text;
 
     /**
-     * Encoding of the text
+     * Encoding of the text.
      *
      * @var string
      */
     protected $_encoding = 'UTF-8';
 
     /**
-     * Align for the text in cell
+     * Align for the text in cell.
      *
      * @var string
      */
     protected $_align = 'left';
 
     /**
-     * Set text for the column
+     * Set text for the column.
      *
-     * @param string $text
-     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     * @param string $text     Text to use.
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default.
      *
-     * @return Phprojekt_Pdf_Table_Column
+     * @return Phprojekt_Pdf_Table_Column An instance of Phprojekt_Pdf_Table_Column.
      */
     public function setText($text, $encoding = 'UTF-8')
     {
@@ -89,9 +89,9 @@ class Phprojekt_Pdf_Table_Column
     }
 
     /**
-     * Get protected value
+     * Get protected value.
      *
-     * @return int
+     * @return integer Current value.
      */
     public function getWidth()
     {
@@ -99,11 +99,11 @@ class Phprojekt_Pdf_Table_Column
     }
 
     /**
-     * Set protected value
+     * Set protected value.
      *
-     * @param int $width
+     * @param integer $width Width to set.
      *
-     * @return int Current value
+     * @return Phprojekt_Pdf_Table_Column An instance of Phprojekt_Pdf_Table_Column.
      */
     public function setWidth($width)
     {
@@ -113,9 +113,9 @@ class Phprojekt_Pdf_Table_Column
     }
 
     /**
-     * Get protected value
+     * Get protected value.
      *
-     * @return int
+     * @return integer Current value.
      */
     public function getHeight()
     {
@@ -123,11 +123,11 @@ class Phprojekt_Pdf_Table_Column
     }
 
     /**
-     * Set protected value
+     * Set protected value.
      *
-     * @param int $width
+     * @param string $align Value to use.
      *
-     * @return int Current value
+     * @return void
      */
     public function setAlignment($align)
     {
@@ -137,11 +137,11 @@ class Phprojekt_Pdf_Table_Column
     }
 
     /**
-     * Insert column in the page
+     * Insert column in the page.
      *
-     * @param Phprojekt_Pdf_Page $page
-     * @param int                $x    Start position x
-     * @param int                $y    Start position y
+     * @param Phprojekt_Pdf_Page $page Current page.
+     * @param integer            $x    Start position x.
+     * @param integer            $y    Start position y.
      *
      * @return void
      */
@@ -155,11 +155,11 @@ class Phprojekt_Pdf_Table_Column
     }
 
     /**
-     * Test function
+     * Test function.
      *
-     * @param Phprojekt_Pdf_Page $page
-     * @param int                $x
-     * @param int                $y
+     * @param Phprojekt_Pdf_Page $page Current page.
+     * @param integer            $x    Start position x.
+     * @param integer            $y    Start position y.
      *
      * @return void
      */
@@ -173,13 +173,13 @@ class Phprojekt_Pdf_Table_Column
     }
 
     /**
-     * Add border
+     * Add border.
      *
-     * @param Phprojekt_Pdf_Page $page
-     * @param int                $x
-     * @param int                $y
-     * @param int                $height
-     * @param boolean            $isHeader
+     * @param Phprojekt_Pdf_Page $page     Current page.
+     * @param integer            $x        Start position x.
+     * @param integer            $y        Start position y.
+     * @param integer            $height   Current height.
+     * @param boolean            $isHeader True if is a header.
      *
      * @return void
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * User class for PHProjekt 6.0
+ * Auth class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Phprojekt_User for PHProjekt 6.0
+ * Auth class.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -37,14 +37,23 @@
  */
 class Phprojekt_Auth extends Zend_Auth
 {
+    /**
+     * Prefix for use in cookies.
+     */
     const COOKIES_PREFIX = 'p6.';
-    const LOGGED_TOKEN   = 'keepLoggedToken';
 
     /**
-     * Checks in the session if user is loggued in or not. It uses the Zend
+     * Token.
+     */
+    const LOGGED_TOKEN = 'keepLoggedToken';
+
+    /**
+     * Checks in the session if user is loggued in or not.
      * If it is not logged, tries to log him/her using browser cookies.
      *
-     * @return boolean true if user is logued in
+     * @throws Phprojekt_Auth_UserNotLoggedInException On user not logged in.
+     *
+     * @return boolean True if user is logued in.
      */
     static public function isLoggedIn()
     {
@@ -101,13 +110,15 @@ class Phprojekt_Auth extends Zend_Auth
     }
 
     /**
-     * Makes the login process
+     * Makes the login process.
      *
-     * @param string  $username   username provided
-     * @param string  $password   Clean password typed by user
-     * @param boolean $keepLogged Keep the user logued for next uses
+     * @param string  $username   Username provided.
+     * @param string  $password   Clean password typed by user.
+     * @param boolean $keepLogged Keep the user logued for next uses.
      *
-     * @return boolean true if login process was sucessful
+     * @throws Phprojekt_Auth_Exception On login errors.
+     *
+     * @return boolean True if login process was sucessful.
      */
     public static function login($username, $password, $keepLogged = false)
     {
@@ -159,9 +170,9 @@ class Phprojekt_Auth extends Zend_Auth
     }
 
     /**
-     * Gets from auth namespace the user id logged in
+     * Gets from auth namespace the user ID logged in.
      *
-     * @return integet user ID or false if there isn't user logged
+     * @return integer|false user ID or false if there isn't user logged.
      */
     static public function getUserId()
     {
@@ -176,9 +187,9 @@ class Phprojekt_Auth extends Zend_Auth
     }
 
     /**
-     * Gets from auth namespace if the user is admin or not
+     * Gets from auth namespace if the user is admin or not.
      *
-     * @return 1 or 0
+     * @return integer 1 or 0.
      */
     public static function isAdminUser()
     {
@@ -193,9 +204,9 @@ class Phprojekt_Auth extends Zend_Auth
     }
 
     /**
-     * Makes the logout process
+     * Makes the logout process.
      *
-     * @return boolean true if logout process was sucessful
+     * @return boolean True if logout process was sucessful.
      */
     public static function logout()
     {
@@ -219,12 +230,12 @@ class Phprojekt_Auth extends Zend_Auth
     }
 
     /**
-     * Compare a string with a user password
+     * Compare a string with a user password.
      *
-     * @param string $string   key uncryted to check if it is the password
-     * @param string $password crypted password
+     * @param string $string   Key uncryted to check if it is the password.
+     * @param string $password Crypted password.
      *
-     * @return boolean true if the string crypted is equal to provide password
+     * @return boolean True if the string crypted is equal to provide password.
      */
     private static function _compareStringWithPassword($string, $password)
     {
@@ -242,11 +253,11 @@ class Phprojekt_Auth extends Zend_Auth
     }
 
     /**
-     * String to be crytped
+     * String to be crytped.
      *
-     * @param string $password string to be cripted
+     * @param string $password String to be cripted.
      *
-     * @return scring crypted password
+     * @return scring Crypted password.
      */
     private static function _cryptPassword($password)
     {
@@ -254,22 +265,23 @@ class Phprojekt_Auth extends Zend_Auth
     }
 
     /**
-     * String to be crytped
+     * String to be crytped.
      *
-     * @param string $string string to be cripted
+     * @param string $string String to be cripted.
      *
-     * @return scring crypted password
+     * @return scring Crypted password.
      */
     public static function cryptString($string)
     {
         $cryptedString = 'phprojektmd5' . $string;
+
         return Phprojekt_Auth::_cryptPassword($cryptedString);
     }
 
     /**
-     * Deletes login data on DB and cookies
+     * Deletes login data on DB and cookies.
      *
-     * @param int $userId  Id of the user
+     * @param integer $userId ID of the user.
      *
      * @return void
      */
@@ -296,9 +308,9 @@ class Phprojekt_Auth extends Zend_Auth
     }
 
     /**
-     * Save the login data into Settings and Cookies
+     * Save the login data into Settings and Cookies.
      *
-     * @param int $userId Current userId
+     * @param integer $userId Current user ID.
      *
      * @return void
      */
@@ -346,11 +358,11 @@ class Phprojekt_Auth extends Zend_Auth
     }
 
     /**
-     * Set the cookies
+     * Set the cookies.
      *
-     * @param string $hash    User hash for check
-     * @param int    $userId  Current userId
-     * @param int    $expires Timestamp for expire
+     * @param string  $hash    User hash for check.
+     * @param integer $userId  Current userId.
+     * @param integer $expires Timestamp for expire.
      *
      * @return void
      */

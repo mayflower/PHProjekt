@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification class of Todo model for PHProjekt 6.0
+ * Notification class for Todo model.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Notification class for Todo module
+ * Notification class for Todo model.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,9 +38,9 @@
 class Todo_Models_Notification extends Phprojekt_Notification
 {
     /**
-     * Returns the recipients for this Todo item
+     * Returns the recipients for this Todo item.
      *
-     * @return array
+     * @return array Array with user IDs.
      */
     public function getTo()
     {

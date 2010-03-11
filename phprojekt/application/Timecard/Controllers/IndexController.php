@@ -1,6 +1,6 @@
 <?php
 /**
- * Timecard Module Controller for PHProjekt 6.0
+ * Timecard Module Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Timecard Module Controller for PHProjekt 6.0
+ * Timecard Module Controller.
  *
  * @category   PHProjekt
  * @package    Application

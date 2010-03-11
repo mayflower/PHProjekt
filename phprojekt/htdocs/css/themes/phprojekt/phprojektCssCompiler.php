@@ -1,6 +1,6 @@
 <?php
 /**
- * Phprojekt CSS Compiler
+ * Phprojekt CSS Compiler.
  *
  * Collect all the css files from the current theme directory
  * Include all the css files in the folder and sub-folders

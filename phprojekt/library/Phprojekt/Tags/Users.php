@@ -1,6 +1,9 @@
 <?php
 /**
- * Tags-User relation class
+ * Tags-User relation class.
+ *
+ * The class provide the functions for manage the relation between
+ * tags and users.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +26,10 @@
  */
 
 /**
+ * Tags-User relation class.
+ *
  * The class provide the functions for manage the relation between
- * tags and users
+ * tags and users.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -39,21 +44,23 @@
 class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
 {
     /**
-     * Table name
+     * Table name.
      *
      * @var string
      */
     protected $_name = 'tags_users';
 
     /**
-     * User ID, Use the current userId
+     * User ID, Use the current userId.
      *
      * @var integer
      */
     private $_user = 0;
 
     /**
-     * Constructs a Phprojekt_Tags_Users
+     * Constructs a Phprojekt_Tags_Users.
+     *
+     * @return void
      */
     public function __construct()
     {
@@ -62,14 +69,14 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Save a relation current user <-> tagId
+     * Save a relation current user <-> tagId.
      *
-     * This function use the Zend_DB insert
-     * First check if the pair donï¿½t exist
+     * This function use the Zend_DB insert.
+     * First check if the pair don´t exist.
      *
-     * @param integer $tagId  The Tagid
+     * @param integer $tagId The Tag ID.
      *
-     * @return integer
+     * @return integer ID of user-tag relation.
      */
     public function saveTags($tagId)
     {
@@ -91,14 +98,14 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Get all the user-tags relation for the current user
+     * Get all the user-tags relation for the current user.
      *
-     * If the $tagId is seted
-     * only return the relation between the current user and this tagId
+     * If the $tagId is seted, only return the relation between the current user and this tagId.
      *
-     * @param integer $tagId Optional tagId
+     * @param integer $userId User ID to check.
+     * @param integer $tagId  Optional tag ID.
      *
-     * @return array
+     * @return array Array with results.
      */
     public function getUserTagIds($userId = 0, $tagId = 0)
     {
@@ -127,11 +134,11 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Return if one relation id is from the current user
+     * Return if one relation id is from the current user.
      *
-     * @param integer $id Relation Id
+     * @param integer $id Relation ID.
      *
-     * @return array
+     * @return boolean True if the relation is for the user.
      */
     public function isFromUser($id)
     {
@@ -142,11 +149,11 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Return the tagId for on id
+     * Return the tagId for on ID.
      *
-     * @param integer $id Id of the relation
+     * @param integer $id ID of the relation.
      *
-     * @return integer
+     * @return integer Tag ID.
      */
     public function getTagId($id)
     {
@@ -157,9 +164,9 @@ class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Delete all the entries for one userId
+     * Delete all the entries for one userId.
      *
-     * @param integer $userId Id of user to delete all tags
+     * @param integer $userId ID of user to delete all tags.
      *
      * @return void
      */

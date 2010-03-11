@@ -1,6 +1,6 @@
 <?php
 /**
- * Helper to save tree nodes and models
+ * Helper to save tree nodes and models.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Helper to save tree nodes and models
+ * Helper to save tree nodes and models.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,14 +38,15 @@
 final class Default_Helpers_Save
 {
     /**
-     * Save a tree
+     * Save a tree.
      *
-     * @param Phprojekt_Tree_Node_Database $node
-     * @param array $params
+     * @param Phprojekt_Tree_Node_Database $node     The project to save.
+     * @param array                        $params   The parameters used to feed the model.
+     * @param integer|null                 $parentId The parent ID.
      *
-     * @throws Exception If validation of parameters fails
+     * @throws Exception If validation of parameters fails.
      *
-     * @return boolean
+     * @return boolean True for a sucessful save.
      */
     protected static function _saveTree(Phprojekt_Tree_Node_Database $node, array $params, $parentId = null)
     {
@@ -137,14 +138,14 @@ final class Default_Helpers_Save
 
     /**
      * Help to save a model by setting the models properties.
-     * Validation is based on the ModelInformation implementation
+     * Validation is based on the ModelInformation implementation.
      *
      * @param Phprojekt_Model_Interface $model  The model
-     * @param array                     $params The parameters used to feed the model
+     * @param array                     $params The parameters used to feed the model.
      *
-     * @throws Exception
+     * @throws Exception If validation of parameters fails.
      *
-     * @return boolean
+     * @return boolean True for a sucessful save.
      */
     protected static function _saveModel(Phprojekt_Model_Interface $model, array $params)
     {
@@ -209,11 +210,9 @@ final class Default_Helpers_Save
     }
 
     /**
-     * Overwrite call to support multiple save routines
+     * Overwrite call to support multiple save routines.
      *
-     * @param string $name
-     * @param array  $arguments
-     * @throws Exception If validation of parameters fails
+     * @throws Exception If validation of parameters fails.
      *
      * @return void
      */
@@ -280,11 +279,11 @@ final class Default_Helpers_Save
     }
 
     /**
-     * Check if the parent project has this module enabled
+     * Check if the parent project has this module enabled.
      *
-     * @param integer $projectId The project Id to check
+     * @param integer $projectId The project ID to check.
      *
-     * @return boolean
+     * @return boolean False if not.
      */
     private static function _checkModule($moduleId, $projectId)
     {
@@ -312,12 +311,12 @@ final class Default_Helpers_Save
     }
 
     /**
-     * Check if the user has write access to the item if is not a global module
+     * Check if the user has write access to the item if is not a global module.
      *
-     * @param Phprojekt_Model_Interface $model      The model to save
-     * @param string                    $moduleName The current module
+     * @param Phprojekt_Model_Interface $model      The model to save.
+     * @param string                    $moduleName The current module.
      *
-     * @return boolean
+     * @return boolean False if not.
      */
     private static function _checkItemRights($model, $moduleName)
     {

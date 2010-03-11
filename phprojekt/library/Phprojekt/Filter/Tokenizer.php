@@ -1,6 +1,8 @@
 <?php
 /**
- * Tokenizer class
+ * Tokenizer class.
+ *
+ * Tokenizer with inherit object methods for iteration.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +25,9 @@
  */
 
 /**
- * Tokenizer with inherit object methods for iteration
+ * Tokenizer class.
+ *
+ * Tokenizer with inherit object methods for iteration.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -46,7 +50,7 @@ class Phprojekt_Filter_Tokenizer
     const T_VALUE       = 6;
 
     /**
-     * regex for tokens
+     * Regex for tokens.
      *
      * @var array
      */
@@ -60,33 +64,40 @@ class Phprojekt_Filter_Tokenizer
         );
 
     /**
-     * string to tokenize
+     * String to tokenize.
      *
      * @var string
      */
     private $_data = '';
 
     /**
-     * array with current token
+     * Array with current token.
      *
      * @var array
      */
     private $_currentToken = array();
 
     /**
-     * type of token
+     * Type of token.
      *
      * @var int
      */
     public $type = null;
 
     /**
-     * value of token
+     * Value of token.
      *
      * @var string
      */
     public $value = '';
 
+    /**
+     * Constructor.
+     *
+     * @param string $string
+     *
+     * @return void
+     */
     public function __construct($string = '')
     {
         $this->_data         = trim($string);
@@ -96,22 +107,23 @@ class Phprojekt_Filter_Tokenizer
     }
 
     /**
-     * Returns current token
+     * Returns current token.
      *
-     * @return array
+     * @return false|Phprojekt_Filter_Tokenizer
      */
     public function getCurrent()
     {
         if (null === $this->_currentToken) {
             return false;
         }
+
         return $this;
     }
 
     /**
-     * Returns next token
+     * Returns next token.
      *
-     * @return array
+     * @return false|Phprojekt_Filter_Tokenizer
      */
     public function getNext()
     {
@@ -123,13 +135,14 @@ class Phprojekt_Filter_Tokenizer
         $token       = $this->parseString(false);
         $next->type  = $token[0];
         $next->value = $token[1];
+
         return $next;
     }
 
     /**
-     * Returns last token
+     * Returns last token.
      *
-     * @return array
+     * @return false|Phprojekt_Filter_Tokenizer
      */
     public function getLast()
     {
@@ -148,11 +161,12 @@ class Phprojekt_Filter_Tokenizer
         $last        = new Phprojekt_Filter_Tokenizer();
         $last->type  = $tok[0];
         $last->value = $tok[1];
+
         return $last;
     }
 
     /**
-     * go to next token
+     * Go to next token.
      *
      * @return void
      */
@@ -164,7 +178,7 @@ class Phprojekt_Filter_Tokenizer
     }
 
     /**
-     * Returns string
+     * Returns string.
      *
      * @return string
      */
@@ -174,9 +188,10 @@ class Phprojekt_Filter_Tokenizer
     }
 
     /**
-     * parse string, removes token from string and returns first token
+     * Parse string, removes token from string and returns first token.
      *
-     * @param  bool
+     * @param boolean $remove
+     *
      * @return array
      */
     private function parseString($remove = true)

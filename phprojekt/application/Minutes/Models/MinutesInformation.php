@@ -44,7 +44,7 @@ class Minutes_Models_MinutesInformation extends Phprojekt_DatabaseManager
      * Set the db table name to use to this fixed value. The database used by the parent
      * class must be used here as well, independent of the class name.
      *
-     * @return string
+     * @return string The table name.
      */
     public function getTableName()
     {
@@ -54,9 +54,9 @@ class Minutes_Models_MinutesInformation extends Phprojekt_DatabaseManager
     /**
      * Return an array of field information.
      *
-     * @param int $ordering
+     * @param integer $ordering An ordering constant.
      *
-     * @return array
+     * @return array Array with fields definitions.
      */
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {

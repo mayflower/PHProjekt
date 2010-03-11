@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification Frontend Message class for PHProjekt 6.0
+ * Notification Frontend Message class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Notification Frontend Message class for PHProjekt 6.0
+ * Notification Frontend Message class.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -41,9 +41,9 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
      * Returns all notifications where the given userId is the recipient and set the delivered flag to 1 which marks
      * a message as delivered.
      *
-     * @param integer $userId The id of the recipient.
+     * @param integer $userId The ID of the recipient.
      *
-     * @return array
+     * @return Zend_Db_Table_Rowset The rowset with the results.
      */
     public function getMessageData($userId)
     {
@@ -84,11 +84,12 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     }
 
     /**
-     * Returns not the ids of the item, module, user, etc. but real values.
+     * Returns not the IDs of the item, module, user, etc. but real values.
      *
-     * @param int $userId
+     * @param integer $userId The ID of the user who calls this method.
      *
-     * @return array
+     * @return array Array with 'user', 'module', 'process', 'description', 'itemId',
+     *                          'item', 'projectId', 'details', 'time' and 'project'.
      */
     public function getMessage($userId)
     {
@@ -130,12 +131,13 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
 
     /**
      * This is the "long polling enigne".
+     *
      * This method calls the getNotification (returns the latest database entry to the given userId) method in a loop.
      * If no new data is available, a sleep of some seconds will be stopp the execution of the script and then
      * calls again the getNotification.
      * A counter will ensure that the loop will not run into an endless loop.
      *
-     * @param integer $userId The id of the user who calls this method.
+     * @param integer $userId The ID of the user who calls this method.
      *
      * @return Array At least an empty array (if no new entries where found)
      *               or the latest entry to the userId in the database.
@@ -160,7 +162,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      * Sets the project_id field of the table frontend_message.
      *
-     * @param integer $projectId
+     * @param integer $projectId The project ID to save.
      *
      * @return void
      */
@@ -172,7 +174,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      * Set the process field of the table frontend_message.
      *
-     * @param string $process
+     * @param string $process The process type to save.
      *
      * @return void
      */
@@ -184,7 +186,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      * Set the recipient_id field of the table frontend_message.
      *
-     * @param Array/integer $recipientId
+     * @param Array/integer $recipientId User IDs to save.
      *
      * @return void
      */
@@ -196,7 +198,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      * Sets the module_id field of the table frontend_message.
      *
-     * @param integer $moduleId
+     * @param integer $moduleId The module ID to save.
      *
      * @return void
      */
@@ -208,7 +210,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      *  Sets the item_id field of the table frontend_message.
      *
-     * @param integer $itemId
+     * @param integer $itemId Item ID to save.
      *
      * @return void
      */
@@ -220,7 +222,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      * Sets the valid_from field of the table frontend_message.
      *
-     * @param $validFrom
+     * @param integer $validFrom Timestamp to save.
      *
      * @return void
      */
@@ -232,7 +234,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      * Sets the valid_until field of the table frontend_message.
      *
-     * @param string $validUntil
+     * @param integer $validUntil Timestamp to save.
      *
      * @return void
      */
@@ -244,7 +246,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      * Set the description of a message.
      *
-     * @param string $description
+     * @param string $description Description to save.
      *
      * @return void
      */
@@ -256,7 +258,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      * Set the details of a message in a serialized form.
      *
-     * @param array $details
+     * @param array $details Details to save.
      *
      * @return void
      */
@@ -268,7 +270,9 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      * Sets the display_item field.
      *
-     * @param string $itemName
+     * @param string $itemName Name of the item.
+     *
+     * @return void
      */
     public function setCustomDisplayItem($itemName)
     {
@@ -278,7 +282,9 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      * Sets the module_name field.
      *
-     * @param string $moduleName
+     * @param string $moduleName Name of the module.
+     *
+     * @return void
      */
     public function setCustomDisplayModule($moduleName)
     {
@@ -288,7 +294,9 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
     /**
      * Sets the item_name field.
      *
-     * @param string $itemName
+     * @param string $itemName Display for the item.
+     *
+     * @return void
      */
     public function setCustomItemName($itemName)
     {
@@ -297,8 +305,6 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
 
     /**
      * Deletes no longer valid messages.
-     *
-     * @param int $userId
      *
      * @return void
      */
@@ -315,9 +321,10 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
 
     /**
      * Saves a frontend message to the database using the abstract record pattern.
+     *
      * Since the actor id is allways the user who calls this method, the actor_id will be set here.
      *
-     * @return boolean
+     * @return boolean True on a sucessful save.
      */
     public function saveFrontendMessage()
     {

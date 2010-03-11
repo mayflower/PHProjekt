@@ -1,6 +1,6 @@
 <?php
 /**
- * Setup
+ * Setup model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Setup
+ * Setup model class.
  *
  * @category   PHProjekt
  * @package    Htdocs
@@ -37,19 +37,41 @@
  */
 class Setup_Models_Setup
 {
+    /**
+     * Array with erros.
+     *
+     * @var array
+     */
     private $_error   = array();
-    private $_message = array();
-    private $_db      = null;
 
+    /**
+     * Array with messages.
+     *
+     * @var array
+     */
+    private $_message = array();
+
+    /**
+     * Configuration for Zend_Db_Table
+     *
+     * @var array
+     */
+    private $_db = null;
+
+    /**
+     * Constructor.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->_checkServer();
     }
 
     /**
-     * Do some checks before install
+     * Do some checks before install.
      *
-     * @throws Expeption
+     * @throws Expeption If the server don't have the requirements.
      *
      * @return void
      */
@@ -122,11 +144,11 @@ class Setup_Models_Setup
     }
 
     /**
-     * Validate the params
+     * Validate the params.
      *
-     * @param array $params Array with the POST values
+     * @param array $params Array with the POST values.
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function validate($params)
     {
@@ -301,9 +323,9 @@ class Setup_Models_Setup
     }
 
     /**
-     * Return the errors created by validate()
+     * Return the errors created by validate().
      *
-     * @return array
+     * @return array Array with errors.
      */
     public function getError()
     {
@@ -314,9 +336,9 @@ class Setup_Models_Setup
     }
 
     /**
-     * Return the messages created by _checkServer()
+     * Return the messages created by _checkServer().
      *
-     * @return array
+     * @return array Array with messages.
      */
     public function getMessage()
     {
@@ -327,9 +349,9 @@ class Setup_Models_Setup
     }
 
     /**
-     * Install itself
+     * Install itself.
      *
-     * @param array $params Array with the POST values
+     * @param array $params Array with the POST values.
      *
      * @return void
      */

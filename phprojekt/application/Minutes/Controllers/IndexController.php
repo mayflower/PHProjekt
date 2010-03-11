@@ -1,6 +1,6 @@
 <?php
 /**
- * Minutes Module Controller for PHProjekt 6.0
+ * Minutes Module Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Minutes Module Controller for PHProjekt 6.0
+ * Minutes Module Controller.
  *
  * @category   PHProjekt
  * @package    Application
@@ -459,7 +459,7 @@ class Minutes_IndexController extends IndexController
      *
      * Final minutes only allow write access to status field.
      *
-     * @return array
+     * @return array POST values with some changes.
      */
     public function setParams()
     {

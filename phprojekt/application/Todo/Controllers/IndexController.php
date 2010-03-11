@@ -1,6 +1,6 @@
 <?php
 /**
- * Todo Module Controller for PHProjekt 6.0
+ * Todo Module Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Todo Module Controller for PHProjekt 6.0
+ * Todo Module Controller.
  *
  * @category   PHProjekt
  * @package    Application
@@ -40,9 +40,9 @@ class Todo_IndexController extends IndexController
     /**
      * Sets some values depending on the parameters.
      *
-     * Set the rights for each user (owner, userId and the normal access tab)
+     * Set the rights for each user (owner, userId and the normal access tab).
      *
-     * @return array
+     * @return array POST values with some changes.
      */
     public function setParams()
     {

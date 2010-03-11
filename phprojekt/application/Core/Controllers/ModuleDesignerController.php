@@ -1,6 +1,6 @@
 <?php
 /**
- * Module Designer Controller for PHProjekt 6.0
+ * Module Designer Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Module Designer Controller for PHProjekt 6.0
+ * Module Designer Controller.
  *
  * @category   PHProjekt
  * @package    Application
@@ -156,7 +156,7 @@ class Core_ModuleDesignerController extends Core_IndexController
      *
      * @param array $data Array $_POST values.
      *
-     * @return array
+     * @return array Array with data of the table.
      */
     private function _getTableData($data)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Minutes Item model class
+ * MinutesItem model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Minutes model class
+ * MinutesItem model class.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,45 +38,44 @@
 class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
-     * The Minutes object this item is related to
+     * The Minutes object this item is related to.
      *
      * @var Phprojekt_Item_Abstract
      */
     protected $_minutes;
 
     /**
-     * The Id of the minutes this Item belongs to
+     * The Id of the minutes this Item belongs to.
      *
      * @var integer
      */
     protected $_minutesId = null;
 
     /**
-     * The standard information manager with hardcoded
-     * field definitions
+     * The standard information manager with hardcoded field definitions.
      *
      * @var Phprojekt_ModelInformation_Interface
      */
     protected $_informationManager;
 
     /**
-     * Validate object
+     * Validate object.
      *
      * @var Phprojekt_Model_Validate
      */
     protected $_validate = null;
 
     /**
-     * Initial state of the data after find()
+     * Initial state of the data after find().
      *
      * @var array
      */
     protected $_history = null;
 
     /**
-     * Initialize new minutes item
+     * Initialize new minutes item.
      *
-     * @param array $db Configuration for Zend_Db_Table
+     * @param array $db Configuration for Zend_Db_Table.
      *
      * @return void
      */
@@ -106,9 +105,9 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Return the information manager
+     * Return the information manager.
      *
-     * @return Phprojekt_ModelInformation_Interface
+     * @return Phprojekt_ModelInformation_Interface The Phprojekt_ModelInformation_Interface object.
      */
     public function getInformation()
     {
@@ -116,10 +115,10 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Assign a value to a var using some validations from the table data
+     * Assign a value to a var using some validations from the table data.
      *
-     * @param string $varname Name of the var to assign
-     * @param mixed  $value   Value for assign to the var
+     * @param string $varname Name of the var to assign.
+     * @param mixed  $value   Value for assign to the var.
      *
      * @return void
      */
@@ -139,9 +138,9 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Validate the current record
+     * Validate the current record.
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function recordValidate()
     {
@@ -153,11 +152,11 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
 
     /**
      * Get a value of a var.
-     * Is the var is a float, return the locale float
+     * Is the var is a float, return the locale float.
      *
-     * @param string $varname Name of the var to assign
+     * @param string $varname Name of the var to assign.
      *
-     * @return mixed
+     * @return mixed Value of the var.
      */
     public function __get($varname)
     {
@@ -174,9 +173,9 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Get error message from model
+     * Get error message from model.
      *
-     * @return array
+     * @return array Array with errors.
      */
     public function getError()
     {
@@ -184,9 +183,9 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Gets the rights of the item for the current user
+     * Extension of getRights() for use the parent minute getRights();
      *
-     * @return array
+     * @return array Array with rights.
      */
     public function getRights()
     {
@@ -194,11 +193,11 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Gets the rights of various items for the current user
+     * Extension of getMultipleRights() for use the parent minute getMultipleRights();
      *
-     * @param array $ids Array with various itemId
+     * @param array $ids Array with various item IDs.
      *
-     * @return array
+     * @return array Array with rights.
      */
     public function getMultipleRights($ids)
     {
@@ -206,9 +205,9 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Gets the rights of the item for other users
+     * Extension of getUsersRights() for use the parent minute getUsersRights();
      *
-     * @return array
+     * @return array Array with rights.
      */
     public function getUsersRights()
     {
@@ -216,9 +215,9 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Save the rights for the current item
+     * Extension of saveRights() for don't save rights.
      *
-     * @param array $rights
+     * @param array $rights Array of user IDs with the bitmask access.
      *
      * @return void
      */
@@ -228,11 +227,11 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Initialize the related minutes object
+     * Initialize the related minutes object.
      *
-     * @param integer $minutesId
+     * @param integer $minutesId Parent minute ID.
      *
-     * @return Minutes_Models_MinutesItem
+     * @return Minutes_Models_MinutesItem An instance of Minutes_Models_MinutesItem.
      */
     public function init($minutesId = null)
     {
@@ -243,34 +242,34 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Finds a record with current criteria key and populates
-     * the object with its data. Makes a copy of the data in the
-     * protected $_history array, to be able to detect changes
+     * Finds a record with current criteria key and populates the object with its data.
+     * Makes a copy of the data in the protected $_history array, to be able to detect changes
      * made after calling find().
      *
      * @param mixed Optional criteria. Can be primary key value or array of field=>value pairs.
      *
-     * @return Minutes_Models_MinutesItem
+     * @return Minutes_Models_MinutesItem An instance of Minutes_Models_MinutesItem.
      */
     public function find($criteria = null)
     {
         $res = parent::find($criteria);
         // Make a backup of the initial data to compare against in save() method
         $this->_history = $this->_data;
+
         return $res;
     }
 
     /**
      * Customized version to calculate the status of a minutes item regardless of its saved database entry.
      *
-     * @param string|array $where  Where clause
-     * @param string|array $order  Order by
-     * @param string|array $count  Limit query
-     * @param string|array $offset Query offset
-     * @param string       $select The comma-separated columns of the joined columns
-     * @param string       $join   The join statements
+     * @param string|array $where  Where clause.
+     * @param string|array $order  Order by.
+     * @param string|array $count  Limit query.
+     * @param string|array $offset Query offset.
+     * @param string       $select The comma-separated columns of the joined columns.
+     * @param string       $join   The join statements.
      *
-     * @return Zend_Db_Table_Rowset
+     * @return Zend_Db_Table_Rowset The rowset with the results.
      */
     public function fetchAll($where = null, $order = array('sort_order ASC', 'id DESC'), $count = null, $offset = null,
         $select = null, $join = null)
@@ -304,7 +303,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     /**
      * Save is handled by parent.
      *
-     * @return boolean
+     * @return boolean True for a sucessful save.
      */
     public function save()
     {
@@ -339,9 +338,9 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Define a getter for the "display" field
+     * Define a getter for the "display" field.
      *
-     * @return integer
+     * @return integer Always 0.
      */
     public function getTopicId()
     {
@@ -349,9 +348,9 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Define a setter for the "display" field
+     * Define a setter for the "display" field.
      *
-     * @param integer $value The value
+     * @param integer $value The value.
      *
      * @return void
      */
@@ -361,9 +360,9 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Return the display depend on the topicType
+     * Return the display depend on the topicType.
      *
-     * @return string
+     * @return string String with data.
      */
     public function getDisplay()
     {

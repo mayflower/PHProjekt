@@ -1,6 +1,6 @@
 <?php
 /**
- * Migration
+ * Migration model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Migration
+ * Migration model class.
  *
  * @category   PHProjekt
  * @package    Htdocs
@@ -38,54 +38,105 @@
 class Setup_Models_Migration
 {
     /**
-     * Arrays with P6 info
+     * Relation: User Kurz in p5 to user ID in p6.
      *
      * @var array
      */
-    private $_userKurz    = array();
-    private $_timeZone    = array();
+    private $_userKurz = array();
+
+    /**
+     * Relation: User timezone in p5 to user timezone in p6.
+     *
+     * @var array
+     */
+    private $_timeZone = array();
+
+    /**
+     * Relation: Group ID in p5 => Array of user IDs of P6.
+     *
+     * @var array
+     */
     private $_groupsUsers = array();
-    private $_modules     = array();
 
     /**
-     * Arrays with P6 info: the key of each array position is the P5 id, and the value the P6 id, they are used for
-     * conversions.
-     * E.g.: $this->_users[<oldId>] = <newId>
-     *       $this->_users[50] = 40  (this could be because of id reordering)
+     * Array with all the modules in P6
      *
      * @var array
      */
-    private $_users     = array();
-    private $_groups    = array();
-    private $_projects  = array();
-    private $_calendars = array();
-    private $_contacts  = array();
-    private $_todos     = array();
-    private $_helpdesk  = array();
+    private $_modules = array();
 
     /**
-     * P5 Database
+     * Relation: User ID in p5 to User ID in p6.
+     *
+     * @var array
+     */
+    private $_users = array();
+
+    /**
+     * Relation: Group ID in p5 to project ID in p6.
+     *
+     * @var array
+     */
+    private $_groups = array();
+
+    /**
+     * Relation: Project ID in p5 to project ID in p6.
+     *
+     * @var array
+     */
+    private $_projects = array();
+
+    /**
+     * Relation: Calendar ID in p5 to Calendar ID in p6.
+     *
+     * @var array
+     */
+    private $_calendars = array();
+
+    /**
+     * Relation: Contact ID in p5 to Contact ID in p6.
+     *
+     * @var array
+     */
+    private $_contacts = array();
+
+    /**
+     * Relation: Todo ID in p5 to Todo ID in p6.
+     *
+     * @var array
+     */
+    private $_todos = array();
+
+    /**
+     * Relation: Helpdesk ID in p5 to Helpdesk ID in p6.
+     *
+     * @var array
+     */
+    private $_helpdesk = array();
+
+    /**
+     * P5 Database.
      *
      * @var Zend_db
      */
     private $_dbOrig = null;
 
     /**
-     * P6 Database
+     * P6 Database.
      *
      * @var Zend_db
      */
     private $_db = null;
 
     /**
-     * Table manager
+     * Table manager.
      *
      * @var Phprojekt_Table
      */
     private $_tableManager = null;
 
     /**
-     * Permissions for the users
+     * Permissions for the users.
      *
      * @var int
      */
@@ -94,28 +145,28 @@ class Setup_Models_Migration
     private $_accessAdmin = null;
 
     /**
-     * Permissions values
+     * Permissions values.
      *
      * @var array
      */
     private $_dbItemRightValues = array();
 
     /**
-     * Keep the project permissions values
+     * Keep the project permissions values.
      *
      * @var array
      */
     private $_dbProjectItemRightValues = array();
 
     /**
-     * Root path, taken out from the config file path
+     * Root path, taken out from the config file path.
      *
      * @var string
      */
     private $_p5RootPath = null;
 
     /**
-     * Search vlaues
+     * Search vlaues.
      *
      * @var array
      */
@@ -137,6 +188,14 @@ class Setup_Models_Migration
     // Pagination
     const ROWS_PER_QUERY = 5000;
 
+    /**
+     * Constructor.
+     *
+     * @param string $file The config file of P5.
+     * @param array  $db   Configuration for Zend_Db_Table.
+     *
+     * @return void
+     */
     public function __construct($file, $db = null)
     {
         if (null === $db) {
@@ -166,7 +225,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Call all the migration functions
+     * Call all the migration functions.
      *
      * @return void
      */
@@ -190,11 +249,11 @@ class Setup_Models_Migration
     }
 
     /**
-     * Checks for migration
+     * Checks for migration.
      *
-     * @throws Expection
+     * @throws Expection If there is an error in the DB connection.
      *
-     * @param string $file The config file of P5
+     * @param string $file The config file of P5.
      *
      * @return void
      */
@@ -220,7 +279,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrate P5 users
+     * Migrate P5 users.
      *
      * @return void
      */
@@ -377,7 +436,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Collect all the P5 groups and migrate them
+     * Collect all the P5 groups and migrate them.
      *
      * @return void
      */
@@ -425,8 +484,8 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrates P5 group-users relations and creates a two-dimensional array with a list of groups of P5 as the first
-     * dimension and users as the second one: _groupsUsers
+     * Migrates P5 group-users relations and creates a two-dimensional array
+     * with a list of groups of P5 as the first dimension and users as the second one: _groupsUsers.
      *
      * @return void
      */
@@ -482,7 +541,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrate P5 projects
+     * Migrate P5 projects.
      *
      * @return void
      */
@@ -583,7 +642,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrate P5 todos
+     * Migrate P5 todos.
      *
      * @return void
      */
@@ -677,7 +736,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrate P5 notes
+     * Migrate P5 notes.
      *
      * @return void
      */
@@ -731,7 +790,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrate P5 timeproj
+     * Migrate P5 timeproj and timecard.
      *
      * @return void
      */
@@ -857,7 +916,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrate P5 events
+     * Migrate P5 events.
      *
      * @return void
      */
@@ -1012,7 +1071,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrate P5 filemanager
+     * Migrate P5 filemanager.
      *
      * @return void
      */
@@ -1088,7 +1147,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrate P5 contacts
+     * Migrate P5 contacts.
      *
      * @return void
      */
@@ -1157,7 +1216,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrate P5 Helpdesk
+     * Migrate P5 Helpdesk.
      *
      * @return void
      */
@@ -1394,11 +1453,11 @@ class Setup_Models_Migration
     }
 
     /**
-     * Converts the old time format (hhmm) to a time format (hh:mm:ss)
+     * Converts the old time format (hhmm) to a time format (hh:mm:ss).
      *
-     * @param string $stringTime
+     * @param string $stringTime P5 Time string.
      *
-     * @return time
+     * @return string Time string.
      */
     private function _stringToTime($stringTime)
     {
@@ -1443,11 +1502,11 @@ class Setup_Models_Migration
     }
 
     /**
-     * Converts the P5 datetime format YYYYMMDDHHMMSS to P6 date format YYYY-MM-DD
+     * Converts the P5 datetime format YYYYMMDDHHMMSS to P6 date format YYYY-MM-DD.
      *
-     * @param string $date  Date & time in YYYYMMDDHHMMSS format
+     * @param string $date Date & time in YYYYMMDDHHMMSS format.
      *
-     * @return string  Date in YYYY-MM-DD format
+     * @return string Date in YYYY-MM-DD format.
      */
     private function _longDateToShortDate($date)
     {
@@ -1465,7 +1524,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Collect all the modules
+     * Collect all the modules.
      *
      * @return void
      */
@@ -1479,11 +1538,11 @@ class Setup_Models_Migration
     }
 
     /**
-     * Return the module id
+     * Return the module ID.
      *
-     * @param string $module The name of the module
+     * @param string $module The name of the module.
      *
-     * @return integer
+     * @return integer The module ID in P6.
      */
     private function _getModuleId($module)
     {
@@ -1508,10 +1567,10 @@ class Setup_Models_Migration
     }
 
     /**
-     * Migrates the permission from PHProjekt 5.x version to PHProjekt 6.0
+     * Migrates the permission from PHProjekt 5.x version to PHProjekt 6.0.
      *
-     * @param string $module Module to grant permissions to: Project / Note / Todo / Filemanager, Helpdesk
-     * @param array  $item   Item data
+     * @param string $module Module to grant permissions to: Project / Note / Todo / Filemanager, Helpdesk.
+     * @param array  $item   Item data.
      *
      * @return void
      */
@@ -1582,9 +1641,9 @@ class Setup_Models_Migration
     /**
      * Returns a list of users according to the value received that corresponds to 'acc' field of 'projekte' table.
      *
-     * @param array $item  Array with data of the module item
+     * @param array $item Array with data of the module item.
      *
-     * @return array List of users
+     * @return array List of user IDs.
     */
     private function _getUsersFromAccField($item)
     {
@@ -1637,9 +1696,9 @@ class Setup_Models_Migration
      * Converts content of P5 recurrence field 'serie_typ' of 'termine' table to P6 format for 'rrule' field of
      * 'calendar' table.
      *
-     * @param string $value  Recurrence parameters in P5 format
+     * @param string $value Recurrence parameters in P5 format.
      *
-     * @return string Recurrence parameters in P6 format
+     * @return string Recurrence parameters in P6 format.
      */
     private function _serietypToRrule($value, $endDate, $startTime)
     {
@@ -1733,12 +1792,12 @@ class Setup_Models_Migration
     }
 
     /**
-     * Collect all the values for save  into 'item_rights' table according to received parameters
+     * Collect all the values for save  into 'item_rights' table according to received parameters.
      *
-     * @param int   $moduleId    Id of the module in 'module' table
-     * @param int   $itemId      Id of the item in the table of the module
-     * @param array $userRights  List of users and righes: the keys are the user ids and the value for each key is the
-     *                           right for that user.
+     * @param integer $moduleId   ID of the module in 'module' table.
+     * @param integer $itemId     ID of the item in the table of the module.
+     * @param array   $userRights List of users and righes: the keys are the user ids and the value for each key is the
+     *                            right for that user.
      *
      * @return void
      */
@@ -1759,7 +1818,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Insert all the permissions into item_rights table
+     * Insert all the permissions into item_rights table.
      *
      * @return void
      */
@@ -1776,9 +1835,9 @@ class Setup_Models_Migration
      * Process the received owner for an item, if it is a non-existing user, returns the admin id, otherwise returns
      * the matching P6 user for this P5 one.
      *
-     * @param int $oldId  Id of the owner user ('von' field) as it is in the original P5 item.
+     * @param integer $oldId ID of the owner user ('von' field) as it is in the original P5 item.
      *
-     * @return int  User id to insert in P6 table owner field.
+     * @return integer User ID to insert in P6 table owner field.
      */
     private function _processOwner($oldId)
     {
@@ -1793,13 +1852,13 @@ class Setup_Models_Migration
     }
 
     /**
-     * Process the received parent project Id for an item, if it is a non-existing one, returns the root project id,
-     * otherwise returns the matching P6 project Id for this P5 one.
+     * Process the received parent project ID for an item, if it is a non-existing one, returns the root project id,
+     * otherwise returns the matching P6 project ID for this P5 one.
      *
-     * @param int $oldProjectId Id of the P5 parent project Id as it is in the original P5 item.
-     * @param int $oldGroupId   Id of the P5 group Id as it is in the original P5 item.
+     * @param integer $oldProjectId ID of the P5 parent project Id as it is in the original P5 item.
+     * @param integer $oldGroupId   ID of the P5 group Id as it is in the original P5 item.
      *
-     * @return int  User id to insert in P6 field 'project_id'
+     * @return integer User ID to insert in P6 field 'project_id'.
      */
     private function _processParentProjId($oldProjectId, $oldGroupId)
     {
@@ -1818,11 +1877,11 @@ class Setup_Models_Migration
     }
 
     /**
-     * Parse module and item id from timeproj
+     * Parse module and item ID from timeproj.
      *
-     * @param array $data Timeproj record
+     * @param array $data Timeproj record.
      *
-     * @return array (module_id, item_id)
+     * @return array Array (module_id, item_id).
      */
     private function _getItemAndModule($data)
     {
@@ -1860,11 +1919,11 @@ class Setup_Models_Migration
     }
 
     /**
-     * Fix timeZone with the P6 values
+     * Fix timeZone with the P6 values.
      *
-     * @param int $timeZone +/- TimeZone
+     * @param integer $timeZone +/- TimeZone.
      *
-     * @return string
+     * @return string P6 timeZone.
      */
     private function _getP6TimeZone($timeZone)
     {
@@ -1876,12 +1935,12 @@ class Setup_Models_Migration
     }
 
     /**
-     * Fix string witn utf8 encode and limit the characters
+     * Fix string witn utf8 encode and limit the characters.
      *
-     * @param string $string Normal string
-     * @param int    $length Limit if characters
+     * @param string  $string Normal string.
+     * @param integer $length Limit if characters.
      *
-     * @return string
+     * @return string Fixed string.
      */
     private function _fix($string, $length = 0)
     {
@@ -1893,13 +1952,13 @@ class Setup_Models_Migration
     }
 
     /**
-     * Keep the display data of each item
+     * Keep the display data of each item.
      *
-     * @param int    $moduleId      Module id
-     * @param int    $itemId        Item Id
-     * @param int    $projectId     Parent project id
-     * @param string $firstDisplay  First display string
-     * @param string $secondDisplay Second display string
+     * @param integer $moduleId      Module ID.
+     * @param integer $itemId        Item ID.
+     * @param integer $projectId     Parent project ID.
+     * @param string  $firstDisplay  First display string.
+     * @param string  $secondDisplay Second display string.
      *
      * @return void
      */
@@ -1918,15 +1977,15 @@ class Setup_Models_Migration
     }
 
     /**
-     * Process the data of the item into the search words
+     * Process the data of the item into the search words.
      * The return array have per word, the count of ocurrences,
      * and the pair moduleId-itemId where is it.
      *
-     * @param string $string   All the string data of the item
-     * @param int    $moduleId Module Id
-     * @param int    $itemId   Item id
+     * @param string  $string   All the string data of the item.
+     * @param integer $moduleId Module ID
+     * @param integer $itemId   Item ID
      *
-     * @return array
+     * @return array Array with words.
      */
     private function _addSearchWords($string, $moduleId, $itemId)
     {
@@ -1956,7 +2015,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Insert all the search_display values
+     * Insert all the search_display values.
      *
      * @return void
      */
@@ -1971,7 +2030,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Insert all the searc_words and search_word_module values
+     * Insert all the searc_words and search_word_module values.
      *
      * @return void
      */

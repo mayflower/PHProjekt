@@ -1,6 +1,6 @@
 <?php
 /**
- * Phprojekt Class for initialize the Zend Framework
+ * Phprojekt Class for initialize the Zend Framework.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Phprojekt Class for initialize the Zend Framework
+ * Phprojekt Class for initialize the Zend Framework.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,22 +38,22 @@
 class Phprojekt
 {
     /**
-     * The first part of the version number
+     * The first part of the version number.
      */
     const VERSION_MAJOR = 6;
 
     /**
-     * The second part of the version number
+     * The second part of the version number.
      */
     const VERSION_MINOR = 0;
 
     /**
-     * The third part of the version number
+     * The third part of the version number.
      */
     const VERSION_RELEASE = 0;
 
     /**
-     * The extra part of the version number
+     * The extra part of the version number.
      */
     const VERSION_EXTRA = null;
 
@@ -63,56 +63,56 @@ class Phprojekt
     const CURRENT_PROJECT = 'currentProjectId';
 
     /**
-     * Copyright
+     * Copyright.
      */
     const COPYRIGHT = 'PHProjekt 6.0 - Copyright (c) 2010 Mayflower GmbH';
 
     /**
-     * Singleton instance
+     * Singleton instance.
      *
      * @var Phprojekt
      */
     protected static $_instance = null;
 
     /**
-     * Config class
+     * Config class.
      *
      * @var Zend_Config_Ini
      */
     protected $_config;
 
     /**
-     * Db class
+     * Db class.
      *
      * @var Zend_Db
      */
     protected $_db;
 
     /**
-     * Log class
+     * Log class.
      *
      * @var Phprojekt_Log
      */
     protected $_log;
 
     /**
-     * Cache class
+     * Cache class.
      *
      * @var Zend_Cache
      */
     protected $_cache;
 
     /**
-     * View class
+     * View class.
      *
      * @var Zend_View
      */
     protected $_view;
 
     /**
-     * Returns the current version of PHProjekt
+     * Returns the current version of PHProjekt.
      *
-     * @return string the version
+     * @return string The current version.
      */
     public static function getVersion()
     {
@@ -125,14 +125,15 @@ class Phprojekt
     }
 
     /**
-     * Compares two PHProjekt version strings. Returns 1 if the first
-     * version is higher than the second one, 0 if they are equal and
-     * -1 if the second version is higher.
+     * Compares two PHProjekt version strings.
      *
-     * @param string $version1 The first string to check
-     * @param string $version2 The second string to check
+     * Returns 1 if the first version is higher than the second one,
+     * 0 if they are equal and -1 if the second version is higher.
      *
-     * @return int
+     * @param string $version1 The first string to check.
+     * @param string $version2 The second string to check.
+     *
+     * @return integer Comparation value.
      */
     public static function compareVersion($version1, $version2)
     {
@@ -178,9 +179,9 @@ class Phprojekt
     }
 
     /**
-     * Return this class only one time
+     * Return this class only one time.
      *
-     * @return Phprojekt
+     * @return Phprojekt An instance of Phprojekt.
      */
     public static function getInstance()
     {
@@ -193,9 +194,9 @@ class Phprojekt
     }
 
     /**
-     * Return the Config class
+     * Return the Config class.
      *
-     * @return Zend_Config_Ini
+     * @return Zend_Config_Ini An instance of Zend_Config_Ini.
      */
     public function getConfig()
     {
@@ -203,10 +204,11 @@ class Phprojekt
     }
 
     /**
-     * Return the Db class
-     * If don't exists, try to create it
+     * Return the Db class.
      *
-     * @return Zend_Db
+     * If don't exists, try to create it.
+     *
+     * @return Zend_Db An instance of Zend_Db.
      */
     public function getDb()
     {
@@ -223,10 +225,11 @@ class Phprojekt
     }
 
     /**
-     * Return the Log class
-     * If don't exists, try to create it
+     * Return the Log class.
      *
-     * @return Phprojekt_Log
+     * If don't exists, try to create it.
+     *
+     * @return Phprojekt_Log An instance of Phprojekt_Log.
      */
     public function getLog()
     {
@@ -242,12 +245,13 @@ class Phprojekt
     }
 
     /**
-     * Return the Translate class
-     * If don't exists, try to create it
+     * Return the Translate class.
      *
-     * @param string|Zend_Locale $locale  Locale/Language to set
+     * If don't exists, try to create it.
      *
-     * @return Phprojekt_Language
+     * @param string|Zend_Locale $locale Locale/Language to set.
+     *
+     * @return Phprojekt_Language An instance of Phprojekt_Language.
      */
     public function getTranslate($locale = null)
     {
@@ -264,9 +268,9 @@ class Phprojekt
     }
 
     /**
-     * Set the current project id
+     * Set the current project ID.
      *
-     * @param integer $projectId Current project Id
+     * @param integer $projectId Current project ID.
      *
      * @return void
      */
@@ -276,9 +280,9 @@ class Phprojekt
     }
 
     /**
-     * Return the current project id
+     * Return the current project ID.
      *
-     * @return integer
+     * @return integer Current project ID.
      */
     public static function getCurrentProjectId()
     {
@@ -286,13 +290,13 @@ class Phprojekt
     }
 
     /**
-     * Translate a string using the current module
+     * Translate a string using the current module.
      *
-     * @param string             $message    Message to translate
-     * @param string|Zend_Locale $locale     Locale/Language to set
-     * @param string             $moduleName Module where search the string
+     * @param string             $message    Message to translate.
+     * @param string|Zend_Locale $locale     Locale/Language to set.
+     * @param string             $moduleName Module where search the string.
      *
-     * @return string
+     * @return string Translated string.
      */
     public function translate($message, $locale = null, $moduleName = null)
     {
@@ -318,17 +322,17 @@ class Phprojekt
     }
 
     /**
-     * Return the tooltip for a field
+     * Return the tooltip for a field.
      *
      * 1. Look for the tooltip in the current module language file.
      * 2. Look for the tooltip in the Default module language file.
      * 3. Look for the tooltip in the current module english file.
      * 4. Look for the tooltip in the Default module english file.
-     * 5. return nothing
+     * 5. return nothing.
      *
-     * @param string $field The field for the tooltipo
+     * @param string $field The field for the tooltip.
      *
-     * @return string
+     * @return string Tooltip message.
      */
     public function getTooltip($field)
     {
@@ -347,9 +351,9 @@ class Phprojekt
     }
 
     /**
-     * Return the View class
+     * Return the View class.
      *
-     * @return Zend_View
+     * @return Zend_View An instance of Zend_View.
      */
     public function getView()
     {
@@ -357,9 +361,9 @@ class Phprojekt
     }
 
     /**
-     * Return the Cache class
+     * Return the Cache class.
      *
-     * @return Zend_Cache
+     * @return Zend_Cache An instance of Zend_Cache.
      */
     public function getCache()
     {
@@ -367,8 +371,7 @@ class Phprojekt
     }
 
     /**
-     * Initialize the paths,
-     * the config values and all the render stuff
+     * Initialize the paths, the config values and all the render stuff.
      *
      * @return void
      */
@@ -520,11 +523,11 @@ class Phprojekt
     }
 
     /**
-     * Cache the View Class
+     * Cache the View Class.
      *
-     * @param array $helperPaths Array with all the folders with helpers
+     * @param array $helperPaths Array with all the folders with helpers.
      *
-     * @return Zend_View
+     * @return Zend_View An instance of Zend_View.
      */
     private function _setView($helperPaths)
     {
@@ -548,9 +551,9 @@ class Phprojekt
     }
 
     /**
-     * Cache the folders with helpers files
+     * Cache the folders with helpers files.
      *
-     * @return array
+     * @return array Array with 'module' and 'path'.
      */
     private function _getHelperPaths()
     {
@@ -576,11 +579,11 @@ class Phprojekt
 
 
     /**
-     * Cache the SubModules folders with controllers files
+     * Cache the SubModules folders with controllers files.
      *
-     * @param array $helperPaths Array with all the folders with helpers
+     * @param array $helperPaths Array with all the folders with helpers.
      *
-     * @return array
+     * @return array Array with directories.
      */
     private function _getControllersFolders($helperPaths)
     {
@@ -616,7 +619,7 @@ class Phprojekt
     }
 
     /**
-     * Run the dispatch
+     * Run the dispatch.
      *
      * @return void
      */
@@ -632,14 +635,14 @@ class Phprojekt
     }
 
     /**
-     * Error handler
+     * Error handler.
      *
-     * @param integer $errNumber  Number of error
-     * @param integer $errStr     Description of the error
-     * @param integer $errFile    File that originated the error
-     * @param integer $errLine    Line of the file that originated the error
+     * @param integer $errNumber Number of error.
+     * @param integer $errStr    Description of the error.
+     * @param integer $errFile   File that originated the error.
+     * @param integer $errLine   Line of the file that originated the error.
      *
-     * @return void/boolean(true)
+     * @return void/boolean True.
      */
     public static function errorHandler($errNumber, $errStr, $errFile, $errLine)
     {
@@ -729,9 +732,9 @@ class Phprojekt
     }
 
     /*
-     * Make a random token for check it on each page
+     * Make a random token for check it on each page.
      *
-     * @return string Token generated
+     * @return string Token generated.
      */
     public static function createCsrfToken()
     {

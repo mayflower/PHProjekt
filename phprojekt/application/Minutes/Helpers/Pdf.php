@@ -1,6 +1,6 @@
 <?php
 /**
- * Helper for creating a PDF document for a Minutes entry
+ * Helper for creating a PDF document for a Minutes entry.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Helper for set the rights of the user in one item
+ * Helper for creating a PDF document for a Minutes entry.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,12 +38,12 @@
 final class Minutes_Helpers_Pdf
 {
     /**
-     * Callback helper function for array_reduce to create string lists of user names
+     * Callback helper function for array_reduce to create string lists of user names.
      *
-     * @param string $collect Var to collect all strings
-     * @param string $new     New array member to add
+     * @param string $collect Var to collect all strings.
+     * @param string $new     New array member to add.
      *
-     * @return string Result of array_reduce call
+     * @return string Result of array_reduce call.
      */
     private static function _concat($collect, $new)
     {
@@ -59,9 +59,9 @@ final class Minutes_Helpers_Pdf
      * Returns the PDF as a string that can either be saved to disk
      * or streamed back to the browser.
      *
-     * @param Phprojekt_Model_Interface $minutesModel The minutes model object to create the PDF from
+     * @param Phprojekt_Model_Interface $minutesModel The minutes model object to create the PDF from.
      *
-     * @return string The resulting PDF document
+     * @return string The resulting PDF document.
      */
     public static function getPdf(Phprojekt_Model_Interface $minutesModel)
     {

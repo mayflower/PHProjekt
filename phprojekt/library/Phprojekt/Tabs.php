@@ -1,6 +1,8 @@
 <?php
 /**
- * Manage tabs-module relation
+ * Manage tabs-module relations.
+ *
+ * The class return the tab on each module ID.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +25,9 @@
  */
 
 /**
- * The class return the tab on each module Id
+ * Manage tabs-module relations.
+ *
+ * The class return the tab on each module ID.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,8 +42,7 @@
 class Phprojekt_Tabs
 {
     /**
-     * Saves the cache for our tab-module entries, to minimize
-     * database lookups
+     * Saves the cache for our tab-module entries, to minimize database lookups.
      *
      * @var array
      */
@@ -48,13 +51,13 @@ class Phprojekt_Tabs
     /**
      * Receives all tabs <-> moduleId combinations from the database.
      *
-     * The method returns an array of the following format
-     *  array( MODULEID   => array(TABID => TABLABEL),
-     *         MODULEID   => array(TABID => TABLABEL));
+     * The method returns an array of the following format:
+     *  array( MODULEID => array(TABID => TABLABEL),
+     *         MODULEID => array(TABID => TABLABEL));
      *
-     * @param integer $moduleId The Module Id
+     * @param integer $moduleId The Module ID.
      *
-     * @return array
+     * @return array Array with 'id' and 'label'.
      */
     protected static function _getCachedIds($moduleId)
     {
@@ -85,11 +88,11 @@ class Phprojekt_Tabs
     }
 
     /**
-     * Returns the tabs for a given module
+     * Returns the tabs for a given module.
      *
-     * @param string $moduleId The Module Id
+     * @param string $moduleId The Module ID.
      *
-     * @return array
+     * @return array Array with 'id' and 'label'.
      */
     public static function getTabsByModule($moduleId)
     {
@@ -97,9 +100,9 @@ class Phprojekt_Tabs
     }
 
     /**
-     * Returns all the tabs
+     * Returns all the tabs.
      *
-     * @return array
+     * @return array Rowset of results.
      */
     public static function getTabs()
     {
@@ -107,16 +110,17 @@ class Phprojekt_Tabs
         $select = $db->select()
                      ->from('tab');
         $stmt = $db->query($select);
+
         return $stmt->fetchAll();
     }
 
     /**
-     * Save/update the tab only
+     * Save/update the tab only.
      *
-     * @param string  $label The tab label
-     * @param integer $id   The tab Id if exists
+     * @param string  $label The tab label.
+     * @param integer $id    The tab ID if exists.
      *
-     * @return int
+     * @return integer Tab ID.
      */
     public function saveTab($label, $id = 0)
     {
@@ -133,10 +137,10 @@ class Phprojekt_Tabs
     }
 
     /**
-     * Save the tab-module relation
+     * Save the tab-module relation.
      *
-     * @param array   $tabIds   Wrray with tab Id
-     * @param integer $moduleId The module Id
+     * @param array   $tabIds   Wrray with tab ID.
+     * @param integer $moduleId The module ID.
      *
      * @return void
      */

@@ -1,6 +1,9 @@
 <?php
 /**
- * Tags class
+ * Tags class.
+ *
+ * The class provide the functions for manage all the tags
+ * All the words are converted to crc32 for search it.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +26,10 @@
  */
 
 /**
+ * Tags class.
+ *
  * The class provide the functions for manage all the tags
- * All the words are converted to crc32 for search it
+ * All the words are converted to crc32 for search it.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -39,14 +44,16 @@
 class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
 {
     /**
-     * Table name
+     * Table name.
      *
      * @var string
      */
     protected $_name = 'tags';
 
     /**
-     * Constructs a Phprojekt_Tags_Tags
+     * Construct.
+     *
+     * @return void
      */
     public function __construct()
     {
@@ -55,15 +62,15 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Save the new word
+     * Save the new word.
      *
-     * This function use the Zend_DB insert
-     * First check if the pair don´t exist
+     * This function use the Zend_DB insert.
+     * First check if the pair don´t exist.
      *
-     * @param integer $crc32  The crc32 number of the word
-     * @param string  $word   The word itself
+     * @param integer $crc32 The crc32 number of the word.
+     * @param string  $word  The word itself.
      *
-     * @return integer
+     * @return integer ID of the tag.
      */
     public function saveTags($crc32, $word)
     {
@@ -87,11 +94,11 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Find the id of one tag
+     * Find the ID of one tag.
      *
-     * @param string $word The word for search
+     * @param string $word The word for search.
      *
-     * @return integer
+     * @return integer ID of the tag.
      */
     public function getTagId($word)
     {
@@ -108,11 +115,11 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Find the name of one tagId
+     * Find the name of one tagId.
      *
-     * @param integer $tagId The tag Id for search
+     * @param integer $tagId The tag ID for search.
      *
-     * @return string
+     * @return string Word.
      */
     public function getTagName($tagId)
     {

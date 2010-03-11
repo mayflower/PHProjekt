@@ -1,6 +1,6 @@
 <?php
 /**
- * Phprojekt Class for PFD creation
+ * Phprojekt Class for PFD creation.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,7 @@
 require_once 'Zend/Pdf.php';
 
 /**
- * Phprojekt Class for PFD creation
+ * Phprojekt Class for PFD creation.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -40,13 +40,16 @@ require_once 'Zend/Pdf.php';
  */
 class Phprojekt_Pdf_Page extends Zend_Pdf_Page
 {
-    const PT_PER_CM = 28.346456692913385826771653543307; // pt/cm equals 72 pt/in / 2.54 cm/in
+    /**
+     * pt/cm equals 72 pt/in / 2.54 cm/in.
+     */
+    const PT_PER_CM = 28.346456692913385826771653543307;
 
     const DEFAULT_FONT_SIZE   = 10;
     const HEADER_GRAY_LEVEL   = 0.9;
 
     /**
-     * Default border values
+     * Default border values.
      *
      * @var float
      */
@@ -56,21 +59,21 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     public $borderBottom = 30;
 
     /**
-     * Default position X of the next element in the page
+     * Default position X of the next element in the page.
      *
      * @var float
      */
     public $freeLineX = 30;
 
      /**
-     * Default position Y of the next element in the page
+     * Default position Y of the next element in the page.
      *
      * @var float
      */
     public $freeLineY = 30;
 
     /**
-     * Default text width for freetext in point
+     * Default text width for freetext in point.
      *
      * NULL acts as a default indicator.
      *
@@ -79,26 +82,37 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     public $textWidth = NULL;
 
      /**
-     * Height of the line in text, in relation to font size
-     *
-     * @var float
-     */
+      * Height of the line in text, in relation to font size.
+      *
+      * @var float
+      */
     public $lineHeight = 1.4;
 
     /**
-     * Padding in the table in point
+     * Padding in the table in point.
      *
      * @var float
      */
     public $tablePadding = 5;
 
     /**
-     * Padding down for paragraphs in point
+     * Padding down for paragraphs in point.
      *
      * @var float
      */
     public $paragraphPadding = 5;
 
+    /**
+     * Constructor.
+     *
+     * @param mixed $param1
+     * @param mixed $param2
+     * @param mixed $param3
+     *
+     * @throws Zend_Pdf_Exception
+     *
+     * @return void
+     */
     public function __construct($param1, $param2 = NULL, $param3 = NULL)
     {
         parent::__construct($param1, $param2, $param3);
@@ -110,12 +124,12 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Define the used border space
+     * Define the used border space.
      *
-     * @param float $top
-     * @param float $right
-     * @param float $bottom
-     * @param float $left
+     * @param float $top    Top value.
+     * @param float $right  Right value.
+     * @param float $bottom Borrom value.
+     * @param float $left   Left value.
      *
      * @return void
      */
@@ -143,9 +157,9 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Function inserts table with given rows to pdf pages
+     * Function inserts table with given rows to pdf pages.
      *
-     * @param array              $tableInfo   specifies table for the PDF
+     * @param array              $tableInfo   specifies table for the PDF.
      *                 E.g. array(
      *                         'type' =>'table',
      *                         'startX'=> 35,
@@ -157,10 +171,10 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      *                              array(...),
      *                          )
      *                      ),
-     * @param Phprojekt_Pdf_Page $currentPage
-     * @param string             $encoding    Encoding of the text string $str, UTF-8 by default
+     * @param Phprojekt_Pdf_Page $currentPage Current page.
+     * @param string             $encoding    Encoding of the text string $str, UTF-8 by default.
      *
-     * @return array of Phprojekt_Pdf_Page
+     * @return array Array of Phprojekt_Pdf_Page.
      */
     public function addTable($tableInfo, $currentPage = NULL, $encoding = 'UTF-8')
     {
@@ -223,9 +237,9 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Function inserts freetext into page
+     * Function inserts freetext into page.
      *
-     * @param array              $freetextInfo specifies free text for the PDF
+     * @param array              $freetextInfo specifies free text for the PDF.
      *                 E.g. array(
      *                         'type' =>'freetext',
      *                         'startX'=> 35,
@@ -236,10 +250,10 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      *                          ),
      *                          'fontSize' => 10,
      *                      )
-     * @param Phprojekt_Pdf_Page $currentPage
-     * @param string             $encoding    Encoding of the text string $str, UTF-8 by default
+     * @param Phprojekt_Pdf_Page $currentPage Current page.
+     * @param string             $encoding    Encoding of the text string $str, UTF-8 by default.
      *
-     * @return Phprojekt_Pdf_Page
+     * @return Phprojekt_Pdf_Page An instance of Phprojekt_Pdf_Page.
      */
     public function addFreetext($freetextInfo, $currentPage = NULL, $encoding = 'UTF-8')
     {
@@ -278,9 +292,9 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Function apply prototype of page (list of pdf tables and text lines)
+     * Function apply prototype of page (list of pdf tables and text lines).
      *
-     * @param array  $prototype Specifies form of elements in the PDF page
+     * @param array  $prototype Specifies form of elements in the PDF page.
      *              E.g. array(
      *                      'font' => 'Helvetica',
      *                      'fontSize' => 10,
@@ -306,9 +320,9 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      *                         'header' => 'Header'
      *                      ),
      *                  )
-     * @param string $encoding  Encoding of the text string $str, UTF-8 by default
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default.
      *
-     * @return array of Phprojekt_Pdf_Page
+     * @return array Array of Phprojekt_Pdf_Page.
      */
     public function parseTemplate($prototype, $encoding = 'UTF-8')
     {
@@ -339,15 +353,17 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Add info box to the current page
+     * Add info box to the current page.
      *
-     * @param string $header
-     * @param array  $lines    Array of string
-     * @param int    $x
-     * @param int    $y
-     * @param int    $width
-     * @param int    $height
-     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     * @param string  $header
+     * @param array   $lines    Array of string.
+     * @param integer $x
+     * @param integer $y
+     * @param integer $width
+     * @param integer $height
+     * @param string  $encoding Encoding of the text string $str, UTF-8 by default.
+     *
+     * @return void
      */
     public function drawInfoBox($header, $lines, $x, $y, $width, $height, $encoding = 'UTF-8')
     {
@@ -365,13 +381,14 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Add free text to the current page
+     * Add free text to the current page.
      *
-     * @param array  $lines    Array of strings
-     * @param int    $x
-     * @param int    $y
-     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     * @param array   $lines    Array of strings.
+     * @param integer $x
+     * @param integer $y
+     * @param string  $encoding Encoding of the text string $str, UTF-8 by default.
      *
+     * @return void
      */
     public function drawMultilineText($lines, $x, $y, $width, $encoding = 'UTF-8')
     {
@@ -397,16 +414,15 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Get size of cell in given font and font size
+     * Get size of cell in given font and font size.
      *
-     * @param text   $str
-     * @param int    $x        Start position X of the text
-     * @param int    $y        Start position Y of the text
-     * @param int    $maxWidth Width of the column
-     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     * @param text    $str
+     * @param integer $x        Start position X of the text.
+     * @param integer $y        Start position Y of the text.
+     * @param integer $maxWidth Width of the column.
+     * @param string  $encoding Encoding of the text string $str, UTF-8 by default.
      *
-     * @return array amount of lines, width and height of the cell
-     *
+     * @return array Amount of lines, width and height of the cell.
      */
     public function getVariableText($str, $x, $y, $maxWidth, $encoding = 'UTF-8')
     {
@@ -480,14 +496,14 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Add text in cell to the page
+     * Add text in cell to the page.
      *
-     * @param string $str
-     * @param int    $x
-     * @param int    $y
-     * @param int    $maxWidth
-     * @param string $align    left, right or center
-     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     * @param string  $str
+     * @param integer $x
+     * @param integer $y
+     * @param integer $maxWidth
+     * @param string  $align    left, right or center.
+     * @param string  $encoding Encoding of the text string $str, UTF-8 by default.
      *
      * @return array
      */
@@ -512,12 +528,12 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Get text length in point
+     * Get text length in point.
      *
      * @param string $str
-     * @param string $encoding Encoding of the text string $str, UTF-8 by default
+     * @param string $encoding Encoding of the text string $str, UTF-8 by default.
      *
-     * @return int
+     * @return integer
      */
     protected final function _calculateTextWidth($str, $encoding = 'UTF-8')
     {
@@ -537,9 +553,9 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Set paragraph padding down value
+     * Set paragraph padding down value.
      *
-     * @param int $value
+     * @param integer paragraphPadding value.
      *
      * @return void
      */
@@ -549,9 +565,9 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Set padding in table
+     * Set padding in table.
      *
-     * @param int $value
+     * @param integer $value tablePadding value.
      *
      * @return void
      */
@@ -561,9 +577,9 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Line height
+     * Line height.
      *
-     * @param int $value
+     * @param integer $value lineHeight value.
      *
      * @return void
      */
@@ -573,10 +589,12 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
     }
 
     /**
-     * Set free position coordinates
+     * Set free position coordinates.
      *
-     * @param int $x    Position in pt
-     * @param int $y    Position in pt
+     * @param integer $x Position in pt.
+     * @param integer $y Position in pt.
+     *
+     * @return void
      */
     public function setStartPosition($x = null, $y = null)
     {

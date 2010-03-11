@@ -1,6 +1,6 @@
 <?php
 /**
- * Engine class
+ * Engine class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,7 @@
  */
 
 /**
- * Cleaner Engine
+ * Engine class.
  *
  * @category  PHProjekt
  * @package   Cleaner
@@ -36,45 +36,44 @@
 class Cleaner_Engine
 {
     /**
-     * Class Name for Messages
+     * Class Name for Messages.
      *
      * @var string
      */
     protected $_messagesClass = 'Cleaner_Messages';
 
     /**
-     * Class Name for Sanitizer
+     * Class Name for Sanitizer.
      *
      * @var string
      */
     protected $_sanitizerClass = 'Cleaner_Sanitizer';
 
     /**
-     * Class Name for Escaper
+     * Class Name for Escaper.
      *
      * @var string
      */
     protected $_escaperClass = 'Cleaner_Escaper';
 
     /**
-     * Default Class Name for Validator
+     * Default Class Name for Validator.
      *
      * @var string
      */
     protected $_validatorClass = 'Cleaner_Validator';
 
     /**
-     * Instance of Cleaner_Engine (Singleton)
+     * Instance of Cleaner_Engine (Singleton).
      *
      * @var Cleaner_Engine
-     *
      */
     protected static $_instance = null;
 
     /**
-     * Returns singleton
+     * Returns singleton.
      *
-     * @return object singleton
+     * @return Cleaner_Engine Singleton
      */
     public static function getInstance()
     {
@@ -86,9 +85,9 @@ class Cleaner_Engine
     }
 
     /**
-     * Returns new Messages-Instance (Factory)
+     * Returns new Messages-Instance (Factory).
      *
-     * @return object
+     * @return Cleaner_Messages An instance of Cleaner_Messages.
      */
     public static function getMessages()
     {
@@ -101,42 +100,45 @@ class Cleaner_Engine
     }
 
     /**
-     * Returns new Sanitizer-Instance (Factory)
+     * Returns new Sanitizer-Instance (Factory).
      *
-     * @return object
+     * @return Cleaner_Sanitizer An instance of Cleaner_Sanitizer.
      */
     public static function getSanitizer()
     {
         $name = self::$_instance->_sanitizerClass;
+
         return new $name();
     }
 
     /**
-     * Returns new Validator-Instance (Factory)
+     * Returns new Validator-Instance (Factory).
      *
-     * @return object
+     * @return Cleaner_Validator An instance of Cleaner_Validator.
      */
     public static function getValidator()
     {
         $name = self::$_instance->_validatorClass;
+
         return new $name();
     }
 
     /**
-     * Returns new Escaper-Instance (Factory)
+     * Returns new Escaper-Instance (Factory).
      *
-     * @return object
+     * @return Cleaner_Escaper An instance of Cleaner_Escaper.
      */
     public static function getEscaper()
     {
         $name = self::$_instance->_escaperClass;
+
         return new $name();
     }
 
     /**
-     * Set classname of individual Sanitizer implementation
+     * Set classname of individual Sanitizer implementation.
      *
-     * @param string $className name of the class
+     * @param string $className Name of the class.
      *
      * @return void
      */
@@ -146,9 +148,9 @@ class Cleaner_Engine
     }
 
     /**
-     * Set classname of individual Validator implementation
+     * Set classname of individual Validator implementation.
      *
-     * @param string $className name of the class
+     * @param string $className Name of the class.
      *
      * @return void
      */
@@ -158,9 +160,9 @@ class Cleaner_Engine
     }
 
     /**
-     * Set classname of individual Escaper implementation
+     * Set classname of individual Escaper implementation.
      *
-     * @param string $className name of the class
+     * @param string $className Name of the class.
      *
      * @return void
      */
@@ -170,9 +172,9 @@ class Cleaner_Engine
     }
 
     /**
-     * Set classname of individual Messages implementation
+     * Set classname of individual Messages implementation.
      *
-     * @param string $className name of the class
+     * @param string $className Name of the class.
      *
      * @return void
      */
@@ -182,13 +184,13 @@ class Cleaner_Engine
     }
 
     /**
-     * Escapes a value by a certain scope and type
+     * Escapes a value by a certain scope and type.
      *
-     * @param string $scope Scope, where value will be used (HTML, SQL, ..)
-     * @param string $type  Subtype/Subscope where value will be used
-     * @param mixed  $value Value to escape
+     * @param string $scope Scope, where value will be used (HTML, SQL, ..).
+     * @param string $type  Subtype/Subscope where value will be used.
+     * @param mixed  $value Value to escape.
      *
-     * @return mixed Escaped value
+     * @return mixed Escaped value.
      */
     public static function escape($scope, $type, $value)
     {
@@ -211,13 +213,13 @@ class Cleaner_Engine
     }
 
     /**
-     * Sanitized a value to a certain type
+     * Sanitized a value to a certain type.
      *
-     * @param string $type     Type value should be sanitized to
-     * @param mixed  $value    Value to sanitize
-     * @param object $messages Mesages generated by Sanitizer
+     * @param string $type     Type value should be sanitized to.
+     * @param mixed  $value    Value to sanitize.
+     * @param object $messages Mesages generated by Sanitizer.
      *
-     * @return mixed Sanitized value
+     * @return mixed Sanitized value.
      */
     public static function sanitize($type, $value, $messages = null)
     {
@@ -233,13 +235,13 @@ class Cleaner_Engine
     }
 
     /**
-     * Validates a value against a certain type
+     * Validates a value against a certain type.
      *
-     * @param string $type     Type to validate against
-     * @param mixed  $value    Value to validate
-     * @param object $messages Messages generated by Validator
+     * @param string $type     Type to validate against.
+     * @param mixed  $value    Value to validate.
+     * @param object $messages Messages generated by Validator.
      *
-     * @return bool true=>valid, false=>invalid
+     * @return boolean True for valid.
      */
     public static function validate($type, $value, $messages = null)
     {

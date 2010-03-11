@@ -1,6 +1,6 @@
 <?php
 /**
- * Module Controller for PHProjekt 6.0
+ * Module Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Module Controller for PHProjekt 6.0
+ * Module Controller.
  *
  * @category   PHProjekt
  * @package    Application
@@ -100,7 +100,7 @@ class Core_ModuleController extends Core_IndexController
     }
 
     /**
-     * Returns all global modules
+     * Returns all global modules.
      *
      * Returns a list of all the global modules with:
      * <pre>

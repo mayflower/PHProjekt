@@ -1,6 +1,6 @@
 <?php
 /**
- * Helpdesk Module Controller for PHProjekt 6.0
+ * Helpdesk Module Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Helpdesk Module Controller for PHProjekt 6.0
+ * Helpdesk Module Controller.
  *
  * @category   PHProjekt
  * @package    Application
@@ -83,12 +83,12 @@ class Helpdesk_IndexController extends IndexController
     }
 
     /**
-     * Set some values deppend on the params
+     * Set some values deppend on the params.
      *
      * Set the author, solvedBy, solvedDate.
-     * Also set the rights for each user (owner, assigned and the normal access tab)
+     * Also set the rights for each user (owner, assigned and the normal access tab).
      *
-     * @return array
+     * @return array POST values with some changes.
      */
     public function setParams()
     {

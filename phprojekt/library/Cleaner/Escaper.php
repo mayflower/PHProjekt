@@ -1,6 +1,8 @@
 <?php
 /**
- * Escaper class
+ * Escaper class.
+ *
+ * Contains escaping methods.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +24,9 @@
  */
 
 /**
- * Contains escaping methods
+ * Escaper class.
+ *
+ * Contains escaping methods.
  *
  * @category  PHProjekt
  * @package   Cleaner
@@ -36,7 +40,7 @@
 class Cleaner_Escaper
 {
     /**
-     * Registered Types of Escapers
+     * Registered Types of Escapers.
      *
      * @var array
      */
@@ -49,11 +53,11 @@ class Cleaner_Escaper
     );
 
     /**
-     * Escapes html url value
+     * Escapes html url value.
      *
-     * @param string $value Value to escape
+     * @param string $value Value to escape.
      *
-     * @return string Escaped value
+     * @return string Escaped value.
      */
     public function escapeHtmlUrl($value)
     {
@@ -61,11 +65,11 @@ class Cleaner_Escaper
     }
 
     /**
-     * Escapes HTML Values
+     * Escapes HTML Values.
      *
-     * @param string $value Value to escape
+     * @param string $value Value to escape.
      *
-     * @return string Escaped value
+     * @return string Escaped value.
      */
     public function escapeHtmlValue($value)
     {
@@ -73,11 +77,11 @@ class Cleaner_Escaper
     }
 
     /**
-     * Escapes SQL Value
+     * Escapes SQL Value.
      *
-     * @param string $value Value to escape
+     * @param string $value Value to escape.
      *
-     * @return string Escaped value
+     * @return string Escaped value.
      */
     public function escapeSqlValue($value)
     {

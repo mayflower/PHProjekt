@@ -1,6 +1,8 @@
 <?php
 /**
- * Search class
+ * Search class.
+ *
+ * The class provide the functions for make a full text search.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +25,9 @@
  */
 
 /**
- * The class provide the functions for make a full text search
+ * Search class.
+ *
+ * The class provide the functions for make a full text search.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,39 +42,37 @@
 class Phprojekt_Search
 {
     /**
-     * Class for manage the words
+     * Class for manage the words.
      *
      * @var Phprojekt_Search_Words
      */
     protected $_words = null;
 
     /**
-     * Class for manage the words-module Relation
+     * Class for manage the words-module Relation.
      *
      * @var Phprojekt_Search_WordModule
      */
     protected $_wordModule = null;
 
     /**
-     * Class for manage the words in files
+     * Class for manage the words in files.
      *
      * @var Phprojekt_Search_Words
      */
     protected $_files = null;
 
     /**
-     * Class for return the display data of the items
+     * Class for return the display data of the items.
      *
      * @var Phprojekt_Search_Display
      */
     protected $_display = null;
 
     /**
-     * Chaneg the tablename for use with the Zend db class
+     * Constructor.
      *
-     * This function is only for PHProjekt6
-     *
-     * @param array $config The config array for the database
+     * @return void
      */
     public function __construct()
     {
@@ -94,15 +96,13 @@ class Phprojekt_Search
     }
 
     /**
-     * Index a object
+     * Index a object.
      *
-     * First delete all the entries for this object
-     * for delete the unused strings
-     *
+     * First delete all the entries for this object for delete the unused strings.
      * Then get all the fields and values to index.
      * Then index each of one.
      *
-     * @param Phprojekt_Item_Abstract $object The item object
+     * @param Phprojekt_Item_Abstract $object The item object.
      *
      * @return void
      */
@@ -140,9 +140,9 @@ class Phprojekt_Search
     }
 
     /**
-     * Delete all the entries for one object
+     * Delete all the entries for one object.
      *
-     * @param Phprojekt_Item_Abstract $object The item object
+     * @param Phprojekt_Item_Abstract $object The item object.
      *
      * @return void
      */
@@ -157,18 +157,17 @@ class Phprojekt_Search
     }
 
     /**
-     * Do the search itself
-     * Only the items with readAccess are returned
+     * Do the search itself.
+     * Only the items with readAccess are returned.
      *
      * @param string  $words Some words separated by space
-     * @param integer $count Limit query
+     * @param integer $count Limit query.
      *
      * @uses
-     *      $db = Phprojekt::getInstance()->getDb();
      *      $search = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
      *      $search->search('text1 text2 text3', 10);
      *
-     * @return array
+     * @return array Array with results.
      */
     public function search($words, $count = null)
     {
@@ -209,13 +208,13 @@ class Phprojekt_Search
     }
 
     /**
-     * Get all the string values from the Object
+     * Get all the string values from the Object.
      *
-     * Allow only text field (varchar, text, tinytext and longtext)
+     * Allow only text field (varchar, text, tinytext and longtext).
      *
-     * @param Phprojekt_Item_Abstract $object The item object
+     * @param Phprojekt_Item_Abstract $object The item object.
      *
-     * @return array
+     * @return array Array with allowed values.
      */
     private function _getObjectDataToIndex($object)
     {

@@ -1,6 +1,8 @@
 <?php
 /**
- * Tree class
+ * Tree class.
+ *
+ * Represents an node of a tree and provides iterator abilities.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +25,8 @@
  */
 
 /**
+ * Tree class.
+ *
  * Represents an node of a tree and provides iterator abilities.
  *
  * @category   PHProjekt
@@ -38,19 +42,18 @@
 class Phprojekt_Tree_Node_Database implements IteratorAggregate
 {
     /**
-     * Name for use with the cache
+     * Name for use with the cache.
      */
     const CACHE_NAME = 'Phprojekt_Tree_Node_Database_setup';
 
     /**
-     * The char that separates a tree path in the database
-     * It should not be edited, if you don't initialize a complete
-     * empty tree, as no conversion is done
+     * The char that separates a tree path in the database.
+     * It should not be edited, if you don't initialize a complete empty tree, as no conversion is done.
      */
     const NODE_SEPARATOR = '/';
 
     /**
-     * Parent Node
+     * Parent Node.
      *
      * @var Phprojekt_Tree_Node
      */
@@ -66,25 +69,25 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * The active record pattern used to determine the table where
      * our actual tree data is stored as well as receiving the additional
-     * columns from the table
+     * columns from the table.
      *
      * @var Phprojekt_ActiveRecord_Abstract
      */
     protected $_activeRecord = null;
 
     /**
-     * The id of the initial requested element. We dont use the id here
-     * because id is received by the active record pattern and is used
-     * to determine if a node was sucessfull received. The requested id itself
-     * does nothing say about the current storage status of the node
+     * The id of the initial requested element.
+     * We dont use the id here because id is received by the active record pattern and is used
+     * to determine if a node was sucessfull received.
+     * The requested id itself does nothing say about the current storage status of the node.
      *
      * @var integer
      */
     protected $_requestedId = null;
 
     /**
-     * If this is the root node, it holds an simple list of all nodes
-     * in the tree. This is used to do fast lookups on a given id
+     * If this is the root node, it holds an simple list of all nodes in the tree.
+     * This is used to do fast lookups on a given id.
      *
      * @var array
      */
@@ -92,10 +95,12 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
 
     /**
-     * Initialize a new node and sets the tree the node belongs to
+     * Initialize a new node and sets the tree the node belongs to.
      *
-     * @param stdClass $activeRecord The Object that holds the tree
-     * @param integer  $id           The requested node, that will be the root node
+     * @param stdClass $activeRecord The Object that holds the tree.
+     * @param integer  $id           The requested node, that will be the root node.
+     *
+     * @return void
      */
     public function __construct($activeRecord, $id = null)
     {
@@ -125,7 +130,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Checks if the tree was setup yet, by checking of the node has an id
+     * Checks if the tree was setup yet, by checking of the node has an id.
      *
      * @return boolean
      */
@@ -140,11 +145,11 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      * If the requested id is not set using the constructor this method
      * usually fails throwing an exception.
      *
-     * @param Phprojekt_Filter_Interface  $filter   A filter to chain
+     * @param Phprojekt_Filter_Interface $filter A filter to chain.
      *
      * @throws Phprojekt_Tree_Node_Exception If no id was requested (see constructor)
      *
-     * @return Phprojekt_Tree_Node_Database
+     * @return Phprojekt_Tree_Node_Database An instance of Phprojekt_Tree_Node_Database.
      */
     public function setup(Phprojekt_Filter_Abstract $filter = null)
     {
@@ -230,11 +235,11 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Delete the projects where the user don't have access
+     * Delete the projects where the user don't have access.
      *
-     * @param Phprojekt_Tree_Node_Database $object
+     * @param Phprojekt_Tree_Node_Database $object Tree class.
      *
-     * @return Phprojekt_Tree_Node_Database
+     * @return Phprojekt_Tree_Node_Database The tree class with only the allowed nodes.
      */
     public function applyRights($object)
     {
@@ -274,10 +279,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Delete a children node
+     * Delete a children node.
      *
-     * @param Phprojekt_Tree_Node_Database $object Tree class
-     * @param integer                      $id     id for delete
+     * @param Phprojekt_Tree_Node_Database $object Tree class.
+     * @param integer                      $id     IF for delete.
      *
      * @return void
      */
@@ -293,9 +298,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Returns active record used to display the tree
+     * Returns active record used to display the tree.
      *
-     * @return Phprojekt_ActiveRecord_Abstract
+     * @return Phprojekt_ActiveRecord_Abstract An instance of Phprojekt_ActiveRecord_Abstract.
      */
     public function getActiveRecord()
     {
@@ -310,7 +315,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * Move upstairs until reach the root node and returns them.
      *
-     * @return Phprojekt_Tree_Node_Database
+     * @return Phprojekt_Tree_Node_Database An instance of Phprojekt_Tree_Node_Database.
      */
     public function getRootNode()
     {
@@ -322,14 +327,14 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Append a new node. If it the new was not yet stored in the
-     * database (id === null) it's inserted
+     * Append a new node.
+     * If it the new was not yet stored in the database (id === null) it's inserted.
      *
-     * @param Phprojekt_Tree_Node_Database $node The node to append
+     * @param Phprojekt_Tree_Node_Database $node The node to append.
      *
-     * @throws Phprojekt_Tree_Node_Exception If object has no current active record
+     * @throws Phprojekt_Tree_Node_Exception If object has no current active record.
      *
-     * @return Phprojekt_Tree_Node_Database
+     * @return Phprojekt_Tree_Node_Database An instance of Phprojekt_Tree_Node_Database.
      */
     public function appendNode(Phprojekt_Tree_Node_Database $node)
     {
@@ -349,9 +354,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Recursive delete children
+     * Recursive delete children.
      *
-     * @param array &$children Array of children to delete
+     * @param array &$children Array of children to delete.
      *
      * @return void
      */
@@ -370,8 +375,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      * Delete a node an all subnodes.
      * ! NOTE this method uses transaction locking.
      *
-     * @throws Zend_Db_Exception If node is not stored to database or
-     *                           was not received yet.
+     * @throws Zend_Db_Exception If node is not stored to database or was not received yet.
      *
      * @return void
      */
@@ -398,12 +402,12 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * Set the parent node.
      * !NOTE this method is somewhat dumb, it doesnot check if
-     * it is a child of the given parent node. You can messup the tree
-     * using the method not carefully.
+     * it is a child of the given parent node.
+     * You can messup the tree using the method not carefully.
      *
-     * @param Phprojekt_Tree_Node_Database $node Parent node
+     * @param Phprojekt_Tree_Node_Database $node Parent node.
      *
-     * @return Phprojekt_Tree_Node_Database
+     * @return Phprojekt_Tree_Node_Database An instance of Phprojekt_Tree_Node_Database.
      */
     public function setParentNode(Phprojekt_Tree_Node_Database $node)
     {
@@ -421,10 +425,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Rebuild the paths of a subtree
+     * Rebuild the paths of a subtree.
      *
-     * @param Phprojekt_Tree_Node_Database $node     Node to rebuild
-     * @param string                       $basePath Path of the parent
+     * @param Phprojekt_Tree_Node_Database $node     Node to rebuild.
+     * @param string                       $basePath Path of the parent.
      *
      * @return void
      */
@@ -446,11 +450,11 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Overwrite getter to access protected properties as read-only
+     * Overwrite getter to access protected properties as read-only.
      *
      * @param string $key Identifier
      *
-     * @return mixed
+     * @return mixed Value of the var.
      */
     public function __get($key)
     {
@@ -469,10 +473,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Pass all sets to the active record
+     * Pass all sets to the active record.
      *
-     * @param integer $key   Identifier
-     * @param mixed   $value Value
+     * @param integer $key   Identifier.
+     * @param mixed   $value Value.
      *
      * @return void
      */
@@ -487,11 +491,11 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Overwrite isset
+     * Overwrite isset.
      *
-     * @param string $key
+     * @param string $key Identifier.
      *
-     * @return boolean
+     * @return boolean True if exists.
      */
     public function __isset($key)
     {
@@ -499,10 +503,12 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Overwrite calls. Act as a proxy for the active record
+     * Overwrite calls.
      *
-     * @param string $name
-     * @param array  $arguments
+     * Act as a proxy for the active record.
+     *
+     * @param string $name      Name of the function.
+     * @param array  $arguments Arguments.
      *
      * @return mixed
      */
@@ -518,9 +524,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * Returns a node from the current tree.
      *
-     * @param integer $id Id of the node to receive
+     * @param integer $id ID of the node to receive.
      *
-     * @return Phprojekt_Tree_Node_Database
+     * @return Phprojekt_Tree_Node_Database An instance of Phprojekt_Tree_Node_Database.
      */
     public function getNodeById($id)
     {
@@ -528,12 +534,12 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Returns a node from the tree intern index, that is maintained
-     * by the root node
+     * Returns a node from the tree intern index,
+     * that is maintained by the root node.
      *
-     * @param integer $id Id of the node to receive
+     * @param integer $id ID of the node to receive.
      *
-     * @return Phprojekt_Tree_Node_Database
+     * @return Phprojekt_Tree_Node_Database|null An instance of Phprojekt_Tree_Node_Database.
      */
     protected function _getFromIndex($id)
     {
@@ -548,8 +554,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
     /**
      * Check if the current node is the root node of a received tree.
-     * This does not mean that its an absolute root node. Use isRootNode to
-     * check this
+     * This does not mean that its an absolute root node.
+     * Use isRootNode to check this.
      *
      * @return boolean
      */
@@ -559,7 +565,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Returns true if node is a root node
+     * Returns true if node is a root node.
      *
      * @return boolean
      */
@@ -570,7 +576,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
     /**
      * Implementation of IteratorAggregate::getIterator.
-     * Makes possible to use nodes with iterators
+     * Makes possible to use nodes with iterators.
      *
      * @return RecursiveIteratorIterator
      */
@@ -581,8 +587,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Returns the parent node of that node or null
-     * if the node doesnt have a parent
+     * Returns the parent node of that node or null if the node doesnt have a parent.
      *
      * @return null|Phprojekt_Tree_Node
      */
@@ -592,10 +597,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Returns the depth of the current node relativ
-     * to the tree it belongs to. The lowest number is 0 (root node)
+     * Returns the depth of the current node relativ to the tree it belongs to.
+     * The lowest number is 0 (root node).
      *
-     * @return integer
+     * @return integer Depth.
      */
     public function getDepth()
     {
@@ -606,9 +611,11 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Returns a formatted string for display purpose
+     * Returns a formatted string for display purpose.
      *
-     * @param string Name of property to include in the output
+     * @param string Name of property to include in the output.
+     *
+     * @return string Name with "...." x depth.
      */
     public function getDepthDisplay($value)
     {
@@ -616,9 +623,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Returns an array of child nodes of the node
+     * Returns an array of child nodes of the node.
      *
-     * @return array
+     * @return array Array of child.
      */
     public function getChildren()
     {
@@ -626,7 +633,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Returns true if the node has child nodes
+     * Returns true if the node has child nodes.
      *
      * @return boolean
      */
@@ -636,9 +643,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Returns the first node of a tree. This also resets the
-     * internal pointer of child entries. If the node doesn't have
-     * any children NULL is returned.
+     * Returns the first node of a tree.
+     * This also resets the internal pointer of child entries.
+     * If the node doesn't have any children NULL is returned.
      *
      * @return null|Phprojekt_Tree_Node
      */
@@ -652,7 +659,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Delete the tree cache
+     * Delete the tree cache.
      *
      * @return void;
      */

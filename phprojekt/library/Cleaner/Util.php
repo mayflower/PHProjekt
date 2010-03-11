@@ -1,6 +1,8 @@
 <?php
 /**
- * Util class
+ * Util class.
+ *
+ * Some Utility Functions used by the Framework.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,9 +24,9 @@
  */
 
 /**
- * Cleaner Util
+ * Util class.
  *
- * Some Utility Functions used by the Framework
+ * Some Utility Functions used by the Framework.
  *
  * @category  PHProjekt
  * @package   Cleaner
@@ -38,11 +40,11 @@
 class Cleaner_Util
 {
     /**
-     * Tests if value is null, empty or only whitespace(s)
+     * Tests if value is null, empty or only whitespace(s).
      *
-     * @param mixed $value Value to test if blank
+     * @param mixed $value Value to test if blank.
      *
-     * @return bool
+     * @return boolean
      */
     public static function isBlank($value)
     {

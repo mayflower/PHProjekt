@@ -1,8 +1,6 @@
 <?php
 /**
- * Convert a model into a json structure.
- * This is usually done by a controller to send data to the
- * client
+ * A generic interface to interact with ModelInformation.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,10 +23,7 @@
  */
 
 /**
- * Convert a model into a json structure.
- * This is usally done by a controller to send data to the client.
- * The Phprojekt_Convert_Json takes care that a apporpriate structure
- * is made from the given model.
+ * A generic interface to interact with ModelInformation.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -43,10 +38,9 @@
 interface Phprojekt_ModelInformation_Interface
 {
     /**
-     * Return an array of field information.
-     * See /docs/Documentation of the detailed exchange format.odt
+     * Return an array of field definitions.
      *
-     * @return array
+     * @return array Array with all the fields definitions.
      */
      public function getFieldDefinition();
 }

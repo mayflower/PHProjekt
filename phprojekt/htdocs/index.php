@@ -22,12 +22,12 @@
  */
 
 /**
-* Section to use from configuration.ini
+* Section to use from configuration.ini.
  */
 define('PHPR_CONFIG_SECTION', 'production');
 
 /**
- * Root path
+ * Root path.
  */
 define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
 

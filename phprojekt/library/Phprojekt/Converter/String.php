@@ -1,6 +1,6 @@
 <?php
 /**
- * Clean an string for index it
+ * Clean an string for index it.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Clean an string for index it
+ * Clean an string for index it.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,11 +38,11 @@
 class Phprojekt_Converter_String
 {
     /**
-     * Clean Up a string for index
+     * Clean Up a string for index.
      *
-     * @param string $string The string for cleanup
+     * @param string $string The string for cleanup.
      *
-     * @return string
+     * @return string Cleaned string.
      */
     public static function cleanupString($string)
     {
@@ -55,11 +55,11 @@ class Phprojekt_Converter_String
     }
 
     /**
-     * Remove the short or long words from the index
+     * Remove the short or long words from the index.
      *
-     * @param array $string String to check
+     * @param array $string String to check.
      *
-     * @return boolean
+     * @return boolean True for words between 3 and 256.
      */
     public static function stripLengthWords($string)
     {

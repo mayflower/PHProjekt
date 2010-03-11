@@ -1,6 +1,6 @@
 <?php
 /**
- * Helper for creating user lists with username mapping
+ * Helper for creating user lists with username mapping.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Helper for set the rights of the user in one item
+ * Helper for creating user lists with username mapping.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,12 +38,12 @@
 final class Minutes_Helpers_Userlist
 {
     /**
-     * Helper to create an array of users
+     * Helper to create an array of users.
      *
-     * @param string $idList   Comma-separated list of user ids
-     * @param string $idListNN Optional additional lists of comma-separated user ids
+     * @param string $idList   Comma-separated list of user ids.
+     * @param string $idListNN Optional additional lists of comma-separated user ids.
      *
-     * @return array
+     * @return array Array with 'id' and 'display'
      */
     public static function expandIdList($idList = '')
     {

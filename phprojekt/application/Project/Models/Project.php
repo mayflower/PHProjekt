@@ -1,6 +1,6 @@
 <?php
 /**
- * Project model class
+ * Project model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,10 +23,10 @@
  */
 
 /**
- * Project model class
+ * Project model class.
  *
  * The class of each model return the data for show
- * on the list and the form view
+ * on the list and the form view.
  *
  * @category   PHProjekt
  * @package    Application
@@ -43,11 +43,11 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     public $hasMany = array('modulePermissions' => array('classname' => 'Project_Models_ProjectModulePermissions'));
 
     /**
-     * Validate function for the projectId field
+     * Validate function for the projectId field.
      *
-     * @param integer $value Value of the projectId to check
+     * @param integer $value Value of the projectId to check.
      *
-     * @return string Error msg
+     * @return string Error msg.
      */
     public function validateProjectId($value)
     {
@@ -65,12 +65,12 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Check if the projectId is under the same project or a subproject of him
+     * Check if the projectId is under the same project or a subproject of him.
      *
-     * @param integer                      $projectId The projectId to check
-     * @param Phprojekt_Tree_Node_Database $node      The node of the current project
+     * @param integer                      $projectId The projectId to check.
+     * @param Phprojekt_Tree_Node_Database $node      The node of the current project.
      *
-     * @return boolean
+     * @return boolean False if not.
      */
     private function _isInTheProject($projectId, $node)
     {
@@ -94,10 +94,10 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Save the allow modules for one projectId
+     * Save the allow modules for one projectId.
      * First delete all the older relations
      *
-     * @param array $rights    Array with the modules to save
+     * @param array $rights Array with the modules to save.
      *
      * @return void
      */
@@ -115,10 +115,10 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Add a new relation module-project without delete any entry
-     * Used for add modules to the root project
+     * Add a new relation module-project without delete any entry.
+     * Used for add modules to the root project.
      *
-     * @param int $moduleId  The Module Id to add
+     * @param integer $moduleId The Module Id to add.
      *
      * @return void
      */
@@ -131,9 +131,9 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Delete the tree cache after save
+     * Delete the tree cache after save.
      *
-     * @return boolean
+     * @return boolean True for a sucessful save.
      */
     public function parentSave()
     {
@@ -144,9 +144,9 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Delete the tree cache after save
+     * Delete the tree cache after save.
      *
-     * @return boolean
+     * @return boolean True for a sucessful save.
      */
     public function save()
     {
@@ -157,9 +157,9 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Delete the tree cache after delete
+     * Delete the tree cache after delete.
      *
-     * @return boolean
+     * @return void
      */
     public function delete()
     {

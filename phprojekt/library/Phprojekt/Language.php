@@ -1,6 +1,6 @@
 <?php
 /**
- * Language Interface for use the PHProjekt lang files
+ * Language Interface for use the PHProjekt lang files.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,7 @@
  * Sinse the Zend use some type of Adapter that can not be used with the
  * PHProjekt lang files, we create an own Adapter for read these files.
  *
- * The class is an extension of the Zend_Translate and call the PHProjekt Adapter.
+ * The class is an extension of the Zend_Translate and call the Phprojekt_LanguageAdapter.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -43,7 +43,7 @@ class Phprojekt_Language extends Zend_Translate
     private $_locale = null;
 
     /**
-     * Constructor function
+     * Constructor.
      *
      * The function is called with a locale string and then
      * create the PHProjekt adapter for load the translated strings.
@@ -51,11 +51,10 @@ class Phprojekt_Language extends Zend_Translate
      * The lang files are in the folder languages with the name:
      * 'locale.inc.php' where locale is the locale string.
      *
-     * For example the English translation is in the file: en.inc.php
+     * For example the English translation is in the file: en.inc.php.
      *
-     * @param string|Zend_Locale $locale Locale/Language to set,
-     *                                   identical with Locale identifiers
-     *                                   see Zend_Locale for more information
+     * @param string|Zend_Locale $locale Locale/Language to set, identical with Locale identifiers
+     *                                   see Zend_Locale for more information.
      */
     public function __construct($locale)
     {
@@ -64,23 +63,20 @@ class Phprojekt_Language extends Zend_Translate
     }
 
     /**
-     * Translate the given string
+     * Translate the given string.
      *
-     * The function translate the message
-     * usign the adapter created with the correct locale.
-     * And return the strign using the utf8 encode
-     * for make sence to the codification of the languages strings.
+     * The function translate the message usign the adapter created with the correct locale,
+     * and return the strign using the utf8 encode for make sence to the codification of the languages strings.
      *
-     * If you want to translate the message in other languages
-     * that is not the default that are you using,
-     * you can call the function like trnaslate($message,$locale).
+     * If you want to translate the message in other languages that is not the default that are you using,
+     * you can call the function like translate($message, $moduleName, $locale).
      * This will try to load the file first if is not already laoded
-     * and then return the message in your $locale languauge
+     * and then return the message in your $locale language.
      *
-     * @param string $message Original to translate
-     * @param string $locale  Locale/language to translate to
+     * @param string $message Original to translate.
+     * @param string $locale  Locale/language to translate to.
      *
-     * @return string
+     * @return string Translated string.
      */
     public function translate($message, $moduleName = 'Default', $locale = null)
     {
@@ -93,14 +89,12 @@ class Phprojekt_Language extends Zend_Translate
     }
 
     /**
-     * Load another lang file if is needed
+     * Load another lang file if is needed.
      *
-     * If the lang file that you want is not loaded,
-     * the function will load it.
+     * If the lang file that you want is not loaded, the function will load it.
      *
-     * @param string|Zend_Locale $locale Locale/Language to set,
-     *                                   identical with Locale identifiers
-     *                                   see Zend_Locale for more information
+     * @param string|Zend_Locale $locale Locale/Language to set, identical with Locale identifiers
+     *                                   see Zend_Locale for more information.
      *
      * @return void
      */
@@ -112,13 +106,12 @@ class Phprojekt_Language extends Zend_Translate
     }
 
     /**
-     * Return all the trasnlated strings for the $locale
+     * Return all the trasnlated strings for the $locale.
      *
-     * @param string|Zend_Locale $locale Locale/Language to set,
-     *                                   identical with Locale identifiers
-     *                                   see Zend_Locale for more information
+     * @param string|Zend_Locale $locale Locale/Language to set, identical with Locale identifiers
+     *                                   see Zend_Locale for more information.
      *
-     * @return array
+     * @return array Array with all the trasnlated strings.
      */
     public function getTranslatedStrings($locale)
     {

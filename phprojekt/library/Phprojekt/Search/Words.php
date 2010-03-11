@@ -1,6 +1,8 @@
 <?php
 /**
- * Class for manage the words on the Search
+ * Class for manage the words on the Search.
+ *
+ * The class provide the functions for save/delete/search the words in the SearchWords table.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +25,9 @@
  */
 
 /**
- * The class provide the functions for save/delete/search the words in the
- * SearchWords table
+ * Class for manage the words on the Search.
+ *
+ * The class provide the functions for save/delete/search the words in the SearchWords table.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -39,25 +42,23 @@
 class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
 {
     /**
-     * Name of the table
+     * Name of the table.
      *
      * @var string
      */
     protected $_name = 'search_words';
 
     /**
-     * Stopwords that should not be indexed
+     * Stopwords that should not be indexed.
      *
      * @var array
      */
     protected $_stopWords = array();
 
     /**
-     * Change the tablename for use with the Zend db class
+     * Constructor.
      *
-     * This function is only for PHProjekt6
-     *
-     * @param array $config The config array for the database
+     * @return void
      */
     public function __construct()
     {
@@ -74,15 +75,14 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Index a string
+     * Index a string.
      * First check if exists, if not, insert it.
-     * Keep and update the number of ocurrences of each word
-     * The function get a string and separate into many words
-     * And store each of them.
+     * Keep and update the number of ocurrences of each word.
+     * The function get a string and separate into many words and store each of them.
      *
-     * @param string $data String to save
+     * @param string $data String to save.
      *
-     * @return array() Array with wordIds
+     * @return array Array with word IDs.
      */
     public function indexWords($data)
     {
@@ -93,15 +93,15 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Do the search looking for the words
+     * Do the search looking for the words.
      * The operator work like: equal => look for the exact words.
      *                         like  => look for words that contain the word.
      *
-     * @param string  $words    Some words separated by space
-     * @param string  $operator Query operator
-     * @param integer $count    Limit query
+     * @param string  $words    Some words separated by space.
+     * @param string  $operator Query operator.
+     * @param integer $count    Limit query.
      *
-     * @return array
+     * @return array Array with resutls.
      */
     public function searchWords($words, $operator = 'equal', $count = null)
     {
@@ -126,13 +126,13 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Save or update the new word
+     * Save or update the new word.
      *
-     * This function use the Zend_DB insert/update
+     * This function use the Zend_DB insert/update.
      *
-     * @param array $words Array with the words string
+     * @param array $words Array with the words string.
      *
-     * @return array
+     * @return array Array with word IDs.
      */
     private function _save($words)
     {
@@ -170,11 +170,11 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     }
 
    /**
-     * Decrease the ocurrences of the word
+     * Decrease the ocurrences of the word.
      *
-     * This function use the Zend_DB update
+     * This function use the Zend_DB update.
      *
-     * @param array $words Array with wordId
+     * @param array $words Array with word IDs.
      *
      * @return void
      */
@@ -208,11 +208,11 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Return all the words accepted for index into an array
+     * Return all the words accepted for index into an array.
      *
-     * @param string $string The string to store
+     * @param string $string The string to store.
      *
-     * @return array
+     * @return array Array with words.
      */
     private function _stringToArray($string)
     {
@@ -233,12 +233,11 @@ class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Remove the StopWords from the index
-     * using the stopwords.txt file
+     * Remove the StopWords from the index using the stopwords.txt file.
      *
-     * @param array $string String to check
+     * @param array $string String to check.
      *
-     * @return boolean
+     * @return boolean True for valid string.
      */
     private function _stripStops($string)
     {

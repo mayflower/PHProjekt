@@ -1,6 +1,7 @@
 <?php
 /**
- * Project-Role-User Relation
+ * Project-Role-User Relation.
+ * Manage the relation between the Projects, the roles and the users.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +24,8 @@
  */
 
 /**
- * Manage the relation between the Projects, the roles and the users
+ * Project-Role-User Relation.
+ * Manage the relation between the Projects, the roles and the users.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,11 +40,11 @@
 class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_Abstract
 {
     /**
-     * Return all the roles in an array and their relations if exists
+     * Return all the roles in an array and their relations if exists.
      *
-     * @param int $projectId The Project id
+     * @param integer $projectId The Project ID.
      *
-     * @return array
+     * @return array Array with 'id', 'name' and 'users'.
      */
     function getProjectRoleUserPermissions($projectId)
     {
@@ -70,11 +72,11 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
     }
 
     /**
-     * Save the roles-user relation for one projectId
+     * Save the roles-user relation for one projectId.
      *
-     * @param array $roles     Array with the roles Id
-     * @param array users      Array with the users Id
-     * @param int   $projectId The project Id
+     * @param array   $roles     Array with the roles ID.
+     * @param array   users      Array with the users ID.
+     * @param integer $projectId The project ID.
      *
      * @return void
      */
@@ -107,12 +109,12 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
     }
 
     /**
-     * Returns the UserRole in the project
+     * Returns the UserRole in the project.
      *
-     * @param int $userId    The user Id
-     * @param int $projectId The project Id
+     * @param integer $userId    The user ID.
+     * @param integer $projectId The project ID.
      *
-     * @return string $_role current role
+     * @return integer $_role Role ID.
      */
     public function fetchUserRole($userId, $projectId)
     {

@@ -1,6 +1,9 @@
 <?php
 /**
- * User-Tag <-> Modules relation class
+ * User-Tag <-> Modules relation class.
+ *
+ * The class provide the functions for manage the relation between
+ * the user-tag relation and modules.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +26,10 @@
  */
 
 /**
+ * User-Tag <-> Modules relation class.
+ *
  * The class provide the functions for manage the relation between
- * the user-tag relation and modules
+ * the user-tag relation and modules.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -39,14 +44,16 @@
 class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
 {
     /**
-     * Table name
+     * Table name.
      *
      * @var string
      */
     protected $_name = 'tags_modules';
 
     /**
-     * Constructs a Phprojekt_Tags_Modules
+     * Construct.
+     *
+     * @return void
      */
     public function __construct()
     {
@@ -55,17 +62,17 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Save a new relation User-Tag <-> ModuleId-ItemId
+     * Save a new relation User-Tag <-> ModuleId-ItemId.
      *
-     * Is  nessesary check if exists,
+     * Is nessesary check if exists,
      * since the relations are delete before insert it
-     * but can be the same word in the string separated by spaces
+     * but can be the same word in the string separated by spaces.
      *
-     * This function use the Zend_DB insert
+     * This function use the Zend_DB insert.
      *
-     * @param integer $moduleId  The module Id to store
-     * @param integer $itemId    The item Id
-     * @param integer $tagUserId The User-Tag relation Id
+     * @param integer $moduleId  The module ID to store.
+     * @param integer $itemId    The item ID.
+     * @param integer $tagUserId The User-Tag relation ID.
      *
      * @return void
      */
@@ -80,11 +87,11 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Return all the modules with the relation User-Tag
+     * Return all the modules with the relation User-Tag.
      *
-     * @param integer $tagUserId Relation User-Tag Id
+     * @param integer $tagUserId Relation User-Tag ID.
      *
-     * @return array
+     * @return array Array with 'itemId' and 'moduleId'.
      */
     public function getModulesByRelationId($tagUserId)
     {
@@ -106,12 +113,12 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Return all the relations with the pair moduleId-itemId
+     * Return all the relations with the pair moduleId-itemId.
      *
-     * @param integer $moduleId The module Id to store
-     * @param integer $itemId   The item Id
+     * @param integer $moduleId The module ID to store.
+     * @param integer $itemId   The item ID.
      *
-     * @return integer
+     * @return array Array of tag_user IDs.
      */
     public function getRelationIdByModule($moduleId, $itemId)
     {
@@ -130,11 +137,11 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Delete all the entries for one userId-moduleId-itemId pair
+     * Delete all the entries for one userId-moduleId-itemId pair.
      *
-     * @param integer $moduleId   The module Id to store
-     * @param integer $itemId     The item Id
-     * @param array   $tagUserIds All the relationsId for delete
+     * @param integer $moduleId   The module ID to store.
+     * @param integer $itemId     The item ID.
+     * @param array   $tagUserIds All the relationsId for delete.
      *
      * @return void
      */
@@ -155,10 +162,10 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Delete all the entries for the moduleId-itemId pair
+     * Delete all the entries for the moduleId-itemId pair.
      *
-     * @param integer $moduleId The module Id to store
-     * @param integer $itemId   The item Id
+     * @param integer $moduleId The module ID to store.
+     * @param integer $itemId   The item ID.
      *
      * @return void
      */
@@ -169,9 +176,9 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Delete all the entries for one userId
+     * Delete all the entries for one userId.
      *
-     * @param array $tagUserIds All the relationsId for delete
+     * @param array $tagUserIds All the relationsId for delete.
      *
      * @return void
      */

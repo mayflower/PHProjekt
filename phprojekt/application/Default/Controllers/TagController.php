@@ -1,6 +1,7 @@
 <?php
 /**
- * Tag Controller for PHProjekt 6
+ * Tag Controller.
+ * The controller will get all the actions for manage tags.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,9 +24,8 @@
  */
 
 /**
- * Tag Controller for PHProjekt 6
- *
- * The controller will get all the actions for manage tags
+ * Tag Controller.
+ * The controller will get all the actions for manage tags.
  *
  * @category   PHProjekt
  * @package    Application

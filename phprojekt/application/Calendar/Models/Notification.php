@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification class of Calendar model for PHProjekt 6.0
+ * Notification class for Calendar module.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Notification class for Calendar module
+ * Notification class for Calendar module.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,12 +38,12 @@
 class Calendar_Models_Notification extends Phprojekt_Notification
 {
     /**
-     * Returns the rrule in descriptive mode
+     * Returns the rrule in descriptive mode.
      *
      * @param string      $rrule String with the recurrence 'rrule' field, as it is saved in the DB.
-     * @param Zend_Locale $lang Locale for use in translations
+     * @param Zend_Locale $lang  Locale for use in translations.
      *
-     * @return array
+     * @return array Array with 'label' and 'value'.
      */
     public function getRruleDescriptive($rrule, $lang)
     {
@@ -112,10 +112,10 @@ class Calendar_Models_Notification extends Phprojekt_Notification
      * Converts the date format and language, from an english '2009-04-25' or 'Sat Apr 25 2009' to
      * 'Wednesday - March 24 2009' in the according language.
      *
-     * @param string      $date String with the original date in english
-     * @param Zend_Locale $lang Locale for use in translations*
+     * @param string      $date String with the original date in english.
+     * @param Zend_Locale $lang Locale for use in translations.
      *
-     * @return string
+     * @return string Translated string.
      */
     public function translateDate($date, $lang)
     {
@@ -178,9 +178,9 @@ class Calendar_Models_Notification extends Phprojekt_Notification
     }
 
     /**
-     * Returns the recipients for this Calendar item
+     * Returns the recipients for this Calendar item.
      *
-     * @return array
+     * @return array Array with user IDs.
      */
     public function getTo()
     {
@@ -190,9 +190,9 @@ class Calendar_Models_Notification extends Phprojekt_Notification
     /**
      * Returns the fields part of the Notification body using a custom criterion for the Calendar module.
      *
-     * @param Zend_Locale $lang Locale for use in translations
+     * @param Zend_Locale $lang Locale for use in translations.
      *
-     * @return array
+     * @return array Array with 'label' and 'value'.
      */
     public function getBodyFields($lang)
     {
@@ -245,10 +245,10 @@ class Calendar_Models_Notification extends Phprojekt_Notification
      * and parses, translates and orders it using a custom criterion for the Calendar Notification.
      * Then returns the final array.
      *
-     * @param Zend_Locale $lang Locale for use in translations
-     * @param boolean     $translate Translate the fields or not
+     * @param Zend_Locale $lang      Locale for use in translations.
+     * @param boolean     $translate Translate the fields or not.
      *
-     * @return array
+     * @return array Array with 'label', 'field', 'type', 'oldValue' and 'newValue'
      */
     public function getBodyChanges($lang = null, $translate = true)
     {
@@ -372,9 +372,9 @@ class Calendar_Models_Notification extends Phprojekt_Notification
     }
 
     /**
-     * Define the datetime until the frontend message is valid
+     * Define the datetime until the frontend message is valid.
      *
-     * @return string
+     * @return string Datetime string.
      */
     public function getCalendarValidUntil()
     {
@@ -384,7 +384,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
     /**
      * Defines the datetime from which the generated frontend message is valid.
      *
-     * @return string
+     * @return string Datetime string.
      */
     public function getCalendarValidFrom()
     {
@@ -398,10 +398,11 @@ class Calendar_Models_Notification extends Phprojekt_Notification
     /**
      * Gets the participants of a calendar item.
      * Does a distinction between the processes 'delete' and 'add' or 'edit' because for the 'delete' process an
-     * additional query to the database is needed. Checks if the recipient has the right settings and if the recipient
-     * is the owner of the calendar item. Returns at least an empty array.
+     * additional query to the database is needed.
+     * Checks if the recipient has the right settings and if the recipient is the owner of the calendar item.
+     * Returns at least an empty array.
      *
-     * @return array
+     * @return array Array of users IDs.
      */
     public function getRecipients()
     {
@@ -418,7 +419,7 @@ class Calendar_Models_Notification extends Phprojekt_Notification
      * Overwrites the existing saveFrontendMessage.
      * Runs a regular save first and if successful, runs a second save for the alert before a meeting starts.
      *
-     * @return boolean
+     * @return boolean True for a sucessful save.
      */
     public function saveFrontendMessage()
     {

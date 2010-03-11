@@ -1,6 +1,7 @@
 <?php
 /**
- * Prefiltering
+ * Filter provide a easy, chainable way to do pre filtering for databases.
+ * It does the pre filtering by modifing a select statement.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,9 +40,7 @@
 abstract class Phprojekt_Filter_Abstract
 {
     /**
-     * The string to ues as an identifier
-     * for the UserModuleSetting database
-     *
+     * The string to ues as an identifier for the UserModuleSetting database.
      */
     const MODULESETTINGS_IDENTIFIER = 'Filter';
 
@@ -53,10 +52,11 @@ abstract class Phprojekt_Filter_Abstract
     protected $_adapter = null;
 
     /**
-     * Initialize a new filter using the db adapter to
-     * quote values and identifiers.
+     * Initialize a new filter using the db adapter to quote values and identifiers.
      *
-     * @param Zend_Db_Adapter_Abstract $adapter Db adapter for quoting
+     * @param Zend_Db_Adapter_Abstract $adapter Db adapter for quoting.
+     *
+     * @return void
      */
     public function __construct(Zend_Db_Adapter_Abstract $adapter)
     {
@@ -65,12 +65,14 @@ abstract class Phprojekt_Filter_Abstract
 
     /**
      * Saves the current filter chain to backing store, aka database
-     * (so why is it called "backing store", and not "database" ;-) )
+     * (so why is it called "backing store", and not "database" ;-) ).
      *
-     * @param Phprojekt_User_User $user     User for whom this filter is saved
-     * @param integer             $moduleId Module id for this filter chain
+     * @param Phprojekt_User_User $user     User for whom this filter is saved.
+     * @param integer             $moduleId Module id for this filter chain.
      *
-     * @return boolean
+     * @throws Exception If the pairs don't exists.
+     *
+     * @return void
      */
     public function saveToBackingStore($user, $moduleId = 1)
     {
@@ -94,16 +96,16 @@ abstract class Phprojekt_Filter_Abstract
     }
 
     /**
-     * Filters a select
+     * Filters a select.
      *
-     * @param Zend_Db_Select $select Db select statement to be filter
+     * @param Zend_Db_Select $select Db select statement to be filter.
      *
      * @return void
      */
     abstract public function filter(Zend_Db_Select $select);
 
     /**
-     * Backing store pair to safe to database
+     * Backing store pair to safe to database.
      *
      * @return array
      */

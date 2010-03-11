@@ -1,6 +1,7 @@
 <?php
 /**
- * Project-Module Relation
+ * Project-Module Relation Model.
+ * Manage the relation between the Projects and the active modules.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +24,8 @@
  */
 
 /**
- * Manage the relation between the Projects and the active modules
+ * Project-Module Relation Model.
+ * Manage the relation between the Projects and the active modules.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,11 +40,11 @@
 class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abstract
 {
     /**
-     * Return all the modules in an array and the permission if exists
+     * Return all the modules in an array and the permission if exists.
      *
-     * @param int $projectId The Project id
+     * @param integer $projectId The Project ID.
      *
-     * @return array
+     * @return array Array with 'id', 'name', 'label' and 'inProject'.
      */
     function getProjectModulePermissionsById($projectId)
     {
@@ -69,9 +71,9 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
     }
 
     /**
-     * Delete a project-module relation
+     * Delete a project-module relation.
      *
-     * @param int $moduleId  The Module Id to delete
+     * @param integer $moduleId The Module ID to delete.
      *
      * @return void
      */

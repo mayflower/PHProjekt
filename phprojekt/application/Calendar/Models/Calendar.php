@@ -1,6 +1,6 @@
 <?php
 /**
- * Calendar model class
+ * Calendar model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Calendar model class
+ * Calendar model class.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,44 +38,60 @@
 class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 {
     /**
-     * Type of event once (single date event)
+     * Type of event once (single date event).
      *
      */
     const EVENT_TYPE_ONCE = 1;
 
     /**
-     * Type of event daily
+     * Type of event daily.
      *
      */
     const EVENT_TYPE_DAILY = 2;
 
     /**
-     * Type of event weekly
+     * Type of event weekly.
      *
      */
     const EVENT_TYPE_WEEKLY = 3;
 
     /**
-     * Type of event monthly
+     * Type of event monthly.
      *
      */
     const EVENT_TYPE_MONTLY = 4;
 
     /**
-     * Type of event anual
+     * Type of event anual.
      *
      */
     const EVENT_TYPE_ANUAL = 5;
 
+    /**
+     * User list to be notified.
+     *
+     * @var array
+     */
     public $notifParticipants;
-    public $startDateNotif;
-    public $endDateNotif;
 
+    /**
+     * Start date for use in notifications.
+     *
+     * @var string
+     */
+    public $startDateNotif;
+
+    /**
+     * End date for use in notifications.
+     *
+     * @var string
+     */
+    public $endDateNotif;
 
     /**
      * Constructor initializes additional Infomanager.
      *
-     * @param array $db Configuration for Zend_Db_Table
+     * @param array $db Configuration for Zend_Db_Table.
      *
      * @return void
      */
@@ -87,17 +103,17 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Save or inserts an event. It inserts one envent by participant
+     * Save or inserts an event. It inserts one envent by participant.
      *
-     * @param array   $request              Array with all the data for the item (Basic Data)
-     * @param integer $id                   Current item id or null for new one
-     * @param string  $startDate            Date of the event
-     * @param string  $rrule                Rule for apply the recurring
-     * @param array   $participants         Array with the users involved in the event
-     * @param boolean $multipleEvents       Apply changes to one event or all the recurring events
-     * @param boolean $multipleParticipants Action for multiple participants or just the logged one
+     * @param array   $request              Array with all the data for the item (Basic Data).
+     * @param integer $id                   Current item id or null for new one.
+     * @param string  $startDate            Date of the event.
+     * @param string  $rrule                Rule for apply the recurring.
+     * @param array   $participants         Array with the users involved in the event.
+     * @param boolean $multipleEvents       Apply changes to one event or all the recurring events.
+     * @param boolean $multipleParticipants Action for multiple participants or just the logged one.
      *
-     * @return integer the id of the root event
+     * @return integer The id of the root event.
      */
     public function saveEvent($request, $id, $startDate, $endDate, $rrule, $participants, $multipleEvents,
         $multipleParticipants)
@@ -184,11 +200,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Returns the id of the root event of the current record
+     * Returns the id of the root event of the current record.
      *
-     * @param Phprojekt_Model_Interface $model The model to check
+     * @param Phprojekt_Model_Interface $model The model to check.
      *
-     * @return integer id of the root event
+     * @return integer Id of the root event.
      */
     public function getRootEventId($model)
     {
@@ -204,9 +220,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Validate the data of the current record
+     * Validate the data of the current record.
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function recordValidate()
     {
@@ -228,14 +244,14 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Get all the participants of one event
+     * Get all the participants of one event.
      *
-     * @return string
+     * @return string User IDs comma separated.
      */
     public function getAllParticipants()
     {
         $participantsList = array();
-        $participants     = array();
+        $participants     = '';
 
         if (!empty($this->id)) {
             $rootEventId = $this->getRootEventId($this);
@@ -258,13 +274,13 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Return the first startDate of the recurring events
+     * Return the first startDate of the recurring events.
      * If the user is the owner, can change it.
      *
-     * @param integer $id        The current item id
-     * @param string  $startDate The current startDate from the POST value
+     * @param integer $id        The current item id.
+     * @param string  $startDate The current startDate from the POST value.
      *
-     * @return string
+     * @return string The first date value.
      */
     public function getRecursionStartDate($id, $startDate)
     {
@@ -286,12 +302,10 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Delete routine
-     *
      * Deletes single or multiple events, both for single or multiple participants.
      *
-     * @param boolean $multipleEvents       Action for multiple events or single one
-     * @param boolean $multipleParticipants Action for multiple participants or just the logged one
+     * @param boolean $multipleEvents       Action for multiple events or single one.
+     * @param boolean $multipleParticipants Action for multiple participants or just the logged one.
      *
      * @return void
      */
@@ -324,15 +338,15 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Return all the events for all the users selected in a date
-     * The function use the ActiveRecord fetchAll for skip the itemRights restrictions
+     * Return all the events for all the users selected in a date.
+     * The function use the ActiveRecord fetchAll for skip the itemRights restrictions.
      *
-     * @param string  $usersId UserId separated by coma
-     * @param string  $date    Date for search
-     * @param integer $count   Count for the fetchall
-     * @param integer $offset  Offset for the fetchall
+     * @param string  $usersId User IDs comma separated.
+     * @param string  $date    Date for search.
+     * @param integer $count   Count for the fetchall.
+     * @param integer $offset  Offset for the fetchall.
      *
-     * @return array
+     * @return array Array of Calendar_Models_Calendar.
      */
     public function getUserSelectionRecords($usersId, $date, $count, $offset)
     {
@@ -361,11 +375,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Check if the user is the owner of the item
+     * Check if the user is the owner of the item.
      *
-     * @param Phprojekt_Model_Interface $model The event to check
+     * @param Phprojekt_Model_Interface $model The event to check.
      *
-     * @return boolean
+     * @return boolean True if is the owner.
      */
     private function _isOwner($model)
     {
@@ -380,13 +394,18 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Save a new event (Single or a recurring one)
+     * Save a new event (Single or a recurring one).
      *
-     * @param array   $request        Array with all the POST data
-     * @param array   $eventDates     Array with the dates of the recurring
-     * @param integer $participantId  Id of the user to add the event
+     * @param array   $request          Array with all the POST data.
+     * @param array   $eventDates       Array with the dates of the recurring.
+     * @param integer $daysDuration     How many days are between the start and end dates.
+     * @param integer $participantId    Id of the user to add the event.
+     * @param boolean $lastParticipant  If is the last participant in the list.
+     * @param boolean $sendNotification If must send or not the notification.
+     * @param array   $participantsList Array with the users involved in the event.
+     * @param integer $parentId         Id of the parent event.
      *
-     * @return integer
+     * @return integer The parentId.
      */
     private function _saveNewEvent($request, $eventDates, $daysDuration, $participantId, $lastParticipant,
         $sendNotification, $participantsList, $parentId)
@@ -419,14 +438,15 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * Update events
      *
      * The function will check for:
-     * - changes in the users (add, delete) (ONLY FOR OWNERS OF THE ITEM)
-     * - changes in the recurring (add, delete, update) (ONLY FOR OWNERS OF THE ITEM)
+     * - changes in the users (add, delete) (ONLY FOR OWNERS OF THE ITEM).
+     * - changes in the recurring (add, delete, update) (ONLY FOR OWNERS OF THE ITEM).
      *
-     * @param array   $request              Array with the POST data
-     * @param integer $id                   Id of the current event
-     * @param array   $eventDates           Array with the dates of the recurring
-     * @param array   $participantsList     Array with the users involved in the event
-     * @param boolean $multipleParticipants Action for multiple participants or just the logged one
+     * @param array   $request              Array with the POST data.
+     * @param integer $id                   Id of the current event.
+     * @param array   $eventDates           Array with the dates of the recurring.
+     * @param integer $daysDuration         How many days are between the start and end dates.
+     * @param array   $participantsList     Array with the users involved in the event.
+     * @param boolean $multipleParticipants Action for multiple participants or just the logged one.
      *
      * @return void
      */
@@ -561,11 +581,12 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     /**
      * Update only one event
      *
-     * @param array   $request              Array with the POST data
-     * @param integer $id                   Id of the current event
-     * @param array   $eventDates           Array with the dates of the recurring
-     * @param array   $participantsList     Array with the users involved in the event
-     * @param boolean $multipleParticipants Action for multiple participants or just the logged one*
+     * @param array   $request              Array with the POST data.
+     * @param integer $id                   Id of the current event.
+     * @param array   $eventDates           Array with the dates of the recurring.
+     * @param integer $daysDuration         How many days are between the start and end dates.
+     * @param array   $participantsList     Array with the users involved in the event.
+     * @param boolean $multipleParticipants Action for multiple participants or just the logged one.
      *
      * @return void
      */
@@ -643,13 +664,14 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      * Do the save for the event
      * Add the full access to the owner and Read, Write and Delete access to the user involved
      *
-     * @param array                     $request       Array with the POST data
-     * @param Phprojekt_Model_Interface $model         The model to check
-     * @param Phprojekt_Date_Collection $oneDate       Date object to save
-     * @param integer                   $participantId Id of the user to save the event
-     * @param integer                   $parentId      Id of the parent event
+     * @param array                     $request       Array with the POST data.
+     * @param Calendar_Models_Calendar  $model         The model to save.
+     * @param Phprojekt_Date_Collection $oneDate       Date object to save.
+     * @param integer                   $daysDuration  How many days are between the start and end dates.
+     * @param integer                   $participantId Id of the user to save the event.
+     * @param integer                   $parentId      Id of the parent event.
      *
-     * @return integer The parentId
+     * @return integer The parentId.
      */
     private function _saveEvent($request, $model, $oneDate, $daysDuration, $participantId, $parentId)
     {
@@ -689,12 +711,12 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Check if some of the fields was changed
+     * Check if some of the fields was changed.
      *
-     * @param Object $model   Calendar model
-     * @param array  $request Array with POST values
+     * @param Calendar_Models_Calendar $model   Calendar model.
+     * @param array                    $request Array with POST values.
      *
-     * @return boolean
+     * @return boolean True if there is any change.
      */
     private function _needSave($model, $request)
     {
@@ -713,11 +735,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Recurrence fields basic validation
+     * Recurrence fields basic validation.
      *
-     * @param String $rrule Event recurrence
+     * @param String $rrule Event recurrence.
      *
-     * @return boolean
+     * @return boolean True for a valid string.
      */
     private function _validateRecurrence($rrule)
     {
@@ -769,10 +791,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Returns all the events connected with the current one by the parentId, for the logged user as participant.
-     * Doesn't return the current event among them
+     * Returns all the events connected with the current one by the parentId,
+     * for the logged user as participant.
+     * Doesn't return the current event among them.
      *
-     * @return array
+     * @return array Array of Calendar IDs.
      */
     public function getRelatedEvents()
     {
@@ -780,9 +803,9 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         $rootEventId = $this->getRootEventId($this);
 
         if ($rootEventId > 0) {
-            $userId      = Phprojekt_Auth::getUserId();
-            $where       = sprintf('(parent_id = %d OR id = %d) AND id != %d AND participant_id = %d',
-                (int) $rootEventId, (int) $rootEventId, (int) $this->id, (int) $userId);
+            $userId = Phprojekt_Auth::getUserId();
+            $where  = sprintf('(parent_id = %d OR id = %d) AND id != %d AND participant_id = %d', (int) $rootEventId,
+                (int) $rootEventId, (int) $this->id, (int) $userId);
             $records = $this->fetchAll($where);
             $return  = array();
             foreach ($records as $record) {
@@ -796,23 +819,24 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Returns an instance of notification class for this module
+     * Returns an instance of notification class for this module.
      *
-     * @return Phprojekt_Notification
+     * @return Phprojekt_Notification An instance of Phprojekt_Notification.
      */
     public function getNotification()
     {
         $notification = Phprojekt_Loader::getModel('Calendar', 'Notification');
         $notification->setModel($this);
+
         return $notification;
     }
 
     /**
-     * Return only the date from a datetime
+     * Return only the date from a datetime.
      *
-     * @param string $datetime The datetime to get
+     * @param string $datetime The datetime to get.
      *
-     * @return string
+     * @return string Date string.
      */
     public function getDate($datetime)
     {
@@ -820,11 +844,11 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Apply the timezone to one datetime for use it in the database
+     * Apply the timezone to one datetime for use it in the database.
      *
-     * @param string $datetime The datetime to transform
+     * @param string $dateTime The datetime to transform.
      *
-     * @return string
+     * @return string Datetime string.
      */
     public function applyTimeZone($dateTime)
     {

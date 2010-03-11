@@ -1,6 +1,10 @@
 <?php
 /**
- * Cage class
+ * Cage class.
+ *
+ * Abstraction/Wrapper of some scope ($_GET, $_POST, ...).
+ *
+ * Wrapped some scope to ensure right security usage of parameters.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,9 +26,11 @@
  */
 
 /**
- * Abstraction/Wrapper of some scope ($_GET, $_POST, ...)
+ * Cage class.
  *
- * Wrapped some scope to ensure right security usage of parameters
+ * Abstraction/Wrapper of some scope ($_GET, $_POST, ...).
+ *
+ * Wrapped some scope to ensure right security usage of parameters.
  *
  * @category  PHProjekt
  * @package   Cleaner
@@ -38,26 +44,26 @@
 class Cleaner_Cage
 {
     /**
-     * Key/Identifier of scope
+     * Key/Identifier of scope.
      *
      * @var string
      */
     protected $_key;
 
     /**
-     * Wrapped scope
+     * Wrapped scope.
      *
      * @var array
      */
     protected $_scope;
 
     /**
-     * Get a wrapped Scope
+     * Get a wrapped Scope.
      *
-     * @param array  &$scope Scope to wrap
-     * @param string $key    Name of Scope
+     * @param array  &$scope Scope to wrap.
+     * @param string $key    Name of Scope.
      *
-     * @return Cleaner_Cage Wrapped Scope
+     * @return Cleaner_Cage Wrapped Scope.
      */
     public static function getInstance(&$scope, $key)
     {
@@ -65,10 +71,10 @@ class Cleaner_Cage
     }
 
     /**
-     * Creates Instance of a wrapped scope
+     * Creates Instance of a wrapped scope.
      *
-     * @param array  &$scope Scope to wrap
-     * @param string $key    Name of Scope
+     * @param array  &$scope Scope to wrap.
+     * @param string $key    Name of Scope.
      *
      * @return void
      *
@@ -80,14 +86,14 @@ class Cleaner_Cage
     }
 
     /**
-     * Validates an item in the wrapped scope for a certain type
+     * Validates an item in the wrapped scope for a certain type.
      *
-     * @param string $type     Type against parameter/item should be validated
-     * @param string $name     Name of parameter / Name of item in scope
-     * @param bool   $empty    Must parameter/item be not null or empty
-     * @param object $messages Messages generated while validation
+     * @param string  $type     Type against parameter/item should be validated.
+     * @param string  $name     Name of parameter / Name of item in scope.
+     * @param boolean $empty    Must parameter/item be not null or empty.
+     * @param object  $messages Messages generated while validation.
      *
-     * @return bool true=>valid, false=>invalid
+     * @return boolean True for valid.
      */
     public function validate($type, $name, $empty = false, $messages = null)
     {
@@ -96,15 +102,15 @@ class Cleaner_Cage
     }
 
     /**
-     * Sanitizes an item in the wrapped scope to a certain type
+     * Sanitizes an item in the wrapped scope to a certain type.
      *
-     * @param string $type     Type of parameter/item to sanitize
-     * @param string $name     Name of parameter / Name of item in scope
-     * @param mixed  $default  Return value, if parameter/item is null/empty/..
-     * @param bool   $empty    Must parameter/item be not null or empty
-     * @param object $messages Messages generated while sanitizing
+     * @param string  $type     Type of parameter/item to sanitize.
+     * @param string  $name     Name of parameter / Name of item in scope.
+     * @param mixed   $default  Return value, if parameter/item is null/empty/...
+     * @param boolean $empty    Must parameter/item be not null or empty.
+     * @param object  $messages Messages generated while sanitizing.
      *
-     * @return mixed
+     * @return mixed Sanitized value.
      */
     public function sanitize($type, $name, $default = null, $empty = false, $messages = null)
     {
@@ -114,15 +120,15 @@ class Cleaner_Cage
 
     /**
      * Validates an item in the wrapped scope for a certain type and if
-     * invalid sanitizes the value of the parameter/item
+     * invalid sanitizes the value of the parameter/item.
      *
-     * @param string $type     Type of parameter/item to validate and/or sanitize
-     * @param string $name     Name of parameter / Name of item in scope
-     * @param bool   $empty    Must parameter/item be not null or empty
-     * @param mixed  $default  Return value, if parameter/item and/or sanitizesparameter/item is null/empty/notset/..
-     * @param bool   $sanitize Wheather sanitize value of parameter/item, when value is invalid
+     * @param string  $type     Type of parameter/item to validate and/or sanitize.
+     * @param string  $name     Name of parameter / Name of item in scope.
+     * @param boolean $empty    Must parameter/item be not null or empty.
+     * @param mixed   $default  Return value, if parameter/item and/or sanitizesparameter/item is null/empty/notset/...
+     * @param boolean $sanitize Wheather sanitize value of parameter/item, when value is invalid.
      *
-     * @return Cleaner_Parameter Instance, representing selected parameter/item in Scope
+     * @return Cleaner_Parameter Instance, representing selected parameter/item in Scope.
      */
     public function getParameter($type, $name, $empty = false, $default = null, $sanitize = true)
     {

@@ -39,12 +39,12 @@ class Phprojekt_Converter_Csv
 {
     /**
      * The function check the parameters type
-     * and choose which convert function must use
+     * and choose which convert function must use.
      *
-     * @param mix $param1 - Array
-     * @param mix $param2 - ORDERING_LIST for items / fieldInformation for tags
+     * @param mix $param1 Array.
+     * @param mix $param2 ORDERING_LIST for items / fieldInformation for tags.
      *
-     * @return string
+     * @return string Data in CSV format.
      */
     public static function convert($param1, $param2 = null)
     {
@@ -61,12 +61,12 @@ class Phprojekt_Converter_Csv
     }
 
     /**
-     * Converts according to convert() and echos the result
-     * with the corresponding headers
+     * Converts according to convert() and echos the result with the corresponding headers.
      *
      * @see convert()
-     * @param mix $param1 - Array
-     * @param mix $param2 - ORDERING_LIST for items / fieldInformation for tags
+     *
+     * @param mix $param1 - Array.
+     * @param mix $param2 - ORDERING_LIST for items / fieldInformation for tags.
      *
      * @return void
      */
@@ -89,14 +89,14 @@ class Phprojekt_Converter_Csv
     }
 
     /**
-     * Convert a model or a model information into a CSV file
+     * Convert a model or a model information into a CSV file.
      *
-     * @param Phprojekt_Interface_Model|array $models The model to convert
-     * @param int                             $order  A Phprojekt_ModelInformation_Default::ORDERING_*
-     *                                                const that defines the ordering for the convert
-     * @param boolean                         $exportHeader Determine if the header needs to be exported
+     * @param Phprojekt_Interface_Model|array $models The model to convert.
+     * @param integer                         $order  A Phprojekt_ModelInformation_Default::ORDERING_*
+     *                                                const that defines the ordering for the convert.
+     * @param boolean                         $exportHeader Determine if the header needs to be exported.
      *
-     * @return string
+     * @return string Data in CSV format.
      */
     private static function _convertModel($models,
                                           $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT,
@@ -134,12 +134,12 @@ class Phprojekt_Converter_Csv
     }
 
     /**
-     * Convert and array data into a CSV file
+     * Convert and array data into a CSV file.
      *
-     * @param array   $data Data to convert
-     * @param boolean $exportHeader Determine if the header needs to be exported
+     * @param array   $data         Data to convert.
+     * @param boolean $exportHeader Determine if the header needs to be exported.
      *
-     * @return string
+     * @return string Data in CSV format.
      */
     private static function _convertArray($data)
     {
@@ -147,11 +147,11 @@ class Phprojekt_Converter_Csv
     }
 
     /**
-     * Writes header and content of the CSV file based on data array
+     * Writes header and content of the CSV file based on data array.
      *
-     * @param array $data Data to write on file
+     * @param array $data Data to write on file.
      *
-     * @return string
+     * @return string Data in CSV format.
      */
     private static function _writeFile($data)
     {

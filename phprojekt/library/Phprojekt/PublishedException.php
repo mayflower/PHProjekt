@@ -1,7 +1,6 @@
 <?php
 /**
- * A exception that can be and will be forwarded to the frontend
- * when thrown.
+ * A exception that can be and will be forwarded to the frontend when thrown.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,8 +23,7 @@
  */
 
 /**
- * A exception that can be and will be forwarded to the frontend
- * when thrown.
+ * A exception that can be and will be forwarded to the frontend when thrown.
  *
  * This exception only returns a message and a code and hides
  * trace informations to avoid an information disclosure.
@@ -49,29 +47,32 @@
 class Phprojekt_PublishedException extends Exception
 {
     /**
-     * Message to display
+     * Message to display.
      *
      * @var string
      */
     public $message;
 
     /**
-     * Special error codes
+     * Special error codes.
      *
-     * 0   Normal meesage
-     * 500 Expired login -> must Logout
+     * 0   Normal meesage.
+     * 500 Expired login -> must Logout.
      *
      * @var integer
      */
     public $code = 0;
 
     /**
-     * Initialize
+     * Initialize.
      *
-     * @param string  $message  A short description what's wrong
-     * @param integer $code     An optional error code
+     * @param string  $message A short description what's wrong.
+     * @param integer $code    An optional error code.
+     *
+     * @return void
      */
-    public function __construct($message, $code = 0) {
+    public function __construct($message, $code = 0)
+    {
         $this->message = Phprojekt::getInstance()->translate($message);
         $this->code    = $code;
     }

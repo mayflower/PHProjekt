@@ -1,6 +1,6 @@
 <?php
 /**
- * Helper to delete tree nodes and models
+ * Helper to delete tree nodes and models.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Helper to delete tree nodes and models
+ * Helper to delete tree nodes and models.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,13 +38,13 @@
 final class Default_Helpers_Delete
 {
     /**
-     * Delete a tree and all the sub-itemes
+     * Delete a tree and all the sub-itemes.
      *
-     * @param Phprojekt_Model_Interface $model
+     * @param Phprojekt_Model_Interface $model Model to delete.
      *
-     * @throws Exception If validation fails
+     * @throws Exception If validation fails.
      *
-     * @return boolean
+     * @return boolean True for a sucessful delete.
      */
     protected static function _deleteTree(Phprojekt_Model_Interface $model)
     {
@@ -95,13 +95,13 @@ final class Default_Helpers_Delete
     }
 
     /**
-     * Help to delete a model
+     * Help to delete a model.
      *
-     * @param Phprojekt_Model_Interface $model  The model
+     * @param Phprojekt_Model_Interface $model The model to delete.
      *
-     * @throws Exception If validation fails
+     * @throws Exception If validation fails.
      *
-     * @return boolean
+     * @return boolean True for a sucessful delete.
      */
     protected static function _deleteModel(Phprojekt_Model_Interface $model)
     {
@@ -115,10 +115,9 @@ final class Default_Helpers_Delete
     }
 
     /**
-     * Overwrite call
+     * Overwrite call.
      *
-     * @param string $name
-     * @throws Exception If validation of parameters fails
+     * @throws Exception If validation of parameters fails.
      *
      * @return void
      */
@@ -151,12 +150,12 @@ final class Default_Helpers_Delete
     }
 
     /**
-     * Check if the user has delete access to the item if is not a global module
+     * Check if the user has delete access to the item if is not a global module.
      *
-     * @param Phprojekt_Model_Interface $model      The model to save
-     * @param string                    $moduleName The current module
+     * @param Phprojekt_Model_Interface $model      The model to save.
+     * @param string                    $moduleName The current module.
      *
-     * @return boolean
+     * @return boolean True for a valid right.
      */
     private static function _checkItemRights($model, $moduleName)
     {

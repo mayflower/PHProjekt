@@ -1,6 +1,6 @@
 <?php
 /**
- * Contact model class
+ * Contact model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Contact model class
+ * Contact model class.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,31 +38,30 @@
 class Contact_Models_Contact extends Phprojekt_Item_Abstract
 {
     /**
-     * Field for display in the search results
+     * Field for display in the search results.
      *
      * @var string
      */
     public $searchFirstDisplayField = 'name';
 
     /**
-     * Field for display in the search results
+     * Field for display in the search results.
      *
      * @var string
      */
     public $searchSecondDisplayField = 'company';
 
     /**
-     * Rewrites parent fetchAll
-     * only public records are shown
+     * Rewrites parent fetchAll, only public records are shown.
      *
-     * @param string|array $where  Where clause
-     * @param string|array $order  Order by
-     * @param string|array $count  Limit query
-     * @param string|array $offset Query offset
-     * @param string       $select The comma-separated columns of the joined columns
-     * @param string       $join   The join statements
+     * @param string|array $where  Where clause.
+     * @param string|array $order  Order by.
+     * @param string|array $count  Limit query.
+     * @param string|array $offset Query offset.
+     * @param string       $select The comma-separated columns of the joined columns.
+     * @param string       $join   The join statements.
      *
-     * @return Zend_Db_Table_Rowset
+     * @return Zend_Db_Table_Rowset The rowset with the results.
      */
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
@@ -77,9 +76,9 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Validate the data of the current record
+     * Validate the data of the current record.
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function recordValidate()
     {
@@ -92,10 +91,9 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Save the rigths for the current item
-     * The users are a POST array with userIds
+     * Extension of saveRights() for don't save the rights.
      *
-     * @param array $rights - Array of usersId with the bitmask access
+     * @param array $rights Array of user IDs with the bitmask access.
      *
      * @return void
      */
@@ -104,8 +102,8 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Extension of the Abstract Record to don't save the search strings
-     * Only allow save if the contact is public or the ownerId is the current user
+     * Extension of save() for don't save the search strings.
+     * Only allow save if the contact is public or the ownerId is the current user.
      *
      * @return void
      */
@@ -128,8 +126,8 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
 
 
     /**
-     * Extension of the Abstract Record to delete an item
-     * Only allow delete if the contact is public or the ownerId is the current user
+     * Extension of delete() for don't save the search strings.
+     * Only allow delete if the contact is public or the ownerId is the current user.
      *
      * @return void
      */
@@ -143,11 +141,11 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Return the data range for a select
+     * Return the data range for a select.
      *
-     * @param Phprojekt_ModelInformation_Interface $field the field description
+     * @param Phprojekt_ModelInformation_Interface $field The field description.
      *
-     * @return an array with key and value to be used as datarange
+     * @return array Array with 'id' and 'name'.
      */
     public function getRangeFromModel($field)
     {

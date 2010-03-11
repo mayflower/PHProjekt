@@ -1,6 +1,8 @@
 <?php
 /**
- * Sanitizing class
+ * Sanitizing class.
+ *
+ * Contains sanitizing methods.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +24,9 @@
  */
 
 /**
- * Contains sanitizing methods
+ * Sanitizing class.
+ *
+ * Contains sanitizing methods.
  *
  * @category  PHProjekt
  * @package   Cleaner
@@ -36,9 +40,9 @@
 class Cleaner_Sanitizer
 {
     /**
-     * Registered Types for Sanitizing
+     * Registered Types for Sanitizing.
      *
-     * @var unknown_type
+     * @var array
      */
     public $sanitizers = array(
         'int'          => 'Int',
@@ -68,11 +72,11 @@ class Cleaner_Sanitizer
     );
 
     /**
-     * Sanitize value to 'Word'
+     * Sanitize value to 'Word'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeWord($value)
     {
@@ -80,11 +84,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'Word'
+     * Sanitize value to 'Word'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeString($value)
     {
@@ -92,11 +96,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'Numeric'
+     * Sanitize value to 'Numeric'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeNumeric($value)
     {
@@ -107,11 +111,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'IsoTimestamp'
+     * Sanitize value to 'IsoTimestamp'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeIsoTimestamp($value)
     {
@@ -130,11 +134,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'IsoTime'
+     * Sanitize value to 'IsoTime'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeIsoTime($value)
     {
@@ -152,11 +156,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'IsoDate'
+     * Sanitize value to 'IsoDate'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeIsoDate($value)
     {
@@ -176,11 +180,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'Ipv4'
+     * Sanitize value to 'Ipv4'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeIpv4($value)
     {
@@ -194,11 +198,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'Int'
+     * Sanitize value to 'Int'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeInt($value)
     {
@@ -238,11 +242,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'HTML' (Purifier)
+     * Sanitize value to 'HTML' (Purifier).
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeHtml($value)
     {
@@ -267,11 +271,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'Float'
+     * Sanitize value to 'Float'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeFloat($value)
     {
@@ -327,11 +331,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'Boolean'
+     * Sanitize value to 'Boolean'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeBool($value)
     {
@@ -356,11 +360,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'Alpha'
+     * Sanitize value to 'Alpha'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeAlpha($value)
     {
@@ -374,11 +378,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'Alnum'
+     * Sanitize value to 'Alnum'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeAlnum($value)
     {
@@ -392,11 +396,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value to 'Xss'
+     * Sanitize value to 'Xss'.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeXss($value)
     {
@@ -404,11 +408,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize value for use in a filter like search
+     * Sanitize value for use in a filter like search.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeFilter($value)
     {
@@ -423,11 +427,11 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize an array of int using a comma separator
+     * Sanitize an array of int using a comma separator.
      *
-     * @param mixed $value Value to sanitizes
+     * @param mixed $value Value to sanitizes.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeArrayOfInt($value)
     {
@@ -435,13 +439,13 @@ class Cleaner_Sanitizer
     }
 
     /**
-     * Sanitize an array using a separator and a type for cast the values
+     * Sanitize an array using a separator and a type for cast the values.
      *
-     * @param mixed  $value     Value to sanitizes
-     * @param string $separator Separator
-     * @param string $cast      Type of cast
+     * @param mixed  $value     Value to sanitizes.
+     * @param string $separator Separator.
+     * @param string $cast      Type of cast.
      *
-     * @return mixed sanitized value
+     * @return mixed Sanitized value.
      */
     public function sanitizeToArray($value, $separator, $cast = 'int')
     {

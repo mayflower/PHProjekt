@@ -1,6 +1,6 @@
 <?php
 /**
- * A simple exception showing that something in setup the nodes went wrong
+ * A simple exception showing that something in setup the nodes went wrong.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * A simple exception showing that something in setup the nodes went wrong
+ * A simple exception showing that something in setup the nodes went wrong.
  *
  * @category   PHProjekt
  * @package    Phprojekt

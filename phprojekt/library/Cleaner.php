@@ -1,6 +1,8 @@
 <?php
 /**
- * Santizing class
+ * Santizing class.
+ *
+ * Cleaner is a PHP written sanitizing and escaping class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,6 +45,8 @@ require_once 'Cleaner/Escaper.php';
 require_once 'Cleaner/Util.php';
 
 /**
+ * Santizing class.
+ *
  * Cleaner is a PHP written sanitizing and escaping class.
  *
  * @category  PHProjekt
@@ -75,21 +79,21 @@ class Cleaner
     const PLUGIN_TYPE_ESCAPER   = 'escaper';
 
     /**
-     * Sigleton Instance of Cleaner
+     * Sigleton Instance of Cleaner.
      *
      * @var Cleaner Instance (Singleton) of Cleaner
      */
     private static $_instance = null;
 
     /**
-     * Cage Instances for default scopes
+     * Cage Instances for default scopes.
      *
      * @var array
      */
     private $_cages;
 
     /**
-     * Getter for Singleton instance of Cleaner
+     * Getter for Singleton instance of Cleaner.
      *
      * @return Cleaner Instance (Singleton) of Cleaner
      */
@@ -103,9 +107,9 @@ class Cleaner
     }
 
     /**
-     * Set a individual Implementation of Cleaner_Messages
+     * Set a individual Implementation of Cleaner_Messages.
      *
-     * @param string $className Name of class to use
+     * @param string $className Name of class to use.
      *
      * @return void
      */
@@ -115,9 +119,9 @@ class Cleaner
     }
 
     /**
-     * Set a individual Implementation of Cleaner_Sanitizer
+     * Set a individual Implementation of Cleaner_Sanitizer.
      *
-     * @param string $className Name of class to use
+     * @param string $className Name of class to use.
      *
      * @return void
      */
@@ -127,9 +131,9 @@ class Cleaner
     }
 
     /**
-     * Set a individual Implementation of Cleaner_Validator
+     * Set a individual Implementation of Cleaner_Validator.
      *
-     * @param string $className Name of class to use
+     * @param string $className Name of class to use.
      *
      * @return void
      */
@@ -139,9 +143,9 @@ class Cleaner
     }
 
     /**
-     * Set a individual Implementation of Cleaner_Escaper
+     * Set a individual Implementation of Cleaner_Escaper.
      *
-     * @param string $className Name of class to use
+     * @param string $className Name of class to use.
      *
      * @return void
      */
@@ -151,11 +155,11 @@ class Cleaner
     }
 
     /**
-     * Get the scope abstraction object
+     * Get the scope abstraction object.
      *
-     * @param string $scope Name of Scope (use constants
+     * @param string $scope Name of Scope (use constants).
      *
-     * @return Cleaner_Cage scope abstraction object
+     * @return Cleaner_Cage Scope abstraction object.
      */
     public static function getCage($scope)
     {
@@ -169,14 +173,14 @@ class Cleaner
     }
 
     /**
-     * Escape a value
+     * Escape a value.
      *
-     * @param string $scope   Scope category, in which the value will be displayed
-     * @param string $type    Subtype/Subscope, in which the value will be displayed
-     * @param mixed  $value   Value to escape
-     * @param mixed  $default Default value, if value is null/empty
+     * @param string $scope   Scope category, in which the value will be displayed.
+     * @param string $type    Subtype/Subscope, in which the value will be displayed.
+     * @param mixed  $value   Value to escape.
+     * @param mixed  $default Default value, if value is null/empty.
      *
-     * @return mixed Escaped value
+     * @return mixed Escaped value.
      */
     public static function escape($scope, $type, $value, $default = null)
     {
@@ -189,14 +193,14 @@ class Cleaner
 
 
     /**
-     * Validates a value against a certain type
+     * Validates a value against a certain type.
      *
-     * @param string $type     Type against parameter/item should be validated
-     * @param mixed  $value    Value to validate
-     * @param bool   $empty    Must parameter/item be not null or empty
-     * @param object $messages Messages generated while validation
+     * @param string  $type     Type against parameter/item should be validated.
+     * @param mixed   $value    Value to validate.
+     * @param boolean $empty    Must parameter/item be not null or empty.
+     * @param object  $messages Messages generated while validation.
      *
-     * @return bool true=>valid, false=>invalid
+     * @return boolean True for valid.
      */
     public static function validate($type, $value, $empty = false, $messages = null)
     {
@@ -217,15 +221,15 @@ class Cleaner
     }
 
     /**
-     * Sanitizes a value to a certain type
+     * Sanitizes a value to a certain type.
      *
-     * @param string $type     Type of parameter/item to sanitize
-     * @param mixed  $value    Value to sanitize
-     * @param mixed  $default  Return value, if parameter/item is null/empty/notset/..
-     * @param bool   $empty    Must parameter/item be not null or empty
-     * @param object $messages Messages generated while validation
+     * @param string  $type     Type of parameter/item to sanitize.
+     * @param mixed   $value    Value to sanitize.
+     * @param mixed   $default  Return value, if parameter/item is null/empty/notset/...
+     * @param boolean $empty    Must parameter/item be not null or empty.
+     * @param object  $messages Messages generated while validation.
      *
-     * @return mixed
+     * @return mixed Sanitized value.
      */
     public static function sanitize($type, $value, $default = null, $empty = false, $messages = null)
     {
@@ -259,16 +263,16 @@ class Cleaner
 
     /**
      * Validates an item in the wrapped scope for a certain type and if
-     * invalid sanitizes the value of the parameter/item
+     * invalid sanitizes the value of the parameter/item.
      *
-     * @param string $type     Type of parameter/item to validate and/or sanitize
-     * @param string $scope    Name of scope to use (GET, POST, ...)
-     * @param string $name     Name of parameter / Name of item in scope
-     * @param bool   $empty    Must parameter/item be not null or empty
-     * @param mixed  $default  Return value, if parameter/item and/or sanitizes parameter/item is null/empty/notset/..
-     * @param bool   $sanitize Wheather sanitize value of parameter/item, when value is invalid
+     * @param string  $type     Type of parameter/item to validate and/or sanitize.
+     * @param string  $scope    Name of scope to use (GET, POST, ...).
+     * @param string  $name     Name of parameter / Name of item in scope.
+     * @param boolean $empty    Must parameter/item be not null or empty.
+     * @param mixed   $default  Return value, if parameter/item and/or sanitizes parameter/item is null/empty/notset/..
+     * @param boolean $sanitize Wheather sanitize value of parameter/item, when value is invalid.
      *
-     * @return Cleaner_Parameter Instance, representing selected parameter/item in Scope
+     * @return Cleaner_Parameter Instance, representing selected parameter/item in Scope.
      */
     public static function getParameter($type, $scope, $name, $empty = false, $default = null, $sanitize = true)
     {
@@ -277,8 +281,9 @@ class Cleaner
     }
 
     /**
-     * Creates a new Instance (Singleton) of Cleaner
+     * Creates a new Instance (Singleton) of Cleaner.
      *
+     * @return void
      */
     protected function __construct()
     {

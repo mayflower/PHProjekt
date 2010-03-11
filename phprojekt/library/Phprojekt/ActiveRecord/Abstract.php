@@ -1,6 +1,6 @@
 <?php
 /**
- * Simple ActiveRecord implementation based on Zend_Db_Table
+ * Simple ActiveRecord implementation based on Zend_Db_Table.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Simple ActiveRecord implementation based on Zend_Db_Table
+ * Simple ActiveRecord implementation based on Zend_Db_Table.
  *
  * Every ActiveRecord object represents a row in a database table.
  * The name of the table is get by naming conventions based on the class name.
@@ -43,18 +43,18 @@
  * class the relation is mapped to. The identifier key is used to access
  * the relation using attributes. For a more detailed explainations how
  * Phprojekt implement active record, take a look at the development
- * documentation
+ * documentation.
  *
  * NOTE for developers:
  *   If you have an attribute defined in your class that has the same name
- *   like an column, the attribute is returned NOT the column. You will
- *   hide the column
+ *   like an column, the attribute is returned NOT the column.
+ *   You will hide the column.
  * NOTE for developers:
  *   If you define the relation attribute name make sure the name doesn't exists
  *   twice and is unique in ALL $hasMany, $belongsTo, $hasManyAndBelongsToMany.
  *   If a key exists more often they are exactly evaluted in the above order.
- *   e.g. if the key exists in hasMany and in belongsTo, you will get the
- *   hasMany relation.
+ *   e.g. if the key exists in hasMany and in belongsTo,
+ *   you will get the hasMany relation.
  * Naming Convention:
  *   A class is mapped to the database using the last part (after the last _)
  *   of the class name
@@ -77,7 +77,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *  - :tableName
      *
      * Default is :tableName_id
-     *
      */
     const FOREIGN_KEY_FORMAT = ':tableName_id';
 
@@ -85,7 +84,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * Models where this element does belong to,
      * for example owner, creator, mandator or similar.
      *
-     * @var array $belongsTo
+     * @var array
      */
     public $belongsTo = array();
 
@@ -98,49 +97,50 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * related model. CLASSNAME is the model name while IDENTIFIER
      * is the name of the attribute of *this* class, that is used to
      * access the relation.
+     *
      * @uses
      *  $hasMany = array('usersettings'=> array('module'=>'Users',
      *                                          'model' =>'UserModuleSetting');
-     * @var array $hasMany
+     * @var array
      */
     public $hasMany = array();
 
     /**
-     * n to m relationship, like user <-> projects
+     * n to m relationship, like user <-> projects.
      *
      * Works exactly like hasMany but uses an relation table based
      * on the names of the two involved classes.
      *
      * @see $hasMany
      *
-     * @var array $hasManyAndBelongsToMany
+     * @var array
      */
     public $hasManyAndBelongsToMany = array();
 
     /**
-     * models that this model just got one of each
+     * Models that this model just got one of each.
      *
      * @see $hasMany
      *
-     * @var array $hasOne
+     * @var array
      */
     public $hasOne = array();
 
     /**
      * Data array. This holds actually all our data from the database
-     * and values are passed from there using __get
+     * and values are passed from there using __get.
      *
-     * @var array $_data
+     * @var array
      */
     protected $_data = array();
 
     /**
-     * Relationship where clause
+     * Relationship where clause.
      * Filled with a simple where clause for belongsTo and hasMany relations
      * $this->_relations['simple'] and complex descriptions for
-     * hasManyAndBelongsToMany in $this->_relations['hasManyAndBelongsToMany']
+     * hasManyAndBelongsToMany in $this->_relations['hasManyAndBelongsToMany'].
      *
-     * @var string $_relations
+     * @var string
      */
     protected $_relations = array();
 
@@ -153,10 +153,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected $_log;
 
     /**
-     * Defines if the id for the entry changed. We have to update
-     * the relations then. It might happend that the real id differes
-     * from the storedId e.g. the programmer changed the id of the
-     * record and not yet updated/saved it into the database
+     * Defines if the id for the entry changed.
+     * We have to update the relations then.
+     * It might happend that the real id differes from the storedId
+     * e.g. the programmer changed the id of the record and not yet updated/saved it into the database
      *
      * @var integer
      */
@@ -164,16 +164,21 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * A list of the actual columns accessable through this active record object.
-     * This is not similar to the keys of the _data array, as this might hold
-     * also belongs, etc stuff. Furthermore we need something with an internal
-     * pointer as this is used by the iterator implementation.
+     * This is not similar to the keys of the _data array,
+     * as this might hold also belongs, etc stuff.
+     * Furthermore we need something with an internal pointer as this is
+     * used by the iterator implementation.
+     *
+     * @var array
      */
     protected $_colInfo;
 
     /**
-     * Initialize new object
+     * Initialize new object.
      *
-     * @param array $config Configuration for Zend_Db_Table
+     * @param array $config Configuration for Zend_Db_Table.
+     *
+     * @return void
      */
     public function __construct($config = null)
     {
@@ -200,7 +205,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * Destructor
-     *
      */
     function __destruct()
     {
@@ -212,7 +216,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @see Iterator::current()
      *
-     * @return mixed
+     * @return mixed Current element.
      */
     public function current()
     {
@@ -220,11 +224,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Returns the name of the current field
+     * Returns the name of the current field.
      *
      * @see Iterator::key()
      *
-     * @return string
+     * @return string Current field.
      */
     public function key()
     {
@@ -233,11 +237,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * Moves the internal iterator pointer one forward, before
-     * receiving the element with current()
+     * receiving the element with current().
      *
      * @see Iterator::next()
      *
-     * @return string
+     * @return void
      */
     public function next()
     {
@@ -246,12 +250,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * Reset the internal pointer. As our iterator is just a wrapper
-     * over the _data array, we just reset the internal array pointer of
-     * _data
+     * over the _data array, we just reset the internal array pointer of _data.
      *
      * @see Iterator::rewind()
      *
-     * @return string
+     * @return void
      */
     public function rewind()
     {
@@ -264,7 +267,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *
      * @see Iterator::valid()
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function valid()
     {
@@ -272,8 +275,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Initialize the data array. The data array has empty values
-     * after that, but the keys exist!
+     * Initialize the data array.
+     * The data array has empty values after that, but the keys exist!.
      *
      * @return void
      */
@@ -300,11 +303,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Checks if a key exists in the system
+     * Checks if a key exists in the system.
      *
-     * @param string $key Name of the key
+     * @param string $key Name of the key.
      *
-     * @return boolean
+     * @return boolean True if exists.
      */
     public function __isset($key)
     {
@@ -312,17 +315,18 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * 1) look if we got a method getVarname, if it's there, use it
+     * __get Method
+     *
+     * 1) look if we got a method getVarname, if it's there, use it.
      * 2) Look if the attribtename is a defined relation,
-     *    if this is true, the relation object will be initialized and returned
-     * 3) Lookup if the attribute itself has this attribute and return it
-     *    if exists
-     * 4) Get value for varname from data array if exists
-     * 5) throw exception, if neither of them exists
+     *    if this is true, the relation object will be initialized and returned.
+     * 3) Lookup if the attribute itself has this attribute and return it if exists.
+     * 4) Get value for varname from data array if exists.
+     * 5) throw exception, if neither of them exists.
      *
-     * @param string $varname Name of the property to be set
+     * @param string $varname Name of the property to be set.
      *
-     * @return mixed
+     * @return mixed Value of the var.
      */
     public function __get($varname)
     {
@@ -352,12 +356,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * 1) look for method setVarname(value), use it
-     * 2) if the attribute varname exists, set it's value
-     * 3) Set the value in the data array
+     * __set Method.
      *
-     * @param string $varname Name of the property to be set
-     * @param mixed  $value   Value of the property to be set
+     * 1) look for method setVarname(value), use it.
+     * 2) if the attribute varname exists, set it's value.
+     * 3) Set the value in the data array.
+     *
+     * @param string $varname Name of the property to be set.
+     * @param mixed  $value   Value of the property to be set.
      *
      * @return void
      */
@@ -380,9 +386,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      * Initialize the _relations array for 1..n relation and initialize
      * a new object of the relation class and put it into the data array.
      *
-     * @param string $key The name of the hasManyAndBelongsToMany relation
+     * @param string $key The name of the hasManyAndBelongsToMany relation.
      *
-     * @return Phprojekt_ActiveRecord
+     * @return Phprojekt_ActiveRecord An instance of Phprojekt_ActiveRecord.
      */
     protected function _hasManyAndBelongsToMany($key)
     {
@@ -404,17 +410,17 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * Overwrite the fetch method if we have a hasManyAndBelongsToMany relation.
-     * This is needed as relations are handles using table objects on the ZF
-     * but as we want to keep things simple we don't want to have a
-     * e.g.: RoleUserRel object. We also cannot create this object on runtime
-     * as the Zend_Db_Table Relationships needs class names, and cannot handle
-     * just objects.
      *
-     * @param string $where A query clause
+     * This is needed as relations are handles using table objects on the ZF
+     * but as we want to keep things simple we don't want to have a e.g.: RoleUserRel object.
+     * We also cannot create this object on runtime as the Zend_Db_Table Relationships needs class names,
+     * and cannot handle just objects.
+     *
+     * @param string $where A query clause.
      *
      * @see _fetch
      *
-     * @return unknown
+     * @return Zend_Db_Table_Rowset The rowset with the results.
      */
     protected function _fetchHasManyAndBelongsToMany($where = null)
     {
@@ -472,14 +478,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Switch fetch method to support hasManyAndBelongsToMany relationship
+     * Switch fetch method to support hasManyAndBelongsToMany relationship.
      *
-     * @param string|array $where  Where clause
-     * @param string|array $order  Order clause
-     * @param string|array $count  Limit
-     * @param string|array $offset Offset
+     * @param string|array $where  Where clause.
+     * @param string|array $order  Order clause.
+     * @param string|array $count  Limit.
+     * @param string|array $offset Offset.
      *
-     * @return array
+     * @return Zend_Db_Table_Rowset The rowset with the results.
      */
     protected function _fetchWithOutJoin($where = null, $order = null, $count = null, $offset = null)
     {
@@ -503,11 +509,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Receive a belongsTo relation
+     * Receive a belongsTo relation.
      *
-     * @param string $key The name of the belongsTo relation
+     * @param string $key The name of the belongsTo relation.
      *
-     * @return Phprojekt_ActiveRecord
+     * @return Phprojekt_ActiveRecord An instance of Phprojekt_ActiveRecord.
      */
     protected function _belongsTo($key)
     {
@@ -538,11 +544,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Receive a hasMany relation
+     * Receive a hasMany relation.
      *
-     * @param string $key The name of the hasMany relation
+     * @param string $key The name of the hasMany relation.
      *
-     * @return Phprojekt_ActiveRecord
+     * @return Phprojekt_ActiveRecord An instance of Phprojekt_ActiveRecord.
      */
     protected function _hasMany($key)
     {
@@ -576,9 +582,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Insert a n:m relation into the relation table
+     * Insert a n:m relation into the relation table.
      *
-     * @return boolean
+     * @return boolean True for a sucessful save.
      */
     protected function _insertHasManyAndBelongsToMany()
     {
@@ -599,16 +605,17 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         }
 
         $stmt = $this->getAdapter()->prepare($query);
+
         return $stmt->execute(array($this->id, $foreignId));
     }
 
     /**
-     * Update    an hasMany relation
+     * Update an hasMany relation.
      *
-     * @param integer $oldId The old primary id of the record
-     * @param integer $newId The new primary id of the record
+     * @param integer $oldId The old primary ID of the record.
+     * @param integer $newId The new primary ID of the record.
      *
-     * @return void
+     * @return boolean True for a sucessful save.
      */
     protected function _updateHasMany($oldId, $newId)
     {
@@ -645,12 +652,12 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Update an has many and belongs to many relation
+     * Update an has many and belongs to many relation.
      *
-     * @param integer $oldId The old primary id of the record
-     * @param integer $newId The new primary id of the record
+     * @param integer $oldId The old primary ID of the record.
+     * @param integer $newId The new primary ID of the record.
      *
-     * @return void
+     * @return boolean True for a sucessful save.
      */
     protected function _updateHasManyAndBelongsToMany($oldId, $newId)
     {
@@ -685,12 +692,12 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Tries to figure out the classname for a relationship
+     * Tries to figure out the classname for a relationship.
      *
      * @param string $key   Name of the requested attribute
-     * @param array  $array Array to search
+     * @param array  $array Array to search.
      *
-     * @return string
+     * @return string Name of the class.
      */
     protected static function _getClassNameForRelationship($key, $array)
     {
@@ -727,7 +734,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      *  Table name: 'projects'
      * @throws Phprojekt_ActiveRecord_Exception Thrown if an class name
      *  contains illegal chars
-     * @return string
+     *
+     * @return string The table name of the class.
      */
     protected static function _translateClassNameToTable($className)
     {
@@ -742,11 +750,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Translate a class name into a foreign key name
+     * Translate a class name into a foreign key name.
      *
-     * @param string $className Name of the class
+     * @param string $className Name of the class.
      *
-     * @return string
+     * @return string A foreing key.
      */
     protected function _translateKeyFormat($className)
     {
@@ -764,14 +772,13 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * We translate the names of two classes into a relation table
-     * Its always {CLASS1}_{CLASS2}_rel while the classes are sorted
-     * in alphabetic order.
+     * We translate the names of two classes into a relation table.
+     * Its always {CLASS1}_{CLASS2}_rel while the classes are sorted in alphabetic order.
      *
-     * @param string $myObject      Own class
-     * @param string $foreignObject Foreign class
+     * @param string $myObject      Own class.
+     * @param string $foreignObject Foreign class.
      *
-     * @return string
+     * @return string Relation name.
      */
     protected static function _translateIntoRelationTableName(Phprojekt_ActiveRecord_Abstract $myObject,
         Phprojekt_ActiveRecord_Abstract $foreignObject)
@@ -791,7 +798,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Overwrite the clone id, to reset _storeId and reinit the data array
+     * Overwrite the clone id, to reset _storeId and reinit the data array.
      *
      * @return void
      */
@@ -804,9 +811,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * Creates a new instance and preserve relation information.
-     * Use this method to create a new object to save a relation
+     * Use this method to create a new object to save a relation.
      *
-     * @return Phprojekt_ActiveRecord_Abstract
+     * @return Phprojekt_ActiveRecord_Abstract An instance of Phprojekt_ActiveRecord_Abstract.
      */
     public function create()
     {
@@ -818,7 +825,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     /**
      * Save an entry. We either trigger update or create here.
      *
-     * @return boolean
+     * @return boolean True for a sucessful save.
      */
     public function save()
     {
@@ -872,9 +879,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Delete a record and all his relations
+     * Delete a record and all his relations.
      *
-     * @return void
+     * @return Phprojekt_ActiveRecord_Abstract An instance of Phprojekt_ActiveRecord_Abstract.
      */
     public function delete()
     {
@@ -917,16 +924,16 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Fetches all rows according to the where, order, count, offset rules
+     * Fetches all rows according to the where, order, count, offset rules.
      *
-     * @param string|array $where  Where clause
-     * @param string|array $order  Order by
-     * @param string|array $count  Limit query
-     * @param string|array $offset Query offset
-     * @param string       $select The comma-separated columns of the joined tables
-     * @param string       $join   Join Statements
+     * @param string|array $where  Where clause.
+     * @param string|array $order  Order by.
+     * @param string|array $count  Limit query.
+     * @param string|array $offset Query offset.
+     * @param string       $select The comma-separated columns of the joined tables.
+     * @param string       $join   Join Statements.
      *
-     * @return Zend_Db_Table_Rowset
+     * @return Zend_Db_Table_Rowset The rowset with the results.
      */
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
@@ -975,9 +982,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Overwrite the find method to get relations too
+     * Overwrite the find method to get relations too.
      *
-     * @return Phprojekt_ActiveRecord
+     * @return Phprojekt_ActiveRecord_Abstract An instance of Phprojekt_ActiveRecord_Abstract.
      */
     public function find()
     {
@@ -1022,10 +1029,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * Count.
-     * ! NOTE we call the fetchAll of the parent here. So this might not
-     * performe good at the moment
+     * ! NOTE we call the fetchAll of the parent here.
+     * So this might not performe good at the moment
      *
-     * @return integer
+     * @return integer Count of results.
      */
     public function count()
     {
@@ -1033,9 +1040,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Returns the name of the table for the active record
+     * Returns the name of the table for the active record.
      *
-     * @return string
+     * @return string Table name of the active record.
      */
     public function getTableName()
     {
@@ -1043,9 +1050,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Returns the name of the class of the active record
+     * Returns the name of the class of the active record.
      *
-     * @return string
+     * @return string Class name of the active record.
      */
     public function getModelName()
     {
@@ -1053,20 +1060,20 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Overwrite the fetch method if we have a joinData stuff
+     * Overwrite the fetch method if we have a joinData stuff.
      *
      * The joinData can have many different joins.
      *
      * @see _fetch
      *
-     * @param string|array $where  Where clause
-     * @param string|array $order  Order by
-     * @param string|array $count  Limit query
-     * @param string|array $offset Query offset
-     * @param string       $select The columns of the joined tables
-     * @param string       $join   Join statement
+     * @param string|array $where  Where clause.
+     * @param string|array $order  Order by.
+     * @param string|array $count  Limit query.
+     * @param string|array $offset Query offset.
+     * @param string       $select The columns of the joined tables.
+     * @param string       $join   Join statement.
      *
-     * @return Zend_Db_Table_Rowset
+     * @return Zend_Db_Table_Rowset The rowset with the results.
      */
     protected function _fetchWithJoin($where = null, $order = null, $count = null, $offset = null, $select = null,
         $join = null)
@@ -1158,11 +1165,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Callback function for _quoteTableAndFieldName
+     * Callback function for _quoteTableAndFieldName.
      *
-     * @param array $data Identifier to convert
+     * @param array $data Identifier to convert.
      *
-     * return string
+     * @return string Quoted string.
      */
     private function _callbackQuoteIdentifier1($data)
     {
@@ -1170,11 +1177,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Callback function for _quoteTableAndFieldName
+     * Callback function for _quoteTableAndFieldName.
      *
-     * @param array $data Array with the string to be quoted
+     * @param array $data Array with the string to be quoted.
      *
-     * @return string
+     * @return string Quoted string.
      */
     private function _callbackQuoteIdentifier2($data)
     {
@@ -1182,11 +1189,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Callback function for _quoteTableAndFieldName
+     * Callback function for _quoteTableAndFieldName.
      *
-     * @param array $data Array with the string to be converter
+     * @param array $data Array with the string to be converter.
      *
-     * @return string
+     * @return string Converted string.
      */
     private function _callbackUpper($data)
     {
@@ -1195,11 +1202,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 
     /**
      * Quote all the table.field and table.field_name
-     * that are not already quoted
+     * that are not already quoted.
      *
-     * @param string $string The string to be quoted
+     * @param string $string The string to be quoted.
      *
-     * @return string
+     * @return string Quoted string.
      */
     private function _quoteTableAndFieldName($string)
     {
@@ -1215,14 +1222,15 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Convert a Camel case var into SQL format
-     * varName   => var_name
-     * TableName => table_name
-     * Tablename => tablename
+     * Convert a Camel case var into SQL format.
      *
-     * @param string $varName The var to convert
+     * varName   => var_name.
+     * TableName => table_name.
+     * Tablename => tablename.
      *
-     * @return string
+     * @param string $varName The var to convert.
+     *
+     * @return string Converted string.
      */
     public static function convertVarToSql($varName)
     {
@@ -1237,13 +1245,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Convert from SQl to Camel case
-     * var_name   => varName
-     * table_name => TableName - does not take place!
+     * Convert from SQl to Camel case.
      *
-     * @param string $varName The var to convert
+     * var_name   => varName.
+     * table_name => TableName - does not take place!.
      *
-     * @return string
+     * @param string $varName The var to convert.
+     *
+     * @return string Converted string.
      */
     public static function convertVarFromSql($varName)
     {
@@ -1258,9 +1267,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Returns all model data as array
+     * Returns all model data as array.
      *
-     * @return array
+     * @return array Array with the model data.
      */
     public function toArray()
     {
@@ -1268,9 +1277,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Gets the rights of the item for the current user
+     * Gets the rights of the item for the current user.
      *
-     * @return array
+     * @return array Empty array.
      */
     public function getRights()
     {
@@ -1278,11 +1287,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Gets the rights of various items for the current user
+     * Gets the rights of various items for the current user.
      *
-     * @param array $ids Array with various itemId
+     * @param array $ids Array with various item IDs.
      *
-     * @return array
+     * @return array Array with empty arrays per ID.
      */
     public function getMultipleRights($ids)
     {
@@ -1295,9 +1304,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Gets the rights of the item for other users
+     * Gets the rights of the item for other users.
      *
-     * @return array
+     * @return array Empty array.
      */
     public function getUsersRights()
     {

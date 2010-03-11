@@ -1,6 +1,6 @@
 <?php
 /**
- * Class for valid the data of each field
+ * Class for valid the data of each field.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,7 @@
 
 /**
  * This class recive some fields, the data and one class for check,
- * and will validate each field deppend on the type and other restrictions
+ * and will validate each field deppend on the type and other restrictions.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -39,12 +39,17 @@
 class Phprojekt_Model_Validate
 {
     /**
-     * Error object
+     * Error object.
      *
      * @var Phprojekt_Error
      */
     public $error = null;
 
+    /**
+     * Constructor.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->error = Phprojekt_Loader::getLibraryClass('Phprojekt_Error');
@@ -61,9 +66,9 @@ class Phprojekt_Model_Validate
     }
 
     /**
-     * Return if the values are valid or not
+     * Return if the values are valid or not.
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function recordValidate($class, $data, $fields)
     {
@@ -164,13 +169,13 @@ class Phprojekt_Model_Validate
     }
 
     /**
-     * Validates a value using the database type of the field
+     * Validates a value using the database type of the field.
      *
-     * @param Phprojekt_Model_Interface $class   Model object
-     * @param string                    $varname Name of the field
-     * @param mix                       $value   Value to validate
+     * @param Phprojekt_Model_Interface $class   Model object.
+     * @param string                    $varname Name of the field.
+     * @param mix                       $value   Value to validate.
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function validateValue(Phprojekt_Model_Interface $class, $varname, $value)
     {
@@ -206,12 +211,13 @@ class Phprojekt_Model_Validate
     }
 
     /**
-     * Validate required fields
-     * return the msg error if exists
+     * Validate required fields.
      *
-     * @param mix $value The value to check
+     * Return the msg error if exists.
      *
-     * @return string Error string or null
+     * @param mix $value The value to check.
+     *
+     * @return string Error string or null.
      */
     public function validateIsRequired($value)
     {

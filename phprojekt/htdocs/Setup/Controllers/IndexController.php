@@ -1,6 +1,6 @@
 <?php
 /**
- * Default Controller for the Setup
+ * Default Controller for the Setup.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Default Controller for the Setup
+ * Default Controller for the Setup.
  *
  * @category   PHProjekt
  * @package    Htdocs
@@ -40,7 +40,7 @@ class IndexController extends Zend_Controller_Action
     private $_setup = null;
 
     /**
-     * Do some checks in the begin
+     * Do some checks in the begin.
      *
      * @return void
      */
@@ -62,7 +62,7 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Default action
+     * Default action.
      *
      * @return void
      */
@@ -80,8 +80,8 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Try to install all
-     * Show finish (success) or message (error)
+     * Try to install all.
+     * Show finish (success) or message (error).
      *
      * @return void
      */
@@ -115,9 +115,9 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Sanitize all the parsams
+     * Sanitize all the parsams.
      *
-     * @return array
+     * @return array Array with the form values.
      */
     private function _setParams() {
         return array(
@@ -136,7 +136,7 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Render always the index template
+     * Render always the index template.
      *
      * @return void
      */

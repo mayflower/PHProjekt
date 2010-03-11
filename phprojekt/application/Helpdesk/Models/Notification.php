@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification class of Helpdesk model for PHProjekt 6.0
+ * Notification class for Helpdesk module.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Notification class for Helpdesk module
+ * Notification class for Helpdesk module.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,9 +38,9 @@
 class Helpdesk_Models_Notification extends Phprojekt_Notification
 {
     /**
-     * Returns the recipients for this Helpdesk item
+     * Returns the recipients for this Helpdesk item.
      *
-     * @return array
+     * @return array Array with user IDs.
      */
     public function getTo()
     {

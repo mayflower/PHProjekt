@@ -1,6 +1,8 @@
 <?php
 /**
- * Messages class
+ * Messages class.
+ *
+ * Abstraction of Messages Container.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +24,9 @@
  */
 
 /**
- * Abstraction of Messages Container
+ * Messages class.
+ *
+ * Abstraction of Messages Container.
  *
  * @category  PHProjekt
  * @package   Cleaner
@@ -36,21 +40,21 @@
 class Cleaner_Messages
 {
     /**
-     * Cached translation messages
+     * Cached translation messages.
      *
      * @var array
      */
     protected static $_translations = array();
 
     /**
-     * Keys of messages
+     * Keys of messages.
      *
      * @var array
      */
     protected $_messages;
 
     /**
-     * Constructor of Cleaner_Messages
+     * Constructor of Cleaner_Messages.
      *
      */
     public function __construct()
@@ -59,9 +63,9 @@ class Cleaner_Messages
     }
 
     /**
-     * Get flag, if messages does not contain any message
+     * Get flag, if messages does not contain any message.
      *
-     * @return bool true, if there are no messages
+     * @return boolean True for 0 messages.
      */
     public function isEmpty()
     {
@@ -69,11 +73,11 @@ class Cleaner_Messages
     }
 
     /**
-     * Get an associative array with keys and localized messages
+     * Get an associative array with keys and localized messages.
      *
-     * @param string $locale Name of locale to use
+     * @param string $locale Name of locale to use.
      *
-     * @return array Array with MessageKey => Localized Messagetext
+     * @return array Array with MessageKey => Localized Messagetext.
      */
     public function get($locale)
     {
@@ -91,9 +95,9 @@ class Cleaner_Messages
     }
 
     /**
-     * Add an additional message key
+     * Add an additional message key.
      *
-     * @param string $message Key of message
+     * @param string $message Key of message.
      *
      * @return void
      */
@@ -103,11 +107,11 @@ class Cleaner_Messages
     }
 
     /**
-     * Check, if a certain messagekey was added
+     * Check, if a certain messagekey was added.
      *
-     * @param string $message MessageKey
+     * @param string $message MessageKey.
      *
-     * @return bool
+     * @return boolean True if has.
      */
     public function has($message)
     {
@@ -115,9 +119,9 @@ class Cleaner_Messages
     }
 
     /**
-     * Return the messages as a string
+     * Return the messages as a string.
      *
-     * @return string
+     * @return string Message.
      */
     public function __toString()
     {
@@ -125,11 +129,11 @@ class Cleaner_Messages
     }
 
     /**
-     * Load messages for a certain locale
+     * Load messages for a certain locale.
      *
-     * @param string $locale Name oflocale (for example de_DE, en_US)
+     * @param string $locale Name oflocale (for example de_DE, en_US).
      *
-     * @return array
+     * @return string
      */
     protected static function _load($locale)
     {

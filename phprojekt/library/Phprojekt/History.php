@@ -1,6 +1,6 @@
 <?php
 /**
- * History class for save all the fields changes
+ * History class for save all the fields changes.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,10 +30,11 @@
  * When you delete a record, the old values are saved.
  *
  * In each change you can know:
- * - Who make the change (Wich user)
- * - When (timestamp)
- * - Where (Wich module)
- * - What (Wich action and wich field with old value and new value)
+ *
+ * - Who make the change (Wich user).
+ * - When (timestamp).
+ * - Where (Wich module).
+ * - What (Wich action and wich field with old value and new value).
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -48,14 +49,16 @@
 class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
 {
     /**
-     * Save each field that is with other value that before
+     * Save each field that is with other value that before.
      *
-     * For add actions, the oldValue is empty and all the fields are saved
+     * For add actions, the oldValue is empty and all the fields are saved.
      * For delete actions, the newValue is empty and all the fields are saved.
      * For edit action, only the fields with other value that before are saved.
      *
-     * @param Phprojekt_Item_Abstract $object The item object
-     * @param string                  $action Action (edit/add/delete)
+     * @param Phprojekt_Item_Abstract $object The item object.
+     * @param string                  $action Action (edit/add/delete).
+     *
+     * @throws Zend_Exception If the object do not exist.
      *
      * @return void
      */
@@ -82,19 +85,18 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Get the differences between the actual data and the old data of one item
+     * Get the differences between the actual data and the old data of one item.
      *
-     * The function will inspect and collect
-     * all the fields that have other value than before.
+     * The function will inspect and collect all the fields that have other value than before.
      *
      * For add action, return all the values.
      * For edit action, return only the fields that have changes.
      * For delete action, return all the values.
      *
-     * @param Phprojekt_Item_Abstract $object The item object
-     * @param string                  $action Action (edit/add/delete)
+     * @param Phprojekt_Item_Abstract $object The item object.
+     * @param string                  $action Action (edit/add/delete).
      *
-     * @return array The array with the differences
+     * @return array The array with 'oldValue' and 'newValue'.
      */
     private function _getDifferences(Phprojekt_Item_Abstract $object, $action)
     {
@@ -156,19 +158,20 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Return the data array with all the changes for a item ID
-     * The data is sorted by date and have all the values stored in the database
-     * The data result is for use with a template
-     * that correct the values for the user.
+     * Return the data array with all the changes for a item ID.
      *
-     * @param Phprojekt_Item_Abstract $object    The item object
-     * @param int                     $itemId    The item ID
-     * @param int                     $moduleId  The id of the module (optional)
-     * @param date                    $startDate Start date of the history list
-     * @param date                    $endDate   End date of the history list
-     * @param int                     $userId    User filter
+     * The data is sorted by date and have all the values stored in the database.
+     * The data result is for use with a template that correct the values for the user.
      *
-     * @return array
+     * @param Phprojekt_Item_Abstract $object    The item object.
+     * @param integer                 $itemId    The item ID.
+     * @param integer                 $moduleId  The ID of the module (optional).
+     * @param date                    $startDate Start date of the history list (optional).
+     * @param date                    $endDate   End date of the history list (optional).
+     * @param integer                 $userId    User filter (optional).
+     *
+     * @return array Array with 'userId', 'moduleId', 'itemId', 'field', 'label',
+     *                          'oldValue', 'newValue', 'action' and 'datetime'.
      */
     public function getHistoryData($object, $itemId, $moduleId = null,
                                    $startDate = null, $endDate = null, $userId = null)
@@ -237,12 +240,14 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
 
     /**
      * Returns the last changes, if there are any, for a specific module and item id.
+     *
      * The result data is used by Mail_Notification class, when telling the users related
      * to an item that it has been modified.
      *
-     * @param Phprojekt_Item_Abstract $object    The item object
+     * @param Phprojekt_Item_Abstract $object The item object
      *
-     * @return array
+     * @return array Array with 'userId', 'moduleId', 'itemId', 'field', 'label',
+     *                          'oldValue', 'newValue', 'action' and 'datetime'.
      */
     public function getLastHistoryData($object)
     {
@@ -287,12 +292,12 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Return the last value for an assigned user
+     * Return the last value for an assigned user.
      *
-     * @param Phprojekt_Item_Abstract $model The item object
+     * @param Phprojekt_Item_Abstract $model     The item object.
      * @param string                  $fieldName Field name used for assign users.
      *
-     * @return integer
+     * @return integer Last user ID.
      */
     public function getLastAssignedUser($model, $fieldName)
     {
@@ -313,13 +318,13 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
     }
 
     /**
-     * Convert time and datetimes values into uset or utc values
+     * Convert time and datetimes values into uset or utc values.
      *
-     * @param mix    $value Current value
-     * @param string $type  Type of the field
-     * @param string $side  utcToUser or userToUtc, used for convert times
+     * @param mix    $value Current value.
+     * @param string $type  Type of the field.
+     * @param string $side  utcToUser or userToUtc, used for convert times.
 
-     * @return mix
+     * @return string Date or Time format.
      */
     private function _convertDateTimes($value, $type, $side)
     {

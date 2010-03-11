@@ -1,6 +1,6 @@
 <?php
 /**
- * Filter manager
+ * Manage the where clause for filter records.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Manage the where clause
+* Manage the where clause for filter records.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,35 +38,35 @@
 class Phprojekt_Filter
 {
     /**
-     * The where clause after apply the filters
+     * The where clause after apply the filters.
      *
      * @var string
      */
     protected $_userWhere = null;
 
     /**
-     * The internal where clause used by the Model
+     * The internal where clause used by the Model.
      *
      * @var string
      */
     protected $_where = null;
 
     /**
-     * Metadata info of the fields
+     * Metadata info of the fields.
      *
      * @var array
      */
     protected $_info = null;
 
     /**
-     * Metadata info of the fields
+     * Metadata info of the fields.
      *
      * @var array
      */
     protected $_cols = null;
 
     /**
-     * An active record for work with the filters
+     * An active record for work with the filters.
      *
      * @var Phprojekt_ActiveRecord_Abstract
      */
@@ -75,8 +75,10 @@ class Phprojekt_Filter
     /**
      * Initialize a new user filter on an active record.
      *
-     * @param Phprojekt_ActiveRecord_Abstract $record An active record
-     * @param string                          $where  The internal where clause
+     * @param Phprojekt_ActiveRecord_Abstract $record An active record.
+     * @param string                          $where  The internal where clause.
+     *
+     * @return void
      */
     public function __construct(Phprojekt_ActiveRecord_Abstract $record, $where = null)
     {
@@ -87,12 +89,12 @@ class Phprojekt_Filter
     }
 
     /**
-     * Make a where clause
+     * Make a where clause.
      *
-     * @param string $field    Field for filter
-     * @param string $rule     Rule for apply the filter
-     * @param string $value    Value used for filter
-     * @param string $operator AND/OR operator for concatenate the where clause
+     * @param string $field    Field for filter.
+     * @param string $rule     Rule for apply the filter.
+     * @param string $value    Value used for filter.
+     * @param string $operator AND/OR operator for concatenate the where clause.
      *
      * @return void
      */
@@ -111,9 +113,9 @@ class Phprojekt_Filter
     }
 
     /**
-     * Return the where clause for use in the fetchAll
+     * Return the where clause for use in the fetchAll.
      *
-     * @return string
+     * @return string Where clause.
      */
     public function getWhere()
     {
@@ -135,14 +137,14 @@ class Phprojekt_Filter
     }
 
     /**
-     * Convert the rule and value into a real where clause
+     * Convert the rule and value into a real where clause.
      *
-     * @param string $field       Field for filter
-     * @param string $identifier  Converted field for filter
-     * @param string $rule        Rule for apply the filter
-     * @param string $keyword     Value used for filter
+     * @param string $field      Field for filter.
+     * @param string $identifier Converted field for filter.
+     * @param string $rule       Rule for apply the filter.
+     * @param string $keyword    Value used for filter.
      *
-     * @return string
+     * @return string Where clause.
      */
     private function _convertRule($field, $identifier, $rule, $keyword)
     {

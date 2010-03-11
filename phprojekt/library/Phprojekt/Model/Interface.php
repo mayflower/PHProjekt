@@ -23,9 +23,9 @@
  */
 
 /**
- * The model interface describes the smallest set of methods that must
- * be provided by a model. All core components that donnot deal with a specific
- * interface should use this interface to interact with an object.
+ * The model interface describes the smallest set of methods that must be provided by a model.
+ * All core components that donnot deal with a specific interface should use this interface
+ * to interact with an object.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -41,11 +41,11 @@ interface Phprojekt_Model_Interface extends Iterator
 {
     /**
      * Returns an object that implements the model information interface
-     * and that provides detailed information about the fields and their
-     * types. For database objects implementing Phprojekt_Item this
-     * ModelInformation implementation is usually the DatabaseManager
+     * and that provides detailed information about the fields and their types.
+     * For database objects implementing Phprojekt_Item this
+     * ModelInformation implementation is usually the DatabaseManager.
      *
-     * @return Phprojekt_ModelInformation_Interface
+     * @return Phprojekt_ModelInformation_Interface An instance of Phprojekt_ModelInformation_Interface.
      */
     public function getInformation();
 
@@ -53,13 +53,13 @@ interface Phprojekt_Model_Interface extends Iterator
      * Find a dataset, usually by an id. If the record is found
      * the current object is filled with the data and returns itself.
      *
-     * @return Phprojekt_Model_Interface
+     * @return Phprojekt_ModelInformation_Interface An instance of Phprojekt_ModelInformation_Interface.
      */
     public function find();
 
     /**
-     * Fetch a set of records. Depending on the implementation
-     * it might be possible to limit the fetch by e.g. providing a where clause.
+     * Fetch a set of records. Depending on the implementation it might be possible to limit the fetch by
+     * e.g. providing a where clause.
      * A model _neednot_ to implement a limiting mechanism.
      *
      * @return array
@@ -67,39 +67,39 @@ interface Phprojekt_Model_Interface extends Iterator
     public function fetchAll();
 
     /**
-     * Save the current object to the backend
+     * Save the current object to the backend.
      *
-     * @return boolean
+     * @return boolean True on sucessful save.
      */
     public function save();
 
     /**
-     * Validate the data of the current record
+     * Validate the data of the current record.
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function recordValidate();
 
     /**
-     * Gets the rights of the item for the current user
+     * Gets the rights of the item for the current user.
      *
-     * @return array
+     * @return array Array of rights per user.
      */
     public function getRights();
 
     /**
      * Gets the rights of various items for the current user
      *
-     * @param array $ids Array with various itemId
+     * @param array $ids Array with various item IDs.
      *
-     * @return array
+     * @return array Array of rights per user.
      */
     public function getMultipleRights($ids);
 
     /**
-     * Gets the rights of the item for other users
+     * Gets the rights of the item for other users.
      *
-     * @return array
+     * @return array Array of rights per user.
      */
     public function getUsersRights();
 }

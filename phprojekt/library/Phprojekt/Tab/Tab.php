@@ -1,6 +1,6 @@
 <?php
 /**
- * Tab class for PHProjekt 6.0
+ * Tab model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Phprojekt_Tab for PHProjekt 6.0
+ * Tab model class.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,24 +38,23 @@
 class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
-     * The standard information manager with hardcoded
-     * field definitions
+     * The standard information manager with hardcoded field definitions.
      *
      * @var Phprojekt_ModelInformation_Interface
      */
     protected $_informationManager;
 
     /**
-     * Validate object
+     * Validate object.
      *
      * @var Phprojekt_Model_Validate
      */
     protected $_validate = null;
 
     /**
-     * Initialize new tab
+     * Initialize new tab.
      *
-     * @param array $db Configuration for Zend_Db_Table
+     * @param array $db Configuration for Zend_Db_Table.
      *
      * @return void
      */
@@ -83,11 +82,11 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
     }
 
     /**
-     * Get the information manager
+     * Get the information manager.
      *
      * @see Phprojekt_Model_Interface::getInformation()
      *
-     * @return Phprojekt_ModelInformation_Interface
+     * @return Phprojekt_ModelInformation_Interface An instance of Phprojekt_ModelInformation_Interface.
      */
     public function getInformation()
     {
@@ -95,7 +94,7 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
     }
 
     /**
-     * Save the rigths
+     * Save the rigths.
      *
      * @return void
      */
@@ -104,9 +103,9 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
     }
 
     /**
-     * Validate the current record
+     * Validate the current record.
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function recordValidate()
     {
@@ -117,9 +116,9 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
     }
 
     /**
-     * Return the error data
+     * Return the error data.
      *
-     * @return array
+     * @return array Array with errors.
      */
     public function getError()
     {
@@ -127,8 +126,8 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
     }
 
     /**
-     * Delete a Tab
-     * It prevents deletion of Tab 1 -Basic Data-
+     * Delete a Tab.
+     * It prevents deletion of Tab 1 -Basic Data-.
      *
      * @return void
      */
@@ -139,9 +138,9 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
         }
     }
     /**
-     * Function to print this class
+     * Function to print this class.
      *
-     * @return string
+     * @return string Empty string.
      */
     public function __toString()
     {

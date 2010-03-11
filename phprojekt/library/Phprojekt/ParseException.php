@@ -1,6 +1,6 @@
 <?php
 /**
- * Represents an Parse error
+ * Represents an Parse error.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Represents an Parse error
+ * Represents an Parse error.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -37,13 +37,21 @@
  */
 class Phprojekt_ParseException extends Exception
 {
+    /**
+     * Internal cache.
+     *
+     * @var string
+     */
     protected $_parsedString;
 
     /**
+     * Constructor.
      *
-     * @param string  $message
-     * @param integer $code
-     * @param string  $parsedString
+     * @param string  $message      Message.
+     * @param integer $code         Code.
+     * @param string  $parsedString Parsed string.
+     *
+     * @return void
      */
     public function __construct($message, $code = null, $parsedString = null)
     {
@@ -54,8 +62,9 @@ class Phprojekt_ParseException extends Exception
     }
 
     /**
+     * Get the last parsed string.
      *
-     * @return string
+     * @return string Parsed string.
      */
     public function getParsedString()
     {

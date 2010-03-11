@@ -1,6 +1,7 @@
 <?php
 /**
- * JavaScript Controller for PHProjekt 6
+ * JavaScript Controller.
+ * The controller will return all the js files for the modules.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,9 +24,8 @@
  */
 
 /**
- * JavaScript Controller for PHProjekt 6
- *
- * The controller will return all the js files for the modules
+ * JavaScript Controller.
+ * The controller will return all the js files for the modules.
  *
  * @category   PHProjekt
  * @package    Application
@@ -252,13 +252,13 @@ class JsController extends IndexController
     }
 
     /**
-     * Get all the Modules scripts
-     * In the process also collect the templates
+     * Get all the Modules scripts.
+     * In the process also collect the templates.
      *
-     * @param array  $scripts All the modules into the Module folder
-     * @param string $module  The module name
+     * @param array  $scripts All the modules into the Module folder.
+     * @param string $module  The module name.
      *
-     * @return string
+     * @return string Content of the files.
      */
     private function _getModuleScripts($scripts, $module)
     {
@@ -280,12 +280,12 @@ class JsController extends IndexController
     }
 
     /**
-     * Get the Core module scripts
-     * In the process also collect the templates
+     * Get the Core module scripts.
+     * In the process also collect the templates.
      *
-     * @param array $scripts All the modules into the Core folder
+     * @param array $scripts All the modules into the Core folder.
      *
-     * @return string
+     * @return string Content of the files.
      */
     private function _getCoreModuleScripts($scripts)
     {
@@ -340,11 +340,11 @@ class JsController extends IndexController
     }
 
     /**
-     * Collect all the templates found in the $path directory
-     * Also scan the sub directories
+     * Collect all the templates found in the $path directory.
+     * Also scan the sub directories.
      *
-     * @param string $path   Path for scan
-     * @param string $module Module Name
+     * @param string $path   Path for scan.
+     * @param string $module Module Name.
      *
      * @return void
      */

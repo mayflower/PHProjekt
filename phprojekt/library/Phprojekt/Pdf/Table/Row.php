@@ -1,6 +1,6 @@
 <?php
 /**
- * Phprojekt Class for creation of row in PDF table
+ * Phprojekt Class for creation of row in PDF table.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Phprojekt Class for creation of row in PDF table
+ * Phprojekt Class for creation of row in PDF table.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,28 +38,28 @@
 class Phprojekt_Pdf_Table_Row
 {
     /**
-     * Width of row
+     * Width of row.
      *
      * @var int
      */
     protected $_width;
 
     /**
-     * Height of row
+     * Height of row.
      *
      * @var int
      */
     protected $_height;
 
     /**
-     * Array of columns
+     * Array of columns.
      *
      * @var array
      */
     protected $_cols = array();
 
     /**
-     * Show if current row is header or not
+     * Show if current row is header or not.
      *
      * @var bool
      */
@@ -68,7 +68,7 @@ class Phprojekt_Pdf_Table_Row
     /**
      * Add column to the list
      *
-     * @param Phprojekt_Pdf_Table_Column $col
+     * @param Phprojekt_Pdf_Table_Column $col Column to add.
      *
      * @return void
      */
@@ -78,11 +78,11 @@ class Phprojekt_Pdf_Table_Row
     }
 
     /**
-     * Render row
+     * Render row.
      *
-     * @param Phprojekt_Pdf_Page $page
-     * @param int                $x    Start position x
-     * @param int                $y    Start position y
+     * @param Phprojekt_Pdf_Page $page Current page.
+     * @param integer            $x    Start position x.
+     * @param integer            $y    Start position y.
      *
      * @return void
      */
@@ -103,11 +103,11 @@ class Phprojekt_Pdf_Table_Row
     }
 
     /**
-     * Test function
+     * Test function.
      *
-     * @param Phprojekt_Pdf_Page $page
-     * @param int                $x
-     * @param int                $y
+     * @param Phprojekt_Pdf_Page $page Current page.
+     * @param integer            $x    Start position x.
+     * @param integer            $y    Start position y.
      *
      * @return int
      */
@@ -127,11 +127,11 @@ class Phprojekt_Pdf_Table_Row
     }
 
     /**
-     * Add border to the row
+     * Add border to the row.
      *
-     * @param Phprojekt_Pdf_Page $page
-     * @param int                $x
-     * @param int                $y
+     * @param Phprojekt_Pdf_Page $page Current page.
+     * @param integer            $x    Start position x.
+     * @param integer            $y    Start position y.
      *
      * @return void
      */
@@ -144,9 +144,9 @@ class Phprojekt_Pdf_Table_Row
     }
 
     /**
-     * Get protected value
+     * Get protected value.
      *
-     * @return int
+     * @return integer Current value.
      */
     public function getHeight()
     {
@@ -154,7 +154,7 @@ class Phprojekt_Pdf_Table_Row
     }
 
     /**
-     * Set true value of the protected property for the current row
+     * Set true value of the protected property for the current row.
      *
      * @return void
      */

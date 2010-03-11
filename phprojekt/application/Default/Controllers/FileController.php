@@ -1,6 +1,6 @@
 <?php
 /**
- * File Controller for PHProjekt 6
+ * File Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * File Controller for PHProjekt 6
+ * File Controller.
  *
  * The controller will get all the actions for manage upload files
  *
@@ -47,7 +47,6 @@ class FileController extends IndexController
      * OPTIONAL request parameters:
      * <pre>
      *  - string  <b>moduleName</b> Current module name.
-     *  - string  <b>value</b>      Value for the upload field (All the uploaded filenames).
      *  - integer <b>id</b>         Id of the current item.
      *  - string  <b>field</b>      Name of the field in the module.
      * </pre>
@@ -383,8 +382,8 @@ class FileController extends IndexController
      * Checks that the 'order' parameter for download and delete file actions is valid.
      * If not, terminates script execution printing an error.
      *
-     * @param int $order       Position of the file (Can be many uploaded files in the same field).
-     * @param int $filesAmount Number of uploaded files for the field.
+     * @param integer $order       Position of the file (Can be many uploaded files in the same field).
+     * @param integer $filesAmount Number of uploaded files for the field.
      *
      * @return void
      */

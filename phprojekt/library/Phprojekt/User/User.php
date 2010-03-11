@@ -1,6 +1,6 @@
 <?php
 /**
- * User class for PHProjekt 6.0
+ * User model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Phprojekt_User for PHProjekt 6.0
+ * User model class.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,7 +38,7 @@
 class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
-     * Has many declrations
+     * Has many declrations.
      *
      * @var array
      */
@@ -47,7 +47,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
                                                 'model'     => 'Setting'));
 
     /**
-     * Has many and belongs to many declrations
+     * Has many and belongs to many declrations.
      *
      * @var array
      */
@@ -56,26 +56,26 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
                                                               'model'     => 'Groups'));
 
     /**
-     * The standard information manager with hardcoded
-     * field definitions
+     * The standard information manager with hardcoded field definitions.
      *
      * @var Phprojekt_ModelInformation_Interface
      */
     protected $_informationManager;
 
     /**
-     * Validate object
+     * Validate object.
      *
      * @var Phprojekt_Model_Validate
      */
     protected $_validate = null;
 
     /**
-     * Initialize new user
-     * If is seted the user id in the session,
-     * the class will get all the values of these user
+     * Initialize new user.
      *
-     * @param array $db Configuration for Zend_Db_Table
+     * If is seted the user id in the session,
+     * the class will get all the values of these user.
+     *
+     * @param array $db Configuration for Zend_Db_Table.
      *
      * @return void
      */
@@ -103,30 +103,29 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Checks if user is active
+     * Checks if user is active.
      *
-     * @return boolean id user is active or not
+     * @return boolean ID user is active or not.
      */
     public function isActive()
     {
         if (strtoupper($this->status) != 'A') {
             return false;
         }
+
         return true;
     }
 
     /**
-     * Searchs an user Id based on the username
+     * Searchs an user ID based on the username.
      *
-     * @param string $username username necessary to find the userId
+     * @param string $username Username necessary to find the userId.
      *
-     * @return integer with the user id value. If the user is not found then
-     * function will return false
+     * @return integer|false User ID value or false.
      */
     public function findIdByUsername($username)
     {
         $db = Phprojekt::getInstance()->getDb();
-        /* @var $db Zend_Db_Adapter_Abstract */
 
         try {
             $users = $this->fetchAll($db->quoteInto("username = ?", $username), null, 1);
@@ -144,12 +143,12 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Found and user using the id and return this class for the new user
-     * If the id is wrong, return the actual user
+     * Found an user using the id and return this class for the new user.
+     * If the ID is wrong, return the actual user.
      *
-     * @param int $id The user id
+     * @param integer $id The user ID.
      *
-     * @return Phprojekt_User_User
+     * @return Phprojekt_User_User An instance of Phprojekt_User_User.
      */
     public function findUserById($id)
     {
@@ -163,9 +162,9 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Extencion of the ActiveRecord save adding default permissions
+     * Extencion of the ActiveRecord save adding default permissions.
      *
-     * @return boolean true if saved correctly
+     * @return boolean True for a sucessful save.
      */
     public function save()
     {
@@ -194,7 +193,9 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Users can't be deleted, so if delete en exception is throw
+     * Users can't be deleted, so if delete en exception is throw.
+     *
+     * @throws Phprojekt_User_Exception On try to delete an user.
      *
      * @return void
      */
@@ -204,11 +205,11 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Get the information manager
+     * Get the information manager.
      *
      * @see Phprojekt_Model_Interface::getInformation()
      *
-     * @return Phprojekt_ModelInformation_Interface
+     * @return Phprojekt_ModelInformation_Interface An instance of Phprojekt_ModelInformation_Interface.
      */
     public function getInformation()
     {
@@ -216,7 +217,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Save the rigths
+     * Save the rigths.
      *
      * @return void
      */
@@ -225,9 +226,9 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Validate the current record
+     * Validate the current record.
      *
-     * @return boolean
+     * @return boolean True on valid.
      */
     public function recordValidate()
     {
@@ -253,9 +254,9 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Return the error data
+     * Returns the error data.
      *
-     * @return array
+     * @return array Array with errors.
      */
     public function getError()
     {
@@ -263,12 +264,12 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Return the user setting
+     * Returns an user setting.
      *
-     * @param string $settingName The key of the setting to get
-     * @param object $defaultValue Default value if setting is empty
+     * @param string $settingName  The key of the setting to get.
+     * @param object $defaultValue Default value if setting is empty.
      *
-     * @return int
+     * @return mix Setting value.
      */
     static public function getSetting($settingName, $defaultValue = null)
     {
@@ -284,9 +285,9 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Return the display format form the config file
+     * Returns the display format form the config file.
      *
-     * @return array List of field names from user table to use
+     * @return array Array of field names from user table to use.
      */
     static public function getDisplay()
     {
@@ -312,12 +313,12 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Apply the display to the $model and return the result
+     * Apply the display to the $model and return the result.
      *
-     * @param array               $display The display format
-     * @param Phprojekt_User_User $model   The model to apply the display
+     * @param array               $display The display format.
+     * @param Phprojekt_User_User $model   The model to apply the display.
      *
-     * @return string
+     * @return string User display.
      */
     public static function applyDisplay(array $display, $model)
     {
@@ -332,11 +333,11 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Return all the users that have at least read access on the current project
+     * Return all the users that have at least read access on the current project.
      *
-     * This function needs that Phprojekt::setCurrentProjectId is called before
+     * This function needs that Phprojekt::setCurrentProjectId is called before.
      *
-     * @return array
+     * @return array Array of users with 'id' and 'name'.
      */
     public function getAllowedUsers()
     {

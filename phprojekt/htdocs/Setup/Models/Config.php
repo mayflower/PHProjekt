@@ -1,6 +1,6 @@
 <?php
 /**
- * Configuration
+ * Configuration model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Configuration
+* Configuration model class.
  *
  * @category   PHProjekt
  * @package    Htdocs
@@ -37,13 +37,42 @@
  */
 class Setup_Models_Config
 {
+    /**
+     * Windows string.
+     */
     const OS_WINDOWS = 'Windows';
-    const OS_UNIX    = 'Unix';
 
-    private $_os      = null;
-    private $_eol     = null;
+    /**
+     * Unix string.
+     */
+    const OS_UNIX = 'Unix';
+
+    /**
+     * Curren OS.
+     *
+     * @var string
+     */
+    private $_os = null;
+
+    /**
+     * Current EOL depend on the OS.
+     *
+     * @var string
+     */
+    private $_eol = null;
+
+    /**
+     * Root path.
+     *
+     * @var string
+     */
     private $_baseDir = null;
 
+    /**
+     * Constructor.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->_setOs();
@@ -51,15 +80,15 @@ class Setup_Models_Config
     }
 
     /**
-     * Return a default configuration
+     * Return a default configuration.
      *
-     * @param string $username Database username to set
-     * @param string $password Database password to set
-     * @param string $dbname   Database table name to set
-     * @param string $adapter  Database type to set
-     * @param string $host     Database host to set
+     * @param string $username Database username to set.
+     * @param string $password Database password to set.
+     * @param string $dbname   Database table name to set.
+     * @param string $adapter  Database type to set.
+     * @param string $host     Database host to set.
      *
-     * @return string
+     * @return string Output for save in the file.
      */
     public function getDefaultProduction($username, $password, $dbname, $adapter, $host)
     {
@@ -79,7 +108,7 @@ class Setup_Models_Config
     }
 
     /**
-     * Set the operating system
+     * Set the operating system.
      *
      * @return void
      */
@@ -101,7 +130,7 @@ class Setup_Models_Config
     }
 
     /**
-     * Set the current base dir
+     * Set the current base dir.
      *
      * @return void
      */
@@ -111,9 +140,9 @@ class Setup_Models_Config
     }
 
     /**
-     * Return the introduction text
+     * Return the introduction text.
      *
-     * @return string
+     * @return string Output for save in the file.
      */
     private function _getIntroduction()
     {
@@ -133,11 +162,11 @@ class Setup_Models_Config
     }
 
     /**
-     * Return the language text
+     * Return the language text.
      *
-     * @param string $language The language to set
+     * @param string $language The language to set.
      *
-     * @return string
+     * @return string Output for save in the file.
      */
     private function _getLanguage($language = 'en')
     {
@@ -156,9 +185,9 @@ class Setup_Models_Config
     }
 
     /**
-     * Return the paths text
+     * Return the paths text.
      *
-     * @return string
+     * @return string Output for save in the file.
      */
     private function _getPaths()
     {
@@ -180,15 +209,15 @@ class Setup_Models_Config
     }
 
     /**
-     * Return the database text
+     * Return the database text.
      *
-     * @param string $username Database username to set
-     * @param string $password Database password to set
-     * @param string $dbname   Database table name to set
-     * @param string $adapter  Database type to set
-     * @param string $host     Database host to set
+     * @param string $username Database username to set.
+     * @param string $password Database password to set.
+     * @param string $dbname   Database table name to set.
+     * @param string $adapter  Database type to set.
+     * @param string $host     Database host to set.
      *
-     * @return string
+     * @return string Output for save in the file.
      */
     private function _getDatabase($username = '', $password = '', $dbname = '', $adapter = 'Pdo_Mysql',
         $host = 'localhost')
@@ -217,9 +246,9 @@ class Setup_Models_Config
     }
 
     /**
-     * Return the logs text
+     * Return the logs text.
      *
-     * @return string
+     * @return string Output for save in the file.
      */
     private function _getLogs()
     {
@@ -245,9 +274,9 @@ class Setup_Models_Config
     }
 
     /**
-     * Return the modules text
+     * Return the modules text.
      *
-     * @return string
+     * @return string Output for save in the file.
      */
     private function _getModules($userDisplayFormat = 0, $itemsPerPage = 3)
     {
@@ -277,9 +306,9 @@ class Setup_Models_Config
     }
 
     /**
-     * Return the mail text
+     * Return the mail text.
      *
-     * @return string
+     * @return string Output for save in the file.
      */
     private function _getMail($endOfLine = 0, $server = 'localhost', $user = '', $password = '')
     {
@@ -322,9 +351,9 @@ class Setup_Models_Config
     }
 
     /**
-     * Return the misc text
+     * Return the misc text.
      *
-     * @return string
+     * @return string Output for save in the file.
      */
     private function _getMisc($compressedDojo = 'true', $useCacheForClasses = 'true')
     {
@@ -345,9 +374,9 @@ class Setup_Models_Config
     }
 
     /**
-     * Return the front text
+     * Return the front text.
      *
-     * @return string
+     * @return string Output for save in the file.
      */
     private function _getFront()
     {
@@ -372,7 +401,7 @@ class Setup_Models_Config
     /**
      * Return the frontend message text.
      *
-     * @return string
+     * @return string Output for save in the file.
      */
     private function _getFrontendMessage()
     {

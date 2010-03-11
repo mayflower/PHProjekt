@@ -1,8 +1,11 @@
 <?php
 /**
  * Convert a model into a json structure.
- * This is usually done by a controller to send data to the
- * client
+ * This is usually done by a controller to send data to the client.
+ *
+ * The Phprojekt_Convert_Json takes care that a apporpriate structure
+ * is made from the given model.
+ *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -25,7 +28,8 @@
 
 /**
  * Convert a model into a json structure.
- * This is usally done by a controller to send data to the client.
+ * This is usually done by a controller to send data to the client.
+ *
  * The Phprojekt_Convert_Json takes care that a apporpriate structure
  * is made from the given model.
  *
@@ -42,11 +46,12 @@
 class Phprojekt_Converter_Json
 {
     /**
-     * Converts according to convert() and echos the result
+     * Converts according to convert() and echos the result.
      *
      * @see convert()
-     * @param mix $param1 - Tree class / Item class / Array
-     * @param mix $param2 - ORDERING_LIST for items / fieldInformation for tags
+     *
+     * @param mix $param1 - Tree class / Item class / Array.
+     * @param mix $param2 - ORDERING_LIST for items / fieldInformation for tags.
      *
      * @return void
      */
@@ -60,13 +65,12 @@ class Phprojekt_Converter_Json
     }
 
     /**
-     * The function check the parameters type
-     * and choose which convert function must use
+     * The function check the parameters type and choose which convert function must use.
      *
      * @param mix $param1 - Tree class / Item class / Array
      * @param mix $param2 - ORDERING_LIST for items / fieldInformation for tags
      *
-     * @return string
+     * @return string Data in JSON format.
      */
     public static function convert($param1, $param2 = null)
     {
@@ -103,13 +107,13 @@ class Phprojekt_Converter_Json
     }
 
     /**
-     * Convert a model or a model information into a json stream
+     * Convert a model or a model information into a json stream.
      *
-     * @param Phprojekt_Interface_Model|array $models The model to convert
-     * @param int                             $order  A Phprojekt_ModelInformation_Default::ORDERING_*
-     *                                                const that defines the ordering for the convert
+     * @param Phprojekt_Interface_Model|array $models The model to convert.
+     * @param integer                         $order  A Phprojekt_ModelInformation_Default::ORDERING_*
+     *                                                const that defines the ordering for the convert.
      *
-     * @return string
+     * @return string Data in JSON format.
      */
     private static function _convertModel($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
@@ -205,11 +209,11 @@ class Phprojekt_Converter_Json
     }
 
     /**
-     * Convert a model or a model information into a json stream
+     * Convert a model or a model information into a json stream.
      *
-     * @param Phprojekt_Interface_Model $tree Tree instance to convert
+     * @param Phprojekt_Interface_Model $tree Tree instance to convert.
      *
-     * @return string
+     * @return string Data in JSON format.
      */
     private static function _convertTree(Phprojekt_Tree_Node_Database $tree)
     {
@@ -239,12 +243,11 @@ class Phprojekt_Converter_Json
     }
 
     /**
-     * Just convert a normal value
-     * And return it with the json-comment-filtered
+     * Just convert a normal value, and return it with the json-comment-filtered.
      *
-     * @param mix $data Some value to convert
+     * @param mix $data Some value to convert.
      *
-     * @return string
+     * @return string Data in JSON format.
      */
     private static function _convertValue($data)
     {
@@ -255,12 +258,12 @@ class Phprojekt_Converter_Json
     }
 
     /**
-     * Convert the tag or search data to json-format
+     * Convert the tag or search data to json-format.
      *
-     * @param array $data            The data values
-     * @param array $fieldDefinition The definition of each field
+     * @param array $data            The data values.
+     * @param array $fieldDefinition The definition of each field.
      *
-     * @return string
+     * @return string Data in JSON format.
      */
     private static function _convertMetadataAndData($data, $fieldDefinition)
     {
@@ -274,14 +277,14 @@ class Phprojekt_Converter_Json
 
     /**
      * Enclose the json result in comments for security reasons, see "json-comment-filtered dojo"
-     * the content-type dojo expects is: json-comment-filtered
+     * the content-type dojo expects is: json-comment-filtered.
      *
-     * @param array $data Data to convert
+     * @param array $data Data to convert.
      *
-     * @return string
+     * @return string Data in JSON format.
      */
     private static function _makeJsonString($data)
     {
-        return '{}&&('.Zend_Json_Encoder::encode($data).')';
+        return '{}&&(' . Zend_Json_Encoder::encode($data) . ')';
     }
 }

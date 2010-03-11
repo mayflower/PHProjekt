@@ -1,6 +1,6 @@
 <?php
 /**
- * Exception class for Authorization
+ * Exception class for Authorization.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Exception class for Authorization
+ * Exception class for Authorization.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,10 +38,12 @@
 class Phprojekt_Auth_Exception extends Exception
 {
     /**
-     * New instance
+     * New instance.
      *
-     * @param string $message Fault string
-     * @param int    $code    Fault code
+     * @param string  $message Fault string.
+     * @param integer $code    Fault code.
+     *
+     * @return void
      */
     function __construct($message, $code = null)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Exception class for Authorization
+ * Exception class for User not logged in
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,10 +38,12 @@
 class Phprojekt_Auth_UserNotLoggedInException extends Phprojekt_PublishedException
 {
     /**
-     * New instance
+     * New instance.
      *
-     * @param string $message Fault string
-     * @param int    $code    Fault code
+     * @param string  $message Fault string.
+     * @param integer $code    Fault code.
+     *
+     * @return void
      */
     function __construct($message, $code = null)
     {

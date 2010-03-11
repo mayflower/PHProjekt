@@ -1,7 +1,6 @@
 <?php
 /**
- * Represent a field in an active record and hold additional information from
- * the DatabaseManager
+ * Represent a field in an active record and hold additional information from the DatabaseManager.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,8 +23,7 @@
  */
 
 /**
- * Represent a field in an active record and hold additional information from
- * the DatabaseManager
+ * Represent a field in an active record and hold additional information from the DatabaseManager.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -40,11 +38,11 @@
 class Phprojekt_DatabaseManager_Field
 {
     /**
-     * Class contain the db information
+     * Class contain the db information.
      *
      * @var Phprojekt_DatabaseManager
      */
-    protected $_metadata = array();
+    protected $_metadata;
 
     /**
      * Field value
@@ -54,11 +52,13 @@ class Phprojekt_DatabaseManager_Field
     public $value;
 
     /**
-     * Initialise a new object
+     * Initialise a new object.
      *
-     * @param Phprojekt_DatabaseManager $dbm   DatabaseManager Object
-     * @param string                    $name  Name of the field
-     * @param mixed                     $value Value of the field
+     * @param Phprojekt_DatabaseManager $dbm   DatabaseManager Object.
+     * @param string                    $name  Name of the field.
+     * @param mixed                     $value Value of the field.
+     *
+     * @return void
      */
     public function __construct(Phprojekt_DatabaseManager $dbm, $name, $value = null)
     {
@@ -67,11 +67,11 @@ class Phprojekt_DatabaseManager_Field
     }
 
     /**
-     * Get a value
+     * Get a value.
      *
-     * @param string $name Name of the field
+     * @param string $name Name of the field.
      *
-     * @return mix
+     * @return mix Value of the var.
      */
     public function __get($name)
     {
@@ -84,9 +84,9 @@ class Phprojekt_DatabaseManager_Field
     }
 
     /**
-     * Function to print this class
+     * Function to print this class.
      *
-     * @return string
+     * @return string Class in a print format.
      */
     public function __toString()
     {

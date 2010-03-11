@@ -1,6 +1,6 @@
 <?php
 /**
- * Gantt model class
+ * Gantt model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Gantt model class
+ * Gantt model class.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,11 +38,11 @@
 class Gantt_Models_Gantt
 {
     /**
-     * Implement fetchAll for delete projects
+     * Implement fetchAll for delete projects.
      *
-     * @param string $where The SQL where
+     * @param string $where The SQL where.
      *
-     * @return array
+     * @return array Empty array.
      */
     public function fetchAll($where)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Default Controller for PHProjekt 6
+ * Default Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Default Controller for PHProjekt 6
+ * Default Controller.
  *
  * <pre>
  * The controller gets an action and runs the nessesary stuff for it.
@@ -132,7 +132,7 @@ class IndexController extends Zend_Controller_Action
     const DISABLE_FRONTEND_MESSAGES_FALSE_TEXT = "No settings were disabled!";
 
     /**
-     * Init function
+     * Init function.
      *
      * Checks if it is a logged user, if not,
      * is redirected to the login form or throws an exception.
@@ -167,9 +167,9 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Check if a token is in the SESSION
+     * Check if a token is in the SESSION.
      *
-     * @return boolean True or die the script
+     * @return boolean True for a valid one.
      */
     public function checkCsrfToken()
     {
@@ -210,7 +210,7 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Standard action
+     * Standard action.
      *
      * The function sets up the template index.phtml and renders it.
      *
@@ -234,7 +234,7 @@ class IndexController extends Zend_Controller_Action
     /**
      * Gets the class model of the module or the default one.
      *
-     * @return Phprojekt_Model_Interface
+     * @return Phprojekt_Model_Interface An instance of Phprojekt_Model_Interface.
      */
     public function getModelObject()
     {
@@ -270,7 +270,7 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Keep in the registry the current project id
+     * Keep in the registry the current project id.
      *
      * @return void
      */
@@ -290,7 +290,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @param string $where Internal where clause.
      *
-     * @return string
+     * @return string Where clause.
      */
     public function getFilterWhere($where)
     {
@@ -327,7 +327,7 @@ class IndexController extends Zend_Controller_Action
      *  - class:  Name of the class for display the icon.
      * </pre>
      *
-     * @return array
+     * @return array Array with 'target', 'action', 'label', 'mode' and 'class'.
      */
     public function getDefaultExtraActions()
     {
@@ -842,7 +842,7 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Returns the rights for all the users of one item
+     * Returns the rights for all the users of one item.
      *
      * OPTIONAL request parameters:
      * <pre>

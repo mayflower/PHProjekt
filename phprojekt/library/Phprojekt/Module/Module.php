@@ -1,6 +1,6 @@
 <?php
 /**
- * Module class for PHProjekt 6.0
+ * Module model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Phprojekt_Module for PHProjekt 6.0
+ * Module model class.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,24 +38,23 @@
 class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
-     * The standard information manager with hardcoded
-     * field definitions
+     * The standard information manager with hardcoded field definitions.
      *
      * @var Phprojekt_ModelInformation_Interface
      */
     protected $_informationManager;
 
     /**
-     * Validate object
+     * Validate object.
      *
      * @var Phprojekt_Model_Validate
      */
     protected $_validate = null;
 
     /**
-     * Initialize new tab
+     * Constructor
      *
-     * @param array $db Configuration for Zend_Db_Table
+     * @param array $db Configuration for Zend_Db_Table.
      *
      * @return void
      */
@@ -83,11 +82,11 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Get the information manager
+     * Get the information manager.
      *
      * @see Phprojekt_Model_Interface::getInformation()
      *
-     * @return Phprojekt_ModelInformation_Interface
+     * @return Phprojekt_ModelInformation_Interface An instance of Phprojekt_ModelInformation_Interface.
      */
     public function getInformation()
     {
@@ -96,14 +95,14 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
 
     /**
      * Help to save a model by setting the models properties.
-     * Validation is based on the ModelInformation implementation
+     * Validation is based on the ModelInformation implementation.
      *
-     * @param Phprojekt_Model_Interface $model  The model
-     * @param array                     $params The parameters used to feed the model
+     * @param Phprojekt_Model_Interface $model  The model.
+     * @param array                     $params The parameters used to feed the model.
      *
-     * @throws Exception
+     * @throws Phprojekt_PublishedException On no valid parameters.
      *
-     * @return boolean
+     * @return boolean True for a sucessful save.
      */
     public function saveModule(array $params)
     {
@@ -153,9 +152,9 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Validate the current record
+     * Validate the current record.
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function recordValidate()
     {
@@ -174,8 +173,8 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Prevent delete modules from the Frontend
-     * For delete modules use safeDelete
+     * Prevent delete modules from the Frontend.
+     * For delete modules use safeDelete.
      *
      * @return void
      */
@@ -206,9 +205,9 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Return the error data
+     * Return the error data.
      *
-     * @return array
+     * @return array Array with errors.
      */
     public function getError()
     {
@@ -216,7 +215,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Save rights
+     * Save rights.
      *
      * @return void
      */
@@ -224,13 +223,12 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     {
     }
 
-
     /**
-     * Create a folder if this not exists in the system
-     * The folder is created with 0770 permissions and then
-     * change it to 0775
+     * Create a folder if this not exists in the system.
      *
-     * @param array $pathToFolder Array with all the folder names
+     * The folder is created with 0770 permissions and then change it to 0775.
+     *
+     * @param array $pathToFolder Array with all the folder names.
      *
      * @return void
      */
@@ -258,13 +256,11 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Read the Template folder and try to reproduce it
-     * into the aplication folder
+     * Read the Template folder and try to reproduce it into the aplication folder.
      *
-     * All the strings ##TEMPLATE##
-     * are replaced by the name of the module
+     * All the strings ##TEMPLATE## are replaced by the name of the module.
      *
-     * @param array $paths Array with all the folder names
+     * @param array $paths Array with all the folder names.
      *
      * @return void
      */
@@ -309,6 +305,11 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
         }
     }
 
+    /**
+     * Create an Db.json file for the module.
+     *
+     * @return void
+     */
     private function _createSqlFile()
     {
         $eol        = "\n";
@@ -393,11 +394,11 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     }
 
     /**
-     * Delete a folder with subfolders and files
+     * Delete a folder with subfolders and files.
      *
-     * @param srting $path The full path of the folder
+     * @param srting $path The full path of the folder.
      *
-     * @return boolean
+     * @return boolean True for a sucessful delete.
      */
     private function _deleteFolder($path)
     {
@@ -414,8 +415,10 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                 }
                 closedir($directory);
             }
+
             return rmdir($path);
         }
+
         return unlink($path);
     }
 }

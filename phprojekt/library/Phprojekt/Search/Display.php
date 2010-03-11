@@ -1,6 +1,8 @@
 <?php
 /**
- * Display Searchs class
+ * Display Searchs class.
+ *
+ * The class provide the functions for display the item data of the results.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +25,8 @@
  */
 
 /**
+ * Display Searchs class.
+ *
  * The class provide the functions for display the item data of the results
  *
  * @category   PHProjekt
@@ -38,19 +42,16 @@
 class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
 {
     /**
-     * Name of the table
+     * Name of the table.
      *
      * @var string
      */
     protected $_name = 'search_display';
 
     /**
-    /**
-     * Chaneg the tablename for use with the Zend db class
+     * Constructor.
      *
-     * This function is only for PHProjekt6
-     *
-     * @param array $config The config array for the database
+     * @return void
      */
     public function __construct()
     {
@@ -60,11 +61,12 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Return the display data for a moduleId-ItemId pair
+     * Return the display data for a moduleId-ItemId pair.
      *
-     * @param array $data Array with the module data for show (moduleId => itemId)
+     * @param array $data Array with the module data for show (moduleId => itemId).
      *
-     * @return array
+     * @return array Array with 'id', 'moduleId', 'moduleName', 'moduleLabel',
+     *                          'firstDisplay', 'secondDisplay' and 'projectId'.
      */
     public function getDisplay($data)
     {
@@ -114,11 +116,11 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Save the display data, insert or update
+     * Save the display data, insert or update.
      *
-     * @param Phprojekt_Item_Abstract $object The item object
-     * @param integer The module Id to store
-     * @param integer The item Id to store
+     * @param Phprojekt_Item_Abstract $object   The item object.
+     * @param integer                 $moduleId The module ID to store.
+     * @param integer                 $itemId   The item ID to store.
      *
      * @return void
      */
@@ -149,10 +151,10 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Delete the entry for one object
+     * Delete the entry for one object.
      *
-     * @param integer $moduleId The moduleId to delete
-     * @param integer $itemId   The item Id
+     * @param integer $moduleId The module ID to delete.
+     * @param integer $itemId   The item ID.
      *
      * @return void
      */
@@ -163,12 +165,12 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Check if the moduleId-itemId pair was already inserted
+     * Check if the moduleId-itemId pair was already inserted.
      *
-     * @param integer $moduleId The moduleId to store
-     * @param integer $itemId   The item Id
+     * @param integer $moduleId The module ID to store.
+     * @param integer $itemId   The item ID.
      *
-     * @return boolean
+     * @return boolean True if exists.
      */
     private function _exists($moduleId, $itemId)
     {
@@ -176,15 +178,15 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Save the new moduleId-item pair
+     * Save the new moduleId-item pair.
      *
-     * This function use the Zend_DB insert
+     * This function use the Zend_DB insert.
      *
-     * @param integer $moduleId      The moduleId to store
-     * @param integer $itemId        The item Id
-     * @param integer $projectId     The parent project Id
-     * @param string  $firstDisplay  Text for the first display
-     * @param string  $secondDisplay Text for the second display
+     * @param integer $moduleId      The module ID to store.
+     * @param integer $itemId        The item ID.
+     * @param integer $projectId     The parent project ID.
+     * @param string  $firstDisplay  Text for the first display.
+     * @param string  $secondDisplay Text for the second display.
      *
      * @return void
      */
@@ -199,15 +201,15 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Update a moduleId-item pair
+     * Update a moduleId-item pair.
      *
-     * This function use the Zend_DB update
+     * This function use the Zend_DB update.
      *
-     * @param integer $moduleId      The moduleId to store
-     * @param integer $itemId        The item Id
-     * @param integer $projectId     The parent project Id
-     * @param string  $firstDisplay  Text for the first display
-     * @param string  $secondDisplay Text for the second display
+     * @param integer $moduleId      The module ID to store.
+     * @param integer $itemId        The item ID.
+     * @param integer $projectId     The parent project ID.
+     * @param string  $firstDisplay  Text for the first display.
+     * @param string  $secondDisplay Text for the second display.
      *
      * @return void
      */

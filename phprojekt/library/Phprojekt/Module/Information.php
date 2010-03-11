@@ -1,8 +1,6 @@
 <?php
 /**
- * Convert a model into a json structure.
- * This is usually done by a controller to send data to the
- * client
+ * Meta information about the Module model.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,10 +23,7 @@
  */
 
 /**
- * Convert a model into a json structure.
- * This is usally done by a controller to send data to the client.
- * The Phprojekt_Convert_Json takes care that a apporpriate structure
- * is made from the given model.
+ * Meta information about the Module model.
  *
  * The fields are hardcore.
  *
@@ -45,7 +40,7 @@
 class Phprojekt_Module_Information extends Phprojekt_ModelInformation_Default
 {
     /**
-     * Sets a fields definitions for each field
+     * Sets a fields definitions for each field.
      *
      * @return void
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Parser class
+ * Parses a given String / Tree
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,42 +40,41 @@
 class Phprojekt_Filter_ParseTree
 {
     /**
-     * Counter for braces, if null all open braces are closed again
+     * Counter for braces, if null all open braces are closed again.
      *
      * @var int
      */
     private $_bracketGroup = 0;
 
     /**
-     * Convertrs an given string to tree
-     *
-     * @param string   $string the string that should be formated
-     *
-     * @return Tree
+     * Convertrs an given string to tree.
      *
      * @uses Phprojekt_Filter_Tokenizer
      * @uses Phprojekt_Tree_Binary
-     * @throws Exception
+     *
+     * @param string $string The string that should be formated.
+     *
+     * @throws Phprojekt_ParseException On errors.
+     *
+     * @return Phprojekt_Tree_Binary An instance of Phprojekt_Tree_Binary.
      */
     public function stringToTree($string)
     {
         $string = $this->_checkString($string);
 
-        // we use this dertemining left open braces
+        // We use this dertemining left open braces
         $braces = 0;
 
-        // last token
+        // Last token
         $last   = null;
         $parsed = '';
 
         $tokenizer = new Phprojekt_Filter_Tokenizer($string);
         while ($current = $tokenizer->getCurrent()) {
-
             $next = $tokenizer->getNext();
-            /**
-             * If a tree [(LEAF)-(NODE)-(LEAF)] was created in last iteration, we have to return
-             * if EOF is reached
-             */
+
+            // If a tree [(LEAF)-(NODE)-(LEAF)] was created in last iteration, we have to return
+            // if EOF is reached
             if (isset($tmpTree) && false === $next) {
                 return $tmpTree;
             } else {
@@ -181,11 +180,11 @@ class Phprojekt_Filter_ParseTree
     }
 
     /**
-     * Gernerates a string from given Phprojekt_Tree_Binary
+     * Gernerates a string from given Phprojekt_Tree_Binary.
      *
-     * @param Phprojekt_Tree_Binary $tree the tree that should be converted
+     * @param Phprojekt_Tree_Binary $tree The tree that should be converted.
      *
-     * @return mixed
+     * @return string The tree converted to string.
      */
     public function treeToString(Phprojekt_Tree_Binary $tree)
     {
@@ -205,12 +204,12 @@ class Phprojekt_Filter_ParseTree
     }
 
     /**
-     * Check the given string
+     * Check the given string.
      *
      * Checking for braces are implemented. If surrounding braces exist remove them,
      * for example:
-     *  ( string ) => string
-     *  ( string ) string => ( string ) string
+     *  ( string ) => string.
+     *  ( string ) string => ( string ) string.
      *
      * But this function may be upgraded for further validations.
      *

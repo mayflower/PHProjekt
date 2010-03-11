@@ -1,6 +1,6 @@
 <?php
 /**
- * Mail class for PHProjekt 6.0
+ * Mail class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Mail class for PHProjekt 6.0
+ * Mail class.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -37,16 +37,20 @@
  */
 class Phprojekt_Mail extends Zend_Mail
 {
-    //External use (configuration.ini):
+    /**
+     * External use (configuration.ini):
+     */
     const LINEEND_RN         = 0;
     const LINEEND_N          = 1;
     const TRANSPORT_SMTP     = 0;
     const TRANSPORT_SENDMAIL = 1;
 
     /**
-     * Sets the SMTP server. The data is obtained from the configuration.ini file.
+     * Sets the SMTP server.
      *
-     * @return Zend_Mail_Transport_Smtp or Zend_Mail_Transport_Sendmail object
+     * The data is obtained from the configuration.ini file.
+     *
+     * @return Zend_Mail_Transport_Smtp|Zend_Mail_Transport_Sendmail Object
      */
     public function setTransport()
     {
@@ -98,9 +102,9 @@ class Phprojekt_Mail extends Zend_Mail
     }
 
     /**
-     * Returns the string used for end of line in text mode emails, according to config file setting
+     * Returns the string used for end of line in text mode emails, according to config file setting.
      *
-     * @return string End of line characters
+     * @return string End of line characters.
      */
     protected function getEndOfLine()
     {

@@ -1,6 +1,8 @@
 <?php
 /**
- * Tree class
+ * Tree class.
+ *
+ * Represents an node of a tree and provides children handling.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +25,9 @@
  */
 
 /**
- * Represents an node of a tree and provides children handling
+ * Tree class.
+ *
+ * Represents an node of a tree and provides children handling.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,38 +42,38 @@
 class Phprojekt_Tree_Binary
 {
     /**
-     * The node / leaf of the tree
+     * The node / leaf of the tree.
      *
      * @var mixed
      */
     protected $_node = null;
 
     /**
-     * Type of the current node
+     * Type of the current node.
      *
      * @var mixed
      */
     protected $_nodeType = null;
 
     /**
-     * Left child of a node, is tree again
+     * Left child of a node, is tree again.
      *
      * @var Phprojekt_Tree_Binary
      */
     protected $_leftChild  = null;
 
     /**
-     * Right child of a node, is a tree again
+     * Right child of a node, is a tree again.
      *
      * @var Phprojekt_Tree_Binary
      */
     protected $_rightChild = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param mixed $node     the value of the node
-     * @param int   $nodeType the type of the node
+     * @param mixed   $node     The value of the node.
+     * @param integer $nodeType The type of the node.
      *
      * @return void
      */
@@ -83,9 +87,9 @@ class Phprojekt_Tree_Binary
     }
 
     /**
-     * Returns the current node
+     * Returns the current node.
      *
-     * @return mixed the current node
+     * @return mixed The current node.
      */
     public function getNode()
     {
@@ -93,9 +97,9 @@ class Phprojekt_Tree_Binary
     }
 
     /**
-     * Returns the type of the node
+     * Returns the type of the node.
      *
-     * @return int
+     * @return int Node type.
      */
     public function getNodeType()
     {
@@ -103,7 +107,7 @@ class Phprojekt_Tree_Binary
     }
 
     /**
-     * Checks weather the object is leaf or not
+     * Checks weather the object is leaf or not.
      *
      * @return boolean
      */
@@ -113,10 +117,11 @@ class Phprojekt_Tree_Binary
     }
 
     /**
-     * Add a child to current node. All childrena are trees as well.
+     * Add a child to current node.
+     * All childrena are trees as well.
      *
-     * @param Phprojekt_Tree_Binary $leftChild  left child tree
-     * @param Phprojekt_Tree_Binary $rightChild right child tree
+     * @param Phprojekt_Tree_Binary $leftChild  Left child tree.
+     * @param Phprojekt_Tree_Binary $rightChild Right child tree.
      *
      * @return void
      */
@@ -127,9 +132,9 @@ class Phprojekt_Tree_Binary
     }
 
     /**
-     * Returns the left child of current node
+     * Returns the left child of current node.
      *
-     * @return Tree
+     * @return Phprojekt_Tree_Binary
      */
     public function getLeftChild()
     {
@@ -137,9 +142,9 @@ class Phprojekt_Tree_Binary
     }
 
     /**
-     * Returns the right child of current node
+     * Returns the right child of current node.
      *
-     * @return Tree
+     * @return Phprojekt_Tree_Binary
      */
     public function getRightChild()
     {
@@ -147,9 +152,9 @@ class Phprojekt_Tree_Binary
     }
 
     /**
-     * Add a new Tree Object to the left side of the node
+     * Add a new Tree Object to the left side of the node.
      *
-     * @param Tree $child the tree to add to the left side of node
+     * @param Tree $child The tree to add to the left side of node.
      *
      * @return void
      */
@@ -159,9 +164,9 @@ class Phprojekt_Tree_Binary
     }
 
     /**
-     * Add a new Tree Object to the right side of the node
+     * Add a new Tree Object to the right side of the node.
      *
-     * @param Tree $child the tree to add to the right side of node
+     * @param Tree $child The tree to add to the right side of node
      *
      * @return void
      */

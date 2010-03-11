@@ -1,6 +1,6 @@
 <?php
 /**
- * Database manager interface
+ * Database manager interface.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,31 +23,27 @@
  */
 
 /**
- * The class provide the functions for get data drom the databaseManager
+ * The class provide the functions for get data drom the databaseManager.
  *
- * You can get all the fields from an specific module
- * sorted by list or form order
+ * You can get all the fields from an specific module sorted by list or form order.
  *
  * For each field we have all the data of the item needed for the project like:
  *
- * tableName     = Name of the module and the table of the module
- * tableField    = Name of the field in the table
- * formTab       = Number of the tab to show it in various tabs
- * formLabel     = Text to display in the form (english text that is translated later)
- * formType      = Type of the field
- * formPosition  = Position of the field in the form
- * formColumns   = Number of columns that use the field
- * formRegexp    = Regular Expression to check the field
- * formRange     = Mix value to make the data of the fields, like for select types
- * defaultValue  = Default value
- * listPosition  = Position of the field in the list
- * listAlign     = Aligment of the field in the list
- * listUseFilter = Use the field in the filter list or not
- * altPosition   = Position of the field in the alt view
- * status        = Active or Inactive field
- * isInteger     = Int field or not
- * isRequired    = Is it a required field or not
- * isUnique      = Is it a unique value that can not be repeated or not
+ * key           = Name of the field.
+ * label         = Label for display. (Translated).
+ * originalLabel = Label without translation.
+ * type          = Type of the field.
+ * hint          = Tooltip for the field.
+ * listPosition  = Position of the field in the list.
+ * formPosition  = Position of the field in the form.
+ * fieldset      = Not implemented.
+ * range         = Range values for selecBox fields and others.
+ * required      = Is it a required field or not.
+ * readOnly      = Is it read only or not.
+ * tab           = In which tab of the form must appear.
+ * integer       = Int field or not.
+ * length        = Max lenght allowed. (0 for unlimited).
+ * default       = Default value.
  *
  * The class itself is an ActiveRecord, so:
  * @see Phprojekt_ActiveRecord_Abstract
@@ -65,53 +61,59 @@
 class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_ModelInformation_Interface
 {
     /**
-     * Cache
+     * Internal Cache.
      *
      * @var array
      */
     protected $_dbFields = array();
 
     /**
-     * The model to fetch the infos from
+     * The model to fetch the infos from.
      *
      * @var Phprojekt_Item_Abstract
      */
     protected $_model;
 
     /**
-     * Info of the model fields in the database
+     * Info of the model fields in the database.
      *
      * @var array
      */
     protected $_modelInfo = array();
 
     /**
-     * The module name
+     * The module name.
      *
      * @var string
      */
     protected $_moduleName = null;
 
     /**
-     * Cache
+     * Internal Cache.
      *
      * @var array
      */
     protected $_fieldTypes = array();
 
     /**
-     * Error Class
+     * Error Class.
      *
      * @var Phprojekt_Error
      */
     protected $_error = null;
 
+    /**
+     * Column for field names.
+     */
     const COLUMN_NAME  = 'table_field';
+
+    /**
+     * Column for field labels.
+     */
     const COLUMN_TITLE = 'form_label';
 
     /**
-     * We have to do the mapping, cause the constants that are passed
-     * are just integers.
+     * We have to do the mapping, cause the constants that are passed are just integers.
      *
      * @var array
      */
@@ -120,10 +122,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                                Phprojekt_ModelInformation_Default::ORDERING_FILTER => 'list_use_filter');
 
     /**
-     * Initialize a new Database Manager and configure it with a model
+     * Initialize a new Database Manager and configure it with a model.
      *
      * @param Phprojekt_Item_Abstract $model Phprojekt_Item_Abstract
-     * @param array                   $db    Db configurations
+     * @param array                   $db    Configuration for Zend_Db_Table.
+     *
+     * @return void
      */
     public function __construct(Phprojekt_Item_Abstract $model = null, $db = null)
     {
@@ -136,9 +140,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Return the associated model
+     * Return the associated model.
      *
-     * @return Phprojekt_Item_Abstract
+     * @return Phprojekt_Item_Abstract An instance of Phprojekt_Item_Abstract.
      */
     public function getModel()
     {
@@ -146,9 +150,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Get the module name of the current model
+     * Get the module name of the current model.
      *
-     * @return string
+     * @return string Current module name.
      */
     protected function _getModuleName()
     {
@@ -160,8 +164,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Get all the fields from the databaseManager
-     * And collect all the values
+     * Get all the fields from the databaseManager and collect all the values.
      *
      * If is defined a correct order, the array will return sorted by the order.
      * If not, the array will return sorted by id.
@@ -171,10 +174,10 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * if not, it gets the new order fields and saves it too.
      * This is for make the query to the database only once and not for each request.
      *
-     * @param string  $order Sort string
-     * @param boolean $all   Return all or only the avtive one
+     * @param string  $order An ordering constant.
+     * @param boolean $all   Return all or only the avtive one.
      *
-     * @return array Array with the data of all the fields
+     * @return array Array with the data of all the fields.
      */
     protected function _getFields($order, $all = false)
     {
@@ -206,9 +209,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Find a special fieldname
+     * Find a special fieldname.
      *
-     * @return Zend_Db_Rowset
+     * @return Zend_Db_Rowset Row Result.
      */
     public function find()
     {
@@ -223,9 +226,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * Return an array of short field information.
      * (Just key and type)
      *
-     * @param integer $ordering An ordering constant
+     * @param integer $ordering An ordering constant.
      *
-     * @return array
+     * @return array Array with fields definitions.
      */
     public function getShortFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
@@ -261,9 +264,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     /**
      * Return an array of field information.
      *
-     * @param integer $ordering An ordering constant
+     * @param integer $ordering An ordering constant.
      *
-     * @return array
+     * @return array Array with fields definitions.
      */
     public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
@@ -309,11 +312,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Convert to a a selectbox
+     * Convert to a a selectbox.
      *
-     * @param Phprojekt_ModelInformation_Interface $field Class with data of the field
+     * @param Phprojekt_ModelInformation_Interface $field Class with data of the field.
      *
-     * @return array
+     * @return array Array with fields definitions.
      */
     protected function _convertSelect(Phprojekt_ModelInformation_Interface $field)
     {
@@ -342,12 +345,14 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
+     * Convert the data from the table.
+     *
      * Fields from the database manager have a complete different
-     * type than those that should be propagated into the PHProjekt core
+     * type than those that should be propagated into the PHProjekt core.
      *
-     * @param Phprojekt_ModelInformation_Interface $field Class with data of the field
+     * @param Phprojekt_ModelInformation_Interface $field Class with data of the field.
      *
-     * @return array
+     * @return array Array with fields definitions.
      */
     protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
     {
@@ -379,13 +384,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Create a primitive mapping to an array. This is not pretty nice, but
-     * for this version a reasonable solution
+     * Create a primitive mapping to an array.
      *
-     * @param integer $order  An ordering constant
-     * @param string  $column Column
+     * @param integer $order  An ordering constant.
+     * @param string  $column Column.
      *
-     * @return array
+     * @return array Array with all the values.
      */
     public function getInfo($order, $column)
     {
@@ -403,11 +407,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Return an array with form types to simplify things
+     * Return an array with form types to simplify things.
      *
-     * @param integer $ordering An ordering constant (MODELINFO_ORD_FORM, etc)
+     * @param integer $ordering An ordering constant.
      *
-     * @return array
+     * @return void
      */
     public function getTypes($ordering = Phprojekt_ModelInformation_Default::ORDERING_FORM)
     {
@@ -418,11 +422,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Return the type of one field
+     * Return the type of one field.
      *
-     * @param string $fieldName The name of the field to chekc
+     * @param string $fieldName The name of the field to check.
      *
-     * @return string
+     * @return string Type of the field.
      */
     public function getType($fieldName)
     {
@@ -436,11 +440,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Gets the data range for a select using a model
+     * Gets the data range for a select using a model.
      *
-     * @param Phprojekt_ModelInformation_Interface $field Class with data of the field
+     * @param Phprojekt_ModelInformation_Interface $field Class with data of the field.
      *
-     * @return an array with key and value to be used as datarange
+     * @return array Array with 'id' and 'name'.
      */
     public function getRangeFromModel(Phprojekt_ModelInformation_Interface $field)
     {
@@ -484,12 +488,12 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Validate the fields definitions per each field
+     * Validate the fields definitions per each field.
      *
-     * @param array   $data     The field definition
-     * @param integer $saveType Type of module save (0 for normal -under project-, 1 for global)
+     * @param array   $data     The field definition.
+     * @param integer $saveType Type of module save (0 for normal -under project-, 1 for global).
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function recordValidate($data, $saveType = 0)
     {
@@ -673,9 +677,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Return an error array if there is any error
+     * Return an error array if there is any error.
      *
-     * @return array
+     * @return array Array with 'field', 'label' and 'message'.
      */
     public function getError()
     {
@@ -685,11 +689,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Delete all entries for the current table and create the new one
+     * Delete all entries for the current table and create the new one.
      *
-     * @param string $table      The table name
-     * @param array  $data       All the data of each field
-     * @param array  $tableData  All the table data of each field
+     * @param string $table      The table name.
+     * @param array  $data       All the data of each field.
+     * @param array  $tableData  All the table data of each field.
      *
      * @return void
      */
@@ -733,11 +737,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
 
     /**
      * Return an array with the definitions of the field
-     * from the databasemanager and the module table itself
+     * from the databasemanager and the module table itself.
      *
-     * The length don't work from int field types
+     * The length don't work from int field types.
      *
-     * @return array
+     * @return array Array with fields definitions.
      */
     public function getDataDefinition()
     {
@@ -788,13 +792,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Check the current Fields and make the sync in the table of the module
+     * Check the current Fields and make the sync in the table of the module.
      *
-     * @param array  $newFields Array with all the data per new field
-     * @param string $tableName Name of the module Table
-     * @param array  $tableData Array with the table data definition per new field
+     * @param array  $newFields Array with all the data per new field.
+     * @param string $tableName Name of the module Table.
+     * @param array  $tableData Array with the table data definition per new field.
      *
-     * @return boolean
+     * @return boolean True on a sucessful sync.
      */
     public function syncTable($newFields, $tableName, $tableData)
     {
@@ -881,10 +885,9 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Delete all the entries for the current Module
-     * And drop the table
+     * Delete all the entries for the current Module and drop the table.
      *
-     * @return boolean
+     * @return boolean True on a sucessful delete.
      */
     public function deleteModule()
     {
@@ -897,18 +900,19 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         }
 
         $tableManager = new Phprojekt_Table(Phprojekt::getInstance()->getDb());
+
         return $tableManager->dropTable($table);
     }
 
     /**
-     * Process the Range value and return the options as array
+     * Process the Range value and return the options as array.
      *
-     * @param Object $field  Field information
-     * @param Object $result Result set of items
-     * @param string $key    Field key for the select (id by default)
-     * @param string $value  Fields for show in the select
+     * @param Object $field  Field information.
+     * @param Object $result Result set of items.
+     * @param string $key    Field key for the select (id by default).
+     * @param string $value  Fields for show in the select.
      *
-     * @return array
+     * @return array Array with 'id' and 'name'.
      */
     private function _setRangeValues($field, $result, $key, $value)
     {
@@ -941,11 +945,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
-     * Apply rules for tableField
+     * Apply rules for tableField.
      *
-     * @param string $value Name of the field in the table
+     * @param string $value Name of the field in the table.
      *
-     * @return string
+     * @return string Converted name.
      */
     static public function convertTableField($value)
     {

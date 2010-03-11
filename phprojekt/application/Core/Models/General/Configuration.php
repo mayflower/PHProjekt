@@ -1,6 +1,6 @@
 <?php
 /**
- * General configuration model
+ * Configurations for general stuff, applied to the system.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Configurations for general stuff, applied to the system
+ * Configurations for general stuff, applied to the system.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,7 +38,7 @@
 class Core_Models_General_Configuration extends Phprojekt_ModelInformation_Default
 {
     /**
-     * Sets a fields definitions for each field
+     * Sets a fields definitions for each field.
      *
      * @return void
      */
@@ -50,6 +50,13 @@ class Core_Models_General_Configuration extends Phprojekt_ModelInformation_Defau
             'length'   => 255));
     }
 
+    /**
+     * Validate the configurations.
+     *
+     * @param array $params Array with values to save.
+     *
+     * @return string|null Error message.
+     */
     public function validateConfigurations($params)
     {
         $message = null;
@@ -64,9 +71,9 @@ class Core_Models_General_Configuration extends Phprojekt_ModelInformation_Defau
     }
 
     /**
-     * Save the configurations into the table
+     * Save the configurations into the table.
      *
-     * @param array $params $_POST fields
+     * @param array $params Array with values to save.
      *
      * @return void
      */

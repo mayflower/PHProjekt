@@ -1,6 +1,6 @@
 <?php
 /**
- * Exception class
+ * Exception class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,7 @@
  */
 
 /**
- * Framework Exception
+ * Exception class.
  *
  * @category  PHProjekt
  * @package   Cleaner
@@ -36,9 +36,9 @@
 class Cleaner_Exception extends Exception
 {
     /**
-     * Constructor of Exception
+     * Constructor of Exception.
      *
-     * @param string $message Message describing cause of exception
+     * @param string $message Message describing cause of exception.
      *
      * @return void
      */

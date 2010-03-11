@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification setting model
+ * Settings for the notifications.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Settings for the notifications
+ * Settings for the notifications.
  *
  * @category   PHProjekt
  * @package    Application
@@ -37,13 +37,28 @@
  */
 class Core_Models_Notification_Setting extends Phprojekt_ModelInformation_Default
 {
-    const FIELD_LOGIN_LOGOUT  = 'loginlogout';
-    const FIELD_DATARECORDS   = 'datarecords';
-    const FIELD_USERGENERATED = 'usergenerated';
-    const FIELD_ALERTS        = 'alerts';
+    /**
+     * Name for login / logut setting.
+     */
+    const FIELD_LOGIN_LOGOUT = 'loginlogout';
 
     /**
-     * Sets a fields definitions for each field
+     * Name for Data records setting.
+     */
+    const FIELD_DATARECORDS = 'datarecords';
+
+    /**
+     * Name for User generated setting.
+     */
+    const FIELD_USERGENERATED = 'usergenerated';
+
+    /**
+     * Name for Alerts setting.
+     */
+    const FIELD_ALERTS = 'alerts';
+
+    /**
+     * Sets a fields definitions for each field.
      *
      * @return void
      */
@@ -73,13 +88,13 @@ class Core_Models_Notification_Setting extends Phprojekt_ModelInformation_Defaul
     }
 
     /**
-     * Collect all the values of the settings and return it in one row
+     * Collect all the values of the settings and return it in one row.
      *
-     * @param integer $moduleId The current moduleId
-     * @param array   $metadata Array with all the fields
-     * @param integer $userId   The user id, if is not setted, the current user is used
+     * @param integer $moduleId The current moduleId.
+     * @param array   $metadata Array with all the fields.
+     * @param integer $userId   The user ID, if is not setted, the current user is used.
      *
-     * @return array
+     * @return array Array with all the settings and values.
      */
     public function getList($moduleId, $metadata, $userId = null)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Note model class
+ * Note model class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Note model class
+ * Note model class.
  *
  * @category   PHProjekt
  * @package    Application
@@ -38,7 +38,7 @@
 class Note_Models_Note extends Phprojekt_Item_Abstract
 {
     /**
-     * Field for display in the search results
+     * Field for display in the search results.
      *
      * @var string
      */

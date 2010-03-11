@@ -1,6 +1,6 @@
 <?php
 /**
- * DbParser Class for process the json db data
+ * DbParser Class for process the json db data.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * DbParser Class for process the json db data
+ * DbParser Class for process the json db data.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,40 +38,48 @@
 class Phprojekt_DbParser
 {
     /**
-     * Class for manage the db transactions
+     * Class for manage the db transactions.
      *
      * @var Phprojekt_Table
      */
     private $_tableManager = null;
 
     /**
-     * Use the extra data content or not
+     * Use the extra data content or not.
      *
      * @var boolean
      */
     private $_useExtraData = false;
 
     /**
-     * Keep relations data for process it at the end
+     * Keep relations data for process it at the end.
      *
      * @var array
      */
     private $_relations = array();
 
     /**
-     * Current db connection
+     * Current db connection.
      *
      * @var Zend_Db
      */
     private $_db = null;
 
     /**
-     * Use log file
+     * Use log file.
      *
      * @var boolean
      */
     protected $_log = false;
 
+    /**
+     * Constructor.
+     *
+     * @param array $options Array with options.
+     * @param array $db      Configuration for Zend_Db_Table.
+     *
+     * @return void
+     */
     public function __construct($options = array(), $db = null)
     {
         if (null === $db) {
@@ -87,6 +95,11 @@ class Phprojekt_DbParser
         }
     }
 
+    /**
+     * Activate the debug.
+     *
+     * @return void
+     */
     public function activeDebugLog()
     {
         $this->_log = true;
@@ -94,13 +107,11 @@ class Phprojekt_DbParser
 
     /**
      * Read all the data from the /$module/Sql/Db.json files,
-     * decode the json data and process it
+     * decode the json data and process it.
      *
-     * The function will call the parse process by each module
+     * The function will call the parse process by each module.
      *
-     * return one array
-     *
-     * @return array
+     * @return void
      */
     public function parseData($coreDirectory = null)
     {
@@ -185,13 +196,13 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Parse the data content
-     * Use only the correct version data
+     * Parse the data content.
+     * Use only the correct version data.
      *
-     * Update the module with the new version
+     * Update the module with the new version.
      *
-     * @param array  $data   Array with all the version and data for parse
-     * @param string $module Current module of the data
+     * @param array  $data   Array with all the version and data for parse.
+     * @param string $module Current module of the data.
      *
      * @return void
      */
@@ -229,11 +240,11 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Return the version of the module
+     * Return the version of the module.
      *
-     * @param string $module The name of the module
+     * @param string $module The name of the module.
      *
-     * @return string
+     * @return string Version string.
      */
     private function _getModuleVersion($module)
     {
@@ -258,10 +269,10 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Save the version for the module
+     * Save the version for the module.
      *
-     * @param string $module  The name of the module
-     * @param string $version The current version for save
+     * @param string $module  The name of the module.
+     * @param string $version The current version for save.
      *
      * @return void
      */
@@ -278,9 +289,11 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Sort the array using the version as key
+     * Sort the array using the version as key.
      *
-     * @return array
+     * @param array $data Array with all the version and data for parse.
+     *
+     * @return array Sorted array.
      */
     private function _sortData($data)
     {
@@ -291,9 +304,12 @@ class Phprojekt_DbParser
 
     /**
      * Delete all the version higher than the current one
-     * and the version lower than the current module version
+     * and the version lower than the current module version.
      *
-     * @return array
+     * @param string $module Current module of the data.
+     * @param array  $data   Array with all the version and data for parse.
+     *
+     * @return array Array with only the correct versions.
      */
     private function _getVersionsForProcess($module, $data)
     {
@@ -311,17 +327,17 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Parse and process the structure content
+     * Parse and process the structure content.
      *
-     * create => create the table
+     * create => create the table.
      *
-     * add    => add a new field
-     * update => make some changes into one field
-     * delete => delete a field
+     * add    => add a new field.
+     * update => make some changes into one field.
+     * delete => delete a field.
      *
-     * drop   => drop the table
+     * drop   => drop the table.
      *
-     * @param array $array Array from the json data with the table data
+     * @param array $array Array from the json data with the table data.
      *
      * @return void
      */
@@ -367,7 +383,15 @@ class Phprojekt_DbParser
         }
     }
 
-    private function _convertModulesId($data) {
+    /**
+     * Convert the values ##xxx_moduleId## with the moduleId value.
+     *
+     * @param array $data Array from the json data with the table data.
+     *
+     * @return array The array with the values replaced.
+     */
+    private function _convertModulesId($data)
+    {
         foreach ($data as $key => $value) {
             if (preg_match("/^##([A-Za-z]+)_moduleId##$/", $value, $matches)) {
                 $data[$key] = $this->_getModuleId($matches[1]);
@@ -376,16 +400,17 @@ class Phprojekt_DbParser
 
         return $data;
     }
+
     /**
-     * Parse and process the data content
+     * Parse and process the data content.
      *
-     * insert => insert rows
-     * update => make some changes into the rows
-     * delete => delete rows
+     * insert => insert rows.
+     * update => make some changes into the rows.
+     * delete => delete rows.
      *
      * The values ##Module_id## are reemplaces with the moduleId value
      *
-     * @param array $array Array from the json data with the changes
+     * @param array $array Array from the json data with the changes.
      *
      * @return void
      */
@@ -436,12 +461,12 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Convert some ##values## into the real one
+     * Convert some ##values## into the real one.
      *
-     * @param array $array Array with all the data
-     * @param int   $newId New id generated
+     * @param array   $array Array with all the data.
+     * @param integer $newId New id generated.
      *
-     * @return array
+     * @return array Array with the converted values.
      */
     private function _convertSpecialValues($array, $newId)
     {
@@ -498,11 +523,11 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Return all the id of one module
+     * Return all the IDs of one module.
      *
-     * @param string $module The module name
+     * @param string $module The module name.
      *
-     * @return array
+     * @return array Array with IDs.
      */
     private function _getAllRows($module)
     {
@@ -530,12 +555,12 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Return the keys of the table
-     * (id by default and all the "primary" fields)
+     * Return the keys of the table.
+     * (id by default and all the "primary" fields).
      *
-     * @param array $fields Array with all the fields data
+     * @param array $fields Array with all the fields data.
      *
-     * @return array
+     * @return array Array with keys (primary key, and unique).
      */
     private function _getKeys($fields)
     {
@@ -558,11 +583,11 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Convert the json data into Phprojekt_Table data for fields
+     * Convert the json data into Phprojekt_Table data for fields.
      *
-     * @param array $fields Array with all the fields data
+     * @param array $fields Array with all the fields data.
      *
-     * @return array
+     * @return array Array with data for use with Phprojekt_Table.
      */
     private function _convertFieldsData($fields)
     {
@@ -622,11 +647,11 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Return the id of the module in the module table
+     * Return the ID of the module in the module table.
      *
-     * @param string $module Name of the module
+     * @param string $module Name of the module.
      *
-     * @return int
+     * @return integer The module ID.
      */
     private function _getModuleId($module)
     {
@@ -639,11 +664,11 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Make a query into the module table
-     * The function make the query directly for avoid caches
+     * Make a query into the module table.
+     * The function make the query directly for avoid caches.
      *
-     * @param string $module Name of the module
-     * @param string $field  Name of the field for get
+     * @param string $module Name of the module.
+     * @param string $field  Name of the field for get.
      *
      * @return mix
      */

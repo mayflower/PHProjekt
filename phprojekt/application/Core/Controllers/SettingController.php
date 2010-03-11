@@ -1,6 +1,6 @@
 <?php
 /**
- * Setting Module Controller for PHProjekt 6.0
+ * Setting Module Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Setting Module Controller for PHProjekt 6.0
+ * Setting Module Controller.
  *
  * @category   PHProjekt
  * @package    Application

@@ -1,6 +1,6 @@
 <?php
 /**
- * Convert a value for save in the table, and get it for the api
+ * Convert a value for save in the table, and get it for the api.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Convert a value for save in the table, and get it for the api
+ * Convert a value for save in the table, and get it for the api.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,12 +38,12 @@
 class Phprojekt_Converter_Value
 {
     /**
-     * Return a value for set, using some validations from the table data
+     * Return a value for set, using some validations from the table data.
      *
-     * @param string $type  Type of field
-     * @param mixed  $value Value to transform
+     * @param string $type  Type of field.
+     * @param mixed  $value Value to transform.
      *
-     * @return mixed
+     * @return mixed Sanitized value.
      */
     public static function set($type, $value)
     {
@@ -92,12 +92,12 @@ class Phprojekt_Converter_Value
     }
 
     /**
-     * Return a value for get, using some validations from the table data
+     * Return a value for get, using some validations from the table data.
      *
-     * @param string $type  Type of field
-     * @param mixed  $value Value to transform
+     * @param string $type  Type of field.
+     * @param mixed  $value Value to transform.
      *
-     * @return mixed
+     * @return mixed Value of the var.
      */
     public static function get($type, $value)
     {

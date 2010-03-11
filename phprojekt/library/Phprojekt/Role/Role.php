@@ -1,6 +1,6 @@
 <?php
 /**
- * Role class for PHProjekt 6.0
+ * Role class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Phprojekt_Role for PHProjekt 6.0
+ * Role class.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -37,40 +37,47 @@
  */
 class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
+    /**
+     * Has many declration.
+     *
+     * @var array
+     */
     public $hasMany = array('modulePermissions' => array('classname' => 'Phprojekt_Role_RoleModulePermissions'));
 
     /**
      * Id of user
-     * @var int $user
+     *
+     * @var integer
      */
     protected $_user = 0;
 
     /**
-     * Keep the found project roles in cache
+     * Keep the found project roles in cache.
      *
      * @var array
      */
     private $_projectRoles = array();
 
     /**
-     * The standard information manager with hardcoded
-     * field definitions
+     * The standard information manager with hardcoded field definitions.
      *
      * @var Phprojekt_ModelInformation_Interface
      */
     protected $_informationManager;
 
     /**
-     * Validate object
+     * Validate object.
      *
      * @var Phprojekt_Model_Validate
      */
     protected $_validate = null;
 
     /**
-     * Constructor for Groups
+     * Constructor.
      *
-     * @param Zend_Db $db database
+     * @param Zend_Db Configuration for Zend_Db_Table.
+     *
+     * @return void
      */
     public function __construct($db = null)
     {
@@ -93,11 +100,11 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Get the information manager
+     * Get the information manager.
      *
      * @see Phprojekt_Model_Interface::getInformation()
      *
-     * @return Phprojekt_ModelInformation_Interface
+     * @return Phprojekt_ModelInformation_Interface An instance of Phprojekt_ModelInformation_Interface.
      */
     public function getInformation()
     {
@@ -105,9 +112,9 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Save the rights for each modules
+     * Save the rights for each modules.
      *
-     * @param array $rights Array with the modules and the bitmask access
+     * @param array $rights Array with the modules and the bitmask access.
      *
      * @return void
      */
@@ -131,9 +138,9 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Validate the current record
+     * Validate the current record.
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function recordValidate()
     {
@@ -144,9 +151,9 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
-     * Return the error data
+     * Return the error data.
      *
-     * @return array
+     * @return array Array with errors.
      */
     public function getError()
     {
@@ -155,7 +162,7 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
 
     /**
      * Delete a role and all his relations.
-     * It prevents deletion of role 1 -admin role-
+     * It prevents deletion of role 1 -admin role-.
      *
      * @return void
      */

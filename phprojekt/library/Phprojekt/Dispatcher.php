@@ -1,6 +1,6 @@
 <?php
 /**
- * Phprojekt own dispatcher to handle customized controller names
+ * Phprojekt own dispatcher.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Phprojekt own dispatcher
+ * Phprojekt own dispatcher.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -46,8 +46,8 @@ class Phprojekt_Dispatcher extends Zend_Controller_Dispatcher_Standard
      * All non-alphanumeric characters are removed.
      * The function works with calls like jsonSearch instead of jsonsearch.
      *
-     * @param string  $unformatted String
-     * @param boolean $isAction    Defaults to false
+     * @param string  $unformatted String.
+     * @param boolean $isAction    Defaults to false.
      *
      * @return string
      */

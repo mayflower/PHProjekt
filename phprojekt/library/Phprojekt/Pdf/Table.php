@@ -1,6 +1,6 @@
 <?php
 /**
-  * Phprojekt Class for PFD table creation
+ * Phprojekt Class for PFD table creation.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
-  * Phprojekt Class for PFD table creation
+ * Phprojekt Class for PFD table creation.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,60 +38,62 @@
 class Phprojekt_Pdf_Table
 {
     /**
-     * Start position X of the table in the page
+     * Start position X of the table in the page.
      *
-     * @var int
+     * @var integer
      */
     public $x;
 
     /**
-     * Start position Y of the table in the page
+     * Start position Y of the table in the page.
      *
-     * @var int
+     * @var integer
      */
     public $y;
 
     /**
-     * Table width
+     * Table width.
      *
-     * @var int
+     * @var integer
      */
     public $width;
 
     /**
-     * Border site of the table
+     * Border site of the table.
      *
      * @var float
      */
     public $border = 0.5;
 
     /**
-     * PDF page object
+     * PDF page object.
      *
      * @var Phprojekt_Pdf_Page
      */
     public $page;
 
     /**
-     * Array of PDF pages in case table couldn't fit to one page
+     * Array of PDF pages in case table couldn't fit to one page.
      *
      * @var array
      */
     protected $_pages = array();
 
     /**
-     * List of row in the table
+     * List of row in the table.
      *
      * @var array
      */
     protected $_rows = array();
 
     /**
-     * Contructor
+     * Contructor.
      *
      * @param Phprojekt_Pdf_Page $page
-     * @param int                $x    Position in the page
-     * @param int                $y    Position in the page
+     * @param integer            $x    Position in the page.
+     * @param integer            $y    Position in the page.
+     *
+     * @return void
      */
     function __construct($page, $x, $y)
     {
@@ -101,9 +103,11 @@ class Phprojekt_Pdf_Table
     }
 
     /**
-     * Add row to the table
+     * Add row to the table.
      *
-     * @param Phprojekt_Pdf_Table_Row $row
+     * @param Phprojekt_Pdf_Table_Row $row The row to add.
+     *
+     * @return void
      */
     public function addRow(Phprojekt_Pdf_Table_Row $row)
     {
@@ -111,9 +115,9 @@ class Phprojekt_Pdf_Table
     }
 
     /**
-     * Parse and draw table on the page
+     * Parse and draw table on the page.
      *
-     * @return array List of pages with table
+     * @return array List of pages with table.
      */
     public function render()
     {

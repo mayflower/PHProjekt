@@ -1,6 +1,6 @@
 <?php
 /**
- * Notification class for PHProjekt 6.0
+ * Notification class.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Notification class for PHProjekt 6.0
+ * Notification class.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -37,25 +37,75 @@
  */
 class Phprojekt_Notification
 {
+    /**
+     * Actions.
+     */
     const LAST_ACTION_ADD     = 'add';
     const LAST_ACTION_EDIT    = 'edit';
     const LAST_ACTION_DELETE  = 'delete';
     const LAST_ACTION_LOGOUT  = 'logout';
     const LAST_ACTION_LOGIN   = 'login';
     const LAST_ACTION_REMIND  = 'remind';
+
+    /**
+     * Transports.
+     */
     const TRANSPORT_MAIL_TEXT = 0;
     const TRANSPORT_MAIL_HTML = 1;
 
+    /**
+     * Last history data for one item.
+     *
+     * @var array
+     */
     protected $_lastHistory;
-    protected $_frontendMessage;
-    protected $_controllProcess = null;
-    protected $_model           = null;
-    protected $_validUntil      = null;
-    protected $_validFrom       = null;
-    protected $_recipients      = null;
 
     /**
-     * Initialize new object
+     * FrontendMessage class.
+     *
+     * @var Phprojekt_Notification_FrontendMessage
+     */
+    protected $_frontendMessage;
+
+    /**
+     * Process 'add', 'delete' or 'update'.
+     *
+     * @var string
+     */
+    protected $_controllProcess = null;
+
+    /**
+     * Model to use.
+     *
+     * @var Phprojekt_Model_Interface
+     */
+    protected $_model = null;
+
+    /**
+     * Datetime until a frontend message is valid.
+     *
+     * @var integer
+     */
+    protected $_validUntil = null;
+
+    /**
+     * Datetime from a frontend message is valid.
+     *
+     * @var integer
+     */
+    protected $_validFrom = null;
+
+    /**
+     * List of recipients.
+     *
+     * @var array
+     */
+    protected $_recipients = null;
+
+    /**
+     * Initialize new object.
+     *
+     * @return void
      */
     public function __construct()
     {
@@ -63,7 +113,9 @@ class Phprojekt_Notification
     }
 
     /**
-     * Stores in the private variable $_model the received model
+     * Stores in the private variable $_model the received model.
+     *
+     * @param Phprojekt_Model_Interface $model Model to use.
      *
      * @return void
      */
@@ -75,9 +127,13 @@ class Phprojekt_Notification
     /**
      * Sends an notification through the indicated transport,
      * the contents are made according to a specific module and a specific event.
+     *
      * Previous to this function it has to be called setModel
      * so that the internal variable _model has the model where to obtain the data from.
+     *
      * Depending on the indicated transport the notification will be sent currently via text or html email.
+     *
+     * @param integer $transport Type of transport to use.
      *
      * @return void
      */
@@ -145,9 +201,9 @@ class Phprojekt_Notification
     }
 
     /**
-     * Return the id of the sender, that's the logged user
+     * Return the id of the sender, that's the logged user.
      *
-     * @return int
+     * @return integer Current user id.
      */
     public function getFrom()
     {
@@ -156,10 +212,11 @@ class Phprojekt_Notification
 
     /**
      * Gets only the recipients with at least a 'read' right.
-     * If no recipient is given, returns an empty array.
-     * Exclude the current user
      *
-     * @return array
+     * If no recipient is given, returns an empty array.
+     * Exclude the current user.
+     *
+     * @return array Array with user IDs.
      */
     public function getTo()
     {
@@ -179,9 +236,10 @@ class Phprojekt_Notification
     }
 
     /**
-     * Returns the subject of the notification according to the current module, stored in $this->_model.
+     * Returns the subject of the notification
+     * according to the current module, stored in $this->_model.
      *
-     * @return string
+     * @return string Subject.
      */
     public function getSubject()
     {
@@ -195,10 +253,10 @@ class Phprojekt_Notification
     }
 
     /**
-     * Returns some params for the body of the notification according to the current module and the event we are
-     * informing to the users.
+     * Returns some params for the body of the notification
+     * according to the current module and the event we are informing to the users.
      *
-     * @return array
+     * @return array Array with options.
      */
     public function getBodyParams()
     {
@@ -231,11 +289,11 @@ class Phprojekt_Notification
     }
 
     /**
-     * Returns the fields part of the Notification body
+     * Returns the fields part of the Notification body.
      *
-     * @param Zend_Locale $lang Locale for use in translations
+     * @param Zend_Locale $lang Locale for use in translations.
      *
-     * @return array
+     * @return array Array with 'field', 'label' and 'value'.
      */
     public function getBodyFields($lang)
     {
@@ -288,14 +346,14 @@ class Phprojekt_Notification
     }
 
     /**
-     * Goes into the contents of the 'changes' part of the Notification body (from internal variable _lastHistory)
-     * and checks for contents that have to be translated if the $translate option is true,
-     * then returns the final array.
+     * Goes into the contents of the 'changes' part of the Notification body
+     * (from internal variable _lastHistory) and checks for contents that have to be translated
+     * if the $translate option is true, then returns the final array.
      *
-     * @param Zend_Locale $lang Locale for use in translations
-     * @param boolean     $translate Translate the fields or not
+     * @param Zend_Locale $lang Locale for use in translations.
+     * @param boolean     $translate Translate the fields or not.
      *
-     * @return array
+     * @return array Array with changes.
      */
     public function getBodyChanges($lang = null, $translate = true)
     {
@@ -360,7 +418,7 @@ class Phprojekt_Notification
      * Calls the saveFrontendMessage of the FrontendMessage class
      * to save a message to the corresponding table.
      *
-     * @return boolean
+     * @return boolean True for a sucessful save.
      */
     public function saveFrontendMessage()
     {
@@ -404,7 +462,7 @@ class Phprojekt_Notification
     /**
      * Delivers the description to a message.
      *
-     * @return string
+     * @return string Description string.
      */
     public function getDescription()
     {
@@ -439,9 +497,9 @@ class Phprojekt_Notification
     }
 
     /**
-     * Setter for the controll process,
+     * Setter for the controll process.
      *
-     * @param string $customProcess
+     * @param string $customProcess Process ('add', 'delete' or 'update').
      *
      * @return void
      */
@@ -453,7 +511,7 @@ class Phprojekt_Notification
     /**
      * Getting the standard process like 'add', 'delete' or 'update'.
      *
-     * @return string
+     * @return string Process.
      */
     public function getProcess()
     {
@@ -469,10 +527,11 @@ class Phprojekt_Notification
     }
 
     /**
-     * Gets the project id.
+     * Gets the project ID.
+     *
      * Returns the default value for the root project if no model was instanciated.
      *
-     * @return int
+     * @return integer The project ID.
      */
     public function getProjectId()
     {
@@ -487,9 +546,9 @@ class Phprojekt_Notification
     }
 
     /**
-     * Gets the module id.
+     * Gets the module ID.
      *
-     * @return int
+     * @return integer The module ID.
      */
     public function getModuleId()
     {
@@ -507,7 +566,7 @@ class Phprojekt_Notification
     /**
      * Gets the item name.
      *
-     * @return string
+     * @return string Item display.
      */
     public function getItemName()
     {
@@ -521,9 +580,9 @@ class Phprojekt_Notification
     }
 
     /**
-     * Gets the item id.
+     * Gets the item ID.
      *
-     * @return int
+     * @return integer The item ID.
      */
     public function getItemId()
     {
@@ -541,7 +600,7 @@ class Phprojekt_Notification
      * Gets the datetime from which the frontend message is valid,
      * typically the moment where the message will be created.
      *
-     * @return string
+     * @return string Datetime format.
      */
     public function getValidFrom()
     {
@@ -554,11 +613,13 @@ class Phprojekt_Notification
 
     /**
      * Gets the datetime until a frontend message is valid.
+     *
      * This is from special interest in the calendar module,
      * where the user can add meetings and other time relevant events.
+     *
      * This time is needed to calculate the 'alarm' before an event starts.
      *
-     * @return string
+     * @return string Datetime format.
      */
     public function getValidUntil()
     {
@@ -575,9 +636,10 @@ class Phprojekt_Notification
     /**
      * Gets only the recipients with at least a 'read' right
      * and checks if the user has disabled/enabled the settings for saving the messages.
+     *
      * If no recipient is given, returns an empty array.
      *
-     * @return array
+     * @return array Array with user IDs.
      */
     public function getRecipients()
     {
@@ -618,7 +680,7 @@ class Phprojekt_Notification
     /**
      * Returns the key from the settings regarding to the given process.
      *
-     *  @return string
+     *  @return string Setting name.
      */
     public function mapProcessToSettings()
     {
@@ -648,6 +710,9 @@ class Phprojekt_Notification
 
     /**
      * Returns the setting value from the notification tab.
+     *
+     * @param string  $settingName Setting name to get.
+     * @param integer $userId      User ID for get the setting.
      *
      * @return mixed Returns the setting value as integer or null if setting is not saved to the database yet.
      */
@@ -680,11 +745,12 @@ class Phprojekt_Notification
     }
 
     /**
-     * Filters the users from the recipients list without the settings for receiving one of the frontend messages.
+     * Filters the users from the recipients list without the settings
+     * for receiving one of the frontend messages.
      *
-     * @param array $recipients
+     * @param array $recipients Array with user IDs.
      *
-     * @return array
+     * @return array Filter array.
      */
     public function filterRecipientsToSettings(array $recipients)
     {

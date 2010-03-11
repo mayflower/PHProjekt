@@ -1,6 +1,9 @@
 <?php
 /**
- * Class for manage the words-module relation
+ * Class for manage the words-module relation.
+ *
+ * The class provide the functions for save/delete/search
+ * the words - module relation in the SearchWordsModule table.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +26,10 @@
  */
 
 /**
+ * Class for manage the words-module relation.
+ *
  * The class provide the functions for save/delete/search
- * the words - module relation in the SearchWordsModule table
+ * the words - module relation in the SearchWordsModule table.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -39,18 +44,16 @@
 class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
 {
     /**
-     * Name of the table
+     * Name of the table.
      *
      * @var string
      */
     protected $_name = 'search_word_module';
 
     /**
-     * Chaneg the tablename for use with the Zend db class
+     * Constructor.
      *
-     * This function is only for PHProjekt6
-     *
-     * @param array $config The config array for the database
+     * @return void
      */
     public function __construct()
     {
@@ -60,14 +63,13 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Index a string with the moduleId and the item Id
+     * Index a string with the moduleId and the item Id.
      * First check if exists, if not, insert it.
-     * The function get a string and separate into many words
-     * And store each of them.
+     * The function get a string and separate into many words and store each of them.
      *
-     * @param integer $moduleId The moduleId to store
-     * @param integer $itemId   The item Id to store
-     * @param array   $wordsId  Array with wordsId
+     * @param integer $moduleId The module ID to store.
+     * @param integer $itemId   The item ID to store.
+     * @param array   $wordsId  Array with wordsId.
      *
      * @return void
      */
@@ -79,12 +81,12 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Delete all the entries for one object
+     * Delete all the entries for one object.
      *
-     * @param integer $moduleId The moduleId to delete
-     * @param integer $itemId   The item Id to delete
+     * @param integer $moduleId The module ID to delete.
+     * @param integer $itemId   The item ID to delete.
      *
-     * @return array WordIds
+     * @return array Array with word IDs.
      */
     public function deleteWords($moduleId, $itemId)
     {
@@ -101,13 +103,13 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Get all the modules-item with the wordId
+     * Get all the modules-item with the wordId.
      *
-     * @param array   $words    Array with words Ids
-     * @param string  $operator Query operator
-     * @param integer $count    Limit query
+     * @param array   $words    Array with words IDs.
+     * @param string  $operator Query operator.
+     * @param integer $count    Limit query.
      *
-     * @return array
+     * @return array Array of results.
      */
     public function searchModuleByWordId($words, $operator = 'AND', $count = 0)
     {
@@ -191,13 +193,13 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Save the new word
+     * Save the new word.
      *
-     * This function use the Zend_DB insert
+     * This function use the Zend_DB insert.
      *
-     * @param integer $moduleId The moduleId to store
-     * @param integer $itemId   The item Id to store
-     * @param integer $wordId   The word Id to store
+     * @param integer $moduleId The module ID to store.
+     * @param integer $itemId   The item ID to store.
+     * @param integer $wordId   The word ID to store.
      *
      * @return void
      */

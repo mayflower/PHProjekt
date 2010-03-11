@@ -1,6 +1,6 @@
 <?php
 /**
- * Convert a time using the timezone
+ * Convert a time using the timezone.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Convert a time using the timezone
+ * Convert a time using the timezone.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,11 +38,11 @@
 class Phprojekt_Converter_Time
 {
     /**
-     * Convert a user time to UTC and return the timestamp
+     * Convert a user time to UTC and return the timestamp.
      *
-     * @param string $value Date value to convert
+     * @param string $value Date value to convert.
      *
-     * @return integer
+     * @return integer Unix timestamp value.
      */
     public static function userToUtc($value)
     {
@@ -50,11 +50,11 @@ class Phprojekt_Converter_Time
     }
 
     /**
-     * Convert a UTC time to user and return the timestamp
+     * Convert a UTC time to user and return the timestamp.
      *
-     * @param string $value Date value to convert
+     * @param string $value Date value to convert.
      *
-     * @return integer
+     * @return integer Unix timestamp value.
      */
     public static function utcToUser($value)
     {
@@ -62,12 +62,12 @@ class Phprojekt_Converter_Time
     }
 
     /**
-     * Convert a UTC time to user or user to UTC and return the timestamp
+     * Convert a UTC time to user or user to UTC and return the timestamp.
      *
-     * @param string  $value Date value to convert
-     * @param integer $side  1 for utc to user, -1 for user to utc
+     * @param string  $value Date value to convert.
+     * @param integer $side  1 for utc to user, -1 for user to utc.
      *
-     * @return integer
+     * @return integer Unix timestamp value.
      */
     public static function convert($value, $side)
     {
@@ -87,11 +87,11 @@ class Phprojekt_Converter_Time
     }
 
     /**
-     * Convert a number of minutes into HH:mm
+     * Convert a number of minutes into HH:mm.
      *
-     * @param integer $minutes The number of minutes
+     * @param integer $minutes The number of minutes.
      *
-     * @return string
+     * @return string Time format.
      */
     public static function convertMinutesToHours($minutes)
     {
@@ -109,9 +109,9 @@ class Phprojekt_Converter_Time
     }
 
     /**
-     * Return the timeZones with the P6 values
+     * Return the timeZones with the P6 values.
      *
-     * @return array
+     * @return array Array with the P6 timeZones.
      */
     public static function getTimeZones()
     {

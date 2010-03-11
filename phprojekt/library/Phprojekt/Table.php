@@ -1,6 +1,8 @@
 <?php
 /**
- * Table udpater for setup and database manager
+ * Table udpater for setup and database manager.
+ *
+ * The class provide the functions for create and alter tables on database.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +25,9 @@
  */
 
 /**
- * The class provide the functions for create and alter tables on database
+ * Table udpater for setup and database manager.
+ *
+ * The class provide the functions for create and alter tables on database.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,37 +42,39 @@
 class Phprojekt_Table
 {
     /**
-     * Db connection
+     * Db connection.
      *
      * @var string
      */
     protected $_db = null;
 
     /**
-     * Db type
+     * Db type.
      *
      * @var string
      */
     protected $_dbType = null;
 
     /**
-     * Exclude system fields
+     * Exclude system fields.
      *
      * @var array
      */
     protected $_excludeFields = array('id', 'ownerId');
 
     /**
-     * Use log file
+     * Use log file.
      *
      * @var boolean
      */
     protected $_log = false;
 
     /**
-     * Initialize a new table admin
+     * Initialize a new table admin.
      *
-     * @param array $db Db configurations
+     * @param array $db Configuration for Zend_Db_Table.
+     *
+     * @return void
      */
     public function __construct($db = null)
     {
@@ -80,21 +86,26 @@ class Phprojekt_Table
         $this->_dbType = strtolower(substr($this->_dbType, strpos($this->_dbType, "Pdo") + 4));
     }
 
+    /**
+     * Active the debug log.
+     *
+     * @return void
+     */
     public function activeDebugLog()
     {
         $this->_log = true;
     }
 
     /**
-     * Creates a table
+     * Creates a table.
      *
-     * @param $tableName String table name
+     * @param $tableName String table name.
      * @param $fields    Array with fieldnames as key
-     *                   Options: 'type', 'length', 'null', 'default')
-     * @param $keys      Array with keys (each array needs to have the key name (primary key, unique, etc) and an array
-     *                   whit the key fields.
+     *                   Options: 'type', 'length', 'null', 'default').
+     * @param $keys      Array with keys (each array needs to have the key name
+     *                   (primary key, unique, etc) and an array whit the key fields.
      *
-     * @return boolean
+     * @return boolean True on a sucessful create.
      */
     public function createTable($tableName, $fields, $keys = array())
     {
@@ -151,14 +162,14 @@ class Phprojekt_Table
     }
 
     /**
-     * Add a field on a table
+     * Add a field on a table.
      *
-     * @param $tableName       String table name
+     * @param $tableName       String table name.
      * @param $fieldDefinition Array with field definition
-     *                         Options: 'name', 'type', 'length', 'null', 'default')
-     * @param $position        After position
+     *                         Options: 'name', 'type', 'length', 'null', 'default').
+     * @param $position        After position.
      *
-     * @return boolean
+     * @return boolean True on a sucessful add.
      */
     public function addField($tableName, $fieldDefinition, $position = null)
     {
@@ -200,13 +211,13 @@ class Phprojekt_Table
     }
 
     /**
-     * Change the name and parameteres of a field
+     * Change the name and parameteres of a field.
      *
-     * @param $tableName       String table name
+     * @param $tableName       String table name.
      * @param $fieldDefinition Array with field definition
-     *                         Options: 'oldName', 'name', 'type', 'length', 'null', 'default')
+     *                         Options: 'oldName', 'name', 'type', 'length', 'null', 'default').
      *
-     * @return boolean
+     * @return boolean True on a sucessful change.
      */
     public function changeField($tableName, $fieldDefinition, $position = null)
     {
@@ -246,13 +257,13 @@ class Phprojekt_Table
     }
 
     /**
-     * Modifies a field on a table
+     * Modifies a field on a table.
      *
-     * @param $tableName       String table name
+     * @param $tableName       String table name.
      * @param $fieldDefinition Array with field definition
-     *                         Options: 'oldName', 'name', 'type', 'length', 'null', 'default')
+     *                         Options: 'oldName', 'name', 'type', 'length', 'null', 'default').
      *
-     * @return boolean
+     * @return boolean True on a sucessful modify.
      */
     public function modifyField($tableName, $fieldDefinition, $position = null)
     {
@@ -293,13 +304,13 @@ class Phprojekt_Table
     }
 
     /**
-     * Deletes a field on a table
+     * Deletes a field on a table.
      *
-     * @param $tableName       String table name
+     * @param $tableName       String table name.
      * @param $fieldDefinition Array with field definition
-     *                         Options: 'name', 'type', 'length', 'null', 'default')
+     *                         Options: 'name', 'type', 'length', 'null', 'default').
      *
-     * @return boolean
+     * @return boolean True on a sucessful delete.
      */
     public function deleteField($tableName, $fieldDefinition)
     {
@@ -326,9 +337,9 @@ class Phprojekt_Table
     /**
      * Return an string with the field definition for each table type.
      *
-     * @param array $fieldDefinition Definitions for the field
+     * @param array $fieldDefinition Definitions for the field.
      *
-     * @return string
+     * @return string Sql clause.
      */
     private function _getTypeDefinition($fieldDefinition)
     {
@@ -414,14 +425,15 @@ class Phprojekt_Table
     }
 
     /**
-     * Check the table and return the field
-     * If the table don`t exist, try to create it
+     * Check the table and return the field.
      *
-     * @param string $tableName The name of the table
-     * @param array  $fields    The fields definitions
-     * @param array  $keys      The PRIMARY KEY values
+     * If the table don`t exist, try to create it.
      *
-     * @return array
+     * @param string $tableName The name of the table.
+     * @param array  $fields    The fields definitions.
+     * @param array  $keys      The PRIMARY KEY values.
+     *
+     * @return array Database definitions.
      */
     public function getTableFields($tableName, $fields = array(), $keys = array('primary key' => array('id')))
     {
@@ -438,11 +450,11 @@ class Phprojekt_Table
     }
 
     /**
-     * Delete the table
+     * Delete the table.
      *
-     * @param string $tableName The name of the table
+     * @param string $tableName The name of the table.
      *
-     * @return boolean
+     * @return boolean True on a sucessful drop.
      */
     public function dropTable($tableName)
     {
@@ -461,11 +473,11 @@ class Phprojekt_Table
     }
 
     /**
-     * Checks if a table exists
+     * Checks if a table exists.
      *
-     * @param string $tableName The name of the table
+     * @param string $tableName The name of the table.
      *
-     * @return boolean
+     * @return boolean True if exists.
      */
     public function tableExists($tableName)
     {
@@ -483,12 +495,12 @@ class Phprojekt_Table
     }
 
     /**
-     * Make an insert
+     * Make an insert.
      *
-     * @param string $tableName The name of the table
-     * @param array  $data      Array with key => value data
+     * @param string $tableName The name of the table.
+     * @param array  $data      Array with key => value data.
      *
-     * @return int
+     * @return integer Last insert ID or 0.
      */
     public function insertRow($tableName, $data)
     {
@@ -502,14 +514,14 @@ class Phprojekt_Table
     }
 
     /**
-     * Make multiple inserts
+     * Make multiple inserts.
      *
-     * @param string  $tableName The name of the table
-     * @param array   $fields    Array with keys
-     * @param array   $datas     Array with values
-     * @param boolean $returnId  Return the inserted ids or not
+     * @param string  $tableName The name of the table.
+     * @param array   $fields    Array with keys.
+     * @param array   $datas     Array with values.
+     * @param boolean $returnId  Return the inserted ids or not.
      *
-     * @return array
+     * @return array Array with inserted IDs.
      */
     public function insertMultipleRows($tableName, $fields, $datas, $returnId = false)
     {
@@ -576,13 +588,13 @@ class Phprojekt_Table
     }
 
     /**
-     * Make an update
+     * Make an update.
      *
-     * @param string $tableName The name of the table
-     * @param array  $data      Array with key => value data
-     * @param string $where     Sql where
+     * @param string $tableName The name of the table.
+     * @param array  $data      Array with key => value data.
+     * @param string $where     Sql where.
      *
-     * @return boolean
+     * @return boolean True on a sucessful update.
      */
     public function updateRows($tableName, $data, $where)
     {
@@ -596,12 +608,12 @@ class Phprojekt_Table
     }
 
     /**
-     * Make a delete
+     * Make a delete.
      *
-     * @param string $tableName The name of the table
-     * @param string $where     Sql where
+     * @param string $tableName The name of the table.
+     * @param string $where     Sql where.
      *
-     * @return boolean
+     * @return boolean True on a sucessful delete.
      */
     public function deleteRows($tableName, $where)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * An item, with database manager support
+ * An item, with database manager support.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * An item, with database manager support
+ * An item, with database manager support.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -38,58 +38,60 @@
 abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
-     * Represents the database_manager class
+     * Represents the database_manager class.
      *
      * @var Phprojekt_ActiveRecord_Abstract
      */
     protected $_dbManager = null;
 
     /**
-     * Validate object
+     * Validate object.
      *
      * @var Phprojekt_Model_Validate
      */
     protected $_validate = null;
 
     /**
-     * History object
+     * History object.
      *
      * @var Phprojekt_History
      */
     protected $_history = null;
 
     /**
-     * Full text Search object
+     * Full text Search object.
      *
      * @var Phprojekt_Search_Words
      */
     protected $_search = null;
 
     /**
-     * Rights class object
+     * Rights class object.
      *
      * @var array
      */
     protected $_rights = null;
 
     /**
-     * Field for display in the search results
+     * Field for display in the search results.
      *
      * @var string
      */
     public $searchFirstDisplayField = 'title';
 
     /**
-     * Field for display in the search results
+     * Field for display in the search results.
      *
      * @var string
      */
     public $searchSecondDisplayField = 'notes';
 
     /**
-     * Initialize new object
+     * Initialize new object.
      *
-     * @param array $db Configuration for Zend_Db_Table
+     * @param array $db Configuration for Zend_Db_Table.
+     *
+     * @return void
      */
     public function __construct($db = null)
     {
@@ -117,9 +119,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Returns the database manager instance used by this phprojekt item
+     * Returns the database manager instance used by this phprojekt item.
      *
-     * @return Phprojekt_DatabaseManager
+     * @return Phprojekt_DatabaseManager An instance of Phprojekt_DatabaseManager.
      */
     public function getInformation()
     {
@@ -127,9 +129,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Returns the notification instance used by this phprojekt item
+     * Returns the notification instance used by this phprojekt item.
      *
-     * @return Phprojekt_Notification
+     * @return Phprojekt_Notification An intance of Phprojekt_Notification.
      */
     public function getNotification()
     {
@@ -140,21 +142,22 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Enter description here...
+     * Returns the field information of the item.
      *
-     * @return Phprojekt_DatabaseManager_Field
+     * @return Phprojekt_DatabaseManager_Field An intance of Phprojekt_DatabaseManager_Field.
      */
     public function current()
     {
         $key = $this->convertVarFromSql($this->key());
+
         return new Phprojekt_DatabaseManager_Field($this->getInformation(), $key, parent::current());
     }
 
     /**
-     * Assign a value to a var using some validations from the table data
+     * Assign a value to a var using some validations from the table data.
      *
-     * @param string $varname Name of the var to assign
-     * @param mixed  $value   Value for assign to the var
+     * @param string $varname Name of the var to assign.
+     * @param mixed  $value   Value for assign to the var.
      *
      * @return void
      */
@@ -174,9 +177,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Return if the values are valid or not
+     * Return if the values are valid or not.
      *
-     * @return boolean
+     * @return boolean True for valid.
      */
     public function recordValidate()
     {
@@ -188,11 +191,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
     /**
      * Get a value of a var.
-     * Is the var is a float, return the locale float
+     * Is the var is a float, return the locale float.
      *
-     * @param string $varname Name of the var to assign
+     * @param string $varname Name of the var to assign.
      *
-     * @return mixed
+     * @return mixed Value of the var.
      */
     public function __get($varname)
     {
@@ -209,9 +212,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Return the error data
+     * Return the error data.
      *
-     * @return array
+     * @return array Array with errors.
      */
     public function getError()
     {
@@ -219,7 +222,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Extension of the Abstract Record to save the history
+     * Extension of the Abstract Record to save the history.
      *
      * @return void
      */
@@ -240,7 +243,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Use directly the the Abstract Record to don't save the history or search words
+     * Use directly the the Abstract Record to don't save the history or search words.
      *
      * @return void
      */
@@ -250,7 +253,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Extension of the Abstract Record to delete an item
+     * Extension of the Abstract Record to delete an item.
      *
      * @return void
      */
@@ -262,6 +265,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $this->_history->saveFields($this, 'delete');
         $this->_search->deleteObjectItem($this);
         $this->_rights->saveRights($moduleId, $this->id, array());
+
         parent::delete();
     }
 
@@ -292,11 +296,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Return the fields that can be filtered
+     * Return the fields that can be filtered.
      *
-     * This function must be here for be overwrited by the default module
+     * This function must be here for be overwrited by the default module.
      *
-     * @return array
+     * @return array Array with field names.
      */
     public function getFieldsForFilter()
     {
@@ -305,16 +309,16 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Rewrites parent fetchAll, so that only records with read access are shown
+     * Rewrites parent fetchAll, so that only records with read access are shown.
      *
-     * @param string|array $where  Where clause
-     * @param string|array $order  Order by
-     * @param string|array $count  Limit query
-     * @param string|array $offset Query offset
-     * @param string       $select The comma-separated columns of the joined columns
-     * @param string       $join   The join statements
+     * @param string|array $where  Where clause.
+     * @param string|array $order  Order by.
+     * @param string|array $count  Limit query.
+     * @param string|array $offset Query offset.
+     * @param string       $select The comma-separated columns of the joined columns.
+     * @param string       $join   The join statements.
      *
-     * @return Zend_Db_Table_Rowset
+     * @return Zend_Db_Table_Rowset The rowset with the results.
      */
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
@@ -336,9 +340,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Returns the rights merged with the role for the current user
+     * Returns the rights merged with the role for the current user.
      *
-     * @return array
+     * @return array Array of rights per user.
      */
     public function getRights()
     {
@@ -348,11 +352,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Returns the rights merged with the role for the current user for each item
+     * Returns the rights merged with the role for the current user for each item.
      *
-     * @param array $ids An array with all the ids for check
+     * @param array $ids An array with all the IDs for check.
      *
-     * @return array
+     * @return array Array of rights per user.
      */
     public function getMultipleRights($ids)
     {
@@ -367,9 +371,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Returns the rights merged with the role for each user has on a Phprojekt item
+     * Returns the rights merged with the role for each user has on a Phprojekt item.
      *
-     * @return array
+     * @return array Array of rights per user.
      */
     public function getUsersRights()
     {
@@ -379,9 +383,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Returns the right merged with the role for each user has on a Phprojekt item
+     * Returns the right merged with the role for each user has on a Phprojekt item.
      *
-     * @return array
+     * @param array $rights Array of rights per user.
+     *
+     * @return array Array of rights per user.
      */
     public function _mergeRightsAndRole($rights)
     {
@@ -447,10 +453,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Save the rights for the current item
-     * The users are a POST array with userIds
+     * Save the rights for the current item.
      *
-     * @param array $rights - Array of usersId with the bitmask access
+     * The users are a POST array with user IDs.
+     *
+     * @param array $rights Array of user IDs with the bitmask access.
      *
      * @return void
      */

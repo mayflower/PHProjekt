@@ -1,7 +1,6 @@
 <?php
 /**
- * Connection to the global configuration table that
- * stores administration settings.
+ * Connection to the global configuration table that stores administration settings.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +22,7 @@
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 /**
- * Connection to the global configuration table that
- * stores administration settings
+ * Connection to the global configuration table that stores administration settings.
  *
  * @category   PHProjekt
  * @package    Application

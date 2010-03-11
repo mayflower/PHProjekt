@@ -1,6 +1,6 @@
 <?php
 /**
- * Role Module Controller for PHProjekt 6.0
+ * Role Module Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Role Module Controller for PHProjekt 6.0
+ * Role Module Controller.
  *
  * @category   PHProjekt
  * @package    Application

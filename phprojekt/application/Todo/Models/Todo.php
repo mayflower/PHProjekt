@@ -40,7 +40,7 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
     /**
      * Returns an instance of notification class for this module
      *
-     * @return Phprojekt_Notification
+     * @return Phprojekt_Notification An instance of Phprojekt_Notification.
      */
     public function getNotification()
     {

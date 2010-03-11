@@ -1,6 +1,6 @@
 <?php
 /**
- * Minutes Module Item Controller for PHProjekt 6.0
+ * MinutesItem Module Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Minutes Module Controller for PHProjekt 6.0
+ * MinutesItem Module Controller.
  *
  * @category   PHProjekt
  * @package    Application
@@ -285,9 +285,9 @@ class MinutesItem_IndexController extends IndexController
     }
 
     /**
-     * Set some values deppend on the params
+     * Set some values deppend on the params.
      *
-     * @return array
+     * @return array POST values with some changes.
      */
     public function setParams()
     {

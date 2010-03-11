@@ -1,6 +1,9 @@
 <?php
 /**
- * Tags class
+ * Tags class.
+ *
+ * The class provide the functions for manage tags per user.
+ * All the words are converted to crc32 for search it.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +26,10 @@
  */
 
 /**
- * The class provide the functions for manage tags per user
- * All the words are converted to crc32 for search it
+ * Tags class.
+ *
+ * The class provide the functions for manage tags per user.
+ * All the words are converted to crc32 for search it.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -39,44 +44,44 @@
 class Phprojekt_Tags
 {
     /**
-     * Singleton instance
+     * Singleton instance.
      *
      * @var Phprojekt_Tags_Users
      */
     protected static $_instance = null;
 
     /**
-     * Phprojekt_Tags_Tags class
+     * Phprojekt_Tags_Tags class.
      *
      * @var Phprojekt_Tags_Tags
      */
     protected $_tags = null;
 
     /**
-     * Phprojekt_Tags_UserModule class
+     * Phprojekt_Tags_UserModule class.
      *
      * @var Phprojekt_Tags_Modules
      */
     protected $_tagsModules = null;
 
     /**
-     * Phprojekt_Tags_Users class
+     * Phprojekt_Tags_Users class.
      *
      * @var Phprojekt_Tags_Users
      */
     protected $_tagsUsers = null;
 
     /**
-     * Class for return the display data of the items
+     * Class for return the display data of the items.
      *
      * @var Phprojekt_Search_Display
      */
     protected $_display = null;
 
     /**
-     * Return this class only one time
+     * Return this class only one time.
      *
-     * @return Phprojekt_Tags_Users
+     * @return Phprojekt_Tags_Users An instance of Phprojekt_Tags_Users.
      */
     public static function getInstance()
     {
@@ -87,11 +92,9 @@ class Phprojekt_Tags
     }
 
     /**
-     * Chaneg the tablename for use with the Zend db class
+     * Constructor.
      *
-     * This function is only for PHProjekt6
-     *
-     * @param array $config The config array for the database
+     * @return void
      */
     private function __construct()
     {
@@ -113,13 +116,13 @@ class Phprojekt_Tags
     }
 
     /**
-     * Index a string
+     * Index a string.
      *
      * Index all the strings.
      *
-     * @param integer $moduleId The module Id to store
-     * @param integer $itemId   The item Id
-     * @param string  $data     Strings to save separated by spaces/coma
+     * @param integer $moduleId The module ID to store.
+     * @param integer $itemId   The item ID.
+     * @param string  $data     Strings to save separated by spaces/coma.
      *
      * @return void
      */
@@ -130,14 +133,13 @@ class Phprojekt_Tags
 
     /**
      * Get all the tags for the current user
-     * and return and array sorted by the number of ocurrences
+     * and return and array sorted by the number of ocurrences.
      *
-     * If the $limit is set,
-     * the returned array is limited to the $limit tags
+     * If the $limit is set, the returned array is limited to the $limit tags.
      *
-     * @param integer $limit The number of tags for return, 0 for all
+     * @param integer $limit The number of tags for return, 0 for all.
      *
-     * @return array
+     * @return array Array with results.
      */
     public function getTags($limit = 0)
     {
@@ -178,15 +180,14 @@ class Phprojekt_Tags
     }
 
     /**
-     * Get all the modules for the current user that are tagged with $tag
+     * Get all the modules for the current user that are tagged with $tag.
      *
-     * If the $limit is set,
-     * the returned array is limited to the $limit tags
+     * If the $limit is set, the returned array is limited to the $limit tags.
      *
-     * @param string  $tag       The tag for search
-     * @param integer $limit     The number of modules for return, 0 for all
+     * @param string  $tag   The tag for search.
+     * @param integer $limit The number of modules for return, 0 for all.
      *
-     * @return array
+     * @return array Array with results.
      */
     public function getModulesByTag($tag, $limit = 0)
     {
@@ -231,16 +232,15 @@ class Phprojekt_Tags
     }
 
     /**
-     * Get all tags that have a moduleId-itemId
+     * Get all tags that have a moduleId-itemId.
      *
-     * If the $limit is set,
-     * the returned array is limited to the $limit tags
+     * If the $limit is set, the returned array is limited to the $limit tags.
      *
-     * @param integer $moduleId The module Id to store
-     * @param integer $itemId   The item Id
-     * @param integer $limit    The number of modules for return, 0 for all
+     * @param integer $moduleId The module ID to store.
+     * @param integer $itemId   The item ID.
+     * @param integer $limit    The number of modules for return, 0 for all.
      *
-     * @return array
+     * @return array Array with results.
      */
     public function getTagsByModule($moduleId, $itemId, $limit = 0)
     {
@@ -275,10 +275,12 @@ class Phprojekt_Tags
     }
 
     /**
-     * Delete the entries for the moduleId-itemId
+     * Delete the entries for the moduleId-itemId.
      *
-     * @param integer $moduleId The module Id to delete
-     * @param integer $itemId   The item Id
+     * @param integer $moduleId The module ID to delete.
+     * @param integer $itemId   The item ID.
+     *
+     * @return void
      */
     public function deleteTagsByItem($moduleId, $itemId)
     {
@@ -286,9 +288,11 @@ class Phprojekt_Tags
     }
 
     /**
-     * Delete the tags for the user
+     * Delete the tags for the user.
      *
-     * @param integer $itemId     The item Id
+     * @param integer $itemId The item ID.
+     *
+     * @return void
      */
     public function deleteTagsByUser($userId)
     {
@@ -300,13 +304,13 @@ class Phprojekt_Tags
     }
 
     /**
-     * Index a string with the moduleId and the itemId
-     * The function get a string and separate into many words
-     * And store each of them.
+     * Index a string with the moduleId and the itemId.
      *
-     * @param integer $moduleId The module Id to store
-     * @param integer $itemId   The item Id
-     * @param string  $data     String to save
+     * The function get a string and separate into many words and store each of them.
+     *
+     * @param integer $moduleId The module ID to store.
+     * @param integer $itemId   The item ID.
+     * @param string  $data     String to save.
      *
      * @return void
      */
@@ -334,12 +338,12 @@ class Phprojekt_Tags
     }
 
     /**
-     * Get all the relations moduleId-itemId that are for the current user
+     * Get all the relations moduleId-itemId that are for the current user.
      *
-     * @param integer $moduleId The module Id to get
-     * @param integer $itemId   The item Id
+     * @param integer $moduleId The module ID to get.
+     * @param integer $itemId   The item ID.
      *
-     * @return array
+     * @return array Array with tag-user Ids.
      */
     public function getRelationIdByModule($moduleId, $itemId)
     {
@@ -358,11 +362,11 @@ class Phprojekt_Tags
     }
 
     /**
-     * Return all the words accepted for index into an array
+     * Return all the words accepted for index into an array.
      *
-     * @param string $string The string to store
+     * @param string $string The string to store.
      *
-     * @return array
+     * @return array Array of words.
      */
     private function _stringToArray($string)
     {
@@ -377,9 +381,9 @@ class Phprojekt_Tags
     }
 
     /**
-     * Return the field definiton for tags
+     * Return the field definiton for tags.
      *
-     * @return array
+     * @return array Array with the tags fields.
      */
     public function getFieldDefinition()
     {

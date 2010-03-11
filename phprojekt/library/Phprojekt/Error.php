@@ -1,6 +1,6 @@
 <?php
 /**
- * Simple error class for collect errors and return it
+ * Simple error class for collect errors and return it.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,20 +49,22 @@
 class Phprojekt_Error
 {
     /**
-     * Containt all the errors
+     * Containt all the errors.
      *
      * @var array
      */
     protected $_errors = array();
 
     /**
-     * Collect all the errors in an array for show it later
-     * Use like addError(array('field'   => 'title',
-     *                         'label'   => 'Label',
-     *                         'message' => 'Hello');
-     * So the template can get the array and use each field of them
+     * Collect all the errors in an array for show it later.
      *
-     * @param array $data Array contain the fields for show
+     * @uses
+     * addError(array('field'   => 'title',
+     *                'label'   => 'Label',
+     *                'message' => 'Hello');
+     * So the template can get the array and use each field of them.
+     *
+     * @param array $data Array contain the fields for show.
      *
      * @return void
      */
@@ -72,14 +74,15 @@ class Phprojekt_Error
     }
 
     /**
-     * Return the error data and delete it
+     * Return the error data and delete it.
      *
-     * @return array
+     * @return array Array with errors.
      */
     public function getError()
     {
         $error         = $this->_errors;
         $this->_errors = array();
+
         return $error;
     }
 }
