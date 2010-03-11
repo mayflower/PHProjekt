@@ -385,8 +385,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * @param integer $order  An ordering constant
      * @param string  $column Column
      *
-     * @todo Maybe we have to refactor this. Doesnt look pretty for me. (dsp)
-     *
      * @return array
      */
     public function getInfo($order, $column)

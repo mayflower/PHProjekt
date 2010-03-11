@@ -23,10 +23,7 @@
  */
 
 /**
- * Phprojekt own dispatcher to handle customized controller names.
- * Customized controllers have the name {MODULE}_Customized_{FOO}Controller
- *
- * @todo not supported yet
+ * Phprojekt own dispatcher
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -43,19 +40,20 @@ class Phprojekt_Dispatcher extends Zend_Controller_Dispatcher_Standard
     /**
      * Formats a string from a URI into a PHP-friendly name.
      *
-     * By default, replaces words separated by the word separator character(s)
-     * with camelCaps. If $isAction is false, it also preserves replaces words
-     * separated by the path separation character with an underscore, making
-     * the following word Title cased. All non-alphanumeric characters are
-     * removed.
+     * By default, replaces words separated by the word separator character(s) with camelCaps.
+     * If $isAction is false, it also preserves replaces words separated by the path
+     * separation character with an underscore, making the following word Title cased.
+     * All non-alphanumeric characters are removed.
+     * The function works with calls like jsonSearch instead of jsonsearch.
      *
-     * @param string $unformatted
-     * @param boolean $isAction Defaults to false
+     * @param string  $unformatted String
+     * @param boolean $isAction    Defaults to false
+     *
      * @return string
      */
     protected function _formatName($unformatted, $isAction = false)
     {
-        // preserve directories
+        // Preserve directories
         if (!$isAction) {
             $segments = explode($this->getPathDelimiter(), $unformatted);
         } else {
@@ -63,8 +61,8 @@ class Phprojekt_Dispatcher extends Zend_Controller_Dispatcher_Standard
         }
 
         foreach ($segments as $segment) {
-            $segment        = str_replace($this->getWordDelimiter(), ' ', $segment);
-            $segment        = preg_replace('/[^a-z0-9 ]/', '', $segment);
+            $segment = str_replace($this->getWordDelimiter(), ' ', $segment);
+            $segment = preg_replace('/[^a-z0-9 ]/', '', $segment);
         }
 
         return implode('_', $segments);

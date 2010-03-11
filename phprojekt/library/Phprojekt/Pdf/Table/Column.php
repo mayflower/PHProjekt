@@ -156,7 +156,6 @@ class Phprojekt_Pdf_Table_Column
 
     /**
      * Test function
-     * @todo remove
      *
      * @param Phprojekt_Pdf_Page $page
      * @param int                $x

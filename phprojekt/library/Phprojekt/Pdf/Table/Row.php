@@ -104,7 +104,6 @@ class Phprojekt_Pdf_Table_Row
 
     /**
      * Test function
-     * @todo remove or rename
      *
      * @param Phprojekt_Pdf_Page $page
      * @param int                $x

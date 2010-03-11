@@ -518,8 +518,6 @@ class Phprojekt_Pdf_Page extends Zend_Pdf_Page
      * @param string $encoding Encoding of the text string $str, UTF-8 by default
      *
      * @return int
-     *
-     * @todo This function has to be made multibyte encoding aware, too. See getVariableText
      */
     protected final function _calculateTextWidth($str, $encoding = 'UTF-8')
     {

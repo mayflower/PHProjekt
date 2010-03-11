@@ -40,7 +40,6 @@ final class Default_Helpers_Save
     /**
      * Save a tree
      *
-     * @todo optimize and use native queries to do
      * @param Phprojekt_Tree_Node_Database $node
      * @param array $params
      *

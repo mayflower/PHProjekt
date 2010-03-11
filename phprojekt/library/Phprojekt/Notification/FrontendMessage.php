@@ -135,8 +135,6 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
      * calls again the getNotification.
      * A counter will ensure that the loop will not run into an endless loop.
      *
-     * @TODO a config variable is needed to define the time between the calls to the database.
-     *
      * @param integer $userId The id of the user who calls this method.
      *
      * @return Array At least an empty array (if no new entries where found)
