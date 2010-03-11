@@ -23,7 +23,7 @@ B. License
     ctype
     gd
     pcre
-    pdo (pdo_mysql / pdo_sqlite2 / pdo_pgsql
+    pdo (pdo_mysql / pdo_sqlite2 / pdo_pgsql)
     Reflection
     session
     SPL
