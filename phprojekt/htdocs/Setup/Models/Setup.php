@@ -42,7 +42,7 @@ class Setup_Models_Setup
      *
      * @var array
      */
-    private $_error   = array();
+    private $_error = array();
 
     /**
      * Array with messages.
@@ -131,7 +131,9 @@ class Setup_Models_Setup
         }
 
         if (strncmp($_SERVER['SCRIPT_NAME'], '/setup.php', 10) < 0) {
-            $message = "PHProjekt 6 must be installed in a DocumentRoot directory.";
+            $message = "PHProjekt 6 must be installed in a DocumentRoot directory.\n"
+                . "Please set the DocumentRoot to phprojekt/htdocs or generate an extra virtual host "
+                . "for the DocumentRoot phprojekt/htdocs";
             throw new Exception($message);
         }
 
