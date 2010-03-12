@@ -92,8 +92,7 @@ class Core_Models_General_Configuration extends Phprojekt_ModelInformation_Defau
                         $project = Phprojekt_Loader::getModel('Project', 'Project');
                         $project->find(1);
                         $project->title = $value;
-                        $project->save();
-                        Phprojekt_Tree_Node_Database::deleteCache();
+                        $project->parentSave();
                     }
                     $where  = sprintf('key_value = %s AND module_id = 0', $configuration->_db->quote($key));
                     $record = $configuration->fetchAll($where);
