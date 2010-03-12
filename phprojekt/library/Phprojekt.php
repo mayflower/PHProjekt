@@ -425,7 +425,6 @@ class Phprojekt
             Zend_Session::regenerateId();
             error_log($error);
         }
-        Zend_Session::registerValidator(new Zend_Session_Validator_HttpUserAgent());
 
         // Set a metadata cache and clean it
         $frontendOptions = array('automatic_serialization' => true);
