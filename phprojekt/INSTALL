@@ -111,7 +111,7 @@ B. License
 
 4. Permission
 
-    Make sure that the webserver or the webserver group can write in the tmp/ and logs/ directories.
+    Make sure that the webserver or the webserver group can write in the tmp/, logs/ and upload/ directories.
     You can set these permissions using the chmod(1) command.
     Assuming your webserver runs on the group "www-data":
 
@@ -120,6 +120,10 @@ B. License
       $ find /srv/www -type f -exec chmod -x '{}' ';'
       $ chmod -R g+w /srv/www/{tmp,application,logs,upload}
       $ chgrp -R www /srv/www
+
+    NOTE: These lines sets also the write permission for the application/ folder!, 
+    you need to have write access there, ONLY when you are adding or deleting modules from the Administration section.
+    We strongly recommend that the application/ folder have read access when you are in production.
 
 5. Logs
 

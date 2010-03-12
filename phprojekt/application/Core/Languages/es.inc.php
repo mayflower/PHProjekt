@@ -89,6 +89,9 @@ $lang["The module must have a project selector called project_id"] = "El módulo
 $lang["Project module must be a normal module"] = "Módulo de Proyecto debe ser un módulo normal";
 $lang["The module must have at least one field with the list position greater than 0"] = "El módulo debe tener al "
     . "menos un campo con la posición en la lista mayor a 0";
+      // View
+$lang["Make sure the application folder is writeable for the webserver!"] = "Asegúrese de que la carpeta application "
+    . "tiene permiso de escritura para el servidor web!";
     // View
 $lang["Module Designer"] = "Diseñador de Módulos";
 $lang["Repository of available field types"] = "Repositorio de los tipos de campo disponibles";
