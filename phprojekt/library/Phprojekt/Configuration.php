@@ -139,7 +139,7 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
      *
      * @return mix Value of the configuration.
      */
-    public function getAdministration($configName)
+    public function getConfiguration($configName)
     {
         $toReturn = null;
 
