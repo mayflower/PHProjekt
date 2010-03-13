@@ -169,7 +169,7 @@ class Phprojekt_Filter
             } else {
                 // Use it as datetime
                 $value = Cleaner::sanitize('timestamp', $keyword);
-                $k     = date("Y-m-s H:i:s", Phprojekt_Converter_Time::userToUtc($value));
+                $k     = date("Y-m-d H:i:s", Phprojekt_Converter_Time::userToUtc($value));
             }
         } else {
             $this->_record->$field = $keyword;
