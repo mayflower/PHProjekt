@@ -120,7 +120,7 @@ class Cleaner_Sanitizer
     public function sanitizeIsoTimestamp($value)
     {
         $format = 'Y-m-d H:i:s';
-        if (is_int($value)) {
+        if (is_numeric($value)) {
             return date($format, $value);
         } else {
             // Remove GMT declaration if exists
