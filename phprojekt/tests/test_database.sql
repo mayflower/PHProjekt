@@ -637,14 +637,20 @@ INSERT INTO `setting` (`id`, `user_id`, `module_id`, `key_value`, `value`, `iden
 (2, 1, 0, 'email','david@example.com', 'Core'),
 (3, 1, 0, 'language','en', 'Core'),
 (4, 1, 0, 'timeZone','2', 'Core'),
-(5, 2, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
-(6, 2, 0, 'email','gus@example.com', 'Core'),
-(7, 2, 0, 'language','en', 'Core'),
-(8, 2, 0, 'timeZone','2', 'Core'),
-(9, 3, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
-(10, 3, 0, 'email','test@example.com', 'Core'),
-(11, 3, 0, 'language','en', 'Core'),
-(12, 3, 0, 'timeZone','2', 'Core');
+(5, 1, 0, 'datarecords','1', 'Notification'),
+(6, 1, 0, 'loginlogout','1', 'Notification'),
+(7, 2, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
+(8, 2, 0, 'email','gus@example.com', 'Core'),
+(9, 2, 0, 'language','en', 'Core'),
+(10, 2, 0, 'timeZone','2', 'Core'),
+(11, 2, 0, 'datarecords','1', 'Notification'),
+(12, 2, 0, 'loginlogout','1', 'Notification'),
+(13, 3, 0, 'password','156c3239dbfa5c5222b51514e9d12948', 'Core'),
+(14, 3, 0, 'email','test@example.com', 'Core'),
+(15, 3, 0, 'language','en', 'Core'),
+(16, 3, 0, 'timeZone','2', 'Core'),
+(17, 3, 0, 'datarecords','1', 'Notification'),
+(18, 3, 0, 'loginlogout','1', 'Notification');
 
 INSERT INTO `project` (`id`, `project_id`, `path`, `title`, `notes`, `owner_id`, `start_date`, `end_date`, `priority`, `current_status`, `complete_percent`, `hourly_wage_rate`, `budget`) VALUES
 (1,NULL,'/','Invisible Root','',1,NULL,NULL,NULL,1,0,NULL,NULL),

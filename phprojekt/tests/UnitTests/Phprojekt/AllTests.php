@@ -40,7 +40,6 @@ require_once 'LogTest.php';
 require_once 'ErrorTest.php';
 require_once 'HistoryTest.php';
 require_once 'Filter/UserFilterTest.php';
-require_once 'Mail/NotificationTest.php';
 require_once 'DispatcherTest.php';
 require_once 'AuthTest.php';
 require_once 'AclTest.php';
@@ -59,6 +58,9 @@ require_once 'ModuleTest.php';
 require_once 'TabsTest.php';
 require_once 'PhprojektTest.php';
 require_once 'Date/CollectionTest.php';
+require_once 'ConfigurationTest.php';
+require_once 'SettingTest.php';
+require_once 'FilterTest.php';
 
 /**
  * Test suite for the default module
@@ -121,6 +123,9 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_TabsTest');
         $suite->addTestSuite('Phprojekt_PhprojektTest');
         $suite->addTestSuite('Phprojekt_Date_CollectionTest');
+        $suite->addTestSuite('Phprojekt_ConfigurationTest');
+        $suite->addTestSuite('Phprojekt_SettingTest');
+        $suite->addTestSuite('Phprojekt_FilterTest');
 
         return $suite;
     }

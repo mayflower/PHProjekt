@@ -53,3 +53,34 @@ smtpServer = "localhost"
 ; for the end of line.
 ; (0 = \r\n  1 = \n)
 mailEndOfLine = 0;
+
+;;;;;;;;;
+; FRONT ;
+;;;;;;;;;
+
+; Optional email support address to show inside error messages, general help and logo alt text
+front.supportAddress = "gustavo.solt@mayflower.de"
+
+;;;;;;;;;;;;;;;;;;;;;
+; FRONTEND MESSAGES ;
+;;;;;;;;;;;;;;;;;;;;;
+
+; Show messages directely to the user if something will be changed on their data,
+; projects, modules, items, etc...
+; Options: true/ false
+frontendMessages = true
+
+; Set how long a frontend messgae is valid in minutes.
+validPeriod = 2
+
+; There is a notification to remind the user to a meeting she/he is invited in.
+; Define here the minutes where the notification should appear
+; before the meeting starts. This should be set in minutes!
+remindBefore = 15
+
+; Define the long polling time in seconds. Max. value is 20s!
+pollingTime = 20
+
+; Define the polling loops in seconds
+; This is the interval after a new poll will be done.
+pollingLoop = 30

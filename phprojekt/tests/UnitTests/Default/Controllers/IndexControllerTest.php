@@ -204,4 +204,136 @@ class Phprojekt_IndexController_Test extends FrontInit
             . '"Invisible Root","","","","Offered","0.00"'."\n"
             . '"Project 1","2009-06-01","2009-10-31","","Offered","0.00"'."\n", $response);
     }
+
+    /**
+     * Test of JsonDeleteMultipleAction
+     */
+    public function testJsonDeleteMultipleActionPart1()
+    {
+        $this->setRequestUrl('Helpdesk/index/jsonList/');
+        $this->request->setParam('nodeId', 1);
+        $response = $this->getResponse();
+        $this->assertContains('"numRows":4}', $response);
+    }
+
+    /**
+     * Test of JsonDeleteMultipleAction
+     */
+    public function testJsonDeleteMultipleActionPart2()
+    {
+        $this->setRequestUrl('Helpdesk/index/jsonDeleteMultiple/');
+        $this->request->setParam('ids', '2,3');
+        $this->request->setParam('nodeId', 1);
+        $response = $this->getResponse();
+        $this->assertContains('The Items were deleted correctly', $response);
+    }
+
+    /**
+     * Test of JsonDeleteMultipleAction
+     */
+    public function testJsonDeleteMultipleActionPart3()
+    {
+        $this->setRequestUrl('Helpdesk/index/jsonList/');
+        $this->request->setParam('nodeId', 1);
+        $response = $this->getResponse();
+        $this->assertContains('"numRows":2}', $response);
+    }
+
+    /**
+     * Test of filters
+     */
+    public function testGetFilterWherePart1()
+    {
+        $this->setRequestUrl('Project/index/jsonList/');
+        $this->request->setParam('nodeId', 1);
+        $response = $this->getResponse();
+        $this->assertContains('"numRows":2}', $response);
+    }
+
+    /**
+     * Test of filters
+     */
+    public function testGetFilterWherePart2()
+    {
+        $this->setRequestUrl('Project/index/jsonList/');
+        $this->request->setParam('nodeId', 1);
+        $this->request->setParam('filters', array('AND;title;like;test'));
+        $response = $this->getResponse();
+        $this->assertContains('"numRows":1}', $response);
+    }
+
+    /**
+     * Test of jsonGetExtraActionsAction
+     */
+    public function testJsonGetExtraActionsAction()
+    {
+        $this->setRequestUrl('Project/index/jsonGetExtraActions');
+        $response = $this->getResponse();
+        $this->assertContains('{}&&([{"target":1,"action":"jsonDeleteMultiple","label":"Delete","mode":0,'
+            . '"class":"deleteOption"},{"target":1,"action":"csvExportMultiple","label":"Export","mode":1,'
+            . '"class":"exportOption"}])', $response);
+    }
+
+    /**
+     * Test of jsonGetConfigurationsAction
+     */
+    public function testJsonGetConfigurationsAction()
+    {
+        $this->setRequestUrl('Project/index/jsonGetConfigurations');
+        $response = $this->getResponse();
+        $this->assertContains('"name":"supportAddress","value":"gustavo.solt@mayflower.de"},{"name":"phprojektVersion"'
+            . ',"value":"6.0.0"},{"name":"currentUserId","value":1},{"name":"csrfToken","value"', $response);
+    }
+
+    /**
+     * Test of getFrontendMessage
+     */
+    public function testGetFrontendMessagePart1()
+    {
+        $this->setRequestUrl('Project/index/jsonGetFrontendMessage/');
+        $response = $this->getResponse();
+        $this->assertContains('"data":false}', $response);
+    }
+
+    /**
+     * Test of getFrontendMessage
+     */
+    public function testGetFrontendMessagePart2()
+    {
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
+        $keepUser = $authNamespace->userId;
+
+        $authNamespace->userId = 2;
+        $this->setRequestUrl('Project/index/jsonGetFrontendMessage/');
+        $response = $this->getResponse();
+        $this->assertContains('"data":{"user":"Soria Parra, David","module":"Helpdesk","process":"delete",'
+            . '"description":"has deleted the entry","itemId":"3","item":"My Helpdesk task 3","projectId":"1",'
+            . '"details":[]', $response);
+        $authNamespace->userId = $keepUser;
+    }
+
+    /**
+     * Test of jsonDisableFrontendMessagesAction
+     */
+    public function testJsonDisableFrontendMessagesAction()
+    {
+        $this->setRequestUrl('Project/index/jsonDisableFrontendMessages/');
+        $response = $this->getResponse();
+        $this->assertContains('All settings were disabled successfully!', $response);
+    }
+
+
+    /**
+     * Test of jsonGetUsersRightsAction
+     */
+    public function testJsonGetUsersRightsAction()
+    {
+        $this->setRequestUrl('Project/index/jsonGetUsersRights/');
+        $this->request->setParam('id', 2);
+        $response = $this->getResponse();
+        $this->assertContains('{"currentUser":{"moduleId":1,"itemId":2,"userId":1,"none":false,"read":true,'
+            . '"write":true,"access":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true},'
+            . '"3":{"moduleId":1,"itemId":2,"userId":3,"none":false,"read":true,"write":true,"access":true,'
+            . '"create":true,"copy":true,"delete":true,"download":true,"admin":true}', $response);
+    }
 }
