@@ -1,25 +1,25 @@
 <?php
 // System
-$lang["Todo"] = "Aufgaben";
+$lang["Todo"] = "Todo";
 
 // Fields
  // Basic Data
 $lang["Title"] = "Titel";
-$lang["Notes"] = "Notes";
-$lang["Start date"] = "Start date";
-$lang["End date"] = "End date";
-$lang["Priority"] = "Priority";
-$lang["Current status"] = "Current status";
-$lang["Waiting"] = "Waiting";
-$lang["Accepted"] = "Accepted";
-$lang["Working"] = "Working";
-$lang["Stopped"] = "Stopped";
-$lang["Ended"] = "Ended";
+$lang["Notes"] = "Notizen";
+$lang["Start date"] = "Startdatum";
+$lang["End date"] = "Enddatum";
+$lang["Priority"] = "Priorität";
+$lang["Current status"] = "Aktueller Stand";
+$lang["Waiting"] = "Wartend";
+$lang["Accepted"] = "Angenommen";
+$lang["Working"] = "in Bearbeitung";
+$lang["Stopped"] = "Angehalten";
+$lang["Ended"] = "Beendet";
 $lang["Project"] = "Projekt";
-$lang["User"] = "User";
+$lang["User"] = "Benutzer";
 
 // Tooltip Help
-$lang["Tooltip"]["projectId"] = "The parent project, if none then select PHProjekt.";
+$lang["Tooltip"]["projectId"] = "Wenn kein Projekt angelegt, dann PHProjekt wählen.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

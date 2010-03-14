@@ -1,16 +1,16 @@
 <?php
 // System
-$lang["Filemanager"] = "Dateien";
+$lang["Filemanager"] = "Dateimanager";
 
 // Fields
  // Basic Data
-$lang["Title"] = "Title";
-$lang["Comments"] = "Kommentar";
+$lang["Title"] = "Titel";
+$lang["Comments"] = "Kommentare";
 $lang["Project"] = "Projekt";
 $lang["Upload"] = "Upload";
 
 // Tooltip help
-$lang["Tooltip"]["files"] = "You can upload as many files as you want.";
+$lang["Tooltip"]["files"] = "Sie können so viele Dateien hochladen wie Sie wollen.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

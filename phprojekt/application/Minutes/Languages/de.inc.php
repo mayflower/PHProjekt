@@ -1,6 +1,6 @@
 <?php
 // System
-$lang["Minute"] = "Protokolle";
+$lang["Minute"] = "Minute";
 
 // Fields
  // Basic Data
@@ -11,65 +11,66 @@ $lang["Project"] = "Projekt";
 $lang["Description"] = "Beschreibung";
 $lang["Place"] = "Ort";
 $lang["Moderator"] = "Moderator";
-$lang["Invited"] = "Eingeladen";
-$lang["Attending"] = "Teilnehmer";
+$lang["Invited"] = "Eingeladene";
+$lang["Attending"] = "Hin";
 $lang["Excused"] = "Entschuldigt";
 $lang["Status"] = "Status";
-$lang["Planned"] = "Geplant";
-$lang["Empty"] = "Noch leer";
-$lang["Filled"] = "Ausgefüllt";
-$lang["Final"]   = "Final";
+$lang["Planned"] = "Geplante";
+$lang["Empty"] = "Leer";
+$lang["Filled"] = "Gefüllt";
+$lang["Final"] = "Final";
 
  // Mail tab
-$lang["Mail"] = "E-Mail";
+$lang["Mail"] = "Mail";
 $lang["Recipients"] = "Empfänger";
-$lang["Additional Recipients"] = "Weitere Empfänger";
+$lang["Additional Recipients"] = "Zusätzliche Empfänger";
 $lang["Options"] = "Optionen";
-$lang["Include PDF attachment"] = "PDF als Anhang hinzufügen";
-$lang["Send mail"] = "E-Mail absenden";
+$lang["Include PDF attachment"] = "PDF-Anhang anhängen";
+$lang["Send mail"] = "Senden";
 $lang["Preview"] = "Vorschau";
 
 // Messages
   // System
-$lang["The currently logged-in user is not owner of the given minutes entry"] = "Die derzeit angemeldeten Benutzers "
-    . "ist nicht Eigentümer der gegebenen Minuten Eintrag";
+$lang["The currently logged-in user is not owner of the given minutes entry"] = "Der angemeldete Benutzer ist nicht "
+    . "der Inhaber des angegebenen Eintrages";
   // View
-$lang["Are you sure this Minutes entry should no longer be finalized?"] = "Sind Sie sicher, daß dieses Protokol nicht "
-    . "mehr finalisiert sein soll?";
-$lang["After proceeding, changes to the data will be possible again."] = "Änderungen wären dann wieder möglich.";
-$lang["Are you sure this Minutes entry should be finalized?"] = "Sind Sie sicher, daß dieses Protokoll finalisiert "
-    . "werden soll?";
-$lang["Write access will be prohibited!"] = "Änderungen sind danach nicht mehr möglich!";
-$lang["Minutes are finalized"] = "Protokoll ist finalisiert";
-$lang["This Minutes entry is finalized."] = "Dieses Protokoll ist finalisiert.";
-$lang["Editing data is no longer possible."] = "Einträge sind nicht mehr möglich.";
+$lang["Are you sure this Minutes entry should no longer be finalized?"] = "Sind Sie sicher, dass diesen "
+    . "Protokolleintrag nicht mehr als abgeschlossen markiert sein sollte?";
+$lang["After proceeding, changes to the data will be possible again."] = "Nach Abschluss werden Änderungen an den "
+    . "Daten wieder möglich sein.";
+$lang["Are you sure this Minutes entry should be finalized?"] = "Sind Sie sicher, dass dieser Protokolleintrag als "
+    . "abgeschlossen markiert werden soolte?";
+$lang["Write access will be prohibited!"] = "Schreibzugriff wird verboten sein!";
+$lang["Minutes are finalized"] = "Protokolle sind abgeschlossen";
+$lang["This Minutes entry is finalized."] = "Dieser Protokolleintrag ist abgeschlossen.";
+$lang["Editing data is no longer possible."] = "Bearbeiten von Daten ist nicht mehr möglich.";
 $lang["Your changes have not been saved."] = "Ihre Änderungen wurden nicht gespeichert.";
 
 // Mail
   // Messages
-$lang["The mail was sent successfully"] = "Die E-Mail wurde erfolgreich versandt";
+$lang["The mail was sent successfully"] = "Die E-Mail wurde erfolgreich gesendet";
 $lang["The mail could not be sent"] = "Die E-Mail konnte nicht gesendet werden";
-$lang["No recipient addresses have been specified"] = "Keine Empfänger-Adressen angegeben wurden";
-$lang["Invalid email address detected:"] = "Ungültige E-Mail Adresse:";
+$lang["No recipient addresses have been specified"] = "Kein Empfänger-Adressen sind festgelegt";
+$lang["Invalid email address detected:"] = "Ungültige E-Mail-Adresse gefunden:";
   // Content
-$lang["Meeting minutes for"] = "Meeting-Protokoll";
+$lang["Meeting minutes for"] = "Sitzungsprotokoll für";
 
 // PDF
   // Content
-$lang["No."] = "Nr.";
+$lang["No."] = "Nein";
 $lang["Type"] = "Typ";
-$lang["Item"] = "Eintrag";
+$lang["Item"] = "Item";
 
 // View
-$lang["Unfinalize Minutes"] = "Protokoll unfinalisieren";
-$lang["Finalize Minutes"] = "Protokoll finalisieren";
-$lang["Confirm"] = "Bestätigen";
+$lang["Unfinalize Minutes"] = "Protokolle aufheben";
+$lang["Finalize Minutes"] = "Protokolle abschließen";
+$lang["Confirm"] = "Bestätigung";
 $lang["Are you sure?"] = "Sind Sie sicher?";
 
 // Tooltip Help
   // Mail tab
-$lang["Email addresses of unlisted recipients, comma-separated."] = "E-Mail Adressen für hier nicht gelistete
-    Empfänger, kommasepariert";
+$lang["Email addresses of unlisted recipients, comma-separated."] = "E-Mail-Adressen nicht aufgeführter Empfänger "
+    . "durch Kommata getrennt.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

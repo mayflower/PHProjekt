@@ -5,31 +5,31 @@ $lang["Project"] = "Projekt";
 // Fields
  // Basic Data
 $lang["Title"] = "Titel";
-$lang["Notes"] = "Notiz";
-$lang["Parent"] = "Oberprojekt";
-$lang["Start date"] = "Beginn";
-$lang["End date"] = "Ende";
+$lang["Notes"] = "Notizen";
+$lang["Parent"] = "Projekt";
+$lang["Start date"] = "Startdatum";
+$lang["End date"] = "Enddatum";
 $lang["Priority"] = "Priorität";
 $lang["Current status"] = "Status";
-$lang["Offered"] = "Angebotene";
+$lang["Offered"] = "Angeboten";
 $lang["Ordered"] = "Bestellt";
-$lang["Working"] = "In bearbeitung";
+$lang["Working"] = "in Bearbeitung";
 $lang["Ended"] = "Beendet";
-$lang["Stopped"] = "Stopped";
-$lang["Re-Opened"] = "Wieder geöffnet";
-$lang["Waiting"] = "Warten";
-$lang["Complete percent"] = "Fortschritt";
+$lang["Stopped"] = "Angehalten";
+$lang["Re-Opened"] = "Neu eröffnete";
+$lang["Waiting"] = "Waiting";
+$lang["Complete percent"] = "Complete Prozent";
 $lang["Budget"] = "Budget";
 $lang["Hourly wage rate"] = "Stundensatz";
-$lang["Contact"] = "Kontakte";
+$lang["Contact"] = "Kontakt";
 
 // Messages
   // View
-$lang["The deletion of a project and its subprojects might take a while"] = "The deletion of a project and its "
-    . "subprojects might take a while";
+$lang["The deletion of a project and its subprojects might take a while"] = "Die Löschung des Projekts und der "
+    . "Teilprojekte kann eine Weile dauern";
 
 // Tooltip Help
-$lang["Tooltip"]["projectId"] = "The parent project, if none then select PHProjekt.";
+$lang["Tooltip"]["projectId"] = "Wenn kein Projekt angelegt, dann PHProjekt wählen.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

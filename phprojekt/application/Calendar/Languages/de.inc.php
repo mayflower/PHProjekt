@@ -4,78 +4,79 @@ $lang["Calendar"] = "Kalender";
 
 // Fields
  // Basic Data
-$lang["Title"] = "Title";
+$lang["Title"] = "Titel";
 $lang["Place"] = "Ort";
-$lang["Notes"] = "Notes";
+$lang["Notes"] = "Notizen";
 $lang["Start"] = "Start";
-$lang["End"] = "End";
-$lang["Visibility"] = "Visibility";
-$lang["Public"] = "Public";
-$lang["Private"] = "Private";
+$lang["End"] = "Ende";
+$lang["Visibility"] = "Sichtbarkeit";
+$lang["Public"] = "Öffentlich";
+$lang["Private"] = "Privat";
 $lang["Status"] = "Status";
-$lang["Pending"] = "Pending";
-$lang["Accepted"] = "Accepted";
-$lang["Rejected"] = "Rejected";
+$lang["Pending"] = "Offen";
+$lang["Accepted"] = "Angenommen";
+$lang["Rejected"] = "Abgelehnt";
  // Participants
 $lang["Participants"] = "Teilnehmer";
  // Recurrence
 $lang["Recurrence"] = "Wiederholung";
-$lang["Repeats"] = "Serientyp";
-$lang["None"] = "Kein";
+$lang["Repeats"] = "Wiederholt";
+$lang["None"] = "Keine";
 $lang["Once"] = "Einmal";
 $lang["Daily"] = "Täglich";
 $lang["Weekly"] = "Wöchentlich";
 $lang["Monthly"] = "Monatlich";
 $lang["Yearly"] = "Jährlich";
-$lang["Interval"] = "Intervall";
+$lang["Interval"] = "Interval";
 $lang["Until"] = "Bis";
 $lang["Weekdays"] = "Wochentage";
-$lang["Rrule"] = "Recurrence rule";
+$lang["Rrule"] = "Wiederholungsregel";
 
 // Messages
   // System
-$lang["Wrong Recurrence Interval"] = "Wrong Recurrence Interval";
-$lang["Incomplete Recurrence Until field"] = "Incomplete Recurrence Until field";
-$lang["Event duration"] = "Event duration";
-$lang["End date and time has to be after Start date and time"] = "End date and time has to be after Start date and "
-    . "time";
+$lang["Wrong Recurrence Interval"] = "Falsches Wiederkehrintervall";
+$lang["Incomplete Recurrence Until field"] = "Unvollständige Wiederholung bis Feld";
+$lang["Event duration"] = "Ergeignis-Dauer";
+$lang["End date and time has to be after Start date and time"] = "Enddatum muss nach dem Startdatum und Uhrzeit liegen";
   // View
-$lang["You have to select at least one user!"] = "Sie müssen mindestens einen User auswählen";
-$lang["Edit repeating events"] = "Edit repeating events";
-$lang["Delete repeating events"] = "Delete repeating events";
-$lang["Edit just this occurrence"] = "Edit just this occurrence";
-$lang["Delete just this occurrence"] = "Delete just this occurrence";
-$lang["Edit all occurrences"] = "Edit all occurrences";
-$lang["Delete all occurrences"] = "Delete all occurrences";
-$lang["To whom will this apply"] = "To whom will this apply";
-$lang["Edit just for me"] = "Edit just for me";
-$lang["Edit for all participants"] = "Edit for all participants";
-$lang["Delete just for me"] = "Delete just for me";
-$lang["Delete for all participants"] = "Delete for all participants";
+$lang["You have to select at least one user!"] = "Sie müssen mindestens einen Benutzer auswählen!";
+$lang["Edit repeating events"] = "Bearbeite wiederkehrende Ereignisse";
+$lang["Delete repeating events"] = "Lösche wiederkehrende Ereignisse";
+$lang["Edit just this occurrence"] = "Bearbeite nur dieses Ereignis";
+$lang["Delete just this occurrence"] = "Löschen nur dieses Ereignis";
+$lang["Edit all occurrences"] = "Bearbeiten alle Vorkommnisse";
+$lang["Delete all occurrences"] = "Alle Vorkommen löschen";
+$lang["To whom will this apply"] = "Wen würde es betreffen";
+$lang["Edit just for me"] = "Bearbeiten nur für mich";
+$lang["Edit for all participants"] = "Bearbeiten für alle Teilnehmer";
+$lang["Delete just for me"] = "Löschen nur für mich";
+$lang["Delete for all participants"] = "Löschen für alle Teilnehmer";
 
 // View
-$lang["Change date"] = "Change date";
+$lang["Change date"] = "Datum ändern";
 $lang["Today"] = "Heute";
-$lang["Self"] = "Mein Kalender";
+$lang["Self"] = "Selbst";
 $lang["Selection"] = "Auswahl";
 $lang["User selection"] = "Benutzerauswahl";
-$lang["Done"] = "Ok";
+$lang["Done"] = "Fertig";
 $lang["List"] = "Liste";
 $lang["Day"] = "Tag";
 $lang["Week"] = "Woche";
 $lang["Month"] = "Monat";
 $lang["Calendar week"] = "Kalenderwoche";
 $lang["Further events"] = "Weitere Termine";
-$lang["Select users for the group view"] = "Bitte User für Gruppenansicht auswählen";
+$lang["Select users for the group view"] = "Wählen Sie die Benutzer für die gruppierte Anzeige";
 
 // Tooltip Help
  // 'Interval' field
-$lang["The interval for the option selected in Repeats."] = "The interval for the option selected in Repeats.";
-$lang["E.g.: Repeats Weekly - Interval 2, that will create one event every 2 weeks."] = "E.g.: Repeats Weekly - "
-    . "Interval 2, that will create one event every 2 weeks.";
+$lang["The interval for the option selected in Repeats."] = "Das Intervall für die ausgewählte Möglichkeit in "
+    . "Wiederholungen.";
+$lang["E.g.: Repeats Weekly - Interval 2, that will create one event every 2 weeks."] = "Z.B.: Wiederholungen "
+    . "wöchnetlich - Intervall 2, dass ein wiederkehrendes Ereignis alle 2 Wochen erstellen.";
  // 'Until' field
-$lang["The day the recurrence will stop happening."] = "The day the recurrence will stop happening.";
-$lang["The last event's day could not match this day."] = "The last event's day could not match this day.";
+$lang["The day the recurrence will stop happening."] = "Datum, an dem die Wiederkehr aufhören soll.";
+$lang["The last event's day could not match this day."] = "Der letzte Tage des Ereignisses konnte nicht mit diesem "
+    . "Datum übereinstimmen.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

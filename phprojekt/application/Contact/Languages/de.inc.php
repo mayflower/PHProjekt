@@ -1,24 +1,24 @@
 <?php
 // System
-$lang["Contact"] = "Kontakte";
+$lang["Contact"] = "Kontakt";
 
 // Fields
  // Basic Data
 $lang["Name"] = "Name";
-$lang["E-Mail"] = "Email";
+$lang["E-Mail"] = "E-Mail";
 $lang["Company"] = "Firma";
-$lang["First phone"] = "Fon 1";
-$lang["Second phone"] = "Fon 2";
-$lang["Mobile phone"] = "Mobiltelefon";
+$lang["First phone"] = "Erste Telefonnummer";
+$lang["Second phone"] = "Zweite Telefonnummer";
+$lang["Mobile phone"] = "Handy";
 $lang["Street"] = "Straße";
 $lang["City"] = "Stadt";
-$lang["Zip code"] = "Postleitzahl";
+$lang["Zip code"] = "PLZ";
 $lang["Country"] = "Land";
 $lang["Comment"] = "Kommentar";
 $lang["Private"] = "Privat";
 
 // Tooltip Help
-$lang["Tooltip"]["private"] = "No: all users can see it - Yes: only the creator can see it.";
+$lang["Tooltip"]["private"] = "Nein, alle Benutzer können es sehen - Ja: nur der Ersteller kann es sehen.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

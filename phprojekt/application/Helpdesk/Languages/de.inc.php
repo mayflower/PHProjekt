@@ -5,26 +5,25 @@ $lang["Helpdesk"] = "Helpdesk";
 // Fields
  // Basic Data
 $lang["Title"] = "Titel";
-$lang["Assigned"] = "Zweckgebundene";
+$lang["Assigned"] = "Zugewiesen";
 $lang["Date"] = "Datum";
 $lang["Project"] = "Projekt";
 $lang["Priority"] = "Priorität";
-$lang["Attachments"] = "Anlage";
-$lang["Description"] = "Problembeschreibung";
+$lang["Attachments"] = "Attachments";
+$lang["Description"] = "Beschreibung";
 $lang["Status"] = "Status";
-$lang["Open"] = "Geöffnet";
-$lang["Assigned"] = "Zugewiesen";
-$lang["Solved"] = "Gelöst";
-$lang["Verified"] = "Verified";
+$lang["Open"] = "Offen";
+$lang["Solved"] = "gelöst";
+$lang["Verified"] = "Verifiziert";
 $lang["Closed"] = "Erledigt";
-$lang["Due date"] = "Frist";
-$lang["Author"] = "Autor";
+$lang["Due date"] = "Fälligkeitsdatum";
+$lang["Author"] = "Author";
 $lang["Solved by"] = "Gelöst von";
-$lang["Solved date"] = "gelöst";
-$lang["Contact"] = "Contact";
+$lang["Solved date"] = "Datum der Lösung";
+$lang["Contact"] = "Kontakt";
 
 // Tooltip Help
-$lang["Tooltip"]["projectId"] = "The parent project, if none then select PHProjekt.";
+$lang["Tooltip"]["projectId"] = "Wenn kein Projekt angelegt, dann PHProjekt wählen.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

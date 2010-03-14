@@ -5,37 +5,38 @@ $lang["Timecard"] = "Zeitkarte";
 // Fields
 $lang["Start"] = "Start";
 $lang["End"] = "Ende";
-$lang["Minutes"] = "Minute";
+$lang["Minutes"] = "Minuten";
 $lang["Project"] = "Projekt";
-$lang["Notes"] = "Notiz";
+$lang["Notes"] = "Notizen";
 $lang["Hours"] = "Stunden";
 $lang["Time period"] = "Zeitraum";
 
 // Messages
   // System
-$lang["Start time has to be between 0:00 and 24:00"] = "Startzeit muss zwischen 0:00 und 24:00 liegen";
-$lang["The start time is invalid"] = "The start time is invalid";
-$lang["Can not Start Working Time because this moment is occupied by an existing period or an open one"] = "Can not "
-    . "Start Working Time because this moment is occupied by an existing period or an open one";
-$lang["The end time must be after the start time"] = "Die Endzeit muss hinter der Startzeit liegen";
-$lang["End time has to be between 0:00 and 24:00"] = "Endzeit muss zwischen 0:00 und 24:00 liegen";
-$lang["The end time is invalid"] = "The end time is invalid";
-$lang["Can not End Working Time because this moment is occupied by an existing period"] = "Can not End Working Time "
-    . "because this moment is occupied by an existing period";
-$lang["Can not save it because it overlaps existing one"] = "Can not save it because it overlaps existing one";
+$lang["Start time has to be between 0:00 and 24:00"] = "Die Startzeit muss zwischen 0:00 und 24:00 Uhr liegen";
+$lang["The start time is invalid"] = "Die Startzeit ist ungültig";
+$lang["Can not Start Working Time because this moment is occupied by an existing period or an open one"]
+= "Kann den Startzeitpunkt nicht nutzen (zeitliche Überschneidung)";
+$lang["The end time must be after the start time"] = "Die Endzeit muss nach der Startzeit liegen";
+$lang["End time has to be between 0:00 and 24:00"] = "Endzeit muss zwischen 0:00 und 24:00 Uhr liegen";
+$lang["The end time is invalid"] = "Die Endzeit ist ungültig";
+$lang["Can not End Working Time because this moment is occupied by an existing period"]
+= "Kann den Endzeitpunkt nicht nutzen (zeitliche Überschneidung)";
+$lang["Can not save it because it overlaps existing one"] = "kann nicht gespeichert werden, weil es Überschneidungen "
+    . "bestehenden";
 
 // View
-$lang["Manage project list"] = "Projekt Favoriten";
-$lang["Drag the projects from left to right"] = "Drag the projects from left to right";
-$lang["Total hours"] = "Stunden gesamt";
+$lang["Manage project list"] = "Verwalte die Projektliste";
+$lang["Drag the projects from left to right"] = "Ziehen Sie die Projekte von links nach rechts";
+$lang["Total hours"] = "Stunden Gesamt";
 
 // Tooltip Help
-$lang["Click for open the form"] = "Click for open the form";
-$lang["Favorite projects appear first in the select box of the form"] = "Favorite projects appear first in the select "
-    . "box of the form";
+$lang["Click for open the form"] = "Klicken Sie hier um das Formular zu öffnen";
+$lang["Favorite projects appear first in the select box of the form"] = "Lieblings-Projekte erscheinen zunächst in "
+    . "der Auswahlbox des Formulars";
 
 // Setting
-$lang["Favorite projects"] = "Angezeigte Projekte";
+$lang["Favorite projects"] = "Lieblings-Projekte";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

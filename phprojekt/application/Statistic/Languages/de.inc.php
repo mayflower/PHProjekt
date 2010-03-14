@@ -1,23 +1,23 @@
 <?php
 // System
-$lang["Statistic"] = "Statistiken";
+$lang["Statistic"] = "Statistik";
 
 // Fields
 $lang["Project"] = "Projekt";
-$lang["Sum"] = "Sum";
+$lang["Sum"] = "Summe";
 $lang["Total"] = "Total";
 
 // Messages
   // System
-$lang["Period"] = "Period";
-$lang["End time can not be before Start time"] = "End time can not be before Start time";
+$lang["Period"] = "Zeitraum";
+$lang["End time can not be before Start time"] = "Endzeit kann nicht vor Beginn sein";
 
 // View
-$lang["Selected Statistic Period"] = "Selected Statistic Period";
+$lang["Selected Statistic Period"] = "Ausgewählte statistische Periode";
 
 // Tooltip Help
-$lang["Choose here the period for the statistics to be calculated."] = "Choose here the period for the statistics to be"
-    . " calculated.";
+$lang["Choose here the period for the statistics to be calculated."] = "Wählen Sie hier den Zeitraum, für den die "
+    . "Statistik berechnet werden soll.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";

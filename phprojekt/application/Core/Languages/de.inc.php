@@ -1,132 +1,132 @@
 <?php
 // Core
   // Fields
-$lang["Label"] = "Label";
+$lang["Label"] = "Beschriftung";
   // System
-$lang["Setting"] = "Einstellungen";
+$lang["Setting"] = "Einstellung";
 $lang["Administration"] = "Administration";
   // Messages
-$lang["Admin section is only for admin users"] = "Admin section is only for admin users";
+$lang["Admin section is only for admin users"] = "Admin-Bereich ist nur für den Admin-Benutzer";
   // View
-$lang["This module is for the user to set and change specific configuration parameters of his/her profile."] = "This "
-    . "module is for the user to set and change specific configuration parameters of his/her profile.";
-$lang["Here can be configured general settings of the site that affects all the users."] = "Here can be configured "
-    . "general settings of the site that affects all the users.";
-$lang["Please choose one of the tabs of above."] = "Please choose one of the tabs of above.";
+$lang["This module is for the user to set and change specific configuration parameters of his/her profile."] = "Dieses "
+    . "Modul ermöglicht dem Benutzer seine Konfigurationsparameter und sein Profil zu ändern.";
+$lang["Here can be configured general settings of the site that affects all the users."] = "Hier können allgemeine "
+    . "Einstellungen der Website angepasst werden. Die Änderungen betreffen ale Nutzer.";
+$lang["Please choose one of the tabs of above."] = "Bitte wählen Sie eine der Registerkarten oben.";
 
 // User
   // System
-$lang["User"] = "User";
+$lang["User"] = "Benutzer";
   // Fields
 $lang["Confirm Password"] = "Passwort bestätigen";
 $lang["Old Password"] = "Altes Passwort";
 $lang["Admin"] = "Admin";
   // Messages
     // System
-$lang["Already exists, choose another one please"] = "Username existiert bereits, bitte einen anderen wählen";
-$lang["The value for the setting is incorrect"] = "Der Wert für diese Einstellung ist nicht gültig";
-$lang["The password and confirmation are different or one of them is empty"] = "The password and confirmation are "
-    . "different or one of them is empty";
-$lang["The old password provided is invalid"] = "Das alte Passwort ist nicht richtig";
-$lang["The Time zone value is out of range"] = "The Time zone value is out of range";
-$lang["The Language value do not exists"] = "The Language value do not exists";
-$lang["Invalid email address"] = "Invalid email address";
-$lang["You need to log out and log in again in order to let changes have effect"] = "You need to log out and log in "
-    . "again in order to let changes have effect";
+$lang["Already exists, choose another one please"] = "existiert bereits, bitte wählen Sie einen anderen";
+$lang["The value for the setting is incorrect"] = "Der Wert für die Einstellung ist falsch";
+$lang["The password and confirmation are different or one of them is empty"] = "Das Passwort und die "
+    . "Passwortwiederholung sind unterschiedlich.";
+$lang["The old password provided is invalid"] = "Das alte Kennwort ist ungültig";
+$lang["The Time zone value is out of range"] = "Die Zeitzone liegt außerhalb der Reichweite";
+$lang["The Language value do not exists"] = "Es ist keine Sprache eingestellt";
+$lang["Invalid email address"] = "Ungültige E-Mail-Adresse";
+$lang["You need to log out and log in again in order to let changes have effect"] = "Sie müssen sich abmelden und "
+    . "wieder anmelden, um Änderungen wirksam  zu machen.";
   // Tooltip Help
-$lang["Tooltip"]["timeZone"] = "The Time zone (UTC) for the region or country you will be using Phprojekt.<br />"
-    . "This is required for all users but specially useful for international events time coordination.";
-$lang["Tooltip"]["password"] = "For new users, this is a required field. "
-    . "For existing users, leave this field blank if you don't want to change the password";
+$lang["Tooltip"]["timeZone"] = "Die Zeitzone (UTC) für die Region oder Land, in dem Sie PHProjekt verwenden werden. "
+    . "<br /> Dies ist für alle Benutzer erforderlich, aber besonders nützlich für zeitliche Koordination "
+    . "internationaler Veranstaltungen.";
+$lang["Tooltip"]["password"] = "Für neue Benutzer ist dies ist ein Pflichtfeld. Wenn Sie nicht möchten, das "
+    . "Passwort zu ändern, lassen Sie dieses Feld für bestehende Nutzer leer.";
 
 // Module
   // System
-$lang["Module"] = "Modul";
+$lang["Module"] = "Module";
   // Fields
 $lang["Form"] = "Form";
 $lang["Normal"] = "Normal";
 $lang["Global"] = "Global";
-$lang["Open Editor"] = "Open Editor";
+$lang["Open Editor"] = "Editor Öffnen";
   // Tooltip help
-$lang["Open a dialog where you can drag and drop many fields for create the form as you want."] = "Open a dialog where "
-    . "you can drag and drop many fields for create the form as you want.";
+$lang["Open a dialog where you can drag and drop many fields for create the form as you want."] = "Öffnen Sie ein "
+    . "Dialogfeld, in dem Sie per Drag & Drop viele Felder für das Formular erstellen können.";
   // Module Designer
     // Fields
 $lang["Database"] = "Datenbank";
 $lang["Field name"] = "Feldname";
-$lang["Field type"] = "Feld typ";
-$lang["Field lenght"] = "Feld länge";
-$lang["Select Type"] = "Wählen Sie Typ";
+$lang["Field type"] = "Feldtyp";
+$lang["Field lenght"] = "Länge des Feldes";
+$lang["Select Type"] = "Auswahltyp";
 $lang["Custom Values"] = "Benutzerdefinierte Werte";
 $lang["Values"] = "Werte";
-$lang["Default Value"] = "Default";
-$lang["Grid"] = "Gitter";
-$lang["List Position"] = "List Position";
-$lang["General"] = "Allgemeine Einstellungen";
+$lang["Default Value"] = "Standartwer";
+$lang["Grid"] = "Raster";
+$lang["List Position"] = "Listesposition";
+$lang["General"] = "Allgemein";
 $lang["Required Field"] = "Pflichtfeld";
     // Messages
       // System
-$lang["The module was added correctly"] = "Das Modul wurde erfolgreich hinzugefügt";
-$lang["The module was edited correctly"] = "Das Modul wurde erfolgreich geändert";
+$lang["The module was added correctly"] = "Das Modul wurde ordnungsgemäß hinzugefügt";
+$lang["The module was edited correctly"] = "Das Modul wurde korrekt bearbeitet";
 $lang["The module can not be deleted"] = "Das Modul kann nicht gelöscht werden";
-$lang["The module was deleted correctly"] = "Das Modul wurde erfolgreich gelöscht";
-$lang["There was an error writing the table"] = "Beim Anlegen der Tabelle trat ein Fehler auf";
-$lang["The table module was created correctly"] = "Die Modultabelle wurde erfolgreich angelegt";
-$lang["The table module was edited correctly"] = "Die Modultabelle wurde erfoglreich geändert";
-$lang["Invalid parameters"] = "Invalid parameters";
-$lang["The Module must contain at least one field"] = "The Module must contain at least one field";
-$lang["Please enter a name for this module"] = "Please enter a name for this module";
-$lang["The module name must start with a letter"] = "The module name must start with a letter";
-$lang["All the fields must have a table name"] = "All the fields must have a table name";
-$lang["There are two fields with the same Field Name"] = "There are two fields with the same Field Name";
-$lang["The length of the varchar fields must be between 1 and 255"] = "The length of the varchar fields must be "
-    . "between 1 and 255";
-$lang["The length of the int fields must be between 1 and 11"] = "The length of the int fields must be between 1 and "
-    . "11";
-$lang["Invalid form Range for the select field"] = "Invalid form Range for the select field";
-$lang["The module must have a project selector called project_id"] = "The module must have a project selector called "
-    . "project_id";
-$lang["Project module must be a normal module"] = "Project module must be a normal module";
-$lang["The module must have at least one field with the list position greater than 0"] = "The module must have at "
-    . "least one field with the list position greater than 0";
+$lang["The module was deleted correctly"] = "Das Modul wurde korrekt gelöscht";
+$lang["There was an error writing the table"] = "Ein Fehler beim Schreiben in die Tabelle is aufgetreten";
+$lang["The table module was created correctly"] = "Die Tabelle für das neue Modul wurde korrekt erstellt";
+$lang["The table module was edited correctly"] = "Die Tabelle für das Modul wurde korrekt geändert";
+$lang["Invalid parameters"] = "Ungültiger Parameter";
+$lang["The Module must contain at least one field"] = "Die Module müssen mindestens ein Feld enthalten";
+$lang["Please enter a name for this module"] = "Bitte geben Sie einen Namen für dieses Modul";
+$lang["The module name must start with a letter"] = "Der Modulname muss mit einem Buchstaben beginnen";
+$lang["All the fields must have a table name"] = "Alle Felder einer Tabelle müssen benannt werden";
+$lang["There are two fields with the same Field Name"] = "Es sind zwei Felder mit identischem Namen";
+$lang["The length of the varchar fields must be between 1 and 255"] = "Die Länge der VARCHAR Felder muss zwischen 1 "
+    . "und 255 Zeichen sein";
+$lang["The length of the int fields must be between 1 and 11"] = "Die Länge der INT Felder muss zwischen 1 und 11 "
+    . "liegen";
+$lang["Invalid form Range for the select field"] = "Ungültiger Wertebereich für das Select-Feld";
+$lang["The module must have a project selector called project_id"] = "Das Modul muss einen Projekt-Selektor genannt "
+    . "project_id haben";
+$lang["Project module must be a normal module"] = "Projekt-Modul muss ein Standardmodul sein";
+$lang["The module must have at least one field with the list position greater than 0"] = "Das Modul muss mindestens "
+    . "ein Feld mit der Liste Position größer als 0 haben";
       // View
 $lang["Make sure the application folder is writeable for the webserver!"] = "Make sure the application folder is "
     . "writeable for the webserver!";
     // View
-$lang["Module Designer"] = "Module Designer";
-$lang["Repository of available field types"] = "Repository of available field types";
-$lang["Active fields in the module"] = "Active fields in the module";
-$lang["Example Project 1"] = "Example Project 1";
-$lang["Example Project 2"] = "Example Project 2";
-$lang["Example User 1"] = "Example User 1";
-$lang["Example User 2"] = "Example User 2";
-$lang["Example Contact 1"] = "Example Contact 1";
-$lang["Example Contact 2"] = "Example Contact 2";
+$lang["Module Designer"] = "Modul Designer";
+$lang["Repository of available field types"] = "Archiv verfügbarer Feldtypen";
+$lang["Active fields in the module"] = "Aktive Felder in dem Modul";
+$lang["Example Project 1"] = "Beispiel Projekt 1";
+$lang["Example Project 2"] = "Beispiel Projekt 2";
+$lang["Example User 1"] = "Beispiel User 1";
+$lang["Example User 2"] = "Beispiel User 2";
+$lang["Example Contact 1"] = "Beispiel Kontakt 1";
+$lang["Example Contact 2"] = "Beispiel Kontakt 2";
     // Tooltip Help
-$lang["Each option have the key, and the value to display, separated by #."] = "Each option have the key, and the "
-    . "value to display, separated by #.";
-$lang["Separate the diferent options with '|'."] = "Separate the diferent options with '|'.";
-$lang["For Modules queries, use Module#keyField#displayField."] = "For Modules queries, use "
-    . "Module#keyField#displayField.";
-$lang["The API will get all the keyField of the module and will use the displayField for show it."] = "The API will "
-    . "get all the keyField of the module and will use the displayField for show it.";
-$lang["Defines the position of the field in the grid. Starts with 1 in the left. 0 for do not show it."] = "Defines "
-    . "the position of the field in the grid. Starts with 1 in the left. 0 for do not show it.";
-$lang["1. Drag a field into the right pane."] = "1. Drag a field into the right pane.";
-$lang["2. Edit the parameters of the field in the lower left pane."] = "2. Edit the parameters of the field in the "
-    . "lower left pane.";
-$lang["Drop in this panel all the fields that you want to have in this tab."] = "Drop in this panel all the fields "
-    . "that you want to have in this tab.";
-$lang["For sort the fields, just drag and drop it in the correct position."] = "For sort the fields, just drag and "
-    . "drop it in the correct position.";
-$lang["Number of stars"] = "Number of stars";
-
+$lang["Each option have the key, and the value to display, separated by #."] = "Jede Option verfügt über einen "
+    . "Schlüssel und einen Wert getrennt durch #.";
+$lang["Separate the diferent options with '|'."] = "Trennen Sie die verschiedenen Optionen mit\"|\".";
+$lang["For Modules queries, use Module#keyField#displayField."] = "Für Module Abfragen verwenden "
+    . "Modul#Schlüsselfeld#Anzeigefeld.";
+$lang["The API will get all the keyField of the module and will use the displayField for show it."] = "Die API sucht "
+    . "über das Schlüsselfeld des Moduls und zeigt den Wert des Anzeigefeldes.";
+$lang["Defines the position of the field in the grid. Starts with 1 in the left. 0 for do not show it."] = "Bestimmt "
+    . "die Position des Feldes in der Tabelle. Beginnt mit 1 auf der linken Seite. 0 macht unsichtbar.";
+$lang["1. Drag a field into the right pane."] = "1. Ziehen Sie ein Feld in den rechten Bereich.";
+$lang["2. Edit the parameters of the field in the lower left pane."] = "2. Bearbeiten Sie die Feldparameter im "
+    . "unteren linken Bereich.";
+$lang["Drop in this panel all the fields that you want to have in this tab."] = "Drag & Drop in dieses Fenster alle "
+    . "Felder, die Sie auf dieser Registerkarte haben wollen.";
+$lang["For sort the fields, just drag and drop it in the correct position."] = "Für die gewünschte Sortierung der "
+    . "Felder, einfach per Drag & Drop in die richtige Position bringen.";
+$lang["Number of stars"] = "Anzahl der Sterne";
 // Tab
   // System
 $lang["Tab"] = "Reiter";
   // Labels
-$lang["Basic Data"] = "Basisdaten";
-$lang['People'] = "Personen";
+$lang["Basic Data"] = "Allgemeine Datem";
+$lang["People"] = "Personen";
 
 // Role
   // System
@@ -134,25 +134,25 @@ $lang["Role"] = "Rolle";
 
 // General
   // Fields
-$lang["Company Name"] = "Firmenname";
+$lang["Company Name"] = "Firma";
   // Messages
-$lang["The Company name is empty"] = "The Company name is empty";
+$lang["The Company name is empty"] = "Der Name der Firma ist leer";
 
 // Notification
   // Fields
 $lang["Login / Logout"] = "Login / Logout";
-$lang["Data Records"] = "Data Records";
-$lang["Alerts"] = "Alerts";
+$lang["Data Records"] = "Datensätze";
+$lang["Alerts"] = "Warnungen";
   // System
-$lang["Notification"] = "Notification";
+$lang["Notification"] = "Benachrichtigung";
   // Tooltip Help
-$lang["Tooltip"]["alerts"] = "This is to turn on/off the alerts, e.g some minutes an event of you starts.";
-$lang["Tooltip"]["loginLogout"] = "Enable/disable this and messages about the login/logout of other user will (not)"
-    . " disappear.";
-$lang["Tooltip"]["usergenerated"] = "This is to turn on/off messages from another user to you.";
-$lang["Tooltip"]["datarecords"] = "This is to turn on/off system generated messages.<br />"
-    . "Events that trigger this message: CREATE a new Item (e.g. a Project, Note or Todo), DELETE an existing Item, "
-    . "and EDIT an Item.";
+$lang["Tooltip"]["alerts"] = "Damit können Sie die Benachrichtigungen ein- und ausschalten.";
+$lang["Tooltip"]["loginLogout"] = "Damit können Sie die Meldungen über den Login/Logout anderer Benutzer aktivieren "
+    . "bzw. deaktivieren.";
+$lang["Tooltip"]["usergenerated"] = "Damit können Sie die Nachrichten von einem anderen Benutzern an Sie aktivieren "
+    . "bzw. deaktivieren.";
+$lang["Tooltip"]["datarecords"] = "Damit können Sie die Nachrichten über Systemereignisse wie zB ein "
+    . "Projekterstellung, Anmerkung- oder Todospeicherung, Löschen bestehender Artikel aktivieren bzw. deaktivieren.";
 
 // General Help (Administration)
 $lang["Content Help Administration"]["General"] = "DEFAULT";

@@ -13,7 +13,7 @@ $lang["Decision"] = "Entscheidung";
 $lang["Comment"] = "Kommentar";
 $lang["Date"] = "Datum";
 $lang["Who"] = "Wer";
-$lang["Sort after"] = "Einordnen nach";
+$lang["Sort after"] = "Sortieren nach";
 
 // Messages
   // System

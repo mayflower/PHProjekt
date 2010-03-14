@@ -8,37 +8,40 @@ $lang["Project"] = "Projekt";
 
 // Messages
   // System
-$lang["No project info was received"] = "No project info was received";
-$lang["Incomplete data received"] = "Incomplete data received";
-$lang["Id not found #"] = "Id not found #";
-$lang["Project id #"] = "Project id #";
-$lang["Start date invalid"] = "Start date invalid";
-$lang["End date invalid"] = "End date invalid";
-$lang["Start date can not be after End date"] = "Start date can not be after End date";
+$lang["No project info was received"] = "Keine Projektinfo empfangen";
+$lang["Incomplete data received"] = "Unvollständige Daten empfangen";
+$lang["Id not found #"] = "Id nicht gefunden #";
+$lang["Project id #"] = "Project-ID #";
+$lang["Start date invalid"] = "Startdatum ist ungültig";
+$lang["End date invalid"] = "Enddatum ist ungültig";
+$lang["Start date can not be after End date"] = "Das Startdatum kann nicht nach dem Enddatum sein";
   // View
-$lang["Attention: parent project"] = "Attention: parent project";
-$lang["Attention: sub-project"] = "Attention: subproject";
-$lang["starts after sub-project"] = "starts after subproject";
-$lang["ends before sub-project"] = "ends before subproject";
-$lang["ends after parent project"] = "ends after parent project";
-$lang["starts before parent project"] = "starts before parent project";
-$lang["Click \"OK\" to adjust parent project to new start date"] = "Click \"OK\" to adjust parent project to new
-    start date";
-$lang["Click \"OK\" to adjust parent project to new end date"] = "Click \"OK\" to adjust parent project to new
-    end date";
-$lang["Click \"OK\" to adjust sub-project to new end date"] = "Click \"OK\" to adjust subproject to new end date";
-$lang["Click \"OK\" to adjust sub-project to new start date"] = "Click \"OK\" to adjust subproject to new start date";
-$lang["Click \"Reset\" to reset current project"] = "Click \"Reset\" to reset current project";
-$lang["Click \"x\" or \"ESC\" to do nothing"] = "Click \"x\" or \"ESC\" to do nothing";
-$lang["There are no valid projects"] = "There are no valid projects";
+$lang["Attention: parent project"] = "Achtung: übergeordnetes Projekt";
+$lang["Attention: sub-project"] = "Achtung: Unterprojekt";
+$lang["starts after sub-project"] = "beginnt nach dem Teilprojekt";
+$lang["ends before sub-project"] = "endet vor dem Teilprojekt";
+$lang["ends after parent project"] = "endet nach dem übergeordneten Projekt";
+$lang["starts before parent project"] = "beginnt vor dem übergeordneten Projekt";
+$lang["Click \"OK\" to adjust parent project to new start date"] = "Klicken Sie auf \"OK\", um das neue Startdatum dem "
+    . "übergeordneten Projekt zuzuweisen";
+$lang["Click \"OK\" to adjust parent project to new end date"] = "Klicken Sie auf \"OK\" , um das neue Enddatum dem "
+    . "übergeordneten Projekt zuzuweisen";
+$lang["Click \"OK\" to adjust sub-project to new end date"] = "Klicken Sie auf \"OK\" , um das neue Enddatum dem "
+    . "Teilprojekt zuzuweisen";
+$lang["Click \"OK\" to adjust sub-project to new start date"] = "Klicken Sie auf \"OK\", um das neue Startdatum dem "
+    . "Teilprojekt zuzuweisen";
+$lang["Click \"Reset\" to reset current project"] = "Klicken Sie auf \"Zurücksetzen\", um aktuelles Projekt "
+    . "zurückzusetzen";
+$lang["Click \"x\" or \"ESC\" to do nothing"] = "Klicken Sie auf \"X\" oder \"ESC\", um Änderungen zu ignorieren";
+$lang["There are no valid projects"] = "Es gibt keine gültigen Projekte";
 
 // View
-$lang["Selected Project Timeline"] = "Selected Project Timeline";
-$lang["Warning"] = "Warning";
+$lang["Selected Project Timeline"] = "Gewählter Projekt-Zeitplan";
+$lang["Warning"] = "Warnung";
 
 // Tooltip Help
-$lang["Click on a Project timeline and see and/or change here the Start and End dates."] = "Click on a Project timeline"
-    . " and see and/or change here the Start and End dates.";
+$lang["Click on a Project timeline and see and/or change here the Start and End dates."] = "Klicken Sie auf ein "
+    . "Projekt-Zeitplan, um  Start-und Enddatum zu sehene und ggf. anzupassen.";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
