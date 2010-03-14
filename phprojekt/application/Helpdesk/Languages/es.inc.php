@@ -13,7 +13,6 @@ $lang["Attachments"] = "Adjuntar";
 $lang["Description"] = "Descripción";
 $lang["Status"] = "Estado";
 $lang["Open"] = "Abierto";
-$lang["Assigned"] = "Asignado";
 $lang["Solved"] = "Resuelto";
 $lang["Verified"] = "Verificado";
 $lang["Closed"] = "Cerrado";

@@ -52,7 +52,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     protected $_validate = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $db Configuration for Zend_Db_Table.
      *

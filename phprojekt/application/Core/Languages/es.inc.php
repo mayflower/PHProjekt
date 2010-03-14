@@ -126,7 +126,7 @@ $lang["Number of stars"] = "Número de estrellas";
 $lang["Tab"] = "Solapa";
   // Labels
 $lang["Basic Data"] = "Datos Básicos";
-$lang['People'] = "Personas";
+$lang["People"] = "Personas";
 
 // Role
   // System
