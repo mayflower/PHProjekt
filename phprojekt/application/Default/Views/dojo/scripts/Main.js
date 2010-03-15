@@ -1060,7 +1060,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             container.addChild(new dijit.layout.ContentPane({
                 title:   tab,
                 content: text,
-                style:   'width: 100%; padding-left: 10px;'
+                style:   'width: 100%; padding-left: 10px; padding-right: 10px;'
             }));
         }
     },
