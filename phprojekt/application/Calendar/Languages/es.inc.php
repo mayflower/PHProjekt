@@ -81,88 +81,316 @@ $lang["The last event's day could not match this day."] = "El día del último e
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Evento"] = "<br />
-    Esta es la <b>Ayuda General del módulo Evento</b><br />
+$lang["Content Help"]["Calendar"] = "<br />
+    This is the <b>General Help of Calendar module</b><br />
     <br />
-    El módulo Evento es una forma muy completa de administrar eventos. Puede crear uno, ingresar información
-    descriptiva sobre él, asignarle fecha y hora, especificar participantes, crearle recurrencia y el resto de
-    propiedades generales de los módulos, como permisos de Acceso, Notificación por email e Historial.<br />
+    The Calendar is a very complete module for managing events. You can create an event, set descriptive info to it,
+    assign it date and time, specify participants, create a particular recurrence for the event, and the rest of
+    general properties of the modules, like Access rights, mail Notification and History registry.<br />
     <br />
-    La <b>pantalla</b> se divide en 5 secciones:<br />
+    The <b>screen</b> is divided into 5 sections:<br />
     <br />
     <ol>
-        <li><b>Botonera superior derecha:</b> aquí, según los ítems mostrados y los permisos del usuario,
-            se mostrarán
-            hasta 3 botones.<br />
+        <li>
+            <b>Top right button bar:</b> here, depending on the items being shown and the user rights, will be shown
+            up to 3 buttons.<br />
             <ul>
-                <li><b>Agregar:</b> lo presiona y un formulario vacío se abre para que cree un nuevo evento.<br />
-                <li><b>Grabar:</b> la grilla puede ser editada sólo cliqueando en los campos que desee cambiar. Luego
-                    presiona este botón para grabar los cambios hechos.<br />
-                <li><b>Exportar:</b> exporta a un archivo CSV los resultados y ofrece descargarlo.<br />
+                <li>
+                    <b>Add a new item:</b> you press it and an empty form is open to create a new event.
+                </li>
+                <li>
+                    <b>Export:</b> exports to a CSV file the results and offers you to download it.
+                </li>
+                <li>
+                    <b>Filter</b> (only seen in List view): activates an optional panel over the grid that lets you
+                    create a set of specific searching criteria to filter the grid items and see only the ones you want.
+                </li>
             </ul>
-        <li><b>Solapas de Vistas:</b> hay cuatro tipos de listados que se activan por medio de estas solapas.<br />
+        </li>
+        <li>
+            <b>View tabs:</b> there are four types of listings that are activated through <b>List</b>, <b>Day</b>,
+            <b>Week</b> and <b>Month</b> tabs.<br />
             <ul>
-                <li><b>Lista:</b> una grilla con todos los eventos para el usuario logueado.<br />
-                <li><b>Día:</b> una agenda desde las 8:00 hasta las 20:00 hs. donde se muestran todos los eventos de un
-                    día determinado.<br />
-                    <u>Tiene dos subtipos</u> que son elegidos a través de las solapas <b>Propio</b> y
-                    <b>Selección</b>
-                    que aparecen a la derecha de la misma barra, cuando el modo <b>Día</b> está activo:
+                <li>
+                    <b>List:</b> a grid with all the events for the current user.
+                </li>
+                <li>
+                    <b>Day:</b> a schedule from 8:00 to 20:00 where all the events of a specific day are shown.<br />
+                    <u>It has two subtypes</u> that are chosen through the <b>Self</b> and <b>Selection</b> tab tabs
+                    appear at the right of the same bar, when <b>Day</b> mode is active:
                     <ul>
-                        <li><b>Propio:</b> se muestran los eventos del día elegido, para el usuario activo.
-                        <li><b>Selección:</b> cuando se presiona este botón, una ventana emergente aparece
-                            permitiendo al usuario seleccionar un pequeño grupo de gente de modo que la lista de
-                            eventos contendrá
-                            tantas columnas como usuarios elegidos; se verá una agenda grupal para el día activo.
+                        <li>
+                            <b>Self:</b> the events of the chosen day, for the current user are shown.
+                        </li>
+                        <li>
+                            <b>Selection:</b> when this tab is pressed, a pop-up window appears letting the user
+                            select a small group of people so that the list of events will have as many columns as
+                            users selected; there will be seen a group schedule for the active day.
+                        </li>
                     </ul>
-                <li><b>Semana:</b> una agenda semanal, igual la diaria pero para los siete días de la semana
-                    simultáneamente.
-                <li><b>Mes:</b> una agenda mensual que expone en un formato claro de calendario todos los días
-                    del mes,
-                    más los días necesarios del mes anterior y siguiente para completar todas las semanas mostradas.
+                </li>
+                <li>
+                    <b>Week:</b> a weekly schedule, like the common day schedule, but for the seven days of the week
+                    simultaneously.
+                </li>
+                <li>
+                    <b>Month:</b> a monthly schedule, shows in a clear calendar table all the days of the month, and
+                    the necessary days of previous and next months in order to complety all the weeks shown.
+                </li>
             </ul>
-            Cuando Día, Semana o Mes son la vista activa, aparece una barra adicional sobre los listados. Esta tiene
-            los vínculos <i>previo</i>, <i>hoy</i> y <i>siguiente</i>, para cambiar el día / semana / mes
-            secuencialmente. Además muestra la fecha del período seleccionado.<br />
+            When the Day, Week or Month view are active, it appears a schedule bar over the listings.
+            It has the <i>previous</i>, <i>today</i> and <i>next</i> links to change the day / week / month in
+            sequence. Also it shows the date of the selected period.<br />
             <br />
-        <li><b>Grilla / Lista:</b> aquí se muestra la lista de ítems o la agenda de un día determinado,
-            según la vista elegida.<br />
-        <br />
-        <li><b>Formulario:</b> cuando un ítem esta por ser creado o se cliquea en uno del listado, un formulario se
-            muestra aquí para completar o modificar sus datos.<br />
-        <br />
-        <li><b>Botonera inferior:</b> aquí, según los permisos del usuario, cuando un ítem está siendo creado o
-            modificado se muestran los botones <b>Grabar</b> y <b>Borrar</b>.<br />
+            <b>Drag and Resize</b><br />
+            <br />
+            In Day and Week views, the events are able to be dragged and resized to any visible place in the panel.
+            If you click any event, it is opened in the form, but you can also drag and drop it in another place and
+            the new time / day will be stored in the database. You can also drag the bottom border of any event to
+            increase and decrease the length of the it. In all cases the descriptive content of the event gets changed
+            automatically while you are dragging its shape or bottom border and the saving process occurs automatially
+            when you release the mouse button.<br />
+            If you drag a multiple days event, the boxes that correspond to other days of the same event get invisible,
+            when the event is dropped they get visible again but in the new position.<br />
+            The Day view in the Selection mode doesn't allow to modify the events of other users, just yours.<br />
+        </li>
+        <li>
+            <b>Grid / List:</b> here are shown the list of items or a determined day's schedule, depending on the
+            selected view.
+        </li>
+        <li>
+            <b>Form:</b> when an item is going to be created or it is clicked one in the grid/schedule above, a form is
+            shown here to enter or change its data.
+        </li>
+        <li>
+            <b>Bottom button bar:</b> here, depending on the user rights, when an item is being created or modified
+            there are shown the <b>Save</b> and <b>Delete</b> buttons.
+        </li>
     </ol>
     <br />
     <br />";
 
-$lang["Content Help"]["Datos Básicos"] = "DEFAULT";
-$lang["Content Help"]["Repetición"] = "<br />
-    <b>Solapa Repetición</b><br />
+$lang["Content Help"]["Basic data"] = "<br />
+    <b>Basic data tab</b><br />
     <br />
-    Esta solapa permite asignar repetición al evento para que suceda tantas veces como se especifique, con la
-    frecuencia y días de la semana definidos.<br />
+    Fields:<br />
     <br />
-    <b>Campos</b><br />
+    <b>Title</b><br />
+    Text: the title of the event, e.g.: 'Annual managers meeting'.<br />
+    * Required field<br />
     <br />
-    <b>Repeticiones</b>: aquí elige cuán seguido quiere que ocurra el evento. <i>Una vez</i> es la
-    repetición predeterminada y significa que no habrá repetición. Puede elegir <i>Diario</i>,
-    <i>Semanal</i>, <i>Mensual</i> o <i>Anual</i> y el evento se repetirá con dicha frecuencia hasta el día elegido
-    en el campo <u>Hasta</u>.<br />
+    <b>Place</b><br />
+    Text: the place where the event will be carried out.<br />
     <br />
-    <b>Intervalo</b>: especifique aquí el intervalo que quiere para las repeticiones. Ej.: si elige <i>Mensual</i> en
-    el campo <u>Repeticiones</u> y <i>2</i> en <u>Intervalo</u>, el evento sucederá cada 2 meses.<br />
+    <b>Notes</b><br />
+    Textarea: description of the event.<br />
     <br />
-    <b>Hasta</b>: si elige una opción distinta a <i>Una vez</i> en el campo <u>Repeticiones</u>, aquí debe elegir
-    cuándo quiere que las repeticiones cesen.<br />
+    <b>Start</b><br />
+    Datetime: date and timewhen the event begins.<br />
+    * Required field<br />
     <br />
-    <b>Días de la semana</b>: puede elegir qué días de la semana sucederá la repetición del evento.<br />
+    <b>End</b><br />
+    Datetime: date and time when the event ends (generally they end the same day)<br />
+    * Required field<br />
+    <br />
+    <b>Visibility</b><br />
+    Whether the event details will be visible to other users in the 'Selection' mode views like 'Day / Selection mode'
+    or not. If set to 'public', other users could see the time, title and note in the selection mode views, if set to
+    'private' then other users will just be able to see the time.<br />
+    <br />
+    <b>Status</b><br />
+    Whether the owner or participant of the event has accepted it, rejected it or it is still pending to be decided
+    whether he/she is going to attend the event.<br />
+    <br />
+    <b>Tag</b><br />
+    The tag field that synchronizes the item with Tags panel.<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Accesos"] = "DEFAULT";
-$lang["Content Help"]["Notificación"] = "DEFAULT";
-$lang["Content Help"]["Historial"] = "DEFAULT";
+$lang["Content Help"]["Participants"] = "<br />
+    <b>Participants tab</b><br />
+    <br />
+    There is no Access tab in this module, instead, it is used this Participants tab that allows adding participants to
+    the event. The owner (creator) of the event has full access to the related events of all participants, and all
+    occurrencies, the rest of the participants are only able to modify the 'status' and 'tag' fields of Basic Data tab
+    of their respective events.  They can't modify other thing nor delete the event.<br />
+    This tab is only seen by the owner of the opened event.<br />
+    <br />
+    <br />
+    <b>Scope of each event and participants</b><br />
+    <br />
+    When it is created an event with many participants, internally as many events as participants are created although
+    only the author is able to modify the events, the participants can't modify nor delete their events.<br />
+    When an owner modifies an event or tries to delete it, the action may be applied to his/her event or also to all
+    participants, the system will eventually ask it.<br />
+    When an owner creates or modifies a multiple participants/occurrencies event, the 'status' field of all the
+    participants is set to Pending, so that they can confirm (or confirm again) whether they agree to participate in
+    the event.<br />
+    <br />
+    <br />
+    <b>Layout</b><br />
+    <br />
+    The tab has a select box and an Add button at its right side. You select a user, click the button and it will be
+    added as a participant under the select box the name of the user and a cross button that permits you to take it out.
+    This way you are adding participants to the event so that they will see it in their views of Calendar module, and
+    will receive a Notification if the checkbox of Notification tab is checked to send it.<br />
+    <br />
+    <br />
+    <b>Pop-up Dialog: To whom will this apply (Edit)</b><br />
+    <br />
+    When the owner (creator) of an event that has participants in this tab modifies the content of any tab of the event,
+    a pop-up dialog will appear when he/she presses Save button. That dialog asks what events will these modifications
+    apply to. Available buttons to answer are:<br />
+    Edit just for me => changes will affect just owner event, participants won't see them.<br />
+    Edit for all participants => changes will be applied to events of all participants.<br />
+    <br />
+    This dialog may be combined with the recurrence one (see 'Recurrence tab' help). If both dialogs appear asking you
+    how to save the event, the results may be the following, according to your answers:<br />
+    <br />
+    1 - First answer: Edit just this occurrence - Second answer: Edit just for me<br />
+    The changes will apply to this occurrence of the whole series, and just for logged user. The rest of the dates and
+    participants won't be affected.<br />
+    <br />
+    2 - First answer: Edit just this occurrence - Second answer: Edit for all participants<br />
+    The changes will apply just to this occurrence of the whole series, but for logged user and all participants.<br />
+    <br />
+    3 - First answer: Edit all occurrences - Second answer: Edit just for me<br />
+    The changes will apply to the whole series of events but just for logged user. The rest of participants won't be
+    affected.<br />
+    <br />
+    4 - First answer: Edit all occurrences - Second answer: Edit for all participants<br />
+    The changes will apply to the whole series of events and for logged user and all participants. This is the maximum
+    possible scope for the changes.<br />
+    <br />
+    <br />
+    <b>Pop-up Dialog: To whom will this apply (Delete)</b><br />
+    <br />
+    When the owner (creator) of an event that has participants in this tab tries to delete it, a pop-up dialog will
+    appear when he/she presses Delete button. That dialog asks what events will this deletion apply to. Available
+    buttons to answer are:<br />
+    Delete just for me => deletion will affect just owner event, participants will remain.<br />
+    Delete for all participants => deletion will be applied to events of all participants.<br />
+    <br />
+    This dialog may be combined with the recurrence one (see 'Recurrence tab' help). If both dialogs appear asking you
+    how to delete the event, the results may be the following, according to your answers:<br />
+    <br />
+    1 - First answer: Delete just this occurrence - Second answer: Delete just for me<br />
+    The deletion will apply to this occurrence of the whole series, and just for logged user. The rest of the dates and
+    participants won't be affected.<br />
+    <br />
+    2 - First answer: Delete just this occurrence - Second answer: Delete for all participants<br />
+    The deletion will apply just to this occurrence of the whole series, but for logged user and all participants.
+    <br />
+    <br />
+    3 - First answer: Delete all occurrences - Second answer: Delete just for me<br />
+    The deletion will apply to the whole series of events but just for logged user. The rest of participants won't be
+    affected.<br />
+    <br />
+    4 - First answer: Delete all occurrences - Second answer: Delete for all participants<br />
+    The deletion will apply to the whole series of events and for logged user and all participants. This is the maximum
+    possible scope for the deletion.<br />
+    <br />
+    <br />";
 
+$lang["Content Help"]["Recurrence"] = "<br />
+    <b>Recurrence Tab</b><br />
+    <br />
+    Recurrence tab allows setting a recurrence to the events so that the same event is repeated later one or more
+    times, according to a user defined pattern.<br />
+    The resulting series of events may be later edited individually or all at once, and they will be connected as an
+    individual series of recurrent events. The owner (creator) of the event has full access to the related events of
+    all participants, and all occurrencies, the rest of the participants are only able to modify the 'status' and 'tag'
+    fields of Basic Data tab of their respective events.  They can't modify other thing nor delete the event.<br />
+    When an owner modifies an event or tries to delete it, the action may be applied to the open event or also to all
+    occurrencies, if any. A pop-up dialog (explained here later) will ask it.<br />
+    <br />
+    When you press Save all the parameters defined inside this tab are sent to the server and this last one calculates
+    and creates the appropriate events.<br />
+    <br />
+    When an owner creates or modifies a multiple participants/occurrencies event, the 'status' field of all the
+    participants is set to Pending, so that they can confirm (or confirm again) whether they agree to participate in
+    the event.<br />
+    <br />
+    It has 4 fields to specify recurrence parameters. The combination of all of them will determine the final result:
+    <br />
+    <br />
+    <b>Repeats</b><br />
+    Select: here you can choose the recurrence frequency. Possible options are None, Daily, Weekly, Monthly and Yearly.
+    <br /><br />
+    <b>Interval</b><br />
+    Text: here you write a number for the interval to be applied to 'Repeats' field content. Default value is '1'.<br />
+    E.g.: Repeats Daily, Interval 1 will make the event to happen everyday, with Interval 2 will make it happen every
+    other day.<br />
+    <br />
+    <b>Until</b><br />
+    The day the event will stop being repeated. This day will be included in the series.<br />
+    <br />
+    <b>Week days</b><br />
+    If you choose Weekly or Monthly in Repeats field, here you can choose a day of the week when you want the event to
+    happen.<br />
+    E.g.: If today is 5 of October Monday and you create an event that starts and ends today and select Weekly in
+    Repeats, 1 in Interval, 2009-10-25 in Until and Tuesday in Week day, the following events will be created.<br />
+    1 - Tuesday 6 of October<br />
+    2 - Tuesday 13 of October<br />
+    3 - Tuesday 20 of October<br />
+    <br />
+    <br />
+    <b>Pop-up Dialog: Edit repeating events</b><br />
+    <br />
+    When a user tries to modify an event that is part of a series and presses Save a pop-up dialog will appear.
+    That dialog asks what events will these modifications apply to. Available buttons to answer are:<br />
+    Edit just this occurrence => changes will affect just this event, the rest of the series will remain the same.
+    <br />
+    Edit all occurrences => changes will be applied to each event of the series.<br />
+    <br />
+    This dialog may be combined with the participants one (see 'Participants tab' help). If both dialogs appear asking
+    you how to save the event, the results may be the following:<br />
+    <br />
+    1 - First answer: Edit just this occurrence - Second answer: Edit just for me<br />
+    The changes will apply to this occurrence of the whole series, and just for logged user. The rest of the dates and
+    participants won't be affected.<br />
+    <br />
+    2 - First answer: Edit just this occurrence - Second answer: Edit for all participants<br />
+    The changes will apply just to this occurrence of the whole series, but for logged user and all participants.
+    <br />
+    <br />
+    3 - First answer: Edit all occurrences - Second answer: Edit just for me<br />
+    The changes will apply to the whole series of events but just for logged user. The rest of participants won't be
+    affected.<br />
+    <br />
+    4 - First answer: Edit all occurrences - Second answer: Edit for all participants<br />
+    The changes will apply to the whole series of events and for logged user and all participants. This is the maximum
+    possible scope for the changes.<br />
+    <br />
+    <br />
+    <b>Pop-up Dialog: Delete for Who</b><br />
+    <br />
+    When a user tries to delete an event that is part of a series (pressing Delete) a pop-up dialog will appear.
+    That dialog asks what events will this deletion apply to. Available buttons to answer are:<br />
+    Delete just this occurrence => deletion will affect just this event, the rest of the series will remain the
+    same.<br />
+    Delete all occurrences => deletion will be applied to each event of the series.<br />
+    <br />
+    This dialog may be combined with the participants one (see 'Participants tab' help). If both dialogs appear asking
+    you how to delete the event, the results may be the following, according to your answers:<br />
+    <br />
+    1 - First answer: Delete just this occurrence - Second answer: Delete just for me<br />
+    The deletion will apply to this occurrence of the whole series, and just for logged user. The rest of the dates and
+    participants won't be affected.<br />
+    <br />
+    2 - First answer: Delete just this occurrence - Second answer: Delete for all participants<br />
+    The deletion will apply just to this occurrence of the whole series, but for logged user and all participants.
+    <br />
+    <br />
+    3 - First answer: Delete all occurrences - Second answer: Delete just for me<br />
+    The deletion will apply to the whole series of events but just for logged user. The rest of participants won't be
+    affected.<br />
+    <br />
+    4 - First answer: Delete all occurrences - Second answer: Delete for all participants<br />
+    The deletion will apply to the whole series of events and for logged user and all participants. This is the maximum
+    possible scope for the deletion.<br />
+    <br />
+    <br />";
 
+$lang["Content Help"]["Notification"] = "DEFAULT";
+$lang["Content Help"]["History"] = "DEFAULT";

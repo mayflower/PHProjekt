@@ -275,67 +275,116 @@ $lang["Content Help"]["General"] = "<br />
     The Phprojekt screen is divided into many sections:<br />
     <br />
     <ul>
-        <li>The <b>upper section</b> that has the system logo at the left and some links and a search box at the right
+        <li>
+            The <b>upper section</b> that has the system logo at the left and some links and a search box at the right
             side.<br />
-        <br />
-        <ol>
-            <li>The <b>logo</b> is a link to the Project module and will show all the root Projects in the left tree
-                panel and also in the grid on the screen's center.<br />
-            <li>The right top section contains <b>many links</b> to modules that are not directly linked to a
-                particular Project. Too see each one's help close this pop-up window, open the module and click on the
-                Help top link again.<br />
+            <br />
             <ol>
-                <li><b>Calendar:</b> a module for managing events that are situated in a specific date and time in a
-                    calendar.<br />
-                <li><b>Timecard:</b> a module for charging working hours to the Projects. It has a visual interface and
-                    is very easy to use.<br />
-                <li><b>Setting:</b> here the user sets and changes specific configurations parameters of his/her
-                    profile, like password, e-mail, etc.<br />
-                <li><b>Administration:</b> this is the general site administration section and is only visible and
-                    accessible to users with Admin profile.<br />
-                <li><b>Help:</b> that is this dynamic window. Whenever it is clicked it shows the general help plus the
-                    help for the active module.<br />
-                <li><b>Logout:</b> finishes the current session and returns to the login page.<br />
+                <li>
+                    The <b>logo</b> is a link to the Project module and will show all the root Projects in the left tree
+                    panel and also in the grid on the screen's center.
+                </li>
+                <li>
+                    The right top section contains <b>many links</b> to modules that are not directly linked to a
+                    particular Project. Too see each one's help close this pop-up window, open the module and click on
+                    the Help top link again.
+                    <br />
+                    <ol>
+                        <li>
+                            <b>Calendar:</b> a module for managing events that are situated in a specific date and time
+                            in a calendar.
+                        </li>
+                        <li>
+                            <b>Timecard:</b> a module for charging working hours to the Projects. It has a visual
+                            interface and is very easy to use.
+                        </li>
+                        <li>
+                            <b>Setting:</b> here the user sets and changes specific configurations parameters of his/her
+                            profile, like password, e-mail, etc.
+                        </li>
+                        <li>
+                            <b>Administration:</b> this is the general site administration section and is only visible
+                            and accessible to users with Admin profile.
+                        </li>
+                        <li>
+                            <b>Help:</b> that is this dynamic window. Whenever it is clicked it shows the general help
+                            plus the help for the active module.
+                        </li>
+                        <li>
+                            <b>Logout:</b> finishes the current session and returns to the login page.
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    <b>Search box:</b> this box permits searching across the site for items containing the portion of
+                    string typed.
+                </li>
             </ol>
-            <li><b>Search box:</b> this box permits searching across the site for items containing the portion of string
-                typed.<br />
-        </ol>
-        <li>Two lefts panels:<br />
-        <br />
-        <ol>
-            <li><b>Projects tree:</b> it has a hierarchical tree of Projects and Subprojects. They are opened just
-                clicking them.<br />
-            <li><b>Tags box:</b> it is a <i>tag cloud</i> with links to items of the system. The tags are
-                defined by the user when editing every item. The more times a tag is repeated in the system, the bigger
-                it appears.<br />
-        </ol>
-        <li>The center panels:<br />
-        <br />
-        This section varies depending on the module selected. Generally it has:<br />
-        <ol>
-            <li>A <b>top tabs bar</b>, some <b>action buttons</b> and a <b>breadcrumb trail</b>:<br />
+            <br />
+        </li>
+        <li>
+            Two lefts panels:<br />
+            <br />
             <ol>
-                <li>The <b>tabs</b> represent modules or submodules for you to click them open it.<br />
-                <li>The buttons are usually three:<br />
-                <ol>
-                    <li><b>Add a new item:</b> to create a new item in the active module.<br />
-                    <li><b>Export to CSV:</b> to export the items that are being shown in the grid, to a file in CSV
-                        format.<br />
-                    <li><b>Filter:</b> activates an optional panel over the grid that lets you create a set of specific
-                        searching criteria to filter the grid items and see only the ones you want.
+                <li>
+                    <b>Projects tree:</b> it has a hierarchical tree of Projects and Subprojects. They are opened just
+                    clicking them.
+                </li>
+                <li>
+                    <b>Tags box:</b> it is a <i>tag cloud</i> with links to items of the system. The tags are defined
+                    by the user when editing every item. The more times a tag is repeated in the system, the bigger it
+                    appears.
+                </li>
+            </ol>
+            <br />
+        </li>
+        <li>
+            The center panels:<br />
+            <br />
+            This section varies depending on the module selected. Generally it has:<br />
+            <ol>
+                <li>
+                    A <b>top tabs bar</b>, some <b>action buttons</b> and a <b>breadcrumb trail</b>:<br />
+                    <ol>
+                    <li>
+                        The <b>tabs</b> represent modules or submodules for you to click them open it.
+                    </li>
+                    <li>
+                        The buttons are usually three:<br />
+                        <ol>
+                            <li>
+                                <b>Add a new item:</b> to create a new item in the active module.
+                            </li>
+                            <li>
+                                <b>Export to CSV:</b> to export the items that are being shown in the grid, to a file
+                                in CSV format.
+                            </li>
+                            <li>
+                                <b>Filter:</b> activates an optional panel over the grid that lets you create a set of
+                                specific searching criteria to filter the grid items and see only the ones you want.
+                            </li>
+                        </ol>
+                    </li>
+                    <li>
+                        <b>Breadcrumb trail</b>: it shows you the specific dependency structure of the selected module
+                        and/or Project: all its parent Projects, if any, and the selected module and item.<br />
+                        Its main purpose is to show you where you are, and what you are looking at.
+                    </li>
                 </ol>
-                <li><b>Breadcrumb trail</b>: it shows you the specific dependency structure of the selected module
-                and/or Project: all its parent Projects, if any, and the selected module and item.<br />
-                Its main purpose is to show you where you are, and what you are looking at.<br />
-            </ol>
-            <li>A <b>grid</b> with the listing of the items of the module. Depending on the user rights they can be
+            </li>
+            <li>
+                A <b>grid</b> with the listing of the items of the module. Depending on the user rights they can be
                 edited double clicking on a cell and modifying it.<br />
                 Clicking on the headers of each column the list is rearranged alphabetically according to that column
                 contents.<br />
-                When an item row is clicked on any cell, the item gets opened in the form below.<br />
-            <li>A <b>form</b> that is shown whenever it is being created a new item or it is open an existing one.<br />
+                When an item row is clicked on any cell, the item gets opened in the form below.
+            </li>
+            <li>
+                A <b>form</b> that is shown whenever it is being created a new item or it is open an existing one.
+            </li>
         </ol>
-    </ul><br />
+    </ul>
+    <br />
     <br />";
 
 $lang["Content Help"]["Basic data"] = "<br />
@@ -380,10 +429,9 @@ $lang["Content Help"]["Access"] = "<br />
 $lang["Content Help"]["Notification"] = "<br />
     <b>Notification tab</b><br />
     <br />
-    This tab makes possible to send an automatic
-    email notification to all the users with read access to the current item, or the users that the current module has
-    defined according its own criteria. That email will tell them about the creation or modification of the item
-    giving details about it.<br />
+    This tab makes possible to send an automatic email notification to all the users with read access to the current
+    item, or the users that the current module has defined according its own criteria. That email will tell them about
+    the creation or modification of the item giving details about it.<br />
     <br />
     <br />";
 

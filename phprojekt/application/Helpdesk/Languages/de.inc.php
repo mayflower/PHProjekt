@@ -67,8 +67,8 @@ $lang["Content Help"]["Basic data"] = "<br />
     * Required field<br />
     <br />
     <b>Priority</b><br />
-    Select: a number between 1 and 10 for the priority. When you have many items in the Grid, you can sort them into the
-    priority clicking the header of that column. It may be ranked in ascending or descending order.<br />
+    Select: a number between 1 and 10 for the priority. When you have many items in the Grid, you can sort them into
+    the priority clicking the header of that column. It may be ranked in ascending or descending order.<br />
     <br />
     <b>Attachments</b><br />
     This field allows you to upload one or more files.<br />
@@ -78,8 +78,8 @@ $lang["Content Help"]["Basic data"] = "<br />
     is a link to download it.<br />
     <br />
     <b>Solved by</b><br />
-    Display: a read-only mode field that is automatically filled with the name of the user that changed the Status field
-    to 'Solved'.<br />
+    Display: a read-only mode field that is automatically filled with the name of the user that changed the Status
+    field to 'Solved'.<br />
     <br />
     <b>Solved Date</b><br />
     Display: a read-only mode field that is automatically filled with the date when it was changed the Status field to
@@ -101,8 +101,8 @@ $lang["Content Help"]["Basic data"] = "<br />
     4 - Verified: the issue was corroborated but it wasn't solved nor closed.<br />
     5 - Closed: this is supposed to be the final state for a NON-solved issue.<br />
     <br />
-    When the status is set to Solved, the fields Solved By and Solved Date in the form are automatically filled with the
-    logged user name and current date respectively. If you change Solved status by another one, those 2 fields are
+    When the status is set to Solved, the fields Solved By and Solved Date in the form are automatically filled with
+    the logged user name and current date respectively. If you change Solved status by another one, those 2 fields are
     emptied again.<br />
     <br />
     <b>Contact</b><br />

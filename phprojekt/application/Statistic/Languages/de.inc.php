@@ -32,7 +32,6 @@ $lang["Content Help"]["Statistic"] = "<br />
     calculate the hours in.<br />
     <br />
     <hr style='height: 2px;'>
-    <br />
     <b>Selected Statistic Period</b><br />
     <br />
     This panel up the Projects time table, allows you to select a specific period of time for the table.<br />
@@ -40,7 +39,6 @@ $lang["Content Help"]["Statistic"] = "<br />
     checkbox button, the table will be done according to the hours charged in Timecard for that period.<br />
     <br />
     <hr style='height: 2px;'>
-    <br />
     <b>Projects table</b><br />
     <br />
     <br />

@@ -40,199 +40,158 @@ $lang["Favorite projects"] = "Proyectos favoritos";
 
 // General Help
 $lang["Content Help"]["General"] = "DEFAULT";
-$lang["Content Help"]["Asistencia"] = "<br />
-    Esta es la <b>Ayuda General del módulo Asistencia</b><br />
+$lang["Content Help"]["Timecard"] = "<br />
+    This is the <b>General Help for Timecard</b><br />
     <br />
-    Asistencia es un módulo para cargar y asignar horas de trabajo a los Proyectos.
-    Tiene una interfaz visual muy fácil
-    de usar.<br />
+    Timecard is a module designed to assign working times to Projects so that it is kept a record about what the people
+    involved in the Projects have worked in, and how much time have they spent on each thing.<br />
+    These times will also impact on Statistic module.<br />
     <br />
-    La pantalla se divide en 4 secciones:<br />
     <br />
-    <ul>
-        <li><b>Botoneras superiores</b><br />
-        <li><b>Tiempo de Trabajo</b><br />
-        <li><b>Horas de Proyectos</b><br />
-        <li><b>Grilla Mensual</b><br />
-    </ul><br />
-    Para ayuda sobre cada sección, mire la solapa respectiva en esta ventana.<br />
+    <b>Sections of the module</b><br />
     <br />
-    <br />";
-
-$lang["Content Help"]["Botoneras"] = "<br />
-    <b>Botoneras superiores</b><br />
+    It has a month section at the left which shows all days of selected month and booked time for each one for the
+    logged user. On bottom the booked amounts for each day, there is the sum of all them.<br />
+    Each day is a link for you to click on and load its contents in the Day section, in the middle of the screen.<br />
+    There is also a Date type field on top that permits to change not only the day but also the month and year
+    both showed in Month left view and the Day view.
     <br />
-    Hay una barra <b>superior</b> y otra <b>debajo</b> de ella.<br />
+    In the middle of the screen there is a schedule for the day. The purpose of it is that the user may perceive
+    graphically the amount of time worked for selected day and the Projects involved.<br />
+    Clicking on the [+] icon or in a booked box, a pop-up appear with the form for add, edit and delete Project bookings.
     <br />
-    <ol>
-        <li>La botonera superior tiene dos botones de <b>exportación</b> a la derecha:
-            <ul>
-                <li><b>Tiempo de Trabajo:</b> exporta en formato CSV los períodos de trabajo para el mes elegido. Qué
-                    días el usuario trabajó y en qué momento del día.<br />
-                <li><b>Horas de proyectos:</b> exporta en formato CSV las horas trabajadas asignadas a proyectos y
-                    subproyectos, para cada día del mes elegido.<br />
-            </ul>
-        <li>La barra que está <b>debajo</b> tiene 2 botones y un campo de fecha:
-            <ul>
-                <li>Botones <b>Empezar tiempo de trabajo</b> y <b>Terminar tiempo de trabajo</b>: se usan para que el
-                    usuario registre automáticamente el tiempo de trabajo.<br />
-                    Ejemplo: un usuario ingresa al sistema a las
-                    9:00 y aprieta el botón <b>Empezar tiempo de trabajo</b>. A las 13:30 él / ella sale a almorzar,
-                    presiona el botón <b>Terminar tiempo de trabajo</b>. El sistema graba ese período y lo muestra
-                    en 3 lugares:<br />
-                    <ol>
-                        <li>Debajo del recuadro en el mismo panel.<br />
-                        <li>Dentro del panel <b>Horas de Proyectos</b> en la parte derecha como un recuadro amarillo
-                            que abarca ese período desde las 9:00 hasta las 13:30 hs dentro del listado de horas.<br />
-                        <li>En el panel <b>Grilla Mensual</b> la cantidad de horas agregada se sumará a las existentes
-                            para ese día en la fila correspondiente de la columna <i>Tiempo de Trabajo</i>.<br />
-                    </ol>
-                <li><b>Campo de fecha:</b> aquí puede elegir con qué día trabajar en el módulo.<br />
-            </ul>
-    </ol>
+    <br />
+    There is an export button on the top left of the module that exports in CSV file format all booked times for logged
+    user and selected month.<br />
+    Near it there is the 'Manage project list' button that provides a dialog for manage the favorites projects that
+    will appear first on the project selection in the form.<br />
+    <br />
+    <br />
+    <b>Overlapping times error</b><br />
+    <br />
+    When you try to add or edit a booking so that some of its time overlaps part of the time of another booking, an
+    internal checking will bring up an error for you to correct the start and end time of it and/or the date.<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Tiempo de Trabajo"] = "<br />
-    <b>Tiempo de Trabajo</b><br />
+$lang["Content Help"]["Month"] = "<br />
+    <b>Month section</b><br />
     <br />
-    Este es el panel donde las horas de tiempo trabajado son cargadas (y eventualmente borradas).<br />
+    The Date field allows selecting a day to show in the schedule. Also, the selected month will be loaded into
+    this section.<br />
     <br />
-    El período se llena dentro de los campos de texto <b>Comienzo</b> y <b>Fin</b>.<br />
-    El formato para escribir las horas es <b>HH?MM</b>, en el que HH es la hora, el signo de interrogación representa
-    los dos puntos (:) u otro signo a elección; aunque no es obligatorio, y MM los minutos. Ejemplos: 08:00, 8:00,
-    0800, 800, 08.00 o 8.00<br />
+    Month section is a list of the days for the selected month which shows at the right side of each day the booked
+    time for the logged user on that day. On bottom the booked amounts for each day, there is the total amount of the
+    month.<br />
     <br />
-    Luego el <b>botón con la tilde</b> lo graba y el período aparece en 3 lugares dentro de la pantalla:<br />
-    <ol>
-        <li>Debajo del recuadro en el mismo panel.<br />
-        <li>Dentro del panel <b>Horas de Proyectos</b> en la parte derecha como un recuadro amarillo que abarca ese
-        período dentro del listado de horas.<br />
-        <li>En el panel <b>Grilla Mensual</b> la cantidad de horas agregada se sumará a las existentes para ese día
-            en la fila correspondiente de la columna <i>Tiempo de Trabajo</i>.<br />
-    </ol>
+    Each listed day is a link to load it onto the center Day section; if you click on any day of the list, the Day
+    schedule will load all booked Projects for that day, if any, and the Date field on top of this section will be
+    filled with that date.<br />
     <br />
-    <br />";
-
-$lang["Content Help"]["Horas de Proyectos"] = "<br />
-    <b>Horas de Proyectos</b><br />
+    To change the listed month, select a date of any month in the Date field over this section and click its check
+    button.<br />
     <br />
-    Este es el panel más interesante de la pantalla, diseñado para asignar tareas a las horas de trabajo ya
-    cargadas. La mayor parte de las cosas se muestran y se manejan gráficamente.<br />
     <br />
-    <b>Lista de proyectos:</b><br />
+    <b>Colors</b><br />
     <br />
-    Hay un botón <b>Admin. lista de proyectos</b> que permite seleccionar proyectos
-    <i>favoritos</i> que son los con los cuales se va a trabajar, es decir, se van a asignar a horas de trabajo
-    cargadas.<br />
-    Esos proyectos aparecerán sobre dicho botón y son un sólo grupo para todo el módulo,
-    o sea que si cambia de fecha en la vista del módulo, se seguirá viendo el mismo grupo de proyectos.<br />
+    The weekend days have grey color, the rest of them are black.<br />
     <br />
-    <b>Agenda horaria:</b><br />
-    <br />
-    Va desde las 8:00 hasta las 20:00 horas. Aquí figuran todas las horas cargadas en el panel
-    <b>Tiempo de Trabajo</b>.<br />
-    <br />
-    Cada uno de esos períodos aparece como un recuadro amarillo que ocupa su superficie
-    correspondiente. Puede asignar un proyecto (o subproyecto) a un período; es muy simple, tiene que arrastrar y
-    soltar un proyecto (del listado de proyectos favoritos) hacia un recuadro amarillo dentro de la <i>Agenda
-    horaria</i>.
-    Luego de soltar el proyecto aparece una ventana flotante debajo del botón <b>Admin. lista de proyectos</b> para
-    que ingrese cuantas horas trabajó en ese proyecto y que escriba una nota.<br />
-    Luego presiona <b>Grabar</b> y la ventana flotante se cierra y el recuadro amarillo se llena con otro recuadro
-    gris conteniendo el proyecto seleccionado. La cantidad de área ocupada por este último recuadro gris, es
-    proporcional a la cantidad de horas asignadas al mismo.<br />
-    Para editarlo basta con cliquear sobre él y la ventana flotante aparecerá nuevamente permitiéndole modificar los
-    datos o borrar dicha asignación de proyecto.<br />
+    If there is an open period in any day, its total time will be red colored so that the user can notice there is
+    something unfinished there.<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Grilla Mensual"] = "<br />
-    <b>Grilla Mensual</b><br />
+$lang["Content Help"]["Day"] = "<br />
+    <b>Day section</b><br />
     <br />
-    Esta grilla es un resumen día por día de todas las horas trabajadas del mes, y de cuánto tiempo de ellas ha sido
-    asignada a Proyectos (y Subproyectos).<br />
+    Day section is located in the center of the Timecard view.<br />
+    It has a schedule showing all time of the day with its Project bookings inside, if any.<br />
     <br />
-    Puede hacer clic en un día para cargarlo en los otros paneles del módulo.<br />
+    <br />
+    <b>Rows</b><br />
+    <br />
+    The schedule is formed by 48 rows; one per half hour.<br />
+    Each row has a (+) plus sign to add a booking for that time. If you press it the selected Date and Time will be
+    loaded into the Form in field Start. The End Time will be filled automatically, its value is one hour after
+    Start Time.<br />
+    <br />
+    <br />
+    <b>Bookings</b><br />
+    <br />
+    The bookings are shown as a rectangle that occupies an area proportional to its length in time.
+    It has the name of the booked Project inside.<br />
+    The purpose is that the user can perceive graphically the amount of time worked and the Projects involved.<br />
+    You may click on a Project to open it in the Form and modify its contents or delete it.<br />
+    <br />
+    Note: the open periods are shown in red color, they will become 'normal' when their end time get filled.<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Paso a paso"] = "<br />
-    <b>Cómo cargar las horas trabajadas y asignarlas a proyectos, paso a paso</b><br />
+$lang["Content Help"]["Form"] = "<br />
+    <b>Form section</b><br />
+    <br />
+    The Form provides a couple of fields to add or edit bookings.<br />
+    <br />
+    You can add an item pressing the (+) plus sign in the center schedule and the Form will be loaded with the Date and
+    Time pressed, and End time set to 1 hour after Start Time. You select a Project, write a Note and press Save to add
+    it.<br />
+    To edit a booking, click on it inside the day schedule; its contents will be loaded into the Form. Make changes and
+    press Save, or just press Delete to take out the booking from the schedule.<br />
     <br />
     <br />
-    <ol>
-        <li>Dentro del módulo <b>Asistencia</b> seleccione el día para el cuál quiere cargar las horas trabajadas
-            mediante el campo de fecha de la barra superior. Luego presione el botón que está a la derecha del
-            mismo.<br />
-            <br />
-        <li>En el panel <b>Tiempo de Trabajo</b> ingrese un período trabajado en el día, por ejemplo si usted
-            trabajó desde las 9:00 hasta las 13:00 y desde las 14:00 hasta las 18:00, esto serían dos períodos,
-            comience cargando el primero. Para ello en el campo <b>Comienzo</b> ingrese <i>9:00</i> y
-            en el campo <b>Fin</b> escriba <i>13:00</i>
-            (puede omitir los dos puntos escribiendo 900 y 1300 si lo desea).<br /><br />
-        <li>Presione el botón con el tilde ubicado bajo esos campos para grabar su ingreso. Luego de unos instantes
-            aparecerá el período dentro de esta pantalla en varios lugares:<br />
-            <ul>
-                <li>Debajo, en el mismo panel como un rectángulo pequeño de color, con el período que acaba de
-                    ingresar.
-                    El mismo posee un botón con una cruz, que le permite borrarlo. Debajo de dicho recuadro
-                    dirá el total de tiempo de trabajo cargado para este día.
-                <li>En el panel <b>Horas de Proyectos</b> aparecerá en la parte derecha, en la agenda diaria de 8:00 a
-                    20:00, un recuadro amarillo que ocupa la superficie acorde al período.
-                <li>En la <b>Grilla Mensual</b> que es el panel de la derecha de la pantalla, para el día
-                    activo se agregará al total de horas, en la columna <b>Tiempo de Trabajo</b> la cantidad de horas
-                    que usted acaba de cargar. Si es el primer período que carga en el día elegido, aparecerá
-                    sólo esa cantidad de horas.
-            </ul>
-        <li>Ahora tiene que focalizarse en el panel central que es en el que los proyectos (y subproyectos) se asignan
-            a los períodos trabajados. Asegúrese que los proyectos de su incumbencia se encuentren listados en el
-            panel, entre el título del panel y el botón <b>Admin. lista de proyectos</b>. Si no hay ningún proyecto,
-             o desea agregar uno o modificar el listado, presione el botón <b>Admin. lista de proyectos</b>.<br />
-            <br />
-        <li>Si presiona el botón <b>Admin. lista de proyectos</b> aparecerá una ventana que le mostrará los
-            proyectos
-            en los que usted está involucrado en un panel izquierdo y le permitirá arrastrarlos con el mouse hacia el
-            panel derecho que es el de los proyectos que se mostrarán luego, al cerrar esta ventana emergente, en el
-            panel <b>Horas de Proyectos</b>.<br />
-            <br />
-        <li>Si desea quitar un proyecto del panel derecho de la ventana emergente, arrástrelo de regreso hacia el panel
-            izquierdo utilizando el mouse.<br />
-            <br />
-        <li>Cuando haya finalizado los cambios presione el botón con el tilde para grabar y cerrar la
-            ventana emergente.<br />
-            <br />
-        <li>El nuevo listado de proyectos aparece bajo el título <b>Horas de Proyectos</b>. Cada proyecto se muestra
-            como un rectángulo gris con extremos curvos.<br />
-            <br />
-        <li>Asigne un proyecto de dicho listado a las horas trabajadas. Esto se hace arrastrando con el mouse un
-            proyecto y soltándolo dentro del recuadro amarillo en la agenda horaria.<br />
-            <br />
-        <li>Aparecerá una ventana donde debe especificar qué cantidad de horas ha trabajado en ese proyecto y escribir
-            una nota.<br />
-            <br />
-        <li>Presione <b>Grabar</b> para guardar los cambios o bien <b>Cancelar</b> para volver atrás y repetir los
-            últimos dos pasos.<br />
-            <br />
-        <li>Una vez grabados los cambios, la ventanita se cierra y el recuadro amarillo muestra gráficamente en su
-            interior el proyecto asignado, cuyo tamaño es proporcional a las horas especificadas en la ventana
-            emergente que se acaba de cerrar.<br />
-            <br />
-        <li>Si el período posee más tiempo libre puede arrastrar y soltar otro proyecto en él hasta llenarlo
-            completamente, repitiendo los últimos pasos.<br />
-            <br />
-        <li>Si desea modificar o quitar la asignación de un proyecto en particular de un período horario trabajado,
-            haga clic sobre el mismo y una ventana emergente le permitirá modificar las horas y la nota o bien quitar
-            la asignación de proyecto mediante el botón <b>Borrar</b>.<br />
-            <br />
-        <li>En la <b>Grilla Mensual</b> que es el panel de la derecha de la pantalla, en la fila del día
-            activo, en la columna <b>Horas de Proyectos</b> se agregará a las horas existentes la cantidad de horas que
-            usted asignó a proyectos.<br />
-            <br />
-        <li>Puede cargar un día determinado en pantalla mediante el campo de fecha en la parte superior del módulo o
-            haciendo clic dentro del panel <b>Grilla Mensual</b> a la derecha de la pantalla, sobre la fecha
-            elegida.<br />
-            <br />
-    </ol>
+    Form fields:<br />
+    <br />
+    <b>Start</b><br />
+    Date/time: the date and time for the booking start.<br />
+    This field is automatically filled in the following cases.<br />
+    1 - When you click on a date of the left Month section -> clicked date and current time<br />
+    2 - When you select a date up the day schedule and press the check button -> selected date and current time<br />
+    3 - When you click on a booking in the day schedule -> start date and time of booking<br />
+    4 - When you click on a (+) plus button of a specific row of the day schedule -> active date and clicked row
+    time<br />
+    <br />
+    <b>End Time</b><br />
+    Time: end time for the booking.<br />
+    It is automatically filled in the following cases.<br />
+    1 - When you click on a booking in the day schedule -> the end time of it<br />
+    2 - When you click on a (+) plus button of a specific row of the day schedule -> one hour after clicked row
+    time<br />
+    <br />
+    <b>Project</b><br />
+    Select: the booked Project.<br />
+    All the favorites projects will appear first, then all the rest.<br />
+    <br />
+    <b>Notes</b><br />
+    Textarea (without HTML mode): a Note with some description of the booking.<br />
+    It is automatically filled when you click on a booking of the day schedule.<br />
+    <br />
+    <br />";
+
+$lang["Content Help"]["Favorite Projects"] = "<br />
+    <br />
+    <b>Managing favorite Projects list</b><br />
+    <br />
+    When you press 'Manage project list' button, a little pop-up window appears. It has two panels. The left one shows
+    all Projects and Sub-Projects you are involved in, it allows you to drag and drop each Project with the mouse to the
+    second panel, at the right. That right panel is the one that has the Projects that will be seen under the Form when
+    you save changes pressing the Check button and this window gets closed.<br />
+    <br />
+    If you want to take out a Project from the right panel of this pop-up window, drag and drop it back to the left
+    panel using the mouse.<br />
+    <br />
+    When you have finished doing the changes, press the Check button to save and close the pop-up window. The new
+    Projects listing appears under the Form. Each Project is shown as a yellow ochre color rectangle with curved
+    ends.<br />
+    Projects available to be added to favorites list are those you have at least Read access to.<br />
+    <br />
+    <br />";
+
+$lang["Content Help"]["Booking times"] = "<br />
+    <br />
+    <b>Clicking a (+) plus button in a schedule row</b><br />
+    <br />
+    Each row of the schedule has a (+) plus button to add a booking for that time. If you press it the selected Date
+    and Time will be loaded into the Form in field Start, and the Form will get into Add mode and End Time will be
+    filled automatically as one hour after Start Time, Project and Notes fields will be emptied.<br />
     <br />
     <br />";

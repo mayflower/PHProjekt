@@ -270,118 +270,173 @@ $lang["Private"] = "Privado";
 
 // General Help
 $lang["Content Help"]["General"] = "<br />
-    Esta es la <b>Ayuda General</b><br />
+    This is the <b>General Help</b><br />
     <br />
-    La pantalla Phprojekt está dividida en varias secciones:<br />
+    The Phprojekt screen is divided into many sections:<br />
     <br />
     <ul>
-        <li>La <b>parte superior</b> que posee el logo del sistema a la izquierda y, a la derecha, algunos vínculos y
-            una caja de búsqueda.<br />
-        <br />
-        <ol>
-            <li>El <b>logo</b> es un vínculo al módulo Proyecto que una vez abierto mostrará todos los proyectos en
-                el árbol de la izquierda y también en la grilla en el centro de la pantalla.<br />
-            <li>La sección superior derecha contiene <b>varios</b> vínculos a módulos que no están directamente
-                asociados a un proyecto en particular. Para ver la ayuda de cada módulo, cierre esta ventana emergente,
-                abra el módulo y cliqueé en el vínculo de Ayuda nuevamente.<br />
+        <li>
+            The <b>upper section</b> that has the system logo at the left and some links and a search box at the right
+            side.<br />
+            <br />
             <ol>
-                <li><b>Evento:</b> módulo para administrar eventos situados temporalmente en un calendario.<br />
-                <li><b>Asistencia:</b> módulo para cargar las horas trabajadas y asignarlas a proyectos. Posee una
-                    interfaz visual muy fácil de usar.<br />
-                <li><b>Configuración:</b> aquí el usuario modifica configuraciones específicas de su perfil, como
-                    contraseña, e-mail, etc.<br />
-                <li><b>Administración:</b> esta es la sección de administración general del sistema, sólo visible y
-                accesible para usuarios con perfil Administrador.<br />
-                <li><b>Ayuda:</b> es esta ventana dinámica. Siempre que es abierta muestra la ayuda general más la
-                    ayuda del módulo activo.<br />
-                <li><b>Salir:</b> termina la sesión actual y regresa a la pantalla de ingreso.<br />
+                <li>
+                    The <b>logo</b> is a link to the Project module and will show all the root Projects in the left tree
+                    panel and also in the grid on the screen's center.
+                </li>
+                <li>
+                    The right top section contains <b>many links</b> to modules that are not directly linked to a
+                    particular Project. Too see each one's help close this pop-up window, open the module and click on
+                    the Help top link again.
+                    <br />
+                    <ol>
+                        <li>
+                            <b>Calendar:</b> a module for managing events that are situated in a specific date and time
+                            in a calendar.
+                        </li>
+                        <li>
+                            <b>Timecard:</b> a module for charging working hours to the Projects. It has a visual
+                            interface and is very easy to use.
+                        </li>
+                        <li>
+                            <b>Setting:</b> here the user sets and changes specific configurations parameters of his/her
+                            profile, like password, e-mail, etc.
+                        </li>
+                        <li>
+                            <b>Administration:</b> this is the general site administration section and is only visible
+                            and accessible to users with Admin profile.
+                        </li>
+                        <li>
+                            <b>Help:</b> that is this dynamic window. Whenever it is clicked it shows the general help
+                            plus the help for the active module.
+                        </li>
+                        <li>
+                            <b>Logout:</b> finishes the current session and returns to the login page.
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    <b>Search box:</b> this box permits searching across the site for items containing the portion of
+                    string typed.
+                </li>
             </ol>
-            <li><b>Caja de búsqueda:</b> este campo permite buscar dentro del sitio ítems que contengan la cadena
-                ingresada.<br />
-        </ol>
-        <li>Dos paneles izquierdos:<br />
-        <br />
-        <ol>
-            <li><b>�?rbol de proyectos:</b> es un árbol jerárquico de proyectos y subproyectos. Ambos se abren en el
-                panel central sólo cliqueándolos dentro del árbol.<br />
-            <li><b>Caja de tags:</b> es una <i>nube de etiquetas</i> (<i>tag cloud</i> en inglés) con vínculos a
-                ítems del sistema.
-                Los tags son definidos por el usuario al editar cada ítem. A mayor veces que un tag se
-                repite en el sistema, más grande aparece aquí.<br />
-        </ol>
-        <li>Los paneles centrales:<br />
-        <br />
-        Esta sección varía según el módulo con el que se esté trabajando. Generalmente tiene:<br />
-        <ol>
-            <li>Una <b>barra superior</b> con solapas a la izquierda y algunos botones a la derecha:<br />
+            <br />
+        </li>
+        <li>
+            Two lefts panels:<br />
+            <br />
             <ol>
-                <li>Las <b>solapas a la izquierda</b> pueden representar módulos o submódulos.<br />
-                <li>Generalmente los botones de la derecha son tres:<br />
-                <ol>
-                    <li><b>Agregar:</b> para crear un nuevo ítem del módulo activo.<br />
-                    <li><b>Grabar:</b> graba los cambios hechos en la grilla (edición en línea).<br />
-                    <li><b>Exportar:</b> exporta los ítems que están siendo mostrados en la grilla a un archivo
-                        en formato CSV.<br />
+                <li>
+                    <b>Projects tree:</b> it has a hierarchical tree of Projects and Subprojects. They are opened just
+                    clicking them.
+                </li>
+                <li>
+                    <b>Tags box:</b> it is a <i>tag cloud</i> with links to items of the system. The tags are defined
+                    by the user when editing every item. The more times a tag is repeated in the system, the bigger it
+                    appears.
+                </li>
+            </ol>
+            <br />
+        </li>
+        <li>
+            The center panels:<br />
+            <br />
+            This section varies depending on the module selected. Generally it has:<br />
+            <ol>
+                <li>
+                    A <b>top tabs bar</b>, some <b>action buttons</b> and a <b>breadcrumb trail</b>:<br />
+                    <ol>
+                    <li>
+                        The <b>tabs</b> represent modules or submodules for you to click them open it.
+                    </li>
+                    <li>
+                        The buttons are usually three:<br />
+                        <ol>
+                            <li>
+                                <b>Add a new item:</b> to create a new item in the active module.
+                            </li>
+                            <li>
+                                <b>Export to CSV:</b> to export the items that are being shown in the grid, to a file
+                                in CSV format.
+                            </li>
+                            <li>
+                                <b>Filter:</b> activates an optional panel over the grid that lets you create a set of
+                                specific searching criteria to filter the grid items and see only the ones you want.
+                            </li>
+                        </ol>
+                    </li>
+                    <li>
+                        <b>Breadcrumb trail</b>: it shows you the specific dependency structure of the selected module
+                        and/or Project: all its parent Projects, if any, and the selected module and item.<br />
+                        Its main purpose is to show you where you are, and what you are looking at.
+                    </li>
                 </ol>
-            </ol>
-            <li>Una <b>grilla</b> con el listado de ítems del módulo. Según los permisos del usuario, pueden ser
-                modificadas tan sólo cliqueando en una celda y modificándola.<br />
-                Cliqueando en los encabezados de cada columna, el listado es reordenado alfabéticamente de acuerdo al
-                contenido de dicha columna.<br />
-                Cuando un ítem es cliqueado sobre su Id, este se abre en el formulario debajo.<br />
-            <li>Un <b>formulario</b> que es mostrado siempre que se crea un nuevo ítem o cuando se abre uno
-                existente.<br />
+            </li>
+            <li>
+                A <b>grid</b> with the listing of the items of the module. Depending on the user rights they can be
+                edited double clicking on a cell and modifying it.<br />
+                Clicking on the headers of each column the list is rearranged alphabetically according to that column
+                contents.<br />
+                When an item row is clicked on any cell, the item gets opened in the form below.
+            </li>
+            <li>
+                A <b>form</b> that is shown whenever it is being created a new item or it is open an existing one.
+            </li>
         </ol>
-    </ul><br />
-    <br />";
-
-$lang["Content Help"]["Datos Básicos"] = "<br />
-    <b>Solapa Datos Básicos</b><br />
-    <br />
-    Dentro de esta solapa se ingresa la información principal sobre un ítem.<br />
-    Posee una serie de campos para completar, de acuerdo al módulo del que se trate.<br />
+    </ul>
     <br />
     <br />";
 
-$lang["Content Help"]["Accesos"] = "<br />
-    <b>Solapa Accesos</b><br />
+$lang["Content Help"]["Basic data"] = "<br />
+    <b>Basic data tab</b><br />
     <br />
-    Esta solapa permite establecer los permisos individuales para cada usuario para el ítem en creación o
-    modificación.<br />
-    Los usuarios que se permite modificar esta solapa son todos excepto el usuario logueado. La intención de
-    esta sección es elegir a qué usuarios se les quiere dar acceso para el ítem, y qué tipo de acceso.<br />
-    Por ejemplo usted crea un ítem y elige algunos usuarios para darles permiso de lectura y si quiere puede elegir
-    otro usuario para darle permiso de escritura (el usuario logueado predeterminadamente tiene acceso tipo 'admin'
-    para el ítem.<br />
-    <br />
-    Los permisos son:<br />
-    <b>Lectura:</b> ver el ítem.<br />
-    <b>Escritura:</b> modificar el ítem.<br />
-    <b>Accesos:</b> acceder a los hijos del ítem (ej.: ver los subproyectos pero no ver el proyecto en sí).<br />
-    <b>Creación:</b> crear un sub ítem.<br />
-    <b>Copiar:</b> copiar el ítem para crear otro.<br />
-    <b>Borrar:</b> borrar el ítem.<br />
-    <b>Bajar:</b> bajar archivos (por ejemplo en el módulo <i>Archivos</i>).<br />
-    <b>Admin:</b> todos los permisos en uno, incluyendo poder editar los permisos del ítem.<br />
-    <b>Ninguno:</b> el usuario no puede siquiera ver el ítem.<br />
-    <br />
-    <u>Nota:</u> el dueño (creador) del ítem tiene predeterminadamente todos los permisos.<br />";
-
-$lang["Content Help"]["Notificación"] = "<br />
-    <b>Solapa Notificación</b><br />
-    <br />
-    Esta solapa permite enviar una notificación automática por email a todos los usuarios con acceso de
-    lectura para este ítem, o a los usuarios que el módulo tenga definido como criterio.<br />
-    <br />
-    Dicho correo les advertirá sobre la creación o modificación del ítem dándole detalles sobre el mismo.<br />
+    Inside this tab it goes the main information about an item.<br />
+    It has several fields to fill, according to the module it belongs to.<br />
     <br />
     <br />";
 
-$lang["Content Help"]["Historial"] = "<br />
-    <b>Solapa Historial</b><br />
+$lang["Content Help"]["Access"] = "<br />
+    <b>Access tab</b><br />
     <br />
-    Muestra un listado de los cambios hechos al ítem desde su creación.<br />
+    Here the individual rights for each item are defined.<br />
     <br />
-    Tiene 4 columnas: <i>fecha</i>, <i>usuario</i>, <i>campo</i> y <i>valor anterior</i>.<br />
+    The rights are: Read, Write, Access, Create, Copy, Delete, Download and Admin.<br />
+    The users that have access to this tab for a specific item, like the owner (creator) of it, can assign these rights
+    to other users for this item.<br />
+    <br />
+    The users that appear in the select list of this tab, that are the ones you can assign rights to, are all the users
+    that have access to the parent Project, except for the logged user who is seeing the tab. If you want an unlisted
+    user to be listed in the select field, you have to give him/her access to all parent projects.<br />
+    The aim of that tab is to select what users you want to give access to the item and what kind of access.<br />
+    For example, you create an item and choose some users to give them 'Read' access and if you want you can choose
+    another user and give him/her 'Write' access.<br />
+    <br />
+    The different permissions are:<br />
+    <br />
+    <b>Read</b>: see the item.<br />
+    <b>Write</b>: modify the item.<br />
+    <b>Access</b>: pass through the item (e.g.: see the sub projects but not to see the project itself).<br />
+    <b>Create</b>: create sub items.<br />
+    <b>Copy</b>: copy the item to create other one.<br />
+    <b>Delete</b>: delete the item.<br />
+    <b>Download</b>: download files (for example in the Filemanager module).<br />
+    <b>Admin</b>: allows to do all, including editing the access of the item.<br />
+    <br />
+    Note: the owner (creator) of the item has by default all the permissions.<br />
     <br />
     <br />";
+
+$lang["Content Help"]["Notification"] = "<br />
+    <b>Notification tab</b><br />
+    <br />
+    This tab makes possible to send an automatic email notification to all the users with read access to the current
+    item, or the users that the current module has defined according its own criteria. That email will tell them about
+    the creation or modification of the item giving details about it.<br />
+    <br />
+    <br />";
+
+$lang["Content Help"]["History"] = "<br />
+    <b>History tab</b><br />
+    <br />
+    It shows a listing of the changes made to the item since its creation.<br />
+    It has five columns: <i>date</i>, <i>user</i>, <i>field</i>, <i>old value</i> and <i>new value</i>.";

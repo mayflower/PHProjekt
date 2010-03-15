@@ -27,29 +27,29 @@ $lang["Content Help"]["Contact"] = "<br />
     <br />
     This module is just to store people and companies information. It has many fields for writing data.<br />
     <br />
-    There is a special field <b>Private</b> that sets whether the selected contact is visible for all users or just for
-    the creator.<br />
+    There is a special field <b>Private</b> that sets whether the selected contact is visible for all users or just
+    for the creator.<br />
     <br />
     <br />
-    <u><b>Linking contacts from other modules</b></u><br/>
-    <br/>
-    <b>Project and Helpdesk</b><br/>
-    <br/>
+    <u><b>Linking contacts from other modules</b></u><br />
+    <br />
+    <b>Project and Helpdesk</b><br />
+    <br />
     Project and Helpdesk modules have a field Contacts to select one to be associated with that Project or Helpdesk
-    item.<br/>
-    <br/>
+    item.<br />
+    <br />
     When you create or modify a Project or Helpdesk item, you can pick a contact from Contact field select box, for you
     to provide a reference to a specific person or company that may be useful for people who work with that Project or
-    Helpdesk ticket.<br/>
-    <br/>
-    <br/>
-    <b>Other modules</b><br/>
-    <br/>
+    Helpdesk ticket.<br />
+    <br />
+    <br />
+    <b>Other modules</b><br />
+    <br />
     The Module Designer (Administration -> Module), permits adding a Contact field to any module. It has to be a
     'Select' field that has, inside left bottom edit box of the Module Designer for that field, tab Form, field Range,
-    the value 'Contact#id#name'.<br/>
-    <br/>
-    <br/>";
+    the value 'Contact#id#name'.<br />
+    <br />
+    <br />";
 
 $lang["Content Help"]["Basic data"] = "<br />
     <b>Basic Data tab</b><br />

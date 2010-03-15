@@ -60,8 +60,8 @@ $lang["Content Help"]["Basic data"] = "<br />
     Date: when task is planned to end, or indeed ended.<br />
     <br />
     <b>Priority</b><br />
-    Select: a number between 1 and 10 for the priority. When you have many items in the Grid, you can sort them into the
-    priority clicking the header of that column. It may be ranked in ascending or descending order.<br />
+    Select: a number between 1 and 10 for the priority. When you have many items in the Grid, you can sort them into
+    the priority clicking the header of that column. It may be ranked in ascending or descending order.<br />
     <br />
     <b>Status</b><br />
     Select: the status of the item, this is supposed to change over time, as the task advances.<br />

@@ -157,231 +157,412 @@ $lang["Tooltip"]["datarecords"] = "Esto es para activar/desactivar los mensajes 
 
 // General Help (Administration)
 $lang["Content Help Administration"]["General"] = "DEFAULT";
-$lang["Content Help Administration"]["Administración"] = "<br />
-    Esta es la <b>Ayuda General del módulo Administración</b><br />
+$lang["Content Help Administration"]["Administration"] = "<br />
+    This is the <b>General Help of Administration module</b><br />
     <br />
-    Este módulo es sólo accesible por usuario con perfil Admin.<br />
-    Aquí pueden configurarse parámetros generales del sitio que afectan a <b>todos los usuarios</b>.<br />
+    This module is only accessible to users with Admin profile.<br />
+    It is located at the top right global modules, the last one.<br />
     <br />
-    Está dividido en 4 partes:<br />
+    Here, general settings of the site that affect all users or specific ones in case of User submodule, can be set and
+    modified.<br />
     <br />
-    <ul>
-            <li><b>Modulo:</b> este es el Diseñador de Módulos, una interfaz muy fácil de usar, con un manejo visual
-            y con métodos <i>arrastrar y soltar</i> (drag and drop), que sirve para crear módulos o modificar los
-            existentes.<br />
-        <li><b>Solapa:</b> aquí puedes crear solapas adicionales para ser mostradas en los módulos.<br />
-        <li><b>Usuario:</b> para agregar, modificar y borrar usuarios del sistema.<br />
-        <li><b>Rol:</b> aquí se editan roles; un rol es un set de permisos para los módulos, que se asigna a
-            usuarios.<br />
-    </ul>
+    It is formed by 5 tabs:<br />
     <br />
-    Para ver la ayuda de cada sección, haga clic en la solapa respectiva de esta ventana.<br />
+    <b>Module</b><br />
+    This is the Module Designer, a very easy-to-use visual drag & drop interface to create modules or modify many
+    existing ones.<br />
+    <br />
+    <b>Tab</b><br />
+    Here additional tabs for modules can be created and modified.<br />
+    <br />
+    <b>User</b><br />
+    To administer users of the system: their main info and settings.<br />
+    <br />
+    <b>Role</b><br />
+    To edit roles; a role is a set of permissions for the Project-modules (non Global ones) that is assigned to
+    users.<br />
+    <br />
+    <b>General</b><br />
+    This is a general configurations tab.<br />
+    Currently it has only one field: 'Company name'.<br />
     <br />
     <br />";
 
-$lang["Content Help Administration"]["Modulo"] = "<br />
-    <b>Solapa Módulo</b><br />
+$lang["Content Help Administration"]["Module"] = "<br />
+    <b>Module tab</b><br />
     <br />
-    El Diseñador de Módulos es una interfaz muy fácil de usar, con un manejo visual y con métodos <i>arrastrar y
-    soltar</i> (drag and drop), que sirve para crear módulos o modificar los existentes.<br />
+    The Module Designer is a very easy-to-use visual drag & drop interface to create modules or modify the existing
+    ones.<br />
     <br />
-    Primero presione el botón <b>agregar</b> o haga clic en un módulo existente en la grilla. Luego el formulario
-    muestra el nombre y permite elegir si está activo o no (si se mostrará en el sistema).
+    Firstly you press the <b>add</b> button or select an existing module from the grid. Then the form shows
+    the label and permits you to choose whether it is currently active or not (whether it is shown in the system).
     <br />
-    Presionando el botón <b>Abrir Diseñador</b> una ventana emergente con el diseñador en sí.<br />
+    Pressing the <b>Open Dialog</b> button a pop-up window appears with the designer itself.<br />
     <br />
-    <b>La interfaz del Diseñador de Módulos</b><br />
+    <b>The Module Designer interface</b><br />
     <br />
-    Tiene 3 paneles:<br />
+    It has 3 panels:<br />
     <br />
     <ul>
-        <li><b>El panel de campos izquierdo:</b> aquí están todos los tipos de campos; <i>text</i>, <i>date</i>,
-            <i>time</i>, <i>select</i>, <i>checkbox</i>, <i>percentage</i>, <i>textarea</i> and <i>upload</i>.<br />
-            Puedes arrastrar y soltar campos al panel derecho, aquel panel derecho es la solapa que está creando o
-            modificando como será vista (pero sin los botones <i>Editar</i> y <i>Borrar</i>).<br />
-            El botón <b>Editar</b> del lado derecho de los campos permite modificar los parámetros del campo antes de
-            arrastrarlo hacia la solapa del módulo (panel derecho), aunque también se puede arrastrar primero y luego
-            editarlo (presionando dicho botón en la solapa derecha).<br />
-            <br />
-        <li><b>El panel derecho de solapas:</b> tiene las solapas principales tal cómo se van a mostrar cuando abra
-            el módulo fuera del <b>Diseñador de Módulos</b> (excepto por los botones Editar / Borrar). Se agregan los
-            campos arrastrando y soltándolos desde el panel izquierdo, luego presionando el botón <b>Editar</b> el
-            panel de edición se abre en la parte izquierda baja de la ventana para que configurar el campo.<br />
-            Los campos pueden ser reordenados mediante arrastrar y soltar y borrados de la solapa arrastrándolos de
-            vuelta hacia el panel izquierdo o sólo presionando <b>Borrar</b>.<br />
-            Hay tantas solapas en este panel como solapas están definidas en el módulo <b>Administración</b>
-            submódulo <b>Solapa</b>.<br />
-            No necesita usar todas las solapas creadas. La solapa aparecerá en el módulo sólo si hay campos
-            dentro de ella.<br />
-            <br />
-        <li><b>El panel de edición, debajo a la izquierda:</b> aquí, cuando se presiona el botón <b>Editar</b> de un
-            campo, un panel aparece para modificar sus valores y parámetros.<br />
-            Posee 4 solapas:<br />
+        <li>
+            <b>The left fields panel:</b> here are all the field types; <i>text</i>, <i>date</i>, <i>time</i>,
+            <i>datetime</i>, <i>select</i>, <i>checkbox</i>, <i>percentage</i>, <i>rating</i>, <i>textarea</i> and
+            <i>upload</i>.<br />
+            You can drag & drop fields to the right panel, that right panel is the tab of the module you are creating
+            or modifying as it will be seen (but without buttons <b>Edit</b> and <b>Delete</b>).<br />
+            The <b>Edit</b> button in the right side of the fields, permits modifying its data before adding them to
+            the module tab (right panel) although it is also possible to drag and drop it first and then edit it
+            pressing that button in the right panel.
+        </li>
+        <li>
+            <b>The right tabs panel:</b> this has the main tabs of the module as they are going to be seen when you
+            open it outside the <b>Module Designer</b> (except for the Edit / Delete buttons). You add fields dragging
+            and dropping them from the left panel, then pressing <b>Edit</b> button the edit panel is opened in the
+            left bottom part of the window so that you can configure the field.<br />
+            The fields can be reordered with drag & drop method and deleted from the tab dragging & dropping them back
+            to the left panel or just pressing <b>Delete</b> button.<br />
+            There are as many tabs in this panel as tabs are defined in module <b>Administration</b> submodule
+            <b>Tab</b>.<br />
+            You don't need to use all the tabs created. The tab will appear in the module only if there are fields
+            inside it.
+        </li>
+        <li>
+            <b>The left bottom editing panel:</b> here, when it is pressed the <b>Edit</b> button of a field, a
+            window appears to modify its values and parameters.<br />
+            It has 4 tabs:<br />
             <ul>
-                <li><b>Base de datos:</b> para editar lo concerniente a la base de datos.<br />
-                <li><b>Formulario:</b> para editar los datos mostrados en el formulario.<br />
-                <li><b>Grilla:</b> para editar si el campo se muestra o no en la grilla y su posición dentro de
-                    ella.<br />
-                <li><b>General:</b> parámetros generales.<br />
+                <li>
+                    <b>Databse:</b> to edit the data of the database.
+                </li>
+                <li>
+                    <b>Form:</b> to edit the data shown in the form.
+                </li>
+                <li>
+                    <b>Grid:</b> to edit whether the field is shown in the grid or not, and its position inside it.
+                </li>
+                <li>
+                    <b>General:</b> general parameters.
+                </li>
             </ul>
+        </li>
     </ul>
     <br />
-    <b>Cómo crear un módulo, desde cero</b><br />
+    <b>How to create a module, from zero</b><br />
     <br />
     <ol>
-        <li>Asumiendo que está en la sección <b>Modulo</b> del módulo <b>Administración</b>, presione el botón
-            <b>Agregar</b>.<br />
-        <li>Un formulario vacío aparece. Escriba el nombre del nuevo módulo en el campo <b>Etiqueta</b>.<br />
-        <li>Presione el botón <b>Abrir Diseñador</b>. Una gran ventana emergente aparece, conteniendo el
-            diseñador de módulos.<br />
-            Verá dos grandes paneles, uno a la izquierda y otro a la derecha, y un espacio vacío abajo a la izquierda
-            donde la ventana de edición de campos aparece eventualmente.<br />
-            En el panel derecho (el módulo como será visto fuera del diseñador) hay un campo Project. Ese campo debe
-            existir para que el módulo funcione, es la relación del ítem con los proyectos, no lo borre.<br />
-        <li>Agregue al panel derecho mediante arrastrar y soltar un campo de su elección. Si hay más de una solapa
-            en el panel derecho, puede elegir la solapa previo a depositar el campo, para ponerlo allí. En ambos casos,
-            luego de soltarlo la ventana de edición aparece para que lo configure.<br />
-            Nota: para soltar el campo al
-            arrastrarlo, tiene que posicionarlo con el mouse sobre un lugar donde la caja flotante que está
-            arrastrando se convierta de rojo rosado a verde; eso significa que en ese lugar puede soltar el campo
-            (arriba o abajo de otro campo).<br />
-        <li>Configure el campo ocupándose de cada una de las 4 solapas de la ventana de edición como se explica aquí
-            arriba.<br />
-        <li>Repita los pasos 5 y 6 tantas veces como campos quiera agregar.<br />
-        <li>Acomode los campos en el panel derecho en el orden que quiera mediante arrastrar y soltar.<br />
-        <li>Presione el botón <b>Cerrar</b> abajo a la izquierda dentro de la pantalla.<br />
-        <li>La ventana emergente se ha cerrado. Presione <b>Grabar</b> y el módulo esta terminado. El acto de grabar,
-            por ejemplo cuando se <i>crea</i> un módulo, crea la tabla en la base de datos, graba los parámetros y
-            crea la estructura de carpetas y archivos.<br />
+        <li>
+            Assuming you are in the <b>Module</b> tab of <b>Administration</b> module, press <b>Add</b> button.
+        </li>
+        <li>
+            An empty form appears. Write the name of the new module in the <b>Label</b> textbox.
+        </li>
+        <li>
+            Press the <b>Open Dialog</b> button. A big pop-up window containing the module designer appears.<br />
+            You will see the two big panels, one at the left and one at the right, and an empty space in the left
+            bottom where the field editing window eventually appears.<br />
+            Inside the right panel (the module as it will be seen outside the designer) there is a Project select box.
+            That field should exist for the module to work, it is the relation between the item and the projects, don't
+            delete it.
+        </li>
+        <li>
+            Add to the right panel using drag & drop a field of your choice. If there is more than one tab in the right
+            panel, you can select the tab you want previous to the drag & drop to set the field there. In both cases,
+            after dropping it the editing window appears for you to configure the field.<br />
+            Note: to drop the field, you have to position it with the mouse over a place where the floating box that
+            you are dragging converts itself from reddish pink to green color; that color means that you are able to
+            drop the field there, up or behind another field.
+        </li>
+        <li>
+            Configure the field attending to each of the 4 tabs of the editing window as explained here above.
+        </li>
+        <li>
+            Repeat the steps 5 and 6 as many times as fields you want to add.
+        </li>
+        <li>
+            Arrange the fields in the right panel in the order you want using drag & drop.
+        </li>
+        <li>
+            Press the <b>Close</b> button in the left bottom of the window.
+        </li>
+        <li>
+            The pop-up window has been closed. Press <b>Save</b> and the module is finished. The saving act, for
+            example when <i>creating</i> a module, creates the table in the database, saves the parameters and creates
+            the structure of folders and files.
+        </li>
     </ol>
-    <b>Notas:</b><br />
     <br />
+    <b>Notes:</b><br />
     <ul>
-        <li>Luego de grabar un módulo nuevo, se necesita refrescar la página en su navegador.<br />
-        <li>Al módulo se le agregarán las solapas <b>Accesos</b>, <b>Notificación</b> e <b>Historial</b>.<br />
-        <li>Pueden ser arrastrados de vuelta campos del panel derecho hacia el izquierdo. Esto es útil para
-            regresarlos más tarde al panel derecho, o para moverlos de esta forma hacia otra solapa del panel
-            derecho.<br />
-        <li><u>Se recomienda no modificar los módulos originales que vienen con el sistema.
-            La mayoría de ellos tienen
-            funcionalidad adicional que no fue hecha con el diseñador de módulos y pueden fallar si son modificados
-            con él.</u><br />
+        <li>
+            After saving a new module, it is needed to refresh the page in the browser.
+        </li>
+        <li>
+            The module will be added the <b>Access</b>, <b>Notification</b> and <b>History</b> tabs.
+        </li>
+        <li>
+            There could be dragged back right panel fields to the left panel. This is useful to take them back later
+            to the right panel, or to move them to another right panel tab.
+        </li>
+        <li>
+            <u>It is not recommended to modify the original modules that come with the system. Most of them have
+            additional functionality that was not made with the Module Designer and could stop working if modified
+            with it.</u>
+        </li>
     </ul>
     <br />
+    <b>Other special tabs</b><br />
     <br />
-    <b>Otras solapas especiales</b><br />
-    <br />
-    Existen otras solapas de módulos usadas en el sistema, que no están definidas aquí, ni pueden ser modificadas.
-    <br />
+    There are other tabs used in the system modules that are not defined here, nor could be modified. They depend on
+    the module you are working with:<br />
     <br />
     <ul>
-        <li>Módulos generales: solapas <i>Accesos</i>, <i>Notificación</i> e <i>Historial</i>.<br />
-            Todos los módulos <i>creados</i> con el <b>Diseñador de módulos</b> tendrán, aparte de las solapas
-            diseñadas por el usuario, estas 3 solapas explicadas en la ayuda de la mayoría de los módulos.
-            <i>Historial</i> sólo se mostrará en el modo de edición.</br>
-        <li>Módulo Proyecto: solapas <i>Módulo</i> y <i>Rol</i>, explicadas en la ayuda de Proyecto.<br />
-        <li>Módulo Calendario: solapa <i>Repetición</i> explicada en la ayuda de Calendario.<br />
-    </ul>
-    <br />
-    <br />";
-
-$lang["Content Help Administration"]["Solapa"] = "<br />
-    <b>Solapa SOLAPA</b><br />
-    <br />
-    Esta sección permite modificar las solapas de los módulos.<br />
-    <br />
-    Su propósito es sólo administrar cuántas solapas definidas por el usuario pueden existir en los módulos, y sus
-    nombres. Por ejemplo, si hay 3 solapas: la predeterminada 'Datos Básicos' más dos creadas por usted, en el
-    'Diseñador de Módulos' puede definir que solapas usar en un módulo específico: no necesita usar todas las
-    solapas creadas.
-    La solapa aparecera en el módulo sólo si cuando la está modificando con el <b>Diseñador de Módulos</b>
-    usted deposita campos en ella.<br />
-    Ejemplo: puede crear una solapa adicional 'Información Geográfica' y crer un módulo con el
-    'Diseñador de Módulos'.
-    Si sólo arrastra y suelta campos a la solapa 'Datos Básicos' y ninguno a la solapa 'Información Geográfica',
-    entonces la segunda solapa no se verá en el módulo.<br />
-    <br />
-    <b>Otras solapas especiales</b><br />
-    <br />
-    Existen otras solapas de módulos usadas en el sistema, que no están definidas aquí, ni pueden ser modificadas.
-    Esto depende del módulo con el que esté trabajando:<br />
-    <ul>
-        <li>Módulos generales: solapas <i>Accesos</i>, <i>Notificación</i> y <i>Historial</i>.<br />
-            Todos los módulos <i>creados</i> con el <b>Diseñador de módulos</b> tendrán, aparte de las solapas
-            diseñadas por el usuario, estas 3 solapas explicadas en la ayuda de la mayoría de los módulos.
-            <i>Historial</i> sólo se mostrará en el modo de edición.</br>
-        <li>Módulo Proyecto: solapas <i>Módulo</i> y <i>Rol</i>, explicadas en la ayuda de Proyecto.<br />
-        <li>Módulo Calendario: solapa <i>Repetición</i> explicada en la ayuda de Calendario.<br />
+        <li>
+            General modules: tabs <i>Access</i>, <i>Notification</i> and <i>History</i>.<br />
+            All the modules <i>created</i> with the <b>Module designer</b> will have, apart from the tabs designed by
+            the user, these 3 tabs explained in the help of most of the modules. <i>History</i> will only be shown in
+            edit mode.
+        </li>
+        <li>
+            Project module: tabs <i>Module</i> and <i>Role</i> explained in Project's help.
+        </li>
+        <li>
+            Calendar module: tab <i>Recurrence</i> explained in Calendar's help.
+        </li>
     </ul>
     <br />
     <br />";
 
-$lang["Content Help Administration"]["Usuario"] = "<br />
-    <b>Solapa Usuario</b><br />
+$lang["Content Help Administration"]["Tab"] = "<br />
+    <b>TAB tab</b><br />
     <br />
-    Esta sección está diseñada para administrar todos los usuarios del sistema.<br />
+    This section permits modifying the tabs of the modules.<br />
     <br />
-    Aquí se pueden agregar, modificar y borrar usuarios del sitio.<br />
+    Its purpose is just to manage how many user defined tabs could exist in the modules, and their names. For example,
+    if there are 3 tabs: the default 'Basic Data' one plus two created by you, in the 'Module Designer' you can define
+    which tabs to use in a specific module; you don't need to use all the tabs created. The tab will appear in the
+    module only if when modifying it with the <b>Module Designer</b> you drop fields inside it.<br />
+    E.g.: you can create an extra tab 'Geographic Info' and create a module with the <b>Module designer</b>.
+    If you just drag & drop fields to the 'Basic Data' tab and nothing to the 'Geographic Info' tab, then the second
+    tab won't be seen in the module.<br />
     <br />
-    <br />";
-
-$lang["Content Help Administration"]["Rol"] = "<br />
-    <b>Solapa Rol</b><br />
+    <b>Other special tabs</b><br />
     <br />
-    Esta sección permite administrar los Roles.<br />
-    <br />
-    Un Rol es un set específico de permisos para cada módulo. Ese Rol es luego asignado a los usuarios de los
-    Proyectos que desee, de modo que esos usuarios tendrán esos permisos. Cuando crea o edita un Proyecto,
-    puere darle a los usuarios que desee ese Rol en la solapa Rol.<br />
-    El permiso final que un usuario tenga para trabajar con un ítem está definido por la combinación de lo
-    especificado tanto en la solapa Rol como en la solapa Accesos de un proyecto determinado.<br />
-    <br />
-    Predeterminadamente, ningún Rol se asigna a nadie, y el permiso para acceder a un nuevo proyecto será acceso
-    <b>Admin</b> para el creador y nada para el resto.<br />
-    <br />
-    <b>Ejemplo</b>
-    <br />
-    Puede crear un Rol llamado 'Puede leer TODOs y NOTAs'.<br />
-    Y especificar en ese Rol, acceso <i>Lectura</i> para los módulos <b>Todo</b> y <b>Nota</b>.<br />
-    Luego crea un Proyecto y le asigna al usuario 'juan' el Rol 'Puede leer TODOs y NOTAs', entonces cuando él entra
-    al proyecto, lo único que podrá hacer además de leer la información principal del proyecto en sí, es leer
-    (pero no modificar) ítems de los módulos <b>Todo</b> y <b>Nota</b>.<br />
-    <br />
-    <b>Nota:</b> en el listado de módulos para asignar permisos a un Rol, hay uno llamado <b>Project</b>, ese
-        representa los Subproyectos de Proyectos.<br />
+    There are other tabs used in the system modules that are not defined here, nor could be modified.<br />
+    <ul>
+        <li>
+            General modules: tabs <i>Access</i>, <i>Notification</i> and <i>History</i>.<br />
+            All the modules <i>created</i> with the <b>Module designer</b> will have, apart from the tabs designed by
+            the user, this 3 tabs explained in the help of most of the modules. <i>History</i> will only be shown in
+            edit mode.
+        </li>
+        <li>
+            Project module: tabs <i>Module</i> and <i>Role</i> explained in Project's help.
+        </li>
+        <li>
+            Calendar module: tab <i>Recurrence</i> explained in Calendar's help.
+        </li>
+    </ul>
     <br />
     <br />";
 
+$lang["Content Help Administration"]["User"] = "<br />
+    <b>User tab</b><br />
+    <br />
+    This sub-module allows modifying users main data and settings.<br />
+    Here all the users of the system will be seen.<br />
+    <br />
+    It has a Grid and a Form like most of modules.<br />
+    <br />
+    <hr style='height: 2px;'>
+    <b>GRID</b><br />
+    <br />
+    Fields:<br />
+    <br />
+    <b>Username</b><br />
+    Text: the login name for the user.<br />
+    <br />
+    <b>First name</b><br />
+    Text: first name of the user.<br />
+    <br />
+    <b>Last name</b><br />
+    Text: last name of the user.<br />
+    <br />
+    <b>Status</b><br />
+    Select: whether this user is active in the system or not (if not, he/she can't log in).<br />
+    <br />
+    <b>Admin</b><br />
+    Select: whether this user has Admin access or not.<br />
+    <br />
+    <hr style='height: 2px;'>
+    <b>FORM</b><br />
+    <br />
+    Note:<br />
+    The users can be added and modified but not deleted, if you want to delete a user, set it to Inactive instead,
+    through Status field. He won't be able to log in and won't appear in the User Select fields.<br />
+    <br />
+    Fields:<br />
+    <br />
+    <b>Username</b><br />
+    Text: the login name for the user.<br />
+    <br />
+    <b>Password</b><br />
+    Text: if you want to change a password write here the NEW one. Black dots will be seen instead of typed characters.
+    If you don't want to change it leave this field blank.<br />
+    <br />
+    <b>First name</b><br />
+    Text: first name of the user.<br />
+    <br />
+    <b>Last name</b><br />
+    Text: last name of the user.<br />
+    <br />
+    <b>Email</b><br />
+    Text: the email of the user, mainly used to send Notifications.<br />
+    <br />
+    <b>Language</b><br />
+    Select: choose a language for the user to be shown site text and messages.<br />
+    <br />
+    <b>Time zone</b><br />
+    Select: The Time zone (UTC) for the region or country the user will be using Phprojekt. This is required for all
+    users but specially useful for international events time coordination, so that each participant of an event will
+    see the time (and eventually the date) converted to his/her local time.<br />
+    <br />
+    <b>Status</b><br />
+    Select: whether this user is active in the system or not (if not, he/she can't log in).<br />
+    <br />
+    <b>Admin</b><br />
+    Select: whether this user has Admin access or not.<br />
+    <br />
+    <br />";
+
+$lang["Content Help Administration"]["Role"] = "<br />
+    <b>Role tab</b><br />
+    <br />
+    This tab permits managing the Roles.<br />
+    <br />
+    A Role is a specific set of permissions for each module. That Role then is assigned to users of the Projects you
+    want, so that he will have that rights. When you create or edit a Project, you can give every different user that
+    Role inside Rol tab.<br />
+    The final right for a specific user to work with an item is defined by the conjunction of the data defined both
+    inside Role and Access tabs of Project module.<br />
+    <br />
+    By default, no Role is assigned to anybody, and the permission to access to a new project will be <b>Admin</b>
+    access  for the creator and nothing for the rest.<br />
+    <br />
+    <b>Example</b>
+    <br />
+    You can create a Role called 'Can read TODOs and NOTEs'.<br />
+    And set in that Role <i>Read</i> access to the <b>Todo</b> and <b>Note</b> modules.<br />
+    Then you create a Project and assign the user 'john' the Role 'Can read TODOs and NOTEs', so when he enters the
+    Project, the only thing he will be able to do apart from reading the main data of the Project itself is to read
+    (but not modify) items of <b>Todo</b> and <b>Note</b> modules.<br />
+    <br />
+    <b>Note:</b> in the listing of modules that you select to assign rights to a rol, the <b>Project</b> module
+    represents the Subprojects of Projects.<br />
+    <br />
+    <br />";
+
+$lang["Content Help Administration"]["General tab"] = "<br />
+    <b>General tab</b><br />
+    <br />
+    This is a general configurations tab.<br />
+    <br />
+    Currently it has only one field 'Company name' where you set the company name that will be seen in the beginning of
+    the breadcrumb trail when a Project related module is selected (Project, Gantt, Todo, etc).<br />
+    <br />
+    <br />";
 
 // General Help (Setting)
 $lang["Content Help Setting"]["General"] = "DEFAULT";
-$lang["Content Help Setting"]["Configuración"] = "<br />
-    Esta es la <b>Ayuda General del módulo Configuración</b><br />
+$lang["Content Help Setting"]["Setting"] = "<br />
+    This is the <b>General Help of Setting module</b><br />
     <br />
-    Este módulo permite al usuario cambiar atributos específicos de configuración de su perfil.<br />
+    Settings module allows logged user to modify personal information.<br />
     <br />
-    Tiene 2 solapas: <b>Usuario</b> y <b>Asistencia</b>.<br />
-    Para ver su ayuda, haga clic en las respectivas solapas dentro de esta ventana.<br />
+    It is formed by three sub-modules: User, Notification and Timecard. You can switch between them clicking their tabs
+    in the upper central tab bar.<br />
+    The first sub-module allows setting and changing Password, Email, Language and Time zone, the second one corresponds
+    to the real-time notifications and server synchronization and the third one is for Timecard favorite Projects.<br />
     <br />
-    <br />";
-
-$lang["Content Help Setting"]["Usuario"] = "<br />
-    <b>Solapa Usuario</b><br />
-    <br />
-    Dentro de esta solapa se configuran los parámetros básicos del usuario.<br />
-    <br />
-    El título de cada campo dentro de esta sección es auto-descriptivo sobre su contenido.<br />
-    Se permite cambiar: <i>Contraseña</i>, <i>Dirección de correo</i>, <i>Idioma</i> y <i>Huso horario</i>.<br />
+    All users including Admin type ones only can modify their own information here.<br />
+    Admin type users are able to modify other users information, but not here, they do it in Administration
+    module.<br />
     <br />
     <br />";
 
-$lang["Content Help Setting"]["Asistencia"] = "<br />
-    <b>Solapa Asistencia</b><br />
+$lang["Content Help Setting"]["User"] = "<br />
+    <b>User tab</b><br />
     <br />
-    Aquí el usuario puede configurar los Proyectos donde mayormente está trabajando, de modo que ellos aparecerán
-    para arrastrar y soltar (drag and drop) dentro del módulo Asistencia.<br />
+    Here you will see logged user info.<br />
+    Password fields don't show anything for security reasons, if you want to change your password, fill the 3 fields
+    as explained here later and then press Save. If you leave them blank and press Save, password won't be modified.
     <br />
-    El título de cada campo dentro de esta sección es auto-descriptivo sobre su contenido.<br />
-    Se permite cambiar: <i>Max. Número de Proyectos favoritos</i> y qué <i>Proyectos favoritos</i> se eligen.<br />
+    The rest of fields show current values and let you modify them.<br />
+    <br />
+    Fields:<br />
+    <br />
+    <b>Password</b><br />
+    Text: if you want to change your password write here the NEW one. Black dots will be seen instead of typed
+    characters.<br />
+    <br />
+    <b>Confirm Password</b><br />
+    Text: if you want to change your password write here the NEW one again. Black dots will be seen instead of typed
+    characters.<br />
+    <br />
+    <b>Old password</b><br />
+    Text: if you want to change your password write here the OLD one that will be verified for security reasons. Black
+    dots will be seen instead of typed characters.<br />
+    <br />
+    <b>Email</b><br />
+    Text: your email registered in the system. It is mainly used to send you Notifications.<br />
+    <br />
+    <b>Language</b><br />
+    Select: choose a language for you to be shown site text and messages.<br />
+    <br />
+    <b>Time zone</b><br />
+    Select: The Time zone (UTC) for the region or country you will be using Phprojekt. This is required for all users
+    but specially useful for international events time coordination, so that each participant of an event will see the
+    time (and eventually the date) converted to his/her local time.<br />
+    Each option of the select field has a local time number and a descriptive earth location to help finding
+    yours.<br />
+    <br />
+    <br />";
+
+$lang["Content Help Setting"]["Notifications"] = "<br />
+    <b>Notifications tab</b><br />
+    <br />
+    Here you can configure the notifications and real-time connection with the server.<br />
+    This functionality tells you some actions of other users in little pop-up dialogs at the right bottom of the
+    screen, like logging in / out, alerts, modifications of items, etc.<br />
+    It also updates content on screen according to what you are seeing and what has been modified by other users.
+    <br />
+    <br />
+    You can activate/inactivate this real-time synchronization through these check boxes:<br />
+    <br />
+    <b>Login / logout</b><br />
+    A pop-up dialog tells you when other users have logged in and out.<br />
+    <br />
+    <b>Data records</b><br />
+    If you check this box, then when some contents that you have access to are modified, you receive a message pointing
+    you that event.<br />
+    Also, if for example a Project name has been modified and you are editing it in the Form, the tree gets updated,
+    also the grid, and each modified form field gets updated and the field border gets thick and red coloured.<br />
+    <br />
+    <b>User Generated Messages</b><br />
+    It is not developed yet, the check box is disabled.<br />
+    <br />
+    <b>Alerts</b><br />
+    It is not developed yet, the check box is disabled.<br />
+    <br />
+    <br />";
+
+$lang["Content Help Setting"]["Timecard"] = "<br />
+    <b>Timecard tab</b><br />
+    <br />
+    Here you will see and will be able to change the Favorite Projects of Timecard module.<br />
+    <br />
+    They will appear first on the project selection in the form of the Timecard module. This list of Projects is
+    independent for each user and its purpose is to shorten booking process time.<br />
+    <br />
+    When you have finished doing the changes in this Multiple Select Box, press Save.<br />
     <br />
     <br />";

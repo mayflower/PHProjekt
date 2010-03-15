@@ -89,31 +89,52 @@ $lang["Content Help"]["Calendar"] = "<br />
     The <b>screen</b> is divided into 5 sections:<br />
     <br />
     <ol>
-        <li><b>Top right button bar:</b> here, depending on the items being shown and the user rights, will be shown
+        <li>
+            <b>Top right button bar:</b> here, depending on the items being shown and the user rights, will be shown
             up to 3 buttons.<br />
             <ul>
-                <li><b>Add a new item:</b> you press it and an empty form is open to create a new event.<br />
-                <li><b>Export:</b> exports to a CSV file the results and offers you to download it.<br />
-                <li><b>Filter</b> (only seen in List view): activates an optional panel over the grid that lets you
+                <li>
+                    <b>Add a new item:</b> you press it and an empty form is open to create a new event.
+                </li>
+                <li>
+                    <b>Export:</b> exports to a CSV file the results and offers you to download it.
+                </li>
+                <li>
+                    <b>Filter</b> (only seen in List view): activates an optional panel over the grid that lets you
                     create a set of specific searching criteria to filter the grid items and see only the ones you want.
+                </li>
             </ul>
-        <li><b>View tabs:</b> there are four types of listings that are activated through <b>List</b>,
-            <b>Day</b>, <b>Week</b> and <b>Month</b> tabs.<br />
+        </li>
+        <li>
+            <b>View tabs:</b> there are four types of listings that are activated through <b>List</b>, <b>Day</b>,
+            <b>Week</b> and <b>Month</b> tabs.<br />
             <ul>
-                <li><b>List:</b> a grid with all the events for the current user.<br />
-                <li><b>Day:</b> a schedule from 8:00 to 20:00 where all the events of a specific day are shown.<br />
-                    <u>It has two subtypes</u> that are chosen through the <b>Self</b> and <b>Selection</b> tab
-                    tabs appear at the right of the same bar, when <b>Day</b> mode is active:
+                <li>
+                    <b>List:</b> a grid with all the events for the current user.
+                </li>
+                <li>
+                    <b>Day:</b> a schedule from 8:00 to 20:00 where all the events of a specific day are shown.<br />
+                    <u>It has two subtypes</u> that are chosen through the <b>Self</b> and <b>Selection</b> tab tabs
+                    appear at the right of the same bar, when <b>Day</b> mode is active:
                     <ul>
-                        <li><b>Self:</b> the events of the chosen day, for the current user are shown.
-                        <li><b>Selection:</b> when this tab is pressed, a pop-up window appears letting the user
+                        <li>
+                            <b>Self:</b> the events of the chosen day, for the current user are shown.
+                        </li>
+                        <li>
+                            <b>Selection:</b> when this tab is pressed, a pop-up window appears letting the user
                             select a small group of people so that the list of events will have as many columns as
                             users selected; there will be seen a group schedule for the active day.
+                        </li>
                     </ul>
-                <li><b>Week:</b> a weekly schedule, like the common day schedule, but for the seven days of the week
+                </li>
+                <li>
+                    <b>Week:</b> a weekly schedule, like the common day schedule, but for the seven days of the week
                     simultaneously.
-                <li><b>Month:</b> a monthly schedule, shows in a clear calendar table all the days of the month, and
+                </li>
+                <li>
+                    <b>Month:</b> a monthly schedule, shows in a clear calendar table all the days of the month, and
                     the necessary days of previous and next months in order to complety all the weeks shown.
+                </li>
             </ul>
             When the Day, Week or Month view are active, it appears a schedule bar over the listings.
             It has the <i>previous</i>, <i>today</i> and <i>next</i> links to change the day / week / month in
@@ -121,24 +142,28 @@ $lang["Content Help"]["Calendar"] = "<br />
             <br />
             <b>Drag and Resize</b><br />
             <br />
-            In Day and Week views, the events are able to be dragged and resized to any visible place in the panel. If
-            you click any event, it is opened in the form, but you can also drag and drop it in another place and the
-            new time / day will be stored in the database. You can also drag the bottom border of any event to increase
-            and decrease the length of the it. In all cases the descriptive content of the event gets changed
+            In Day and Week views, the events are able to be dragged and resized to any visible place in the panel.
+            If you click any event, it is opened in the form, but you can also drag and drop it in another place and
+            the new time / day will be stored in the database. You can also drag the bottom border of any event to
+            increase and decrease the length of the it. In all cases the descriptive content of the event gets changed
             automatically while you are dragging its shape or bottom border and the saving process occurs automatially
             when you release the mouse button.<br />
             If you drag a multiple days event, the boxes that correspond to other days of the same event get invisible,
             when the event is dropped they get visible again but in the new position.<br />
             The Day view in the Selection mode doesn't allow to modify the events of other users, just yours.<br />
-            <br />
-        <li><b>Grid / List:</b> here are shown the list of items or a determined day's schedule, depending on the
-            selected view.<br />
-        <br />
-        <li><b>Form:</b> when an item is going to be created or it is clicked one in the grid/schedule above, a form is
-            shown here to enter or change its data.<br />
-        <br />
-        <li><b>Bottom button bar:</b> here, depending on the user rights, when an item is being created or modified
-            there are shown the <b>Save</b> and <b>Delete</b> buttons.<br />
+        </li>
+        <li>
+            <b>Grid / List:</b> here are shown the list of items or a determined day's schedule, depending on the
+            selected view.
+        </li>
+        <li>
+            <b>Form:</b> when an item is going to be created or it is clicked one in the grid/schedule above, a form is
+            shown here to enter or change its data.
+        </li>
+        <li>
+            <b>Bottom button bar:</b> here, depending on the user rights, when an item is being created or modified
+            there are shown the <b>Save</b> and <b>Delete</b> buttons.
+        </li>
     </ol>
     <br />
     <br />";
@@ -197,8 +222,8 @@ $lang["Content Help"]["Participants"] = "<br />
     When an owner modifies an event or tries to delete it, the action may be applied to his/her event or also to all
     participants, the system will eventually ask it.<br />
     When an owner creates or modifies a multiple participants/occurrencies event, the 'status' field of all the
-    participants is set to Pending, so that they can confirm (or confirm again) whether they agree to participate in the
-    event.<br />
+    participants is set to Pending, so that they can confirm (or confirm again) whether they agree to participate in
+    the event.<br />
     <br />
     <br />
     <b>Layout</b><br />
@@ -252,7 +277,8 @@ $lang["Content Help"]["Participants"] = "<br />
     participants won't be affected.<br />
     <br />
     2 - First answer: Delete just this occurrence - Second answer: Delete for all participants<br />
-    The deletion will apply just to this occurrence of the whole series, but for logged user and all participants.<br />
+    The deletion will apply just to this occurrence of the whole series, but for logged user and all participants.
+    <br />
     <br />
     3 - First answer: Delete all occurrences - Second answer: Delete just for me<br />
     The deletion will apply to the whole series of events but just for logged user. The rest of participants won't be
@@ -267,11 +293,11 @@ $lang["Content Help"]["Participants"] = "<br />
 $lang["Content Help"]["Recurrence"] = "<br />
     <b>Recurrence Tab</b><br />
     <br />
-    Recurrence tab allows setting a recurrence to the events so that the same event is repeated later one or more times,
-    according to a user defined pattern.<br />
+    Recurrence tab allows setting a recurrence to the events so that the same event is repeated later one or more
+    times, according to a user defined pattern.<br />
     The resulting series of events may be later edited individually or all at once, and they will be connected as an
-    individual series of recurrent events. The owner (creator) of the event has full access to the related events of all
-    participants, and all occurrencies, the rest of the participants are only able to modify the 'status' and 'tag'
+    individual series of recurrent events. The owner (creator) of the event has full access to the related events of
+    all participants, and all occurrencies, the rest of the participants are only able to modify the 'status' and 'tag'
     fields of Basic Data tab of their respective events.  They can't modify other thing nor delete the event.<br />
     When an owner modifies an event or tries to delete it, the action may be applied to the open event or also to all
     occurrencies, if any. A pop-up dialog (explained here later) will ask it.<br />
@@ -280,8 +306,8 @@ $lang["Content Help"]["Recurrence"] = "<br />
     and creates the appropriate events.<br />
     <br />
     When an owner creates or modifies a multiple participants/occurrencies event, the 'status' field of all the
-    participants is set to Pending, so that they can confirm (or confirm again) whether they agree to participate in the
-    event.<br />
+    participants is set to Pending, so that they can confirm (or confirm again) whether they agree to participate in
+    the event.<br />
     <br />
     It has 4 fields to specify recurrence parameters. The combination of all of them will determine the final result:
     <br />
@@ -309,9 +335,10 @@ $lang["Content Help"]["Recurrence"] = "<br />
     <br />
     <b>Pop-up Dialog: Edit repeating events</b><br />
     <br />
-    When a user tries to modify an event that is part of a series and presses Save a pop-up dialog will appear. That
-    dialog asks what events will these modifications apply to. Available buttons to answer are:<br />
-    Edit just this occurrence => changes will affect just this event, the rest of the series will remain the same.<br />
+    When a user tries to modify an event that is part of a series and presses Save a pop-up dialog will appear.
+    That dialog asks what events will these modifications apply to. Available buttons to answer are:<br />
+    Edit just this occurrence => changes will affect just this event, the rest of the series will remain the same.
+    <br />
     Edit all occurrences => changes will be applied to each event of the series.<br />
     <br />
     This dialog may be combined with the participants one (see 'Participants tab' help). If both dialogs appear asking
@@ -322,7 +349,8 @@ $lang["Content Help"]["Recurrence"] = "<br />
     participants won't be affected.<br />
     <br />
     2 - First answer: Edit just this occurrence - Second answer: Edit for all participants<br />
-    The changes will apply just to this occurrence of the whole series, but for logged user and all participants.<br />
+    The changes will apply just to this occurrence of the whole series, but for logged user and all participants.
+    <br />
     <br />
     3 - First answer: Edit all occurrences - Second answer: Edit just for me<br />
     The changes will apply to the whole series of events but just for logged user. The rest of participants won't be
@@ -335,8 +363,8 @@ $lang["Content Help"]["Recurrence"] = "<br />
     <br />
     <b>Pop-up Dialog: Delete for Who</b><br />
     <br />
-    When a user tries to delete an event that is part of a series (pressing Delete) a pop-up dialog will appear. That
-    dialog asks what events will this deletion apply to. Available buttons to answer are:<br />
+    When a user tries to delete an event that is part of a series (pressing Delete) a pop-up dialog will appear.
+    That dialog asks what events will this deletion apply to. Available buttons to answer are:<br />
     Delete just this occurrence => deletion will affect just this event, the rest of the series will remain the
     same.<br />
     Delete all occurrences => deletion will be applied to each event of the series.<br />
@@ -349,7 +377,8 @@ $lang["Content Help"]["Recurrence"] = "<br />
     participants won't be affected.<br />
     <br />
     2 - First answer: Delete just this occurrence - Second answer: Delete for all participants<br />
-    The deletion will apply just to this occurrence of the whole series, but for logged user and all participants.<br />
+    The deletion will apply just to this occurrence of the whole series, but for logged user and all participants.
+    <br />
     <br />
     3 - First answer: Delete all occurrences - Second answer: Delete just for me<br />
     The deletion will apply to the whole series of events but just for logged user. The rest of participants won't be
