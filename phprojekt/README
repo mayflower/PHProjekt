@@ -1,34 +1,32 @@
 PHProjekt - README
 
-Manual installation and update: please read the "INSTALL" file.
-Manual/automatic installation: read wiki documentation.
-@todo add wiki link
+Manual installation and update: please read the "INSTALL" file
+or the wiki documentation.
+(http://docs.phprojekt.com/index.php/Administrator:Manual_installation)
 
-Version 6.0.0 - 2010-03-01
+Automatic installation: read wiki documentation.
+(http://docs.phprojekt.com/index.php/Administrator:Automatic_installation)
+
+Version 6.0.0 - 2010-03-18
 http://www.PHProjekt.com
-Copyright (C) 2000-2010 Mayflower GmbH <phprojekt@mayflower.de>
+Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation; either version 2.1 of the License, or
-(at your option) any later version.
+This software is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License version 3 as published by the Free Software Foundation
 
-This program is distributed in the hope that it will be useful,
+This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+Lesser General Public License for more details.
 
 PHProjekt uses and contains the following external projects:
-- Zend Framework 1.6.1 (http://www.zend.com)
+- Zend Framework 1.10.1 (http://www.zend.com)
 - Dojo Toolkit 1.4.0 (http://www.dojotoolkit.org)
 
 It is possible to perform a data migration from Phprojekt 5 while
 installing 6th version, read wiki installation documentation.
-@todo add wiki link.
+(http://docs.phprojekt.com/index.php/Administrator:Migration)
 
 Suggested and tested browsers are last versions of Firefox and Internet
 Explorer. You can try any other at your own risk.
