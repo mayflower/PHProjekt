@@ -68,15 +68,17 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->view->dbHost           = 'localhost';
-        $this->view->dbUser           = 'phprojekt';
-        $this->view->dbPass           = '';
-        $this->view->dbName           = 'phprojekt';
-        $this->view->adminPass        = '';
-        $this->view->adminPassConfirm = '';
-        $this->view->testPass         = '';
-        $this->view->testPassConfirm  = '';
-        $this->view->useExtraData     = 1;
+        $this->view->dbHost              = 'localhost';
+        $this->view->dbUser              = 'phprojekt';
+        $this->view->dbPass              = '';
+        $this->view->dbName              = 'phprojekt';
+        $this->view->adminPass           = '';
+        $this->view->adminPassConfirm    = '';
+        $this->view->testPass            = '';
+        $this->view->testPassConfirm     = '';
+        $this->view->useExtraData        = 1;
+        $this->view->migrationConfigFile = '';
+        $this->view->diffToUtc           = 0;
     }
 
     /**
@@ -112,6 +114,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->testPassConfirm     = $params['testPassConfirm'];
         $this->view->useExtraData        = $params['useExtraData'];
         $this->view->migrationConfigFile = $params['migrationConfigFile'];
+        $this->view->diffToUtc           = $params['diffToUtc'];
     }
 
     /**
@@ -131,6 +134,7 @@ class IndexController extends Zend_Controller_Action
             'testPass'            => Cleaner::sanitize('string', $this->getRequest()->getParam('testPass')),
             'testPassConfirm'     => Cleaner::sanitize('string', $this->getRequest()->getParam('testPassConfirm')),
             'migrationConfigFile' => Cleaner::sanitize('string', $this->getRequest()->getParam('migrationConfigFile')),
+            'diffToUtc'           => Cleaner::sanitize('integer', $this->getRequest()->getParam('diffToUtc')),
             'useExtraData'        => (int) $this->getRequest()->getParam('useExtraData'),
         );
     }

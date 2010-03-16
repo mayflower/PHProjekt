@@ -375,7 +375,8 @@ class Setup_Models_Setup
         // Migration
         if (file_exists($params['migrationConfigFile'])) {
             try {
-                $migration = new Setup_Models_Migration($params['migrationConfigFile'], $this->_db);
+                $migration = new Setup_Models_Migration($params['migrationConfigFile'], $params['diffToUtc'],
+                    $this->_db);
                 $migration->migrateTables();
             } catch (Exception $error) {
                 echo $error->getMessage();

@@ -140,6 +140,7 @@ style="width: 20%;" />
             <a href="#" onclick="window.open('<?php echo $this->webPath; ?>Setup/Docs/Migration.html', 'Migration',
             'status=0,menubar=0,resizable=1,top=200px,left=400px,width=700px,height=600px,scrollbars=1,addressbar=0');
             return false;">Migration</a> file.</b></li>
+            <li>Choose a difference of hours between the server and GMT for convert the times values in UTC.</li>
         </ul>
     </td>
 </tr>
@@ -151,6 +152,27 @@ style="width: 20%;" />
         <input dojoType="dijit.form.TextBox" type="text" name="migrationConfigFile"
         value="<?php echo $this->migrationConfigFile; ?>" />
         <br />File path (e.g. /var/www/html/config.inc.php)
+   </td>
+</tr>
+<tr>
+    <td class="label">
+        <label for="diffToUtc">Difference to GMT:</label>
+    </td>
+    <td>
+        <select id="diffToUtc" name="diffToUtc" dojoType="dijit.form.FilteringSelect"
+        required="true" autocomplete="true" value="<?php echo $this->diffToUtc; ?>" searchAttr="name"
+        invalidMessage="You must select one">
+        <?php
+            for ($i = -12; $i < 13; $i++) {
+                $sel = '';
+                if ($i == $this->diffToUtc) {
+                    $sel = 'selected="selected"';
+                }
+                echo '<option value="' . $i . '"' . $sel .' >' . $i . '</option>';
+            }
+        ?>
+        </select>
+        <br />Difference in hours between the server and GMT.
    </td>
 </tr>
 <tr>

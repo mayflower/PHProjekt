@@ -166,6 +166,13 @@ class Setup_Models_Migration
     private $_p5RootPath = null;
 
     /**
+     * Set the diff between the server and GMT
+     *
+     * @var integer
+     */
+    private $_diffToUtc = 0;
+
+    /**
      * Search vlaues.
      *
      * @var array
@@ -196,7 +203,7 @@ class Setup_Models_Migration
      *
      * @return void
      */
-    public function __construct($file, $db = null)
+    public function __construct($file, $diffToUtc, $db = null)
     {
         if (null === $db) {
             $this->_db = Phprojekt::getInstance()->getDb();
@@ -222,6 +229,9 @@ class Setup_Models_Migration
 
         // Set modules
         $this->_setModules();
+
+        // Set the diff between the server and GMT
+        $this->_diffToUtc = $diffToUtc;
     }
 
     /**
@@ -1020,12 +1030,20 @@ class Setup_Models_Migration
                         $status = 2; // Rejected
                     }
 
+                    // Start
+                    $startDatetime = date("Y-m-d H:i:s", $this->_getUtcTime($date . " " . $calendar['anfang'],
+                        $calendar['von']));
+
+                    // End
+                    $endDateime = date("Y-m-d H:i:s", $this->_getUtcTime($date . " " . $calendar['ende'],
+                        $calendar['von']));
+
                     // @todo: 'ical_ID' field is not being migrated to 'uid' field,
                     // it will be done when implemented P6 ical
                     $dbValues[] = array($parentId, $calendar['von'], self::PROJECT_ROOT,
                         $this->_fix($calendar['event'], 255), $this->_fix($calendar['ort']),
-                        $this->_fix($calendar['remark'], 65500), $date . " " . $calendar['anfang'],
-                        $date . " " . $calendar['ende'], $rrule, $visibility, $status, $participantId);
+                        $this->_fix($calendar['remark'], 65500), $startDatetime, $endDateime, $rrule, $visibility,
+                        $status, $participantId);
                 } else {
                     unset($events[$index]);
                 }
@@ -1934,11 +1952,38 @@ class Setup_Models_Migration
      */
     private function _getP6TimeZone($timeZone)
     {
+        $timeZone = $timeZone + $this->_diffToUtc;
         if ($timeZone == 0 || $timeZone > 12 || $timeZone < -12) {
             return "000";
         } else {
             return $timeZone;
         }
+    }
+
+    /**
+     * Convert the p5 time in UTC
+     *
+     * @param integer $value  P5 time value.
+     * @param integer $userId User ID.
+     *
+     * @return integer UTC time.
+     */
+    private function _getUtcTime($value, $userId)
+    {
+        $timeZone = $this->_timeZone[$userId];
+        if (strstr($timeZone, "_")) {
+            list ($hours, $minutes) = explode("_", $timeZone);
+        } else {
+            $hours   = (int) $timeZone;
+            $minutes = 0;
+        }
+
+        $hoursComplement   = $hours * -1;
+        $minutesComplement = $minutes * -1;
+        $u                 = strtotime($value);
+
+        return mktime(date("H", $u) + $hoursComplement, date("i", $u) + $minutesComplement,
+            date("s", $u) , date("m", $u), date("d", $u), date("Y", $u));
     }
 
     /**
