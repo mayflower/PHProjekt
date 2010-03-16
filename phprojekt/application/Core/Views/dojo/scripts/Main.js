@@ -143,7 +143,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                         "moduleFunction": "setUrlHash",
                         "functionParams": "'" + parentModule + "', null, ['" + tmp[i].name + "']"});
                 }
-                var navigation = '<ul id="nav_main">';
+                var navigation = '<table id="nav_main"><tr>';
                 for (var i = 0; i < modules.length; i++) {
                     var liclass        = '';
                     var moduleName     = modules[i].name;
@@ -161,7 +161,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                         functionParams: functionParams
                     });
                 }
-                navigation += "</ul>";
+                navigation += "</tr></table>";
                 dojo.byId("subModuleNavigation").innerHTML = navigation;
                 phpr.initWidgets(dojo.byId("subModuleNavigation"));
                 this.customSetSubmoduleNavigation();
