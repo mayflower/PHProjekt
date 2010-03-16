@@ -1195,11 +1195,18 @@ class Setup_Models_Migration
                     $comment .= chr(10) . 'User defined field 2: ' . $contact['div2'];
                 }
 
+                // Private
+                if (isset($contact['acc_read']) && $contact['acc_read'] == 'group') {
+                    $private = 0;
+                } else {
+                    $private = 1;
+                }
+
                 $dbValues[] = array(self::PROJECT_ROOT, $this->_fix($contact['vorname'] . ' ' . $contact['nachname']),
                     $this->_fix($contact['email']), $this->_fix($contact['firma']), $this->_fix($contact['tel1']),
                     $this->_fix($contact['tel2']), $this->_fix($contact['mobil']), $this->_fix($contact['strasse']),
                     $this->_fix($contact['stadt']), $this->_fix($contact['plz']), $this->_fix($contact['land']),
-                    $this->_fix($comment), $contact['von'], 1);
+                    $this->_fix($comment), $contact['von'], $private);
             }
 
             // Run the multiple inserts
