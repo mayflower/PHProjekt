@@ -15,7 +15,8 @@ Before submitting patches to the mailinglist (devml@phprojekt.com) or committing
 repository make sure that your prepared your patch with the following rules in mind.
 
  1. Use unified diff format. This can be done using the diff -u switch. Version control
-    systems like subversion use unified diffs by default.
+    systems like subversion use unified diffs by default. You can also send us
+    pull requests.
 
  2. Include a proper commit message
 
@@ -26,7 +27,7 @@ repository make sure that your prepared your patch with the following rules in m
     to the mailinglist.
 
  5. If you include third party libraries, make sure that they can be distributed und
-    the terms of the Lesser GNU Public License 2.1 as described in the LICENSE file.
+    the terms of the Lesser GNU Public License 3 as described in the LICENSE file.
 
 Happy hacking.
 
