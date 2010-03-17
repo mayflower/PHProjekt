@@ -1,4 +1,4 @@
-PHProjekt 6 Installation - 6.0 Developer Preview 1
+PHProjekt 6 Installation - 6.0
 --------------------------------------------------
 
 1. Requirements
@@ -18,58 +18,59 @@ B. License
   * MySQL version 5.x
   * PHP 5.2.4 with pdo_mysql drivers installed
   * PHP extensions:
-    mbstring
-    iconv
-    ctype
-    gd
-    pcre
-    pdo (pdo_mysql / pdo_sqlite2 / pdo_pgsql)
-    Reflection
-    session
-    SPL
-    zlib
+        mbstring
+        iconv
+        ctype
+        gd
+        pcre
+        pdo (pdo_mysql / pdo_sqlite2 / pdo_pgsql)
+        Reflection
+        session
+        SPL
+        zlib
   * PHP Settings:
-    magic_quotes_gpc     = 0
-    magic_quotes_runtime = 0
-    magic_quotes_sybase  = 0
+        magic_quotes_gpc     = 0
+        magic_quotes_runtime = 0
+        magic_quotes_sybase  = 0
 
   * Recommend PHP Settings:
-    register_globals     = 0
-    safe_mode            = 0
+        register_globals     = 0
+        safe_mode            = 0
 
     If you don't have access to the php.ini to change these values,
-    you can try creating a .htaccess file with the following content for example:
+    you can try creating a .htaccess file with the following content
+    for example:
 
         php_flag magic_quotes_gpc off
 
     and put it into the root folder of the app.
 
     Note: Phprojekt 6 has been tested with:
-
-    * Apache HTTP Server 2.2
-    * PHP 5.2.6
-    * MySQL Server 5.0
+        * Apache HTTP Server 2.2
+        * PHP 5.2.6
+        * MySQL Server 5.0
 
 2. Installation
 
- 1. Download the compressed package file and decompress it into an appropriate folder
-    outside the ones accessed by your HTTP server.
+ 1. Download the compressed package file and decompress it into an
+    appropriate folder outside the ones accessed by your HTTP server.
 
      $ tar xzvpf phprojekt-6.X.tar.gz
      $ cp -R phprojekt/* /srv/www/
 
-    Use your favorite packaging tool on Windows under an appropriate path "C:\phprojekt\"
+    Use your favorite packaging tool on Windows under an appropriate
+    path "C:\phprojekt\"
 
- 2. Phprojekt separates both the document root from the rest of the application,
-    so you need to point your server host to the 'htdocs' folder.
-    In the given example, it would be:
+ 2. PHProjekt separates both the document root from the rest of the
+    application, so you need to point your server host to the
+    'htdocs' folder.  In the given example, it would be:
 
     UNIX        /srv/www/htdocs/
     WINDOWS     C:\phprojekt\htdocs\
 
- 3. Create a database in your MySQL server (e.g. phprojekt). Make sure that the
-    database user that you want to use has the rights to load files.
-    An example:
+ 3. Create a database in your MySQL server (e.g. phprojekt). Make
+    sure that the database user that you want to use has the rights
+    to load files.  An example:
 
     UNIX
       $ mysql -u root -p
@@ -87,8 +88,9 @@ B. License
     UNIX        /srv/www/docs/blank_database.sql
     WINDOWS     c:\phprojekt\docs\blank_database.sql
 
-    Load it into the database. You might use MySQL Administration tools or PHPMyAdmin.
-    You can also use the command line to do it:
+    Load it into the database. You might use MySQL Administration
+    tools or PHPMyAdmin.  You can also use the command line to do
+    it:
 
     UNIX
       $ mysql -u phprojekt -p
@@ -102,7 +104,8 @@ B. License
 3. Configuration
 
  1. Make a copy of configuration.ini-dist in the same folder,
-    name it configuration.ini and set its parameters according to the explanations and examples inside it.
+    name it configuration.ini and set its parameters according to
+    the explanations and examples inside it.
 
     UNIX     /srv/www/configuration.ini-dist
              to /srv/www/configuration.ini
@@ -111,9 +114,10 @@ B. License
 
 4. Permission
 
-    Make sure that the webserver or the webserver group can write in the tmp/, logs/ and upload/ directories.
-    You can set these permissions using the chmod(1) command.
-    Assuming your webserver runs on the group "www-data":
+    Make sure that the webserver or the webserver group can write
+    to tmp/, logs/ and upload/.  You can set these permissions using
+    the chmod(1) command.  Assuming your webserver runs on the group
+    "www-data":
 
     UNIX
       $ chmod -R 0750 /srv/www
@@ -121,20 +125,24 @@ B. License
       $ chmod -R g+w /srv/www/{tmp,application,logs,upload}
       $ chgrp -R www /srv/www
 
-    NOTE: These lines sets also the write permission for the application/ folder!, 
-    you need to have write access there, ONLY when you are adding or deleting modules from the Administration section.
-    We strongly recommend that the application/ folder have read access when you are in production.
+    NOTE: These lines sets also the write permission for the
+    application/ folder!, you need to have write access there, ONLY
+    when you are adding or deleting modules from the Administration
+    section.  We strongly recommend that the application/ folder
+    have read access when you are in production.
 
 5. Logs
 
-    If the logs do not exist, please, create them /logs/err.log and /logs/debug.log
+    If the logs do not exist, please, create them logs/err.log and
+    logs/debug.log
 
 6. Finalizing
 
-    Enter the site from your browser (see Browser notes in the Notes section of this document).
-    Log in using the admin user (see Users notes in the Notes section of this document).
-    It is suggested to change the password,
-    entering to 'Setting' option in the top menu -> the tab 'User' -> Password fields.
+    Enter the site from your browser (see Browser notes in the Notes
+    section of this document).  Log in using the admin user (see
+    Users notes in the Notes section of this document).  It is
+    suggested to change the password, entering to 'Setting' option
+    in the top menu -> the tab 'User' -> Password fields.
 
 DONE
 
@@ -157,5 +165,6 @@ A. Notes
 
 B. License
 
-    PHProjekt 6 is licensed under the terms and conditions of the Lesser GNU Public License version 3.
-    Please refer to the LICENSE file distributed with this file.
+    PHProjekt 6 is licensed under the terms and conditions of the
+    Lesser GNU Public License version 3.  Please refer to the LICENSE
+    file distributed with this file.
