@@ -30,7 +30,12 @@ language = "de"
 ;;;;;;;;;
 
 ; Where the site and the main file (index.php) are located (htdocs folder).
-webpath = "http://localhost/phprojekt/htdocs/"
+; The webpath is the exact URL where the site is.
+; With VirtualHost
+; webpath = "http://phprojekt6/"
+; Without VirtualHost
+; webpath = "http://localhost/phprojekt/htdocs/"
+webpath = "http://phprojekt6/"
 
 ; Path where will be placed files uploaded by the user.
 ; UNIX

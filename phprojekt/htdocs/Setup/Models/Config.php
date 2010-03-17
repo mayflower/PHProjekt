@@ -198,10 +198,14 @@ class Setup_Models_Config
         $content .= $this->_eol;
 
         $content .= '; Where the site and the main file (index.php) are located (htdocs folder).' . $this->_eol;
+        $content .= '; The webpath is the exact URL where the site is.' . $this->_eol;
+        $content .= '; With VirtualHost' . $this->_eol;
+        $content .= '; webpath = "http://phprojekt6/"' . $this->_eol;
+        $content .= '; Without VirtualHost' . $this->_eol;
+        $content .= '; webpath = "http://localhost/phprojekt/htdocs/"' . $this->_eol;
         $webPath = "http://" . $_SERVER['HTTP_HOST'] . str_replace('setup.php', '', $_SERVER['SCRIPT_NAME']);
         $content .= 'webpath = "' . $webPath . '"' . $this->_eol;
         $content .= $this->_eol;
-
         $content .= '; Path where will be placed files uploaded by the user.' . $this->_eol;
         $content .= 'uploadpath = "' . $this->_baseDir . 'upload/"' . $this->_eol;
 
