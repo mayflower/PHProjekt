@@ -482,6 +482,12 @@ class Setup_Models_Migration
             $this->_addSearchDisplay(1, $itemId, 1, $words[0], '');
             $this->_addSearchWords(implode(" ", $words), 1, $itemId);
 
+            // Migrate permission for admin
+            $moduleId                        = $this->_getModuleId('Project');
+            $userRightsAdd                   = array();
+            $userRightsAdd[self::USER_ADMIN] = $this->_accessAdmin;
+            $this->_addItemRights($moduleId, $projectId, $userRightsAdd);
+
             foreach ($this->_modules as $moduleId) {
                 $dbValues[] = array($moduleId, $projectId);
             }
@@ -514,13 +520,12 @@ class Setup_Models_Migration
             if ($lastGroup != $oldGroupId) {
                 if (!$first) {
                     // Migrate each permission
-                    $moduleId = $this->_getModuleId('Project');
-                    $itemId   = $this->_groups[$lastGroup];
+                    if (isset($this->_groups[$lastGroup])) {
+                        $moduleId = $this->_getModuleId('Project');
+                        $itemId   = $this->_groups[$lastGroup];
 
-                    // Add admin user
-                    $userRightsAdd[self::USER_ADMIN] = $this->_accessAdmin;
-
-                    $this->_addItemRights($moduleId, $itemId, $userRightsAdd);
+                        $this->_addItemRights($moduleId, $itemId, $userRightsAdd);
+                    }
                 }
 
                 // New group
@@ -547,6 +552,15 @@ class Setup_Models_Migration
 
                 $userRightsAdd[$userId] = $this->_accessRead;
             }
+        }
+
+        // Finish with the last one
+        // Migrate each permission
+        if (isset($this->_groups[$lastGroup])) {
+            $moduleId = $this->_getModuleId('Project');
+            $itemId   = $this->_groups[$lastGroup];
+
+            $this->_addItemRights($moduleId, $itemId, $userRightsAdd);
         }
     }
 
@@ -584,7 +598,8 @@ class Setup_Models_Migration
             foreach ($projects as $index => $project) {
                 $oldProjectId = $project['ID'];
                 if (empty($project['parent'])) {
-                    $parentId = $this->_groups[$project['gruppe']];
+                    $parentId = (isset($this->_groups[$project['gruppe']])) ? $this->_groups[$project['gruppe']]
+                        : self::PROJECT_ROOT;
                     if (!isset($paths[$parentId])) {
                         $paths[$parentId] = $paths[self::PROJECT_ROOT] . $parentId . "/";
                     }
