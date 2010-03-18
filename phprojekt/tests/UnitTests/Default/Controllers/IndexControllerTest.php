@@ -282,7 +282,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonGetConfigurations');
         $response = $this->getResponse();
         $this->assertContains('"name":"supportAddress","value":"gustavo.solt@mayflower.de"},{"name":"phprojektVersion"'
-            . ',"value":"6.0.0"},{"name":"currentUserId","value":1},{"name":"csrfToken","value"', $response);
+            . ',"value":"6.0.1"},{"name":"currentUserId","value":1},{"name":"csrfToken","value"', $response);
     }
 
     /**
