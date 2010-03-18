@@ -1592,7 +1592,7 @@ class Setup_Models_Migration
             // Global modules
             $select = $this->_db->select()
                                 ->from('module')
-                                ->where('name = ?', $module);
+                                ->where('name = ?', (string) $module);
 
             $stmt = $this->_db->query($select);
             $rows = $stmt->fetchAll();
@@ -1928,7 +1928,7 @@ class Setup_Models_Migration
         $moduleId = $this->_getModuleId($data['module']);
         if ($moduleId < 1) {
             $moduleId = 1;
-            $itemId = null;
+            $itemId   = null;
         } else {
             switch ($data['module']) {
                 case 'todo':
