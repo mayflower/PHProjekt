@@ -247,7 +247,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      *
      * @return integer Comparation value.
      */
-    public function sortByListPosition($a, $b)
+    public static function sortByListPosition($a, $b)
     {
         if ($a['listPosition'] == $b['listPosition']) {
             return 0;
@@ -264,7 +264,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
      *
      * @return integer Comparation value.
      */
-    public function sortByFormPosition($a, $b)
+    public static function sortByFormPosition($a, $b)
     {
         if ($a['formPosition'] == $b['formPosition']) {
             return 0;
