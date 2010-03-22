@@ -2,8 +2,10 @@ Contributing to PHProjekt 6
 
 Patches to PHProjekt are always welcome.
 
-Before submitting patches to the mailinglist (devml@phprojekt.com) or committing to the
-repository make sure that your prepared your patch with the following rules in mind.
+Before submitting patches to the mailinglist
+(phprojekt-devel@lists.sourceforge.net) or committing to the
+repository make sure that your prepared your patch with the following
+rules in mind.
 
  1. Use unified diff format. This can be done using the diff -u switch. Version control
     systems like subversion use unified diffs by default.
