@@ -314,7 +314,12 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 showLabel: true,
                 onClick:   dojo.hitch(this, function(e) {
                     phpr.currentProjectId = phpr.rootProjectId;
-                    this.setUrlHash(e.target.name);
+                    // Fix target for some browsers
+                    var module = e.target.name;
+                    if (undefined == module) {
+                        module = e.target.parentNode.name;
+                    }
+                    this.setUrlHash(module);
                 })
             });
             toolbar.addChild(button);

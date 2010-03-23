@@ -151,6 +151,10 @@
     opacity: .5;
 }
 
+.dj_safari .phprojekt #projectBookingForm {
+    overflow: hidden;
+}
+
 .phprojekt #projectBookingForm .formContainer {
     padding-left: 0px;
     background: #fff;

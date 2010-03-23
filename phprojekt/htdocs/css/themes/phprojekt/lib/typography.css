@@ -120,6 +120,11 @@ del {
     color: #666;
 }
 
+*:focus {
+    -moz-outline-style: none;
+    outline: none;
+}
+
 a:focus,
 a:hover {
     color: #000;

@@ -50,8 +50,7 @@ foreach (scandir(".") as $item) {
     }
 }
 
-$allCss = str_replace("../images", "images", $allCss);
-$allCss .= ":focus { -moz-outline-style: none; }";
+$allCss  = str_replace("../images", "images", $allCss);
 $allCss .= file_get_contents("../../../dojo/dijit/themes/dijit.css");
 $allCss .= file_get_contents("../../../dojo/dijit/themes/dijit_rtl.css");
 
