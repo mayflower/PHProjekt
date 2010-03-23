@@ -570,10 +570,12 @@ class Phprojekt_Notification
      */
     public function getItemName()
     {
-        $itemName = "";
+        $itemName = "-";
 
         if (false === empty($this->_model)) {
-            $itemName = $this->_model->{$this->_model->searchFirstDisplayField};
+            if (isset($this->_model->{$this->_model->searchFirstDisplayField})) {
+                $itemName = $this->_model->{$this->_model->searchFirstDisplayField};
+            }
         }
 
         return $itemName;
