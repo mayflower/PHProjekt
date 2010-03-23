@@ -166,4 +166,68 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         parent::delete();
         Phprojekt_Tree_Node_Database::deleteCache();
     }
+
+    /**
+     * Save the rights for the current item.
+     *
+     * The users are a POST array with user IDs.
+     *
+     * @param array $rights Array of user IDs with the bitmask access.
+     *
+     * @return void
+     */
+    public function saveRights($rights)
+    {
+        // Do the default action
+        parent::saveRights($rights);
+
+        // Update access and delete the cache also for the children
+        $itemRights   = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $tree         = new Phprojekt_Tree_Node_Database($activeRecord, $this->id);
+        $tree         = $tree->setup();
+
+        $users = array();
+        foreach ($rights as $userId => $access) {
+            $users[] = (int) $userId;
+        }
+
+        // Just a check
+        if (empty($users)) {
+            $users[] = 1;
+        }
+
+        // Keep on the childen only the access for the allowed users in the parent
+        foreach ($tree as $node) {
+            $projectId = (int) $node->id;
+
+            // Delete users that are not allowed in the parent
+            $where = sprintf('module_id = 1 AND item_id = %d AND user_id NOT IN (%s)', $projectId,
+                implode(",", $users));
+            $itemRights->delete($where);
+
+            // Reset access by module-item-user
+            foreach ($users as $userId) {
+                // Reset cache
+                $sessionName = 'Phprojekt_Item_Rights-getItemRight' . '-1-' . $projectId . '-' . $userId;
+                $rightNamespace = new Zend_Session_Namespace($sessionName);
+                $rightNamespace->unsetAll();
+            }
+
+            // Reset access by module-item
+            $sessionName    = 'Phprojekt_Item_Rights-getUsersRights' . '-1-' . $projectId;
+            $rightNamespace = new Zend_Session_Namespace($sessionName);
+            $rightNamespace->unsetAll();
+
+            // Reset users by module-item
+            $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-1-' . $projectId;
+            $rightNamespace = new Zend_Session_Namespace($sessionName);
+            $rightNamespace->unsetAll();
+
+            // Reset users by project
+            $sessionName = 'Phprojekt_User_User-getAllowedUsers' . '-' . $projectId;
+            $rightNamespace   = new Zend_Session_Namespace($sessionName);
+            $rightNamespace->unsetAll();
+        }
+    }
 }

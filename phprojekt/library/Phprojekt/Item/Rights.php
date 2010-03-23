@@ -91,13 +91,6 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-' . $moduleId . '-' . $itemId;
         $rightNamespace = new Zend_Session_Namespace($sessionName);
         $rightNamespace->unsetAll();
-
-        // Reset users by project
-        if ($moduleId == 1) {
-            $sessionName    = 'Phprojekt_User_User-getAllowedUsers' . '-' . $itemId;
-            $rightNamespace = new Zend_Session_Namespace($sessionName);
-            $rightNamespace->unsetAll();
-        }
     }
 
     /**
