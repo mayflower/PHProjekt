@@ -171,7 +171,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 var isCurrentUser = (id == 'currentUser');
                 var checkBoxs     = new Array();
                 var userId        = isCurrentUser ? currentUser : accessContent[id]['userId'];
-                if (userId == 1) {
+                if (userId == 1 && currentUser != 1) {
                     continue;
                 }
                 for (var i in this._rights) {
