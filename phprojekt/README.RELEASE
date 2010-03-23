@@ -41,9 +41,11 @@ This is a checklist for all the steps that the release require.
 
     1.7 Test installations in Windows and Linux with zip and tar.gz files.
 
-    1.8 Upload files into the web.
+    1.8 Upload the files into the web.
 
-    1.9 Copy the file to phprojekt.{tar.gz | zip }.
+    1.9 Copy the files to phprojekt.{tar.gz | zip }.
+
+    1.10 Upload the files in Source Forge.
 
 2 Web
 
