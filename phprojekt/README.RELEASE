@@ -1,0 +1,74 @@
+This is a checklist for all the steps that the release require.
+
+1 Package
+
+    1.1 Change the version if needed:
+        1.1.1 VERSION
+        1.1.2 library/PHProjekt.php
+        1.1.3 test/Phprojekt/PhprojektTest.php
+        1.1.4 test/Default/Controllers/IndexControllerTest.php
+        1.1.5 unitTest
+        1.1.6 commit
+        1.1.7 Make a new tag.
+            1.1.8 git tag -s 6.x.x
+            1.1.9 git push --tags
+
+    1.2 Copy the phprojekt folder into other one.
+
+    1.3 Remove production directories and files:
+        1.3.1 logs/debug.log
+        1.3.2 logs/err.log
+        1.3.3 test/
+        1.3.4 tmp/CSS/*
+        1.3.5 tmp/HTML/*
+        1.3.6 tmp/URI/*
+        1.3.7 tmp/zendCache/*
+        1.3.8 upload/*
+        1.3.9 configuration.ini
+        1.3.10 README.RELEASE
+
+    1.4 Make a search and replace for @package_version@ to current version.
+
+    1.5 Make a zip of the phprojekt folder.
+
+    1.6 Tar.gz file.
+        1.6.1 chmod -R 0750 phprojekt
+        1.6.2 find phprojekt -type f -exec chmod -x '{}' ';'
+        1.6.3 chmod -R g+w phprojekt/{tmp,application,logs,upload}
+        1.6.4 chgrp -R www phprojekt
+        1.6.5 chmod 0770 phprojekt
+        1.6.6 tar -cpzf phprojekt-6.x.x.tar.gz phprojekt
+
+    1.7 Test installations in Windows and Linux with zip and tar.gz files.
+
+    1.8 Upload files into the web.
+
+    1.9 Copy the file to phprojekt.{tar.gz | zip }.
+
+2 Web
+
+    2.1 Changes on http://www.phprojekt.com/download
+        2.1.1 Change the version of the file
+        2.1.2 Change the size of the file
+
+    2.2 Write a news about the release.
+
+3 Blog
+
+    3.1 Write a blog about the release.
+
+4 Social webs
+
+    4.1 Write a news in FaceBook.
+
+    4.2 Write a news in Twitter.
+
+5 Next version
+
+    5.1 Change the version for the next one:
+        5.1.1 VERSION
+        5.1.2 library/PHProjekt.php
+        5.1.3 test/Phprojekt/PhprojektTest.php
+        5.1.4 test/Default/Controllers/IndexControllerTest.php
+        5.1.5 unitTest
+        5.1.6 commit
