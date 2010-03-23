@@ -349,7 +349,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
             $displayName = $this->getDisplay();
             $rights      = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
             $ids         = $rights->getUsersWithRight(1, (int) Phprojekt::getCurrentProjectId());
-            $where = sprintf('status = %s', $this->getAdapter()->quote('A'));
+            $where       = sprintf('status = %s', $this->getAdapter()->quote('A'));
             if (!empty($ids)) {
                 $where .= sprintf(' AND id IN (%s) ', implode(',', $ids));
             }

@@ -127,8 +127,8 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $where = array();
         $clone = clone($this);
 
-        $where[] = 'module_id = '. $clone->getAdapter()->quote($moduleId);
-        $where[] = 'item_id = '. $clone->getAdapter()->quote($itemId);
+        $where[] = 'module_id = ' . $clone->getAdapter()->quote($moduleId);
+        $where[] = 'item_id = ' . $clone->getAdapter()->quote($itemId);
         $clone->delete($where);
     }
 
