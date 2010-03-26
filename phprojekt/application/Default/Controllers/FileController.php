@@ -179,11 +179,9 @@ class FileController extends IndexController
                     . 'item.');
                 die($error);
             }
-            $files = array_merge(explode('||', $model->$field), explode('||', $_SESSION['uploadedFiles_' . $field]));
-        } else {
-            $files = explode('||', $_SESSION['uploadedFiles_' . $field]);
         }
 
+        $files = explode('||', $_SESSION['uploadedFiles_' . $field]);
         $this->_fileCheckParamOrder($order, count($files));
 
         $md5Name  = '';
@@ -244,13 +242,7 @@ class FileController extends IndexController
         $this->_fileCheckParamField($model, $field);
         $this->_fileCheckWritePermission($model, $itemId);
 
-        if ($itemId > 0) {
-            $model->find($itemId);
-            $filesIn = array_merge(explode('||', $model->$field), explode('||', $_SESSION['uploadedFiles_' . $field]));
-        } else {
-            $filesIn = explode('||', $_SESSION['uploadedFiles_' . $field]);
-        }
-
+        $filesIn = explode('||', $_SESSION['uploadedFiles_' . $field]);
         $this->_fileCheckParamOrder($order, count($filesIn));
 
         // Delete the file name and md5 from the string
