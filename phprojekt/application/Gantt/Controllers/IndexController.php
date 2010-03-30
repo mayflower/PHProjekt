@@ -132,7 +132,9 @@ class Gantt_IndexController extends IndexController
                 implode(", ", $ids));
             $access = $rights->fetchAll($where)->toArray();
             foreach ($access as $right) {
-                $data['data']['rights']["currentUser"][$right['item_id']] = ($right['access'] > 1);
+                $itemRights = Phprojekt_Acl::convertBitmaskToArray($right['access']);
+
+                $data['data']['rights']["currentUser"][$right['item_id']] = ($itemRights['write'] === true);
                 if ($data['data']['rights']["currentUser"]["write"] === false &&
                     $projectId != $right['item_id'] &&
                     $right['access'] > 1) {
