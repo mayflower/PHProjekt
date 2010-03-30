@@ -52,13 +52,6 @@ class Setup_Models_Setup
     private $_message = array();
 
     /**
-     * Configuration for Zend_Db_Table
-     *
-     * @var array
-     */
-    private $_db = null;
-
-    /**
      * Constructor.
      *
      * @return void
@@ -125,8 +118,7 @@ class Setup_Models_Setup
         }
 
         if (!empty($missingRequirements)) {
-            $message = "Your PHP does not meet the requirements needed for PHProjekt 6.\n"
-                . implode("\n", $missingRequirements);
+            $message = implode("\n", $missingRequirements);
             throw new Exception($message);
         }
 
@@ -146,13 +138,13 @@ class Setup_Models_Setup
     }
 
     /**
-     * Validate the params.
+     * Validate the params for the database.
      *
      * @param array $params Array with the POST values.
      *
      * @return boolean True for valid.
      */
-    public function validate($params)
+    public function validateDatabase($params)
     {
         $valid = true;
 
@@ -173,17 +165,44 @@ class Setup_Models_Setup
                     'password' => $params['dbPass'],
                     'dbname'   => $params['dbName']
                 );
-                $this->_db = Zend_Db::factory($params['serverType'], $dbParams);
-                $this->_db->query("DROP DATABASE `" . $params['dbName'] . "`");
-                $this->_db->query("CREATE DATABASE `" . $params['dbName'] . "`"
+                $db = Zend_Db::factory($params['serverType'], $dbParams);
+                $db->query("DROP DATABASE `" . $params['dbName'] . "`");
+                $db->query("CREATE DATABASE `" . $params['dbName'] . "`"
                     ." DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;");
-                $this->_db = Zend_Db::factory($params['serverType'], $dbParams);
+                $db = Zend_Db::factory($params['serverType'], $dbParams);
             } catch (Exception $error) {
                 $this->_error[] = 'Cannot connect to server at ' . $params['dbHost']
                     . ' using ' . $params['dbUser'] . ' user ' . '(' . $error->getMessage() . ')';
                 $valid = false;
             }
         }
+
+        return $valid;
+    }
+
+    /**
+     * Save the database params into the SESSION.
+     *
+     * @param array $params Array with the POST values.
+     *
+     * @return void
+     */
+    public function saveDatabase($params)
+    {
+        $databaseNamespace       = new Zend_Session_Namespace('databaseData');
+        $databaseNamespace->data = $params;
+    }
+
+    /**
+     * Validate the params for the users.
+     *
+     * @param array $params Array with the POST values.
+     *
+     * @return boolean True for valid.
+     */
+    public function validateUsers($params)
+    {
+        $valid = true;
 
         // Admin pass
         if (!isset($params['adminPass']) || empty($params['adminPass'])) {
@@ -209,6 +228,33 @@ class Setup_Models_Setup
             $valid = false;
         }
 
+        return $valid;
+    }
+
+    /**
+     * Save the users params into the SESSION.
+     *
+     * @param array $params Array with the POST values.
+     *
+     * @return void
+     */
+    public function saveUsers($params)
+    {
+        $usersNamespace       = new Zend_Session_Namespace('usersData');
+        $usersNamespace->data = $params;
+    }
+
+    /**
+     * Validate the params for the server.
+     *
+     * @param array $params Array with the POST values.
+     *
+     * @return boolean True for valid.
+     */
+    public function validateServer($params)
+    {
+        $valid = true;
+
         // Check write access
         $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
         $configFile = $baseDir . "configuration.ini";
@@ -231,7 +277,7 @@ class Setup_Models_Setup
         // Check log files
         $logsDir = $baseDir . "logs";
 
-        if (!file_exists($logsDir)) {
+        if (!is_dir($logsDir)) {
             if (!is_writable($baseDir)) {
                 $this->_error[] = 'Error creating the logs folder: Do not have write access.';
                 $valid = false;
@@ -257,7 +303,7 @@ class Setup_Models_Setup
         // Check upload dir
         $uploadDir = $baseDir . "upload";
 
-        if (!file_exists($uploadDir)) {
+        if (!is_dir($uploadDir)) {
             if (!is_writable($baseDir)) {
                 $this->_error[] = 'Error creating the upload folder: Do not have write access.';
                 $valid = false;
@@ -273,7 +319,7 @@ class Setup_Models_Setup
         // Check tmp dir
         $cacheDir = $baseDir . "tmp";
 
-        if (!file_exists($cacheDir)) {
+        if (!is_dir($cacheDir)) {
             if (!is_writable($baseDir)) {
                 $this->_error[] = 'Error creating the tmp folder: Do not have write access.';
                 $valid = false;
@@ -289,7 +335,7 @@ class Setup_Models_Setup
         // Check zendCache dir
         $cacheDir = $baseDir . "tmp" . DIRECTORY_SEPARATOR . "zendCache";
 
-        if (!file_exists($cacheDir)) {
+        if (!is_dir($cacheDir)) {
             if (!is_writable($baseDir . "tmp")) {
                 $this->_error[] = 'Error creating the "tmp"' . DIRECTORY_SEPARATOR . '"zendCache" folder'
                     . ': Do not have write access.';
@@ -301,7 +347,7 @@ class Setup_Models_Setup
         } else if (!is_writable($cacheDir)) {
             $this->_error[] = 'Please set permission to allow use the cache in ' . $cacheDir;
             $valid = false;
-        } else if (is_dir($cacheDir)) {
+        } else {
             // Remove old data if exists
             if ($directory = opendir($cacheDir)) {
                 while (($file = readdir($directory)) !== false) {
@@ -313,15 +359,111 @@ class Setup_Models_Setup
             }
         }
 
-        // Migration
+        return $valid;
+    }
+
+    /**
+     * Install all the tables and return the messages generated.
+     *
+     * @param array $params Array with options for the install.
+     *
+     * @return array Array with messages of what was installed.
+     */
+    public function install($params)
+    {
+        $options                 = array();
+        $options['useExtraData'] = (boolean) $params['useExtraData'];
+        $db                      = $this->_getDb();
+
+        // Install tables
+        $dbParser           = new Phprojekt_DbParser($options, $db);
+        $dbParser->parseData(PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
+
+        // Update users passwords
+        $usersNamespace = new Zend_Session_Namespace('usersData');
+
+        // Update admin Pass
+        $db->update('setting', array('value' => md5('phprojektmd5' . $usersNamespace->data['adminPass'])),
+            'id = 1');
+
+        // Update test Pass
+        $db->update('setting', array('value' => md5('phprojektmd5' . $usersNamespace->data['testPass'])),
+            'user_id = 2 AND key_value = \'password\'');
+
+        return $dbParser->getMessages();
+    }
+
+    /**
+     * Validate the params for the migration.
+     *
+     * @param array $params Array with the POST values.
+     *
+     * @return boolean True for valid.
+     */
+    public function validateMigration($params)
+    {
+        $valid = true;
+
         if (!empty($params['migrationConfigFile'])) {
             if (!file_exists($params['migrationConfigFile'])) {
                 $this->_error[] = 'The file "' . $params['migrationConfigFile'] . '" do not exists.';
                 $valid = false;
+            } else if (!strstr($params['migrationConfigFile'], 'config.inc.php')) {
+                $this->_error[] = 'The file "' . $params['migrationConfigFile'] . '" do not exists.';
+                $valid = false;
             }
+        } else {
+            $this->_error[] = 'You must provide the path to the config.inc.php file of your old PHProjekt 5.x.';
+            $valid = false;
         }
 
         return $valid;
+    }
+
+    /**
+     * Migrate old versions to the new one.
+     *
+     * @param array $params Array with options for the migration.
+     *
+     * @return array Array with messages of what was migrated.
+     */
+    public function migrate($params)
+    {
+        if (file_exists($params['migrationConfigFile'])) {
+            try {
+                $migration = new Setup_Models_Migration($params['migrationConfigFile'], $params['diffToUtc'],
+                    $this->_getDb());
+                $migration->{'migrate' . $params['module']}();
+            } catch (Exception $error) {
+                echo $error->getMessage();
+            }
+        }
+    }
+
+    /**
+     * Complete the installation writing the config file.
+     *
+     * @return void
+     */
+    public function finish()
+    {
+        // Create config file
+        $databaseNamespace = new Zend_Session_Namespace('databaseData');
+        $config            = new Setup_Models_Config();
+        $content           = $config->getDefaultProduction($databaseNamespace->data['dbUser'],
+            $databaseNamespace->data['dbPass'], $databaseNamespace->data['dbName'], 'Pdo_Mysql',
+            $databaseNamespace->data['dbHost']);
+
+        $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
+        $configFile = $baseDir . "configuration.ini";
+        file_put_contents($configFile, $content);
+
+        // Delete a session if exists
+        $_SESSION = array();
+        foreach ($_COOKIE as $key => $value) {
+            setcookie($key, "", 1);
+        }
+        Zend_Session::writeClose();
     }
 
     /**
@@ -347,56 +489,24 @@ class Setup_Models_Setup
         $message        = $this->_message;
         $this->_message = array();
 
-        return implode("\n", $message);
+        return $message;
     }
 
     /**
-     * Install itself.
+     * Return the database connection.
      *
-     * @param array $params Array with the POST values.
-     *
-     * @return void
+     * @return Zend_Db The database conection.
      */
-    public function install($params)
+    private function _getDb()
     {
-        $options = array();
-        $options['useExtraData'] = (boolean) $params['useExtraData'];
+        $databaseNamespace = new Zend_Session_Namespace('databaseData');
 
-        $dbParser = new Phprojekt_DbParser($options, $this->_db);
-        $dbParser->parseData(PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
+        $dbParams = array(
+                    'host'     => $databaseNamespace->data['dbHost'],
+                    'username' => $databaseNamespace->data['dbUser'],
+                    'password' => $databaseNamespace->data['dbPass'],
+                    'dbname'   => $databaseNamespace->data['dbName']);
 
-        // Update admin Pass
-        $this->_db->update('setting', array('value' => md5('phprojektmd5' . $params['adminPass'])), 'id = 1');
-
-        // Update test Pass
-        $this->_db->update('setting', array('value' => md5('phprojektmd5' . $params['testPass'])),
-            'user_id = 2 AND key_value = \'password\'');
-
-        // Migration
-        if (file_exists($params['migrationConfigFile'])) {
-            try {
-                $migration = new Setup_Models_Migration($params['migrationConfigFile'], $params['diffToUtc'],
-                    $this->_db);
-                $migration->migrateTables();
-            } catch (Exception $error) {
-                echo $error->getMessage();
-            }
-        }
-
-        // Create config file
-        $config  = new Setup_Models_Config();
-        $content = $config->getDefaultProduction($params['dbUser'], $params['dbPass'], $params['dbName'],
-            'Pdo_Mysql', $params['dbHost']);
-
-        $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
-        $configFile = $baseDir . "configuration.ini";
-        file_put_contents($configFile, $content);
-
-        // Delete a session if exists
-        $_SESSION = array();
-        foreach ($_COOKIE as $key => $value) {
-            setcookie($key, "", 1);
-        }
-        Zend_Session::writeClose();
+        return Zend_Db::factory($databaseNamespace->data['serverType'], $dbParams);
     }
 }

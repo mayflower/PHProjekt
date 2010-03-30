@@ -1,0 +1,115 @@
+<div class="prepend-0">
+<h2>Step 3 - Set the users</h2>
+Below you should set your first users.<br />
+Please define the admin and test passwords.<br />
+<br />
+<?php
+include ("serverFeedback.phtml");
+?>
+
+<table class="form"
+style="width: auto;">
+<col class="col1" />
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="adminPass">Admin user pass:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="password" id="adminPass" name="adminPass" dojoType="dijit.form.TextBox"
+        required="true" value="<?php echo $this->adminPass; ?>" invalidMessage="" />
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                Is the password for the user 'admin' in PHProjekt 6.
+                </div>
+            </div>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="adminPassConfirm">Admin pass confirm:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="password" id="adminPassConfirm" name="adminPassConfirm" dojoType="dijit.form.TextBox"
+        required="required" value="<?php echo $this->adminPassConfirm; ?>" invalidMessage="" />
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                Is a password confirmation, repeat the 'admin' password.
+                </div>
+            </div>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="testPass">Test user pass:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="password" id="testPass" name="testPass" dojoType="dijit.form.TextBox"
+        required="true" value="<?php echo $this->testPass; ?>" invalidMessage="" />
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                Is the password for the user 'test' in PHProjekt 6.
+                </div>
+            </div>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="testPassConfirm">Test pass confirm:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="password" id="testPassConfirm" name="testPassConfirm" dojoType="dijit.form.TextBox"
+        required="required" value="<?php echo $this->testPassConfirm; ?>" invalidMessage="" />
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                Is a password confirmation, repeat the 'test' password.
+                </div>
+            </div>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td class="label">
+        &nbsp;
+    </td>
+    <td>
+        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
+        onClick="
+        phprSend({
+            url: '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonUsersSetup',
+            content:   dijit.byId('installForm').attr('value'),
+            onSuccess: dojo.hitch(this, function(data) {
+                if (data.type != 'error') {
+                    dijit.byId('formContent').attr('content', data.template);
+                }
+                addMessage(data.type, data.message);
+            })
+        });">
+            Save users passwords
+        </button>
+    </td>
+</tr>
+</table>
+</div>

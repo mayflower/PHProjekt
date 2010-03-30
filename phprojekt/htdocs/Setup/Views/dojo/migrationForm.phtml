@@ -1,0 +1,141 @@
+<div class="prepend-0">
+<h2>Step 5 - Migrate old versions</h2>
+
+Please, provide the path to the config.inc.php file of your old PHProjekt 5.x.<br />
+<u>Notes</u>:<br />
+<ul style="margin: 0 1.5em">
+    <li>
+        The process could take several minutes depending on the number of projects to be migrated. <br />
+        Approximately half of the migration time corresponds to the indexing process of the items, which<br />
+        provides P6 with a fast searching skill.
+    </li>
+    <li>
+        The config.inc.php needs to be on the same server where you are installing PHProjekt 6.
+    </li>
+    <li>
+        <b>If you want to know more about the migration routine, please read the
+        <a href="#" onclick="window.open('<?php echo $this->webPath; ?>Setup/Docs/Migration.html', 'Migration',
+        'status=0,menubar=0,resizable=1,top=200px,left=400px,width=700px,height=600px,scrollbars=1,addressbar=0');
+        return false;">Migration</a> file.</b>
+    </li>
+    <li>
+        Choose a difference of hours between the server and GMT for convert the times values in UTC.
+    </li>
+</ul>
+<br />
+<?php
+include ("serverFeedback.phtml");
+?>
+
+<table class="form"
+style="width: auto;">
+<col class="col1" />
+<tr>
+    <td class="label">
+        <label for="migration_config">Configuration file:</label>
+    </td>
+    <td>
+        <input dojoType="dijit.form.TextBox" type="text" id="migrationConfigFile" name="migrationConfigFile"
+        value="<?php echo $this->migrationConfigFile; ?>" />
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                File path (e.g. /var/www/html/config.inc.php)
+                </div>
+            </div>
+        </button>
+   </td>
+</tr>
+<tr>
+    <td class="label">
+        <label for="diffToUtc">Difference to GMT:</label>
+    </td>
+    <td>
+        <select id="diffToUtc" name="diffToUtc" dojoType="dijit.form.FilteringSelect"
+        required="true" autocomplete="true" value="<?php echo $this->diffToUtc; ?>" searchAttr="name"
+        invalidMessage="You must select one">
+        <?php
+            for ($i = -12; $i < 13; $i++) {
+                $sel = '';
+                if ($i == $this->diffToUtc) {
+                    $sel = 'selected="selected"';
+                }
+                echo '<option value="' . $i . '"' . $sel .' >' . $i . '</option>';
+            }
+        ?>
+        </select>
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                Difference in hours between the server and GMT.
+                </div>
+            </div>
+        </button>
+   </td>
+</tr>
+<tr id="trResults"
+style="display: none">
+    <td class="label">
+        <label for="results">Results:</label>
+    </td>
+    <td>
+        <div dojoType="dijit.layout.ContentPane" region="center" id="results">
+        <table>
+        <?php
+        foreach ($this->exportModules as $module) {
+        ?>
+        <tr>
+            <td
+            style="padding: 0px; height: 20px;">
+                <?php echo $module; ?>
+            </td>
+            <td
+            style="padding: 0px; height: 20px;">
+                &nbsp;
+            </td>
+            <td id="resultFor<?php echo $module; ?>"
+            style="padding: 0px; height: 20px; vertical-align: middle;">
+                &nbsp;
+            </td>
+        </tr>
+        <?php
+        }
+        ?>
+        </table>
+        </div>
+   </td>
+</tr>
+<tr>
+    <td class="label">
+        &nbsp;
+    </td>
+    <td>
+        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
+        onClick="
+            var display = (dojo.isIE) ? 'block' : 'table-row';
+            dojo.style(dojo.byId('trResults'), 'display', display);
+            migrateStatus = true;
+            dojo.byId('message').style.display = 'none';
+            migrate();
+        ">
+            Migrate
+        </button>
+        &nbsp;&nbsp;
+        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="cross"
+        onClick="
+        phprSend({
+            url: '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonFinish',
+            onSuccess: dojo.hitch(this, function(data) {
+                dijit.byId('formContent').attr('content', data.template);
+                changeStep(4, 5);
+            })
+        });">
+        Do not migrate data
+        </button>
+    </td>
+</tr>
+</table>

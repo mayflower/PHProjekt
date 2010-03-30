@@ -1,0 +1,28 @@
+<div class="prepend-0">
+<h2>Step 4 - Install the tables</h2>
+Now we are ready to install all the tables.<br />
+<br />
+<?php
+include ("serverFeedback.phtml");
+?>
+
+<table class="form"
+style="width: auto;">
+<col class="col1" />
+<tr>
+    <td colspan="2">
+        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
+        onClick="
+        phprSend({
+            url: '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonMigrationForm',
+            onSuccess: dojo.hitch(this, function(data) {
+                dijit.byId('formContent').attr('content', data.template);
+                changeStep(3, 4);
+            })
+        });">
+            Continue with the migration
+        </button>
+    </td>
+</tr>
+</table>
+</div>

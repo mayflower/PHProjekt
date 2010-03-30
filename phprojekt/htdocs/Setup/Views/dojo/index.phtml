@@ -7,6 +7,11 @@
     <style type="text/css">
         @import "<?php echo $this->webPath; ?>css/themes/phprojekt/phprojektCssCompiler.php";
     </style>
+    <style type="text/css">
+        .dj_ie .phprojekt #serverFeedback {
+            padding-left: 5px;
+        }
+    </style>
     <script type="text/javascript">
         var djConfig = {isDebug: false, parseOnLoad: false, bindEncoding: "utf-8",
                         locale: 'en', useCommentedJson: true};
@@ -47,19 +52,254 @@
         dojo.addOnLoad(function() {
             dojo.parser.parse();
             init();
-            hideLoading();
         });
 
         window.onresize = function() {
             init();
         };
 
-        hideLoading = function() {
-            if (dojo.byId('initLoading') && dojo.byId('completeContent')) {
-                dojo.style("initLoading", "display", "none");
-                dojo.style("completeContent", "opacity", 1);
+        function phprSend(paramsIn) {
+            var params = {
+                url:       "",
+                content:   "",
+                handleAs:  "json",
+                onSuccess: null,
+                onError:   null,
+                onEnd:     null,
+                sync:      false,
+                chunkMap:  {}
             }
-        }
+            if (dojo.isObject(paramsIn)) {
+                dojo.mixin(params, paramsIn);
+            }
+            var _onError, _onSuccess = function() {};
+            var _onEnd = params.onEnd || function() {};
+
+            if (params.onError) {
+                _onError = function(response, ioArgs) {
+                    params.onError(response, ioArgs);
+                    _onEnd();
+                }
+            } else {
+                _onError = function(response, ioArgs) {
+                    _onEnd();
+                }
+            }
+
+            _onSuccess = function(data, ioArgs) {
+                dojo.byId('loadingIcon').style.display = 'none';
+                try {
+                    if (params.onSuccess) {
+                        params.onSuccess(data, ioArgs);
+                    }
+                    _onEnd();
+                } catch(e) {
+                    return;
+                }
+            };
+
+            dojo.byId('loadingIcon').style.display = 'inline';
+            dojo.xhrPost({
+                url:      params.url,
+                content:  params.content,
+                handleAs: params.handleAs,
+                sync:     params.sync,
+                error:    _onError,
+                load:     _onSuccess
+            });
+        };
+
+        function makeErrorLink(id, message) {
+            dojo.byId('resultFor' + id).innerHTML = "<a href=\"#\" onClick=\"dojo.style('"
+                + id + "Error', 'display', 'block'); return false;\">ERROR</a>"
+                + '<div dojoType="dijit.layout.ContentPane" id="' + id + 'Error" style="display: none;">'
+                + message + '</div>';
+        };
+
+        function makeImg(id) {
+            dojo.byId('resultFor' + id).innerHTML = '&nbsp;&nbsp;<img src=\"<?php echo $this->webPath; ?>img/ajax-loader.gif\"'
+                + ' style="width: 15px; height: 15px"; alt=\"Loadding\" />';
+        };
+
+        <?php
+            echo 'migrateData = new Array(';
+            $count = 0;
+            foreach ($this->exportModules as $module) {
+                $count++;
+                echo '{module: \'' . $module .'\'';
+                if ($count != count($this->exportModules)) {
+                    echo '},'."\n";
+                } else {
+                    echo ", processData: 'finish'}";
+                }
+            }
+            echo ');'."\n";
+        ?>
+
+        cloneMigrateData = dojo.clone(migrateData);
+        migrateStatus    = true;
+
+        function migrate() {
+            var params = cloneMigrateData.shift();
+
+            makeImg(params['module']);
+            phprSend({
+                url: '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonMigrateSetup/module/'
+                    + params['module'],
+                content:   dijit.byId('installForm').attr('value'),
+                onSuccess: dojo.hitch(this, function(data) {
+                    if (data.type == 'error') {
+                        makeErrorLink(data.module, data.message);
+                        migrateStatus = false;
+                    } else {
+                        dojo.byId('resultFor' + data.module).innerHTML = '<span class="tick">'
+                            + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+                    }
+
+                    if (!params.processData) {
+                        if (data.type == 'error') {
+                            addMessage(data.type, data.message);
+                            dojo.style(dojo.byId('trResults'), 'display', 'none');
+                            migrateStatus    = false;
+                            cloneMigrateData = dojo.clone(migrateData);
+                        } else if (migrateStatus) {
+                            params.processData = dojo.hitch(this, "migrate");
+                            params.processData.call()
+                        }
+                    } else {
+                        if (migrateStatus) {
+                            if (data.type != 'error') {
+                                dijit.byId('formContent').attr('content', data.template);
+                            }
+                            addMessage(data.type, data.message);
+                        }
+                    }
+                })
+            });
+        };
+
+        function changeStep(oldStep, newStep) {
+            dojo.byId('Step' + oldStep).style.background = '#CCCCCC';
+            if (previous = dojo.byId('Step' + (oldStep - 1) + 'Img')) {
+                previous.innerHTML = '<img src="<?php echo $this->webPath; ?>'
+                    + 'img/setup/grey-grey.png" alt="" />';
+            }
+            dojo.byId('Step' + oldStep + 'Img').innerHTML = '<img src="<?php echo $this->webPath; ?>'
+                + 'img/setup/grey-blue.png" alt="" />';
+
+            dojo.byId('Step' + newStep).style.background = '#284164';
+            if (newStep != 5) {
+                dojo.byId('Step' + newStep + 'Img').innerHTML = '<img src="<?php echo $this->webPath; ?>'
+                    + 'img/setup/blue-grey.png" alt="" />';
+            } else {
+                dojo.byId('Step' + newStep + 'Img').innerHTML = '<img src="<?php echo $this->webPath; ?>'
+                    + 'img/setup/blue-white.png" alt="" />';
+            }
+        };
+
+        function addMessage(type, message) {
+            var table           = dojo.byId('message');
+            table.style.display = 'inline';
+
+            var messages = new Array();
+            if (typeof(message) != 'object') {
+                messages.push(message);
+            } else {
+                messages = message;
+            }
+
+            if (row = dojo.byId('trMessage0')) {
+                row.parentNode.removeChild(row);
+            }
+
+            for (i in messages) {
+                if (row = dojo.byId('trMessage' + i)) {
+                    row.parentNode.removeChild(row);
+                }
+                var row       = table.insertRow(i);
+                row.id        = 'trMessage' + i;
+                var cellIndex = 0;
+
+                // Type
+                var cell       = row.insertCell(cellIndex);
+                cell.innerHTML = '<div class="' + type + '" style="margin-bottom: 0;">' + type.toUpperCase(); + '</div>';
+                cellIndex++;
+
+                // Message
+                var cell = row.insertCell(cellIndex);
+                if (typeof(messages[i]) != 'object') {
+                    cell.innerHTML = messages[i];
+                    if (type == 'error') {
+                        cell.style.color = "red";
+                    }
+                    cellIndex++;
+                } else {
+                    // Tables messages
+
+                    // Module
+                    var cell       = row.insertCell(cellIndex);
+                    cell.innerHTML = i + "&nbsp;&nbsp;&nbsp;";
+                    cellIndex++;
+
+                    // Version
+                    var cell       = row.insertCell(cellIndex);
+                    cell.innerHTML = messages[i]['version'] + "&nbsp;&nbsp;&nbsp;";
+                    cellIndex++;
+
+                    // Process - structure
+                    var cell = row.insertCell(cellIndex);
+                    if (messages[i]['process'][0]) {
+                        cell.innerHTML = messages[i]['process'][0];
+                    } else {
+                        cell.innerHTML = "&nbsp;";
+                    }
+                    cell.innerHTML += "&nbsp;&nbsp;&nbsp;"
+                    cellIndex++;
+
+                    // Process - initalData
+                    var cell = row.insertCell(cellIndex);
+                    if (messages[i]['process'][1]) {
+                        cell.innerHTML = messages[i]['process'][1];
+                    } else {
+                        cell.innerHTML = "&nbsp;";
+                    }
+                    cell.innerHTML += "&nbsp;&nbsp;&nbsp;"
+                    cellIndex++;
+
+                    // Process - extraData
+                    var cell = row.insertCell(cellIndex);
+                    if (messages[i]['process'][2]) {
+                        cell.innerHTML = messages[i]['process'][2];
+                    } else {
+                        cell.innerHTML = "&nbsp;";
+                    }
+                    cell.innerHTML += "&nbsp;&nbsp;&nbsp;"
+                    cellIndex++;
+
+                    // Finish
+                    var cell       = row.insertCell(cellIndex);
+                    cell.innerHTML = messages[i]['finish'];
+                    cellIndex++;
+                }
+
+                // Icon
+                switch (type) {
+                    case 'error':
+                        icon     = 'cross';
+                        iconText = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                        break;
+                    case 'success':
+                        icon     = 'tick';
+                        iconText = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                        break;
+                }
+                var cell       = row.insertCell(cellIndex);
+                cell.innerHTML = '<span class="' + icon + '">' + iconText + '</span>';
+                cellIndex++;
+
+                dojo.parser.parse(row);
+            }
+        };
     </script>
 </head>
 <body class="phprojekt">
@@ -85,6 +325,10 @@
         <img class="left" src="<?php echo $this->webPath; ?>img/logo.png" alt="PHProjekt 6" />
         <div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
         </div>
+        <div id="loadingIcon" class="right align-right"
+        style="margin-top: 5px; margin-bottom: 5px; display: none;">
+            <img class="left" src="<?php echo $this->webPath; ?>img/ajax-loader.gif" alt="Loadding" />
+        </div>
     </div>
 
     <!-- Center Content -->
@@ -98,64 +342,75 @@
                 <div class="column">
                     <img src="<?php echo $this->webPath; ?>img/subheaderborder.png" alt="" />
                 </div>
-                <div dojoType="dijit.layout.ContentPane" region="top" class="block"
-                style="height: 2%;" splitter="false">
+                <div dojoType="dijit.layout.ContentPane" region="top" class="block" splitter="false"
+                style="height: 2%; overflow: hidden;">
                 </div>
-                <!-- Exception Form -->
-                <div id="serverFeedback" class="prepend-1 append-1">
-                <?php
-                if ($this->error) {
-                    echo '<div class="error">' . $this->error . '</div>';
-                    ?>
-                    <script type="text/javascript">
-                        hideLoading();
-                    </script>
-                    <?php
-                }
-                ?>
-                <?php
-                if ($this->message) {
-                    echo '<div class="error">' . $this->message . '</div>';
-                    ?>
-                    <script type="text/javascript">
-                        hideLoading();
-                    </script>
-                    <?php
-                }
-                ?>
-                <?php
-                if ($this->success) {
-                    echo '<div class="success">' . $this->success . '</div>';
-                    ?>
-                    <script type="text/javascript">
-                        hideLoading();
-                    </script>
-                    <?php
-                }
-                ?>
+                <!-- Progress Bar -->
+                <div dojoType="dijit.layout.ContentPane" class="block" splitter="false"
+                style="height: 20px; color: white; text-align: right; overflow: hidden;">
+                    <div dojoType="dijit.layout.ContentPane" id="Step0"
+                    style="background: #284164; height: 20px; display: inline; float: left; padding: 0 10px 0 20px;">
+                        Server
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane"  id="Step0Img"
+                    style="height: 20px; display: inline; float: left; overflow: hidden;">
+                        <img src="<?php echo $this->webPath; ?>img/setup/blue-grey.png" alt="" />
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane"  id="Step1"
+                    style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
+                        Database
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane"  id="Step1Img"
+                    style="height: 20px; display: inline; float: left; overflow: hidden;">
+                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step2"
+                    style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
+                        Users
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step2Img"
+                    style="height: 20px; display: inline; float: left; overflow: hidden;">
+                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step3"
+                    style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
+                        Tables
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step3Img"
+                    style="height: 20px; display: inline; float: left; overflow: hidden;">
+                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step4"
+                    style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
+                        Migration
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step4Img"
+                    style="height: 20px; display: inline; float: left; overflow: hidden;">
+                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step5"
+                    style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
+                        Done!
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step5Img"
+                    style="height: 20px; display: inline; float: left; overflow: hidden;">
+                        <img src="<?php echo $this->webPath; ?>img/setup/grey-white.png" alt="" />
+                    </div>
                 </div>
+                <br />
                 <!-- Main Content -->
                 <div dojoType="dijit.layout.ContentPane" region="center" id="centerMainContent">
+                <form dojoType="dijit.form.Form" id="installForm" name="frm" method="post" onsubmit="return false;">
+                    <div dojoType="dijit.layout.ContentPane" id="formContent">
                     <?php
-                    if (empty($this->success) && null === $this->error) {
-                        include ("form.phtml");
-                    } else if (empty($this->error)) {
-                        include ("finish.phtml");
-                    }
+                    echo $this->template;
                     ?>
+                    </div>
+                </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div id="initLoading"
-style="position: absolute; top: 45%; left: 30%; right: 30%; display: none;">
-    <center>
-    <img src="<?php echo $this->webPath; ?>img/ajax-init-loader.gif" alt="Loadding" />
-    <br /><br />
-    Installing PHProjekt 6<br />
-    The process could take several minutes, please wait...
-    </center>
 </div>
 </body>
 </html>

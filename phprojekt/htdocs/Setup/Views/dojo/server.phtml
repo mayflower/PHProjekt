@@ -1,0 +1,44 @@
+<div class="prepend-0">
+<h2>Step 1 - Check the Server</h2>
+Welcome to PHProjekt 6!<br />
+This wizard will help you to create one and install all the nesesaries tables.
+<br />
+<br />
+
+<b>Checking the server:</b><br />
+<?php
+include ("serverFeedback.phtml");
+
+if (!empty($this->error)) {
+    echo '<b>Your server does not meet the requirements needed for PHProjekt 6.<br />'
+        . 'You must fix the errors for install PHProjekt 6 on this server.</b><br /><br />';
+} else {
+    if (!empty($this->message)) {
+        echo '<b>It seems to have some caveats, this is not an impediment to install PhProjekt 6, '
+            . ' however, is recommended fix them.</b><br /><br />';
+    }
+?>
+
+<table class="form"
+style="width: auto;">
+<col class="col1" />
+<tr>
+    <td colspan="2">
+        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
+        onClick="
+        phprSend({
+            url: '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonDatabaseForm',
+            onSuccess: dojo.hitch(this, function(data) {
+                dijit.byId('formContent').attr('content', data.template);
+                changeStep(0, 1);
+            })
+        });">
+            Continue with the database
+        </button>
+    </td>
+</tr>
+</table>
+<?php
+}
+?>
+</div>

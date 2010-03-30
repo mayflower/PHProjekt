@@ -403,6 +403,7 @@ class Phprojekt
             $this->_config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
         } catch (Zend_Config_Exception $error) {
             $webPath = "http://" . $_SERVER['HTTP_HOST'] . str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+            header("Location: " . $webPath . "setup.php");
             die('You need the file configuration.ini to continue. Have you tried the <a href="' . $webPath
                 . 'setup.php">setup</a> routine?');
         }
@@ -509,7 +510,7 @@ class Phprojekt
         $front->setModuleControllerDirectoryName('Controllers');
         $front->addModuleDirectory(PHPR_CORE_PATH);
 
-        // Add SubModules direcroties with controlles
+        // Add SubModules directories with controlles
         $moduleDirectories = $this->_getControllersFolders($helperPaths);
         foreach ($moduleDirectories as $moduleDirectory) {
             $front->addModuleDirectory($moduleDirectory);

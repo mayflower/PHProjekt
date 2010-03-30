@@ -37,6 +37,11 @@
  */
 class IndexController extends Zend_Controller_Action
 {
+    /**
+     * Internal var for keep the Setup model.
+     *
+     * @var Setup_Models_Setup
+     */
     private $_setup = null;
 
     /**
@@ -52,12 +57,25 @@ class IndexController extends Zend_Controller_Action
         $webPath = "http://" . $_SERVER['HTTP_HOST'] . str_replace('setup.php', '', $_SERVER['SCRIPT_NAME']);
 
         $this->view->webPath = $webPath;
+        $this->view->message = array();
+        $this->view->success = array();
+        $this->view->error   = array();
+
+        $this->view->exportModules = array('System', 'Todo', 'Note', 'Calendar', 'Filemanager',
+            'Contact', 'Helpdesk', 'Timecard', 'Words');
+
+        $this->_helper->viewRenderer->setNoRender();
 
         try {
-            $this->_setup        = new Setup_Models_Setup();
-            $this->view->message = nl2br($this->_setup->getMessage());
+            $this->_setup = new Setup_Models_Setup();
+            $message      = $this->_setup->getMessage();
+            if (!empty($message)) {
+                $this->view->message = $message;
+            } else {
+                $this->view->success = "Server OK";
+            }
         } catch (Exception $error) {
-            $this->view->error = nl2br($error->getMessage());
+            $this->view->error = explode("\n", $error->getMessage());
         }
     }
 
@@ -68,84 +86,400 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $this->view->dbHost              = 'localhost';
-        $this->view->dbUser              = 'phprojekt';
-        $this->view->dbPass              = '';
-        $this->view->dbName              = 'phprojekt';
-        $this->view->adminPass           = '';
-        $this->view->adminPassConfirm    = '';
-        $this->view->testPass            = '';
-        $this->view->testPassConfirm     = '';
-        $this->view->useExtraData        = 1;
-        $this->view->migrationConfigFile = '';
-        $this->view->diffToUtc           = 0;
+        $this->view->template = $this->view->render('server.phtml');
+        $this->render('index');
     }
 
     /**
-     * Try to install all.
-     * Show finish (success) or message (error).
+     * Returns the database form.
+     *
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
-    public function installAction()
+    public function jsonDatabaseFormAction()
     {
-        $params = $this->_setParams();
+        $this->view->message  = array();
+        $this->view->success  = array();
+        $this->view->dbHost   = 'localhost';
+        $this->view->dbUser   = 'phprojekt';
+        $this->view->dbPass   = '';
+        $this->view->dbName   = 'phprojekt';
+
+        $message  = null;
+        $type     = 'success';
+        $template = $this->view->render('databaseForm.phtml');
+
+        $this->returnContent($type, $message, $template);
+    }
+
+    /**
+     * Validate the params and if is all ok, save them.
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - string <b>serverType</b> Type of database connector.
+     *  - string <b>dbHost</b> Database host.
+     *  - string <b>dbUser</b> Database username.
+     *  - string <b>dbPass</b> Database password.
+     *  - string <b>dbName</b> Database name.
+     * </pre>
+     *
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonDatabaseSetupAction()
+    {
+        $this->view->message = array();
+        $this->view->success = array();
+        $params = array(
+            'serverType' => Cleaner::sanitize('string', $this->getRequest()->getParam('serverType')),
+            'dbHost'     => Cleaner::sanitize('string', $this->getRequest()->getParam('dbHost')),
+            'dbUser'     => Cleaner::sanitize('string', $this->getRequest()->getParam('dbUser')),
+            'dbPass'     => Cleaner::sanitize('string', $this->getRequest()->getParam('dbPass')),
+            'dbName'     => Cleaner::sanitize('string', $this->getRequest()->getParam('dbName')));
 
         if (null !== $this->_setup) {
-            if ($this->_setup->validate($params)) {
-                ob_start();
-                $this->_setup->install($params);
-                $this->view->success = ob_get_contents();
-                ob_end_clean();
-                $this->view->finish  = true;
-                $this->view->message = null;
+            if ($this->_setup->validateDatabase($params)) {
+                $this->_setup->saveDatabase($params);
+                $message = 'Database OK';
+                $type    = 'success';
             } else {
-                $error               = $this->_setup->getError();
-                $this->view->message = array_shift($error);
+                $error   = $this->_setup->getError();
+                $message = array_shift($error);
+                $type    = 'error';
             }
+        } else {
+            die('You can not call this directly');
         }
-        $this->view->dbHost              = $params['dbHost'];
-        $this->view->dbUser              = $params['dbUser'];
-        $this->view->dbPass              = $params['dbPass'];
-        $this->view->dbName              = $params['dbName'];
-        $this->view->adminPass           = $params['adminPass'];
-        $this->view->adminPassConfirm    = $params['adminPassConfirm'];
-        $this->view->testPass            = $params['testPass'];
-        $this->view->testPassConfirm     = $params['testPassConfirm'];
-        $this->view->useExtraData        = $params['useExtraData'];
-        $this->view->migrationConfigFile = $params['migrationConfigFile'];
-        $this->view->diffToUtc           = $params['diffToUtc'];
+
+        $template = $this->view->render('databaseOk.phtml');
+
+        $this->returnContent($type, $message, $template);
     }
 
     /**
-     * Sanitize all the parsams.
+     * Returns the users form.
      *
-     * @return array Array with the form values.
-     */
-    private function _setParams() {
-        return array(
-            'serverType'          => Cleaner::sanitize('string', $this->getRequest()->getParam('serverType')),
-            'dbHost'              => Cleaner::sanitize('string', $this->getRequest()->getParam('dbHost')),
-            'dbUser'              => Cleaner::sanitize('string', $this->getRequest()->getParam('dbUser')),
-            'dbPass'              => Cleaner::sanitize('string', $this->getRequest()->getParam('dbPass')),
-            'dbName'              => Cleaner::sanitize('string', $this->getRequest()->getParam('dbName')),
-            'adminPass'           => Cleaner::sanitize('string', $this->getRequest()->getParam('adminPass')),
-            'adminPassConfirm'    => Cleaner::sanitize('string', $this->getRequest()->getParam('adminPassConfirm')),
-            'testPass'            => Cleaner::sanitize('string', $this->getRequest()->getParam('testPass')),
-            'testPassConfirm'     => Cleaner::sanitize('string', $this->getRequest()->getParam('testPassConfirm')),
-            'migrationConfigFile' => Cleaner::sanitize('string', $this->getRequest()->getParam('migrationConfigFile')),
-            'diffToUtc'           => Cleaner::sanitize('integer', $this->getRequest()->getParam('diffToUtc')),
-            'useExtraData'        => (int) $this->getRequest()->getParam('useExtraData'),
-        );
-    }
-
-    /**
-     * Render always the index template.
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * </pre>
+     *
+     * The return is in JSON format.
      *
      * @return void
      */
-    public function postDispatch()
+    public function jsonUsersFormAction()
     {
-        $this->render('index');
+        $this->view->message          = array();
+        $this->view->success          = array();
+        $this->view->adminPass        = '';
+        $this->view->adminPassConfirm = '';
+        $this->view->testPass         = '';
+        $this->view->testPassConfirm  = '';
+
+        $message  = null;
+        $type     = 'success';
+        $template = $this->view->render('usersForm.phtml');
+
+        $this->returnContent($type, $message, $template);
+    }
+
+    /**
+     * Validate the params and if is all ok, save them.
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - string <b>adminPass</b> Admin password.
+     *  - string <b>adminPassConfirm</b> Admin password confirmation.
+     *  - string <b>testPass</b> Test password.
+     *  - string <b>testPassConfirm</b> Test password confirmation.
+     * </pre>
+     *
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonUsersSetupAction()
+    {
+        $this->view->message = array();
+        $this->view->success = array();
+        $params = array(
+            'adminPass'        => Cleaner::sanitize('string', $this->getRequest()->getParam('adminPass')),
+            'adminPassConfirm' => Cleaner::sanitize('string', $this->getRequest()->getParam('adminPassConfirm')),
+            'testPass'         => Cleaner::sanitize('string', $this->getRequest()->getParam('testPass')),
+            'testPassConfirm'  => Cleaner::sanitize('string', $this->getRequest()->getParam('testPassConfirm')));
+
+        if (null !== $this->_setup) {
+            if ($this->_setup->validateUsers($params)) {
+                $this->_setup->saveUsers($params);
+                $message = 'Users OK';
+                $type    = 'success';
+            } else {
+                $error   = $this->_setup->getError();
+                $message = array_shift($error);
+                $type    = 'error';
+            }
+        } else {
+            die('You can not call this directly');
+        }
+
+        $template = $this->view->render('usersOk.phtml');
+
+        $this->returnContent($type, $message, $template);
+    }
+
+    /**
+     * Returns the tables form.
+     *
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonTablesFormAction()
+    {
+        $this->view->message      = array();
+        $this->view->success      = array();
+        $this->view->useExtraData = 1;
+
+        $message  = null;
+        $type     = 'success';
+        $template = $this->view->render('tablesForm.phtml');
+
+        $this->returnContent($type, $message, $template);
+    }
+
+    /**
+     * Validate the params and if is all ok, install the tables.
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>useExtraData</b> Install extra data or not.
+     * </pre>
+     *
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonTablesSetupAction()
+    {
+        $this->view->message = array();
+        $this->view->success = array();
+        $params = array(
+            'useExtraData' => (int) $this->getRequest()->getParam('useExtraData'));
+
+        if (null !== $this->_setup) {
+            if ($this->_setup->validateServer($params)) {
+                $message = $this->_setup->install($params);
+                $type    = 'success';
+                ob_end_clean();
+            } else {
+                $error   = $this->_setup->getError();
+                $message = array_shift($error);
+                $type    = 'error';
+            }
+        } else {
+            die('You can not call this directly');
+        }
+
+        $template = $this->view->render('tablesOk.phtml');
+
+        $this->returnContent($type, $message, $template);
+    }
+
+    /**
+     * Returns the migration form.
+     *
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonMigrationFormAction()
+    {
+        $this->view->message             = array();
+        $this->view->success             = array();
+        $this->view->migrationConfigFile = '';
+        $this->view->diffToUtc           = 0;
+
+        $message  = null;
+        $type     = 'success';
+        $template = $this->view->render('migrationForm.phtml');
+
+        $this->returnContent($type, $message, $template);
+    }
+
+    /**
+     * Validate the params and if is all ok, migrate the data.
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - string <b>migrationConfigFile</b> File for get the config of P5.
+     *  - integer <b>diffToUtc</b> Difference between the server and UTC.
+     *  - string <b>module</b> Module to migrate.
+     * </pre>
+     *
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonMigrateSetupAction()
+    {
+        $this->view->message = array();
+        $this->view->success = array();
+        $params  = array(
+            'migrationConfigFile' => Cleaner::sanitize('string', $this->getRequest()->getParam('migrationConfigFile')),
+            'diffToUtc'           => Cleaner::sanitize('integer', $this->getRequest()->getParam('diffToUtc')),
+            'module'              => Cleaner::sanitize('string', $this->getRequest()->getParam('module')));
+
+        if (null !== $this->_setup) {
+            if ($this->_setup->validateMigration($params)) {
+                if (in_array($params['module'], $this->view->exportModules)) {
+                    ob_start();
+                    $this->_setup->migrate($params);
+                    $errors = ob_get_contents();
+                    if (!empty($errors)) {
+                        $message = $errors;
+                        $type    = 'error';
+                    } else {
+                        $message = "Migration OK";
+                        $type    = 'success';
+                    }
+                    ob_end_clean();
+                } else {
+                    $message = 'Wrong module';
+                    $type    = 'error';
+                }
+            } else {
+                $error   = $this->_setup->getError();
+                $message = array_shift($error);
+                $type    = 'error';
+            }
+        } else {
+            die('You can not call this directly');
+        }
+
+        $template = $this->view->render('migrationOk.phtml');
+
+        $this->returnContent($type, $message, $template, $params['module']);
+    }
+
+    /**
+     * Returns the finish template.
+     *
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonFinishAction()
+    {
+        $this->view->message = array();
+        $this->view->success = array();
+
+        if (null !== $this->_setup) {
+            ob_start();
+            $this->_setup->finish();
+            $message = ob_get_contents();
+            $type    = 'success';
+            ob_end_clean();
+        } else {
+            die('You can not call this directly');
+        }
+
+        $template = $this->view->render('finish.phtml');
+
+        $this->returnContent($type, $message, $template);
+    }
+
+    /**
+     * Returns server feedback.
+     *
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * - module   => OPTIONAL, the module installed.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @param string $type     Type of message (error, success, warning).
+     * @param string $message  Message to show.
+     * @param string $template HTML of the templatate to show.
+     * @param string $module   Module installed.
+     *
+     * @return void
+     */
+    public function returnContent($type, $message, $template, $module = null)
+    {
+        $return = array('type'     => $type,
+                        'message'  => $message,
+                        'template' => $template);
+
+        if (null !== $module) {
+            $return['module'] = $module;
+        }
+
+        echo '{}&&(' . Zend_Json_Encoder::encode($return) . ')';
     }
 }

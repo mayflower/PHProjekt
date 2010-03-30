@@ -1,0 +1,79 @@
+<!-- Exception Form -->
+<div id="serverFeedback">
+    <!-- PHP messages -->
+    <table
+    style="border-spacing: 5px; display: <?php echo (!empty($this->error)) ? 'inline' : 'none'; ?>;">
+    <?php
+    foreach ($this->error as $error) {
+    ?>
+    <tr>
+        <td>
+            <div class="error" style="margin-bottom: 0;">
+            ERROR
+            </div>
+        </td>
+        <td style="color: red;">
+            <?php
+            echo $error;
+            ?>
+        </td>
+        <td>
+            <span class="cross">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </td>
+    </tr>
+    <?php
+    }
+    ?>
+    </table>
+    <table
+    style="border-spacing: 5px; display: <?php echo (!empty($this->message)) ? 'inline' : 'none'; ?>;">
+    <?php
+    foreach ($this->message as $message) {
+    ?>
+    <tr>
+        <td>
+            <div class="notice" style="margin-bottom: 0;">
+            WARNING
+            </div>
+        </td>
+        <td>
+            <?php
+            echo $message;
+            ?>
+        </td>
+        <td>
+            <span class="dijitValidationIcon" style="visibility: visible;">&nbsp;</span>
+        </td>
+    </tr>
+    <?php
+    }
+    ?>
+    </table>
+    <table
+    style="border-spacing: 5px; display: <?php echo ($this->success) ? 'inline' : 'none'; ?>;">
+    <tr>
+        <td>
+            <div class="success" style="margin-bottom: 0px;">
+            SUCCESS
+            </div>
+        </td>
+        <td>
+            <?php
+            echo $this->success;
+            ?>
+        </td>
+        <td>
+            <span class="tick">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </td>
+    </tr>
+    </table>
+    <!-- Js messages -->
+    <table id="message"
+    style="border-spacing: 5px; display: none;">
+    <tr id="trMessage0">
+        <td>
+            &nbsp;
+        </td>
+    </tr>
+    </table>
+</div>

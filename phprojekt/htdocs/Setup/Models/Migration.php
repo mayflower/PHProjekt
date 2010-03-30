@@ -227,35 +227,223 @@ class Setup_Models_Migration
         $pos               = strpos($file, 'config.inc.php');
         $this->_p5RootPath = substr($file, 0, $pos);
 
-        // Set modules
-        $this->_setModules();
+        // Modules
+        $this->_modules = $this->_getModules();
 
         // Set the diff between the server and GMT
         $this->_diffToUtc = $diffToUtc;
+
+        // Users
+        $usersNamespace = new Zend_Session_Namespace('migratedUsers');
+        $this->_users   = (isset($usersNamespace->users)) ? $usersNamespace->users : array();
+
+        // User Kurz
+        $userKurzNamespace = new Zend_Session_Namespace('migratedUserKurz');
+        $this->_userKurz   = (isset($userKurzNamespace->userKurz)) ? $userKurzNamespace->userKurz : array();
+
+        // TimeZone
+        $timeZoneNamespace = new Zend_Session_Namespace('migratedTimeZone');
+        $this->_timeZone   = (isset($timeZoneNamespace->timeZone)) ? $timeZoneNamespace->timeZone : array();
+
+        // Groups-Users
+        $groupsUsersNamespace = new Zend_Session_Namespace('migratedGroupsUsers');
+        $this->_groupsUsers   = (isset($groupsUsersNamespace->groupsUsers)) ? $groupsUsersNamespace->groupsUsers
+            : array();
+
+        // Groups
+        $groupsNamespace = new Zend_Session_Namespace('migratedGroups');
+        $this->_groups   = (isset($groupsNamespace->groups)) ? $groupsNamespace->groups : array();
+
+        // Projects
+        $projectsNamespace = new Zend_Session_Namespace('migratedProjects');
+        $this->_projects   = (isset($projectsNamespace->projects)) ? $projectsNamespace->projects : array();
+
+        // Project ItemRight
+        $projectRightsNamespace          = new Zend_Session_Namespace('migratedProjectRights');
+        $this->_dbProjectItemRightValues = (isset($projectRightsNamespace->values)) ? $projectRightsNamespace->values
+            : array();
+
+        // Search Word
+        $searchWordNamespace = new Zend_Session_Namespace('migratedSearchWord');
+        $this->_searchWord   = (isset($searchWordNamespace->searchWord)) ? $searchWordNamespace->searchWord : array();
     }
 
     /**
-     * Call all the migration functions.
+     * Migrate Users, groups, projects and the user access relations.
      *
      * @return void
      */
-    public function migrateTables()
+    public function migrateSystem()
     {
         $this->_migrateUsers();
         $this->_migrateGroups();
         $this->_migrateGroupsUserRelations();
         $this->_migrateProjects();
-        $this->_migrateTodos();
-        $this->_migrateNotes();
-        $this->_migrateCalendar();
-        $this->_migrateFilemanager();
-        $this->_migrateContacts();
-        $this->_migrateHelpdesk();
-        $this->_migrateTimeCard();
 
         $this->_executeItemRightsInsert();
         $this->_executeSearchDisplayInsert();
+
+        // Save Project ItemRight
+        $projectRightsNamespace         = new Zend_Session_Namespace('migratedProjectRights');
+        $projectRightsNamespace->values = $this->_dbProjectItemRightValues;
+
+        // Save words
+        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
+        $searchWordNamespace->searchWord = $this->_searchWord;
+    }
+
+    /**
+     * Migrate the Todo module.
+     *
+     * @return void
+     */
+    public function migrateTodo()
+    {
+        $this->_migrateTodos();
+
+        $this->_executeItemRightsInsert();
+        $this->_executeSearchDisplayInsert();
+
+        // Save words
+        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
+        $searchWordNamespace->searchWord = $this->_searchWord;
+    }
+
+    /**
+     * Migrate the Note module.
+     *
+     * @return void
+     */
+    public function migrateNote()
+    {
+        $this->_migrateNotes();
+
+        $this->_executeItemRightsInsert();
+        $this->_executeSearchDisplayInsert();
+
+        // Save words
+        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
+        $searchWordNamespace->searchWord = $this->_searchWord;
+    }
+
+    /**
+     * Migrate the Calendar module.
+     *
+     * @return void
+     */
+    public function migrateCalendar()
+    {
+        $this->_migrateCalendar();
+
+        $this->_executeItemRightsInsert();
+        $this->_executeSearchDisplayInsert();
+
+        // Save words
+        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
+        $searchWordNamespace->searchWord = $this->_searchWord;
+    }
+
+    /**
+     * Migrate the Filemanager module.
+     *
+     * @return void
+     */
+    public function migrateFilemanager()
+    {
+        $this->_migrateFilemanager();
+
+        $this->_executeItemRightsInsert();
+        $this->_executeSearchDisplayInsert();
+
+        // Save words
+        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
+        $searchWordNamespace->searchWord = $this->_searchWord;
+    }
+
+    /**
+     * Migrate the Contact module.
+     *
+     * @return void
+     */
+    public function migrateContact()
+    {
+        $this->_migrateContacts();
+    }
+
+    /**
+     * Migrate the Helpdesk module.
+     *
+     * @return void
+     */
+    public function migrateHelpdesk()
+    {
+        $this->_migrateHelpdesk();
+
+        $this->_executeItemRightsInsert();
+        $this->_executeSearchDisplayInsert();
+
+        // Save words
+        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
+        $searchWordNamespace->searchWord = $this->_searchWord;
+    }
+
+    /**
+     * Migrate the Timecard module.
+     *
+     * @return void
+     */
+    public function migrateTimecard()
+    {
+        $this->_migrateTimecard();
+    }
+
+    /**
+     * Migrate the words found in all the modules.
+     *
+     * Also since is the last function, clean the session.
+     *
+     * @return void
+     */
+    public function migrateWords()
+    {
+        $this->_modules = $this->_getModules();
+
+        // Users
+        $usersNamespace = new Zend_Session_Namespace('migratedUsers');
+        $usersNamespace->unsetAll();
+
+        // User Kurz
+        $userKurzNamespace = new Zend_Session_Namespace('migratedUserKurz');
+        $userKurzNamespace->unsetAll();
+
+        // TimeZone
+        $timeZoneNamespace = new Zend_Session_Namespace('migratedTimeZone');
+        $timeZoneNamespace->unsetAll();
+
+        // Groups-Users
+        $groupsUsersNamespace = new Zend_Session_Namespace('migratedGroupsUsers');
+        $groupsUsersNamespace->unsetAll();
+
+        // Groups
+        $groupsNamespace = new Zend_Session_Namespace('migratedGroups');
+        $groupsNamespace->unsetAll();
+
+        // Projects
+        $projectsNamespace = new Zend_Session_Namespace('migratedProjects');
+        $projectsNamespace->unsetAll();
+
+        // Project ItemRight
+        $projectRightsNamespace = new Zend_Session_Namespace('migratedProjectRights');
+        $projectRightsNamespace->unsetAll();
+
+        // Modules
+        $modulesNamespace = new Zend_Session_Namespace('migratedModules');
+        $modulesNamespace->unsetAll();
+
+        // Search Word
         $this->_executeSearchWordsInsert();
+        $searchWordNamespace = new Zend_Session_Namespace('migratedSearchWord');
+        $searchWordNamespace->unsetAll();
     }
 
     /**
@@ -443,6 +631,19 @@ class Setup_Models_Migration
         if (!empty($dbValues)) {
             $this->_tableManager->insertMultipleRows('setting', $dbFields, $dbValues);
         }
+
+        // Save data into the session
+        // Users
+        $usersNamespace        = new Zend_Session_Namespace('migratedUsers');
+        $usersNamespace->users = $this->_users;
+
+        // UserKurz
+        $userKurzNamespace           = new Zend_Session_Namespace('migratedUserKurz');
+        $userKurzNamespace->userKurz = $this->_userKurz;
+
+        // TimeZone
+        $timeZoneNamespace           = new Zend_Session_Namespace('migratedTimeZone');
+        $timeZoneNamespace->timeZone = $this->_timeZone;
     }
 
     /**
@@ -478,7 +679,7 @@ class Setup_Models_Migration
 
             // Add search values
             $words  = array($this->_fix($project['name'], 255));
-            $itemId = $project['ID'];
+            $itemId = $projectId;
             $this->_addSearchDisplay(1, $itemId, 1, $words[0], '');
             $this->_addSearchWords(implode(" ", $words), 1, $itemId);
 
@@ -497,6 +698,15 @@ class Setup_Models_Migration
         if (!empty($dbValues)) {
             $this->_tableManager->insertMultipleRows('project_module_permissions', $dbFields, $dbValues);
         }
+
+        // Save data into the session
+        // Groups-Users
+        $groupsUsersNamespace              = new Zend_Session_Namespace('migratedGroupsUsers');
+        $groupsUsersNamespace->groupsUsers = $this->_groupsUsers;
+
+        // Groups
+        $groupsNamespace         = new Zend_Session_Namespace('migratedGroups');
+        $groupsNamespace->groups = $this->_groups;
     }
 
     /**
@@ -562,6 +772,11 @@ class Setup_Models_Migration
 
             $this->_addItemRights($moduleId, $itemId, $userRightsAdd);
         }
+
+        // Save data into the session
+        // Groups-Users
+        $groupsUsersNamespace              = new Zend_Session_Namespace('migratedGroupsUsers');
+        $groupsUsersNamespace->groupsUsers = $this->_groupsUsers;
     }
 
     /**
@@ -664,6 +879,11 @@ class Setup_Models_Migration
         if (!empty($dbValues)) {
             $this->_tableManager->insertMultipleRows('project_module_permissions', $dbFields, $dbValues);
         }
+
+        // Save data into the session
+        // Projects
+        $projectsNamespace           = new Zend_Session_Namespace('migratedProjects');
+        $projectsNamespace->projects = $this->_projects;
     }
 
     /**
@@ -758,6 +978,11 @@ class Setup_Models_Migration
                 }
             }
         }
+
+        // Save data into the session
+        // Todos
+        $todosNamespace        = new Zend_Session_Namespace('migratedTodos');
+        $todosNamespace->todos = $this->_todos;
     }
 
     /**
@@ -819,8 +1044,16 @@ class Setup_Models_Migration
      *
      * @return void
      */
-    private function _migrateTimeCard()
+    private function _migrateTimecard()
     {
+        // Todos
+        $todosNamespace = new Zend_Session_Namespace('migratedTodos');
+        $this->_todos   = $todosNamespace->todos;
+
+        // Helpdesk
+        $helpdeskNamespace = new Zend_Session_Namespace('migratedHelpdesk');
+        $this->_helpdesk   = $helpdeskNamespace->helpdesk;
+
         // Multiple inserts
         $dbFields = array('owner_id', 'start_datetime', 'end_time', 'minutes', 'project_id', 'notes', 'module_id',
             'item_id');
@@ -938,6 +1171,8 @@ class Setup_Models_Migration
         // Clean memory
         $this->_todos    = array();
         $this->_helpdesk = array();
+        $todosNamespace->unsetAll();
+        $helpdeskNamespace->unsetAll();
     }
 
     /**
@@ -1253,6 +1488,11 @@ class Setup_Models_Migration
                 }
             }
         }
+
+        // Save data into the session
+        // Contacts
+        $contactsNamespace           = new Zend_Session_Namespace('migratedContacts');
+        $contactsNamespace->contacts = $this->_contacts;
     }
 
     /**
@@ -1266,8 +1506,10 @@ class Setup_Models_Migration
         $start = 0;
         $end   = self::ROWS_PER_QUERY;
 
-        $ownerIdRelation  = array();
-        $assignedRelation = array();
+        $ownerIdRelation   = array();
+        $assignedRelation  = array();
+        $contactsNamespace = new Zend_Session_Namespace('migratedContacts');
+        $this->_contacts   = $contactsNamespace->contacts;
 
         while ($run) {
             $query = "SELECT * FROM " . PHPR_DB_PREFIX . "rts ORDER BY ID LIMIT "
@@ -1490,6 +1732,12 @@ class Setup_Models_Migration
 
         // Clean memory
         $this->_contacts = array();
+        $contactsNamespace->unsetAll();
+
+        // Save data into the session
+        // Helpdesk
+        $helpdeskNamespace           = new Zend_Session_Namespace('migratedHelpdesk');
+        $helpdeskNamespace->helpdesk = $this->_helpdesk;
     }
 
     /**
@@ -1568,13 +1816,19 @@ class Setup_Models_Migration
      *
      * @return void
      */
-    private function _setModules()
+    private function _getModules()
     {
-        // Set the modules id
-        $modules = $this->_db->query("SELECT * FROM module WHERE (save_type = 0 OR save_type = 2)")->fetchAll();
-        foreach ($modules as $module) {
-            $this->_modules[$module['name']] = $module['id'];
+        $modulesNamespace = new Zend_Session_Namespace('migratedModules');
+        if (!isset($modulesNamespace->modules)) {
+            $modulesNamespace->modules = array();
+
+            $modules = $this->_db->query("SELECT * FROM module WHERE (save_type = 0 OR save_type = 2)")->fetchAll();
+            foreach ($modules as $module) {
+                $modulesNamespace->modules[$module['name']] = $module['id'];
+            }
         }
+
+        return $modulesNamespace->modules;
     }
 
     /**
@@ -2106,6 +2360,7 @@ class Setup_Models_Migration
         // Words
         $dbFields = array('word', 'count');
         $dbValues = array();
+
         foreach ($this->_searchWord as $word => $data) {
             $dbValues[] = array($word, $data['count']);
         }

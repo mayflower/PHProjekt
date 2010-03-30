@@ -1,0 +1,59 @@
+<div class="prepend-0">
+<h2>Step 4 - Install the tables</h2>
+Now we are ready to install all the tables.<br />
+<br />
+<?php
+include ("serverFeedback.phtml");
+?>
+
+<table class="form"
+style="width: auto;">
+<col class="col1" />
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="extraData">Install example data:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="checkbox" dojotype="dijit.form.CheckBox" id="useExtraData" name="useExtraData"
+        <?php
+        if ($this->useExtraData) {
+            echo 'checked="checked"';
+        }
+        ?>
+        value="1" />
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                Check this if you want to have some examples like projects, roles, users, etc.
+                </div>
+            </div>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td class="label">
+        &nbsp;
+    </td>
+    <td>
+        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
+        onClick="
+        phprSend({
+            url: '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonTablesSetup',
+            content:   dijit.byId('installForm').attr('value'),
+            onSuccess: dojo.hitch(this, function(data) {
+                if (data.type != 'error') {
+                    dijit.byId('formContent').attr('content', data.template);
+                }
+                addMessage(data.type, data.message);
+            })
+        });">
+            Install tables
+        </button>
+    </td>
+</tr>
+</table>
+</div>

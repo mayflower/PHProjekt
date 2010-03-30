@@ -1,0 +1,52 @@
+<div class="prepend-0">
+<h2>Step 5 - Migrate old versions</h2>
+
+Please, provide the path to the config.inc.php file of your old PHProjekt 5.x.<br />
+<u>Notes</u>:<br />
+<ul style="margin: 0 1.5em">
+    <li>
+        <b>Choose a different database from the one used in Phprojekt 5 so that you don't lose your data.</b>
+    </li>
+    <li>
+        The process could take several minutes depending on the number of projects to be migrated. <br />
+        Approximately half of the migration time corresponds to the indexing process of the items, which<br />
+        provides P6 with a fast searching skill.
+    </li>
+    <li>
+        The config.inc.php needs to be on the same server where you are installing PHProjekt 6.
+    </li>
+    <li>
+        <b>If you want to know more about the migration routine, please read the
+        <a href="#" onclick="window.open('<?php echo $this->webPath; ?>Setup/Docs/Migration.html', 'Migration',
+        'status=0,menubar=0,resizable=1,top=200px,left=400px,width=700px,height=600px,scrollbars=1,addressbar=0');
+        return false;">Migration</a> file.</b>
+    </li>
+    <li>
+        Choose a difference of hours between the server and GMT for convert the times values in UTC.
+    </li>
+</ul>
+<br />
+<?php
+include ("serverFeedback.phtml");
+?>
+
+<table class="form"
+style="width: auto;">
+<col class="col1" />
+<tr>
+    <td colspan="2">
+        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
+        onClick="
+        phprSend({
+            url: '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonFinish',
+            onSuccess: dojo.hitch(this, function(data) {
+                dijit.byId('formContent').attr('content', data.template);
+                changeStep(4, 5);
+            })
+        });">
+            Finish
+        </button>
+    </td>
+</tr>
+</table>
+</div>

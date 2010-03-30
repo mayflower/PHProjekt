@@ -1,0 +1,138 @@
+<div class="prepend-0">
+<h2>Step 2 - Set the database</h2>
+Below you should enter your database connection details.<br />
+If you're not sure about these, please contact your server administrator.<br />
+<br />
+<?php
+include ("serverFeedback.phtml");
+?>
+
+<table class="form"
+style="width: auto;">
+<col class="col1" />
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="dbName">Database name:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="text" id="dbName" name="dbName" dojoType="dijit.form.TextBox"
+        required="true" value="<?php echo $this->dbName; ?>" invalidMessage="" />
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                The name of the database you want to run Phprojekt 6 in.<br />
+                <b>Choose a different database from the one used in Phprojekt 5 so that you don't lose your data.</b>
+                </div>
+            </div>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="dbUser">Database username:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="text" id="dbUser" name="dbUser" dojoType="dijit.form.TextBox"
+        required="true" value="<?php echo $this->dbUser; ?>" invalidMessage="" />
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                Your database username.
+                </div>
+            </div>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="dbPass">Database password:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="password" id="dbPass" name="dbPass" dojoType="dijit.form.TextBox"
+        required="true" value="<?php echo $this->dbPass; ?>" invalidMessage="" />
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                Your database password.
+                </div>
+            </div>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="dbHost">Database server:</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="text" id="dbHost" name="dbHost" dojoType="dijit.form.TextBox"
+        required="true" value="<?php echo $this->dbHost; ?>" invalidMessage="" />
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                99% chance you won't need to change this value.
+                </div>
+            </div>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="serverType">Server type</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <select id="serverType" name="serverType" dojoType="dijit.form.FilteringSelect"
+        required="true" autocomplete="true" value="pdo_mysql" searchAttr="name" invalidMessage="You must select one">
+            <option value="pdo_mysql">MySQL</option>
+        </select>
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                Choose the database connector.<br />This version have only MySQL.
+                </div>
+            </div>
+        </button>
+    </td>
+</tr>
+<tr>
+    <td class="label">
+        &nbsp;
+    </td>
+    <td>
+        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
+        onClick="
+        phprSend({
+            url: '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonDatabaseSetup',
+            content:   dijit.byId('installForm').attr('value'),
+            onSuccess: dojo.hitch(this, function(data) {
+                if (data.type != 'error') {
+                    dijit.byId('formContent').attr('content', data.template);
+                }
+                addMessage(data.type, data.message);
+            })
+        });">
+            Check database
+        </button>
+    </td>
+</tr>
+</table>
+</div>
