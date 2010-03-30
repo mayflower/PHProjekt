@@ -115,8 +115,8 @@ class JsController extends IndexController
                                     $subScripts = array();
                                 }
                                 $this->_subModules[$file][] = "'" . $subFile . "'";
-                                echo 'dojo.registerModulePath' . '("phpr.' . $subFile . '", "../../../application/' . $file
-                                    . '/SubModules/' . $subFile . '/Views/dojo/scripts");';
+                                echo 'dojo.registerModulePath' . '("phpr.' . $subFile . '", "../../../application/'
+                                    . $file . '/SubModules/' . $subFile . '/Views/dojo/scripts");';
                                 echo $this->_getModuleScripts($subScripts, $file . '/SubModules/' . $subFile);
                             }
                         }
@@ -135,16 +135,17 @@ class JsController extends IndexController
                                     if ($subFile != '.'  &&
                                         $subFile != '..' &&
                                         $subFile != '.svn') {
-                                        if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subModule . '/' . $subFile
-                                            . '/Views/dojo/scripts/')) {
+                                        if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subModule . '/'
+                                            . $subFile . '/Views/dojo/scripts/')) {
                                             $subScripts = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/'
                                                 . $subModule . '/' . $subFile . '/Views/dojo/scripts/');
                                         } else {
                                             $subScripts = array();
                                         }
                                         $this->_subModules[$subModule][] = "'" . $subFile . "'";
-                                        echo 'dojo.registerModulePath' . '("phpr.' . $subFile . '", "../../../application/' . $file
-                                            . '/SubModules/' . $subModule . $subFile . '/Views/dojo/scripts");';
+                                        echo 'dojo.registerModulePath' . '("phpr.' . $subFile
+                                            . '", "../../../application/' . $file . '/SubModules/' . $subModule
+                                            . '/' . $subFile . '/Views/dojo/scripts");';
                                         echo $this->_getModuleScripts($subScripts, $file . '/SubModules/' . $subModule
                                             . '/' . $subFile);
                                     }
