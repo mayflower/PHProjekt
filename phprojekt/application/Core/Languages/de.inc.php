@@ -125,7 +125,7 @@ $lang["Number of stars"] = "Anzahl der Sterne";
   // System
 $lang["Tab"] = "Reiter";
   // Labels
-$lang["Basic Data"] = "Allgemeine Datem";
+$lang["Basic Data"] = "Allgemeine Daten";
 $lang["People"] = "Personen";
 
 // Role
