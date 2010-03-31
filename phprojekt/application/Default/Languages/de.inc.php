@@ -138,8 +138,8 @@ $lang["There are no Results"] = "Es gibt keine Ergebnisse";
 // Notification
 $lang["Send Notification"] = "Benachrichtigung senden";
   // Mail
-$lang["A"] = "A";
-$lang["item has been "] = "Artikel wurde";
+$lang["A"] = "Ein";
+$lang["item has been"] = "Artikel wurde";
 $lang["modified"] = "bearbeitet";
 $lang["created"] = "angelegt";
 $lang["Current data"] = "Aktuelle Daten";

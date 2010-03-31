@@ -136,7 +136,7 @@ $lang["There are no Results"] = "There are no Results";
 $lang["Send Notification"] = "Send Notification";
   // Mail
 $lang["A"] = "A";
-$lang["item has been "] = "item has been";
+$lang["item has been"] = "item has been";
 $lang["modified"] = "modified";
 $lang["created"] = "created";
 $lang["Current data"] = "Current data";
