@@ -575,6 +575,8 @@ class Phprojekt_Notification
         if (false === empty($this->_model)) {
             if (isset($this->_model->{$this->_model->searchFirstDisplayField})) {
                 $itemName = $this->_model->{$this->_model->searchFirstDisplayField};
+            } else {
+                $itemName = "ID: " . $this->_model->id;
             }
         }
 

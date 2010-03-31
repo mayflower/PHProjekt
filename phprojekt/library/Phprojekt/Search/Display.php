@@ -126,7 +126,7 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
      */
     public function saveDisplay($object, $moduleId, $itemId)
     {
-        $firstDisplay  = '-';
+        $firstDisplay  = '';
         $secondDisplay = '';
         $firstField    = $object->searchFirstDisplayField;
         $secondField   = $object->searchSecondDisplayField;
@@ -134,6 +134,8 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
 
         if (isset($object->$firstField)) {
             $firstDisplay = $object->$firstField;
+        } else {
+            $firstDisplay = "ID: " . $object->id;
         }
 
         if (isset($object->$secondField)) {
