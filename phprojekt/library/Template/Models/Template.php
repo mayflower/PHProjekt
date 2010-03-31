@@ -35,4 +35,17 @@
  */
 class ##TEMPLATE##_Models_##TEMPLATE## extends Phprojekt_Item_Abstract
 {
+    /**
+     * Field for display in the search results.
+     *
+     * @var string
+     */
+    public $searchFirstDisplayField = '##FIRSTFIELD##';
+
+    /**
+     * Field for display in the search results.
+     *
+     * @var string
+     */
+    public $searchSecondDisplayField = '##SECONDFIELD##';
 }

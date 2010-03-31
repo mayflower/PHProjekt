@@ -128,8 +128,19 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                 $role  = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_RoleModulePermissions');
                 $role->addModuleToAdminRole($this->id);
 
+                // Get the first and second fields
+                $field  = Phprojekt_DatabaseManager::COLUMN_NAME;
+                $db     = Phprojekt::getInstance()->getDb();
+                $select = $db->select()
+                             ->from('database_manager')
+                             ->where(sprintf('table_name = %s AND status = 1 AND %s != %s', $db->quote($this->name),
+                                $field, $db->quote('project_id')));
+                $results     = $db->query($select)->fetchAll();
+                $firstField  = (isset($results[0][$field])) ? $results[0][$field] : 'id';
+                $secondField = (isset($results[1][$field])) ? $results[1][$field] : 'id';
+
                 // Copy Templates files
-                $this->_copyTemplates(array('Template'));
+                $this->_copyTemplates(array('Template'), $firstField, $secondField);
 
                 // Change SQL file
                 $this->_createSqlFile();
@@ -259,12 +270,16 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
      * Read the Template folder and try to reproduce it into the aplication folder.
      *
      * All the strings ##TEMPLATE## are replaced by the name of the module.
+     * All the strings ##FIRSTFIELD## are replaced by the first field found.
+     * All the strings ##SECONDFIELD## are replaced by the second field found.
      *
-     * @param array $paths Array with all the folder names.
+     * @param array  $paths       Array with all the folder names.
+     * @param string $firstField  Name of the first field for display.
+     * @param string $secondField Name of the second field for display.
      *
      * @return void
      */
-    private function _copyTemplates($paths)
+    private function _copyTemplates($paths, $firstField, $secondField)
     {
         $templatePath = PHPR_LIBRARY_PATH;
         foreach ($paths as $path) {
@@ -278,11 +293,14 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                 if (is_dir($templatePath . DIRECTORY_SEPARATOR . $file)) {
                     array_push($paths, $file);
                     $this->_makeFolder($paths);
-                    $this->_copyTemplates($paths);
+                    $this->_copyTemplates($paths, $firstField, $secondField);
                     array_pop($paths);
                 } else {
                     $templateContent = file_get_contents($templatePath . DIRECTORY_SEPARATOR . $file);
                     $templateContent = str_replace("##TEMPLATE##", $this->name, $templateContent);
+                    $templateContent = str_replace("##FIRSTFIELD##", $firstField, $templateContent);
+                    $templateContent = str_replace("##SECONDFIELD##", $secondField, $templateContent);
+
                     if ($file == 'Template.php') {
                         $file = $this->name . '.php';
                     }
