@@ -226,11 +226,6 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
      */
     public function recordValidate()
     {
-        // one is the unique value available because calendar is a global module
-        if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->getModelName())) >= 1) {
-            $this->projectId = 1;
-        }
-
         if (strtotime($this->startDatetime) >= strtotime($this->endDatetime)) {
             $this->_validate->error->addError(array(
                 'field'   => "Event duration",

@@ -82,11 +82,6 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
      */
     public function recordValidate()
     {
-        // One is the unique value available because is a global module
-        if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($this->getModelName())) >= 1) {
-            $this->projectId = 1;
-        }
-
         return true;
     }
 

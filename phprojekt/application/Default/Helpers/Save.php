@@ -188,6 +188,11 @@ final class Default_Helpers_Save
         } else if (!self::_checkItemRights($model, $moduleName)) {
             throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
+            // Set the projectId to 1 for global modules
+            if (isset($model->projectId) && Phprojekt_Module::getSaveType($moduleId) == 1) {
+                $model->projectId = 1;
+            }
+
             $model->save();
 
             // Save access only if the user have "access" right
