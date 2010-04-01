@@ -120,6 +120,10 @@ $lang["All settings were disabled successfully!"] = "Alle Einstellungen wurden e
 $lang["No settings were disabled!"] = "Keine Einstellungen wurden deaktiviert!";
 $lang["You can not delete the root project"] = "Sie können das Basisprojekt nicht löschen";
 $lang["The model argument is expected"] = "Das Modellargument wird erwartet";
+$lang["Confirmation"] = "Bestätigung";
+$lang["Are you sure you want to delete?"] = "Sind sie sicher, die sie löschen möchten?";
+$lang["Please confirm implement"] = "Bitte bestätigen sie implementieren";
+$lang["rows selected"] = "zeilen ausgewählt";
 
 // Error handler messages
 $lang["Run-time notice. The script encountered something that could indicate an error, but could also happen in the "

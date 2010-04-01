@@ -1486,12 +1486,20 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             }
             if (ids.length > 0) {
                 var idsSend = ids.join(',');
-                var key     = dojo.byId("gridComboAction").value;
+                var select  = dojo.byId("gridComboAction");
+                var key     = select.value;
                 if (key != null) {
                     var temp   = key.split('|');
                     var action = temp[0];
                     var mode   = parseInt(temp[1]);
-                    this.doAction(action, idsSend, mode, this.TARGET_MULTIPLE);
+
+                    // Check for multiple rows
+                    var actionName = select.children[select.selectedIndex].text;
+                    phpr.confirmDialog(dojo.hitch(this, function() {
+                        this.doAction(action, idsSend, mode, this.TARGET_MULTIPLE);
+                    }), phpr.nls.get('Please confirm implement') + ' "' + actionName + '"<br />(' + ids.length + ' '
+                        + phpr.nls.get('rows selected') + ')');
+                    select.selectedIndex = 0;
                 }
             } else {
                 dojo.byId("gridComboAction").selectedIndex = 0;

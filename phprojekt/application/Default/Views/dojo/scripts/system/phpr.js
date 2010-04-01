@@ -1283,3 +1283,63 @@ dojo.declare("phpr.regExpForFilter", null, {
             + phpr.nls.get('Allowed values are: Letters, numbers, space, dash, underscore and colon');
     }
 });
+
+phpr.confirmDialog = function(callbackOk, message) {
+    // Summary:
+    //    Open a dialog for confirm the delete action
+    // Description:
+    //    Open a dialog and call the callback function on "OK" clicked
+    var callback = function(confirm) {
+        confirmDialog.hide();
+        confirmDialog.destroyRecursive();
+        if (confirm) {
+            callbackOk.call();
+        }
+    }
+
+    var content = new dijit.layout.ContentPane({
+        region: 'center',
+        style:  'text-align: center;'
+    }, document.createElement('div'));
+    var question = new dijit.layout.ContentPane({
+        region:  'center',
+        content: '<p>' + message + '</p>'
+    }, document.createElement('div'));
+    var buttonContent = new dijit.layout.ContentPane({
+        region: 'bottom',
+        gutter: 'yes'
+    }, document.createElement('div'));
+    var buttonOK = new dijit.form.Button({
+        baseClass: 'negative',
+        iconClass: 'tick',
+        style:     'float: left;',
+        label:     phpr.nls.get('OK'),
+        onClick:   dojo.hitch(this, function() {
+            callback(true);
+        })
+    });
+    var buttonCancel = new dijit.form.Button({
+        baseClass: 'positive',
+        iconClass: 'cross',
+        style:     'float: right;',
+        label:     phpr.nls.get('Cancel'),
+        onClick:   dojo.hitch(this, function() {
+            callback(false);
+        })
+    });
+    var confirmDialog = new phpr.Dialog({
+        title:     phpr.nls.get('Confirmation'),
+        draggable: false,
+        style:     "width: 300px;"
+    });
+
+    buttonContent.domNode.appendChild(buttonOK.domNode);
+    buttonContent.domNode.appendChild(buttonCancel.domNode);
+
+    content.domNode.appendChild(question.domNode);
+    content.domNode.appendChild(dojo.create('br'));
+    content.domNode.appendChild(buttonContent.domNode);
+
+    confirmDialog.containerNode.appendChild(content.domNode);
+    confirmDialog.show();
+};

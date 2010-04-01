@@ -117,6 +117,10 @@ $lang["All settings were disabled successfully!"] = "Todas las configuraciones f
 $lang["No settings were disabled!"] = "Ningúna configuración fué deshabilitada!";
 $lang["You can not delete the root project"] = "Usted no puede borrar el projecto raíz";
 $lang["The model argument is expected"] = "El argumento model es requerido";
+$lang["Confirmation"] = "Confirmación";
+$lang["Are you sure you want to delete?"] = "�Está seguro que desea eliminar?";
+$lang["Please confirm implement"] = "Por favor, confirme aplicar";
+$lang["rows selected"] = "filas seleccionadas";
 
 // Error handler messages
 $lang["Run-time notice. The script encountered something that could indicate an error, but could also happen in the "

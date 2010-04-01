@@ -256,8 +256,11 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                     });
                     tooltipDialog.startup();
 
-                    dojo.connect(dijit.byId("deleteBookingButton"), "onClick", dojo.hitch(this, "deleteForm"));
                     dojo.connect(dijit.byId("saveBookingButton"), "onClick", dojo.hitch(this, "submitForm"));
+                    dojo.connect(dijit.byId("deleteBookingButton"), "onClick", dojo.hitch(this, function() {
+                        phpr.confirmDialog(dojo.hitch(this, "deleteForm"),
+                        phpr.nls.get('Are you sure you want to delete?'))
+                    }));
                 } else {
                     tooltipDialog = dijit.byId('timecardTooltipDialog');
                     dijit.byId('timecardId').attr('value', this.id);

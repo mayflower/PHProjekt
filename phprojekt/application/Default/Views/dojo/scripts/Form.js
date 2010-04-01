@@ -525,7 +525,9 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // Summary:
         //    Connect the buttons to the actions
         dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
-        dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, "deleteForm"));
+        dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, function() {
+            phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'))
+        }));
     },
 
     useCache:function() {
