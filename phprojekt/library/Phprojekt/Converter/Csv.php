@@ -82,7 +82,12 @@ class Phprojekt_Converter_Csv
             header("Pragma: no-cache");
             header('Content-Length: ' . strlen($outputString));
             header("Content-Disposition: attachment; filename=\"export.csv\"");
-            header("Content-type: application/octet-stream");
+            header("Content-type: application/octet-stream; charset=utf-8");
+        }
+
+        $detected = mb_detect_encoding($outputString);
+        if ($detected !== 'ASCII') {
+            $outputString = chr(254) . chr(255) . mb_convert_encoding($outputString, 'UTF-16', $detected);
         }
 
         echo $outputString;
@@ -113,7 +118,7 @@ class Phprojekt_Converter_Csv
             $metadata = $information->getFieldDefinition($order);
             if (is_array($metadata)) {
                 foreach ($metadata as $oneCol) {
-                    $data[] = utf8_decode($oneCol['label']);
+                    $data[] = $oneCol['label'];
                 }
             }
             $datas[] = $data;
@@ -124,7 +129,6 @@ class Phprojekt_Converter_Csv
             foreach ($information->getFieldDefinition($order) as $field) {
                 $key    = $field['key'];
                 $value  = Phprojekt_Converter_Text::convert($cmodel, $field);
-                $value  = utf8_decode($value);
                 $data[] = $value;
             }
             $datas[] = $data;
