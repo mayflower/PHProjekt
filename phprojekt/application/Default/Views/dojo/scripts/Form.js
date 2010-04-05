@@ -125,7 +125,8 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Each module can overwrite this function for load the own data
 
         // Get the rights for other users
-        this._accessUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetUsersRights/id/' + this.id;
+        this._accessUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetUsersRights'
+            + '/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
         this._initData.push({'url': this._accessUrl});
 
         // Get all the active users

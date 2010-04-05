@@ -170,7 +170,8 @@ class Project_IndexController extends IndexController
      *
      * OPTIONAL request parameters:
      * <pre>
-     *  - integer <b>id</b> The project id for consult.
+     *  - integer <b>id</b>     The project id for consult.
+     *  - integer <b>nodeId</b> The id of the parent project.
      * </pre>
      *
      * The return is in JSON format.
@@ -180,8 +181,15 @@ class Project_IndexController extends IndexController
     public function jsonGetModulesProjectRelationAction()
     {
         $projectId = (int) $this->getRequest()->getParam('id');
-        $project   = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
-        $modules   = $project->getProjectModulePermissionsById($projectId);
+        $parentId  = (int) $this->getRequest()->getParam('nodeId');
+
+        // On new entries, get the parent data
+        if (empty($projectId)) {
+            $projectId = $parentId;
+        }
+
+        $project = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+        $modules = $project->getProjectModulePermissionsById($projectId);
 
         Phprojekt_Converter_Json::echoConvert($modules);
     }
@@ -198,7 +206,8 @@ class Project_IndexController extends IndexController
      *
      * OPTIONAL request parameters:
      * <pre>
-     *  - integer <b>id</b> The project id for consult.
+     *  - integer <b>id</b>     The project id for consult.
+     *  - integer <b>nodeId</b> The id of the parent project.
      * </pre>
      *
      * The return is in JSON format.
@@ -208,8 +217,15 @@ class Project_IndexController extends IndexController
     public function jsonGetProjectRoleUserRelationAction()
     {
         $projectId = (int) $this->getRequest()->getParam('id');
-        $project   = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
-        $roles     = $project->getProjectRoleUserPermissions($projectId);
+        $parentId  = (int) $this->getRequest()->getParam('nodeId');
+
+        // On new entries, get the parent data
+        if (empty($projectId)) {
+            $projectId = $parentId;
+        }
+
+        $project = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
+        $roles   = $project->getProjectRoleUserPermissions($projectId);
 
         Phprojekt_Converter_Json::echoConvert($roles);
     }

@@ -31,7 +31,8 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
 
     initData:function() {
         // Get the rights for other users
-        this._accessUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetUsersRights/id/' + this.id;
+        this._accessUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetUsersRights'
+            + '/nodeId/' + phpr.Tree.getParentId(phpr.currentProjectId) + '/id/' + this.id;
         this._initData.push({'url': this._accessUrl});
 
         // Get all the active users
@@ -39,11 +40,11 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
         this._initData.push({'store': this.userStore});
 
         // Get roles
-        this.roleStore = new phpr.Store.Role(this.id);
+        this.roleStore = new phpr.Store.Role(phpr.Tree.getParentId(phpr.currentProjectId), this.id);
         this._initData.push({'store': this.roleStore});
 
         // Get modules
-        this.moduleStore = new phpr.Store.Module(this.id);
+        this.moduleStore = new phpr.Store.Module(phpr.Tree.getParentId(phpr.currentProjectId), this.id);
         this._initData.push({'store': this.moduleStore});
 
         // Get the tags

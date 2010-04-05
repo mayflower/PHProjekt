@@ -24,11 +24,11 @@ dojo.provide("phpr.Project.Form");
 dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     initData:function() {
         // Get roles
-        this.roleStore = new phpr.Store.Role(this.id);
+        this.roleStore = new phpr.Store.Role(phpr.currentProjectId, this.id);
         this._initData.push({'store': this.roleStore});
 
         // Get modules
-        this.moduleStore = new phpr.Store.Module(this.id);
+        this.moduleStore = new phpr.Store.Module(phpr.currentProjectId, this.id);
         this._initData.push({'store': this.moduleStore});
 
         this.inherited(arguments);

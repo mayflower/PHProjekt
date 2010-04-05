@@ -846,7 +846,8 @@ class IndexController extends Zend_Controller_Action
      *
      * OPTIONAL request parameters:
      * <pre>
-     *  - integer <b>id</b> id of the item to consult.
+     *  - integer <b>id</b>     The id of the item to consult.
+     *  - integer <b>nodeId</b> The id of the parent project.
      * </pre>
      *
      * The return is an array like ('#userID' => {'admin': true/false, 'read': true/false, etc})
@@ -856,10 +857,16 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonGetUsersRightsAction()
     {
-        $id = (int) $this->getRequest()->getParam('id');
+        $id        = (int) $this->getRequest()->getParam('id');
+        $projectId = (int) $this->getRequest()->getParam('nodeId');
 
         if (empty($id)) {
-            $record = $this->getModelObject();
+            if (empty($projectId)) {
+                $record = $this->getModelObject();
+            } else {
+                $model  = Phprojekt_Loader::getModel('Project', 'Project');
+                $record = $model->find($projectId);
+            }
         } else {
             $record = $this->getModelObject()->find($id);
         }
