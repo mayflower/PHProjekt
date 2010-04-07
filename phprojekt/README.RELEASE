@@ -28,7 +28,7 @@ This is a checklist for all the steps that the release require.
         1.3.10 README.RELEASE
 
     1.4 Make a search and replace for @package_version@ and replace
-		it with the current version.
+        it with the current version.
 
     1.5 Make a zip of the phprojekt folder.
 

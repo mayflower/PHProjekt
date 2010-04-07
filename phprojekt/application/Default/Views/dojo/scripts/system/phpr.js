@@ -621,11 +621,11 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
 });
 
 dojo.declare("phpr.DateTextBox", [dijit.form.DateTextBox], {
-    _blankValue: '',	// used by filter() when the textbox is blank
+    _blankValue: '', // used by filter() when the textbox is blank
 
     parse:function(value, constraints) {
         // Summary:
-        //		Parses as string as a Date, according to constraints
+        //    Parses as string as a Date, according to constraints
         // Date
         return this.dateLocaleModule.parse(value, constraints) || (this._isEmpty(value) ? '' : undefined);
     },
@@ -1169,7 +1169,7 @@ dojo.declare("phpr.FilteringSelect", dijit.form.FilteringSelect, {
     _doSelect:function(/*Event*/ tgt) {
         // Summary:
         //    Overrides ComboBox._doSelect(), the method called when an item in the menu is selected.
-        //	Description:
+        // Description:
         //    FilteringSelect overrides this to set both the visible and
         //    hidden value from the information stored in the menu.
         //    Also mark the last selected item.
@@ -1180,7 +1180,7 @@ dojo.declare("phpr.FilteringSelect", dijit.form.FilteringSelect, {
     _setDisplayedValueAttr:function(/*String*/ label, /*Boolean?*/ priorityChange) {
         // Summary:
         //    Overrides dijit.form.FilteringSelect._setDisplayedValueAttr().
-        //	Description:
+        // Description:
         //    Change the query for search the id if an item is select,
         //    or by the name is not (normal case)
 

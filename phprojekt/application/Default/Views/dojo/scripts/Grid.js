@@ -1187,7 +1187,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }
     },
 
-	doDblClick:function(e) {
+    doDblClick:function(e) {
         // Summary:
         //    Empry function for disable the double click, since is processes by the doClick
         if (dojo.isIE) {
