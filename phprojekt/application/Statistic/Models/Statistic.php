@@ -89,14 +89,4 @@ class Statistic_Models_Statistic
 
         return $data;
     }
-
-    /**
-     * Implement fetchAll for delete projects.
-     *
-     * @return array Empty array.
-     */
-    public function fetchAll()
-    {
-        return array();
-    }
 }

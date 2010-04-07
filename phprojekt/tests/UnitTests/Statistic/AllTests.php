@@ -29,7 +29,6 @@ require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'Controllers/IndexControllerTest.php';
-require_once 'Models/StatisticTest.php';
 
 /**
  * Test suite for the default module
@@ -65,7 +64,6 @@ class Statistic_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Statistic Controller');
 
         $suite->addTestSuite('Statistic_IndexController_Test');
-        $suite->addTestSuite('Statistic_Models_Statistic_Test');
 
         return $suite;
     }

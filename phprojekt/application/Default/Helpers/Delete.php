@@ -60,13 +60,17 @@ final class Default_Helpers_Delete
 
             // Delete related items
             $modules = $relations->getProjectModulePermissionsById($id);
+            $tag     = Phprojekt_Tags::getInstance();
             foreach ($modules['data'] as $moduleData) {
                 if ($moduleData['inProject']) {
-                    $module  = Phprojekt_Loader::getModel($moduleData['name'], $moduleData['name']);
-                    $records = $module->fetchAll($where);
-                    if (is_array($records)) {
-                        foreach ($records as $record) {
-                            self::delete($record);
+                    $module = Phprojekt_Loader::getModel($moduleData['name'], $moduleData['name']);
+                    if ($module instanceof Phprojekt_ActiveRecord_Abstract) {
+                        $records = $module->fetchAll($where);
+                        if (is_array($records)) {
+                            foreach ($records as $record) {
+                                $tag->deleteTagsByItem($moduleData['id'], $record->id);
+                                self::delete($record);
+                            }
                         }
                     }
                 }

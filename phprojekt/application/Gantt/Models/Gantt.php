@@ -37,15 +37,4 @@
  */
 class Gantt_Models_Gantt
 {
-    /**
-     * Implement fetchAll for delete projects.
-     *
-     * @param string $where The SQL where.
-     *
-     * @return array Empty array.
-     */
-    public function fetchAll($where)
-    {
-        return array();
-    }
 }

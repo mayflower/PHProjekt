@@ -192,20 +192,25 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     public function delete()
     {
         // Delete all the project-module relations
-        $project  = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+        $project = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
         $project->deleteModuleRelation($this->id);
 
         // Delete all the role-module relations
-        $role  = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_RoleModulePermissions');
+        $role = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_RoleModulePermissions');
         $role->deleteModuleRelation($this->id);
 
         // Delete the items and tags
-        $tag     = Phprojekt_Tags::getInstance();
-        $model   = Phprojekt_Loader::getModel($this->name, $this->name);
-        $results = $model->fetchAll();
-        foreach ($results as $record) {
-            $tag->deleteTagsByItem($this->id, $record->id);
-            $record->delete();
+        $tag   = Phprojekt_Tags::getInstance();
+        $model = Phprojekt_Loader::getModel($this->name, $this->name);
+        if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
+            $results = $model->fetchAll();
+            if (is_array($results)) {
+                foreach ($results as $record) {
+                    $tag->deleteTagsByItem($this->id, $record->id);
+                    // @todo: Improve the delete routine for modules with a lot of entries.
+                    $record->delete();
+                }
+            }
         }
 
         // Delete Files
@@ -259,10 +264,13 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                 $folderPath .= DIRECTORY_SEPARATOR . $path;
             }
         }
-        if (mkdir($folderPath, 0770)) {
-            chmod($folderPath, 0775);
-        } else {
-            Phprojekt::getInstance()->getLog()->debug('Error on create folder ' . $folderPath);
+
+        if (!is_dir($folderPath)) {
+            if (mkdir($folderPath, 0770)) {
+                chmod($folderPath, 0775);
+            } else {
+                Phprojekt::getInstance()->getLog()->debug('Error on create folder ' . $folderPath);
+            }
         }
     }
 

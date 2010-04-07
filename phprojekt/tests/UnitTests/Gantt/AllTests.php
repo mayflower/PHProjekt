@@ -30,7 +30,6 @@ require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'Controllers/IndexControllerTest.php';
-require_once 'Models/GanttTest.php';
 
 /**
  * Test suite for the Gantt module
@@ -67,7 +66,6 @@ class Gantt_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Gantt Controller');
 
         $suite->addTestSuite('Gantt_IndexController_Test');
-        $suite->addTestSuite('Gantt_Models_Gantt_Test');
 
         return $suite;
     }
