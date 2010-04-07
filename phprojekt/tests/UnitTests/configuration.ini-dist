@@ -24,6 +24,7 @@ log.debug.filename   = "/home/dsp/public_html/phprojekt-mvc/logs/debug.log"
 
 itemsPerPage         = 3;
 userDisplayFormat    = 0
+maxUploadSize        = 512000
 
 ;;;;;;;;
 ; MAIL ;

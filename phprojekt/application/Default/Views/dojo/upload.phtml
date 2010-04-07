@@ -38,7 +38,7 @@
             <input type="hidden" name="field" id="field" value="<?php echo $this->field; ?>" />
             <input type="hidden" name="itemId" id="itemId" value="<?php echo $this->itemId; ?>" />
             <input type="hidden" name="csrfToken" id="csrfToken" value="<?php echo $this->csrfToken; ?>" />
-            <input type="hidden" name="MAX_FILE_SIZE" value="512000" />
+            <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $this->maxUploadSize; ?>" />
             <input type="file" name="uploadedFile" id="uploadedFile" onChange="dojo.byId('upload').submit();" />
         </div>
     </form>

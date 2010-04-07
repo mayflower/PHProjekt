@@ -287,10 +287,12 @@ class FileController extends IndexController
      */
     private function _fileRenderView($linkBegin, $module, $itemId, $field, $value, $filesChanged)
     {
-        $sessionName                = 'Phprojekt_CsrfToken';
-        $csrfNamespace              = new Zend_Session_Namespace($sessionName);
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
-        $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
+        $sessionName   = 'Phprojekt_CsrfToken';
+        $csrfNamespace = new Zend_Session_Namespace($sessionName);
+        $config        = Phprojekt::getInstance()->getConfig();
+
+        $this->view->webpath        = $config->webpath;
+        $this->view->compressedDojo = (bool) $config->compressedDojo;
         $this->view->formPath       = $linkBegin . 'fileUpload/moduleName/' . $module;
         $this->view->downloadLink   = '';
         $this->view->fileName       = null;
@@ -299,6 +301,7 @@ class FileController extends IndexController
         $this->view->value          = $value;
         $this->view->filesChanged   = $filesChanged;
         $this->view->csrfToken      = $csrfNamespace->token;
+        $this->view->maxUploadSize  = (isset($config->maxUploadSize)) ? (int) $config->maxUploadSize : 512000;
 
         $filesForView = array();
 
