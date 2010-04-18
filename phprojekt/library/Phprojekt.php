@@ -404,7 +404,7 @@ class Phprojekt
         } catch (Zend_Config_Exception $error) {
             $webPath = "http://" . $_SERVER['HTTP_HOST'] . str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
             die('You need the file configuration.ini to continue. Have you tried the <a href="' . $webPath
-                . 'setup.php">setup</a> routine?');
+                . 'setup.php">setup</a> routine?'."\n".'<br />Original error: '. $error->getMessage());
         }
 
         if (substr($this->_config->webpath, -1) != '/') {
