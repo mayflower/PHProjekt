@@ -100,10 +100,10 @@ final class Default_Helpers_Save
                 $node->setParentNode($parentNode);
             }
 
-            // Save access, modules and roles only if the user have "access" right
+            // Save access, modules and roles only if the user have "admin" right
             $itemRights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
             $check      = $itemRights->getRights(1, $node->getActiveRecord()->id);
-            if ($check['currentUser']['access']) {
+            if ($check['currentUser']['admin']) {
                 $rights = Default_Helpers_Right::getItemRights($params, 1, $newItem);
 
                 if (count($rights) > 0) {
@@ -195,10 +195,10 @@ final class Default_Helpers_Save
 
             $model->save();
 
-            // Save access only if the user have "access" right
+            // Save access only if the user have "admin" right
             $itemRights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
             $check      = $itemRights->getRights($moduleId, $model->id);
-            if ($check['currentUser']['access']) {
+            if ($check['currentUser']['admin']) {
                 if ($moduleName == 'Core') {
                     $rights = Default_Helpers_Right::getModuleRights($params);
                 } else {
