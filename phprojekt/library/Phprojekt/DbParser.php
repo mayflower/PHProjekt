@@ -141,7 +141,7 @@ class Phprojekt_DbParser
                             if (file_exists($subPath)) {
                                 $json = file_get_contents($subPath);
                                 $data = Zend_Json::decode($json);
-                                $this->_parseData($data, $subFile);
+                                $this->_parseData($data, $subFile, 'Core');
                             }
                         }
                     }
@@ -166,7 +166,7 @@ class Phprojekt_DbParser
                             if (file_exists($subPath)) {
                                 $json = file_get_contents($subPath);
                                 $data = Zend_Json::decode($json);
-                                $this->_parseData($data, $subFile);
+                                $this->_parseData($data, $subFile, $file);
                             }
                         }
                     }
@@ -210,35 +210,60 @@ class Phprojekt_DbParser
      *
      * @param array  $data   Array with all the version and data for parse.
      * @param string $module Current module of the data.
+     * @param string $parent Parent module of the data.
      *
      * @return void
      */
-    private function _parseData($data, $module)
+    private function _parseData($data, $module, $parent = null)
     {
         $data          = $this->_getVersionsForProcess($module, $this->_sortData($data));
-        $moduleVersion = $this->_getModuleVersion($module);
+        if (null === $parent) {
+            $moduleVersion = $this->_getModuleVersion($module);
+        } else {
+            $moduleVersion = $this->_getModuleVersion($parent);
+        }
         foreach ($data as $version => $content) {
-            $this->_messages[$module] = array('version' => $version);
+            if (null === $parent) {
+                $this->_messages[$module] = array('version' => $version);
+            }
             // Only process the initialData if the module version is lower than the data version
             if (Phprojekt::compareVersion($moduleVersion, $version) < 0) {
                 $this->_messages[$module]['process'] = array();
                 if (isset($content['structure'])) {
-                    $this->_messages[$module]['process'][] = 'Structure';
+                    if (null === $parent) {
+                        $this->_messages[$module]['process'][] = 'Structure';
+                    } else {
+                        $this->_messages[$parent]['process'][] = 'Structure';
+                    }
                     $this->_processStructure($content['structure']);
                 }
 
                 if (isset($content['initialData'])) {
-                    $this->_messages[$module]['process'][] = 'Inital data';
+                    if (null === $parent) {
+                        $this->_messages[$module]['process'][] = 'Inital data';
+                    } else {
+                        $this->_messages[$parent]['process'][] = 'Inital data';
+                    }
                     $this->_processData($this->_convertSpecialValues($content['initialData'], 0));
                 }
 
                 if (isset($content['extraData']) && $this->_useExtraData) {
-                    $this->_messages[$module]['process'][] = 'Extra data';
+                    if (null === $parent) {
+                        $this->_messages[$module]['process'][] = 'Extra data';
+                    } else {
+                        $this->_messages[$parent]['process'][] = 'Extra data';
+                    }
                     $this->_processData($this->_convertSpecialValues($content['extraData'], 0));
                 }
-                $this->_messages[$module]['finish'] = 'Done';
+                if (null === $parent) {
+                    $this->_messages[$module]['finish'] = 'Done';
+                } else {
+                    $this->_messages[$parent]['finish'] = 'Done';
+                }
             } else {
-                $this->_messages[$module]['finish'] = 'Already installed';
+                if (null === $parent) {
+                    $this->_messages[$module]['finish'] = 'Already installed';
+                }
             }
             $this->_setModuleVersion($module, $version);
         }
