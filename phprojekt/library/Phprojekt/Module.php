@@ -38,6 +38,17 @@
 class Phprojekt_Module
 {
     /**
+     * The module saveType.
+     *
+     * const TYPE_NORMAL = Under a project.
+     * const TYPE_GLOBAL = Global (Under root project).
+     * const TYPE_MIX    = Mix Under a project AND global.
+     */
+    const TYPE_NORMAL = 0; // Under a project.
+    const TYPE_GLOBAL = 1; // Global (Under root project).
+    const TYPE_MIX    = 2; // Mix Under a project AND global.
+
+    /**
      * Saves the cache for our module entries, to minimize database lookups.
      *
      * @var array
@@ -164,5 +175,29 @@ class Phprojekt_Module
         }
 
         return 0;
+    }
+
+    /**
+     * Returns if the module is saved under a project.
+     *
+     * @param string $name The Module name.
+     *
+     * @return boolean True if the saveType is 0.
+     */
+    public static function saveTypeIsNormal($id)
+    {
+        return (self::getSaveType($id) == self::TYPE_NORMAL);
+    }
+
+    /**
+     * Returns if the module is saved as global.
+     *
+     * @param string $name The Module name.
+     *
+     * @return boolean True if the saveType is 1.
+     */
+    public static function saveTypeIsGlobal($id)
+    {
+        return (self::getSaveType($id) == self::TYPE_GLOBAL);
     }
 }

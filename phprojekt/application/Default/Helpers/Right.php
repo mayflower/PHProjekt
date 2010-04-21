@@ -304,8 +304,7 @@ final class Default_Helpers_Right
             }
 
             if (isset($params['dataAccess'])) {
-                $moduleType = Phprojekt_Module::getSaveType($moduleId);
-                if ($moduleType != 1) {
+                if (!Phprojekt_Module::saveTypeIsGlobal($moduleId)) {
                     // Items under a project => add admin with full access
                     $resultRights[1] = Phprojekt_Acl::ALL;
                 }

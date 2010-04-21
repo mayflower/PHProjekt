@@ -167,7 +167,7 @@ final class Default_Helpers_Delete
 
         if ($moduleName == 'Core') {
             return Phprojekt_Auth::isAdminUser();
-        } else if (Phprojekt_Module::getSaveType(Phprojekt_Module::getId($moduleName)) == 0) {
+        } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))) {
             $itemRights = $model->getRights();
 
             if (isset($itemRights['currentUser'])) {

@@ -394,7 +394,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $moduleId = Phprojekt_Module::getId($this->getModelName());
         $saveType = Phprojekt_Module::getSaveType($moduleId);
         switch ($saveType) {
-            case 0:
+            case Phprojekt_Module::TYPE_NORMAL:
                 $roleRights      = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
                 $roleRightRead   = $roleRights->hasRight('read');
                 $roleRightWrite  = $roleRights->hasRight('write');
@@ -442,9 +442,9 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     }
                 }
                 break;
-            case 1:
+            case Phprojekt_Module::TYPE_GLOBAL:
                 break;
-            case 2:
+            case Phprojekt_Module::TYPE_MIX:
                 // Implement saveType 2
                 break;
         }
