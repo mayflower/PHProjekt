@@ -64,7 +64,7 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
      *
      * @var array
      */
-    protected static $_excludePaths = array('Default', 'Core', '.svn');
+    protected static $_excludePaths = array('Default', 'Core');
 
     /**
      * Returns a set of modules available and have Configuration sections.

@@ -295,9 +295,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
         }
         $files = scandir($templatePath);
         foreach ($files as $file) {
-            if ($file != '.'  &&
-                $file != '..' &&
-                $file != '.svn') {
+            if ($file != '.'  && $file != '..') {
                 if (is_dir($templatePath . DIRECTORY_SEPARATOR . $file)) {
                     array_push($paths, $file);
                     $this->_makeFolder($paths);

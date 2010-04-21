@@ -69,7 +69,7 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
      *
      * @var array
      */
-    protected static $_excludePaths = array('Default', 'Core', '.svn');
+    protected static $_excludePaths = array('Default', 'Core');
 
     /**
      * Returns a set of modules available that have Setting.php files.

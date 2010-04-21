@@ -562,7 +562,7 @@ class Phprojekt
             $helperPaths = array();
             foreach (scandir(PHPR_CORE_PATH) as $module) {
                 $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
-                if ($module == '.'  || $module == '..' || $module == '.svn' || !is_dir($dir)) {
+                if ($module == '.'  || $module == '..' || !is_dir($dir)) {
                     continue;
                 }
 
@@ -600,10 +600,7 @@ class Phprojekt
                         $coreModules = scandir($dir);
                         foreach ($coreModules as $coreModule) {
                             $coreDir = $dir . DIRECTORY_SEPARATOR . $coreModule;
-                            if ($coreModule != '.'  &&
-                                $coreModule != '..' &&
-                                $coreModule != '.svn' &&
-                                is_dir($coreDir)) {
+                            if ($coreModule != '.'  && $coreModule != '..' && is_dir($coreDir)) {
                                 $controllerPaths[] = $coreDir;
                             }
                         }

@@ -107,10 +107,7 @@ class FrontInit extends PHPUnit_Framework_TestCase
                     $coreModules = scandir($dir);
                     foreach ($coreModules as $coreModule) {
                         $coreDir = $dir . DIRECTORY_SEPARATOR . $coreModule;
-                        if ($coreModule != '.'  &&
-                            $coreModule != '..' &&
-                            $coreModule != '.svn' &&
-                            is_dir($coreDir)) {
+                        if ($coreModule != '.'  && $coreModule != '..' && is_dir($coreDir)) {
                             $moduleDirectories[] = $coreDir;
                         }
                     }

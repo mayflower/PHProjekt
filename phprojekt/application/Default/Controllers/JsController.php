@@ -86,10 +86,7 @@ class JsController extends IndexController
         // Load all modules and make and array of it
         $files = scandir(PHPR_CORE_PATH);
         foreach ($files as $file) {
-            if ($file != '.'  &&
-                $file != '..' &&
-                $file != '.svn' &&
-                $file != 'Default') {
+            if ($file != '.'  && $file != '..' && $file != 'Default') {
                 if (is_dir(PHPR_CORE_PATH . '/' . $file . '/Views/dojo/scripts/')) {
                     $scripts = scandir(PHPR_CORE_PATH . '/' . $file . '/Views/dojo/scripts/');
                 } else {
@@ -104,9 +101,7 @@ class JsController extends IndexController
                     if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/')) {
                         $subFiles = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/');
                         foreach ($subFiles as $subFile) {
-                            if ($subFile != '.'  &&
-                                $subFile != '..' &&
-                                $subFile != '.svn') {
+                            if ($subFile != '.'  && $subFile != '..') {
                                 if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subFile
                                     . '/Views/dojo/scripts/')) {
                                     $subScripts = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subFile
@@ -126,15 +121,10 @@ class JsController extends IndexController
                     if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/')) {
                         $subModulesFiles = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/');
                         foreach ($subModulesFiles as $subModule) {
-                            if ($subModule != '.'  &&
-                                $subModule != '..' &&
-                                $subModule != '.svn') {
-
+                            if ($subModule != '.' && $subModule != '..') {
                                 $subFiles = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subModule);
                                 foreach ($subFiles as $subFile) {
-                                    if ($subFile != '.'  &&
-                                        $subFile != '..' &&
-                                        $subFile != '.svn') {
+                                    if ($subFile != '.'  && $subFile != '..') {
                                         if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subModule . '/'
                                             . $subFile . '/Views/dojo/scripts/')) {
                                             $subScripts = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/'
@@ -366,7 +356,7 @@ class JsController extends IndexController
                 }
             } else {
                 // The item is a subdirectory
-                if ($item != '.svn' && $item != '.' && $item != '..') {
+                if ($item != '.' && $item != '..') {
                     $subItemPath = $path . $item . DIRECTORY_SEPARATOR;
                     foreach (scandir($subItemPath) as $subItem) {
                         if (!is_dir($subItemPath . $subItem) && substr($subItem, -5) == '.html') {

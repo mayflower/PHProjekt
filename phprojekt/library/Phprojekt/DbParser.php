@@ -133,10 +133,10 @@ class Phprojekt_DbParser
         if (is_dir($coreDirectory . '/Core/SubModules/')) {
             $files = scandir($coreDirectory . '/Core/SubModules/');
             foreach ($files as $file) {
-                if ($file != '.'  && $file != '..' && $file != '.svn') {
+                if ($file != '.'  && $file != '..') {
                     $subFiles = scandir($coreDirectory . '/Core/SubModules/' . $file);
                     foreach ($subFiles as $subFile) {
-                        if ($subFile != '.'  && $subFile != '..' && $subFile != '.svn') {
+                        if ($subFile != '.'  && $subFile != '..') {
                             $subPath = $coreDirectory . '/Core/SubModules/' . $file . '/' . $subFile . '/Sql/Db.json';
                             if (file_exists($subPath)) {
                                 $json = file_get_contents($subPath);
@@ -152,7 +152,7 @@ class Phprojekt_DbParser
         // Per module, load the file and process it
         $files = scandir($coreDirectory);
         foreach ($files as $file) {
-            if ($file != '.'  && $file != '..' && $file != '.svn' && $file != 'Core') {
+            if ($file != '.'  && $file != '..' && $file != 'Core') {
                 if (file_exists($coreDirectory . '/' . $file . '/Sql/Db.json')) {
                     $json = file_get_contents($coreDirectory . '/' . $file . '/Sql/Db.json');
                     $data = Zend_Json::decode($json);
@@ -161,7 +161,7 @@ class Phprojekt_DbParser
                 if (is_dir($coreDirectory . '/' . $file . '/SubModules/')) {
                     $subFiles = scandir($coreDirectory . '/' . $file . '/SubModules/');
                     foreach ($subFiles as $subFile) {
-                        if ($subFile != '.'  && $subFile != '..' && $subFile != '.svn') {
+                        if ($subFile != '.'  && $subFile != '..') {
                             $subPath = $coreDirectory . '/' . $file . '/SubModules/' . $subFile . '/Sql/Db.json';
                             if (file_exists($subPath)) {
                                 $json = file_get_contents($subPath);

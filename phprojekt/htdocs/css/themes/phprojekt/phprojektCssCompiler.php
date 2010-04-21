@@ -33,7 +33,7 @@ $allCss .= file_get_contents("../../../dojo/dojo/resources/dojo.css");
 foreach (scandir(".") as $item) {
     if (is_dir($item)) {
         //Is it a subdirectory
-        if ($item != '.svn' && $item != '.' && $item != '..') {
+        if ($item != '.' && $item != '..') {
             //It is a CSS folder
             foreach (scandir($item) as $subItem) { //Iterate on every file
                 $subItemPath = $item . DIRECTORY_SEPARATOR . $subItem;

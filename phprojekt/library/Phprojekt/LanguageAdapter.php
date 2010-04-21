@@ -153,7 +153,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                 // Modules
                 $files = scandir(PHPR_CORE_PATH);
                 foreach ($files as $module) {
-                    if ($module != '.' && $module != '..' && $module != 'Default' && $module != '.svn') {
+                    if ($module != '.' && $module != '..' && $module != 'Default') {
                         // Get the translation file
                         $lang        = array ();
                         $langFile    = $this->_getLangFile($locale);
@@ -200,7 +200,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         if (file_exists($languageDir)) {
             $subFiles = scandir(PHPR_CORE_PATH . '/' . $module . '/SubModules/');
             foreach ($subFiles as $subModule) {
-                if ($subModule != '.' && $subModule != '..' && $subModule != '.svn') {
+                if ($subModule != '.' && $subModule != '..') {
                     $languageDir = PHPR_CORE_PATH . '/' . $module . '/SubModules/' . $subModule . '/Languages/';
                     if (file_exists($languageDir . $langFile)) {
                         include_once($languageDir . $langFile);
@@ -215,7 +215,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                     } else if ($module == 'Core') {
                         $subCoreFiles = scandir(PHPR_CORE_PATH . '/' . $module . '/SubModules/' . $subModule);
                         foreach ($subCoreFiles as $subCoreModule) {
-                            if ($subCoreModule != '.' && $subCoreModule != '..' && $subCoreModule != '.svn') {
+                            if ($subCoreModule != '.' && $subCoreModule != '..') {
                                 $coreLanguageDir = PHPR_CORE_PATH . '/' . $module . '/SubModules/' . $subModule
                                     . '/' . $subCoreModule . '/Languages/';
                                 if (file_exists($coreLanguageDir . $langFile)) {
@@ -514,7 +514,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             // Get all the languages files in Defualt module
             $files = scandir(PHPR_CORE_PATH . '/Default/Languages');
             foreach ($files as $file) {
-                if ($file != '.' && $file != '..' && $file != '.svn') {
+                if ($file != '.' && $file != '..') {
                     $available[str_replace('.inc.php', '', $file)] = 1;
                 }
             }
