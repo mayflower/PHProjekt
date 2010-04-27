@@ -39,33 +39,35 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 {
     /**
      * Type of event once (single date event).
-     *
      */
     const EVENT_TYPE_ONCE = 1;
 
     /**
      * Type of event daily.
-     *
      */
     const EVENT_TYPE_DAILY = 2;
 
     /**
      * Type of event weekly.
-     *
      */
     const EVENT_TYPE_WEEKLY = 3;
 
     /**
      * Type of event monthly.
-     *
      */
     const EVENT_TYPE_MONTLY = 4;
 
     /**
      * Type of event anual.
-     *
      */
     const EVENT_TYPE_ANUAL = 5;
+
+    /**
+     * Values for the status value
+     */
+    const EVENT_STATUS_PENDING  = 0;
+    const EVENT_STATUS_ACCEPTED = 1;
+    const EVENT_STATUS_REJECTED = 2;
 
     /**
      * User list to be notified.
@@ -690,7 +692,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
 
             // Set the status to "Pending" if there is any change and the event is for other user
             if ($participantId != $ownerId && $participantId != Phprojekt_Auth::getUserId()) {
-                $request['status'] = 0;
+                $request['status'] = self::EVENT_STATUS_PENDING;
             }
 
             $request = Default_Helpers_Right::allowAll($request, $ownerId);
