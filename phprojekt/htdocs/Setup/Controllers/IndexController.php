@@ -45,6 +45,15 @@ class IndexController extends Zend_Controller_Action
     private $_setup = null;
 
     /**
+     * Default values
+     */
+    const DEFAULT_DBHOST         = 'localhost';
+    const DEFAULT_DBUSER         = 'phprojekt';
+    const DEFAULT_DBNAME         = 'phprojekt';
+    const DEFAULT_USE_EXTRA_DATA = 1;
+    const DEFAULT_DIFF_TO_UTC    = 0;
+
+    /**
      * Do some checks in the begin.
      *
      * @return void
@@ -108,10 +117,10 @@ class IndexController extends Zend_Controller_Action
     {
         $this->view->message  = array();
         $this->view->success  = array();
-        $this->view->dbHost   = 'localhost';
-        $this->view->dbUser   = 'phprojekt';
+        $this->view->dbHost   = self::DEFAULT_DBHOST;
+        $this->view->dbUser   = self::DEFAULT_DBUSER;
         $this->view->dbPass   = '';
-        $this->view->dbName   = 'phprojekt';
+        $this->view->dbName   = self::DEFAULT_DBNAME;
 
         $message  = null;
         $type     = 'success';
@@ -272,7 +281,7 @@ class IndexController extends Zend_Controller_Action
     {
         $this->view->message      = array();
         $this->view->success      = array();
-        $this->view->useExtraData = 1;
+        $this->view->useExtraData = self::DEFAULT_USE_EXTRA_DATA;
 
         $message  = null;
         $type     = 'success';
@@ -345,7 +354,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->message             = array();
         $this->view->success             = array();
         $this->view->migrationConfigFile = '';
-        $this->view->diffToUtc           = 0;
+        $this->view->diffToUtc           = self::DEFAULT_DIFF_TO_UTC;
 
         $message  = null;
         $type     = 'success';
