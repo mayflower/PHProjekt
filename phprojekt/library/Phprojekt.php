@@ -402,16 +402,19 @@ class Phprojekt
         try {
             $this->_config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
         } catch (Zend_Config_Exception $error) {
-            $webPath = "http://" . $_SERVER['HTTP_HOST'] . str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+            $response = new Zend_Controller_Request_Http();
+            $webPath  = $response->getScheme() . '://' . $response->getHttpHost() . $response->getBasePath() . '/';
             header("Location: " . $webPath . "setup.php");
             die('You need the file configuration.ini to continue. Have you tried the <a href="' . $webPath
                 . 'setup.php">setup</a> routine?'."\n".'<br />Original error: ' . $error->getMessage());
         }
 
-        if (substr($this->_config->webpath, -1) != '/') {
-            $this->_config->webpath.= '/';
+        // Set the webpath
+        if (empty($this->_config->webpath)) {
+            $response               = new Zend_Controller_Request_Http();
+            $this->_config->webpath = $response->getScheme() . '://' . $response->getHttpHost()
+                . $response->getBasePath() . '/';
         }
-
         define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
 
         // Set the timezone to UTC

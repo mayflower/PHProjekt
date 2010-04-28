@@ -15,9 +15,6 @@ database.params.password    = "phprojekt"
 
 [general]
 
-; Where the site and the main file (index.php) are located (htdocs folder). It must begin with HTTP.
-webpath = "http://localhost/phprojekt/htdocs/"
-
 applicationDir       = "/home/dsp/public_html/phprojekt-mvc"
 
 log.debug.filename   = "/home/dsp/public_html/phprojekt-mvc/logs/debug.log"
