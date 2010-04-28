@@ -40,6 +40,11 @@
 class FileController extends IndexController
 {
     /**
+     * Default Max size in bytes that is allowed to be uploaded per file.
+     */
+    const DEFAULT_MAX_UPLOAD_SIZE = 512000;
+
+    /**
      * The function sets up the template upload.phtml and renders it.
      *
      * This function draws the upload field in the form.
@@ -301,7 +306,8 @@ class FileController extends IndexController
         $this->view->value          = $value;
         $this->view->filesChanged   = $filesChanged;
         $this->view->csrfToken      = $csrfNamespace->token;
-        $this->view->maxUploadSize  = (isset($config->maxUploadSize)) ? (int) $config->maxUploadSize : 512000;
+        $this->view->maxUploadSize  = (isset($config->maxUploadSize)) ? (int) $config->maxUploadSize :
+            self::DEFAULT_MAX_UPLOAD_SIZE;
 
         $filesForView = array();
 
