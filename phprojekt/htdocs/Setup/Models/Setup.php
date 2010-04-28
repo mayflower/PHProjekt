@@ -123,10 +123,28 @@ class Setup_Models_Setup
         }
 
         if (strncmp($_SERVER['SCRIPT_NAME'], '/setup.php', 10) != 0) {
-            $message = "PHProjekt 6 must be installed in a DocumentRoot directory.\n"
-                . "Please set the DocumentRoot to phprojekt/htdocs or generate an extra virtual host "
-                . "for the DocumentRoot phprojekt/htdocs";
-            throw new Exception($message);
+            $this->_message[] = "It is recommend install PHProjekt 6 using a virtual host.<br />"
+                . "You should try to generate an extra virtual host (or a sub-domain) to phprojekt/htdocs.";
+
+            // Works the .htaccess?
+            $response = new Zend_Controller_Request_Http();
+            $webpath  = $response->getHttpHost();
+            $str      = '';
+            $sock     = fsockopen($webpath, $response->getServer('SERVER_PORT'));
+            $request  = "GET " . str_replace('htdocs', '', $response->getBasePath()) . "/ HTTP/1.1\r\n" .
+               "Host: " . $webpath . "\r\nConnection: close\r\n\r\n";
+            fwrite($sock, $request);
+            while ($buff = fread($sock, 1024)) {
+                $str .= $buff;
+            }
+            $response = Zend_Http_Response::fromString($str);
+            if ($response->getStatus() != '403') {
+                $this->_message[] = "Please note that your webserver needs to support .htaccess files "
+                    . "to deny access to the configuration files.<br />"
+                    . "Running PHProjekt 6 without using the provided .htaccess files to deny access to "
+                    . "certain files and folders, might not be secure and is not recommended.";
+            }
+            fclose($sock);
         }
 
         foreach ($settingsRecommended as $conf => $value) {

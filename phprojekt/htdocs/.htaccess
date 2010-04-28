@@ -1,0 +1,2 @@
+# Allow access to everyone
+allow from all
