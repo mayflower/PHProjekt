@@ -267,80 +267,35 @@ class Setup_Models_Setup
         }
 
         // Check log files
-        $logsDir = $baseDir . "logs";
-
-        if (!is_dir($logsDir)) {
-            if (!is_writable($baseDir)) {
-                $this->_error[] = 'Error creating the logs folder: Do not have write access.';
-                $valid = false;
-            } else {
-                if (!mkdir($logsDir)) {
-                    $this->_error[] = 'Please create the dir ' . $logsDir . ' to save the logs';
-                    $valid = false;
-                }
-                if (!@fopen($logsDir . DIRECTORY_SEPARATOR . 'debug.log', 'a', false)) {
-                    $this->_error[] = 'The debug log cannot be created';
-                    $valid = false;
-                }
-                if (!@fopen($logsDir . DIRECTORY_SEPARATOR . 'err.log', 'a', false)) {
-                    $this->_error[] = 'The err log can not be created';
-                    $valid = false;
-                }
-            }
-        } else if (!is_writable($logsDir)) {
-            $this->_error[] = 'Please set permission to allow writing logs in ' . $logsDir;
+        if (!$this->_checkWriteAccess($baseDir, 'logs')) {
             $valid = false;
+        } else {
+            if (!@fopen($baseDir . 'logs' . DIRECTORY_SEPARATOR . 'debug.log', 'a', false)) {
+                $this->_error[] = 'The debug log cannot be created';
+                $valid = false;
+            }
+            if (!@fopen($baseDir . 'logs' . DIRECTORY_SEPARATOR . 'err.log', 'a', false)) {
+                $this->_error[] = 'The err log can not be created';
+                $valid = false;
+            }
         }
 
         // Check upload dir
-        $uploadDir = $baseDir . "upload";
-
-        if (!is_dir($uploadDir)) {
-            if (!is_writable($baseDir)) {
-                $this->_error[] = 'Error creating the upload folder: Do not have write access.';
-                $valid = false;
-            } else if (!mkdir($uploadDir)) {
-                $this->_error[] = 'Please create the dir ' . $uploadDir . ' to upload files';
-                $valid = false;
-            }
-        } else if (!is_writable($uploadDir)) {
-            $this->_error[] = 'Please set permission to allow writing uploaded files in ' . $uploadDir;
+        if (!$this->_checkWriteAccess($baseDir, 'upload')) {
             $valid = false;
         }
 
         // Check tmp dir
-        $cacheDir = $baseDir . "tmp";
-
-        if (!is_dir($cacheDir)) {
-            if (!is_writable($baseDir)) {
-                $this->_error[] = 'Error creating the tmp folder: Do not have write access.';
-                $valid = false;
-            } else if (!mkdir($cacheDir)) {
-                $this->_error[] = 'Please create the dir ' . $cacheDir . ' to use the cache';
-                $valid = false;
-            }
-        } else if (!is_writable($cacheDir)) {
-            $this->_error[] = 'Please set permission to allow use the cache in ' . $cacheDir;
+        if (!$this->_checkWriteAccess($baseDir, 'tmp')) {
             $valid = false;
         }
 
         // Check zendCache dir
-        $cacheDir = $baseDir . "tmp" . DIRECTORY_SEPARATOR . "zendCache";
-
-        if (!is_dir($cacheDir)) {
-            if (!is_writable($baseDir . "tmp")) {
-                $this->_error[] = 'Error creating the "tmp"' . DIRECTORY_SEPARATOR . '"zendCache" folder'
-                    . ': Do not have write access.';
-                $valid = false;
-            } else if (!mkdir($cacheDir)) {
-                $this->_error[] = 'Please create the dir ' . $cacheDir . ' to use the cache';
-                $valid = false;
-            }
-        } else if (!is_writable($cacheDir)) {
-            $this->_error[] = 'Please set permission to allow use the cache in ' . $cacheDir;
+        if (!$this->_checkWriteAccess($baseDir . "tmp" . DIRECTORY_SEPARATOR, 'zendCache')) {
             $valid = false;
         } else {
             // Remove old data if exists
+            $cacheDir = $baseDir . "tmp" . DIRECTORY_SEPARATOR . 'zendCache';
             if ($directory = opendir($cacheDir)) {
                 while (($file = readdir($directory)) !== false) {
                     if ($file == '.' || $file == '..') {
@@ -349,6 +304,38 @@ class Setup_Models_Setup
                     unlink($cacheDir . DIRECTORY_SEPARATOR . $file);
                 }
             }
+        }
+
+        return $valid;
+    }
+
+    /**
+     * Check if the folder exists and have write access.
+     *
+     * If not, try to create it.
+     *
+     * @param string $baseDir Path to the folder.
+     * @param string $folder  Folder name.
+     *
+     * @return boolean True if the folder is writable.
+     */
+    private function _checkWriteAccess($baseDir, $folder)
+    {
+        $valid = false;
+        $path  = $baseDir . $folder;
+
+        if (!is_dir($path)) {
+            if (!is_writable($baseDir)) {
+                $this->_error[] = 'Error creating the "' . $folder . '" folder: Do not have write access.';
+            } else if (!mkdir($path)) {
+                $this->_error[] = 'Please create the dir ' . $path . '.';
+            } else {
+                $valid = true;
+            }
+        } else if (!is_writable($path)) {
+            $this->_error[] = 'Please set write permission to ' . $path . '.';
+        } else {
+            $valid = true;
         }
 
         return $valid;
