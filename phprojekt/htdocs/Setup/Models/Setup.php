@@ -186,8 +186,7 @@ class Setup_Models_Setup
      */
     public function saveDatabase($params)
     {
-        $databaseNamespace       = new Zend_Session_Namespace('databaseData');
-        $databaseNamespace->data = $params;
+        $this->_saveSession('databaseData', $params);
     }
 
     /**
@@ -237,8 +236,7 @@ class Setup_Models_Setup
      */
     public function saveUsers($params)
     {
-        $usersNamespace       = new Zend_Session_Namespace('usersData');
-        $usersNamespace->data = $params;
+        $this->_saveSession('usersData', $params);
     }
 
     /**
@@ -505,5 +503,19 @@ class Setup_Models_Setup
                     'dbname'   => $databaseNamespace->data['dbName']);
 
         return Zend_Db::factory($databaseNamespace->data['serverType'], $dbParams);
+    }
+
+    /**
+     * Save a value into the session
+     *
+     * @param string $name  Namespace for the session.
+     * @param mix    $value Mix value to save.
+     *
+     * @return void
+     */
+    private function _saveSession($name, $value)
+    {
+        $namespace       = new Zend_Session_Namespace($name);
+        $namespace->data = $value;
     }
 }

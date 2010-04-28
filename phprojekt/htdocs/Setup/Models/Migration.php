@@ -244,38 +244,28 @@ class Setup_Models_Migration
         $this->_diffToUtc = $diffToUtc;
 
         // Users
-        $usersNamespace = new Zend_Session_Namespace('migratedUsers');
-        $this->_users   = (isset($usersNamespace->users)) ? $usersNamespace->users : array();
+        $this->_users = $this->_getSession('migratedUsers');
 
         // User Kurz
-        $userKurzNamespace = new Zend_Session_Namespace('migratedUserKurz');
-        $this->_userKurz   = (isset($userKurzNamespace->userKurz)) ? $userKurzNamespace->userKurz : array();
+        $this->_userKurz = $this->_getSession('migratedUserKurz');
 
         // TimeZone
-        $timeZoneNamespace = new Zend_Session_Namespace('migratedTimeZone');
-        $this->_timeZone   = (isset($timeZoneNamespace->timeZone)) ? $timeZoneNamespace->timeZone : array();
+        $this->_timeZone = $this->_getSession('migratedTimeZone');
 
         // Groups-Users
-        $groupsUsersNamespace = new Zend_Session_Namespace('migratedGroupsUsers');
-        $this->_groupsUsers   = (isset($groupsUsersNamespace->groupsUsers)) ? $groupsUsersNamespace->groupsUsers
-            : array();
+        $this->_groupsUsers = $this->_getSession('migratedGroupsUsers');
 
         // Groups
-        $groupsNamespace = new Zend_Session_Namespace('migratedGroups');
-        $this->_groups   = (isset($groupsNamespace->groups)) ? $groupsNamespace->groups : array();
+        $this->_groups = $this->_getSession('migratedGroups');
 
         // Projects
-        $projectsNamespace = new Zend_Session_Namespace('migratedProjects');
-        $this->_projects   = (isset($projectsNamespace->projects)) ? $projectsNamespace->projects : array();
+        $this->_projects = $this->_getSession('migratedProjects');
 
         // Project ItemRight
-        $projectRightsNamespace          = new Zend_Session_Namespace('migratedProjectRights');
-        $this->_dbProjectItemRightValues = (isset($projectRightsNamespace->values)) ? $projectRightsNamespace->values
-            : array();
+        $this->_dbProjectItemRightValues = $this->_getSession('migratedProjectRights');
 
         // Search Word
-        $searchWordNamespace = new Zend_Session_Namespace('migratedSearchWord');
-        $this->_searchWord   = (isset($searchWordNamespace->searchWord)) ? $searchWordNamespace->searchWord : array();
+        $this->_searchWord = $this->_getSession('migratedSearchWord');
     }
 
     /**
@@ -294,12 +284,11 @@ class Setup_Models_Migration
         $this->_executeSearchDisplayInsert();
 
         // Save Project ItemRight
-        $projectRightsNamespace         = new Zend_Session_Namespace('migratedProjectRights');
-        $projectRightsNamespace->values = $this->_dbProjectItemRightValues;
+        $this->_saveSession('migratedProjectRights', $this->_dbProjectItemRightValues);
 
         // Save words
-        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
-        $searchWordNamespace->searchWord = $this->_searchWord;
+        $this->_saveSession('migratedSearchWord', $this->_searchWord);
+
     }
 
     /**
@@ -315,8 +304,7 @@ class Setup_Models_Migration
         $this->_executeSearchDisplayInsert();
 
         // Save words
-        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
-        $searchWordNamespace->searchWord = $this->_searchWord;
+        $this->_saveSession('migratedSearchWord', $this->_searchWord);
     }
 
     /**
@@ -332,8 +320,7 @@ class Setup_Models_Migration
         $this->_executeSearchDisplayInsert();
 
         // Save words
-        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
-        $searchWordNamespace->searchWord = $this->_searchWord;
+        $this->_saveSession('migratedSearchWord', $this->_searchWord);
     }
 
     /**
@@ -349,8 +336,7 @@ class Setup_Models_Migration
         $this->_executeSearchDisplayInsert();
 
         // Save words
-        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
-        $searchWordNamespace->searchWord = $this->_searchWord;
+        $this->_saveSession('migratedSearchWord', $this->_searchWord);
     }
 
     /**
@@ -366,8 +352,7 @@ class Setup_Models_Migration
         $this->_executeSearchDisplayInsert();
 
         // Save words
-        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
-        $searchWordNamespace->searchWord = $this->_searchWord;
+        $this->_saveSession('migratedSearchWord', $this->_searchWord);
     }
 
     /**
@@ -393,8 +378,7 @@ class Setup_Models_Migration
         $this->_executeSearchDisplayInsert();
 
         // Save words
-        $searchWordNamespace             = new Zend_Session_Namespace('migratedSearchWord');
-        $searchWordNamespace->searchWord = $this->_searchWord;
+        $this->_saveSession('migratedSearchWord', $this->_searchWord);
     }
 
     /**
@@ -418,42 +402,16 @@ class Setup_Models_Migration
     {
         $this->_modules = $this->_getModules();
 
-        // Users
-        $usersNamespace = new Zend_Session_Namespace('migratedUsers');
-        $usersNamespace->unsetAll();
-
-        // User Kurz
-        $userKurzNamespace = new Zend_Session_Namespace('migratedUserKurz');
-        $userKurzNamespace->unsetAll();
-
-        // TimeZone
-        $timeZoneNamespace = new Zend_Session_Namespace('migratedTimeZone');
-        $timeZoneNamespace->unsetAll();
-
-        // Groups-Users
-        $groupsUsersNamespace = new Zend_Session_Namespace('migratedGroupsUsers');
-        $groupsUsersNamespace->unsetAll();
-
-        // Groups
-        $groupsNamespace = new Zend_Session_Namespace('migratedGroups');
-        $groupsNamespace->unsetAll();
-
-        // Projects
-        $projectsNamespace = new Zend_Session_Namespace('migratedProjects');
-        $projectsNamespace->unsetAll();
-
-        // Project ItemRight
-        $projectRightsNamespace = new Zend_Session_Namespace('migratedProjectRights');
-        $projectRightsNamespace->unsetAll();
-
-        // Modules
-        $modulesNamespace = new Zend_Session_Namespace('migratedModules');
-        $modulesNamespace->unsetAll();
+        // Remove all the session data
+        $namespaces = array('migratedUsers', 'migratedUserKurz', 'migratedTimeZone', 'migratedGroupsUsers',
+            'migratedGroups', 'migratedProjects', 'migratedProjectRights', 'migratedModules');
+        foreach ($namespaces as $name) {
+            $this->_cleanSession($name);
+        }
 
         // Search Word
         $this->_executeSearchWordsInsert();
-        $searchWordNamespace = new Zend_Session_Namespace('migratedSearchWord');
-        $searchWordNamespace->unsetAll();
+        $this->_cleanSession('migratedSearchWord');
     }
 
     /**
@@ -644,16 +602,13 @@ class Setup_Models_Migration
 
         // Save data into the session
         // Users
-        $usersNamespace        = new Zend_Session_Namespace('migratedUsers');
-        $usersNamespace->users = $this->_users;
+        $this->_saveSession('migratedUsers', $this->_users);
 
         // UserKurz
-        $userKurzNamespace           = new Zend_Session_Namespace('migratedUserKurz');
-        $userKurzNamespace->userKurz = $this->_userKurz;
+        $this->_saveSession('migratedUserKurz', $this->_userKurz);
 
         // TimeZone
-        $timeZoneNamespace           = new Zend_Session_Namespace('migratedTimeZone');
-        $timeZoneNamespace->timeZone = $this->_timeZone;
+        $this->_saveSession('migratedTimeZone', $this->_timeZone);
     }
 
     /**
@@ -711,12 +666,10 @@ class Setup_Models_Migration
 
         // Save data into the session
         // Groups-Users
-        $groupsUsersNamespace              = new Zend_Session_Namespace('migratedGroupsUsers');
-        $groupsUsersNamespace->groupsUsers = $this->_groupsUsers;
+        $this->_saveSession('migratedGroupsUsers', $this->_groupsUsers);
 
         // Groups
-        $groupsNamespace         = new Zend_Session_Namespace('migratedGroups');
-        $groupsNamespace->groups = $this->_groups;
+        $this->_saveSession('migratedGroups', $this->_groups);
     }
 
     /**
@@ -785,8 +738,7 @@ class Setup_Models_Migration
 
         // Save data into the session
         // Groups-Users
-        $groupsUsersNamespace              = new Zend_Session_Namespace('migratedGroupsUsers');
-        $groupsUsersNamespace->groupsUsers = $this->_groupsUsers;
+        $this->_saveSession('migratedGroupsUsers', $this->_groupsUsers);
     }
 
     /**
@@ -892,8 +844,7 @@ class Setup_Models_Migration
 
         // Save data into the session
         // Projects
-        $projectsNamespace           = new Zend_Session_Namespace('migratedProjects');
-        $projectsNamespace->projects = $this->_projects;
+        $this->_saveSession('migratedProjects', $this->_projects);
     }
 
     /**
@@ -991,8 +942,7 @@ class Setup_Models_Migration
 
         // Save data into the session
         // Todos
-        $todosNamespace        = new Zend_Session_Namespace('migratedTodos');
-        $todosNamespace->todos = $this->_todos;
+        $this->_saveSession('migratedTodos', $this->_todos);
     }
 
     /**
@@ -1057,12 +1007,10 @@ class Setup_Models_Migration
     private function _migrateTimecard()
     {
         // Todos
-        $todosNamespace = new Zend_Session_Namespace('migratedTodos');
-        $this->_todos   = $todosNamespace->todos;
+        $this->_todos = $this->_getSession('migratedTodos');
 
         // Helpdesk
-        $helpdeskNamespace = new Zend_Session_Namespace('migratedHelpdesk');
-        $this->_helpdesk   = $helpdeskNamespace->helpdesk;
+        $this->_helpdesk = $this->_getSession('migratedHelpdesk');
 
         // Multiple inserts
         $dbFields = array('owner_id', 'start_datetime', 'end_time', 'minutes', 'project_id', 'notes', 'module_id',
@@ -1181,8 +1129,9 @@ class Setup_Models_Migration
         // Clean memory
         $this->_todos    = array();
         $this->_helpdesk = array();
-        $todosNamespace->unsetAll();
-        $helpdeskNamespace->unsetAll();
+
+        $this->_cleanSession('migratedTodos');
+        $this->_cleanSession('migratedHelpdesk');
     }
 
     /**
@@ -1501,8 +1450,7 @@ class Setup_Models_Migration
 
         // Save data into the session
         // Contacts
-        $contactsNamespace           = new Zend_Session_Namespace('migratedContacts');
-        $contactsNamespace->contacts = $this->_contacts;
+        $this->_saveSession('migratedContacts', $this->_contacts);
     }
 
     /**
@@ -1516,10 +1464,9 @@ class Setup_Models_Migration
         $start = 0;
         $end   = self::ROWS_PER_QUERY;
 
-        $ownerIdRelation   = array();
-        $assignedRelation  = array();
-        $contactsNamespace = new Zend_Session_Namespace('migratedContacts');
-        $this->_contacts   = $contactsNamespace->contacts;
+        $ownerIdRelation  = array();
+        $assignedRelation = array();
+        $this->_contacts  = $this->_getSession('migratedContacts');
 
         while ($run) {
             $query = "SELECT * FROM " . PHPR_DB_PREFIX . "rts ORDER BY ID LIMIT "
@@ -1742,12 +1689,11 @@ class Setup_Models_Migration
 
         // Clean memory
         $this->_contacts = array();
-        $contactsNamespace->unsetAll();
+        $this->_cleanSession('migratedContacts');
 
         // Save data into the session
         // Helpdesk
-        $helpdeskNamespace           = new Zend_Session_Namespace('migratedHelpdesk');
-        $helpdeskNamespace->helpdesk = $this->_helpdesk;
+        $this->_saveSession('migratedHelpdesk', $this->_helpdesk);
     }
 
     /**
@@ -2393,5 +2339,48 @@ class Setup_Models_Migration
         if (!empty($dbValues)) {
             $this->_tableManager->insertMultipleRows('search_word_module', $dbFields, $dbValues);
         }
+    }
+
+    /**
+     * Save a value into the session
+     *
+     * @param string $name  Namespace for the session.
+     * @param array  $value Array with data to save.
+     *
+     * @return void
+     */
+    private function _saveSession($name, $value)
+    {
+        $namespace       = new Zend_Session_Namespace($name);
+        $namespace->data = $value;
+    }
+
+    /**
+     * Get the value of the session.
+     *
+     * Return an empty array if the session don't exists.
+     *
+     * @param string $name Namespace for the session.
+     *
+     * @return array Array with stored data.
+     */
+    private function _getSession($name)
+    {
+        $namespace = new Zend_Session_Namespace($name);
+
+        return (isset($namespace->data)) ? $namespace->data : array();
+    }
+
+    /**
+     * Delete a session.
+     *
+     * @param string $name Namespace for the session.
+     *
+     * @return void
+     */
+    private function _cleanSession($name)
+    {
+        $namespace = new Zend_Session_Namespace($name);
+        $namespace->unsetAll();
     }
 }
