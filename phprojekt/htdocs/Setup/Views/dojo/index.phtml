@@ -212,13 +212,15 @@
                 row.parentNode.removeChild(row);
             }
 
+            var rowIndex = 0;
             for (i in messages) {
                 if (row = dojo.byId('trMessage' + i)) {
                     row.parentNode.removeChild(row);
                 }
-                var row       = table.insertRow(i);
+                var row       = table.insertRow(rowIndex);
                 row.id        = 'trMessage' + i;
                 var cellIndex = 0;
+                rowIndex++;
 
                 // Type
                 var cell       = row.insertCell(cellIndex);
@@ -248,8 +250,8 @@
 
                     // Process - structure
                     var cell = row.insertCell(cellIndex);
-                    if (messages[i]['process'][0]) {
-                        cell.innerHTML = messages[i]['process'][0];
+                    if (messages[i]['process'] && messages[i]['process']['structure']) {
+                        cell.innerHTML = 'Structure';
                     } else {
                         cell.innerHTML = "&nbsp;";
                     }
@@ -258,8 +260,8 @@
 
                     // Process - initalData
                     var cell = row.insertCell(cellIndex);
-                    if (messages[i]['process'][1]) {
-                        cell.innerHTML = messages[i]['process'][1];
+                    if (messages[i]['process'] && messages[i]['process']['initalData']) {
+                        cell.innerHTML = 'Initial Data';
                     } else {
                         cell.innerHTML = "&nbsp;";
                     }
@@ -268,8 +270,8 @@
 
                     // Process - extraData
                     var cell = row.insertCell(cellIndex);
-                    if (messages[i]['process'][2]) {
-                        cell.innerHTML = messages[i]['process'][2];
+                    if (messages[i]['process'] && messages[i]['process']['extraData']) {
+                        cell.innerHTML = 'Extra Data';
                     } else {
                         cell.innerHTML = "&nbsp;";
                     }

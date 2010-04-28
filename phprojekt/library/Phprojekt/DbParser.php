@@ -127,9 +127,8 @@ class Phprojekt_DbParser
         }
 
         // Load the Code file and process it
-        $json = file_get_contents($coreDirectory . '/Core/Sql/Db.json');
-        $data = Zend_Json::decode($json);
-        $this->_parseData($data, 'Core');
+        $json         = file_get_contents($coreDirectory . '/Core/Sql/Db.json');
+        $dataToParser = Zend_Json::decode($json);
         if (is_dir($coreDirectory . '/Core/SubModules/')) {
             $files = scandir($coreDirectory . '/Core/SubModules/');
             foreach ($files as $file) {
@@ -139,24 +138,28 @@ class Phprojekt_DbParser
                         if ($subFile != '.'  && $subFile != '..') {
                             $subPath = $coreDirectory . '/Core/SubModules/' . $file . '/' . $subFile . '/Sql/Db.json';
                             if (file_exists($subPath)) {
-                                $json = file_get_contents($subPath);
-                                $data = Zend_Json::decode($json);
-                                $this->_parseData($data, $subFile, 'Core');
+                                $json         = file_get_contents($subPath);
+                                $data         = Zend_Json::decode($json);
+                                $dataToParser = array_merge_recursive($dataToParser, $data);
                             }
                         }
                     }
                 }
             }
         }
+        if (!empty($dataToParser)) {
+            $this->_parseData($dataToParser, 'Core');
+        }
 
         // Per module, load the file and process it
         $files = scandir($coreDirectory);
         foreach ($files as $file) {
             if ($file != '.'  && $file != '..' && $file != 'Core') {
+                $dataToParser = array();
                 if (file_exists($coreDirectory . '/' . $file . '/Sql/Db.json')) {
-                    $json = file_get_contents($coreDirectory . '/' . $file . '/Sql/Db.json');
-                    $data = Zend_Json::decode($json);
-                    $this->_parseData($data, $file);
+                    $json         = file_get_contents($coreDirectory . '/' . $file . '/Sql/Db.json');
+                    $data         = Zend_Json::decode($json);
+                    $dataToParser = $data;
                 }
                 if (is_dir($coreDirectory . '/' . $file . '/SubModules/')) {
                     $subFiles = scandir($coreDirectory . '/' . $file . '/SubModules/');
@@ -164,12 +167,15 @@ class Phprojekt_DbParser
                         if ($subFile != '.'  && $subFile != '..') {
                             $subPath = $coreDirectory . '/' . $file . '/SubModules/' . $subFile . '/Sql/Db.json';
                             if (file_exists($subPath)) {
-                                $json = file_get_contents($subPath);
-                                $data = Zend_Json::decode($json);
-                                $this->_parseData($data, $subFile, $file);
+                                $json         = file_get_contents($subPath);
+                                $data         = Zend_Json::decode($json);
+                                $dataToParser = array_merge_recursive($dataToParser, $data);
                             }
                         }
                     }
+                }
+                if (!empty($dataToParser)) {
+                    $this->_parseData($dataToParser, $file);
                 }
             }
         }
@@ -210,60 +216,40 @@ class Phprojekt_DbParser
      *
      * @param array  $data   Array with all the version and data for parse.
      * @param string $module Current module of the data.
-     * @param string $parent Parent module of the data.
      *
      * @return void
      */
-    private function _parseData($data, $module, $parent = null)
+    private function _parseData($data, $module)
     {
         $data          = $this->_getVersionsForProcess($module, $this->_sortData($data));
-        if (null === $parent) {
-            $moduleVersion = $this->_getModuleVersion($module);
-        } else {
-            $moduleVersion = $this->_getModuleVersion($parent);
-        }
+        $moduleVersion = $this->_getModuleVersion($module);
         foreach ($data as $version => $content) {
-            if (null === $parent) {
-                $this->_messages[$module] = array('version' => $version);
+            if (!isset($this->_messages[$module])) {
+                $this->_messages[$module] = array();
             }
+            $this->_messages[$module]['version'] = $version;
             // Only process the initialData if the module version is lower than the data version
             if (Phprojekt::compareVersion($moduleVersion, $version) < 0) {
-                $this->_messages[$module]['process'] = array();
+                if (!isset($this->_messages[$module]['process'])) {
+                    $this->_messages[$module]['process'] = array();
+                }
                 if (isset($content['structure'])) {
-                    if (null === $parent) {
-                        $this->_messages[$module]['process'][] = 'Structure';
-                    } else {
-                        $this->_messages[$parent]['process'][] = 'Structure';
-                    }
+                    $this->_messages[$module]['process']['structure'] = true;
                     $this->_processStructure($content['structure']);
                 }
 
                 if (isset($content['initialData'])) {
-                    if (null === $parent) {
-                        $this->_messages[$module]['process'][] = 'Inital data';
-                    } else {
-                        $this->_messages[$parent]['process'][] = 'Inital data';
-                    }
+                    $this->_messages[$module]['process']['initalData'] = true;
                     $this->_processData($this->_convertSpecialValues($content['initialData'], 0));
                 }
 
                 if (isset($content['extraData']) && $this->_useExtraData) {
-                    if (null === $parent) {
-                        $this->_messages[$module]['process'][] = 'Extra data';
-                    } else {
-                        $this->_messages[$parent]['process'][] = 'Extra data';
-                    }
+                    $this->_messages[$module]['process']['extraData'] = true;
                     $this->_processData($this->_convertSpecialValues($content['extraData'], 0));
                 }
-                if (null === $parent) {
-                    $this->_messages[$module]['finish'] = 'Done';
-                } else {
-                    $this->_messages[$parent]['finish'] = 'Done';
-                }
+                $this->_messages[$module]['finish'] = 'Done';
             } else {
-                if (null === $parent) {
-                    $this->_messages[$module]['finish'] = 'Already installed';
-                }
+                $this->_messages[$module]['finish'] = 'Already installed';
             }
             $this->_setModuleVersion($module, $version);
         }

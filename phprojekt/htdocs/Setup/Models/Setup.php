@@ -166,10 +166,7 @@ class Setup_Models_Setup
                     'dbname'   => $params['dbName']
                 );
                 $db = Zend_Db::factory($params['serverType'], $dbParams);
-                $db->query("DROP DATABASE `" . $params['dbName'] . "`");
-                $db->query("CREATE DATABASE `" . $params['dbName'] . "`"
-                    ." DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;");
-                $db = Zend_Db::factory($params['serverType'], $dbParams);
+                $db->getConnection();
             } catch (Exception $error) {
                 $this->_error[] = 'Cannot connect to server at ' . $params['dbHost']
                     . ' using ' . $params['dbUser'] . ' user ' . '(' . $error->getMessage() . ')';
