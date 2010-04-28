@@ -94,7 +94,7 @@ final class Default_Helpers_Delete
             }
 
             // Delete the project itself
-            return $model->delete();
+            return (null === $model->delete());
         }
     }
 
@@ -114,7 +114,12 @@ final class Default_Helpers_Delete
         if (!self::_checkItemRights($model, $moduleName)) {
             throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
-            return $model->delete();
+            $return = $model->delete();
+            if (null === $return) {
+                return true;
+            } else {
+                return $return;
+            }
         }
     }
 
