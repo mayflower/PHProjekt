@@ -196,6 +196,16 @@ class Setup_Models_Migration
     const ROWS_PER_QUERY = 5000;
 
     /**
+     * Return a list of all modules availables for migrate.
+     *
+     * @return array
+     */
+    public static function getModules()
+    {
+        return array('System', 'Todo', 'Note', 'Calendar', 'Filemanager', 'Contact', 'Helpdesk', 'Timecard', 'Words');
+    }
+
+    /**
      * Constructor.
      *
      * @param string $file The config file of P5.

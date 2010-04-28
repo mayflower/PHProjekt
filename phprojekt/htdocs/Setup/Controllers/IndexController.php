@@ -70,8 +70,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->success = array();
         $this->view->error   = array();
 
-        $this->view->exportModules = array('System', 'Todo', 'Note', 'Calendar', 'Filemanager',
-            'Contact', 'Helpdesk', 'Timecard', 'Words');
+        $this->view->exportModules = Setup_Models_Migration::getModules();
 
         $this->_helper->viewRenderer->setNoRender();
 
