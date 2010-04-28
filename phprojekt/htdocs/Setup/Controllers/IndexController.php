@@ -173,7 +173,8 @@ class IndexController extends Zend_Controller_Action
                 $type    = 'error';
             }
         } else {
-            die('You can not call this directly');
+            $this->getResponse()->setHttpResponseCode(403);
+            $this->sendResponse();
         }
 
         $template = $this->view->render('databaseOk.phtml');
@@ -254,7 +255,8 @@ class IndexController extends Zend_Controller_Action
                 $type    = 'error';
             }
         } else {
-            die('You can not call this directly');
+            $this->getResponse()->setHttpResponseCode(403);
+            $this->sendResponse();
         }
 
         $template = $this->view->render('usersOk.phtml');
@@ -326,7 +328,8 @@ class IndexController extends Zend_Controller_Action
                 $type    = 'error';
             }
         } else {
-            die('You can not call this directly');
+            $this->getResponse()->setHttpResponseCode(403);
+            $this->sendResponse();
         }
 
         $template = $this->view->render('tablesOk.phtml');
@@ -416,7 +419,8 @@ class IndexController extends Zend_Controller_Action
                 $type    = 'error';
             }
         } else {
-            die('You can not call this directly');
+            $this->getResponse()->setHttpResponseCode(403);
+            $this->sendResponse();
         }
 
         $template = $this->view->render('migrationOk.phtml');
@@ -450,7 +454,8 @@ class IndexController extends Zend_Controller_Action
             $type    = 'success';
             ob_end_clean();
         } else {
-            die('You can not call this directly');
+            $this->getResponse()->setHttpResponseCode(403);
+            $this->sendResponse();
         }
 
         $template = $this->view->render('finish.phtml');
