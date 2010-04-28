@@ -236,11 +236,13 @@ class MinutesItem_IndexController extends IndexController
             $tmp = Default_Helpers_Delete::delete($model);
             if ($tmp === false) {
                 $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
+                $type    = 'error';
             } else {
                 $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
+                $type    = 'success';
             }
 
-            $return = array('type'    => 'success',
+            $return = array('type'    => $type,
                             'message' => $message,
                             'code'    => 0,
                             'id'      => $id);
