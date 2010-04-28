@@ -168,18 +168,24 @@ class Core_ModuleController extends Core_IndexController
             if ($databaseModel instanceof Phprojekt_Item_Abstract) {
                 $databaseManager = new Phprojekt_DatabaseManager($databaseModel);
 
-                $return = (Default_Helpers_Delete::delete($model) || $databaseManager->deleteModule());
+                if (Default_Helpers_Delete::delete($model)) {
+                    $return = $databaseManager->deleteModule();
+                } else {
+                    $return = false;
+                }
             } else {
                 $return = Default_Helpers_Delete::delete($model);
             }
 
             if ($return === false) {
                 $message = Phprojekt::getInstance()->translate('The module can not be deleted');
+                $type    = 'error';
             } else {
                 $message = Phprojekt::getInstance()->translate('The module was deleted correctly');
+                $type    = 'success';
             }
 
-            $return = array('type'    => 'success',
+            $return = array('type'    => $type,
                             'message' => $message,
                             'code'    => 0,
                             'id'      => $id);
