@@ -146,17 +146,14 @@ class Setup_Models_Setup
      */
     public function validateDatabase($params)
     {
-        $valid = true;
+        $valid = false;
 
         if (!isset($params['dbHost']) || empty($params['dbHost'])) {
             $this->_error[] = 'The database server address can not be empty';
-            $valid = false;
         } else if (!isset($params['dbUser']) || empty($params['dbUser'])) {
             $this->_error[] = 'The database user can not be empty';
-            $valid = false;
         } else if (!isset($params['dbName']) || empty($params['dbName'])) {
             $this->_error[] = 'The database name can not be empty';
-            $valid = false;
         } else {
             try {
                 $dbParams = array(
@@ -167,10 +164,10 @@ class Setup_Models_Setup
                 );
                 $db = Zend_Db::factory($params['serverType'], $dbParams);
                 $db->getConnection();
+                $valid = true;
             } catch (Exception $error) {
                 $this->_error[] = 'Cannot connect to server at ' . $params['dbHost']
                     . ' using ' . $params['dbUser'] . ' user ' . '(' . $error->getMessage() . ')';
-                $valid = false;
             }
         }
 
