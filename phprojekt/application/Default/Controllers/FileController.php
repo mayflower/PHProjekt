@@ -118,7 +118,7 @@ class FileController extends IndexController
         }
         // Fix name for save it as md5
         if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
-            $md5name                        = md5(uniqid(rand(), 1));
+            $md5name                        = md5(mt_srand());
             $addedValue                     = $md5name . '|' . $_FILES['uploadedFile']['name'];
             $_FILES['uploadedFile']['name'] = $md5name;
         }
