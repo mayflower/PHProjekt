@@ -309,11 +309,11 @@ class Setup_Models_Setup
         }
 
         // Check zendCache dir
-        if (!$this->_checkWriteAccess($baseDir . "tmp" . DIRECTORY_SEPARATOR, 'zendCache')) {
+        if (!$this->_checkWriteAccess($baseDir . 'tmp' . DIRECTORY_SEPARATOR, 'zendCache')) {
             $valid = false;
         } else {
             // Remove old data if exists
-            $cacheDir = $baseDir . "tmp" . DIRECTORY_SEPARATOR . 'zendCache';
+            $cacheDir = $baseDir . 'tmp' . DIRECTORY_SEPARATOR . 'zendCache';
             if ($directory = opendir($cacheDir)) {
                 while (($file = readdir($directory)) !== false) {
                     if ($file == '.' || $file == '..') {
