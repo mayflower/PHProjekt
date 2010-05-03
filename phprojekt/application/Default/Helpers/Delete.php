@@ -116,9 +116,14 @@ final class Default_Helpers_Delete
         } else {
             $return = $model->delete();
             if (null === $return) {
+                 // ActiveRecord delete the model, and returns null.
                 return true;
-            } else {
+            } else if (is_bool($return)) {
+                // An extention returns true or false.
                 return $return;
+            } else {
+                // Any other value, is wrong.
+                return false;
             }
         }
     }
