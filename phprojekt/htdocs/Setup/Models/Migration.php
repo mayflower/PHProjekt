@@ -200,7 +200,7 @@ class Setup_Models_Migration
      *
      * @return array
      */
-    public static function getModules()
+    public static function getModulesToMigrate()
     {
         return array('System', 'Todo', 'Note', 'Calendar', 'Filemanager', 'Contact', 'Helpdesk', 'Timecard', 'Words');
     }

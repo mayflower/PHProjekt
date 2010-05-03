@@ -72,7 +72,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->success = array();
         $this->view->error   = array();
 
-        $this->view->exportModules = Setup_Models_Migration::getModules();
+        $this->view->exportModules = Setup_Models_Migration::getModulesToMigrate();
 
         $this->_helper->viewRenderer->setNoRender();
 
