@@ -104,20 +104,21 @@ class Gantt_IndexController extends IndexController
                     if ($end > $max) {
                         $max = $end;
                     }
-                    $ids[]                      = (int) $key;
-                    $data['data']["projects"][] = array('id'      => (int) $key,
-                                                        'level'   => (int) $node->getDepth() * 10,
-                                                        'parent'  => (int) $parent,
-                                                        'childs'  => (int) count($node->getChildren()),
-                                                        'caption' => $node->title,
-                                                        'start'   => (int) $start,
-                                                        'end'     => (int) $end,
-                                                        'startD'  => $startDay,
-                                                        'startM'  => $startMonth,
-                                                        'startY'  => $startYear,
-                                                        'endD'    => $endDay,
-                                                        'endM'    => $endMonth,
-                                                        'endY'    => $endYear);
+                    $key                        = (int) $key;
+                    $ids[]                      = $key;
+                    $data['data']["projects"][$key] = array('id'      => $key,
+                                                            'level'   => (int) $node->getDepth() * 10,
+                                                            'parent'  => (int) $parent,
+                                                            'childs'  => (int) count($node->getChildren()),
+                                                            'caption' => $node->title,
+                                                            'start'   => (int) $start,
+                                                            'end'     => (int) $end,
+                                                            'startD'  => $startDay,
+                                                            'startM'  => $startMonth,
+                                                            'startY'  => $startYear,
+                                                            'endD'    => $endDay,
+                                                            'endM'    => $endMonth,
+                                                            'endY'    => $endYear);
                 }
             }
         }
@@ -133,11 +134,25 @@ class Gantt_IndexController extends IndexController
             $access = $rights->fetchAll($where)->toArray();
             foreach ($access as $right) {
                 $itemRights = Phprojekt_Acl::convertBitmaskToArray($right['access']);
+                $itemRight  = ($itemRights['write'] === true);
 
-                $data['data']['rights']["currentUser"][$right['item_id']] = ($itemRights['write'] === true);
+                // Mix the item_right with the role
+                if ($itemRight) {
+                    $roleRights = new Phprojekt_RoleRights($data['data']["projects"][$right['item_id']]['parent'], 1,
+                        $right['item_id']);
+
+                    $roleRightWrite  = $roleRights->hasRight('write');
+                    $roleRightCreate = $roleRights->hasRight('create');
+                    $roleRightAdmin  = $roleRights->hasRight('admin');
+
+                    $mixedRight = ($roleRightWrite || $roleRightCreate || $roleRightAdmin);
+                } else {
+                    $mixedRight = false;
+                }
+                $data['data']['rights']["currentUser"][$right['item_id']] = $mixedRight;
+
                 if ($data['data']['rights']["currentUser"]["write"] === false &&
-                    $projectId != $right['item_id'] &&
-                    $right['access'] > 1) {
+                    $projectId != $right['item_id'] && $mixedRight) {
                     $data['data']['rights']["currentUser"]["write"] = true;
                 }
             }
@@ -153,6 +168,9 @@ class Gantt_IndexController extends IndexController
                 $max = gmmktime(0, 0, 0, 5, 5, date("Y", $max) - 1);
             }
         }
+
+        // Remove index for the json data
+        $data['data']["projects"] = array_values($data['data']["projects"]);
 
         Phprojekt_Converter_Json::echoConvert($data);
     }
