@@ -166,11 +166,13 @@ class MinutesItem_IndexController extends IndexController
             $id = (int) $this->getRequest()->getParam('id');
 
             if (empty($id)) {
-                $model   = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem')->init($minutesId);
+                $model = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
+                    'MinutesItem')->init($minutesId);
                 $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
                 $newItem = true;
             } else {
-                $model   = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem')->init($minutesId)->find($id);
+                $model = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
+                    'MinutesItem')->init($minutesId)->find($id);
                 $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
                 $newItem = false;
             }
@@ -230,7 +232,8 @@ class MinutesItem_IndexController extends IndexController
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
-        $model = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem')->init($minutesId)->find($id);
+        $model = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
+            'MinutesItem')->init($minutesId)->find($id);
 
         if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
             $tmp = Default_Helpers_Delete::delete($model);
@@ -274,7 +277,8 @@ class MinutesItem_IndexController extends IndexController
     public function jsonListItemSortOrderAction()
     {
         $minutesId = (int) $this->getRequest()->getParam('minutesId');
-        $items     = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem')->init($minutesId)->fetchAll();
+        $items     = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
+            'MinutesItem')->init($minutesId)->fetchAll();
 
         $return = array('data' => array(array('id'   => 0,
                                               'name' => '')));

@@ -35,7 +35,8 @@
  * @version    Release: @package_version@
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
-class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
+class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract
+    implements Phprojekt_Model_Interface
 {
     /**
      * The Minutes object this item is related to.
