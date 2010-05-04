@@ -163,7 +163,7 @@ class Core_ModuleController extends Core_IndexController
 
         $model = $this->getModelObject()->find($id);
 
-        if ($model instanceof Phprojekt_Model_Interface) {
+        if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
             $databaseModel   = Phprojekt_Loader::getModel($model->name, $model->name);
             if ($databaseModel instanceof Phprojekt_Item_Abstract) {
                 $databaseManager = new Phprojekt_DatabaseManager($databaseModel);

@@ -294,7 +294,7 @@ class Calendar_IndexController extends IndexController
 
         $model = $this->getModelObject()->find($id);
 
-        if ($model instanceof Phprojekt_Model_Interface) {
+        if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
             $model->deleteEvents($multipleEvents, $multipleParticipants);
             $message = Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT);
             $return  = array('type'    => 'success',

@@ -589,7 +589,7 @@ class IndexController extends Zend_Controller_Action
 
         $model = $this->getModelObject()->find($id);
 
-        if ($model instanceof Phprojekt_Model_Interface) {
+        if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
             $tmp = Default_Helpers_Delete::delete($model);
             if ($tmp === false) {
                 $message    = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
@@ -640,10 +640,12 @@ class IndexController extends Zend_Controller_Action
             $model    = $this->getModelObject();
             $idsArray = explode(",", $ids);
 
-            foreach ($idsArray as $id) {
-                $model->find((int) $id);
-                Default_Helpers_Delete::delete($model);
-                $showId[] = $id;
+            if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
+                foreach ($idsArray as $id) {
+                    $model->find((int) $id);
+                    Default_Helpers_Delete::delete($model);
+                    $showId[] = $id;
+                }
             }
 
             $return = array('type'    => 'success',

@@ -92,7 +92,7 @@ class Minutes_IndexController extends IndexController
             'MinutesItem')->init($id)->fetchAll();
         $success = true;
 
-        if ($minutes instanceof Phprojekt_Model_Interface) {
+        if ($minutes instanceof Phprojekt_ActiveRecord_Abstract) {
             foreach ($minutesItems as $item) {
                 $success = $success && (false !== Default_Helpers_Delete::delete($item));
             }

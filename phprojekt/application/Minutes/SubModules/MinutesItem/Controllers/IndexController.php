@@ -232,7 +232,7 @@ class MinutesItem_IndexController extends IndexController
 
         $model = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem')->init($minutesId)->find($id);
 
-        if ($model instanceof Phprojekt_Model_Interface) {
+        if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
             $tmp = Default_Helpers_Delete::delete($model);
             if ($tmp === false) {
                 $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
