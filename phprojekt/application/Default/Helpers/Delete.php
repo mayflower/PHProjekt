@@ -115,8 +115,8 @@ final class Default_Helpers_Delete
             throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
             $return = $model->delete();
-            if (null === $return) {
-                 // ActiveRecord delete the model, and returns null.
+            if ((isset($return->id) && null === $return->id) || null === $return) {
+                 // ActiveRecord delete the model.
                 return true;
             } else if (is_bool($return)) {
                 // An extention returns true or false.
