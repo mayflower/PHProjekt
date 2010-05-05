@@ -1,5 +1,7 @@
+; <?php die(); /* Do not remove this line */ ?>
+
 ; In the process of the initial configuration of PHProjekt 6, this file must be
-; renamed to configuration.ini (without the sufix '-dist') and the parameters
+; renamed to configuration.php (without the sufix '-dist') and the parameters
 ; have to be set as explained.
 
 ; The semicolons ';' are used preceding a comment line, or a line which has data
@@ -11,7 +13,7 @@
 ; index.php, inside folder 'htdocs' in the line that has:
 ; define('PHPR_CONFIG_SECTION', 'production');
 
-; You could leave that line as it is, and in configuration.ini just modify the
+; You could leave that line as it is, and in configuration.php just modify the
 ; parameters inside [production] section. You can also add your own sections.
 
 [production]

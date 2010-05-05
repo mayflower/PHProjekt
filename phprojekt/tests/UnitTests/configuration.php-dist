@@ -1,3 +1,5 @@
+; <?php die(); /* Do not remove this line */ ?>
+
 [testing-mysql : general]
 database.adapter            = "Pdo_Mysql"
 database.params.host        = "localhost"
