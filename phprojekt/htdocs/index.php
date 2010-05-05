@@ -22,7 +22,7 @@
  */
 
 /**
-* Section to use from configuration.ini.
+* Section to use from configuration.php.
  */
 define('PHPR_CONFIG_SECTION', 'production');
 

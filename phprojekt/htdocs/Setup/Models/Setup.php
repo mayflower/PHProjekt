@@ -111,9 +111,9 @@ class Setup_Models_Setup
             }
         }
 
-        // Checking if configuration.ini exists
+        // Checking if configuration.php exists
         $baseDir = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
-        if (file_exists($baseDir . "configuration.ini")) {
+        if (file_exists($baseDir . "configuration.php")) {
             throw new Exception("Configuration file found. Please, delete it before run setup again.");
         }
 
@@ -267,7 +267,7 @@ class Setup_Models_Setup
 
         // Check write access
         $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
-        $configFile = $baseDir . "configuration.ini";
+        $configFile = $baseDir . "configuration.php";
 
         if (!file_exists($configFile)) {
             if (!is_writable($baseDir)) {
@@ -452,7 +452,7 @@ class Setup_Models_Setup
             $databaseNamespace->data['dbHost']);
 
         $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
-        $configFile = $baseDir . "configuration.ini";
+        $configFile = $baseDir . "configuration.php";
         file_put_contents($configFile, $content);
 
         // Delete a session if exists

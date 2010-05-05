@@ -1,36 +1,36 @@
 <project name="phprojekt6" default="build" basedir=".">
-    
+
     <property name="project.name" value="phprojekt6" />
     <property name="project.dir" location="${basedir}/.." />
-    
+
     <property name="test.dir" location="${project.dir}/tests/UnitTests" />
     <property name="log.dir" location="${project.dir}/tests/log" />
     <property name="doc.dir" location="${project.dir}/tests/phpdoc/phpdoc" />
     <property name="cs.dir" location="${project.dir}/tests/phpdoc/cs" />
-    
+
     <property name="phpdocumentor.log" location="${log.dir}/phpdocumentor.log" />
     <property name="phpunit.class" value="AllTests" />
     <property name="phpunit.file" location="${test.dir}/AllTests.php" />
     <property name="phpunit.log" location="${log.dir}/phpunit.xml" />
     <property name="phpcs.log" location="${cs.dir}/index.xml" />
     <property name="phpcs.xsl" value="phpcs.xsl" />
-    <property name="project.configfile" location="${test.dir}/configuration.ini" />
+    <property name="project.configfile" location="${test.dir}/configuration.php" />
 
     <!-- Configure these values to fit your installation -->
     <!-- Where does Zend_Cache put its files? -->
     <property name="project.zendcache.dir" location="/tmp" />
 
-    <!-- How to connect to the mysql database? -->   
+    <!-- How to connect to the mysql database? -->
     <property name="database.params.host" value="localhost" />
     <property name="database.params.dbname" value="SET_DATABASE_HERE" />
     <property name="database.params.username" value="SET_USERNAME_HERE" />
     <property name="database.params.password" value="SET_PASSWORD_HERE" />
-    
+
     <!-- Where are files located? -->
     <property name="database.testdatafile" location="${basedir}/test_database.sql" />
     <property name="doc.dir.imagesource" location="/usr/share/php5/PEAR/data/PhpDocumentor/phpDocumentor/Converters/HTML/frames/templates/earthli/templates/media/images" />
 
-    
+
     <target name="config-check">
         <fail message="You have not configured the database access in the build file.">
             <condition>
@@ -55,7 +55,7 @@
         <mkdir dir="${log.dir}" />
     </target>
 
-    <target name="configure" depends="logdir-prepare,config-check" description="Create configuration.ini file">
+    <target name="configure" depends="logdir-prepare,config-check" description="Create configuration.php file">
         <echo file="${project.configfile}" append="false">[testing-mysql : general]
 database.adapter            = "Pdo_Mysql"
 database.params.host        = "${database.params.host}"
@@ -87,7 +87,7 @@ itemsPerPage         = 3;
             <fileset dir="${project.zendcache.dir}" includes="zend_cache*" />
         </delete>
     </target>
-    
+
     <target name="dbclean" depends="config-check" description="Drops and inits new database">
     	<exec executable="/usr/bin/mysql">
             <arg line="--user=${database.params.username}" />
@@ -108,7 +108,7 @@ itemsPerPage         = 3;
     <target name="phpdoc-prepare">
         <mkdir dir="${doc.dir}" />
         <copy todir="${doc.dir}/media/images">
-            <fileset dir="${doc.dir.imagesource}" />  
+            <fileset dir="${doc.dir.imagesource}" />
         </copy>
     </target>
 
@@ -123,7 +123,7 @@ itemsPerPage         = 3;
         <echo file="${cs.dir}/${phpcs.xsl}" append="false"><![CDATA[<xsl:stylesheet  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 <xsl:output method="html" indent="yes"/>
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
- 
+
 <xsl:template match="phpcs">
   <html>
     <head>
@@ -139,10 +139,10 @@ itemsPerPage         = 3;
       background-color:#FFFFFF;
       color:#000000;
     }
-    .a td { 
+    .a td {
       background: #efefef;
     }
-    .b td { 
+    .b td {
       background: #fff;
     }
     th, td {
@@ -159,7 +159,7 @@ itemsPerPage         = 3;
       border: none
     }
     table.log tr td, tr th {
-      
+
     }
     h1 {
       font-weight:bold;
@@ -188,15 +188,15 @@ itemsPerPage         = 3;
         </tr>
       </table>
       <hr size="1"/>
-      
+
       <!-- Summary part -->
       <xsl:apply-templates select="." mode="summary"/>
       <hr size="1" width="100%" align="left"/>
-      
+
       <!-- Package List part -->
       <xsl:apply-templates select="." mode="filelist"/>
       <hr size="1" width="100%" align="left"/>
-      
+
       <!-- For each package create its part -->
       <xsl:for-each select="file">
         <xsl:sort select="@name"/>
@@ -205,15 +205,15 @@ itemsPerPage         = 3;
         <p/>
       </xsl:for-each>
       <hr size="1" width="100%" align="left"/>
-      
-      
+
+
     </body>
   </html>
 </xsl:template>
-  
-  
-  
-  <xsl:template match="phpcs" mode="filelist">  
+
+
+
+  <xsl:template match="phpcs" mode="filelist">
     <h2>Files</h2>
     <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
       <tr>
@@ -222,7 +222,7 @@ itemsPerPage         = 3;
       </tr>
       <xsl:for-each select="file">
         <xsl:sort data-type="number" order="descending" select="count(error)"/>
-        <xsl:variable name="errorCount" select="count(error)"/>        
+        <xsl:variable name="errorCount" select="count(error)"/>
         <xsl:if test="$errorCount > 0">
         <tr>
           <xsl:call-template name="alternated-row"/>
@@ -231,10 +231,10 @@ itemsPerPage         = 3;
         </tr>
         </xsl:if>
       </xsl:for-each>
-    </table>    
+    </table>
   </xsl:template>
-  
-  
+
+
   <xsl:template match="file">
     <xsl:variable name="errorCount" select="count(error)"/>
     <xsl:if test="$errorCount > 0">
@@ -258,8 +258,8 @@ itemsPerPage         = 3;
     <a href="#top">Back to top</a>
     </xsl:if>
   </xsl:template>
-  
-  
+
+
   <xsl:template match="phpcs" mode="summary">
     <h2>Summary</h2>
     <xsl:variable name="fileCount" select="count(//file)"/>
@@ -276,19 +276,19 @@ itemsPerPage         = 3;
     </tr>
     </table>
   </xsl:template>
-  
+
   <xsl:template name="alternated-row">
     <xsl:attribute name="class">
       <xsl:if test="position() mod 2 = 1">a</xsl:if>
       <xsl:if test="position() mod 2 = 0">b</xsl:if>
-    </xsl:attribute>  
-  </xsl:template>  
+    </xsl:attribute>
+  </xsl:template>
 </xsl:stylesheet>
 
         ]]>
         </echo>
     </target>
-    
+
     <target name="cs" depends="logdir-prepare,cs-prepare" description="Run CodeSniffer checks and generate error report">
         <exec dir="${basedir}" executable="phpcs" failonerror="false">
             <arg line="-n --standard=Zend --extensions=php --report=xml --ignore=.inc.php ${project.dir}/application ${project.dir}/library/Phprojekt ${test.dir}" />

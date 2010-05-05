@@ -1,7 +1,7 @@
 .buildpath
 .project
 .settings/*
-phprojekt/configuration.ini
+phprojekt/configuration.php
 phprojekt/logs/*
 phprojekt/tmp/*
 phprojekt/upload/*

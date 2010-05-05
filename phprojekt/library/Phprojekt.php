@@ -388,7 +388,7 @@ class Phprojekt
         define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
         define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
         if (!defined('PHPR_CONFIG_FILE')) {
-            define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.ini');
+            define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.php');
         }
         define('PHPR_TEMP_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR);
 
@@ -410,7 +410,7 @@ class Phprojekt
             $response = new Zend_Controller_Request_Http();
             $webPath  = $response->getScheme() . '://' . $response->getHttpHost() . $response->getBasePath() . '/';
             header("Location: " . $webPath . "setup.php");
-            die('You need the file configuration.ini to continue. Have you tried the <a href="' . $webPath
+            die('You need the file configuration.php to continue. Have you tried the <a href="' . $webPath
                 . 'setup.php">setup</a> routine?'."\n".'<br />Original error: ' . $error->getMessage());
         }
 

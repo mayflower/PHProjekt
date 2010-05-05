@@ -29,7 +29,7 @@
  * we create an array with various Zend_Log objects,
  * each one, defined with a own log file and a own filter.
  *
- * The path to the log file is defined in the configuration.ini file in the way:
+ * The path to the log file is defined in the configuration.php file in the way:
  * log.debug.filename is for log DEBUG stuffs.
  * log.crit.filename  is for log CRIT stuffs.
  * etc.
@@ -44,7 +44,7 @@
  * INFO    = Informational: informational messages.
  * DEBUG   = Debug: debug messages.
  *
- * You can add in the configuration.ini all of these types.
+ * You can add in the configuration.php all of these types.
  * If the path to a log file is not defined, the class just drop the log.
  *
  * @category   PHProjekt

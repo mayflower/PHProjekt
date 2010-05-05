@@ -146,7 +146,9 @@ class Setup_Models_Config
      */
     private function _getIntroduction()
     {
-        $content  = '; The semicolons \';\' are used preceding a comment line, or a line which has data' . $this->_eol;
+        $content  = '; <?php die(); /* Do not remove this line */ ?>' . $this->_eol;
+        $content .= $this->_eol;
+        $content .= '; The semicolons \';\' are used preceding a comment line, or a line which has data' . $this->_eol;
         $content .= '; that is not being used.' . $this->_eol;
         $content .= $this->_eol;
         $content .= '; This file is divided into sections,' . $this->_eol;
@@ -155,7 +157,7 @@ class Setup_Models_Config
         $content .= '; index.php, inside folder \'htdocs\' in the line that has:' . $this->_eol;
         $content .= '; define(\'PHPR_CONFIG_SECTION\', \'production\');' . $this->_eol;
         $content .= $this->_eol;
-        $content .= '; You could leave that line as it is, and in configuration.ini just modify the' . $this->_eol;
+        $content .= '; You could leave that line as it is, and in configuration.php just modify the' . $this->_eol;
         $content .= '; parameters inside [production] section. You can also add your own sections.' . $this->_eol;
 
         return $content;

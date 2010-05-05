@@ -103,14 +103,14 @@ B. License
 
 3. Configuration
 
- 1. Make a copy of configuration.ini-dist in the same folder,
-    name it configuration.ini and set its parameters according to
+ 1. Make a copy of configuration.php-dist in the same folder,
+    name it configuration.php and set its parameters according to
     the explanations and examples inside it.
 
-    UNIX     /srv/www/configuration.ini-dist
-             to /srv/www/configuration.ini
-    WINDOWS     C:\phprojekt\configuration.ini-dist
-             to C:\phprojekt\configuration.ini
+    UNIX     /srv/www/configuration.php-dist
+             to /srv/www/configuration.php
+    WINDOWS     C:\phprojekt\configuration.php-dist
+             to C:\phprojekt\configuration.php
 
 4. Permission
 

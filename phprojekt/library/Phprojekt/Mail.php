@@ -38,7 +38,7 @@
 class Phprojekt_Mail extends Zend_Mail
 {
     /**
-     * External use (configuration.ini):
+     * External use (configuration.php):
      */
     const LINEEND_RN         = 0;
     const LINEEND_N          = 1;
@@ -48,7 +48,7 @@ class Phprojekt_Mail extends Zend_Mail
     /**
      * Sets the SMTP server.
      *
-     * The data is obtained from the configuration.ini file.
+     * The data is obtained from the configuration.php file.
      *
      * @return Zend_Mail_Transport_Smtp|Zend_Mail_Transport_Sendmail Object
      */

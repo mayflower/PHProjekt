@@ -34,7 +34,7 @@ define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
 define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'htdocs');
 define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
 if (!defined('PHPR_CONFIG_FILE')) {
-    define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.ini');
+    define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.php');
 }
 
 set_include_path('.' . PATH_SEPARATOR

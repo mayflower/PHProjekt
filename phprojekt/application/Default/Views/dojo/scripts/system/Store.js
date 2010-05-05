@@ -202,9 +202,9 @@ dojo.declare("phpr.Store.Config", phpr.Store, {
 
     makeSelect:function() {
         // Summary:
-        //    Return all the front configurations from the configuration.ini
+        //    Return all the front configurations from the configuration.php
         // Description:
-        //    Return all the front configurations from the configuration.ini
+        //    Return all the front configurations from the configuration.php
         var config = phpr.DataStore.getData({url: this._url});
         this._list = new Object();
         for (i in config) {

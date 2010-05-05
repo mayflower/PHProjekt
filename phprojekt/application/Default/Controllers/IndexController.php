@@ -736,7 +736,7 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Returns the front configurations from the configuration.ini (front.xxx),
+     * Returns the front configurations from the configuration.php (front.xxx),
      * and some others Core Settings.
      *
      * The return is an array like ('name' => varName, 'value' => varValue')

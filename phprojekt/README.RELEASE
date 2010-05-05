@@ -24,7 +24,7 @@ This is a checklist for all the steps that the release require.
         1.3.6 tmp/URI/*
         1.3.7 tmp/zendCache/*
         1.3.8 upload/*
-        1.3.9 configuration.ini
+        1.3.9 configuration.php
         1.3.10 README.RELEASE
 
     1.4 Make a search and replace for @package_version@ and replace
