@@ -2,6 +2,3 @@
 .project
 .settings/*
 phprojekt/configuration.php
-phprojekt/logs/*
-phprojekt/tmp/*
-phprojekt/upload/*

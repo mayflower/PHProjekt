@@ -30,7 +30,7 @@ style="width: auto;">
             url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonDatabaseForm',
             onSuccess: dojo.hitch(this, function(data) {
                 dijit.byId('formContent').attr('content', data.template);
-                changeStep(0, 1);
+                changeStep(1, 2);
             })
         });">
             Continue with the database

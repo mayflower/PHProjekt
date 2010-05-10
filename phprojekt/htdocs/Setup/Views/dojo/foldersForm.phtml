@@ -1,0 +1,99 @@
+<div class="prepend-0">
+<h2>Step 4 - Create private folders for save user data</h2>
+Phprojekt 6 will create a private folder to store sensitiv data.<br />
+We recommend to use a path outside your document root.<br />
+Please provide the path of this folder, and the setup will try to create it.<br />
+<br />
+<?php
+include ("serverFeedback.phtml");
+?>
+
+<div id="normalForm">
+    <table class="form"
+    style="width: auto;">
+    <col class="col1" />
+    <tr>
+        <td class="label">
+            <label for="migration_config">Folder name:</label>
+        </td>
+        <td>
+            <input type="hidden" dojotype="dijit.form.TextBox" id="confirmationCheck" name="confirmationCheck"
+            value="0" />
+            <input dojoType="dijit.form.TextBox" type="text" id="privateDir" name="privateDir"
+            value="<?php echo $this->privateDir; ?>" />
+            <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+            tabindex="-1">
+                <div dojoType="dijit.TooltipDialog">
+                    <div
+                    style="white-space: nowrap;">
+                    Name of the private folder
+                    </div>
+                </div>
+            </button>
+       </td>
+    </tr>
+    <tr>
+        <td class="label">
+            &nbsp;
+        </td>
+        <td>
+            <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
+            onClick="
+            phprSend({
+                url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonFoldersSetup',
+                content:   dijit.byId('installForm').attr('value'),
+                onSuccess: dojo.hitch(this, function(data) {
+                    if (data.type == 'confirm') {
+                        dojo.style('normalForm', 'display', 'none');
+                        dojo.style('confirmationForm', 'display', 'inline');
+                    } else if (data.type != 'error') {
+                        dijit.byId('formContent').attr('content', data.template);
+                    }
+                    addMessage(data.type, data.message);
+                })
+            });">
+                Create folders
+            </button>
+        </td>
+    </tr>
+    </table>
+</div>
+
+<div id="confirmationForm"
+style="display: none;">
+    <table class="form"
+    style="width: auto;">
+    <col class="col1" />
+    <tr>
+        <td class="label">
+            <label for="migration_config">Please confirm that you want to use this folder</label>
+        </td>
+        <td>
+            <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
+            onClick="
+            dijit.byId('confirmationCheck').attr('value', 1);
+            phprSend({
+                url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonFoldersSetup',
+                content:   dijit.byId('installForm').attr('value'),
+                onSuccess: dojo.hitch(this, function(data) {
+                    if (data.type != 'error') {
+                        dijit.byId('formContent').attr('content', data.template);
+                    }
+                    addMessage(data.type, data.message);
+                })
+            });">
+                OK
+            </button>
+            &nbsp;&nbsp;
+            <button dojoType="dijit.form.Button" type="button" iconClass="cross"
+            onClick="
+            dojo.style('normalForm', 'display', 'inline');
+            dojo.style('confirmationForm', 'display', 'none');
+            dojo.style('message', 'display', 'none');
+            ">
+                Cancel
+            </button>
+        </td>
+    </tr>
+    </table>
+</div>

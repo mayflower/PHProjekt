@@ -18,7 +18,7 @@ style="width: auto;">
             url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonUsersForm',
             onSuccess: dojo.hitch(this, function(data) {
                 dijit.byId('formContent').attr('content', data.template);
-                changeStep(1, 2);
+                changeStep(2, 3);
             })
         });">
             Continue with the users

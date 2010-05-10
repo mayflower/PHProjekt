@@ -116,12 +116,12 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonDatabaseFormAction()
     {
-        $this->view->message  = array();
-        $this->view->success  = array();
-        $this->view->dbHost   = self::DEFAULT_DBHOST;
-        $this->view->dbUser   = self::DEFAULT_DBUSER;
-        $this->view->dbPass   = '';
-        $this->view->dbName   = self::DEFAULT_DBNAME;
+        $this->view->message = array();
+        $this->view->success = array();
+        $this->view->dbHost  = self::DEFAULT_DBHOST;
+        $this->view->dbUser  = self::DEFAULT_DBUSER;
+        $this->view->dbPass  = '';
+        $this->view->dbName  = self::DEFAULT_DBNAME;
 
         $message  = null;
         $type     = 'success';
@@ -157,6 +157,7 @@ class IndexController extends Zend_Controller_Action
     {
         $this->view->message = array();
         $this->view->success = array();
+
         $params = array(
             'serverType' => Cleaner::sanitize('string', $this->getRequest()->getParam('serverType')),
             'dbHost'     => Cleaner::sanitize('string', $this->getRequest()->getParam('dbHost')),
@@ -240,6 +241,7 @@ class IndexController extends Zend_Controller_Action
     {
         $this->view->message = array();
         $this->view->success = array();
+
         $params = array(
             'adminPass'        => Cleaner::sanitize('string', $this->getRequest()->getParam('adminPass')),
             'adminPassConfirm' => Cleaner::sanitize('string', $this->getRequest()->getParam('adminPassConfirm')),
@@ -263,6 +265,102 @@ class IndexController extends Zend_Controller_Action
 
         $template = $this->view->render('usersOk.phtml');
 
+        $this->returnContent($type, $message, $template);
+    }
+
+    /**
+     * Returns the folder form.
+     *
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonFoldersFormAction()
+    {
+        $this->view->message    = array();
+        $this->view->success    = array();
+        $this->view->privateDir = $this->_setup->getProposedPrivateFolderPath();
+
+        $message  = null;
+        $type     = 'success';
+        $template = $this->view->render('foldersForm.phtml');
+
+        $this->returnContent($type, $message, $template);
+    }
+
+    /**
+     * Validate the params and if is all ok, save them.
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - string <b>privateDir</b> Path of the private folder.
+     * </pre>
+     *
+     * The return have:
+     * <pre>
+     * - type     => The type of the message (error or success).
+     * - message  => The message.
+     * - template => The template to show.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonFoldersSetupAction()
+    {
+        $this->view->message = array();
+        $this->view->success = array();
+
+        $params = array(
+            'privateDir'        => (string) $this->getRequest()->getParam('privateDir'),
+            'confirmationCheck' => (int) $this->getRequest()->getParam('confirmationCheck')
+        );
+
+        if (null !== $this->_setup) {
+            $return = $this->_setup->validatePrivateFolder($params);
+            if ($return == 0) {
+                // Error
+                $error   = $this->_setup->getError();
+                $message = array_shift($error);
+                $type    = 'error';
+            } else {
+                if ($return == 2 && !$params['confirmationCheck']) {
+                    // Confirmation needed
+                    $error   = $this->_setup->getError();
+                    $message = array_shift($error);
+                    $type    = 'confirm';
+                } else {
+                    // OK
+                    if ($this->_setup->writeFolders($params)) {
+                        $error = $this->_setup->getError();
+                        if (empty($error)) {
+                            $message = 'Private folders OK';
+                            $type    = 'success';
+                        } else {
+                            $message = $error;
+  	                        $type    = 'notice';
+                        }
+                    } else {
+                        $error   = $this->_setup->getError();
+                        $message = array_shift($error);
+                        $type    = 'error';
+                    }
+                }
+            }
+        } else {
+            $this->getResponse()->setHttpResponseCode(403);
+            $this->sendResponse();
+        }
+
+        $template = $this->view->render('foldersOk.phtml');
         $this->returnContent($type, $message, $template);
     }
 
@@ -316,19 +414,14 @@ class IndexController extends Zend_Controller_Action
     {
         $this->view->message = array();
         $this->view->success = array();
-        $params = array(
-            'useExtraData' => (int) $this->getRequest()->getParam('useExtraData'));
+
+        $params = array('useExtraData' => (int) $this->getRequest()->getParam('useExtraData'));
 
         if (null !== $this->_setup) {
-            if ($this->_setup->validateServer($params)) {
-                $message = $this->_setup->install($params);
-                $type    = 'success';
-                ob_end_clean();
-            } else {
-                $error   = $this->_setup->getError();
-                $message = array_shift($error);
-                $type    = 'error';
-            }
+            ob_start();
+            $message = $this->_setup->install($params);
+            $type    = 'success';
+            ob_end_clean();
         } else {
             $this->getResponse()->setHttpResponseCode(403);
             $this->sendResponse();
@@ -392,7 +485,8 @@ class IndexController extends Zend_Controller_Action
     {
         $this->view->message = array();
         $this->view->success = array();
-        $params  = array(
+
+        $params = array(
             'migrationConfigFile' => Cleaner::sanitize('string', $this->getRequest()->getParam('migrationConfigFile')),
             'diffToUtc'           => Cleaner::sanitize('integer', $this->getRequest()->getParam('diffToUtc')),
             'module'              => Cleaner::sanitize('string', $this->getRequest()->getParam('module')));
@@ -452,8 +546,14 @@ class IndexController extends Zend_Controller_Action
         if (null !== $this->_setup) {
             ob_start();
             $this->_setup->finish();
-            $message = ob_get_contents();
-            $type    = 'success';
+            $error = $this->_setup->getError();
+            if (!empty($error)) {
+                $message = array_shift($error);
+                $type    = 'notice';
+            } else {
+                $message = ob_get_contents();
+                $type    = 'success';
+            }
             ob_end_clean();
         } else {
             $this->getResponse()->setHttpResponseCode(403);

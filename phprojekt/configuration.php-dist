@@ -33,9 +33,21 @@ language = "de"
 
 ; Path where will be placed files uploaded by the user.
 ; UNIX
-uploadpath = "/var/www/phprojekt/upload/"
+uploadpath = "/var/www/phprojekt_private/upload/"
 ; WINDOWS
-;uploadpath = "C:\phprojekt\upload\"
+;uploadpath = "C:\phprojekt_private\upload\"
+
+; Path where will be placed temporaly files.
+; UNIX
+tmpPath = "/var/www/phprojekt_private/upload/"
+; WINDOWS
+;tmpPath = "C:\phprojekt_private\upload\"
+
+; Path where will be placed modules created by the admin.
+; UNIX
+applicationPath = "/var/www/phprojekt_private/application/"
+; WINDOWS
+;applicationPath = "C:\phprojekt_private\application\"
 
 ;;;;;;;;;;;;
 ; DATABASE ;
@@ -180,7 +192,8 @@ pollingLoop = 30
 language = "de"
 
 webpath     = "http://localhost/phprojekt"
-uploadpath  = "C:\Programme\Zend\Apache2\htdocs\phprojekt\tmp\"
+uploadpath = "C:\Programme\Zend\Apache2\phprojekt_private\upload\"
+tmpPath    = "C:\Programme\Zend\Apache2\phprojekt_private\tmp\"
 
 database.adapter         = "Pdo_Mysql"
 database.params.host     = "localhost"
@@ -188,8 +201,8 @@ database.params.username = "p6-user"
 database.params.password = "phprojekt"
 database.params.dbname   = "phprojekt-testing"
 
-log.debug.filename = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\debug.log"
-log.err.filename   = "C:\Programme\Zend\Apache2\htdocs\phprojekt\logs\err.log"
+log.debug.filename = "C:\Programme\Zend\Apache2\phprojekt_private\logs\debug.log"
+log.err.filename   = "C:\Programme\Zend\Apache2\phprojekt_private\logs\err.log"
 
 itemsPerPage       = 3
 userDisplayFormat  = 1

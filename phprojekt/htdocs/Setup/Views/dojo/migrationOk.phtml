@@ -1,5 +1,5 @@
 <div class="prepend-0">
-<h2>Step 5 - Migrate old versions</h2>
+<h2>Step 6 - Migrate old versions</h2>
 
 Please, provide the path to the config.inc.php file of your old PHProjekt 5.x.<br />
 <u>Notes</u>:<br />
@@ -41,7 +41,8 @@ style="width: auto;">
             url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonFinish',
             onSuccess: dojo.hitch(this, function(data) {
                 dijit.byId('formContent').attr('content', data.template);
-                changeStep(4, 5);
+                changeStep(6, 7);
+                addMessage(data.type, data.message);
             })
         });">
             Finish

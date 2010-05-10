@@ -188,7 +188,7 @@
                 + 'img/setup/grey-blue.png" alt="" />';
 
             dojo.byId('Step' + newStep).style.background = '#284164';
-            if (newStep != 5) {
+            if (newStep != 7) {
                 dojo.byId('Step' + newStep + 'Img').innerHTML = '<img src="<?php echo $this->webPath; ?>'
                     + 'img/setup/blue-grey.png" alt="" />';
             } else {
@@ -223,6 +223,9 @@
                 rowIndex++;
 
                 // Type
+                if (type == 'confirm') {
+                    type = 'notice';
+                }
                 var cell       = row.insertCell(cellIndex);
                 cell.innerHTML = '<div class="' + type + '" style="margin-bottom: 0;">' + type.toUpperCase(); + '</div>';
                 cellIndex++;
@@ -350,33 +353,25 @@
                 <!-- Progress Bar -->
                 <div dojoType="dijit.layout.ContentPane" class="block" splitter="false"
                 style="height: 20px; color: white; text-align: right; overflow: hidden;">
-                    <div dojoType="dijit.layout.ContentPane" id="Step0"
+                    <div dojoType="dijit.layout.ContentPane" id="Step1"
                     style="background: #284164; height: 20px; display: inline; float: left; padding: 0 10px 0 20px;">
                         Server
                     </div>
-                    <div dojoType="dijit.layout.ContentPane"  id="Step0Img"
+                    <div dojoType="dijit.layout.ContentPane"  id="Step1Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
                         <img src="<?php echo $this->webPath; ?>img/setup/blue-grey.png" alt="" />
                     </div>
-                    <div dojoType="dijit.layout.ContentPane"  id="Step1"
+                    <div dojoType="dijit.layout.ContentPane"  id="Step2"
                     style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
                         Database
                     </div>
-                    <div dojoType="dijit.layout.ContentPane"  id="Step1Img"
-                    style="height: 20px; display: inline; float: left; overflow: hidden;">
-                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
-                    </div>
-                    <div dojoType="dijit.layout.ContentPane" id="Step2"
-                    style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
-                        Users
-                    </div>
-                    <div dojoType="dijit.layout.ContentPane" id="Step2Img"
+                    <div dojoType="dijit.layout.ContentPane"  id="Step2Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
                         <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step3"
                     style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
-                        Tables
+                        Users
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step3Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
@@ -384,7 +379,7 @@
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step4"
                     style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
-                        Migration
+                        Folders
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step4Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
@@ -392,9 +387,25 @@
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step5"
                     style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
-                        Done!
+                        Tables
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step5Img"
+                    style="height: 20px; display: inline; float: left; overflow: hidden;">
+                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step6"
+                    style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
+                        Migration
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step6Img"
+                    style="height: 20px; display: inline; float: left; overflow: hidden;">
+                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step7"
+                    style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
+                        Done!
+                    </div>
+                    <div dojoType="dijit.layout.ContentPane" id="Step7Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
                         <img src="<?php echo $this->webPath; ?>img/setup/grey-white.png" alt="" />
                     </div>

@@ -390,7 +390,6 @@ class Phprojekt
         if (!defined('PHPR_CONFIG_FILE')) {
             define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.php');
         }
-        define('PHPR_TEMP_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR);
 
         set_include_path('.' . PATH_SEPARATOR
             . PHPR_LIBRARY_PATH . PATH_SEPARATOR
@@ -414,13 +413,14 @@ class Phprojekt
                 . 'setup.php">setup</a> routine?'."\n".'<br />Original error: ' . $error->getMessage());
         }
 
-        // Set the webpath
+        // Set webpath and tmpPath
         if (empty($this->_config->webpath)) {
             $response               = new Zend_Controller_Request_Http();
             $this->_config->webpath = $response->getScheme() . '://' . $response->getHttpHost()
                 . $response->getBasePath() . '/';
         }
         define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
+        define('PHPR_TEMP_PATH', $this->_config->tmpPath);
 
         // Set the timezone to UTC
         date_default_timezone_set('UTC');

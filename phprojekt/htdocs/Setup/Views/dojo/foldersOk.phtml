@@ -1,6 +1,8 @@
 <div class="prepend-0">
-<h2>Step 5 - Install the tables</h2>
-Now we are ready to install all the tables.<br />
+<h2>Step 4 - Create private folders for save user data</h2>
+Phprojekt 6 will create a private folder to store sensitiv data.<br />
+We recommend to use a path outside your document root.<br />
+Please provide the path of this folder, and the setup will try to create it.<br />
 <br />
 <?php
 include ("serverFeedback.phtml");
@@ -14,13 +16,13 @@ style="width: auto;">
         <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
         onClick="
         phprSend({
-            url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonMigrationForm',
+            url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonTablesForm',
             onSuccess: dojo.hitch(this, function(data) {
                 dijit.byId('formContent').attr('content', data.template);
-                changeStep(5, 6);
+                changeStep(4, 5);
             })
         });">
-            Continue with the migration
+            Continue with the tables
         </button>
     </td>
 </tr>

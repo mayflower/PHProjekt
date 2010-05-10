@@ -15,13 +15,13 @@ style="width: auto;">
         <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
         onClick="
         phprSend({
-            url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonTablesForm',
+            url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonFoldersForm',
             onSuccess: dojo.hitch(this, function(data) {
                 dijit.byId('formContent').attr('content', data.template);
-                changeStep(2, 3);
+                changeStep(3, 4);
             })
         });">
-            Continue with the tables
+            Continue with the folders
         </button>
     </td>
 </tr>
