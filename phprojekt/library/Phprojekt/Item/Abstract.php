@@ -286,7 +286,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                 $files      = explode('||', $filesField);
                 foreach ($files as $file) {
                     $md5Name          = substr($file, 0, strpos($file, '|'));
-                    $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
+                    $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadPath . $md5Name;
                     if (!empty($md5Name) && file_exists($fileAbsolutePath)) {
                         unlink($fileAbsolutePath);
                     }

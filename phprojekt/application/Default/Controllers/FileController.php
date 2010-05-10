@@ -119,7 +119,7 @@ class FileController extends IndexController
         }
 
         $adapter = new Zend_File_Transfer_Adapter_Http();
-        $adapter->setDestination(Phprojekt::getInstance()->getConfig()->uploadpath);
+        $adapter->setDestination(Phprojekt::getInstance()->getConfig()->uploadPath);
 
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
@@ -191,7 +191,7 @@ class FileController extends IndexController
         }
 
         if (!empty($fileName) && preg_match("/^[A-Fa-f0-9]{32,32}$/", $md5Name)) {
-            $md5Name = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
+            $md5Name = Phprojekt::getInstance()->getConfig()->uploadPath . $md5Name;
             if (file_exists($md5Name)) {
                 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
                 header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
@@ -257,7 +257,7 @@ class FileController extends IndexController
             } else {
                 // Delete the file from the server
                 $md5Name          = substr($file, 0, strpos($file, '|'));
-                $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadpath . $md5Name;
+                $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadPath . $md5Name;
                 if (preg_match("/^[A-Fa-f0-9]{32,32}$/", $md5Name) && file_exists($fileAbsolutePath)) {
                     unlink($fileAbsolutePath);
                 }

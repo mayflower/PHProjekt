@@ -33,9 +33,9 @@ language = "de"
 
 ; Path where will be placed files uploaded by the user.
 ; UNIX
-uploadpath = "/var/www/phprojekt_private/upload/"
+uploadPath = "/var/www/phprojekt_private/upload/"
 ; WINDOWS
-;uploadpath = "C:\phprojekt_private\upload\"
+;uploadPath = "C:\phprojekt_private\upload\"
 
 ; Path where will be placed temporaly files.
 ; UNIX
@@ -192,7 +192,7 @@ pollingLoop = 30
 language = "de"
 
 webpath     = "http://localhost/phprojekt"
-uploadpath = "C:\Programme\Zend\Apache2\phprojekt_private\upload\"
+uploadPath = "C:\Programme\Zend\Apache2\phprojekt_private\upload\"
 tmpPath    = "C:\Programme\Zend\Apache2\phprojekt_private\tmp\"
 
 database.adapter         = "Pdo_Mysql"

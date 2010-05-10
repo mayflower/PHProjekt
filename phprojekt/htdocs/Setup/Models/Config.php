@@ -223,7 +223,7 @@ class Setup_Models_Config
         $content .= $this->_eol;
 
         $content .= '; Path where will be placed files uploaded by the user.' . $this->_eol;
-        $content .= 'uploadpath = "' . $this->_privateDir . 'upload/"' . $this->_eol;
+        $content .= 'uploadPath = "' . $this->_privateDir . 'upload/"' . $this->_eol;
 
         $content .= $this->_eol;
         $content .= '; Path where will be placed temporaly files.' . $this->_eol;
