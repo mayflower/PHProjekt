@@ -393,7 +393,6 @@ class Phprojekt
 
         set_include_path('.' . PATH_SEPARATOR
             . PHPR_LIBRARY_PATH . PATH_SEPARATOR
-            . PHPR_CORE_PATH . PATH_SEPARATOR
             . get_include_path());
 
         require_once 'Zend/Loader/Autoloader.php';
@@ -413,7 +412,7 @@ class Phprojekt
                 . 'setup.php">setup</a> routine?'."\n".'<br />Original error: ' . $error->getMessage());
         }
 
-        // Set webpath and tmpPath
+        // Set webpath, tmpPath and applicationPath
         if (empty($this->_config->webpath)) {
             $response               = new Zend_Controller_Request_Http();
             $this->_config->webpath = $response->getScheme() . '://' . $response->getHttpHost()
@@ -421,6 +420,13 @@ class Phprojekt
         }
         define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
         define('PHPR_TEMP_PATH', $this->_config->tmpPath);
+        define('PHPR_USER_CORE_PATH', $this->_config->applicationPath);
+
+        set_include_path('.' . PATH_SEPARATOR
+            . PHPR_LIBRARY_PATH . PATH_SEPARATOR
+            . PHPR_CORE_PATH . PATH_SEPARATOR
+            . PHPR_USER_CORE_PATH . PATH_SEPARATOR
+            . get_include_path());
 
         // Set the timezone to UTC
         date_default_timezone_set('UTC');
@@ -503,7 +509,7 @@ class Phprojekt
         $viewRenderer->setViewScriptPathSpec(':action.:suffix');
         Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
         foreach ($helperPaths as $helperPath) {
-            Zend_Controller_Action_HelperBroker::addPath($helperPath['path']);
+            Zend_Controller_Action_HelperBroker::addPath($helperPath['directory']);
         }
 
         $plugin = new Zend_Controller_Plugin_ErrorHandler();
@@ -517,6 +523,7 @@ class Phprojekt
         $front->setDefaultModule('Default');
         $front->setModuleControllerDirectoryName('Controllers');
         $front->addModuleDirectory(PHPR_CORE_PATH);
+        $front->addModuleDirectory(PHPR_USER_CORE_PATH);
 
         // Add SubModules directories with controlles
         $moduleDirectories = $this->_getControllersFolders($helperPaths);
@@ -544,8 +551,8 @@ class Phprojekt
             $view = new Zend_View();
             $view->addScriptPath(PHPR_CORE_PATH . '/Default/Views/dojo/');
             foreach ($helperPaths as $helperPath) {
-                if (is_dir($helperPath['path'])) {
-                    $view->addHelperPath($helperPath['path'], $helperPath['module'] . '_' . 'Helpers');
+                if (is_dir($helperPath['directory'])) {
+                    $view->addHelperPath($helperPath['directory'], $helperPath['module'] . '_' . 'Helpers');
                 }
             }
             $viewNamespace->view = $view;
@@ -561,22 +568,37 @@ class Phprojekt
     /**
      * Cache the folders with helpers files.
      *
-     * @return array Array with 'module' and 'path'.
+     * @return array Array with 'module', 'path' and 'directory'.
      */
     private function _getHelperPaths()
     {
         $helperPathNamespace = new Zend_Session_Namespace('Phprojekt-_getHelperPaths');
         if (!isset($helperPathNamespace->helperPaths)) {
             $helperPaths = array();
+            // System modules
             foreach (scandir(PHPR_CORE_PATH) as $module) {
                 $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
                 if ($module == '.'  || $module == '..' || !is_dir($dir)) {
                     continue;
                 }
 
-                $helperPaths[] = array('module' => $module,
-                                       'path'   => $dir . DIRECTORY_SEPARATOR . 'Helpers');
+                $helperPaths[] = array('module'    => $module,
+                                       'path'      => PHPR_CORE_PATH . DIRECTORY_SEPARATOR,
+                                       'directory' => $dir . DIRECTORY_SEPARATOR . 'Helpers');
             }
+
+            // User modules
+            foreach (scandir(PHPR_USER_CORE_PATH) as $module) {
+                $dir = PHPR_USER_CORE_PATH . $module;
+                if ($module == '.'  || $module == '..' || !is_dir($dir)) {
+                    continue;
+                }
+
+                $helperPaths[] = array('module'    => $module,
+                                       'path'      => PHPR_USER_CORE_PATH,
+                                       'directory' => $dir . DIRECTORY_SEPARATOR . 'Helpers');
+            }
+
             $helperPathNamespace->helperPaths = $helperPaths;
         } else {
             $helperPaths = $helperPathNamespace->helperPaths;
@@ -599,7 +621,7 @@ class Phprojekt
         if (!isset($controllerPathNamespace->controllerPaths)) {
             $controllerPaths = array();
             foreach ($helperPaths as $helperPath) {
-                $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $helperPath['module'] . DIRECTORY_SEPARATOR
+                $dir = $helperPath['path'] . $helperPath['module'] . DIRECTORY_SEPARATOR
                     . 'SubModules';
                 if (is_dir($dir)) {
                     if ($helperPath['module'] != 'Core') {

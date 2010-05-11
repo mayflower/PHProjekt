@@ -92,7 +92,7 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
                                'label' => Phprojekt::getInstance()->translate('Notification'));
         }
 
-        // Module settings
+        // System modules settings
         foreach (scandir(PHPR_CORE_PATH) as $dir) {
             $path = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $dir;
             if ($dir == '.' || $dir == '..' || in_array($dir, self::$_excludePaths)) {
@@ -106,6 +106,22 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
                 }
             }
         }
+
+        // User modules settings
+        foreach (scandir(PHPR_USER_CORE_PATH) as $dir) {
+            $path = PHPR_USER_CORE_PATH . $dir;
+            if ($dir == '.' || $dir == '..') {
+                continue;
+            }
+            if (is_dir($path)) {
+                $settingClass = Phprojekt_Loader::getModelClassname($dir, 'Setting');
+                if (Phprojekt_Loader::tryToLoadClass($settingClass, false, true)) {
+                    $results[] = array('name'  => $dir,
+                                       'label' => Phprojekt::getInstance()->translate($dir, null, $dir));
+                }
+            }
+        }
+
         return $results;
     }
 

@@ -84,6 +84,8 @@ class FrontInit extends PHPUnit_Framework_TestCase
         $this->front->setDefaultModule('Default');
 
         $moduleDirectories = array();
+
+        // System modules
         foreach (scandir(PHPR_CORE_PATH) as $module) {
             $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module;
 
@@ -97,7 +99,6 @@ class FrontInit extends PHPUnit_Framework_TestCase
                 $view->addHelperPath($helperPath, $module . '_' . 'Helpers');
                 Zend_Controller_Action_HelperBroker::addPath($helperPath);
             }
-
 
             $dir = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . 'SubModules';
             if (is_dir($dir)) {
@@ -115,11 +116,33 @@ class FrontInit extends PHPUnit_Framework_TestCase
             }
         }
 
+        // User modules
+        foreach (scandir(PHPR_USER_CORE_PATH) as $module) {
+            $dir = PHPR_USER_CORE_PATH . $module;
+
+            if (is_dir(!$dir)) {
+                continue;
+            }
+
+            $helperPath = $dir . DIRECTORY_SEPARATOR . 'Helpers';
+
+            if (is_dir($helperPath)) {
+                $view->addHelperPath($helperPath, $module . '_' . 'Helpers');
+                Zend_Controller_Action_HelperBroker::addPath($helperPath);
+            }
+
+            $dir = PHPR_USER_CORE_PATH . $module . DIRECTORY_SEPARATOR . 'SubModules';
+            if (is_dir($dir)) {
+                $moduleDirectories[] = $dir;
+            }
+        }
+
         Zend_Registry::set('view', $view);
         $view->webPath = $this->config->webpath;
 
         $this->front->setModuleControllerDirectoryName('Controllers');
         $this->front->addModuleDirectory(PHPR_CORE_PATH);
+        $this->front->addModuleDirectory(PHPR_USER_CORE_PATH);
 
         foreach ($moduleDirectories as $moduleDirectory) {
             $this->front->addModuleDirectory($moduleDirectory);

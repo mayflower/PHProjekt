@@ -82,7 +82,7 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
                                'label' => Phprojekt::getInstance()->translate('General'));
         }
 
-        // Module Configuration
+        // System modules Configurations
         foreach (scandir(PHPR_CORE_PATH) as $dir) {
             $path = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $dir;
             if ($dir == '.' || $dir == '..' || in_array($dir, self::$_excludePaths)) {
@@ -91,6 +91,21 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
             if (is_dir($path)) {
                 $configClass = Phprojekt_Loader::getModelClassname($dir, 'Configuration');
                 if (Phprojekt_Loader::tryToLoadClass($configClass)) {
+                    $results[] = array('name'  => $dir,
+                                       'label' => Phprojekt::getInstance()->translate($dir, null, $dir));
+                }
+            }
+        }
+
+        // User modules Configurations
+        foreach (scandir(PHPR_USER_CORE_PATH) as $dir) {
+            $path = PHPR_USER_CORE_PATH . $dir;
+            if ($dir == '.' || $dir == '..') {
+                continue;
+            }
+            if (is_dir($path)) {
+                $configClass = Phprojekt_Loader::getModelClassname($dir, 'Configuration');
+                if (Phprojekt_Loader::tryToLoadClass($configClass, false, true)) {
                     $results[] = array('name'  => $dir,
                                        'label' => Phprojekt::getInstance()->translate($dir, null, $dir));
                 }

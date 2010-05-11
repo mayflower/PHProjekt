@@ -62,7 +62,7 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @var array
      */
-    protected static $_directories = array(PHPR_CORE_PATH, PHPR_LIBRARY_PATH);
+    protected static $_directories = array(PHPR_CORE_PATH, PHPR_LIBRARY_PATH, PHPR_USER_CORE_PATH);
 
     /**
      * Define the set of allowed characters for classes..
@@ -84,14 +84,15 @@ class Phprojekt_Loader extends Zend_Loader
             $front  = Zend_Controller_Front::getInstance();
             $module = (count($names) > 1) ? $names[0] : $front->getDefaultModule();
 
-            $file = PHPR_CORE_PATH . DIRECTORY_SEPARATOR
-                  . $module . DIRECTORY_SEPARATOR
+            $path = $module . DIRECTORY_SEPARATOR
                   . $front->getModuleControllerDirectoryName()
                   . DIRECTORY_SEPARATOR
                   . array_pop($names) . '.php';
 
-            if (self::isReadable($file)) {
-                self::_includeFile($file, true);
+            if (self::isReadable(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $path)) {
+                self::_includeFile(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $path, true);
+            } else if (self::isReadable(PHPR_USER_CORE_PATH . $path)) {
+                self::_includeFile(PHPR_USER_CORE_PATH . $path, true);
             }
         }
 
@@ -351,15 +352,20 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @param string  $class          The name of the class.
      * @param boolean $isLibraryClass True if the class is in the library dir.
+     * @param boolean $isUserModule   True if the class is in the user core dir.
      *
      * @return boolean
      */
-    public static function tryToLoadClass($class, $isLibraryClass = false)
+    public static function tryToLoadClass($class, $isLibraryClass = false, $isUserModule = false)
     {
         $names  = explode('_', $class);
 
         if (!$isLibraryClass) {
-            $file = PHPR_CORE_PATH;
+            if ($isUserModule) {
+                $file = substr(PHPR_USER_CORE_PATH, 0, strlen(PHPR_USER_CORE_PATH) -1);
+            } else {
+                $file = PHPR_CORE_PATH;
+            }
         } else {
             $file = PHPR_LIBRARY_PATH;
         }
@@ -402,7 +408,16 @@ class Phprojekt_Loader extends Zend_Loader
         if (null === $view) {
             $view = Phprojekt::getInstance()->getView();
         }
-        $view->addScriptPath(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR
-            . self::VIEW . DIRECTORY_SEPARATOR . 'dojo' . DIRECTORY_SEPARATOR);
+
+        // Try the system module
+        $path = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR
+            . self::VIEW . DIRECTORY_SEPARATOR . 'dojo' . DIRECTORY_SEPARATOR;
+        if (!is_dir($path)) {
+            // Try the user module
+            $path = PHPR_USER_CORE_PATH . $module . DIRECTORY_SEPARATOR
+            . self::VIEW . DIRECTORY_SEPARATOR . 'dojo' . DIRECTORY_SEPARATOR;
+        }
+
+        $view->addScriptPath($path);
     }
 }

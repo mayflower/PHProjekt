@@ -60,10 +60,6 @@ class JsController extends IndexController
      */
     public function indexAction()
     {
-        echo 'dojo.registerModulePath("phpr", "../../../application/Default/Views/dojo/scripts/system");';
-        echo 'dojo.registerModulePath("phpr.Default", "../../../application/Default/Views/dojo/scripts");';
-        echo 'dojo.registerModulePath("phpr.Core", "../../../application/Core/Views/dojo/scripts");';
-
         // System files, must be parsed in this order
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/phpr.js');
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Component.js');
@@ -77,75 +73,17 @@ class JsController extends IndexController
 
         // Default Folder
         $scripts = scandir(PHPR_CORE_PATH . '/Default/Views/dojo/scripts');
-        echo $this->_getModuleScripts($scripts, 'Default');
+        echo $this->_getModuleScripts(PHPR_CORE_PATH . DIRECTORY_SEPARATOR, $scripts, 'Default');
 
         // Core Folder
         $scripts = scandir(PHPR_CORE_PATH . '/Core/Views/dojo/scripts');
-        echo $this->_getModuleScripts($scripts, 'Core');
+        echo $this->_getModuleScripts(PHPR_CORE_PATH . DIRECTORY_SEPARATOR, $scripts, 'Core');
 
-        // Load all modules and make and array of it
-        $files = scandir(PHPR_CORE_PATH);
-        foreach ($files as $file) {
-            if ($file != '.'  && $file != '..' && $file != 'Default') {
-                if (is_dir(PHPR_CORE_PATH . '/' . $file . '/Views/dojo/scripts/')) {
-                    $scripts = scandir(PHPR_CORE_PATH . '/' . $file . '/Views/dojo/scripts/');
-                } else {
-                    $scripts = array();
-                }
-                $this->_modules[]         = $file;
-                $this->_subModules[$file] = array();
-                if ($file != 'Core') {
-                    echo 'dojo.registerModulePath' . '("phpr.' . $file . '", "../../../application/' . $file
-                        . '/Views/dojo/scripts");';
-                    echo $this->_getModuleScripts($scripts, $file);
-                    if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/')) {
-                        $subFiles = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/');
-                        foreach ($subFiles as $subFile) {
-                            if ($subFile != '.'  && $subFile != '..') {
-                                if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subFile
-                                    . '/Views/dojo/scripts/')) {
-                                    $subScripts = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subFile
-                                        . '/Views/dojo/scripts/');
-                                } else {
-                                    $subScripts = array();
-                                }
-                                $this->_subModules[$file][] = "'" . $subFile . "'";
-                                echo 'dojo.registerModulePath' . '("phpr.' . $subFile . '", "../../../application/'
-                                    . $file . '/SubModules/' . $subFile . '/Views/dojo/scripts");';
-                                echo $this->_getModuleScripts($subScripts, $file . '/SubModules/' . $subFile);
-                            }
-                        }
-                    }
-                } else {
-                    echo $this->_getCoreModuleScripts($scripts);
-                    if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/')) {
-                        $subModulesFiles = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/');
-                        foreach ($subModulesFiles as $subModule) {
-                            if ($subModule != '.' && $subModule != '..') {
-                                $subFiles = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subModule);
-                                foreach ($subFiles as $subFile) {
-                                    if ($subFile != '.'  && $subFile != '..') {
-                                        if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subModule . '/'
-                                            . $subFile . '/Views/dojo/scripts/')) {
-                                            $subScripts = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/'
-                                                . $subModule . '/' . $subFile . '/Views/dojo/scripts/');
-                                        } else {
-                                            $subScripts = array();
-                                        }
-                                        $this->_subModules[$subModule][] = "'" . $subFile . "'";
-                                        echo 'dojo.registerModulePath' . '("phpr.' . $subFile
-                                            . '", "../../../application/' . $file . '/SubModules/' . $subModule
-                                            . '/' . $subFile . '/Views/dojo/scripts");';
-                                        echo $this->_getModuleScripts($subScripts, $file . '/SubModules/' . $subModule
-                                            . '/' . $subFile);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // Load all the system modules and make and array of it
+        $this->_processModuleDirectory(PHPR_CORE_PATH . DIRECTORY_SEPARATOR);
+
+        // Load all the user modules and make and array of it
+        $this->_processModuleDirectory(PHPR_USER_CORE_PATH);
 
         // Preload all the templates and save them into __phpr_templateCache
         echo 'var __phpr_templateCache = {};';
@@ -218,15 +156,13 @@ class JsController extends IndexController
         $module = ucfirst(str_replace(" ", "", $module));
 
         // Load the module
-        if (is_dir(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/')) {
-            $scripts = scandir(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/');
+        if (is_dir(PHPR_USER_CORE_PATH . $module . '/Views/dojo/scripts/')) {
+            $scripts = scandir(PHPR_USER_CORE_PATH . $module . '/Views/dojo/scripts/');
         } else {
             $scripts = array();
         }
 
-        echo 'dojo.registerModulePath'
-            . '("phpr.' . $module . '", "../../../application/' . $module . '/Views/dojo/scripts");';
-        echo $this->_getModuleScripts($scripts, $module);
+        echo $this->_getModuleScripts(PHPR_USER_CORE_PATH, $scripts, $module);
 
         // Preload the templates and save them into __phpr_templateCache
         foreach ($this->_templates as $templateData) {
@@ -246,24 +182,25 @@ class JsController extends IndexController
      * Get all the Modules scripts.
      * In the process also collect the templates.
      *
+     * @param string $path    Path to the module directory.
      * @param array  $scripts All the modules into the Module folder.
      * @param string $module  The module name.
      *
      * @return string Content of the files.
      */
-    private function _getModuleScripts($scripts, $module)
+    private function _getModuleScripts($path, $scripts, $module)
     {
         $output = '';
         foreach ($scripts as $script) {
             if (substr($script, -3) == '.js') {
-                $output .= file_get_contents(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/' . $script);
+                $output .= file_get_contents($path . $module . '/Views/dojo/scripts/' . $script);
             } else if ('template' == $script) {
                 if (strstr($module, '/')) {
                     $templateModule = substr(strrchr($module, '/'), 1);
                 } else {
                     $templateModule = $module;
                 }
-                $this->_getTemplates(PHPR_CORE_PATH . '/' . $module . '/Views/dojo/scripts/template/', $templateModule);
+                $this->_getTemplates($path . $module . '/Views/dojo/scripts/template/', $templateModule);
             }
         }
 
@@ -286,8 +223,6 @@ class JsController extends IndexController
                 // Core Modules
                 $coreScripts = scandir(PHPR_CORE_PATH . '/Core/Views/dojo/scripts/' . $script);
                 if (in_array('Main.js', $coreScripts)) {
-                    $output .= 'dojo.registerModulePath'
-                        . '("phpr.' . $script . '", "../../../application/Core/Views/dojo/scripts/' . $script . '");';
                     $this->_modules[] = $script;
                 }
                 foreach ($coreScripts as $coreScript) {
@@ -304,9 +239,6 @@ class JsController extends IndexController
                         $subCoreScripts = scandir(PHPR_CORE_PATH . '/Core/Views/dojo/scripts/'
                             . $script . '/' . $coreScript);
                         if (in_array('Main.js', $subCoreScripts)) {
-                            $output .= 'dojo.registerModulePath'
-                                . '("phpr.' . $coreScript . '", "../../../application/Core/Views/dojo/scripts/'
-                                . $script . '/' . $coreScript . '");';
                             $this->_modules[] = $coreScript;
                         }
 
@@ -368,6 +300,71 @@ class JsController extends IndexController
                             $this->_templates[] = array('module'   => $module,
                                                         'name'     => $item . "." . $subItem,
                                                         'contents' => $fileContents);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Load all the scritps from a module directory.
+     *
+     * @param string $path Path to the module directory.
+     *
+     * @return void
+     */
+    private function _processModuleDirectory($path)
+    {
+        $files = scandir($path);
+        foreach ($files as $file) {
+            if ($file != '.'  && $file != '..' && $file != 'Default') {
+                if (is_dir($path . $file . '/Views/dojo/scripts/')) {
+                    $scripts = scandir($path . $file . '/Views/dojo/scripts/');
+                } else {
+                    $scripts = array();
+                }
+                $this->_modules[]         = $file;
+                $this->_subModules[$file] = array();
+                if ($file != 'Core') {
+                    echo $this->_getModuleScripts($path, $scripts, $file);
+                    if (is_dir($path . $file . '/SubModules/')) {
+                        $subFiles = scandir($path . $file . '/SubModules/');
+                        foreach ($subFiles as $subFile) {
+                            if ($subFile != '.'  && $subFile != '..') {
+                                if (is_dir($path . $file . '/SubModules/' . $subFile . '/Views/dojo/scripts/')) {
+                                    $subScripts = scandir($path . $file . '/SubModules/' . $subFile
+                                        . '/Views/dojo/scripts/');
+                                } else {
+                                    $subScripts = array();
+                                }
+                                $this->_subModules[$file][] = "'" . $subFile . "'";
+                                echo $this->_getModuleScripts($path, $subScripts, $file . '/SubModules/' . $subFile);
+                            }
+                        }
+                    }
+                } else {
+                    echo $this->_getCoreModuleScripts($scripts);
+                    if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/')) {
+                        $subModulesFiles = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/');
+                        foreach ($subModulesFiles as $subModule) {
+                            if ($subModule != '.' && $subModule != '..') {
+                                $subFiles = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subModule);
+                                foreach ($subFiles as $subFile) {
+                                    if ($subFile != '.'  && $subFile != '..') {
+                                        if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subModule . '/'
+                                            . $subFile . '/Views/dojo/scripts/')) {
+                                            $subScripts = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/'
+                                                . $subModule . '/' . $subFile . '/Views/dojo/scripts/');
+                                        } else {
+                                            $subScripts = array();
+                                        }
+                                        $this->_subModules[$subModule][] = "'" . $subFile . "'";
+                                        echo $this->_getModuleScripts($path, $subScripts, $file . '/SubModules/'
+                                            . $subModule . '/' . $subFile);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
