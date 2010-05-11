@@ -91,8 +91,7 @@ $lang["Project module must be a normal module"] = "Projekt-Modul muss ein Standa
 $lang["The module must have at least one field with the list position greater than 0"] = "Das Modul muss mindestens "
     . "ein Feld mit der Liste Position größer als 0 haben";
       // View
-$lang["Make sure the application folder is writeable for the webserver!"] = "Make sure the application folder is "
-    . "writeable for the webserver!";
+$lang["You can not delete system modules"] = "Sie können nicht löschen Systemmodule";
     // View
 $lang["Module Designer"] = "Modul Designer";
 $lang["Repository of available field types"] = "Archiv verfügbarer Feldtypen";

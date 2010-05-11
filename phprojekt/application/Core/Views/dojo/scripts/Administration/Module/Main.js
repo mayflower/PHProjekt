@@ -41,14 +41,6 @@ dojo.declare("phpr.Module.Main", phpr.Core.Main, {
         this.form.openDialog();
     },
 
-    openForm:function(id, module) {
-        this.inherited(arguments);
-        var result     = Array();
-        result.type    = 'warning';
-        result.message = phpr.nls.get('Make sure the application folder is writeable for the webserver!');
-        new phpr.handleResponse('serverFeedback', result);
-    },
-
     submitForm:function() {
         this.form.submitForm();
     }

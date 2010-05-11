@@ -57,10 +57,17 @@ class Core_ModuleDesignerController extends Core_IndexController
             $model           = Phprojekt_Loader::getModel($module, $module);
             if ($model instanceof Phprojekt_Item_Abstract) {
                 $databaseManager = new Phprojekt_DatabaseManager($model);
-                $data['data'] = $databaseManager->getDataDefinition();
+                $data['data']['definition'] = $databaseManager->getDataDefinition();
             } else {
-                $data['data'] = 'none';
+                $data['data']['definition'] = 'none';
             }
+
+            $data['data']['isUserModule'] = false;
+            if (is_dir(PHPR_USER_CORE_PATH . $module)) {
+                $data['data']['isUserModule'] = true;
+            }
+        } else {
+            $data['data']['definition'] = array();
         }
 
         Phprojekt_Converter_Json::echoConvert($data);

@@ -90,8 +90,7 @@ $lang["Project module must be a normal module"] = "Project module must be a norm
 $lang["The module must have at least one field with the list position greater than 0"] = "The module must have at "
     . "least one field with the list position greater than 0";
       // View
-$lang["Make sure the application folder is writeable for the webserver!"] = "Make sure the application folder is "
-    . "writeable for the webserver!";
+$lang["You can not delete system modules"] = "You can not delete system modules";
     // View
 $lang["Module Designer"] = "Module Designer";
 $lang["Repository of available field types"] = "Repository of available field types";
