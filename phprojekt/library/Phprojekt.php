@@ -621,8 +621,7 @@ class Phprojekt
         if (!isset($controllerPathNamespace->controllerPaths)) {
             $controllerPaths = array();
             foreach ($helperPaths as $helperPath) {
-                $dir = $helperPath['path'] . $helperPath['module'] . DIRECTORY_SEPARATOR
-                    . 'SubModules';
+                $dir = $helperPath['path'] . $helperPath['module'] . DIRECTORY_SEPARATOR . 'SubModules';
                 if (is_dir($dir)) {
                     if ($helperPath['module'] != 'Core') {
                         $controllerPaths[] = $dir;
@@ -643,6 +642,18 @@ class Phprojekt
         }
 
         return $controllerPaths;
+    }
+
+    /**
+     * Remove cache of SubModules folders with controllers files.
+     *
+     * @return void.
+     */
+    public static function removeControllersFolders()
+    {
+        // Remove SubModules entries
+        $controllerPathNamespace = new Zend_Session_Namespace('Phprojekt-_getControllersFolders');
+        $controllerPathNamespace->unsetAll();
     }
 
     /**

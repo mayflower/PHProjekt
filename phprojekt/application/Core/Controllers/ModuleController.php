@@ -190,6 +190,7 @@ class Core_ModuleController extends Core_IndexController
                 $message = Phprojekt::getInstance()->translate('The module can not be deleted');
                 $type    = 'error';
             } else {
+                Phprojekt::removeControllersFolders();
                 $message = Phprojekt::getInstance()->translate('The module was deleted correctly');
                 $type    = 'success';
             }
