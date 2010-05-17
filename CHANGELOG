@@ -1,0 +1,52 @@
+6.0.2
+Added
+ - New layout and workflow for the install routine.
+ - Add confirmation dialog for delete actions.
+ - Inherit data from the parent project.
+ - Store sensitiv data in a separated private folder.
+ - Use configuration.php instead of configuration.ini.
+
+Improvements
+ - Allow administartors to see their permissions on items.
+ - Improve translations.			
+ - Improve global module handling.
+ - Autodetect the webPath.
+ - Move the upload limit value to configuration file.
+ - Improve module management.
+ - The user need admin permissions to change rights, modules or roles.
+ - Remove .svn check when read folders.
+ - Remove DocumentRoot limitation.
+ - Generate better local names for uploaded files.
+
+Fixes
+ General
+  - Add compatibility for Chrome and Safari.
+  - Fix error on searchFirstDisplayField, check if exists first.
+   - Show "-" in case that the field don't exists for allow the link.
+   - In case that the firstDisplay don't exists, show the ID of the item.
+   - When a new module is created, use the first and second fields for fill the
+    searchFirstDisplayField and searchSecondDisplayField vars.
+   - Fix download/delete error on uploaded files.
+   - Make blank_database.sql work with NO_AUTO_VALUE_ON_ZERO enabled.
+   - Fix encode error in CVS export.
+   - Fix Module designer for modules without items.
+ Calendar
+  - Allow changing the status field if the user is the participant.
+ Gantt
+  - Fix permission checks in the Gantt module.
+
+6.0.1
+Fixes
+ General
+ - Fix migration problems with groups.
+  - Admin have full access to all the groups (even if no other user have it).
+  - Fix problem with access in the last group, now all are processed.
+  - If a project is assigned to one group that don't exists,
+    put it under the root.
+ - Fix migration bug for timecards.
+  - Allow null values for module field in timeproj.
+ - Use static functions since are callback.
+  - sortByListPosition and sortByFormPosition
+
+			
+
