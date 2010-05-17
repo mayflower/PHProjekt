@@ -1,0 +1,17 @@
+
+                             UPGRADE
+
+From 6.0.0 and 6.0.1 to 6.0.2
+-----------------------------
+Download the latest PHProjekt 6.0.2 releases from http://phprojekt.com and
+untar them into your existing installation:
+
+ $ tar xzvf phprojekt-6.0.2.tar.gz
+
+Go to your old PHProjekt installation URL:
+
+ http://example.com/phprojekt/htdocs/
+
+You will be redirected to the setup routine. Use the setup routine
+to update PHProjekt. The standard setup will automatically update
+your installation.
