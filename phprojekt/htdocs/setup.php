@@ -32,6 +32,7 @@ define('PHPR_CONFIG_SECTION', 'production');
  */
 define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
 define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'htdocs');
+define('PHPR_USER_CORE_PATH', PHPR_CORE_PATH);
 define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
 if (!defined('PHPR_CONFIG_FILE')) {
     define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.php');

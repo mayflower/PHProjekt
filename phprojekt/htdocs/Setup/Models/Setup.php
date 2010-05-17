@@ -410,6 +410,14 @@ class Setup_Models_Setup
             }
         }
 
+        // Configuration.ini and ini-dist files
+        if (file_exists($baseDir . "configuration.ini")) {
+            unlink($baseDir . "configuration.ini");
+        }
+        if (file_exists($baseDir . "configuration.ini-dist")) {
+            unlink($baseDir . "configuration.ini-dist");
+        }
+
         return $valid;
     }
 
