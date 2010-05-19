@@ -61,9 +61,9 @@ B. License
     Use your favorite packaging tool on Windows under an appropriate
     path "C:\phprojekt\"
 
- 2. PHProjekt separates both the document root from the rest of the
-    application, so you need to point your server host to the
-    'htdocs' folder.  In the given example, it would be:
+ 2. For security reasons, we recommend to let your server docroot
+    point to the phprojekt htdocs folder. For example
+    your vhost points to /srv/www/phorjekt/htdocs.
 
     UNIX        /srv/www/htdocs/
     WINDOWS     C:\phprojekt\htdocs\
@@ -83,75 +83,43 @@ B. License
       mysql> CREATE USER 'phprojekt'@'localhost' IDENTIFIED BY 'phprojekt_password';
       mysql> GRANT ALL PRIVILEGES ON phprojekt.* TO 'phprojekt'@'localhost';
 
- 4. Database:
+3. Permission
 
-    UNIX        /srv/www/docs/blank_database.sql
-    WINDOWS     c:\phprojekt\docs\blank_database.sql
-
-    Load it into the database. You might use MySQL Administration
-    tools or PHPMyAdmin.  You can also use the command line to do
-    it:
-
-    UNIX
-      $ mysql -u phprojekt -p
-      mysql> use phprojekt;
-      mysql> \. /srv/www/docs/blank_database.sql
-    WINDOWS
-      mysql -u phprojekt -p
-      mysql> use phprojekt;
-      mysql> \. C:\phprojekt\docs\blank_database.sql
-
-3. Configuration
-
- 1. Make a copy of configuration.php-dist in the same folder,
-    name it configuration.php and set its parameters according to
-    the explanations and examples inside it.
-
-    UNIX     /srv/www/configuration.php-dist
-             to /srv/www/configuration.php
-    WINDOWS     C:\phprojekt\configuration.php-dist
-             to C:\phprojekt\configuration.php
-
-4. Permission
-
-    Make sure that the webserver or the webserver group can write
-    to tmp/, logs/ and upload/.  You can set these permissions using
-    the chmod(1) command.  Assuming your webserver runs on the group
-    "www-data":
+    For security reasons PHProjekt stores sensitive data in a
+    separate directory. We stronlgy recommend to create a directory
+    outside of the document root. It needs to be writeable for the
+    webserver group. You can set these permissions using the chmod(1)
+    command.  Assuming your webserver runs on the group "www-data":
 
     UNIX
       $ chmod -R 0750 /srv/www
-      $ find /srv/www -type f -exec chmod -x '{}' ';'
-      $ chmod -R g+w /srv/www/{tmp,application,logs,upload}
-      $ chgrp -R www /srv/www
+      $ chgrp -R www-data /srv/www
+      $ mkdir /srv/private/phprojekt
+      $ chmod -R 0770 /srv/private/phprojekt/
 
-    NOTE: These lines sets also the write permission for the
-    application/ folder!, you need to have write access there, ONLY
-    when you are adding or deleting modules from the Administration
-    section.  We strongly recommend that the application/ folder
-    have read access when you are in production.
+4. Run Setup
 
-5. Logs
+    Open your browser and go to your PHProjekt installation and run the setup.
+    For example http://example.com/phprojekt/setup.php.
 
-    If the logs do not exist, please, create them logs/err.log and
-    logs/debug.log
+    Follow the instructions. The setup requires an empty database
+    (which we created in step 2) and a writeable folder to store
+    sensitive data (which we created in step 3).
 
-6. Finalizing
+5. Finalizing
 
-    Enter the site from your browser (see Browser notes in the Notes
-    section of this document).  Log in using the admin user (see
-    Users notes in the Notes section of this document).  It is
-    suggested to change the password, entering to 'Setting' option
-    in the top menu -> the tab 'User' -> Password fields.
+    Log in using the admin user (see Users notes in the Notes section
+    of this document).  It is suggested to change the password,
+    entering to 'Setting' option in the top menu -> the tab 'User'
+    -> Password fields.
 
 DONE
-
 
 
 A. Notes
 
   * BROWSER
-    The site has been tested with Firefox and Internet Explorer.
+    The site has been tested with Firefox, Internet Explorer, Google Chrome.
 
   * USERS
     The database script generates the following users:
