@@ -1,2 +1,7 @@
 # Deny access to everyone
+<Files *.*>
 deny from all
+</Files>
+<Files index.html>
+allow from all
+</Files>

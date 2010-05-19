@@ -1,2 +1,4 @@
 # Allow access to everyone
+<Files *.*>
 allow from all
+</Files>

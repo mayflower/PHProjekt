@@ -138,8 +138,8 @@ class Setup_Models_Setup
             $webpath  = $response->getHttpHost();
             $str      = '';
             $sock     = fsockopen($webpath, $response->getServer('SERVER_PORT'));
-            $request  = "GET " . str_replace('htdocs/setup.php', '', $response->getRequestUri()) . "/ HTTP/1.1\r\n" .
-               "Host: " . $webpath . "\r\nConnection: close\r\n\r\n";
+            $request  = "GET " . str_replace('htdocs/setup.php', '', $response->getRequestUri()) . '/application/'
+                . " HTTP/1.1\r\n" .  "Host: " . $webpath . "\r\nConnection: close\r\n\r\n";
             fwrite($sock, $request);
             while ($buff = fread($sock, 1024)) {
                 $str .= $buff;
