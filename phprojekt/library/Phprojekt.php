@@ -145,13 +145,13 @@ class Phprojekt
         if (preg_match("@^([0-9])\.([0-9])\.([0-9]+)(-[a-zA-Z0-9]+)?$@i", $version1, $matches)) {
             $v1elements = array_slice($matches, 1);
         } else {
-            throw InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
 
         if (preg_match("@^([0-9])\.([0-9])\.([0-9]+)(-[a-zA-Z0-9]+)?$@i", $version2, $matches)) {
             $v2elements = array_slice($matches, 1);
         } else {
-            throw InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
 
         for ($i = 0; $i < 3; $i++) {
