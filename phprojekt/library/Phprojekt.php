@@ -457,44 +457,31 @@ class Phprojekt
         // Check Logs
         $this->getLog();
 
-        $missingRequirements = array();
-
-        // The following extensions are either needed by components of the Zend Framework that are used
-        // or by P6 components itself.
-        $extensionsNeeded = array('mbstring', 'iconv', 'ctype', 'gd', 'pcre', 'pdo', 'Reflection', 'session', 'SPL',
-            'zlib');
-
-        // These settings need to be properly configured by the admin
-        $settingsNeeded = array('magic_quotes_gpc' => 0, 'magic_quotes_runtime' => 0, 'magic_quotes_sybase' => 0);
+        // Check the server
+        $checkServer = Phprojekt::checkExtensionsAndSettings();
 
         // Check the PHP version
-        $requiredPhpVersion = "5.2.4";
-        if (version_compare(phpversion(), $requiredPhpVersion, '<')) {
-            // This is a requirement of the Zend Framework
-            $missingRequirements[] = "- PHP Version '" . $requiredPhpVersion . "' or newer";
+        if (!$checkServer['requirements']['php']['checked']) {
+            $missingRequirements[] = "- You need the PHP Version '" . $checkServer['requirements']['php']['required']
+                . "' or newer";
         }
 
-        foreach ($extensionsNeeded as $extension) {
-            if (!extension_loaded($extension)) {
-                $missingRequirements[] = "- The '" . $extension . "' extension must be enabled.";
+        // Check required extension
+        foreach ($checkServer['requirements']['extension'] as $name => $values) {
+            if (!$values['checked']) {
+                $missingRequirements[] = "- The '" . $name . "' extension must be enabled.";
             }
         }
 
-        // Check pdo library
-        $mysql  = extension_loaded('pdo_mysql');
-        $sqlite = extension_loaded('pdo_sqlite2');
-        $pgsql  = extension_loaded('pdo_pgsql');
-
-        if (!$mysql && !$sqlite && !$pgsql) {
-            $missingRequirements[] = "- You need one of these PDO extensions: pdo_mysql, pdo_pgsql or pdo_sqlite";
-        }
-
-        foreach ($settingsNeeded as $conf => $value) {
-            if (ini_get($conf) != $value) {
-                $missingRequirements[] = "- The php.ini setting of '" . $conf ."' has to be '" . $value . "'.";
+        // Check required settings
+        foreach ($checkServer['requirements']['settings'] as $name => $values) {
+            if (!$values['checked']) {
+                $missingRequirements[] = "- The php.ini setting of '" . $name ."' has to be '"
+                    . $values['required'] . "'.";
             }
         }
 
+        // Show message
         if (!empty($missingRequirements)) {
             $message = "Your PHP does not meet the requirements needed for P6.<br />"
                 . implode("<br />", $missingRequirements);
@@ -783,5 +770,136 @@ class Phprojekt
         $csrfNamespace->token = $token;
 
         return $token;
+    }
+
+    /**
+     * Return an array with requirements and recommendations of extensions and settings.
+     *
+     * The array is like:
+     * array(
+     *       'requirements' =>
+     *           array(
+     *               'extension' => array(
+     *                  'NAME' => array('required' => true, 'checked' => true | false, 'help' => link)
+     *               ),
+     *               'settings' => array(
+     *                  'NAME' => array('required' => VALUE, 'checked' => true | false, 'help' => link)
+     *               ),
+     *               'php' => array('required' => VALUE, 'checked' => true | false, 'help' => link)
+     *           ),
+     *       'recommendations' =>
+     *           array(
+     *               'settings' => array(
+     *                  'NAME' => array('required' => VALUE, 'checked' => true | false, 'help' => link)
+     *               )
+     *           )
+     * )
+     *
+     * @return array Array as describe above
+     */
+    public static function checkExtensionsAndSettings()
+    {
+        // PHP version
+        $requiredPhpVersion = "5.2.4";
+
+        // The following extensions are either needed by components of the Zend Framework that are used
+        // or by P6 components itself.
+        $extensionsNeeded = array(
+            'mbstring'   => 'http://us.php.net/manual/en/mbstring.installation.php',
+            'iconv'      => 'http://us.php.net/manual/en/iconv.installation.php',
+            'ctype'      => 'http://us.php.net/manual/en/ctype.installation.php',
+            'gd'         => 'http://us.php.net/manual/en/image.installation.php',
+            'pcre'       => 'http://us.php.net/manual/en/pcre.installation.php',
+            'pdo'        => 'http://us.php.net/manual/en/pdo.installation.php',
+            'Reflection' => 'http://us.php.net/manual/en/reflection.installation.php',
+            'session'    => 'http://us.php.net/manual/en/session.installation.php',
+            'SPL'        => 'http://us.php.net/manual/en/spl.installation.php',
+            'zlib'       => 'http://us.php.net/manual/en/zlib.installation.php');
+
+        // These settings need to be properly configured by the admin
+        $settingsNeeded = array(
+            'magic_quotes_gpc' =>
+                array('value' => 0,
+                      'help'  => 'http://us.php.net/manual/en/info.configuration.php#ini.magic-quotes-gpc'),
+            'magic_quotes_runtime' =>
+                array('value' => 0,
+                      'help'  => 'http://us.php.net/manual/en/info.configuration.php#ini.magic-quotes-runtime'),
+            'magic_quotes_sybase' =>
+                array('value' => 0,
+                      'help'  => 'http://us.php.net/manual/en/sybase.configuration.php#ini.magic-quotes-sybase'));
+
+        // These settings should be properly configured by the admin
+        $settingsRecommended = array(
+            'register_globals' =>
+                array('value' => 0,
+                      'help'  => 'http://us.php.net/manual/en/ini.core.php#ini.register-globals'),
+            'safe_mode' =>
+                array('value' => 0,
+                      'help'  => 'http://us.php.net/manual/en/features.safe-mode.php'));
+
+        $requirements              = array();
+        $recommendations           = array();
+        $requirements['extension'] = array();
+        $requirements['settings']  = array();
+
+        // Check the PHP version
+        $requirements['php']['required'] = $requiredPhpVersion;
+        if (version_compare(phpversion(), $requiredPhpVersion, '<')) {
+            // This is a requirement of the Zend Framework
+            $requirements['php']['checked'] = false;
+        } else {
+            $requirements['php']['checked'] = true;
+        }
+        $requirements['php']['help'] = 'http://us.php.net/';
+
+        // Check the extensions needed
+        foreach ($extensionsNeeded as $extension => $link) {
+            $requirements['extension'][$extension]['required'] = true;
+            if (!extension_loaded($extension)) {
+                $requirements['extension'][$extension]['checked'] = false;
+            } else {
+                $requirements['extension'][$extension]['checked'] = true;
+            }
+            $requirements['extension'][$extension]['help'] = $link;
+        }
+
+        // Check pdo library
+        $mysql  = extension_loaded('pdo_mysql');
+        $sqlite = extension_loaded('pdo_sqlite2');
+        $pgsql  = extension_loaded('pdo_pgsql');
+
+        $requirements['extension']['pdo_mysql | pdo_sqlite2 | pdo_pgsql']['required'] = true;
+        if (!$mysql && !$sqlite && !$pgsql) {
+            $requirements['extension']['pdo_mysql | pdo_sqlite2 | pdo_pgsql']['checked'] = false;
+        } else {
+            $requirements['extension']['pdo_mysql | pdo_sqlite2 | pdo_pgsql']['checked'] = true;
+        }
+        $requirements['extension']['pdo_mysql | pdo_sqlite2 | pdo_pgsql']['help'] =
+            'http://us.php.net/manual/en/pdo.installation.php';
+
+        // Check the settings needed
+        foreach ($settingsNeeded as $conf => $values) {
+            $requirements['settings'][$conf]['required'] = $values['value'];
+            if (ini_get($conf) != $values['value']) {
+                $requirements['settings'][$conf]['checked'] = false;
+            } else {
+                $requirements['settings'][$conf]['checked'] = true;
+            }
+            $requirements['settings'][$conf]['help'] = $values['help'];
+        }
+
+        // Check the settings recommended
+        foreach ($settingsRecommended as $conf => $values) {
+            $recommendations['settings'][$conf]['required'] = $values['value'];
+            if (ini_get($conf) != $values['value']) {
+                $recommendations['settings'][$conf]['checked'] = false;
+            } else {
+                $recommendations['settings'][$conf]['checked'] = true;
+            }
+            $recommendations['settings'][$conf]['help'] = $values['help'];
+        }
+
+        return array('requirements'    => $requirements,
+                     'recommendations' => $recommendations);
     }
 }

@@ -55,4 +55,55 @@ class Phprojekt_PhprojektTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, Phprojekt::compareVersion("6.0.0-RC1", "6.0.0-RC1"));
         $this->assertEquals(0, Phprojekt::compareVersion("6.0.1", "6.0.1"));
     }
+
+    public function testCheckExtensionsAndSettings()
+    {
+        $spected = array(
+            'requirements' => array(
+                'extension' => array(
+                    'mbstring' => array('required' => true, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/mbstring.installation.php'),
+                    'iconv' => array('required' => true, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/iconv.installation.php'),
+                    'ctype' => array('required' => true, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/ctype.installation.php'),
+                    'gd' => array('required' => true, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/image.installation.php'),
+                    'pcre' => array('required' => true, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/pcre.installation.php'),
+                    'pdo' => array('required' => true, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/pdo.installation.php'),
+                    'Reflection' => array('required' => true, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/reflection.installation.php'),
+                    'session' => array('required' => true, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/session.installation.php'),
+                    'SPL' => array('required' => true, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/spl.installation.php'),
+                    'zlib' => array('required' => true, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/zlib.installation.php'),
+                    'pdo_mysql | pdo_sqlite2 | pdo_pgsql' => array('required' => true, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/pdo.installation.php')
+                ),
+                'settings' => array(
+                    'magic_quotes_gpc' => array('required' => 0, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/info.configuration.php#ini.magic-quotes-gpc'),
+                    'magic_quotes_runtime' => array('required' => 0, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/info.configuration.php#ini.magic-quotes-runtime'),
+                    'magic_quotes_sybase'  => array('required' => 0, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/sybase.configuration.php#ini.magic-quotes-sybase'),
+                ),
+                'php' => array('required' => '5.2.4', 'checked' => true, 'help' => 'http://us.php.net/')
+            ),
+            'recommendations' => array(
+                'settings' => array(
+                    'register_globals' => array('required' => 0, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/ini.core.php#ini.register-globals'),
+                    'safe_mode' => array('required' => 0, 'checked' => true,
+                        'help' => 'http://us.php.net/manual/en/features.safe-mode.php')
+                )
+            )
+        );
+
+        $this->assertEquals($spected, Phprojekt::checkExtensionsAndSettings());
+    }
 }

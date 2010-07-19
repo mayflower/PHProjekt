@@ -77,44 +77,30 @@ class Setup_Models_Setup
      */
     private function _checkServer()
     {
-        $missingRequirements = array();
-
-        // The following extensions are either needed by components of the Zend Framework that are used
-        // or by P6 components itself.
-        $extensionsNeeded = array('mbstring', 'iconv', 'ctype', 'gd', 'pcre', 'pdo', 'Reflection', 'session', 'SPL',
-            'zlib');
-
-        // These settings need to be properly configured by the admin
-        $settingsNeeded = array('magic_quotes_gpc' => 0, 'magic_quotes_runtime' => 0, 'magic_quotes_sybase' => 0);
-
-        // These settings should be properly configured by the admin
-        $settingsRecommended = array('register_globals' => 0, 'safe_mode' => 0);
+        // Check the server
+        $checkServer = Phprojekt::checkExtensionsAndSettings();
 
         // Check the PHP version
-        $requiredPhpVersion = "5.2.4";
-        if (version_compare(phpversion(), $requiredPhpVersion, '<')) {
-            // This is a requirement of the Zend Framework
-            $missingRequirements[] = "PHP Version $requiredPhpVersion or newer";
+        if (!$checkServer['requirements']['php']['checked']) {
+            $missingRequirements[] = "You need the PHP Version " . $checkServer['requirements']['php']['required']
+                . " or newer. Follow this link for help: <a href=\"". $checkServer['requirements']['php']['help'] ."\""
+                . " target=\"_new\">HELP</a>";
         }
 
-        foreach ($extensionsNeeded as $extension) {
-            if (!extension_loaded($extension)) {
-                $missingRequirements[] = "The $extension extension must be enabled.";
+        // Check required extension
+        foreach ($checkServer['requirements']['extension'] as $name => $values) {
+            if (!$values['checked']) {
+                $missingRequirements[] = "The '" . $name . "' extension must be enabled. Follow this link for help: "
+                    . "<a href=\"". $values['help'] ."\" target=\"_new\">HELP</a>";
             }
         }
 
-        // Check pdo library
-        $mysql  = extension_loaded('pdo_mysql');
-        $sqlite = extension_loaded('pdo_sqlite2');
-        $pgsql  = extension_loaded('pdo_pgsql');
-
-        if (!$mysql && !$sqlite && !$pgsql) {
-            $missingRequirements[] = "You need one of these PDO extensions: pdo_mysql, pdo_pgsql or pdo_sqlite";
-        }
-
-        foreach ($settingsNeeded as $conf => $value) {
-            if (ini_get($conf) != $value) {
-                $missingRequirements[] = "The php.ini setting of \"$conf\" has to be \"$value\".";
+        // Check required settings
+        foreach ($checkServer['requirements']['settings'] as $name => $values) {
+            if (!$values['checked']) {
+                $missingRequirements[] = "The php.ini setting of '" . $name . "' has to be '"
+                    . $values['required'] . "'. Follow this link for help: <a href=\"". $values['help'] . "\""
+                    . " target=\"_new\">HELP</a>";
             }
         }
 
@@ -154,10 +140,11 @@ class Setup_Models_Setup
             fclose($sock);
         }
 
-        foreach ($settingsRecommended as $conf => $value) {
-            if (ini_get($conf) != $value) {
-                $this->_message[] = "It is recommend to have \"$conf\" set to \"$value\", but it is not required "
-                    . "to run PHProjekt.";
+        foreach ($checkServer['recommendations']['settings'] as $name => $values) {
+            if (!$values['checked']) {
+                $this->_message[] = "It is recommend to have '" . $name . "' set to '" . $values['required']
+                    . "', but it is not required to run PHProjekt. Follow this link for help: <a href=\""
+                    . $values['help'] . "\" target=\"_new\">HELP</a>";
             }
         }
     }
