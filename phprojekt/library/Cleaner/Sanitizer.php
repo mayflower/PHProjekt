@@ -170,7 +170,7 @@ class Cleaner_Sanitizer
             return gmdate($format, $value);
         } else {
             // Remove GMT declaration if exists
-            $value = preg_replace('/ GMT([-+0-9])+ \((\D)*\)/', '', $value);
+            $value = preg_replace('/ GMT ?\(?[+-0-9](\d)*\)?/', '', $value);
             $time  = strtotime($value);
             if ($time === false || $time === -1) {
                 return null;
