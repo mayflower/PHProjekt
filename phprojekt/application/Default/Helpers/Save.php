@@ -189,7 +189,9 @@ final class Default_Helpers_Save
             throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
             // Set the projectId to 1 for global modules
-            if (isset($model->projectId) && Phprojekt_Module::saveTypeIsGlobal($moduleId)) {
+            // @TODO Remove the Timecard limitation
+            if (isset($model->projectId) && Phprojekt_Module::saveTypeIsGlobal($moduleId)
+                && Phprojekt_Module::getModuleName($moduleId) != 'Timecard') {
                 $model->projectId = 1;
             }
 
