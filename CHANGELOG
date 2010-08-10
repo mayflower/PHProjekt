@@ -1,3 +1,9 @@
+6.0.3
+Fixed
+ - Fix multiple uploads/downloads (PHPROJEKT-26).
+ - Project assign in Timecard impossible (PHPROJEKT-14).
+ - Extension detection in Setup (PHPROJEKT-13).
+
 6.0.2
 Added
  - New layout and workflow for the install routine.

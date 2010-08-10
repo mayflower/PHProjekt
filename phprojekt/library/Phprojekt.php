@@ -50,7 +50,7 @@ class Phprojekt
     /**
      * The third part of the version number.
      */
-    const VERSION_RELEASE = 2;
+    const VERSION_RELEASE = 3;
 
     /**
      * The extra part of the version number.
