@@ -539,6 +539,12 @@ class Phprojekt
 
         // Define general error handler
         set_error_handler(Array("Phprojekt", "errorHandler"));
+
+        /* initialize PHPRojekt Extensions */
+        $extensions = new Phprojekt_Extensions(PHPR_CORE_PATH);
+
+        /* call init method on every extension */
+        $extensions->init();
     }
 
     /**
