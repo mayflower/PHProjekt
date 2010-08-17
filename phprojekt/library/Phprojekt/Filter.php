@@ -151,11 +151,13 @@ class Phprojekt_Filter
         // Sanitize values
         if ($this->_info['metadata'][$identifier]['DATA_TYPE'] == 'time') {
             // Moving the value to UTC
+            $identifier = $this->_record->getTableName() . '.' . $identifier;
             $identifier = Phprojekt::getInstance()->getDb()->quoteIdentifier($identifier);
             $value      = Cleaner::sanitize('time', $keyword);
             $k          = date("H:i:s", Phprojekt_Converter_Time::userToUtc($value));
             //$identifier = 'TIME(' . $identifier . ')';
         } else if ($this->_info['metadata'][$identifier]['DATA_TYPE'] == 'datetime') {
+            $identifier = $this->_record->getTableName() . '.' . $identifier;
             $identifier = Phprojekt::getInstance()->getDb()->quoteIdentifier($identifier);
             if (strstr($keyword, '-')) {
                 // Use it as date
@@ -174,6 +176,7 @@ class Phprojekt_Filter
         } else {
             $this->_record->$field = $keyword;
             $k                     = $this->_record->$field;
+            $identifier            = $this->_record->getTableName() . '.' . $identifier;
             $identifier            = Phprojekt::getInstance()->getDb()->quoteIdentifier($identifier);
         }
 
