@@ -251,6 +251,18 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
                   'tableField'  => 'project_id',
                   'tableLength' => 11,
                   'formType'    => 'selectValues',
+                  'formRange'   => '1#e#2',
+                  'selectType'  => 'custom'))));
+        $error = $db->getError();
+        $this->assertEquals($message, $error['message']);
+
+        $message = 'Invalid form Range for the select field';
+        $this->assertFalse($db->recordValidate(array(
+            array('tableName'   => 'Project',
+                  'tableType'   => 'int',
+                  'tableField'  => 'project_id',
+                  'tableLength' => 11,
+                  'formType'    => 'selectValues',
                   'formRange'   => '1#e | 2',
                   'selectType'  => 'custom'))));
         $error = $db->getError();

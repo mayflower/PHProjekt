@@ -532,13 +532,13 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
         params = new Array();
     }
 
-    var formLabel    = '';
-    var selectType   = params['selectType'] || 'custom';
-    var tableType    = params['tableType'] || 'varchar';
+    var formLabel  = '';
+    var selectType = params['selectType'] || 'custom';
+    var tableType  = params['tableType'] || 'varchar';
     if (tableType == 'int') {
-        var tableLength  = params['tableLength'] || 11;
+        var tableLength = params['tableLength'] || 11;
     } else {
-        var tableLength  = params['tableLength'] || 255;
+        var tableLength = params['tableLength'] || 255;
     }
     var tableField   = params['tableField'] || '';
     var formRange    = params['formRange'] || '';
@@ -563,6 +563,9 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
                 break;
             } else if (values[0] && values[1] && values[2]) {
                 selectType = values[0].replace(/(^\s*)|(\s*$)/g, "").toLowerCase();
+                if (!phpr.inArray(selectType, new Array('project', 'user', 'contact'))) {
+                    selectType = 'custom';
+                }
                 break;
             }
         }
@@ -621,14 +624,26 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
                     formRange = 'id1 # value1 | id2 # value2';
                 }
                 var formRangeOptions = new Array();
-                var options = formRange.split("|");
-                for (var i in options) {
-                    var values = options[i].split("#");
+                var options          = formRange.split("|");
+                if (options.length > 1) {
+                    for (var i in options) {
+                        var values = options[i].split("#");
                         if (values[0] && values[1]) {
                             formRangeOptions.push({
                                 'id':   values[0],
                                 'name': phpr.nls.get(values[1], dijit.byId('name').value)
-                        });
+                            });
+                        }
+                    }
+                } else {
+                    var values = options[0].split("#");
+                    if (values[1] && values[2]) {
+                        for (var k = 1; k < 3 ; k++) {
+                            formRangeOptions.push({
+                                'id':   values[1],
+                                'name': values[2] + k
+                            });
+                        }
                     }
                 }
                 for (i in formRangeOptions) {

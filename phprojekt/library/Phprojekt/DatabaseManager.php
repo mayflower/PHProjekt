@@ -617,18 +617,37 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                                         'field'   => 'Module Designer',
                                         'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                                         'message' => Phprojekt::getInstance()->translate('Invalid form Range for '
-                                            .'the select field')));
+                                            . 'the select field')));
                                 }
                                 break;
                             default:
                                 if ($valid && !strstr($field['formRange'], '|')) {
-                                    $valid = false;
-                                    $this->_error->addError(array(
-                                        'field'   => 'Module Designer',
-                                        'label'   => Phprojekt::getInstance()->translate('Module Designer'),
-                                        'message' => Phprojekt::getInstance()->translate('Invalid form Range for '.
-                                            'the select field')));
+                                    // Do not have "|"
+                                    if (count(explode('#', $field['formRange'])) != 3) {
+                                        // Invalid module format
+                                        $valid = false;
+                                        $this->_error->addError(array(
+                                            'field'   => 'Module Designer',
+                                            'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                                            'message' => Phprojekt::getInstance()->translate('Invalid form '
+                                                . 'Range for the select field')));
+                                    } else {
+                                        // Check if the module format is correct
+                                        list($module, $key, $value) = explode('#', $field['formRange']);
+                                        $module                     = trim($module);
+                                        $key                        = trim($key);
+                                        $value                      = trim($value);
+                                        if (Phprojekt_Module::getId($module) == 0) {
+                                            $valid = false;
+                                            $this->_error->addError(array(
+                                                'field'   => 'Module Designer',
+                                                'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                                                'message' => Phprojekt::getInstance()->translate('Invalid form '
+                                                    . 'Range for the select field')));
+                                        }
+                                    }
                                 } else {
+                                    // Have "|", check it
                                     foreach (explode('|', $field['formRange']) as $range) {
                                         if ($valid && (count(explode('#', trim($range))) != 2)) {
                                             $valid = false;
