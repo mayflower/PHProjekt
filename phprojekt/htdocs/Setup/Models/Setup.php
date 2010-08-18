@@ -167,6 +167,7 @@ class Setup_Models_Setup
         } else if (!isset($params['dbName']) || empty($params['dbName'])) {
             $this->_error[] = 'The database name can not be empty';
         } else {
+            ob_start();
             try {
                 $dbParams = array(
                     'host'     => $params['dbHost'],
@@ -181,6 +182,7 @@ class Setup_Models_Setup
                 $this->_error[] = 'Cannot connect to server at ' . $params['dbHost']
                     . ' using ' . $params['dbUser'] . ' user ' . '(' . $error->getMessage() . ')';
             }
+            ob_end_clean();
         }
 
         return $valid;
