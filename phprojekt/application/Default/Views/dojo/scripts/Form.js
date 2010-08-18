@@ -746,6 +746,13 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             var sendData = this.formsWidget[i].attr('value');
             if (typeof(sendData) != 'object') {
                 sendData = new Array(sendData);
+            } else {
+                for (var k in sendData) {
+                    // Allow empty arrays, set the value to an empty string
+                    if (typeof(sendData[k]) == 'object' && sendData[k].length == 0) {
+                        sendData[k] = new Array("");
+                    }
+                }
             }
             dojo.mixin(this.sendData, sendData);
         }
