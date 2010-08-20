@@ -28,5 +28,20 @@ dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
 
         this.gridWidget = phpr.Todo.Grid;
         this.formWidget = phpr.Todo.Form;
+    },
+
+    openForm:function(id, module) {
+        // Summary:
+        //    This function opens a new Detail View
+        if (!dojo.byId('detailsBox')) {
+            this.reload();
+        }
+
+        if (id == undefined || id == 0) {
+            var params          = new Array();
+            params['startDate'] = phpr.Date.getIsoDate(new Date());
+        }
+
+        this.form = new this.formWidget(this, id, module, params);
     }
 });
