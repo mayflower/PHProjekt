@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -482,18 +482,21 @@ if(dojo.isIE || dojo.isOpera){
 
 	dojo._setOpacity =
 				d.isIE ? function(/*DomNode*/node, /*Number*/opacity){
-			var ov = opacity * 100;
-			node.style.zoom = 1.0;
-
-			// on IE7 Alpha(Filter opacity=100) makes text look fuzzy so disable it altogether (bug #2661),
-			//but still update the opacity value so we can get a correct reading if it is read later.
-			af(node, 1).Enabled = !(opacity == 1);
+			var ov = opacity * 100, opaque = opacity == 1;
+			node.style.zoom = opaque ? "" : 1;
 
 			if(!af(node)){
+				if(opaque){
+					return opacity;
+				}
 				node.style.filter += " progid:" + astr + "(Opacity=" + ov + ")";
 			}else{
 				af(node, 1).Opacity = ov;
 			}
+
+			// on IE7 Alpha(Filter opacity=100) makes text look fuzzy so disable it altogether (bug #2661),
+			//but still update the opacity value so we can get a correct reading if it is read later.
+			af(node, 1).Enabled = !opaque;
 
 			if(node.nodeName.toLowerCase() == "tr"){
 				d.query("> td", node).forEach(function(i){
@@ -988,12 +991,15 @@ if(dojo.isIE || dojo.isOpera){
 		//		150px. Note that the content box may have a much larger border
 		//		or margin box, depending on the box model currently in use and
 		//		CSS values set/inherited for node.
+		//		While the getter will return top and left values, the
+		//		setter only accepts setting the width and height.
 		//	node:
 		//		id or reference to DOM Node to get/set box for
 		//	box:
 		//		If passed, denotes that dojo.contentBox() should
 		//		update/set the content box for node. Box is an object in the
-		//		above format. All properties are optional if passed.
+		//		above format, but only w (width) and h (height) are supported.
+		//		All properties are optional if passed.
 		var n = byId(node), s = gcs(n), b = box;
 		return !b ? d._getContentBox(n, s) : d._setContentSize(n, b.w, b.h, s); // Object
 	}
@@ -1704,7 +1710,7 @@ if(dojo.isIE || dojo.isOpera){
 				}
 			}
 			// assumed to be an array
-			return s;
+			return s || "";
 		};
 
 	dojo.addClass = function(/*DomNode|String*/node, /*String|Array*/classStr){
@@ -1737,14 +1743,18 @@ if(dojo.isIE || dojo.isOpera){
 
 		node = byId(node);
 		classStr = str2array(classStr);
-		var cls = " " + node[_className] + " ";
+		var cls = node[_className], oldLen;
+		cls = cls ? " " + cls + " " : " ";
+		oldLen = cls.length;
 		for(var i = 0, len = classStr.length, c; i < len; ++i){
 			c = classStr[i];
 			if(c && cls.indexOf(" " + c + " ") < 0){
 				cls += c + " ";
 			}
 		}
-		node[_className] = d.trim(cls);
+		if(oldLen < cls.length){
+			node[_className] = cls.substr(1, cls.length - 2);
+		}
 	};
 
 	dojo.removeClass = function(/*DomNode|String*/node, /*String|Array?*/classStr){

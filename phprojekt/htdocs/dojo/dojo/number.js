@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -24,7 +24,7 @@ dojo.number.__FormatOptions = function(){
 	//	pattern: String?
 	//		override [formatting pattern](http://www.unicode.org/reports/tr35/#Number_Format_Patterns)
 	//		with this string.  Default value is based on locale.  Overriding this property will defeat
-	//		localization.
+	//		localization.  Literal characters in patterns are not supported.
 	//	type: String?
 	//		choose a format type based on the locale from the following:
 	//		decimal, scientific (not yet supported), percent, currency. decimal by default.
@@ -36,11 +36,14 @@ dojo.number.__FormatOptions = function(){
 	//		means do not round.
 	//	locale: String?
 	//		override the locale used to determine formatting rules
+	//	fractional: Boolean?
+	//		If false, show no decimal places, overriding places and pattern settings.
 	this.pattern = pattern;
 	this.type = type;
 	this.places = places;
 	this.round = round;
 	this.locale = locale;
+	this.fractional = fractional;
 }
 =====*/
 
@@ -50,15 +53,15 @@ dojo.number.format = function(/*Number*/value, /*dojo.number.__FormatOptions?*/o
 	// description:
 	//		Create a string from a Number using a known localized pattern.
 	//		Formatting patterns appropriate to the locale are chosen from the
-	//		[CLDR](http://unicode.org/cldr) as well as the appropriate symbols and
-	//		delimiters.  See <http://www.unicode.org/reports/tr35/#Number_Elements>
+	//		[Common Locale Data Repository](http://unicode.org/cldr) as well as the appropriate symbols and
+	//		delimiters.
 	//		If value is Infinity, -Infinity, or is not a valid JavaScript number, return null.
 	// value:
 	//		the number to be formatted
 
 	options = dojo.mixin({}, options || {});
-	var locale = dojo.i18n.normalizeLocale(options.locale);
-	var bundle = dojo.i18n.getLocalization("dojo.cldr", "number", locale);
+	var locale = dojo.i18n.normalizeLocale(options.locale),
+		bundle = dojo.i18n.getLocalization("dojo.cldr", "number", locale);
 	options.customs = bundle;
 	var pattern = options.pattern || bundle[(options.type || "decimal") + "Format"];
 	if(isNaN(value) || Math.abs(value) == Infinity){ return null; } // null
@@ -84,11 +87,10 @@ dojo.number._applyPattern = function(/*Number*/value, /*String*/pattern, /*dojo.
 
 	//TODO: support escapes
 	options = options || {};
-	var group = options.customs.group;
-	var decimal = options.customs.decimal;
-
-	var patternList = pattern.split(';');
-	var positivePattern = patternList[0];
+	var group = options.customs.group,
+		decimal = options.customs.decimal,
+		patternList = pattern.split(';'),
+		positivePattern = patternList[0];
 	pattern = patternList[(value < 0) ? 1 : 0] || ("-" + positivePattern);
 
 	//TODO: only test against unescaped
@@ -189,31 +191,33 @@ dojo.number._formatAbsolute = function(/*Number*/value, /*String*/pattern, /*doj
 	if(options.places === true){options.places=0;}
 	if(options.places === Infinity){options.places=6;} // avoid a loop; pick a limit
 
-	var patternParts = pattern.split(".");
-	var maxPlaces = (options.places >= 0) ? options.places : (patternParts[1] && patternParts[1].length) || 0;
+	var patternParts = pattern.split("."),
+		comma = typeof options.places == "string" && options.places.indexOf(","),
+		maxPlaces = options.places;
+	if(comma){
+		maxPlaces = options.places.substring(comma + 1);
+	}else if(!(maxPlaces >= 0)){
+		maxPlaces = (patternParts[1] || []).length;
+	}
 	if(!(options.round < 0)){
 		value = dojo.number.round(value, maxPlaces, options.round);
 	}
 
-	var valueParts = String(Math.abs(value)).split(".");
-	var fractional = valueParts[1] || "";
-	if(options.places){
-		var comma = dojo.isString(options.places) && options.places.indexOf(",");
+	var valueParts = String(Math.abs(value)).split("."),
+		fractional = valueParts[1] || "";
+	if(patternParts[1] || options.places){
 		if(comma){
-			options.places = options.places.substring(comma+1);
+			options.places = options.places.substring(0, comma);
 		}
-		valueParts[1] = dojo.string.pad(fractional.substr(0, options.places), options.places, '0', true);
-	}else if(patternParts[1] && options.places !== 0){
 		// Pad fractional with trailing zeros
-		var pad = patternParts[1].lastIndexOf("0") + 1;
+		var pad = options.places !== undefined ? options.places : (patternParts[1] && patternParts[1].lastIndexOf("0") + 1);
 		if(pad > fractional.length){
 			valueParts[1] = dojo.string.pad(fractional, pad, '0', true);
 		}
 
 		// Truncate fractional
-		var places = patternParts[1].length;
-		if(places < fractional.length){
-			valueParts[1] = fractional.substr(0, places);
+		if(maxPlaces < fractional.length){
+			valueParts[1] = fractional.substr(0, maxPlaces);
 		}
 	}else{
 		if(valueParts[1]){ valueParts.pop(); }
@@ -235,8 +239,8 @@ dojo.number._formatAbsolute = function(/*Number*/value, /*String*/pattern, /*doj
 	}
 
 	// Add group separators
-	var index = patternParts[0].lastIndexOf(',');
-	var groupSize, groupSize2;
+	var index = patternParts[0].lastIndexOf(','),
+		groupSize, groupSize2;
 	if(index != -1){
 		groupSize = patternParts[0].length - index - 1;
 		var remainder = patternParts[0].substr(0, index);
@@ -295,13 +299,13 @@ dojo.number.regexp = function(/*dojo.number.__RegexpOptions?*/options){
 
 dojo.number._parseInfo = function(/*Object?*/options){
 	options = options || {};
-	var locale = dojo.i18n.normalizeLocale(options.locale);
-	var bundle = dojo.i18n.getLocalization("dojo.cldr", "number", locale);
-	var pattern = options.pattern || bundle[(options.type || "decimal") + "Format"];
+	var locale = dojo.i18n.normalizeLocale(options.locale),
+		bundle = dojo.i18n.getLocalization("dojo.cldr", "number", locale),
+		pattern = options.pattern || bundle[(options.type || "decimal") + "Format"],
 //TODO: memoize?
-	var group = bundle.group;
-	var decimal = bundle.decimal;
-	var factor = 1;
+		group = bundle.group,
+		decimal = bundle.decimal,
+		factor = 1;
 
 	if(pattern.indexOf('%') != -1){
 		factor /= 100;
@@ -329,20 +333,29 @@ dojo.number._parseInfo = function(/*Object?*/options){
 				separator: options.strict ? group : [group,""],
 				fractional: options.fractional,
 				decimal: decimal,
-				exponent: false};
-			var parts = format.split('.');
-			var places = options.places;
-			if(parts.length == 1 || places === 0){flags.fractional = false;}
-			else{
-				if(places === undefined){ places = options.pattern ? parts[1].lastIndexOf('0')+1 : Infinity; }
+				exponent: false
+				},
+
+				parts = format.split('.'),
+				places = options.places;
+
+			// special condition for percent (factor != 1)
+			// allow decimal places even if not specified in pattern
+			if(parts.length == 1 && factor != 1){
+			    parts[1] = "###";
+			}
+			if(parts.length == 1 || places === 0){
+				flags.fractional = false;
+			}else{
+				if(places === undefined){ places = options.pattern ? parts[1].lastIndexOf('0') + 1 : Infinity; }
 				if(places && options.fractional == undefined){flags.fractional = true;} // required fractional, unless otherwise specified
 				if(!options.places && (places < parts[1].length)){ places += "," + parts[1].length; }
 				flags.places = places;
 			}
 			var groups = parts[0].split(',');
-			if(groups.length>1){
+			if(groups.length > 1){
 				flags.groupSize = groups.pop().length;
-				if(groups.length>1){
+				if(groups.length > 1){
 					flags.groupSize2 = groups.pop().length;
 				}
 			}
@@ -353,8 +366,8 @@ dojo.number._parseInfo = function(/*Object?*/options){
 	if(isCurrency){
 		// substitute the currency symbol for the placeholder in the pattern
 		re = re.replace(/([\s\xa0]*)(\u00a4{1,3})([\s\xa0]*)/g, function(match, before, target, after){
-			var prop = ["symbol", "currency", "displayName"][target.length-1];
-			var symbol = dojo.regexp.escapeString(options[prop] || options.currency || "");
+			var prop = ["symbol", "currency", "displayName"][target.length-1],
+				symbol = dojo.regexp.escapeString(options[prop] || options.currency || "");
 			before = before ? "[\\s\\xa0]" : "";
 			after = after ? "[\\s\\xa0]" : "";
 			if(!options.strict){
@@ -377,7 +390,7 @@ dojo.number.__ParseOptions = function(){
 	//	pattern: String?
 	//		override [formatting pattern](http://www.unicode.org/reports/tr35/#Number_Format_Patterns)
 	//		with this string.  Default value is based on locale.  Overriding this property will defeat
-	//		localization.
+	//		localization.  Literal characters in patterns are not supported.
 	//	type: String?
 	//		choose a format type based on the locale from the following:
 	//		decimal, scientific (not yet supported), percent, currency. decimal by default.
@@ -386,10 +399,14 @@ dojo.number.__ParseOptions = function(){
 	//	strict: Boolean?
 	//		strict parsing, false by default.  Strict parsing requires input as produced by the format() method.
 	//		Non-strict is more permissive, e.g. flexible on white space, omitting thousands separators
+	//	fractional: Boolean?|Array?
+	//		Whether to include the fractional portion, where the number of decimal places are implied by pattern
+	//		or explicit 'places' parameter.  The value [true,false] makes the fractional portion optional.
 	this.pattern = pattern;
 	this.type = type;
 	this.locale = locale;
 	this.strict = strict;
+	this.fractional = fractional;
 }
 =====*/
 dojo.number.parse = function(/*String*/expression, /*dojo.number.__ParseOptions?*/options){
@@ -401,10 +418,11 @@ dojo.number.parse = function(/*String*/expression, /*dojo.number.__ParseOptions?
 	//		Formatting patterns are chosen appropriate to the locale
 	//		and follow the syntax described by
 	//		[unicode.org TR35](http://www.unicode.org/reports/tr35/#Number_Format_Patterns)
+    	//		Note that literal characters in patterns are not supported.
 	// expression:
 	//		A string representation of a Number
-	var info = dojo.number._parseInfo(options);
-	var results = (new RegExp("^"+info.regexp+"$")).exec(expression);
+	var info = dojo.number._parseInfo(options),
+		results = (new RegExp("^"+info.regexp+"$")).exec(expression);
 	if(!results){
 		return NaN; //NaN
 	}
@@ -461,7 +479,7 @@ dojo.number._realNumberRegexp = function(/*dojo.number.__RealNumberRegexpFlags?*
 	//		Builds a regular expression to match a real number in exponential
 	//		notation
 
-	// assign default values to missing paramters
+	// assign default values to missing parameters
 	flags = flags || {};
 	//TODO: use mixin instead?
 	if(!("places" in flags)){ flags.places = Infinity; }
@@ -470,11 +488,8 @@ dojo.number._realNumberRegexp = function(/*dojo.number.__RealNumberRegexpFlags?*
 	if(!("exponent" in flags)){ flags.exponent = [true, false]; }
 	if(!("eSigned" in flags)){ flags.eSigned = [true, false]; }
 
-	// integer RE
-	var integerRE = dojo.number._integerRegexp(flags);
-
-	// decimal RE
-	var decimalRE = dojo.regexp.buildGroupRE(flags.fractional,
+	var integerRE = dojo.number._integerRegexp(flags),
+		decimalRE = dojo.regexp.buildGroupRE(flags.fractional,
 		function(q){
 			var re = "";
 			if(q && (flags.places!==0)){
@@ -490,7 +505,6 @@ dojo.number._realNumberRegexp = function(/*dojo.number.__RealNumberRegexpFlags?*
 		true
 	);
 
-	// exponent RE
 	var exponentRE = dojo.regexp.buildGroupRE(flags.exponent,
 		function(q){ 
 			if(q){ return "([eE]" + dojo.number._integerRegexp({ signed: flags.eSigned}) + ")"; }
@@ -498,7 +512,6 @@ dojo.number._realNumberRegexp = function(/*dojo.number.__RealNumberRegexpFlags?*
 		}
 	);
 
-	// real number RE
 	var realRE = integerRE + decimalRE;
 	// allow for decimals without integers, e.g. .25
 	if(decimalRE){realRE = "(?:(?:"+ realRE + ")|(?:" + decimalRE + "))";}
@@ -530,7 +543,7 @@ dojo.number._integerRegexp = function(/*dojo.number.__IntegerRegexpFlags?*/flags
 	// summary: 
 	//		Builds a regular expression that matches an integer
 
-	// assign default values to missing paramters
+	// assign default values to missing parameters
 	flags = flags || {};
 	if(!("signed" in flags)){ flags.signed = [true, false]; }
 	if(!("separator" in flags)){
@@ -538,13 +551,12 @@ dojo.number._integerRegexp = function(/*dojo.number.__IntegerRegexpFlags?*/flags
 	}else if(!("groupSize" in flags)){
 		flags.groupSize = 3;
 	}
-	// build sign RE
+
 	var signRE = dojo.regexp.buildGroupRE(flags.signed,
 		function(q){ return q ? "[-+]" : ""; },
 		true
 	);
 
-	// number RE
 	var numberRE = dojo.regexp.buildGroupRE(flags.separator,
 		function(sep){
 			if(!sep){
@@ -566,7 +578,6 @@ dojo.number._integerRegexp = function(/*dojo.number.__IntegerRegexpFlags?*/flags
 		true
 	);
 
-	// integer RE
 	return signRE + numberRE; // String
 }
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -207,7 +207,8 @@ if(typeof window != 'undefined'){
 			return (stat >= 200 && stat < 300) || 	// Boolean
 				stat == 304 || 						// allow any 2XX response code
 				stat == 1223 || 						// get it out of the cache
-				(!stat && (lp == "file:" || lp == "chrome:" || lp == "app:") ); // Internet Explorer mangled the status code OR we're Titanium requesting a local file
+				// Internet Explorer mangled the status code OR we're Titanium/browser chrome/chrome extension requesting a local file
+				(!stat && (lp == "file:" || lp == "chrome:" || lp == "chrome-extension:" || lp == "app:") );
 		}
 
 		//See if base tag is in use.
@@ -295,6 +296,7 @@ if(typeof window != 'undefined'){
 			while(mll.length){
 				(mll.pop())();
 			}
+			d = null;
 		};
 
 		var _onWindowUnloadAttached = 0;
@@ -363,6 +365,11 @@ if(typeof window != 'undefined'){
 	//START DOMContentLoaded
 	dojo._initFired = false;
 	dojo._loadInit = function(e){
+		if(dojo._scrollIntervalId){
+			clearInterval(dojo._scrollIntervalId);
+			dojo._scrollIntervalId = 0;
+		}
+
 		if(!dojo._initFired){
 			dojo._initFired = true;
 
@@ -377,7 +384,7 @@ if(typeof window != 'undefined'){
 		}
 	}
 
-	if(!dojo.config.afterOnLoad){
+	if(!dojo.config.afterOnLoad){		
 		if(document.addEventListener){
 			//Standards. Hooray! Assumption here that if standards based,
 			//it knows about DOMContentLoaded. It is OK if it does not, the fall through
@@ -386,33 +393,44 @@ if(typeof window != 'undefined'){
 			window.addEventListener("load", dojo._loadInit, false);
 		}else if(window.attachEvent){
 			window.attachEvent("onload", dojo._loadInit);
+
+			//DOMContentLoaded approximation. Diego Perini found this MSDN article
+			//that indicates doScroll is available after DOM ready, so do a setTimeout
+			//to check when it is available.
+			//http://msdn.microsoft.com/en-us/library/ms531426.aspx
+			if(!dojo.config.skipIeDomLoaded && self === self.top){
+				dojo._scrollIntervalId = setInterval(function (){
+					try{
+						//When dojo is loaded into an iframe in an IE HTML Application 
+						//(HTA), such as in a selenium test, javascript in the iframe
+						//can't see anything outside of it, so self===self.top is true,
+						//but the iframe is not the top window and doScroll will be 
+						//available before document.body is set. Test document.body
+						//before trying the doScroll trick
+						if(document.body){
+							document.documentElement.doScroll("left");
+							dojo._loadInit();
+						}
+					}catch (e){}
+				}, 30);
+			}
 		}
 	}
 
 		if(dojo.isIE){
-		// 	for Internet Explorer. readyState will not be achieved on init
-		// 	call, but dojo doesn't need it however, we'll include it
-		// 	because we don't know if there are other functions added that
-		// 	might.  Note that this has changed because the build process
-		// 	strips all comments -- including conditional ones.
-		if(!dojo.config.afterOnLoad && !dojo.config.skipIeDomLoaded){
-			document.write('<scr'+'ipt defer src="//:" '
-				+ 'onreadystatechange="if(this.readyState==\'complete\'){' + dojo._scopeName + '._loadInit();}">'
-				+ '</scr'+'ipt>'
-			);
-		}
-
 		try{
-			document.namespaces.add("v","urn:schemas-microsoft-com:vml");
-			var vmlElems = ["*", "group", "roundrect", "oval", "shape", "rect", "imagedata"],
-				i = 0, l = 1, s = document.createStyleSheet();
-			if(dojo.isIE >= 8){
-				i = 1;
-				l = vmlElems.length;
-			}
-			for(; i < l; ++i){
-				s.addRule("v\\:" + vmlElems[i], "behavior:url(#default#VML); display:inline-block");
-			}
+			(function(){
+				document.namespaces.add("v", "urn:schemas-microsoft-com:vml");
+				var vmlElems = ["*", "group", "roundrect", "oval", "shape", "rect", "imagedata", "path", "textpath", "text"],
+					i = 0, l = 1, s = document.createStyleSheet();
+				if(dojo.isIE >= 8){
+					i = 1;
+					l = vmlElems.length;
+				}
+				for(; i < l; ++i){
+					s.addRule("v\\:" + vmlElems[i], "behavior:url(#default#VML); display:inline-block");
+				}
+			})();
 		}catch(e){}
 	}
 		//END DOMContentLoaded

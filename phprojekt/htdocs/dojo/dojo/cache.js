@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -80,19 +80,18 @@ dojo.cache = {
 		var key = pathObj.toString();
 
 		var val = value;
-		if(value !== undefined && !dojo.isString(value)){
+		if(value != undefined && !dojo.isString(value)){
 			val = ("value" in value ? value.value : undefined);
 		}
 
 		var sanitize = value && value.sanitize ? true : false;
 
-		if(val || val === null){
-			//We have a value, either clear or set the cache value.
-			if(val == null){
-				delete cache[key];
-			}else{
-				val = cache[key] = sanitize ? dojo.cache._sanitize(val) : val;
-			}
+		if(typeof val == "string"){
+			//We have a string, set cache value
+			val = cache[key] = sanitize ? dojo.cache._sanitize(val) : val;
+		}else if(val === null){
+			//Remove cached value
+			delete cache[key];
 		}else{
 			//Allow cache values to be empty strings. If key property does
 			//not exist, fetch it.
