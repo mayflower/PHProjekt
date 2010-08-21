@@ -14,19 +14,17 @@
 	background:#fafafa url("../images/titleBar.png") repeat-x top left;
 	border-top: 1px solid #b9bbdd;
 	padding: 5px 4px 6px 8px;
-	cursor:pointer;
 	font-size: 0.9em;
 	font-weight: bold;
 	color: #373941;
 }
 
-.soria .dijitAccordionTitle-selected  {
+.soria .dijitAccordionTitleSelected  {
 	background: #f9f9f9 url("../images/accordionItemActive.png") top repeat-x;
 	font-weight: bold;
 	border-top: 1px solid #b9bbdd;
 	border-bottom: 1px solid #b9bbdd;
 	padding: 5px 4px 5px 8px;
-	cursor: default;
 	color: #243C5F;
 }
 
@@ -37,7 +35,7 @@
 	margin-top:-1px;
 }
 
-.soria .dijitAccordionTitle-selected .dijitAccordionArrow {
+.soria .dijitAccordionTitleSelected .dijitAccordionArrow {
 	background:url("../images/spriteRoundedIconsSmallBl.gif") no-repeat -15px top;
 	margin-top:-1px;
 }

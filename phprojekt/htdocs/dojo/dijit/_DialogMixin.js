@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,6 +8,8 @@
 if(!dojo._hasResource["dijit._DialogMixin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit._DialogMixin"] = true;
 dojo.provide("dijit._DialogMixin");
+
+dojo.require("dijit._Widget");
 
 dojo.declare("dijit._DialogMixin", null,
 	{
@@ -58,7 +60,7 @@ dojo.declare("dijit._DialogMixin", null,
 			// type:
 			//		protected
 			this.onExecute();	// notify container that we are about to execute
-			this.execute(this.attr('value'));
+			this.execute(this.get('value'));
 		},
 
 		_getFocusItems: function(/*Node*/ dialogNode){

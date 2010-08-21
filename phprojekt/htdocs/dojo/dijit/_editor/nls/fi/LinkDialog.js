@@ -1,1 +1,1 @@
-({"set":"Aseta","text":"Kuvaus:","insertImageTitle":"Kuvan ominaisuudet","url":"URL-osoite:","createLinkTitle":"Linkin ominaisuudet","newWindow":"New Window","topWindow":"Topmost Window","target":"Target:","parentWindow":"Parent Window","currentWindow":"Current Window"})
+({"text":"Kuvaus:","insertImageTitle":"Kuvan ominaisuudet","set":"Aseta","newWindow":"Uusi ikkuna","topWindow":"Päällimmäinen ikkuna","target":"Kohde:","createLinkTitle":"Linkin ominaisuudet","parentWindow":"Pääikkuna","currentWindow":"Nykyinen ikkuna","url":"URL-osoite:"})

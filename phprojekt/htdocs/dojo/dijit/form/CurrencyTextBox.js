@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -45,7 +45,7 @@ dojo.declare(
 		//		2. The currency mark (dollar sign, euro mark, etc.) is displayed when the field is blurred
 		//			but erased during editing, so that the user can just enter a plain number.
 
-		// currency: String
+		// currency: [const] String
 		//		the [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, a three letter sequence like "USD"
 		currency: "",
 
@@ -56,6 +56,8 @@ dojo.declare(
 		/*=====
 		constraints: {},
 		======*/
+		
+		baseClass: "dijitTextBox dijitCurrencyTextBox",
 
 		// Override regExpGen ValidationTextBox.regExpGen().... we use a reg-ex generating function rather
 		// than a straight regexp to deal with locale  (plus formatting options too?)
@@ -80,10 +82,11 @@ dojo.declare(
 			return v;
 		},
 
-
-		postMixInProperties: function(){
-			this.constraints = dojo.currency._mixInDefaults(dojo.mixin(this.constraints, { currency: this.currency, exponent: false })); // get places
-			this.inherited(arguments);
+		_setConstraintsAttr: function(/* Object */ constraints){
+			if(!constraints.currency && this.currency){
+				constraints.currency = this.currency;
+			}
+			this.inherited(arguments, [ dojo.currency._mixInDefaults(dojo.mixin(constraints, { exponent: false })) ]); // get places
 		}
 	}
 );

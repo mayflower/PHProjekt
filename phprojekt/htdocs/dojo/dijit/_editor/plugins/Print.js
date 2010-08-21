@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -13,7 +13,7 @@ dojo.require("dijit._editor._Plugin");
 dojo.require("dijit.form.Button");
 dojo.require("dojo.i18n");
 
-dojo.requireLocalization("dijit._editor", "commands", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit._editor", "commands", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
 dojo.declare("dijit._editor.plugins.Print",dijit._editor._Plugin,{
 	// summary:
@@ -23,9 +23,12 @@ dojo.declare("dijit._editor.plugins.Print",dijit._editor._Plugin,{
 	_initButton: function(){
 		// summary:
 		//		Over-ride for creation of the Print button.
-		var strings = dojo.i18n.getLocalization("dijit._editor", "commands");
+		var strings = dojo.i18n.getLocalization("dijit._editor", "commands"),
+			editor = this.editor;
 		this.button = new dijit.form.Button({
 			label: strings["print"],
+			dir: editor.dir,
+			lang: editor.lang,
 			showLabel: false,
 			iconClass: this.iconClassPrefix + " " + this.iconClassPrefix + "Print",
 			tabIndex: "-1",
@@ -46,7 +49,7 @@ dojo.declare("dijit._editor.plugins.Print",dijit._editor._Plugin,{
 		this.editor.onLoadDeferred.addCallback(
 			dojo.hitch(this, function(){
 				if(!this.editor.iframe.contentWindow["print"]){
-					this.button.attr("disabled", true);
+					this.button.set("disabled", true);
 				}
 			})
 		);
@@ -62,15 +65,15 @@ dojo.declare("dijit._editor.plugins.Print",dijit._editor._Plugin,{
 			// IE requires the frame to be focused for
 			// print to work, but since this is okay for all
 			// no special casing.
-			if(!dojo.isOpera){
+			if(!dojo.isOpera && !dojo.isChrome){
 				dijit.focus(edFrame);
 				edFrame.contentWindow.print();
 			}else{
-				// Opera doesn't let you print single frames.
+				// Neither Opera nor Chrome 3 et you print single frames.
 				// So, open a new 'window', print it, and close it.
 				// Also, can't use size 0x0, have to use 1x1
 				var edDoc = this.editor.document;
-				var content = this.editor.attr("value");
+				var content = this.editor.get("value");
 				content = "<html><head><meta http-equiv='Content-Type' " +
 					"content='text/html; charset='UTF-8'></head><body>" +
 					content + "</body></html>";
@@ -109,5 +112,6 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 		o.plugin = new dijit._editor.plugins.Print({command: "print"});
 	}
 });
+
 
 }

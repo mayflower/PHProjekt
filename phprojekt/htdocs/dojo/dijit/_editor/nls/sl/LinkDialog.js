@@ -1,1 +1,1 @@
-({"set":"Nastavi","text":"Opis:","insertImageTitle":"Lastnosti slike","url":"URL:","createLinkTitle":"Lastnosti povezave","newWindow":"New Window","topWindow":"Topmost Window","target":"Target:","parentWindow":"Parent Window","currentWindow":"Current Window"})
+({"text":"Opis:","insertImageTitle":"Lastnosti slike","set":"Nastavi","newWindow":"Novo okno","topWindow":"Najvišje okno","target":"Cilj:","createLinkTitle":"Lastnosti povezave","parentWindow":"Nadrejeno okno","currentWindow":"Trenutno okno","url":"URL:"})

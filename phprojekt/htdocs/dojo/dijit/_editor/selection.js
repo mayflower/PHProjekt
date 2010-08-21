@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -245,9 +245,7 @@ dojo.mixin(dijit._editor.selection, {
 			}
 		}else if(win.getSelection){
 			var selection = dojo.global.getSelection();
-			if(selection.setBaseAndExtent){ // Safari
-				selection.setBaseAndExtent(element, 0, element, element.innerText.length - 1);
-			}else if(dojo.isOpera){
+			if(dojo.isOpera){
 				//Opera's selectAllChildren doesn't seem to work right
 				//against <body> nodes and possibly others ... so
 				//we use the W3C range API
@@ -259,7 +257,7 @@ dojo.mixin(dijit._editor.selection, {
 				range.setStart(element, 0);
 				range.setEnd(element,(element.nodeType == 3)?element.length:element.childNodes.length);
 				selection.addRange(range);
-			}else if(selection.selectAllChildren){ // Mozilla
+			}else{
 				selection.selectAllChildren(element);
 			}
 		}
@@ -303,7 +301,61 @@ dojo.mixin(dijit._editor.selection, {
 				selection.addRange(range);
 			}
 		}
+	},
+
+	inSelection: function(node){
+		// summary:
+		//		This function determines if 'node' is
+		//		in the current selection.
+		// tags:
+		//		public
+		if(node){
+			var newRange;
+			var doc = dojo.doc;
+			var range;
+
+			if(dojo.global.getSelection){
+				//WC3
+				var sel = dojo.global.getSelection();
+				if(sel && sel.rangeCount > 0){
+					range = sel.getRangeAt(0);
+				}
+				if(range && range.compareBoundaryPoints && doc.createRange){
+					try{
+						newRange = doc.createRange();
+						newRange.setStart(node, 0);
+						if(range.compareBoundaryPoints(range.START_TO_END, newRange) === 1){
+							return true;
+						}
+					}catch(e){ /* squelch */}
+				}
+			}else if(doc.selection){
+				// Probably IE, so we can't use the range object as the pseudo
+				// range doesn't implement the boundry checking, we have to 
+				// use IE specific crud.
+				range = doc.selection.createRange();
+				try{
+					newRange = node.ownerDocument.body.createControlRange();
+					if(newRange){
+						newRange.addElement(node);
+					}
+				}catch(e1){
+					try{
+						newRange = node.ownerDocument.body.createTextRange();
+						newRange.moveToElementText(node);
+					}catch(e2){/* squelch */}
+				}
+				if(range && newRange){
+					// We can finally compare similar to W3C
+					if(range.compareEndPoints("EndToStart", newRange) === 1){
+						return true;
+					}
+				}
+			}
+		}
+		return false; // boolean
 	}
+
 });
 
 }

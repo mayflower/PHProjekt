@@ -1,1 +1,1 @@
-({"set":"Ορισμός","text":"Περιγραφή:","insertImageTitle":"Ιδιότητες εικόνας","url":"Διεύθυνση URL:","createLinkTitle":"Ιδιότητες διασύνδεσης","newWindow":"New Window","topWindow":"Topmost Window","target":"Target:","parentWindow":"Parent Window","currentWindow":"Current Window"})
+({"text":"Περιγραφή:","insertImageTitle":"Ιδιότητες εικόνας","set":"Ορισμός","newWindow":"Νέο παράθυρο","topWindow":"Παράθυρο σε πρώτο πλάνο","target":"Προορισμός:","createLinkTitle":"Ιδιότητες σύνδεσης","parentWindow":"Γονικό παράθυρο","currentWindow":"Τρέχον παράθυρο","url":"Διεύθυνση URL:"})

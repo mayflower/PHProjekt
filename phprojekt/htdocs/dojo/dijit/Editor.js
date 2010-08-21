@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,6 +9,7 @@ if(!dojo._hasResource["dijit.Editor"]){ //_hasResource checks added by build. Do
 dojo._hasResource["dijit.Editor"] = true;
 dojo.provide("dijit.Editor");
 dojo.require("dijit._editor.RichText");
+
 dojo.require("dijit.Toolbar");
 dojo.require("dijit.ToolbarSeparator");
 dojo.require("dijit._editor._Plugin");
@@ -16,7 +17,9 @@ dojo.require("dijit._editor.plugins.EnterKeyHandling");
 dojo.require("dijit._editor.range");
 dojo.require("dijit._Container");
 dojo.require("dojo.i18n");
-dojo.requireLocalization("dijit._editor", "commands", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.require("dijit.layout._LayoutWidget");
+dojo.require("dijit._editor.range");
+dojo.requireLocalization("dijit._editor", "commands", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
 dojo.declare(
 	"dijit.Editor",
@@ -78,35 +81,49 @@ dojo.declare(
 		},
 
 		postCreate: function(){
-			//for custom undo/redo
-			if(this.customUndo){
-				dojo['require']("dijit._editor.range");
-				this._steps=this._steps.slice(0);
-				this._undoedSteps=this._undoedSteps.slice(0);
-//				this.addKeyHandler('z',this.KEY_CTRL,this.undo);
-//				this.addKeyHandler('y',this.KEY_CTRL,this.redo);
-			}
+			//for custom undo/redo, if enabled.
+			this._steps=this._steps.slice(0);
+			this._undoedSteps=this._undoedSteps.slice(0);
+
 			if(dojo.isArray(this.extraPlugins)){
 				this.plugins=this.plugins.concat(this.extraPlugins);
 			}
 
-//			try{
+			// Set up a deferred so that the value isn't applied to the editor 
+			// until all the plugins load, needed to avoid timing condition
+			// reported in #10537.
+			this.setValueDeferred = new dojo.Deferred();
+
 			this.inherited(arguments);
-//			dijit.Editor.superclass.postCreate.apply(this, arguments);
 
 			this.commands = dojo.i18n.getLocalization("dijit._editor", "commands", this.lang);
 
 			if(!this.toolbar){
 				// if we haven't been assigned a toolbar, create one
-				this.toolbar = new dijit.Toolbar({});
-				dojo.place(this.toolbar.domNode, this.editingArea, "before");
+				this.toolbar = new dijit.Toolbar({
+					dir: this.dir,
+					lang: this.lang
+				});
+				this.header.appendChild(this.toolbar.domNode);
 			}
 
 			dojo.forEach(this.plugins, this.addPlugin, this);
-			this.onNormalizedDisplayChanged(); //update toolbar button status
-//			}catch(e){ console.debug(e); }
 
+			// Okay, denote the value can now be set.
+			this.setValueDeferred.callback(true);
+
+			dojo.addClass(this.iframe.parentNode, "dijitEditorIFrameContainer");
+			dojo.addClass(this.iframe, "dijitEditorIFrame");
+			dojo.attr(this.iframe, "allowTransparency", true);
+
+			if(dojo.isWebKit){
+				// Disable selecting the entire editor by inadvertant double-clicks.
+				// on buttons, title bar, etc.  Otherwise clicking too fast on
+				// a button such as undo/redo selects the entire editor.
+				dojo.style(this.domNode, "KhtmlUserSelect", "none");
+			}
 			this.toolbar.startup();
+			this.onNormalizedDisplayChanged(); //update toolbar button status
 		},
 		destroy: function(){
 			dojo.forEach(this._plugins, function(p){
@@ -194,8 +211,14 @@ dojo.declare(
 			//		protected
 
 			// Converts the iframe (or rather the <div> surrounding it) to take all the available space
-			// except what's needed for the toolbar
-			this.editingArea.style.height = (this._contentBox.h - dojo.marginBox(this.toolbar.domNode).h)+"px";
+			// except what's needed for the header (toolbars) and footer (breadcrumbs, etc).
+			// A class was added to the iframe container and some themes style it, so we have to
+			// calc off the added margins and padding too. See tracker: #10662
+			var areaHeight = (this._contentBox.h - 
+				(this.getHeaderHeight() + this.getFooterHeight() + 
+				 dojo._getPadBorderExtents(this.iframe.parentNode).h +
+				 dojo._getMarginExtents(this.iframe.parentNode).h));
+			this.editingArea.style.height = areaHeight + "px";
 			if(this.iframe){
 				this.iframe.style.height="100%";
 			}
@@ -206,9 +229,41 @@ dojo.declare(
 			//		IE only to prevent 2 clicks to focus
 			// tags:
 			//		private
+			var outsideClientArea;
+			// IE 8's componentFromPoint is broken, which is a shame since it
+			// was smaller code, but oh well.  We have to do this brute force
+			// to detect if the click was scroller or not.
+			var b = this.document.body;
+			var clientWidth = b.clientWidth;
+			var clientHeight = b.clientHeight;
+			var clientLeft = b.clientLeft;
+			var offsetWidth = b.offsetWidth;
+			var offsetHeight = b.offsetHeight;
+			var offsetLeft = b.offsetLeft;
 
-			var outsideClientArea = this.document.body.componentFromPoint(e.x, e.y);
+			//Check for vertical scroller click.
+			bodyDir = b.dir?b.dir.toLowerCase():""
+			if(bodyDir != "rtl"){
+				if(clientWidth < offsetWidth && e.x > clientWidth && e.x < offsetWidth){ 
+					// Check the click was between width and offset width, if so, scroller
+					outsideClientArea = true;
+				}
+			}else{
+				// RTL mode, we have to go by the left offsets.
+				if(e.x < clientLeft && e.x > offsetLeft){
+					// Check the click was between width and offset width, if so, scroller
+					outsideClientArea = true;
+				}
+			}
 			if(!outsideClientArea){
+				// Okay, might be horiz scroller, check that.
+				if(clientHeight < offsetHeight && e.y > clientHeight && e.y < offsetHeight){
+					// Horizontal scroller.
+					outsideClientArea = true;
+				}
+			}
+			if(!outsideClientArea){
+				delete this._cursorToStart; // Remove the force to cursor to start position. 
 				delete this._savedSelection; // new mouse position overrides old selection
 				if(e.target.tagName == "BODY"){
 					setTimeout(dojo.hitch(this, "placeCursorAtEnd"), 0);
@@ -242,7 +297,8 @@ dojo.declare(
 		//		browser support. By default, we only enable customUndo for IE, as it
 		//		has broken native undo/redo support. Note: the implementation does
 		//		support other browsers which have W3C DOM2 Range API implemented.
-		customUndo: dojo.isIE,
+		//		It was also enabled on WebKit, to fix undo/redo enablement. (#9613)
+		customUndo: dojo.isIE || dojo.isWebKit,
 
 		// editActionInterval: Integer
 		//		When using customUndo, not every keystroke will be saved as a step.
@@ -320,7 +376,6 @@ dojo.declare(
 				return this.inherited('queryCommandEnabled',arguments);
 			}
 		},
-
 		_moveToBookmark: function(b){
 			// summary:
 			//		Selects the text specified in bookmark b
@@ -329,22 +384,57 @@ dojo.declare(
 			var bookmark = b.mark;
 			var mark = b.mark;
 			var col = b.isCollapsed;
-			if(dojo.isIE){
-				if(dojo.isArray(mark)){//IE CONTROL
-					bookmark = [];
-					dojo.forEach(mark,function(n){
-						bookmark.push(dijit.range.getNode(n,this.editNode));
-					},this);
+			var r, sNode, eNode, sel;
+			if(mark){
+				if(dojo.isIE){
+					if(dojo.isArray(mark)){
+						//IE CONTROL, have to use the native bookmark.
+						bookmark = [];
+						dojo.forEach(mark,function(n){
+							bookmark.push(dijit.range.getNode(n,this.editNode));
+						},this);
+						dojo.withGlobal(this.window,'moveToBookmark',dijit,[{mark: bookmark, isCollapsed: col}]);
+					}else{
+						if(mark.startContainer && mark.endContainer){
+							// Use the pseudo WC3 range API.  This works better for positions
+							// than the IE native bookmark code.
+							sel = dijit.range.getSelection(this.window);
+							if(sel && sel.removeAllRanges){
+								sel.removeAllRanges();
+								r = dijit.range.create(this.window);
+								sNode = dijit.range.getNode(mark.startContainer,this.editNode);
+								eNode = dijit.range.getNode(mark.endContainer,this.editNode);
+								if(sNode && eNode){
+									// Okay, we believe we found the position, so add it into the selection
+									// There are cases where it may not be found, particularly in undo/redo, when
+									// IE changes the underlying DOM on us (wraps text in a <p> tag or similar.
+									// So, in those cases, don't bother restoring selection.
+									r.setStart(sNode,mark.startOffset);
+									r.setEnd(eNode,mark.endOffset);
+									sel.addRange(r);
+								}
+							}
+						}
+					}
+				}else{//w3c range
+					sel = dijit.range.getSelection(this.window);
+					if(sel && sel.removeAllRanges){
+						sel.removeAllRanges();
+						r = dijit.range.create(this.window);
+						sNode = dijit.range.getNode(mark.startContainer,this.editNode);
+						eNode = dijit.range.getNode(mark.endContainer,this.editNode);
+						if(sNode && eNode){
+							// Okay, we believe we found the position, so add it into the selection
+							// There are cases where it may not be found, particularly in undo/redo, when
+							// formatting as been done and so on, so don't restore selection then.
+							r.setStart(sNode,mark.startOffset);
+							r.setEnd(eNode,mark.endOffset);
+							sel.addRange(r);
+						}
+					}
 				}
-			}else{//w3c range
-				var r=dijit.range.create(this.window);
-				r.setStart(dijit.range.getNode(b.startContainer,this.editNode),b.startOffset);
-				r.setEnd(dijit.range.getNode(b.endContainer,this.editNode),b.endOffset);
-				bookmark=r;
 			}
-			dojo.withGlobal(this.window,'moveToBookmark',dijit,[{mark: bookmark, isCollapsed: col}]);
 		},
-
 		_changeToStep: function(from, to){
 			// summary:
 			//		Reverts editor to "to" setting, from the undo stack.
@@ -360,35 +450,45 @@ dojo.declare(
 			//		Handler for editor undo (ex: ctrl-z) operation
 			// tags:
 			//		private
-//			console.log('undo');
-			this.endEditing(true);
-			var s=this._steps.pop();
-			if(this._steps.length>0){
-				this.focus();
-				this._changeToStep(s,this._steps[this._steps.length-1]);
-				this._undoedSteps.push(s);
-				this.onDisplayChanged();
-				return true;
-			}
-			return false;
+			//console.log('undo');
+			var ret = false;
+			if(!this._undoRedoActive){
+				this._undoRedoActive = true;
+				this.endEditing(true);
+				var s=this._steps.pop();
+				if(s && this._steps.length>0){
+					this.focus();
+					this._changeToStep(s,this._steps[this._steps.length-1]);
+					this._undoedSteps.push(s);
+					this.onDisplayChanged();
+					delete this._undoRedoActive;
+					ret = true;
+				}
+				delete this._undoRedoActive;
+			}	
+			return ret;
 		},
 		redo: function(){
 			// summary:
 			//		Handler for editor redo (ex: ctrl-y) operation
 			// tags:
 			//		private
-
-//			console.log('redo');
-			this.endEditing(true);
-			var s=this._undoedSteps.pop();
-			if(s && this._steps.length>0){
-				this.focus();
-				this._changeToStep(this._steps[this._steps.length-1],s);
-				this._steps.push(s);
-				this.onDisplayChanged();
-				return true;
+			//console.log('redo');
+			var ret = false;
+			if(!this._undoRedoActive){
+				this._undoRedoActive = true;
+				this.endEditing(true);
+				var s=this._undoedSteps.pop();
+				if(s && this._steps.length>0){
+					this.focus();
+					this._changeToStep(this._steps[this._steps.length-1],s);
+					this._steps.push(s);
+					this.onDisplayChanged();
+					ret = true;
+				}
+				delete this._undoRedoActive;
 			}
-			return false;
+			return ret;
 		},
 		endEditing: function(ignore_caret){
 			// summary:
@@ -404,6 +504,7 @@ dojo.declare(
 				this._inEditing=false;
 			}
 		},
+
 		_getBookmark: function(){
 			// summary:
 			//		Get the currently selected text
@@ -411,21 +512,41 @@ dojo.declare(
 			//		protected
 			var b=dojo.withGlobal(this.window,dijit.getBookmark);
 			var tmp=[];
-			if(b.mark){
+			if(b && b.mark){
 				var mark = b.mark;
 				if(dojo.isIE){
-					if(dojo.isArray(mark)){//CONTROL
-						dojo.forEach(mark,function(n){
+					// Try to use the pseudo range API on IE for better accuracy.
+					var sel = dijit.range.getSelection(this.window);
+					if(!dojo.isArray(mark)){
+						if(sel){
+							var range;
+							if(sel.rangeCount){
+								range = sel.getRangeAt(0);
+							}
+							if(range){
+								b.mark = range.cloneRange();
+							}else{
+								b.mark = dojo.withGlobal(this.window,dijit.getBookmark);
+							}
+						}
+					}else{
+						// Control ranges (img, table, etc), handle differently.
+						dojo.forEach(b.mark,function(n){
 							tmp.push(dijit.range.getIndex(n,this.editNode).o);
 						},this);
 						b.mark = tmp;
 					}
-				}else{//w3c range
-					tmp=dijit.range.getIndex(mark.startContainer,this.editNode).o;
-					b.mark ={startContainer:tmp,
-						startOffset:mark.startOffset,
-						endContainer:mark.endContainer === mark.startContainer?tmp:dijit.range.getIndex(mark.endContainer,this.editNode).o,
-						endOffset:mark.endOffset};
+				}
+				try{
+					if(b.mark && b.mark.startContainer){
+						tmp=dijit.range.getIndex(b.mark.startContainer,this.editNode).o;
+						b.mark={startContainer:tmp,
+							startOffset:b.mark.startOffset,
+							endContainer:b.mark.endContainer===b.mark.startContainer?tmp:dijit.range.getIndex(b.mark.endContainer,this.editNode).o,
+							endOffset:b.mark.endOffset};
+					}
+				}catch(e){
+					b.mark = null;
 				}
 			}
 			return b;
@@ -437,7 +558,11 @@ dojo.declare(
 			// tags:
 			//		private
 			if(this._steps.length === 0){
-				this._steps.push({'text':this.savedContent,'bookmark':this._getBookmark()});
+				// You want to use the editor content without post filtering
+				// to make sure selection restores right for the 'initial' state.
+				// and undo is called.  So not using this.savedContent, as it was 'processed'
+				// and the line-up for selections may have been altered.
+				this._steps.push({'text':dijit._editor.getChildrenHtml(this.editNode),'bookmark':this._getBookmark()});
 			}
 		},
 		_endEditing: function(ignore_caret){
@@ -446,7 +571,8 @@ dojo.declare(
 			//		Deals with saving undo; see editActionInterval parameter.
 			// tags:
 			//		private
-			var v=this.getValue(true);
+			// Avoid filtering to make sure selections restore.
+			var v = dijit._editor.getChildrenHtml(this.editNode);
 
 			this._undoedSteps=[];//clear undoed steps
 			this._steps.push({text: v, bookmark: this._getBookmark()});
@@ -553,6 +679,8 @@ dojo.declare(
 			// tags:
 			//		private
 			if(this._savedSelection){
+				// Clear off cursor to start, we're deliberately going to a selection.
+				delete this._cursorToStart;
 				// only restore the selection if the current range is collapsed
 				// if not collapsed, then it means the editor does not lose
 				// selection and there is no need to restore it
@@ -570,8 +698,41 @@ dojo.declare(
 			//		protected
 			this.endEditing(true);
 			this.inherited(arguments);
+		},
+
+		_setDisabledAttr: function(/*Boolean*/ value){
+			if(!this.disabled && value){
+				// Disable editor: disable all enabled buttons and remember that list
+				this._buttonEnabledPlugins = dojo.filter(this._plugins, function(p){
+					if (p && p.button && !p.button.get("disabled")) {
+						p.button.set("disabled", true);
+						return true;
+					}
+					return false;
+				});
+			}else if(this.disabled && !value){
+				// Enable editor: we only want to enable the buttons that should be
+				// enabled (for example, the outdent button shouldn't be enabled if the current
+				// text can't be outdented).
+				dojo.forEach(this._buttonEnabledPlugins, function(p){
+					p.button.attr("disabled", false);
+					p.updateState && p.updateState();	// just in case something changed, like caret position
+				});
+			}
+			
+			this.inherited(arguments);
+		},
+		
+		_setStateClass: function(){
+			this.inherited(arguments);
+			
+			// Let theme set the editor's text color based on editor enabled/disabled state.
+			// We need to jump through hoops because the main document (where the theme CSS is)
+			// is separate from the iframe's document.
+			if(this.document && this.document.body){
+				dojo.style(this.document.body, "color", dojo.style(this.iframe, "color"));
+			}
 		}
-		/* end of custom undo/redo support */
 	}
 );
 
@@ -595,7 +756,7 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 			p = new _p({ buttonClass: dijit.form.ToggleButton, command: name });
 			break;
 		case "|":
-			p = new _p({ button: new dijit.ToolbarSeparator() });
+			p = new _p({ button: new dijit.ToolbarSeparator(), setEditor: function(editor) {this.editor = editor;} });
 	}
 //	console.log('name',name,p);
 	o.plugin=p;

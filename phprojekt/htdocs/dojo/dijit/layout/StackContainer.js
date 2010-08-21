@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,7 +11,7 @@ dojo.provide("dijit.layout.StackContainer");
 
 dojo.require("dijit._Templated");
 dojo.require("dijit.layout._LayoutWidget");
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 dojo.require("dojo.cookie");
 
 dojo.declare(
@@ -150,12 +150,8 @@ dojo.declare(
 		// every page one by one
 		if(this._beingDestroyed){ return; }
 
-		if(this._started){
-			// in case the tab titles now take up one line instead of two lines
-			// TODO: this is overkill in most cases since ScrollingTabController never changes size (for >= 1 tab)
-			this.layout();
-		}
-
+		// Select new page to display, also updating TabController to show the respective tab.
+		// Do this before layout call because it can affect the height of the TabController.
 		if(this.selectedChildWidget === page){
 			this.selectedChildWidget = undefined;
 			if(this._started){
@@ -165,9 +161,16 @@ dojo.declare(
 				}
 			}
 		}
+
+		if(this._started){
+			// In case the tab titles now take up one line instead of two lines
+			// (note though that ScrollingTabController never overflows to multiple lines),
+			// or the height has changed slightly because of addition/removal of tab which close icon
+			this.layout();
+		}
 	},
 
-	selectChild: function(/*dijit._Widget|String*/ page){
+	selectChild: function(/*dijit._Widget|String*/ page, /*Boolean*/ animate){
 		// summary:
 		//		Show the given widget (which must be one of my children)
 		// page:
@@ -177,7 +180,7 @@ dojo.declare(
 
 		if(this.selectedChildWidget != page){
 			// Deselect old page and select new one
-			this._transition(page, this.selectedChildWidget);
+			this._transition(page, this.selectedChildWidget, animate);
 			this.selectedChildWidget = page;
 			dojo.publish(this.id+"-selectChild", [page]);
 
@@ -224,13 +227,13 @@ dojo.declare(
 	forward: function(){
 		// summary:
 		//		Advance to next page.
-		this.selectChild(this._adjacent(true));
+		this.selectChild(this._adjacent(true), true);
 	},
 
 	back: function(){
 		// summary:
 		//		Go back to previous page.
-		this.selectChild(this._adjacent(false));
+		this.selectChild(this._adjacent(false), true);
 	},
 
 	_onKeyPress: function(e){
@@ -240,7 +243,7 @@ dojo.declare(
 	layout: function(){
 		// Implement _LayoutWidget.layout() virtual method.
 		if(this.doLayout && this.selectedChildWidget && this.selectedChildWidget.resize){
-			this.selectedChildWidget.resize(this._contentBox);
+			this.selectedChildWidget.resize(this._containerContentBox || this._contentBox);
 		}
 	},
 
@@ -320,17 +323,7 @@ dojo.extend(dijit._Widget, {
 	//		Parameter for children of `dijit.layout.StackContainer` or subclasses.
 	//		When true, display title of this widget as tab label etc., rather than just using
 	//		icon specified in iconClass
-	showTitle: true,
-
-	onClose: function(){
-		// summary:
-		//		Parameter for children of `dijit.layout.StackContainer` or subclasses.
-		//		Callback if a user tries to close the child.   Child will be closed if this function returns true.
-		// tags:
-		//		extension
-
-		return true;		// Boolean
-	}
+	showTitle: true
 });
 
 }

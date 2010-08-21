@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,7 +19,6 @@ dojo.declare("dijit._Templated",
 	{
 		// summary:
 		//		Mixin for widgets that are instantiated from a template
-		//
 
 		// templateString: [protected] String
 		//		A string that represents the widget template. Pre-empts the
@@ -55,6 +54,17 @@ dojo.declare("dijit._Templated",
 		//		'true' to re-enable to previous, arguably broken, behavior.
 		_earlyTemplatedStartup: false,
 
+		// _attachPoints: [private] String[]
+		//		List of widget attribute names associated with dojoAttachPoint=... in the
+		//		template, ex: ["containerNode", "labelNode"]
+/*=====
+ 		_attachPoints: [],
+ =====*/
+
+		constructor: function(){
+			this._attachPoints = [];
+		},
+
 		_stringRepl: function(tmpl){
 			// summary:
 			//		Does substitution of ${foo} type properties in template string
@@ -83,8 +93,6 @@ dojo.declare("dijit._Templated",
 			//		Construct the UI for this widget from a template, setting this.domNode.
 			// tags:
 			//		protected
-
-			this._attachPoints = [];
 
 			// Lookup cached version of template, and download to cache if it
 			// isn't there already.  Returns either a DomNode or a string, depending on
@@ -122,7 +130,8 @@ dojo.declare("dijit._Templated",
 
 				// Store widgets that we need to start at a later point in time
 				var cw = (this._startupWidgets = dojo.parser.parse(node, {
-					noStart: !this._earlyTemplatedStartup
+					noStart: !this._earlyTemplatedStartup,
+					inherited: {dir: this.dir, lang: this.lang}
 				}));
 
 				// Restore the query.
