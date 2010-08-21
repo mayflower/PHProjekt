@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -58,7 +58,6 @@ dojo.declare("dojox.form.Rating",
 	},
 
 	_onMouse: function(evt){
-		this.inherited(arguments);
 		if(this._hovering){
 			var hoverValue = +dojo.attr(evt.target, "value");
 			this.onMouseOver(evt, hoverValue);

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -12,17 +12,74 @@ dojo.provide("dojox.charting.plot2d.Pie");
 dojo.require("dojox.charting.Element");
 dojo.require("dojox.charting.axis2d.common");
 dojo.require("dojox.charting.plot2d.common");
+dojo.require("dojox.charting.plot2d._PlotEvents");
 
 dojo.require("dojox.lang.functional");
+dojo.require("dojox.lang.utils");
 dojo.require("dojox.gfx");
 
+dojo.require("dojo.number");
+
+/*=====
+dojo.declare("dojox.charting.plot2d.__PieCtorArgs", dojox.charting.plot2d.__DefaultCtorArgs, {
+	//	summary:
+	//		Specialized keyword arguments object for use in defining parameters on a Pie chart.
+
+	//	labels: Boolean?
+	//		Whether or not to draw labels within each pie slice.  Default is true.
+	labels:			true,
+
+	//	ticks: Boolean?
+	//		Whether or not to draw ticks to labels within each slice. Default is false.
+	ticks:			false,
+
+	//	fixed: Boolean?
+	//		TODO
+	fixed:			true,
+
+	//	precision: Number?
+	//		The precision at which to sum/add data values. Default is 1.
+	precision:		1,
+
+	//	labelOffset: Number?
+	//		The amount in pixels by which to offset labels.  Default is 20.
+	labelOffset:	20,
+
+	//	labelStyle: String?
+	//		Options as to where to draw labels.  Values include "default", "rows", and "auto". Default is "default".
+	labelStyle:		"default",	// default/rows/auto
+
+	//	htmlLabels: Boolean?
+	//		Whether or not to use HTML to render slice labels. Default is true.
+	htmlLabels:		true,
+
+	//	radGrad: String?
+	//		The type of radial gradient to use in rendering.  Default is "native".
+	radGrad:        "native",
+
+	//	fanSize: Number?
+	//		The amount for a radial gradient.  Default is 5.
+	fanSize:		5,
+
+	//	startAngle: Number?
+	//		Where to being rendering gradients in slices, in degrees.  Default is 0.
+	startAngle:     0,
+
+	//	radius: Number?
+	//		The size of the radial gradient.  Default is 0.
+	radius:		0
+});
+=====*/
 (function(){
 	var df = dojox.lang.functional, du = dojox.lang.utils,
 		dc = dojox.charting.plot2d.common,
 		da = dojox.charting.axis2d.common,
-		g = dojox.gfx;
+		g = dojox.gfx, m = g.matrix,
+		FUDGE_FACTOR = 0.2; // use to overlap fans
 
-	dojo.declare("dojox.charting.plot2d.Pie", dojox.charting.Element, {
+	dojo.declare("dojox.charting.plot2d.Pie", [dojox.charting.Element, dojox.charting.plot2d._PlotEvents], {
+		//	summary:
+		//		The plot that represents a typical pie chart.
 		defaultParams: {
 			labels:			true,
 			ticks:			false,
@@ -30,92 +87,89 @@ dojo.require("dojox.gfx");
 			precision:		1,
 			labelOffset:	20,
 			labelStyle:		"default",	// default/rows/auto
-			htmlLabels:		true		// use HTML to draw labels
+			htmlLabels:		true,		// use HTML to draw labels
+			radGrad:        "native",	// or "linear", or "fan"
+			fanSize:		5,			// maximum fan size in degrees
+			startAngle:     0			// start angle for slices in degrees
 		},
 		optionalParams: {
+			radius:		0,
+			// theme components
+			stroke:		{},
+			outline:	{},
+			shadow:		{},
+			fill:		{},
 			font:		"",
-			fontColor:	"",
-			radius:		0
+			fontColor:	""
 		},
 
 		constructor: function(chart, kwArgs){
+			//	summary:
+			//		Create a pie plot.
 			this.opt = dojo.clone(this.defaultParams);
 			du.updateWithObject(this.opt, kwArgs);
 			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
 			this.run = null;
 			this.dyn = [];
 		},
-		destroy: function(){
-			this.resetEvents();
-			this.inherited(arguments);
-		},
 		clear: function(){
+			//	summary:
+			//		Clear out all of the information tied to this plot.
+			//	returns: dojox.charting.plot2d.Pie
+			//		A reference to this plot for functional chaining.
 			this.dirty = true;
 			this.dyn = [];
 			this.run = null;
-			return this;
+			return this;	//	dojox.charting.plot2d.Pie
 		},
 		setAxis: function(axis){
-			// nothing
-			return this;
+			//	summary:
+			//		Dummy method, since axes are irrelevant with a Pie chart.
+			//	returns: dojox.charting.plot2d.Pie
+			//		The reference to this plot for functional chaining.
+			return this;	//	dojox.charting.plot2d.Pie
 		},
 		addSeries: function(run){
+			//	summary:
+			//		Add a series of data to this plot.
+			//	returns: dojox.charting.plot2d.Pie
+			//		The reference to this plot for functional chaining.
 			this.run = run;
-			return this;
+			return this;	//	dojox.charting.plot2d.Pie
 		},
-		calculateAxes: function(dim){
-			// nothing
+		getSeriesStats: function(){
+			//	summary:
+			//		Returns default stats (irrelevant for this type of plot).
+			//	returns: Object
+			//		{hmin, hmax, vmin, vmax} min/max in both directions.
+			return dojo.delegate(dc.defaultStats);
+		},
+		initializeScalers: function(){
+			//	summary:
+			//		Does nothing (irrelevant for this type of plot).
 			return this;
 		},
 		getRequiredColors: function(){
+			//	summary:
+			//		Return the number of colors needed to draw this plot.
 			return this.run ? this.run.data.length : 0;
 		},
 
-		// events
-		plotEvent: function(o){
-			// intentionally empty --- used for events
-		},
-		connect: function(object, method){
-			this.dirty = true;
-			return dojo.connect(this, "plotEvent", object, method);
-		},
-		events: function(){
-			var ls = this.plotEvent._listeners;
-			if(!ls || !ls.length){ return false; }
-			for(var i in ls){
-				if(!(i in Array.prototype)){
-					return true;
-				}
-			}
-			return false;
-		},
-		resetEvents: function(){
-			this.plotEvent({type: "onplotreset", plot: this});
-		},
-		_connectEvents: function(shape, o){
-			shape.connect("onmouseover", this, function(e){
-				o.type  = "onmouseover";
-				o.event = e;
-				this.plotEvent(o);
-			});
-			shape.connect("onmouseout", this, function(e){
-				o.type  = "onmouseout";
-				o.event = e;
-				this.plotEvent(o);
-			});
-			shape.connect("onclick", this, function(e){
-				o.type  = "onclick";
-				o.event = e;
-				this.plotEvent(o);
-			});
-		},
-
 		render: function(dim, offsets){
+			//	summary:
+			//		Render the plot on the chart.
+			//	dim: Object
+			//		An object of the form { width, height }.
+			//	offsets: Object
+			//		An object of the form { l, r, t, b }.
+			//	returns: dojox.charting.plot2d.Pie
+			//		A reference to this plot for functional chaining.
 			if(!this.dirty){ return this; }
-			this.dirty = false;
-			this.cleanGroup();
-			var s = this.group, color, t = this.chart.theme;
 			this.resetEvents();
+			this.dirty = false;
+			this._eventSeries = {};
+			this.cleanGroup();
+			var s = this.group, t = this.chart.theme;
 
 			if(!this.run || !this.run.data.length){
 				return this;
@@ -128,11 +182,12 @@ dojo.require("dojox.gfx");
 				taFont = "font" in this.opt ? this.opt.font : t.axis.font,
 				size = taFont ? g.normalizedLength(g.splitFontString(taFont).size) : 0,
 				taFontColor = "fontColor" in this.opt ? this.opt.fontColor : t.axis.fontColor,
-				start = 0, step, filteredRun, slices, labels, shift, labelR,
+				startAngle = m._degToRad(this.opt.startAngle),
+				start = startAngle, step, filteredRun, slices, labels, shift, labelR,
 				run = this.run.data,
 				events = this.events();
 			if(typeof run[0] == "number"){
-				filteredRun = df.map(run, "Math.max(x, 0)");
+				filteredRun = df.map(run, "x ? Math.max(x, 0) : 0");
 				if(df.every(filteredRun, "<= 0")){
 					return this;
 				}
@@ -143,7 +198,7 @@ dojo.require("dojox.gfx");
 					}, this);
 				}
 			}else{
-				filteredRun = df.map(run, "Math.max(x.y, 0)");
+				filteredRun = df.map(run, "x ? Math.max(x.y, 0) : 0");
 				if(df.every(filteredRun, "<= 0")){
 					return this;
 				}
@@ -156,9 +211,16 @@ dojo.require("dojox.gfx");
 					}, this);
 				}
 			}
+			var themes = df.map(run, function(v, i){
+				if(v === null || typeof v == "number"){
+					return t.next("slice", [this.opt, this.run], true);
+				}
+				return t.next("slice", [this.opt, this.run, v], true);
+			}, this);
 			if(this.opt.labels){
-				shift = df.foldl1(df.map(labels, function(label){
-					return dojox.gfx._base._getTextBox(label, {font: taFont}).w;
+				shift = df.foldl1(df.map(labels, function(label, i){
+					var font = themes[i].series.font;
+					return dojox.gfx._base._getTextBox(label, {font: font}).w;
 				}, this), "Math.max(a, b)") / 2;
 				if(this.opt.labelOffset < 0){
 					r = Math.min(rx - 2 * shift, ry - size) + this.opt.labelOffset;
@@ -177,33 +239,30 @@ dojo.require("dojox.gfx");
 
 			this.dyn = [];
 			// draw slices
+			var eventSeries = new Array(slices.length);
 			dojo.some(slices, function(slice, i){
 				if(slice <= 0){
 					// degenerated slice
 					return false;	// continue
 				}
-				var v = run[i];
+				var v = run[i], theme = themes[i], specialFill;
 				if(slice >= 1){
 					// whole pie
-					var color, fill, stroke;
-					if(typeof v == "object"){
-						color  = "color"  in v ? v.color  : new dojo.Color(t.next("color"));
-						fill   = "fill"   in v ? v.fill   : dc.augmentFill(t.series.fill, color);
-						stroke = "stroke" in v ? v.stroke : dc.augmentStroke(t.series.stroke, color);
-					}else{
-						color  = new dojo.Color(t.next("color"));
-						fill   = dc.augmentFill(t.series.fill, color);
-						stroke = dc.augmentStroke(t.series.stroke, color);
-					}
-					var shape = s.createCircle(circle).setFill(fill).setStroke(stroke);
-					this.dyn.push({color: color, fill: fill, stroke: stroke});
+					specialFill = this._plotFill(theme.series.fill, dim, offsets);
+					specialFill = this._shapeFill(specialFill,
+						{
+							x: circle.cx - circle.r, y: circle.cy - circle.r,
+							width: 2 * circle.r, height: 2 * circle.r
+						});
+					specialFill = this._pseudoRadialFill(specialFill, {x: circle.cx, y: circle.cy}, circle.r);
+					var shape = s.createCircle(circle).setFill(specialFill).setStroke(theme.series.stroke);
+					this.dyn.push({fill: specialFill, stroke: theme.series.stroke});
 
 					if(events){
 						var o = {
 							element: "slice",
 							index:   i,
 							run:     this.run,
-							plot:    this,
 							shape:   shape,
 							x:       i,
 							y:       typeof v == "number" ? v : v.y,
@@ -211,7 +270,8 @@ dojo.require("dojox.gfx");
 							cy:      circle.cy,
 							cr:      r
 						};
-						this._connectEvents(shape, o);
+						this._connectEvents(o);
+						eventSeries[i] = o;
 					}
 
 					return true;	// stop iteration
@@ -219,7 +279,7 @@ dojo.require("dojox.gfx");
 				// calculate the geometry of the slice
 				var end = start + slice * 2 * Math.PI;
 				if(i + 1 == slices.length){
-					end = 2 * Math.PI;
+					end = startAngle + 2 * Math.PI;
 				}
 				var	step = end - start,
 					x1 = circle.cx + r * Math.cos(start),
@@ -227,32 +287,59 @@ dojo.require("dojox.gfx");
 					x2 = circle.cx + r * Math.cos(end),
 					y2 = circle.cy + r * Math.sin(end);
 				// draw the slice
-				var color, fill, stroke;
-				if(typeof v == "object"){
-					color  = "color"  in v ? v.color  : new dojo.Color(t.next("color"));
-					fill   = "fill"   in v ? v.fill   : dc.augmentFill(t.series.fill, color);
-					stroke = "stroke" in v ? v.stroke : dc.augmentStroke(t.series.stroke, color);
-				}else{
-					color  = new dojo.Color(t.next("color"));
-					fill   = dc.augmentFill(t.series.fill, color);
-					stroke = dc.augmentStroke(t.series.stroke, color);
-				}
-				var shape = s.createPath({}).
+				var fanSize = m._degToRad(this.opt.fanSize);
+				if(theme.series.fill && theme.series.fill.type === "radial" && this.opt.radGrad === "fan" && step > fanSize){
+					var group = s.createGroup(), nfans = Math.ceil(step / fanSize), delta = step / nfans;
+					specialFill = this._shapeFill(theme.series.fill,
+						{x: circle.cx - circle.r, y: circle.cy - circle.r, width: 2 * circle.r, height: 2 * circle.r});
+					for(var j = 0; j < nfans; ++j){
+						var fansx = j == 0 ? x1 : circle.cx + r * Math.cos(start + (j - FUDGE_FACTOR) * delta),
+							fansy = j == 0 ? y1 : circle.cy + r * Math.sin(start + (j - FUDGE_FACTOR) * delta),
+							fanex = j == nfans - 1 ? x2 : circle.cx + r * Math.cos(start + (j + 1 + FUDGE_FACTOR) * delta),
+							faney = j == nfans - 1 ? y2 : circle.cy + r * Math.sin(start + (j + 1 + FUDGE_FACTOR) * delta),
+							fan = group.createPath({}).
+								moveTo(circle.cx, circle.cy).
+								lineTo(fansx, fansy).
+								arcTo(r, r, 0, delta > Math.PI, true, fanex, faney).
+								lineTo(circle.cx, circle.cy).
+								closePath().
+								setFill(this._pseudoRadialFill(specialFill, {x: circle.cx, y: circle.cy}, r, start + (j + 0.5) * delta, start + (j + 0.5) * delta));
+					}
+					group.createPath({}).
 						moveTo(circle.cx, circle.cy).
 						lineTo(x1, y1).
 						arcTo(r, r, 0, step > Math.PI, true, x2, y2).
 						lineTo(circle.cx, circle.cy).
 						closePath().
-						setFill(fill).
-						setStroke(stroke);
-				this.dyn.push({color: color, fill: fill, stroke: stroke});
+						setStroke(theme.series.stroke);
+					shape = group;
+				}else{
+					shape = s.createPath({}).
+						moveTo(circle.cx, circle.cy).
+						lineTo(x1, y1).
+						arcTo(r, r, 0, step > Math.PI, true, x2, y2).
+						lineTo(circle.cx, circle.cy).
+						closePath().
+						setStroke(theme.series.stroke);
+					var specialFill = theme.series.fill;
+					if(specialFill && specialFill.type === "radial"){
+						specialFill = this._shapeFill(specialFill, {x: circle.cx - circle.r, y: circle.cy - circle.r, width: 2 * circle.r, height: 2 * circle.r});
+						if(this.opt.radGrad === "linear"){
+							specialFill = this._pseudoRadialFill(specialFill, {x: circle.cx, y: circle.cy}, r, start, end);
+						}
+					}else if(specialFill && specialFill.type === "linear"){
+						specialFill = this._plotFill(specialFill, dim, offsets);
+						specialFill = this._shapeFill(specialFill, shape.getBoundingBox());
+					}
+					shape.setFill(specialFill);
+				}
+				this.dyn.push({fill: specialFill, stroke: theme.series.stroke});
 
 				if(events){
 					var o = {
 						element: "slice",
 						index:   i,
 						run:     this.run,
-						plot:    this,
 						shape:   shape,
 						x:       i,
 						y:       typeof v == "number" ? v : v.y,
@@ -260,7 +347,8 @@ dojo.require("dojox.gfx");
 						cy:      circle.cy,
 						cr:      r
 					};
-					this._connectEvents(shape, o);
+					this._connectEvents(o);
+					eventSeries[i] = o;
 				}
 
 				start = end;
@@ -269,45 +357,52 @@ dojo.require("dojox.gfx");
 			}, this);
 			// draw labels
 			if(this.opt.labels){
-				start = 0;
+				start = startAngle;
 				dojo.some(slices, function(slice, i){
 					if(slice <= 0){
 						// degenerated slice
 						return false;	// continue
 					}
+					var theme = themes[i];
 					if(slice >= 1){
 						// whole pie
-						var v = run[i], elem = da.createText[this.opt.htmlLabels && dojox.gfx.renderer != "vml" ? "html" : "gfx"]
-									(this.chart, s, circle.cx, circle.cy + size / 2, "middle",
-										labels[i], taFont, (typeof v == "object" && "fontColor" in v) ? v.fontColor : taFontColor);
-						if(this.opt.htmlLabels){ this.htmlElements.push(elem); }
+						var v = run[i], elem = da.createText[this.opt.htmlLabels && dojox.gfx.renderer != "vml" ? "html" : "gfx"](
+								this.chart, s, circle.cx, circle.cy + size / 2, "middle", labels[i],
+								theme.series.font, theme.series.fontColor);
+						if(this.opt.htmlLabels){
+							this.htmlElements.push(elem);
+						}
 						return true;	// stop iteration
 					}
 					// calculate the geometry of the slice
 					var end = start + slice * 2 * Math.PI, v = run[i];
 					if(i + 1 == slices.length){
-						end = 2 * Math.PI;
+						end = startAngle + 2 * Math.PI;
 					}
 					var	labelAngle = (start + end) / 2,
 						x = circle.cx + labelR * Math.cos(labelAngle),
 						y = circle.cy + labelR * Math.sin(labelAngle) + size / 2;
 					// draw the label
 					var elem = da.createText[this.opt.htmlLabels && dojox.gfx.renderer != "vml" ? "html" : "gfx"]
-									(this.chart, s, x, y, "middle",
-										labels[i], taFont,
-										(typeof v == "object" && "fontColor" in v)
-											? v.fontColor : taFontColor);
-					if(this.opt.htmlLabels){ this.htmlElements.push(elem); }
+							(this.chart, s, x, y, "middle", labels[i], theme.series.font, theme.series.fontColor);
+					if(this.opt.htmlLabels){
+						this.htmlElements.push(elem);
+					}
 					start = end;
 					return false;	// continue
 				}, this);
 			}
-			return this;
+			// post-process events to restore the original indexing
+			var esi = 0;
+			this._eventSeries[this.run.name] = df.map(run, function(v){
+				return v <= 0 ? null : eventSeries[esi++];
+			});
+			return this;	//	dojox.charting.plot2d.Pie
 		},
 
 		// utilities
 		_getLabel: function(number){
-			return this.opt.fixed ? number.toFixed(this.opt.precision) : number.toString();
+			return this.opt.fixed ? dojo.number.format(number, {places: this.opt.precision}) : number.toString();
 		}
 	});
 })();

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,7 +14,7 @@ dojo.provide("dojox.form.ListInput");
 dojo.require("dijit.form._FormWidget");
 dojo.require("dijit.form.ValidationTextBox");
 dojo.require("dijit.InlineEditBox");
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
 dojo.declare("dojox.form.ListInput", 
 	[dijit.form._FormValueWidget],
@@ -101,7 +101,7 @@ dojo.declare("dojox.form.ListInput",
 	
 	value: "",
 	
-	templateString: "<div dojoAttachPoint=\"focusNode\" class=\"dijit dijitReset dijitLeft dojoxListInput\"><select dojoAttachpoint=\"_selectNode\" multiple=\"multiple\" class=\"dijitHidden\" ${nameAttrSetting}></select><ul dojoAttachPoint=\"_listInput\"><li dojoAttachEvent=\"onclick: _onClick\" class=\"dijitInputField dojoxListInputNode dijitHidden\" dojoAttachPoint=\"_inputNode\"></li></ul></div>",
+	templateString: "<div dojoAttachPoint=\"focusNode\" class=\"dijit dijitReset dijitLeft dojoxListInput\"><select dojoAttachpoint=\"_selectNode\" multiple=\"multiple\" class=\"dijitHidden\" ${!nameAttrSetting}></select><ul dojoAttachPoint=\"_listInput\"><li dojoAttachEvent=\"onclick: _onClick\" class=\"dijitInputField dojoxListInputNode dijitHidden\" dojoAttachPoint=\"_inputNode\"></li></ul></div>",
 	
 	// useAnim: Boolean
 	//		If true, then item will use an anime to show hide itself 
@@ -306,7 +306,7 @@ dojo.declare("dojox.form.ListInput",
 		//		set input to readonly when max is reached
 		// tags:
 		//		private
-		this.attr("readOnlyInput",(this._count>=this.maxItems && this.maxItems !== null));
+		this.set("readOnlyInput",(this._count>=this.maxItems && this.maxItems !== null));
 	},
 	
 	_setSelectNode: function(){
@@ -316,7 +316,7 @@ dojo.declare("dojox.form.ListInput",
 		//		private
 		this._selectNode.options.length = 0;
 		
-		var values=this.submitOnlyValidValue?this.attr("MatchedValue"):this.value;
+		var values=this.submitOnlyValidValue?this.get("MatchedValue"):this.value;
 		
 		if(!dojo.isArray(values)){
 			return;
@@ -561,8 +561,8 @@ dojo.declare("dojox.form.ListInput",
 		//		private
 		this._currentItem=null;
 		
-		if(e.keyCode == dojo.keys.BACKSPACE && this._input.attr("value") == "" && this.attr("lastItem")){
-			this._destroyItem(this.attr("lastItem"));
+		if(e.keyCode == dojo.keys.BACKSPACE && this._input.attr("value") == "" && this.get("lastItem")){
+			this._destroyItem(this.get("lastItem"));
 		}else if(e.keyCode == dojo.keys.ENTER && this._input.attr("value") != ""){
 			this.add(this._input.attr("value"));
 		}else if(e.keyCode == dojo.keys.LEFT_ARROW && this._getCursorPos(this._input.focusNode)==0 &&

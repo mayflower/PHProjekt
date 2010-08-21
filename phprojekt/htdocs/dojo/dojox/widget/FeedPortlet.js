@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -63,7 +63,7 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 		this.inherited(arguments);
 		var url = child.attr("feedPortletUrl");
 		if(url){
-			this.attr("url", url);
+			this.set("url", url);
 		}
 	},
 	
@@ -150,7 +150,7 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 				if (this.showFeedTitle && store.getFeedValue) {
 					var title = this.store.getFeedValue("title");
 					if(title){
-						this.attr("title", title.text ? title.text : title);
+						this.set("title", title.text ? title.text : title);
 					}
 				}
 				this.generateResults(items);
@@ -168,8 +168,8 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 		//		containing a summary when the mouse hovers over them.
 		var store = this.store;
 		var timer;
-		var ul = this._resultList = 
-			dojo.create("ul", {"class" : "dojoxFeedPortletList"}, this.containerNode);
+		var ul = (this._resultList = 
+			dojo.create("ul", {"class" : "dojoxFeedPortletList"}, this.containerNode));
 
 		dojo.forEach(items, dojo.hitch(this, function(item){
 			var li = dojo.create("li", {
@@ -202,7 +202,7 @@ dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 					});
 					
 					// Hover the tooltip over the anchor tag
-					dijit.showTooltip(content, li.firstChild);
+					dijit.showTooltip(content, li.firstChild, !this.isLeftToRight());
 				}), 500);
 				
 				
@@ -244,9 +244,9 @@ dojo.declare("dojox.widget.ExpandableFeedPortlet", dojox.widget.FeedPortlet, {
 		var expandedCls = "dojoxPortletItemOpen";
 		
 		var timer;
-		var ul = this._resultList = dojo.create("ul", {
+		var ul = (this._resultList = dojo.create("ul", {
 			"class": "dojoxFeedPortletExpandableList"
-		}, this.containerNode);
+		}, this.containerNode));
 		
 		// Create the LI elements.	Each LI has two DIV elements, the 
 		// top DIV contains the toggle icon and title, and the bottom
@@ -379,7 +379,7 @@ dojo.declare("dojox.widget.PortletFeedSettings",
 					// Set the selected index on the Select node.
 					dojo.some(this.text.options, dojo.hitch(this, function(opt, idx){
 						if(opt.selected){
-							this.attr("selectedIndex", idx);
+							this.set("selectedIndex", idx);
 							return true;
 						}
 						return false;
@@ -429,7 +429,7 @@ dojo.declare("dojox.widget.PortletFeedSettings",
 				this.text.attr("value", url);
 			}
 		}else{
-			this.portlet.attr("url", this.attr("feedPortletUrl"));
+			this.portlet.attr("url", this.get("feedPortletUrl"));
 		}
 	},
 	

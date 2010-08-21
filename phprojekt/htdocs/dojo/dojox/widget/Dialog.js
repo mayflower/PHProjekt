@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,6 +10,7 @@ dojo._hasResource['dojox.widget.Dialog'] = true;
 dojo.provide('dojox.widget.Dialog');
 dojo.experimental('dojox.widget.Dialog');
 
+dojo.require("dojo.window");
 dojo.require('dijit.Dialog');
 dojo.require("dojox.layout.ContentPane");
 
@@ -105,7 +106,7 @@ dojo.declare('dojox.widget.Dialog',
 	
 	_setSize: function(){
 		// summary: cache and set our desired end position 
-		this._vp = dijit.getViewport();
+		this._vp = dojo.window.getBox();
 		var tc = this.containerNode,
 			vpSized = this.sizeToViewport
 		;

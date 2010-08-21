@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -139,12 +139,7 @@ dojox.drawing.manager.Anchors = dojox.drawing.util.oo.declare(
 			dojo.forEach(pts, function(p, i){
 				if(p.noAnchor){ return; }
 				if(i==0 || i == item.points.length-1){
-					console.log("ITEM TYPE:", item.type, item.shortType)
-					if(i==0){
-						
-					}else{
-						
-					}
+					console.log("ITEM TYPE:", item.type, item.shortType);
 				}
 				var a = new dojox.drawing.manager.Anchor({stencil:item, point:p, pointIdx:i, mouse:this.mouse, util:this.util});
 				this.items[item.id]._cons = [
@@ -166,7 +161,7 @@ dojox.drawing.manager.Anchors = dojox.drawing.util.oo.declare(
 				// check if we have a double-point of a closed-curve-path
 				var f = pts[0], l = pts[pts.length-1], a = this.items[item.id].anchors;
 				if(f.x ==l.x && f.y==l.y){
-					console.warn("LINK ANVHROS", a[0], a[a.length-1])
+					console.warn("LINK ANVHROS", a[0], a[a.length-1]);
 					a[0].linkedAnchor = a[a.length-1];
 					a[a.length-1].linkedAnchor = a[0];
 				}
@@ -227,6 +222,9 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 		this.stencil = options.stencil;
 		if(this.stencil.anchorPositionCheck){
 			this.anchorPositionCheck = dojo.hitch(this.stencil, this.stencil.anchorPositionCheck);
+		}
+		if(this.stencil.anchorConstrain){
+			this.anchorConstrain = dojo.hitch(this.stencil, this.stencil.anchorConstrain);
 		}
 		this._zCon = dojo.connect(this.mouse, "setZoom", this, "render");
 		this.render();
@@ -302,8 +300,8 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 				
 				var orgx = pmx.dx + this.org.x,
 					orgy = pmx.dy + this.org.y,
-					x = obj.x - orgx;
-					y = obj.y - orgy;
+					x = obj.x - orgx,
+					y = obj.y - orgy,
 					s = this.defaults.anchors.minSize;
 				
 				var conL, conR, conT, conB;
@@ -396,7 +394,12 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 						x = conL;
 					}
 				}
-				
+				//Constrains anchor point, returns null if not overwritten by stencil
+				var constrained = this.anchorConstrain(x, y);
+				if(constrained != null){ 
+					x=constrained.x;
+					y=constrained.y; 
+				}
 				
 				this.shape.setTransform({
 					dx:x,
@@ -411,6 +414,15 @@ dojox.drawing.manager.Anchor = dojox.drawing.util.oo.declare(
 				}
 				this.onTransformPoint(this);
 			}
+		},
+		
+		anchorConstrain: function(/* Number */x,/* Number */ y){
+			// summary:
+			//		To be over written by tool!
+			//		Add an anchorConstrain method to the tool
+			//		and it will automatically overwrite this stub.
+			//		Should return a constrained x & y value.
+			return null;
 		},
 		
 		anchorPositionCheck: function(/* Number */x,/* Number */ y, /* Anchor */anchor){

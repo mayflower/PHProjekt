@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -384,17 +384,14 @@ dojo.declare("dojox.data.QueryReadStore",
 					serverQuery.count = request.count;
 				}
 			}
-			if(!this.doClientSorting){
-				if(request.sort){
-					var sort = request.sort[0];
+			if(!this.doClientSorting && request.sort){
+				var sortInfo = [];
+				dojo.forEach(request.sort, function(sort){
 					if(sort && sort.attribute){
-						var sortStr = sort.attribute;
-						if(sort.descending){
-							sortStr = "-" + sortStr;
-						}
-						serverQuery.sort = sortStr;
+						sortInfo.push((sort.descending ? "-" : "") + sort.attribute);
 					}
-				}
+				});
+				serverQuery.sort = sortInfo.join(',');
 			}
 			// Compare the last query and the current query by simply json-encoding them,
 			// so we dont have to do any deep object compare ... is there some dojo.areObjectsEqual()???

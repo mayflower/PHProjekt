@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -363,8 +363,11 @@ dojo.require("dojo.dnd.Moveable");
 				n = ascendDom(e.target, makeNotTagName("th"));
 				x -= (n && n.offsetLeft) || 0;
 				var t = e.sourceView.getScrollbarWidth();
-				if(!dojo._isBodyLtr() && e.sourceView.headerNode.scrollLeft < t)
-					x -= t;
+				if(!dojo._isBodyLtr()/*&& e.sourceView.headerNode.scrollLeft < t*/){
+					//fix #11253
+					table = ascendDom(n,makeNotTagName("table"));
+					x -= (table && table.offsetLeft) || 0;
+				}
 				//x -= getProp(ascendDom(e.target, mkNotTagName("td")), "offsetLeft") || 0;
 			}
 			n = ascendDom(e.target, function(){
@@ -508,13 +511,18 @@ dojo.require("dojo.dnd.Moveable");
 				// NOTE: this is for backwards compatibility with Dojo 1.3
 				var vw = (dojo.position||dojo._abs)(e.sourceView.headerNode, true);
 				var bodyContentBox = dojo.contentBox(e.sourceView.domNode);
+				//fix #11340
+				var l = e.clientX;
+				if(!dojo._isBodyLtr() && dojo.isIE < 8){
+					l -= dojox.html.metrics.getScrollbar().w;
+				}				
 				dojo.style(this.lineDiv, {
 					top: vw.y + "px",
-					left: e.clientX + "px",
+					left: l + "px",
 					height: (bodyContentBox.h + headContentBox.h) + "px"
 				});
 				dojo.addClass(this.lineDiv, "dojoxGridResizeColLine");
-				this.lineDiv._origLeft = e.clientX;
+				this.lineDiv._origLeft = l;
 				dojo.body().appendChild(this.lineDiv);
 			}
 			var spanners = [], nodes = this.tableMap.findOverlappingNodes(e.cellNode);
@@ -577,7 +585,7 @@ dojo.require("dojo.dnd.Moveable");
 			var changeX = leftTop.l;
 			var data = {
 				deltaX: changeX,
-				w: inDrag.w + changeX,
+				w: inDrag.w + (dojo._isBodyLtr() ? changeX : -changeX),//fix #11341
 				vw: inDrag.vw + changeX,
 				tw: inDrag.tw + changeX
 			};
@@ -638,9 +646,11 @@ dojo.require("dojo.dnd.Moveable");
 				s.node.style.width = sw + 'px';
 				inDrag.view.setColWidth(s.index, sw);
 			}
-			for(i=0; (f=inDrag.followers[i]); i++){
-				fl = f.left + data.deltaX;
-				f.node.style.left = fl + 'px';
+			if(dojo._isBodyLtr() || !dojo.isIE){//fix #11339			
+				for(i=0; (f=inDrag.followers[i]); i++){
+					fl = f.left + data.deltaX;
+					f.node.style.left = fl + 'px';
+				}
 			}
 			inDrag.node.style.width = data.w + 'px';
 			inDrag.view.setColWidth(inDrag.index, data.w);

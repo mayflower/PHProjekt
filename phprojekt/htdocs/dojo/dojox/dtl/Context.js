@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -18,7 +18,7 @@ dojox.dtl.Context = dojo.extend(function(dict){
 	getKeys: function(){
 		var keys = [];
 		for(var key in this){
-			if(this.hasOwnProperty(key) && key != "_dicts" && key != "_this"){
+			if(this.hasOwnProperty(key) && key != "_this"){
 				keys.push(key);
 			}
 		}
@@ -62,14 +62,15 @@ dojox.dtl.Context = dojo.extend(function(dict){
 		return this._this;
 	},
 	hasKey: function(key){
-		if(typeof this[key] != "undefined"){
-			return true;
-		}
-
-		for(var i = 0, dict; dict = this._dicts[i]; i++){
-			if(typeof dict[key] != "undefined"){
+		if(this._getter){
+			var got = this._getter(key);
+			if(typeof got != "undefined"){
 				return true;
 			}
+		}
+
+		if(typeof this[key] != "undefined"){
+			return true;
 		}
 
 		return false;

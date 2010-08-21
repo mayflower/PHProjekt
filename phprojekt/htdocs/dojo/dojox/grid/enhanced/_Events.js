@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -54,7 +54,7 @@ dojo.declare("dojox.grid.enhanced._Events", null, {
 		// summary:
 		//		Overwritten, see dojox.grid._Events.onStyleRow()
 		var i = inRow;
-		i.customClasses += (i.odd?" dojoxGridRowOdd":"") + (i.selected?" dojoxGridRowSelected":"") + (i.over&&!this.isDndSelectEnable?" dojoxGridRowOver":"");
+		i.customClasses += (i.odd?" dojoxGridRowOdd":"") + (i.selected?" dojoxGridRowSelected":"") + (i.over/*&&!this.isDndSelectEnable*/?" dojoxGridRowOver":"");
 		this.focus.styleRow(inRow);
 		this.edit.styleRow(inRow);
 	},
@@ -410,7 +410,13 @@ dojo.declare("dojox.grid.enhanced._Events", null, {
 		//		Decorated event object which contains reference to grid and info of selected 
 		//		regions(selection type - row|column, selected index - [...])
 		if(this.selectedRegionMenu){
-			this.selectedRegionMenu._openMyself(e);
+			this.selectedRegionMenu._openMyself({
+				target: e.target,
+				coords: "pageX" in e ? {
+					x: e.pageX,
+					y: e.pageY
+				} : null
+			});
 			dojo.stopEvent(e);
 		}
 	},
@@ -492,11 +498,15 @@ dojo.declare("dojox.grid.enhanced._Events", null, {
 	onHeaderCellClick: function(e){
 		// summary:
 		//		Overwritten, see dojox.grid._Events.onHeaderCellClick()
-		if(this.indirectSelection && e.cell && e.cell.isRowSelector){
-			return;//ignore if under column selection
+		if(this.nestedSorting){
+			if((e.unarySortChoice || e.nestedSortChoice) && !this._inResize(e.sourceView)){
+				this.setSortIndex(e.cell.index, null, e);//nested sorting
+			}
+		}else if(!(this.indirectSelection && e.cell && e.cell.isRowSelector)){
+			this.setSortIndex(e.cell.index);//single sorting
 		}
-		//invoke dojox.grid._Events.onHeaderCellClick()
-		dojo.hitch(this, this._events.onHeaderCellClick)(e);
+		//invoke dojox.grid._Events.onHeaderClick()
+		dojo.hitch(this, this._events.onHeaderClick)(e);
 	},
 	
 	onHeaderContextMenu: function(e){

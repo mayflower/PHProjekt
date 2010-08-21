@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -121,7 +121,7 @@ dojo.require("dojox.gfx.matrix");
 				result.push([c1.x, c1.y, c2.x, c2.y, e.x, e.y]);
 				startAngle += 2 * step;
 			}
-			return result;	// Object
+			return result;	// Array
 		}
 	});
 })();

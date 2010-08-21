@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,7 +15,8 @@ dojo.provide("dojox.drawing.manager._registry");
 		tool:{},
 		stencil:{},
 		drawing:{},
-		plugin:{}
+		plugin:{},
+		button:{}
 	};
 	
 	dojox.drawing.register = function(item, type){
@@ -27,6 +28,8 @@ dojo.provide("dojox.drawing.manager._registry");
 			_registered.stencil[item.name] = item;	
 		}else if(type=="plugin"){
 			_registered.plugin[item.name] = item;	
+		}else if(type=="button"){
+			_registered.button[item.toolType] = item;
 		}
 	};
 	

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -21,40 +21,57 @@ dojox.drawing.defaults = {
 	// See:
 	//		Drawing.changeDefaults
 	//
+	//  Determines whether in draw or edit mode (whether stencils
+	//  are clickable.  If clickMode is false, the original
+	//  functionality of silently switching between select modes
+	//  is enabled.  If clickMode is true, it allows powerpoint-
+	//  like functionality.  Clickable is used by powerpoint to
+	//  distinguish when things can be selected and when they can't
+	clickMode:true,
+	clickable:true,
+
 	// current: Object
 	// 	 current will point to either null or selected
 	current:null,
-	
 	// currentHit: Object
 	//		currentHit will point to either hitNorm or hitSelected
 	currentHit:null,
-	
+
 	// angleSnap: Number
 	// 		Line, arrows, vector and axes will all snap to this angle on mouse up
 	// 		shown angle also reflects the snap
 	// 		currently cannot accept less than 1 degree
 	angleSnap:1,
+
+	// zAxis:  Boolean
+    // 		If true, draw current object in z-direction.
+	// zAxisEnabled: Boolean
+    // 		If true, render axes with Z-axis included, allow objects drawn in z-direction.
+	//		If false the z-axis button will not show up.
+	zAxis: false,
+	zAxisEnabled: true,
+	zAngle: 225,
 	
 	// renderHitLines: Boolean
 	//		If true, renders a second, larger layer for lines to make
-	// 		them more easily clickable. 
+	// 		them more easily clickable.
 	renderHitLines: true,
-	// 
+	//
 	// renderHitLayer:
 	// 		If true, renders a second layer for each Stencil, one
 	// 		acting as a 'hit' object for a wider mouse-click area.
 	// 		It also doubles as a hilight. If true, overrides
 	//		renderHitLines setting.
 	renderHitLayer:true,
-	
+
 	// labelSameColor:
 	//		If true, the label text color will be the same as the
 	//		Stencil's line color.
 	labelSameColor:false,
-	
+
 	//
 	useSelectedStyle: true,
-	
+
 	norm:{
 		// summary:
 		// 		Normal style of all shapes
@@ -66,7 +83,7 @@ dojox.drawing.defaults = {
 		cap:"round", // square, butt, round
 		fill:"#CCCCCC"
 	},
-	
+
 	selected:{
 		// summary:
 		// 		Selected style of all shapes
@@ -75,7 +92,7 @@ dojox.drawing.defaults = {
 		width:6,
 		color:"#00FF00"
 	},
-	
+
 	highlighted:{
 		// summary:
 		// 		Highlighted style of all shapes
@@ -86,7 +103,7 @@ dojox.drawing.defaults = {
 		cap:"round",
 		fill:"#E11EBB"
 	},
-	
+
 	disabled:{
 		// summary:
 		// 		Disabled or "locked" or "fade" style of all shapes
@@ -96,7 +113,7 @@ dojox.drawing.defaults = {
 		cap:"round",
 		fill:"#cccccc"
 	},
-	
+
 	// "hit" refers to the hidden object below the shape
 	// that is usually larger than the object to give a
 	// larger 'target' to click upon. These hit objects
@@ -129,11 +146,11 @@ dojox.drawing.defaults = {
 		cap:"round",
 		fill:{r:255, g:255, b:255, a:0}
 	},
-	
-	
+
+
 	anchors:{
 		// summary:
-		// 		Style for the anchor resize-points 
+		// 		Style for the anchor resize-points
 		size:10,
 		width:2,
 		color:"#999",
@@ -172,7 +189,7 @@ dojox.drawing.defaults = {
 		weight:"normal",
 		color:"#cccccc"
 	},
-	
+
 	textMode:{
 		// summary:
 		// 		These styles apply to the containing
@@ -189,12 +206,12 @@ dojox.drawing.defaults = {
 			color:"#666",
 			fill:null
 		}
-	
+
 	},
-	
+
 	button:{
 		norm:{
-			"color": "#cccccc", 
+			"color": "#cccccc",
 			"fill": {
 				type:"linear",
 				x1:0, x2:0, y1:0, y2:100,
@@ -209,23 +226,23 @@ dojox.drawing.defaults = {
 				type:"linear",
 				x1:0, x2:0, y1:0, y2:100,
 				colors:[{offset:.5, color:"#ffffff"}, {offset:1, color:"#e1eaf5"}]
-			}, 
-			"color": "#92a0b3" 
+			},
+			"color": "#92a0b3"
 		},
 		down:{
 			"fill": {
 				type:"linear",
-				x1:0, x2:0, y1:0, y2:100, 
+				x1:0, x2:0, y1:0, y2:100,
 				colors:[{offset:0, color:"#e1eaf5"}, {offset:1, color:"#ffffff"}]
-			}, 
+			},
 			"color": "#92a0b3"
 		},
 		selected:{
 			"fill": {
 				type:"linear",
-				x1:0, x2:0, y1:0, y2:100, 
+				x1:0, x2:0, y1:0, y2:100,
 				colors:[{offset:0, color:"#97b4bf"}, {offset:1, color:"#c8dae1"}]
-			}, 
+			},
 			"color": "#92a0b3"
 		},
 		icon:{
@@ -239,7 +256,7 @@ dojox.drawing.defaults = {
 			}
 		}
 	},
-	
+
 	copy: function(){
 		// summary
 		//		Each shape gets its own copy
@@ -255,7 +272,7 @@ dojox.drawing.defaults = {
 					o = [];
 					for(var i=0; i<obj.length;i++){
 						o.push(cpy(obj[i]))
-					}    
+					}
 					return o;
 				}
 			o = {};
@@ -276,7 +293,7 @@ dojox.drawing.defaults = {
 		o.currentText = o.text;
 		return o;
 	}
-	
+
 };
 
 }

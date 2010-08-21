@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -13,6 +13,7 @@ dojo.experimental("dojox.layout.ResizeHandle");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated"); 
 dojo.require("dojo.fx"); 
+dojo.require("dojo.window");
 
 dojo.declare("dojox.layout.ResizeHandle",
 	[dijit._Widget, dijit._Templated],
@@ -162,7 +163,9 @@ dojo.declare("dojox.layout.ResizeHandle",
 		if(!this.targetDomNode){ return false; }
 
 		if(!this.activeResize){
-			var c = dojo.coords(this.targetDomNode, true);
+			var c = dojo.position(this.targetDomNode, true);
+			console.log(c);
+			console.log(dojo.window.getBox());
 			this._resizeHelper.resize({l: c.x, t: c.y, w: c.w, h: c.h});
 			this._resizeHelper.show();
 		}
@@ -220,7 +223,7 @@ dojo.declare("dojox.layout.ResizeHandle",
 		}
 		this._activeResizeLastEvent = e; 
 
-		var dx = this.startPoint.x - e.clientX,
+		var dx = (this.isLeftToRight()? this.startPoint.x - e.clientX: e.clientX - this.startPoint.x),
 			dy = this.startPoint.y - e.clientY,
 			newW = this.startSize.w - (this._resizeX ? dx : 0),
 			newH = this.startSize.h - (this._resizeY ? dy : 0)
@@ -353,7 +356,7 @@ dojo.declare("dojox.layout._ResizeHelper",
 	
 	resize: function(/* Object */dim){
 		// summary: size the widget and place accordingly
-		
+
 		// FIXME: this is off when padding present
 		dojo.marginBox(this.domNode, dim);
 	}

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -67,12 +67,19 @@ dojo.declare("dojox.drawing.ui.Toolbar", [], {
 		
 		if(this.toolDrawing.ready){
 			this.makeButtons();
+			if(!this.strSelected && this.drawing.defaults.clickMode){ this.drawing.mouse.setCursor('default'); };
 		}else{
 			var c = dojo.connect(this.toolDrawing, "onSurfaceReady", this, function(){
 				//console.log("TB built")
 				dojo.disconnect(c);
 				this.drawing = dojox.drawing.getRegistered("drawing", dojo.attr(node, "drawingId")); // 
 				this.makeButtons();
+				if(!this.strSelected && this.drawing.defaults.clickMode){ 
+					var c = dojo.connect(this.drawing, "onSurfaceReady", this, function(){
+					dojo.disconnect(c);
+					this.drawing.mouse.setCursor('default'); 
+					});
+				}
 			});
 		}
 		
@@ -97,7 +104,7 @@ dojo.declare("dojox.drawing.ui.Toolbar", [], {
 	
 	//	strSlelected | selected: String
 	//		The button that should be selected at startup.
-	strSlelected:"",
+	strSelected:"",
 	//	strTools | tools: String
 	//		A comma delineated list of the Stencil-tools to include in the Toolbar.
 	//		If "all" is used, all registered tools are included.
@@ -119,27 +126,60 @@ dojo.declare("dojox.drawing.ui.Toolbar", [], {
 				 
 		if(this.strTools){
 			var toolAr = [];
-			if(this.strTools=="all"){
-				for(var nm in dojox.drawing.getRegistered("tool")){
-					toolAr.push(this.util.abbr(nm));
+			var tools = dojox.drawing.getRegistered("tool");
+			var toolMap = {};
+			for(var nm in tools){
+				var tool = this.util.abbr(nm);
+				toolMap[tool] = tools[nm];
+				if(this.strTools=="all"){
+					toolAr.push(tool);
+					var details = dojox.drawing.getRegistered("tool",nm);
+					if(details.secondary){
+						toolAr.push(details.secondary.name);
+					}
 				}
-			}else{
-				toolAr = this.strTools.split(",");
-				dojo.map(toolAr, function(t){ return dojo.trim(t); });
+			}
+			if(this.strTools!="all"){
+				var toolTmp = this.strTools.split(",");
+				dojo.forEach(toolTmp, function(tool){
+					tool = dojo.trim(tool);
+					toolAr.push(tool);
+					var details = dojox.drawing.getRegistered("tool",toolMap[tool].name);
+					if(details.secondary){
+						toolAr.push(details.secondary.name);
+					}
+				}, this);
+				//dojo.map(toolAr, function(t){ return dojo.trim(t); });
 			}
 			
 			dojo.forEach(toolAr, function(t){
 				t = dojo.trim(t);
-				var btn = this.toolDrawing.addUI("button", {data:{x:x, y:y, width:w, height:h, r:r}, toolType:t, icon:sym[t], shadow:s, scope:this, callback:"onToolClick"})
+				var secondary = false;
+				if(t.indexOf("Secondary")>-1){
+					var prim = t.substring(0,t.indexOf("Secondary"));
+					var sec = dojox.drawing.getRegistered("tool",toolMap[prim].name).secondary;
+					var label = sec.label;
+					this[t] = sec.funct;
+					if(sec.setup){ dojo.hitch(this, sec.setup)(); };
+					var btn = this.toolDrawing.addUI("button", {data:{x:x, y:y, width:w, height:h/2, r:r}, toolType:t, secondary:true, text:label, shadow:s, scope:this, callback:this[t]});
+					if(sec.postSetup){ dojo.hitch(this, sec.postSetup, btn)(); };
+					secondary = true;
+				} else {
+					var btn = this.toolDrawing.addUI("button", {data:{x:x, y:y, width:w, height:h, r:r}, toolType:t, icon:sym[t], shadow:s, scope:this, callback:"onToolClick"});
+				}
+				dojox.drawing.register(btn, "button");
 				this.buttons.push(btn);
 				if(this.strSelected==t){
 					btn.select();
+					this.selected = btn;
 					this.drawing.setTool(btn.toolType);
 				}
 				if(this.horizontal){
-					y += h + g;
+					var space = secondary ? h/2 + g : h + g;
+					y += space;
 				}else{
-					y += h + g;
+					var space = secondary ? h/2 + g : h + g;
+					y += space;
 				}
 			}, this);
 		}
@@ -152,37 +192,59 @@ dojo.declare("dojox.drawing.ui.Toolbar", [], {
 		
 		if(this.strPlugs){
 			var plugAr = [];
-			if(this.strPlugs=="all"){
-				for(var nm in dojox.drawing.getRegistered("plugin")){
-					plugAr.push(this.util.abbr(nm));
-				}
-			}else{
-				plugAr = this.strPlugs.split(",")
+			var plugs = dojox.drawing.getRegistered("plugin");
+			var plugMap = {};
+			for(var nm in plugs){
+				var abbr = this.util.abbr(nm);
+				plugMap[abbr] = plugs[nm];
+				if(this.strPlugs=="all"){ plugAr.push(abbr); }
+			}
+			if(this.strPlugs!="all"){
+				plugAr = this.strPlugs.split(",");
 				dojo.map(plugAr, function(p){ return dojo.trim(p); });
 			}
 			
-			
 			dojo.forEach(plugAr, function(p){
-				t = dojo.trim(p);
-				//console.log("   plugin:", p)
-				var btn = this.toolDrawing.addUI("button", {data:{x:x, y:y, width:w, height:h, r:r}, toolType:t, icon:sym[t], shadow:s, scope:this, callback:"onPlugClick"})
-				this.plugins.push(btn);
-				if(this.horizontal){
-					y += h + g;
-				}else{
-					y += h + g;
+				var t = dojo.trim(p);
+				//console.log("   plugin:", p);
+				if(plugMap[p].button != false){  
+					var btn = this.toolDrawing.addUI("button", {data:{x:x, y:y, width:w, height:h, r:r}, toolType:t, icon:sym[t], shadow:s, scope:this, callback:"onPlugClick"});
+					dojox.drawing.register(btn, "button");
+					this.plugins.push(btn);
+					
+					if(this.horizontal){
+						y += h + g;
+					}else{
+						y += h + g;
+					}
 				}
-				this.drawing.addPlugin({name:this.drawing.stencilTypeMap[p], options:{button:btn}});
+				
+				var addPlug = {}
+				plugMap[p].button == false ? addPlug = {name:this.drawing.stencilTypeMap[p]} : addPlug = {name:this.drawing.stencilTypeMap[p], options:{button:btn}};
+				this.drawing.addPlugin(addPlug); 
 			}, this);
 		}
+		
+		dojo.connect(this.drawing, "onRenderStencil", this, "onRenderStencil");
+	},
+	
+	onRenderStencil: function(/* Object */stencil){
+		// summary:
+		//		Stencil render event.
+		if(this.drawing.defaults.clickMode){
+			this.drawing.mouse.setCursor("default");
+			this.selected && this.selected.deselect();
+			this.selected = null;
+		}
+
 	},
 	
 	addTool: function(){
-		// TODO: ad button here
+		// TODO: add button here
 	},
 	
 	addPlugin: function(){
-		// TODO: ad button here
+		// TODO: add button here
 	},
 	
 	addBack: function(){
@@ -190,16 +252,19 @@ dojo.declare("dojox.drawing.ui.Toolbar", [], {
 		//		Internal. Adds the back, behind the toolbar.
 		this.toolDrawing.addUI("rect", {data:{x:0, y:0, width:this.width, height:this.size + (this.padding*2), fill:"#ffffff", borderWidth:0}});
 	},
+	
 	onToolClick: function(/*Object*/button){
 		// summary:
 		//		Tool click event. May be connected to.
 		//
+		if(this.drawing.defaults.clickMode){ this.drawing.mouse.setCursor("crosshair"); }
 		dojo.forEach(this.buttons, function(b){
 			if(b.id==button.id){
 				b.select();
+				this.selected = b;
 				this.drawing.setTool(button.toolType)
 			}else{
-				b.deselect();
+				if(!b.secondary){ b.deselect(); }
 			}
 		},this)
 	},

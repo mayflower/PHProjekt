@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -123,7 +123,7 @@ dojox.drawing.util.oo = {
 			}
 		}
 			
-		for(var n in sub.prototype){
+		for(n in sub.prototype){
 			f.prototype[n] = sub.prototype[n];
 		}
 		return f; // Function

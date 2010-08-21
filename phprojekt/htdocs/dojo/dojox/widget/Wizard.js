@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,8 +14,8 @@ dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.form.Button");
 
 dojo.require("dojo.i18n"); 
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw"); 
-dojo.requireLocalization("dojox.widget", "Wizard", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw"); 
+dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw"); 
+dojo.requireLocalization("dojox.widget", "Wizard", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw"); 
 
 dojo.declare(
 	"dojox.widget.Wizard",
@@ -98,7 +98,7 @@ dojo.declare(
 		var sw = this.selectedChildWidget;
 		
 		var lastStep = sw.isLastChild;
-		this.nextButton.attr("disabled", lastStep);
+		this.nextButton.set("disabled", lastStep);
 		this._setButtonClass(this.nextButton);
 		if(sw.doneFunction){
 			//console.log(sw.doneFunction);
@@ -110,7 +110,7 @@ dojo.declare(
 			// #1438 issue here.
 			this.doneButton.domNode.style.display = "none";
 		}
-		this.previousButton.attr("disabled", !this.selectedChildWidget.canGoBack);
+		this.previousButton.set("disabled", !this.selectedChildWidget.canGoBack);
 		this._setButtonClass(this.previousButton);
 	},
 

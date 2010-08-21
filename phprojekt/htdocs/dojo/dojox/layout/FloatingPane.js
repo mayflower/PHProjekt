@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,10 +10,13 @@ dojo._hasResource["dojox.layout.FloatingPane"] = true;
 dojo.provide("dojox.layout.FloatingPane");
 dojo.experimental("dojox.layout.FloatingPane"); 
 
-dojo.require("dojox.layout.ContentPane");
+dojo.require("dojo.window");
+
 dojo.require("dijit._Templated"); 
 dojo.require("dijit._Widget"); 
 dojo.require("dojo.dnd.Moveable");
+
+dojo.require("dojox.layout.ContentPane");
 dojo.require("dojox.layout.ResizeHandle"); 
 
 dojo.declare("dojox.layout.FloatingPane", 
@@ -176,7 +179,7 @@ dojo.declare("dojox.layout.FloatingPane",
 	setTitle: function(/* String */ title){
 		// summary: Update the Title bar with a new string
 		dojo.deprecated("pane.setTitle", "Use pane.attr('title', someTitle)", "2.0");
-		this.attr("title", title);
+		this.set("title", title);
 		// this.setTitle = dojo.hitch(this, "setTitle") ?? 
 	},
 		
@@ -239,7 +242,7 @@ dojo.declare("dojox.layout.FloatingPane",
 			setTimeout(dojo.hitch(this,"maximize"),this.duration);
 		}
 		dojo.addClass(this.focusNode,"floatingPaneMaximized");
-		this.resize(dijit.getViewport());
+		this.resize(dojo.window.getBox());
 		this._maximized = true;
 	},
 
@@ -363,7 +366,7 @@ dojo.declare("dojox.layout.Dock",
 				// Give some time for scrollbars to appear/disappear
 				setTimeout(dojo.hitch(this, function() {
 					this._inPositiononing = true;
-					var viewport = dijit.getViewport();
+					var viewport = dojo.window.getBox();
 					var s = this.domNode.style;
 					s.left = viewport.l + "px";
 					s.width = (viewport.w-2) + "px";

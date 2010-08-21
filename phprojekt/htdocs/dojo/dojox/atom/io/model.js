@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -679,7 +679,7 @@ dojo.declare("dojox.atom.io.model.Content",dojox.atom.io.model.Node,{
 		//We need to unescape the HTML content here so that it can be displayed correctly when the value is fetched.
 		var lowerType = this.type.toLowerCase();
 		if(lowerType === "html" || lowerType === "text/html" || lowerType === "xhtml" || lowerType === "text/xhtml"){
-			this.value = dojox.atom.io.model.util.unEscapeHtml(this.value);
+			this.value = this.value?dojox.atom.io.model.util.unEscapeHtml(this.value):"";
 		}
 
 		if(this._postBuild){this._postBuild();}

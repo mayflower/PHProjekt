@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -344,7 +344,8 @@ dojo.declare("dojox.grid.enhanced.dnd._DndMovingManager", dojox.grid.enhanced.dn
 		}
 		
 		var coords = this.normalizeColMoverCoords(leftPosition, rightPosition, leadingBorderIdx, trailingBorderIdx);
-		var height = coords.h, width = coords.w, leftPosition = coords.l, rightPosition = coords.r;
+		var height = coords.h, width = coords.w;
+		leftPosition = coords.l, rightPosition = coords.r;
 		
 		var coverMover = this.createCoverMover(width, height, leftPosition, top, "col");
 		this.movers.push(coverMover);
@@ -667,6 +668,7 @@ dojo.declare("dojox.grid.enhanced.dnd._DndMovingManager", dojox.grid.enhanced.dn
 			var colHeight =  dojo.coords(rowBarView.contentNode).h;
 			var rowCount = 0, bottomRowIndex = -1;
 			for(i in rowBarNodes){
+				i = parseInt(i);
 				++rowCount;
 				if(i > bottomRowIndex){ bottomRowIndex = i; }
 			}

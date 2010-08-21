@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -92,7 +92,7 @@ dojo.require("dojo.data.util.filter");
 						var remove = this._updates[i].remove;
 						if(remove){
 							for(var j = 0; j < resultSet.length;j++){
-								if(resultSet[j] == remove){
+								if(this.getIdentity(resultSet[j]) == this.getIdentity(remove)){
 									resultSet.splice(j--,1);
 									var updated = true;
 								}

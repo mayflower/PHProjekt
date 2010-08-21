@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -245,6 +245,13 @@ dojo.declare("dojox.layout.TableContainer",
 		});
 		this.table = table;
 		this.resize();
+	},
+	
+	destroyDescendants: function(/*Boolean*/ preserveDom){
+		// summary:
+		//      Destroys all the widgets inside this.containerNode,
+		//      but not this widget itself
+		dojo.forEach(this._children, function(child){ child.destroyRecursive(preserveDom); });
 	},
 	
 	_setSpacingAttr: function(value) {

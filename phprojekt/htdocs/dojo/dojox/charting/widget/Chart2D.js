@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -167,6 +167,18 @@ dojo.require("dojox.charting.action2d.Tooltip");
 			type = dojox._scopeName + ".charting.axis2d.Default";
 		}
 		collectParams(node, type, kw);
+		// compatibility conversions
+		if(kw.font || kw.fontColor){
+			if(!kw.tick){
+				kw.tick = {};
+			}
+			if(kw.font){
+				kw.tick.font = kw.font;
+			}
+			if(kw.fontColor){
+				kw.tick.fontColor = kw.fontColor;
+			}
+		}
 		return o;
 	};
 	
@@ -218,14 +230,22 @@ dojo.require("dojox.charting.action2d.Tooltip");
 		if(t != null){ kw.marker = t; }
 		t = ga("stroke");
 		if(t != null){ kw.stroke = eval("(" + t + ")"); }
+		t = ga("outline");
+		if(t != null){ kw.outline = eval("(" + t + ")"); }
+		t = ga("shadow");
+		if(t != null){ kw.shadow = eval("(" + t + ")"); }
 		t = ga("fill");
 		if(t != null){ kw.fill = eval("(" + t + ")"); }
+		t = ga("font");
+		if(t != null){ kw.font = t; }
+		t = ga("fontColor");
+		if(t != null){ kw.fontColor = eval("(" + t + ")"); }
 		t = ga("legend");
 		if(t != null){ kw.legend = t; }
 		t = ga("data");
 		if(t != null){
 			o.type = "data";
-			o.data = dojo.map(String(t).split(','), Number);
+			o.data = t ? dojo.map(String(t).split(','), Number) : [];
 			return o;
 		}
 		t = ga("array");

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,6 +11,12 @@ dojo.provide("dojox.charting.scaler.primitive");
 
 dojox.charting.scaler.primitive = {
 	buildScaler: function(/*Number*/ min, /*Number*/ max, /*Number*/ span, /*Object*/ kwArgs){
+		if(min == max){
+			// artificially extend bounds
+			min -= 0.5;
+			max += 0.5;
+			// now the line will be centered
+		}
 		return {
 			bounds: {
 				lower: min,
