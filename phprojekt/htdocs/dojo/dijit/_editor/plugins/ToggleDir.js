@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -39,7 +39,7 @@ dojo.declare("dijit._editor.plugins.ToggleDir",
 				//view.  But, the nice thing is this works for all supported browsers.
 				editDoc = editDoc.getElementsByTagName("body")[0];
 				var isLtr = dojo.getComputedStyle(editDoc).direction == "ltr";
-				this.button.attr("checked", !isLtr);
+				this.button.set("checked", !isLtr);
 				this.connect(this.button, "onChange", "_setRtl");
 			}));
 		},

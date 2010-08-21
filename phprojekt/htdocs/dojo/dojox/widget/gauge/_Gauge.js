@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -230,7 +230,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 		dojo.style(this.mouseNode, 'position', 'absolute');
 		dojo.style(this.mouseNode, 'z-index', '100');
 		if(this.useTooltip){
-			dijit.showTooltip('test',this.mouseNode);
+			dijit.showTooltip('test',this.mouseNode, !this.isLeftToRight());
 			dijit.hideTooltip(this.mouseNode);
 		}
 	},
@@ -414,7 +414,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 		if(this._lastHover != txt){
 			if(txt !== ''){ 
 				dijit.hideTooltip(this.mouseNode);
-				dijit.showTooltip(txt,this.mouseNode);
+				dijit.showTooltip(txt,this.mouseNode, !this.isLeftToRight());
 			}else{
 				dijit.hideTooltip(this.mouseNode);
 			}

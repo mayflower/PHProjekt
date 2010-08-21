@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -54,10 +54,17 @@ dojo.declare("dojox.form.FileInputAuto",
 	triggerEvent: "onblur",
 	
 	_sent: false,
-
+	
 	// small template changes, new attachpoint: overlay
 	templateString: dojo.cache("dojox.form", "resources/FileInputAuto.html", "<div class=\"dijitFileInput\">\r\n\t<input id=\"${id}\" name=\"${name}\" class=\"dijitFileInputReal\" type=\"file\" dojoAttachPoint=\"fileInput\" />\r\n\t<div class=\"dijitFakeInput\" dojoAttachPoint=\"fakeNodeHolder\">\r\n\t\t<input class=\"dijitFileInputVisible\" type=\"text\" dojoAttachPoint=\"focusNode, inputNode\" />\r\n\t\t<div class=\"dijitInline dijitFileInputText\" dojoAttachPoint=\"titleNode\">${label}</div>\r\n\t\t<div class=\"dijitInline dijitFileInputButton\" dojoAttachPoint=\"cancelNode\" dojoAttachEvent=\"onclick:reset\">${cancelText}</div>\r\n\t</div>\r\n\t<div class=\"dijitProgressOverlay\" dojoAttachPoint=\"overlay\">&nbsp;</div>\r\n</div>\r\n"),
-
+	
+	onBeforeSend: function(){
+		// summary: Called immediately before a FileInput sends it's file via io.iframe.send. 
+		//		The return of this function is passed as the `content` member in the io.iframe IOArgs
+		//		object.
+		return {};
+	},
+	
 	startup: function(){
 		// summary: add our extra blur listeners
 		this._blurListener = this.connect(this.fileInput, this.triggerEvent, "_onBlur");
@@ -121,10 +128,11 @@ dojo.declare("dojox.form.FileInputAuto",
 			url: this.url,
 			form: _newForm,
 			handleAs: "json",
-			handle: dojo.hitch(this,"_handleSend")
+			handle: dojo.hitch(this,"_handleSend"),
+			content: this.onBeforeSend()
 		});
 	},
-
+	
 	_handleSend: function(data,ioArgs){
 		// summary: The callback to toggle the progressbar, and fire the user-defined callback
 

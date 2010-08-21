@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -54,14 +54,16 @@ StencilPoints: [
 				// we'll need to build a string and set that.
 				var strAr = [];
 				dojo.forEach(this.points, function(o, i){
-					if(i==0){
-						strAr.push("M " + o.x +" "+ o.y);
-					}else{
-						var cmd = (o.t || "") + " ";
-						if(o.x===undefined){// Z + undefined works here, but checking anyway
-							strAr.push(cmd);
+					if(!o.skip){
+						if(i==0){
+							strAr.push("M " + o.x +" "+ o.y);
 						}else{
-							strAr.push(cmd + o.x +" "+ o.y); 
+							var cmd = (o.t || "") + " ";
+							if(o.x===undefined){// Z + undefined works here, but checking anyway
+								strAr.push(cmd);
+							}else{
+								strAr.push(cmd + o.x +" "+ o.y); 
+							}
 						}
 					}
 				}, this);
@@ -81,12 +83,14 @@ StencilPoints: [
 				this.closePath && this[shp].setFill(sty.fill);
 				
 				dojo.forEach(this.points, function(o, i){
-					if(i==0 || o.t=="M"){
-						this[shp].moveTo(o.x, o.y);
-					}else if(o.t=="Z"){
-						this.closePath && this[shp].closePath();
-					}else{
-						this[shp].lineTo(o.x, o.y);
+					if(!o.skip){
+						if(i==0 || o.t=="M"){
+							this[shp].moveTo(o.x, o.y);
+						}else if(o.t=="Z"){
+							this.closePath && this[shp].closePath();
+						}else{
+							this[shp].lineTo(o.x, o.y);
+						}
 					}
 				}, this);
 				

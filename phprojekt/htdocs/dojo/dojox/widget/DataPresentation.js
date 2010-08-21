@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -20,34 +20,27 @@ dojo.require("dojo.data.ItemFileWriteStore");
 
 (function(){
 	
-	// sort out the labels for the independant axis of the chart
-	var getLabels = function(rangevalues, labelMod, reverse, charttype, domNode){
+	// sort out the labels for the independent axis of the chart
+	var getLabels = function(range, labelMod, charttype, domNode){
 		
 		// prepare labels for the independent axis
-		var labels = [], labelmod = labelMod;
+		var labels = [];
 		// add empty label, hack
 		labels[0] = {value: 0, text: ''};
 
-		var range = rangevalues.slice(0);
-			
-		// reverse the labels if requested
-		if(reverse){
-			range.reverse();
-		}
-			
 		var nlabels = range.length;
 
-	    // auto-set labelmod for horizontal charts if the labels will otherwise collide
+		// auto-set labelMod for horizontal charts if the labels will otherwise collide
 		if((charttype !== "ClusteredBars") && (charttype !== "StackedBars")){
     		var cwid = domNode.offsetWidth;
     		var tmp = ("" + range[0]).length * range.length * 7; // *assume* 7 pixels width per character ( was 9 )
     	  
-    		if(labelmod == 1){
+    		if(labelMod == 1){
     			for(var z = 1; z < 500; ++z){
     				if((tmp / z) < cwid){
     					break;
     				}
-    				++labelmod;
+    				++labelMod;
     			}
     		}
 	    }
@@ -55,15 +48,14 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		// now set the labels
 		for(var i = 0; i < nlabels; i++){
 			//sparse labels
-			if(i % labelmod == 0){
-				labels.push({value: (i+1), text: range[i]});
-			}else{
-				labels.push({value: (i+1), text: "" });
-			}
+			labels.push({
+				value: i + 1,
+				text: (!labelMod || i % labelMod) ? "" : range[i]
+			});
 		}
 		
 		// add empty label again, hack
-		labels.push({value:(nlabels + 1),text:''});
+		labels.push({value: nlabels + 1, text:''});
 		
 		return labels;
 	};
@@ -158,7 +150,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 	};
 
 	// set up a chart presentation
-	var setupChart = function(/*DomNode*/domNode, /*Object?*/chart, /*String*/type, /*Boolean*/reverse, /*Object*/animate, /*Integer*/labelMod, /*String*/theme, /*Object?*/store, /*String?*/query, /*String?*/queryOptions){
+	var setupChart = function(/*DomNode*/domNode, /*Object?*/chart, /*String*/type, /*Boolean*/reverse, /*Object*/animate, /*Integer*/labelMod, /*String*/theme, /*String*/tooltip, /*Object?*/store, /*String?*/query, /*String?*/queryOptions){
 		var _chart = chart;
 		
 		if(!_chart){
@@ -195,7 +187,14 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			_chart.setTheme(theme);
 		}
 
-		var labels = getLabels(store.series_data[0], labelMod, reverse, type, domNode);
+		var range = store.series_data[0].slice(0);
+		
+		// reverse the labels if requested
+		if(reverse){
+			range.reverse();
+		}
+			
+		var labels = getLabels(range, labelMod, type, domNode);
 
 		// collect details of whether primary and/or secondary axes are required 
 		// and what plots we have instantiated using each type of axis
@@ -204,18 +203,23 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		// collect maximum and minimum data values
 		var maxval = null;
 		var minval = null;
+		
+		var seriestoremove = {};
+		for(var sname in _chart.runs){
+			seriestoremove[sname] = true;
+		}
 
 		// set x values & max data value
 		var nseries = store.series_name.length;
 		for(var i = 0; i < nseries; i++){
 			// only include series with chart=true and with some data values in
 			if(store.series_chart[i] && (store.series_data[i].length > 0)){
-				
+
 				var charttype = type;
 				var axistype = store.series_axis[i];
-				
+
 				if(charttype == "Hybrid"){
-					if (store.series_charttype[i] == 'line'){
+					if(store.series_charttype[i] == 'line'){
 						charttype = "Hybrid-Lines";
 					}else{
 						charttype = "Hybrid-ClusteredColumns";
@@ -232,11 +236,22 @@ dojo.require("dojo.data.ItemFileWriteStore");
 					var axisname = axistype + "-" + charttype;
 					
 					// create the plot and enable tooltips
-					_chart.addPlot(axisname, getPlotArgs(charttype, axistype, animate));					
-					new dojox.charting.action2d.Tooltip(_chart, axisname);
+					_chart.addPlot(axisname, getPlotArgs(charttype, axistype, animate));
+
+					var tooltipArgs = {};
+					if(typeof tooltip == 'string'){
+						tooltipArgs.text = function(o){
+							var substitutions = [o.element, o.run.name, range[o.index], ((charttype === "ClusteredBars") || (charttype === "StackedBars")) ? o.x : o.y];
+							return dojo.replace(tooltip, substitutions);  // from Dojo 1.4 onward
+							//return tooltip.replace(/\{([^\}]+)\}/g, function(_, token){ return dojo.getObject(token, false, substitutions); });  // prior to Dojo 1.4
+						}
+					}else if(typeof tooltip == 'function'){
+						tooltipArgs.text = tooltip;
+					}
+					new dojox.charting.action2d.Tooltip(_chart, axisname, tooltipArgs);
 					
 					// add highlighting, except for lines
-					if ((charttype !== "Lines") && (charttype !== "Hybrid-Lines")){
+					if(charttype !== "Lines" && charttype !== "Hybrid-Lines"){
 						new dojox.charting.action2d.Highlight(_chart, axisname);
 					}
 					
@@ -262,35 +277,39 @@ dojo.require("dojo.data.ItemFileWriteStore");
 				if(reverse){
 					xvals.reverse();
 				}
-					
+
 				var seriesargs = { plot: axistype + "-" + charttype };
 				if(store.series_linestyle[i]){
 					seriesargs.stroke = { style: store.series_linestyle[i] };
 				}
-			    _chart.addSeries(store.series_name[i], xvals, seriesargs);
+
+				_chart.addSeries(store.series_name[i], xvals, seriesargs);
+				delete seriestoremove[store.series_name[i]];
 			}
 		}
 		
+		// remove any series that are no longer needed
+		for(sname in seriestoremove){
+			_chart.removeSeries(sname);
+		}
+
 		// create axes
 		_chart.addAxis("independent", getIndependentAxisArgs(type, labels));
 		_chart.addAxis("dependent-primary", getDependentAxisArgs(type, "primary", minval, maxval));
 		_chart.addAxis("dependent-secondary", getDependentAxisArgs(type, "secondary", minval, maxval));
 		
-		_chart.render();
 		return _chart;
 	};		
 
 	// set up a legend presentation
-	var setupLegend = function(/*DomNode*/domNode, /*Legend*/legend, /*Chart2D*/chart, /*Boolean*/vertical){
+	var setupLegend = function(/*DomNode*/domNode, /*Legend*/legend, /*Chart2D*/chart, /*Boolean*/horizontal){
 		// destroy any existing legend and recreate
 		var _legend = legend;
 		
 		if(!_legend){
-			if(vertical){
-				_legend = new dojox.charting.widget.Legend({ chart: chart, horizontal: false }, domNode);
-			}else{
-				_legend = new dojox.charting.widget.Legend({ chart: chart, vertical: false }, domNode);
-			}
+			_legend = new dojox.charting.widget.Legend({ chart: chart, horizontal: horizontal }, domNode);
+		}else{
+			_legend.refresh();
 		}
 		
 		return _legend;
@@ -311,7 +330,6 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		}
 		
 		_grid.setStructure(structure);
-		_grid.render();
 		
 		return _grid;
 	};
@@ -400,6 +418,10 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		//      a warning message in the console unless djConfig.useCommentedJson
 		//      has been set to true.
 		//
+		//  urlContent: Object   
+		//      Content to be passed to the URL when fetching data. If a URL has
+		//      not been supplied, this value is ignored.
+		//
 		//  urlError: function
 		//      A function to be called if an error is encountered when fetching
 		//      data from the supplied URL. This function will be supplied with
@@ -428,7 +450,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		//			field: the name of the field within each data point which
 		//				contains the data for this data series. If not supplied,
 		//				each data point is assumed to be the value for the series.
-        //      	name: a name for the series, used in the legend and grid headings
+		//      	name: a name for the series, used in the legend and grid headings
 		//          namefield: the name of the field from the source data which
 		//              contains the name the series, used in the legend and grid
 		//              headings. If both name and namefield are supplied, name takes
@@ -439,10 +461,10 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		//          linestyle: the stroke style for lines (if applicable) (default: "Solid")
 		//          axis: the dependant axis to which the series will be attached in the chart,
 		//              which can be "primary" or "secondary"
-        //			grid: true if the series should be included in a data grid presentation (default: true)
-        //			gridformatter: an optional formatter to use for this series in the data grid
+		//			grid: true if the series should be included in a data grid presentation (default: true)
+		//			gridformatter: an optional formatter to use for this series in the data grid
 		//
-	    //      a call-back function may alternatively be supplied. The function takes
+		//      a call-back function may alternatively be supplied. The function takes
 		//      a single parameter, which will be the data (from the 'data' field or
 		//      loaded from the value in the 'url' field), and should return the array
 		//      of objects describing the data series to be included in the data
@@ -479,13 +501,30 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		//
 		//  labelMod: Integer
 		//      the frequency of label annotations to be included on the
-		//      independent axis. 1=every label. The default is 1.
+		//      independent axis. 1=every label. 0=no labels. The default is 1.
 		labelMod: 1,
 		//
-		//  legendVertical: Boolean
-		//      true if the legend should be rendered vertically. The default
-		//      is false (legend rendered horizontally).
-		legendVertical: false,
+		//  tooltip: String | Function
+		//      a string pattern defining the tooltip text to be applied to chart
+		//      data points, or a function which takes a single parameter and returns
+		//      the tooltip text to be applied to chart data points. The string pattern
+		//      will have the following substitutions applied:
+		//       {0} - the type of chart element ('bar', 'surface', etc)
+		//       {1} - the name of the data series
+		//       {2} - the independent axis value at the tooltip data point
+		//       {3} - the series value at the tooltip data point point
+		//      The function, if supplied, will receive a single parameter exactly
+		//      as per the dojox.charting.action2D.Tooltip class. The default value
+		//      is to apply the default tooltip as defined by the
+		//      dojox.charting.action2D.Tooltip class.
+		//
+		//  legendHorizontal: Boolean | Number
+		//      true if the legend should be rendered horizontally, or a number if
+		//      the legend should be rendered as horizontal rows with that number of
+		//      items in each row, or false if the legend should be rendered
+		//      vertically (same as specifying 1). The default is true (legend
+		//      rendered horizontally).
+		legendHorizontal: true,
 		//
 		//  theme: String|Theme
 		//      a theme to use for the chart, or the name of a theme.
@@ -536,11 +575,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			//	arguments:
 			//		node: DomNode
 			//			The node to attach the data presentation to.
-			//		kwArgs:	Object
-			//			store: Object
-			//				optional data store (see above)
-			//			url: Object
-			//				optional URL to fetch data from (see above)
+			//		kwArgs:	Object (see above)
 			
 			// apply arguments directly
 			dojo.mixin(this, args);
@@ -563,8 +598,14 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			this.titleNode = dojo.byId(this.titleNode);
 			this.footerNode = dojo.byId(this.footerNode);
 			
+			// we used to support a 'legendVertical' so for now
+			// at least maintain backward compatibility
+			if(this.legendVertical){
+				this.legendHorizontal = !this.legendVertical;
+			}
+			
 			if(this.url){
-				this.setURL(null, this.refreshInterval);
+				this.setURL(null, null, this.refreshInterval);
 			}
 			else{
 				if(this.data){
@@ -576,9 +617,10 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			}
 		},
 		
-		setURL: function(/*String?*/url, /*Number?*/refreshInterval){
+		setURL: function(/*String?*/url, /*Object?*/ urlContent, /*Number?*/refreshInterval){
 			// summary:
-			//      Sets the URL to fetch data from, and an optional
+			//      Sets the URL to fetch data from, with optional content
+			//      supplied with the request, and an optional
 			//      refresh interval in milliseconds (0=no refresh)
 
 			// if a refresh interval is supplied we will start a fresh
@@ -588,12 +630,14 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			}
 			
 			this.url = url || this.url;
+			this.urlContent = urlContent || this.urlContent;
 			this.refreshInterval = refreshInterval || this.refreshInterval;
 			
 			var me = this;
 			
 			dojo.xhrGet({
 				url: this.url,
+				content: this.urlContent,
 				handleAs: 'json-comment-optional',
 				load: function(response, ioArgs){
 					me.setData(response);
@@ -730,7 +774,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			//      restarted. If a URL or data was not supplied, this
 			//      method has no effect.
 			if(this.url){
-				this.setURL(this.url, this.refreshInterval);
+				this.setURL(this.url, this.urlContent, this.refreshInterval);
 			}else if(this.data){
 				this.setData(this.data, this.refreshInterval);
 			}
@@ -761,13 +805,15 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			
 			if(this.preparedstore){
 				if(this.chartNode){
-					this.chartWidget = setupChart(this.chartNode, this.chartWidget, this.chartType, this.reverse, this.animate, this.labelMod, this.theme, this.preparedstore, this.query, this,queryOptions);
+					this.chartWidget = setupChart(this.chartNode, this.chartWidget, this.chartType, this.reverse, this.animate, this.labelMod, this.theme, this.tooltip, this.preparedstore, this.query, this,queryOptions);
+					this.renderChartWidget();
 				}
 				if(this.legendNode){
-					this.legendWidget = setupLegend(this.legendNode, this.legendWidget, this.chartWidget, this.legendVertical);
+					this.legendWidget = setupLegend(this.legendNode, this.legendWidget, this.chartWidget, this.legendHorizontal);
 				}
 				if(this.gridNode){
 					this.gridWidget = setupGrid(this.gridNode, this.gridWidget, this.preparedstore, this.query, this.queryOptions);
+					this.renderGridWidget();
 				}
 				if(this.titleNode){
 					setupTitle(this.titleNode, this.preparedstore);
@@ -775,6 +821,26 @@ dojo.require("dojo.data.ItemFileWriteStore");
 				if(this.footerNode){
 					setupFooter(this.footerNode, this.preparedstore);
 				}
+			}
+		},
+		
+		renderChartWidget: function(){
+			// summary:
+			//      Renders the chart widget (if any). This method is
+			//      called whenever a chart widget is created or
+			//      configured, and may be connected to.
+			if(this.chartWidget){
+				this.chartWidget.render();
+			}
+		},
+		
+		renderGridWidget: function(){
+			// summary:
+			//      Renders the grid widget (if any). This method is
+			//      called whenever a grid widget is created or
+			//      configured, and may be connected to.
+			if(this.gridWidget){
+				this.gridWidget.render();
 			}
 		},
 		
@@ -801,17 +867,17 @@ dojo.require("dojo.data.ItemFileWriteStore");
 			
 			if(this.chartWidget){
 				this.chartWidget.destroy();
-				this.chartWidget = undefined;
+				delete this.chartWidget;
 			}
 			
 			if(this.legendWidget){
 				// no legend.destroy()
-				this.legendWidget = undefined;				
+				delete this.legendWidget;				
 			}
 
 			if(this.gridWidget){
 				// no grid.destroy()
-				this.gridWidget = undefined;
+				delete this.gridWidget;
 			}
 			
 			if(this.chartNode){

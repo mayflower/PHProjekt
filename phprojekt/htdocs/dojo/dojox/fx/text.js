@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -411,9 +411,9 @@ dojox.fx.text.backspace = function(/*Object*/ args){
 
 	// Returns the animation object for each piece
 	args.pieceAnimation = function(piece, pieceCoords, coords, number, numPieces){
-		var interval = args.interval || (args.duration / (1.5 * numPieces));
-		var text = piece.textContent;
-		var whitespace = text.match(/\s/g);
+		var interval = args.interval || (args.duration / (1.5 * numPieces)),
+			text = ("textContent" in piece) ? piece.textContent : piece.innerText,
+			whitespace = text.match(/\s/g);
 
 		if(typeof(args.wordDelay) == "undefined"){
 			args.wordDelay = interval * 2;

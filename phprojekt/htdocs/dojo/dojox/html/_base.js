@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -152,7 +152,7 @@ dojo.require("dojo.html");
 		//them up.
 		cont = cont.replace(/<[!][-][-](.|\s){5,}?[-][-]>/g,
 			function(comment){
-				return comment.replace(/<(\/?)script\b([^>]|\s)*\>/ig,"&lt;$1Script$2&gt;");
+				return comment.replace(/<(\/?)script\b/ig,"&lt;$1Script");
 			}
 		);
 

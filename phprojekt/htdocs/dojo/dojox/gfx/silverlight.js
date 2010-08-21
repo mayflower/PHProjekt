@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -351,14 +351,11 @@ dojo.declare("dojox.gfx.Polyline", dojox.gfx.shape.Polyline, {
 		}else{
 			this.shape = dojox.gfx.makeParameters(this.shape, points);
 		}
-		this.box = null;
+		this.bbox = null;
+		this._normalizePoints();
 		var p = this.shape.points, rp = [];
 		for(var i = 0; i < p.length; ++i){
-			if(typeof p[i] == "number"){
-				rp.push(p[i], p[++i]);
-			}else{
-				rp.push(p[i].x, p[i].y);
-			}
+			rp.push(p[i].x, p[i].y);
 		}
 		this.rawNode.points = rp.join(",");
 		return this;	// self

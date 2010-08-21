@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,10 +14,10 @@ dojo.require("dojox.charting.Theme");
 	var dxc=dojox.charting;
 	dxc.themes.Ireland=new dxc.Theme({
 		colors: [
-			"#abdbcb", 
+			"#abdbcb",
 			"#435a51",
 			"#70998b",
-			"#78q596",
+			"#78d596",
 			"#5f8074"
 		]
 	});

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -27,7 +27,7 @@ dojo.provide("dojox.data.ServiceStore");
 dojo.declare("dojox.data.ServiceStore",
 	// ClientFilter is intentionally not required, ServiceStore does not need it, and is more
 	// lightweight without it, but if it is provided, the ServiceStore will use it.
-	dojox.data.ClientFilter,{
+	dojox.data.ClientFilter||null,{
 		service: null,
 		constructor: function(options){
 			//summary:
@@ -100,10 +100,10 @@ dojo.declare("dojox.data.ServiceStore",
 			// We supply a default idAttribute for parser driven construction, but if no id attribute
 			//	is supplied, it should be null so that auto identification takes place properly
 			this.idAttribute = (options && options.idAttribute) || (this.schema && this.schema._idAttr);
-			this.labelAttribute = this.labelAttribute || "label";
 		},
 		schema: null,
 		idAttribute: "id",
+		labelAttribute: "label",
 		syncMode: false,
 		estimateCountFactor: 1,
 		getSchema: function(){
@@ -142,6 +142,13 @@ dojo.declare("dojox.data.ServiceStore",
 			//		property to look up value for
 
 			var val = this.getValue(item,property);
+			if(val instanceof Array){
+				return val;
+			}
+			if(!this.isItemLoaded(val)){
+				dojox.rpc._sync = true;
+				val = this.loadItem({item:val});
+			}
 			return val instanceof Array ? val : val === undefined ? [] : [val];
 		},
 

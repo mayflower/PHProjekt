@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -146,14 +146,14 @@ dojo.declare("dojox.data.ItemExplorer", dijit.Tree, {
 			if(node){
 				var item = node.item;
 				if(this.store.isItem(item.value, true) && !item.parent){
-					contextMenu.getChildren().forEach(function(widget){
+					dojo.forEach(contextMenu.getChildren(), function(widget){
 						widget.attr("disabled", (widget.label != "Add"));
 					});
 					this.lastFocused = node;
 					// TODO: Root Node - allow Edit when mutli-value editing is possible
 				}else if(item.value && typeof item.value == 'object' && !(item.value instanceof Date)){
 					// an object that's not a Date - could be a store item
-					contextMenu.getChildren().forEach(function(widget){
+					dojo.forEach(contextMenu.getChildren(), function(widget){
 						widget.attr("disabled", (widget.label != "Add") && (widget.label != "Delete"));
 					});
 					this.lastFocused = node;
@@ -164,7 +164,7 @@ dojo.declare("dojox.data.ItemExplorer", dijit.Tree, {
 				}else if(item.addNew){
 					this.focusNode(node);
 				}else{
-					contextMenu.getChildren().forEach(function(widget){
+					dojo.forEach(contextMenu.getChildren(), function(widget){
 						widget.attr("disabled", (widget.label != "Edit") && (widget.label != "Delete"));
 					})
 					// this won't focus the node but gives us a way to reference the node

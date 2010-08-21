@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -17,6 +17,14 @@ dojo.require("dojo.cldr.monetary");
 /*=====
 dojo.currency = {
 	// summary: localized formatting and parsing routines for currencies
+	//
+	// description: extends dojo.number to provide culturally-appropriate formatting of values
+	//	in various world currencies, including use of a currency symbol.  The currencies are specified
+	//	by a three-letter international symbol in all uppercase, and support for the currencies is
+	//	provided by the data in `dojo.cldr`.  The scripts generating dojo.cldr specify which
+	//	currency support is included.  A fixed number of decimal places is determined based
+	//	on the currency type and is not determined by the 'pattern' argument.  The fractional
+	//	portion is optional, by default, and variable length decimals are not supported.
 }
 =====*/
 
@@ -24,7 +32,7 @@ dojo.currency._mixInDefaults = function(options){
 	options = options || {};
 	options.type = "currency";
 
-	// Get locale-depenent currency data, like the symbol
+	// Get locale-dependent currency data, like the symbol
 	var bundle = dojo.i18n.getLocalization("dojo.cldr", "currency", options.locale) || {};
 
 	// Mixin locale-independent currency data, like # of places
@@ -44,19 +52,19 @@ dojo.currency._mixInDefaults = function(options){
 /*=====
 dojo.declare("dojo.currency.__FormatOptions", [dojo.number.__FormatOptions], {
 	//	type: String?
-	//		Should not be set.  Value is assumed to be currency.
-	//	currency: String?
-	//		an [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, a three letter sequence like "USD".
-	//		For use with dojo.currency only.
+	//		Should not be set.  Value is assumed to be "currency".
 	//	symbol: String?
 	//		localized currency symbol. The default will be looked up in table of supported currencies in `dojo.cldr`
 	//		A [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code will be used if not found.
+	//	currency: String?
+	//		an [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, a three letter sequence like "USD".
+	//		For use with dojo.currency only.
 	//	places: Number?
 	//		number of decimal places to show.  Default is defined based on which currency is used.
 	type: "",
 	symbol: "",
-	places: "",
-	fractional: ""
+	currency: "",
+	places: ""
 });
 =====*/
 
@@ -66,8 +74,9 @@ dojo.currency.format = function(/*Number*/value, /*dojo.currency.__FormatOptions
 //
 // description:
 //		Create a string from a Number using a known, localized pattern.
-//		[Formatting patterns](http://www.unicode.org/reports/tr35/#Number_Elements) appropriate to the locale are chosen from the [CLDR](http://unicode.org/cldr)
-//		as well as the appropriate symbols and delimiters.
+//		[Formatting patterns](http://www.unicode.org/reports/tr35/#Number_Elements)
+//		appropriate to the locale are chosen from the [CLDR](http://unicode.org/cldr)
+//		as well as the appropriate symbols and delimiters and number of decimal places.
 //
 // value:
 //		the number to be formatted.
@@ -97,11 +106,13 @@ dojo.declare("dojo.currency.__ParseOptions", [dojo.number.__ParseOptions], {
 	//		localized currency symbol. The default will be looked up in table of supported currencies in `dojo.cldr`
 	//		A [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code will be used if not found.
 	//	places: Number?
-	//		number of decimal places to accept.  Default is defined based on which currency is used.
+	//		fixed number of decimal places to accept.  The default is determined based on which currency is used.
 	//	fractional: Boolean?|Array?
-	//		Whether to include the fractional portion, where the number of decimal places are implied by pattern
-	//		or explicit 'places' parameter.  By default for currencies, it the fractional portion is optional.
+	//		Whether to include the fractional portion, where the number of decimal places are implied by the currency
+	//		or explicit 'places' parameter.  The value [true,false] makes the fractional portion optional.
+	//		By default for currencies, it the fractional portion is optional.
 	type: "",
+	currency: "",
 	symbol: "",
 	places: "",
 	fractional: ""
@@ -116,9 +127,11 @@ dojo.currency.parse = function(/*String*/expression, /*dojo.currency.__ParseOpti
 	//
 	// description:
 	//		Create a Number from a string using a known, localized pattern.
-	//		[Formatting patterns](http://www.unicode.org/reports/tr35/#Number_Format_Patterns) are chosen appropriate to the locale.
+	//		[Formatting patterns](http://www.unicode.org/reports/tr35/#Number_Format_Patterns)
+	//		are chosen appropriate to the locale, as well as the appropriate symbols and delimiters
+	//		and number of decimal places.
 	//
-	// expression: A string representation of a Number
+	// expression: A string representation of a currency value
 
 	return dojo.number.parse(expression, dojo.currency._mixInDefaults(options));
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -48,13 +48,27 @@ dojox.drawing.tools.Ellipse = dojox.drawing.util.oo.declare(
 		onUp: function(/*EventObject*/obj){
 			// summary: See stencil._Base.onUp
 			//
-			if(this.created || !this.shape){ return; }
-			
+			if(this.created || !this._downOnCanvas){ return; }
+			this._downOnCanvas = false;
+			//Default shape on single click
+			if(!this.shape){
+				var s = obj.start, e = this.minimumSize*2;
+				this.data = {
+					cx: s.x+e,
+					cy: s.y+e,
+					rx: e,
+					ry: e
+				};
+				this.dataToPoints();
+				this.render();
+			}else{
 			// if too small, need to reset
-			var o = this.pointsToData();
-			if(o.rx*2<this.minimumSize && o.ry*2 < this.minimumSize){
-				this.remove(this.shape, this.hit);
-				return;
+				var o = this.pointsToData();
+				console.log("Create a default shape here, pt to data: ",o);
+				if(o.rx*2<this.minimumSize && o.ry*2 < this.minimumSize){
+					this.remove(this.shape, this.hit);
+					return;
+				}
 			}
 			
 			this.onRender(this);

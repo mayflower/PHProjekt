@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,7 +11,7 @@ dojo.provide("dojox.widget.DynamicTooltip");
 dojo.experimental("dojox.widget.DynamicTooltip");
 
 dojo.require("dijit.Tooltip");
-dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
 dojo.declare("dojox.widget.DynamicTooltip", dijit.Tooltip,
 	{
@@ -53,9 +53,9 @@ dojo.declare("dojox.widget.DynamicTooltip", dijit.Tooltip,
 		// MOW: this is a new widget, do we really need a deprecated stub?
 		// setHref: function(/*String|Uri*/ href){
 		//	// summary:
-		//	//		Deprecated.   Use attr('href', ...) instead.
-		//	dojo.deprecated("dojox.widget.DynamicTooltip.setHref() is deprecated.	Use attr('href', ...) instead.", "", "2.0");
-		//	return this.attr("href", href);
+		//	//		Deprecated.   Use set('href', ...) instead.
+		//	dojo.deprecated("dojox.widget.DynamicTooltip.setHref() is deprecated.	Use set('href', ...) instead.", "", "2.0");
+		//	return this.set("href", href);
 		// },
 
 		_setHrefAttr: function(/*String|Uri*/ href){

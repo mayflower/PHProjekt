@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -54,12 +54,12 @@ dojo.declare("dijit.form.NumberTextBoxMixin",
 		======*/
 
 		// value: Number
-		//		The value of this NumberTextBox as a javascript Number (ie, not a String).
+		//		The value of this NumberTextBox as a Javascript Number (i.e., not a String).
 		//		If the displayed value is blank, the value is NaN, and if the user types in
 		//		an gibberish value (like "hello world"), the value is undefined
 		//		(i.e. attr('value') returns undefined).
 		//
-		//		Symetrically, attr('value', NaN) will clear the displayed value,
+		//		Symmetrically, attr('value', NaN) will clear the displayed value,
 		//		whereas attr('value', undefined) will have no effect.
 		value: NaN,
 
@@ -86,21 +86,24 @@ dojo.declare("dijit.form.NumberTextBoxMixin",
 		 =====*/
 		_formatter: dojo.number.format,
 
-		postMixInProperties: function(){
-			var places = typeof this.constraints.places == "number"? this.constraints.places : 0;
+		_setConstraintsAttr: function(/* Object */ constraints){
+			var places = typeof constraints.places == "number"? constraints.places : 0;
 			if(places){ places++; } // decimal rounding errors take away another digit of precision
-			if(typeof this.constraints.max != "number"){
-				this.constraints.max = 9 * Math.pow(10, 15-places);
+			if(typeof constraints.max != "number"){
+				constraints.max = 9 * Math.pow(10, 15-places);
 			}
-			if(typeof this.constraints.min != "number"){
-				this.constraints.min = -9 * Math.pow(10, 15-places);
+			if(typeof constraints.min != "number"){
+				constraints.min = -9 * Math.pow(10, 15-places);
 			}
-			this.inherited(arguments);
+			this.inherited(arguments, [ constraints ]);
+			if(this.focusNode && this.focusNode.value && !isNaN(this.value)){
+				this.set('value', this.value);
+			}
 		},
 
 		_onFocus: function(){
 			if(this.disabled){ return; }
-			var val = this.attr('value');
+			var val = this.get('value');
 			if(typeof val == "number" && !isNaN(val)){
 				var formattedValue = this.format(val, this.constraints);
 				if(formattedValue !== undefined){
@@ -116,9 +119,13 @@ dojo.declare("dijit.form.NumberTextBoxMixin",
 			// tags:
 			//		protected
 
-			if(typeof value != "number"){ return String(value); }
+			var formattedValue = String(value);
+			if(typeof value != "number"){ return formattedValue; }
 			if(isNaN(value)){ return ""; }
-			if(("rangeCheck" in this) && !this.rangeCheck(value, constraints)){ return String(value) }
+			// check for exponential notation that dojo.number.format chokes on
+			if(!("rangeCheck" in this && this.rangeCheck(value, constraints)) && constraints.exponent !== false && /\de[-+]?\d/i.test(formattedValue)){
+				return formattedValue;
+			}
 			if(this.editOptions && this._focused){
 				constraints = dojo.mixin({}, constraints, this.editOptions);
 			}
@@ -168,16 +175,17 @@ dojo.declare("dijit.form.NumberTextBoxMixin",
 			// summary:
 			//		Hook so attr('value', ...) works.
 			if(value !== undefined && formattedValue === undefined){
+				formattedValue = String(value);
 				if(typeof value == "number"){
 					if(isNaN(value)){ formattedValue = '' }
-					else if(("rangeCheck" in this) && !this.rangeCheck(value, this.constraints)){
-						formattedValue = String(value);
+					// check for exponential notation that dojo.number.format chokes on
+					else if(("rangeCheck" in this && this.rangeCheck(value, this.constraints)) || this.constraints.exponent === false || !/\de[-+]?\d/i.test(formattedValue)){
+						formattedValue = undefined; // lets format comnpute a real string value
 					}
 				}else if(!value){ // 0 processed in if branch above, ''|null|undefined flow thru here
 					formattedValue = '';
 					value = NaN;
 				}else{ // non-numeric values
-					formattedValue = String(value);
 					value = undefined;
 				}
 			}
@@ -195,7 +203,7 @@ dojo.declare("dijit.form.NumberTextBoxMixin",
 			// Returning undefined prevents user text from being overwritten when doing _setValueAttr(_getValueAttr()).
 			// A blank displayed value is still returned as NaN.
 			if(isNaN(v) && this.textbox.value !== ''){
-				if(this.constraints.exponent !== false && /\de[-+]?|\d/i.test(this.textbox.value) && (new RegExp("^"+dojo.number._realNumberRegexp(dojo.mixin({}, this.constraints))+"$").test(this.textbox.value))){	// check for exponential notation that parse() rejected (erroneously?)
+				if(this.constraints.exponent !== false && /\de[-+]?\d/i.test(this.textbox.value) && (new RegExp("^"+dojo.number._realNumberRegexp(dojo.mixin({}, this.constraints))+"$").test(this.textbox.value))){	// check for exponential notation that parse() rejected (erroneously?)
 					var n = Number(this.textbox.value);
 					return isNaN(n) ? undefined : n; // return exponential Number or undefined for random text (may not be possible to do with the above RegExp check)
 				}else{
@@ -212,7 +220,7 @@ dojo.declare("dijit.form.NumberTextBoxMixin",
 			if(!this._focused || this._isEmpty(this.textbox.value)){
 				return this.inherited(arguments);
 			}else{
-				var v = this.attr('value');
+				var v = this.get('value');
 				if(!isNaN(v) && this.rangeCheck(v, this.constraints)){
 					if(this.constraints.exponent !== false && /\de[-+]?\d/i.test(this.textbox.value)){ // exponential, parse doesn't like it
 						return true; // valid exponential number in range

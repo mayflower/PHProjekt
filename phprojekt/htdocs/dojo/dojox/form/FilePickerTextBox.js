@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,9 +9,10 @@ if(!dojo._hasResource["dojox.form.FilePickerTextBox"]){ //_hasResource checks ad
 dojo._hasResource["dojox.form.FilePickerTextBox"] = true;
 dojo.provide("dojox.form.FilePickerTextBox");
 
-dojo.require("dojox.widget.FilePicker");
+dojo.require("dojo.window");
 dojo.require("dijit.form.ValidationTextBox");
 dojo.require("dijit._HasDropDown");
+dojo.require("dojox.widget.FilePicker");
 
 dojo.declare(
 	"dojox.form.FilePickerTextBox",
@@ -22,16 +23,12 @@ dojo.declare(
 		
 		baseClass: "dojoxFilePickerTextBox",
 		
-		templateString: dojo.cache("dojox.form", "resources/FilePickerTextBox.html", "<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\r\n\tid=\"widget_${id}\"\r\n\tdojoAttachEvent=\"onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse\" waiRole=\"combobox\" tabIndex=\"-1\"\r\n\t><div style=\"overflow:hidden;\"\r\n\t\t><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton'\r\n\t\t\tdojoAttachPoint=\"downArrowNode,_buttonNode,_popupStateNode\" waiRole=\"presentation\"\r\n\t\t\t><div class=\"dijitArrowButtonInner\">&thinsp;</div\r\n\t\t\t><div class=\"dijitArrowButtonChar\">&#9660;</div\r\n\t\t></div\r\n\t\t><div class=\"dijitReset dijitValidationIcon\"><br></div\r\n\t\t><div class=\"dijitReset dijitValidationIconText\">&Chi;</div\r\n\t\t><div class=\"dijitReset dijitInputField\"\r\n\t\t\t><input type=\"text\" autocomplete=\"off\" ${nameAttrSetting} class='dijitReset'\r\n\t\t\t\tdojoAttachEvent='onkeypress:_onKey' \r\n\t\t\t\tdojoAttachPoint='textbox,focusNode' waiRole=\"textbox\" waiState=\"haspopup-true,autocomplete-list\"\r\n\t\t/></div\r\n\t></div\r\n></div>\r\n"),
+		templateString: dojo.cache("dojox.form", "resources/FilePickerTextBox.html", "<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\r\n\tid=\"widget_${id}\"\r\n\twaiRole=\"combobox\" tabIndex=\"-1\"\r\n\t><div style=\"overflow:hidden;\"\r\n\t\t><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton'\r\n\t\t\tdojoAttachPoint=\"downArrowNode,_buttonNode,_popupStateNode\" waiRole=\"presentation\"\r\n\t\t\t><div class=\"dijitArrowButtonInner\">&thinsp;</div\r\n\t\t\t><div class=\"dijitArrowButtonChar\">&#9660;</div\r\n\t\t></div\r\n\t\t><div class=\"dijitReset dijitValidationIcon\"><br></div\r\n\t\t><div class=\"dijitReset dijitValidationIconText\">&Chi;</div\r\n\t\t><div class=\"dijitReset dijitInputField\"\r\n\t\t\t><input type=\"text\" autocomplete=\"off\" ${!nameAttrSetting} class='dijitReset'\r\n\t\t\t\tdojoAttachEvent='onkeypress:_onKey' \r\n\t\t\t\tdojoAttachPoint='textbox,focusNode' waiRole=\"textbox\" waiState=\"haspopup-true,autocomplete-list\"\r\n\t\t/></div\r\n\t></div\r\n></div>\r\n"),
 		
 		// searchDelay: Integer
 		//		Delay in milliseconds between when user types something and we start
 		//		searching based on that value
 		searchDelay: 500,
-		
-		// _stopClickEvent: boolean
-		//		Set to false since we want to handle our own click events
-		_stopClickEvents: false,
 		
 		// valueItem: item
 		//		The item, in our store, of the directory relating to our value
@@ -112,7 +109,7 @@ dojo.declare(
 			this.inherited(arguments);
 			// Make sure our display is up-to-date with our value
 			if(this._opened){ 
-				this.dropDown.attr("pathValue", this.attr("value"));
+				this.dropDown.attr("pathValue", this.get("value"));
 			}
 		},
 		
@@ -160,7 +157,7 @@ dojo.declare(
 			// summary: sets the value of the widget once focus has left
 			if(this.dropDown && !this._settingBlurValue){
 				this._settingBlurValue = true;
-				this.attr("value", this.focusNode.value);
+				this.set("value", this.focusNode.value);
 			}else{
 				delete this._settingBlurValue;
 				this.inherited(arguments);
@@ -253,7 +250,7 @@ dojo.declare(
 								}
 								targetString = targetString.substring(dir.length);
 								window.setTimeout(function(){
-									dijit.scrollIntoView(first.domNode);
+									dojo.window.scrollIntoView(first.domNode);
 								}, 1);
 								fn.value = oVal + targetString;
 								dijit.selectInputText(fn, oVal.length);

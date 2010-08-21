@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,7 +9,6 @@ if(!dojo._hasResource["dijit._editor._Plugin"]){ //_hasResource checks added by 
 dojo._hasResource["dijit._editor._Plugin"] = true;
 dojo.provide("dijit._editor._Plugin");
 dojo.require("dijit._Widget");
-dojo.require("dijit.Editor");
 dojo.require("dijit.form.Button");
 
 dojo.declare("dijit._editor._Plugin", null, {
@@ -67,11 +66,14 @@ dojo.declare("dijit._editor._Plugin", null, {
 		// tags:
 		//		protected extension
 		if(this.command.length){
-			var label = this.getLabel(this.command);
-			var className = this.iconClassPrefix+" "+this.iconClassPrefix + this.command.charAt(0).toUpperCase() + this.command.substr(1);
+			var label = this.getLabel(this.command),
+				editor = this.editor,
+				className = this.iconClassPrefix+" "+this.iconClassPrefix + this.command.charAt(0).toUpperCase() + this.command.substr(1);
 			if(!this.button){
 				var props = dojo.mixin({
 					label: label,
+					dir: editor.dir,
+					lang: editor.lang,
 					showLabel: false,
 					iconClass: className,
 					dropDown: this.dropDown,
@@ -122,13 +124,13 @@ dojo.declare("dijit._editor._Plugin", null, {
 				enabled = e.queryCommandEnabled(c);
 				if(this.enabled !== enabled){
 					this.enabled = enabled;
-					this.button.attr('disabled', !enabled);
+					this.button.set('disabled', !enabled);
 				}
 				if(typeof this.button.checked == 'boolean'){
 					checked = e.queryCommandState(c);
 					if(this.checked !== checked){
 						this.checked = checked;
-						this.button.attr('checked', e.queryCommandState(c));
+						this.button.set('checked', e.queryCommandState(c));
 					}
 				}
 			}catch(e){
@@ -149,19 +151,18 @@ dojo.declare("dijit._editor._Plugin", null, {
 		// FIXME: prevent creating this if we don't need to (i.e., editor can't handle our command)
 		this._initButton();
 
-		// FIXME: wire up editor to button here!
-		if(this.command.length &&
-			!this.editor.queryCommandAvailable(this.command)){
-			// console.debug("hiding:", this.command);
-			if(this.button){
-				this.button.domNode.style.display = "none";
+		// Processing for buttons that execute by calling editor.execCommand()
+		if(this.button && this.useDefaultCommand){
+			if(this.editor.queryCommandAvailable(this.command)){
+				this.connect(this.button, "onClick",
+					dojo.hitch(this.editor, "execCommand", this.command, this.commandArg)
+				);
+			}else{
+				// hide button because editor doesn't support command (due to browser limitations)
+				this.button.domNode.style.display = "none";			
 			}
 		}
-		if(this.button && this.useDefaultCommand){
-			this.connect(this.button, "onClick",
-				dojo.hitch(this.editor, "execCommand", this.command, this.commandArg)
-			);
-		}
+
 		this.connect(this.editor, "onNormalizedDisplayChanged", "updateState");
 	},
 

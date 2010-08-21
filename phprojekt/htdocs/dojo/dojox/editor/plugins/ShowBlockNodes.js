@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -13,7 +13,7 @@ dojo.require("dijit._editor._Plugin");
 dojo.require("dijit.form.Button");
 dojo.require("dojo.i18n");
 
-dojo.requireLocalization("dojox.editor.plugins", "ShowBlockNodes", null, "ROOT");
+dojo.requireLocalization("dojox.editor.plugins", "ShowBlockNodes", null, "ROOT,cs,de,es,fr,hu,it,ja,ko,pl,pt,ro,ru,zh,zh-tw");
 
 dojo.declare("dojox.editor.plugins.ShowBlockNodes",dijit._editor._Plugin,{
 	// summary:
@@ -61,7 +61,7 @@ dojo.declare("dojox.editor.plugins.ShowBlockNodes",dijit._editor._Plugin,{
 	toggle: function(){
 		// summary:
 		//		Function to allow programmatic toggling of the view.
-		this.button.attr("checked", !this.button.attr("checked"));
+		this.button.set("checked", !this.button.get("checked"));
 	},
 
 	_showBlocks: function(show){

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -28,7 +28,7 @@ dojo.require("dojox.drawing.plugins._Plugin");
 			show: function(button, text){
 				this.domNode.innerHTML = text;
 				
-				var dx = 30, dy = 30;
+				var dx = 30;
 				var px = button.data.x + button.data.width; 
 				var py = button.data.y + button.data.height;
 				var x =  px + this.mouse.origin.x + dx;
@@ -53,13 +53,13 @@ dojo.require("dojox.drawing.plugins._Plugin");
 					for(var i=0;i<arguments.length;i++){
 						points.push(arguments[i]);
 					}
-				}
+				};
 				
 				add({x:x,y:y+5},
 					{t:"Q", x:x,y:y},
 					{x:x+r,y:y});
 				
-				add({t:"L", x:x2-r,y:y})
+				add({t:"L", x:x2-r,y:y});
 				
 				add({t:"Q", x:x2,y:y},
 					{x:x2,y:y+r});

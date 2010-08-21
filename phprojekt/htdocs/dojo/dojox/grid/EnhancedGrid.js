@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,7 +11,7 @@ dojo.provide("dojox.grid.EnhancedGrid");
 
 dojo.require("dojox.grid.DataGrid");
 dojo.require("dojox.grid.enhanced._Plugin");
-dojo.requireLocalization("dojox.grid.enhanced", "EnhancedGrid", null, "ROOT,zh");
+dojo.requireLocalization("dojox.grid.enhanced", "EnhancedGrid", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
 dojo.experimental("dojox.grid.EnhancedGrid");
 
@@ -69,6 +69,26 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 	//doubleAffordance: Boolean
 	//		For special cell hover style
 	doubleAffordance: false,
+	
+	//minRowHeight: Integer
+	//		Minimal row height	
+	minRowHeight: 10,	
+
+	//keepSortSelection: Boolean
+	//		Whether keep selection after sort - only applicable when client-side data store is used.	
+	keepSortSelection: false,
+	
+	//rowSelectionChangedTopic: String
+	//		Topic fired when row selection is changed 
+	rowSelectionChangedTopic: 'ROW_SELECTION_CHANGED',
+	
+	//sortRowSelectionChangedTopic: String
+	//		Topic only fired when row selection is changed by sorting.
+	sortRowSelectionChangedTopic: 'SORT_ROW_SELECTION_CHANGED',
+	
+	//rowMovedTopic: String
+	//		Topic fired when selected rows are moved.
+	rowMovedTopic: 'ROW_MOVED',		
 
 	postMixInProperties: function(){
 		//load nls bundle
@@ -77,13 +97,11 @@ dojo.declare("dojox.grid.EnhancedGrid", dojox.grid.DataGrid, {
 	},
 
 	postCreate: function(){
-		if(this.plugins){
-			//create plugin manager
-			this.pluginMgr = new dojox.grid.enhanced._Plugin(this);
-			this.pluginMgr.preInit();
-		}
+		//create plugin manager
+		this.pluginMgr = new dojox.grid.enhanced._Plugin(this);
+		this.pluginMgr.preInit();
 		this.inherited(arguments);
-		this.pluginMgr && this.pluginMgr.postInit();
+		this.pluginMgr.postInit();
 	},
 	
 	_fillContent: function(){

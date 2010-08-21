@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,11 +9,13 @@ if(!dojo._hasResource["dijit._editor.plugins.FullScreen"]){ //_hasResource check
 dojo._hasResource["dijit._editor.plugins.FullScreen"] = true;
 dojo.provide("dijit._editor.plugins.FullScreen");
 
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.form.Button");
+dojo.require("dojo.window");
 dojo.require("dojo.i18n");
 
-dojo.requireLocalization("dijit._editor", "commands", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.require("dijit._editor._Plugin");
+dojo.require("dijit.form.Button");
+
+dojo.requireLocalization("dijit._editor", "commands", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
 dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 	// summary:
@@ -46,15 +48,18 @@ dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 	toggle: function(){
 		// summary:
 		//		Function to allow programmatic toggling of the view.
-		this.button.attr("checked", !this.button.attr("checked"));
+		this.button.set("checked", !this.button.get("checked"));
 	},
 
 	_initButton: function(){
 		// summary:
 		//		Over-ride for creation of the resize button.
-		var strings = dojo.i18n.getLocalization("dijit._editor", "commands");
+		var strings = dojo.i18n.getLocalization("dijit._editor", "commands"),
+			editor = this.editor;
 		this.button = new dijit.form.ToggleButton({
 			label: strings["fullScreen"],
+			dir: editor.dir,
+			lang: editor.lang,
 			showLabel: false,
 			iconClass: this.iconClassPrefix + " " + this.iconClassPrefix + "FullScreen",
 			tabIndex: "-1",
@@ -131,23 +136,26 @@ dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 		//		resizes (window scaled)
 		// tags:
 		//		private
-		var vp = dijit.getViewport();
+		var vp = dojo.window.getBox();
 		dojo.marginBox(this.editor.domNode, {
 			w: vp.w,
 			h: vp.h
 		});
 
 		//Adjust the inernal heights too, as they can be a bit off.
-		var tBox = dojo.marginBox(this.editor.toolbar.domNode);
+		var hHeight = this.editor.getHeaderHeight();
+		var fHeight = this.editor.getFooterHeight();
 		var extents = dojo._getPadBorderExtents(this.editor.domNode);
-
-		//AQdjust it.
-		var cHeight = vp.h - (tBox.h + extents.h);
+		var fcpExtents = dojo._getPadBorderExtents(this.editor.iframe.parentNode);
+		var fcmExtents = dojo._getMarginExtents(this.editor.iframe.parentNode);
+		
+		var cHeight = vp.h - (hHeight + extents.h + fHeight);
 		dojo.marginBox(this.editor.iframe.parentNode, {
-			h: cHeight
+			h: cHeight,
+			w: vp.w
 		});
 		dojo.marginBox(this.editor.iframe, {
-			h: cHeight
+			h: cHeight - (fcpExtents.h + fcmExtents.h)
 		});
 	},
 
@@ -166,32 +174,20 @@ dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 		//		regular view.
 		// tags:
 		//		private
-		var vp = dijit.getViewport();
+		var vp = dojo.window.getBox();
 
 		//Alias this for shorter code.
 		var ed = this.editor;
 		var body = dojo.body();
+		var editorParent = ed.domNode.parentNode;
 
 		this.isFullscreen = full;
 
 		if(full){
 			//Parent classes can royally screw up this plugin, so we 
-			//have to clear them, then restore them on 
-			//toggle off
-			var editorParent = ed.domNode.parentNode;
-			this._classedParents = [];
+			//have to set eveything to position static.
 			while(editorParent && editorParent !== dojo.body()){
-				// FIXME:  This depends on the theme class being on body!
-				// Would prefer reparenting, but FF reloads the iframe, which
-				// breaks all sorts of stuff.
-				var classes = dojo.attr(editorParent, "class");
-				if(classes){
-					this._classedParents.push({
-						node: editorParent,
-						classes: classes
-					});
-					dojo.attr(editorParent, "class", "");
-				}
+				dojo.addClass(editorParent, "dijitForceStatic");
 				editorParent = editorParent.parentNode;
 			}
 
@@ -217,7 +213,8 @@ dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 				height: domStyle.height || "",
 				top: dojo.style(domNode, "top") || "",
 				left: dojo.style(domNode, "left") || "",
-				position: dojo.style(domNode, "position") || "static"
+				position: dojo.style(domNode, "position") || "static",
+				marginBox: dojo.marginBox(ed.domNode)
 			};
 
 			// Store the iframe state we have to restore later.
@@ -275,24 +272,21 @@ dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 					body.parentNode.style.overflow){
 					this._oldBodyParentOverflow = body.parentNode.style.overflow;
 				}else{
-					this._oldBodyParentOverflow = "scroll";
+					try{
+						this._oldBodyParentOverflow = dojo.style(body.parentNode, "overflow");
+					}catch(e){
+						this._oldBodyParentOverflow = "scroll";
+					}
 				}
 				dojo.style(body.parentNode, "overflow", "hidden");
 			}
 			dojo.style(body, "overflow", "hidden");
 
 			var resizer = function(){
-				// Make sure no class states have been added by a resize.
-				var editorParent = this.editor.domNode.parentNode;
-				while(editorParent && editorParent !== dojo.body()){
-					dojo.attr(editorParent, "class", "");
-					editorParent = editorParent.parentNode;
-				}
-
 				// function to handle resize events.
 				// Will check current VP and only resize if
 				// different.
-				var vp = dijit.getViewport();
+				var vp = dojo.window.getBox();
 				if("_prevW" in this && "_prevH" in this){
 					// No actual size change, ignore.
 					if(vp.w === this._prevW && vp.h === this._prevH){
@@ -315,17 +309,42 @@ dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 			};
 			this._resizeHandle = dojo.connect(window, "onresize", this, resizer);
 
+			// Also monitor for direct calls to resize and adapt editor.
+			this._resizeHandle2 = dojo.connect(ed, "resize", dojo.hitch(this, function(){
+				if(this._resizer){
+					clearTimeout(this._resizer);
+					delete this._resizer;
+				}
+				this._resizer = setTimeout(dojo.hitch(this, function(){
+					delete this._resizer;
+					this._resizeEditor();
+				}), 10);
+			}));
+
 			// Call it once to work around IE glitchiness.  Safe for other browsers too.
 			this._resizeEditor();
 			var dn = this.editor.toolbar.domNode;
-			setTimeout(function(){dijit.scrollIntoView(dn);}, 250);
+			setTimeout(function(){dojo.window.scrollIntoView(dn);}, 250);
 		}else{
-			if(this._classedParents){
-				while(this._classedParents.length > 0){
-					var classP = this._classedParents.pop();
-					dojo.attr(classP.node, "class", classP.classes);
-				}
-				delete this._classedParents;
+			if(this._resizeHandle){
+				// Cleanup resizing listeners
+				dojo.disconnect(this._resizeHandle);
+				this._resizeHandle = null;
+			}
+			if(this._resizeHandle2){
+				// Cleanup resizing listeners
+				dojo.disconnect(this._resizeHandle2);
+				this._resizeHandle2 = null;
+			}
+			if(this._rst){
+				clearTimeout(this._rst);
+				this._rst = null;
+			}
+			
+			//Remove all position static class assigns.
+			while(editorParent && editorParent !== dojo.body()){
+				dojo.removeClass(editorParent, "dijitForceStatic");
+				editorParent = editorParent.parentNode;
 			}
 			
 			// Restore resize function
@@ -341,21 +360,14 @@ dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 				ed.onKeyDown = ed._fullscreen_oldOnKeyDown;
 				delete ed._fullscreen_oldOnKeyDown;
 			}
-			if(this._resizeHandle){
-				// Cleanup resizing listeners
-				dojo.disconnect(this._resizeHandle);
-				this._resizeHandle = null;
-			}
-			if(this._rst){
-				clearTimeout(this._rst);
-				this._rst = null;
-			}
 
 			// Add a timeout to make sure we don't have a resize firing in the
 			// background at the time of minimize.
 			var self = this;
 			setTimeout(function(){
 				// Restore all the editor state.
+				var mb = self._origState.marginBox;
+				var oh = self._origState.height;
 				if(dojo.isIE && !dojo.isQuirks){
 					body.parentNode.style.overflow = self._oldBodyParentOverflow;
 					delete self._oldBodyParentOverflow;
@@ -373,12 +385,18 @@ dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 				delete self._origiFrameState;
 				// In case it is contained in a layout and the layout changed size,
 				// go ahead and call resize.
-				ed.resize();
 				var pWidget = dijit.getEnclosingWidget(ed.domNode.parentNode);
 				if(pWidget && pWidget.resize){
-				    pWidget.resize();
+					pWidget.resize();
+				}else{
+					if(!oh || oh.indexOf("%") < 0){
+						// Resize if the original size wasn't set
+						// or wasn't in percent.  Timeout is to avoid
+						// an IE crash in unit testing.
+						setTimeout(dojo.hitch(this, function(){ed.resize({h: mb.h});}), 0);		
+					}
 				}
-				dijit.scrollIntoView(self.editor.toolbar.domNode);
+				dojo.window.scrollIntoView(self.editor.toolbar.domNode);
 			}, 100);
 		}
 	},
@@ -390,6 +408,11 @@ dojo.declare("dijit._editor.plugins.FullScreen",dijit._editor._Plugin,{
 			// Cleanup resizing listeners
 			dojo.disconnect(this._resizeHandle);
 			this._resizeHandle = null;
+		}
+		if(this._resizeHandle2){
+			// Cleanup resizing listeners
+			dojo.disconnect(this._resizeHandle2);
+			this._resizeHandle2 = null;
 		}
 		if(this._resizer){
 			clearTimeout(this._resizer);

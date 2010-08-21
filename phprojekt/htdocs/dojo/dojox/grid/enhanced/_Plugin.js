@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -38,18 +38,6 @@ dojo.declare("dojox.grid.enhanced._Plugin", null, {
 	//funcMap: Object
 	//		Map for caching default DataGrid methods.
 	funcMap:{},
-	
-	//rowSelectionChangedTopic: String
-	//		Topic fired when row selection is changed 
-	rowSelectionChangedTopic: 'ROW_SELECTION_CHANGED',
-	
-	//sortRowSelectionChangedTopic: String
-	//		Topic only fired when row selection is changed by sorting.
-	sortRowSelectionChangedTopic: 'SORT_ROW_SELECTION_CHANGED',
-	
-	//rowMovedTopic: String
-	//		Topic fired when selected rows are moved.
-	rowMovedTopic: 'ROW_MOVED',
 
 	constructor: function(inGrid){
 		this.grid = inGrid;
@@ -64,10 +52,6 @@ dojo.declare("dojox.grid.enhanced._Plugin", null, {
 		
 		//mixin all plugin properties into Grid
 		grid.plugins && dojo.mixin(grid, grid.plugins);
-		
-		//add topics
-		grid.rowSelectionChangedTopic = this.rowSelectionChangedTopic;
-		grid.sortRowSelectionChangedTopic = this.sortRowSelectionChangedTopic;		
 		
 		//cell(column) of indirect selection
 		grid.rowSelectCell = null;
@@ -131,7 +115,7 @@ dojo.declare("dojox.grid.enhanced._Plugin", null, {
 		this.fixedCellNum = this.getFixedCellNumber();
 		
 		//overwrite some default methods of DataGrid by method caching
-		this._bindFuncs();
+		this.grid.plugins && this._bindFuncs();
 	},
 	
 	getPluginClazz: function(clazzStr){
@@ -224,16 +208,18 @@ dojo.declare("dojox.grid.enhanced._Plugin", null, {
 		if(this.grid.indirectSelection){
 			this.funcMap['renderPage'] = this.grid.scroller.renderPage;
 			this.grid.scroller.renderPage = this.renderPage;	
+			this.funcMap['measurePage'] = this.grid.scroller.measurePage;
+			this.grid.scroller.measurePage = this.measurePage;	
 		}
 		
 		//overwrite _Grid.updateRow()
 		this.funcMap['updateRow'] = this.grid.updateRow;		
 		this.grid.updateRow = this.updateRow;	
 		
-		if(this.grid.nestedSorting){
-			dojox.grid.cells._Base.prototype.getEditNode = this.getEditNode;
-			dojox.grid.cells._Widget.prototype.sizeWidget = this.sizeWidget;
+		if(this.grid.nestedSorting && dojox.grid.cells._Widget){			
+			 dojox.grid.cells._Widget.prototype.sizeWidget = this.sizeWidget;
 		}
+		dojox.grid.cells._Base.prototype.getEditNode = this.getEditNode;
 		dojox.grid._EditManager.prototype.styleRow = function(inRow){};		
 	},
 	
@@ -314,6 +300,15 @@ dojo.declare("dojox.grid.enhanced._Plugin", null, {
 		
 		//invoke _Scroller.renderPage()
 		dojo.hitch(this, this.grid.pluginMgr.funcMap['renderPage'])(inPageIndex);
+	},
+	
+	measurePage: function(inPageIndex){
+		//summary:
+		//		Overwrite _Scroller.measurePage(), "this" - _Scroller scope
+		//		Fix a regression similar as #5552
+		//		invoke _Scroller.measurePage()
+		var pageHeight = dojo.hitch(this, this.grid.pluginMgr.funcMap['measurePage'])(inPageIndex);
+		return (!dojo.isIE || this.grid.rowHeight || pageHeight > this.rowsPerPage * this.grid.minRowHeight) ? pageHeight : undefined;
 	},
 	
 	updateRow: function(inRowIndex){

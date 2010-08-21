@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,8 +19,8 @@ dojo.require("dijit.form.Select");
 dojo.require("dijit._editor.range");
 dojo.require("dojo.i18n");
 dojo.require("dojo.string");
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
-dojo.requireLocalization("dijit._editor", "LinkDialog", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit._editor", "LinkDialog", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
 dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 	// summary:
@@ -43,6 +43,11 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 	//		useful, they are technically valid.
 	urlRegExp: "((https?|ftps?|file)\\://|\./|/|)(/[a-zA-Z]{1,1}:/|)(((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)*(?:[a-zA-Z](?:[-\\da-zA-Z]{0,80}[\\da-zA-Z])?)\\.?)|(((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])|(0[xX]0*[\\da-fA-F]?[\\da-fA-F]\\.){3}0[xX]0*[\\da-fA-F]?[\\da-fA-F]|(0+[0-3][0-7][0-7]\\.){3}0+[0-3][0-7][0-7]|(0|[1-9]\\d{0,8}|[1-3]\\d{9}|4[01]\\d{8}|42[0-8]\\d{7}|429[0-3]\\d{6}|4294[0-8]\\d{5}|42949[0-5]\\d{4}|429496[0-6]\\d{3}|4294967[01]\\d{2}|42949672[0-8]\\d|429496729[0-5])|0[xX]0*[\\da-fA-F]{1,8}|([\\da-fA-F]{1,4}\\:){7}[\\da-fA-F]{1,4}|([\\da-fA-F]{1,4}\\:){6}((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])))(\\:\\d+)?(/(?:[^?#\\s/]+/)*(?:[^?#\\s/]+(?:\\?[^?#\\s/]*)?(?:#.*)?)?)?",
 
+	// emailRegExp: [protected] String
+	//		Used for validating input as correct email address.  Taken from dojox.validate
+	emailRegExp:  "<?(mailto\\:)([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+" /*username*/ + "@" +  
+        "((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)+(?:[a-zA-Z](?:[-\\da-zA-Z]{0,6}[\\da-zA-Z])?)\\.?)|localhost|^[^-][a-zA-Z0-9_-]*>?",	// host.
+
 	// htmlTemplate: [protected] String
 	//		String used for templating the HTML to insert at the desired point.
 	htmlTemplate: "<a href=\"${urlInput}\" _djrealurl=\"${urlInput}\"" +
@@ -57,13 +62,17 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 	//		Regular expression used to validate url fragments (ip address, hostname, etc)
 	_hostRxp:  new RegExp("^((([^\\[:]+):)?([^@]+)@)?(\\[([^\\]]+)\\]|([^\\[:]*))(:([0-9]+))?$"),
 
+	// _userAtRxp [private] RegExp
+	//		Regular expression used to validate e-mail address fragment.
+	_userAtRxp: new RegExp("^([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+@", "i"),
+
 	// linkDialogTemplate: [protected] String
 	//		Template for contents of TooltipDialog to pick URL
 	linkDialogTemplate: [
 		"<table><tr><td>",
 		"<label for='${id}_urlInput'>${url}</label>",
 		"</td><td>",
-		"<input dojoType='dijit.form.ValidationTextBox' regExp='${urlRegExp}' required='true' " +
+		"<input dojoType='dijit.form.ValidationTextBox' required='true' " +
 		"id='${id}_urlInput' name='urlInput' intermediateChanges='true'>",
 		"</td></tr><tr><td>",
 		"<label for='${id}_textInput'>${text}</label>",
@@ -121,6 +130,16 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		if(this._textInput){
 			this.connect(this._textInput, "onChange", "_checkAndFixInput");
 		}
+
+		// Build up the dual check for http/https/file:, and mailto formats.
+		this._urlRegExp = new RegExp("^" + this.urlRegExp + "$", "i");
+		this._emailRegExp = new RegExp("^" + this.emailRegExp + "$", "i");
+		this._urlInput.isValid = dojo.hitch(this, function(){
+			// Function over-ride of isValid to test if the input matches a url or a mailto style link.
+			var value = this._urlInput.get("value");
+			return this._urlRegExp.test(value) || this._emailRegExp.test(value);
+		});
+
 		this._connectTagEvents();
 		this.inherited(arguments);
 	},
@@ -133,27 +152,36 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		//		not, append http:// to it.  Also validates other fields as determined by
 		//		the internal _isValid function.
 		var self = this;
-		var url = this._urlInput.attr("value");
+		var url = this._urlInput.get("value");
 		var fixupUrl = function(url){
 			var appendHttp = false;
-			if(url && url.length > 7){
+			var appendMailto = false;
+			if(url && url.length > 1){
 				url = dojo.trim(url);
-				if(url.indexOf("/") > 0){
-					if(url.indexOf("://") === -1){
-						// Check that it doesn't start with / or ./, which would
-						// imply 'target server relativeness'
-						if(url.charAt(0) !== '/' && url.indexOf("./") !== 0){
-							if(self._hostRxp.test(url)){
-								appendHttp = true;
+				if(url.indexOf("mailto:") !== 0){
+					if(url.indexOf("/") > 0){
+						if(url.indexOf("://") === -1){
+							// Check that it doesn't start with / or ./, which would
+							// imply 'target server relativeness'
+							if(url.charAt(0) !== '/' && url.indexOf("./") !== 0){
+								if(self._hostRxp.test(url)){
+									appendHttp = true;
+								}
 							}
 						}
+					}else if(self._userAtRxp.test(url)){
+						// If it looks like a foo@, append a mailto.
+						appendMailto = true;
 					}
 				}
 			}
 			if(appendHttp){
-				self._urlInput.attr("value", "http://" + url);
+				self._urlInput.set("value", "http://" + url);
 			}
-			self._setButton.attr("disabled", !self._isValid());
+			if(appendMailto){
+				self._urlInput.set("value", "mailto:" + url);
+			}
+			self._setButton.set("disabled", !self._isValid());
 		};
 		if(this._delayedCheck){
 			clearTimeout(this._delayedCheck);
@@ -184,7 +212,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 	_setContent: function(staticPanel){
 		// summary:
 		//		Helper for _initButton above.   Not sure why it's a separate method.
-		this.dropDown.attr('content', staticPanel);
+		this.dropDown.set('content', staticPanel);
 	},
 
 	_checkValues: function(args){
@@ -258,7 +286,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		//		protected
 		var url, text, target;
 		if(a && a.tagName.toLowerCase() === this.tag){
-			url = a.getAttribute('_djrealurl');
+			url = a.getAttribute('_djrealurl') || a.getAttribute('href');
 			target = a.getAttribute('target') || "_self";
 			text = a.textContent || a.innerText;
 			dojo.withGlobal(this.editor.window, "selectElement", dijit._editor.selection, [a, true]);
@@ -296,8 +324,8 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 				"getAncestorElement", dijit._editor.selection, [this.tag]);
 		}
 		this.dropDown.reset();
-		this._setButton.attr("disabled", true);
-		this.dropDown.attr("value", this._getCurrentValues(a));
+		this._setButton.set("disabled", true);
+		this.dropDown.set("value", this._getCurrentValues(a));
 	},
 
 	_onDblClick: function(e){
@@ -312,15 +340,15 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		if(e && e.target){
 			var t = e.target;
 			var tg = t.tagName? t.tagName.toLowerCase() : "";
-			if(tg === this.tag){
-				this.editor.onDisplayChanged();
+			if(tg === this.tag && dojo.attr(t,"href")){
 				dojo.withGlobal(this.editor.window,
 					 "selectElement",
 					 dijit._editor.selection, [t]);
+				this.editor.onDisplayChanged();
 				setTimeout(dojo.hitch(this, function(){
 					// Focus shift outside the event handler.
 					// IE doesn't like focus changes in event handles.
-					this.button.attr("disabled", false);
+					this.button.set("disabled", false);
 					this.button.openDropDown();
 				}), 10);
 			}
@@ -375,7 +403,7 @@ dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkD
 		//		protected
 		var url, text;
 		if(img && img.tagName.toLowerCase() === this.tag){
-			url = img.getAttribute('_djrealurl');
+			url = img.getAttribute('_djrealurl') || img.getAttribute('src');
 			text = img.getAttribute('alt');
 			dojo.withGlobal(this.editor.window,
 				"selectElement", dijit._editor.selection, [img, true]);
@@ -398,7 +426,9 @@ dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkD
 		//		Over-ridable function that connects tag specific events.
 		this.inherited(arguments);
 		this.editor.onLoadDeferred.addCallback(dojo.hitch(this, function(){
-			this.connect(this.editor.editNode, "onclick", this._selectTag);
+			// Use onmousedown instead of onclick.  Seems that IE eats the first onclick
+			// to wrap it in a selector box, then the second one acts as onclick.  See #10420
+			this.connect(this.editor.editNode, "onmousedown", this._selectTag);
 		}));
 	},
 
@@ -408,7 +438,7 @@ dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkD
 		//		makes it easier to select images in a standard way across browsers.  Otherwise
 		//		selecting an image for edit becomes difficult.
 		// e: Event
-		//		The click event.
+		//		The mousedown event.
 		// tags:
 		//		private
 		if(e && e.target){
@@ -437,6 +467,33 @@ dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkD
 			args.textInput = args.textInput.replace(/"/g, "&quot;");
 		}
 		return args;
+	},
+
+	_onDblClick: function(e){
+		// summary:
+		// 		Function to define a behavior on double clicks on the element
+		//		type this dialog edits to select it and pop up the editor
+		//		dialog.
+		// e: Object
+		//		The double-click event.
+		// tags:
+		//		protected.
+		if(e && e.target){
+			var t = e.target;
+			var tg = t.tagName? t.tagName.toLowerCase() : "";
+			if(tg === this.tag && dojo.attr(t,"src")){
+				dojo.withGlobal(this.editor.window,
+					 "selectElement",
+					 dijit._editor.selection, [t]);
+				this.editor.onDisplayChanged();
+				setTimeout(dojo.hitch(this, function(){
+					// Focus shift outside the event handler.
+					// IE doesn't like focus changes in event handles.
+					this.button.set("disabled", false);
+					this.button.openDropDown();
+				}), 10);
+			}
+		}
 	}
 });
 

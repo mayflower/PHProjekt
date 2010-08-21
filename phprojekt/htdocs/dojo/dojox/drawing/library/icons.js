@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -63,6 +63,13 @@ dojox.drawing.library.icons = {
 		borderWidth:0,
 		closePath:true,
 		points:[ { x:20, y:20 }, { x:80, y:20 }, { x:80, y:38 }, { x:80, y:38 }, { x:74, y:32 }, { x:68, y:26 }, { x:56, y:20 }, { x:56, y:68 }, { x:56, y:74 }, { x:62, y:80 }, { x:68, y:80 }, { x:68, y:80 }, { x:32, y:80 }, { x:32, y:80 }, { x:38, y:80 }, { x:44, y:74 }, { x:44, y:68 }, { x:44, y:20 }, { x:32, y:26 }, { x:26, y:32 }, { x:20, y:38 }, { x:20, y:38 } ]
+	},
+	
+	equation:{
+		type:"path",
+		borderWidth:2,
+		closePath:false,
+		points:[ {x:20, y:60 }, { x:80, y:60 }, {t:'M', x:20, y:40 }, { x:80, y:40 } ]
 	},
 	
 	axes:{

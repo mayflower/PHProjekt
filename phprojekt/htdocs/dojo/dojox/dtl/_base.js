@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -24,8 +24,14 @@ dojo.experimental("dojox.dtl");
 
 	dd._Context = dojo.extend(function(dict){
 		// summary: Pass one of these when rendering a template to tell the template what values to use.
-		dojo._mixin(this, dict || {});
-		this._dicts = [];
+		if(dict){
+			dojo._mixin(this, dict);
+			if(dict.get){
+				// Preserve passed getter and restore prototype get
+				this._getter = dict.get;
+				delete this.get;
+			}
+		}
 	},
 	{
 		push: function(){
@@ -38,14 +44,17 @@ dojo.experimental("dojox.dtl");
 			throw new Error("pop() called on empty Context");
 		},
 		get: function(key, otherwise){
-			if(typeof this[key] != "undefined"){
-				return this._normalize(this[key]);
+			var n = this._normalize;
+
+			if(this._getter){
+				var got = this._getter(key);
+				if(typeof got != "undefined"){
+					return n(got);
+				}
 			}
 
-			for(var i = 0, dict; dict = this._dicts[i]; i++){
-				if(typeof dict[key] != "undefined"){
-					return this._normalize(dict[key]);
-				}
+			if(typeof this[key] != "undefined"){
+				return n(this[key]);
 			}
 
 			return otherwise;

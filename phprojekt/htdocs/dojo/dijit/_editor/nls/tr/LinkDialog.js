@@ -1,1 +1,1 @@
-({"set":"Ayarla","text":"Açıklama:","insertImageTitle":"Resim Özellikleri","url":"URL:","createLinkTitle":"Bağlantı Özellikleri","newWindow":"New Window","topWindow":"Topmost Window","target":"Target:","parentWindow":"Parent Window","currentWindow":"Current Window"})
+({"text":"Açıklama:","insertImageTitle":"Resim Özellikleri","set":"Ayarla","newWindow":"Yeni Pencere","topWindow":"En Üst Pencere","target":"Hedef:","createLinkTitle":"Bağlantı Özellikleri","parentWindow":"Üst Pencere","currentWindow":"Geçerli Pencere","url":"URL:"})

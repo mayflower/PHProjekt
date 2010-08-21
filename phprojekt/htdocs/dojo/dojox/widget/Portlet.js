@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -179,6 +179,7 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 				this._createIcon(child.portletIconClass, child.portletIconHoverClass, dojo.hitch(child, "toggle"));
 				dojo.place(child.domNode, this.containerNode, "before");
 				child.attr("portlet", this);
+				this._settingsWidget = child;
 			}
 		}));
 	},
@@ -315,6 +316,13 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 		}
 		if(this._started && !child.started && !child._started){
 			child.startup();
+		}
+	},
+	
+	destroyDescendants: function(/*Boolean*/ preserveDom){
+		this.inherited(arguments);
+		if(this._settingsWidget){
+			this._settingsWidget.destroyRecursive(preserveDom);
 		}
 	},
 	
