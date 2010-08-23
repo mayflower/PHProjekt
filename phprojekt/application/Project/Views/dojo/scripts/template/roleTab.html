@@ -15,7 +15,7 @@
     </tr>
     <tr>
         <td>
-            <select id="relationUserAdd" name="relationUserAdd" dojoType="phpr.FilteringSelect" required="true"
+            <select id="relationUserAdd" name="relationUserAdd" dojoType="phpr.FilteringSelect" required="false"
             autocomplete="false" value="" invalidMessage="" {{disabled}} >
                 {% for user in users %}
                 <option value="{{user.id}}" >{{user.display}}</option>
@@ -23,7 +23,7 @@
             </select>
         </td>
         <td>
-            <select id="relationRoleAdd" name="relationRoleAdd" dojoType="phpr.FilteringSelect" required="true"
+            <select id="relationRoleAdd" name="relationRoleAdd" dojoType="phpr.FilteringSelect" required="false"
             autocomplete="false" value="" invalidMessage="" {{disabled}} >
                 {% for role in roles %}
                 <option value="{{role.id}}" >{{role.name}}</option>

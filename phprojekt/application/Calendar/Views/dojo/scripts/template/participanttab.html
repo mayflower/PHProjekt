@@ -13,7 +13,7 @@
     <tr>
         <td>
             <select id="dataParticipantAdd" name="dataParticipantAdd" dojoType="phpr.FilteringSelect"
-            required="true" autocomplete="false" value="" invalidMessage="" >
+            required="false" autocomplete="false" value="" invalidMessage="" >
                 {% for user in users %}
                 <option value="{{user.id}}" >{{user.name}}</option>
                 {% endfor %}
