@@ -306,19 +306,14 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         dojo.byId("mainNavigation").innerHTML = '';
 
         for (i in globalModules) {
-            phpr.destroyWidget("globalModule" + globalModules[i].id);
+            phpr.destroyWidget("globalModule_" + globalModules[i].name);
             var button = new dijit.form.Button({
-                id:        "globalModule" + globalModules[i].id,
+                id:        "globalModule_" + globalModules[i].name,
                 label:     globalModules[i].label,
-                name:      globalModules[i].name,
                 showLabel: true,
                 onClick:   dojo.hitch(this, function(e) {
                     phpr.currentProjectId = phpr.rootProjectId;
-                    // Fix target for some browsers
-                    var module = e.target.name;
-                    if (undefined == module) {
-                        module = e.target.parentNode.name;
-                    }
+                    var module            = e.target.id.replace('globalModule_', '').replace('_label', '');
                     this.setUrlHash(module);
                 })
             });
@@ -326,9 +321,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
 
         // Setting
-        phpr.destroyWidget("globalModuleSettings");
+        phpr.destroyWidget("globalModule_Setting");
         var button = new dijit.form.Button({
-            id:        "globalModuleSetting",
+            id:        "globalModule_Setting",
             label:     phpr.nls.get('Setting'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
@@ -340,9 +335,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         if (isAdmin > 0) {
             // Administration
-            phpr.destroyWidget("globalModuleAdmin");
+            phpr.destroyWidget("globalModule_Administration");
             var button = new dijit.form.Button({
-                id:        "globalModuleAdmin",
+                id:        "globalModule_Administration",
                 label:     phpr.nls.get('Administration'),
                 showLabel: true,
                 onClick:   dojo.hitch(this, function() {
@@ -354,9 +349,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
 
         // Help
-        if (!dojo.byId('globalModuleHelp')) {
+        if (!dojo.byId('globalModule_Help')) {
             var button = new dijit.form.Button({
-                id:        "globalModuleHelp",
+                id:        "globalModule_Help",
                 label:     phpr.nls.get('Help'),
                 showLabel: true,
                 onClick:   dojo.hitch(this, function() {
@@ -367,9 +362,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         }
 
         // Logout
-        if (!dojo.byId('globalModuleLogout')) {
+        if (!dojo.byId('globalModule_Logout')) {
             var button = new dijit.form.Button({
-                id:        "globalModuleLogout",
+                id:        "globalModule_Logout",
                 label:     phpr.nls.get('Logout'),
                 showLabel: true,
                 onClick:   dojo.hitch(this, function() {
@@ -503,11 +498,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         globalModules[1000] = {id: "Setting", "name": "Setting"};
         globalModules[1001] = {id: "Admin", "name": "Administration"};
         for (i in globalModules) {
-            if (dojo.byId("globalModule" + globalModules[i].id)) {
+            if (dojo.byId("globalModule_" + globalModules[i].name)) {
                 if (phpr.module == globalModules[i].name || phpr.parentmodule == globalModules[i].name) {
-                    dojo.addClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
+                    dojo.addClass(dojo.byId("globalModule_" + globalModules[i].name), "selected");
                 } else {
-                    dojo.removeClass(dojo.byId("globalModule" + globalModules[i].id), "selected");
+                    dojo.removeClass(dojo.byId("globalModule_" + globalModules[i].name), "selected");
                 }
             }
         }
