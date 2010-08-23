@@ -934,8 +934,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             this._node.attr('content', phpr.drawEmptyMessage('There are no entries on this level'));
             var buttonRow = dojo.byId('buttonRow');
             if (buttonRow.children.length != 0) {
-                var button = buttonRow.children[0].children[0].children[0].children[0].children[0];
-                if (button.className == 'dijitReset dijitInline add') {
+                var button = buttonRow.children[0].children[0].children[0].children[0];
+                if (button.className == 'dijitReset dijitInline dijitIcon add') {
                     // There is an 'add' button, so the user have create access
                     var newEntry = new dijit.form.Button(params);
                     dojo.addClass(this._node.domNode, 'addButtonText');
