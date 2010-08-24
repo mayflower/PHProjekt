@@ -532,8 +532,21 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
 
             this.drawFormView(dojo.byId("buttonHours" + index), this.dateObject, startTime, endTime,
                 data[0]['projectId'], data[0]['notes']);
-            dojo.byId('notes').focus();
+
+            this.focusNote();
         })});
+    },
+
+    focusNote:function() {
+        // Summary:
+        //    Wait that the widget exists to focus it
+        // Description:
+        //    Wait that the widget exists to focus it
+        if (!dojo.byId('notes')) {
+            setTimeout(dojo.hitch(this, "focusNote"), 500);
+        } else {
+            dojo.byId('notes').focus();
+        }
     },
 
     fillFormTime:function(index) {
