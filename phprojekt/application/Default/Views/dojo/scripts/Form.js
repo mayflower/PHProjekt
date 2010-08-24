@@ -749,7 +749,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             } else {
                 for (var k in sendData) {
                     // Allow empty arrays, set the value to an empty string
-                    if (typeof(sendData[k]) == 'object' && sendData[k].length == 0) {
+                    if (sendData[k] && typeof(sendData[k]) == 'object' && sendData[k].length == 0) {
                         sendData[k] = new Array("");
                     }
                 }
