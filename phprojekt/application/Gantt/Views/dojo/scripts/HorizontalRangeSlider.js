@@ -22,6 +22,27 @@
 dojo.provide("phpr.form.HorizontalRangeSlider");
 
 dojo.declare("phpr.form._RangeSliderMixin", dojox.form._RangeSliderMixin, {
+    postCreate: function() {
+        // Summary:
+        //    Overwrite function for redefine the movers,
+        //    since are wrong in the dojo distribution (1.5.0)
+        this.inherited(arguments);
+
+        // define a custom constructor for a SliderMoverMax that points back to me
+        this._movableMax.destroy();
+        var mover = dojo.declare(dijit.form._SliderMoverMax, {
+            widget: this
+        });
+        this._movableMax = new dojo.dnd.Moveable(this.sliderHandleMax, {mover: mover});
+
+        // a dnd for the bar!
+        this._movableBar.destroy();
+        var barMover = dojo.declare(dijit.form._SliderBarMover, {
+            widget: this
+        });
+        this._movableBar = new dojo.dnd.Moveable(this.progressBar, {mover: barMover});
+    },
+
     _onFocus: function() {
         // Summary:
         //    Overwrite function for do nothing
