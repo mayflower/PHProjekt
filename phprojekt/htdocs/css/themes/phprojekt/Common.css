@@ -56,7 +56,7 @@
 
 .phprojekt #header #search-bar .dijitTextBox {
     background: transparent !important;
-    width: 95px !important;
+    width: 83px !important;
     border: 0px !important;
     margin-top: 2px;
     margin-right: 10px;
@@ -82,7 +82,7 @@
     line-height: normal;
     text-align: start;
     vertical-align: baseline;
-    margin-top: 2px;
+    margin-top: -1px;
     margin-right: 10px;
     margin-left: 20px;
     padding-top: 1px;
@@ -94,7 +94,7 @@
     padding-top: 0;
 }
 .dj_ie .phprojekt #header #search-bar .dijitTextBox {
-    margin-top: 4px !important;
+    margin-top: 3px !important;
 }
 
 .phprojekt #header #toolbar {
