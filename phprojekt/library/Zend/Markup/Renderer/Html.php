@@ -17,7 +17,7 @@
  * @subpackage Renderer
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Html.php 20662 2010-01-26 18:40:33Z kokx $
+ * @version    $Id: Html.php 22281 2010-05-25 14:21:43Z matthew $
  */
 
 /**
@@ -101,7 +101,14 @@ class Zend_Markup_Renderer_Html extends Zend_Markup_Renderer_RendererAbstract
             'Zend_Markup_Renderer_Html' => 'Zend/Markup/Renderer/Html/'
         ));
 
-        $this->_defineDefaultMarkups();
+        if (!isset($options['useDefaultMarkups']) && isset($options['useDefaultTags'])) {
+            $options['useDefaultMarkups'] = $options['useDefaultTags'];
+        }
+        if (isset($options['useDefaultMarkups']) && ($options['useDefaultMarkups'] !== false)) {
+            $this->_defineDefaultMarkups();
+        } elseif (!isset($options['useDefaultMarkups'])) {
+            $this->_defineDefaultMarkups();
+        }
 
         parent::__construct($options);
     }
@@ -182,37 +189,37 @@ class Zend_Markup_Renderer_Html extends Zend_Markup_Renderer_RendererAbstract
                 'type'   => 10,
                 'tag'    => 'h1',
                 'group'  => 'inline',
-                'filter' => false,
+                'filter' => true,
             ),
             'h2' => array(
                 'type'   => 10,
                 'tag'    => 'h2',
                 'group'  => 'inline',
-                'filter' => false,
+                'filter' => true,
             ),
             'h3' => array(
                 'type'   => 10,
                 'tag'    => 'h3',
                 'group'  => 'inline',
-                'filter' => false,
+                'filter' => true,
             ),
             'h4' => array(
                 'type'   => 10,
                 'tag'    => 'h4',
                 'group'  => 'inline',
-                'filter' => false,
+                'filter' => true,
             ),
             'h5' => array(
                 'type'   => 10,
                 'tag'    => 'h5',
                 'group'  => 'inline',
-                'filter' => false,
+                'filter' => true,
             ),
             'h6' => array(
                 'type'   => 10,
                 'tag'    => 'h6',
                 'group'  => 'inline',
-                'filter' => false,
+                'filter' => true,
             ),
             // callback tags
             'url' => array(

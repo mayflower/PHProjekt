@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Date
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: DateObject.php 20279 2010-01-14 15:21:47Z thomas $
+ * @version    $Id: DateObject.php 22071 2010-05-01 17:25:23Z thomas $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -144,7 +144,6 @@ abstract class Zend_Date_DateObject {
      */
     protected function mktime($hour, $minute, $second, $month, $day, $year, $gmt = false)
     {
-
         // complete date but in 32bit timestamp - use PHP internal
         if ((1901 < $year) and ($year < 2038)) {
 
@@ -235,7 +234,7 @@ abstract class Zend_Date_DateObject {
 
                     for ($mcount = 11; $mcount > ($month - 1); $mcount--) {
                         $date += self::$_monthTable[$mcount];
-                        if (($leapyear === true) and ($mcount == 1)) {
+                        if (($leapyear === true) and ($mcount == 2)) {
                             $date++;
                         }
 
@@ -323,7 +322,7 @@ abstract class Zend_Date_DateObject {
             }
         }
 
-        // check on false or null alone failes
+        // check on false or null alone fails
         if (empty($gmt) and empty($jump)) {
             $tempstamp = $timestamp;
             if ($tempstamp > 0) {
@@ -344,7 +343,6 @@ abstract class Zend_Date_DateObject {
                 self::$_cache->save( serialize($timestamp), $idstamp);
             }
         }
-
 
         if (($timestamp < 0) and ($gmt !== true)) {
             $timestamp -= $this->_offset;

@@ -17,7 +17,7 @@
  * @subpackage Amazon_S3
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Stream.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Stream.php 22623 2010-07-18 00:43:57Z torio $
  */
 
 /**
@@ -175,6 +175,10 @@ class Zend_Service_Amazon_S3_Stream
     /**
      * Read from the stream
      *
+     * http://bugs.php.net/21641 - stream_read() is always passed PHP's 
+     * internal read buffer size (8192) no matter what is passed as $count 
+     * parameter to fread(). 
+     *
      * @param  integer $count
      * @return string
      */
@@ -182,6 +186,11 @@ class Zend_Service_Amazon_S3_Stream
     {
         if (!$this->_objectName) {
             return false;
+        }
+
+        // make sure that count doesn't exceed object size
+        if ($count + $this->_position > $this->_objectSize) {
+            $count = $this->_objectSize - $this->_position;
         }
 
         $range_start = $this->_position;
@@ -194,12 +203,12 @@ class Zend_Service_Amazon_S3_Stream
         if (($this->_position == 0) || (($range_end > strlen($this->_objectBuffer)) && ($range_end <= $this->_objectSize))) {
 
             $headers = array(
-                'Range' => "$range_start-$range_end"
+                'Range' => "bytes=$range_start-$range_end"
             );
 
             $response = $this->_s3->_makeRequest('GET', $this->_objectName, null, $headers);
 
-            if ($response->getStatus() == 200) {
+            if ($response->getStatus() == 206) { // 206 Partial Content
                 $this->_objectBuffer .= $response->getBody();
             }
         }

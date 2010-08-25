@@ -16,7 +16,7 @@
  * @package    Zend_Dojo
  * @subpackage View
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Container.php 20295 2010-01-14 22:15:29Z matthew $
+ * @version    $Id: Container.php 21705 2010-03-31 17:38:19Z matthew $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -67,7 +67,7 @@ class Zend_Dojo_View_Helper_Dojo_Container
      * Dojo version to use from CDN
      * @var string
      */
-    protected $_cdnVersion = '1.4.0';
+    protected $_cdnVersion = '1.4.1';
 
     /**
      * Has the dijit loader been registered?

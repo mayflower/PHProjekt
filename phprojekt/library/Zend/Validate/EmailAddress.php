@@ -16,7 +16,7 @@
  * @package    Zend_Validate
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: EmailAddress.php 20910 2010-02-04 19:36:26Z thomas $
+ * @version    $Id: EmailAddress.php 22697 2010-07-26 21:14:47Z alexander $
  */
 
 /**
@@ -441,10 +441,11 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
      */
     private function _validateMXRecords()
     {
-        $result = true;
         $mxHosts = array();
-        getmxrr($this->_hostname, $mxHosts);
-        if ($this->_options['deep'] && function_exists('checkdnsrr')) {
+        $result = getmxrr($this->_hostname, $mxHosts);
+        if (!$result) {
+            $this->_error(self::INVALID_MX_RECORD);
+        } else if ($this->_options['deep'] && function_exists('checkdnsrr')) {
             $validAddress = false;
             $reserved     = true;
             foreach ($mxHosts as $hostname) {

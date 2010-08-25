@@ -16,7 +16,7 @@
  * @package    Zend_View
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 20907 2010-02-04 18:08:01Z matthew $
+ * @version    $Id: Abstract.php 22447 2010-06-18 12:16:43Z matthew $
  */
 
 /** @see Zend_Loader */
@@ -897,7 +897,11 @@ abstract class Zend_View_Abstract implements Zend_View_Interface
             return call_user_func($this->_escape, $var, ENT_COMPAT, $this->_encoding);
         }
 
-        return call_user_func($this->_escape, $var);
+        if (1 == func_num_args()) {
+            return call_user_func($this->_escape, $var);
+        }
+        $args = func_get_args();
+        return call_user_func_array($this->_escape, $args);
     }
 
     /**

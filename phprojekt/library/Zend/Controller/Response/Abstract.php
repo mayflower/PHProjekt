@@ -16,7 +16,7 @@
  * @package    Zend_Controller
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Abstract.php 21302 2010-03-02 23:01:38Z yoshida@zend.co.jp $
  */
 
 /**
@@ -184,26 +184,26 @@ abstract class Zend_Controller_Response_Abstract
         return $this;
     }
 
-	/**
-	 * Clears the specified HTTP header
-	 *
-	 * @param  string $name
-	 * @return Zend_Controller_Response_Abstract
-	 */
-	public function clearHeader($name)
-	{
-		if (! count($this->_headers)) {
-			return $this;
-		}
+    /**
+     * Clears the specified HTTP header
+     *
+     * @param  string $name
+     * @return Zend_Controller_Response_Abstract
+     */
+    public function clearHeader($name)
+    {
+        if (! count($this->_headers)) {
+            return $this;
+        }
 
-		foreach ($this->_headers as $index => $header) {
-			if ($name == $header['name']) {
-				unset($this->_headers[$index]);
-			}
-		}
+        foreach ($this->_headers as $index => $header) {
+            if ($name == $header['name']) {
+                unset($this->_headers[$index]);
+            }
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Set raw HTTP header
@@ -244,23 +244,23 @@ abstract class Zend_Controller_Response_Abstract
         return $this;
     }
 
-	/**
-	 * Clears the specified raw HTTP header
-	 *
-	 * @param  string $headerRaw
-	 * @return Zend_Controller_Response_Abstract
-	 */
-	public function clearRawHeader($headerRaw)
-	{
-		if (! count($this->_headersRaw)) {
-			return $this;
-		}
+    /**
+     * Clears the specified raw HTTP header
+     *
+     * @param  string $headerRaw
+     * @return Zend_Controller_Response_Abstract
+     */
+    public function clearRawHeader($headerRaw)
+    {
+        if (! count($this->_headersRaw)) {
+            return $this;
+        }
 
-		$key = array_search($headerRaw, $this->_headersRaw);
-		unset($this->_headersRaw[$key]);
+        $key = array_search($headerRaw, $this->_headersRaw);
+        unset($this->_headersRaw[$key]);
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Clear all headers, normal and raw

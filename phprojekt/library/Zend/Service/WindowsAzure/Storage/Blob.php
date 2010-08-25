@@ -17,7 +17,7 @@
  * @subpackage Storage
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://todo     name_todo
- * @version    $Id: Blob.php 36457 2010-01-04 07:36:33Z unknown $
+ * @version    $Id: Blob.php 20923 2010-02-05 07:16:14Z maartenba $
  */
 
 /**
@@ -123,7 +123,7 @@ class Zend_Service_WindowsAzure_Storage_Blob extends Zend_Service_WindowsAzure_S
 	 * @param boolean $usePathStyleUri Use path-style URI's
 	 * @param Zend_Service_WindowsAzure_RetryPolicy_RetryPolicyAbstract $retryPolicy Retry policy to use when making requests
 	 */
-	public function __construct($host = Zend_Service_WindowsAzure_Storage::URL_DEV_BLOB, $accountName = Zend_Service_WindowsAzure_Credentials_CredentialsAbstract_CredentialsAbstract::DEVSTORE_ACCOUNT, $accountKey = Zend_Service_WindowsAzure_Credentials_CredentialsAbstract_CredentialsAbstract::DEVSTORE_KEY, $usePathStyleUri = false, Zend_Service_WindowsAzure_RetryPolicy_RetryPolicyAbstract $retryPolicy = null)
+	public function __construct($host = Zend_Service_WindowsAzure_Storage::URL_DEV_BLOB, $accountName = Zend_Service_WindowsAzure_Credentials_CredentialsAbstract::DEVSTORE_ACCOUNT, $accountKey = Zend_Service_WindowsAzure_Credentials_CredentialsAbstract::DEVSTORE_KEY, $usePathStyleUri = false, Zend_Service_WindowsAzure_RetryPolicy_RetryPolicyAbstract $retryPolicy = null)
 	{
 		parent::__construct($host, $accountName, $accountKey, $usePathStyleUri, $retryPolicy);
 		

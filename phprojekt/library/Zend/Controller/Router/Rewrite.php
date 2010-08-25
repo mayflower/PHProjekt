@@ -16,7 +16,7 @@
  * @package    Zend_Controller
  * @subpackage Router
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Rewrite.php 20246 2010-01-12 21:36:08Z dasprid $
+ * @version    $Id: Rewrite.php 22417 2010-06-11 14:15:05Z rob $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -458,7 +458,8 @@ class Zend_Controller_Router_Rewrite extends Zend_Controller_Router_Abstract
             }
         }
 
-        $params = array_merge($this->_globalParams, $userParams);
+        // Use UNION (+) in order to preserve numeric keys 
+        $params = $userParams + $this->_globalParams;
 
         $route = $this->getRoute($name);
         $url   = $route->assemble($params, $reset, $encode);

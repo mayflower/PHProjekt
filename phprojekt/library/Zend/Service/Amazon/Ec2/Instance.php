@@ -17,7 +17,7 @@
  * @subpackage Ec2
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Instance.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Instance.php 22048 2010-04-28 22:23:19Z shahar $
  */
 
 /**
@@ -282,9 +282,9 @@ class Zend_Service_Amazon_Ec2_Instance extends Zend_Service_Amazon_Ec2_Abstract
                 $item['amiLaunchIndex'] = $xpath->evaluate('string(ec2:amiLaunchIndex/text())', $is_node);
                 $item['monitoringState'] = $xpath->evaluate('string(ec2:monitoring/ec2:state/text())', $is_node);
 
+                $return['instances'][] = $item;
                 unset($is_node);
             }
-            $return['instances'][] = $item;
             unset($item);
             unset($is);
         }

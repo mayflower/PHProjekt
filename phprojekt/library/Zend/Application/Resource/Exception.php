@@ -17,8 +17,13 @@
  * @subpackage Resource
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Exception.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Exception.php 22610 2010-07-17 08:49:08Z torio $
  */
+
+/**
+ * @see Zend_Application_Exception
+ */
+require_once 'Zend/Application/Exception.php';
 
 /**
  * Exception class for Zend_Application

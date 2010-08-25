@@ -16,7 +16,7 @@
  * @package    Zend_Validate
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Validate.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Validate.php 21340 2010-03-05 15:33:49Z thomas $
  */
 
 /**
@@ -197,7 +197,7 @@ class Zend_Validate implements Zend_Validate_Interface
         $namespaces = array_merge((array) $namespaces, self::$_defaultNamespaces, array('Zend_Validate'));
         $className  = ucfirst($classBaseName);
         try {
-            if (!class_exists($className)) {
+            if (!class_exists($className, false)) {
                 require_once 'Zend/Loader.php';
                 foreach($namespaces as $namespace) {
                     $class = $namespace . '_' . $className;
@@ -205,6 +205,7 @@ class Zend_Validate implements Zend_Validate_Interface
                     if (Zend_Loader::isReadable($file)) {
                         Zend_Loader::loadClass($class);
                         $className = $class;
+                        break;
                     }
                 }
             }
@@ -263,5 +264,27 @@ class Zend_Validate implements Zend_Validate_Interface
     {
         require_once 'Zend/Validate/Abstract.php';
         Zend_Validate_Abstract::setMessageLength($length);
+    }
+
+    /**
+     * Returns the default translation object
+     *
+     * @return Zend_Translate_Adapter|null
+     */
+    public static function getDefaultTranslator($translator = null)
+    {
+        require_once 'Zend/Validate/Abstract.php';
+        return Zend_Validate_Abstract::getDefaultTranslator();
+    }
+
+    /**
+     * Sets a default translation object for all validation objects
+     *
+     * @param Zend_Translate|Zend_Translate_Adapter|null $translator
+     */
+    public static function setDefaultTranslator($translator = null)
+    {
+        require_once 'Zend/Validate/Abstract.php';
+        Zend_Validate_Abstract::setDefaultTranslator($translator);
     }
 }

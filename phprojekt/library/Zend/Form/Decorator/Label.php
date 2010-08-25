@@ -41,7 +41,7 @@ require_once 'Zend/Form/Decorator/Abstract.php';
  * @subpackage Decorator
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Label.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Label.php 22129 2010-05-06 11:20:39Z alab $
  */
 class Zend_Form_Decorator_Label extends Zend_Form_Decorator_Abstract
 {
@@ -310,7 +310,7 @@ class Zend_Form_Decorator_Label extends Zend_Form_Decorator_Abstract
             $options['class'] = $class;
             $label = $view->formLabel($element->getFullyQualifiedName(), trim($label), $options);
         } else {
-            $label = '&nbsp;';
+            $label = '&#160;';
         }
 
         if (null !== $tag) {
