@@ -37,6 +37,11 @@
     font-size: 100%;
 }
 
+
+.phprojekt .dijitComboBox {
+    padding: 0 !important;
+}
+
 .phprojekt .dijitMultiSelect,
 .phprojekt .dijitComboBox,
 .phprojekt .dijitSpinner,
