@@ -16,7 +16,7 @@
  * @package    Zend_Oauth
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Utility.php 20217 2010-01-12 16:01:57Z matthew $
+ * @version    $Id: Utility.php 21233 2010-02-28 13:48:58Z padraic $
  */
 
 /** Zend_Oauth */
@@ -52,9 +52,13 @@ class Zend_Oauth_Http_Utility
             'oauth_nonce'            => $this->generateNonce(),
             'oauth_signature_method' => $config->getSignatureMethod(),
             'oauth_timestamp'        => $this->generateTimestamp(),
-            'oauth_token'            => $config->getToken()->getToken(),
             'oauth_version'          => $config->getVersion(),
         );
+        
+        if ($config->getToken()->getToken() != null) {
+            $params['oauth_token'] = $config->getToken()->getToken();
+        }
+
 
         if (!is_null($serviceProviderParams)) {
             $params = array_merge($params, $serviceProviderParams);

@@ -17,7 +17,7 @@
  * @subpackage Parser
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Bbcode.php 20945 2010-02-06 16:42:04Z kokx $
+ * @version    $Id: Bbcode.php 21128 2010-02-21 15:36:07Z kokx $
  */
 
 /**
@@ -295,7 +295,7 @@ class Zend_Markup_Parser_Bbcode implements Zend_Markup_Parser_ParserInterface
                     break;
                 case self::STATE_PARSEVALUE:
                     $matches = array();
-                    $regex   = '#\G((?<quote>"|\')(?<valuequote>[^\\2]*)\\2|(?<value>[^\]\s]+))#';
+                    $regex   = '#\G((?<quote>"|\')(?<valuequote>.*?)\\2|(?<value>[^\]\s]+))#';
                     if (!preg_match($regex, $this->_value, $matches, null, $this->_pointer)) {
                         $this->_state = self::STATE_SCANATTRS;
                         break;

@@ -16,7 +16,7 @@
  * @package    Zend_Filter
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Filter.php 20280 2010-01-14 15:52:18Z kokx $
+ * @version    $Id: Filter.php 21097 2010-02-19 20:11:34Z thomas $
  */
 
 /**
@@ -210,7 +210,7 @@ class Zend_Filter implements Zend_Filter_Interface
         $namespaces = array_merge((array) $namespaces, self::$_defaultNamespaces, array('Zend_Filter'));
         foreach ($namespaces as $namespace) {
             $className = $namespace . '_' . ucfirst($classBaseName);
-            if (!class_exists($className)) {
+            if (!class_exists($className, false)) {
                 try {
                     $file = str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
                     if (Zend_Loader::isReadable($file)) {

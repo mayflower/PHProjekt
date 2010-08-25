@@ -17,7 +17,7 @@
  * @subpackage Index
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: SegmentInfo.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: SegmentInfo.php 22724 2010-07-29 22:07:22Z alexander $
  */
 
 /** Zend_Search_Lucene_Index_TermsStream_Interface */
@@ -1113,8 +1113,9 @@ class Zend_Search_Lucene_Index_SegmentInfo implements Zend_Search_Lucene_Index_T
                             }
                         } else {
                             $docId += $docDelta/2;
+                            $freq = $frqFile->readVInt();
                             if (isset($filter[$docId])) {
-                                $result[$shift + $docId] = $frqFile->readVInt();
+                                $result[$shift + $docId] = $freq;
                                 $updatedFilterData[$docId] = 1; // 1 is just a some constant value, so we don't need additional var dereference here
                             }
                         }
@@ -1135,8 +1136,9 @@ class Zend_Search_Lucene_Index_SegmentInfo implements Zend_Search_Lucene_Index_T
                             }
                         } else {
                             $docId += $docDelta/2;
+                            $freq = $frqFile->readVInt();
                             if (isset($filter[$docId])) {
-                                $result[$shift + $docId] = $frqFile->readVInt();
+                                $result[$shift + $docId] = $freq;
                                 $updatedFilterData[$docId] = 1; // 1 is just some constant value, so we don't need additional var dereference here
                             }
                         }

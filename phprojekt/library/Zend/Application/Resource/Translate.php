@@ -17,7 +17,7 @@
  * @subpackage Resource
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Translate.php 20816 2010-02-01 21:13:54Z freak $
+ * @version    $Id: Translate.php 21770 2010-04-05 20:16:08Z thomas $
  */
 
 /**
@@ -72,13 +72,25 @@ class Zend_Application_Resource_Translate extends Zend_Application_Resource_Reso
                 throw new Zend_Application_Resource_Exception('No translation source data provided.');
             }
 
-            $adapter = isset($options['adapter']) ? $options['adapter'] : Zend_Translate::AN_ARRAY;
-            $locale  = isset($options['locale'])  ? $options['locale']  : null;
-            $translateOptions = isset($options['options']) ? $options['options'] : array();
+            if (empty($options['adapter'])) {
+                $options['adapter'] = Zend_Translate::AN_ARRAY;
+            }
+
+            if (!empty($options['data'])) {
+                $options['content'] = $options['data'];
+                unset($options['data']);
+            }
+
+            if (isset($options['options'])) {
+                foreach($options['options'] as $key => $value) {
+                    $options[$key] = $value;
+                }
+            }
 
             $key = (isset($options['registry_key']) && !is_numeric($options['registry_key']))
                  ? $options['registry_key']
                  : self::DEFAULT_REGISTRY_KEY;
+            unset($options['registry_key']);
 
             if(Zend_Registry::isRegistered($key)) {
                 $translate = Zend_Registry::get($key);
@@ -89,13 +101,10 @@ class Zend_Application_Resource_Translate extends Zend_Application_Resource_Reso
                                    . 'no instance of Zend_Translate');
                 }
 
-                $translate->addTranslation($options['data'], $locale, $options);
+                $translate->addTranslation($options);
                 $this->_translate = $translate;
             } else {
-                $this->_translate = new Zend_Translate(
-                    $adapter, $options['data'], $locale, $translateOptions
-                );
-
+                $this->_translate = new Zend_Translate($options);
                 Zend_Registry::set($key, $this->_translate);
             }
         }

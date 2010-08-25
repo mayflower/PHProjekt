@@ -17,7 +17,7 @@
  * @subpackage Dispatcher
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Standard.php 20244 2010-01-12 21:12:56Z matthew $
+ * @version    $Id: Standard.php 22039 2010-04-28 18:56:43Z matthew $
  */
 
 /** Zend_Loader */
@@ -206,7 +206,13 @@ class Zend_Controller_Dispatcher_Standard extends Zend_Controller_Dispatcher_Abs
             return false;
         }
 
-        if (class_exists($className, false)) {
+        $finalClass  = $className;
+        if (($this->_defaultModule != $this->_curModule)
+            || $this->getParam('prefixDefaultModule'))
+        {
+            $finalClass = $this->formatClassName($this->_curModule, $className);
+        }
+        if (class_exists($finalClass, false)) {
             return true;
         }
 

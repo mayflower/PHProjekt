@@ -30,7 +30,7 @@ require_once 'Zend/Form/Element/Multi.php';
  * @subpackage Element
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Radio.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Radio.php 22329 2010-05-30 15:12:58Z bittarman $
  */
 class Zend_Form_Element_Radio extends Zend_Form_Element_Multi
 {
@@ -49,9 +49,12 @@ class Zend_Form_Element_Radio extends Zend_Form_Element_Multi
      */
     public function loadDefaultDecorators()
     {
-        parent::loadDefaultDecorators();
-        if (false !== $decorator = $this->getDecorator('Label')) {
-            $decorator->setOption('disableFor', true);
+        if ($this->loadDefaultDecoratorsIsDisabled()) {
+            return $this;
         }
+        parent::loadDefaultDecorators();
+        $this->addDecorator('Label', array('tag' => 'dt',
+                                           'disableFor' => true));
+        return $this;
     }
 }

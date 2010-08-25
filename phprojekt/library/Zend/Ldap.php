@@ -17,7 +17,7 @@
  * @package    Zend_Ldap
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Ldap.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Ldap.php 22502 2010-06-29 08:19:18Z sgehrig $
  */
 
 /**
@@ -995,6 +995,19 @@ class Zend_Ldap
          */
         require_once 'Zend/Ldap/Collection/Iterator/Default.php';
         $iterator = new Zend_Ldap_Collection_Iterator_Default($this, $search);
+        return $this->_createCollection($iterator, $collectionClass);
+    }
+
+    /**
+     * Extension point for collection creation
+     *
+     * @param  Zend_Ldap_Collection_Iterator_Default	$iterator
+     * @param  string|null								$collectionClass
+     * @return Zend_Ldap_Collection
+     * @throws Zend_Ldap_Exception
+     */
+    protected function _createCollection(Zend_Ldap_Collection_Iterator_Default $iterator, $collectionClass)
+    {
         if ($collectionClass === null) {
             /**
              * Zend_Ldap_Collection
@@ -1196,10 +1209,10 @@ class Zend_Ldap
         $rdnParts = $dn->getRdn(Zend_Ldap_Dn::ATTR_CASEFOLD_LOWER);
         foreach ($rdnParts as $key => $value) {
             $value = Zend_Ldap_Dn::unescapeValue($value);
-            if (!array_key_exists($key, $entry) ||
-                    !in_array($value, $entry[$key]) ||
-                    count($entry[$key]) !== 1) {
+            if (!array_key_exists($key, $entry)) {
                 $entry[$key] = array($value);
+            } else if (!in_array($value, $entry[$key])) {
+                $entry[$key] = array_merge(array($value), $entry[$key]);
             }
         }
         $adAttributes = array('distinguishedname', 'instancetype', 'name', 'objectcategory',
@@ -1237,10 +1250,16 @@ class Zend_Ldap
         self::prepareLdapEntryArray($entry);
 
         $rdnParts = $dn->getRdn(Zend_Ldap_Dn::ATTR_CASEFOLD_LOWER);
+        foreach ($rdnParts as $key => $value) {
+            $value = Zend_Ldap_Dn::unescapeValue($value);
+            if (array_key_exists($key, $entry) && !in_array($value, $entry[$key])) {
+                $entry[$key] = array_merge(array($value), $entry[$key]);
+            }
+        }
+
         $adAttributes = array('distinguishedname', 'instancetype', 'name', 'objectcategory',
             'objectguid', 'usnchanged', 'usncreated', 'whenchanged', 'whencreated');
-        $stripAttributes = array_merge(array_keys($rdnParts), $adAttributes);
-        foreach ($stripAttributes as $attr) {
+        foreach ($adAttributes as $attr) {
             if (array_key_exists($attr, $entry)) {
                 unset($entry[$attr]);
             }

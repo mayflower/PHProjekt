@@ -29,7 +29,7 @@ require_once 'Zend/Form/Decorator/Interface.php';
  * @subpackage Decorator
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Abstract.php 21147 2010-02-23 14:42:04Z yoshida@zend.co.jp $
  */
 abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Interface
 {
@@ -244,7 +244,7 @@ abstract class Zend_Form_Decorator_Abstract implements Zend_Form_Decorator_Inter
      *
      * @param  string $content
      * @return string
-     * @throws Zend_Dorm_Decorator_Exception when unimplemented
+     * @throws Zend_Form_Decorator_Exception when unimplemented
      */
     public function render($content)
     {

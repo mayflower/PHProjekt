@@ -25,7 +25,7 @@
  * @package    Zend_Form
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: DisplayGroup.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: DisplayGroup.php 22465 2010-06-19 17:41:03Z alab $
  */
 class Zend_Form_DisplayGroup implements Iterator,Countable
 {
@@ -620,7 +620,7 @@ class Zend_Form_DisplayGroup implements Iterator,Countable
     public function loadDefaultDecorators()
     {
         if ($this->loadDefaultDecoratorsIsDisabled()) {
-            return;
+            return $this;
         }
 
         $decorators = $this->getDecorators();
@@ -630,6 +630,7 @@ class Zend_Form_DisplayGroup implements Iterator,Countable
                  ->addDecorator('Fieldset')
                  ->addDecorator('DtDdWrapper');
         }
+        return $this;
     }
 
     /**
@@ -702,11 +703,14 @@ class Zend_Form_DisplayGroup implements Iterator,Countable
      */
     public function addDecorators(array $decorators)
     {
-        foreach ($decorators as $decoratorInfo) {
-            if (is_string($decoratorInfo)) {
-                $this->addDecorator($decoratorInfo);
-            } elseif ($decoratorInfo instanceof Zend_Form_Decorator_Interface) {
-                $this->addDecorator($decoratorInfo);
+        foreach ($decorators as $decoratorName => $decoratorInfo) {
+            if (is_string($decoratorInfo) ||
+                $decoratorInfo instanceof Zend_Form_Decorator_Interface) {
+                if (!is_numeric($decoratorName)) {
+                    $this->addDecorator(array($decoratorName => $decoratorInfo));
+                } else {
+                    $this->addDecorator($decoratorInfo);
+                }
             } elseif (is_array($decoratorInfo)) {
                 $argc    = count($decoratorInfo);
                 $options = array();

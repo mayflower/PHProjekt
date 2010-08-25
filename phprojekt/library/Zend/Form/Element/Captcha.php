@@ -17,7 +17,7 @@
  * @subpackage Element
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Captcha.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Captcha.php 22329 2010-05-30 15:12:58Z bittarman $
  */
 
 /** @see Zend_Form_Element_Xhtml */
@@ -154,7 +154,6 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
      */
     public function setOptions(array $options)
     {
-        parent::setOptions($options);
         if (array_key_exists('captcha', $options)) {
             if (array_key_exists('captchaOptions', $options)) {
                 $this->setCaptcha($options['captcha'], $options['captchaOptions']);
@@ -164,6 +163,7 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
             }
             unset($options['captcha']);
         }
+        parent::setOptions($options);
         return $this;
     }
 
@@ -258,7 +258,7 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
     public function loadDefaultDecorators()
     {
         if ($this->loadDefaultDecoratorsIsDisabled()) {
-            return;
+            return $this;
         }
 
         $decorators = $this->getDecorators();
@@ -268,6 +268,7 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
                  ->addDecorator('HtmlTag', array('tag' => 'dd'))
                  ->addDecorator('Label', array('tag' => 'dt'));
         }
+        return $this;
     }
 
     /**

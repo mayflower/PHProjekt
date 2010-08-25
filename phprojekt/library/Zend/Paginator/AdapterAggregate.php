@@ -17,7 +17,7 @@
  * @subpackage Adapter
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: AdapterAggregate.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: AdapterAggregate.php 22543 2010-07-09 19:46:37Z ramon $
  */
 
 /**
@@ -34,7 +34,7 @@ interface Zend_Paginator_AdapterAggregate
     /**
      * Return a fully configured Paginator Adapter from this method.
      *
-     * @return Zend_Paginator_Adapter_Abstract
+     * @return Zend_Paginator_Adapter_Interface
      */
     public function getPaginatorAdapter();
 }

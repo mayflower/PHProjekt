@@ -16,7 +16,7 @@
  * @package    Zend_Oauth
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Consumer.php 20232 2010-01-12 17:56:33Z matthew $
+ * @version    $Id: Consumer.php 22475 2010-06-20 18:25:36Z padraic $
  */
 
 /** Zend_Oauth */
@@ -193,9 +193,10 @@ class Zend_Oauth_Consumer extends Zend_Oauth
 
         // OAuth 1.0a Verifier
         if (!is_null($authorizedToken->getParam('oauth_verifier'))) {
-            $request->setParameters(array(
+            $params = array_merge($request->getParameters(), array(
                 'oauth_verifier' => $authorizedToken->getParam('oauth_verifier')
             ));
+            $request->setParameters($params);
         }
         if (!is_null($httpMethod)) {
             $request->setMethod($httpMethod);

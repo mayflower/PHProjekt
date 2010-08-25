@@ -17,7 +17,7 @@
  * @subpackage Ec2
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Ebs.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Ebs.php 22048 2010-04-28 22:23:19Z shahar $
  */
 
 /**
@@ -242,7 +242,7 @@ class Zend_Service_Amazon_Ec2_Ebs extends Zend_Service_Amazon_Ec2_Abstract
     {
         $params = array();
         $params['Action']       = 'DeleteVolume';
-        $params['volumeId']     = $volumeId;
+        $params['VolumeId']     = $volumeId;
 
         $response = $this->sendRequest($params);
         $xpath = $response->getXPath();

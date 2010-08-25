@@ -17,7 +17,7 @@
  * @subpackage PluginLoader
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: PluginLoader.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: PluginLoader.php 22604 2010-07-17 00:14:06Z ramon $
  */
 
 /** Zend_Loader_PluginLoader_Interface */
@@ -126,6 +126,12 @@ class Zend_Loader_PluginLoader implements Zend_Loader_PluginLoader_Interface
         if($prefix == "") {
             return $prefix;
         }
+
+        $last = strlen($prefix) - 1;
+        if ($prefix{$last} == '\\') {
+            return $prefix;
+        }
+
         return rtrim($prefix, '_') . '_';
     }
 
@@ -250,7 +256,7 @@ class Zend_Loader_PluginLoader implements Zend_Loader_PluginLoader_Interface
 
         if ($path != null) {
             $pos = array_search($path, $registry[$prefix]);
-            if ($pos === null) {
+            if (false === $pos) {
                 require_once 'Zend/Loader/PluginLoader/Exception.php';
                 throw new Zend_Loader_PluginLoader_Exception('Prefix ' . $prefix . ' / Path ' . $path . ' was not found in the PluginLoader.');
             }
@@ -408,10 +414,8 @@ class Zend_Loader_PluginLoader implements Zend_Loader_PluginLoader_Interface
 
         if ($this->_useStaticRegistry) {
             self::$_staticLoadedPlugins[$this->_useStaticRegistry][$name]     = $className;
-            self::$_staticLoadedPluginPaths[$this->_useStaticRegistry][$name] = (isset($loadFile) ? $loadFile : '');
         } else {
             $this->_loadedPlugins[$name]     = $className;
-            $this->_loadedPluginPaths[$name] = (isset($loadFile) ? $loadFile : '');
         }
         return $className;
     }

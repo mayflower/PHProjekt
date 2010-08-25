@@ -17,7 +17,7 @@
  * @subpackage FileParser
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Png.php 20423 2010-01-19 14:37:20Z yoshida@zend.co.jp $
+ * @version    $Id: Png.php 22655 2010-07-22 18:47:20Z mabe $
  */
 
 /** @see Zend_Pdf_FileParser_Image */
@@ -312,7 +312,7 @@ class Zend_Pdf_FileParser_Image_Png extends Zend_Pdf_FileParser_Image
                   */
 
                   $tmpData = $this->readBytes($chunkLength);
-                  if(($trnsIdx = strpos($tmpData, chr(0))) !== false) {
+                  if(($trnsIdx = strpos($tmpData, "\0")) !== false) {
                        $this->_transparencyData = array($trnsIdx, $trnsIdx);
                   }
 

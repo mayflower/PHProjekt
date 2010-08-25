@@ -16,7 +16,7 @@
  * @package   Zend_File_Transfer
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Transfer.php 20141 2010-01-08 09:00:56Z thomas $
+ * @version   $Id: Transfer.php 21202 2010-02-24 22:16:44Z thomas $
  */
 
 /**
@@ -74,9 +74,9 @@ class Zend_File_Transfer
 
         $direction = (integer) $direction;
         $this->_adapter[$direction] = new $adapter($options);
-        if (!$this->_adapter[$direction] instanceof Zend_File_Transfer_Adapter) {
+        if (!$this->_adapter[$direction] instanceof Zend_File_Transfer_Adapter_Abstract) {
             require_once 'Zend/File/Transfer/Exception.php';
-            throw new Zend_File_Transfer_Exception("Adapter " . $adapter . " does not extend Zend_File_Transfer_Adapter");
+            throw new Zend_File_Transfer_Exception("Adapter " . $adapter . " does not extend Zend_File_Transfer_Adapter_Abstract");
         }
 
         return $this;
