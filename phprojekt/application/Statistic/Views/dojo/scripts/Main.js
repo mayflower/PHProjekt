@@ -72,8 +72,8 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         //    Request a new data store for the dates
         // description:
         //    Request to the server the data for draw the statistics
-        dijit.byId("startDate").attr('value', new Date(start.getFullYear(), start.getMonth(), start.getDate()));
-        dijit.byId("endDate").attr('value', new Date(end.getFullYear(), end.getMonth(), end.getDate()));
+        dijit.byId("startDate").set('value', new Date(start.getFullYear(), start.getMonth(), start.getDate()));
+        dijit.byId("endDate").set('value', new Date(end.getFullYear(), end.getMonth(), end.getDate()));
 
         this._url = phpr.webpath + 'index.php/Statistic/index/jsonGetStatistic'
             + '/nodeId/' + phpr.currentProjectId
@@ -146,8 +146,8 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
     },
 
     exportData:function() {
-        var start = dijit.byId("startDate").attr('value');
-        var end   = dijit.byId("endDate").attr('value');
+        var start = dijit.byId("startDate").get('value');
+        var end   = dijit.byId("endDate").get('value');
 
         window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList'
             + '/nodeId/' + phpr.currentProjectId

@@ -178,7 +178,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         if (this._currentDate != dijit.byId('startDatetime_forDate').value) {
             if (dijit.byId('startDatetime_forDate').isValid()) {
                 diff = dojo.date.difference(this._currentDate, dijit.byId('startDatetime_forDate').value, 'day');
-                dijit.byId('endDatetime_forDate').attr('value', dojo.date.add(dijit.byId('endDatetime_forDate').value,
+                dijit.byId('endDatetime_forDate').set('value', dojo.date.add(dijit.byId('endDatetime_forDate').value,
                     'day', diff));
                 this._currentDate = dijit.byId('startDatetime_forDate').value;
             }
@@ -194,7 +194,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         if (this._currentTime != dijit.byId('startDatetime_forTime').value) {
             if (dijit.byId('startDatetime_forTime').isValid()) {
                 diff = dojo.date.difference(this._currentTime, dijit.byId('startDatetime_forTime').value, 'minute');
-                dijit.byId('endDatetime_forTime').attr('value', dojo.date.add(dijit.byId('endDatetime_forTime').value,
+                dijit.byId('endDatetime_forTime').set('value', dojo.date.add(dijit.byId('endDatetime_forTime').value,
                     'minute', diff));
                 this._currentTime = dijit.byId('startDatetime_forTime').value;
             }
@@ -283,12 +283,12 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         //    Add a new row of one participant
         // Description:
         //    Add a the row of one participant
-        var userId = dijit.byId("dataParticipantAdd").attr('value');
+        var userId = dijit.byId("dataParticipantAdd").get('value');
         if (!dojo.byId("trParticipantFor" + userId) && userId > 0) {
             phpr.destroyWidget("dataParticipant[" + userId + "]");
             phpr.destroyWidget("ParticipantDeleteButton" + userId);
 
-            var userName = dijit.byId("dataParticipantAdd").attr('displayedValue');
+            var userName = dijit.byId("dataParticipantAdd").get('displayedValue');
             var table    = dojo.byId("participantTable");
             var row      = table.insertRow(table.rows.length);
             row.id       = "trParticipantFor" + userId;
@@ -413,7 +413,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         // Description:
         //    This function calls jsonDeleteAction
 
-        var rruleFreq = this.formsWidget[this._FRMWIDG_RECURRENCE].attr('value')['rruleFreq'];
+        var rruleFreq = this.formsWidget[this._FRMWIDG_RECURRENCE].get('value')['rruleFreq'];
         if (this.id > 0) {
             // If the event has recurrence or is at least one participant added in participants tab, ask what to modify
             if (rruleFreq && null === this._multipleEvents) {
@@ -463,7 +463,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         dojo.byId("eventSelectorContainer").innerHTML = '';
 
         dojo.byId('eventSelectorTitle').innerHTML = phpr.nls.get(action + ' repeating events');
-        dijit.byId('eventSelectorDialog').attr('title', phpr.nls.get('Calendar'));
+        dijit.byId('eventSelectorDialog').set('title', phpr.nls.get('Calendar'));
 
         // Add button for one event
         var params = {
@@ -501,7 +501,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         dojo.byId("eventSelectorContainer").innerHTML = '';
 
         dojo.byId('eventSelectorTitle').innerHTML = phpr.nls.get('To whom will this apply');
-        dijit.byId('eventSelectorDialog').attr('title', phpr.nls.get('Calendar'));
+        dijit.byId('eventSelectorDialog').set('title', phpr.nls.get('Calendar'));
 
         // Add button for one Participant
         var params = {

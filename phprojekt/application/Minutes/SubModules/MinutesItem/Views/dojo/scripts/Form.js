@@ -60,8 +60,8 @@ dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
             case 3:
                 dojo.style(trUser, "display", display);
                 dojo.style(trDate, "display", display);
-                dijit.byId(this.main.module + 'userId').attr("disabled", false);
-                dijit.byId(this.main.module + 'topicDate').attr("disabled", false);
+                dijit.byId(this.main.module + 'userId').set("disabled", false);
+                dijit.byId(this.main.module + 'topicDate').set("disabled", false);
                 if (dojo.isIE) {
                     // Fix the display of the selectBox for IE
                     dojo.style(dojo.byId(this.main.module + 'userId'), "display", "inline");
@@ -71,8 +71,8 @@ dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
             case 5:
                 dojo.style(trUser, "display", "none");
                 dojo.style(trDate, "display", display);
-                dijit.byId(this.main.module + 'userId').attr("disabled", true);
-                dijit.byId(this.main.module + 'topicDate').attr("disabled", false);
+                dijit.byId(this.main.module + 'userId').set("disabled", true);
+                dijit.byId(this.main.module + 'topicDate').set("disabled", false);
                 if (dojo.isIE) {
                     // Fix the display of the selectBox for IE
                     dojo.style(dojo.byId(this.main.module + 'userId'), "display", "none");
@@ -82,8 +82,8 @@ dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
             default:
                 dojo.style(trUser, "display", "none");
                 dojo.style(trDate, "display", "none");
-                dijit.byId(this.main.module + 'userId').attr("disabled", true);
-                dijit.byId(this.main.module + 'topicDate').attr("disabled", true);
+                dijit.byId(this.main.module + 'userId').set("disabled", true);
+                dijit.byId(this.main.module + 'topicDate').set("disabled", true);
                 if (dojo.isIE) {
                     // Fix the display of the selectBox for IE
                     dojo.style(dojo.byId(this.main.module + 'userId'), "display", "none");

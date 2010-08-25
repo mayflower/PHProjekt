@@ -12,13 +12,13 @@
             <input type="text" id="{{idForDate}}" name="{{idForDate}}" dojoType="phpr.DateTextBox"
             required="{{required}}" {{disabled}} constraints="{datePattern: 'yyyy-MM-dd'}" promptMessage="yyyy-MM-dd"
             invalidMessage="Invalid date. Use yyyy-MM-dd format." value="{{valueForDate}}"
-            onchange="dijit.byId('{{id}}').attr('value',
-                phpr.Date.getIsoDatetime(this.value, dijit.byId('{{idForTime}}').attr('value')));" />
+            onchange="dijit.byId('{{id}}').set('value',
+                phpr.Date.getIsoDatetime(this.value, dijit.byId('{{idForTime}}').get('value')));" />
             <input type="text" id="{{idForTime}}" name="{{idForTime}}" value="T{{valueForTime}}"
             dojoType="dijit.form.TimeTextBox" required="{{required}}" {{disabled}}
             constraints="{formatLength: 'short', timePattern: 'HH:mm'}"
-            onchange="dijit.byId('{{id}}').attr('value',
-                phpr.Date.getIsoDatetime(dijit.byId('{{idForDate}}').attr('value'), this.value));" />
+            onchange="dijit.byId('{{id}}').set('value',
+                phpr.Date.getIsoDatetime(dijit.byId('{{idForDate}}').get('value'), this.value));" />
             <input type="hidden" id="{{id}}" name="{{id}}" value="{{value}}"
             dojoType="dijit.form.TextBox" required="{{required}}" {{disabled}} />
         </div>

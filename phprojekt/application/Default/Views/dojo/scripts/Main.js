@@ -198,7 +198,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     phpr.nls = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
 
                     translatedText = phpr.nls.get("Disable Frontend Messages");
-                    dijit.byId('disableFrontendMessage').attr('label', translatedText);
+                    dijit.byId('disableFrontendMessage').set('label', translatedText);
 
                     translatedText = phpr.nls.get("Tags");
                     dijit.byId('tagsbox').titleNode.innerHTML = translatedText;
@@ -416,7 +416,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 var activeTab  = false;
                 var modules    = this.sortModuleTabs(modules);
                 for (var i = 0; i < modules.length; i++) {
-                    var liclass ='';
+                    var liclass        = '';
                     var moduleName     = modules[i].name;
                     var moduleLabel    = modules[i].label;
                     var moduleFunction = modules[i].moduleFunction || "setUrlHash";
@@ -424,11 +424,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     if (modules[i].rights.read) {
                        if (functionParams == "'Project', null, ['basicData']" && currentModule == 'BasicData'
                             && !activeTab) {
-                            liclass = 'class = active';
+                            liclass   = 'class = active';
                             activeTab = true;
                         } else if (moduleName == phpr.module && functionParams != "'Project', null, ['basicData']"
                             && !activeTab) {
-                            liclass = 'class = active';
+                            liclass   = 'class = active';
                             activeTab = true;
                         }
                         navigation += self.render(["phpr.Default.template", "navigation.html"], null, {
@@ -866,7 +866,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         if (value == '') {
             value += phpr.drawEmptyMessage('There are no Tags');
         }
-        dijit.byId("tagsbox").attr('content', value);
+        dijit.byId("tagsbox").set('content', value);
     },
 
     showTagsResults:function(/*String*/tag) {
@@ -934,7 +934,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 if (search == '') {
                     search += phpr.drawEmptyMessage('There are no Results');
                 }
-                dijit.byId("gridBox").attr('content', search);
+                dijit.byId("gridBox").set('content', search);
             })
         });
     },
@@ -978,11 +978,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         var currentModule = phpr.module;
         if (phpr.parentmodule && ('Administration' == phpr.parentmodule || 'Setting' == phpr.parentmodule)) {
             currentModule = 'Core';
-            dijit.byId('helpDialog').attr('title', phpr.nls.get('Help', currentModule));
+            dijit.byId('helpDialog').set('title', phpr.nls.get('Help', currentModule));
             dojo.byId('helpTitle').innerHTML = phpr.nls.get(phpr.parentmodule);
             var helpData = phpr.nls.get('Content Help ' + phpr.parentmodule, currentModule);
         } else {
-            dijit.byId('helpDialog').attr('title', phpr.nls.get('Help', currentModule));
+            dijit.byId('helpDialog').set('title', phpr.nls.get('Help', currentModule));
             dojo.byId('helpTitle').innerHTML = phpr.nls.get(currentModule, currentModule);
             var helpData = phpr.nls.get('Content Help', currentModule);
             if (this.subModules.length > 0) {
@@ -1019,7 +1019,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                     if (typeof(helpData) == 'object') {
                         this.showHelp_part2(helpData, nlsSource);
                     } else {
-                        dijit.byId('helpContainer').attr("content", phpr.nls.get('No help available', currentModule));
+                        dijit.byId('helpContainer').set("content", phpr.nls.get('No help available', currentModule));
                         dijit.byId('helpDialog').show();
                     }
                 })
@@ -1037,7 +1037,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             useMenu:   false,
             useSlider: false
         }, document.createElement('div'));
-        dijit.byId('helpContainer').attr("content", container);
+        dijit.byId('helpContainer').set("content", container);
         dijit.byId('helpDialog').show();
 
         for (var tab in helpData) {

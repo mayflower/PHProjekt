@@ -81,7 +81,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
             phpr.send({
                 url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId
                     + '/id/' + this.id,
-                content:   dijit.byId('mailFormTab').attr('value'),
+                content:   dijit.byId('mailFormTab').get('value'),
                 onSuccess: dojo.hitch(this, function(data) {
                     new phpr.handleResponse('serverFeedback', data);
                 })

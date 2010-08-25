@@ -378,7 +378,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
 
         phpr.destroyWidget('selectorContent');
         dojo.byId('selectorTitle').innerHTML = phpr.nls.get('User selection');
-        dijit.byId('selectorDialog').attr('title', phpr.nls.get('Calendar'));
+        dijit.byId('selectorDialog').set('title', phpr.nls.get('Calendar'));
 
         // Mark as select the selected users
         for (var i = 0; i < userList.length; i++) {
@@ -405,7 +405,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     usersSelectionDoneClick:function() {
         // Summary:
         //    Called once the users of the selection window have been selected.
-        var userList = dijit.byId('userList').attr('value');
+        var userList = dijit.byId('userList').get('value');
         if (userList.length == 0) {
             dojo.byId("usersSelectorError").style.visibility = 'visible';
             return;
@@ -555,7 +555,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                 var scheduleBar = new dijit.layout.ContentPane({id: 'scheduleBar', region:'top',
                                                                 style:'height: 6%; overflow: hidden;'});
                 // This should be here, and not in the scheduleBar definition, to avoid a bug on IE
-                scheduleBar.attr('class', 'prepend-0 append-0');
+                scheduleBar.set('class', 'prepend-0 append-0');
             } else {
                 var scheduleBar = dijit.byId('scheduleBar');
             }
@@ -573,7 +573,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                 date:  dateDescrip,
                 today: phpr.nls.get('Today')
             });
-            scheduleBar.attr('content', content);
+            scheduleBar.set('content', content);
             dijit.byId('calendarMain').addChild(scheduleBar);
             dijit.byId('calendarMain').resize();
         } else {

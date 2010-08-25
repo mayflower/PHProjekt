@@ -69,7 +69,7 @@ dojo.declare("phpr.form.Rating", [dojox.form.Rating], {
     },
 
     setAttribute:function(key, value){
-        this.attr('value', value);
+        this.set('value', value);
         if (key == "value") {
             this._renderStars(this.value);
             this.onChange(this.value);

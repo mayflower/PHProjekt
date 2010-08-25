@@ -423,7 +423,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var ids        = new Array();
         while (++listIndex < listLength) {
             var name  = this.gantt.projectDataBuffer[listIndex][0];
-            var value = this.gantt.normalizeValues(dijit.byId(name).attr('value'));
+            var value = this.gantt.normalizeValues(dijit.byId(name).get('value'));
             // Only send the changed values
             if ((value[0] != this.gantt.projectDataBuffer[listIndex][1]) ||
                 (value[1] != this.gantt.projectDataBuffer[listIndex][2]) ||

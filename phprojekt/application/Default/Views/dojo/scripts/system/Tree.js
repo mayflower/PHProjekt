@@ -49,7 +49,7 @@ dojo.declare("phpr.Tree", phpr.Component, {
                 _this.getModel();
                 _this.tree = _this.getTree();
                 _this.setId(_this.tree.id);
-                _this._treeNode.attr('content', _this.tree.domNode);
+                _this._treeNode.set('content', _this.tree.domNode);
                 _this.tree.startup();
                 dojo.connect(_this.tree, "onClick", dojo.hitch(this, "onItemClick"));
                 dojo.byId("navigation-container-title").innerHTML = phpr.nls.get('Projects');

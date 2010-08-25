@@ -100,7 +100,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
             totalClass: totalClass,
             dates:      dates
         });
-        dijit.byId("selectDate").attr('value', new Date(this._year, this._month, this._date.getDate()));
+        dijit.byId("selectDate").set('value', new Date(this._year, this._month, this._date.getDate()));
     },
 
     reload:function(date, forceReload) {

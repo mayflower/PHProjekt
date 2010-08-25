@@ -22,10 +22,10 @@
                     &nbsp;
                     <button dojoType="dijit.form.Button" baseClass="positive smallIcon" type="button" iconClass="tick"
                     onClick="
-                        if (dijit.byId('startDate').attr('value') != null
-                            && dijit.byId('endDate').attr('value') != null) {
-                            dojo.publish('Statistic.changeDate', [dijit.byId('startDate').attr('value'),
-                                dijit.byId('endDate').attr('value')]);
+                        if (dijit.byId('startDate').get('value') != null
+                            && dijit.byId('endDate').get('value') != null) {
+                            dojo.publish('Statistic.changeDate', [dijit.byId('startDate').get('value'),
+                                dijit.byId('endDate').get('value')]);
                         }">
                     </button>
                     &nbsp;&nbsp;
