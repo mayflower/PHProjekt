@@ -425,7 +425,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
                 phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
                     var favorites = phpr.DataStore.getData({url: this._favoritesUrl});
                     var meta      = phpr.DataStore.getMetaData({url: this._url});
-                    var range     = meta[3]['range'];
+                    var range     = meta[3]['range'] || new Array();
 
                     // Get Favorites
                     var favoritesList = new Array();
