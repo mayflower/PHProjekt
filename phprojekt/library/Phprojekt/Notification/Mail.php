@@ -112,19 +112,21 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
         foreach ($recipients as $recipient) {
             $email = $setting->getSetting('email', (int) $recipient);
 
-            if ((int) $recipient) {
-                $phpUser->find($recipient);
-            } else {
-                $phpUser->find(Phprojekt_Auth::getUserId());
-            }
+            if (!empty($email)) {
+                if ((int) $recipient) {
+                    $phpUser->find($recipient);
+                } else {
+                    $phpUser->find(Phprojekt_Auth::getUserId());
+                }
 
-            $name = trim($phpUser->firstname . ' ' . $phpUser->lastname);
-            if (!empty($name)) {
-                $name = $name . ' (' . $phpUser->username . ')';
-            } else {
-                $name = $phpUser->username;
+                $name = trim($phpUser->firstname . ' ' . $phpUser->lastname);
+                if (!empty($name)) {
+                    $name = $name . ' (' . $phpUser->username . ')';
+                } else {
+                    $name = $phpUser->username;
+                }
+                $this->addTo($email, $name);
             }
-            $this->addTo($email, $name);
         }
     }
 

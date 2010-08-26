@@ -191,11 +191,13 @@ class Phprojekt_Notification
                 $adapter = new $adapterName($params);
                 $adapter->setCustomFrom($from);
                 $adapter->setTo($recipients);
-                if ($showSubject) {
-                    $adapter->setCustomSubject($subject);
+                if (count($adapter->getRecipients()) > 0) {
+                    if ($showSubject) {
+                        $adapter->setCustomSubject($subject);
+                    }
+                    $adapter->setCustomBody($bodyParams, $bodyFields, $changes, $lang);
+                    $adapter->sendNotification();
                 }
-                $adapter->setCustomBody($bodyParams, $bodyFields, $changes, $lang);
-                $adapter->sendNotification();
             }
         }
     }
