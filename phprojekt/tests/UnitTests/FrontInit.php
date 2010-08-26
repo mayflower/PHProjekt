@@ -62,7 +62,7 @@ class FrontInit extends PHPUnit_Framework_TestCase
 
         $cache = Phprojekt::getInstance()->getCache();
         if (!($translate = $cache->load('Phprojekt_getTranslate_en'))) {
-            $translate = new Phprojekt_Language('en');
+            $translate = new Phprojekt_Language(array('locale' => 'en'));
             $cache->save($translate, 'Phprojekt_getTranslate_en', array('Language'));
         }
         Zend_Registry::set('translate', $translate);

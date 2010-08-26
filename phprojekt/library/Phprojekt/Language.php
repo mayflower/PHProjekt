@@ -53,13 +53,13 @@ class Phprojekt_Language extends Zend_Translate
      *
      * For example the English translation is in the file: en.inc.php.
      *
-     * @param string|Zend_Locale $locale Locale/Language to set, identical with Locale identifiers
-     *                                   see Zend_Locale for more information.
+     * @param array $options Options to use.
      */
-    public function __construct($locale)
+    public function __construct($options)
     {
-        $this->_loacale = $locale;
-        $this->_adapter = new Phprojekt_LanguageAdapter('', $locale);
+        $options['content'] = '-';
+        $this->_loacale     = $options['locale'];
+        $this->_adapter     = new Phprojekt_LanguageAdapter($options);
     }
 
     /**
@@ -101,7 +101,10 @@ class Phprojekt_Language extends Zend_Translate
     private function _loadLangFile($locale)
     {
         if (false === $this->_adapter->isLoaded($locale)) {
-            $this->_adapter = new Phprojekt_LanguageAdapter(null, $locale);
+            $options            = array();
+            $options['content'] = '-';
+            $options['locale']  = $locale;
+            $this->_adapter     = new Phprojekt_LanguageAdapter($options);
         }
     }
 

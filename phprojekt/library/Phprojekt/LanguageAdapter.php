@@ -98,10 +98,11 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      *
      * @return void
      */
-    public function __construct($data, $locale = 'en')
+    public function __construct($options)
     {
-        $locale = self::_convertToZendLocale($locale);
-        parent::__construct($data, $locale, array('disableNotices' => true));
+        $options['locale']         = self::_convertToZendLocale($options['locale']);
+        $options['disableNotices'] = true;
+        parent::__construct($options);
     }
 
     /**
