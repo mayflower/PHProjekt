@@ -16,7 +16,7 @@
  * @package    Zend_Oauth
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Client.php 20950 2010-02-06 17:20:59Z padraic $
+ * @version    $Id: Client.php 22051 2010-04-29 13:51:41Z padraic $
  */
 
 /** Zend_Oauth */
@@ -56,6 +56,14 @@ class Zend_Oauth_Client extends Zend_Http_Client
     protected $_config = null;
 
     /**
+     * True if this request is being made with data supplied by
+     * a stream object instead of a raw encoded string.
+     *
+     * @var bool
+     */
+    protected $_streamingRequest = null;
+
+    /**
      * Constructor; creates a new HTTP Client instance which itself is
      * just a typical Zend_Http_Client subclass with some OAuth icing to
      * assist in automating OAuth parameter generation, addition and
@@ -79,6 +87,103 @@ class Zend_Oauth_Client extends Zend_Http_Client
     }
 
     /**
+     * Return the current connection adapter
+     *
+     * @return Zend_Http_Client_Adapter_Interface|string $adapter
+     */
+    public function getAdapter()
+    {
+        return $this->adapter;
+    }
+    
+   /**
+     * Load the connection adapter
+     *
+     * @param Zend_Http_Client_Adapter_Interface $adapter
+     * @return void
+     */
+    public function setAdapter($adapter)
+    {
+        if ($adapter == null) {
+            $this->adapter = $adapter;
+        } else {
+              parent::setAdapter($adapter);
+        }
+    }
+
+    /**
+     * Set the streamingRequest variable which controls whether we are
+     * sending the raw (already encoded) POST data from a stream source.
+     *
+     * @param boolean $value The value to set.
+     * @return void
+     */
+    public function setStreamingRequest($value)
+    {
+        $this->_streamingRequest = $value;
+    }
+
+    /**
+     * Check whether the client is set to perform streaming requests.
+     *
+     * @return boolean True if yes, false otherwise.
+     */
+    public function getStreamingRequest()
+    {
+        if ($this->_streamingRequest) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Prepare the request body (for POST and PUT requests)
+     *
+     * @return string
+     * @throws Zend_Http_Client_Exception
+     */
+    protected function _prepareBody()
+    {
+        if($this->_streamingRequest) {
+            $this->setHeaders(self::CONTENT_LENGTH,
+                $this->raw_post_data->getTotalSize());
+            return $this->raw_post_data;
+        }
+        else {
+            return parent::_prepareBody();
+        }
+    }
+
+    /**
+     * Clear all custom parameters we set.
+     *
+     * @return Zend_Http_Client
+     */
+    public function resetParameters($clearAll = false)
+    {
+        $this->_streamingRequest = false;
+        return parent::resetParameters($clearAll);
+    }
+
+    /**
+     * Set the raw (already encoded) POST data from a stream source.
+     *
+     * This is used to support POSTing from open file handles without
+     * caching the entire body into memory. It is a wrapper around
+     * Zend_Http_Client::setRawData().
+     *
+     * @param string $data The request data
+     * @param string $enctype The encoding type
+     * @return Zend_Http_Client
+     */
+    public function setRawDataStream($data, $enctype = null)
+    {
+        $this->_streamingRequest = true;
+        return $this->setRawData($data, $enctype);
+    }
+
+    /**
      * Same as Zend_Http_Client::setMethod() except it also creates an
      * Oauth specific reference to the method type.
      * Might be defunct and removed in a later iteration.
@@ -94,6 +199,10 @@ class Zend_Oauth_Client extends Zend_Http_Client
             $this->setRequestMethod(self::POST);
         } elseif($method == self::PUT) {
             $this->setRequestMethod(self::PUT);
+        }  elseif($method == self::DELETE) {
+            $this->setRequestMethod(self::DELETE);
+        }   elseif($method == self::HEAD) {
+            $this->setRequestMethod(self::HEAD);
         }
         return parent::setMethod($method);
     }
@@ -131,21 +240,10 @@ class Zend_Oauth_Client extends Zend_Http_Client
         $requestMethod = $this->getRequestMethod();
         $query = null;
         if ($requestScheme == Zend_Oauth::REQUEST_SCHEME_HEADER) {
-            $params = array();
-            if (!empty($this->paramsGet)) {
-                $params = array_merge($params, $this->paramsGet);
-                $query  = $this->getToken()->toQueryString(
-                    $this->getUri(true), $this->_config, $params
-                );
-            }
-            if (!empty($this->paramsPost)) {
-                $params = array_merge($params, $this->paramsPost);
-                $query  = $this->getToken()->toQueryString(
-                    $this->getUri(true), $this->_config, $params
-                );
-            }
             $oauthHeaderValue = $this->getToken()->toHeader(
-                $this->getUri(true), $this->_config, $params
+                $this->getUri(true),
+                $this->_config,
+                $this->_getSignableParametersAsQueryString()
             );
             $this->setHeaders('Authorization', $oauthHeaderValue);
         } elseif ($requestScheme == Zend_Oauth::REQUEST_SCHEME_POSTBODY) {
@@ -158,7 +256,9 @@ class Zend_Oauth_Client extends Zend_Http_Client
                 );
             }
             $raw = $this->getToken()->toQueryString(
-                $this->getUri(true), $this->_config, $this->paramsPost
+                $this->getUri(true),
+                $this->_config,
+                $this->_getSignableParametersAsQueryString()
             );
             $this->setRawData($raw);
             $this->paramsPost = array();
@@ -166,14 +266,19 @@ class Zend_Oauth_Client extends Zend_Http_Client
             $params = array();
             $query = $this->getUri()->getQuery();
             if ($query) {
-                $queryParts = split('&', $this->getUri()->getQuery());
+                $queryParts = explode('&', $this->getUri()->getQuery());
                 foreach ($queryParts as $queryPart) {
-                    $kvTuple = split('=', $queryPart);
+                    $kvTuple = explode('=', $queryPart);
                     $params[$kvTuple[0]] = 
                         (array_key_exists(1, $kvTuple) ? $kvTuple[1] : NULL);
                 }
             }
-
+            if (!empty($this->paramsPost)) {
+                $params = array_merge($params, $this->paramsPost);
+                $query  = $this->getToken()->toQueryString(
+                    $this->getUri(true), $this->_config, $params
+                );
+            }
             $query = $this->getToken()->toQueryString(
                 $this->getUri(true), $this->_config, $params
             );
@@ -183,6 +288,31 @@ class Zend_Oauth_Client extends Zend_Http_Client
             require_once 'Zend/Oauth/Exception.php';
             throw new Zend_Oauth_Exception('Invalid request scheme: ' . $requestScheme);
         }
+    }
+
+    /**
+     * Collect all signable parameters into a single array across query string
+     * and POST body. These are returned as a properly formatted single
+     * query string.
+     *
+     * @return string
+     */
+    protected function _getSignableParametersAsQueryString()
+    {
+        $params = array();
+            if (!empty($this->paramsGet)) {
+                $params = array_merge($params, $this->paramsGet);
+                $query  = $this->getToken()->toQueryString(
+                    $this->getUri(true), $this->_config, $params
+                );
+            }
+            if (!empty($this->paramsPost)) {
+                $params = array_merge($params, $this->paramsPost);
+                $query  = $this->getToken()->toQueryString(
+                    $this->getUri(true), $this->_config, $params
+                );
+            }
+            return $params;
     }
 
     /**

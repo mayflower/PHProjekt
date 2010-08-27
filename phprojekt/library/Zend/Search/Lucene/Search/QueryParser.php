@@ -17,7 +17,7 @@
  * @subpackage Search
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: QueryParser.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: QueryParser.php 21638 2010-03-24 17:56:46Z alexander $
  */
 
 
@@ -331,6 +331,16 @@ class Zend_Search_Lucene_Search_QueryParser extends Zend_Search_Lucene_FSM
     }
 
 
+    /**
+     * Escape keyword to force it to be parsed as one term
+     *
+     * @param string $keyword
+     * @return string
+     */
+    public static function escape($keyword)
+    {
+        return '\\' . implode('\\', str_split($keyword));
+    }
 
     /**
      * Parses a query string

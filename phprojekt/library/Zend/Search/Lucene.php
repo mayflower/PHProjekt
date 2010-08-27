@@ -16,7 +16,7 @@
  * @package    Zend_Search_Lucene
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Lucene.php 20468 2010-01-21 16:06:08Z alexander $
+ * @version    $Id: Lucene.php 21640 2010-03-24 18:28:32Z alexander $
  */
 
 
@@ -300,6 +300,21 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
 
         return -1;
     }
+
+    /**
+     * Get generation number associated with this index instance
+     *
+     * The same generation number in pair with document number or query string
+     * guarantees to give the same result while index retrieving.
+     * So it may be used for search result caching.
+     *
+     * @return integer
+     */
+    public function getGeneration()
+    {
+        return $this->_generation;
+    }
+
 
     /**
      * Get segments file name

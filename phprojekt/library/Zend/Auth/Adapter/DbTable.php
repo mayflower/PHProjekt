@@ -17,7 +17,7 @@
  * @subpackage Adapter
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: DbTable.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: DbTable.php 22614 2010-07-17 13:46:07Z dragonbe $
  */
 
 
@@ -114,21 +114,30 @@ class Zend_Auth_Adapter_DbTable implements Zend_Auth_Adapter_Interface
      * @var array
      */
     protected $_resultRow = null;
+    
+    /**
+     * $_ambiguityIdentity - Flag to indicate same Identity can be used with 
+     * different credentials. Default is FALSE and need to be set to true to
+     * allow ambiguity usage.
+     * 
+     * @var boolean
+     */
+    protected $_ambiguityIdentity = false;
 
     /**
      * __construct() - Sets configuration options
      *
-     * @param  Zend_Db_Adapter_Abstract $zendDb
+     * @param  Zend_Db_Adapter_Abstract $zendDb If null, default database adapter assumed
      * @param  string                   $tableName
      * @param  string                   $identityColumn
      * @param  string                   $credentialColumn
      * @param  string                   $credentialTreatment
      * @return void
      */
-    public function __construct(Zend_Db_Adapter_Abstract $zendDb, $tableName = null, $identityColumn = null,
+    public function __construct(Zend_Db_Adapter_Abstract $zendDb = null, $tableName = null, $identityColumn = null,
                                 $credentialColumn = null, $credentialTreatment = null)
     {
-        $this->_zendDb = $zendDb;
+        $this->_setDbAdapter($zendDb);
 
         if (null !== $tableName) {
             $this->setTableName($tableName);
@@ -145,6 +154,32 @@ class Zend_Auth_Adapter_DbTable implements Zend_Auth_Adapter_Interface
         if (null !== $credentialTreatment) {
             $this->setCredentialTreatment($credentialTreatment);
         }
+    }
+
+    /**
+     * _setDbAdapter() - set the database adapter to be used for quering
+     *
+     * @param Zend_Db_Adapter_Abstract 
+     * @throws Zend_Auth_Adapter_Exception
+     * @return Zend_Auth_Adapter_DbTable
+     */
+    protected function _setDbAdapter(Zend_Db_Adapter_Abstract $zendDb = null)
+    {
+        $this->_zendDb = $zendDb;
+
+        /**
+         * If no adapter is specified, fetch default database adapter.
+         */
+        if(null === $this->_zendDb) {
+            require_once 'Zend/Db/Table/Abstract.php';
+            $this->_zendDb = Zend_Db_Table_Abstract::getDefaultAdapter();
+            if (null === $this->_zendDb) {
+                require_once 'Zend/Auth/Adapter/Exception.php';
+                throw new Zend_Auth_Adapter_Exception('No database adapter present');
+            }
+        }
+        
+        return $this;
     }
 
     /**
@@ -230,6 +265,34 @@ class Zend_Auth_Adapter_DbTable implements Zend_Auth_Adapter_Interface
         $this->_credential = $credential;
         return $this;
     }
+    
+    /**
+     * setAmbiguityIdentity() - sets a flag for usage of identical identities
+     * with unique credentials. It accepts integers (0, 1) or boolean (true,
+     * false) parameters. Default is false.
+     * 
+     * @param  int|bool $flag
+     * @return Zend_Auth_Adapter_DbTable
+     */
+    public function setAmbiguityIdentity($flag)
+    {
+        if (is_integer($flag)) {
+            $this->_ambiguityIdentity = (1 === $flag ? true : false);
+        } elseif (is_bool($flag)) {
+            $this->_ambiguityIdentity = $flag;
+        }
+        return $this;
+    }
+    /**
+     * getAmbiguityIdentity() - returns TRUE for usage of multiple identical 
+     * identies with different credentials, FALSE if not used.
+     * 
+     * @return bool
+     */
+    public function getAmbiguityIdentity()
+    {
+        return $this->_ambiguityIdentity;
+    }
 
     /**
      * getDbSelect() - Return the preauthentication Db Select object for userland select query modification
@@ -304,11 +367,22 @@ class Zend_Auth_Adapter_DbTable implements Zend_Auth_Adapter_Interface
         $this->_authenticateSetup();
         $dbSelect = $this->_authenticateCreateSelect();
         $resultIdentities = $this->_authenticateQuerySelect($dbSelect);
-
-        if ( ($authResult = $this->_authenticateValidateResultset($resultIdentities)) instanceof Zend_Auth_Result) {
+        
+        if ( ($authResult = $this->_authenticateValidateResultSet($resultIdentities)) instanceof Zend_Auth_Result) {
             return $authResult;
         }
 
+        if (true === $this->getAmbiguityIdentity()) {
+            $validIdentities = array ();
+            $zendAuthCredentialMatchColumn = $this->_zendDb->foldCase('zend_auth_credential_match');
+            foreach ($resultIdentities as $identity) {
+                if (1 === (int) $identity[$zendAuthCredentialMatchColumn]) {
+                    $validIdentities[] = $identity;
+                }
+            }
+            $resultIdentities = $validIdentities;
+        }
+        
         $authResult = $this->_authenticateValidateResult(array_shift($resultIdentities));
         return $authResult;
     }
@@ -434,7 +508,7 @@ class Zend_Auth_Adapter_DbTable implements Zend_Auth_Adapter_Interface
             $this->_authenticateResultInfo['code'] = Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND;
             $this->_authenticateResultInfo['messages'][] = 'A record with the supplied identity could not be found.';
             return $this->_authenticateCreateAuthResult();
-        } elseif (count($resultIdentities) > 1) {
+        } elseif (count($resultIdentities) > 1 && false === $this->getAmbiguityIdentity()) {
             $this->_authenticateResultInfo['code'] = Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS;
             $this->_authenticateResultInfo['messages'][] = 'More than one record matches the supplied identity.';
             return $this->_authenticateCreateAuthResult();

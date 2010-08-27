@@ -17,7 +17,7 @@
  * @subpackage Math
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Bcmath.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Bcmath.php 22655 2010-07-22 18:47:20Z mabe $
  */
 
 /**
@@ -166,14 +166,14 @@ class Zend_Crypt_Math_BigInteger_Bcmath implements Zend_Crypt_Math_BigInteger_In
         $cmp = bccomp($operand, 0);
         $return = '';
         if ($cmp == 0) {
-            return (chr(0));
+            return "\0";
         }
         while (bccomp($operand, 0) > 0) {
             $return = chr(bcmod($operand, 256)) . $return;
             $operand = bcdiv($operand, 256);
         }
         if (ord($return[0]) > 127) {
-            $return = chr(0) . $return;
+            $return = "\0" . $return;
         }
         return $return;
     }

@@ -47,7 +47,7 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Framework_TestCase
      */
     public function testToString()
     {
-        $lang   = new Phprojekt_LanguageAdapter('es');
+        $lang   = new Phprojekt_LanguageAdapter(array('locale' => 'es', 'content' => '-'));
         $string = $lang->toString();
         $this->assertEquals('Phprojekt', $string);
     }
@@ -62,7 +62,7 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Framework_TestCase
         foreach ($constants as $value) {
             if (strstr($value, 'inc.php')) {
                 $value = str_replace('.inc.php', '', $value);
-                new Phprojekt_Language($value);
+                new Phprojekt_Language(array('locale' => $value));
             }
         }
     }

@@ -16,7 +16,7 @@
  * @package   Zend_File_Transfer
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Http.php 20911 2010-02-04 19:40:57Z thomas $
+ * @version   $Id: Http.php 22564 2010-07-15 20:43:55Z thomas $
  */
 
 /**
@@ -304,7 +304,7 @@ class Zend_File_Transfer_Adapter_Http extends Zend_File_Transfer_Adapter_Abstrac
     {
         if (!function_exists('apc_fetch') and !function_exists('uploadprogress_get_info')) {
             require_once 'Zend/File/Transfer/Exception.php';
-            throw new Zend_File_Transfer_Exception('Wether APC nor uploadprogress extension installed');
+            throw new Zend_File_Transfer_Exception('Neither APC nor uploadprogress extension installed');
         }
 
         $session = 'Zend_File_Transfer_Adapter_Http_ProgressBar';

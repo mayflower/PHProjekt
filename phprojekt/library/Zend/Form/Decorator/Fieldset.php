@@ -32,7 +32,7 @@ require_once 'Zend/Form/Decorator/Abstract.php';
  * @subpackage Decorator
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Fieldset.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Fieldset.php 21967 2010-04-21 23:22:00Z alab $
  */
 class Zend_Form_Decorator_Fieldset extends Zend_Form_Decorator_Abstract
 {
@@ -126,12 +126,12 @@ class Zend_Form_Decorator_Fieldset extends Zend_Form_Decorator_Abstract
             return $content;
         }
 
-        $legend        = $this->getLegend();
-        $attribs       = $this->getOptions();
-        $name          = $element->getFullyQualifiedName();
+        $legend  = $this->getLegend();
+        $attribs = $this->getOptions();
+        $name    = $element->getFullyQualifiedName();
+        $id      = (string)$element->getId();
 
-        $id = $element->getId();
-        if (!empty($id)) {
+        if (!array_key_exists('id', $attribs) && '' !== $id) {
             $attribs['id'] = 'fieldset-' . $id;
         }
 

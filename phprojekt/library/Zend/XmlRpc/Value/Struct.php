@@ -17,7 +17,7 @@
  * @subpackage Value
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Struct.php 20208 2010-01-11 22:37:37Z lars $
+ * @version    $Id: Struct.php 22025 2010-04-27 18:09:14Z matthew $
  */
 
 
@@ -71,6 +71,5 @@ class Zend_XmlRpc_Value_Struct extends Zend_XmlRpc_Value_Collection
         }
         $generator->closeElement('struct')
                   ->closeElement('value');
-        $this->_xml = (string)$generator;
     }
 }

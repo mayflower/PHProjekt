@@ -17,7 +17,7 @@
  * @package    Zend_OpenId
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: OpenId.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: OpenId.php 22655 2010-07-22 18:47:20Z mabe $
  */
 
 /**
@@ -585,7 +585,7 @@ class Zend_OpenId
         } else if (extension_loaded('bcmath')) {
             $cmp = bccomp($bn, 0);
             if ($cmp == 0) {
-                return (chr(0));
+                return "\0";
             } else if ($cmp < 0) {
                 require_once "Zend/OpenId/Exception.php";
                 throw new Zend_OpenId_Exception(
@@ -598,7 +598,7 @@ class Zend_OpenId
                 $bn = bcdiv($bn, 256);
             }
             if (ord($bin[0]) > 127) {
-                $bin = chr(0) . $bin;
+                $bin = "\0" . $bin;
             }
             return $bin;
         }
@@ -693,7 +693,7 @@ class Zend_OpenId
         if (function_exists('openssl_dh_compute_key')) {
             $ret = openssl_dh_compute_key($pub_key, $dh);
             if (ord($ret[0]) > 127) {
-                $ret = chr(0) . $ret;
+                $ret = "\0" . $ret;
             }
             return $ret;
         } else if (extension_loaded('gmp')) {
@@ -729,7 +729,7 @@ class Zend_OpenId
     static public function btwoc($str)
     {
         if (ord($str[0]) > 127) {
-            return chr(0) . $str;
+            return "\0" . $str;
         }
         return $str;
     }

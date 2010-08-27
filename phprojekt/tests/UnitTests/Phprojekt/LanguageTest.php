@@ -47,7 +47,7 @@ class Phprojekt_LanguageTest extends PHPUnit_Framework_TestCase
      */
     public function testTranslate()
     {
-        $lang = new Phprojekt_Language('es');
+        $lang = new Phprojekt_Language(array('locale' => 'es'));
         $string = $lang->translate('Delete');
         $this->assertEquals('Borrar', $string);
 

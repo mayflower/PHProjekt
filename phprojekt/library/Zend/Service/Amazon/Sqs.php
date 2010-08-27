@@ -17,7 +17,7 @@
  * @subpackage Amazon_Sqs
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Sqs.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Sqs.php 21323 2010-03-04 18:27:32Z stas $
  */
 
 /**
@@ -298,8 +298,16 @@ class Zend_Service_Amazon_Sqs extends Zend_Service_Amazon_Abstract
             require_once 'Zend/Service/Amazon/Sqs/Exception.php';
             throw new Zend_Service_Amazon_Sqs_Exception($result->Error->Code);
         }
-
-        return (string) $result->GetQueueAttributesResult->Attribute->Value;
+        
+        if(count($result->GetQueueAttributesResult->Attribute) > 1) {
+            $attr_result = array();
+            foreach($result->GetQueueAttributesResult->Attribute as $attribute) {
+                $attr_result[(string)$attribute->Name] = (string)$attribute->Value;
+            }
+            return $attr_result;
+        } else {
+            return (string) $result->GetQueueAttributesResult->Attribute->Value;
+        }
     }
 
     /**

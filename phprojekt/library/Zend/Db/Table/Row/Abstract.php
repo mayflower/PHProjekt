@@ -17,7 +17,7 @@
  * @subpackage Table
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Abstract.php 20571 2010-01-24 15:40:22Z mikaelkael $
+ * @version    $Id: Abstract.php 22230 2010-05-21 20:59:18Z ralph $
  */
 
 /**
@@ -32,7 +32,7 @@ require_once 'Zend/Db.php';
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-abstract class Zend_Db_Table_Row_Abstract implements ArrayAccess
+abstract class Zend_Db_Table_Row_Abstract implements ArrayAccess, IteratorAggregate
 {
 
     /**
@@ -642,6 +642,11 @@ abstract class Zend_Db_Table_Row_Abstract implements ArrayAccess
         return $result;
     }
 
+    public function getIterator()
+    {
+        return new ArrayIterator((array) $this->_data);
+    }
+    
     /**
      * Returns the column/value data as an array.
      *
@@ -1051,7 +1056,7 @@ abstract class Zend_Db_Table_Row_Abstract implements ArrayAccess
         }
         $joinCond = implode(' AND ', $joinCond);
 
-        $select->from(array('i' => $interName), Zend_Db_Select::SQL_WILDCARD, $interSchema)
+        $select->from(array('i' => $interName), array(), $interSchema)
                ->joinInner(array('m' => $matchName), $joinCond, Zend_Db_Select::SQL_WILDCARD, $matchSchema)
                ->setIntegrityCheck(false);
 

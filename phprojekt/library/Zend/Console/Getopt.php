@@ -17,7 +17,7 @@
  * @package    Zend_Console_Getopt
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Getopt.php 20096 2010-01-06 02:05:09Z bkarwin $
+ * @version    $Id: Getopt.php 22485 2010-06-25 22:54:25Z ramon $
  */
 
 /**
@@ -594,6 +594,7 @@ class Zend_Console_Getopt
     {
         $usage = "Usage: {$this->_progname} [ options ]\n";
         $maxLen = 20;
+        $lines = array();
         foreach ($this->_rules as $rule) {
             $flags = array();
             if (is_array($rule['alias'])) {

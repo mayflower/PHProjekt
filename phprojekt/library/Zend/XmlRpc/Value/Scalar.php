@@ -17,7 +17,7 @@
  * @subpackage Value
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Scalar.php 20208 2010-01-11 22:37:37Z lars $
+ * @version    $Id: Scalar.php 22025 2010-04-27 18:09:14Z matthew $
  */
 
 
@@ -49,7 +49,5 @@ abstract class Zend_XmlRpc_Value_Scalar extends Zend_XmlRpc_Value
                   ->openElement($this->_type, $this->_value)
                   ->closeElement($this->_type)
                   ->closeElement('value');
-
-        $this->_xml = (string)$generator;
     }
 }

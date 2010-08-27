@@ -17,7 +17,7 @@
  * @subpackage Storage
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Storage.php 36457 2010-01-04 07:36:33Z unknown $
+ * @version    $Id: Storage.php 21315 2010-03-04 00:50:25Z stas $
  */
 
 /**
@@ -209,16 +209,17 @@ class Zend_Service_WindowsAzure_Storage
 		}
 		
 		// Setup default Zend_Http_Client channel
-		$this->_httpClientChannel = new Zend_Http_Client(
-			null,
-			array(
-				'adapter' => 'Zend_Http_Client_Adapter_Proxy',
-				'curloptions' => array(
+		$options = array(
+			'adapter' => 'Zend_Http_Client_Adapter_Proxy'
+		);
+		if (function_exists('curl_init')) {
+			// Set cURL options if cURL is used afterwards
+			$options['curloptions'] = array(
 					CURLOPT_FOLLOWLOCATION => true,
 					CURLOPT_TIMEOUT => 120,
-				)
-			)
-		);
+			);
+		}
+		$this->_httpClientChannel = new Zend_Http_Client(null, $options);
 	}
 	
 	/**
@@ -261,7 +262,9 @@ class Zend_Service_WindowsAzure_Storage
 	    
 	    if ($this->_useProxy) {
 	    	$credentials = explode(':', $this->_proxyCredentials);
-	    	
+	    	if(!isset($credentials[1])) {
+	    	    $credentials[1] = '';
+	    	}
 	    	$this->_httpClientChannel->setConfig(array(
 				'proxy_host' => $this->_proxyUrl,
 	    		'proxy_port' => $this->_proxyPort,

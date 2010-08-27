@@ -265,7 +265,7 @@ class Phprojekt
         }
 
         if (!($translate = $this->_cache->load('Phprojekt_getTranslate_' . $locale))) {
-            $translate = new Phprojekt_Language($locale);
+            $translate = new Phprojekt_Language(array('locale' => $locale));
             $this->_cache->save($translate, 'Phprojekt_getTranslate_' . $locale, array('Language'));
         }
 
