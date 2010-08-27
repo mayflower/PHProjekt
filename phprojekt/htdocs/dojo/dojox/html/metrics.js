@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -35,7 +35,7 @@ dojo.provide("dojox.html.metrics");
 		ds.top="0";
 		ds.width="30px";
 		ds.height="1000em";
-		ds.border="0";
+		ds.borderWidth="0";
 		ds.margin="0";
 		ds.padding="0";
 		ds.outline="0";
@@ -65,27 +65,41 @@ dojo.provide("dojox.html.metrics");
 
 	var measuringNode = null, empty = {};
 	dhm.getTextBox = function(/* String */ text, /* Object */ style, /* String? */ className){
-		var m;
+		var m, s;
 		if(!measuringNode){
 			m = measuringNode = dojo.doc.createElement("div");
-			m.style.position = "absolute";
-			m.style.left = "-10000px";
-			m.style.top = "0";
-			dojo.body().appendChild(m);
+			// Container that we can set contraints on so that it doesn't
+			// trigger a scrollbar.
+			var c = dojo.doc.createElement("div"); 
+			c.appendChild(m);
+			s = c.style;
+			s.overflow='scroll';
+			s.position = "absolute";
+			s.left = "0px";
+			s.top = "-10000px";
+			s.width = "1px";
+			s.height = "1px";
+			s.visibility = "hidden";
+			s.borderWidth = "0";
+			s.margin = "0";
+			s.padding = "0";
+			s.outline = "0";
+			dojo.body().appendChild(c);
 		}else{
 			m = measuringNode;
 		}
 		// reset styles
 		m.className = "";
-		m.style.border = "0";
-		m.style.margin = "0";
-		m.style.padding = "0";
-		m.style.outline = "0";
+		s = m.style;
+		s.borderWidth = "0";
+		s.margin = "0";
+		s.padding = "0";
+		s.outline = "0";
 		// set new style
 		if(arguments.length > 1 && style){
 			for(var i in style){
 				if(i in empty){ continue; }
-				m.style[i] = style[i];
+				s[i] = style[i];
 			}
 		}
 		// set classes
@@ -94,7 +108,12 @@ dojo.provide("dojox.html.metrics");
 		}
 		// take a measure
 		m.innerHTML = text;
-		return dojo.marginBox(m);
+		var box = dojo.position(m);
+		// position doesn't report right (reports 1, since parent is 1)
+		// So we have to look at the scrollWidth to get the real width
+		// Height is right.
+		box.w = m.parentNode.scrollWidth;
+		return box;
 	};
 
 	//	determine the scrollbar sizes on load.

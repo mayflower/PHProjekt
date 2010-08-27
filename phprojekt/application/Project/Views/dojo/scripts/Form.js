@@ -136,8 +136,8 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         // Description:
         //    Add a new row of one user-role
         //    with the values selected on the first row
-        var roleId = dijit.byId("relationRoleAdd").attr('value');
-        var userId = dijit.byId("relationUserAdd").attr('value');
+        var roleId = dijit.byId("relationRoleAdd").get('value');
+        var userId = dijit.byId("relationUserAdd").get('value');
         if (!dojo.byId("trRelationFor" + userId) && userId > 0) {
             phpr.destroyWidget("roleRelation[" + userId + "]");
             phpr.destroyWidget("userRelation[" + userId + "]");
@@ -152,7 +152,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             var userField = this.render(["phpr.Project.template", "roleInputUser.html"], null, {
                 userId:      userId,
                 disabled:    '',
-                userDisplay: dijit.byId("relationUserAdd").attr('displayedValue'),
+                userDisplay: dijit.byId("relationUserAdd").get('displayedValue'),
                 currentUser: false
             });
             var cell = row.insertCell(cellIndex);
@@ -165,7 +165,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 roleId:      roleId,
                 disabled:    '',
                 currentUser: false,
-                roleName:    dijit.byId("relationRoleAdd").attr('displayedValue')
+                roleName:    dijit.byId("relationRoleAdd").get('displayedValue')
             });
             var cell = row.insertCell(cellIndex);
             cell.innerHTML = roleField;

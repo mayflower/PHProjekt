@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -12,7 +12,7 @@ dojo.provide("dojox.widget.FilePicker");
 dojo.require("dojox.widget.RollingList");
 
 dojo.require("dojo.i18n"); 
-dojo.requireLocalization("dojox.widget", "FilePicker", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-tw"); 
+dojo.requireLocalization("dojox.widget", "FilePicker", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw"); 
 
 dojo.declare("dojox.widget._FileInfoPane", 
 	[dojox.widget._RollingListPane], {
@@ -183,7 +183,7 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 	_setPathValueAttr: function(/*string*/ path, /*boolean?*/ resetLastExec, /*function?*/ onSet){
 		// Summary: sets the value of this widget based off the given path
 		if(!path){
-			this.attr("value", null);
+			this.set("value", null);
 			return;
 		}
 		if(path.lastIndexOf(this.pathSeparator) == (path.length - 1)){
@@ -194,7 +194,7 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 											if(resetLastExec){ 
 												this._lastExecutedValue = v;
 											}
-											this.attr("value", v);
+											this.set("value", v);
 											if(onSet){ onSet(); }
 										},
 										scope: this});

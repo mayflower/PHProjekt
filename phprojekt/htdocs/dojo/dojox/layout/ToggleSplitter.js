@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -89,7 +89,7 @@ dojo.declare("dojox.layout.ToggleSplitter", [ dijit.layout._Splitter ],
 
 		// update state
 		this._started = true; 
-		this.attr("open", this.open);
+		this.set("open", this.open);
 
 		return this;
 	},
@@ -245,7 +245,7 @@ dojo.declare("dojox.layout.ToggleSplitter", [ dijit.layout._Splitter ],
 		if(evt){
 			dojo.stopEvent(evt);
 		}
-		this.attr("open", !this.open);
+		this.set("open", !this.open);
 	},
 
 	_onKeyPress: function(/*Event*/ e){

@@ -1174,7 +1174,7 @@ dojo.declare("phpr.FilteringSelect", dijit.form.FilteringSelect, {
         //    hidden value from the information stored in the menu.
         //    Also mark the last selected item.
         this._setValueFromItem(tgt.item, true);
-        this._lastSelectedId = this.attr('value');
+        this._lastSelectedId = this.get('value');
     },
 
     _setDisplayedValueAttr:function(/*String*/ label, /*Boolean?*/ priorityChange) {

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -106,8 +106,8 @@ dojo.declare("dojox.data.StoreExplorer", dijit.layout.BorderContainer, {
 		this.gridOnFetchComplete = grid._onFetchComplete;
 		this.setStore(this.store);
 	},
-	setQuery: function(query){
-		this.grid.setQuery(query);
+	setQuery: function(query, options){
+		this.grid.setQuery(query, options);
 	},
 	_formatCell: function(value){
 		if(this.store.isItem(value)){

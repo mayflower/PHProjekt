@@ -375,10 +375,14 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
     padding-top: 7px;
 }
 
-.phprojekt #buttonRow .dijitLeft {
+.phprojekt #buttonRow .dijitButtonNode {
     margin-right: 5px;
 }
 
 .dj_ie .phprojekt #buttonRow {
     padding-top: 6px;
+}
+
+.phprojekt .dijitButtonContents {
+    padding: 0.13em;
 }

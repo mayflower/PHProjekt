@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -47,14 +47,14 @@ dojo.require("dojox.xml.DomParser");
 			}
 			if(toText.length==0){
 				//	we are deleting.
-				var ann=this.figure.get(from.shapeId);
+				var ann=this.figure.getAnnotator(from.shapeId);
 				this.figure._delete([ann],true);
 				return;
 			}
 			
 			//	we can simply reinit and draw from the shape itself,
 			//		regardless of the actual command.
-			var nann=this.figure.get(to.shapeId);
+			var nann=this.figure.getAnnotator(to.shapeId);
 			var no=dojox.xml.DomParser.parse(toText).documentElement;
 			nann.draw(no);
 			this.figure.select(nann);

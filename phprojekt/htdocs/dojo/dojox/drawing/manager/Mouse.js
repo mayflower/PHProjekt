@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -175,6 +175,14 @@ EventObject: function(){
 				left:this.container.parentNode.scrollLeft		
 			}; // Object
 		},
+
+		resize: function(width,height){
+			if(this.origin){
+				this.origin.w=width;
+				this.origin.h=height;
+			}
+		},
+
 		register: function(/* Object*/scope){
 			// summary:
 			//		All objects (Stencils) should register here if they
@@ -187,7 +195,7 @@ EventObject: function(){
 			// See: CustomEventMethod and EventObject
 			//
 			var handle = scope.id || "reg_"+(this.__reg++);
-			if(!this.registered[handle]) { this.registered[handle] = scope; }
+			if(!this.registered[handle]){ this.registered[handle] = scope; }
 			return handle; // String
 		},
 		unregister: function(handle){
@@ -212,7 +220,6 @@ EventObject: function(){
 			// summary:
 			// 		Create on[xx]Down event and send to broadcaster.
 			//		Could be connected to.
-			//
 			//console.info("onDown:", this.eventName("down"))
 			this._broadcastEvent(this.eventName("down"), obj);			
 		},
@@ -239,16 +246,27 @@ EventObject: function(){
 			this._broadcastEvent("onMove", obj);
 		},
 		
+		overName: function(obj,evt){
+			var nm = obj.id.split(".");
+			evt = evt.charAt(0).toUpperCase() + evt.substring(1);
+			if(nm[0] == "dojox" && (dojox.drawing.defaults.clickable || !dojox.drawing.defaults.clickMode)){
+				return "onStencil"+evt;	
+			}else{
+				return "on"+evt;	
+			}
+			
+		},
+		
 		onOver: function(obj){
 			// summary:
 			//
-			this._broadcastEvent("onOver", obj);
+			this._broadcastEvent(this.overName(obj,"over"), obj);
 		},
 		
 		onOut: function(obj){
 			// summary:
 			//
-			this._broadcastEvent("onOut", obj);
+			this._broadcastEvent(this.overName(obj,"out"), obj);
 		},
 		
 		onUp: function(obj){
@@ -321,8 +339,10 @@ EventObject: function(){
 				if(this.mode == "onUI"){
 					//return "on"+name;
 				}
-				return this.mode + name;		
+				return this.mode + name;
 			}else{
+				//Allow a mode where stencils aren't clickable
+				if(!dojox.drawing.defaults.clickable && dojox.drawing.defaults.clickMode){return "on"+name;}
 				var dt = !this.drawingType || this.drawingType=="surface" || this.drawingType=="canvas" ? "" : this.drawingType;
 				var t = !dt ? "" : dt.charAt(0).toUpperCase() + dt.substring(1);
 				return "on"+t+name;
@@ -349,14 +369,12 @@ EventObject: function(){
 			this._lastpagex = dim.x;
 			this._lastpagey = dim.y;
 			var o = this.origin;
-			var x = dim.x - o.x;
-			var y = dim.y - o.y;
+			var x = dim.x - o.x + sc.left;
+			var y = dim.y - o.y + sc.top;
 			
+			var withinCanvas = x>=0 && y>=0 && x<=o.w && y<=o.h;
 			x*= this.zoom;
 			y*= this.zoom;
-			x += sc.left*this.zoom;
-			y += sc.top*this.zoom;
-			var withinCanvas = x>=0 && y>=0 && x<=o.w && y<=o.h;
 			
 			o.startx = x;
 			o.starty = y;
@@ -366,7 +384,7 @@ EventObject: function(){
 			this.drawingType = this.util.attr(evt, "drawingType") || "";
 			var id = this._getId(evt);
 			//console.log("DOWN:", this.id, id, withinCanvas);
-			//console.log("this.drawingType:", this.drawingType)
+			//console.log("this.drawingType:", this.drawingType);
 			this.onDown({
 				mid:this.id,
 				x:x,
@@ -399,7 +417,7 @@ EventObject: function(){
 				//console.log("obj.id:", obj.id, "was:", this.currentNodeId)
 			}
 			if(obj.id != this.currentNodeId){
-				// TODO: I wonder if an ID is god enough
+				// TODO: I wonder if an ID is good enough
 				//	that would avoid the mixin
 				var outObj = {};
 				for(var nm in obj){
@@ -427,18 +445,15 @@ EventObject: function(){
 			var pagex = dim.x;
 			var pagey = dim.y;
 			
-			var x = dim.x - this.origin.x;
-			var y = dim.y - this.origin.y;
 			var o = this.origin;
-			
-			x += sc.left;
-			y += sc.top;
+			var x = dim.x - o.x + sc.left;
+			var y = dim.y - o.y + sc.top;
+
+			var withinCanvas = x>=0 && y>=0 && x<=o.w && y<=o.h;
 			x*= this.zoom;
 			y*= this.zoom;
 			
-			var withinCanvas = x>=0 && y>=0 && x<=o.w && y<=o.h;
 			var id = withinCanvas ? this._getId(evt, squelchErrors) : "";
-			
 			var ret = {
 				mid:this.id,
 				x:x,
@@ -485,6 +500,17 @@ EventObject: function(){
 			// summary:
 			//		Internal. Gets mouse coords to page.
 			return {x:evt.pageX, y:evt.pageY}; // Object
+		},
+		
+		setCursor: function(cursor,/* HTMLNode*/node){
+			// summary:
+			//		Sets the cursor for  a given node.  If no
+			//		node is specified the containing node is used.
+			if(!node){ 
+				dojo.style(this.container, "cursor", cursor); 
+			}else{
+				dojo.style(node, "cursor", cursor);
+			}
 		}
 	}
 );

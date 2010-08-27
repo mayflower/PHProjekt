@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -17,19 +17,11 @@ dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 
 	templateString: dojo.cache("dijit", "templates/MenuBar.html", "<div class=\"dijitMenuBar dijitMenuPassive\" dojoAttachPoint=\"containerNode\"  waiRole=\"menubar\" tabIndex=\"${tabIndex}\" dojoAttachEvent=\"onkeypress: _onKeyPress\"></div>\r\n"),
 
+	baseClass: "dijitMenuBar",
+
 	// _isMenuBar: [protected] Boolean
 	//		This is a MenuBar widget, not a (vertical) Menu widget.
 	_isMenuBar: true,
-
-	constructor: function(){
-		// summary:
-		//		Sets up local variables etc.
-		// tags:
-		//		private
-
-		// parameter to dijit.popup.open() about where to put popup (relative to this.domNode)
-		this._orient = this.isLeftToRight() ? {BL: 'TL'} : {BR: 'TR'};
-	},
 
 	postCreate: function(){
 		var k = dojo.keys, l = this.isLeftToRight();
@@ -37,6 +29,9 @@ dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 			l ? [k.LEFT_ARROW] : [k.RIGHT_ARROW],
 			l ? [k.RIGHT_ARROW] : [k.LEFT_ARROW]
 		);
+
+		// parameter to dijit.popup.open() about where to put popup (relative to this.domNode)
+		this._orient = this.isLeftToRight() ? {BL: 'TL'} : {BR: 'TR'};
 	},
 
 	focusChild: function(item){

@@ -109,9 +109,9 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
 
         borderContainer.addChild(this.gridBox);
         borderContainer.addChild(this.detailsBox);
-        content.attr("content", borderContainer.domNode);
+        content.set("content", borderContainer.domNode);
 
-        dijit.byId(nodeId).attr('content', content);
+        dijit.byId(nodeId).set('content', content);
 
         dojo.connect(dijit.byId(nodeId), "onShow", dojo.hitch(this, function() {
             this._renderSubModule();
@@ -332,7 +332,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
                 this.formsWidget[i].validate();
                 return false;
             }
-            var data = this.formsWidget[i].attr('value');
+            var data = this.formsWidget[i].get('value');
             for (var index in data) {
                 if (index.indexOf(this.main.module) == 0) {
                     var newIndex   = index.substr(this.main.module.length);

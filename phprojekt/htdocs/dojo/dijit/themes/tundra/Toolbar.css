@@ -45,8 +45,8 @@
 .tundra .dijitToolbar .dijitButtonHover,
 .tundra .dijitToolbar .dijitToggleButtonHover,
 .tundra .dijitToolbar .dijitDropDownButtonHover,
-.tundra .dijitToolbar .dijitComboButtonHover .dijitButtonContents,
-.tundra .dijitToolbar .dijitComboButtonDownArrowHover .dijitDownArrowButton {
+.tundra .dijitToolbar .dijitComboButton .dijitButtonContentsHover,
+.tundra .dijitToolbar .dijitComboButton .dijitDownArrowButtonHover {
 	/* TODO: change this from Hover to Selected so that button is still highlighted while drop down is being used */
 	border: 1px solid #869cbf;
 	padding: 0px;	/* reduce padding to compensate for space taken by border */
@@ -62,4 +62,14 @@
 	/* focus border doesn't appear on <td> for IE, so need to add it manually */
 	border: 1px #555 dotted !important;
 	padding: 0px;
+}
+
+.tundra .dijitToolbarSeparator {
+	/* separator icon in the editor sprite */
+	background: url('../../icons/images/editorIconsEnabled.png');
+}
+
+.tundra .dijitToolbarRtl .dijitToolbarSeparator {
+	/* separator icon in the editor sprite */
+	background-image: url('../../icons/images/editorIconsDisabled.png');
 }

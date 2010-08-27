@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,11 +10,11 @@ dojo._hasResource["dojox.math.BigInteger"] = true;
 dojo.provide("dojox.math.BigInteger");
 dojo.experimental("dojox.math.BigInteger");
 
-// Copyright (c) 2005  Tom Wu
-// All Rights Reserved.
-// See "LICENSE-BigInteger" for details.
+// Contributed under CLA by Tom Wu <tjw@cs.Stanford.EDU>
+// See http://www-cs-students.stanford.edu/~tjw/jsbn/ for details.
 
 // Basic JavaScript BN library - subset useful for RSA encryption.
+// The API for dojox.math.BigInteger closely resembles that of the java.math.BigInteger class in Java.
 
 (function(){
 

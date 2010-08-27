@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -151,7 +151,6 @@ dojo.declare("dijit.layout.SplitContainer",
 		// add the thumb div
 		var thumb = dojo.doc.createElement('div');
 		thumb.className = 'thumb';
-		thumb.id = sizer.id;
 		sizer.appendChild(thumb);
 
 		// FIXME: are you serious? why aren't we using mover start/stop combo?

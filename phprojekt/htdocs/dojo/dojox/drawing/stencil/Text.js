@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -74,12 +74,32 @@ StencilPoints: [
 	//		Bottom left point
 ],
 =====*/
-		
+
+		typesetter: function(text){
+			// summary:
+			//		Register raw text, returning typeset form.
+			//		Uses function dojox.drawing.stencil.Text.typeset
+			//		for typesetting, if it exists.
+			//
+			if(dojox.drawing.stencil.Text.typeset){
+				this._rawText = text;
+				return dojox.drawing.stencil.Text.typeset(text);
+			}
+			return text;
+		},
+
 		setText: function(text){
 			// summary:
 			//		Setter for text.
 			//
+			// Only apply typesetting to objects that the user can modify.
+			// Else, it is assumed that typesetting is done elsewhere.
+			if(this.enabled){
+				text = this.typesetter(text);
+			}
+			// This only has an effect if text is null or this.created is false.
 			this._text = text;
+
 			this._textArray = [];
 			this.created && this.render(text);
 		},
@@ -88,7 +108,7 @@ StencilPoints: [
 			// summary:
 			//		Getter for text.
 			//
-			return this._text;	
+			return this._rawText || this._text;	
 		},
 		
 		dataToPoints: function(/*Object*/o){
@@ -98,9 +118,9 @@ StencilPoints: [
 			var w = o.width =="auto" ? 1 : o.width;
 			var h = o.height || this._lineHeight;
 			this.points = [
-				{x:o.x, y:o.y}, 						// TL
+				{x:o.x, y:o.y}, 				// TL
 				{x:o.x + w, y:o.y},				// TR
-				{x:o.x + w, y:o.y + h},	// BR
+				{x:o.x + w, y:o.y + h},			// BR
 				{x:o.x, y:o.y + h}				// BL
 			];
 			return this.points;
@@ -141,7 +161,6 @@ StencilPoints: [
 			}
 			
 			var d = this.pointsToData();
-			var w = d.width;
 			var h = this._lineHeight;
 			var x = d.x + this.style.text.pad*2;
 			var y = d.y + this._lineHeight - (this.textSize*.4);
@@ -198,11 +217,11 @@ StencilPoints: [
 		makeFit: function(text, w){
 			var span = dojo.create('span', {innerHTML:text, id:"foo"}, document.body);
 			var sz = 1;
-			dojo.style(span, "fontSize", sz+"px")
+			dojo.style(span, "fontSize", sz+"px");
 			var cnt = 30;
 			while(dojo.marginBox(span).w<w){
 				sz++;
-				dojo.style(span, "fontSize", sz+"px")
+				dojo.style(span, "fontSize", sz+"px");
 				if(cnt--<=0) break;
 			}
 			sz--;

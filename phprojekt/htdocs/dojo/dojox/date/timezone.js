@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -7,34 +7,17 @@
 
 if(!dojo._hasResource["dojox.date.timezone"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.date.timezone"] = true;
-/*******************************************************************************
- * timezone.js
- *
+/******************************************************************************
  * Dojo port of fleegix date plugin from
  *
  *   http://js.fleegix.org/plugins/date/date
  *
- * Copyright 2009 Matthew Eernisse (mde@fleegix.org)
+ * contributed to Dojo under CLA, with thanks to Matthew Eernisse (mde@fleegix.org)
  * and Open Source Applications Foundation
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
  * Credits: Ideas included from incomplete JS implementation of Olson
- * parser, "XMLDAte" by Philippe Goetz (philippe.goetz@wanadoo.fr)
- * Additional contributions: Preston Hunt (prestonhunt@gmail.com),
- * Dov. B Katz (dov.katz@morganstanley.com), Peter Bergström
- * (pbergstr@mac.com)
- ******************************************************************************/
+ * parser, "XMLDate" by Philippe Goetz (philippe.goetz@wanadoo.fr)
+ *****************************************************************************/
 dojo.experimental("dojox.date.timezone");
 dojo.provide("dojox.date.timezone");
 
@@ -47,13 +30,13 @@ dojo.require("dojo.date.locale");
 					"southamerica" ];
 					
 	// Our mins an maxes for years that we care about
-	var _minYear = 1835;
-	var _maxYear = 2038;
+	var _minYear = 1835,
+		_maxYear = 2038;
 	
-	var _loadedZones = {};
-	var _zones = {};
-	var _loadedRanges = {};
-	var _rules = {};
+	var _loadedZones = {},
+		_zones = {},
+		_loadedRanges = {},
+		_rules = {};
 	
 	// timezoneFileBasePath: String
 	//		A different location to pull zone files from
@@ -124,7 +107,7 @@ dojo.require("dojo.date.locale");
 	
 	function loadZoneObj(/* Object */ data){
 		// summary:
-		//		Loads the given data obejct into the zone database
+		//		Loads the given data object into the zone database
 		//
 		// data: Object
 		//		The data to load - contains "zones" and "rules" parameters
@@ -140,7 +123,7 @@ dojo.require("dojo.date.locale");
 	
 	function loadZoneFile(/* String */ fileName){
 		// summary:
-		//		Loads the given URL of the olson zone information into the
+		//		Loads the given URL of the Olson zone information into the
 		//		zone database
 		//
 		// fileName: String
@@ -151,7 +134,7 @@ dojo.require("dojo.date.locale");
 		_loadedZones[fileName] = true;
 		_d.xhrGet({
 			url: timezoneFileBasePath + "/" + fileName,
-			sync: true, // Needs to be syncronous so we can return values
+			sync: true, // Needs to be synchronous so we can return values
 			handleAs: "olson-zoneinfo",
 			load: loadZoneObj,
 			error: errorLoadingZoneFile
@@ -159,10 +142,10 @@ dojo.require("dojo.date.locale");
 	}
 	
 	var monthMap = { 'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3,'may': 4, 'jun': 5,
-				'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11 };
-	var dayMap = {'sun': 0, 'mon': 1, 'tue': 2, 'wed': 3, 'thu': 4, 
-				'fri': 5, 'sat': 6 };
-	var regionMap = {'EST': "northamerica", 'MST': "northamerica",
+				'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11 },
+		dayMap = {'sun': 0, 'mon': 1, 'tue': 2, 'wed': 3, 'thu': 4, 
+				'fri': 5, 'sat': 6 },
+		regionMap = {'EST': "northamerica", 'MST': "northamerica",
 					'HST': "northamerica", 'EST5EDT': "northamerica",
 					'CST6CDT': "northamerica", 'MST7MDT': "northamerica",
 					'PST8PDT': "northamerica", 'America': "northamerica",
@@ -171,8 +154,8 @@ dojo.require("dojo.date.locale");
 					'Antarctica': "antarctica", 'Asia': "asia", 
 					'Australia': "australasia", 'Europe': "europe",
 					'WET': "europe", 'CET': "europe", 'MET': "europe",
-					'EET': "europe"};
-	var regionExceptions = {'Pacific/Honolulu':"northamerica",
+					'EET': "europe"},
+		regionExceptions = {'Pacific/Honolulu':"northamerica",
 							'Atlantic/Bermuda':"northamerica",
 							'Atlantic/Cape_Verde':"africa",
 							'Atlantic/St_Helena':"africa",
@@ -239,8 +222,8 @@ dojo.require("dojo.date.locale");
 							'America/Paramaribo':"southamerica",
 							'America/Port_of_Spain':"southamerica",
 							'America/Montevideo':"southamerica",
-							'America/Caracas':"southamerica"};
-	var abbrExceptions = { 'US': "S", 'Chatham': "S", 'NZ': "S", 'NT_YK': "S", 
+							'America/Caracas':"southamerica"},
+		abbrExceptions = { 'US': "S", 'Chatham': "S", 'NZ': "S", 'NT_YK': "S", 
 							'Edm': "S", 'Salv': "S", 'Canada': "S", 'StJohns': "S",
 							'TC': "S", 'Guat': "S", 'Mexico': "S", 'Haiti': "S",
 							'Barb': "S", 'Belize': "S", 'CR': "S", 'Moncton': "S",
@@ -263,7 +246,7 @@ dojo.require("dojo.date.locale");
 	
 	function getRegionForTimezone(/* String */ tz) {
 		// summary:
-		//		Returns the olson region for the given timzeone
+		//		Returns the Olson region for the given timezone
 		var ret = regionExceptions[tz];
 		if(!ret){
 			var reg = tz.split('/')[0];
@@ -527,7 +510,7 @@ dojo.require("dojo.date.locale");
 		var t = tz;
 		var zoneList = _zones[t];
 
-		// Follow links to get to an acutal zone
+		// Follow links to get to an actual zone
 		while(typeof zoneList == "string"){
 			t = zoneList;
 			zoneList = _zones[t];
@@ -625,19 +608,41 @@ dojo.require("dojo.date.locale");
 		return res; // String
 	}
 	
+/*=====
+dojox.date.timezone = function(){
+	// summary:
+	//	mix-in to dojo.date to provide timezones based on
+	//	the Olson timezone data
+	//
+	// description:
+	//	mix-in to dojo.date to provide timezones based on
+	//	the Olson timezone data.
+	//	If you pass "timezone" as a parameter to your format options,
+	//	then you get the date formatted (and offset) for that timezone
+
+//TODOC
+};
+
+dojox.date.timezone.getTzInfo = function(dt, tz){
+	// summary:
+	//	Returns the timezone information for the given date and
+	//	timezone string
+	//
+	// dt: Date
+	//	The Date - a "proxyDate"
+	//
+	// tz: String
+	//	String representation of the timezone you want to get info
+	//	for date
+};
+
+dojox.date.timezone.getAllZones = function(){
+	// summary:
+	//	Returns an array of zones that have been loaded
+};
+=====*/
 	_d.setObject("dojox.date.timezone", {
 		getTzInfo: function(/* Date */ dt, /* String */ tz){
-			// summary:
-			//		Returns the timezone information for the given date and
-			//		timezone string
-			//
-			// dt: Date
-			//		The Date - a "proxyDate"
-			//
-			// tz: String
-			//		String representation of the timezone you want to get info
-			//		for date
-
 			// Lazy-load any zones not yet loaded
 			if(loadingScheme == "lazyLoad"){
 				// Get the correct region for the zone
@@ -669,8 +674,6 @@ dojo.require("dojo.date.locale");
 			return { tzOffset: off, tzAbbr: abbr }; // Object
 		},
 		getAllZones: function(){
-			// summary:
-			//		Returns an array of zones that have been loaded
 			var arr = [];
 			for(var z in _zones){ arr.push(z); }
 			arr.sort();
@@ -691,9 +694,10 @@ dojo.require("dojo.date.locale");
 	// And enhance the default formatting functions
 	// If you pass "timezone" as a parameter to your format options,
 	// then you get the date formatted (and offset) for that timezone
-	var oLocaleFmt = _d.date.locale.format;
-	var oGetZone = _d.date.locale._getZone;
+	var oLocaleFmt = _d.date.locale.format,
+		oGetZone = _d.date.locale._getZone;
 	_d.date.locale.format = function(dateObject, options){
+		options = options||{};
 		if(options.timezone && !options._tzInfo){
 			// Store it in our options so we can use it later
 			options._tzInfo = dojox.date.timezone.getTzInfo(dateObject, options.timezone);
@@ -708,16 +712,10 @@ dojo.require("dojo.date.locale");
 	};
 	_d.date.locale._getZone = function(dateObject, getName, options){
 		if(options._tzInfo){
-			if(getName){
-				return options._tzInfo.tzAbbr;
-			}else{
-				return options._tzInfo.tzOffset;
-			}
+			return getName ? options._tzInfo.tzAbbr : options._tzInfo.tzOffset;
 		}
 		return oGetZone.call(this, dateObject, getName, options);
 	};
-	
-	
 })(dojo);
 
 }

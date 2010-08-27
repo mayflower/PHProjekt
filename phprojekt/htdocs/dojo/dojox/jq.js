@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -1241,7 +1241,7 @@ dojo.query differences that cause some tests to fail:
 			for (var evtFullName in sEvtData){
 				tEvtData[evtFullName] = {
 					fn: sEvtData[evtFullName].fn,
-					data: sEvtData[evtFullName].data,
+					data: sEvtData[evtFullName].data
 				};
 			}
 		}

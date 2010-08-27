@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -22,7 +22,7 @@ dojo.declare("dijit.form.MultiSelect", dijit.form._FormValueWidget, {
 	//		set the size via style="..." or CSS class names instead.
 	size: 7,
 
-	templateString: "<select multiple='true' ${nameAttrSetting} dojoAttachPoint='containerNode,focusNode' dojoAttachEvent='onchange: _onChange'></select>",
+	templateString: "<select multiple='true' ${!nameAttrSetting} dojoAttachPoint='containerNode,focusNode' dojoAttachEvent='onchange: _onChange'></select>",
 
 	attributeMap: dojo.delegate(dijit.form._FormWidget.prototype.attributeMap, {
 		size: "focusNode"
@@ -97,11 +97,11 @@ dojo.declare("dijit.form.MultiSelect", dijit.form._FormValueWidget, {
 		dojo.query("option",this.containerNode).forEach(function(n){
 			n.selected = !n.selected;
 		});
-		this._handleOnChange(this.attr('value'), onChange == true);
+		this._handleOnChange(this.get('value'), onChange == true);
 	},
 
 	_onChange: function(/*Event*/ e){
-		this._handleOnChange(this.attr('value'), true);
+		this._handleOnChange(this.get('value'), true);
 	},
 
 	// for layout widgets:

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -136,11 +136,11 @@ dojo.declare("dojox.grid.cells._SingleRowSelectorMixin", null, {
 		//		Subscriber of rowSelectionChangedTopic, update row selection accordingly
 		// obj: Object
 		//		Object that fired the rowSelectionChangedTopic
-		if(obj == this) {
+		if(obj == this || obj.grid && obj.grid != this.grid){
 			//ignore if the topic is published by self
 			return;
 		}
-		for (var i in this.widgetMap[this.view.id]) {
+		for (var i in this.widgetMap[this.view.id]){
 			var idx = new Number(i);
 			var widget = this.widgetMap[this.view.id][idx];
 			var value = !!this.grid.selection.selected[idx];
@@ -150,7 +150,7 @@ dojo.declare("dojox.grid.cells._SingleRowSelectorMixin", null, {
 		this.grid.edit.isEditing() && this.grid.edit.apply();
 	},
 	
-	_toggleSingleRow: function(idx, value) {
+	_toggleSingleRow: function(idx, value){
 		// summary:
 		//		toggle selection of a single row
 		// idx: Integer
@@ -244,7 +244,7 @@ dojo.declare("dojox.grid.cells._MultipleRowSelectorMixin", null, {
 		this._finisheSelect();
 	},
 	
-	dokeyup: function(e) {
+	dokeyup: function(e){
 		// summay:
 		//		Event hanlder for key up event
 		// e: Event
@@ -254,7 +254,7 @@ dojo.declare("dojox.grid.cells._MultipleRowSelectorMixin", null, {
 		}
 	},
 	
-	_startSelection: function(rowIndex) {
+	_startSelection: function(rowIndex){
 		// summay:
 		//		Initilize parameters to start a new swipe selection
 		// rowIndex: Integer

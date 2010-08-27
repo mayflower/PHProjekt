@@ -1,22 +1,15 @@
-/* Dialog */
+/* Dialog and Tooltip/TooltipDialog */
 
 .tundra .dijitDialog {
 	background: #fff;
 	border: 1px solid #7eabcd;
-	/*
-	filter: progid:DXImageTransform.Microsoft.DropShadow(OffX=5, OffY=5, Color='#adadad', Positive='true');
-	filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=3, ShadowOpacity=.30), progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
-	filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='5', MakeShadow='true', ShadowOpacity='0.50');
-	filter: progid:DXImageTransform.Microsoft.Shadow(color='#666666', ShadowOpacity=.30, Direction=135, Strength=3);
-	*/
 	padding: 0px;
 	-webkit-box-shadow: 0px 5px 10px #adadad;
 }
 
-.tundra .dijitDialog .dijitDialogPaneContent {
+.tundra .dijitDialogPaneContent {
 	background: #fff;
-	border:none;
-	border-top: 1px solid #d3d3d3; /* w/out this, an <h1> on the top line causes a gap between the .content and .label */
+	border-top: 1px solid #d3d3d3;
 	padding:10px;
 
 }
@@ -25,7 +18,6 @@
 	/* outer container for the titlebar of the dialog */
 	background: #fafafa url("images/titleBar.png") repeat-x top left;
 	padding: 5px 6px 3px 6px;
-	cursor: move;
 	outline:0; /* remove this line if keyboard focus on dialog startup is an issue. tab still takes you to first focusable element */
 }
 
@@ -45,16 +37,15 @@
 	top: 4px;
 	height: 15px;
 	width: 15px;
-	cursor: pointer;
 }
 .dj_ie6 .tundra .dijitDialogCloseIcon {
 	background : url("images/tabClose.gif") no-repeat right top;
 }
 
-.tundra .dijitDialogCloseIcon-hover {
+.tundra .dijitDialogCloseIconHover {
 	background: url("images/tabCloseHover.png") no-repeat right top;
 }
-.dj_ie6 .tundra .dijitDialogCloseIcon-hover {
+.dj_ie6 .tundra .dijitDialogCloseIconHover {
 	background : url("images/tabCloseHover.gif") no-repeat right top;
 }
 
@@ -161,16 +152,6 @@
 	background-image: url("images/tooltipConnectorLeft.gif");
 }
 
-.dj_webkit .tundra .dijitPopup .dijitTooltipContainer,
-.dj_webkit .tundra .dijitPopup .dijitMenu {
-	/* -webkit-border-radius: 5px; */
+.dj_webkit .tundra .dijitTooltipContainer {
 	-webkit-box-shadow: 0px 5px 10px #adadad;
 }
-
-/*
-.dj_ie6 .tundra .dijitPopup .dijitTooltipContainer,
-.dj_ie6 .tundra .dijitPopup .dijitMenu {
-	filter: progid:DXImageTransform.Microsoft.Shadow(color='#666666', Direction=135, Strength=3);
-}
-*/
-

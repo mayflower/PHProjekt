@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -25,7 +25,7 @@ dojo.require("dojox.html.entities");
 		//		as the indent.
 		// maxLineLength: Integer
 		//		Optional input for the number of characters a text line should use in 
-		//		the document, not including the indent.
+		//		the document, including the indent if possible.
 		// map:	Array
 		//		Optional array of entity mapping characters to use when processing the 
 		//		HTML Text content.  By default it uses the default set used by the 
@@ -111,6 +111,14 @@ dojo.require("dojox.html.entities");
 			return html;
 		};
 
+		var sizeIndent = function(){
+			var i, txt = "";
+			for(i = 0; i < indentDepth; i++){
+				txt += iTxt;
+			}
+			return txt.length;
+		}
+
 		var indent = function(){
 			// summary:
 			//		Function to handle indent depth.
@@ -154,10 +162,21 @@ dojo.require("dojox.html.entities");
 			if(txt !== ""){
 				var lines = [];
 				if(maxLineLength && maxLineLength > 0){
+					var indentSize = sizeIndent();
+					var maxLine = maxLineLength;
+					if(maxLineLength > indentSize){
+						maxLine -= indentSize;
+					}
 					while(txt){
 						if(txt.length > maxLineLength){
-							for(i = maxLineLength; (i < txt.length && txt.charAt(i) !== " "); i++){
+							for(i = maxLine; (i > 0 && txt.charAt(i) !== " "); i--){
 								// Do nothing, we're just looking for a space to split at.
+							}
+							if(!i){
+								// Couldn't find a split going back, so go forward.
+								for(i = maxLine; (i < txt.length && txt.charAt(i) !== " "); i++){
+									// Do nothing, we're just looking for a space to split at.
+								}
 							}
 							var line = txt.substring(0, i);
 							line = dojo.trim(line);
@@ -456,6 +475,11 @@ dojo.require("dojox.html.entities");
 
 		//Okay, finally process the input string.
 		processNode(contentDiv);
+		if(textContent){
+			// Insert any trailing text.  See: #10854
+			content.push(formatText(textContent));
+			textContent = "";
+		}
 		return content.join(""); //String
 	};
 })();

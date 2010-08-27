@@ -14,8 +14,8 @@
         style="width: 90px;" />
         <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick" class="smallIcon"
         onClick="
-        if (dijit.byId('selectDate').attr('value') != null) {
-            dojo.publish('Timecard.changeDate', [dijit.byId('selectDate').attr('value')]);
+        if (dijit.byId('selectDate').get('value') != null) {
+            dojo.publish('Timecard.changeDate', [dijit.byId('selectDate').get('value')]);
         }">
         </button>
         <div class="timecardSeparator"></div>
@@ -27,7 +27,7 @@
     <td>
         <a href="javascript:
         var date = phpr.Date.isoDateTojsDate('{{day.date}}');
-        dijit.byId('selectDate').attr('value', new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+        dijit.byId('selectDate').set('value', new Date(date.getFullYear(), date.getMonth(), date.getDate()));
         dojo.publish('Timecard.changeDate', [date]);">{{day.date}}</a>
     </td>
     <td class="{{day.sumClass}}">{{day.sum}}</td>

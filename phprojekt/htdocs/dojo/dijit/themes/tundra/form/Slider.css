@@ -36,16 +36,11 @@
 	border-color:#888;
 }
 
-.dijit_a11y .dijitSliderProgressBar {
-	background-color:#888 !important;
-}
-
 .tundra .dijitSliderImageHandleH {
 	border:0px;
 	width:16px;
 	height:16px;
 	background:url("../images/preciseSliderThumb.png") no-repeat center top;
-	cursor:pointer;
 }
 .tundra .dijitSliderFocused .dijitSliderImageHandleH {
 	background-image:url("../images/preciseSliderThumbFocus.png");
@@ -73,7 +68,6 @@
 	width:16px;
 	height:16px;
 	background:url("../images/sliderThumb.png") no-repeat center center;
-	cursor:pointer;
 }
 
 .tundra .dijitSliderFocused .dijitSliderImageHandleV {
@@ -99,7 +93,6 @@
 .tundra .dijitSliderDecrementIconV,
 .tundra .dijitSliderIncrementIconH,
 .tundra .dijitSliderIncrementIconV {
-	cursor: pointer;
 	background-image: url('../images/spriteArrows.png');
 	background-repeat: no-repeat;
 	margin: 5px;

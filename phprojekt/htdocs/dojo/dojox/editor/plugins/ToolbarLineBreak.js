@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -36,7 +36,12 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(o.plugin){ return; }
 	var name = o.args.name.toLowerCase();
 	if(name ===  "||" || name === "toolbarlinebreak"){
-		o.plugin = new dijit._editor._Plugin({button: new dojox.editor.plugins._ToolbarLineBreak()});
+		o.plugin = new dijit._editor._Plugin({
+			button: new dojox.editor.plugins._ToolbarLineBreak(),
+			setEditor: function(editor){
+				this.editor = editor;
+			}
+		});
 	}
 });
 

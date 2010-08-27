@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -13,6 +13,19 @@ dojo.require("dojo.fx.easing");
 dojo.require("dojox.lang.functional.object");
 dojo.require("dojox.gfx.fx");
 
+/*=====
+dojox.charting.action2d.__BaseCtorArgs = function(duration, easing){
+ 	//	summary:
+	//		The base keyword arguments object for creating an action2d.
+	//	duration: Number?
+	//		The amount of time in milliseconds for an animation to last.  Default is 400.
+	//	easing: dojox.fx.easing.*?
+	//		An easing object (see dojo.fx.easing) for use in an animation.  The
+	//		default is dojox.fx.easing.backOut.
+	this.duration = duration;
+	this.easing = easing;
+}
+=====*/
 (function(){
 	var DEFAULT_DURATION = 400,	// ms
 		DEFAULT_EASING   = dojo.fx.easing.backOut,
@@ -23,8 +36,16 @@ dojo.require("dojox.gfx.fx");
 		overOutEvents: {onmouseover: 1, onmouseout: 1},
 
 		constructor: function(chart, plot, kwargs){
+			//	summary:
+			//		Create a new base Action.
+			//	chart: dojox.charting.Chart2D
+			//		The chart this action applies to.
+			//	plot: String?
+			//		The name of the plot this action belongs to.  If none is passed "default" is assumed.
+			//	kwargs: dojox.charting.action2d.__BaseCtorArgs?
+			//		Optional arguments for the action.
 			this.chart = chart;
-			this.plot = plot ? plot : "default";
+			this.plot = plot || "default";
 			this.anim = {};
 
 			// process common optional named parameters
@@ -34,10 +55,14 @@ dojo.require("dojox.gfx.fx");
 		},
 
 		connect: function(){
+			//	summary:
+			//		Connect this action to the given plot.
 			this.handle = this.chart.connectToPlot(this.plot, this, "process");
 		},
 
 		disconnect: function(){
+			//	summary:
+			//		Disconnect this action from the given plot, if connected.
 			if(this.handle){
 				dojo.disconnect(this.handle);
 				this.handle = null;
@@ -45,13 +70,14 @@ dojo.require("dojox.gfx.fx");
 		},
 
 		reset: function(){
-			// nothing by default
+			//	summary:
+			//		Reset the action.
 		},
 
 		destroy: function(){
-			if(this.handle){
-				this.disconnect();
-			}
+			//	summary:
+			//		Do any cleanup needed when destroying parent elements.
+			this.disconnect();
 			df.forIn(this.anim, function(o){
 				df.forIn(o, function(anim){
 					anim.action.stop(true);

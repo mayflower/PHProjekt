@@ -75,7 +75,7 @@ dojo.declare("phpr.grid.cells.Percentage", dojox.grid.cells._Widget, {
     widgetClass: phpr.form.HorizontalSlider,
 
     getValue:function(inRowIndex) {
-        return dojo.number.round(this.widget.attr('value'), 1);
+        return dojo.number.round(this.widget.get('value'), 1);
     },
 
     format:function(inRowIndex, inItem) {
@@ -118,7 +118,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
     widgetClass: dijit.form.DateTextBox,
 
     getValue:function(inRowIndex) {
-        var date = this.widget.attr('value');
+        var date = this.widget.get('value');
         var day = date.getDate();
         if (day < 10) {
             day = '0'+day;
@@ -136,7 +136,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
             var year  = parts[0];
             var month = parts[1]-1;
             var day   = parts[2];
-            this.widget.attr('value', new Date(year, month, day));
+            this.widget.set('value', new Date(year, month, day));
         } else {
             this.inherited(arguments);
         }
@@ -156,7 +156,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
 dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
     setValue:function(inRowIndex, inValue) {
         if (this.widget && this.widget.setValue) {
-            this.widget.attr('value', inValue);
+            this.widget.set('value', inValue);
         } else {
             this.inherited(arguments);
         }
@@ -284,14 +284,14 @@ dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
     setValue:function(inRowIndex, inValue) {
         inValue = phpr.Date.getIsoTime(inValue);
         if (this.widget && this.widget.setValue) {
-            this.widget.attr('value', inValue);
+            this.widget.set('value', inValue);
         } else {
             this.inherited(arguments);
         }
     },
 
     getValue:function(inRowIndex) {
-        var value = this.widget.attr('value');
+        var value = this.widget.get('value');
         return phpr.Date.getIsoTime(value);
     },
 

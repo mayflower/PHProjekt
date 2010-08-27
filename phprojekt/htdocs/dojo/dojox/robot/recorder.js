@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -474,9 +474,9 @@ dojo.connect(document,!dojo.isMozilla ? "onmousewheel" : 'DOMMouseScroll',onmous
 
 dojo.addOnLoad(function(){
 	// get scrollIntoView for good measure
-	// catch: dijit might not be loaded (yet?) so addonload
-	if(window["dijit"] && dijit.scrollIntoView){
-		dojo.connect(dijit,"scrollIntoView",function(node){
+	// catch: dojo.window might not be loaded (yet?) so addonload
+	if(dojo.window){
+		dojo.connect(dojo.window,"scrollIntoView",function(node){
 			addCommand("doh.robot.scrollIntoView",[getSelector(node)]);
 		});
 	}

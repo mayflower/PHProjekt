@@ -1,1 +1,1 @@
-({"set":"تحديد","text":"الوصف:","insertImageTitle":"خصائص الصورة","url":"عنوان URL:","createLinkTitle":"خصائص الوصلة","newWindow":"New Window","topWindow":"Topmost Window","target":"Target:","parentWindow":"Parent Window","currentWindow":"Current Window"})
+({"text":"الوصف:","insertImageTitle":"خصائص الصورة","set":"تحديد","newWindow":"نافذة جديدة","topWindow":"النافذة العلوية","target":"الهدف: ","createLinkTitle":"خصائص الوصلة","parentWindow":"النافذة الرئيسية","currentWindow":"النافذة الحالية","url":"عنوان URL:"})

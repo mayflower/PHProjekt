@@ -18,9 +18,9 @@
             {{value|safe}}
         </div>
         <div dojoType="phpr.Dialog" id="dialogFor_{{id}}" draggable="false" refocus="false" execute="
-            var value = dijit.byId('editorFor_{{id}}').attr('value');
+            var value = dijit.byId('editorFor_{{id}}').get('value');
             dojo.byId('displayHtml_{{id}}').innerHTML = value;
-            dijit.byId('{{id}}').attr('value', value);
+            dijit.byId('{{id}}').set('value', value);
             dojo.byId('displayText_{{id}}').style.display = 'none';
             dojo.byId('textButtons_{{id}}').style.display = 'none';
             dojo.byId('displayHtml_{{id}}').style.display = 'inline';
@@ -42,14 +42,14 @@
     <td>
         {{tooltip|safe}}
         <div id="textButtons_{{id}}"
-        style="display: {{displayText}}; margin-left: 7px;">
+        style="display: {{displayText}}; margin-left: 3px;">
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="toHtmlButton" class="toHtmlButton"
             title="{{htmlModeTxt}}" onclick="
                 dojo.byId('displayText_{{id}}').style.display = 'none';
                 dojo.byId('textButtons_{{id}}').style.display = 'none';
                 dojo.byId('displayHtml_{{id}}').style.display = 'inline';
                 dojo.byId('htmlButtons_{{id}}').style.display = 'inline';
-                dijit.byId('editorFor_{{id}}').attr('value', dijit.byId('{{id}}').attr('value'));
+                dijit.byId('editorFor_{{id}}').set('value', dijit.byId('{{id}}').get('value'));
                 dijit.byId('dialogFor_{{id}}').show();">
             </button>
         </div>
@@ -57,7 +57,7 @@
         style="display: {{displayHtml}};">
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="edit" class="editButton"
             title="{{editHtmlTxt}}" onclick="
-                dijit.byId('editorFor_{{id}}').attr('value', dijit.byId('{{id}}').attr('value'));
+                dijit.byId('editorFor_{{id}}').set('value', dijit.byId('{{id}}').get('value'));
                 dijit.byId('dialogFor_{{id}}').show();">
             </button>
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="toTextButton" class="toTextButton"

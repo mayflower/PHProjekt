@@ -40,12 +40,12 @@ dojo.declare("phpr.User.Form", phpr.Core.Form, {
 
     prepareSubmission:function() {
         // Check the admin value
-        if (dijit.byId('admin').attr('value') == "") {
-            dijit.byId('admin').attr('value', 0);
+        if (dijit.byId('admin').get('value') == "") {
+            dijit.byId('admin').set('value', 0);
         }
         // Check the status value
-        if (dijit.byId('status').attr('value') == "") {
-            dijit.byId('status').attr('value', "A");
+        if (dijit.byId('status').get('value') == "") {
+            dijit.byId('status').set('value', "A");
         }
 
         return this.inherited(arguments);

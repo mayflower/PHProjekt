@@ -295,7 +295,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             id:    id,
             title: phpr.nls.get(title)
         });
-        tab.attr('content', html);
+        tab.set('content', html);
         this.form.addChild(tab);
         if (typeof formId != "undefined") {
             this.formsWidget.push(dijit.byId(formId));
@@ -325,7 +325,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this._meta = phpr.DataStore.getMetaData({url: this._url});
         var data   = phpr.DataStore.getData({url: this._url});
         if (data.length == 0) {
-            this._formNode.attr('content', phpr.drawEmptyMessage('The Item was not found'));
+            this._formNode.set('content', phpr.drawEmptyMessage('The Item was not found'));
         } else {
             var tabs               = this.getTabs();
             var firstRequiredField = null;
@@ -442,7 +442,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             this.form        = this.setFormContent();
             this.formsWidget = new Array();
 
-            this._formNode.attr('content', this.form.domNode);
+            this._formNode.set('content', this.form.domNode);
 
             var firstTab = true;
             for (t in tabs) {
@@ -639,7 +639,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         // Description:
         //    Add a the row of one user-accees
         //    with the values selected on the first row
-        var userId = dijit.byId("dataAccessAdd").attr('value');
+        var userId = dijit.byId("dataAccessAdd").get('value');
         if (!dojo.byId("trAccessFor" + userId) && userId > 0) {
             phpr.destroyWidget("dataAccess[" + userId + "]");
             for (var i in this._rights) {
@@ -659,7 +659,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             var input = this.render(["phpr.Default.template.access", "input.html"], null, {
                 id:          userId,
                 disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
-                userDisplay: dijit.byId("dataAccessAdd").attr('displayedValue'),
+                userDisplay: dijit.byId("dataAccessAdd").get('displayedValue'),
                 currentUser: false
             });
             cell.innerHTML = input;
@@ -724,7 +724,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         if (dijit.byId("checkAdminAccess" + str).checked) {
             for (var i in this._rights) {
                 var fieldId = 'check' + this._rights[i] + 'Access' + str;
-                dijit.byId(fieldId).attr('checked', true);
+                dijit.byId(fieldId).set('checked', true);
             }
         }
     },
@@ -743,7 +743,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 this.formsWidget[i].validate();
                 return false;
             }
-            var sendData = this.formsWidget[i].attr('value');
+            var sendData = this.formsWidget[i].get('value');
             if (typeof(sendData) != 'object') {
                 sendData = new Array(sendData);
             } else {
@@ -1000,21 +1000,21 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                             var key          = field + '_forDate';
                             var displayfield = 'widget_' + key;
                             if (fieldWidget = dijit.byId(key)) {
-                                fieldWidget.attr("displayedValue", dateTime[0]);
+                                fieldWidget.set("displayedValue", dateTime[0]);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
 
                             var key          = field + '_forTime';
                             var displayfield = 'widget_' + key;
                             if (fieldWidget = dijit.byId(key)) {
-                                fieldWidget.attr("displayedValue", time);
+                                fieldWidget.set("displayedValue", time);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;
                         case 'selectbox':
                             var displayfield = 'widget_' + field;
                             if (fieldWidget = dijit.byId(field)) {
-                                fieldWidget.attr("value", value);
+                                fieldWidget.set("value", value);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;
@@ -1035,14 +1035,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                         case 'percentage':
                             var displayfield = field;
                             if (fieldWidget = dijit.byId(field)) {
-                                fieldWidget.attr('value', value);
+                                fieldWidget.set('value', value);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;
                         case 'upload':
                             var displayfield = 'filesIframe_' + field;
                             if (fieldWidget = dijit.byId(field)) {
-                                fieldWidget.attr('value', value);
+                                fieldWidget.set('value', value);
                                 dojo.byId('filesIframe_files').contentDocument.location.href = phpr.webpath
                                     + 'index.php/Default/File/fileForm/moduleName/' + phpr.module + '/id/'
                                     + this.id + '/field/' + field + '/value/' + value;
@@ -1053,7 +1053,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                             var displayfield = field;
                             if (fieldWidget = dijit.byId(field)) {
                                 value = (value == 1) ? true : false;
-                                fieldWidget.attr('checked', value);
+                                fieldWidget.set('checked', value);
                                 dojo.addClass(dojo.byId(displayfield).parentNode, "highlightChanges");
                             }
                             break;
@@ -1061,7 +1061,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                             var displayfield = field + '[]';
                             if (fieldWidget = dijit.byId(displayfield)) {
                                 value = value.split(',');
-                                fieldWidget.attr("value", value);
+                                fieldWidget.set("value", value);
                                 dojo.addClass(dojo.byId(displayfield).parentNode, "highlightChanges");
                             }
                             break;
@@ -1075,7 +1075,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                         default:
                             var displayfield = field;
                             if (fieldWidget = dijit.byId(field)) {
-                                fieldWidget.attr("displayedValue", value);
+                                fieldWidget.set("displayedValue", value);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;

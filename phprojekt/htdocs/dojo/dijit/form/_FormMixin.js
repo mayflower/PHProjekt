@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,6 +8,8 @@
 if(!dojo._hasResource["dijit.form._FormMixin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit.form._FormMixin"] = true;
 dojo.provide("dijit.form._FormMixin");
+
+dojo.require("dojo.window");
 
 dojo.declare("dijit.form._FormMixin", null,
 	{
@@ -22,15 +24,17 @@ dojo.declare("dijit.form._FormMixin", null,
 
 /*=====
     // value: Object
-	//		Name/value hash for each form element.
-	//		If there are multiple elements w/the same name, value is an array,
-	//		unless they are radio buttons in which case value is a scalar since only
-	//		one can be checked at a time.
+	//		Name/value hash for each child widget with a name and value.
+	//		Child widgets without names are not part of the hash.
+	// 
+	//		If there are multiple child widgets w/the same name, value is an array,
+	//		unless they are radio buttons in which case value is a scalar (since only
+	//		one radio button can be checked at a time).
 	//
-	//		If the name is a dot separated list (like a.b.c.d), it's a nested structure.
-	//		Only works on widget form elements.
-	// example:
-	//	| { name: "John Smith", interests: ["sports", "movies"] }
+	//		If a child widget's name is a dot separated list (like a.b.c.d), it's a nested structure.
+	//
+	//		Example:
+	//	|	{ name: "John Smith", interests: ["sports", "movies"] }
 =====*/
 
 	//	TODO:
@@ -64,7 +68,7 @@ dojo.declare("dijit.form._FormMixin", null,
 				var valid = widget.disabled || !widget.validate || widget.validate();
 				if(!valid && !didFocus){
 					// Set focus of the first non-valid widget
-					dijit.scrollIntoView(widget.containerNode || widget.domNode);
+					dojo.window.scrollIntoView(widget.containerNode || widget.domNode);
 					widget.focus();
 					didFocus = true;
 				}
@@ -73,8 +77,8 @@ dojo.declare("dijit.form._FormMixin", null,
 		},
 
 		setValues: function(val){
-			dojo.deprecated(this.declaredClass+"::setValues() is deprecated. Use attr('value', val) instead.", "", "2.0");
-			return this.attr('value', val);
+			dojo.deprecated(this.declaredClass+"::setValues() is deprecated. Use set('value', val) instead.", "", "2.0");
+			return this.set('value', val);
 		},
 		_setValueAttr: function(/*object*/obj){
 			// summary:
@@ -104,15 +108,15 @@ dojo.declare("dijit.form._FormMixin", null,
 				if(typeof widgets[0].checked == 'boolean'){
 					// for checkbox/radio, values is a list of which widgets should be checked
 					dojo.forEach(widgets, function(w, i){
-						w.attr('value', dojo.indexOf(values, w.value) != -1);
+						w.set('value', dojo.indexOf(values, w.value) != -1);
 					});
 				}else if(widgets[0].multiple){
 					// it takes an array (e.g. multi-select)
-					widgets[0].attr('value', values);
+					widgets[0].set('value', values);
 				}else{
 					// otherwise, values is a list of values to be assigned sequentially to each widget
 					dojo.forEach(widgets, function(w, i){
-						w.attr('value', values[i]);
+						w.set('value', values[i]);
 					});
 				}
 			}
@@ -191,8 +195,8 @@ dojo.declare("dijit.form._FormMixin", null,
 		},
 
 		getValues: function(){
-			dojo.deprecated(this.declaredClass+"::getValues() is deprecated. Use attr('value') instead.", "", "2.0");
-			return this.attr('value');
+			dojo.deprecated(this.declaredClass+"::getValues() is deprecated. Use get('value') instead.", "", "2.0");
+			return this.get('value');
 		},
 		_getValueAttr: function(){
 			// summary:
@@ -215,7 +219,7 @@ dojo.declare("dijit.form._FormMixin", null,
 				if(!name || widget.disabled){ return; }
 
 				// Single value widget (checkbox, radio, or plain <input> type widget
-				var value = widget.attr('value');
+				var value = widget.get('value');
 
 				// Store widget's value(s) as a scalar, except for checkboxes which are automatically arrays
 				if(typeof widget.checked == 'boolean'){
@@ -359,7 +363,7 @@ dojo.declare("dijit.form._FormMixin", null,
 				this._invalidWidgets = dojo.filter(this._invalidWidgets || [], function(w){
 					return (w != widget);
 				}, this);
-				if(!widget.isValid() && !widget.attr("disabled")){
+				if(!widget.isValid() && !widget.get("disabled")){
 					this._invalidWidgets.push(widget);
 				}
 				isValid = (this._invalidWidgets.length === 0);
@@ -383,7 +387,7 @@ dojo.declare("dijit.form._FormMixin", null,
 			// we connect to validate - so that it better reflects the states
 			// of the widgets - also, we only connect if it has a validate
 			// function (to avoid too many unneeded connections)
-			var conns = this._changeConnections = [];
+			var conns = (this._changeConnections = []);
 			dojo.forEach(dojo.filter(this.getDescendants(),
 				function(item){ return item.validate; }
 			),

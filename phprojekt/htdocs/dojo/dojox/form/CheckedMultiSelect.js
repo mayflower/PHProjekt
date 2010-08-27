@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,7 +19,7 @@ dojo.declare("dojox.form._CheckedMultiSelectItem",
 	//		The individual items for a CheckedMultiSelect
 
 	widgetsInTemplate: true,
-	templateString: dojo.cache("dojox.form", "resources/_CheckedMultiSelectItem.html", "<div class=\"dijitReset ${baseClass}\"\r\n\t><input class=\"${baseClass}Box\" dojoType=\"dijit.form.CheckBox\" dojoAttachPoint=\"checkBox\" \r\n\t\tdojoAttachEvent=\"_onClick:_changeBox\" type=\"${_type.type}\" baseClass=\"${_type.baseClass}\"\r\n\t><div class=\"dijitInline ${baseClass}Label\" dojoAttachPoint=\"labelNode\" dojoAttachEvent=\"onmousedown:_onMouse,onmouseover:_onMouse,onmouseout:_onMouse,onclick:_onClick\"></div\r\n></div>\r\n"),
+	templateString: dojo.cache("dojox.form", "resources/_CheckedMultiSelectItem.html", "<div class=\"dijitReset ${baseClass}\"\r\n\t><input class=\"${baseClass}Box\" dojoType=\"dijit.form.CheckBox\" dojoAttachPoint=\"checkBox\" \r\n\t\tdojoAttachEvent=\"_onClick:_changeBox\" type=\"${_type.type}\" baseClass=\"${_type.baseClass}\"\r\n\t/><div class=\"dijitInline ${baseClass}Label\" dojoAttachPoint=\"labelNode\" dojoAttachEvent=\"onclick:_onClick\"></div\r\n></div>\r\n"),
 
 	baseClass: "dojoxMultiSelectItem",
 
@@ -62,7 +62,7 @@ dojo.declare("dojox.form._CheckedMultiSelectItem",
 		//		Called to force the select to match the state of the check box
 		//		(only on click of the checkbox)  Radio-based calls _setValueAttr
 		//		instead.
-		if(this.attr("disabled") || this.attr("readOnly")){ return; }
+		if(this.get("disabled") || this.get("readOnly")){ return; }
 		if(this.parent.multiple){
 			this.option.selected = this.checkBox.attr('value') && true;
 		}else{
@@ -74,22 +74,11 @@ dojo.declare("dojox.form._CheckedMultiSelectItem",
 		// refocus the parent
 		this.parent.focus();
 	},
-
-	_onMouse: function(e){
-		// summary:
-		//		Sets the hover state depending on mouse state (passes through
-		//		to the check box)
-		if(this.attr("disabled") || this.attr("readOnly")){
-			dojo.stopEvent(e);
-		}else{
-			this.checkBox._onMouse(e);
-		}
-	},
 	
 	_onClick: function(e){
 		// summary:
 		//		Sets the click state (passes through to the check box)
-		if(this.attr("disabled") || this.attr("readOnly")){
+		if(this.get("disabled") || this.get("readOnly")){
 			dojo.stopEvent(e);
 		}else{
 			this.checkBox._onClick(e);
@@ -114,7 +103,6 @@ dojo.declare("dojox.form._CheckedMultiSelectItem",
 		// summary:
 		//		Sets read only (or unsets) all the children as well
 		this.checkBox.attr("readOnly", value);
-		this.checkBox._setStateClass();
 		this.readOnly = value;
 	}
 });
@@ -123,11 +111,11 @@ dojo.declare("dojox.form.CheckedMultiSelect", dijit.form._FormSelectWidget, {
 	// summary:
 	//		Extends the core dijit MultiSelect to provide a "checkbox" selector
 
-	templateString: dojo.cache("dojox.form", "resources/CheckedMultiSelect.html", "<div class=\"dijit dijitReset dijitInline\" dojoAttachEvent=\"onmousedown:_mouseDown,onclick:focus\"\r\n\t><select class=\"${baseClass}Select\" multiple=\"true\" dojoAttachPoint=\"containerNode,focusNode\"></select\r\n\t><div dojoAttachPoint=\"wrapperDiv\"></div\r\n></div>\r\n"),
+	templateString: dojo.cache("dojox.form", "resources/CheckedMultiSelect.html", "<div class=\"dijit dijitReset dijitInline\" dojoAttachEvent=\"onmousedown:_onMouseDown,onclick:focus\"\r\n\t><select class=\"${baseClass}Select\" multiple=\"true\" dojoAttachPoint=\"containerNode,focusNode\"></select\r\n\t><div dojoAttachPoint=\"wrapperDiv\"></div\r\n></div>\r\n"),
 
 	baseClass: "dojoxMultiSelect",
 
-	_mouseDown: function(e){
+	_onMouseDown: function(e){
 		// summary:
 		//		Cancels the mousedown event to prevent others from stealing
 		//		focus
@@ -185,7 +173,6 @@ dojo.declare("dojox.form.CheckedMultiSelect", dijit.form._FormSelectWidget, {
 				node.attr("readOnly", value);
 			}
 		});
-		this._setStateClass();
 	},
 
 	uninitialize: function(){

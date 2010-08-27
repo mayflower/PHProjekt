@@ -1,16 +1,14 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
 
 /*
-	This is a compiled version of Dojo, built for deployment and not for
-	development. To get an editable version, please visit:
+	This is an optimized version of Dojo, built for deployment and not for
+	development. To get sources and documentation, please visit:
 
 		http://dojotoolkit.org
-
-	for documentation and information on getting the source.
 */
 
 ;(function(){
@@ -271,7 +269,7 @@ dojo.global = {
 =====*/
 	dojo.locale = d.config.locale;
 
-	var rev = "$Rev: 20973 $".match(/\d+/);
+	var rev = "$Rev: 22487 $".match(/\d+/);
 
 /*=====
 	dojo.version = function(){
@@ -492,28 +490,17 @@ dojo.global = {
 		return !!d.getObject(name, false, obj); // Boolean
 	}
 
-
 	dojo["eval"] = function(/*String*/ scriptFragment){
 		//	summary:
-		//		Perform an evaluation in the global scope. Use this rather than
-		//		calling 'eval()' directly.
+		//		A legacy method created for use exclusively by internal Dojo methods. Do not use
+		//		this method directly, the behavior of this eval will differ from the normal
+		//		browser eval.
 		//	description:
 		//		Placed in a separate function to minimize size of trapped
 		//		exceptions. Calling eval() directly from some other scope may
 		//		complicate tracebacks on some platforms.
 		//	returns:
 		//		The result of the evaluation. Often `undefined`
-
-
-		// note:
-		//	 - JSC eval() takes an optional second argument which can be 'unsafe'.
-		//	 - Mozilla/SpiderMonkey eval() takes an optional second argument which is the
-		//  	 scope object for new symbols.
-
-		// FIXME: investigate Joseph Smarr's technique for IE:
-		//		http://josephsmarr.com/2007/01/31/fixing-eval-to-use-global-scope-in-ie/
-		//	see also:
-		// 		http://trac.dojotoolkit.org/ticket/744
 		return d.global.eval ? d.global.eval(scriptFragment) : eval(scriptFragment); 	// Object
 	}
 
@@ -1558,7 +1545,8 @@ if(typeof window != 'undefined'){
 			return (stat >= 200 && stat < 300) || 	// Boolean
 				stat == 304 || 						// allow any 2XX response code
 				stat == 1223 || 						// get it out of the cache
-				(!stat && (lp == "file:" || lp == "chrome:" || lp == "app:") ); // Internet Explorer mangled the status code OR we're Titanium requesting a local file
+				// Internet Explorer mangled the status code OR we're Titanium/browser chrome/chrome extension requesting a local file
+				(!stat && (lp == "file:" || lp == "chrome:" || lp == "chrome-extension:" || lp == "app:") );
 		}
 
 		//See if base tag is in use.
@@ -1646,6 +1634,7 @@ if(typeof window != 'undefined'){
 			while(mll.length){
 				(mll.pop())();
 			}
+			d = null;
 		};
 
 		var _onWindowUnloadAttached = 0;
@@ -1714,6 +1703,11 @@ if(typeof window != 'undefined'){
 	//START DOMContentLoaded
 	dojo._initFired = false;
 	dojo._loadInit = function(e){
+		if(dojo._scrollIntervalId){
+			clearInterval(dojo._scrollIntervalId);
+			dojo._scrollIntervalId = 0;
+		}
+
 		if(!dojo._initFired){
 			dojo._initFired = true;
 
@@ -1728,7 +1722,7 @@ if(typeof window != 'undefined'){
 		}
 	}
 
-	if(!dojo.config.afterOnLoad){
+	if(!dojo.config.afterOnLoad){		
 		if(document.addEventListener){
 			//Standards. Hooray! Assumption here that if standards based,
 			//it knows about DOMContentLoaded. It is OK if it does not, the fall through
@@ -1737,33 +1731,44 @@ if(typeof window != 'undefined'){
 			window.addEventListener("load", dojo._loadInit, false);
 		}else if(window.attachEvent){
 			window.attachEvent("onload", dojo._loadInit);
+
+			//DOMContentLoaded approximation. Diego Perini found this MSDN article
+			//that indicates doScroll is available after DOM ready, so do a setTimeout
+			//to check when it is available.
+			//http://msdn.microsoft.com/en-us/library/ms531426.aspx
+			if(!dojo.config.skipIeDomLoaded && self === self.top){
+				dojo._scrollIntervalId = setInterval(function (){
+					try{
+						//When dojo is loaded into an iframe in an IE HTML Application 
+						//(HTA), such as in a selenium test, javascript in the iframe
+						//can't see anything outside of it, so self===self.top is true,
+						//but the iframe is not the top window and doScroll will be 
+						//available before document.body is set. Test document.body
+						//before trying the doScroll trick
+						if(document.body){
+							document.documentElement.doScroll("left");
+							dojo._loadInit();
+						}
+					}catch (e){}
+				}, 30);
+			}
 		}
 	}
 
 		if(dojo.isIE){
-		// 	for Internet Explorer. readyState will not be achieved on init
-		// 	call, but dojo doesn't need it however, we'll include it
-		// 	because we don't know if there are other functions added that
-		// 	might.  Note that this has changed because the build process
-		// 	strips all comments -- including conditional ones.
-		if(!dojo.config.afterOnLoad && !dojo.config.skipIeDomLoaded){
-			document.write('<scr'+'ipt defer src="//:" '
-				+ 'onreadystatechange="if(this.readyState==\'complete\'){' + dojo._scopeName + '._loadInit();}">'
-				+ '</scr'+'ipt>'
-			);
-		}
-
 		try{
-			document.namespaces.add("v","urn:schemas-microsoft-com:vml");
-			var vmlElems = ["*", "group", "roundrect", "oval", "shape", "rect", "imagedata"],
-				i = 0, l = 1, s = document.createStyleSheet();
-			if(dojo.isIE >= 8){
-				i = 1;
-				l = vmlElems.length;
-			}
-			for(; i < l; ++i){
-				s.addRule("v\\:" + vmlElems[i], "behavior:url(#default#VML); display:inline-block");
-			}
+			(function(){
+				document.namespaces.add("v", "urn:schemas-microsoft-com:vml");
+				var vmlElems = ["*", "group", "roundrect", "oval", "shape", "rect", "imagedata", "path", "textpath", "text"],
+					i = 0, l = 1, s = document.createStyleSheet();
+				if(dojo.isIE >= 8){
+					i = 1;
+					l = vmlElems.length;
+				}
+				for(; i < l; ++i){
+					s.addRule("v\\:" + vmlElems[i], "behavior:url(#default#VML); display:inline-block");
+				}
+			})();
 		}catch(e){}
 	}
 		//END DOMContentLoaded
@@ -2043,7 +2048,7 @@ dojo.provide("dojo._base.lang");
 			// null, undefined, any non-object, or function
 			return o;	// anything
 		}
-		if(o.nodeType && o.cloneNode){
+		if(o.nodeType && "cloneNode" in o){
 			// DOM Node
 			return o.cloneNode(true); // Node
 		}
@@ -2470,7 +2475,9 @@ dojo.provide("dojo._base.declare");
 		for(; i < l; ++i){
 			base = bases[i];
 			if(!base){
-				err("mixin #" + i + " is null");
+				err("mixin #" + i + " is unknown. Did you use dojo.require to pull it in?");
+			}else if(opts.call(base) != "[object Function]"){
+				err("mixin #" + i + " is not a callable constructor.");
 			}
 			lin = base._meta ? base._meta.bases : [base];
 			top = 0;
@@ -2617,7 +2624,7 @@ dojo.provide("dojo._base.declare");
 						if(meta && meta.ctor === caller){
 							break;
 						}
-					};
+					}
 					pos = base ? pos : -1;
 				}
 			}
@@ -2661,7 +2668,24 @@ dojo.provide("dojo._base.declare");
 		return this instanceof cls;
 	}
 
-	// imlementation of safe mixin function
+	function mixOwn(target, source){
+		var name, i = 0, l = d._extraNames.length;
+		// add props adding metadata for incoming functions skipping a constructor
+		for(name in source){
+			if(name != cname && source.hasOwnProperty(name)){
+				target[name] = source[name];
+			}
+		}
+		// process unenumerable methods on IE
+		for(; i < l; ++i){
+			name = d._extraNames[i];
+			if(name != cname && source.hasOwnProperty(name)){
+				target[name] = source[name];
+			}
+		}
+	}
+
+	// implementation of safe mixin function
 	function safeMixin(target, source){
 		var name, t, i = 0, l = d._extraNames.length;
 		// add props adding metadata for incoming functions skipping a constructor
@@ -2700,6 +2724,12 @@ dojo.provide("dojo._base.declare");
 		return function(){
 			var a = arguments, args = a, a0 = a[0], f, i, m,
 				l = bases.length, preArgs;
+
+			if(!(this instanceof a.callee)){
+				// not called via new, so force it
+				return applyNew(a);
+			}
+
 			//this._inherited = {};
 			// perform the shaman's rituals of the original dojo.declare()
 			// 1) call two types of the preamble
@@ -2723,7 +2753,7 @@ dojo.provide("dojo._base.declare");
 					if(f){
 						a = f.apply(this, a) || a;
 					}
-					// one pecularity of the preamble:
+					// one peculiarity of the preamble:
 					// it is called if it is not needed,
 					// e.g., there is no constructor to call
 					// let's watch for the last constructor
@@ -2756,6 +2786,12 @@ dojo.provide("dojo._base.declare");
 	function singleConstructor(ctor, ctorSpecial){
 		return function(){
 			var a = arguments, t = a, a0 = a[0], f;
+
+			if(!(this instanceof a.callee)){
+				// not called via new, so force it
+				return applyNew(a);
+			}
+
 			//this._inherited = {};
 			// perform the shaman's rituals of the original dojo.declare()
 			// 1) call two types of the preamble
@@ -2772,7 +2808,7 @@ dojo.provide("dojo._base.declare");
 				if(f){
 					// process the preamble of this class
 					f.apply(this, t);
-					// one pecularity of the preamble:
+					// one peculiarity of the preamble:
 					// it is called even if it is not needed,
 					// e.g., there is no constructor to call
 					// let's watch for the last constructor
@@ -2794,7 +2830,13 @@ dojo.provide("dojo._base.declare");
 	// plain vanilla constructor (can use inherited() to call its base constructor)
 	function simpleConstructor(bases){
 		return function(){
-			var a = arguments, i = 0, f;
+			var a = arguments, i = 0, f, m;
+
+			if(!(this instanceof a.callee)){
+				// not called via new, so force it
+				return applyNew(a);
+			}
+
 			//this._inherited = {};
 			// perform the shaman's rituals of the original dojo.declare()
 			// 1) do not call the preamble
@@ -2832,9 +2874,31 @@ dojo.provide("dojo._base.declare");
 		};
 	}
 
-	d.declare = function(className, superclass, props){
-		var proto, i, t, ctor, name, bases, chains, mixins = 1, parents = superclass;
+	// forceNew(ctor)
+	// return a new object that inherits from ctor.prototype but
+	// without actually running ctor on the object.
+	function forceNew(ctor){
+		// create object with correct prototype using a do-nothing
+		// constructor
+		xtor.prototype = ctor.prototype;
+		var t = new xtor;
+		xtor.prototype = null;	// clean up
+		return t;
+	}
 
+	// applyNew(args)
+	// just like 'new ctor()' except that the constructor and its arguments come
+	// from args, which must be an array or an arguments object
+	function applyNew(args){
+		// create an object with ctor's prototype but without
+		// calling ctor on it.
+		var ctor = args.callee, t = forceNew(ctor);
+		// execute the real constructor on the new object
+		ctor.apply(t, args);
+		return t;
+	}
+
+	d.declare = function(className, superclass, props){
 		// crack parameters
 		if(typeof className != "string"){
 			props = superclass;
@@ -2842,6 +2906,8 @@ dojo.provide("dojo._base.declare");
 			className = "";
 		}
 		props = props || {};
+
+		var proto, i, t, ctor, name, bases, chains, mixins = 1, parents = superclass;
 
 		// build a prototype
 		if(opts.call(superclass) == "[object Array]"){
@@ -2853,22 +2919,26 @@ dojo.provide("dojo._base.declare");
 		}else{
 			bases = [0];
 			if(superclass){
-				t = superclass._meta;
-				bases = bases.concat(t ? t.bases : superclass);
+				if(opts.call(superclass) == "[object Function]"){
+					t = superclass._meta;
+					bases = bases.concat(t ? t.bases : superclass);
+				}else{
+					err("base class is not a callable constructor.");
+				}
+			}else if(superclass !== null){
+				err("unknown base class. Did you use dojo.require to pull it in?")
 			}
 		}
 		if(superclass){
 			for(i = mixins - 1;; --i){
-				// delegation
-				xtor.prototype = superclass.prototype;
-				proto = new xtor;
+				proto = forceNew(superclass);
 				if(!i){
 					// stop if nothing to add (the last base)
 					break;
 				}
 				// mix in properties
 				t = bases[i];
-				mix(proto, t._meta ? t._meta.hidden : t.prototype);
+				(t._meta ? mixOwn : mix)(proto, t.prototype);
 				// chain in new constructor
 				ctor = new Function;
 				ctor.superclass = superclass;
@@ -2886,7 +2956,6 @@ dojo.provide("dojo._base.declare");
 			t.nom = cname;
 			proto.constructor = t;
 		}
-		xtor.prototype = 0;	// cleanup
 
 		// collect chains and flags
 		for(i = mixins - 1; i; --i){ // intentional assignment
@@ -2912,7 +2981,7 @@ dojo.provide("dojo._base.declare");
 		ctor.prototype = proto;
 		proto.constructor = ctor;
 
-		// add "standard" methods to the ptototype
+		// add "standard" methods to the prototype
 		proto.getInherited = getInherited;
 		proto.inherited = inherited;
 		proto.isInstanceOf = isInstanceOf;
@@ -3335,7 +3404,7 @@ dojo.provide("dojo._base.declare");
 	/*=====
 	Object.isInstanceOf = function(cls){
 		//	summary:
-		//		Checks the inheritance cahin to see if it is inherited from this
+		//		Checks the inheritance chain to see if it is inherited from this
 		//		class.
 		//	cls: Function
 		//		Class constructor.
@@ -3449,18 +3518,18 @@ dojo._listener = {
 			// return value comes from original target function
 			var r = t && t.apply(this, arguments);
 			// make local copy of listener array so it is immutable during processing
-			var lls;
+			var i, lls;
 											lls = [].concat(ls);
 							
 			// invoke listeners after target function
-			for(var i in lls){
+			for(i in lls){
 				if(!(i in ap)){
 					lls[i].apply(this, arguments);
 				}
 			}
 			// return value comes from original target function
 			return r;
-		}
+		};
 	},
 	// add a listener to an object
 	add: function(/*Object*/ source, /*String*/ method, /*Function*/ listener){
@@ -3475,7 +3544,7 @@ dojo._listener = {
 		// The source method is either null, a dispatcher, or some other function
 		var f = source[method];
 		// Ensure a dispatcher
-		if(!f||!f._listeners){
+		if(!f || !f._listeners){
 			var d = dojo._listener.getDispatcher();
 			// original target function is special
 			d.target = f;
@@ -3492,11 +3561,11 @@ dojo._listener = {
 		// in non-IE browsers.
 		//
 		// We could have separate lists of before and after listeners.
-		return f._listeners.push(listener) ; /*Handle*/
+		return f._listeners.push(listener); /*Handle*/
 	},
 	// remove a listener from an object
 	remove: function(/*Object*/ source, /*String*/ method, /*Handle*/ handle){
-		var f = (source||dojo.global)[method];
+		var f = (source || dojo.global)[method];
 		// remember that handle is the index+1 (0 is not a valid handle)
 		if(f && f._listeners && handle--){
 			delete f._listeners[handle];
@@ -3524,7 +3593,7 @@ dojo.connect = function(/*Object|null*/ obj,
 	//
 	// description:
 	//		Connects listeners to actions, so that after event fires, a
-	//		listener is called with the same arguments passed to the orginal
+	//		listener is called with the same arguments passed to the original
 	//		function.
 	//
 	//		Since `dojo.connect` allows the source of events to be either a
@@ -3537,7 +3606,7 @@ dojo.connect = function(/*Object|null*/ obj,
 	//		When setting up a connection, the `event` parameter must be a
 	//		string that is the name of the method/event to be listened for. If
 	//		`obj` is null, `dojo.global` is assumed, meaning that connections
-	//		to global methods are supported but also that you may inadvertantly
+	//		to global methods are supported but also that you may inadvertently
 	//		connect to a global by passing an incorrect object name or invalid
 	//		reference.
 	//
@@ -3545,7 +3614,7 @@ dojo.connect = function(/*Object|null*/ obj,
 	//		function or method that does not yet exist on `obj`, connect will
 	//		not fail, but will instead set up a stub method. Similarly, null
 	//		arguments may simply be omitted such that fewer than 4 arguments
-	//		may be required to set up a connection See the examples for deails.
+	//		may be required to set up a connection See the examples for details.
 	//
 	//		The return value is a handle that is needed to 
 	//		remove this connection with `dojo.disconnect`.
@@ -3614,7 +3683,7 @@ dojo.connect = function(/*Object|null*/ obj,
 
 	// normalize arguments
 	var a=arguments, args=[], i=0;
-	// if a[0] is a String, obj was ommited
+	// if a[0] is a String, obj was omitted
 	args.push(dojo.isString(a[0]) ? null : a[i++], a[i++]);
 	// if the arg-after-next is a String or Function, context was NOT omitted
 	var a1 = a[i+1];
@@ -3710,7 +3779,7 @@ dojo.connectPublisher = function(	/*String*/ topic,
 									/*Object|null*/ obj, 
 									/*String*/ event){
 	//	summary:
-	//	 	Ensure that everytime obj.event() is called, a message is published
+	//	 	Ensure that every time obj.event() is called, a message is published
 	//	 	on the topic. Returns a handle which can be passed to
 	//	 	dojo.disconnect() to disable subsequent automatic publication on
 	//	 	the topic.
@@ -3725,7 +3794,7 @@ dojo.connectPublisher = function(	/*String*/ topic,
 	//	example:
 	//	|	dojo.connectPublisher("/ajax/start", dojo, "xhrGet");
 	var pf = function(){ dojo.publish(topic, arguments); }
-	return (event) ? dojo.connect(obj, event, pf) : dojo.connect(obj, pf); //Handle
+	return event ? dojo.connect(obj, event, pf) : dojo.connect(obj, pf); //Handle
 };
 
 }
@@ -3735,115 +3804,52 @@ dojo._hasResource["dojo._base.Deferred"] = true;
 dojo.provide("dojo._base.Deferred");
 
 
-dojo.Deferred = function(/*Function?*/ canceller){
+(function(){
+	var mutator = function(){};		
+	var freeze = Object.freeze || function(){};
+	// A deferred provides an API for creating and resolving a promise.
+	dojo.Deferred = function(/*Function?*/canceller){
 	// summary:
-	//		Encapsulates a sequence of callbacks in response to a value that
-	//		may not yet be available.  This is modeled after the Deferred class
-	//		from Twisted <http://twistedmatrix.com>.
+	//		Deferreds provide a generic means for encapsulating an asynchronous
+	// 		operation and notifying users of the completion and result of the operation. 
 	// description:
-	//		JavaScript has no threads, and even if it did, threads are hard.
-	//		Deferreds are a way of abstracting non-blocking events, such as the
-	//		final response to an XMLHttpRequest. Deferreds create a promise to
-	//		return a response a some point in the future and an easy way to
-	//		register your interest in receiving that response.
+	//		The dojo.Deferred API is based on the concept of promises that provide a
+	//		generic interface into the eventual completion of an asynchronous action.
+	//		The motivation for promises fundamentally is about creating a 
+	//		separation of concerns that allows one to achieve the same type of 
+	//		call patterns and logical data flow in asynchronous code as can be 
+	//		achieved in synchronous code. Promises allows one 
+	//		to be able to call a function purely with arguments needed for 
+	//		execution, without conflating the call with concerns of whether it is 
+	//		sync or async. One shouldn't need to alter a call's arguments if the 
+	//		implementation switches from sync to async (or vice versa). By having 
+	//		async functions return promises, the concerns of making the call are 
+	//		separated from the concerns of asynchronous interaction (which are 
+	//		handled by the promise).
+	// 
+	//  	The dojo.Deferred is a type of promise that provides methods for fulfilling the 
+	// 		promise with a successful result or an error. The most important method for 
+	// 		working with Dojo's promises is the then() method, which follows the 
+	// 		CommonJS proposed promise API. An example of using a Dojo promise:
+	//		
+	//		| 	var resultingPromise = someAsyncOperation.then(function(result){
+	//		|		... handle result ...
+	//		|	},
+	//		|	function(error){
+	//		|		... handle error ...
+	//		|	});
+	//	
+	//		The .then() call returns a new promise that represents the result of the 
+	// 		execution of the callback. The callbacks will never affect the original promises value.
 	//
-	//		The most important methods for Deffered users are:
+	//		The dojo.Deferred instances also provide the following functions for backwards compatibility:
 	//
 	//			* addCallback(handler)
 	//			* addErrback(handler)
 	//			* callback(result)
 	//			* errback(result)
 	//
-	//		In general, when a function returns a Deferred, users then "fill
-	//		in" the second half of the contract by registering callbacks and
-	//		error handlers. You may register as many callback and errback
-	//		handlers as you like and they will be executed in the order
-	//		registered when a result is provided. Usually this result is
-	//		provided as the result of an asynchronous operation. The code
-	//		"managing" the Deferred (the code that made the promise to provide
-	//		an answer later) will use the callback() and errback() methods to
-	//		communicate with registered listeners about the result of the
-	//		operation. At this time, all registered result handlers are called
-	//		*with the most recent result value*.
-	//
-	//		Deferred callback handlers are treated as a chain, and each item in
-	//		the chain is required to return a value that will be fed into
-	//		successive handlers. The most minimal callback may be registered
-	//		like this:
-	//
-	//		|	var d = new dojo.Deferred();
-	//		|	d.addCallback(function(result){ return result; });
-	//
-	//		Perhaps the most common mistake when first using Deferreds is to
-	//		forget to return a value (in most cases, the value you were
-	//		passed).
-	//
-	//		The sequence of callbacks is internally represented as a list of
-	//		2-tuples containing the callback/errback pair.  For example, the
-	//		following call sequence:
-	//		
-	//		|	var d = new dojo.Deferred();
-	//		|	d.addCallback(myCallback);
-	//		|	d.addErrback(myErrback);
-	//		|	d.addBoth(myBoth);
-	//		|	d.addCallbacks(myCallback, myErrback);
-	//
-	//		is translated into a Deferred with the following internal
-	//		representation:
-	//
-	//		|	[
-	//		|		[myCallback, null],
-	//		|		[null, myErrback],
-	//		|		[myBoth, myBoth],
-	//		|		[myCallback, myErrback]
-	//		|	]
-	//
-	//		The Deferred also keeps track of its current status (fired).  Its
-	//		status may be one of three things:
-	//
-	//			* -1: no value yet (initial condition)
-	//			* 0: success
-	//			* 1: error
-	//	
-	//		A Deferred will be in the error state if one of the following three
-	//		conditions are met:
-	//
-	//			1. The result given to callback or errback is "instanceof" Error
-	//			2. The previous callback or errback raised an exception while
-	//			   executing
-	//			3. The previous callback or errback returned a value
-	//			   "instanceof" Error
-	//
-	//		Otherwise, the Deferred will be in the success state. The state of
-	//		the Deferred determines the next element in the callback sequence
-	//		to run.
-	//
-	//		When a callback or errback occurs with the example deferred chain,
-	//		something equivalent to the following will happen (imagine
-	//		that exceptions are caught and returned):
-	//
-	//		|	// d.callback(result) or d.errback(result)
-	//		|	if(!(result instanceof Error)){
-	//		|		result = myCallback(result);
-	//		|	}
-	//		|	if(result instanceof Error){
-	//		|		result = myErrback(result);
-	//		|	}
-	//		|	result = myBoth(result);
-	//		|	if(result instanceof Error){
-	//		|		result = myErrback(result);
-	//		|	}else{
-	//		|		result = myCallback(result);
-	//		|	}
-	//
-	//		The result is then stored away in case another step is added to the
-	//		callback sequence.	Since the Deferred already has a value
-	//		available, any new callbacks added will be called immediately.
-	//
-	//		There are two other "advanced" details about this implementation
-	//		that are useful:
-	//
-	//		Callbacks are allowed to return Deferred instances themselves, so
+	//		Callbacks are allowed to return promisesthemselves, so
 	//		you can build complicated sequences of events with ease.
 	//
 	//		The creator of the Deferred may specify a canceller.  The canceller
@@ -3910,7 +3916,7 @@ dojo.Deferred = function(/*Function?*/ canceller){
 	//		|	}
 	//
 	//		|	// using Deferred style
-	//		|	renderLotsOfData(someDataObj).addErrback(function(){
+	//		|	renderLotsOfData(someDataObj).then(null, function(){
 	//		|		promptUserToRecover();
 	//		|	});
 	//		|	// NOTE: addErrback and addCallback both return the Deferred
@@ -3938,221 +3944,194 @@ dojo.Deferred = function(/*Function?*/ canceller){
 	//		|	}
 	//
 	//		|	// using Deferred style
-	//		|	renderLotsOfData(someDataObj).addErrback(function(){
+	//		|	renderLotsOfData(someDataObj).then(null, function(){
 	//		|		promptUserToRecover();
 	//		|	});
 	//
 	//		Note that the caller doesn't have to change his code at all to
 	//		handle the asynchronous case.
-
-	this.chain = [];
-	this.id = this._nextId();
-	this.fired = -1;
-	this.paused = 0;
-	this.results = [null, null];
-	this.canceller = canceller;
-	this.silentlyCancelled = false;
-	this.isFiring = false;
-};
-
-dojo.extend(dojo.Deferred, {
-	/*
-	makeCalled: function(){
-		// summary:
-		//		returns a new, empty deferred, which is already in the called
-		//		state. Calling callback() or errback() on this deferred will
-		//		yeild an error and adding new handlers to it will result in
-		//		them being called immediately.
-		var deferred = new dojo.Deferred();
-		deferred.callback();
-		return deferred;
-	},
-
-	toString: function(){
-		var state;
-		if(this.fired == -1){
-			state = 'unfired';
-		}else{
-			state = this.fired ? 'success' : 'error';
-		}
-		return 'Deferred(' + this.id + ', ' + state + ')';
-	},
-	*/
-
-	_nextId: (function(){
-		var n = 1;
-		return function(){ return n++; };
-	})(),
-
-	cancel: function(){
-		// summary:	
-		//		Cancels a Deferred that has not yet received a value, or is
-		//		waiting on another Deferred as its value.
-		// description:
-		//		If a canceller is defined, the canceller is called. If the
-		//		canceller did not return an error, or there was no canceller,
-		//		then the errback chain is started.
-		var err;
-		if(this.fired == -1){
-			if(this.canceller){
-				err = this.canceller(this);
-			}else{
-				this.silentlyCancelled = true;
-			}
-			if(this.fired == -1){
-				if(!(err instanceof Error)){
-					var res = err;
-					var msg = "Deferred Cancelled";
-					if(err && err.toString){
-						msg += ": " + err.toString();
-					}
-					err = new Error(msg);
-					err.dojoType = "cancel";
-					err.cancelResult = res;
-				}
-				this.errback(err);
-			}
-		}else if(	(this.fired == 0) &&
-					(this.results[0] instanceof dojo.Deferred)
-		){
-			this.results[0].cancel();
-		}
-	},
-			
-
-	_resback: function(res){
-		// summary:
-		//		The private primitive that means either callback or errback
-		this.fired = ((res instanceof Error) ? 1 : 0);
-		this.results[this.fired] = res;
-		this._fire();
-	},
-
-	_check: function(){
-		if(this.fired != -1){
-			if(!this.silentlyCancelled){
-				throw new Error("already called!");
-			}
-			this.silentlyCancelled = false;
-			return;
-		}
-	},
-
-	callback: function(res){
-		//	summary:	
-		//		Begin the callback sequence with a non-error value.
+		var result, finished, isError, head, nextListener;
+		var promise = this.promise = {};
 		
-		/*
-		callback or errback should only be called once on a given
-		Deferred.
-		*/
-		this._check();
-		this._resback(res);
-	},
-
-	errback: function(/*Error*/res){
-		//	summary: 
-		//		Begin the callback sequence with an error result.
-		this._check();
-		if(!(res instanceof Error)){
-			res = new Error(res);
+		function complete(value){
+			if(finished){
+				throw new Error("This deferred has already been resolved");				
+			}
+			result = value;
+			finished = true;
+			notify();
 		}
-		this._resback(res);
-	},
-
-	addBoth: function(/*Function|Object*/cb, /*String?*/cbfn){
-		//	summary:
-		//		Add the same function as both a callback and an errback as the
-		//		next element on the callback sequence.This is useful for code
-		//		that you want to guarantee to run, e.g. a finalizer.
-		var enclosed = dojo.hitch.apply(dojo, arguments);
-		return this.addCallbacks(enclosed, enclosed); // dojo.Deferred
-	},
-
-	addCallback: function(/*Function|Object*/cb, /*String?*/cbfn /*...*/){
-		//	summary: 
-		//		Add a single callback to the end of the callback sequence.
-		return this.addCallbacks(dojo.hitch.apply(dojo, arguments)); // dojo.Deferred
-	},
-
-	addErrback: function(cb, cbfn){
-		//	summary: 
-		//		Add a single callback to the end of the callback sequence.
-		return this.addCallbacks(null, dojo.hitch.apply(dojo, arguments)); // dojo.Deferred
-	},
-
-	addCallbacks: function(cb, eb){
-		// summary: 
-		//		Add separate callback and errback to the end of the callback
-		//		sequence.
-		this.chain.push([cb, eb])
-		if(this.fired >= 0 && !this.isFiring){
-			this._fire();
-		}
-		return this; // dojo.Deferred
-	},
-
-	_fire: function(){
-		// summary: 
-		//		Used internally to exhaust the callback sequence when a result
-		//		is available.
-		this.isFiring = true;
-		var chain = this.chain;
-		var fired = this.fired;
-		var res = this.results[fired];
-		var self = this;
-		var cb = null;
-		while(
-			(chain.length > 0) &&
-			(this.paused == 0)
-		){
-			// Array
-			var f = chain.shift()[fired];
-			if(!f){ continue; }
-			var func = function(){
-				var ret = f(res);
-				//If no response, then use previous response.
-				if(typeof ret != "undefined"){
-					res = ret;
+		function notify(){
+			var mutated;
+			while(!mutated && nextListener){
+				var listener = nextListener;
+				nextListener = nextListener.next;
+				if(mutated = (listener.progress == mutator)){ // assignment and check
+					finished = false;
 				}
-				fired = ((res instanceof Error) ? 1 : 0);
-				if(res instanceof dojo.Deferred){
-					cb = function(res){
-						self._resback(res);
-						// inlined from _pause()
-						self.paused--;
-						if(
-							(self.paused == 0) && 
-							(self.fired >= 0)
-						){
-							self._fire();
+				var func = (isError ? listener.error : listener.resolved);
+				if (func) {
+					try {
+						var newResult = func(result);
+						if (newResult && typeof newResult.then === "function") {
+							newResult.then(dojo.hitch(listener.deferred, "resolve"), dojo.hitch(listener.deferred, "reject"));
+							continue;
 						}
+						var unchanged = mutated && newResult === undefined;
+						listener.deferred[unchanged && isError ? "reject" : "resolve"](unchanged ? result : newResult);
 					}
-					// inlined from _unpause
-					this.paused++;
+					catch (e) {
+						listener.deferred.reject(e);
+					}
+				}else {
+					if(isError){
+						listener.deferred.reject(result);
+					}else{
+						listener.deferred.resolve(result);
+					}
 				}
-			};
-			if(dojo.config.debugAtAllCosts){
-				func.call(this);
-			}else{
-				try{
-					func.call(this);
-				}catch(err){
-					fired = 1;
-					res = err;
+			}	
+		}
+		// calling resolve will resolve the promise
+		this.resolve = this.callback = function(value){
+			// summary:
+			//		Fulfills the Deferred instance successfully with the provide value
+			this.fired = 0;
+			this.results = [value, null];
+			complete(value);
+		};
+		
+		
+		// calling error will indicate that the promise failed
+		this.reject = this.errback = function(error){
+			// summary:
+			//		Fulfills the Deferred instance as an error with the provided error 
+			isError = true;
+			this.fired = 1;
+			complete(error);
+			this.results = [null, error];
+			if(!error || error.log !== false){
+				(dojo.config.deferredOnError || function(x){ console.error(x); })(error);
+			}
+		};
+		// call progress to provide updates on the progress on the completion of the promise
+		this.progress = function(update){
+			// summary
+			//		Send progress events to all listeners
+			var listener = nextListener;
+			while(listener){
+				var progress = listener.progress;
+				progress && progress(update);
+				listener = listener.next;	
+			}
+		};
+		this.addCallbacks = function(/*Function?*/callback, /*Function?*/errback){
+			this.then(callback, errback, mutator);
+			return this;
+		};
+		// provide the implementation of the promise
+		this.then = promise.then = function(/*Function?*/resolvedCallback, /*Function?*/errorCallback, /*Function?*/progressCallback){
+			// summary
+			// 		Adds a fulfilledHandler, errorHandler, and progressHandler to be called for 
+			// 		completion of a promise. The fulfilledHandler is called when the promise 
+			// 		is fulfilled. The errorHandler is called when a promise fails. The 
+			// 		progressHandler is called for progress events. All arguments are optional 
+			// 		and non-function values are ignored. The progressHandler is not only an 
+			// 		optional argument, but progress events are purely optional. Promise 
+			// 		providers are not required to ever create progress events.
+			// 
+			// 		This function will return a new promise that is fulfilled when the given 
+			// 		fulfilledHandler or errorHandler callback is finished. This allows promise 
+			// 		operations to be chained together. The value returned from the callback 
+			// 		handler is the fulfillment value for the returned promise. If the callback 
+			// 		throws an error, the returned promise will be moved to failed state.
+			//	
+			// example:
+			// 		An example of using a CommonJS compliant promise:
+  			//		|	asyncComputeTheAnswerToEverything().
+			//		|		then(addTwo).
+			//		|		then(printResult, onError);
+  			//		|	>44 
+			// 		
+			var returnDeferred = progressCallback == mutator ? this : new dojo.Deferred(promise.cancel);
+			var listener = {
+				resolved: resolvedCallback, 
+				error: errorCallback, 
+				progress: progressCallback, 
+				deferred: returnDeferred
+			}; 
+			if(nextListener){
+				head = head.next = listener;
+			}
+			else{
+				nextListener = head = listener;
+			}
+			if(finished){
+				notify();
+			}
+			return returnDeferred.promise;
+		};
+		var deferred = this;
+		this.cancel = promise.cancel = function () {
+			// summary:
+			//		Cancels the asynchronous operation
+			if(!finished){
+				var error = canceller && canceller(deferred);
+				if(!finished){
+					if (!(error instanceof Error)) {
+						error = new Error(error);
+					}
+					error.log = false;
+					deferred.reject(error);
 				}
 			}
 		}
-		this.fired = fired;
-		this.results[fired] = res;
-		this.isFiring = false;
-		if((cb)&&(this.paused)){
-			// this is for "tail recursion" in case the dependent
-			// deferred is already fired
-			res.addBoth(cb);
-		}
+		freeze(promise);
+	};
+	dojo.extend(dojo.Deferred, {
+		addCallback: function (/*Function*/callback) {
+			return this.addCallbacks(dojo.hitch.apply(dojo, arguments));
+		},
+	
+		addErrback: function (/*Function*/errback) {
+			return this.addCallbacks(null, dojo.hitch.apply(dojo, arguments));
+		},
+	
+		addBoth: function (/*Function*/callback) {
+			var enclosed = dojo.hitch.apply(dojo, arguments);
+			return this.addCallbacks(enclosed, enclosed);
+		},
+		fired: -1
+	});
+})();
+dojo.when = function(promiseOrValue, /*Function?*/callback, /*Function?*/errback, /*Function?*/progressHandler){
+	// summary:
+	//		This provides normalization between normal synchronous values and 
+	//		asynchronous promises, so you can interact with them in a common way
+	//	example:
+	//		|	function printFirstAndList(items){
+	//		|		dojo.when(findFirst(items), console.log);
+	//		|		dojo.when(findLast(items), console.log);
+	//		|	}
+	//		|	function findFirst(items){
+	//		|		return dojo.when(items, function(items){
+	//		|			return items[0];
+	//		|		});
+	//		|	}
+	//		|	function findLast(items){
+	//		|		return dojo.when(items, function(items){
+	//		|			return items[items.length];
+	//		|		});
+	//		|	}
+	//		And now all three of his functions can be used sync or async.
+	//		|	printFirstAndLast([1,2,3,4]) will work just as well as
+	//		|	printFirstAndLast(dojo.xhrGet(...));
+	
+	if(promiseOrValue && typeof promiseOrValue.then === "function"){
+		return promiseOrValue.then(callback, errback, progressHandler);
 	}
-});
+	return callback(promiseOrValue);
+};
 
 }
 
@@ -4165,7 +4144,8 @@ dojo.fromJson = function(/*String*/ json){
 	// 		Parses a [JSON](http://json.org) string to return a JavaScript object.
 	// description:
 	// 		Throws for invalid JSON strings, but it does not use a strict JSON parser. It
-	// 		delegates to eval().
+	// 		delegates to eval().  The content passed to this method must therefore come
+	//		from a trusted source.
 	// json: 
 	//		a string literal of a JSON item, for instance:
 	//			`'{ "foo": [ "bar", 1, { "baz": "thud" } ] }'`
@@ -5756,18 +5736,21 @@ if(dojo.isIE || dojo.isOpera){
 
 	dojo._setOpacity =
 				d.isIE ? function(/*DomNode*/node, /*Number*/opacity){
-			var ov = opacity * 100;
-			node.style.zoom = 1.0;
-
-			// on IE7 Alpha(Filter opacity=100) makes text look fuzzy so disable it altogether (bug #2661),
-			//but still update the opacity value so we can get a correct reading if it is read later.
-			af(node, 1).Enabled = !(opacity == 1);
+			var ov = opacity * 100, opaque = opacity == 1;
+			node.style.zoom = opaque ? "" : 1;
 
 			if(!af(node)){
+				if(opaque){
+					return opacity;
+				}
 				node.style.filter += " progid:" + astr + "(Opacity=" + ov + ")";
 			}else{
 				af(node, 1).Opacity = ov;
 			}
+
+			// on IE7 Alpha(Filter opacity=100) makes text look fuzzy so disable it altogether (bug #2661),
+			//but still update the opacity value so we can get a correct reading if it is read later.
+			af(node, 1).Enabled = !opaque;
 
 			if(node.nodeName.toLowerCase() == "tr"){
 				d.query("> td", node).forEach(function(i){
@@ -6262,12 +6245,15 @@ if(dojo.isIE || dojo.isOpera){
 		//		150px. Note that the content box may have a much larger border
 		//		or margin box, depending on the box model currently in use and
 		//		CSS values set/inherited for node.
+		//		While the getter will return top and left values, the
+		//		setter only accepts setting the width and height.
 		//	node:
 		//		id or reference to DOM Node to get/set box for
 		//	box:
 		//		If passed, denotes that dojo.contentBox() should
 		//		update/set the content box for node. Box is an object in the
-		//		above format. All properties are optional if passed.
+		//		above format, but only w (width) and h (height) are supported.
+		//		All properties are optional if passed.
 		var n = byId(node), s = gcs(n), b = box;
 		return !b ? d._getContentBox(n, s) : d._setContentSize(n, b.w, b.h, s); // Object
 	}
@@ -6978,7 +6964,7 @@ if(dojo.isIE || dojo.isOpera){
 				}
 			}
 			// assumed to be an array
-			return s;
+			return s || "";
 		};
 
 	dojo.addClass = function(/*DomNode|String*/node, /*String|Array*/classStr){
@@ -7011,14 +6997,18 @@ if(dojo.isIE || dojo.isOpera){
 
 		node = byId(node);
 		classStr = str2array(classStr);
-		var cls = " " + node[_className] + " ";
+		var cls = node[_className], oldLen;
+		cls = cls ? " " + cls + " " : " ";
+		oldLen = cls.length;
 		for(var i = 0, len = classStr.length, c; i < len; ++i){
 			c = classStr[i];
 			if(c && cls.indexOf(" " + c + " ") < 0){
 				cls += c + " ";
 			}
 		}
-		node[_className] = d.trim(cls);
+		if(oldLen < cls.length){
+			node[_className] = cls.substr(1, cls.length - 2);
+		}
 	};
 
 	dojo.removeClass = function(/*DomNode|String*/node, /*String|Array?*/classStr){
@@ -7703,11 +7693,11 @@ dojo.provide("dojo._base.NodeList");
 			//		if no value is passed, the result is an array of attribute values
 			//		If a value is passed, the return is this NodeList
 			//	example:
-			//		Make all nodes with a particular class focusabl:
+			//		Make all nodes with a particular class focusable:
 			//	|	dojo.query(".focusable").attr("tabIndex", -1);
 			//	example:
 			//		Disable a group of buttons:
-			//	|	dojo.query("button.group").attr("disalbed", true);
+			//	|	dojo.query("button.group").attr("disabled", true);
 			//	example:
 			//		innerHTML can be assigned or retreived as well:
 			//	|	// get the innerHTML (as an array) for each list item
@@ -8031,13 +8021,34 @@ dojo.provide("dojo._base.NodeList");
 			//	summary:
 			//		Returns a new NodeList comprised of items in this NodeList
 			//		at the given index or indices.
+			//
 			//	index: Integer...
 			//		One or more 0-based indices of items in the current
-			//		NodeList.
+			//		NodeList. A negative index will start at the end of the
+			//		list and go backwards. 
+			//
+			//	example:
+			//	Shorten the list to the first, second, and third elements
+			//	|	dojo.query("a").at(0, 1, 2).forEach(fn); 
+			//
+			//	example:
+			//	Retrieve the first and last elements of a unordered list:
+			//	|	dojo.query("ul > li").at(0, -1).forEach(cb);
+			//
+			//	example:
+			//	Do something for the first element only, but end() out back to
+			//	the original list and continue chaining:
+			//	|	dojo.query("a").at(0).onclick(fn).end().forEach(function(n){
+			//	|		console.log(n); // all anchors on the page. 
+			//	|	})	
+			//
 			//	returns:
 			//		dojo.NodeList
 			var t = new this._NodeListCtor();
-			d.forEach(arguments, function(i){ if(this[i]){ t.push(this[i]); }}, this);
+			d.forEach(arguments, function(i){ 
+				if(i < 0){ i = this.length + i }
+				if(this[i]){ t.push(this[i]); }
+			}, this);
 			return t._stash(this); // dojo.NodeList
 		}
 
@@ -8049,10 +8060,12 @@ dojo.provide("dojo._base.NodeList");
 		"keyup", "load", "mousedown", "mouseenter", "mouseleave", "mousemove",
 		"mouseout", "mouseover", "mouseup", "submit"
 	];
+	
+	// FIXME: pseudo-doc the above automatically generated on-event functions
 
 	// syntactic sugar for DOM events
 	d.forEach(nl.events, function(evt){
-			var _oe = "on"+evt;
+			var _oe = "on" + evt;
 			nlp[_oe] = function(a, b){
 				return this.connect(_oe, a, b);
 			}
@@ -10546,13 +10559,13 @@ dojo.provide("dojo._base.fx");
 
 
 /*
-	Animation loosely package based on Dan Pupius' work, contributed under CLA: 
+	Animation loosely package based on Dan Pupius' work, contributed under CLA:
 		http://pupius.co.uk/js/Toolkit.Drawing.js
 */
-(function(){ 
+(function(){
 	var d = dojo;
 	var _mixin = d._mixin;
-	
+
 	dojo._Line = function(/*int*/ start, /*int*/ end){
 		//	summary:
 		//		dojo._Line is the object used to generate values from a start value
@@ -10564,17 +10577,17 @@ dojo.provide("dojo._base.fx");
 		this.start = start;
 		this.end = end;
 	};
-	
+
 	dojo._Line.prototype.getValue = function(/*float*/ n){
 		//	summary: Returns the point on the line
 		//	n: a floating point number greater than 0 and less than 1
 		return ((this.end - this.start) * n) + this.start; // Decimal
 	};
-	
+
 	dojo.Animation = function(args){
 		//	summary:
 		//		A generic animation class that fires callbacks into its handlers
-		//		object at various states. 
+		//		object at various states.
 		//	description:
 		//		A generic animation class that fires callbacks into its handlers
 		//		object at various states. Nearly all dojo animation functions
@@ -10584,80 +10597,80 @@ dojo.provide("dojo._base.fx");
 		//		returned.
 		// args: Object
 		//		The 'magic argument', mixing all the properties into this
-		//		animation instance. 
-		
+		//		animation instance.
+
 		_mixin(this, args);
 		if(d.isArray(this.curve)){
 			this.curve = new d._Line(this.curve[0], this.curve[1]);
 		}
-		
+
 	};
-	
+
 	// Alias to drop come 2.0:
 	d._Animation = d.Animation;
-	
+
 	d.extend(dojo.Animation, {
 		// duration: Integer
 		//		The time in milliseonds the animation will take to run
 		duration: 350,
-	
+
 	/*=====
 		// curve: dojo._Line|Array
 		//		A two element array of start and end values, or a `dojo._Line` instance to be
-		//		used in the Animation. 
+		//		used in the Animation.
 		curve: null,
-	
+
 		// easing: Function?
-		//		A Function to adjust the acceleration (or deceleration) of the progress 
+		//		A Function to adjust the acceleration (or deceleration) of the progress
 		//		across a dojo._Line
 		easing: null,
 	=====*/
-	
+
 		// repeat: Integer?
 		//		The number of times to loop the animation
 		repeat: 0,
-	
+
 		// rate: Integer?
-		//		the time in milliseconds to wait before advancing to next frame 
+		//		the time in milliseconds to wait before advancing to next frame
 		//		(used as a fps timer: 1000/rate = fps)
 		rate: 20 /* 50 fps */,
-	
-	/*===== 
+
+	/*=====
 		// delay: Integer?
-		//		The time in milliseconds to wait before starting animation after it 
+		//		The time in milliseconds to wait before starting animation after it
 		//		has been .play()'ed
 		delay: null,
-	
+
 		// beforeBegin: Event?
 		//		Synthetic event fired before a dojo.Animation begins playing (synchronous)
 		beforeBegin: null,
-	
+
 		// onBegin: Event?
 		//		Synthetic event fired as a dojo.Animation begins playing (useful?)
 		onBegin: null,
-	
+
 		// onAnimate: Event?
 		//		Synthetic event fired at each interval of a `dojo.Animation`
 		onAnimate: null,
-	
+
 		// onEnd: Event?
 		//		Synthetic event fired after the final frame of a `dojo.Animation`
 		onEnd: null,
-	
+
 		// onPlay: Event?
 		//		Synthetic event fired any time a `dojo.Animation` is play()'ed
 		onPlay: null,
-	
+
 		// onPause: Event?
 		//		Synthetic event fired when a `dojo.Animation` is paused
 		onPause: null,
-	
+
 		// onStop: Event
 		//		Synthetic event fires when a `dojo.Animation` is stopped
 		onStop: null,
-	
+
 	=====*/
-	
+
 		_percent: 0,
 		_startRepeatCount: 0,
 
@@ -10674,7 +10687,7 @@ dojo.provide("dojo._base.fx");
 			//	description:
 			//		Convenience function.  Fire event "evt" and pass it the
 			//		arguments specified in "args".
-			//		Fires the callback in the scope of the `dojo.Animation` 
+			//		Fires the callback in the scope of the `dojo.Animation`
 			//		instance.
 			//	evt:
 			//		The event to fire.
@@ -10721,12 +10734,12 @@ dojo.provide("dojo._base.fx");
 			}else if(_t._active && !_t._paused){
 				return _t;
 			}
-	
+
 			_t._fire("beforeBegin", [_t.node]);
-	
+
 			var de = delay || _t.delay,
 				_p = dojo.hitch(_t, "_play", gotoStart);
-				
+
 			if(de > 0){
 				_t._delayTimer = setTimeout(_p, de);
 				return _t;
@@ -10734,7 +10747,7 @@ dojo.provide("dojo._base.fx");
 			_p();
 			return _t;
 		},
-	
+
 		_play: function(gotoStart){
 			var _t = this;
 			if(_t._delayTimer){ _t._clearTimer(); }
@@ -10742,8 +10755,7 @@ dojo.provide("dojo._base.fx");
 			if(_t._paused){
 				_t._startTime -= _t.duration * _t._percent;
 			}
-			_t._endTime = _t._startTime + _t.duration;
-	
+
 			_t._active = true;
 			_t._paused = false;
 			var value = _t.curve.getValue(_t._getStep());
@@ -10753,13 +10765,13 @@ dojo.provide("dojo._base.fx");
 				}
 				_t._fire("onBegin", [value]);
 			}
-	
+
 			_t._fire("onPlay", [value]);
-	
+
 			_t._cycle();
 			return _t; // dojo.Animation
 		},
-	
+
 		pause: function(){
 			// summary: Pauses a running animation.
 			var _t = this;
@@ -10770,7 +10782,7 @@ dojo.provide("dojo._base.fx");
 			_t._fire("onPause", [_t.curve.getValue(_t._getStep())]);
 			return _t; // dojo.Animation
 		},
-	
+
 		gotoPercent: function(/*Decimal*/ percent, /*Boolean?*/ andPlay){
 			//	summary:
 			//		Sets the progress of the animation.
@@ -10785,7 +10797,7 @@ dojo.provide("dojo._base.fx");
 			if(andPlay){ _t.play(); }
 			return _t; // dojo.Animation
 		},
-	
+
 		stop: function(/*boolean?*/ gotoEnd){
 			// summary: Stops a running animation.
 			// gotoEnd: If true, the animation will end.
@@ -10800,9 +10812,9 @@ dojo.provide("dojo._base.fx");
 			_t._active = _t._paused = false;
 			return _t; // dojo.Animation
 		},
-	
+
 		status: function(){
-			// summary: 
+			// summary:
 			//		Returns a string token representation of the status of
 			//		the animation, one of: "paused", "playing", "stopped"
 			if(this._active){
@@ -10810,30 +10822,30 @@ dojo.provide("dojo._base.fx");
 			}
 			return "stopped"; // String
 		},
-	
+
 		_cycle: function(){
 			var _t = this;
 			if(_t._active){
 				var curr = new Date().valueOf();
-				var step = (curr - _t._startTime) / (_t._endTime - _t._startTime);
-	
+				var step = (curr - _t._startTime) / (_t.duration);
+
 				if(step >= 1){
 					step = 1;
 				}
 				_t._percent = step;
-	
+
 				// Perform easing
 				if(_t.easing){
 					step = _t.easing(step);
 				}
-	
+
 				_t._fire("onAnimate", [_t.curve.getValue(step)]);
-	
+
 				if(_t._percent < 1){
 					_t._startTimer();
 				}else{
 					_t._active = false;
-	
+
 					if(_t.repeat > 0){
 						_t.repeat--;
 						_t.play(null, true);
@@ -10852,18 +10864,17 @@ dojo.provide("dojo._base.fx");
 			}
 			return _t; // dojo.Animation
 		},
-		
+
 		_clearTimer: function(){
 			// summary: Clear the play delay timer
 			clearTimeout(this._delayTimer);
 			delete this._delayTimer;
 		}
-		
+
 	});
 
 	// the local timer, stubbed into all Animation instances
 	var ctr = 0,
-		_globalTimerList = [],
 		timer = null,
 		runner = {
 			run: function(){}
@@ -10896,7 +10907,7 @@ dojo.provide("dojo._base.fx");
 
 	});
 
-	var _makeFadeable = 
+	var _makeFadeable =
 				d.isIE ? function(node){
 			// only set the zoom if the "tickle" value would be the same as the
 			// default
@@ -10906,22 +10917,22 @@ dojo.provide("dojo._base.fx");
 			if(!ns.width.length && d.style(node, "width") == "auto"){
 				ns.width = "auto";
 			}
-		} : 
+		} :
 				function(){};
 
 	dojo._fade = function(/*Object*/ args){
-		//	summary: 
+		//	summary:
 		//		Returns an animation that will fade the node defined by
 		//		args.node from the start to end values passed (args.start
 		//		args.end) (end is mandatory, start is optional)
 
 		args.node = d.byId(args.node);
 		var fArgs = _mixin({ properties: {} }, args),
-		 	props = (fArgs.properties.opacity = {});
-		
+			props = (fArgs.properties.opacity = {});
+
 		props.start = !("start" in fArgs) ?
-			function(){ 
-				return +d.style(fArgs.node, "opacity")||0; 
+			function(){
+				return +d.style(fArgs.node, "opacity")||0;
 			} : fArgs.start;
 		props.end = fArgs.end;
 
@@ -10933,7 +10944,7 @@ dojo.provide("dojo._base.fx");
 
 	/*=====
 	dojo.__FadeArgs = function(node, duration, easing){
-		// 	node: DOMNode|String
+		//	node: DOMNode|String
 		//		The node referenced in the animation
 		//	duration: Integer?
 		//		Duration of the animation in milliseconds.
@@ -10946,14 +10957,14 @@ dojo.provide("dojo._base.fx");
 	=====*/
 
 	dojo.fadeIn = function(/*dojo.__FadeArgs*/ args){
-		// summary: 
+		// summary:
 		//		Returns an animation that will fade node defined in 'args' from
 		//		its current opacity to fully opaque.
 		return d._fade(_mixin({ end: 1 }, args)); // dojo.Animation
 	};
 
 	dojo.fadeOut = function(/*dojo.__FadeArgs*/  args){
-		// summary: 
+		// summary:
 		//		Returns an animation that will fade node defined in 'args'
 		//		from its current opacity to fully transparent.
 		return d._fade(_mixin({ end: 0 }, args)); // dojo.Animation
@@ -10999,13 +11010,13 @@ dojo.provide("dojo._base.fx");
 		//	A hash map of style properties to Objects describing the transition,
 		//	such as the properties of dojo._Line with an additional 'units' property
 		properties: {}
-		
+
 		//TODOC: add event callbacks
 	});
 	=====*/
 
 	dojo.animateProperty = function(/*dojo.__AnimArgs*/ args){
-		// summary: 
+		// summary:
 		//		Returns an animation that will transition the properties of
 		//		node defined in `args` depending how they are defined in
 		//		`args.properties`
@@ -11015,10 +11026,10 @@ dojo.provide("dojo._base.fx");
 		//		animations. It takes an object of "properties" corresponding to
 		//		style properties, and animates them in parallel over a set
 		//		duration.
-		//	
+		//
 		// example:
 		//		A simple animation that changes the width of the specified node.
-		//	|	dojo.animateProperty({ 
+		//	|	dojo.animateProperty({
 		//	|		node: "nodeId",
 		//	|		properties: { width: 400 },
 		//	|	}).play();
@@ -11034,18 +11045,18 @@ dojo.provide("dojo._base.fx");
 		//	|		properties: {
 		//	|			width: { start: '200', end: '400', units:"px" },
 		//	|			height: { start:'200', end: '400', units:"px" },
-		//	|			paddingTop: { start:'5', end:'50', units:"px" } 
+		//	|			paddingTop: { start:'5', end:'50', units:"px" }
 		//	|		}
 		//	|	}).play();
 		//		Note 'paddingTop' is used over 'padding-top'. Multi-name CSS properties
 		//		are written using "mixed case", as the hyphen is illegal as an object key.
-		//		
+		//
 		// example:
 		//		Plug in a different easing function and register a callback for
 		//		when the animation ends. Easing functions accept values between
 		//		zero and one and return a value on that basis. In this case, an
 		//		exponential-in curve.
-		//	|	dojo.animateProperty({ 
+		//	|	dojo.animateProperty({
 		//	|		node: "nodeId",
 		//	|		// dojo figures out the start value
 		//	|		properties: { width: { end: 400 } },
@@ -11087,7 +11098,7 @@ dojo.provide("dojo._base.fx");
 		//	|			},
 		//	|			width:{
 		//	|				start:function(node){ return 100; },
-		//	|				end:function(node){ return 200; }	
+		//	|				end:function(node){ return 200; }
 		//	|			}
 		//	|		}
 		//	|	}).play();
@@ -11146,10 +11157,10 @@ dojo.provide("dojo._base.fx");
 		return anim; // dojo.Animation
 	};
 
-	dojo.anim = function(	/*DOMNode|String*/ 	node, 
-							/*Object*/ 			properties, 
-							/*Integer?*/		duration, 
-							/*Function?*/		easing, 
+	dojo.anim = function(	/*DOMNode|String*/	node,
+							/*Object*/			properties,
+							/*Integer?*/		duration,
+							/*Function?*/		easing,
 							/*Function?*/		onEnd,
 							/*Integer?*/		delay){
 		//	summary:
@@ -11195,7 +11206,7 @@ dojo.provide("dojo._base.fx");
 			duration: duration || d.Animation.prototype.duration,
 			properties: properties,
 			easing: easing,
-			onEnd: onEnd 
+			onEnd: onEnd
 		}).play(delay || 0);
 	};
 })();
@@ -11227,13 +11238,14 @@ dojo.forEach(dojo.config.require, function(i){
 
 	//INSERT dojo.i18n._preloadLocalizations HERE
 
-	if(dojo.config.afterOnLoad && dojo.isBrowser){
-		//Dojo is being added to the page after page load, so just trigger
-		//the init sequence after a timeout. Using a timeout so the rest of this
-		//script gets evaluated properly. This work needs to happen after the
-		//dojo.config.require work done in dojo._base.
-		window.setTimeout(dojo._loadInit, 1000);
+	//Check if document already complete, and if so, just trigger page load
+	//listeners. NOTE: does not work with Firefox before 3.6. To support
+	//those browsers, set djConfig.afterOnLoad = true when you know Dojo is added
+	//after page load. Using a timeout so the rest of this
+	//script gets evaluated properly. This work needs to happen after the
+	//dojo.config.require work done in dojo._base.
+	if(dojo.isBrowser && (document.readyState === "complete" || dojo.config.afterOnLoad)){
+		window.setTimeout(dojo._loadInit, 100);
 	}
-
 })();
 

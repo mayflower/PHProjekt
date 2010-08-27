@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,16 +15,33 @@ dojo.require("dojox.gfx.path");
 
 (function(){
 	var d = dojo, g = dojox.gfx, gs = g.shape, svg = g.svg;
-
-        var _createElementNS = function(ns, nodeType){
+	svg.useSvgWeb = (typeof(window.svgweb)!=='undefined');
+	
+	var _createElementNS = function(ns, nodeType){
 		// summary:
 		//		Internal helper to deal with creating elements that
 		//		are namespaced.  Mainly to get SVG markup output
 		//		working on IE.
-		if(document.createElementNS){
-			return document.createElementNS(ns,nodeType);
-                }else{
-			return document.createElement(nodeType);
+		if(dojo.doc.createElementNS){
+			return dojo.doc.createElementNS(ns,nodeType);
+		}else{
+			return dojo.doc.createElement(nodeType);
+		}
+	}
+	
+	var _createTextNode = function(text) {
+		if (svg.useSvgWeb) {
+			return dojo.doc.createTextNode(text, true);
+		} else {
+			return dojo.doc.createTextNode(text);
+		}
+	}
+	
+	var _createFragment = function() {
+		if (svg.useSvgWeb) {
+			return dojo.doc.createDocumentFragment(true);
+		} else {
+			return dojo.doc.createDocumentFragment();
 		}
 	}
 
@@ -213,7 +230,7 @@ dojo.require("dojox.gfx.path");
 				img.setAttribute("y", 0);
 				img.setAttribute("width",  f.width .toFixed(8));
 				img.setAttribute("height", f.height.toFixed(8));
-				img.setAttributeNS(svg.xmlns.xlink, "href", f.src);
+				img.setAttributeNS(svg.xmlns.xlink, "xlink:href", f.src);
 				fill.appendChild(img);
 			}else{
 				fill.setAttribute("gradientUnits", "userSpaceOnUse");
@@ -278,6 +295,7 @@ dojo.require("dojox.gfx.path");
 			for(var i in this.shape){
 				if(i != "type"){ this.rawNode.setAttribute(i, this.shape[i]); }
 			}
+			this.bbox = null;
 			return this;	// self
 		},
 
@@ -352,15 +370,11 @@ dojo.require("dojox.gfx.path");
 			}else{
 				this.shape = g.makeParameters(this.shape, points);
 			}
-			this.box = null;
+			this.bbox = null;
+			this._normalizePoints();
 			var attr = [], p = this.shape.points;
 			for(var i = 0; i < p.length; ++i){
-				if(typeof p[i] == "number"){
-					attr.push(p[i].toFixed(8));
-				}else{
-					attr.push(p[i].x.toFixed(8));
-					attr.push(p[i].y.toFixed(8));
-				}
+				attr.push(p[i].x.toFixed(8), p[i].y.toFixed(8));
 			}
 			this.rawNode.setAttribute("points", attr.join(" "));
 			return this;	// self
@@ -379,7 +393,8 @@ dojo.require("dojox.gfx.path");
 			for(var i in this.shape){
 				if(i != "type" && i != "src"){ rawNode.setAttribute(i, this.shape[i]); }
 			}
-			rawNode.setAttributeNS(svg.xmlns.xlink, "href", this.shape.src);
+			rawNode.setAttribute("preserveAspectRatio", "none");
+			rawNode.setAttributeNS(svg.xmlns.xlink, "xlink:href", this.shape.src);
 			return this;	// self
 		}
 	});
@@ -400,10 +415,12 @@ dojo.require("dojox.gfx.path");
 			r.setAttribute("rotate", s.rotated ? 90 : 0);
 			r.setAttribute("kerning", s.kerning ? "auto" : 0);
 			r.setAttribute("text-rendering", "optimizeLegibility");
-			if(!dojo.isIE){
-				r.textContent = s.text;
+			
+			// update the text content
+			if(r.firstChild){
+				r.firstChild.nodeValue = s.text;
 			}else{
-				r.appendChild(document.createTextNode(s.text));
+				r.appendChild(_createTextNode(s.text));
 			}
 			return this;	// self
 		},
@@ -422,7 +439,11 @@ dojo.require("dojox.gfx.path");
 			// (nodeValue == "" hangs firefox)
 			if(_text!=""){
 				while(!_width){
+//Yang: work around svgweb bug 417 -- http://code.google.com/p/svgweb/issues/detail?id=417
+if (_measurementNode.getBBox)
 					_width = parseInt(_measurementNode.getBBox().width);
+else
+	_width = 68;
 				}
 			}
 			oldParent.removeChild(_measurementNode);
@@ -471,7 +492,7 @@ dojo.require("dojox.gfx.path");
 			var r = this.rawNode;
 			if(!r.firstChild){
 				var tp = _createElementNS(svg.xmlns.svg, "textPath"),
-					tx = document.createTextNode("");
+					tx = _createTextNode("");
 				tp.appendChild(tx);
 				r.appendChild(tp);
 			}
@@ -485,7 +506,7 @@ dojo.require("dojox.gfx.path");
 					var id = g._base._getUniqueId();
 					path.setAttribute("id", id);
 					defs.appendChild(path);
-					r.firstChild.setAttributeNS(svg.xmlns.xlink, "href", "#" + id);
+					r.firstChild.setAttributeNS(svg.xmlns.xlink, "xlink:href", "#" + id);
 				}
 			}
 			if(path){
@@ -496,7 +517,7 @@ dojo.require("dojox.gfx.path");
 			var r = this.rawNode;
 			if(!r.firstChild){
 				var tp = _createElementNS(svg.xmlns.svg, "textPath"),
-					tx = document.createTextNode("");
+					tx = _createTextNode("");
 				tp.appendChild(tx);
 				r.appendChild(tp);
 			}
@@ -600,11 +621,27 @@ dojo.require("dojox.gfx.path");
 		_init: function(){
 			gs.Container._init.call(this);
 		},
+		openBatch: function() {
+			// summary: starts a new batch, subsequent new child shapes will be held in
+			//	the batch instead of appending to the container directly
+			this.fragment = _createFragment();
+		},
+		closeBatch: function() {
+			// summary: submits the current batch, append all pending child shapes to DOM
+			if (this.fragment) {
+				this.rawNode.appendChild(this.fragment);
+				delete this.fragment;
+			}
+		},
 		add: function(shape){
 			// summary: adds a shape to a group/surface
 			// shape: dojox.gfx.Shape: an VML shape object
 			if(this != shape.getParent()){
-				this.rawNode.appendChild(shape.rawNode);
+				if (this.fragment) {
+					this.fragment.appendChild(shape.rawNode);
+				} else {
+					this.rawNode.appendChild(shape.rawNode);
+				}
 				//dojox.gfx.Group.superclass.add.apply(this, arguments);
 				//this.inherited(arguments);
 				gs.Container.add.apply(this, arguments);
@@ -618,6 +655,9 @@ dojo.require("dojox.gfx.path");
 			if(this == shape.getParent()){
 				if(this.rawNode == shape.rawNode.parentNode){
 					this.rawNode.removeChild(shape.rawNode);
+				}
+				if(this.fragment && this.fragment == shape.rawNode.parentNode){
+					this.fragment.removeChild(shape.rawNode);
 				}
 				//dojox.gfx.Group.superclass.remove.apply(this, arguments);
 				//this.inherited(arguments);
@@ -656,8 +696,8 @@ dojo.require("dojox.gfx.path");
 				node = _createElementNS(svg.xmlns.svg, shapeType.nodeType);
 
 			shape.setRawNode(node);
-			this.rawNode.appendChild(node);
 			shape.setShape(rawShape);
+			// rawNode.appendChild() will be done inside this.add(shape) below
 			this.add(shape);
 			return shape;	// dojox.gfx.Shape
 		}
@@ -671,6 +711,83 @@ dojo.require("dojox.gfx.path");
 
 	d.extend(g.Surface, svg.Container);
 	d.extend(g.Surface, gs.Creator);
+
+
+	// some specific override for svgweb + flash
+	if (svg.useSvgWeb) {
+		
+		// override createSurface()
+		g.createSurface = function(parentNode, width, height) {
+			var s = new g.Surface();
+
+			// ensure width / height
+			if (!width || !height) {
+				var pos = d.position(parentNode);
+				width  = width  || pos.w;
+				height = height || pos.h;
+			}
+
+			// ensure id
+			parentNode = d.byId(parentNode);
+			var id = parentNode.id ? parentNode.id+'_svgweb' : g._base._getUniqueId();
+			
+			// create dynamic svg root
+			var mockSvg = _createElementNS(svg.xmlns.svg, 'svg');
+			mockSvg.id = id;
+			mockSvg.setAttribute('width', width);
+			mockSvg.setAttribute('height', height);
+			svgweb.appendChild(mockSvg, parentNode);
+
+			// notice: any call to the raw node before flash init will fail.
+			mockSvg.addEventListener('SVGLoad', function() {
+				// become loaded
+				s.rawNode = this;
+				s.isLoaded = true;
+				
+				// init defs
+				var defNode = _createElementNS(svg.xmlns.svg, "defs");
+				s.rawNode.appendChild(defNode);
+				s.defNode = defNode;
+				
+				// notify application
+				if (s.onLoad)
+					s.onLoad(s);
+			}, false);
+
+			// flash not loaded yet
+			s.isLoaded = false;
+			return s;
+		}
+		
+		// override Surface.destroy()
+		dojo.extend(dojox.gfx.shape.Surface, {
+			destroy: function() {
+				var mockSvg = this.rawNode;
+				svgweb.removeChild(mockSvg, mockSvg.parentNode);
+			}
+		});
+
+		// override connect() & disconnect() for Shape & Surface event processing
+		gs._eventsProcessing.connect = function(name, object, method) {
+			// connect events using the mock addEventListener() provided by svgweb
+			if (name.substring(0, 2)==='on') { name = name.substring(2); }
+			if (arguments.length == 2) {
+				method = object;
+			} else {
+				method = d.hitch(object, method);
+			}
+			this.getEventSource().addEventListener(name, method, false);
+			return [this, name, method];
+		}
+		gs._eventsProcessing.disconnect = function(token) {
+			// disconnect events using the mock removeEventListener() provided by svgweb
+			this.getEventSource().removeEventListener(token[1], token[2], false);
+			delete token[0];
+		}
+		dojo.extend(dojox.gfx.Shape, dojox.gfx.shape._eventsProcessing);
+		dojo.extend(dojox.gfx.shape.Surface, dojox.gfx.shape._eventsProcessing);
+	}
+
 })();
 
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -154,7 +154,7 @@ dojo.require("dojox.sketch.UndoStack");
 			self._ctr=dojo.position(self.node);
 			//	figure out the coordinates taking scroll into account
 			var scroll={x:self.node.scrollLeft,y:self.node.scrollTop};
-			//var win = dijit.getDocumentWindow(self.node.ownerDocument);
+			//var win = dojo.window.get(self.node.ownerDocument);
 			//var scroll=dojo.withGlobal(win,dojo._docScroll);
 			self._ctr={x:self._ctr.x-scroll.x, y:self._ctr.y-scroll.y};
 			var X=e.clientX-self._ctr.x, Y=e.clientY-self._ctr.y;
@@ -388,7 +388,7 @@ dojo.require("dojox.sketch.UndoStack");
 		if(idx>-1){ this.shapes.splice(idx, 1); }
 		return annotation;
 	};
-	p.get=function(id){
+	p.getAnnotator=function(id){
 		for(var i=0; i<this.shapes.length; i++){
 			if(this.shapes[i].id==id) {
 				return this.shapes[i];

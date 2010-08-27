@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -36,10 +36,10 @@ dojo.declare(
 =====*/
 
 		// value: Date
-		//		The value of this widget as a JavaScript Date object, with only hours/minutes/seconds specified.
+		//		The value of this widget as a JavaScript Date object.  Note that the date portion implies time zone and daylight savings rules.
 		//
 		//		Example:
-		// |	new dijit.form.TimeTextBox({value: dojo.date.local.fromISOString("T:12:59:59")})
+		// |	new dijit.form.TimeTextBox({value: dojo.date.stamp.fromISOString("T12:59:59", new Date())})
 		//
 		//		When passed to the parser in markup, must be specified according to locale-independent
 		//		`dojo.date.stamp.fromISOString` format.
@@ -47,6 +47,7 @@ dojo.declare(
 		//		Example:
 		// |	<input dojotype='dijit.form.TimeTextBox' value='T12:34:00'>
 		value: new Date("")		// value.toString()="NaN"
+		//FIXME: in markup, you have no control over daylight savings
 	}
 );
 

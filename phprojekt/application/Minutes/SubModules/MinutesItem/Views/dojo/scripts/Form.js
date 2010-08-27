@@ -54,26 +54,41 @@ dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
         //    selected topicType. Currently registered types are:
         //    1='Topic', 2='Statement', 3='TODO', 4='Decision', 5='Date'
         var display = (dojo.isIE) ? 'block' : 'table-row';
-        var trDate  = dojo.byId(this.main.module + 'topicDate').parentNode.parentNode.parentNode.parentNode.parentNode;
-        var trUser  = dojo.byId(this.main.module + 'userId').parentNode.parentNode.parentNode.parentNode.parentNode;
+        var trDate  = dojo.byId(this.main.module + 'topicDate').parentNode.parentNode.parentNode.parentNode;
+        var trUser  = dojo.byId(this.main.module + 'userId').parentNode.parentNode.parentNode.parentNode;
         switch(parseInt(typeValue)) {
             case 3:
                 dojo.style(trUser, "display", display);
                 dojo.style(trDate, "display", display);
-                dijit.byId(this.main.module + 'userId').attr("disabled", false);
-                dijit.byId(this.main.module + 'topicDate').attr("disabled", false);
+                dijit.byId(this.main.module + 'userId').set("disabled", false);
+                dijit.byId(this.main.module + 'topicDate').set("disabled", false);
+                if (dojo.isIE) {
+                    // Fix the display of the selectBox for IE
+                    dojo.style(dojo.byId(this.main.module + 'userId'), "display", "inline");
+                    dojo.style(dojo.byId(this.main.module + 'topicDate'), "display", "inline");
+                }
                 break;
             case 5:
                 dojo.style(trUser, "display", "none");
                 dojo.style(trDate, "display", display);
-                dijit.byId(this.main.module + 'userId').attr("disabled", true);
-                dijit.byId(this.main.module + 'topicDate').attr("disabled", false);
+                dijit.byId(this.main.module + 'userId').set("disabled", true);
+                dijit.byId(this.main.module + 'topicDate').set("disabled", false);
+                if (dojo.isIE) {
+                    // Fix the display of the selectBox for IE
+                    dojo.style(dojo.byId(this.main.module + 'userId'), "display", "none");
+                    dojo.style(dojo.byId(this.main.module + 'topicDate'), "display", "inline");
+                }
                 break;
             default:
                 dojo.style(trUser, "display", "none");
                 dojo.style(trDate, "display", "none");
-                dijit.byId(this.main.module + 'userId').attr("disabled", true);
-                dijit.byId(this.main.module + 'topicDate').attr("disabled", true);
+                dijit.byId(this.main.module + 'userId').set("disabled", true);
+                dijit.byId(this.main.module + 'topicDate').set("disabled", true);
+                if (dojo.isIE) {
+                    // Fix the display of the selectBox for IE
+                    dojo.style(dojo.byId(this.main.module + 'userId'), "display", "none");
+                    dojo.style(dojo.byId(this.main.module + 'topicDate'), "display", "none");
+                }
                 break;
         }
     },

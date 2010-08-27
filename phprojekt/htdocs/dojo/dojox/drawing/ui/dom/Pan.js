@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -117,10 +117,10 @@ dojox.drawing.ui.dom.Pan = dojox.drawing.util.oo.declare(
 			// very high maintenance.
 			var log = function(){
 				///console.log.apply(console, arguments);
-			}
+			};
 			var warn = function(){
 				//console.warn.apply(console, arguments);
-			}
+			};
 			//console.clear();
 			//console.time("check bounds");
 			var t=Infinity, r=-Infinity, b=-Infinity, l=Infinity,

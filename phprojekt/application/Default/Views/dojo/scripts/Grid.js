@@ -577,7 +577,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     okTxt:   phpr.nls.get("OK")
                 });
 
-                dijit.byId('gridFiltersBox').attr('content', html);
+                dijit.byId('gridFiltersBox').set('content', html);
                 this.drawFilters(filters);
 
                 // Only open div if there is any filter
@@ -645,8 +645,8 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 }
                 rule += '</select>';
 
-                dijit.byId('filterRuleDiv').attr('content', rule);
-                dijit.byId('filterInputDiv').attr('content', input);
+                dijit.byId('filterRuleDiv').set('content', rule);
+                dijit.byId('filterInputDiv').set('content', input);
                 dojo.style(dojo.byId('filterButtonDiv'), 'display', 'inline');
                 break;
             }
@@ -664,7 +664,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         }
         var filters  = this.getFilters();
         var found    = 0;
-        var sendData = dijit.byId('filterForm').attr('value');
+        var sendData = dijit.byId('filterForm').get('value');
 
         if (sendData['filterField'].indexOf('_forDate') > 0) {
             // Convert date
@@ -806,9 +806,9 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
         // Message
         if (dijit.byId('filterLabelDiv')) {
             if (this.filterField.length > 0) {
-                dijit.byId('filterLabelDiv').attr('content', phpr.nls.get("Add a filter"));
+                dijit.byId('filterLabelDiv').set('content', phpr.nls.get("Add a filter"));
             } else {
-                dijit.byId('filterLabelDiv').attr('content',
+                dijit.byId('filterLabelDiv').set('content',
                     phpr.nls.get("Please, delete some filters for get a correct result set."));
             }
         }
@@ -828,7 +828,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                     }
                     fieldSelect += '</select>';
                     dojo.style(fieldDiv, 'display', 'inline');
-                    dijit.byId('filterFieldDiv').attr('content', fieldSelect);
+                    dijit.byId('filterFieldDiv').set('content', fieldSelect);
                 }
             }
         }
@@ -891,7 +891,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
             }
         }
 
-        dijit.byId('filterDisplayDiv').attr('content', html);
+        dijit.byId('filterDisplayDiv').set('content', html);
 
         if (filters.length > 0) {
             if (this._deleteAllFilters === null && dojo.byId("filterDisplayDelete").children.length == 0) {
@@ -931,11 +931,11 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
                 iconClass: 'add'
             };
 
-            this._node.attr('content', phpr.drawEmptyMessage('There are no entries on this level'));
+            this._node.set('content', phpr.drawEmptyMessage('There are no entries on this level'));
             var buttonRow = dojo.byId('buttonRow');
             if (buttonRow.children.length != 0) {
-                var button = buttonRow.children[0].children[0].children[0].children[0].children[0];
-                if (button.className == 'dijitReset dijitInline add') {
+                var button = buttonRow.children[0].children[0].children[0].children[0];
+                if (button.className == 'dijitReset dijitInline dijitIcon add') {
                     // There is an 'add' button, so the user have create access
                     var newEntry = new dijit.form.Button(params);
                     dojo.addClass(this._node.domNode, 'addButtonText');
@@ -1021,7 +1021,7 @@ dojo.declare("phpr.Default.Grid", phpr.Component, {
 
             this.setClickEdit();
 
-            this._node.attr('content', this.grid.domNode);
+            this._node.set('content', this.grid.domNode);
             this.grid.startup();
             this.loadGridSorting();
             this.loadGridScroll();

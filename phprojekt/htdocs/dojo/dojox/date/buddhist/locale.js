@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,7 +15,7 @@ dojo.require("dojo.regexp");
 dojo.require("dojo.string");
 dojo.require("dojo.i18n");
 
-dojo.requireLocalization("dojo.cldr", "buddhist", null, "th");
+dojo.requireLocalization("dojo.cldr", "buddhist", null, "ROOT,th");
 
 (function(){
 	// Format a pattern without literals
@@ -57,7 +57,7 @@ dojo.requireLocalization("dojo.cldr", "buddhist", null, "th");
 					break;
 				case 'a':
 					var timePeriod = (dateObject.getHours() < 12) ? 'am' : 'pm';
-					s = bundle[timePeriod];
+					s = bundle['dayPeriods-format-wide-' + timePeriod];
 					break;
 				case 'h':
 				case 'H':
@@ -221,8 +221,8 @@ dojox.date.buddhist.locale.parse= function(/*String*/value, /*object?*/options){
 					result[2] =  Number(v);
 				break;
 			case 'a': //am/pm
-				var am = options.am || bundle.am;
-				var pm = options.pm || bundle.pm;
+				var am = options.am || bundle['dayPeriods-format-wide-am'],
+					pm = options.pm || bundle['dayPeriods-format-wide-pm'];
 				if(!options.strict){
 					var period = /\./g;
 					v = v.replace(period,'').toLowerCase();
@@ -347,8 +347,8 @@ function _buildDateTimeRE  (tokens, bundle, options, pattern){
 					s = '\\d{'+l+'}';
 					break;
 				case 'a':
-					var am = options.am || bundle.am || 'AM';
-					var pm = options.pm || bundle.pm || 'PM';
+					var am = options.am || bundle['dayPeriods-format-wide-am'],
+						pm = options.pm || bundle['dayPeriods-format-wide-pm'];
 					if(options.strict){
 						s = am + '|' + pm;
 					}else{

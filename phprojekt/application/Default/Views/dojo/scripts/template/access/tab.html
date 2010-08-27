@@ -38,7 +38,7 @@
     {% if accessPermissions %}
     <tr>
         <td>
-            <select id="dataAccessAdd" name="dataAccessAdd" dojoType="phpr.FilteringSelect" required="true"
+            <select id="dataAccessAdd" name="dataAccessAdd" dojoType="phpr.FilteringSelect" required="false"
             autocomplete="false" value="" invalidMessage="" >
                 {% for user in users %}
                 <option value="{{user.id}}" >{{user.display}}</option>

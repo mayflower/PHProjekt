@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -54,11 +54,11 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				//		them to this, but they won't have selection
 				//		or drag ability.
 				//
-				console.log("Selection.register ::::::", stencil.id)
+				console.log("Selection.register ::::::", stencil.id);
 				if(stencil.isText && !stencil.editMode && stencil.deleteEmptyCreate && !stencil.getText()){
 					// created empty text field
 					// defaults say to delete
-					console.warn("EMPTY CREATE DELETE", stencil)
+					console.warn("EMPTY CREATE DELETE", stencil);
 					stencil.destroy();
 					return false;
 				}
@@ -67,12 +67,12 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				
 				if(stencil.execText){
 					if(stencil._text && !stencil.editMode){
-						console.log("select text")
+						console.log("select text");
 						this.selectItem(stencil);
 					}
 					stencil.connect("execText", this, function(){
 						if(stencil.isText && stencil.deleteEmptyModify && !stencil.getText()){
-							console.warn("EMPTY MOD DELETE", stencil)
+							console.warn("EMPTY MOD DELETE", stencil);
 							// text deleted
 							// defaults say to delete
 							this.deleteItem(stencil);
@@ -104,7 +104,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				//		This doesn't delete them, only removes them from
 				// 		the list.
 				//
-				console.log("Selection.unregister ::::::", stencil.id, "sel:", stencil.selected)
+				console.log("Selection.unregister ::::::", stencil.id, "sel:", stencil.selected);
 				if(stencil){
 					stencil.selected && this.onDeselect(stencil);
 					delete this.stencils[stencil.id];
@@ -153,7 +153,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				this._throttleVrl = setTimeout(dojo.hitch(this, function(){
 					this._throttle = false;
 					this.saveMoveState();
-				}), this.throttleTime)
+				}), this.throttleTime);
 				if(this._throttle){ return; }
 				this._throttle = true;
 				
@@ -174,7 +174,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				// summary:
 				//		Event fired on deletion of a stencil
 				//
-				console.log("onDelete", noundo)
+				console.log("onDelete", noundo);
 				if(noundo!==true){
 					this.undo.add({
 						before:dojo.hitch(this, "unDelete", this.selectedStencils),
@@ -184,7 +184,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				this.withSelected(function(m){
 					this.anchors.remove(m);
 					var id = m.id;
-					console.log("delete:", m)
+					console.log("delete:", m);
 					m.destroy();
 					delete this.stencils[id];
 				});
@@ -265,7 +265,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				//		and determines how far left and up the selection
 				//		can go without going below zero
 				//
-				var t = Infinity; l = Infinity;
+				var t = Infinity, l = Infinity;
 				this.withSelected(function(m){
 					var o = m.getBounds();
 					t = Math.min(o.y1, t);
@@ -356,7 +356,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				// summary:
 				//		Event fired on the double-click of a stencil
 				//
-				console.info("mgr.onStencilDoubleClick:", obj)
+				console.info("mgr.onStencilDoubleClick:", obj);
 				if(this.selectedStencils[obj.id]){
 					if(this.selectedStencils[obj.id].edit){
 						console.info("Mgr Stencil Edit -> ", this.selectedStencils[obj.id]);
@@ -381,7 +381,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				// summary:
 				//		Event fired on mousedown on a stencil
 				//
-				console.info(" >>> onStencilDown:", obj.id, this.keys.meta)
+				console.info(" >>> onStencilDown:", obj.id, this.keys.meta);
 				if(!this.stencils[obj.id]){ return; }
 				this._isBusy = true;
 				
@@ -403,7 +403,7 @@ dojo.provide("dojox.drawing.manager.Stencil");
 					return;
 				
 				}else if(this.selectedStencils[obj.id]){
-					console.log("    clicked on selected")
+					console.log("    clicked on selected");
 					// clicking on same selected item(s)
 					// RESET OFFSETS
 					var mx = this.group.getTransform();
@@ -420,11 +420,11 @@ dojo.provide("dojox.drawing.manager.Stencil");
 					// meta-key add
 					//console.log("reset sel and add stencil")
 				}
-				console.log("    add stencil to selection")
+				console.log("    add stencil to selection");
 				// add a stencil
 				this.selectItem(obj.id);
 				
-				var mx = this.group.getTransform();
+				mx = this.group.getTransform();
 				this._offx = obj.x - mx.dx; 
 				this._offy = obj.y - mx.dx;
 				
@@ -467,7 +467,6 @@ dojo.provide("dojox.drawing.manager.Stencil");
 					
 					var x = obj.x - obj.last.x,
 						y = obj.y - obj.last.y,
-						mx = this.group.getTransform(),
 						c = this.constrain,
 						mz = this.defaults.anchors.marginZero;
 					
@@ -510,22 +509,22 @@ dojo.provide("dojox.drawing.manager.Stencil");
 				//
 				this.deselect();
 			},
+						
 			
-			/*
-			onStencilOver: function(evt, stencil){
+			onStencilOver: function(obj){
 				// summary:
-				//		TODO: This is currently not supported.
-				console.log("OVER", surface)
-				dojo.style(surfaceNode, "cursor", "move");
+				//		This changes the cursor when hovering over
+				//		a selectable stencil.
+				//console.log("OVER")
+				dojo.style(obj.id, "cursor", "move");
 			},
-			
-			onStencilOut: function(evt, stencil){
+
+			onStencilOut: function(obj){
 				// summary:
-				//		TODO: This is currently not supported.
-				console.log("OUT")
-				dojo.style(surfaceNode, "cursor", "crosshair");
+				//		This restores the cursor.
+				//console.log("OUT")
+				dojo.style(obj.id, "cursor", "crosshair");
 			},
-			*/
 			
 			exporter: function(){
 				// summary:
@@ -536,6 +535,10 @@ dojo.provide("dojox.drawing.manager.Stencil");
 					this.stencils[m].enabled && items.push(this.stencils[m].exporter());
 				}
 				return items; // Array
+			},
+			
+			listStencils: function(){
+				return this.stencils;
 			},
 			
 			toSelected: function(/*String*/func){

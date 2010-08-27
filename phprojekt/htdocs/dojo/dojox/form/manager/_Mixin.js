@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -57,7 +57,7 @@ dojo.require("dijit._Widget");
 		},
 
 		registerWidget = function(widget){
-			var name = widget.attr("name");
+			var name = widget.get("name");
 			if(name && widget instanceof dijit.form._FormWidget){
 				if(name in this.formWidgets){
 					var a = this.formWidgets[name].widget;
@@ -78,7 +78,7 @@ dojo.require("dijit._Widget");
 		getObserversFromWidget = function(name){
 			var observers = {};
 			aa(function(_, w){
-				var o = w.attr("observer");
+				var o = w.get("observer");
 				if(o && typeof o == "string"){
 					dojo.forEach(o.split(","), function(o){
 						o = dojo.trim(o);
@@ -106,7 +106,7 @@ dojo.require("dijit._Widget");
 							// w.checked != w.focusNode.checked when value changes.
 							// We test the underlying value to be 100% sure.
 							if(this.watch && dojo.attr(w.focusNode, "checked")){
-								this[o](w.attr("value"), name, w, evt);
+								this[o](w.get("value"), name, w, evt);
 							}
 						}));
 					}, this);
@@ -119,7 +119,7 @@ dojo.require("dijit._Widget");
 				dojo.forEach(observers, function(o){
 					c.push(dojo.connect(w, eventName, this, function(evt){
 						if(this.watch){
-							this[o](w.attr("value"), name, w, evt);
+							this[o](w.get("value"), name, w, evt);
 						}
 					}));
 				}, this);
@@ -251,7 +251,7 @@ dojo.require("dijit._Widget");
 				dojo.map(
 					widget.getDescendants(),
 					function(w){
-						return w instanceof dijit.form._FormWidget && w.attr("name") || null;
+						return w instanceof dijit.form._FormWidget && w.get("name") || null;
 					}
 				),
 				function(name){
@@ -297,10 +297,10 @@ dojo.require("dijit._Widget");
 				// input/radio array of widgets
 				if(isSetter){
 					dojo.forEach(elem, function(widget){
-						widget.attr("checked", false);
+						widget.set("checked", false, !this.watch);
 					});
 					dojo.forEach(elem, function(widget){
-						widget.attr("checked", widget.attr("value") === value);
+						widget.set("checked", widget.value === value, !this.watch);
 					});
 					return this;	// self
 				}
@@ -310,20 +310,30 @@ dojo.require("dijit._Widget");
 					// w.checked != w.focusNode.checked when value changes.
 					// We test the underlying value to be 100% sure.
 					if(dojo.attr(widget.focusNode, "checked")){
-					//if(widget.attr("checked")){
+					//if(widget.get("checked")){
 						result = widget;
 						return true;
 					}
 					return false;
 				});
-				return result ? result.attr("value") : "";	// String
+				return result ? result.get("value") : "";	// String
 			}
+
+			// checkbox widget is a special case :-(
+			if(elem.declaredClass == "dijit.form.CheckBox"){
+				if(isSetter){
+					elem.set("value", Boolean(value), !this.watch);
+					return this;	// self
+				}
+				return Boolean(elem.get("value"));	// Object
+			}
+
 			// all other elements
 			if(isSetter){
-				elem.attr("value", value);
+				elem.set("value", value, !this.watch);
 				return this;	// self
 			}
-			return elem.attr("value");	// Object
+			return elem.get("value");	// Object
 		},
 
 		formPointValue: function(elem, value){

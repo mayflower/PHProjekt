@@ -121,7 +121,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             tabs:        tabs
         });
         phpr.makeModuleDesignerSource();
-        phpr.makeModuleDesignerTarget(dijit.byId('designerData').attr('value'), this.tabStore.getList());
+        phpr.makeModuleDesignerTarget(dijit.byId('designerData').get('value'), this.tabStore.getList());
 
         // Select the first tab, since the tabs in the dialog don't work on dojo 1.4
         dijit.byId('moduleDesignerEditor').startup();
@@ -153,10 +153,10 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                 i++;
                 data[i] = new Object();
 
-                if (dijit.byId('name').attr('value') != '') {
-                    data[i]['tableName'] = dijit.byId('name').attr('value');
+                if (dijit.byId('name').get('value') != '') {
+                    data[i]['tableName'] = dijit.byId('name').get('value');
                 } else {
-                    data[i]['tableName'] = self.convertLabelIntoTableName(dijit.byId('label').attr('value'));
+                    data[i]['tableName'] = self.convertLabelIntoTableName(dijit.byId('label').get('value'));
                 }
 
                 formPosition++;
@@ -214,7 +214,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         }
 
         var json = dojo.toJson(data);
-        dijit.byId('designerData').attr('value', json);
+        dijit.byId('designerData').set('value', json);
     },
 
     updateDesignerData:function(event) {
@@ -224,20 +224,20 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         //    Update the field "name" with the value of the name or label
         //    Change the value into all the data array
         var self = this;
-        var data = dojo.fromJson(dijit.byId('designerData').attr('value'));
+        var data = dojo.fromJson(dijit.byId('designerData').get('value'));
 
         if (self.id > 0) {
-            var tableName = self.convertLabelIntoTableName(dijit.byId('name').attr('value'));
+            var tableName = self.convertLabelIntoTableName(dijit.byId('name').get('value'));
         } else {
-            var tableName = self.convertLabelIntoTableName(dijit.byId('label').attr('value'));
-            dijit.byId('name').attr('value', tableName);
+            var tableName = self.convertLabelIntoTableName(dijit.byId('label').get('value'));
+            dijit.byId('name').set('value', tableName);
         }
 
         for (var i in data) {
             data[i]['tableName'] = self.convertLabelIntoTableName(tableName);
         }
         data = dojo.toJson(data);
-        dijit.byId('designerData').attr('value', data);
+        dijit.byId('designerData').set('value', data);
 
         if (event) {
             dojo.stopEvent(event);

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,30 +19,40 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 		options.subShape = true;
 		dojo.mixin(this, options);
 		//console.log("  button:", this);
-		this.width = options.data.width;
-		this.height = options.data.height;
+		this.width = options.data.width || options.data.rx*2;
+		this.height = options.data.height || options.data.ry*2;
+		this.y = options.data.y || options.data.cy - options.data.ry;
+		//
 		this.id = this.id || this.util.uid(this.type);
 		this.util.attr(this.container, "id", this.id);
-		
 		if(this.callback){
 			this.hitched = dojo.hitch(this.scope || window, this.callback, this);
 		}
 		
-		this.shape = new dojox.drawing.stencil.Rect(options)
+		// Rectangle itself must be "ui" for radio buttons to work.
+		// This is a work-around for messy code associated with drawingType;
+		// see http://www.andestutor.org/bugzilla/show_bug.cgi?id=1745
+		options.drawingType="ui";
+		// Choose between rectangle and ellipse based on options
+		if(options.data.width && options.data.height){
+			this.shape = new dojox.drawing.stencil.Rect(options);
+		}else{
+			this.shape = new dojox.drawing.stencil.Ellipse(options);
+		}
 		
 		var setGrad = function(s, p, v){
 			dojo.forEach(["norm", "over", "down", "selected"], function(nm){
 				s[nm].fill[p] = v;
 			});
-		}
+		};
 		// for button backs, not for icons
-		setGrad(this.style.button, "y2", this.data.height + this.data.y);
-		setGrad(this.style.button, "y1", this.data.y);
+		setGrad(this.style.button, "y2", this.height + this.y);
+		setGrad(this.style.button, "y1", this.y);
 		
 		if(options.icon && !options.icon.text){
 			var constr = this.drawing.getConstructor(options.icon.type);
 			var o = this.makeOptions(options.icon);
-			o.data = dojo.mixin(o.data, this.style.button.icon.norm)
+			o.data = dojo.mixin(o.data, this.style.button.icon.norm);
 			
 			if(o.data && o.data.borderWidth===0){
 				o.data.fill = this.style.button.icon.norm.fill = o.data.color;
@@ -53,15 +63,15 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 			}
 			this.icon = new constr(o);
 			//console.log("  button:", this.toolType, this.style.button.icon)
-		}else if(options.text || options.icon.text){
+		}else if(options.text || (options.icon && options.icon.text)){
 			//console.warn("button text:", options.text || options.icon.text)
-			var o = this.makeOptions(options.text || options.icon.text);
-			o.data.color = this.style.button.icon.norm.color //= o.data.fill;
+			o = this.makeOptions(options.text || options.icon.text);
+			o.data.color = this.style.button.icon.norm.color; //= o.data.fill;
 			this.style.button.icon.selected.color = this.style.button.icon.selected.fill;
 			this.icon = new dojox.drawing.stencil.Text(o);
 			this.icon.attr({
 				height:	this.icon._lineHeight,
-				y:((this.data.height-this.icon._lineHeight)/2)+this.data.y
+				y:((this.height-this.icon._lineHeight)/2)+this.y
 			});
 		}
 		
@@ -95,7 +105,7 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 				mouse: this.mouse,
 				container: this.container,
 				subShape:true
-			}
+			};
 			
 			if(typeof(d)=="string"){
 				
@@ -124,7 +134,7 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 				
 			}else{
 				//console.warn("data")
-				for(var n in d){
+				for(n in d){
 					if(/x|width/.test(n)){
 						d[n] = d[n] * this.data.width * .01 * s;
 					}else if(/y|height/.test(n)){
@@ -162,27 +172,38 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 		// moveTo.. methods.
 		select: function(){
 			this.selected = true;
-			this.icon.attr(this.style.button.icon.selected);
+			if(this.icon){this.icon.attr(this.style.button.icon.selected);}
 			this._change(this.style.button.selected);
 			this.shape.shadow && this.shape.shadow.hide();
 		},
 		deselect: function(){
 			this.selected = false;
-			this.icon.attr(this.style.button.icon.norm);
+			if(this.icon){this.icon.attr(this.style.button.icon.norm);}
 			this.shape.shadow && this.shape.shadow.show();
 			this._change(this.style.button.norm);
 			
+		},
+		disable: function(){
+			if(!this.enabled){ return; }
+			this.enabled = false;
+			this._change(this.style.button.disabled);
+			this.icon.attr({color:this.style.button.norm.color});
+		},
+		enable: function(){
+			if(this.enabled){ return; }
+			this.enabled = true;
+			this._change(this.style.button.norm);
+			this.icon.attr({color:this.style.button.icon.norm.color});
 		},
 		
 		_change: function(/*Object*/sty){
 			this.shape.attr(sty);
 			this.shape.shadow && this.shape.shadow.container.moveToBack();	
-			this.icon.shape.moveToFront();
-			
+			if(this.icon){this.icon.shape.moveToFront();};
 		},
 		onOver: function(){
 			//console.log("BUTTON OVER")
-			if(this.selected){ return; }
+			if(this.selected || !this.enabled){ return; }
 			this._change(this.style.button.over);
 		},
 		onOut: function(){
@@ -190,16 +211,20 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 			this._change(this.style.button.norm);
 		},
 		onDown: function(){
-			if(this.selected){ return; }
+			if(this.selected || !this.enabled){ return; }
 			this._change(this.style.button.selected);
 		},
 		onUp: function(){
 			//console.log("BUTTON UP")
+			if(!this.enabled){ return; }
 			this._change(this.style.button.over);
 			if(this.hitched){
 				this.hitched();
 			}
 			this.onClick(this);
+		},
+		attr: function(options){
+			if(this.icon){this.icon.attr(options);}
 		}
 	}	
 	

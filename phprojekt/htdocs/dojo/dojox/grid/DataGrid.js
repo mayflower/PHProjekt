@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -96,6 +96,15 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 	},
 
 	get: function(inRowIndex, inItem){
+		// summary: Default data getter.
+		// description:
+		//		Provides data to display in a grid cell. Called in grid cell context.
+		//		So this.cell.index is the column index.
+		// inRowIndex: Integer
+		//		Row for which to provide data
+		// returns:
+		//		Data to display for a given grid cell.
+		
 		if(inItem && this.field == "_item" && !this.fields){
 			return inItem;
 		}else if(inItem && this.fields){
@@ -105,6 +114,8 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 				ret = ret.concat(s.getValues(inItem, f));
 			});
 			return ret;
+		}else if(!inItem && typeof inRowIndex === "string"){
+			return this.inherited(arguments);
 		}
 		return (!inItem ? this.defaultValue : (!this.field ? this.value : (this.field == "_item" ? inItem : this.grid.store.getValue(inItem, this.field))));
 	},
@@ -154,7 +165,7 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 
 	_onNew: function(item, parentInfo){
 		this._checkUpdateStatus();
-		var rowCount = this.attr('rowCount');
+		var rowCount = this.get('rowCount');
 		this._addingItem = true;
 		this.updateRowCount(rowCount+1);
 		this._addingItem = false;
@@ -180,8 +191,8 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 			var o = this._by_idx[idx];
 			this._by_idx.splice(idx, 1);
 			delete this._by_idty[o.idty];
-			this.updateRowCount(this.attr('rowCount')-1);
-			if(this.attr('rowCount') === 0){
+			this.updateRowCount(this.get('rowCount')-1);
+			if(this.get('rowCount') === 0){
 				this.showMessage(this.noDataMessage);
 			}
 		}
@@ -424,7 +435,7 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 	// rendering
 	_render: function(){
 		if(this.domNode.parentNode){
-			this.scroller.init(this.attr('rowCount'), this.keepRows, this.rowsPerPage);
+			this.scroller.init(this.get('rowCount'), this.keepRows, this.rowsPerPage);
 			this.prerender();
 			this._fetch(0, true);
 		}
@@ -448,7 +459,7 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 			var pageIndex = this._rowToPage(inRowIndex);
 			this._needPage(pageIndex);
 			this._bop = pageIndex * this.rowsPerPage;
-			this._eop = this._bop + (this.rowsPerPage || this.attr('rowCount'));
+			this._eop = this._bop + (this.rowsPerPage || this.get('rowCount'));
 		}
 	},
 
@@ -461,7 +472,7 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 
 	_requestPage: function(inPageIndex){
 		var row = this._pageToRow(inPageIndex);
-		var count = Math.min(this.rowsPerPage, this.attr('rowCount') - row);
+		var count = Math.min(this.rowsPerPage, this.get('rowCount') - row);
 		if(count > 0){
 			this._requests++;
 			if(!this._requestsPending(row)){

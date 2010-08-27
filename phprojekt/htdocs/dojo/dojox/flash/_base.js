@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,8 +10,8 @@ dojo._hasResource["dojox.flash._base"] = true;
 dojo.provide("dojox.flash._base");
 dojo.experimental("dojox.flash");
 
-// for dijit.getViewport(), needed by dojox.flash.Embed.center()
-dojo.require("dijit._base.place");
+// for dojo.window.getBox(), needed by dojox.flash.Embed.center()
+dojo.require("dojo.window");
 
 dojox.flash = function(){
 	// summary:
@@ -547,7 +547,7 @@ dojox.flash.Embed.prototype = {
 		var elementWidth = this.width;
 		var elementHeight = this.height;
 
-		var viewport = dijit.getViewport();
+		var viewport = dojo.window.getBox();
 
 		// compute the centered position    
 		var x = viewport.l + (viewport.w - elementWidth) / 2;

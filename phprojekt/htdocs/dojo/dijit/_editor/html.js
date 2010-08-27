@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -25,7 +25,7 @@ dijit._editor.getNodeHtml=function(/* DomNode */node){
 	switch(node.nodeType){
 		case 1: //element node
 			var lName = node.nodeName.toLowerCase();
-			if(lName.charAt(0) == "/"){
+			if(!lName || lName.charAt(0) == "/"){
 				// IE does some strange things with malformed HTML input, like
 				// treating a close tag </span> without an open tag <span>, as
 				// a new tag with tagName of /span.  Corrupts output HTML, remove

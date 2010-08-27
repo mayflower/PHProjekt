@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,9 +9,10 @@ if(!dojo._hasResource["dojox.charting.axis2d.Default"]){ //_hasResource checks a
 dojo._hasResource["dojox.charting.axis2d.Default"] = true;
 dojo.provide("dojox.charting.axis2d.Default");
 
+dojo.require("dojox.charting.axis2d.Invisible");
+
 dojo.require("dojox.charting.scaler.linear");
 dojo.require("dojox.charting.axis2d.common");
-dojo.require("dojox.charting.axis2d.Base");
 
 dojo.require("dojo.colors");
 dojo.require("dojo.string");
@@ -19,16 +20,151 @@ dojo.require("dojox.gfx");
 dojo.require("dojox.lang.functional");
 dojo.require("dojox.lang.utils");
 
+/*=====
+	dojox.charting.axis2d.__AxisCtorArgs = function(
+		vertical, fixUpper, fixLower, natural, leftBottom,
+		includeZero, fixed, majorLabels, minorTicks, minorLabels, microTicks, htmlLabels,
+		min, max, from, to, majorTickStep, minorTickStep, microTickStep,
+		labels, labelFunc, maxLabelSize,
+		stroke, majorTick, minorTick, microTick, tick,
+		font, fontColor
+	){
+	//	summary:
+	//		Optional arguments used in the definition of an axis.
+	//
+	//	vertical: Boolean?
+	//		A flag that says whether an axis is vertical (i.e. y axis) or horizontal. Default is false (horizontal).
+	//	fixUpper: String?
+	//		Align the greatest value on the axis with the specified tick level. Options are "major", "minor", "micro", or "none".  Defaults to "none".
+	//	fixLower: String?
+	//		Align the smallest value on the axis with the specified tick level. Options are "major", "minor", "micro", or "none".  Defaults to "none".
+	//	natural: Boolean?
+	//		Ensure tick marks are made on "natural" numbers. Defaults to false.
+	//	leftBottom: Boolean?
+	//		The position of a vertical axis; if true, will be placed against the left-bottom corner of the chart.  Defaults to true.
+	//	includeZero: Boolean?
+	//		Include 0 on the axis rendering.  Default is false.
+	//	fixed: Boolean?
+	//		Force all axis labels to be fixed numbers.  Default is true.
+	//	majorLabels: Boolean?
+	//		Flag to draw all labels at major ticks. Default is true.
+	//	minorTicks: Boolean?
+	//		Flag to draw minor ticks on an axis.  Default is true.
+	//	minorLabels: Boolean?
+	//		Flag to draw labels on minor ticks. Default is true.
+	//	microTicks: Boolean?
+	//		Flag to draw micro ticks on an axis. Default is false.
+	//	htmlLabels: Boolean?
+	//		Flag to use HTML (as opposed to the native vector graphics engine) to draw labels. Default is true.
+	//	min: Number?
+	//		The smallest value on an axis. Default is 0.
+	//	max: Number?
+	//		The largest value on an axis. Default is 1.
+	//	from: Number?
+	//		Force the chart to render data visible from this value. Default is 0.
+	//	to: Number?
+	//		Force the chart to render data visible to this value. Default is 1.
+	//	majorTickStep: Number?
+	//		The amount to skip before a major tick is drawn.  Default is 4.
+	//	minorTickStep: Number?
+	//		The amount to skip before a minor tick is drawn. Default is 2.
+	//	microTickStep: Number?
+	//		The amount to skip before a micro tick is drawn. Default is 1.
+	//	labels: Object[]?
+	//		An array of labels for major ticks, with corresponding numeric values, ordered by value.
+	//	labelFunc: Function?
+	//		An optional function used to compute label values.
+	//	maxLabelSize: Number?
+	//		The maximum size, in pixels, for a label.  To be used with the optional label function.
+	//	stroke: dojox.gfx.Stroke?
+	//		An optional stroke to be used for drawing an axis.
+	//	majorTick: Object?
+	//		An object containing a dojox.gfx.Stroke, and a length (number) for a major tick.
+	//	minorTick: Object?
+	//		An object containing a dojox.gfx.Stroke, and a length (number) for a minor tick.
+	//	microTick: Object?
+	//		An object containing a dojox.gfx.Stroke, and a length (number) for a micro tick.
+	//	tick: Object?
+	//		An object containing a dojox.gfx.Stroke, and a length (number) for a tick.
+	//	font: String?
+	//		An optional font definition (as used in the CSS font property) for labels.
+	//	fontColor: String|dojo.Color?
+	//		An optional color to be used in drawing labels.
+
+	this.vertical = vertical;
+	this.fixUpper = fixUpper;
+	this.fixLower = fixLower;
+	this.natural = natural;
+	this.leftBottom = leftBottom;
+	this.includeZero = includeZero;
+	this.fixed = fixed;
+	this.majorLabels = majorLabels;
+	this.minorTicks = minorTicks;
+	this.minorLabels = minorLabels;
+	this.microTicks = microTicks;
+	this.htmlLabels = htmlLabels;
+	this.min = min;
+	this.max = max;
+	this.from = from;
+	this.to = to;
+	this.majorTickStep = majorTickStep;
+	this.minorTickStep = minorTickStep;
+	this.microTickStep = microTickStep;
+	this.labels = labels;
+	this.labelFunc = labelFunc;
+	this.maxLabelSize = maxLabelSize;
+	this.stroke = stroke;
+	this.majorTick = majorTick;
+	this.minorTick = minorTick;
+	this.microTick = microTick;
+	this.tick = tick;
+	this.font = font;
+	this.fontColor = fontColor;
+}
+=====*/
 (function(){
 	var dc = dojox.charting,
-		df = dojox.lang.functional,
 		du = dojox.lang.utils,
 		g = dojox.gfx,
 		lin = dc.scaler.linear,
-		labelGap = 4;	// in pixels
+		labelGap = 4,			// in pixels
+		centerAnchorLimit = 45;	// in degrees
 
-	dojo.declare("dojox.charting.axis2d.Default", dojox.charting.axis2d.Base, {
-		 defaultParams: {
+	dojo.declare("dojox.charting.axis2d.Default", dojox.charting.axis2d.Invisible, {
+		//	summary:
+		//		The default axis object used in dojox.charting.  See dojox.charting.Chart2D.addAxis for details.
+		//
+		//	defaultParams: Object
+		//		The default parameters used to define any axis.
+		//	optionalParams: Object
+		//		Any optional parameters needed to define an axis.
+
+		/*
+		//	TODO: the documentation tools need these to be pre-defined in order to pick them up
+		//	correctly, but the code here is partially predicated on whether or not the properties
+		//	actually exist.  For now, we will leave these undocumented but in the code for later. -- TRT
+
+		//	opt: Object
+		//		The actual options used to define this axis, created at initialization.
+		//	scalar: Object
+		//		The calculated helper object to tell charts how to draw an axis and any data.
+		//	ticks: Object
+		//		The calculated tick object that helps a chart draw the scaling on an axis.
+		//	dirty: Boolean
+		//		The state of the axis (whether it needs to be redrawn or not)
+		//	scale: Number
+		//		The current scale of the axis.
+		//	offset: Number
+		//		The current offset of the axis.
+
+		opt: null,
+		scalar: null,
+		ticks: null,
+		dirty: true,
+		scale: 1,
+		offset: 0,
+		*/
+		defaultParams: {
 			vertical:    false,		// true for vertical axis
 			fixUpper:    "none",	// align the upper on ticks: "major", "minor", "micro", "none"
 			fixLower:    "none",	// align the lower on ticks: "major", "minor", "micro", "none"
@@ -40,6 +176,7 @@ dojo.require("dojox.lang.utils");
 			minorTicks:  true,		// draw minor ticks
 			minorLabels: true,		// draw minor labels
 			microTicks:  false,		// draw micro ticks
+			rotation:    0,			// label rotation angle in degrees
 			htmlLabels:  true		// use HTML to draw labels
 		},
 		optionalParams: {
@@ -64,267 +201,288 @@ dojo.require("dojox.lang.utils");
 			majorTick:		{},	// stroke + length for a tick
 			minorTick:		{},	// stroke + length for a tick
 			microTick:		{},	// stroke + length for a tick
+			tick:           {},	// stroke + length for a tick
 			font:			"",	// font for labels
 			fontColor:		""	// color for labels as a string
 		},
 
 		constructor: function(chart, kwArgs){
+			//	summary:
+			//		The constructor for an axis.
+			//	chart: dojox.charting.Chart2D
+			//		The chart the axis belongs to.
+			//	kwArgs: dojox.charting.axis2d.__AxisCtorArgs?
+			//		Any optional keyword arguments to be used to define this axis.
 			this.opt = dojo.delegate(this.defaultParams, kwArgs);
 			// du.updateWithObject(this.opt, kwArgs);
 			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
 		},
-		dependOnData: function(){
-			return !("min" in this.opt) || !("max" in this.opt);
-		},
-		clear: function(){
-			delete this.scaler;
-			delete this.ticks;
-			this.dirty = true;
-			return this;
-		},
-		initialized: function(){
-			return "scaler" in this && !(this.dirty && this.dependOnData());
-		},
-		setWindow: function(scale, offset){
-			this.scale  = scale;
-			this.offset = offset;
-			return this.clear();
-		},
-		getWindowScale: function(){
-			return "scale" in this ? this.scale : 1;
-		},
-		getWindowOffset: function(){
-			return "offset" in this ? this.offset : 0;
-		},
-		_groupLabelWidth: function(labels, font){
-			if(labels[0]["text"]){
-				labels = df.map(labels, function(label){ return label.text; });
-			}
-			var s = labels.join("<br>");
-			return dojox.gfx._base._getTextBox(s, {font: font}).w || 0;
-		},
-		calculate: function(min, max, span, labels){
-			if(this.initialized()){
-				return this;
-			}
-			var o = this.opt;
-			this.labels = "labels" in o  ? o.labels : labels;
-			this.scaler = lin.buildScaler(min, max, span, o);
-			var tsb = this.scaler.bounds;
-			if("scale" in this){
-				// calculate new range
-				o.from = tsb.lower + this.offset;
-				o.to   = (tsb.upper - tsb.lower) / this.scale + o.from;
-				// make sure that bounds are correct
-				if( !isFinite(o.from) ||
-					isNaN(o.from) ||
-					!isFinite(o.to) ||
-					isNaN(o.to) ||
-					o.to - o.from >= tsb.upper - tsb.lower
-				){
-					// any error --- remove from/to bounds
-					delete o.from;
-					delete o.to;
-					delete this.scale;
-					delete this.offset;
-				}else{
-					// shift the window, if we are out of bounds
-					if(o.from < tsb.lower){
-						o.to += tsb.lower - o.from;
-						o.from = tsb.lower;
-					}else if(o.to > tsb.upper){
-						o.from += tsb.upper - o.to;
-						o.to = tsb.upper;
-					}
-					// update the offset
-					this.offset = o.from - tsb.lower;
-				}
-				// re-calculate the scaler
-				this.scaler = lin.buildScaler(min, max, span, o);
-				tsb = this.scaler.bounds;
-				// cleanup
-				if(this.scale == 1 && this.offset == 0){
-					delete this.scale;
-					delete this.offset;
-				}
-			}
-			var minMinorStep = 0, ta = this.chart.theme.axis,
-				taFont = "font" in o ? o.font : ta.font,
-				size = taFont ? g.normalizedLength(g.splitFontString(taFont).size) : 0;
-			if(this.vertical){
-				if(size){
-					minMinorStep = size + labelGap;
-				}
-			}else{
-				if(size){
-					var labelWidth, i;
-					if(o.labelFunc && o.maxLabelSize){
-						labelWidth = o.maxLabelSize;
-					}else if(this.labels){
-						labelWidth = this._groupLabelWidth(this.labels, taFont);
-					}else{
-						var labelLength = Math.ceil(
-								Math.log(
-									Math.max(
-										Math.abs(tsb.from),
-										Math.abs(tsb.to)
-									)
-								) / Math.LN10
-							),
-							t = [];
-						if(tsb.from < 0 || tsb.to < 0){
-							t.push("-");
-						}
-						t.push(dojo.string.rep("9", labelLength));
-						var precision = Math.floor(
-							Math.log( tsb.to - tsb.from ) / Math.LN10
-						);
-						if(precision > 0){
-							t.push(".");
-							for(i = 0; i < precision; ++i){
-								t.push("9");
-							}
-						}
-						labelWidth = dojox.gfx._base._getTextBox(
-							t.join(""),
-							{ font: taFont }
-						).w;
-					}
-					minMinorStep = labelWidth + labelGap;
-				}
-			}
-			this.scaler.minMinorStep = minMinorStep;
-			this.ticks = lin.buildTicks(this.scaler, o);
-			return this;
-		},
-		getScaler: function(){
-			return this.scaler;
-		},
-		getTicks: function(){
-			return this.ticks;
-		},
 		getOffsets: function(){
-			var o = this.opt;
-			var offsets = { l: 0, r: 0, t: 0, b: 0 },
-				labelWidth,
-				a,
-				b,
-				c,
-				d,
-				gl = dc.scaler.common.getNumericLabel,
-				offset = 0,
-				ta = this.chart.theme.axis,
-				taFont = "font" in o ? o.font : ta.font,
-				taMajorTick = "majorTick" in o ? o.majorTick : ta.majorTick,
-				taMinorTick = "minorTick" in o ? o.minorTick : ta.minorTick,
-				size = taFont ? g.normalizedLength(g.splitFontString(taFont).size) : 0,
-				s = this.scaler;
+			//	summary:
+			//		Get the physical offset values for this axis (used in drawing data series).
+			//	returns: Object
+			//		The calculated offsets in the form of { l, r, t, b } (left, right, top, bottom).
+			var s = this.scaler, offsets = { l: 0, r: 0, t: 0, b: 0 };
 			if(!s){
 				return offsets;
 			}
-			var ma = s.major, mi = s.minor;
-			if(this.vertical){
-				if(size){
-					if(o.labelFunc && o.maxLabelSize){
-						labelWidth = o.maxLabelSize;
-					}else if(this.labels){
-						labelWidth = this._groupLabelWidth(
-							this.labels,
-							taFont
-						);
-					}else{
-						labelWidth = this._groupLabelWidth([
-							gl(ma.start, ma.prec, o),
-							gl(ma.start + ma.count * ma.tick, ma.prec, o),
-							gl(mi.start, mi.prec, o),
-							gl(mi.start + mi.count * mi.tick, mi.prec, o)
-						], taFont);
-					}
-					offset = labelWidth + labelGap;
+			var o = this.opt, labelWidth = 0, a, b, c, d,
+				gl = dc.scaler.common.getNumericLabel,
+				offset = 0, ma = s.major, mi = s.minor,
+				ta = this.chart.theme.axis,
+				// TODO: we use one font --- of major tick, we need to use major and minor fonts
+				taFont = o.font || (ta.majorTick && ta.majorTick.font) || (ta.tick && ta.tick.font),
+				taMajorTick = this.chart.theme.getTick("major", o),
+				taMinorTick = this.chart.theme.getTick("minor", o),
+				size = taFont ? g.normalizedLength(g.splitFontString(taFont).size) : 0,
+				rotation = o.rotation % 360, leftBottom = o.leftBottom,
+				cosr = Math.abs(Math.cos(rotation * Math.PI / 180)),
+				sinr = Math.abs(Math.sin(rotation * Math.PI / 180));
+			if(rotation < 0){
+				rotation += 360;
+			}
+
+			if(size){
+				// we need width of all labels
+				if(o.maxLabelSize){
+					labelWidth = o.maxLabelSize;
+				}else if(this.labels){
+					labelWidth = this._groupLabelWidth(this.labels, taFont);
+				}else{
+					labelWidth = this._groupLabelWidth([
+						gl(ma.start, ma.prec, o),
+						gl(ma.start + ma.count * ma.tick, ma.prec, o),
+						gl(mi.start, mi.prec, o),
+						gl(mi.start + mi.count * mi.tick, mi.prec, o)
+					], taFont);
 				}
-				offset += labelGap + Math.max(taMajorTick.length, taMinorTick.length);
-				offsets[o.leftBottom ? "l" : "r"] = offset;
-				offsets.t = offsets.b = size / 2;
-			}else{
-				if(size){
-					offset = size + labelGap;
-				}
-				offset += labelGap + Math.max(taMajorTick.length, taMinorTick.length);
-				offsets[o.leftBottom ? "b" : "t"] = offset;
-				if(size){
-					if(o.labelFunc && o.maxLabelSize){
-						labelWidth = o.maxLabelSize;
-					}else if(this.labels){
-						labelWidth = this._groupLabelWidth(this.labels, taFont);
-					}else{
-						labelWidth = this._groupLabelWidth([
-							gl(ma.start, ma.prec, o),
-							gl(ma.start + ma.count * ma.tick, ma.prec, o),
-							gl(mi.start, mi.prec, o),
-							gl(mi.start + mi.count * mi.tick, mi.prec, o)
-						], taFont);
+				if(this.vertical){
+					var side = leftBottom ? "l" : "r";
+					switch(rotation){
+						case 0:
+						case 180:
+							offsets[side] = labelWidth;
+							offsets.t = offsets.b = size / 2;
+							break;
+						case 90:
+						case 270:
+							offsets[side] = size;
+							offsets.t = offsets.b = labelWidth / 2;
+							break;
+						default:
+							if(rotation <= centerAnchorLimit || (180 < rotation && rotation <= (180 + centerAnchorLimit))){
+								offsets[side] = size * sinr / 2 + labelWidth * cosr;
+								offsets[leftBottom ? "t" : "b"] = size * cosr / 2 + labelWidth * sinr;
+								offsets[leftBottom ? "b" : "t"] = size * cosr / 2;
+							}else if(rotation > (360 - centerAnchorLimit) || (180 > rotation && rotation > (180 - centerAnchorLimit))){
+								offsets[side] = size * sinr / 2 + labelWidth * cosr;
+								offsets[leftBottom ? "b" : "t"] = size * cosr / 2 + labelWidth * sinr;
+								offsets[leftBottom ? "t" : "b"] = size * cosr / 2;
+							}else if(rotation < 90 || (180 < rotation && rotation < 270)){
+								offsets[side] = size * sinr + labelWidth * cosr;
+								offsets[leftBottom ? "t" : "b"] = size * cosr + labelWidth * sinr;
+							}else{
+								offsets[side] = size * sinr + labelWidth * cosr;
+								offsets[leftBottom ? "b" : "t"] = size * cosr + labelWidth * sinr;
+							}
+							break;
 					}
-					offsets.l = offsets.r = labelWidth / 2;
+					offsets[side] += labelGap + Math.max(taMajorTick.length, taMinorTick.length);
+				}else{
+					var side = leftBottom ? "b" : "t";
+					switch(rotation){
+						case 0:
+						case 180:
+							offsets[side] = size;
+							offsets.l = offsets.r = labelWidth / 2;
+							break;
+						case 90:
+						case 270:
+							offsets[side] = labelWidth;
+							offsets.l = offsets.r = size / 2;
+							break;
+						default:
+							if((90 - centerAnchorLimit) <= rotation && rotation <= 90 || (270 - centerAnchorLimit) <= rotation && rotation <= 270){
+								offsets[side] = size * sinr / 2 + labelWidth * cosr;
+								offsets[leftBottom ? "r" : "l"] = size * cosr / 2 + labelWidth * sinr;
+								offsets[leftBottom ? "l" : "r"] = size * cosr / 2;
+							}else if(90 <= rotation && rotation <= (90 + centerAnchorLimit) || 270 <= rotation && rotation <= (270 + centerAnchorLimit)){
+								offsets[side] = size * sinr / 2 + labelWidth * cosr;
+								offsets[leftBottom ? "l" : "r"] = size * cosr / 2 + labelWidth * sinr;
+								offsets[leftBottom ? "r" : "l"] = size * cosr / 2;
+							}else if(rotation < centerAnchorLimit || (180 < rotation && rotation < (180 - centerAnchorLimit))){
+								offsets[side] = size * sinr + labelWidth * cosr;
+								offsets[leftBottom ? "r" : "l"] = size * cosr + labelWidth * sinr;
+							}else{
+								offsets[side] = size * sinr + labelWidth * cosr;
+								offsets[leftBottom ? "l" : "r"] = size * cosr + labelWidth * sinr;
+							}
+							break;
+					}
+					offsets[side] += labelGap + Math.max(taMajorTick.length, taMinorTick.length);
 				}
 			}
 			if(labelWidth){
 				this._cachedLabelWidth = labelWidth;
 			}
-			return offsets;
+			return offsets;	//	Object
 		},
 		render: function(dim, offsets){
+			//	summary:
+			//		Render/draw the axis.
+			//	dim: Object
+			//		An object of the form { width, height}.
+			//	offsets: Object
+			//		An object of the form { l, r, t, b }.
+			//	returns: dojox.charting.axis2d.Default
+			//		The reference to the axis for functional chaining.
 			if(!this.dirty){
-				return this;
+				return this;	//	dojox.charting.axis2d.Default
 			}
 			// prepare variable
-			var o = this.opt;
-			var start,
-				stop,
-				axisVector,
-				tickVector,
-				labelOffset,
-				labelAlign,
-				ta = this.chart.theme.axis,
+			var o = this.opt, ta = this.chart.theme.axis, leftBottom = o.leftBottom, rotation = o.rotation % 360,
+				start, stop, axisVector, tickVector, anchorOffset, labelOffset, labelAlign,
+
+				// TODO: we use one font --- of major tick, we need to use major and minor fonts
+				taFont = o.font || (ta.majorTick && ta.majorTick.font) || (ta.tick && ta.tick.font),
+				// TODO: we use one font color --- we need to use different colors
+				taFontColor = o.fontColor || (ta.majorTick && ta.majorTick.fontColor) || (ta.tick && ta.tick.fontColor) || "black",
+				taMajorTick = this.chart.theme.getTick("major", o),
+				taMinorTick = this.chart.theme.getTick("minor", o),
+				taMicroTick = this.chart.theme.getTick("micro", o),
+
+				tickSize = Math.max(taMajorTick.length, taMinorTick.length, taMicroTick.length),
 				taStroke = "stroke" in o ? o.stroke : ta.stroke,
-				taMajorTick = "majorTick" in o ? o.majorTick : ta.majorTick,
-				taMinorTick = "minorTick" in o ? o.minorTick : ta.minorTick,
-				taMicroTick = "microTick" in o ? o.microTick : ta.minorTick,
-				taFont = "font" in o ? o.font : ta.font,
-				taFontColor = "fontColor" in o ? o.fontColor : ta.fontColor,
-				tickSize = Math.max(taMajorTick.length, taMinorTick.length),
 				size = taFont ? g.normalizedLength(g.splitFontString(taFont).size) : 0;
+			if(rotation < 0){
+				rotation += 360;
+			}
 			if(this.vertical){
-				start = { y: dim.height - offsets.b };
-				stop  = { y: offsets.t };
-				axisVector = { x: 0, y: -1 };
-				if(o.leftBottom){
+				start = {y: dim.height - offsets.b};
+				stop  = {y: offsets.t};
+				axisVector = {x: 0, y: -1};
+				labelOffset = {x: 0, y: 0};
+				tickVector = {x: 1, y: 0};
+				anchorOffset = {x: labelGap, y: 0};
+				switch(rotation){
+					case 0:
+						labelAlign = "end";
+						labelOffset.y = size * 0.4;
+						break;
+					case 90:
+						labelAlign = "middle";
+						labelOffset.x = -size;
+						break;
+					case 180:
+						labelAlign = "start";
+						labelOffset.y = -size * 0.4;
+						break;
+					case 270:
+						labelAlign = "middle";
+						break;
+					default:
+						if(rotation < centerAnchorLimit){
+							labelAlign = "end";
+							labelOffset.y = size * 0.4;
+						}else if(rotation < 90){
+							labelAlign = "end";
+							labelOffset.y = size * 0.4;
+						}else if(rotation < (180 - centerAnchorLimit)){
+							labelAlign = "start";
+						}else if(rotation < (180 + centerAnchorLimit)){
+							labelAlign = "start";
+							labelOffset.y = -size * 0.4;
+						}else if(rotation < 270){
+							labelAlign = "start";
+							labelOffset.x = leftBottom ? 0 : size * 0.4;
+						}else if(rotation < (360 - centerAnchorLimit)){
+							labelAlign = "end";
+							labelOffset.x = leftBottom ? 0 : size * 0.4;
+						}else{
+							labelAlign = "end";
+							labelOffset.y = size * 0.4;
+						}
+				}
+				if(leftBottom){
 					start.x = stop.x = offsets.l;
-					tickVector = { x: -1, y: 0 };
-					labelAlign = "end";
+					tickVector.x = -1;
+					anchorOffset.x = -anchorOffset.x;
 				}else{
 					start.x = stop.x = dim.width - offsets.r;
-					tickVector = { x: 1, y: 0 };
-					labelAlign = "start";
+					switch(labelAlign){
+						case "start":
+							labelAlign = "end";
+							break;
+						case "end":
+							labelAlign = "start";
+							break;
+						case "middle":
+							labelOffset.x += size;
+							break;
+					}
 				}
-				labelOffset = {
-					x: tickVector.x * (tickSize + labelGap),
-					y: size * 0.4
-				};
 			}else{
-				start = { x: offsets.l };
-				stop  = { x: dim.width - offsets.r };
-				axisVector = { x: 1, y: 0 };
-				labelAlign = "middle";
-				if(o.leftBottom){
+				start = {x: offsets.l};
+				stop  = {x: dim.width - offsets.r};
+				axisVector = {x: 1, y: 0};
+				labelOffset = {x: 0, y: 0};
+				tickVector = {x: 0, y: 1};
+				anchorOffset = {x: 0, y: labelGap};
+				switch(rotation){
+					case 0:
+						labelAlign = "middle";
+						labelOffset.y = size;
+						break;
+					case 90:
+						labelAlign = "start";
+						labelOffset.x = -size * 0.4;
+						break;
+					case 180:
+						labelAlign = "middle";
+						break;
+					case 270:
+						labelAlign = "end";
+						labelOffset.x = size * 0.4;
+						break;
+					default:
+						if(rotation < (90 - centerAnchorLimit)){
+							labelAlign = "start";
+							labelOffset.y = leftBottom ? size : 0;
+						}else if(rotation < (90 + centerAnchorLimit)){
+							labelAlign = "start";
+							labelOffset.x = -size * 0.4;
+						}else if(rotation < 180){
+							labelAlign = "start";
+							labelOffset.y = leftBottom ? 0 : -size;
+						}else if(rotation < (270 - centerAnchorLimit)){
+							labelAlign = "end";
+							labelOffset.y = leftBottom ? 0 : -size;
+						}else if(rotation < (270 + centerAnchorLimit)){
+							labelAlign = "end";
+							labelOffset.y = leftBottom ? size * 0.4 : 0;
+						}else{
+							labelAlign = "end";
+							labelOffset.y = leftBottom ? size : 0;
+						}
+				}
+				if(leftBottom){
 					start.y = stop.y = dim.height - offsets.b;
-					tickVector = { x: 0, y: 1 };
-					labelOffset = { y: tickSize + labelGap + size };
 				}else{
 					start.y = stop.y = offsets.t;
-					tickVector = { x: 0, y: -1 };
-					labelOffset = { y: -tickSize - labelGap };
+					tickVector.y = -1;
+					anchorOffset.y = -anchorOffset.y;
+					switch(labelAlign){
+						case "start":
+							labelAlign = "end";
+							break;
+						case "end":
+							labelAlign = "start";
+							break;
+						case "middle":
+							labelOffset.y -= size;
+							break;
+					}
 				}
-				labelOffset.x = 0;
 			}
 
 			// render shapes
@@ -338,7 +496,7 @@ dojo.require("dojox.lang.utils");
 					canLabel,
 					f = lin.getTransformerFromModel(this.scaler),
 					forceHtmlLabels = (dojox.gfx.renderer == "canvas"),
-					labelType = forceHtmlLabels || this.opt.htmlLabels && !dojo.isIE && !dojo.isOpera ? "html" : "gfx",
+					labelType = forceHtmlLabels || !rotation && this.opt.htmlLabels && !dojo.isIE && !dojo.isOpera ? "html" : "gfx",
 					dx = tickVector.x * taMajorTick.length,
 					dy = tickVector.y * taMajorTick.length;
 
@@ -362,16 +520,25 @@ dojo.require("dojox.lang.utils");
 							elem = dc.axis2d.common.createText[labelType](
 								this.chart,
 								s,
-								x + labelOffset.x,
-								y + labelOffset.y,
+								x + dx + anchorOffset.x + (rotation ? 0 : labelOffset.x),
+								y + dy + anchorOffset.y + (rotation ? 0 : labelOffset.y),
 								labelAlign,
 								tick.label,
 								taFont,
-								taFontColor,
-								this._cachedLabelWidth
+								taFontColor
+								//this._cachedLabelWidth
 							);
 							if(labelType == "html"){
 								this.htmlElements.push(elem);
+							}else if(rotation){
+								elem.setTransform([
+									{dx: labelOffset.x, dy: labelOffset.y},
+									g.matrix.rotategAt(
+										rotation,
+										x + dx + anchorOffset.x,
+										y + dy + anchorOffset.y
+									)
+								]);
 							}
 						}
 				}, this);
@@ -392,16 +559,25 @@ dojo.require("dojox.lang.utils");
 							elem = dc.axis2d.common.createText[labelType](
 								this.chart,
 								s,
-								x + labelOffset.x,
-								y + labelOffset.y,
+								x + dx + anchorOffset.x + (rotation ? 0 : labelOffset.x),
+								y + dy + anchorOffset.y + (rotation ? 0 : labelOffset.y),
 								labelAlign,
 								tick.label,
 								taFont,
-								taFontColor,
-								this._cachedLabelWidth
+								taFontColor
+								//this._cachedLabelWidth
 							);
 							if(labelType == "html"){
 								this.htmlElements.push(elem);
+							}else if(rotation){
+								elem.setTransform([
+									{dx: labelOffset.x, dy: labelOffset.y},
+									g.matrix.rotategAt(
+										rotation,
+										x + dx + anchorOffset.x,
+										y + dy + anchorOffset.y
+									)
+								]);
 							}
 						}
 				}, this);
@@ -423,7 +599,7 @@ dojo.require("dojox.lang.utils");
 			}
 
 			this.dirty = false;
-			return this;
+			return this;	//	dojox.charting.axis2d.Default
 		}
 	});
 })();

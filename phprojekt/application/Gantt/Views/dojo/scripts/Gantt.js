@@ -98,7 +98,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
             }
         });
 
-        dialog.attr('content', content);
+        dialog.set('content', content);
         dojo.body().appendChild(dialog.domNode);
         dojo.disconnect(dialog, "onExecute");
         dialog.show();
@@ -118,7 +118,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
         // description:
         //    This function delivers the error text and executes showDialog()
 
-        if (dijit.byId(nodeToChange).attr('disabled')) {
+        if (dijit.byId(nodeToChange).get('disabled')) {
             return;
         }
 
@@ -225,12 +225,12 @@ dojo.declare('phpr.Project.GanttBase', null, {
         // description:
         //    Assign range slider value from calendar
         if (this.activeSlider.length > 1) {
-            var current =  this.normalizeValues(dijit.byId(this.activeSlider).attr('value'));
+            var current =  this.normalizeValues(dijit.byId(this.activeSlider).get('value'));
             // Min value has array index 0, max := 1
             var index = (side == 'min')? 0 : 1;
             current[index] = this.convertStampToIndex(new_date.getTime());
             this.assertUpdate(current[0], current[1], this.activeSlider);
-            dijit.byId(this.activeSlider).attr('value', current);
+            dijit.byId(this.activeSlider).set('value', current);
 
             // Try to find the named project element in the list and store the state
             var listIndex = this.findArrayIndex(this.activeSlider);
@@ -283,7 +283,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
             // Try to find the named project element in the list and store last values
             var listIndex = this.findArrayIndex(sliderName);
             if (listIndex > -1) {
-                var values = this.normalizeValues(dijit.byId(this.activeSlider).attr('value'));
+                var values = this.normalizeValues(dijit.byId(this.activeSlider).get('value'));
                 this.projectDataBuffer[listIndex][1] = values[0];
                 this.projectDataBuffer[listIndex][2] = values[1];
                 this.selectActiveTile(this.activeSlider);
@@ -346,7 +346,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
 
             // Parent exists
             if (parent != false) {
-                var parentValues = this.normalizeValues(dijit.byId(parent).attr('value'));
+                var parentValues = this.normalizeValues(dijit.byId(parent).get('value'));
                 if (posMin < parentValues[0]) {
                     this.processDialog(this.RESIZE_PARENT_START, parent, nodeName, posMin, parentValues[1]);
                 }
@@ -371,7 +371,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
                     continue;
                 }
                 var childName   = this.projectDataBuffer[listIndex][0];
-                var childValues = this.normalizeValues(dijit.byId(childName).attr('value'));
+                var childValues = this.normalizeValues(dijit.byId(childName).get('value'));
                 if (posMax < childValues[1]) {
                     this.processDialog(this.RESIZE_SUBPROJECT_END, childName, nodeName, childValues[0], posMax);
                 }
@@ -387,7 +387,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
         //    Change the value of the node
         // description:
         //    Change the value of the node
-        var values = this.normalizeValues(dijit.byId(nodeName).attr('value'));
+        var values = this.normalizeValues(dijit.byId(nodeName).get('value'));
         switch (dialogType) {
             case this.RESIZE_PARENT_END:
             case this.RESIZE_SUBPROJECT_END:
@@ -409,8 +409,8 @@ dojo.declare('phpr.Project.GanttBase', null, {
         var projectIndex = this.findArrayIndex(projectId);
         if (projectIndex > -1) {
             // Set the 'projects' values to the current state
-            dijit.byId(projectId).attr('value', new Array(this.projectDataBuffer[projectIndex][1],
-                                                          this.projectDataBuffer[projectIndex][2]));
+            dijit.byId(projectId).set('value', new Array(this.projectDataBuffer[projectIndex][1],
+                                                         this.projectDataBuffer[projectIndex][2]));
             this.projectDataBuffer[projectIndex][4] = 1;
         }
     },
@@ -420,7 +420,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
         //    Update the value of the slider
         // description:
         //    Update the value of the slider
-        dijit.byId(projectId).attr('value', sliderValues);
+        dijit.byId(projectId).set('value', sliderValues);
         var projectIndex = this.findArrayIndex(projectId);
         if (projectIndex > -1) {
             // Set the 'projects' values to the current state

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -22,7 +22,7 @@ dojo.require("dijit.MenuSeparator");
 
 dojo.experimental("dojox.editor.plugins.Breadcrumb");
 
-dojo.requireLocalization("dojox.editor.plugins", "Breadcrumb", null, "ROOT");
+dojo.requireLocalization("dojox.editor.plugins", "Breadcrumb", null, "ROOT,cs,de,es,fr,hu,it,ja,ko,pl,pt,ro,ru,zh,zh-tw");
 
 dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitle",[dijit._Widget, dijit._Templated, dijit._Contained],{
 	// summary:
@@ -68,13 +68,11 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		this.editor = editor;
 		this._buttons = [];
 		this.breadcrumbBar = new dijit.Toolbar();
-		dojo.style(this.breadcrumbBar.domNode, "height", "1.5em");
-
+        
 		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "Breadcrumb");
 		this._titleTemplate = strings.nodeActions;
 
-		//editor.footer.appendChild(this.breadcrumbBar.domNode);
-		dojo.place(this.breadcrumbBar.domNode, this.editor.iframe, "after");
+		dojo.place(this.breadcrumbBar.domNode, editor.footer);
 		this.editor.onLoadDeferred.addCallback(dojo.hitch(this, function(){
 			this._menu = new dijit.Menu({});
 			dojo.addClass(this.breadcrumbBar.domNode, "dojoxEditorBreadcrumbArrow");
@@ -84,10 +82,10 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 				label: "body",
 				_selNode: editor.editNode,
 				dropDown: this._menu,
-				onClick: function(){
-					self._menuTarget = editor.editNode;
-					self._selectContents();
-				}
+				onClick: dojo.hitch(this, function(){
+					this._menuTarget = editor.editNode;
+					this._selectContents();
+				})
 			});
 			
 			// Build the menu
@@ -111,16 +109,24 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 
 			body._ddConnect = dojo.connect(body, "openDropDown", dojo.hitch(this, function(){
 				this._menuTarget = body._selNode;
-				this._menuTitle.attr("menuTitle", dojo.string.substitute(this._titleTemplate,{
+				this._menuTitle.set("menuTitle", dojo.string.substitute(this._titleTemplate,{
 						"nodeName": "&lt;body&gt;"
 				}));
-				this._selEMenu.attr("disabled", true);
-				this._delEMenu.attr("disabled", true);
+				this._selEMenu.set("disabled", true);
+				this._delEMenu.set("disabled", true);
+				this._selCMenu.set("disabled", false);
+				this._delCMenu.set("disabled", false);
+				this._moveSMenu.set("disabled", false);
+				this._moveEMenu.set("disabled", false);
 			}));
 			this.breadcrumbBar.addChild(body);
 			this.connect(this.editor, "onNormalizedDisplayChanged", "updateState");
 		}));
 		this.breadcrumbBar.startup();
+		if(dojo.isIE){
+			// Sometimes IE will mess up layout and needs to be poked.
+            setTimeout(dojo.hitch(this, function(){this.breadcrumbBar.domNode.className = this.breadcrumbBar.domNode.className;}), 100);
+		}
 	},
 
 	_selectContents: function(){
@@ -128,11 +134,26 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		//		Internal function for selecting the contents of a node.
 		this.editor.focus();
 		if(this._menuTarget){
-			dojo.withGlobal(this.editor.window, 
-				"collapse", dijit._editor.selection, [null]);
-			dojo.withGlobal(this.editor.window, 
-				"selectElementChildren", dijit._editor.selection, [this._menuTarget]);
-			this.editor.onDisplayChanged();
+			var nodeName = this._menuTarget.tagName.toLowerCase();
+			switch(nodeName){
+				case 'br':
+				case 'hr':
+				case 'img':
+				case 'input':
+				case 'base':
+				case 'meta':
+				case 'area':
+				case 'basefont':
+						break;
+				default: 
+					try{
+						dojo.withGlobal(this.editor.window, 
+							"collapse", dijit._editor.selection, [null]);
+						dojo.withGlobal(this.editor.window, 
+							"selectElementChildren", dijit._editor.selection, [this._menuTarget]);
+						this.editor.onDisplayChanged();
+					}catch(e){/*squelch*/}
+			}
 		}
 	},
 
@@ -144,7 +165,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 			this._selectContents();
 			dojo.withGlobal(this.editor.window, 
 				"remove", dijit._editor.selection, [this._menuTarget]);
-			this.editor.endditing();
+			this.editor.endEditing();
 			this._updateBreadcrumb();
 			this.editor.onDisplayChanged();
 		}
@@ -210,13 +231,17 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 			var sel = dijit.range.getSelection(ed.window);
 			if(sel && sel.rangeCount > 0){
 				var range = sel.getRangeAt(0);
-				var node = range.startContainer;
+                
+				// Check the getSelectedElement call.  Needed when dealing with img tags.
+				var node = dojo.withGlobal(ed.window, 
+					"getSelectedElement", dijit._editor.selection) || range.startContainer;
+				//var node = range.startContainer;
 				var bcList = [];
 
 				// Make sure we get a selection within the editor document,
 				// have seen cases on IE where this wasn't true.
 				if(node && node.ownerDocument === ed.document){
-					while(node && node !== ed.editNode){
+					while(node && node !== ed.editNode && node != ed.document.body && node != ed.document){
 						if(node.nodeType === 1){
 							bcList.push({type: node.tagName.toLowerCase(), node: node}); 
 						}
@@ -247,16 +272,44 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 						});
 						b._ddConnect = dojo.connect(b, "openDropDown", dojo.hitch(b, function(){
 							self._menuTarget = this._selNode;
+							var nodeName = self._menuTarget.tagName.toLowerCase();
 							var title = dojo.string.substitute(self._titleTemplate,{
-								"nodeName": "&lt;" + self._menuTarget.tagName.toLowerCase() + "&gt;"
+								"nodeName": "&lt;" + nodeName + "&gt;"
 							});
-							self._menuTitle.attr("menuTitle", title);
-							self._selEMenu.attr("disabled", false);
-							self._delEMenu.attr("disabled", false);
+							self._menuTitle.set("menuTitle", title);
+							switch(nodeName){
+								case 'br':
+								case 'hr':
+								case 'img':
+								case 'input':
+								case 'base':
+								case 'meta':
+								case 'area':
+								case 'basefont':
+									self._selCMenu.set("disabled", true);
+									self._delCMenu.set("disabled", true);
+									self._moveSMenu.set("disabled", true);
+									self._moveEMenu.set("disabled", true);
+									self._selEMenu.set("disabled", false);
+									self._delEMenu.set("disabled", false);
+									break;
+								default:
+									self._selCMenu.set("disabled", false);
+									self._delCMenu.set("disabled", false);
+									self._selEMenu.set("disabled", false);
+									self._delEMenu.set("disabled", false);
+									self._moveSMenu.set("disabled", false);
+									self._moveEMenu.set("disabled", false);
+							}
 						}));
 						this._buttons.push(b);
 						this.breadcrumbBar.addChild(b);
 					}
+					if(dojo.isIE){
+						// Prod it to fix layout.
+						this.breadcrumbBar.domNode.className = this.breadcrumbBar.domNode.className;
+					}
+					
 				}
 			}
 		}
@@ -273,6 +326,10 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 				dojo.style(this.breadcrumbBar.domNode, "display", "block");
 			}
 			this._updateBreadcrumb();
+
+			// Some themes do padding, so we have to resize again after display.
+			var size = dojo.marginBox(this.editor.domNode);
+			this.editor.resize({h: size.h});
 		}
 	},
 

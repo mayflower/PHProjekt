@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -165,17 +165,17 @@ dojo.declare(
 				onComplete(childItems);
 			}else{
 				// still waiting for some or all of the items to load
-				var onItem = function onItem(item){
-					if(--_waitCount == 0){
-						// all nodes have been loaded, send them to the tree
-						onComplete(childItems);
-					}
-				}
-				dojo.forEach(childItems, function(item){
+				dojo.forEach(childItems, function(item, idx){
 					if(!store.isItemLoaded(item)){
 						store.loadItem({
 							item: item,
-							onItem: onItem,
+							onItem: function(item){
+								childItems[idx] = item;
+								if(--_waitCount == 0){
+									// all nodes have been loaded, send them to the tree
+									onComplete(childItems);
+								}
+							},
 							onError: onError
 						});
 					}
@@ -264,13 +264,14 @@ dojo.declare(
 			// modify target item's children attribute to include this item
 			if(newParentItem){
 				if(typeof insertIndex == "number"){
-					var childItems = store.getValues(newParentItem, parentAttr);
+					// call slice() to avoid modifying the original array, confusing the data store
+					var childItems = store.getValues(newParentItem, parentAttr).slice();
 					childItems.splice(insertIndex, 0, childItem);
 					store.setValues(newParentItem, parentAttr, childItems);
 				}else{
-				store.setValues(newParentItem, parentAttr,
-					store.getValues(newParentItem, parentAttr).concat(childItem));
-			}
+					store.setValues(newParentItem, parentAttr,
+						store.getValues(newParentItem, parentAttr).concat(childItem));
+				}
 			}
 		},
 

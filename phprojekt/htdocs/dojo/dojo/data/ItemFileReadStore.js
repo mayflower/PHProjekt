@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -154,7 +154,8 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
-		return item[attribute] || []; // Array
+		// Clone it before returning.  refs: #10474
+		return (item[attribute] || []).slice(0); // Array
 	},
 
 	getAttributes: function(/* item */ item){
@@ -275,13 +276,13 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 							/* Function */ errorCallback){
 		//	summary: 
 		//		See dojo.data.util.simpleFetch.fetch()
-		var self = this;
-		var filter = function(requestArgs, arrayOfItems){
-			var items = [];
-			var i, key;
+		var self = this,
+		    filter = function(requestArgs, arrayOfItems){
+			var items = [],
+			    i, key;
 			if(requestArgs.query){
-				var value;
-				var ignoreCase = requestArgs.queryOptions ? requestArgs.queryOptions.ignoreCase : false; 
+				var value,
+				    ignoreCase = requestArgs.queryOptions ? requestArgs.queryOptions.ignoreCase : false;
 
 				//See if there are any string values that can be regexp parsed first to avoid multiple regexp gens on the
 				//same value for each item examined.  Much more efficient.
@@ -428,9 +429,9 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//Execute any deferred fetches now.
 		if(this._queuedFetches.length > 0){
 			for(var i = 0; i < this._queuedFetches.length; i++){
-				var fData = this._queuedFetches[i];
-				var delayedQuery = fData.args;
-				var delayedFilter = fData.filter;
+				var fData = this._queuedFetches[i],
+				    delayedQuery = fData.args,
+				    delayedFilter = fData.filter;
 				if(delayedFilter){
 					delayedFilter(delayedQuery, this._getItemsArray(delayedQuery.queryOptions)); 
 				}else{
@@ -492,8 +493,8 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//		Array of items in store item format.
 		
 		// First, we define a couple little utility functions...
-		var addingArrays = false;
-		var self = this;
+		var addingArrays = false,
+		    self = this;
 		
 		function valueIsAnItem(/* anything */ aValue){
 			// summary:
@@ -552,8 +553,8 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		// to work with in memory.
 
 		// Step 1: Walk through the object hierarchy and build a list of all items
-		var i;
-		var item;
+		var i,
+		    item;
 		this._arrayOfAllItems = [];
 		this._arrayOfTopLevelItems = dataObject.items;
 
@@ -574,8 +575,8 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		// 
 		// We also store the attribute names so we can validate our store  
 		// reference and item id special properties for the O(1) isItem
-		var allAttributeNames = {};
-		var key;
+		var allAttributeNames = {},
+		    key;
 
 		for(i = 0; i < this._arrayOfAllItems.length; ++i){
 			item = this._arrayOfAllItems[i];
@@ -682,13 +683,13 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 							if(!dojo.isObject(referenceDescription)){
 								// example: 'Miss Piggy'
 								// from an item like: { name:['Kermit'], friends:[{_reference:'Miss Piggy'}]}
-								arrayOfValues[j] = this._itemsByIdentity[referenceDescription];
+								arrayOfValues[j] = this._getItemByIdentity(referenceDescription);
 							}else{
 								// example: {name:'Miss Piggy'}
 								// from an item like: { name:['Kermit'], friends:[{_reference:{name:'Miss Piggy'}}] }
 								for(var k = 0; k < this._arrayOfAllItems.length; ++k){
-									var candidateItem = this._arrayOfAllItems[k];
-									var found = true;
+									var candidateItem = this._arrayOfAllItems[k],
+									    found = true;
 									for(var refKey in referenceDescription){
 										if(candidateItem[refKey] != referenceDescription[refKey]){ 
 											found = false; 
@@ -754,8 +755,8 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		//		See dojo.data.api.Identity.fetchItemByIdentity()
 
 		// Hasn't loaded yet, we have to trigger the load.
-		var item;
-		var scope;
+		var item,
+		    scope;
 		if(!this._loadFinished){
 			var self = this;
 			//Do a check on the JsonFileUrl and crosscheck it.

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -35,7 +35,7 @@ dojo.declare("dijit._editor.plugins.TabIndent",
 
 			var e = this.editor;
 			this.connect(this.button, "onChange", function(val){
-				e.attr("isTabIndent", val);
+				e.set("isTabIndent", val);
 			});
 
 			// Set initial checked state of button based on Editor.isTabIndent
@@ -46,7 +46,7 @@ dojo.declare("dijit._editor.plugins.TabIndent",
 			// Overrides _Plugin.updateState().
 			// Ctrl-m in the editor will switch tabIndent mode on/off, so we need to react to that.
 
-			this.button.attr('checked', this.editor.isTabIndent, false);
+			this.button.set('checked', this.editor.isTabIndent, false);
 		}
 	}
 );

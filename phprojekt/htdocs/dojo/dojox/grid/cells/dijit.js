@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -60,10 +60,17 @@ dojo.require("dijit.Editor");
 			}
 		},
 		getWidgetProps: function(inDatum){
-			return dojo.mixin({}, this.widgetProps||{}, {
-				constraints: dojo.mixin({}, this.constraint) || {}, //TODO: really just for ValidationTextBoxes
-				value: inDatum
-			});
+			return dojo.mixin(
+				{
+					dir: this.dir,
+					lang: this.lang
+				},
+				this.widgetProps||{},
+				{
+					constraints: dojo.mixin({}, this.constraint) || {}, //TODO: really just for ValidationTextBoxes
+					value: inDatum
+				}
+			);
 		},
 		createWidget: function(inNode, inDatum, inRowIndex){
 			return new this.widgetClass(this.getWidgetProps(inDatum), inNode);

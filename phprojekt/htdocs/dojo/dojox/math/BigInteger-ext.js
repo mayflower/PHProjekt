@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2009, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -12,9 +12,7 @@ dojo.experimental("dojox.math.BigInteger-ext");
 
 dojo.require("dojox.math.BigInteger");
 
-// Copyright (c) 2005  Tom Wu
-// All Rights Reserved.
-// See "LICENSE-BigInteger" for details.
+// Contributed under CLA by Tom Wu
 
 // Extended JavaScript BN functions, required for RSA private ops.
 

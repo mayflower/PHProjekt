@@ -4,19 +4,14 @@
 	border:1px solid #bfbfbf;
 	padding:3px 4px;
 }
-.tundra .dijitTitlePaneTitle-hover  {
+.tundra .dijitTitlePaneTitleHover  {
 	background: #f8fafd url("images/accordionItemHover.gif") bottom repeat-x;
-	cursor: pointer;
 }
 
-.tundra .dijitTitlePaneTitle * {
-	vertical-align: middle;
-}
-
-.tundra .dijitTitlePane .dijitOpen .dijitArrowNode,
-.tundra .dijitTitlePane .dijitClosed .dijitArrowNode {
+.tundra .dijitTitlePane .dijitArrowNode {
 	background-image: url('images/spriteArrows.png');
 	background-repeat: no-repeat;
+	background-position: 0px 0px;
 	height: 7px;
 	width: 7px;
 }
@@ -24,46 +19,17 @@
 	background-image: url('images/spriteArrows.gif');
 }
 
-.tundra .dijitTitlePane .dijitOpen .dijitArrowNode {
-	background-position: 0px 0px;
-}
 .tundra .dijitTitlePane .dijitClosed .dijitArrowNode {
 	background-position: -14px 0px;
-}
-
-.tundra .dijitTitlePaneFocused .dijitTitlePaneTextNode {
-	text-decoration:underline;
-}
-
-.tundra .dijitTitlePane .dijitArrowNodeInner {
-	/* hide A11Y text in favor of icon */
-	display:none;
-}
-
-.dijit_a11y .dijitTitlePane .dijitOpen .dijitArrowNodeInner,
-.dijit_a11y .dijitTitlePane .dijitClosed .dijitArrowNodeInner {
-	display:inline !important;
-	font-family:monospace;
-	padding-bottom:.2em;
-}
-
-.dijit_a11y .dijitTitlePane .dijitArrowNode {
-	/* except in a11y mode, then hide icon in favor of text */
-	display:none;
 }
 
 .tundra .dijitTitlePaneContentOuter {
 	background: #ffffff;
 	border:1px solid #bfbfbf;
-	border-top: 1px solid #ccc;	/* w/out this, an <h1> on the top line causes a gap between the .content and .label */
+	border-top: 0px;
 }
 .tundra .dijitTitlePaneContentInner {
 	padding:10px;
-}
-/* force hasLayout to ensure borders etc, show up */
-.dj_ie6 .tundra .dijitTitlePaneContentOuter,
-.dj_ie6 .tundra .dijitTitlePane .dijitTitlePaneTitle {
-	zoom: 1;
 }
 
 .tundra .dijitTitlePaneTextNode {
