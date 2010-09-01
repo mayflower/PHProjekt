@@ -417,7 +417,7 @@ class Cleaner_Sanitizer
     public function sanitizeFilter($value)
     {
         // Allow letters, numbers, '-', ':' and '_'
-        $result = preg_replace('/[^\w\s\-\:]/', '', $value);
+        $result = preg_replace('/[^\w\s\-\:\p{L}+]/iu', '', $value);
 
         if ($result == '') {
             return null;
