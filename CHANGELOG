@@ -1,3 +1,19 @@
+6.0.4
+Fixed
+ - Fix filter query when search for users (PHPROJEKT-25).
+ - Fix sanitizer for dates that cause many date errors (PHPROJEKT-15).
+ - Fix setup for catch connection errors from the database (PHPROJEKT-39).
+ - Fix multiple select fields, for allow empty values (PHPROJEKT-28).
+ - Allow unicode letters in the filter query (PHPROJEKT-40).
+ - Fix notification for send mails only if the user have an email.
+
+Improvements
+ - Change Module Designer for allow custom select box
+   using new modules (PHPROJEKT-16).
+ - Use "today" value in startDate fields for new projects and todos (PHPROJEKT-2).
+ - New dojo 1.5.0 (PHPROJEKT-38).
+ - New Zend Framewrk 1.10.7 (PHPROJEKT-42).
+
 6.0.3
 Fixed
  - Fix multiple uploads/downloads (PHPROJEKT-26).
