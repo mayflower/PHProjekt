@@ -50,12 +50,12 @@ class Phprojekt
     /**
      * The third part of the version number.
      */
-    const VERSION_RELEASE = 4;
+    const VERSION_RELEASE = 5;
 
     /**
      * The extra part of the version number.
      */
-    const VERSION_EXTRA = null;
+    const VERSION_EXTRA = 'dev';
 
     /**
      * Name of the Registry for current project.
@@ -65,7 +65,7 @@ class Phprojekt
     /**
      * Copyright.
      */
-    const COPYRIGHT = 'PHProjekt 6.0.4 - Copyright (c) 2010 Mayflower GmbH';
+    const COPYRIGHT = 'PHProjekt 6.0.5-dev - Copyright (c) 2010 Mayflower GmbH';
 
     /**
      * Default Max size in bytes that is allowed to be uploaded per file.
