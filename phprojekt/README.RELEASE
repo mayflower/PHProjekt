@@ -59,12 +59,14 @@ This is a checklist for all the steps that the release require.
 
     4.2 Write a news entry on Twitter.
 
+    4.3 Update freshmeat.net
+
 5 Next version
 
     5.1 Change the version for the next one:
         5.1.1 VERSION
         5.1.2 library/PHProjekt.php
-        5.1.3 test/Phprojekt/PhprojektTest.php
-        5.1.4 test/Default/Controllers/IndexControllerTest.php
+        5.1.3 tests/UnitTests/Phprojekt/PhprojektTest.php
+        5.1.4 tests/UnitTests/Default/Controllers/IndexControllerTest.php
         5.1.5 run unitTest
         5.1.6 commit
