@@ -232,14 +232,35 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
+     * Return the model name for construct the class.
+     *
+     * @return string The path to the model in the class format.
+     */
+    public function getModelName()
+    {
+        return $this->getRequest()->getModuleName();
+    }
+
+    /**
+     * Return the module name for construct the class.
+     *
+     * @return string The module name.
+     */
+    public function getModuleName()
+    {
+        return $this->getRequest()->getModuleName();
+    }
+
+    /**
      * Gets the class model of the module or the default one.
      *
      * @return Phprojekt_Model_Interface An instance of Phprojekt_Model_Interface.
      */
     public function getModelObject()
     {
-        $moduleName = $this->getRequest()->getModuleName();
-        $object     = Phprojekt_Loader::getModel($moduleName, $moduleName);
+        $modelName  = $this->getModelName();
+        $moduleName = $this->getModuleName();
+        $object     = Phprojekt_Loader::getModel($modelName, $moduleName);
         if (null === $object) {
             $object = Phprojekt_Loader::getModel('Default', 'Default');
         }
