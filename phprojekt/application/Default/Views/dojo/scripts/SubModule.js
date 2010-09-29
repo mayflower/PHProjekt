@@ -313,7 +313,9 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
         // Description:
         //    Change the name of the fields for don't overwrite the module fields
         //    Also change the tab for the same reason
-        fieldValues['id']  = this.main.module + fieldValues['id'];
+        if (fieldValues['type'] != 'upload') {
+            fieldValues['id'] = this.main.module + fieldValues['id'];
+        }
         fieldValues['tab'] = fieldValues['tab'] * this._tabNumber;
 
         return fieldValues;
@@ -385,5 +387,11 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
 
     useHistoryTab:function() {
         return false;
+    },
+
+    getUploadIframePath:function(itemid) {
+        return phpr.webpath + 'index.php/' + this.main.module + '/index/fileForm'
+            + '/nodeId/' + phpr.currentProjectId + '/id/' + this.id + '/field/' + itemid
+            + '/parentId/'  + this.main.parentId + '/csrfToken/' + phpr.csrfToken;
     }
 });
