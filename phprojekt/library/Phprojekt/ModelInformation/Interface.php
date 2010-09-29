@@ -43,4 +43,13 @@ interface Phprojekt_ModelInformation_Interface
      * @return array Array with all the fields definitions.
      */
      public function getFieldDefinition();
+
+    /**
+     * Return the type of one field.
+     *
+     * @param string $fieldName The name of the field to check.
+     *
+     * @return string Type of the field.
+     */
+    public function getType($fieldName);
 }

@@ -190,6 +190,27 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     }
 
     /**
+     * Return the type of one field.
+     *
+     * @param string $fieldName The name of the field to check.
+     *
+     * @return string Type of the field.
+     */
+    public function getType($fieldName)
+    {
+        $return = null;
+        $fields = $this->_getFields();
+        foreach ($fields as $field) {
+            if ($field['key'] == $fieldName) {
+                $return = $field['type'];
+                break;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
      * Return the pair in a range format.
      *
      * The value is trasnlated and the originalName is returned also.
