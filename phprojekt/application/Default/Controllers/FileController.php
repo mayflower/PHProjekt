@@ -46,25 +46,18 @@ class FileController extends IndexController
      *
      * OPTIONAL request parameters:
      * <pre>
-     *  - string  <b>moduleName</b> Current module name.
-     *  - integer <b>id</b>         Id of the current item.
-     *  - string  <b>field</b>      Name of the field in the module.
+     *  - integer <b>id</b>    Id of the current item.
+     *  - string  <b>field</b> Name of the field in the module.
      * </pre>
      *
      * @return void
      */
     public function fileFormAction()
     {
-        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
         $itemId = (int) $this->getRequest()->getParam('id', null);
         $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
 
-        $this->getResponse()->clearHeaders();
-        $this->getResponse()->clearBody();
-
-        $linkBegin = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/Default/File/';
-
-        $model = Phprojekt_Loader::getModel($module, $module);
+        $model = $this->getModelObject();
         $this->_fileCheckParamField($model, $field);
 
         $value = '';
@@ -74,7 +67,7 @@ class FileController extends IndexController
         }
         $_SESSION['uploadedFiles_' . $field] = $value;
 
-        $this->_fileRenderView($linkBegin, $module, $itemId, $field, $value, false);
+        $this->_fileRenderView($itemId, $field, $value, false);
     }
 
     /**
@@ -84,7 +77,6 @@ class FileController extends IndexController
      *
      * OPTIONAL request parameters:
      * <pre>
-     *  - string  <b>moduleName</b>    Current module name.
      *  - string  <b>field</b>         Name of the field in the module.
      *  - integer <b>MAX_FILE_SIZE</b> Max size allowed for the file.
      *  - integer <b>itemId</b>        Id of the current item.
@@ -94,13 +86,12 @@ class FileController extends IndexController
      */
     public function fileUploadAction()
     {
-        $module     = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
         $field      = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
         $maxSize    = (int) $this->getRequest()->getParam('MAX_FILE_SIZE', null);
-        $itemId     = (int) $this->getRequest()->getParam('itemId', null);
+        $itemId     = (int) $this->getRequest()->getParam('id', null);
         $addedValue = '';
 
-        $model = Phprojekt_Loader::getModel($module, $module);
+        $model = $this->getModelObject();
         $this->_fileCheckParamField($model, $field);
         $this->_fileCheckWritePermission($model, $itemId);
         $value = $_SESSION['uploadedFiles_' . $field];
@@ -121,9 +112,6 @@ class FileController extends IndexController
         $adapter = new Zend_File_Transfer_Adapter_Http();
         $adapter->setDestination(Phprojekt::getInstance()->getConfig()->uploadPath);
 
-        $this->getResponse()->clearHeaders();
-        $this->getResponse()->clearBody();
-
         if (!$adapter->receive()) {
             $messages = $adapter->getMessages();
             foreach ($messages as $index => $message) {
@@ -142,9 +130,7 @@ class FileController extends IndexController
         }
         $_SESSION['uploadedFiles_' . $field] = $value;
 
-        $linkBegin = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/Default/File/';
-
-        $this->_fileRenderView($linkBegin, $module, $itemId, $field, $value, true);
+        $this->_fileRenderView($itemId, $field, $value, true);
     }
 
     /**
@@ -152,22 +138,20 @@ class FileController extends IndexController
      *
      * OPTIONAL request parameters:
      * <pre>
-     *  - string  <b>moduleName</b>  Current module name.
-     *  - integer <b>itemId</b>      Id of the current item.
-     *  - string  <b>field</b>       Name of the field in the module.
-     *  - integer <b>order</b>       Position of the file (Can be many uploaded files in the same field).
+     *  - integer <b>itemId</b> Id of the current item.
+     *  - string  <b>field</b>  Name of the field in the module.
+     *  - integer <b>order</b>  Position of the file (Can be many uploaded files in the same field).
      * </pre>
      *
      * @return void
      */
     public function fileDownloadAction()
     {
-        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
-        $itemId = (int) $this->getRequest()->getParam('itemId', null);
+        $itemId = (int) $this->getRequest()->getParam('id', null);
         $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
         $order  = (int) $this->getRequest()->getParam('order', null);
 
-        $model = Phprojekt_Loader::getModel($module, $module);
+        $model = $this->getModelObject();
         $this->_fileCheckParamField($model, $field);
 
         if ($itemId > 0) {
@@ -218,27 +202,20 @@ class FileController extends IndexController
      *
      * OPTIONAL request parameters:
      * <pre>
-     *  - string  <b>moduleName</b> Current module name.
-     *  - string  <b>field</b>      Name of the field in the module.
-     *  - integer <b>id</b>         Id of the current item.
-     *  - integer <b>order</b>      Position of the file (Can be many uploaded files in the same field).
+     *  - string  <b>field</b> Name of the field in the module.
+     *  - integer <b>id</b>    Id of the current item.
+     *  - integer <b>order</b> Position of the file (Can be many uploaded files in the same field).
      * </pre>
      *
      * @return void
      */
     public function fileDeleteAction()
     {
-        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
         $field  = Cleaner::sanitize('alnum', $this->getRequest()->getParam('field', null));
         $itemId = (int) $this->getRequest()->getParam('id', null);
         $order  = (int) $this->getRequest()->getParam('order', 0);
 
-        $this->getResponse()->clearHeaders();
-        $this->getResponse()->clearBody();
-
-        $linkBegin = Phprojekt::getInstance()->getConfig()->webpath . 'index.php/Default/File/';
-        $model     = Phprojekt_Loader::getModel($module, $module);
-
+        $model = $this->getModelObject();
         $this->_fileCheckParamField($model, $field);
         $this->_fileCheckWritePermission($model, $itemId);
 
@@ -267,7 +244,7 @@ class FileController extends IndexController
 
         $_SESSION['uploadedFiles_' . $field] = $filesOut;
 
-        $this->_fileRenderView($linkBegin, $module, $itemId, $field, $filesOut, true);
+        $this->_fileRenderView($itemId, $field, $filesOut, true);
     }
 
     /**
@@ -276,8 +253,6 @@ class FileController extends IndexController
      * This function draws the upload field in the form.
      * All the uploaded files are displayed with a cross for delete it and a link for download it.
      *
-     * @param string  $linkBegin    URL for use in the links.
-     * @param string  $module       Current module name.
      * @param integer $itemId       Current item id.
      * @param string  $field        Name of the field in the module.
      * @param string  $value        Value of the field.
@@ -285,15 +260,29 @@ class FileController extends IndexController
      *
      * @return void
      */
-    private function _fileRenderView($linkBegin, $module, $itemId, $field, $value, $filesChanged)
+    private function _fileRenderView($itemId, $field, $value, $filesChanged)
     {
+        $this->getResponse()->clearHeaders();
+        $this->getResponse()->clearBody();
+
         $sessionName   = 'Phprojekt_CsrfToken';
         $csrfNamespace = new Zend_Session_Namespace($sessionName);
         $config        = Phprojekt::getInstance()->getConfig();
+        $linkBegin     = $config->webpath . 'index.php/' . $this->getModuleName() . '/index/';
+
+        // Add all the extra parameters that have the original URL
+        $linkData      = '';
+        $removeParams  = array('module', 'controller', 'field', 'id',
+                               'csrfToken', 'action', 'MAX_FILE_SIZE', 'order');
+        foreach ($this->getRequest()->getParams() as $paramName => $paramValue) {
+            if (!in_array($paramName, $removeParams)) {
+                $linkData .= $paramName . '/' . $paramValue . '/';
+            }
+        }
 
         $this->view->webpath        = $config->webpath;
         $this->view->compressedDojo = (bool) $config->compressedDojo;
-        $this->view->formPath       = $linkBegin . 'fileUpload/moduleName/' . $module;
+        $this->view->formPath       = $linkBegin . 'fileUpload/' . $linkData;
         $this->view->downloadLink   = '';
         $this->view->fileName       = null;
         $this->view->itemId         = $itemId;
@@ -309,21 +298,21 @@ class FileController extends IndexController
         // Is there any file?
         if (!empty($value)) {
             $files = explode('||', $value);
-            $model = Phprojekt_Loader::getModel($module, $module);
+            $model = $this->getModelObject();
             $model->find($itemId);
             $rights = $model->getRights();
             $i      = 0;
             foreach ($files as $file) {
                 $fileName = strstr($file, '|');
-                $fileData = 'moduleName/' . $module . '/itemId/' . $itemId . '/field/' . $field . '/order/'
+                $fileData = 'id/' . $itemId . '/field/' . $field . '/order/'
                     . (string) ($i + 1) . '/csrfToken/' . $csrfNamespace->token;
 
                 $filesForView[$i] = array('fileName' => substr($fileName, 1));
                 if ($rights['currentUser']['download']) {
-                    $filesForView[$i]['downloadLink'] = $linkBegin . 'fileDownload/' . $fileData;
+                    $filesForView[$i]['downloadLink'] = $linkBegin . 'fileDownload/' . $linkData . $fileData;
                 }
                 if ($rights['currentUser']['write']) {
-                    $filesForView[$i]['deleteLink'] = $linkBegin . 'fileDelete/' . $fileData;
+                    $filesForView[$i]['deleteLink'] = $linkBegin . 'fileDelete/' . $linkData . $fileData;
                 }
                 $i++;
             }
@@ -349,16 +338,13 @@ class FileController extends IndexController
     {
         $valid = false;
         $info  = $model->info();
+        $this->setCurrentProjectId();
 
         if (in_array($field, $info['cols'])) {
             $dbManager = $model->getInformation();
-            $dbField   = $dbManager->find($field);
-
-            if (!empty($dbField)) {
-                $fieldType = $dbManager->getType($field);
-                if ($fieldType == 'upload') {
-                    $valid = true;
-                }
+            $fieldType = $dbManager->getType($field);
+            if ($fieldType == 'upload') {
+                $valid = true;
             }
         }
 
@@ -368,7 +354,7 @@ class FileController extends IndexController
 
             // Log error
             Phprojekt::getInstance()->getLog()->err("Error: wrong 'field' parameter trying to Download or Delete a file"
-                . ". User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
+                . ". User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getModuleName());
             // Show error to user and stop script execution
             die($error);
         }
@@ -391,7 +377,7 @@ class FileController extends IndexController
 
             // Log error
             Phprojekt::getInstance()->getLog()->err("Error: wrong 'order' parameter trying to Download or Delete a file"
-                . ". User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
+                . ". User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getModuleName());
             // Show error to user and stop script execution
             die($error);
         }
@@ -408,14 +394,16 @@ class FileController extends IndexController
      */
     private function _fileCheckWritePermission($model, $itemId)
     {
-        $model->find($itemId);
+        if ($itemId != 0) {
+            $model->find($itemId);
+        }
         $rights = $model->getRights();
         if (!$rights['currentUser']['write']) {
             $error = Phprojekt::getInstance()->translate('You don\'t have permission for modifying this item.');
 
             // Log error
             Phprojekt::getInstance()->getLog()->err("Error: trying to Delete or Upload a file without write access. "
-                . "User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getRequest()->getModuleName());
+                . "User Id: " . Phprojekt_Auth::getUserId() . " - Module: " . $this->getModuleName());
             // Show error to user and stop script execution
             die($error);
         }
