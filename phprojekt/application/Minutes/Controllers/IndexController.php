@@ -85,15 +85,18 @@ class Minutes_IndexController extends IndexController
 
         if (empty($id)) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+        } else {
+            $minutes = $this->getModelObject()->find($id);
+            if (empty($minutes->id)) {
+                throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            }
         }
-
-        $minutes      = $this->getModelObject()->find($id);
-        $minutesItems = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
-            'MinutesItem')->init($id)->fetchAll();
-        $success = true;
+        $minutesItems = $minutes->items->fetchAll();
+        $success      = true;
 
         if ($minutes instanceof Phprojekt_ActiveRecord_Abstract) {
             foreach ($minutesItems as $item) {
+                $item->setParent($id);
                 $success = $success && (false !== Default_Helpers_Delete::delete($item));
             }
             $success = $success && (false !== Default_Helpers_Delete::delete($minutes));
