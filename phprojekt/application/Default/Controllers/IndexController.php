@@ -264,7 +264,7 @@ class IndexController extends Zend_Controller_Action
         $args = func_get_args();
 
         if (1 > count($args)) {
-            throw new Phprojekt_PublishedException('Missing arguments in setParams function');
+            throw new InvalidArgumentException('Missing arguments in setParams function');
         }
 
         return $args[0];
