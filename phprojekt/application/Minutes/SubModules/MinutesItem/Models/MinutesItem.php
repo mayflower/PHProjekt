@@ -43,14 +43,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
      *
      * @var Phprojekt_Item_Abstract
      */
-    protected $_minutes;
-
-    /**
-     * The Id of the minutes this Item belongs to.
-     *
-     * @var integer
-     */
-    protected $_minutesId = null;
+    protected $_minutes = null;
 
     /**
      * The standard information manager with hardcoded field definitions.
@@ -190,7 +183,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
      */
     public function getRights()
     {
-        return $this->_minutes->getRights();
+        return $this->getParent()->getRights();
     }
 
     /**
@@ -202,7 +195,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
      */
     public function getMultipleRights($ids)
     {
-        return $this->_minutes->getMultipleRights($ids);
+        return $this->getParent()->getMultipleRights($ids);
     }
 
     /**
@@ -212,7 +205,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
      */
     public function getUsersRights()
     {
-        return $this->_minutes->getUsersRights();
+        return $this->getParent()->getUsersRights();
     }
 
     /**
@@ -228,18 +221,25 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Initialize the related minutes object.
+     * Set the parent related minutes object.
      *
      * @param integer $minutesId Parent minute ID.
      *
+     * @return void
+     */
+    public function setParent($minutesId)
+    {
+        $this->_minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes')->find($minutesId);
+    }
+
+    /**
+     * Return the parent.
+     *
      * @return Minutes_Models_MinutesItem An instance of Minutes_Models_MinutesItem.
      */
-    public function init($minutesId = null)
+    public function getParent()
     {
-        $this->_minutes   = Phprojekt_Loader::getModel('Minutes', 'Minutes');
-        $this->_minutesId = $minutesId;
-
-        return $this;
+        return $this->_minutes;
     }
 
     /**
@@ -254,6 +254,12 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     public function find($criteria = null)
     {
         $res = parent::find($criteria);
+
+        // Define the parent if is not set
+        if (null === $this->getParent()) {
+            $res->setParent($res->projectId);
+        }
+
         // Make a backup of the initial data to compare against in save() method
         $this->_history = $this->_data;
 
@@ -275,14 +281,6 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     public function fetchAll($where = null, $order = array('sort_order ASC', 'id DESC'), $count = null, $offset = null,
         $select = null, $join = null)
     {
-        if (null !== $where) {
-            $where .= ' AND ';
-        }
-
-        $where .= sprintf('(%s.%s = %d )',
-            $this->_db->quoteIdentifier($this->getTableName()), $this->_db->quoteIdentifier('minutes_id'),
-            (empty($this->_minutesId) ? $this->_relations['hasMany']['id'] : $this->_minutesId));
-
         $result = parent::fetchAll($where, $order, $count, $offset, $select, $join);
 
         // Integrate numbering
@@ -315,7 +313,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
             // Detect highest available sort order up until now and use next-higher number.
             $sql = 'SELECT MAX(' . $db->quoteIdentifier('sort_order') . ') FROM '
                 . $db->quoteIdentifier($this->getTableName()) . ' WHERE '.$db->quoteIdentifier('minutes_id').' = ?';
-            $result  = $db->fetchCol($sql, $this->_minutesId);
+            $result  = $db->fetchCol($sql, $this->getParent()->id);
             $maxSort = $result[0];
 
             if (!$maxSort || $maxSort < 0) {
@@ -329,8 +327,8 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
                 // all sort order values equal or above the new value by one, and then update this
                 // record with the new value. That should ensure order value consistency.
                 $data  = array('sort_order' => new Zend_Db_Expr($this->_db->quoteIdentifier('sort_order') . ' + 1'));
-                $where = sprintf('%s = %d and %s >= %d', $this->_db->quoteIdentifier('minutes_id'), $this->_minutesId,
-                    $this->_db->quoteIdentifier('sort_order'), $this->sortOrder);
+                $where = sprintf('%s = %d and %s >= %d', $this->_db->quoteIdentifier('minutes_id'),
+                    $this->getParent()->id, $this->_db->quoteIdentifier('sort_order'), $this->sortOrder);
                 $this->update($data, $where);
             }
         }

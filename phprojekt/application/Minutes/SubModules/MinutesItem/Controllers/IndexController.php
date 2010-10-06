@@ -43,6 +43,35 @@ class MinutesItem_IndexController extends IndexController
     const MINUTES_READ_ONLY = 'This minutes is final and cannot be edited.';
 
     /**
+     * Return the model name for construct the class.
+     *
+     * @return string The path to the model in the class format.
+     */
+    public function getModelName()
+    {
+        return 'Minutes_SubModules_MinutesItem';
+    }
+
+    /**
+     * Gets the class model of the module and set the parent.
+     *
+     * @return Phprojekt_Model_Interface An instance of Phprojekt_Model_Interface.
+     */
+    public function getModelObject()
+    {
+        $minutesId = (int) $this->getRequest()->getParam('minutesId', 0);
+        if ($minutesId == 0) {
+            // Try with parentId
+            $minutesId = (int) $this->getRequest()->getParam('parentId', 0);
+        }
+
+        $object = parent::getModelObject();
+        $object->setParent($minutesId);
+
+        return $object;
+    }
+
+    /**
      * Returns the list of minutes items referenced by a minutesId.
      *
      * The return have:
@@ -67,57 +96,22 @@ class MinutesItem_IndexController extends IndexController
         $this->setCurrentProjectId();
 
         if (!empty($minutesId)) {
-            $itemModel = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem');
-            $itemModel->init($minutesId);
-            $result = $itemModel->fetchAll();
+            $where = sprintf('minutes_id = %d', (int) $minutesId);
         } else {
-            $result = array();
+            $where = null;
         }
 
-        if (array() === $result && isset($itemModel)) {
-            // Inject metadata for correct filling of topicType select field
+        $itemModel = $this->getModelObject();
+        $result    = $itemModel->fetchAll($where);
+
+        if (array() === $result) {
+            // Inject metadata for draw an empty grid
             $ordering = Phprojekt_ModelInformation_Default::ORDERING_LIST;
             $result   = array('metadata' => $itemModel->getInformation()->getFieldDefinition($ordering),
                               'numRows'  => 0);
         }
 
         Phprojekt_Converter_Json::echoConvert($result, Phprojekt_ModelInformation_Default::ORDERING_LIST);
-    }
-
-    /**
-     * Returns the detail (fields and data) of a single minutes item.
-     *
-     * The return have:
-     *  - The metadata of each field.
-     *  - The data of one item.
-     *  - The number of rows.
-     *
-     * The function use Phprojekt_ModelInformation_Default::ORDERING_FORM for get and sort the fields.
-     *
-     * REQUIRES request parameters:
-     * <pre>
-     *  - integer <b>id</b>        The id of the item.
-     *  - integer <b>minutesId</b> The id of the minutes.
-     * </pre>
-     *
-     * The return is in JSON format.
-     *
-     * @return void
-     */
-    public function jsonDetailAction()
-    {
-        $itemModel = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'MinutesItem');
-        $itemModel->init((int) $this->getRequest()->getParam('minutesId', 0));
-        $id = (int) $this->getRequest()->getParam('id');
-        $this->setCurrentProjectId();
-
-        if (empty($id)) {
-            $record = $itemModel;
-        } else {
-            $record = $itemModel->find($id);
-        }
-
-        Phprojekt_Converter_Json::echoConvert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
     }
 
     /**
@@ -152,33 +146,25 @@ class MinutesItem_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $minutesId = (int) $this->getRequest()->getParam('minutesId');
         $this->setCurrentProjectId();
+        $model = $this->getModelObject();
 
-        $minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes');
-        $minutes->find($minutesId);
-
-        if (empty($minutes->id)) {
+        if (empty($model->getParent()->id)) {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
-        } elseif (4 == $minutes->itemStatus) {
+        } elseif (4 == $model->getParent()->itemStatus) {
             throw new Phprojekt_PublishedException(self::MINUTES_READ_ONLY);
         } else {
             $id = (int) $this->getRequest()->getParam('id');
 
             if (empty($id)) {
-                $model = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
-                    'MinutesItem')->init($minutesId);
                 $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
-                $newItem = true;
             } else {
-                $model = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
-                    'MinutesItem')->init($minutesId)->find($id);
+                $model->find($id);
                 $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
-                $newItem = false;
             }
 
             if ($model instanceof Phprojekt_Model_Interface) {
-                $params = $this->setParams($this->getRequest()->getParams(), $minutes);
+                $params = $this->setParams($this->getRequest()->getParams(), $model->getParent());
                 Default_Helpers_Save::save($model, $params);
 
                 $return = array('type'    => 'success',
@@ -216,15 +202,13 @@ class MinutesItem_IndexController extends IndexController
      */
     public function jsonDeleteAction()
     {
-        $minutesId = (int) $this->getRequest()->getParam('minutesId');
-        $id        = (int) $this->getRequest()->getParam('id');
+        $id = (int) $this->getRequest()->getParam('id');
 
-        $minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes');
-        $minutes->find($minutesId);
+        $model = $this->getModelObject();
 
-        if (empty($minutesId)) {
+        if (empty($model->getParent()->id)) {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
-        } elseif (4 == $minutes->itemStatus) {
+        } elseif (4 == $model->getParent()->itemStatus) {
             throw new Phprojekt_PublishedException(self::MINUTES_READ_ONLY);
         }
 
@@ -232,10 +216,9 @@ class MinutesItem_IndexController extends IndexController
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
         }
 
-        $model = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
-            'MinutesItem')->init($minutesId)->find($id);
+        $model->find($id);
 
-        if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
+        if ($model instanceof Phprojekt_ActiveRecord_Abstract && !empty($model->id)) {
             $tmp = Default_Helpers_Delete::delete($model);
             if ($tmp === false) {
                 $message = Phprojekt::getInstance()->translate(self::DELETE_FALSE_TEXT);
@@ -276,9 +259,10 @@ class MinutesItem_IndexController extends IndexController
      */
     public function jsonListItemSortOrderAction()
     {
-        $minutesId = (int) $this->getRequest()->getParam('minutesId');
-        $items     = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
-            'MinutesItem')->init($minutesId)->fetchAll();
+        $minutesId = (int) $this->getRequest()->getParam('minutesId', 0);
+        $where     = sprintf('minutes_id = %d', (int) $minutesId);
+
+        $items = $this->getModelObject()->fetchAll($where);
 
         $return = array('data' => array(array('id'   => 0,
                                               'name' => '')));

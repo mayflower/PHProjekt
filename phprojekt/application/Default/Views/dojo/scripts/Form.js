@@ -411,9 +411,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                                                     itemrequired, itemdisabled, itemhint);
                         break;
                     case 'upload':
-                        iFramePath = phpr.webpath + 'index.php/Default/File/fileForm/moduleName/' + phpr.module
-                            + '/id/' + this.id + '/field/' + itemid
-                            + '/csrfToken/' + phpr.csrfToken;
+                        iFramePath              = this.getUploadIframePath(itemid);
                         this.formdata[itemtab] += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue,
                                                     itemrequired, itemdisabled, iFramePath, itemhint);
                         break;
@@ -1084,5 +1082,11 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
                 }
             }
         }
+    },
+
+    getUploadIframePath:function(itemid) {
+        return phpr.webpath + 'index.php/' + phpr.module + '/index/fileForm'
+            + '/nodeId/' + phpr.currentProjectId + '/id/' + this.id + '/field/' + itemid
+            + '/csrfToken/' + phpr.csrfToken;
     }
 });
