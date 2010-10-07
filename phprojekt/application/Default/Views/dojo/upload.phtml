@@ -59,7 +59,7 @@
                 <td style="padding: 0 0 0 5px; vertical-align: middle;">';
                 if (isset($file['downloadLink'])) {
                     echo '
-                    <a onClick="window.location.href=\''. $file['downloadLink'] . '\'; return false;" target="_blank">'
+                    <a href="#" onClick="window.location.href=\''. $file['downloadLink'] . '\'; return false;" target="_blank">'
                     . $file['fileName'] . '</a>';
                 } else {
                     echo $file['fileName'];
