@@ -1001,7 +1001,7 @@ class IndexController extends Zend_Controller_Action
         }
         $_SESSION['uploadedFiles_' . $field] = $value;
 
-        $this->_fileRenderView($itemId, $field, $value, false);
+        $this->_fileRenderView($itemId, $field, $value);
     }
 
     /**
@@ -1064,7 +1064,7 @@ class IndexController extends Zend_Controller_Action
         }
         $_SESSION['uploadedFiles_' . $field] = $value;
 
-        $this->_fileRenderView($itemId, $field, $value, true);
+        $this->_fileRenderView($itemId, $field, $value);
     }
 
     /**
@@ -1187,14 +1187,13 @@ class IndexController extends Zend_Controller_Action
      * This function draws the upload field in the form.
      * All the uploaded files are displayed with a cross for delete it and a link for download it.
      *
-     * @param integer $itemId       Current item id.
-     * @param string  $field        Name of the field in the module.
-     * @param string  $value        Value of the field.
-     * @param boolean $filesChanged Defines if is needed to reload the field value.
+     * @param integer $itemId Current item id.
+     * @param string  $field  Name of the field in the module.
+     * @param string  $value  Value of the field.
      *
      * @return void
      */
-    private function _fileRenderView($itemId, $field, $value, $filesChanged)
+    private function _fileRenderView($itemId, $field, $value)
     {
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
@@ -1222,7 +1221,6 @@ class IndexController extends Zend_Controller_Action
         $this->view->itemId         = $itemId;
         $this->view->field          = $field;
         $this->view->value          = $value;
-        $this->view->filesChanged   = $filesChanged;
         $this->view->csrfToken      = $csrfNamespace->token;
         $this->view->maxUploadSize  = (isset($config->maxUploadSize)) ? (int) $config->maxUploadSize :
             Phprojekt::DEFAULT_MAX_UPLOAD_SIZE;

@@ -19,17 +19,11 @@
     }
     ?>
     <script type="text/javascript">
-        <?php
-        if ($this->filesChanged) {
-            ?>
-            var par     = window.parent.document;
-            var input   = par.getElementById("<?php echo $this->field; ?>");
-            if (input) {
-                input.value = "<?php echo $this->value; ?>";
-            }
-            <?php
+        var par   = window.parent.document;
+        var input = par.getElementById("<?php echo $this->field; ?>");
+        if (input) {
+            input.value = "<?php echo $this->value; ?>";
         }
-        ?>
     </script>
 </head>
 <body class="phprojekt">
