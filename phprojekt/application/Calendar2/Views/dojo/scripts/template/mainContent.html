@@ -1,0 +1,35 @@
+<div dojoType="dijit.layout.BorderContainer" design="sidebar" id="calendarMain" persist="true"
+    style="width: 100%; height: 100%;">
+    <!-- List View -->
+    <div dojoType="dijit.layout.ContentPane" region="center" class="prepend-0 append-0">
+        <div dojoType="dijit.layout.BorderContainer" gutters="false"
+        style="height: 100%; overflow: hidden;">
+            <div dojoType="phpr.Filter.ExpandoPane" id="gridFiltersBox" title="" region="top"
+            startExpanded="false" maxHeight="200" style="height: 90px; z-index: 3; overflow-x: hidden;">
+            </div>
+            <div dojoType="dijit.layout.ContentPane" id="gridBox" region="center" startExpanded="true"
+            style="overflow-x: hidden;">
+            </div>
+        </div>
+    </div>
+    <!-- Form View -->
+    <div dojoType="dijit.layout.ContentPane" id="detailsBox" region="bottom" splitter="true"
+    style="height: 60%;">
+    </div>
+</div>
+<!-- Users Selector -->
+<div dojoType="dijit.Dialog" id="selectorDialog" title="" draggable="false"
+    style="background-color: white; width: auto; height: auto; text-align: center;">
+    <h1 id="selectorTitle"></h1>
+    <div dojoType="dijit.layout.ContentPane" id="selectorContainer"
+        style="width: 330px; height: 310px; border: 2px solid #294064; padding-left: 7px;">
+    </div>
+</div>
+<!-- Event Selector -->
+<div dojoType="dijit.Dialog" id="eventSelectorDialog" title="" draggable="false"
+    style="background-color: white; width: auto; height: auto;">
+    <h2 id="eventSelectorTitle" style="text-align:center"></h2>
+    <div dojoType="dijit.layout.ContentPane" id="eventSelectorContainer"
+        style="border: 2px solid #294064; padding: 7px;">
+    </div>
+</div>
