@@ -153,6 +153,8 @@ class Phprojekt_Converter_Json
                     } else {
                         if (is_null($value) && !is_null($field['default'])) {
                             $data[$key] = (string) $field['default'];
+                        } else if (is_array($value)) {
+                            $data[$key] = $value;
                         } else {
                             $data[$key] = (string) $value;
                         }
@@ -182,6 +184,8 @@ class Phprojekt_Converter_Json
                         } else {
                             if (is_null($value) && !is_null($field['default'])) {
                                 $data[$key] = (string) $field['default'];
+                            } else if (is_array($value)) {
+                                $data[$key] = $value;
                             } else {
                                 $data[$key] = (string) $value;
                             }
