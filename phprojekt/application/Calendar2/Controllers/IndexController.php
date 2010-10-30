@@ -46,8 +46,6 @@ class Calendar2_IndexController extends IndexController
      *  - datetime Start
      *  - datetime End
      * </pre>
-     *
-     * Both datetimes must include timezone information.
      */
     public function jsonPeriodListAction()
     {
@@ -58,7 +56,34 @@ class Calendar2_IndexController extends IndexController
             Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd'))
         );
 
-        $model = new Calendar2_Models_Calendar2();
+        $model  = new Calendar2_Models_Calendar2();
+        $events = $model->fetchAllForPeriod($start, $end);
+
+        Phprojekt_Converter_Json::echoConvert(
+            $events,
+            Phprojekt_ModelInformation_Default::ORDERING_FORM
+        );
+    }
+
+    /**
+     * Returns all events on the given day that the user is involved in.
+     *
+     * Request parameters:
+     * <pre>
+     *  - datetime date
+     * </pre>
+     */
+    public function jsonDayListSelfAction()
+    {
+        $start = new Datetime(
+            Cleaner::sanitize('date', $this->getRequest()->getParam('date'))
+        );
+
+        $start->setTime(0, 0, 0);
+        $end = clone $start;
+        $end->setTime(23, 59, 59);
+
+        $model  = new Calendar2_Models_Calendar2();
         $events = $model->fetchAllForPeriod($start, $end);
 
         Phprojekt_Converter_Json::echoConvert(
