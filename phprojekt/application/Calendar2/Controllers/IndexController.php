@@ -51,9 +51,18 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonPeriodListAction()
     {
-        // TODO: Implement jsonPeriodListAction
+        $start = new Datetime(
+            Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart'))
+        );
+        $end   = new Datetime(
+            Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd'))
+        );
+
+        $model = new Calendar2_Models_Calendar2();
+        $events = $model->fetchAllForPeriod($start, $end);
+
         Phprojekt_Converter_Json::echoConvert(
-            array(),
+            $events,
             Phprojekt_ModelInformation_Default::ORDERING_FORM
         );
     }

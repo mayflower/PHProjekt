@@ -97,6 +97,27 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Get all events in the period that the currently active user participates in.
+     *
+     * @param Datetime $start The start of the period.
+     * @param Datetime $end   The end of the period.
+     *
+     * @return array of Calendar2_Models_Calendar
+     */
+    public function fetchAllForPeriod(Datetime $start, Datetime $end)
+    {
+        $db = $this->getAdapter();
+        $where  = $db->quoteInto('calendar2_user_relation.user_id = ? ', Phprojekt_Auth::getUserId());
+        $where .= $db->quoteInto('AND start >= ?', $start->format('Y-m-d H:i:s'));
+        $where .= $db->quoteInto('AND start <= ?', $end->format('Y-m-d H:i:s'));
+        $join   = $db->quoteInto('JOIN calendar2_user_relation ON calendar2.id = calendar2_user_relation.calendar2_id');
+
+        return $this->fetchAll($where, null, null, null, null, $join);
+    }
+
+
+
+    /**
      * Get the participants of this event.
      *
      * @return array of int
