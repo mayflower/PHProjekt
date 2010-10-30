@@ -84,6 +84,15 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             }
         }
 
+        // Adjust the access rights
+        foreach ($this->participants as $p) {
+            //TODO: Figure out what rights we need exactly.
+            $rights[$p] = Phprojekt_Acl::READ;
+        }
+        $rights = array($this->ownerId => Phprojekt_Acl::ALL);
+
+        $this->saveRights($rights);
+
         return $this->id;
     }
 
@@ -108,7 +117,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @return void
      */
-    public function setParticipants($ids)
+    public function setParticipants(Array $ids)
     {
         $this->_participantData = array_fill_keys($ids, self::STATUS_PENDING);
     }
