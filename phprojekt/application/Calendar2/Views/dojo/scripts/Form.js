@@ -285,7 +285,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
             row.id       = "trParticipantFor" + userId;
 
             var cell = row.insertCell(0);
-            cell.innerHTML = '<input id="dataParticipant[' + userId + ']" name="dataParticipant[' + userId + ']" '
+            cell.innerHTML = '<input id="dataParticipant[' + userId + ']" name="newParticipants[]" '
                 + ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
             var cell = row.insertCell(1);
             cell.innerHTML = '<div id="participantDeleteButton' + userId + '"></div>';

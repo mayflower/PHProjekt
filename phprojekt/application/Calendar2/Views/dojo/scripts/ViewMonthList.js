@@ -162,10 +162,10 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
         for (var event in content) {
 
             // Split datetime in date and time
-            var dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['startDatetime']);
+            var dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['start']);
             content[event]['startDate'] = phpr.Date.getIsoDate(dateTime);
             content[event]['startTime'] = phpr.Date.getIsoTime(dateTime);
-            dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['endDatetime']);
+            dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['end']);
             content[event]['endDate'] = phpr.Date.getIsoDate(dateTime);
             content[event]['endTime'] = phpr.Date.getIsoTime(dateTime);
 

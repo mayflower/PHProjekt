@@ -106,8 +106,8 @@ class Calendar2_IndexController extends IndexController
         $model->ownerId        = Phprojekt_Auth::getUserId();
         $model->visibility     = $params['visibility'];
 
-        if (array_key_exists('dataParticipant', $params)) {
-            $model->participants = $params['dataParticipant'];
+        if (array_key_exists('participants', $params)) {
+            $model->setParticipants($params['participants']);
         }
         $model->addParticipant(Phprojekt_Auth::getUserId());
         $model->setConfirmationStatus(
