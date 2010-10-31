@@ -50,12 +50,12 @@ class Todo_Models_Notification extends Phprojekt_Notification
         $recipients = parent::getTo();
 
         // Assigned user
-        if (isset($this->_model->userId) && $this->_model->userId != $userId) {
+        if (!empty($this->_model->userId) && $this->_model->userId != $userId) {
             $recipients[] = $this->_model->userId;
         }
 
         // Owner user
-        if (isset($this->_model->ownerId) && $this->_model->ownerId != $userId) {
+        if (!empty($this->_model->userId) && $this->_model->ownerId != $userId) {
             $recipients[] = $this->_model->ownerId;
         }
 
