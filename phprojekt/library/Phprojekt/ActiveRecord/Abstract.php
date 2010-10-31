@@ -204,13 +204,6 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Destructor
-     */
-    function __destruct()
-    {
-    }
-
-    /**
      * Iterator implementation.
      * Returns the current element from the data array.
      *
