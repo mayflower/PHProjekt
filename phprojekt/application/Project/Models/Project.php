@@ -230,4 +230,18 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             $rightNamespace->unsetAll();
         }
     }
+
+    /**
+     * Validate the data of the current record.
+     *
+     * @return boolean True for valid.
+     */
+    public function recordValidate()
+    {
+        if (!$this->_validate->validateDateRange($this->startDate, $this->endDate)) {
+            return false;
+        } else {
+            return parent::recordValidate();
+        }
+    }
 }
