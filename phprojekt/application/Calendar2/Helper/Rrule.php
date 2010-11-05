@@ -25,7 +25,7 @@
 /**
  * Calendar2 recurrence rule Helper.
  *
- * The rrule format is defined in the iCalendar rfc.
+ * The rrule format is defined in RFC 5545.
  *
  * @category   PHProjekt
  * @package    Application
@@ -42,17 +42,22 @@ class Calendar2_Helper_Rrule
     /**
      * @var Datetime The first occurrence of the event.
      */
-    private $first;
+    private $_first;
 
     /**
-     * @var array of String => String The rrule properties.
+     * @var array of String => mixed The rrule properties.
+     *
+     * 'FREQ'     => DateInterval
+     * 'INTERVAL' => int
+     * 'UNTIL'    => DateTime (exclusive, meant for DatePeriod)
+     * 'COUNT'    => int (The number of _RE_occurences, i.e. excluding the first event)
      */
-    private $rrule;
+    private $_rrule;
 
     /**
      * @var array of Datetime Dates to exclude.
      */
-    private $exceptions;
+    private $_exceptions;
 
     /**
      * Constructor.
@@ -63,9 +68,9 @@ class Calendar2_Helper_Rrule
      */
     public function __construct(Datetime $first, $rrule, Array $exceptions = array())
     {
-        $this->first      = $first;
-        $this->rrule      = $this->parseRrule($rrule);
-        $this->exceptions = $exceptions;
+        $this->_first      = $first;
+        $this->_rrule      = $this->_parseRrule($rrule);
+        $this->_exceptions = $exceptions;
     }
 
     /**
@@ -78,94 +83,61 @@ class Calendar2_Helper_Rrule
      */
     public function getDatesInPeriod(Datetime $start, Datetime $end)
     {
-        //TODO: Refactor this in multiple methods.
-        $firstTs = $this->first->getTimestamp();
+        $firstTs = $this->_first->getTimestamp();
         $startTs = $start->getTimestamp();
         $endTs   = $end->getTimestamp();
 
-        if (!array_key_exists('FREQ', $this->rrule)) {
+        if (!array_key_exists('FREQ', $this->_rrule)) {
             // There is no frequency in the rrule, so there's actually no recurrence
             if ($firstTs >= $startTs && $firstTs <= $endTs) {
-                return array($this->first);
+                return array($this->_first);
             } else {
                 return array();
             }
         }
 
-        $interval = 1;
-        if (array_key_exists('INTERVAL', $this->rrule)) {
-            $interval = $this->rrule['INTERVAL'];
-        }
-
-        switch ($this->rrule['FREQ']) {
-            case 'DAILY':
-                $dateInterval = new DateInterval("P{$interval}D");
-                break;
-            case 'WEEKLY':
-                $dateInterval = new DateInterval("P{$interval}W");
-                break;
-            case 'MONTHLY':
-                $dateInterval = new DateInterval("P{$interval}M");
-                break;
-            case 'YEARLY':
-                $dateInterval = new DateInterval("P{$interval}Y");
-                break;
-            default:
-                // We don't know how to handle anything else.
-                if ($firstTs >= $startTs && $firstTs <= $endTs) {
-                    return array($this->first);
-                } else {
-                    return array();
-                }
-        }
-
-        if (array_key_exists('COUNT', $this->rrule)) {
+        if (array_key_exists('COUNT', $this->_rrule)) {
             $period = new DatePeriod(
-                $this->first,
-                $dateInterval,
-                (int) $this->rrule['COUNT']
+                $this->_first,
+                $this->_rrule['FREQ'],
+                $this->_rrule['COUNT']
             );
-        } else if (array_key_exists('UNTIL', $this->rrule)) {
+        } else if (array_key_exists('UNTIL', $this->_rrule)) {
             $period = new DatePeriod(
-                $this->first,
-                $dateInterval,
-                new Datetime($this->rrule['UNTIL']) //TODO: Check if this explodes when using timezones.
+                $this->_first,
+                $this->_rrule['FREQ'],
+                $this->_rrule['UNTIL'] //TODO: Check if this explodes when using timezones.
             );
         } else {
-            $period = new DatePeriod($this->first, $dateInterval, $end);
+            $period = new DatePeriod($this->_first, $this->_rrule['FREQ'], $end);
         }
 
         $ret = array();
-
         foreach ($period as $date) {
+            // Work around http://bugs.php.net/bug.php?id=52454
+            // 'Relative dates and getTimestamp increments by one day'
+            $datestring = $date->format('Y-m-d H:i:s');
+
             $ts = $date->getTimestamp();
-            if ($startTs <= $ts && $ts <= $endTs && !in_array($date, $this->exceptions)) {
-                $ret[] = $date;
+            if ($startTs <= $ts && $ts <= $endTs && !in_array($date, $this->_exceptions)) {
+                $ret[] = new Datetime($datestring);
             }
         }
         return $ret;
     }
 
     /**
-     * Properties that are extracted from the rrules.
-     */
-    private $properties = array(
-        'FREQ',
-        'INTERVAL',
-        'COUNT',
-        'UNTIL'
-    );
-
-    /**
-     * Parses a rrule string into a dictionary.
+     * Parses a rrule string into a dictionary while working around all
+     * specialities of iCalendar, so we have values in $this->_rrule that
+     * a php programmer would expect. See there for exact documentation.
      *
      * @param string $rrule The rrule.
      *
-     * @return array of string => string The properties and their values.
+     * @return array of string => mixed The properties and their values.
      */
-    private function parseRrule($rrule)
+    private function _parseRrule($rrule)
     {
-        if ($rrule === '') {
+        if (empty($rrule)) {
             return array(
                 'FREQ'     => null,
                 'INTERVAL' => null,
@@ -176,13 +148,78 @@ class Calendar2_Helper_Rrule
 
         $ret = array();
 
-        foreach ($this->properties as $prop) {
-            preg_match("/$prop=([^;]+)/", $rrule, $matches);
-
-            if (array_key_exists(1, $matches)) {
-                $ret[$prop] = $matches[1];
-            }
+        // Parse interval
+        $ret['INTERVAL'] = (int) $this->_parseRruleHelper($rrule, 'INTERVAL');
+        if (empty($ret['INTERVAL'])) {
+            $ret['INTERVAL'] = 1;
         }
+
+        // Parse frequency
+        $freq = $this->_parseRruleHelper($rrule, 'FREQ');
+        if (empty($freq)) {
+            // Violates RFC 5545
+            throw new Exception('Rrule contains no FREQ');
+        }
+        switch ($freq) {
+            case 'DAILY':
+                $ret['FREQ'] = new DateInterval("P1D");
+                break;
+            case 'WEEKLY':
+                $ret['FREQ'] = new DateInterval("P1W");
+                break;
+            case 'MONTHLY':
+                $ret['FREQ'] = new DateInterval("P1M");
+                break;
+            case 'YEARLY':
+                $ret['FREQ'] = new DateInterval("P1Y");
+                break;
+            default:
+                // We don't know how to handle anything else.
+                throw new Exception("Cannot handle rrule frequency $freq");
+        }
+
+        // Parse until
+        $until = $this->_parseRruleHelper($rrule, 'UNTIL');
+        if (!empty($until)) {
+            if (strpos($until, 'TZID')) {
+                // We have a time with timezone, can't handle that
+                throw new Exception('Cannot handle rrules with timezone information');
+            } else if (!strpos($until, 'Z')) {
+                // A floating time, can't handle those either.
+                throw new Exception('Cannot handle floating times in rrules.');
+            }
+            // until is yyyymmddThhiissZ. Z represents UTC, but php doesn't understand this.
+            $ret['UNTIL'] = new Datetime(substr($until, 0, 15), new DateTimeZone('UTC'));
+        }
+
+        // Parse count
+        $count = $this->_parseRruleHelper($rrule, 'COUNT');
+        if ($count === 0) {
+            throw new Exception('Rrule with COUNT=0 means event never occurs');
+        } else if (!empty($count)) {
+            if (array_key_exists('UNTIL', $ret)) {
+                throw new Exception('Both UNTIL and COUNT appear in one rrule (violates rfc5545)');
+            }
+            // iCalendar counts the first occurence, while php does not.
+            $ret['COUNT'] = $count - 1;
+        }
+
         return $ret;
     }
+
+    /**
+     * Helper function for parseRrule
+     */
+    private function _parseRruleHelper($rrule, $prop)
+    {
+        $matches = array();
+        preg_match("/$prop=([^;]+)/", $rrule, $matches);
+
+        if (array_key_exists(1, $matches)) {
+            return $matches[1];
+        } else {
+            return null;
+        }
+    }
+
 }

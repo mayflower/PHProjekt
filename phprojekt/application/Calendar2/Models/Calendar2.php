@@ -110,12 +110,34 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $where  = $db->quoteInto('calendar2_user_relation.user_id = ? ', Phprojekt_Auth::getUserId());
         $where .= $db->quoteInto('AND start >= ?', $start->format('Y-m-d H:i:s'));
         $where .= $db->quoteInto('AND start <= ?', $end->format('Y-m-d H:i:s'));
-        $join   = $db->quoteInto('JOIN calendar2_user_relation ON calendar2.id = calendar2_user_relation.calendar2_id');
+        $join   = 'JOIN calendar2_user_relation ON calendar2.id = calendar2_user_relation.calendar2_id';
 
-        return $this->fetchAll($where, null, null, null, null, $join);
+        $models = $this->fetchAll($where, null, null, null, null, $join);
+        $ret = array();
+
+        foreach ($models as $model) {
+            $helper = new Calendar2_Helper_Rrule(
+                new Datetime($model->start),
+                $model->rrule,
+                array()
+            );
+            $startDT  = new Datetime($model->start);
+            $endDT    = new Datetime($model->end);
+            $duration = $startDT->diff($endDT);
+
+            foreach ($helper->getDatesInPeriod($start, $end) as $date) {
+                //TODO: Check if this creates a performance problem and add
+                //      copy functionality to Phprojekt_ActiveRecord_Abstract.
+                $m = $model->copy();
+                $m->start = $date->format('Y-m-d H:i:s');
+                $date->add($duration);
+                $m->end = $date->format('Y-m-d H:i:s');
+                $ret[] = $m;
+            }
+        }
+
+        return $ret;
     }
-
-
 
     /**
      * Get the participants of this event.
@@ -240,5 +262,21 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 array('id' => $this->id)
             );
         }
+    }
+
+    /**
+     * Returns a copy of this model object.
+     *
+     * Note that a call to save will fail, only show the objects
+     * returned by this function to the client.
+     */
+    private function copy() {
+        $m = new Calendar2_Models_Calendar2();
+
+        // user _data to bypass __set
+        foreach($this->_data as $k => $v) {
+            $m->_data[$k] = $v;
+        }
+        return $m;
     }
 }
