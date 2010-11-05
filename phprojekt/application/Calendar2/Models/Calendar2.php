@@ -133,6 +133,44 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         return $this->id;
     }
 
+    public function delete()
+    {
+        $this->getAdapter()->delete(
+            'calendar2_user_relation',
+            $this->getAdapter()->quoteInto('calendar2_id = ?', $this->id)
+        );
+        parent::delete();
+    }
+
+    public function find()
+    {
+        $this->_participantData     = null;
+        $this->_participantDataInDb = null;
+
+        // This is very uncool, but activeRecord declares find()
+        // while expecting find($id)...
+        $args = func_get_args();
+
+        if (1 > count($args)) {
+            throw new Phprojekt_ActiveRecord_Exception('Missing argument');
+        }
+        if (1 < count($args)) {
+            throw new Phprojekt_ActiveRecord_Exception('Too many arguments');
+        }
+        if (is_null($args[0])) {
+            throw new Phprojekt_ActiveRecord_Exception('Argument cannot be NULL');
+        }
+
+        return parent::find($args[0]);
+    }
+
+    public function __clone()
+    {
+        parent::__clone();
+        $this->_participantData     = null;
+        $this->_participantDataInDb = null;
+    }
+
     /**
      * Get all events in the period that the currently active user participates in.
      *
