@@ -54,13 +54,21 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     protected $_participantData = null;
 
     /**
+     * The participant data of the event as it is stored in the database.
+     *
+     * @var array of (int => int) (ParticipantId => Status)
+     */
+    protected $_participantDataInDb = null;
+
+    /**
      * Overwrite save function. Writes the data in this object into the database.
      *
      * @return int The id of the saved object
      */
     public function save()
     {
-        //TODO: Make this update-safe
+        $new = empty($this->_storedId);
+
         // Save our regular values.
         parent::save();
 
@@ -70,10 +78,15 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         }
         parent::save();
 
-        // Save the participants.
-        if (null !== $this->_participantData) {
-            foreach ($this->_participantData as $id => $status) {
-                $this->getAdapter()->insert(
+        $db = $this->getAdapter();
+
+        // Find the added and removed participants
+        $this->_fetchParticipantData();
+
+        foreach ($this->_participantData as $id => $status) {
+            if (!array_key_exists($id, $this->_participantDataInDb)) {
+                Phprojekt::getInstance()->getLog()->debug("Adding $id");
+                $db->insert(
                     'calendar2_user_relation',
                     array(
                         'calendar2_id'        => $this->id,
@@ -83,13 +96,37 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 );
             }
         }
+        foreach (array_keys($this->_participantDataInDb) as $id) {
+            if (!array_key_exists($id, $this->_participantData) && $id !== $this->ownerId) {
+                Phprojekt::getInstance()->getLog()->debug("Removing $id from event owned by {$this->ownerId}");
+                $db->delete(
+                    'calendar2_user_relation',
+                    array(
+                        $db->quoteInto('calendar2_id = ?', $this->id),
+                        $db->quoteInto('user_id = ?', $id)
+                    )
+                );
+            }
+        }
+
+        // If this is a new event, we also have to add the owner
+        if ($new) {
+            $db->insert(
+                'calendar2_user_relation',
+                array(
+                    'calendar2_id'        => $this->id,
+                    'user_id'             => $this->ownerId,
+                    'confirmation_status' => self::STATUS_ACCEPTED
+                )
+            );
+        }
 
         // Adjust the access rights
         foreach ($this->participants as $p) {
             //TODO: Figure out what rights we need exactly.
             $rights[$p] = Phprojekt_Acl::READ;
         }
-        $rights = array($this->ownerId => Phprojekt_Acl::ALL);
+        $rights[$this->ownerId] = Phprojekt_Acl::ALL;
 
         $this->saveRights($rights);
 
@@ -126,8 +163,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $duration = $startDT->diff($endDT);
 
             foreach ($helper->getDatesInPeriod($start, $end) as $date) {
-                //TODO: Check if this creates a performance problem and add
-                //      copy functionality to Phprojekt_ActiveRecord_Abstract.
                 $m = $model->copy();
                 $m->start = $date->format('Y-m-d H:i:s');
                 $date->add($duration);
@@ -253,14 +288,19 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     {
         if (null === $this->_storedId) {
             // We don't exist in the database. So we don't have any.
-            $this->_participantData = array();
+            $this->_participantDataInDb = array();
         } else {
-            $this->_participantData = $this->getAdapter()->fetchPairs(
+            $this->_participantDataInDb = $this->getAdapter()->fetchPairs(
                 'SELECT user_id,confirmation_status '
                     . 'FROM calendar2_user_relation '
                     . 'WHERE calendar2_id = :id',
                 array('id' => $this->id)
             );
+        }
+
+        if (null === $this->_participantData) {
+            // Avoid overwriting new data
+            $this->_participantData = $this->_participantDataInDb;
         }
     }
 

@@ -126,12 +126,12 @@ class Calendar2_IndexController extends IndexController
     {
         //TODO: Input validation
         $id = (int) $this->getRequest()->getParam('id');
-        if (!empty($id)) {
-            throw new Exception('Updating not implemented yet');
-        }
 
         $params = $this->getRequest()->getParams();
         $model = new Calendar2_Models_Calendar2();
+        if (!empty($id)) {
+            $model->find($id);
+        }
 
         $model->title          = trim($params['title']);
         $model->subject        = trim($params['subject']);
@@ -140,14 +140,11 @@ class Calendar2_IndexController extends IndexController
         $model->ownerId        = Phprojekt_Auth::getUserId();
         $model->visibility     = $params['visibility'];
 
-        if (array_key_exists('participants', $params)) {
-            $model->setParticipants($params['participants']);
+        if (array_key_exists('newParticipants', $params)) {
+            $model->setParticipants($params['newParticipants']);
+        } else {
+            $model->setParticipants(array());
         }
-        $model->addParticipant(Phprojekt_Auth::getUserId());
-        $model->setConfirmationStatus(
-            $model->ownerId,
-            Calendar2_Models_Calendar2::STATUS_ACCEPTED
-        );
 
         // Using Datetime would be much nicer here.
         // But Phprojekt doesn't support Datetime in any way yet.
