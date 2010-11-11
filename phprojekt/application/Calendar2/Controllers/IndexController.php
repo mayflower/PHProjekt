@@ -133,12 +133,12 @@ class Calendar2_IndexController extends IndexController
             $model->find($id);
         }
 
-        $model->title          = trim($params['title']);
-        $model->subject        = trim($params['subject']);
-        $model->place          = trim($params['place']);
-        $model->notes          = trim($params['notes']);
-        $model->ownerId        = Phprojekt_Auth::getUserId();
-        $model->visibility     = $params['visibility'];
+        $model->summary     = trim($params['summary']);
+        $model->description = trim($params['description']);
+        $model->location    = trim($params['location']);
+        $model->comments    = trim($params['comments']);
+        $model->ownerId     = Phprojekt_Auth::getUserId();
+        $model->visibility  = $params['visibility'];
 
         if (array_key_exists('newParticipants', $params)) {
             $model->setParticipants($params['newParticipants']);

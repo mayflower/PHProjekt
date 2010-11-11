@@ -61,6 +61,16 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     protected $_participantDataInDb = null;
 
     /**
+     * Constructor.
+     */
+    public function __construct($db = null)
+    {
+        parent::__construct($db);
+        // UID generation method taken from rfc 5545
+        $this->uid = time() . '-' . getMyPid() . '@' . getHostName();
+    }
+
+    /**
      * Overwrite save function. Writes the data in this object into the database.
      *
      * @return int The id of the saved object
@@ -68,24 +78,16 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     public function save()
     {
         $new = empty($this->_storedId);
-
-        // Save our regular values.
-        parent::save();
-
-        // Check if we already have a seriesId. If not, get us one.
-        if (empty($this->seriesId)) {
-            $this->seriesId = $this->id;
-        }
-        parent::save();
-
         $db = $this->getAdapter();
 
         // Find the added and removed participants
         $this->_fetchParticipantData();
 
+        // Save our regular values.
+        parent::save();
+
         foreach ($this->_participantData as $id => $status) {
             if (!array_key_exists($id, $this->_participantDataInDb)) {
-                Phprojekt::getInstance()->getLog()->debug("Adding $id");
                 $db->insert(
                     'calendar2_user_relation',
                     array(
@@ -94,11 +96,20 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                         'confirmation_status' => $status
                     )
                 );
+            } else if ($status != $this->_participantDataInDb[$id]) {
+                $db->update(
+                    'calendar2_user_relation',
+                    array('confirmation_status' => $status),
+                    array(
+                        'calendar2_id' => $this->id,
+                        'user_id' => $id
+                    )
+                );
             }
         }
+
         foreach (array_keys($this->_participantDataInDb) as $id) {
             if (!array_key_exists($id, $this->_participantData) && $id !== $this->ownerId) {
-                Phprojekt::getInstance()->getLog()->debug("Removing $id from event owned by {$this->ownerId}");
                 $db->delete(
                     'calendar2_user_relation',
                     array(
@@ -133,6 +144,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         return $this->id;
     }
 
+    /**
+     * Deletes this series of events.
+     */
     public function delete()
     {
         $this->getAdapter()->delete(
@@ -142,6 +156,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         parent::delete();
     }
 
+    /**
+     * Implemented because we need to reset the participant data.
+     */
     public function find()
     {
         $this->_participantData     = null;
@@ -164,6 +181,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         return parent::find($args[0]);
     }
 
+    /**
+     * Implemented because we need to reset the participant data.
+     */
     public function __clone()
     {
         parent::__clone();
@@ -202,6 +222,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
             foreach ($helper->getDatesInPeriod($start, $end) as $date) {
                 $m = $model->copy();
+                $m->uid = $model->uid;
                 $m->start = $date->format('Y-m-d H:i:s');
                 $date->add($duration);
                 $m->end = $date->format('Y-m-d H:i:s');
@@ -317,6 +338,19 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Retrieves the recurrenceId.
+     *
+     * @return string The recurrence Id.
+     */
+    public function getRecurrenceId()
+    {
+        $dt = new Datetime(
+            '@' . Phprojekt_Converter_Time::userToUtc($this->start)
+        );
+        return $dt->format('Ymd\THis');
+    }
+
+    /**
      * Get the participants and their confirmation statuses from the database.
      * Modifies $this->_participantData.
      *
@@ -351,7 +385,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     private function copy() {
         $m = new Calendar2_Models_Calendar2();
 
-        // user _data to bypass __set
+        // use _data to bypass __set
         foreach($this->_data as $k => $v) {
             $m->_data[$k] = $v;
         }

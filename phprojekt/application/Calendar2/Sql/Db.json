@@ -10,19 +10,16 @@
             {
                 "id":                   "default",
                 "project_id":           {"type": "int", "notNull": "true", "default": "1"},
-                "series_id":            {"type": "int", "notNull": "true"},
-
-                "title":                {"type": "varchar"},
-                "subject":              {"type": "varchar"},
-                "place":                {"type": "varchar"},
-                "notes":                {"type": "text"},
-
+                "summary":              {"type": "varchar"},
+                "description":          {"type": "varchar"},
+                "location":             {"type": "varchar"},
+                "comments":             {"type": "varchar"},
                 "start":                {"type": "datetime"},
                 "end":                  {"type": "datetime"},
+                "owner_id":             {"type": "int", "notNull": "true"},
                 "rrule":                {"type": "varchar"},
-
                 "visibility":           {"type": "int", "length": "1", "default": "1"},
-                "owner_id":             {"type": "int", "notNull": "true"}
+                "uid":                  {"type": "varchar", "notNull": "true"}
             }
         },
 
@@ -46,9 +43,9 @@
             [
                 {
                     "table_name":      "Calendar2",
-                    "table_field":     "title",
+                    "table_field":     "summary",
                     "form_tab":        "1",
-                    "form_label":      "Title",
+                    "form_label":      "Summary",
                     "form_type":       "text",
                     "form_position":   "1",
                     "form_columns":    "1",
@@ -66,9 +63,9 @@
                 },
                 {
                     "table_name":      "Calendar2",
-                    "table_field":     "subject",
+                    "table_field":     "description",
                     "form_tab":        "1",
-                    "form_label":      "Subject",
+                    "form_label":      "Description",
                     "form_type":       "text",
                     "form_position":   "2",
                     "form_columns":    "1",
@@ -86,9 +83,9 @@
                 },
                 {
                     "table_name":      "Calendar2",
-                    "table_field":     "place",
+                    "table_field":     "location",
                     "form_tab":        "1",
-                    "form_label":      "Place",
+                    "form_label":      "Location",
                     "form_type":       "text",
                     "form_position":   "3",
                     "form_columns":    "1",
@@ -106,9 +103,9 @@
                 },
                 {
                     "table_name":      "Calendar2",
-                    "table_field":     "notes",
+                    "table_field":     "comments",
                     "form_tab":        "1",
-                    "form_label":      "Notes",
+                    "form_label":      "Comments",
                     "form_type":       "textarea",
                     "form_position":   "4",
                     "form_columns":    "1",
@@ -211,6 +208,26 @@
                     "form_label":      "Rrule",
                     "form_type":       "hidden",
                     "form_position":   "9",
+                    "form_columns":    "1",
+                    "form_regexp":     "NULL",
+                    "form_range":      "NULL",
+                    "default_value":   "NULL",
+                    "list_position":   "0",
+                    "list_align":      "NULL",
+                    "list_use_filter": "NULL",
+                    "alt_position":    "0",
+                    "status":          "1",
+                    "is_integer":      "0",
+                    "is_required":     "0",
+                    "is_unique":       "0"
+                },
+                {
+                    "table_name":      "Calendar2",
+                    "table_field":     "recurrenceId",
+                    "form_tab":        "1",
+                    "form_label":      "recurrenceId",
+                    "form_type":       "hidden",
+                    "form_position":   "10",
                     "form_columns":    "1",
                     "form_regexp":     "NULL",
                     "form_range":      "NULL",

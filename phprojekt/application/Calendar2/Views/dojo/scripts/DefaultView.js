@@ -483,8 +483,8 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
                 });
 
                 // Update textual visible contents of event
-                var textualContents = this.events[i]['timeDescrip'] + ' ' + this.events[i]['title'] + '<br />' +
-                    this.events[i]['notes'];
+                var textualContents = this.events[i]['timeDescrip'] + ' ' + this.events[i]['summary'] + '<br />' +
+                    this.events[i]['comments'];
                 eventDiv2.innerHTML = textualContents;
             } else {
                 var visibility = 'hidden';
@@ -659,7 +659,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
         // 8 - Make changes on screen
         if (!dropped) {
             // Update description of moved or resized event
-            var eventDescrip = timeDescrip + ' ' + movedEvent['title'] + '<br />' + movedEvent['notes'];
+            var eventDescrip = timeDescrip + ' ' + movedEvent['summary'] + '<br />' + movedEvent['comments'];
             dojo.byId('plainDiv' + movedEventIndex).innerHTML = eventDescrip;
         } else {
             // Update concurrent events internal values just in case, and update divs on screen
@@ -1325,10 +1325,10 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
             content[event]['endDate'] = phpr.Date.getIsoDate(dateTime);
             content[event]['endTime'] = phpr.Date.getIsoTime(dateTime);
 
-            // Process title and note
-            var title = this.htmlEntities(content[event]['title']);
-            var notes = this.htmlEntities(content[event]['notes']);
-            notes     = notes.replace('\n', '<br />');
+            // Process summary and note
+            var summary = this.htmlEntities(content[event]['summary']);
+            var comments = this.htmlEntities(content[event]['comments']);
+            comments     = comments.replace('\n', '<br />');
             if (this.main.dayListSelect != null) {
                 var column = this.getUserColumnPosition(content[event]['participantId'])
             }
@@ -1386,7 +1386,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
                 // Events inside the grid
                 if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
                     eventInfo['hasChanged'] = false;
-                    parent                  = this.addGridEventToArray(eventInfo, id, title, notes, parent,
+                    parent                  = this.addGridEventToArray(eventInfo, id, summary, comments, parent,
                         content[event]['startDate'], content[event]['startTime'], content[event]['endDate'],
                         content[event]['endTime'], column);
                 } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
@@ -1397,7 +1397,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
                     furtherEventsTemp['events'][nextPosition]          = new Array();
                     furtherEventsTemp['events'][nextPosition]['id']    = id;
                     furtherEventsTemp['events'][nextPosition]['time']  = eventInfo['timeDescrip'];
-                    furtherEventsTemp['events'][nextPosition]['title'] = title;
+                    furtherEventsTemp['events'][nextPosition]['summary'] = summary;
                 }
             }
         }
@@ -1422,13 +1422,13 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
                     this._furtherEvents['events'][nextEvent]          = new Array();
                     this._furtherEvents['events'][nextEvent]['id']    = furtherEventsTemp['events'][event]['id'];
                     this._furtherEvents['events'][nextEvent]['time']  = furtherEventsTemp['events'][event]['time'];
-                    this._furtherEvents['events'][nextEvent]['title'] = furtherEventsTemp['events'][event]['title'];
+                    this._furtherEvents['events'][nextEvent]['summary'] = furtherEventsTemp['events'][event]['summary'];
                 }
             }
         }
     },
 
-    addGridEventToArray: function(eventInfo, id, title, notes, parent, wholeStartDate, wholeStartTime, wholeEndDate,
+    addGridEventToArray: function(eventInfo, id, summary, comments, parent, wholeStartDate, wholeStartTime, wholeEndDate,
             wholeEndTime, column) {
         // Summary:
         //    Adds an event to 'events' class array. Returns parent index which is useful just for multiple day events.
@@ -1444,9 +1444,9 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
         newEventDiv['editable']    = true;
         newEventDiv['order']       = nextEvent; // For Django template
         newEventDiv['id']          = id;
-        newEventDiv['title']       = title;
+        newEventDiv['summary']     = summary;
         newEventDiv['timeDescrip'] = eventInfo['timeDescrip'];
-        newEventDiv['notes']       = notes;
+        newEventDiv['comments']    = comments;
         newEventDiv['date']        = eventInfo['date']
         newEventDiv['startTime']   = eventInfo['startTime'];
         newEventDiv['endTime']     = eventInfo['endTime'];
@@ -1654,7 +1654,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
                 }
                 eventInfo['hasChanged'] = true;
             }
-            parent = this.addGridEventToArray(eventInfo, movedEvent['id'], movedEvent['title'], movedEvent['notes'],
+            parent = this.addGridEventToArray(eventInfo, movedEvent['id'], movedEvent['summary'], movedEvent['comments'],
                 parent, wholeStartDate, wholeStartTime, wholeEndDate, wholeEndTime, column);
         }
     }
