@@ -107,7 +107,7 @@ final class Default_Helpers_Upload
         }
         // Fix name for save it as md5
         if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
-            $md5name                        = md5(mt_rand());
+            $md5name                        = md5(mt_rand() . time());
             $addedValue                     = $md5name . '|' . $_FILES['uploadedFile']['name'];
             $_FILES['uploadedFile']['name'] = $md5name;
         }
@@ -173,7 +173,7 @@ final class Default_Helpers_Upload
         $md5Name  = '';
         $fileName = '';
         if (isset($files[$order - 1])) {
-            list($md5Name, $fileName) = explode("|", $files[$order - 1]);
+            list($md5Name, $fileName) = explode("|", $files[$order - 1], 2);
         }
 
         if (!empty($fileName) && preg_match("/^[A-Fa-f0-9]{32,32}$/", $md5Name)) {
