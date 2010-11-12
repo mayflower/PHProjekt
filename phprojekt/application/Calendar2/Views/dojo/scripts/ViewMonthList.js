@@ -183,6 +183,7 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
                         this._schedule[row][weekDay]['events'][nextEvent]['id']    = content[event]['id'];
                         this._schedule[row][weekDay]['events'][nextEvent]['title'] = this.htmlEntities(contentTitle);
                         this._schedule[row][weekDay]['events'][nextEvent]['time']  = eventInfo['time'];
+                        this._schedule[row][weekDay]['events'][nextEvent]['start'] = content[event]['start'];
                     }
                 }
             }

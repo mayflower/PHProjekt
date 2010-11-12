@@ -347,6 +347,9 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
             }
             params['start'] = phpr.Date.getIsoDatetime(startDate, startTime);
             params['end']   = phpr.Date.getIsoDatetime(startDate, endTime);
+        } else {
+            var params = new Array();
+            params['start'] = startDate;
         }
 
         this.form = new this.formWidget(this, id, module, params);

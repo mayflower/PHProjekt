@@ -550,5 +550,10 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
             phpr.DataStore.deleteData({url: relatedUrl});
             phpr.DataStore.deleteData({url: tagUrl});
         }
+    },
+
+    setUrl:function() {
+        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/'
+                  + phpr.currentProjectId + '/id/' + this.id + '/start/' + this._presetValues['start'];
     }
 });
