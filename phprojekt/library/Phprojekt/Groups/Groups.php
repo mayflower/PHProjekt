@@ -108,7 +108,8 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
         $groupNamespace = new Zend_Session_Namespace($sessionName);
         if (!isset($groupNamespace->isInGroup)) {
             $currentGroup = $this->find($group);
-            if (count($currentGroup->users->find($this->getUserId())) > 0) {
+            if (isset($currentGroup->users)
+                && $currentGroupcount($currentGroup->users->find($this->getUserId())) > 0) {
                 $groupNamespace->isInGroup = true;
             } else {
                 $groupNamespace->isInGroup = false;
