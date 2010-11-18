@@ -50,10 +50,12 @@ class Calendar2_IndexController extends IndexController
     public function jsonPeriodListAction()
     {
         $start = new Datetime(
-            Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart'))
+            Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart')),
+            $this->_getUserTimezone()
         );
-        $end   = new Datetime(
-            Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd'))
+        $end = new Datetime(
+            Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd')),
+            $this->_getUserTimezone()
         );
 
         $model  = new Calendar2_Models_Calendar2();
@@ -76,7 +78,8 @@ class Calendar2_IndexController extends IndexController
     public function jsonDayListSelfAction()
     {
         $start = new Datetime(
-            Cleaner::sanitize('date', $this->getRequest()->getParam('date'))
+            Cleaner::sanitize('date', $this->getRequest()->getParam('date')),
+            $this->_getUserTimezone()
         );
 
         $start->setTime(0, 0, 0);
@@ -147,9 +150,10 @@ class Calendar2_IndexController extends IndexController
         }
 
         // Using Datetime would be much nicer here.
-        // But Phprojekt doesn't support Datetime in any way yet.
-        $model->start = Phprojekt_Converter_Time::userToUtc($params['start']);
-        $model->end   = Phprojekt_Converter_Time::userToUtc($params['end']);
+        // But Phprojekt doesn't really support Datetime yet.
+        // (Dates will automatically be converted from Usertime to UTC)
+        $model->start = $params['start'];
+        $model->end   = $params['end'];
 
         if (array_key_exists('rrule', $params)) {
             $model->rrule = $params['rrule'];
@@ -165,4 +169,26 @@ class Calendar2_IndexController extends IndexController
         ));
     }
 
+    /**
+     * This function wraps around the phprojekt setting for the user timezone
+     * to return a DateTimeZone object.
+     *
+     * @return DateTimeZone The timezone of the user.
+     */
+    private function _getUserTimezone()
+    {
+        $tz = Phprojekt_User_User::getSetting('timezone', '0');
+        $tz = explode('_', $tz);
+        $hours = (int) $tz[0];
+        if ($hours >= 0) {
+            $hours = '+' . $hours;
+        }
+        $minutes = '00';
+        if (array_key_exists(1, $tz)) {
+            // We don't need the minus sign
+            $minutes = abs($tz[1]);
+        }
+        $datetime = new Datetime($hours . ':' . $minutes);
+        return $datetime->getTimezone();
+    }
 }
