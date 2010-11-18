@@ -229,6 +229,52 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Finds a special occurence of an event. Will throw an exception
+     * if the date is not part of this event.
+     *
+     * @param int      $id   The id of the event to find.
+     * @param Datetime $date The date of the occurence.
+     *
+     * @throws Exception If $date is no occurence of this event.
+     *
+     * @return $this
+     */
+    public function findOccurrence($id, Datetime $date)
+    {
+        $find = $this->find($id);
+        if ($find !== $this) {
+            // Some error occured, maybe the id doesn't exist in the db
+            return $find;
+        }
+
+        $start = new Datetime('@'.Phprojekt_Converter_Time::userToUtc($this->start));
+        $helper = new Calendar2_Helper_Rrule(
+            $start,
+            $this->rrule,
+            array()
+        );
+
+        if (!$helper->containsDate($date)) {
+            throw new Exception(
+                "Occurence on {$date->format('Y-m-d H:i:s')}, "
+                . "{$date->getTimezone()->getName()} not found."
+            );
+        }
+        $start = new Datetime($this->start);
+        $end = new Datetime($this->end);
+        $duration = $start->diff($end);
+
+        $start = $date;
+        $end = clone $start;
+        $end->add($duration);
+
+        $this->start = $start->format('Y-m-d H:i:s');
+        $this->end   = $end->format('Y-m-d H:i:s');
+
+        return $this;
+    }
+
+    /**
      * Get the participants of this event.
      *
      * @return array of int

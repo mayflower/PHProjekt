@@ -170,6 +170,29 @@ class Calendar2_IndexController extends IndexController
         ));
     }
 
+    public function jsonDetailAction()
+    {
+        $id = (int) $this->getRequest()->getParam('id');
+        //TODO: Input validation
+        $start = new Datetime(
+            $this->getRequest()->getParam('start'),
+            $this->_getUserTimezone()
+        );
+        $this->setCurrentProjectId();
+
+        $record = new Calendar2_Models_Calendar2;
+
+        if (!empty($id)) {
+            if (empty($start)) {
+                $record = $record->find($id);
+            } else {
+                $record = $record->findOccurrence($id, $start);
+            }
+        }
+
+        Phprojekt_Converter_Json::echoConvert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+
     /**
      * This function wraps around the phprojekt setting for the user timezone
      * to return a DateTimeZone object.
