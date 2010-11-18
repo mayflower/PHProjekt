@@ -117,13 +117,28 @@ class Calendar2_Helper_Rrule
             // Work around http://bugs.php.net/bug.php?id=52454
             // 'Relative dates and getTimestamp increments by one day'
             $datestring = $date->format('Y-m-d H:i:s');
+            $date = new Datetime($datestring, new DateTimeZone('UTC'));
 
             $ts = $date->getTimestamp();
             if ($startTs <= $ts && $ts <= $endTs && !in_array($date, $this->_exceptions)) {
-                $ret[] = new Datetime($datestring);
+                $ret[] = new Datetime($datestring, new DateTimeZone('UTC'));
             }
         }
         return $ret;
+    }
+
+    /**
+     * Checks whether the given datetime is an occurence of this rrule.
+     *
+     * @param $time The time to check for.
+     *
+     * @return bool If the given time is an occurence of this rrule.
+     */
+    public function containsDate(Datetime $date)
+    {
+        $dates = $this->getDatesInPeriod($date, $date);
+
+        return !empty($dates);
     }
 
     /**
