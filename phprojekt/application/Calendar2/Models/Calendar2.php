@@ -67,7 +67,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     {
         parent::__construct($db);
         // UID generation method taken from rfc 5545
-        $this->uid = time() . '-' . getMyPid() . '@' . getHostName();
+        $this->uid = time() . '-' . getMyPid() . '@' . php_uname('n');
     }
 
     /**
@@ -77,8 +77,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function save()
     {
-        $new = empty($this->_storedId);
-        $db = $this->getAdapter();
+        $isNew = empty($this->_storedId);
+        $db    = $this->getAdapter();
 
         // Find the added and removed participants
         $this->_fetchParticipantData();
@@ -86,6 +86,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         // Save our regular values.
         parent::save();
 
+        //TODO: Don't make that many queries.
         foreach ($this->_participantData as $id => $status) {
             if (!array_key_exists($id, $this->_participantDataInDb)) {
                 $db->insert(
@@ -108,7 +109,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             }
         }
 
-        foreach (array_keys($this->_participantDataInDb) as $id) {
+        foreach ($this->_participantDataInDb as $id => $status) {
             if (!array_key_exists($id, $this->_participantData) && $id !== $this->ownerId) {
                 $db->delete(
                     'calendar2_user_relation',
@@ -121,7 +122,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         }
 
         // If this is a new event, we also have to add the owner
-        if ($new) {
+        if ($isNew) {
             $db->insert(
                 'calendar2_user_relation',
                 array(
@@ -168,14 +169,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         // while expecting find($id)...
         $args = func_get_args();
 
-        if (1 > count($args)) {
-            throw new Phprojekt_ActiveRecord_Exception('Missing argument');
-        }
-        if (1 < count($args)) {
-            throw new Phprojekt_ActiveRecord_Exception('Too many arguments');
-        }
-        if (is_null($args[0])) {
-            throw new Phprojekt_ActiveRecord_Exception('Argument cannot be NULL');
+        if (1 != count($args)) {
+            throw new Phprojekt_ActiveRecord_Exception('Wrong number of arguments for find');
         }
 
         return parent::find($args[0]);
@@ -201,14 +196,14 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function fetchAllForPeriod(Datetime $start, Datetime $end)
     {
-        $db = $this->getAdapter();
+        $db     = $this->getAdapter();
         $where  = $db->quoteInto('calendar2_user_relation.user_id = ? ', Phprojekt_Auth::getUserId());
         $where .= $db->quoteInto('AND start >= ?', $start->format('Y-m-d H:i:s'));
         $where .= $db->quoteInto('AND start <= ?', $end->format('Y-m-d H:i:s'));
         $join   = 'JOIN calendar2_user_relation ON calendar2.id = calendar2_user_relation.calendar2_id';
 
         $models = $this->fetchAll($where, null, null, null, null, $join);
-        $ret = array();
+        $ret    = array();
 
         foreach ($models as $model) {
             $helper = new Calendar2_Helper_Rrule(
@@ -221,12 +216,12 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $duration = $startDT->diff($endDT);
 
             foreach ($helper->getDatesInPeriod($start, $end) as $date) {
-                $m = $model->copy();
-                $m->uid = $model->uid;
+                $m        = $model->copy();
+                $m->uid   = $model->uid;
                 $m->start = $date->format('Y-m-d H:i:s');
                 $date->add($duration);
-                $m->end = $date->format('Y-m-d H:i:s');
-                $ret[] = $m;
+                $m->end   = $date->format('Y-m-d H:i:s');
+                $ret[]    = $m;
             }
         }
 
@@ -254,9 +249,12 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @return void
      */
-    public function setParticipants(Array $ids)
+    public function setParticipants(array $ids)
     {
-        $this->_participantData = array_fill_keys($ids, self::STATUS_PENDING);
+        $this->_participantData = array();
+        foreach ($ids as $id) {
+            $this->addParticipant($id);
+        }
     }
 
     /**
@@ -266,7 +264,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @return void
      */
-    public function addParticipant($id)
+    public function addParticipant($id, $status = self::STATUS_PENDING)
     {
         if (null === $this->_participantData) {
             $this->_fetchParticipantData();
@@ -275,7 +273,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         if (array_key_exists($id, $this->_participantData)) {
             throw new Exception("Tried to add already participating user $id");
         }
-        $this->_participantData[$id] = self::STATUS_PENDING;
+        $this->_participantData[$id] = $status;
     }
 
     /**
@@ -338,7 +336,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Retrieves the recurrenceId.
+     * Retrieves the recurrenceId as specified by the iCalendar standard.
      *
      * @return string The recurrence Id.
      */
@@ -381,6 +379,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * Note that a call to save will fail, only show the objects
      * returned by this function to the client.
+     *
+     * This function would best be written as __clone, but ActiveRecord
+     * already implements __clone to create a new, empty model object
+     * and we don't want to break the semantics of cloning model objects.
      */
     private function copy() {
         $m = new Calendar2_Models_Calendar2();

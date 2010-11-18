@@ -49,13 +49,14 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonPeriodListAction()
     {
+        $timezone = $this->_getUserTimezone();
         $start = new Datetime(
             Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart')),
-            $this->_getUserTimezone()
+            $timezone
         );
         $end = new Datetime(
             Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd')),
-            $this->_getUserTimezone()
+            $timezone
         );
 
         $model  = new Calendar2_Models_Calendar2();

@@ -25,6 +25,9 @@
 /**
  * Calendar2 recurrence rule Helper.
  *
+ * This class is used to create a set of dates from a start date and an
+ * recurrence rule.
+ *
  * The rrule format is defined in RFC 5545.
  *
  * @category   PHProjekt
@@ -47,7 +50,7 @@ class Calendar2_Helper_Rrule
     /**
      * @var array of String => mixed The rrule properties.
      *
-     * 'FREQ'     => DateInterval
+     * 'FREQ'     => DateInterval between occurences
      * 'INTERVAL' => int
      * 'UNTIL'    => DateTime (exclusive, meant for DatePeriod)
      * 'COUNT'    => int (The number of _RE_occurences, i.e. excluding the first event)
@@ -87,7 +90,7 @@ class Calendar2_Helper_Rrule
         $startTs = $start->getTimestamp();
         $endTs   = $end->getTimestamp();
 
-        if (!array_key_exists('FREQ', $this->_rrule)) {
+        if (is_null($this->_rrule['FREQ'])) {
             // There is no frequency in the rrule, so there's actually no recurrence
             if ($firstTs >= $startTs && $firstTs <= $endTs) {
                 return array($this->_first);
@@ -96,13 +99,13 @@ class Calendar2_Helper_Rrule
             }
         }
 
-        if (array_key_exists('COUNT', $this->_rrule)) {
+        if (!is_null($this->_rrule['COUNT'])) {
             $period = new DatePeriod(
                 $this->_first,
                 $this->_rrule['FREQ'],
                 $this->_rrule['COUNT']
             );
-        } else if (array_key_exists('UNTIL', $this->_rrule)) {
+        } else if (!is_null($this->_rrule['UNTIL'])) {
             $period = new DatePeriod(
                 $this->_first,
                 $this->_rrule['FREQ'],
@@ -117,7 +120,7 @@ class Calendar2_Helper_Rrule
             // Work around http://bugs.php.net/bug.php?id=52454
             // 'Relative dates and getTimestamp increments by one day'
             $datestring = $date->format('Y-m-d H:i:s');
-            $date = new Datetime($datestring, new DateTimeZone('UTC'));
+            $date       = new Datetime($datestring, new DateTimeZone('UTC'));
 
             $ts = $date->getTimestamp();
             if ($startTs <= $ts && $ts <= $endTs && !in_array($date, $this->_exceptions)) {
@@ -128,9 +131,9 @@ class Calendar2_Helper_Rrule
     }
 
     /**
-     * Checks whether the given datetime is an occurence of this rrule.
+     * Checks whether a datetime is one of the dates described by this rrule.
      *
-     * @param $time The time to check for.
+     * @param Datetime $date The time to check for.
      *
      * @return bool If the given time is an occurence of this rrule.
      */
@@ -138,7 +141,7 @@ class Calendar2_Helper_Rrule
     {
         $dates = $this->getDatesInPeriod($date, $date);
 
-        return !empty($dates);
+        return (0 < count($dates));
     }
 
     /**
@@ -162,72 +165,98 @@ class Calendar2_Helper_Rrule
         }
 
         $ret = array();
+        $ret['INTERVAL']  = self::_parseInterval($rrule);
+        $ret['FREQ']      = self::_parseFreq($rrule);
+        $ret['UNTIL']     = self::_parseUntil($rrule);
+        $ret['COUNT']     = self::_parseCount($rrule);
 
-        // Parse interval
-        $ret['INTERVAL'] = (int) $this->_parseRruleHelper($rrule, 'INTERVAL');
-        if (empty($ret['INTERVAL'])) {
-            $ret['INTERVAL'] = 1;
+        if (is_null($ret['UNTIL']) && is_null($ret['COUNT']))
+        {
+            throw new Exception('Rrule contains neither COUNT nor UNTIL.');
         }
 
-        // Parse frequency
-        $freq = $this->_parseRruleHelper($rrule, 'FREQ');
+        return $ret;
+    }
+
+    private static function _parseInterval($rrule)
+    {
+        $interval = (int) self::_extractFromRrule($rrule, 'INTERVAL');
+        if (is_null($interval)) {
+            $interval = 1;
+        } else if (0 >= $interval) {
+            throw new Exception('Negative or Zero Intervals not permitted.');
+        }
+        return $interval;
+    }
+
+    private static function _parseFreq($rrule)
+    {
+        $freq = self::_extractFromRrule($rrule, 'FREQ');
         if (empty($freq)) {
             // Violates RFC 5545
             throw new Exception('Rrule contains no FREQ');
         }
         switch ($freq) {
             case 'DAILY':
-                $ret['FREQ'] = new DateInterval("P1D");
+                return new DateInterval("P1D");
                 break;
             case 'WEEKLY':
-                $ret['FREQ'] = new DateInterval("P1W");
+                return new DateInterval("P1W");
                 break;
             case 'MONTHLY':
-                $ret['FREQ'] = new DateInterval("P1M");
+                return new DateInterval("P1M");
                 break;
             case 'YEARLY':
-                $ret['FREQ'] = new DateInterval("P1Y");
+                return new DateInterval("P1Y");
                 break;
             default:
                 // We don't know how to handle anything else.
                 throw new Exception("Cannot handle rrule frequency $freq");
         }
+    }
 
-        // Parse until
-        $until = $this->_parseRruleHelper($rrule, 'UNTIL');
+    private static function _parseUntil($rrule)
+    {
+        // Format is yyyymmddThhiissZ.
+        $until = self::_extractFromRrule($rrule, 'UNTIL');
         if (!empty($until)) {
-            if (strpos($until, 'TZID')) {
+            if (false !== strpos($until, 'TZID')) {
                 // We have a time with timezone, can't handle that
                 throw new Exception('Cannot handle rrules with timezone information');
-            } else if (!strpos($until, 'Z')) {
+            } else if (false === strpos($until, 'Z')) {
                 // A floating time, can't handle those either.
                 throw new Exception('Cannot handle floating times in rrules.');
+            } else if (!preg_match('/\d{8}T\d{6}Z/', $until)) {
+                throw new Exception('Malformed until');
             }
-            // until is yyyymmddThhiissZ. Z represents UTC, but php doesn't understand this.
-            $ret['UNTIL'] = new Datetime(substr($until, 0, 15), new DateTimeZone('UTC'));
+            // php doesn't understand ...Z as an alias for UTC
+            return new Datetime(substr($until, 0, 15), new DateTimeZone('UTC'));
         }
+        return null;
+    }
 
+    private static function _parseCount($rrule)
+    {
         // Parse count
-        $count = $this->_parseRruleHelper($rrule, 'COUNT');
-        if ($count === 0) {
-            throw new Exception('Rrule with COUNT=0 means event never occurs');
-        } else if (!empty($count)) {
-            if (array_key_exists('UNTIL', $ret)) {
-                throw new Exception('Both UNTIL and COUNT appear in one rrule (violates rfc5545)');
-            }
+        $count = self::_extractFromRrule($rrule, 'COUNT');
+        if (!empty($count)) {
             // iCalendar counts the first occurence, while php does not.
-            $ret['COUNT'] = $count - 1;
+            $count = $count - 1;
+        } else if (!is_null($count)) {
+            throw new Exception('Count 0 is invalid.');
         }
 
-        return $ret;
+        return $count;
     }
 
     /**
      * Helper function for parseRrule
      */
-    private function _parseRruleHelper($rrule, $prop)
+    private static function _extractFromRrule($rrule, $prop)
     {
+        //TODO: Maybe optimize this to a single match?
         $matches = array();
+        $prop = preg_quote($prop, '/');
         preg_match("/$prop=([^;]+)/", $rrule, $matches);
 
         if (array_key_exists(1, $matches)) {
