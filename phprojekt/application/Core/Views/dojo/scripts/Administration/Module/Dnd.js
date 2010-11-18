@@ -37,7 +37,7 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
 
                     // Open the edit form
                     var t = this._normalizedCreator(nodes[0]);
-                    if (dojo.isIE) {
+                    if (dojo.isIE || (dojo.isChrome && dojo.isChrome == 7)) {
                         dojo.style(t.node.childNodes[0].childNodes[1].childNodes[0].childNodes[2], 'display', 'inline');
                     } else {
                         dojo.style(t.node.childNodes[0].childNodes[3].childNodes[0].childNodes[2], 'display', 'inline');
