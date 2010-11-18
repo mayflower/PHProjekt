@@ -199,9 +199,9 @@ class Phprojekt_Converter_Json
 
             // Use the last model for get all the rights
             $rights = $cmodel->getMultipleRights($ids);
-            foreach ($datas as $index => $data) {
-                $datas[$index]['rights'] = $rights[$datas[$index]['id']];
-                unset($rights[$datas[$index]['id']]);
+            foreach ($datas as $data) {
+                $id = $data['id'];
+                $data['rights'] = $rights[$id];
             }
         }
 
