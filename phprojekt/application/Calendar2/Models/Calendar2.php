@@ -154,6 +154,38 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Saves this single Occurence.
+     * If it's part of a recurring series, it will be extracted from the series.
+     *
+     * @return int The (new) id of this event.
+     */
+    public function saveSingleEvent()
+    {
+        if (is_null($this->_storedId)) {
+            // This event is not saved yet. Reset the rrule and save it.
+            $this->rrule = null;
+            return $this->save();
+        }
+
+        $start = new Datetime(
+            '@' . Phprojekt_Converter_Time::userToUtc($this->start)
+        );
+
+        $series = clone $this;
+        $series->find($this->id);
+
+        $series->_excludeDate($this->_originalStart);
+        $series->save();
+
+        $extracted                 = $this->copy();
+        $extracted->_data['id']    = null;
+        $extracted->_data['rrule'] = null;
+        $extracted->save();
+
+        return $extracted->id;
+    }
+
+    /**
      * Deletes this series of events.
      */
     public function delete()
