@@ -206,10 +206,18 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $ret    = array();
 
         foreach ($models as $model) {
+            $excludes = $this->getAdapter()->fetchCol(
+                'SELECT date FROM calendar2_excluded_dates WHERE calendar2_id = ?',
+                $model->id
+            );
+            foreach ($excludes as $idx => $date) {
+                $excludes[$idx] = new Datetime($date, new DateTimeZone('UTC'));
+            }
+
             $helper = new Calendar2_Helper_Rrule(
                 new Datetime($model->start),
                 $model->rrule,
-                array()
+                $excludes
             );
             $startDT  = new Datetime($model->start);
             $endDT    = new Datetime($model->end);
@@ -237,7 +245,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @throws Exception If $date is no occurence of this event.
      *
-     * @return $this
+     * @return $this or something empty() when the occurence couldn't be found.
      */
     public function findOccurrence($id, Datetime $date)
     {
@@ -247,29 +255,38 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             return $find;
         }
 
-        $start = new Datetime('@'.Phprojekt_Converter_Time::userToUtc($this->start));
-        $helper = new Calendar2_Helper_Rrule(
-            $start,
-            $this->rrule,
-            array()
+        $date->setTimezone(new DateTimeZone('UTC'));
+
+        $excludes = $this->getAdapter()->fetchCol(
+            'SELECT date FROM calendar2_excluded_dates WHERE calendar2_id = ?',
+            $id
         );
-
-        if (!$helper->containsDate($date)) {
-            throw new Exception(
-                "Occurence on {$date->format('Y-m-d H:i:s')}, "
-                . "{$date->getTimezone()->getName()} not found."
-            );
+        if (in_array($date->format('Y-m-d H:i:s'), $excludes)) {
+            return null;
         }
-        $start = new Datetime($this->start);
-        $end = new Datetime($this->end);
-        $duration = $start->diff($end);
 
-        $start = $date;
-        $end = clone $start;
-        $end->add($duration);
+        $start = new Datetime('@'.Phprojekt_Converter_Time::userToUtc($this->start));
 
-        $this->start = $start->format('Y-m-d H:i:s');
-        $this->end   = $end->format('Y-m-d H:i:s');
+        if ($date != $start) {
+            $helper = new Calendar2_Helper_Rrule($start, $this->rrule);
+            if (!$helper->containsDate($date)) {
+                throw new Exception(
+                    "Occurence on {$date->format('Y-m-d H:i:s')}, "
+                    . "{$date->getTimezone()->getName()} not found."
+                );
+            }
+            $start = new Datetime($this->start);
+            $end = new Datetime($this->end);
+            $duration = $start->diff($end);
+
+            $start = $date;
+            $end = clone $start;
+            $end->add($duration);
+
+            $this->start = $start->format('Y-m-d H:i:s');
+            $this->end   = $end->format('Y-m-d H:i:s');
+
+        }
 
         return $this;
     }
@@ -395,6 +412,32 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Removes the given date from this recurrence.
+     *
+     * @param Datetime $date The date to remove
+     *
+     * @return void
+     */
+    protected function _excludeDate(Datetime $date)
+    {
+        //TODO: If this is the first event, we might get trash entries in the
+        //      db when someone excludes the start date and then changes all
+        //      events starting with the first.
+        //      If $date is the first date, it would be better to change the
+        //      start and rrule (count!) of this object.
+        if (empty($this->id)) {
+            throw new Exception('Can only exclude dates from already saved events');
+        }
+        $this->getAdapter()->insert(
+            'calendar2_excluded_dates',
+            array(
+                'calendar2_id' => $this->id,
+                'date'         => $date->format('Y-m-d H:i:s')
+            )
+        );
+    }
+
+    /**
      * Get the participants and their confirmation statuses from the database.
      * Modifies $this->_participantData.
      *
@@ -438,5 +481,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $m->_data[$k] = $v;
         }
         return $m;
+        //XXX: Copy participants, too!
     }
 }

@@ -28,9 +28,19 @@
             "create":
             {
                 "id":                   "default",
-                "calendar2_id":          {"type": "int", "notNull": "true"},
+                "calendar2_id":         {"type": "int", "notNull": "true"},
                 "user_id":              {"type": "int", "notNull": "true"},
                 "confirmation_status":  {"type": "int", "notNull": "true", "default": "1"}
+            }
+        },
+
+        "calendar2_excluded_dates":
+        {
+            "create":
+            {
+                "id":           "default",
+                "calendar2_id": {"type": "int", "notNull": "true"},
+                "date":         {"type": "datetime", "notNull": "true"}
             }
         }
     },
