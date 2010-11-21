@@ -49,6 +49,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     /**
      * The confirmation statuses of this event's participants.
      *
+     * Must never be null if $_participantData is not null.
+     *
      * @var array of (int => int) (ParticipantId => Status)
      */
     protected $_participantData = null;
@@ -85,70 +87,14 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function save()
     {
-        $isNew = empty($this->_storedId);
-        $db    = $this->getAdapter();
+        //TODO: Split the series if this is not the first event
 
-        // Find the added and removed participants
         $this->_fetchParticipantData();
 
-        // Save our regular values.
+        $isNew = empty($this->_storedId);
         parent::save();
-
-        //TODO: Don't make that many queries.
-        foreach ($this->_participantData as $id => $status) {
-            if (!array_key_exists($id, $this->_participantDataInDb)) {
-                $db->insert(
-                    'calendar2_user_relation',
-                    array(
-                        'calendar2_id'        => $this->id,
-                        'user_id'             => $id,
-                        'confirmation_status' => $status
-                    )
-                );
-            } else if ($status != $this->_participantDataInDb[$id]) {
-                $db->update(
-                    'calendar2_user_relation',
-                    array('confirmation_status' => $status),
-                    array(
-                        'calendar2_id' => $this->id,
-                        'user_id' => $id
-                    )
-                );
-            }
-        }
-
-        foreach ($this->_participantDataInDb as $id => $status) {
-            if (!array_key_exists($id, $this->_participantData) && $id !== $this->ownerId) {
-                $db->delete(
-                    'calendar2_user_relation',
-                    array(
-                        $db->quoteInto('calendar2_id = ?', $this->id),
-                        $db->quoteInto('user_id = ?', $id)
-                    )
-                );
-            }
-        }
-
-        // If this is a new event, we also have to add the owner
-        if ($isNew) {
-            $db->insert(
-                'calendar2_user_relation',
-                array(
-                    'calendar2_id'        => $this->id,
-                    'user_id'             => $this->ownerId,
-                    'confirmation_status' => self::STATUS_ACCEPTED
-                )
-            );
-        }
-
-        // Adjust the access rights
-        foreach ($this->participants as $p) {
-            //TODO: Figure out what rights we need exactly.
-            $rights[$p] = Phprojekt_Acl::READ;
-        }
-        $rights[$this->ownerId] = Phprojekt_Acl::ALL;
-
-        $this->saveRights($rights);
+        $this->_saveParticipantData($isNew);
+        $this->_updateRights();
 
         return $this->id;
     }
@@ -245,35 +191,26 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     public function fetchAllForPeriod(Datetime $start, Datetime $end)
     {
         $db     = $this->getAdapter();
-        $where  = $db->quoteInto('calendar2_user_relation.user_id = ? ', Phprojekt_Auth::getUserId());
+        $where  = $db->quoteInto(
+            'calendar2_user_relation.user_id = ? ',
+            Phprojekt_Auth::getUserId()
+        );
         $where .= $db->quoteInto('AND start >= ?', $start->format('Y-m-d H:i:s'));
         $where .= $db->quoteInto('AND start <= ?', $end->format('Y-m-d H:i:s'));
-        $join   = 'JOIN calendar2_user_relation ON calendar2.id = calendar2_user_relation.calendar2_id';
+        $join   = 'JOIN calendar2_user_relation '
+                    . 'ON calendar2.id = calendar2_user_relation.calendar2_id';
 
         $models = $this->fetchAll($where, null, null, null, null, $join);
         $ret    = array();
 
         foreach ($models as $model) {
-            $excludes = $this->getAdapter()->fetchCol(
-                'SELECT date FROM calendar2_excluded_dates WHERE calendar2_id = ?',
-                $model->id
-            );
-            foreach ($excludes as $idx => $date) {
-                $excludes[$idx] = new Datetime($date, new DateTimeZone('UTC'));
-            }
-
-            $helper = new Calendar2_Helper_Rrule(
-                new Datetime($model->start),
-                $model->rrule,
-                $excludes
-            );
             $startDT  = new Datetime($model->start);
             $endDT    = new Datetime($model->end);
             $duration = $startDT->diff($endDT);
 
+            $helper = $model->getRruleHelper();
             foreach ($helper->getDatesInPeriod($start, $end) as $date) {
                 $m        = $model->copy();
-                $m->uid   = $model->uid;
                 $m->start = $date->format('Y-m-d H:i:s');
                 $m->_originalStart = clone $date;
                 $date->add($duration);
@@ -317,19 +254,18 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $start = new Datetime('@'.Phprojekt_Converter_Time::userToUtc($this->start));
 
         if ($date != $start) {
-            $helper = new Calendar2_Helper_Rrule($start, $this->rrule);
-            if (!$helper->containsDate($date)) {
+            if (!$this->getRruleHelper()->containsDate($date)) {
                 throw new Exception(
                     "Occurence on {$date->format('Y-m-d H:i:s')}, "
                     . "{$date->getTimezone()->getName()} not found."
                 );
             }
-            $start = new Datetime($this->start);
-            $end = new Datetime($this->end);
+            $start    = new Datetime($this->start);
+            $end      = new Datetime($this->end);
             $duration = $start->diff($end);
 
             $start = $date;
-            $end = clone $start;
+            $end   = clone $start;
             $end->add($duration);
 
             $this->start = $start->format('Y-m-d H:i:s');
@@ -348,9 +284,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function getParticipants()
     {
-        if (null === $this->_participantData) {
-            $this->_fetchParticipantData();
-        }
+        $this->_fetchParticipantData();
         return array_keys($this->_participantData);
     }
 
@@ -379,9 +313,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function addParticipant($id, $status = self::STATUS_PENDING)
     {
-        if (null === $this->_participantData) {
-            $this->_fetchParticipantData();
-        }
+        $this->_fetchParticipantData();
 
         if (array_key_exists($id, $this->_participantData)) {
             throw new Exception("Tried to add already participating user $id");
@@ -398,9 +330,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function removeParticipant($id)
     {
-        if (null === $this->_participantData) {
-            $this->_fetchParticipantData();
-        }
+        $this->_fetchParticipantData();
 
         if (!array_key_exists($id, $this->_participantData)) {
             throw new Exception("Tried to remove unknown participant $id");
@@ -417,9 +347,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function getConfirmationStatus($id)
     {
-        if (null === $this->_participantData) {
-            $this->_fetchParticipantData();
-        }
+        $this->_fetchParticipantData();
 
         if (!array_key_exists($id, $this->_participantData)) {
             throw new Exception('Participant not found');
@@ -437,9 +365,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function setConfirmationStatus($id, $newStatus)
     {
-        if (null === $this->_participantData) {
-            $this->_fetchParticipantData();
-        }
+        $this->_fetchParticipantData();
 
         if (!array_key_exists($id, $this->participants)) {
             throw new Exception('Participant not found');
@@ -462,7 +388,67 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Removes the given date from this recurrence.
+     * Returns the dates excluded from this reccurring event.
+     *
+     * @return array of Datetime
+     */
+    public function getExcludedDates()
+    {
+        //TODO: Maybe cache this?
+        $excludes = $this->getAdapter()->fetchCol(
+            'SELECT date FROM calendar2_excluded_dates WHERE calendar2_id = ?',
+            $this->id
+        );
+
+        $ret = array();
+        foreach ($excludes as $date) {
+            $ret[] = new Datetime($date, new DateTimeZone('UTC'));
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Returns a Calendar2_Helper_Rrule object initialized with this objects
+     * start date, recurrence rule and excluded ocurrences.
+     *
+     * @return Calendar2_Helper_Rrule
+     */
+    public function getRruleHelper()
+    {
+        return new Calendar2_Helper_Rrule(
+            new Datetime('@' . Phprojekt_Converter_Time::userToUtc($this->start)),
+            $this->rrule,
+            $this->getExcludedDates()
+        );
+    }
+
+    /**
+     * Returns a copy of this model object.
+     *
+     * Note that a call to save will fail, only show the objects
+     * returned by this function to the client.
+     *
+     * This function would best be written as __clone, but ActiveRecord
+     * already implements __clone to create a new, empty model object
+     * and we don't want to break the semantics of cloning model objects.
+     */
+    public function copy() {
+        $m = new Calendar2_Models_Calendar2();
+
+        // use _data to bypass __set
+        foreach($this->_data as $k => $v) {
+            $m->_data[$k] = $v;
+        }
+        $m->_participantData     = $this->_participantData;
+        $m->_participantDataInDb = $this->_participantDataInDb;
+        $m->_isFirst             = $this->_isFirst;
+
+        return $m;
+    }
+
+    /**
+     * Excludes the given date from this series.
      *
      * @param Datetime $date The date to remove
      *
@@ -495,42 +481,99 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     private function _fetchParticipantData()
     {
-        if (null === $this->_storedId) {
-            // We don't exist in the database. So we don't have any.
-            $this->_participantDataInDb = array();
-        } else {
-            $this->_participantDataInDb = $this->getAdapter()->fetchPairs(
-                'SELECT user_id,confirmation_status '
-                    . 'FROM calendar2_user_relation '
-                    . 'WHERE calendar2_id = :id',
-                array('id' => $this->id)
-            );
-        }
+        if (is_null($this->_participantDataInDb)) {
+            if (null === $this->_storedId) {
+                // We don't exist in the database. So we don't have any.
+                $this->_participantDataInDb = array();
+            } else {
+                $this->_participantDataInDb = $this->getAdapter()->fetchPairs(
+                    'SELECT user_id,confirmation_status '
+                        . 'FROM calendar2_user_relation '
+                        . 'WHERE calendar2_id = :id',
+                    array('id' => $this->id)
+                );
+            }
 
-        if (null === $this->_participantData) {
-            // Avoid overwriting new data
-            $this->_participantData = $this->_participantDataInDb;
+            if (is_null($this->_participantData)) {
+                // Avoid overwriting new data
+                $this->_participantData = $this->_participantDataInDb;
+            }
         }
     }
 
     /**
-     * Returns a copy of this model object.
+     * Saves the participants for this event.
+     * This object must have already been save()d for this method to work.
      *
-     * Note that a call to save will fail, only show the objects
-     * returned by this function to the client.
+     * @param bool $isNew Whether this is a new event.
      *
-     * This function would best be written as __clone, but ActiveRecord
-     * already implements __clone to create a new, empty model object
-     * and we don't want to break the semantics of cloning model objects.
+     * @return void
      */
-    private function copy() {
-        $m = new Calendar2_Models_Calendar2();
+    private function _saveParticipantData($isNew = false)
+    {
+        $db = $this->getAdapter();
 
-        // use _data to bypass __set
-        foreach($this->_data as $k => $v) {
-            $m->_data[$k] = $v;
+        //TODO: Don't make that many queries.
+        foreach ($this->_participantData as $id => $status) {
+            if (!array_key_exists($id, $this->_participantDataInDb)) {
+                $db->insert(
+                    'calendar2_user_relation',
+                    array(
+                        'calendar2_id'        => $this->id,
+                        'user_id'             => $id,
+                        'confirmation_status' => $status
+                    )
+                );
+            } else if ($status != $this->_participantDataInDb[$id]) {
+                $where  = $db->quoteInto('calendar2_id = ?', $this->id);
+                $where .= $db->quoteInto(' AND user_id = ?', $id);
+                $db->update(
+                    'calendar2_user_relation',
+                    array('confirmation_status' => $status),
+                    $where
+                );
+            }
         }
-        return $m;
-        //XXX: Copy participants, too!
+
+        foreach ($this->_participantDataInDb as $id => $status) {
+            if (!array_key_exists($id, $this->_participantData) && $id !== $this->ownerId) {
+                $db->delete(
+                    'calendar2_user_relation',
+                    array(
+                        $db->quoteInto('calendar2_id = ?', $this->id),
+                        $db->quoteInto('user_id = ?', $id)
+                    )
+                );
+            }
+        }
+
+        // If this is a new event, we also have to add the owner
+        if ($isNew) {
+            $db->insert(
+                'calendar2_user_relation',
+                array(
+                    'calendar2_id'        => $this->id,
+                    'user_id'             => $this->ownerId,
+                    'confirmation_status' => self::STATUS_ACCEPTED
+                )
+            );
+        }
+
+        $this->_participantDataInDb = $this->_participantData;
+    }
+
+    /**
+     * Updates the rights for added or removed participants.
+     *
+     * @return void
+     */
+    private function _updateRights()
+    {
+        foreach ($this->participants as $p) {
+            $rights[$p] = Phprojekt_Acl::READ;
+        }
+        $rights[$this->ownerId] = Phprojekt_Acl::ALL;
+
+        $this->saveRights($rights);
     }
 }
