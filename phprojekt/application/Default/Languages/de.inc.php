@@ -124,6 +124,8 @@ $lang["Confirmation"] = "Bestätigung";
 $lang["Are you sure you want to delete?"] = "Sind sie sicher, die sie löschen möchten?";
 $lang["Please confirm implement"] = "Bitte bestätigen sie implementieren";
 $lang["rows selected"] = "zeilen ausgewählt";
+$lang["Period"] = "Zeitraum";
+$lang["End date can not be before Start date"] = "Das Start-Datum muss vor dem End-Datum liegen";
 
 // Error handler messages
 $lang["Run-time notice. The script encountered something that could indicate an error, but could also happen in the "

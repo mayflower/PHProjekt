@@ -228,4 +228,27 @@ class Phprojekt_Model_Validate
 
         return $error;
     }
+
+    /**
+     * Validate that $start is before $end.
+     *
+     * @param string $start Start date value.
+     * @param string $end   End date value.
+     *
+     * @return boolean True for valid.
+     */
+    public function validateDateRange($start, $end)
+    {
+        if (!empty($start) && !empty($end)) {
+            if (strtotime($start) > strtotime($end)) {
+                $this->error->addError(array(
+                    'field'   => "Period",
+                    'label'   => Phprojekt::getInstance()->translate('Period'),
+                    'message' => Phprojekt::getInstance()->translate('End date can not be before Start date')));
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

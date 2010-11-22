@@ -578,11 +578,11 @@ class Setup_Models_Setup
         // Set access
         $baseDir = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
         if (PHP_OS == 'WIN32' || PHP_OS == 'WINNT') {
-            $this->_error[] = '"' . $baseDir . '" should have the next rights: 0750 for folders, 0640 for files';
+            $this->_error[] = '"' . $baseDir . '" should have the next rights: 0755 for folders, 0644 for files';
         } else {
             // Root
-            if (!$this->chmodRecursive($baseDir, 0750, 0640)) {
-                $this->_error[] = '"' . $baseDir . '" should have the next rights: 0750 for folders, 0640 for files';
+            if (!$this->chmodRecursive($baseDir, 0755, 0644)) {
+                $this->_error[] = '"' . $baseDir . '" should have the next rights: 0755 for folders, 0644 for files';
             }
         }
 

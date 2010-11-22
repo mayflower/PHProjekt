@@ -121,6 +121,8 @@ $lang["Confirmation"] = "Confirmation";
 $lang["Are you sure you want to delete?"] = "Are you sure you want to delete?";
 $lang["Please confirm implement"] = "Please confirm implement";
 $lang["rows selected"] = "rows selected";
+$lang["Period"] = "Period";
+$lang["End date can not be before Start date"] = "End date can not be before Start date";
 
 // Error handler messages
 $lang["Run-time notice. The script encountered something that could indicate an error, but could also happen in the "
