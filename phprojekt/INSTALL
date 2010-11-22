@@ -95,7 +95,7 @@ B. License
       $ chmod -R 0755 /srv/www
       $ chgrp -R www-data /srv/www
       $ mkdir /srv/private/phprojekt
-      $ chmod -R 0700 /srv/private/phprojekt/
+      $ chmod -R 0770 /srv/private/phprojekt/
 
 4. Run Setup
 
