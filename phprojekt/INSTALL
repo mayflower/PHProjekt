@@ -100,7 +100,8 @@ B. License
 4. Run Setup
 
     Open your browser and go to your PHProjekt installation and run the setup.
-    For example http://example.com/phprojekt/setup.php.
+    For example http://example.com/phprojekt/. You will be automatically
+    redirected to http://example.com/phprojekt/htdocs/setup.php.
 
     Follow the instructions. The setup requires an empty database
     (which we created in step 2) and a writeable folder to store
