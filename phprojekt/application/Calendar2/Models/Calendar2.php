@@ -119,16 +119,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
         $series = clone $this;
         $series->find($this->id);
-
         $series->_excludeDate($this->_originalStart);
         $series->save();
 
-        $extracted                 = $this->copy();
-        $extracted->_data['id']    = null;
-        $extracted->_data['rrule'] = null;
-        $extracted->save();
+        $this->_data['rrule'] = null;
+        $this->_saveToNewRow();
 
-        return $extracted->id;
+        return $this->id;
     }
 
     /**
@@ -575,5 +572,23 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $rights[$this->ownerId] = Phprojekt_Acl::ALL;
 
         $this->saveRights($rights);
+    }
+
+    /**
+     * Saves this object to a new row, even if it is already backed by the
+     * database. After a call to this function, the id will be different.
+     *
+     * @return int The id of the saved row.
+     */
+    private function _saveToNewRow()
+    {
+        $this->_fetchParticipantData();
+        $excludedDates             = $this->getExcludedDates();
+        $this->_storedId           = null;
+        $this->_data['id']         = null;
+        $this->participantDataInDb = array();
+        $this->save();
+
+        return $this->id;
     }
 }

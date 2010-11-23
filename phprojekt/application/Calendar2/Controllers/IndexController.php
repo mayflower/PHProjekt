@@ -134,7 +134,11 @@ class Calendar2_IndexController extends IndexController
         $params = $this->getRequest()->getParams();
         $model = new Calendar2_Models_Calendar2();
         if (!empty($id)) {
-            $model->find($id);
+            $start = new Datetime(
+                $this->getRequest()->getParam('recurrenceId'),
+                $this->_getUserTimezone()
+            );
+            $model->findOccurrence($id, $start);
         }
 
         $model->summary     = trim($params['summary']);
@@ -160,7 +164,12 @@ class Calendar2_IndexController extends IndexController
             $model->rrule = $params['rrule'];
         }
 
-        $model->save();
+        if (!array_key_exists('multipleEvents', $params)
+                || 'true' === $params['multipleEvents']) {
+            $model->save();
+        } else {
+            $model->saveSingleEvent();
+        }
 
         Phprojekt_Converter_Json::echoConvert(array(
             'type'    => 'success',
