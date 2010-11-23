@@ -63,6 +63,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     protected $_participantDataInDb = null;
 
     /**
+     * Whether this is the first occurence of this series.
+     *
+     * @var boolean
+     */
+    protected $_isFirst = true;
+
+    /**
      * Holds the original start date of this event as stored in the db.
      * Is never null if this event exists in the db.
      *
@@ -87,16 +94,43 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function save()
     {
-        //TODO: Split the series if this is not the first event
+        if ($this->_isFirst) {
+            $this->_fetchParticipantData();
 
-        $this->_fetchParticipantData();
+            $isNew = empty($this->_storedId);
+            parent::save();
+            $this->_saveParticipantData($isNew);
+            $this->_updateRights();
 
-        $isNew = empty($this->_storedId);
-        parent::save();
-        $this->_saveParticipantData($isNew);
-        $this->_updateRights();
+            return $this->id;
+        } else {
+            // Split the series into two parts. $this will be the second part.
+            $new = $this;
+            $old = $this->create();
+            $old->find($this->id);
 
-        return $this->id;
+            $splitDate = new Datetime(
+                '@' . Phprojekt_Converter_Time::userToUtc($new->start)
+            );
+            $helper = $old->getRruleHelper();
+            $rrules = $helper->splitRrule($splitDate);
+
+            $old->rrule = $rrules['old'];
+            $new->rrule = $rrules['new'];
+
+            $old->save();
+            $new->_saveToNewRow();
+
+            // Update the excluded occurences
+            $where  = "id = {$old->id} ";
+            $where .= "AND date >= '{$splitDate->format('Y-m-d H:i:s')}'";
+
+            $this->getAdapter()->update(
+                'calendar2_excluded_dates',
+                array('id' => $new->id),
+                $where
+            );
+        }
     }
 
     /**
@@ -123,6 +157,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $series->save();
 
         $this->_data['rrule'] = null;
+        $this->_isFirst       = true;
         $this->_saveToNewRow();
 
         return $this->id;
@@ -145,6 +180,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function find()
     {
+        $this->_isFirst             = true;
         $this->_participantData     = null;
         $this->_participantDataInDb = null;
 
@@ -175,6 +211,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $this->_participantData     = null;
         $this->_participantDataInDb = null;
         $this->_originalStart       = null;
+        $this->_isFirst             = true;
     }
 
     /**
@@ -211,9 +248,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $m->start = $date->format('Y-m-d H:i:s');
                 $m->_originalStart = clone $date;
                 $date->add($duration);
-                $m->end   = $date->format('Y-m-d H:i:s');
-                $ret[]    = $m;
+                $m->end      = $date->format('Y-m-d H:i:s');
+                $m->_isFirst = false;
+                $ret[]       = $m;
             }
+        }
+        if(!empty($ret)) {
+            $ret[0]->_isFirst = true;
         }
 
         return $ret;
@@ -269,6 +310,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $this->end   = $end->format('Y-m-d H:i:s');
 
             $this->_originalStart = $start;
+            $this->_isFirst = false;
         }
 
         return $this;
@@ -583,10 +625,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     private function _saveToNewRow()
     {
         $this->_fetchParticipantData();
-        $excludedDates             = $this->getExcludedDates();
-        $this->_storedId           = null;
-        $this->_data['id']         = null;
-        $this->participantDataInDb = array();
+        $excludedDates              = $this->getExcludedDates();
+        $this->_storedId            = null;
+        $this->_data['id']          = null;
+        $this->_participantDataInDb = array();
+        $this->_isFirst             = true;
         $this->save();
 
         return $this->id;
