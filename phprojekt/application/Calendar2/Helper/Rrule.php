@@ -58,6 +58,13 @@ class Calendar2_Helper_Rrule
     private $_rrule;
 
     /**
+     * The original rrule string.
+     *
+     * @var string
+     */
+    private $_rruleString;
+
+    /**
      * @var array of Datetime Dates to exclude.
      */
     private $_exceptions;
@@ -71,9 +78,10 @@ class Calendar2_Helper_Rrule
      */
     public function __construct(Datetime $first, $rrule, Array $exceptions = array())
     {
-        $this->_first      = $first;
-        $this->_rrule      = $this->_parseRrule($rrule);
-        $this->_exceptions = $exceptions;
+        $this->_first       = $first;
+        $this->_rrule       = $this->_parseRrule($rrule);
+        $this->_rruleString = $rrule;
+        $this->_exceptions  = $exceptions;
     }
 
     /**
@@ -125,6 +133,8 @@ class Calendar2_Helper_Rrule
             $ts = $date->getTimestamp();
             if ($startTs <= $ts && $ts <= $endTs && !in_array($date, $this->_exceptions)) {
                 $ret[] = new Datetime($datestring, new DateTimeZone('UTC'));
+            } else if ($ts > $endTs) {
+               break;
             }
         }
         return $ret;
@@ -143,6 +153,41 @@ class Calendar2_Helper_Rrule
 
         return (0 < count($dates));
     }
+
+    /**
+     * Splits this helper's rrule in 2 parts, one for all events before the
+     * split date and one for all other occurences.
+     *
+     * @param Datetime $splitDate The first occurence of the second part.
+     *
+     * @return array See description
+     */
+    public function splitRrule(Datetime $splitDate)
+    {
+        // This only supports rrules with either until or no ending
+
+        if (!is_null($this->_rrule['COUNT'])) {
+            //TODO: Have a close look for other cases where this might break.
+            throw new Exception('Rrules with count not fully supported yet');
+        }
+
+        if (is_null($this->_rrule['UNTIL'])) {
+            // The recurrence never ends, no need to calculate anything
+            $old = $this->_rruleString;
+        } else {
+            $dates = $this->getDatesInPeriod($this->_first, $splitDate);
+            $lastBeforeSplit = $dates[count($dates) - 2];
+
+            $old = preg_replace(
+                '/UNTIL=[^;]*/',
+                "UNTIL={$lastBeforeSplit->format('Ymd\THis\Z')}",
+                $this->_rruleString
+            );
+        }
+
+        return array('old' => $old, 'new' => $this->_rruleString);
+    }
+
 
     /**
      * Parses a rrule string into a dictionary while working around all
@@ -229,8 +274,13 @@ class Calendar2_Helper_Rrule
             } else if (!preg_match('/\d{8}T\d{6}Z/', $until)) {
                 throw new Exception('Malformed until');
             }
+
             // php doesn't understand ...Z as an alias for UTC
-            return new Datetime(substr($until, 0, 15), new DateTimeZone('UTC'));
+            $return = new Datetime(substr($until, 0, 15), new DateTimeZone('UTC'));
+            // php datePeriod also excludes the last occurence. we need it, so
+            // we add one second.
+            $return->modify('+1 second');
+            return $return;
         }
         return null;
     }
