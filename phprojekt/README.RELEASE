@@ -41,6 +41,8 @@ This is a checklist for all the steps that the release require.
 
     1.10 Upload the files in Source Forge.
 
+    1.11 Mark release as done in Jira
+
 2 Web
 
     2.1 Changes on http://www.phprojekt.com/download
