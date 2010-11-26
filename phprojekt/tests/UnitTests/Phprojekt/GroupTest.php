@@ -61,6 +61,7 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
         $group = new Phprojekt_Groups_Groups($this->sharedFixture);
         $this->assertTrue($group->isUserInGroup(1));
         $this->assertFalse($group->isUserInGroup(4));
+        $this->assertFalse($group->isUserInGroup(1000));
     }
 
     /**
