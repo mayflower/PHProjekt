@@ -391,11 +391,11 @@ class Setup_Models_Setup
 
         // Set access
         if (PHP_OS == 'WIN32' || PHP_OS == 'WINNT') {
-            $this->_error[] = '"' . $privateDir . '" should have the next rights: 0700 for folders, 0600 for files';
+            $this->_error[] = '"' . $privateDir . '" should have the next rights: 0770 for folders, 0660 for files';
         } else {
             // Private folder
-            if (!$this->chmodRecursive($privateDir, 0700, 0600)) {
-                $this->_error[] = '"' . $privateDir . '" should have the next rights: 0700 for folders, 0600 for files';
+            if (!$this->chmodRecursive($privateDir, 0770, 0660)) {
+                $this->_error[] = '"' . $privateDir . '" should have the next rights: 0770 for folders, 0660 for files';
             }
         }
 
