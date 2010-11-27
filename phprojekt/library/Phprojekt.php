@@ -55,7 +55,7 @@ class Phprojekt
     /**
      * The extra part of the version number.
      */
-    const VERSION_EXTRA = 'dev';
+    const VERSION_EXTRA = null;
 
     /**
      * Name of the Registry for current project.
@@ -65,7 +65,7 @@ class Phprojekt
     /**
      * Copyright.
      */
-    const COPYRIGHT = 'PHProjekt 6.0.5-dev - Copyright (c) 2010 Mayflower GmbH';
+    const COPYRIGHT = 'PHProjekt 6.0.5 - Copyright (c) 2010 Mayflower GmbH';
 
     /**
      * Default Max size in bytes that is allowed to be uploaded per file.

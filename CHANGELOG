@@ -1,3 +1,25 @@
+6.0.5
+Fixed
+ - Fix bug where not possible to upload files correctly. (PHPROJEKT-26)
+ - Fix module designer for works ok in Chorme 7. (PHPROJEKT-72)
+
+Improvements
+ - Allow the upload field into sub-modules. (PHPROJEKT-45)
+ - Improve download link of the upload field, for not open a new tab in some browsers.
+ - Reduce the possibility of collision in the names of uploaded files (md5 string). (PHPROJEKT-62)
+ - New Upload Helper:
+   - Improve the upload/download functions.
+   - Move the action functions into the Indexcontroller.
+   - Remove the FileController.
+ - Improve the permissions for folders and files in the setup. (PHPROJEKT-74)
+ - Add a hint about the requirements of cookies in the setup. (PHPROJEKT-75)
+ - Add a check for "Reject start dates that are after end dates" in Todo and Project module. (PHPROJEKT-76)
+ - Define getType as required function for Phprojekt_ModelInformation_Interface.
+ - Update getModelObject function for use the new functions getModelName and getModuleName.
+ - Improve Minutes and MinutesItem code:
+   - Use new functions getModelName and getModuleName from the IndexController.
+   - Remove init() and use setParent().
+
 6.0.4
 Fixed
  - Fix filter query when search for users (PHPROJEKT-25).
