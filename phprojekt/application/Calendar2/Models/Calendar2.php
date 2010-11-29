@@ -328,6 +328,19 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Returns whether the given user participates in this event.
+     *
+     * @param int $id The id of the user to check for.
+     *
+     * @return boolean Whether the user participates in the event.
+     */
+    public function hasParticipant($id)
+    {
+        $this->_fetchParticipantData();
+        return array_key_exists($id, $this->_participantData);
+    }
+
+    /**
      * Set the participants of this event.
      * All confirmation statuses will be set to pending.
      *
@@ -354,7 +367,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     {
         $this->_fetchParticipantData();
 
-        if (array_key_exists($id, $this->_participantData)) {
+        if ($this->hasParticipant($id)) {
             throw new Exception("Tried to add already participating user $id");
         }
         $this->_participantData[$id] = $status;
@@ -371,8 +384,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     {
         $this->_fetchParticipantData();
 
-        if (!array_key_exists($id, $this->_participantData)) {
+        if (!$this->hasParticipant($id)) {
             throw new Exception("Tried to remove unknown participant $id");
+        } else if ($id == $this->ownerId) {
+            throw new Exception('Must not remove owner');
         }
         unset($this->_participantData[$id]);
     }
@@ -388,8 +403,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     {
         $this->_fetchParticipantData();
 
-        if (!array_key_exists($id, $this->_participantData)) {
-            throw new Exception('Participant not found');
+        if (!$this->hasParticipant($id)) {
+            throw new Exception("Participant #$id not found");
         }
         return $this->_participantData[$id];
     }
@@ -406,8 +421,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     {
         $this->_fetchParticipantData();
 
-        if (!array_key_exists($id, $this->participants)) {
-            throw new Exception('Participant not found');
+        if (!$this->hasParticipant($id)) {
+            throw new Exception("Participant #$id not found");
         }
 
         $this->_participantData[$id] = $newStatus;
