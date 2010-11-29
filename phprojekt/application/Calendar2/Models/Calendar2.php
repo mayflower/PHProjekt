@@ -350,7 +350,18 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function setParticipants(array $ids)
     {
+        $hasOwner = !is_null($this->ownerId);
+        if ($hasOwner) {
+            $this->_fetchParticipantData();
+            $ownerStatus = $this->_participantData[$this->ownerId];
+        }
+
         $this->_participantData = array();
+
+        if ($hasOwner) {
+            $this->addParticipant($this->ownerId, $ownerStatus);
+        }
+
         foreach ($ids as $id) {
             $this->addParticipant($id);
         }
@@ -395,16 +406,26 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     /**
      * Get a participant's confirmation status.
      *
+     * If no id is given, the currently logged in user's status
+     * will be returned.
+     *
      * @param int $id The id of the participant.
      *
      * @return int
      */
-    public function getConfirmationStatus($id)
+    public function getConfirmationStatus($id = null)
     {
+        if (is_null($id)) {
+            $id = Phprojekt_Auth::getUserId();
+        }
         $this->_fetchParticipantData();
 
         if (!$this->hasParticipant($id)) {
-            throw new Exception("Participant #$id not found");
+            // We can not throw an exception here because if a user edits a new
+            // entry, a empty model object will be requested and serialized.
+            // Returning null here will yield the default value as configured
+            // in the database_manager table.
+            return null;
         }
         return $this->_participantData[$id];
     }
@@ -475,6 +496,26 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $this->rrule,
             $this->getExcludedDates()
         );
+    }
+
+    /**
+     * Sets the owner id.
+     * The owner is also added as an participant with 'Accepted' as status.
+     *
+     * @param int $id The owner id.
+     *
+     * @return void.
+     */
+    public function setOwnerId($id)
+    {
+        $this->_fetchParticipantData();
+
+        if ($this->hasParticipant($id)) {
+            unset($this->_participantData[$id]);
+        }
+        $this->addParticipant($id, self::STATUS_ACCEPTED);
+
+        $this->_data['ownerId'] = $id;
     }
 
     /**
@@ -599,18 +640,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                     )
                 );
             }
-        }
-
-        // If this is a new event, we also have to add the owner
-        if ($isNew) {
-            $db->insert(
-                'calendar2_user_relation',
-                array(
-                    'calendar2_id'        => $this->id,
-                    'user_id'             => $this->ownerId,
-                    'confirmation_status' => self::STATUS_ACCEPTED
-                )
-            );
         }
 
         $this->_participantDataInDb = $this->_participantData;
