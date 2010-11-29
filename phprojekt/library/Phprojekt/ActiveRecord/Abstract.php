@@ -326,7 +326,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $varname = trim($varname);
         $getter  = 'get' . ucfirst($varname);
         if (method_exists(get_class($this), $getter)) {
-            return call_user_func(array($this, $getter), $this->_data);
+            return call_user_func(array($this, $getter));
         } elseif (array_key_exists($varname, $this->hasMany)
         && array_key_exists('id', $this->_data)) {
             return $this->_hasMany($varname);
