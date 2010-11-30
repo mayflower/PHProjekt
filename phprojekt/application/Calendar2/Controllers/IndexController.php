@@ -129,18 +129,64 @@ class Calendar2_IndexController extends IndexController
     public function jsonSaveAction()
     {
         //TODO: Input validation
-        $id = (int) $this->getRequest()->getParam('id');
-
+        $id     = (int) $this->getRequest()->getParam('id');
         $params = $this->getRequest()->getParams();
-        $model = new Calendar2_Models_Calendar2();
+
+        $model   = new Calendar2_Models_Calendar2();
+        $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+
         if (!empty($id)) {
             $start = new Datetime(
                 $this->getRequest()->getParam('recurrenceId'),
                 $this->_getUserTimezone()
             );
             $model->findOccurrence($id, $start);
+            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
+        $newId = $this->_saveAction($model, $params);
+
+        Phprojekt_Converter_Json::echoConvert(array(
+            'type'    => 'success',
+            'message' => $message,
+            'code'    => 0,
+            'id'      => $newId
+        ));
+    }
+
+    public function jsonDetailAction()
+    {
+        $id = (int) $this->getRequest()->getParam('id');
+        //TODO: Input validation
+        $start = new Datetime(
+            $this->getRequest()->getParam('start'),
+            $this->_getUserTimezone()
+        );
+        $this->setCurrentProjectId();
+
+        $record = new Calendar2_Models_Calendar2;
+
+        if (!empty($id)) {
+            if (empty($start)) {
+                $record = $record->find($id);
+            } else {
+                $record = $record->findOccurrence($id, $start);
+            }
+        }
+
+        Phprojekt_Converter_Json::echoConvert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+
+    /**
+     * Saves the model.
+     *
+     * @param Calendar2_Models_Calendar2 $model  The model object
+     * @param Array                      $params The request's parameters.
+     *
+     * @return int The id of the (new) model object.
+     */
+    private function _saveAction($model, $params)
+    {
         $model->summary     = trim($params['summary']);
         $model->description = trim($params['description']);
         $model->location    = trim($params['location']);
@@ -171,35 +217,7 @@ class Calendar2_IndexController extends IndexController
             $model->saveSingleEvent();
         }
 
-        Phprojekt_Converter_Json::echoConvert(array(
-            'type'    => 'success',
-            'message' => Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT),
-            'code'    => 0,
-            'id'      => $model->id
-        ));
-    }
-
-    public function jsonDetailAction()
-    {
-        $id = (int) $this->getRequest()->getParam('id');
-        //TODO: Input validation
-        $start = new Datetime(
-            $this->getRequest()->getParam('start'),
-            $this->_getUserTimezone()
-        );
-        $this->setCurrentProjectId();
-
-        $record = new Calendar2_Models_Calendar2;
-
-        if (!empty($id)) {
-            if (empty($start)) {
-                $record = $record->find($id);
-            } else {
-                $record = $record->findOccurrence($id, $start);
-            }
-        }
-
-        Phprojekt_Converter_Json::echoConvert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        return $model->id;
     }
 
     /**
