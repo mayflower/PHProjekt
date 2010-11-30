@@ -144,7 +144,11 @@ class Calendar2_IndexController extends IndexController
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
-        $newId = $this->_saveAction($model, $params);
+        if (!empty($id) && $model->ownerId != Phprojekt_Auth::getUserId()) {
+            $newId = $this->_updateConfirmationStatusAction($model, $params);
+        } else {
+            $newId = $this->_saveAction($model, $params);
+        }
 
         Phprojekt_Converter_Json::echoConvert(array(
             'type'    => 'success',
@@ -175,6 +179,31 @@ class Calendar2_IndexController extends IndexController
         }
 
         Phprojekt_Converter_Json::echoConvert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+    }
+
+    /**
+     * Updates the current user's confirmation status on the given event.
+     *
+     * @param Calendar2_Models_Calendar2 $model  The model to update.
+     * @param Array                      $params The Request's parameters.
+     *
+     * @return int The id of the (new) model object.
+     */
+    private function _updateConfirmationStatusAction($model, $params)
+    {
+        $model->setConfirmationStatus(
+            Phprojekt_Auth::getUserId(),
+            $params['confirmationStatus']
+        );
+
+        if (!array_key_exists('multipleEvents', $params)
+                || 'true' === $params['multipleEvents']) {
+            $model->save();
+        } else {
+            $model->saveSingleEvent();
+        }
+
+        return $model->id;
     }
 
     /**
