@@ -64,18 +64,6 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
                 // If the event has recurrence ask what to modify
                 this.showEventSelector('Edit', "submitForm");
                 return false;
-            } else if (null === this._multipleParticipants) {
-                if (this._participantsInDb > 0 && this._participantsInDb == this._participantsInTab) {
-                    // If there is at least one user in Participant tab and the user hasn't changed that tab, ask him
-                    this.showParticipSelector('Edit', 'submitForm');
-                    return false;
-                } else if (this._participantsInDb != this._participantsInTab) {
-                    // If the user has modified Participant tab, changes apply for all participants
-                    this._multipleParticipants = true;
-                } else {
-                    // If there was no user in Participant tab and neither now, the action is obvious:
-                    this._multipleParticipants = false;
-                }
             }
         }
 
@@ -410,18 +398,6 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
             if (rruleFreq && null === this._multipleEvents) {
                 this.showEventSelector('Delete', "deleteForm");
                 return false;
-            } else if (null === this._multipleParticipants) {
-                if (this._participantsInDb > 0 && this._participantsInDb == this._participantsInTab) {
-                    // If there is at least one user in Participant tab and the user hasn't changed that tab, ask him
-                    this.showParticipSelector('Delete', "deleteForm");
-                    return false;
-                } else if (this._participantsInDb != this._participantsInTab) {
-                    // If the user has modified Participant tab, changes apply for all participants
-                    this._multipleParticipants = true;
-                } else {
-                    // If there was no user in Participant tab and neither now, the action is obvious:
-                    this._multipleParticipants = false;
-                }
             }
         }
 
@@ -471,51 +447,13 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
 
         // Add button for multiple event
         var params = {
-            label: phpr.nls.get(action + ' all occurrences'),
-            alt:   phpr.nls.get(action + ' all occurrences')
+            label: phpr.nls.get(action + ' all occurrences after this one'),
+            alt:   phpr.nls.get(action + ' all occurrences after this one')
         };
         var multipleEvent = new dijit.form.Button(params);
         dojo.byId("eventSelectorContainer").appendChild(multipleEvent.domNode);
         dojo.connect(multipleEvent, "onClick", dojo.hitch(this, function() {
             this._multipleEvents = true;
-            dijit.byId('eventSelectorDialog').hide();
-            eval('this.' + nextFunction + '()');
-        }));
-
-        dijit.byId('eventSelectorDialog').show();
-    },
-
-    showParticipSelector:function(action, nextFunction) {
-        // Summary:
-        //    This function shows the participant dialog selector
-
-        dojo.byId("eventSelectorContainer").innerHTML = '';
-
-        dojo.byId('eventSelectorTitle').innerHTML = phpr.nls.get('To whom will this apply');
-        dijit.byId('eventSelectorDialog').set('title', phpr.nls.get('Calendar2'));
-
-        // Add button for one Participant
-        var params = {
-            label: phpr.nls.get(action + ' just for me'),
-            alt:   phpr.nls.get(action + ' just for me')
-        };
-        var singleParticipant = new dijit.form.Button(params);
-        dojo.byId("eventSelectorContainer").appendChild(singleParticipant.domNode);
-        dojo.connect(singleParticipant, "onClick", dojo.hitch(this, function() {
-            this._multipleParticipants = false;
-            dijit.byId('eventSelectorDialog').hide();
-            eval('this.' + nextFunction + '()');
-        }));
-
-        // Add button for multiple Participants
-        var params = {
-            label: phpr.nls.get(action + ' for all participants'),
-            alt:   phpr.nls.get(action + ' for all participants')
-        };
-        var multipleParticipants = new dijit.form.Button(params);
-        dojo.byId("eventSelectorContainer").appendChild(multipleParticipants.domNode);
-        dojo.connect(multipleParticipants, "onClick", dojo.hitch(this, function() {
-            this._multipleParticipants = true;
             dijit.byId('eventSelectorDialog').hide();
             eval('this.' + nextFunction + '()');
         }));
