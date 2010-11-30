@@ -216,18 +216,30 @@ class Calendar2_IndexController extends IndexController
      */
     private function _saveAction($model, $params)
     {
-        $model->summary     = trim($params['summary']);
-        $model->description = trim($params['description']);
-        $model->location    = trim($params['location']);
-        $model->comments    = trim($params['comments']);
         $model->ownerId     = Phprojekt_Auth::getUserId();
-        $model->visibility  = $params['visibility'];
 
         if (array_key_exists('newParticipants', $params)) {
             $model->setParticipants($params['newParticipants']);
         } else {
             $model->setParticipants(array());
         }
+
+        if ($model->id) {
+            // We might have to reset confirmation statuses
+            if ($model->location !== trim($params['location'])
+                    || $model->start !== $params['start']
+                    || $model->end   !== $params['end']) {
+                $model->setParticipantsConfirmationStatuses(
+                    Calendar2_Models_Calendar2::STATUS_PENDING
+                );
+            }
+        }
+
+        $model->summary     = trim($params['summary']);
+        $model->description = trim($params['description']);
+        $model->location    = trim($params['location']);
+        $model->comments    = trim($params['comments']);
+        $model->visibility  = $params['visibility'];
 
         // Using Datetime would be much nicer here.
         // But Phprojekt doesn't really support Datetime yet.

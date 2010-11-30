@@ -454,6 +454,23 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Updates the confirmation statuses of all participants.
+     * The owner's status will not be updated.
+     *
+     * @param int $status The new Status
+     *
+     * @return void.
+     */
+    public function setParticipantsConfirmationStatuses($status)
+    {
+        foreach($this->participants as $p) {
+            if ($p !== $this->ownerId) {
+                $this->setConfirmationStatus($p, $status);
+            }
+        }
+    }
+
+    /**
      * Retrieves the recurrenceId as specified by the iCalendar standard.
      *
      * @return string The recurrence Id.
