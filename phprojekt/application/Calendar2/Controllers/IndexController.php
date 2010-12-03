@@ -219,7 +219,12 @@ class Calendar2_IndexController extends IndexController
             $model = $model->findOccurrence($id, $start);
         }
 
-        $model->delete();
+        if (!array_key_exists('multipleEvents', $params)
+                || 'true' === $params['multipleEvents']) {
+            $model->delete();
+        } else {
+            $model->deleteSingleEvent();
+        }
 
         Phprojekt_Converter_Json::echoConvert(
             array(

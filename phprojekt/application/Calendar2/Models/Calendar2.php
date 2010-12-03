@@ -214,6 +214,18 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Deletes just the single event out of this series.
+     */
+    public function deleteSingleEvent()
+    {
+        //TODO: If this is the first or last in this series, we should
+        //      adjust the start occurrence/the end date/the count instead
+        $this->_excludeDate(
+            new Datetime('@' . Phprojekt_Converter_Time::userToUtc($this->start))
+        );
+    }
+
+    /**
      * Implemented because we need to reset the participant data.
      */
     public function find()
