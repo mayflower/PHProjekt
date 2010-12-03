@@ -168,15 +168,49 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Deletes this series of events.
+     * Deletes all events in this series beginning with this one.
+     *
+     * @return void.
      */
     public function delete()
     {
-        $this->getAdapter()->delete(
-            'calendar2_user_relation',
-            $this->getAdapter()->quoteInto('calendar2_id = ?', $this->id)
-        );
-        parent::delete();
+        $db = $this->getAdapter();
+
+        if ($this->_isFirst) {
+            $db->delete(
+                'calendar2_user_relation',
+                $db->quoteInto('calendar2_id = ?', $this->id)
+            );
+            $db->delete(
+                'calendar2_excluded_dates',
+                $db->quoteInto('calendar2_id = ?', $this->id)
+            );
+
+            parent::delete();
+        } else {
+            $first = clone $this;
+            $first->find($this->id);
+
+            $start = new Datetime(
+                '@' . Phprojekt_Converter_Time::userToUtc($this->start)
+            );
+            // Adjust the rrule.
+            $helper = $first->getRruleHelper();
+            $split  = $helper->splitRrule($start);
+            $first->rrule = $split['old'];
+            $first->save();
+
+            // Delete all excludes after this event.
+            $where  = $db->quoteInto('calendar2_id = ?', $this->id);
+            $where .= $db->quoteInto(
+                'AND date >= ?',
+                $start->format('Y-m-d H:i:s')
+            );
+            $db->delete(
+                'calendar2_excluded_dates',
+                $where
+            );
+        }
     }
 
     /**

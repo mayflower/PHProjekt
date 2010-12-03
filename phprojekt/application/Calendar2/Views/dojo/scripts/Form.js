@@ -405,7 +405,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         this.sendData.multipleParticipants = this._multipleParticipants;
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
+            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
+                                                                 + '/start/' + this._presetValues['start'],
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);

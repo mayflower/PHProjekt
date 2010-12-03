@@ -182,6 +182,56 @@ class Calendar2_IndexController extends IndexController
     }
 
     /**
+     * Deletes a certain item.
+     *
+     * REQUIRES request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the item to delete.
+     * </pre>
+     *
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0.
+     *  - id      => id of the deleted item.
+     * </pre>
+     *
+     * @throws Phprojekt_PublishedException On missing or wrong id, or on error in the action delete.
+     *
+     * @return void
+     */
+    public function jsonDeleteAction()
+    {
+        //TODO: Input validation
+        $params = $this->getRequest()->getParams();
+        $id     = (int) $params['id'];
+        $start  = $params['start'];
+        $model = new Calendar2_Models_Calendar2;
+
+        if (empty($start)) {
+            $model = $model->find($id);
+        } else {
+            $start = new Datetime(
+                $this->getRequest()->getParam('start'),
+                $this->_getUserTimezone()
+            );
+            $model = $model->findOccurrence($id, $start);
+        }
+
+        $model->delete();
+
+        Phprojekt_Converter_Json::echoConvert(
+            array(
+                'type'    => 'success',
+                'message' => Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT),
+                'code'    => 0,
+                'id'      => $id
+            )
+        );
+    }
+
+    /**
      * Updates the current user's confirmation status on the given event.
      *
      * @param Calendar2_Models_Calendar2 $model  The model to update.
