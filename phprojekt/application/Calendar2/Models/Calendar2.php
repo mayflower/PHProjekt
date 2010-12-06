@@ -279,7 +279,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             'calendar2_user_relation.user_id = ? ',
             Phprojekt_Auth::getUserId()
         );
-        $where .= $db->quoteInto('AND start >= ?', $start->format('Y-m-d H:i:s'));
+        //TODO: This might query a lot of objects. Consider saving the last
+        //      occurrence too so this is faster.
         $where .= $db->quoteInto('AND start <= ?', $end->format('Y-m-d H:i:s'));
         $join   = 'JOIN calendar2_user_relation '
                     . 'ON calendar2.id = calendar2_user_relation.calendar2_id';
