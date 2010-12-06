@@ -299,12 +299,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $m->_originalStart = clone $date;
                 $date->add($duration);
                 $m->end      = $date->format('Y-m-d H:i:s');
-                $m->_isFirst = false;
+                $m->_isFirst = ($m->start == $model->start);
+                $isFirst     = false;
                 $ret[]       = $m;
             }
-        }
-        if(!empty($ret)) {
-            $ret[0]->_isFirst = true;
         }
 
         return $ret;
