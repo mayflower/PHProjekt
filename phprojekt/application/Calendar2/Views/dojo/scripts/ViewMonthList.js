@@ -179,11 +179,11 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
                         }
                         var nextEvent    = this._schedule[row][weekDay]['events'].length;
                         var contentTitle = content[event]['summary'];
-                        this._schedule[row][weekDay]['events'][nextEvent]          = new Array();
-                        this._schedule[row][weekDay]['events'][nextEvent]['id']    = content[event]['id'];
-                        this._schedule[row][weekDay]['events'][nextEvent]['title'] = this.htmlEntities(contentTitle);
-                        this._schedule[row][weekDay]['events'][nextEvent]['time']  = eventInfo['time'];
-                        this._schedule[row][weekDay]['events'][nextEvent]['start'] = content[event]['start'];
+                        this._schedule[row][weekDay]['events'][nextEvent]            = new Array();
+                        this._schedule[row][weekDay]['events'][nextEvent]['id']      = content[event]['id'];
+                        this._schedule[row][weekDay]['events'][nextEvent]['summary'] = this.htmlEntities(contentTitle);
+                        this._schedule[row][weekDay]['events'][nextEvent]['time']    = eventInfo['time'];
+                        this._schedule[row][weekDay]['events'][nextEvent]['start']   = content[event]['start'];
                     }
                 }
             }
