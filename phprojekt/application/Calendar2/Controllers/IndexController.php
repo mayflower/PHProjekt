@@ -39,7 +39,7 @@ class Calendar2_IndexController extends IndexController
 {
     /**
      * Returns all events in the given period of time that the user is
-     * involved in.
+     * involved in. Only days are recognized.
      *
      * Request parameters:
      * <pre>
@@ -54,10 +54,12 @@ class Calendar2_IndexController extends IndexController
             Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart')),
             $timezone
         );
+        $start->setTime(0, 0, 0);
         $end = new Datetime(
             Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd')),
             $timezone
         );
+        $end->setTime(23, 59, 59);
 
         $model  = new Calendar2_Models_Calendar2();
         $events = $model->fetchAllForPeriod($start, $end);
