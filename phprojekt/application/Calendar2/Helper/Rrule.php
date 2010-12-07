@@ -115,14 +115,20 @@ class Calendar2_Helper_Rrule
                 $this->_rrule['FREQINTERVAL'],
                 $this->_rrule['COUNT']
             );
-        } else if (!is_null($this->_rrule['UNTIL'])) {
+        } else {
+            if (!is_null($this->_rrule['UNTIL'])) {
+                $until = clone $this->_rrule['UNTIL'];
+            } else {
+                $until = clone $end;
+            }
+            // php datePeriod also excludes the last occurence. we need it, so
+            // we add one second.
+            $until->modify('+1 second');
             $period = new DatePeriod(
                 $this->_first,
                 $this->_rrule['FREQINTERVAL'],
-                $this->_rrule['UNTIL']
+                $until
             );
-        } else {
-            $period = new DatePeriod($this->_first, $this->_rrule['FREQ'], $end);
         }
 
         $ret = array();
@@ -286,9 +292,6 @@ class Calendar2_Helper_Rrule
 
             // php doesn't understand ...Z as an alias for UTC
             $return = new Datetime(substr($until, 0, 15), new DateTimeZone('UTC'));
-            // php datePeriod also excludes the last occurence. we need it, so
-            // we add one second.
-            $return->modify('+1 second');
             return $return;
         }
         return null;
