@@ -50,10 +50,12 @@ class Calendar2_Helper_Rrule
     /**
      * @var array of String => mixed The rrule properties.
      *
-     * 'FREQ'     => DateInterval between occurences
-     * 'INTERVAL' => int
-     * 'UNTIL'    => DateTime (exclusive, meant for DatePeriod)
-     * 'COUNT'    => int (The number of _RE_occurences, i.e. excluding the first event)
+     * 'FREQ'         => DateInterval between occurences
+     * 'INTERVAL'     => int
+     * 'FREQINTERVAL' => FREQUENCY, but INTERVAL times
+     * 'UNTIL'        => DateTime (inclusive)
+     *                   (Note that DatePeriod expects exclusive UNTIL values)
+     * 'COUNT'        => int (The number of _RE_occurences, i.e. excluding the first event)
      */
     private $_rrule;
 
@@ -110,13 +112,13 @@ class Calendar2_Helper_Rrule
         if (!is_null($this->_rrule['COUNT'])) {
             $period = new DatePeriod(
                 $this->_first,
-                $this->_rrule['FREQ'],
+                $this->_rrule['FREQINTERVAL'],
                 $this->_rrule['COUNT']
             );
         } else if (!is_null($this->_rrule['UNTIL'])) {
             $period = new DatePeriod(
                 $this->_first,
-                $this->_rrule['FREQ'],
+                $this->_rrule['FREQINTERVAL'],
                 $this->_rrule['UNTIL']
             );
         } else {
@@ -213,6 +215,14 @@ class Calendar2_Helper_Rrule
         $ret['FREQ']      = self::_parseFreq($rrule);
         $ret['UNTIL']     = self::_parseUntil($rrule);
         $ret['COUNT']     = self::_parseCount($rrule);
+
+        // Apply FREQ INTERVAL times
+        $tmp  = new Datetime();
+        $tmp2 = clone $tmp;
+        for ($i = 0; $i < $ret['INTERVAL']; $i++) {
+            $tmp2->add($ret['FREQ']);
+        }
+        $ret['FREQINTERVAL'] = $tmp->diff($tmp2);
 
         if (is_null($ret['UNTIL']) && is_null($ret['COUNT']))
         {
