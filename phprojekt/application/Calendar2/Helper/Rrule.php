@@ -167,7 +167,6 @@ class Calendar2_Helper_Rrule
         // This only supports rrules with either until or no ending
 
         if (!is_null($this->_rrule['COUNT'])) {
-            //TODO: Have a close look for other cases where this might break.
             throw new Exception('Rrules with count not fully supported yet');
         }
 
