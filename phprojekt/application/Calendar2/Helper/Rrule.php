@@ -117,7 +117,7 @@ class Calendar2_Helper_Rrule
             $period = new DatePeriod(
                 $this->_first,
                 $this->_rrule['FREQ'],
-                $this->_rrule['UNTIL'] //TODO: Check if this explodes when using timezones.
+                $this->_rrule['UNTIL']
             );
         } else {
             $period = new DatePeriod($this->_first, $this->_rrule['FREQ'], $end);
