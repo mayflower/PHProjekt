@@ -55,7 +55,6 @@ class Calendar2_Helper_Rrule
      * 'FREQINTERVAL' => FREQUENCY, but INTERVAL times
      * 'UNTIL'        => DateTime (inclusive)
      *                   (Note that DatePeriod expects exclusive UNTIL values)
-     * 'COUNT'        => int (The number of _RE_occurences, i.e. excluding the first event)
      */
     private $_rrule;
 
@@ -109,27 +108,19 @@ class Calendar2_Helper_Rrule
             }
         }
 
-        if (!is_null($this->_rrule['COUNT'])) {
-            $period = new DatePeriod(
-                $this->_first,
-                $this->_rrule['FREQINTERVAL'],
-                $this->_rrule['COUNT']
-            );
+        if (!is_null($this->_rrule['UNTIL'])) {
+            $until = clone $this->_rrule['UNTIL'];
         } else {
-            if (!is_null($this->_rrule['UNTIL'])) {
-                $until = clone $this->_rrule['UNTIL'];
-            } else {
-                $until = clone $end;
-            }
-            // php datePeriod also excludes the last occurence. we need it, so
-            // we add one second.
-            $until->modify('+1 second');
-            $period = new DatePeriod(
-                $this->_first,
-                $this->_rrule['FREQINTERVAL'],
-                $until
-            );
+            $until = clone $end;
         }
+        // php datePeriod also excludes the last occurence. we need it, so
+        // we add one second.
+        $until->modify('+1 second');
+        $period = new DatePeriod(
+            $this->_first,
+            $this->_rrule['FREQINTERVAL'],
+            $until
+        );
 
         $ret = array();
         foreach ($period as $date) {
@@ -172,12 +163,6 @@ class Calendar2_Helper_Rrule
      */
     public function splitRrule(Datetime $splitDate)
     {
-        // This only supports rrules with either until or no ending
-
-        if (!is_null($this->_rrule['COUNT'])) {
-            throw new Exception('Rrules with count not fully supported yet');
-        }
-
         if (is_null($this->_rrule['UNTIL'])) {
             // The recurrence never ends, no need to calculate anything
             $old = $this->_rruleString;
@@ -211,7 +196,6 @@ class Calendar2_Helper_Rrule
             return array(
                 'FREQ'     => null,
                 'INTERVAL' => null,
-                'COUNT'    => null,
                 'UNTIL'    => null
             );
         }
@@ -220,7 +204,6 @@ class Calendar2_Helper_Rrule
         $ret['INTERVAL']  = self::_parseInterval($rrule);
         $ret['FREQ']      = self::_parseFreq($rrule);
         $ret['UNTIL']     = self::_parseUntil($rrule);
-        $ret['COUNT']     = self::_parseCount($rrule);
 
         // Apply FREQ INTERVAL times
         $tmp  = new Datetime();
@@ -229,11 +212,6 @@ class Calendar2_Helper_Rrule
             $tmp2->add($ret['FREQ']);
         }
         $ret['FREQINTERVAL'] = $tmp->diff($tmp2);
-
-        if (is_null($ret['UNTIL']) && is_null($ret['COUNT']))
-        {
-            throw new Exception('Rrule contains neither COUNT nor UNTIL.');
-        }
 
         return $ret;
     }
@@ -295,20 +273,6 @@ class Calendar2_Helper_Rrule
             return $return;
         }
         return null;
-    }
-
-    private static function _parseCount($rrule)
-    {
-        // Parse count
-        $count = self::_extractFromRrule($rrule, 'COUNT');
-        if (!empty($count)) {
-            // iCalendar counts the first occurence, while php does not.
-            $count = $count - 1;
-        } else if (!is_null($count)) {
-            throw new Exception('Count 0 is invalid.');
-        }
-
-        return $count;
     }
 
     /**
