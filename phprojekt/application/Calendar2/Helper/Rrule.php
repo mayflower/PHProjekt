@@ -234,13 +234,13 @@ class Calendar2_Helper_Rrule
 
     private static function _parseInterval($rrule)
     {
-        $interval = (int) self::_extractFromRrule($rrule, 'INTERVAL');
+        $interval = self::_extractFromRrule($rrule, 'INTERVAL');
         if (is_null($interval)) {
             $interval = 1;
         } else if (0 >= $interval) {
             throw new Exception('Negative or Zero Intervals not permitted.');
         }
-        return $interval;
+        return (int) $interval;
     }
 
     private static function _parseFreq($rrule)
