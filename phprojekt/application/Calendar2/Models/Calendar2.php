@@ -289,9 +289,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $ret    = array();
 
         foreach ($models as $model) {
-            $startDT  = new Datetime($model->start);
-            $endDT    = new Datetime($model->end);
-            $duration = $startDT->diff($endDT);
+            $startDt  = new Datetime($model->start);
+            $endDt    = new Datetime($model->end);
+            $duration = $startDt->diff($endDt);
 
             $helper = $model->getRruleHelper();
             foreach ($helper->getDatesInPeriod($start, $end) as $date) {
@@ -557,8 +557,20 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function getRruleHelper()
     {
+        if ($this->_isFirst) {
+            $start = new Datetime(
+                '@' . Phprojekt_Converter_Time::userToUtc($this->start)
+            );
+        } else {
+            $original = $this->create();
+            $original->find($this->id);
+            $start = new Datetime(
+                '@' . Phprojekt_Converter_Time::userToUtc($original->start)
+            );
+        }
+
         return new Calendar2_Helper_Rrule(
-            new Datetime('@' . Phprojekt_Converter_Time::userToUtc($this->start)),
+            $start,
             $this->rrule,
             $this->getExcludedDates()
         );
