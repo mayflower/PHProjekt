@@ -296,10 +296,14 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $helper = $model->getRruleHelper();
             foreach ($helper->getDatesInPeriod($start, $end) as $date) {
                 $m        = $model->copy();
-                $m->start = $date->format('Y-m-d H:i:s');
+                $m->start = Phprojekt_Converter_Time::utcToUser(
+                    $date->format('Y-m-d H:i:s')
+                );
                 $m->_originalStart = clone $date;
                 $date->add($duration);
-                $m->end      = $date->format('Y-m-d H:i:s');
+                $m->end = Phprojekt_Converter_Time::utcToUser(
+                    $date->format('Y-m-d H:i:s')
+                );
                 $m->_isFirst = ($m->start == $model->start);
                 $isFirst     = false;
                 $ret[]       = $m;
@@ -347,16 +351,21 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                     . "{$date->getTimezone()->getName()} not found."
                 );
             }
-            $start    = new Datetime($this->start);
-            $end      = new Datetime($this->end);
+            $end = new Datetime(
+                '@' . Phprojekt_Converter_Time::userToUtc($this->end)
+            );
             $duration = $start->diff($end);
 
             $start = $date;
             $end   = clone $start;
             $end->add($duration);
 
-            $this->start = $start->format('Y-m-d H:i:s');
-            $this->end   = $end->format('Y-m-d H:i:s');
+            $this->start = Phprojekt_Converter_Time::utcToUser(
+                $start->format('Y-m-d H:i:s')
+            );
+            $this->end = Phprojekt_Converter_Time::utcToUser(
+                $end->format('Y-m-d H:i:s')
+            );
 
             $this->_originalStart = $start;
             $this->_isFirst = false;
