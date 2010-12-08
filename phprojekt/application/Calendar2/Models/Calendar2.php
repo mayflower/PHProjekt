@@ -782,7 +782,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     {
         $db = $this->getAdapter();
 
-        //TODO: Don't make that many queries.
         foreach ($this->_participantData as $id => $status) {
             if (!array_key_exists($id, $this->_participantDataInDb)) {
                 $db->insert(
