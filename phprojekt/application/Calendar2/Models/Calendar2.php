@@ -638,21 +638,102 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     protected function _excludeDate(Datetime $date)
     {
-        //TODO: If this is the first event, we might get trash entries in the
-        //      db when someone excludes the start date and then changes all
-        //      events starting with the first.
-        //      If $date is the first date, it would be better to change the
-        //      start and rrule (count!) of this object.
+        // This function distinguishes three cases.
+        // 1. This is the first event in the series.
+        // 2. This is the last event in the series.
+        // 3. Somewhere in between.
         if (empty($this->id)) {
-            throw new Exception('Can only exclude dates from already saved events');
+            throw new Exception('Can only exclude dates from saved events');
         }
-        $this->getAdapter()->insert(
-            'calendar2_excluded_dates',
-            array(
-                'calendar2_id' => $this->id,
-                'date'         => $date->format('Y-m-d H:i:s')
-            )
+
+        $series = clone $this;
+        $series->find($this->id);
+
+        $helper = $series->getRruleHelper();
+
+        if (!$helper->containsDate($date)) {
+            throw new Exception(
+                'Trying to exclude date that is not part of this series'
+            );
+        }
+        $start  = new Datetime(
+            '@' . Phprojekt_Converter_Time::userToUtc($series->start)
         );
+        $end    = new Datetime(
+            '@' . Phprojekt_Converter_Time::userToUtc($series->end)
+        );
+
+        if ($start == $date) {
+            // If it's the first in it's series, adjust the start date,
+            // remove excluded dates that we skipped while doing that and
+            // finally, check if we still need a rrule at all.
+            $duration = $start->diff($end);
+
+            $newStart  = $helper->firstOccurrenceAfter($start);
+            if (is_null($newStart)) {
+                throw new Exception('$newStart should not be null');
+            }
+            $newEnd = clone $newStart;
+            $newEnd->add($duration);
+
+            $series->start = Phprojekt_Converter_Time::utcToUser(
+                $newStart->format('Y-m-d H:i:s')
+            );
+            $series->end   = Phprojekt_Converter_Time::utcToUser(
+                $newEnd->format('Y-m-d H:i:s')
+            );
+
+            // Delete all obsolete excludes
+            $db     = $this->getAdapter();
+            $where  = $db->quoteInto('calendar2_id = ?', $this->id);
+            $where .= $db->quoteInto(
+                'AND date < ?',
+                $newStart->format('Y-m-d H:i:s')
+            );
+            $db->delete('calendar2_excluded_dates', $where);
+
+            // Check if this is still a recurring event
+            if ($helper->islastOccurrence($newStart)) {
+                $series->rrule = null;
+            }
+            $series->save();
+        } elseif ($helper->isLastOccurrence($date)) {
+            // If it's the last in it's series, adjust the Rrule and delete
+            // now obsolete excludes.
+            $newLast = $helper->lastOccurrenceBefore($date);
+
+            // Check if this is still a recurring event
+            if ($helper->isFirstOccurrence($newLast)) {
+                $series->rrule = null;
+            } else {
+                // Adjust the rrule
+                $series->rrule = preg_replace(
+                    '/UNTIL=[^;]*/',
+                    "UNTIL={$newLast->format('Ymd\THis\Z')}",
+                    $series->rrule
+                );
+            }
+            $series->save();
+
+            // Delete all obsolete excludes
+            $db     = $this->getAdapter();
+            $where  = $db->quoteInto('calendar2_id = ?', $this->id);
+            $where .= $db->quoteInto(
+                'AND date > ?',
+                $newLast->format('Y-m-d H:i:s')
+            );
+            $db->delete('calendar2_excluded_dates', $where);
+        } else {
+            // If it's somewhere in between, just add it to the list of
+            // excluded dates.
+            $this->getAdapter()->insert(
+                'calendar2_excluded_dates',
+                array(
+                    'calendar2_id' => $this->id,
+                    'date'         => $date->format('Y-m-d H:i:s')
+                )
+            );
+        }
     }
 
     /**
