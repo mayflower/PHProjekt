@@ -165,7 +165,9 @@ class Calendar2_Helper_Rrule
     {
         if (is_null($this->_rrule['UNTIL'])) {
             // The recurrence never ends, no need to calculate anything
-            $old = $this->_rruleString;
+            $last  = $this->lastOccurrenceBefore($splitDate);
+            $until = "UNTIL={$last->format('Ymd\THis\Z')};";
+            $old   = $until . $this->_rruleString;
         } else {
             $dates = $this->getDatesInPeriod($this->_first, $splitDate);
             $lastBeforeSplit = $dates[count($dates) - 2];
