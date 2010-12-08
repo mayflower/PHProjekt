@@ -180,6 +180,93 @@ class Calendar2_Helper_Rrule
         return array('old' => $old, 'new' => $this->_rruleString);
     }
 
+    /**
+     * Checks whether the given Datetime is the last occurrence of this series.
+     *
+     * @param Datetime $datetime The datetime to check for.
+     *
+     * @return bool Whether the given datetime is the last occurrence.
+     */
+    public function isLastOccurrence(Datetime $datetime)
+    {
+        $until = $this->_rrule['UNTIL'];
+
+        if (is_null($until)) {
+            return false;
+        } else {
+            return $datetime->getTimestamp() == $until->getTimestamp();
+        }
+    }
+
+    /**
+     * Checks whether the given Datetime is the first occurrence of this series.
+     *
+     * @param Datetime $datetime The datetime to check for.
+     *
+     * @return bool Whether the given datetime is the first occurrence.
+     */
+    public function isFirstOccurrence(Datetime $datetime)
+    {
+        return $this->_first == $datetime;
+    }
+
+    /**
+     * Returns the first occurrence after the given datetime
+     * This assumes that the given date is a valid occurrence.
+     * If this is the last occurrence, null will be returned.
+     *
+     * @param Datetime $datetime The datetime after which to look.
+     *
+     * @return Datetime The first occurrence after $datetime or null.
+     */
+    public function firstOccurrenceAfter(Datetime $datetime)
+    {
+        if (!$this->containsDate($datetime)) {
+            throw new Exception('Invalid Datetime given.');
+        }
+
+        $occurrence = clone $datetime;
+        do {
+            $occurrence->add($this->_rrule['FREQINTERVAL']);
+        } while (in_array($occurrence, $this->_exceptions));
+
+        $until = $this->_rrule['UNTIL'];
+        if (!is_null($until)) {
+            $untilTs = $until->getTimestamp();
+            $occurrenceTs = $occurrence->getTimestamp();
+            if ($untilTs < $occurrenceTs) {
+                return null;
+            }
+        }
+
+        return $occurrence;
+    }
+    /**
+     * Returns the last occurrence before the given datetime
+     * This assumes that the given date is a valid occurrence.
+     * If this is the first occurrence, null will be returned.
+     *
+     * @param Datetime $datetime The datetime until which to look.
+     *
+     * @return Datetime The last occurrence before $datetime
+     */
+    public function lastOccurrenceBefore(Datetime $datetime)
+    {
+        if (!$this->containsDate($datetime)) {
+            throw new Exception('Invalid Datetime given.');
+        }
+
+        if ($datetime == $this->_first) {
+            return null;
+        }
+
+        $occurrence = clone $datetime;
+        do {
+            $occurrence->sub($this->_rrule['FREQINTERVAL']);
+        } while (in_array($occurrence, $this->_exceptions));
+
+        return $occurrence;
+    }
 
     /**
      * Parses a rrule string into a dictionary while working around all
