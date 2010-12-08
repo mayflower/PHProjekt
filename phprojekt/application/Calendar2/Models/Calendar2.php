@@ -215,14 +215,20 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
     /**
      * Deletes just the single event out of this series.
+     *
+     * @return void
      */
     public function deleteSingleEvent()
     {
-        //TODO: If this is the first or last in this series, we should
-        //      adjust the start occurrence/the end date/the count instead
-        $this->_excludeDate(
-            new Datetime('@' . Phprojekt_Converter_Time::userToUtc($this->start))
-        );
+        if (empty($this->rrule)) {
+            // If this is a non-recurring event, call delete()
+            $this->delete();
+        } else {
+            $start = new Datetime(
+                '@' . Phprojekt_Converter_Time::userToUtc($this->start)
+            );
+            $this->_excludeDate($start);
+        }
     }
 
     /**
