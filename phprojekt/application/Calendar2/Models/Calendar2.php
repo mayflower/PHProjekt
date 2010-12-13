@@ -102,6 +102,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $this->_fetchParticipantData();
 
             $isNew = empty($this->_storedId);
+
+            $now = new Datetime('now', new DateTimeZone('UTC'));
+            $this->lastModified = $now->format('Y-m-d H:i:s');
             parent::save();
             $this->_saveParticipantData($isNew);
             $this->_updateRights();
@@ -229,6 +232,16 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             );
             $this->_excludeDate($start);
         }
+
+        // Update the lastModified-Time
+        // We can't assume that the user calls save() after this method, so we
+        // have to update the database here.
+        $now = new Datetime('now', new DateTimeZone('UTC'));
+        $this->lastModified = $now->format('Y-m-d H:i:s');
+        $this->update(
+            array('last_modified' => $now->format('Y-m-d H:i:s')),
+            $this->getAdapter()->quoteInto('id = ?', $this->id)
+        );
     }
 
     /**
