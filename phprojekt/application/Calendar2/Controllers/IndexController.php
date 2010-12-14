@@ -49,16 +49,22 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonPeriodListAction()
     {
+        $dateStart = $this->getRequest()->getParam('dateStart');
+        $dateEnd   = $this->getRequest()->getParam('dateEnd');
+
+        if (!Cleaner::validate('isoDate', $dateStart)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid dateStart '$dateStart'"
+            );
+        }
+        if (!Cleaner::validate('isoDate', $dateEnd)) {
+            throw new Phprojekt_PublishedException("Invalid dateEnd $dateEnd");
+        }
+
         $timezone = $this->_getUserTimezone();
-        $start = new Datetime(
-            Cleaner::sanitize('date', $this->getRequest()->getParam('dateStart')),
-            $timezone
-        );
+        $start = new Datetime($dateStart, $timezone);
         $start->setTime(0, 0, 0);
-        $end = new Datetime(
-            Cleaner::sanitize('date', $this->getRequest()->getParam('dateEnd')),
-            $timezone
-        );
+        $end = new Datetime($dateEnd, $timezone);
         $end->setTime(23, 59, 59);
 
         $model  = new Calendar2_Models_Calendar2();
@@ -80,12 +86,15 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonDayListSelfAction()
     {
-        $start = new Datetime(
-            Cleaner::sanitize('date', $this->getRequest()->getParam('date')),
-            $this->_getUserTimezone()
-        );
+        $date = $this->getRequest()->getParam('date');
 
+        if (!Cleaner::validate('isoDate', $date)) {
+            throw new Phprojekt_PublishedException("Invalid date '$date'");
+        }
+
+        $start = new Datetime($date, $this->_getUserTimezone());
         $start->setTime(0, 0, 0);
+
         $end = clone $start;
         $end->setTime(23, 59, 59);
 
@@ -130,8 +139,24 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        //TODO: Input validation
-        $id     = (int) $this->getRequest()->getParam('id');
+        $id = $this->getRequest()->getParam('id');
+        $recurrenceId = $this->getRequest()->getParam('recurrenceId');
+
+        if (!Cleaner::validate('int', $id, true)
+                && 'null'      !== $id
+                && 'undefined' !== $id) {
+            throw new Phprojekt_PublishedException("Invalid id '$id'");
+        }
+        if (!preg_match('/\d{8}T\d{6}/', $recurrenceId)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid reucrrenceId '$recurrenceId'"
+            );
+        }
+
+        $id = (int) $id;
+
+        // Note that all function this gets passed to must validate the
+        // parameters they use.
         $params = $this->getRequest()->getParams();
 
         $model   = new Calendar2_Models_Calendar2();
@@ -162,12 +187,21 @@ class Calendar2_IndexController extends IndexController
 
     public function jsonDetailAction()
     {
-        $id = (int) $this->getRequest()->getParam('id');
-        //TODO: Input validation
-        $start = new Datetime(
-            $this->getRequest()->getParam('start'),
-            $this->_getUserTimezone()
-        );
+        $id    = $this->getRequest()->getParam('id');
+        $start = $this->getRequest()->getParam('start');
+
+        if (!Cleaner::validate('int', $id) && 'null' !== $id) {
+            throw new Phprojekt_PublishedException("Invalid id '$id'");
+        }
+        if (!self::_validateTimestamp($start)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid start timestamp '$start'"
+            );
+        }
+
+        $id = (int) $id;
+
+        $start = new Datetime($start, $this->_getUserTimezone());
         $this->setCurrentProjectId();
 
         $record = new Calendar2_Models_Calendar2;
@@ -180,15 +214,28 @@ class Calendar2_IndexController extends IndexController
             }
         }
 
-        Phprojekt_Converter_Json::echoConvert($record, Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        Phprojekt_Converter_Json::echoConvert(
+            $record,
+            Phprojekt_ModelInformation_Default::ORDERING_FORM
+        );
     }
 
     /**
      * Deletes a certain item.
      *
-     * REQUIRES request parameters:
+     * REQUIRED request parameters:
      * <pre>
      *  - integer <b>id</b> id of the item to delete.
+     * </pre>
+     *
+     * Optional request parameters:
+     * <pre>
+     *  - timestamp <b>start</b>          The start date of the occurrence
+     *                                    to delete.
+     *  - boolean   <b>multipleEvents</b> Whether all events in this series
+     *                                    beginning with this one should be
+     *                                    deleted or just this
+     *                                    single occurrence.
      * </pre>
      *
      * The return is a string in JSON format with:
@@ -199,30 +246,39 @@ class Calendar2_IndexController extends IndexController
      *  - id      => id of the deleted item.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On missing or wrong id, or on error in the action delete.
+     * @throws Phprojekt_PublishedException On wrong parameters.
      *
      * @return void
      */
     public function jsonDeleteAction()
     {
-        //TODO: Input validation
-        $params = $this->getRequest()->getParams();
-        $id     = (int) $params['id'];
-        $start  = $params['start'];
+        $id       = $this->getRequest()->getParam('id');
+        $start    = $this->getRequest()->getParam('start');
+        $multiple = $this->getRequest()->getParam('multipleEvents', 'true');
+
+        if (!Cleaner::validate('int', $id)) {
+            throw new Phprojekt_PublishedException("Invalid id '$id'");
+        }
+        if (!self::_validateTimestamp($start)) {
+            throw new Phprojekt_PublishedException("Invalid start timestamp '$start'");
+        }
+        if (!Cleaner::validate('boolean', $multiple)) {
+            throw new Phprojekt_PublishedException("Invalid multiple '$multiple'");
+        }
+
+        $id = (int) $id;
+        $multiple = ('true' == strtolower($multiple));
+
         $model = new Calendar2_Models_Calendar2;
 
         if (empty($start)) {
             $model = $model->find($id);
         } else {
-            $start = new Datetime(
-                $this->getRequest()->getParam('start'),
-                $this->_getUserTimezone()
-            );
+            $start = new Datetime($start, $this->_getUserTimezone());
             $model = $model->findOccurrence($id, $start);
         }
 
-        if (!array_key_exists('multipleEvents', $params)
-                || 'true' === $params['multipleEvents']) {
+        if ($multiple) {
             $model->delete();
         } else {
             $model->deleteSingleEvent();
@@ -231,7 +287,9 @@ class Calendar2_IndexController extends IndexController
         Phprojekt_Converter_Json::echoConvert(
             array(
                 'type'    => 'success',
-                'message' => Phprojekt::getInstance()->translate(self::DELETE_TRUE_TEXT),
+                'message' => Phprojekt::getInstance()->translate(
+                    self::DELETE_TRUE_TEXT
+                ),
                 'code'    => 0,
                 'id'      => $id
             )
@@ -242,19 +300,39 @@ class Calendar2_IndexController extends IndexController
      * Updates the current user's confirmation status on the given event.
      *
      * @param Calendar2_Models_Calendar2 $model  The model to update.
-     * @param Array                      $params The Request's parameters.
+     * @param Array                      $params The Request's parameters. All
+     *                                           values taken from this array
+     *                                           will be validated.
      *
      * @return int The id of the (new) model object.
+     *
+     * @throws Phprojekt_PublishedException On malformed $params content.
      */
     private function _updateConfirmationStatusAction($model, $params)
     {
-        $model->setConfirmationStatus(
-            Phprojekt_Auth::getUserId(),
-            $params['confirmationStatus']
-        );
+        $status   = $params['confirmationStatus'];
+        $multiple = array_key_exists('multipleEvents', $params)
+            ? $params['multipleEvents']
+            : 'true';
 
-        if (!array_key_exists('multipleEvents', $params)
-                || 'true' === $params['multipleEvents']) {
+        if (!Cleaner::validate('int', $status)
+                || !Calendar2_Models_Calendar2::isValidStatus((int) $status)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid confirmationStatus '$status'"
+            );
+        }
+        if (!Cleaner::validate('boolean', $multiple)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid multiple '$multiple'"
+            );
+        }
+
+        $status   = (int) $status;
+        $multiple = ('true' == strtolower($multiple));
+
+        $model->setConfirmationStatus(Phprojekt_Auth::getUserId(), $status);
+
+        if ($multiple) {
             $model->save();
         } else {
             $model->saveSingleEvent();
@@ -267,49 +345,90 @@ class Calendar2_IndexController extends IndexController
      * Saves the model.
      *
      * @param Calendar2_Models_Calendar2 $model  The model object
-     * @param Array                      $params The request's parameters.
+     * @param Array                      $params The request's parameters. All
+     *                                           values taken from this array
+     *                                           will be validated.
      *
      * @return int The id of the (new) model object.
      */
     private function _saveAction($model, $params)
     {
-        $model->ownerId     = Phprojekt_Auth::getUserId();
+        $participants = array_key_exists('newParticipants', $params)
+            ? $params['newParticipants']
+            : array();
+        $location    = trim($params['location']);
+        $start       = $params['start'];
+        $end         = $params['end'];
+        $summary     = trim($params['summary']);
+        $description = trim($params['description']);
+        $comments    = trim($params['comments']);
+        $visibility  = $params['visibility'];
+        $rrule       = array_key_exists('rrule', $params)
+            ? trim($params['rrule'])
+            : null;
+        $multiple = array_key_exists('multipleEvents', $params)
+            ? $params['multipleEvents']
+            : 'true';
 
-        if (array_key_exists('newParticipants', $params)) {
-            $model->setParticipants($params['newParticipants']);
-        } else {
-            $model->setParticipants(array());
+        if (!is_array($participants)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid newParticipants '$participants'"
+            );
         }
-
-        if ($model->id) {
-            // We might have to reset confirmation statuses
-            if ($model->location !== trim($params['location'])
-                    || $model->start !== $params['start']
-                    || $model->end   !== $params['end']) {
-                $model->setParticipantsConfirmationStatuses(
-                    Calendar2_Models_Calendar2::STATUS_PENDING
+        foreach ($participants as $p) {
+            if (!Cleaner::validate('int', $p)) {
+                //TODO: Check if the participant exists?
+                throw new Phprojekt_PublishedException(
+                    "Invalid participant $p"
                 );
             }
         }
+        if (!self::_validateTimestamp($start)) {
+            throw new Phprojekt_PublishedException("Invalid start '$start'");
+        }
+        if (!self::_validateTimestamp($end)) {
+            throw new Phprojekt_PublishedException("Invalid end '$end'");
+        }
+        if (!Cleaner::validate('int', $visibility)
+                || !Calendar2_Models_Calendar2::isValidVisibility(
+                        (int) $visibility
+                   )) {
+           throw new Phprojekt_PublishedException(
+               "Invalid visibility '$visibility'"
+            );
+        }
+        $visibility = (int) $visibility;
+        if (!Cleaner::validate('boolean', $multiple)) {
+            throw new Phprojekt_PublishedException("Invalid multiple '$multiple'");
+        }
+        $multiple = ('true' == strtolower($multiple));
 
-        $model->summary     = trim($params['summary']);
-        $model->description = trim($params['description']);
-        $model->location    = trim($params['location']);
-        $model->comments    = trim($params['comments']);
-        $model->visibility  = $params['visibility'];
+        $model->ownerId = Phprojekt_Auth::getUserId();
+        $model->setParticipants($participants);
+
+        if ($model->id
+                && ($model->location !== $location
+                    || $model->start !== $start
+                    || $model->end   !== $end)) {
+            $model->setParticipantsConfirmationStatuses(
+                Calendar2_Models_Calendar2::STATUS_PENDING
+            );
+        }
+
+        $model->summary     = $summary;
+        $model->description = $description;
+        $model->location    = $location;
+        $model->comments    = $comments;
+        $model->visibility  = $visibility;
 
         // Using Datetime would be much nicer here.
         // But Phprojekt doesn't really support Datetime yet.
         // (Dates will automatically be converted from Usertime to UTC)
-        $model->start = $params['start'];
-        $model->end   = $params['end'];
+        $model->start = $start;
+        $model->end   = $end;
+        $model->rrule = $rrule;
 
-        if (array_key_exists('rrule', $params)) {
-            $model->rrule = $params['rrule'];
-        }
-
-        if (!array_key_exists('multipleEvents', $params)
-                || 'true' === $params['multipleEvents']) {
+        if ($multiple) {
             $model->save();
         } else {
             $model->saveSingleEvent();
@@ -339,5 +458,19 @@ class Calendar2_IndexController extends IndexController
         }
         $datetime = new Datetime($hours . ':' . $minutes);
         return $datetime->getTimezone();
+    }
+
+    /**
+     * Wrapper around Cleaner::validate('timestamp', $value) because the client
+     * sends timestamps without seconds. Set emptyOk if null values are
+     * permitted.
+     */
+    private static function _validateTimestamp($value, $emptyOk = false)
+    {
+        if (preg_match('/\d{4}-\d\d-\d\d \d\d:\d\d/', $value)) {
+            return true;
+        } else {
+            return Cleaner::validate('timestamp', $value, $emptyOk);
+        }
     }
 }
