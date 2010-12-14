@@ -193,7 +193,7 @@ class Calendar2_IndexController extends IndexController
         if (!Cleaner::validate('int', $id) && 'null' !== $id) {
             throw new Phprojekt_PublishedException("Invalid id '$id'");
         }
-        if (!self::_validateTimestamp($start)) {
+        if (!self::_validateTimestamp($start) && 'undefined' !== $start) {
             throw new Phprojekt_PublishedException(
                 "Invalid start timestamp '$start'"
             );
@@ -201,7 +201,11 @@ class Calendar2_IndexController extends IndexController
 
         $id = (int) $id;
 
-        $start = new Datetime($start, $this->_getUserTimezone());
+        if ('undefined' === $start) {
+            $start = null;
+        } else {
+            $start = new Datetime($start, $this->_getUserTimezone());
+        }
         $this->setCurrentProjectId();
 
         $record = new Calendar2_Models_Calendar2;
