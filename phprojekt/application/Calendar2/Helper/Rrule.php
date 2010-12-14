@@ -99,8 +99,8 @@ class Calendar2_Helper_Rrule
         $startTs = $start->getTimestamp();
         $endTs   = $end->getTimestamp();
 
-        if (is_null($this->_rrule['FREQ'])) {
-            // There is no frequency in the rrule, so there's actually no recurrence
+        if (empty($this->_rrule)) {
+            // There is no recurrence
             if ($firstTs >= $startTs && $firstTs <= $endTs) {
                 return array($this->_first);
             } else {
@@ -163,7 +163,9 @@ class Calendar2_Helper_Rrule
      */
     public function splitRrule(Datetime $splitDate)
     {
-        if (is_null($this->_rrule['UNTIL'])) {
+        if (empty($this->_rrule)) {
+            return array('old' => '', 'new' => '');
+        } elseif (is_null($this->_rrule['UNTIL'])) {
             // The recurrence never ends, no need to calculate anything
             $last  = $this->lastOccurrenceBefore($splitDate);
             $until = "UNTIL={$last->format('Ymd\THis\Z')};";
@@ -191,6 +193,10 @@ class Calendar2_Helper_Rrule
      */
     public function isLastOccurrence(Datetime $datetime)
     {
+        if (empty($this->_rrule)) {
+            return $datetime == $this->_first;
+        }
+
         $until = $this->_rrule['UNTIL'];
 
         if (is_null($until)) {
@@ -225,6 +231,10 @@ class Calendar2_Helper_Rrule
     {
         if (!$this->containsDate($datetime)) {
             throw new Exception('Invalid Datetime given.');
+        }
+
+        if (empty($this->_rrule)) {
+            return null;
         }
 
         $occurrence = clone $datetime;
@@ -282,11 +292,7 @@ class Calendar2_Helper_Rrule
     private function _parseRrule($rrule)
     {
         if (empty($rrule)) {
-            return array(
-                'FREQ'     => null,
-                'INTERVAL' => null,
-                'UNTIL'    => null
-            );
+            return array();
         }
 
         $ret = array();
