@@ -635,6 +635,16 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Returns a textual representation of the rrule of this event.
+     *
+     * @return string The recurrence in human-readable form.
+     */
+    public function getRecurrence()
+    {
+        return $this->getRruleHelper()->getHumanreadableRrule();
+    }
+
+    /**
      * Returns a Calendar2_Helper_Rrule object initialized with this objects
      * start date, recurrence rule and excluded ocurrences.
      *
