@@ -281,6 +281,54 @@ class Calendar2_Helper_Rrule
     }
 
     /**
+     * Returns a textual representation of the rrule.
+     *
+     * @return string The recurrence in human-readable form.
+     */
+    public function getHumanreadableRrule()
+    {
+        if (empty($this->_rrule)) {
+            return '';
+        }
+
+        $ret   = 'Every ';
+        $interval = $this->_rrule['INTERVAL'];
+        switch ($interval) {
+            case 1:
+                break;
+            case 2:
+                $ret .= 'other ';
+                break;
+            default:
+                $ret .= $this->_rrule['INTERVAL'] . ' ';
+                break;
+        }
+
+        $wordsFromFreq = array(
+            'DAILY'   => 'day',
+            'WEEKLY'  => 'week',
+            'MONTHLY' => 'month',
+            'YEARLY'  => 'year'
+        );
+        $freq = self::_extractFromRrule($this->_rruleString, 'FREQ');
+        if (!array_key_exists($freq, $wordsFromFreq)) {
+            // This should be found on __construct
+            throw new Exception('No valid FREQ found in rrule');
+        }
+        $ret .= $wordsFromFreq[$freq];
+
+        if ($interval > 2) {
+            $ret .= 's';
+        }
+
+        if (!is_null($this->_rrule['UNTIL'])) {
+            $ret .= " until {$this->_rrule['UNTIL']->format('Y-m-d')}";
+        }
+
+        return $ret;
+    }
+
+    /**
      * Parses a rrule string into a dictionary while working around all
      * specialities of iCalendar, so we have values in $this->_rrule that
      * a php programmer would expect. See there for exact documentation.
