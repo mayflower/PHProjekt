@@ -47,6 +47,12 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     const STATUS_REJECTED = 3;
 
     /**
+     * Values for the visibility
+     */
+    const VISIBILITY_PUBLIC  = 1;
+    const VISIBILITY_PRIVATE = 2;
+
+    /**
      * The confirmation statuses of this event's participants.
      *
      * Must never be null if $_participantData is not null.
@@ -78,6 +84,43 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     protected $_originalStart = null;
 
     /**
+     * Checks if the given value is a valid status.
+     *
+     * @param mixed $value The value to check.
+     *
+     * @return If $value is a valid status.
+     */
+    public static function isValidStatus($var)
+    {
+        if ($var === self::STATUS_PENDING
+                || $var === self::STATUS_ACCEPTED
+                || $var === self::STATUS_REJECTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the given value is a valid visibility.
+     *
+     * @param mixed $value The value to check.
+     *
+     * @return If $value is a valid status.
+     */
+    public static function isValidVisibility($var)
+    {
+        if ($var === self::VISIBILITY_PUBLIC
+                || $var === self::VISIBILITY_PRIVATE) {
+            return true;
+        } elseif (is_string($var)) {
+            return self::isValidVisibility((int) $var);
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Constructor.
      */
     public function __construct($db = null)
@@ -99,6 +142,12 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     public function save()
     {
         if ($this->_isFirst) {
+            if (!self::isValidVisibility($this->visibility)) {
+                throw new Phprojekt_PublishedException(
+                    "Invalid visibility {$this->visibility}"
+                );
+            }
+
             $this->_fetchParticipantData();
 
             $isNew = empty($this->_storedId);
@@ -457,6 +506,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
         if ($this->hasParticipant($id)) {
             throw new Exception("Tried to add already participating user $id");
+        } elseif (!self::isValidStatus($status)) {
+            throw new Exception("Tried to save invalid status $status");
         }
         $this->_participantData[$id] = $status;
     }
@@ -521,6 +572,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
         if (!$this->hasParticipant($id)) {
             throw new Exception("Participant #$id not found");
+        } elseif (!self::isValidStatus($newStatus)) {
+            throw new Exception("Tried to save invalid status $newStatus");
         }
 
         $this->_participantData[$id] = $newStatus;
@@ -536,6 +589,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function setParticipantsConfirmationStatuses($status)
     {
+        if (!self::isValidStatus($status)) {
+            throw new Exception("Tried to save invalid status $status");
+        }
+
         foreach($this->participants as $p) {
             if ($p !== $this->ownerId) {
                 $this->setConfirmationStatus($p, $status);
