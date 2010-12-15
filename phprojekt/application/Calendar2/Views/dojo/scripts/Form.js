@@ -193,6 +193,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         var participantIds = data[0]["participants"];
         var participants   = new Array();
         var users          = new Array();
+        var statuses       = data[0]["confirmationStatuses"];
 
         if (userList) {
             for (var i in userList) {
@@ -212,7 +213,18 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
                         break;
                     }
                 }
-                participants.push({'userId': participantIds[i], 'userName': userName});
+                var status;
+                switch (statuses[participantIds[i]]) {
+                    case "1": status="?"; break;
+                    case "2": status="A"; break;
+                    case "3": status="R"; break;
+                }
+
+                participants.push({
+                    'userId':   participantIds[i],
+                    'userName': userName,
+                    'status':   status
+                });
             }
         }
         this._participantsInDb  = participants.length;
@@ -273,9 +285,11 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
             row.id       = "trParticipantFor" + userId;
 
             var cell = row.insertCell(0);
+            cell.innerHTML = 'N';   // Status: new participant
+            var cell = row.insertCell(1);
             cell.innerHTML = '<input id="dataParticipant[' + userId + ']" name="newParticipants[]" '
                 + ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
-            var cell = row.insertCell(1);
+            var cell = row.insertCell(2);
             cell.innerHTML = '<div id="participantDeleteButton' + userId + '"></div>';
 
             dojo.parser.parse(row);

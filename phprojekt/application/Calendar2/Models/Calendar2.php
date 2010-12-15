@@ -559,6 +559,17 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Gets the confirmations status of all participants.
+     *
+     * @return array of (int => int) UserId => Confirmation status
+     */
+    public function getConfirmationStatuses()
+    {
+        $this->_fetchParticipantData();
+        return $this->_participantData;
+    }
+
+    /**
      * Update a participant's confirmation status.
      *
      * @param int $id        The Id of the participant.
