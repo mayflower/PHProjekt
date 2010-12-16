@@ -45,12 +45,12 @@ class Phprojekt
     /**
      * The second part of the version number.
      */
-    const VERSION_MINOR = 0;
+    const VERSION_MINOR = 1;
 
     /**
      * The third part of the version number.
      */
-    const VERSION_RELEASE = 6;
+    const VERSION_RELEASE = 0;
 
     /**
      * The extra part of the version number.
@@ -65,7 +65,7 @@ class Phprojekt
     /**
      * Copyright.
      */
-    const COPYRIGHT = 'PHProjekt 6.0.5 - Copyright (c) 2010 Mayflower GmbH';
+    const COPYRIGHT = 'PHProjekt 6.1.0 - Copyright (c) 2010 Mayflower GmbH';
 
     /**
      * Default Max size in bytes that is allowed to be uploaded per file.
