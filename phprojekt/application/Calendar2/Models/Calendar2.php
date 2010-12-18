@@ -61,6 +61,14 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     protected $_participantDataInDb = null;
 
     /**
+     * Holds the original start date of this event as stored in the db.
+     * Is never null if this event exists in the db.
+     *
+     * @var Datetime
+     */
+    protected $_originalStart = null;
+
+    /**
      * Constructor.
      */
     public function __construct($db = null)
@@ -173,7 +181,14 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             throw new Phprojekt_ActiveRecord_Exception('Wrong number of arguments for find');
         }
 
-        return parent::find($args[0]);
+        $find = parent::find($args[0]);
+        if (is_object($find)) {
+            $find->_originalStart = new Datetime(
+                '@' . Phprojekt_Converter_Time::userToUtc($find->start)
+            );
+        }
+
+        return $find;
     }
 
     /**
@@ -184,6 +199,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         parent::__clone();
         $this->_participantData     = null;
         $this->_participantDataInDb = null;
+        $this->_originalStart       = null;
     }
 
     /**
@@ -227,6 +243,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $m        = $model->copy();
                 $m->uid   = $model->uid;
                 $m->start = $date->format('Y-m-d H:i:s');
+                $m->_originalStart = clone $date;
                 $date->add($duration);
                 $m->end   = $date->format('Y-m-d H:i:s');
                 $ret[]    = $m;
@@ -286,6 +303,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $this->start = $start->format('Y-m-d H:i:s');
             $this->end   = $end->format('Y-m-d H:i:s');
 
+            $this->_originalStart = $start;
         }
 
         return $this;
