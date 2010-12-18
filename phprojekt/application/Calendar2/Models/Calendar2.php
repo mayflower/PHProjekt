@@ -158,6 +158,29 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $this->_saveParticipantData($isNew);
             $this->_updateRights();
 
+            // If the start time has changed, we have to adjust all the excluded
+            // dates.
+            $start = new Datetime(
+                '@' . Phprojekt_Converter_Time::userToUtc($this->start)
+            );
+            if (!$isNew && $start != $this->_originalStart) {
+                $delta = $this->_originalStart->diff($start);
+                $db = $this->getAdapter();
+                foreach ($this->getExcludedDates() as $date){
+                    $where  = $db->quoteInto('calendar2_id = ?', $this->id);
+                    $where .= $db->quoteInto(
+                        'AND date = ?',
+                        $date->format('Y-m-d H:i:s')
+                    );
+                    $date->add($delta);
+                    $db->update(
+                        'calendar2_excluded_dates',
+                        array('date' => $date->format('Y-m-d H:i:s')),
+                        $where
+                    );
+                }
+            }
+
             return $this->id;
         } else {
             // Split the series into two parts. $this will be the second part.
