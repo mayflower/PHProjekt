@@ -81,30 +81,21 @@ class Calendar2_IndexController extends IndexController
      *
      * Request parameters:
      * <pre>
-     *  - datetime date
+     *  - date <b>date</b>
      * </pre>
      */
     public function jsonDayListSelfAction()
     {
         $date = $this->getRequest()->getParam('date');
-
         if (!Cleaner::validate('isoDate', $date)) {
-            throw new Phprojekt_PublishedException("Invalid date '$date'");
+            throw new Phprojekt_PublishedException(
+                "Invalid date '$date'"
+            );
         }
 
-        $start = new Datetime($date, $this->_getUserTimezone());
-        $start->setTime(0, 0, 0);
-
-        $end = clone $start;
-        $end->setTime(23, 59, 59);
-
-        $model  = new Calendar2_Models_Calendar2();
-        $events = $model->fetchAllForPeriod($start, $end);
-
-        Phprojekt_Converter_Json::echoConvert(
-            $events,
-            Phprojekt_ModelInformation_Default::ORDERING_FORM
-        );
+        $this->getRequest()->setParam('dateStart', $date);
+        $this->getRequest()->setParam('dateEnd',   $date);
+        $this->jsonPeriodListAction();
     }
 
     /**
