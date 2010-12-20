@@ -168,6 +168,16 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
             dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['end']);
             content[event]['endDate'] = phpr.Date.getIsoDate(dateTime);
             content[event]['endTime'] = phpr.Date.getIsoTime(dateTime);
+            var warning = '';
+            for (p in content[event]['confirmationStatuses']) {
+                var status = content[event]['confirmationStatuses'][p];
+                if (1 == status) { // Pending
+                    warning = '(?)';
+                } else if (3 == status) { //Rejected
+                    warning = '(!)';
+                    break;
+                }
+            }
 
             for (var row in this._schedule) {
                 for (weekDay in this._schedule[row]) {
@@ -184,6 +194,7 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
                         this._schedule[row][weekDay]['events'][nextEvent]['summary'] = this.htmlEntities(contentTitle);
                         this._schedule[row][weekDay]['events'][nextEvent]['time']    = eventInfo['time'];
                         this._schedule[row][weekDay]['events'][nextEvent]['start']   = content[event]['start'];
+                        this._schedule[row][weekDay]['events'][nextEvent]['warning'] = warning;
                     }
                 }
             }

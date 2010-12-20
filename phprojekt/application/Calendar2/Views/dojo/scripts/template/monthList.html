@@ -19,7 +19,7 @@
             {{event.time|safe}}
             <a href="javascript: dojo.publish('Calendar2.openForm', [{{event.id}}, null, '{{event.start}}']);">
                 {{event.summary|safe}}
-            </a>
+            </a> {{event.warning|safe}}
             <br />
             {% endfor %}
         </td>
