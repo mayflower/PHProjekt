@@ -728,15 +728,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     /**
      * Returns a copy of this model object.
      *
-     * Note that a call to save will fail, only show the objects
-     * returned by this function to the client.
-     *
      * This function would best be written as __clone, but ActiveRecord
      * already implements __clone to create a new, empty model object
      * and we don't want to break the semantics of cloning model objects.
      */
     public function copy() {
         $m = new Calendar2_Models_Calendar2();
+        $m->find($this->id);
 
         // use _data to bypass __set
         foreach($this->_data as $k => $v) {
@@ -745,6 +743,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $m->_participantData     = $this->_participantData;
         $m->_participantDataInDb = $this->_participantDataInDb;
         $m->_isFirst             = $this->_isFirst;
+        $m->_originalStart       = $this->_originalStart;
 
         return $m;
     }
