@@ -138,5 +138,147 @@ dojo.declare("phpr.Calendar2.ViewDayListSelect", phpr.Calendar2.DefaultView, {
                 return i;
             }
         }
+    },
+
+    fillEventsArrays:function(content) {
+        // Summary:
+        //    Parses and analyses 'content' contents and puts every event in 'events' array, if there are any multiple
+        //    days event, they get splitted into each day events with a connection among them.
+        // Note:
+        //    This function is mostly copied from Calendar2_DefaultView. The
+        //    column is not retrieved from the particpantId as in the old
+        //    calendar. Instead, we iterate over the participants of each event.
+        this.events                 = new Array();
+        furtherEventsTemp           = new Array();
+        furtherEventsTemp['show']   = false;
+        furtherEventsTemp['events'] = new Array();
+
+        // For each event received from the DB
+        for (var event in content) {
+            for (user in content[event]['participants']) {
+                var userId = content[event]['participants'][user];
+                var requested = false;
+                for (u in this.users) {
+                    if (this.users[u] == userId) {
+                        requested = true;
+                    }
+                }
+                if (!requested) {
+                    continue;
+                }
+                var eventsInfo     = new Array();
+                var id             = content[event]['id'];
+                var singleDayEvent = false;
+
+                // Split datetime in date and time
+                var dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['start']);
+                content[event]['startDate'] = phpr.Date.getIsoDate(dateTime);
+                content[event]['startTime'] = phpr.Date.getIsoTime(dateTime);
+                dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['end']);
+                content[event]['endDate'] = phpr.Date.getIsoDate(dateTime);
+                content[event]['endTime'] = phpr.Date.getIsoTime(dateTime);
+
+                // Process summary and note
+                var summary = this.htmlEntities(content[event]['summary']);
+                var comments = this.htmlEntities(content[event]['comments']);
+                comments     = comments.replace('\n', '<br />');
+                if (this.main.dayListSelect != null) {
+                    var column = this.getUserColumnPosition(userId)
+                }
+
+                // What kind of event is this one concerning multiple day events?
+                if (content[event]['startDate'] == content[event]['endDate']) {
+                    // Single day event
+                    singleDayEvent = true;
+                } else {
+                    // Multiple days event
+                    if (this.main.dayListSelf != null || this.main.dayListSelect != null) {
+                        var onlyDayString = this._date;
+                    } else {
+                        var onlyDayString = null;
+                    }
+                    var eventsSplitted = this.splitMultDayEvent(content[event]['startDate'], content[event]['startTime'],
+                        content[event]['endDate'], content[event]['endTime'], onlyDayString);
+
+                    // The event has at least 1 minute inside the 8:00 to 20:00 grid?
+                    if (eventsSplitted['eventShownInGrid']) {
+                        // Yes - It uses one or more day columns.
+                        // For each day column (it can't be used 'for (var i in eventsSplitted)':
+                        for (var i = 0; i < eventsSplitted.length; i ++) {
+                            var eventSplitted = eventsSplitted[i];
+                            if (eventSplitted['dayShownInGrid']) {
+                                // Obtain more info
+                                eventSplitted['multDay']    = true;
+                                eventsInfo[i]               = this.processEventInfo(eventSplitted);
+                                eventsInfo[i]['multDayPos'] = eventSplitted['multDayPos'];
+                                eventsInfo[i]['shown']      = eventSplitted['shown'];
+                                if (eventSplitted['multDayPos'] == this.DATETIME_MULTIDAY_END) {
+                                    eventsInfo[i]['hasResizeHandler'] = true;
+                                } else {
+                                    eventsInfo[i]['hasResizeHandler'] = false;
+                                }
+                            }
+                        }
+                    } else {
+                        // No - Show it as an out-of-schedule event
+                        singleDayEvent = true;
+                    }
+                }
+
+                if (singleDayEvent) {
+                    var eventInfo          = content[event];
+                    eventInfo['multDay']   = false;
+                    eventsInfo[0]          = this.processEventInfo(content[event], event);
+                    eventsInfo[0]['shown'] = true;
+                }
+
+                // Fill the 'events' class array
+                var parent = -1;
+                for (var i in eventsInfo) {
+                    var eventInfo = eventsInfo[i];
+                    // Events inside the grid
+                    if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
+                        eventInfo['hasChanged'] = false;
+                        parent                  = this.addGridEventToArray(eventInfo, id, summary, comments, parent,
+                            content[event]['startDate'], content[event]['startTime'], content[event]['endDate'],
+                            content[event]['endTime'], column);
+                    } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
+                        // Events outside the grid: located under it as textual strings
+                        furtherEventsTemp['show'] = true;
+                        var nextPosition          = furtherEventsTemp['events'].length;
+
+                        furtherEventsTemp['events'][nextPosition]          = new Array();
+                        furtherEventsTemp['events'][nextPosition]['id']    = id;
+                        furtherEventsTemp['events'][nextPosition]['time']  = eventInfo['timeDescrip'];
+                        furtherEventsTemp['events'][nextPosition]['summary'] = summary;
+                    }
+                }
+            }
+        }
+
+        this.updateSimultEventWidths();
+
+        // Clean the repeated 'further events'. Copy the rest to the global variable
+        this._furtherEvents = new Array();
+        if (furtherEventsTemp['show']) {
+            this._furtherEvents['events'] = new Array();
+            for (var event in furtherEventsTemp['events']) {
+                var repeated = false;
+                for (var i in this._furtherEvents['events']) {
+                    if (this._furtherEvents['events'][i]['id'] == furtherEventsTemp['events'][event]['id']) {
+                        repeated = true;
+                        break;
+                    }
+                }
+                if (!repeated) {
+                    this._furtherEvents['show']                       = true;
+                    var nextEvent                                     = this._furtherEvents['events'].length;
+                    this._furtherEvents['events'][nextEvent]          = new Array();
+                    this._furtherEvents['events'][nextEvent]['id']    = furtherEventsTemp['events'][event]['id'];
+                    this._furtherEvents['events'][nextEvent]['time']  = furtherEventsTemp['events'][event]['time'];
+                    this._furtherEvents['events'][nextEvent]['summary'] = furtherEventsTemp['events'][event]['summary'];
+                }
+            }
+        }
     }
 });

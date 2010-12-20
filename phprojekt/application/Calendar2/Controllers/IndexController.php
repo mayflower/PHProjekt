@@ -37,6 +37,28 @@
  */
 class Calendar2_IndexController extends IndexController
 {
+    public function jsonGetSpecificUsersAction()
+    {
+        $ids = Cleaner::sanitize('arrayofint', $this->getRequest()->getParam('users', array()));
+
+        if (empty($ids)) {
+            $ids[] = (int) PHprojekt_Auth::getUserId();
+        }
+
+        $db      = Phprojekt::getInstance()->getDb();
+        $where   = sprintf('status = %s AND id IN (%s)', $db->quote('A'), implode(", ", $ids));
+        $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $display = $user->getDisplay();
+        $records = $user->fetchAll($where, $display);
+
+        $data = array();
+        foreach ($records as $record) {
+            $data['data'][] = array('id'      => (int) $record->id,
+                                    'display' => $record->applyDisplay($display, $record));
+        }
+
+        Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
     /**
      * Returns all events in the given period of time that the user is
      * involved in. Only days are recognized.
@@ -96,6 +118,74 @@ class Calendar2_IndexController extends IndexController
         $this->getRequest()->setParam('dateStart', $date);
         $this->getRequest()->setParam('dateEnd',   $date);
         $this->jsonPeriodListAction();
+    }
+
+    /**
+     * Returns the list of events where some users are involved,
+     * only for one date.
+     *
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of all the rows.
+     *  - The number of rows.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - date    <b>date</b>
+     *  - users   <b>users</b>  Comma separated ids of the users.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonDayListSelectAction()
+    {
+        $date  = $this->getRequest()->getParam('date');
+        $users = $this->getRequest()->getParam('users');
+        $users = explode(',', $users);
+
+        if (!Cleaner::validate('isoDate', $date)) {
+            throw new Phprojekt_PublishedException("Invalid date '$date'");
+        }
+        foreach ($users as $index => $user){
+            if (!Cleaner::validate('int', $user)) {
+                throw new Phprojekt_PublishedException("Invalid user '$user'");
+            }
+            $users[$index] = (int) $user;
+        }
+
+        $start = new Datetime($date, $this->_getUserTimezone());
+        $start->setTime(0, 0, 0);
+        $end = clone $start;
+        $end->setTime(23, 59, 59);
+
+        // We build an two-dimensional array of the form
+        // {
+        //   id => {
+        //           recurrenceId => event
+        //         }
+        // }
+        // to make sure that we have each occurrence only once.
+        $events = array();
+        foreach ($users as $user){
+            $model    = new Calendar2_Models_Calendar2();
+            foreach ($model->fetchAllForPeriod($start, $end) as $event) {
+                $events[$event->id][$event->recurrenceId] = $event;
+            }
+        }
+        // Then we flatten it to send it to the client
+        $ret = array();
+        foreach ($events as $byId) foreach ($byId as $event) {
+            $ret[] = $event;
+        }
+
+        Phprojekt_Converter_Json::echoConvert(
+            $ret,
+            Phprojekt_ModelInformation_Default::ORDERING_FORM
+        );
     }
 
     /**
