@@ -157,6 +157,9 @@ class Calendar2_Helper_Rrule
      * Splits this helper's rrule in 2 parts, one for all events before the
      * split date and one for all other occurences.
      *
+     * The returned array will have the form of
+     *      {'old' => string, 'new' => string}
+     *
      * @param Datetime $splitDate The first occurence of the second part.
      *
      * @return array See description
