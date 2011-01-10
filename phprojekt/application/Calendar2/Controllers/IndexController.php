@@ -39,25 +39,37 @@ class Calendar2_IndexController extends IndexController
 {
     public function jsonGetSpecificUsersAction()
     {
-        $ids = Cleaner::sanitize('arrayofint', $this->getRequest()->getParam('users', array()));
+        $ids = Cleaner::sanitize(
+            'arrayofint',
+            $this->getRequest()->getParam('users', array())
+        );
 
         if (empty($ids)) {
             $ids[] = (int) PHprojekt_Auth::getUserId();
         }
 
         $db      = Phprojekt::getInstance()->getDb();
-        $where   = sprintf('status = %s AND id IN (%s)', $db->quote('A'), implode(", ", $ids));
+        $where   = sprintf(
+            'status = %s AND id IN (%s)',
+            $db->quote('A'),
+            implode(", ", $ids)
+        );
         $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $display = $user->getDisplay();
         $records = $user->fetchAll($where, $display);
 
         $data = array();
         foreach ($records as $record) {
-            $data['data'][] = array('id'      => (int) $record->id,
-                                    'display' => $record->applyDisplay($display, $record));
+            $data['data'][] = array(
+                'id'      => (int) $record->id,
+                'display' => $record->applyDisplay($display, $record)
+            );
         }
 
-        Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        Phprojekt_Converter_Json::echoConvert(
+            $data,
+            Phprojekt_ModelInformation_Default::ORDERING_LIST
+        );
     }
     /**
      * Returns all events in the given period of time that the user is
@@ -116,7 +128,7 @@ class Calendar2_IndexController extends IndexController
         }
 
         $this->getRequest()->setParam('dateStart', $date);
-        $this->getRequest()->setParam('dateEnd',   $date);
+        $this->getRequest()->setParam('dateEnd', $date);
         $this->jsonPeriodListAction();
     }
 
@@ -129,7 +141,8 @@ class Calendar2_IndexController extends IndexController
      *  - The data of all the rows.
      *  - The number of rows.
      *
-     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for
+     * get and sort the fields.
      *
      * OPTIONAL request parameters:
      * <pre>
@@ -150,7 +163,7 @@ class Calendar2_IndexController extends IndexController
         if (!Cleaner::validate('isoDate', $date)) {
             throw new Phprojekt_PublishedException("Invalid date '$date'");
         }
-        foreach ($users as $index => $user){
+        foreach ($users as $index => $user) {
             if (!Cleaner::validate('int', $user)) {
                 throw new Phprojekt_PublishedException("Invalid user '$user'");
             }
@@ -170,7 +183,7 @@ class Calendar2_IndexController extends IndexController
         // }
         // to make sure that we have each occurrence only once.
         $events = array();
-        foreach ($users as $user){
+        foreach ($users as $user) {
             $model    = new Calendar2_Models_Calendar2();
             foreach ($model->fetchAllForPeriod($start, $end) as $event) {
                 $events[$event->id][$event->recurrenceId] = $event;
@@ -191,22 +204,23 @@ class Calendar2_IndexController extends IndexController
     /**
      * Saves the current item.
      *
-     * If the request parameter "id" is null or 0, the function will add a new item,
-     * if the "id" is an existing item, the function will update it.
+     * If the request parameter "id" is null or 0, the function will add a new
+     * item, if the "id" is an existing item, the function will update it.
      *
      * Request parameters:
      * <pre>
-     *  - integer <b>id</b>                      id of the item to save.
-     *  - string  <b>start</b>                   Start datetime of the item or recurring.
-     *  - string  <b>end</b>                     End datetime of the item or recurring.
-     *  - string  <b>rrule</b>                   Recurrence rule.
-     *  - array   <b>dataParticipant</b>         Array with users id involved in the event.
-     *  - boolean <b>multipleEvents</b>          Aply the save for one item or multiple events.
-     *  - boolean <b>sendNotifications</b>       Whether Notifications should be send.
-     *  - mixed   <b>all other module fields</b> All the fields values to save.
+     *  - integer <b>id</b>                  id of the item to save.
+     *  - string  <b>start</b>               Start datetime.
+     *  - string  <b>end</b>                 End datetime.
+     *  - string  <b>rrule</b>               Recurrence rule.
+     *  - array   <b>dataParticipant</b>     Participating users' ids.
+     *  - boolean <b>multipleEvents</b>      Save for this occurrence only or
+     *                                       for all that follow it too?
+     *  - boolean <b>sendNotifications</b>   Whether Notifications will be send.
+     *  - mixed   <b>other module fields</b> All the fields values to save.
      * </pre>
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * If there is an error, the save will throw a Phprojekt_PublishedException,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
@@ -215,7 +229,7 @@ class Calendar2_IndexController extends IndexController
      *  - id      => Id of the item.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
+     * @throws Phprojekt_PublishedException On error or wrong id.
      *
      * @return void
      */
@@ -262,7 +276,8 @@ class Calendar2_IndexController extends IndexController
                 $this->_getUserTimezone()
             );
             $model->findOccurrence($id, $start);
-            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
+            $message
+                = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
         if (!empty($id) && $model->ownerId != Phprojekt_Auth::getUserId()) {
@@ -275,12 +290,14 @@ class Calendar2_IndexController extends IndexController
             $model->notify();
         }
 
-        Phprojekt_Converter_Json::echoConvert(array(
-            'type'    => 'success',
-            'message' => $message,
-            'code'    => 0,
-            'id'      => $newId
-        ));
+        Phprojekt_Converter_Json::echoConvert(
+            array(
+                'type'    => 'success',
+                'message' => $message,
+                'code'    => 0,
+                'id'      => $newId
+            )
+        );
     }
 
     public function jsonDetailAction()
@@ -370,10 +387,14 @@ class Calendar2_IndexController extends IndexController
             throw new Phprojekt_PublishedException("Invalid id '$id'");
         }
         if (!self::_validateTimestamp($start)) {
-            throw new Phprojekt_PublishedException("Invalid start timestamp '$start'");
+            throw new Phprojekt_PublishedException(
+                "Invalid start timestamp '$start'"
+            );
         }
         if (!Cleaner::validate('boolean', $multiple)) {
-            throw new Phprojekt_PublishedException("Invalid multiple '$multiple'");
+            throw new Phprojekt_PublishedException(
+                "Invalid multiple '$multiple'"
+            );
         }
         if ('1' === $sendNotifications) {
             $sendNotifications = 'true';
@@ -495,7 +516,8 @@ class Calendar2_IndexController extends IndexController
         }
         foreach ($participants as $p) {
             if (!Cleaner::validate('int', $p)) {
-                //TODO: Check if the participant exists?
+                //TODO: Check if the participant exists? Many db calls, little
+                //      gain...
                 throw new Phprojekt_PublishedException(
                     "Invalid participant $p"
                 );
@@ -509,15 +531,17 @@ class Calendar2_IndexController extends IndexController
         }
         if (!Cleaner::validate('int', $visibility)
                 || !Calendar2_Models_Calendar2::isValidVisibility(
-                        (int) $visibility
-                   )) {
+                    (int) $visibility
+                )) {
            throw new Phprojekt_PublishedException(
                "Invalid visibility '$visibility'"
             );
         }
         $visibility = (int) $visibility;
         if (!Cleaner::validate('boolean', $multiple)) {
-            throw new Phprojekt_PublishedException("Invalid multiple '$multiple'");
+            throw new Phprojekt_PublishedException(
+                "Invalid multiple '$multiple'"
+            );
         }
         $multiple = ('true' == strtolower($multiple));
 

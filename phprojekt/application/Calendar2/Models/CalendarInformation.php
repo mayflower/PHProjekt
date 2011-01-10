@@ -1,7 +1,8 @@
 <?php
 /**
- * Meta information about the Calendar2 model. Acts as a layer over
- * database manager to filter readonly fields to yes if the event is from other participant.
+ * Meta information about the Calendar2 model. Acts as a layer over database
+ * manager to filter readonly fields to yes if the event is from other
+ * participant.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,8 +25,9 @@
  */
 
 /**
- * Meta information about the Calendar2 model. Acts as a layer over
- * database manager to filter readonly fields to yes if the event is from other participant.
+ * Meta information about the Calendar2 model. Acts as a layer over database
+ * manager to filter readonly fields to yes if the event is from other
+ * participant.
  *
  * @category   PHProjekt
  * @package    Application
@@ -42,7 +44,8 @@ class Calendar2_Models_CalendarInformation extends Phprojekt_DatabaseManager
 {
     /**
      * Set the db table name to use to this fixed value.
-     * The database used by the parent class must be used here as well, independent of the class name.
+     * The database used by the parent class must be used here as well,
+     * independent of the class name.
      *
      * @return string The table name.
      */
@@ -58,12 +61,14 @@ class Calendar2_Models_CalendarInformation extends Phprojekt_DatabaseManager
      *
      * @return array Array with fields definitions.
      */
-    public function getFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    public function getFieldDefinition(
+            $ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         $meta = parent::getFieldDefinition($ordering);
 
-        // If ownerId != currentUser then set readOnly for all fields except status
-        if ($this->_model->ownerId && (Phprojekt_Auth::getUserId() != $this->_model->ownerId)) {
+        // If ownerId != currentUser then set all fields except status readonly
+        if ($this->_model->ownerId
+                && (Phprojekt_Auth::getUserId() != $this->_model->ownerId)) {
             foreach (array_keys($meta) as $key) {
                 if ('confirmationStatus' != $meta[$key]['key']) {
                     $meta[$key]['readOnly'] = 1;

@@ -131,14 +131,16 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         parent::__construct($db);
 
         // This is needed to make fields read-only if we're not the owner.
-        $this->_dbManager = new Calendar2_Models_CalendarInformation($this, $db);
+        $this->_dbManager
+            = new Calendar2_Models_CalendarInformation($this, $db);
 
         // UID generation method taken from rfc 5545
         $this->uid = time() . '-' . getMyPid() . '@' . php_uname('n');
     }
 
     /**
-     * Overwrite save function. Writes the data in this object into the database.
+     * Overwrite save function. Writes the data in this object into the
+     * database.
      *
      * @return int The id of the saved object
      */
@@ -169,7 +171,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             if (!$isNew && $start != $this->_originalStart) {
                 $delta = $this->_originalStart->diff($start);
                 $db = $this->getAdapter();
-                foreach ($this->getExcludedDates() as $date){
+                foreach ($this->getExcludedDates() as $date) {
                     $where  = $db->quoteInto('calendar2_id = ?', $this->id);
                     $where .= $db->quoteInto(
                         'AND date = ?',
@@ -345,7 +347,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $args = func_get_args();
 
         if (1 != count($args)) {
-            throw new Phprojekt_ActiveRecord_Exception('Wrong number of arguments for find');
+            throw new Phprojekt_ActiveRecord_Exception(
+                'Wrong number of arguments for find'
+            );
         }
 
         $find = parent::find($args[0]);
@@ -371,7 +375,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Get all events in the period that the currently active user participates in.
+     * Get all events in the period that the currently active user participates
+     * in.  Both given times are inclusive.
      *
      * @param Datetime $start The start of the period.
      * @param Datetime $end   The end of the period.
@@ -386,7 +391,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             Phprojekt_Auth::getUserId()
         );
         //TODO: This might query a lot of objects. Consider saving the last
-        //      occurrence too so this is faster.
+        //      date of occurrence too so this is faster.
         $where .= $db->quoteInto('AND start <= ?', $end->format('Y-m-d H:i:s'));
         $join   = 'JOIN calendar2_user_relation '
                     . 'ON calendar2.id = calendar2_user_relation.calendar2_id';
@@ -428,7 +433,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @throws Exception If $date is no occurence of this event.
      *
-     * @return $this or something empty() when the occurence couldn't be found.
+     * @return $this
      */
     public function findOccurrence($id, Datetime $date)
     {
@@ -448,7 +453,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             return null;
         }
 
-        $start = new Datetime('@'.Phprojekt_Converter_Time::userToUtc($this->start));
+        $start = new Datetime(
+            '@'.Phprojekt_Converter_Time::userToUtc($this->start)
+        );
 
         if ($date != $start) {
             if (!$this->getRruleHelper()->containsDate($date)) {
@@ -642,7 +649,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             throw new Exception("Tried to save invalid status $status");
         }
 
-        foreach($this->participants as $p) {
+        foreach ($this->participants as $p) {
             if ($p !== $this->ownerId) {
                 $this->setConfirmationStatus($p, $status);
             }
@@ -747,12 +754,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      * already implements __clone to create a new, empty model object
      * and we don't want to break the semantics of cloning model objects.
      */
-    public function copy() {
+    public function copy()
+    {
         $m = new Calendar2_Models_Calendar2();
         $m->find($this->id);
 
         // use _data to bypass __set
-        foreach($this->_data as $k => $v) {
+        foreach ($this->_data as $k => $v) {
             $m->_data[$k] = $v;
         }
         $m->_participantData     = $this->_participantData;
@@ -769,7 +777,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @return void
      **/
-    public function notify($method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
+    public function notify(
+            $method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
     {
         $this->_notify(null, $method);
     }
@@ -916,8 +925,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             } else {
                 $this->_participantDataInDb = $this->getAdapter()->fetchPairs(
                     'SELECT user_id,confirmation_status '
-                        . 'FROM calendar2_user_relation '
-                        . 'WHERE calendar2_id = :id',
+                    . 'FROM calendar2_user_relation '
+                    . 'WHERE calendar2_id = :id',
                     array('id' => $this->id)
                 );
             }
@@ -963,7 +972,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         }
 
         foreach ($this->_participantDataInDb as $id => $status) {
-            if (!array_key_exists($id, $this->_participantData) && $id !== $this->ownerId) {
+            if (!array_key_exists($id, $this->_participantData)
+                    && $id !== $this->ownerId) {
                 $db->delete(
                     'calendar2_user_relation',
                     array(

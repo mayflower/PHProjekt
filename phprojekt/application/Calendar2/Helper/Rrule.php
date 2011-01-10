@@ -77,7 +77,10 @@ class Calendar2_Helper_Rrule
      * @param String   $rrule   The recurrence rule.
      * @param Array of Datetime Exceptions from the recurrence.
      */
-    public function __construct(Datetime $first, $rrule, Array $exceptions = array())
+    public function __construct(
+            Datetime $first,
+            $rrule,
+            Array $exceptions = array())
     {
         $this->_first       = $first;
         $this->_rrule       = $this->_parseRrule($rrule);
@@ -87,6 +90,7 @@ class Calendar2_Helper_Rrule
 
     /**
      * Retrieves all the single events in the given period.
+     * Both given times are inclusive.
      *
      * @param Datetime $start The start of the period.
      * @param datetime $end   The end of the period.
@@ -130,7 +134,9 @@ class Calendar2_Helper_Rrule
             $date       = new Datetime($datestring, new DateTimeZone('UTC'));
 
             $ts = $date->getTimestamp();
-            if ($startTs <= $ts && $ts <= $endTs && !in_array($date, $this->_exceptions)) {
+            if ($startTs <= $ts
+                    && $ts <= $endTs
+                    && !in_array($date, $this->_exceptions)) {
                 $ret[] = new Datetime($datestring, new DateTimeZone('UTC'));
             } else if ($ts > $endTs) {
                break;
@@ -352,12 +358,12 @@ class Calendar2_Helper_Rrule
         $ret['UNTIL']     = self::_parseUntil($rrule);
 
         // Apply FREQ INTERVAL times
-        $tmp  = new Datetime();
-        $tmp2 = clone $tmp;
+        $tmp    = new Datetime();
+        $frqint = clone $tmp;
         for ($i = 0; $i < $ret['INTERVAL']; $i++) {
-            $tmp2->add($ret['FREQ']);
+            $frqint->add($ret['FREQ']);
         }
-        $ret['FREQINTERVAL'] = $tmp->diff($tmp2);
+        $ret['FREQINTERVAL'] = $tmp->diff($frqint);
 
         return $ret;
     }
@@ -406,7 +412,9 @@ class Calendar2_Helper_Rrule
         if (!empty($until)) {
             if (false !== strpos($until, 'TZID')) {
                 // We have a time with timezone, can't handle that
-                throw new Exception('Cannot handle rrules with timezone information');
+                throw new Exception(
+                    'Cannot handle rrules with timezone information'
+                );
             } else if (false === strpos($until, 'Z')) {
                 // A floating time, can't handle those either.
                 throw new Exception('Cannot handle floating times in rrules.');
@@ -415,7 +423,10 @@ class Calendar2_Helper_Rrule
             }
 
             // php doesn't understand ...Z as an alias for UTC
-            $return = new Datetime(substr($until, 0, 15), new DateTimeZone('UTC'));
+            $return = new Datetime(
+                substr($until, 0, 15),
+                new DateTimeZone('UTC')
+            );
             return $return;
         }
         return null;
@@ -426,7 +437,6 @@ class Calendar2_Helper_Rrule
      */
     private static function _extractFromRrule($rrule, $prop)
     {
-        //TODO: Maybe optimize this to a single match?
         $matches = array();
         $prop = preg_quote($prop, '/');
         preg_match("/$prop=([^;]+)/", $rrule, $matches);
