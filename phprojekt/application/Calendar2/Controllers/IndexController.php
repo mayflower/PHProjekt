@@ -202,6 +202,7 @@ class Calendar2_IndexController extends IndexController
      *  - string  <b>rrule</b>                   Recurrence rule.
      *  - array   <b>dataParticipant</b>         Array with users id involved in the event.
      *  - boolean <b>multipleEvents</b>          Aply the save for one item or multiple events.
+     *  - boolean <b>sendNotifications</b>       Whether Notifications should be send.
      *  - mixed   <b>all other module fields</b> All the fields values to save.
      * </pre>
      *
@@ -220,8 +221,12 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $id = $this->getRequest()->getParam('id');
-        $recurrenceId = $this->getRequest()->getParam('recurrenceId');
+        $id                = $this->getRequest()->getParam('id');
+        $recurrenceId      = $this->getRequest()->getParam('recurrenceId');
+        $sendNotifications = $this->getRequest()->getParam(
+            'sendNotification',
+            'false'
+        );
 
         if (!Cleaner::validate('int', $id, true)
                 && 'null'      !== $id
@@ -233,6 +238,14 @@ class Calendar2_IndexController extends IndexController
                 "Invalid reucrrenceId '$recurrenceId'"
             );
         }
+        if ('1' === $sendNotifications) {
+            $sendNotifications = 'true';
+        } else if (!Cleaner::validate('boolean', $sendNotifications)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid value for sendNotification '$sendNotifications'"
+            );
+        }
+        $sendNotifications = ($sendNotifications == 'true') ? true : false;
 
         $id = (int) $id;
 
@@ -256,6 +269,10 @@ class Calendar2_IndexController extends IndexController
             $newId = $this->_updateConfirmationStatusAction($model, $params);
         } else {
             $newId = $this->_saveAction($model, $params);
+        }
+
+        if ($sendNotifications) {
+            $model->notify();
         }
 
         Phprojekt_Converter_Json::echoConvert(array(
@@ -315,12 +332,13 @@ class Calendar2_IndexController extends IndexController
      *
      * Optional request parameters:
      * <pre>
-     *  - timestamp <b>start</b>          The start date of the occurrence
-     *                                    to delete.
-     *  - boolean   <b>multipleEvents</b> Whether all events in this series
-     *                                    beginning with this one should be
-     *                                    deleted or just this
-     *                                    single occurrence.
+     *  - timestamp <b>start</b>           The start date of the occurrence
+     *                                     to delete.
+     *  - boolean <b>sendNotifications</b> Whether Notifications should be send.
+     *  - boolean <b>multipleEvents</b>    Whether all events in this series
+     *                                     beginning with this one should be
+     *                                     deleted or just this
+     *                                     single occurrence.
      * </pre>
      *
      * The return is a string in JSON format with:
@@ -337,9 +355,16 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonDeleteAction()
     {
-        $id       = $this->getRequest()->getParam('id');
-        $start    = $this->getRequest()->getParam('start');
-        $multiple = $this->getRequest()->getParam('multipleEvents', 'true');
+        $id                = $this->getRequest()->getParam('id');
+        $start             = $this->getRequest()->getParam('start');
+        $multiple          = $this->getRequest()->getParam(
+            'multipleEvents',
+            'true'
+        );
+        $sendNotifications = $this->getRequest()->getParam(
+            'sendNotification',
+            'false'
+        );
 
         if (!Cleaner::validate('int', $id)) {
             throw new Phprojekt_PublishedException("Invalid id '$id'");
@@ -350,6 +375,14 @@ class Calendar2_IndexController extends IndexController
         if (!Cleaner::validate('boolean', $multiple)) {
             throw new Phprojekt_PublishedException("Invalid multiple '$multiple'");
         }
+        if ('1' === $sendNotifications) {
+            $sendNotifications = 'true';
+        } else if (!Cleaner::validate('boolean', $sendNotifications)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid value for sendNotification '$sendNotifications'"
+            );
+        }
+        $sendNotifications = ($sendNotifications == 'true') ? true : false;
 
         $id = (int) $id;
         $multiple = ('true' == strtolower($multiple));
@@ -364,9 +397,9 @@ class Calendar2_IndexController extends IndexController
         }
 
         if ($multiple) {
-            $model->delete();
+            $model->delete($sendNotification);
         } else {
-            $model->deleteSingleEvent();
+            $model->deleteSingleEvent($sendNotification);
         }
 
         Phprojekt_Converter_Json::echoConvert(

@@ -52,6 +52,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     const VISIBILITY_PUBLIC  = 1;
     const VISIBILITY_PRIVATE = 2;
 
+    /** Overwrite field to display in the search results. */
+    public $searchFirstDisplayField = 'summary';
+
     /**
      * The confirmation statuses of this event's participants.
      *
@@ -247,7 +250,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @return void.
      */
-    public function delete()
+    public function delete($sendNotifications = false)
     {
         $db = $this->getAdapter();
 
@@ -260,6 +263,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 'calendar2_excluded_dates',
                 $db->quoteInto('calendar2_id = ?', $this->id)
             );
+
+            if ($sendNotification) {
+                $this->_notify('delete');
+            }
 
             parent::delete();
         } else {
@@ -285,6 +292,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 'calendar2_excluded_dates',
                 $where
             );
+
+            if ($sendNotification) {
+                $this->_notify('edit');
+            }
         }
     }
 
@@ -293,7 +304,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @return void
      */
-    public function deleteSingleEvent()
+    public function deleteSingleEvent($sendNotifications = false)
     {
         if (empty($this->rrule)) {
             // If this is a non-recurring event, call delete()
@@ -314,6 +325,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             array('last_modified' => $now->format('Y-m-d H:i:s')),
             $this->getAdapter()->quoteInto('id = ?', $this->id)
         );
+
+        if ($sendNotifications) {
+            $this->_notify('edit');
+        }
     }
 
     /**
@@ -746,6 +761,37 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $m->_originalStart       = $this->_originalStart;
 
         return $m;
+    }
+
+    /**
+     * Send notification mails and (if configured) frontend messages for the
+     * latest change.
+     *
+     * @return void
+     **/
+    public function notify($method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
+    {
+        $this->_notify(null, $method);
+    }
+
+    /**
+     * Helper function to allow delete() et al to send notifications with for
+     * their respective processes.
+     */
+    private function _notify(
+            $process = null,
+            $method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
+    {
+        $notification = new Phprojekt_Notification();
+        $notification->setModel($this);
+
+        if (!is_null($process)) {
+            $notification->setControllProcess($process);
+        }
+        $notification->send($method);
+        if (Phprojekt::getInstance()->getConfig()->frontendMessages) {
+            $notification->saveFrontendMessage();
+        }
     }
 
     /**
