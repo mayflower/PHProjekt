@@ -185,8 +185,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                     );
                 }
             }
-
-            return $this->id;
         } else {
             // Split the series into two parts. $this will be the second part.
             $new = $this;
@@ -215,6 +213,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $where
             );
         }
+
+        $this->_originalStart = new Datetime(
+            '@' . Phprojekt_Converter_Time::userToUtc($this->start)
+        );
+        return $this->id;
     }
 
     /**
