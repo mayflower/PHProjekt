@@ -273,6 +273,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $this->_notify('delete');
             }
 
+            Phprojekt_Tags::getInstance()->deleteTagsByItem(
+                Phprojekt_Module::getId('Calendar2'),
+                $this->id
+            );
+
             parent::delete();
         } else {
             $first = clone $this;
@@ -1013,6 +1018,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     private function _saveToNewRow()
     {
+        $tags_object = Phprojekt_Tags::getInstance();
+        $moduleId = Phprojekt_Module::getId('Calendar2');
+        $tags = array();
+        foreach ($tags_object->getTagsByModule($moduleId, $this->id) as $val) {
+            $tags[] = $val['string'];
+        }
+
         $this->_fetchParticipantData();
         $excludedDates              = $this->getExcludedDates();
         $this->_storedId            = null;
@@ -1020,6 +1032,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $this->_participantDataInDb = array();
         $this->_isFirst             = true;
         $this->save();
+
+        $tags_object->saveTags($moduleId, $this->id, implode(' ', $tags));
 
         return $this->id;
     }

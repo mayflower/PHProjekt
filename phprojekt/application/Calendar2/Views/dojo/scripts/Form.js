@@ -425,17 +425,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
                if (data.type == 'success') {
-                   phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonDeleteTags/moduleName/' + phpr.module
-                            + '/id/' + this.id,
-                        onSuccess: dojo.hitch(this, function(data) {
-                            new phpr.handleResponse('serverFeedback', data);
-                            if (data.type == 'success') {
-                                this.publish("updateCacheData");
-                                this.publish("setUrlHash", [phpr.module]);
-                            }
-                        })
-                    });
+                   this.publish("updateCacheData");
+                   this.publish("setUrlHash", [phpr.module]);
                }
             })
         });
@@ -508,5 +499,49 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
     setUrl:function() {
         this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/'
                   + phpr.currentProjectId + '/id/' + this.id + '/start/' + this._presetValues['start'];
+    },
+
+    // We have to overwrite this function here because we need to use the id
+    // returned from the server to store the tags, not the original id.
+    // This is because the save could result in the event being represented by
+    // another line in the db than before.
+    submitForm:function() {
+        // Summary:
+        //    This function is responsible for submitting the formdata
+        // Description:
+        //    This function sends the form data as json data to the server
+        //    and call the reload routine
+        if (!this.prepareSubmission()) {
+            return false;
+        }
+
+        phpr.send({
+            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId
+                + '/id/' + this.id,
+            content:   this.sendData,
+            onSuccess: dojo.hitch(this, function(data) {
+               new phpr.handleResponse('serverFeedback', data);
+    // Only change: these two lines have been commented out.
+    //           if (!this.id) {
+                   this.id = data['id'];
+    //           }
+               if (data.type == 'success') {
+                   phpr.send({
+                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module
+                            + '/id/' + this.id,
+                        content:   this.sendData,
+                        onSuccess: dojo.hitch(this, function(data) {
+                            if (this.sendData['string']) {
+                                new phpr.handleResponse('serverFeedback', data);
+                            }
+                            if (data.type == 'success') {
+                                this.publish("updateCacheData");
+                                this.publish("setUrlHash", [phpr.module]);
+                            }
+                        })
+                    });
+                }
+            })
+        });
     }
 });
