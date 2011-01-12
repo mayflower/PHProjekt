@@ -273,7 +273,7 @@ class Calendar2_IndexController extends IndexController
         if (!empty($id)) {
             $start = new Datetime(
                 $this->getRequest()->getParam('recurrenceId'),
-                $this->_getUserTimezone()
+                new DateTimeZone('UTC')
             );
             $model->findOccurrence($id, $start);
             $message
