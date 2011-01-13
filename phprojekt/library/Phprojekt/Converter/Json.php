@@ -109,7 +109,7 @@ class Phprojekt_Converter_Json
     /**
      * Convert a model or a model information into a json stream.
      *
-     * @param Phprojekt_Interface_Model|array $models The model to convert.
+     * @param Phprojekt_Interface_Model|array $models The model(s) to convert.
      * @param integer                         $order  A Phprojekt_ModelInformation_Default::ORDERING_*
      *                                                const that defines the ordering for the convert.
      *
@@ -117,88 +117,48 @@ class Phprojekt_Converter_Json
      */
     private static function _convertModel($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
-        if (!is_array($models)) {
-            $model = $models;
-        } else {
-            $model = current((array) $models);
+        if (empty($models)) {
+            throw new Exception('Called with empty value');
         }
-
-        $information     = $model->getInformation($order);
+        if (!is_array($models)) {
+            $models = array($models);
+        }
+        $information     = $models[0]->getInformation($order);
         $fieldDefinition = $information->getFieldDefinition($order);
 
-        // We can check the returned array, but at the moment we just pass it
         $datas   = array();
-        $data    = array();
-        $numRows = 0;
+        foreach ($models as $model) {
+            $data = array();
+            $ids  = array();
 
-        // We have to do this ugly convert, because Zend_Json_Encoder doesnot check
-        // if a value in an array is an object
-        if (!is_array($models) && $models instanceof Phprojekt_Model_Interface) {
-            foreach ($fieldDefinition as $field) {
-                $data['id'] = (int) $models->id;
-
+            $data['id'] = (int) $models->id;
+            $ids[]      = $data['id'];
+            foreach($fieldDefinition as $field) {
                 $key   = $field['key'];
                 $value = $models->$key;
                 if (is_numeric($value) && $field['integer']) {
                     $data[$key] = (int) $value;
                 } else if (is_scalar($value)) {
                     $data[$key] = $value;
-                } else {
-                    if ($field['integer']) {
-                        if (is_null($value) && !is_null($field['default'])) {
-                            $data[$key] = (int) $field['default'];
-                        } else {
-                            $data[$key] = (int) $value;
-                        }
+                } else if ($field['integer']) {
+                    if (is_null($value) && !is_null($field['default'])) {
+                        $data[$key] = (int) $field['default'];
                     } else {
-                        if (is_null($value) && !is_null($field['default'])) {
-                            $data[$key] = (string) $field['default'];
-                        } else {
-                            $data[$key] = (string) $value;
-                        }
-                    }
-                }
-            }
-            $data['rights'] = $models->getRights();
-            $datas[]        = $data;
-        } else {
-            $ids = array();
-            foreach ($models as $cmodel) {
-                $data['id'] = (int) $cmodel->id;
-                foreach ($fieldDefinition as $field) {
-                    $key   = $field['key'];
-                    $value = $cmodel->$key;
-                    if (is_numeric($value) && $field['integer']) {
                         $data[$key] = (int) $value;
-                    } else if (is_scalar($value)) {
-                        $data[$key] = $value;
-                    } else {
-                        if ($field['integer']) {
-                            if (is_null($value) && !is_null($field['default'])) {
-                                $data[$key] = (int) $field['default'];
-                            } else {
-                                $data[$key] = (int) $value;
-                            }
-                        } else {
-                            if (is_null($value) && !is_null($field['default'])) {
-                                $data[$key] = (string) $field['default'];
-                            } else {
-                                $data[$key] = (string) $value;
-                            }
-                        }
                     }
+                } else if (is_null($value) && !is_null($field['default'])) {
+                    $data[$key] = (string) $field['default'];
+                } else {
+                    $data[$key] = (string) $value;
                 }
-                $ids[]          = $data['id'];
-                $data['rights'] = array();
-                $datas[]        = $data;
             }
+            $data['rights'] = array();
+            $datas[]        = $data;
+        }
 
-            // Use the last model for get all the rights
-            $rights = $cmodel->getMultipleRights($ids);
-            foreach ($datas as $index => $data) {
-                $datas[$index]['rights'] = $rights[$datas[$index]['id']];
-                unset($rights[$datas[$index]['id']]);
-            }
+        $rights = $models[0]->getMultipleRights($ids);
+        foreach ($datas as $index => $data) {
+            $datas[$index]['rights'] = $rights[$datas[$index]['id']];
         }
 
         $data = array('metadata' => $fieldDefinition,
