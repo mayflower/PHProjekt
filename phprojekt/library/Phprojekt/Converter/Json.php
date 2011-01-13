@@ -109,13 +109,16 @@ class Phprojekt_Converter_Json
     /**
      * Convert a model or a model information into a json stream.
      *
-     * @param Phprojekt_Interface_Model|array $models The model(s) to convert.
-     * @param integer                         $order  A Phprojekt_ModelInformation_Default::ORDERING_*
-     *                                                const that defines the ordering for the convert.
+     * @param Phprojekt_Interface_Model | array $models The model(s) to convert.
+     * @param integer                           $order
+     *          A Phprojekt_ModelInformation_Default::ORDERING_* const that
+     *          defines the ordering for the convert.
      *
      * @return string Data in JSON format.
      */
-    private static function _convertModel($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    private static function _convertModel(
+            $models,
+            $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         if (empty($models)) {
             throw new Exception('Called with empty value');
@@ -133,24 +136,10 @@ class Phprojekt_Converter_Json
 
             $data['id'] = (int) $models->id;
             $ids[]      = $data['id'];
-            foreach($fieldDefinition as $field) {
+            foreach ($fieldDefinition as $field) {
                 $key   = $field['key'];
                 $value = $models->$key;
-                if (is_numeric($value) && $field['integer']) {
-                    $data[$key] = (int) $value;
-                } else if (is_scalar($value)) {
-                    $data[$key] = $value;
-                } else if ($field['integer']) {
-                    if (is_null($value) && !is_null($field['default'])) {
-                        $data[$key] = (int) $field['default'];
-                    } else {
-                        $data[$key] = (int) $value;
-                    }
-                } else if (is_null($value) && !is_null($field['default'])) {
-                    $data[$key] = (string) $field['default'];
-                } else {
-                    $data[$key] = (string) $value;
-                }
+                $data[$key] = self::_convertModelValue($value, $field);
             }
             $data['rights'] = array();
             $datas[]        = $data;
@@ -166,6 +155,38 @@ class Phprojekt_Converter_Json
                       'numRows'  => (int) count($datas));
 
         return self::_makeJsonString($data);
+    }
+
+    /**
+     * Converts a single value. Helper function of _convertModel.
+     *
+     * @param mixed $value The value to convert.
+     * @param array $field Information about the value type etc.
+     *
+     * @return mixed The converted value to give to self::_makeJsonString.
+     */
+    private static function _convertModelValue($value, $field)
+    {
+        if (is_numeric($value) && $field['integer']) {
+            return (int) $value;
+        }
+        if (is_scalar($value)) {
+            return $value;
+        }
+        if ($field['integer']) {
+            if (is_null($value) && !is_null($field['default'])) {
+                return (int) $field['default'];
+            } else {
+                return (int) $value;
+            }
+        }
+        if (is_null($value) && !is_null($field['default'])) {
+            return (string) $field['default'];
+        }
+        if (is_array($value)) {
+            return array_map(array(get_class(), __FUNCTION__), $value);
+        }
+        return (string) $value;
     }
 
     /**
