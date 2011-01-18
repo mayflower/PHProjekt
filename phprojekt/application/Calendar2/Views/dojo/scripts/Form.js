@@ -30,6 +30,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
     _updateCacheIds:       null,
     _participantsInDb:     null,
     _participantsInTab:    null,
+    _originalRrule:        null,
 
     _FRMWIDG_BASICDATA:  0,
     _FRMWIDG_PARTICIP:   1,
@@ -60,7 +61,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         }
 
         if (this.id > 0) {
-            if (this.sendData['rruleFreq'] && null === this._multipleEvents) {
+            if (this._originalRrule && null === this._multipleEvents) {
                 // If the event has recurrence ask what to modify
                 this.showEventSelector('Edit', "submitForm");
                 return false;
@@ -543,5 +544,14 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
                 }
             })
         });
+    },
+
+    getFormData:function() {
+        // Summary:
+        //    Override this method to save whether we have a recurrence set on
+        //    the server.
+        phpr.Calendar.Form.superclass.getFormData.apply(this);
+        var data = phpr.DataStore.getData({url: this._url});
+        this._originalRrule = data[0].rrule;
     }
 });
