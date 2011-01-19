@@ -165,7 +165,7 @@ class Phprojekt_Converter_Json
      *
      * @return mixed The converted value to give to self::_makeJsonString.
      */
-    private static function _convertModelValue($value, $field)
+    final private static function _convertModelValue($value, $field)
     {
         if (is_numeric($value) && $field['integer']) {
             return (int) $value;
