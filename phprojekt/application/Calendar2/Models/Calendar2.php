@@ -135,7 +135,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             = new Calendar2_Models_CalendarInformation($this, $db);
 
         // UID generation method taken from rfc 5545
-        $this->uid = time() . '-' . getMyPid() . '@' . php_uname('n');
+        $this->uid = rand()
+                   . '-' . time()
+                   . '-' . getMyPid()
+                   . '@' . php_uname('n');
     }
 
     /**
