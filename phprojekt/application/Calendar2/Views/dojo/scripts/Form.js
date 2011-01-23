@@ -552,6 +552,10 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         //    the server.
         phpr.Calendar.Form.superclass.getFormData.apply(this);
         var data = phpr.DataStore.getData({url: this._url});
-        this._originalRrule = data[0].rrule;
+        if (data.length > 0) {
+            this._originalRrule = data[0].rrule;
+        } else {
+            this._originalRrule = '';
+        }
     }
 });

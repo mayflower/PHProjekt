@@ -323,7 +323,7 @@ class Calendar2_IndexController extends IndexController
         }
         $this->setCurrentProjectId();
 
-        $record = new Calendar2_Models_Calendar2;
+        $record = new Calendar2_Models_Calendar2();
 
         if (!empty($id)) {
             if (empty($start)) {
