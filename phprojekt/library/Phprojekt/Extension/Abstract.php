@@ -39,5 +39,23 @@ abstract class PHProjekt_Extension_Abstract {
     public function init() {
     }
 
+    /**
+     * Return the extension api version to use. Current is 6.0.1.
+     *
+     * @return string The version.
+     */
     public abstract function getVersion();
+
+    /**
+     * This function has to be implemented if the module needs to upgrade the
+     * database between minor changes.
+     *
+     * The returned object must be a subclass of Phprojekt_Migration_Abstract or
+     * null. If it is null, Phprojekt will assume that this module never needs
+     * to upgrade.
+     */
+    public function getMigration()
+    {
+        return null;
+    }
 }
