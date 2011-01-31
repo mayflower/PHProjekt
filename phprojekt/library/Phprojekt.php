@@ -540,28 +540,7 @@ class Phprojekt
         // Define general error handler
         set_error_handler(Array("Phprojekt", "errorHandler"));
 
-        /* initialize PHPRojekt Extensions */
-        $extensions = new Phprojekt_Extensions(PHPR_CORE_PATH);
-
-        /* Redirect to the upgrade controller if an upgrade is neccessary */
-        $request = $front->getRequest;
-        if (Phprojekt_Auth::isLoggedIn() &&
-                ($request->getModuleName != 'Core'
-                 || $request->getControllerName != 'Upgrade')) {
-            $migration = new Phprojekt_Migration($extensions);
-            if ($migration->needsUpgrade()) {
-                $r = Zend_Controller_Action_HelperBroker::getStaticHelper(
-                    'redirector'
-                );
-                $url = Phprojekt::getInstance()->getConfig()->webpath
-                        . 'index.php/Core/Upgrade/index/csrfToken/'
-                        . Phprojekt::createCsrfToken();
-                $r->gotoUrl($url);
-            }
-        }
-
-        /* call init method on every extension */
-        $extensions->init();
+        $front->registerPlugin(new Phprojekt_ExtensionsPlugin());
     }
 
     /**
