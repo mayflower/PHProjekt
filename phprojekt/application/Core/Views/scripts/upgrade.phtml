@@ -91,11 +91,16 @@
                 Thank you for upgrading to Phprojekt <?php echo $this->newVersion; ?>.<br/>
                 We're sorry to bother you, but we need to upgrade the database to the current version.<br/><br/>
                 When you're ready, just click the button. Please note that the upgrade might take a few moments.
-            </p>
+            </p><br/>
+            <style type="text/css">
+                .modulesTable, .modulesTable td, .modulesTable th {
+                    border: medium solid rgb(239, 239, 239);
+                }
+            </style>
             <?php if ($this->modules): ?>
-            <table style="border: medium solid rgb(239, 239, 239)">
+            <table class="modulesTable">
                 <tr>
-                    <th>Module</th><th>Old version</th><th>New version</th>
+                    <th >Module</th><th>Old version</th><th>New version</th>
                 </tr>
                 <?php foreach ($this->modules as $module => $mdata): ?>
                 <tr>
@@ -104,7 +109,7 @@
                     <td><?php echo $mdata['to']; ?></td>
                 </tr>
                 <?php endforeach; ?>
-            </table>
+            </table><br/>
             <?php endif; ?>
             <form action="<?php echo $this->webPath; ?>index.php/Core/Upgrade/upgrade" method="post">
                 <input type="submit" value="Upgrade now"/>
