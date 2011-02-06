@@ -54,9 +54,11 @@ class Phprojekt_ExtensionsPlugin extends Zend_Controller_Plugin_Abstract
     public function routeShutdown(Zend_Controller_Request_Abstract $request)
     {
         /* Redirect to the upgrade controller if an upgrade is neccessary */
-        if (Phprojekt_Auth::isLoggedIn() &&
-                ($request->getModuleName() != 'Core'
-                 || $request->getControllerName() != 'Upgrade')) {
+        if (Phprojekt_Auth::isLoggedIn()
+                && ($request->getModuleName() != 'Core'
+                    || $request->getControllerName() != 'Upgrade')
+                && ($request->getControllerName() != 'Login'
+                    || $request->getActionName() != 'logout')) {
             $migration = new Phprojekt_Migration($this->_extensions);
             if ($migration->needsUpgrade()) {
                 $r = Zend_Controller_Action_HelperBroker::getStaticHelper(

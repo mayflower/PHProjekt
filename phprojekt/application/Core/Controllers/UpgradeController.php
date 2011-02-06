@@ -38,11 +38,6 @@
 class Core_UpgradeController extends Core_IndexController
 {
     public function indexAction() {
-        // The Core_IndexController has assured that the user has administrative
-        // rights at this point.
-        // TODO: This is actually bad, because the user will then be redirected
-        //       back here again. We have to show the user a 'tell your admin'
-        //       page instead.
         $config = Phprojekt::getInstance()->getConfig();
         $language = Phprojekt_User_User::getSetting(
             "language",
@@ -55,11 +50,19 @@ class Core_UpgradeController extends Core_IndexController
         $this->view->frontendMsg    = (bool) $config->frontendMessages;
         $this->view->newVersion     = Phprojekt::getVersion();
 
-        $this->render('upgrade');
+        if (!Phprojekt_Auth::isAdminUser()) {
+            $this->render('upgradeLocked');
+        } else {
+            $this->render('upgrade');
+        }
+
     }
 
     public function upgradeAction() {
-        // TODO: Quadruple-check that we are allowed to do this thing.
+        if (!Phprojekt_Auth::isAdminUser()) {
+            throw new Phprojekt_PublishedException('Insufficient rights.', 500);
+        }
+
         $extensions = new Phprojekt_Extensions(PHPR_CORE_PATH);
         $migration  = new Phprojekt_Migration($extensions);
 
