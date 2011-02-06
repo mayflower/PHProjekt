@@ -157,9 +157,6 @@ class PHProjekt_Extensions {
                 . $module . DIRECTORY_SEPARATOR . self::EXT_NAME . '.php';
 
             if (file_exists($filename)) {
-                /* load extension */
-                include($filename);
-
                 $classname = sprintf("%s_%s", $module, self::EXT_NAME);
                 if (class_exists($classname)) {
                     $obj = new $classname;
