@@ -92,6 +92,20 @@
                 We're sorry to bother you, but we need to upgrade the database to the current version.<br/><br/>
                 When you're ready, just click the button. Please note that the upgrade might take a few moments.
             </p>
+            <?php if ($this->modules): ?>
+            <table style="border: medium solid rgb(239, 239, 239)">
+                <tr>
+                    <th>Module</th><th>Old version</th><th>New version</th>
+                </tr>
+                <?php foreach ($this->modules as $module => $mdata): ?>
+                <tr>
+                    <td><?php echo $module; ?></td>
+                    <td><?php echo $mdata['from'] ?: 'Not installed'; ?></td>
+                    <td><?php echo $mdata['to']; ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+            <?php endif; ?>
             <form action="<?php echo $this->webPath; ?>index.php/Core/Upgrade/upgrade" method="post">
                 <input type="submit" value="Upgrade now"/>
                 <input type="hidden" value="<?php echo Phprojekt::createCsrfToken(); ?>"/>

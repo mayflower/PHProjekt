@@ -53,6 +53,10 @@ class Core_UpgradeController extends Core_IndexController
         if (!Phprojekt_Auth::isAdminUser()) {
             $this->render('upgradeLocked');
         } else {
+            $extensions          = new Phprojekt_Extensions(PHPR_CORE_PATH);
+            $migration           = new Phprojekt_Migration($extensions);
+            $this->view->modules = $migration->getModulesNeedingUpgrade();
+
             $this->render('upgrade');
         }
 
