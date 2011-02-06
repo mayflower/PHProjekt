@@ -50,14 +50,18 @@ class Core_UpgradeController extends Core_IndexController
         $this->view->frontendMsg    = (bool) $config->frontendMessages;
         $this->view->newVersion     = Phprojekt::getVersion();
 
-        if (!Phprojekt_Auth::isAdminUser()) {
-            $this->render('upgradeLocked');
-        } else {
-            $extensions          = new Phprojekt_Extensions(PHPR_CORE_PATH);
-            $migration           = new Phprojekt_Migration($extensions);
-            $this->view->modules = $migration->getModulesNeedingUpgrade();
+        $extensions          = new Phprojekt_Extensions(PHPR_CORE_PATH);
+        $migration           = new Phprojekt_Migration($extensions);
 
-            $this->render('upgrade');
+        if ($migration->needsUpgrade()) {
+            if (!Phprojekt_Auth::isAdminUser()) {
+                $this->render('upgradeLocked');
+            } else {
+                $this->view->modules = $migration->getModulesNeedingUpgrade();
+                $this->render('upgrade');
+            }
+        } else {
+            $this->render('upgradeIdle');
         }
 
     }
