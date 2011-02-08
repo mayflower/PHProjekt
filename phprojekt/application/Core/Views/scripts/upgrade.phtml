@@ -97,20 +97,18 @@
                     border: medium solid rgb(239, 239, 239);
                 }
             </style>
-            <?php if ($this->modules): ?>
             <table class="modulesTable">
                 <tr>
                     <th >Module</th><th>Old version</th><th>New version</th>
                 </tr>
                 <?php foreach ($this->modules as $module => $mdata): ?>
                 <tr>
-                    <td><?php echo $module; ?></td>
+                    <td><?php echo ucfirst($module); ?></td>
                     <td><?php echo $mdata['from'] ?: 'Not installed'; ?></td>
                     <td><?php echo $mdata['to']; ?></td>
                 </tr>
                 <?php endforeach; ?>
             </table><br/>
-            <?php endif; ?>
             <form action="<?php echo $this->webPath; ?>index.php/Core/Upgrade/upgrade" method="post">
                 <input type="submit" value="Upgrade now"/>
                 <input type="hidden" value="<?php echo Phprojekt::createCsrfToken(); ?>"/>

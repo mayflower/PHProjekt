@@ -140,30 +140,60 @@ class Phprojekt_Migration
     /**
      * Check if an upgrade is needed.
      *
+     * @param $module If specified, check only if this module needs upgrading.
+     *
      * @return boolean Whether an upgrade is neccessary.
      */
-    public function needsUpgrade()
+    public function needsUpgrade($module = null)
     {
         $modules = $this->getModulesNeedingUpgrade();
-        return (!empty($modules));
+
+        if (is_null($module)) {
+            return (!empty($modules));
+        } else {
+            return array_key_exists($module, $modules);
+        }
     }
 
     /**
-     * Perform the neccessary upgrades.
+     * Perform all the neccessary upgrades.
      *
      * @return void
      */
-    public function performUpgrade() {
-        $db = Phprojekt::getInstance()->getDb();
-
-        foreach (self::getModulesNeedingUpgrade() as $module => $data) {
-            $data['migration']->upgrade($data['from'], $db);
-            $where = $db->quoteInto('name = ?', $module);
-            $db->update(
-                'module',
-                array('version' => $data['to']),
-                $where
-            );
+    public function performAllUpgrades()
+    {
+        foreach (array_keys($this->getModulesNeedingUpgrade()) as $module) {
+            $this->performUpgrade($module);
         }
+    }
+
+    /**
+     * Perform the neccessary upgrades for the given module.
+     *
+     * @return void
+     */
+    public function performUpgrade($module)
+    {
+        if (!array_key_exists($module, $this->_migrations)) {
+            throw new Exception("No migration object found for $module.");
+        }
+        if (!$this->needsUpgrade($module)) {
+            throw new Exception("Module $module does not need upgrading.");
+        }
+
+        $db = Phprojekt::getInstance()->getDb();
+        $modules = $this->getModulesNeedingUpgrade();
+        $data    = $modules[$module];
+        $data['migration']->upgrade($data['from'], $db);
+
+        $db->update(
+            'module',
+            array('version' => $data['to']),
+            $db->quoteInto('name = ?', $module)
+        );
+
+        Phprojekt::getInstance()->getCache()->clean(
+            Zend_Cache::CLEANING_MODE_ALL
+        );
     }
 }

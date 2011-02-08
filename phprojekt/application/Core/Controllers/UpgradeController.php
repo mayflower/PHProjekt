@@ -74,7 +74,7 @@ class Core_UpgradeController extends Core_IndexController
         $extensions = new Phprojekt_Extensions(PHPR_CORE_PATH);
         $migration  = new Phprojekt_Migration($extensions);
 
-        $migration->performUpgrade();
+        $migration->performAllUpgrades();
 
         // TODO: Notify the user that we're happy
         $config = Phprojekt::getInstance()->getConfig();
