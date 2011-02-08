@@ -172,9 +172,11 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
             for (p in content[event]['confirmationStatuses']) {
                 var status = content[event]['confirmationStatuses'][p];
                 if (1 == status) { // Pending
-                    warning = '(?)';
+                    warning = '<img src="/css/themes/phprojekt/images/help.gif"'
+                        + ' alt="Some participants have not accepted yet."/>';
                 } else if (3 == status) { //Rejected
-                    warning = '(!)';
+                    warning = '<img src="/css/themes/phprojekt/images/warning.png"'
+                        + ' alt="Some participants have rejected your invitation."/>';
                     break;
                 }
             }

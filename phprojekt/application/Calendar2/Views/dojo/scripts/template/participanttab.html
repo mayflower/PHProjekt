@@ -32,7 +32,7 @@
         style="display: none;"
         {% endifequal %}
     >
-        <td>{{item.status}}</td>
+        <td><img src="{{item.statusIcon}}" alt="{{item.statusTooltip}}"/></td>
         <td>
             <input id="dataParticipant[{{item.userId}}]" id="dataParticipant[{{item.userId}}]"
             name="newParticipants[]" type="hidden" value="{{item.userId}}"

@@ -214,17 +214,28 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
                         break;
                     }
                 }
-                var status;
+                var statusIcon;
+                var statusTooltip;
                 switch (statuses[participantIds[i]]) {
-                    case "1": status="?"; break;
-                    case "2": status="A"; break;
-                    case "3": status="R"; break;
+                    case "1":
+                        statusIcon    = "help.gif";
+                        statusTooltip = "The participant has not accepted yet.";
+                        break;
+                    case "2":
+                        statusIcon="tick.gif";
+                        statusTooltip = "The participant has accepted your invitation.";
+                        break;
+                    case "3":
+                        statusIcon="cross.gif";
+                        statusTooltip = "The participant has rejected your invitation.";
+                        break;
                 }
 
                 participants.push({
                     'userId':   participantIds[i],
                     'userName': userName,
-                    'status':   status
+                    'statusIcon':   '/css/themes/phprojekt/images/' + statusIcon,
+                    'statusTooltip': statusTooltip
                 });
             }
         }
@@ -286,7 +297,9 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
             row.id       = "trParticipantFor" + userId;
 
             var cell = row.insertCell(0);
-            cell.innerHTML = 'N';   // Status: new participant
+            // Status: New Participant
+            cell.innerHTML
+                = '<img src="/css/themes/phprojekt/images/rating_full.gif" alt="New"/>';
             var cell = row.insertCell(1);
             cell.innerHTML = '<input id="dataParticipant[' + userId + ']" name="newParticipants[]" '
                 + ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
