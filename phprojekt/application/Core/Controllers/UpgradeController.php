@@ -80,4 +80,25 @@ class Core_UpgradeController extends Core_IndexController
         $config = Phprojekt::getInstance()->getConfig();
         $this->_redirect($config->webpath . '/index.php');
     }
+
+    public function jsonUpgradeAction() {
+        if (!Phprojekt_Auth::isAdminUser()) {
+            throw new Phprojekt_PublishedException('Insufficient rights.', 500);
+        }
+
+        $extensions = new Phprojekt_Extensions(PHPR_CORE_PATH);
+        $migration  = new Phprojekt_Migration($extensions);
+
+        $migration->performUpgrade(
+            $this->getRequest()->getParam('upgradeModule')
+        );
+
+        Phprojekt_Converter_Json::echoConvert(
+            array(
+                'type' => 'success',
+                'message' => 'The module was upgraded correctly'
+            )
+        );
+
+    }
 }

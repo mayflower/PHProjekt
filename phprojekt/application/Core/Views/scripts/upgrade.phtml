@@ -96,23 +96,64 @@
                 .modulesTable, .modulesTable td, .modulesTable th {
                     border: medium solid rgb(239, 239, 239);
                 }
+
+                .modulesTable td, .modulesTable th{
+                    height:       21px;
+                    padding:       2px;
+                    padding-left:  4px;
+                    padding-right: 4px;
+                }
             </style>
             <table class="modulesTable">
                 <tr>
-                    <th >Module</th><th>Old version</th><th>New version</th>
+                    <th >Module</th><th>Old version</th><th>New version</th><th>Status</th>
                 </tr>
                 <?php foreach ($this->modules as $module => $mdata): ?>
                 <tr>
                     <td><?php echo ucfirst($module); ?></td>
                     <td><?php echo $mdata['from'] ?: 'Not installed'; ?></td>
                     <td><?php echo $mdata['to']; ?></td>
+                    <td id="<?php echo $module; ?>_status_field"></td>
                 </tr>
                 <?php endforeach; ?>
             </table><br/>
-            <form action="<?php echo $this->webPath; ?>index.php/Core/Upgrade/upgrade" method="post">
-                <input type="submit" value="Upgrade now"/>
-                <input type="hidden" value="<?php echo Phprojekt::createCsrfToken(); ?>"/>
-            </form>
+            <button id='button' dojoType="dijit.form.Button" type="button" onclick="upgrade">
+                Upgrade now
+            </button>
+            <script type="text/javascript">
+                var modules = <?php echo Zend_Json::encode(array_keys($this->modules)); ?>;
+
+                upgrade = function() {
+                    if (modules.length < 1) {
+                        button = dijit.byId('button');
+                        button.attr('label', 'Continue');
+                        button.attr('onClick', function() {
+                            window.location = "<?php echo $this->webPath; ?>";
+                        })
+                        return;
+                    }
+                    var module = modules.shift();
+                    dojo.byId(module + "_status_field").innerHTML
+                        = "<img src='/img/ajax-loader-small.gif' alt='working'/>";
+                    dojo.xhrPost({
+                        url:      "<?php echo $this->webPath; ?>index.php/Core/Upgrade/jsonUpgrade",
+                        handleAs: "json",
+                        content:  {
+                            upgradeModule: module,
+                            csrfToken:     "<?php echo Phprojekt::createCsrfToken(); ?>"
+                        },
+                        error: function() {
+                            alert("An error has occured (Oh god, I hope I do not happen!)");
+                        },
+                        load: function() {
+                            dojo.byId(module + "_status_field").innerHTML
+                                = "<img src='/css/themes/phprojekt/images/tick.gif' "
+                                + "alt='Done'/>";
+                            upgrade();
+                        }
+                    });
+                }
+            </script>
         </div>
     </div>
 </div>
