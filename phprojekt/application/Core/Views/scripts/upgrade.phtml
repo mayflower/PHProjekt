@@ -91,7 +91,19 @@
                 Thank you for upgrading to Phprojekt <?php echo $this->newVersion; ?>.<br/>
                 We're sorry to bother you, but we need to upgrade the database to the current version.<br/><br/>
                 When you're ready, just click the button. Please note that the upgrade might take a few moments.
-            </p><br/>
+            </p>
+            <div style="display: inline-block;
+                        border:  2px solid red;
+                        padding: 1px;
+                        margin:  5px;">
+                <h4>Warning!</h4>
+                <p>
+                    This feature is still new, and we really don't want you to lose
+                    your data.<br/>
+                    So please, back up your data before clicking the button.
+                    <br/><br/>Thank you.
+                </p>
+            </div>
             <style type="text/css">
                 .modulesTable, .modulesTable td, .modulesTable th {
                     border: medium solid rgb(239, 239, 239);
