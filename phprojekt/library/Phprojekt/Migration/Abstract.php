@@ -57,6 +57,19 @@ abstract class Phprojekt_Migration_Abstract
     /**
      * Perform the upgrade to the current version.
      *
+     * When you implement this function, please consider a few things.
+     * First: Use transactions!
+     * In case anything goes wrong, you can just roll back and throw a new
+     * Exception. (For debugging purposes, pass the old Exception as third
+     * parameter to the new Exception).
+     * IMPORTANT: Please don't throw Phprojekt_PublishedException s unless you
+     *            _really_ make sure they don't contain sensitive data. They
+     *            might be shown to the user.
+     *
+     * If you can't use transactions (See for example
+     * http://dev.mysql.com/doc/refman/5.0/en/implicit-commit.html) then try to
+     * act in a way that makes it possible to recover the old state of the
+     * database. (And to that if something goes wrong.) Then throw an Exception.
      * @param                   string $currentVersion The current version of
      *                                                 the module or null if
      *                                                 not yet installed.
