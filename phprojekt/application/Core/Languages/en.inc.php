@@ -585,3 +585,9 @@ $lang["Upgrade warning"] = "<h4>Warning!</h4>
                     <br/><br/>Thank you.
                 </p>";
 $lang["Not installed"] = "Not installed";
+$lang["Upgrade controller idle (before link)"] = "This is the place where migration happens after installing a new
+                Version. Currently, there's nothing to upgrade, so this page is
+                quite boring.<br/>
+                Visit the ";
+$lang["Upgrade controller idle (link text)"] = "main page";
+$lang["Upgrade controller idle (after link)"] = " for more interesting things.";

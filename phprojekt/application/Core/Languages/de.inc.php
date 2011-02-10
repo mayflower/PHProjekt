@@ -587,3 +587,6 @@ $lang["Upgrade warning"] = "<h4>Achtung!</h4>
 $lang["Not installed"] = "Nicht installiert";
 $lang["Upgrade now"] = "Upgrade starten";
 $lang["Continue"] = "Fortfahren";
+$lang["Upgrade controller idle (before link)"] = "Auf dieser Seite findet die Migration statt, nachdem eine neue Version installiert wurde.";
+$lang["Upgrade controller idle (link text)"] = "Hier";
+$lang["Upgrade controller idle (after link)"] = "können sie auf PHProjekt zugreifen.";

@@ -85,14 +85,15 @@
             region="center"
             style="height: 1000px;">
         <br/>
+        <?php $p = Phprojekt::getInstance(); ?>
         <div class="prepend-0" id="content">
-            <h2>Migration</h2>
+            <h2><?php echo $p->translate('Migration'); ?></h2>
             <p>
-                This is the place where migration happens after installing a new
-                Version. Currently, there's nothing to upgrade, so this page is
-                quite boring.<br/>
-                Visit the <a href="<?php echo $this->webPath; ?>index.php">main
-                page</a> for more interesting things.
+                <?php echo $p->translate('Upgrade controller idle (before link)'); ?>
+                <a href="<?php echo $this->webPath; ?>index.php">
+                    <?php echo $p->translate('Upgrade controller idle (link text)'); ?>
+                </a>
+                <?php echo $p->translate('Upgrade controller idle (after link)'); ?>
             </p>
         </div>
     </div>
