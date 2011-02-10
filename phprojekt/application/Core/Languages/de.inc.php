@@ -572,3 +572,18 @@ $lang["Upgrade controller locked (after version)"] = " installiert haben.<br/>
                 Wir müssen ihre Arbeit aufgrund von Änderungen in der Datenbankstruktur leider unterbrechen.<br/><br/>
                 Sie können PHProjekt wieder benutzen nachdem ein Administrator die Änderungen autorisiert hat.";
 $lang["Logout"] = "Abmelden";
+$lang["Migration"] = "Migration";
+$lang["Upgrade controller (before version)"] = "Danke, dass sie das Upgrade auf Version ";
+$lang["Upgrade controller (after version)"] = " installiert haben.<br/>
+                Wir müssen ihre Arbeit aufgrund von Änderungen in der Datenbankstruktur leider unterbrechen.<br/><br/>
+                Die Migration kann einige Minuten dauern.";
+$lang["Upgrade warning"] = "<h4>Achtung!</h4>
+                <p>
+                Die Migration ist ein neues Feature, und wir sind sehr besorgt um ihre Daten.
+                Deshalb bitten wir sie, bevor sie das Upgrade starten eine Sicherung ihrer Datenbank
+                anzufertigen.<br/><br/>
+                Vielen Dank.
+                </p>";
+$lang["Not installed"] = "Nicht installiert";
+$lang["Upgrade now"] = "Upgrade starten";
+$lang["Continue"] = "Fortfahren";

@@ -85,24 +85,21 @@
             region="center"
             style="height: 1000px;">
         <br/>
+        <?php $p = Phprojekt::getInstance(); ?>
         <div class="prepend-0" id="content">
-            <h2>Migration</h2>
+            <h2><?php echo $p->translate('Migration'); ?></h2>
             <p>
-                Thank you for upgrading to Phprojekt <?php echo $this->newVersion; ?>.<br/>
-                We're sorry to bother you, but we need to upgrade the database to the current version.<br/><br/>
-                When you're ready, just click the button. Please note that the upgrade might take a few moments.
-            </p>
+                <?php
+                    echo $p->translate('Upgrade controller (before version)');
+                    echo $this->newVersion;
+                    echo $p->translate('Upgrade controller (after version)');
+                ?>
+           </p>
             <div style="display: inline-block;
                         border:  2px solid red;
                         padding: 1px;
                         margin:  5px;">
-                <h4>Warning!</h4>
-                <p>
-                    This feature is still new, and we really don't want you to lose
-                    your data.<br/>
-                    So please, back up your data before clicking the button.
-                    <br/><br/>Thank you.
-                </p>
+                <?php echo $p->translate('Upgrade warning'); ?>
             </div>
             <style type="text/css">
                 .modulesTable, .modulesTable td, .modulesTable th {
@@ -118,19 +115,22 @@
             </style>
             <table class="modulesTable">
                 <tr>
-                    <th >Module</th><th>Old version</th><th>New version</th><th>Status</th>
+                    <th><?php echo $p->translate('Module'); ?></th>
+                    <th><?php echo $p->translate('Old version'); ?></th>
+                    <th><?php echo $p->translate('New version'); ?></th>
+                    <th><?php echo $p->translate('Status'); ?></th>
                 </tr>
                 <?php foreach ($this->modules as $module => $mdata): ?>
                 <tr>
                     <td><?php echo ucfirst($module); ?></td>
-                    <td><?php echo $mdata['from'] ?: 'Not installed'; ?></td>
+                    <td><?php echo $mdata['from'] ?: $p->translate('Not installed'); ?></td>
                     <td><?php echo $mdata['to']; ?></td>
                     <td id="<?php echo $module; ?>_status_field"></td>
                 </tr>
                 <?php endforeach; ?>
             </table><br/>
             <button id='button' dojoType="dijit.form.Button" type="button" onclick="upgrade">
-                Upgrade now
+                <?php echo $p->translate('Upgrade now'); ?>
             </button>
             <script type="text/javascript">
                 var modules = <?php echo Zend_Json::encode(array_keys($this->modules)); ?>;
@@ -138,7 +138,7 @@
                 upgrade = function() {
                     if (modules.length < 1) {
                         button = dijit.byId('button');
-                        button.attr('label', 'Continue');
+                        button.attr('label', "<?php echo $p->translate('Continue'); ?>");
                         button.attr('onClick', function() {
                             window.location = "<?php echo $this->webPath; ?>";
                         })
