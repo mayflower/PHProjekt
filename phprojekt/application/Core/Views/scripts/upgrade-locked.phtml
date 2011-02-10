@@ -86,12 +86,16 @@
             style="height: 1000px;">
         <br/>
         <div class="prepend-0" id="content">
-            <h2>Migration neccessary</h2>
+        <?php $p = Phprojekt::getInstance(); ?>
+        <h2><?php echo $p->translate('Migration neccessary'); ?></h2>
             <p>
-                Phprojekt has been upgraded to <?php echo $this->newVersion; ?>.<br/>
-                We're sorry to disrupt you, but we need to do some things to the database.<br/><br/>
-                You can use Phprojekt again after an administrator initiated the upgrade.<br/>
-                <a href="<?php echo $this->webPath; ?>index.php/Login/logout">Logout</a>
+                <?php echo $p->translate('Upgrade controller locked (before version)');
+                      echo $this->newVersion;
+                      echo $p->translate('Upgrade controller locked (after version)'); ?>
+                <br/>
+                    <a href="<?php echo $this->webPath; ?>index.php/Login/logout">
+                        <?php echo $p->translate('Logout'); ?>
+                    </a>
             </p>
         </div>
     </div>

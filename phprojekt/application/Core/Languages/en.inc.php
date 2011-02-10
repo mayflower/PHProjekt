@@ -564,3 +564,11 @@ $lang["Content Help Setting"]["Timecard"] = "<br />
     When you have finished doing the changes in this Multiple Select Box, press Save.<br />
     <br />
     <br />";
+
+// Upgrade Controller
+$lang["Migration neccessary"] = "Migration neccessary";
+$lang["Upgrade controller locked (before version)"] = "Thank you for upgrading to PHProjekt version ";
+$lang["Upgrade controller locked (after version)"] = ".<br/>
+                We're sorry to disrupt your Work, but we need to do some things to the database.<br/><br/>
+                You can use Phprojekt again after an administrator initiated the upgrade.";
+$lang["Logout"] = "Logout";

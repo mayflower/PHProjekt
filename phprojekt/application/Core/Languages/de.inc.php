@@ -564,3 +564,11 @@ $lang["Content Help Setting"]["Timecard"] = "<br />
     When you have finished doing the changes in this Multiple Select Box, press Save.<br />
     <br />
     <br />";
+
+// Upgrade Controller
+$lang["Migration neccessary"] = "Migration benötigt";
+$lang["Upgrade controller locked (before version)"] = "Danke, dass sie das Upgrade auf Version ";
+$lang["Upgrade controller locked (after version)"] = " installiert haben.<br/>
+                Wir müssen ihre Arbeit aufgrund von Änderungen in der Datenbankstruktur leider unterbrechen.<br/><br/>
+                Sie können PHProjekt wieder benutzen nachdem ein Administrator die Änderungen autorisiert hat.";
+$lang["Logout"] = "Abmelden";
