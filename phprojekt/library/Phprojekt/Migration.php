@@ -159,6 +159,9 @@ class Phprojekt_Migration
      * Perform all the neccessary upgrades.
      *
      * @return void
+     *
+     * @throws Phprojekt_Migration_IKilledTheDatabaseException
+     * @throws Exception If we could recover.
      */
     public function performAllUpgrades()
     {
@@ -171,6 +174,9 @@ class Phprojekt_Migration
      * Perform the neccessary upgrades for the given module.
      *
      * @return void
+     *
+     * @throws Phprojekt_Migration_IKilledTheDatabaseException
+     * @throws Exception If we could recover.
      */
     public function performUpgrade($module)
     {

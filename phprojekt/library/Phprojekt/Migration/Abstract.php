@@ -70,6 +70,11 @@ abstract class Phprojekt_Migration_Abstract
      * http://dev.mysql.com/doc/refman/5.0/en/implicit-commit.html) then try to
      * act in a way that makes it possible to recover the old state of the
      * database. (And to that if something goes wrong.) Then throw an Exception.
+     *
+     * If that fails, too, please use
+     * Phprojekt::getInstance()->getLog()->debug() to save as much information
+     * as possible and throw a Phprojekt_Migration_IKilledTheDatabaseException.
+     *
      * @param                   string $currentVersion The current version of
      *                                                 the module or null if
      *                                                 not yet installed.

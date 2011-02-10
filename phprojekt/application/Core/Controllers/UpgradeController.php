@@ -37,6 +37,13 @@
  */
 class Core_UpgradeController extends Core_IndexController
 {
+    /**
+     * Index.
+     *
+     * If the user is an admin and we need upgrades, print a form.
+     * Else, print a message depending on the situation.
+     *
+     */
     public function indexAction() {
         $config = Phprojekt::getInstance()->getConfig();
         $language = Phprojekt_User_User::getSetting(
@@ -66,6 +73,13 @@ class Core_UpgradeController extends Core_IndexController
 
     }
 
+    /**
+     * Perform all upgrades.
+     *
+     * Redirects to the index after completion.
+     *
+     * @return void
+     */
     public function upgradeAction() {
         if (!Phprojekt_Auth::isAdminUser()) {
             throw new Phprojekt_PublishedException('Insufficient rights.', 500);
@@ -81,6 +95,13 @@ class Core_UpgradeController extends Core_IndexController
         $this->_redirect($config->webpath . '/index.php');
     }
 
+    /**
+     * Perform the upgrade for a single module.
+     *
+     * The module is taken from the 'upgradeModule' parameter of the request.
+     *
+     * @return void
+     */
     public function jsonUpgradeAction() {
         if (!Phprojekt_Auth::isAdminUser()) {
             throw new Phprojekt_PublishedException('Insufficient rights.', 500);
@@ -89,9 +110,15 @@ class Core_UpgradeController extends Core_IndexController
         $extensions = new Phprojekt_Extensions(PHPR_CORE_PATH);
         $migration  = new Phprojekt_Migration($extensions);
 
-        $migration->performUpgrade(
-            $this->getRequest()->getParam('upgradeModule')
-        );
+        try {
+            $migration->performUpgrade(
+                $this->getRequest()->getParam('upgradeModule')
+            );
+        } catch (Phprojekt_Migration_IKilledTheDatabaseException $e) {
+            // well...
+        } catch (Exception $e) {
+            // hm.
+        }
 
         Phprojekt_Converter_Json::echoConvert(
             array(
