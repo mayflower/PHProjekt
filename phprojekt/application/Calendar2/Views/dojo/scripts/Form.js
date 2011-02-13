@@ -214,28 +214,23 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
                         break;
                     }
                 }
-                var statusIcon;
-                var statusTooltip;
+                var statusClass;
                 switch (statuses[participantIds[i]]) {
-                    case "1":
-                        statusIcon    = "help.gif";
-                        statusTooltip = "The participant has not accepted yet.";
+                    case "1": // pending
+                        statusClass = "notice";
                         break;
-                    case "2":
-                        statusIcon="tick.gif";
-                        statusTooltip = "The participant has accepted your invitation.";
+                    case "2": // accepted
+                        statusClass = "success";
                         break;
-                    case "3":
-                        statusIcon="cross.gif";
-                        statusTooltip = "The participant has rejected your invitation.";
+                    case "3": // rejected
+                        statusClass = "error";
                         break;
                 }
 
                 participants.push({
                     'userId':   participantIds[i],
                     'userName': userName,
-                    'statusIcon':   '/css/themes/phprojekt/images/' + statusIcon,
-                    'statusTooltip': statusTooltip
+                    'statusClass': statusClass
                 });
             }
         }
@@ -297,13 +292,9 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
             row.id       = "trParticipantFor" + userId;
 
             var cell = row.insertCell(0);
-            // Status: New Participant
-            cell.innerHTML
-                = '<img src="/css/themes/phprojekt/images/rating_full.gif" alt="New"/>';
-            var cell = row.insertCell(1);
             cell.innerHTML = '<input id="dataParticipant[' + userId + ']" name="newParticipants[]" '
                 + ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
-            var cell = row.insertCell(2);
+            var cell = row.insertCell(1);
             cell.innerHTML = '<div id="participantDeleteButton' + userId + '"></div>';
 
             dojo.parser.parse(row);

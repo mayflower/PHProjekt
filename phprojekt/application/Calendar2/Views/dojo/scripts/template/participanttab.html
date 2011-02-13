@@ -3,7 +3,6 @@
     <table id="participantTable"
     style="position: relative; left: 75px">
     <tr>
-        <td></td>
         <td>
             <label>{{participantUserText}}</label>
         </td>
@@ -12,7 +11,6 @@
         </td>
     </tr>
     <tr>
-        <td></td>
         <td>
             <select id="dataParticipantAdd" name="dataParticipantAdd" dojoType="phpr.FilteringSelect"
             required="false" autocomplete="false" value="" invalidMessage="" >
@@ -32,11 +30,12 @@
         style="display: none;"
         {% endifequal %}
     >
-        <td><img src="{{item.statusIcon}}" alt="{{item.statusTooltip}}"/></td>
-        <td>
-            <input id="dataParticipant[{{item.userId}}]" id="dataParticipant[{{item.userId}}]"
-            name="newParticipants[]" type="hidden" value="{{item.userId}}"
-            dojoType="dijit.form.TextBox" />
+        <td class="{{item.statusClass}}">
+            <input id="dataParticipant[{{item.userId}}]"
+                   name="newParticipants[]"
+                   type="hidden"
+                   value="{{item.userId}}"
+                   dojoType="dijit.form.TextBox" />
             {{item.userName}}
         </td>
         <td>
