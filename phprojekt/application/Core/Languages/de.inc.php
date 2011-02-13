@@ -564,3 +564,29 @@ $lang["Content Help Setting"]["Timecard"] = "<br />
     When you have finished doing the changes in this Multiple Select Box, press Save.<br />
     <br />
     <br />";
+
+// Upgrade Controller
+$lang["Migration neccessary"] = "Migration benötigt";
+$lang["Upgrade controller locked (before version)"] = "Danke, dass sie das Upgrade auf Version ";
+$lang["Upgrade controller locked (after version)"] = " installiert haben.<br/>
+                Wir müssen ihre Arbeit aufgrund von Änderungen in der Datenbankstruktur leider unterbrechen.<br/><br/>
+                Sie können PHProjekt wieder benutzen nachdem ein Administrator die Änderungen autorisiert hat.";
+$lang["Logout"] = "Abmelden";
+$lang["Migration"] = "Migration";
+$lang["Upgrade controller (before version)"] = "Danke, dass sie das Upgrade auf Version ";
+$lang["Upgrade controller (after version)"] = " installiert haben.<br/>
+                Wir müssen ihre Arbeit aufgrund von Änderungen in der Datenbankstruktur leider unterbrechen.<br/><br/>
+                Die Migration kann einige Minuten dauern.";
+$lang["Upgrade warning"] = "<h4>Achtung!</h4>
+                <p>
+                Die Migration ist ein neues Feature, und wir sind sehr besorgt um ihre Daten.
+                Deshalb bitten wir sie, bevor sie das Upgrade starten eine Sicherung ihrer Datenbank
+                anzufertigen.<br/><br/>
+                Vielen Dank.
+                </p>";
+$lang["Not installed"] = "Nicht installiert";
+$lang["Upgrade now"] = "Upgrade starten";
+$lang["Continue"] = "Fortfahren";
+$lang["Upgrade controller idle (before link)"] = "Auf dieser Seite findet die Migration statt, nachdem eine neue Version installiert wurde.";
+$lang["Upgrade controller idle (link text)"] = "Hier";
+$lang["Upgrade controller idle (after link)"] = "können sie auf PHProjekt zugreifen.";

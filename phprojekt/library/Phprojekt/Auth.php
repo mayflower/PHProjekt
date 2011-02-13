@@ -48,6 +48,11 @@ class Phprojekt_Auth extends Zend_Auth
     const LOGGED_TOKEN = 'keepLoggedToken';
 
     /**
+     * An error message that can be shown if the user is not logged in.
+     */
+    const NOT_LOGGED_IN_MESSAGE = 'User not logged in';
+
+    /**
      * Checks in the session if user is loggued in or not.
      * If it is not logged, tries to log him/her using browser cookies.
      *
@@ -99,10 +104,10 @@ class Phprojekt_Auth extends Zend_Auth
 
                 if ($goToLoginPage) {
                     self::_deleteDbAndCookies($tokenCookieUserId);
-                    throw new Phprojekt_Auth_UserNotLoggedInException('User not logged in', 1);
+                    return false;
                 }
             } else {
-                throw new Phprojekt_Auth_UserNotLoggedInException('User not logged in', 1);
+                return false;
             }
         }
 

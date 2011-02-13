@@ -54,23 +54,26 @@ class Core_IndexController extends IndexController
 
         if (!Phprojekt_Auth::isAdminUser()) {
             $valid = false;
+
             // Add exceptions for public calls into the Core
-            if ($this->getRequest()->getControllerName() == 'history' &&
-                $this->getRequest()->getActionName() == 'jsonList') {
+            $controller = strtolower($this->getRequest()->getControllerName());
+            $action     = $this->getRequest()->getActionName();
+
+            if ($controller == 'history' && $action == 'jsonList') {
                 $valid = true;
-            } else if ($this->getRequest()->getControllerName() == 'module' &&
-                $this->getRequest()->getActionName() == 'jsonGetGlobalModules') {
+            } else if ($controller == 'module'
+                    && $action == 'jsonGetGlobalModules') {
                 $valid = true;
-            } else if ($this->getRequest()->getControllerName() == 'role' &&
-                $this->getRequest()->getActionName() == 'jsonGetModulesAccess') {
+            } else if ($controller == 'role'
+                && $action == 'jsonGetModulesAccess') {
                 $valid = true;
-            } else if ($this->getRequest()->getControllerName() == 'user' &&
-                $this->getRequest()->getActionName() == 'jsonGetUsers') {
+            } else if ($controller == 'user' && $action == 'jsonGetUsers') {
                 $valid = true;
-            } else if ($this->getRequest()->getControllerName() == 'tab' &&
-                $this->getRequest()->getActionName() == 'jsonList') {
+            } else if ($controller == 'tab' && $action == 'jsonList') {
                 $valid = true;
-            } else if ($this->getRequest()->getControllerName() == 'setting') {
+            } else if ($controller == 'setting') {
+                $valid = true;
+            } else if ($controller == 'upgrade') {
                 $valid = true;
             }
 

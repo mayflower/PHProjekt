@@ -564,3 +564,30 @@ $lang["Content Help Setting"]["Timecard"] = "<br />
     When you have finished doing the changes in this Multiple Select Box, press Save.<br />
     <br />
     <br />";
+
+// Upgrade Controller
+$lang["Migration neccessary"] = "Migration neccessary";
+$lang["Upgrade controller locked (before version)"] = "Thank you for upgrading to PHProjekt version ";
+$lang["Upgrade controller locked (after version)"] = ".<br/>
+                We're sorry to disrupt your Work, but we need to do some things to the database.<br/><br/>
+                You can use Phprojekt again after an administrator initiated the upgrade.";
+$lang["Logout"] = "Logout";
+$lang["Migration"] = "Migration";
+$lang["Upgrade controller (before version)"] = "Thank you for upgrading to PHProjekt version ";
+$lang["Upgrade controller (after version)"] = ".<br/>
+                We're sorry to bother you, but we need to upgrade the database to the current version.<br/><br/>
+                When you're ready, just click the button. Please note that the upgrade might take a few moments.";
+$lang["Upgrade warning"] = "<h4>Warning!</h4>
+                <p>
+                    This feature is still new, and we really don't want you to lose
+                    your data.<br/>
+                    So please, back up your data before clicking the button.
+                    <br/><br/>Thank you.
+                </p>";
+$lang["Not installed"] = "Not installed";
+$lang["Upgrade controller idle (before link)"] = "This is the place where migration happens after installing a new
+                Version. Currently, there's nothing to upgrade, so this page is
+                quite boring.<br/>
+                Visit the ";
+$lang["Upgrade controller idle (link text)"] = "main page";
+$lang["Upgrade controller idle (after link)"] = " for more interesting things.";

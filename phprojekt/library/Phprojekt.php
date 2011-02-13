@@ -73,6 +73,11 @@ class Phprojekt
     const DEFAULT_MAX_UPLOAD_SIZE = 512000;
 
     /**
+     * Integer that define the current API version.
+     */
+    const API_VERSION = 0;
+
+    /**
      * Singleton instance.
      *
      * @var Phprojekt
@@ -127,6 +132,18 @@ class Phprojekt
         } else {
             return sprintf("%d.%d.%d", self::VERSION_MAJOR, self::VERSION_MINOR, self::VERSION_RELEASE);
         }
+    }
+
+    /**
+     * Returns the current api verison of PHProjekt.
+     *
+     * The Api version is an integer that is incremented everytime a
+     * method is added or modified.
+     *
+     * @return integer
+     */
+    public static function getApiVersion() {
+        return self::API_VERSION;
     }
 
     /**
@@ -452,7 +469,7 @@ class Phprojekt
         Zend_Db_Table_Abstract::setDefaultMetadataCache($this->_cache);
 
         // Use for Debug only
-        //Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
+        Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
 
         // Check Logs
         $this->getLog();
@@ -522,6 +539,8 @@ class Phprojekt
 
         // Define general error handler
         set_error_handler(Array("Phprojekt", "errorHandler"));
+
+        $front->registerPlugin(new Phprojekt_ExtensionsPlugin());
     }
 
     /**

@@ -152,31 +152,9 @@ class Phprojekt_DbParser
         }
 
         // Per module, load the file and process it
-        $files = scandir($coreDirectory);
-        foreach ($files as $file) {
-            if ($file != '.'  && $file != '..' && $file != 'Core') {
-                $dataToParser = array();
-                if (file_exists($coreDirectory . '/' . $file . '/Sql/Db.json')) {
-                    $json         = file_get_contents($coreDirectory . '/' . $file . '/Sql/Db.json');
-                    $data         = Zend_Json::decode($json);
-                    $dataToParser = $data;
-                }
-                if (is_dir($coreDirectory . '/' . $file . '/SubModules/')) {
-                    $subFiles = scandir($coreDirectory . '/' . $file . '/SubModules/');
-                    foreach ($subFiles as $subFile) {
-                        if ($subFile != '.'  && $subFile != '..') {
-                            $subPath = $coreDirectory . '/' . $file . '/SubModules/' . $subFile . '/Sql/Db.json';
-                            if (file_exists($subPath)) {
-                                $json         = file_get_contents($subPath);
-                                $data         = Zend_Json::decode($json);
-                                $dataToParser = array_merge_recursive($dataToParser, $data);
-                            }
-                        }
-                    }
-                }
-                if (!empty($dataToParser)) {
-                    $this->_parseData($dataToParser, $file);
-                }
+        foreach (scandir($coreDirectory) as $module) {
+            if ($module != '.'  && $module != '..' && $module != 'Core') {
+                $this->parseSingleModuleData($module, $coreDirectory);
             }
         }
 
@@ -206,6 +184,50 @@ class Phprojekt_DbParser
         }
 
         $this->_processData($relations);
+    }
+
+    /**
+     * Parse the data of a single module.
+     *
+     * @param string $module        The module
+     * @param string $coreDirectory The core directory. The module is assumed to
+     *                              live under $coreDirectory . '/' . $module.
+     *                              Defaults to PHPR_CORE_PATH if omitted.
+     *
+     * @return void
+     */
+    public function parseSingleModuleData($module, $coreDirectory = null)
+    {
+        if (null === $coreDirectory) {
+            $coreDirectory = PHPR_CORE_PATH;
+        }
+
+        // Do we need to check the parameters for malicious paths?
+
+        $data = array();
+        $file = $coreDirectory . '/' . $module . '/Sql/Db.json';
+        if (file_exists($file)) {
+            $json         = file_get_contents($file);
+            $data         = Zend_Json::decode($json);
+        }
+        $submoduleDir = $coreDirectory . '/' . $module . '/SubModules/';
+        if (is_dir($submoduleDir)) {
+            foreach (scandir($submoduleDir) as $submodule) {
+                if ($submodule != '.'  && $submodule != '..') {
+                    $file = $submoduleDir . $submodule . '/Sql/Db.json';
+                    if (file_exists($file)) {
+                        $json = file_get_contents($file);
+                        $data = array_merge_recursive(
+                            $data,
+                            Zend_Json::decode($json)
+                        );
+                    }
+                }
+            }
+        }
+        if (!empty($data)) {
+            $this->_parseData($data, $module);
+        }
     }
 
     /**
