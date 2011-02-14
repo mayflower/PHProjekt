@@ -154,6 +154,6 @@ class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
     {
         $records = $this->_model->getProjectRange();
         $this->assertEquals($records[0]['id'], 1);
-        $this->assertEquals($records[0]['name'], "Invisible Root");
+        $this->assertEquals($records[0]['name'], "PHProjekt");
     }
 }

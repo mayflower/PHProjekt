@@ -187,16 +187,16 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $user->find(1);
         $group = $user->groups->fetchAll();
 
-        $this->assertEquals('default', $user->groups->find(1)->name);
-        $this->assertEquals('ninasgruppe', $group[1]->name);
-        $this->assertEquals('TEST GROUP', $group[2]->name);
-        $this->assertEquals(5, $user->groups->count());
+        $this->assertEquals('Group 1', $user->groups->find(1)->name);
+        $this->assertEquals('Group 2', $group[1]->name);
+        $this->assertEquals(2, $user->groups->count());
 
         $group = new Phprojekt_Groups_Groups(array('db' => $this->sharedFixture));
         $group->find(1);
         $users = $group->users->fetchAll();
-        $this->assertEquals('david', $users[0]->username);
-        $this->assertEquals(5, $group->users->count());
+        $this->assertEquals('Test', $users[0]->username);
+        $this->assertEquals('Marie', $users[1]->username);
+        $this->assertEquals(2, $group->users->count());
     }
 
     /**
@@ -209,18 +209,18 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
     public function testHasMany()
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $project->find(5);
-        $this->assertEquals(5, $project->id);
+        $project->find(2);
+        $this->assertEquals(2, $project->id);
         $this->assertEquals('Developer Tasks', $project->instances->find(1)->name);
         $this->assertEquals('Project Tasks', $project->instances->find(2)->name);
 
-        $this->assertEquals(3, $project->instances->count());
-        $this->assertEquals(7, $project->count());
+        $this->assertEquals(2, $project->instances->count());
+        $this->assertEquals(5, $project->count());
 
         // same but with fetch all
         $rows = $project->fetchAll();
-        $this->assertEquals(5, $rows[3]->id);
-        $this->assertEquals('Developer Tasks', $rows[3]->instances->find(1)->name);
+        $this->assertEquals(6, $rows[3]->id);
+        $this->assertEquals('Developer Tasks', $rows[1]->instances->find(1)->name);
     }
 
     /**
@@ -235,7 +235,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $instance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
 
         $instance->find(1);
-        $this->assertEquals(3, $instance->count());
+        $this->assertEquals(2, $instance->count());
     }
 
     /**
@@ -249,9 +249,9 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $instance->notes = '';
         $this->assertTrue($instance->save());
 
-        $instance->find(8);
+        $instance->find(2);
         $this->assertEquals('Developer Tasks', $instance->instances->find(1)->name);
-        $this->assertEquals(8, $instance->instances->find(1)->projectId);
+        $this->assertEquals(2, $instance->instances->find(1)->projectId);
 
         $instance->id = 5;
         $this->assertTrue($instance->save());
@@ -286,7 +286,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $instance->find(5);
 
-        $this->assertEquals('Test Project', $instance->title);
+        $this->assertEquals('Sub Project', $instance->title);
 
         $instance->title = 'PHPUnit Test Project';
         $this->assertEquals('PHPUnit Test Project', $instance->title);
@@ -414,14 +414,14 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $expected = array('id'              => 1,
                           'projectId'       => "",
                           'path'            => '/',
-                          'title'           => 'Invisible Root',
+                          'title'           => 'PHProjekt',
                           'notes'           => "",
                           'ownerId'         => 1,
-                          'startDate'       => "",
+                          'startDate'       => "2007-12-01",
                           'endDate'         => "",
-                          'priority'        => "",
-                          'currentStatus'   => 1,
-                          'completePercent' => 0,
+                          'priority'        => 1,
+                          'currentStatus'   => 3,
+                          'completePercent' => null,
                           'hourlyWageRate'  => "",
                           'budget'          => "",
                           'contactId'       => "");

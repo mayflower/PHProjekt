@@ -67,7 +67,7 @@ class Phprojekt_Converter_TextTest extends DatabaseTest
             // Selectbox
             if ($info['key'] == 'currentStatus') {
                 $value = Phprojekt_Converter_Text::convert($object, $info);
-                $this->assertEquals('Offered', $value);
+                $this->assertEquals('Working', $value);
             }
             // Percentage
             if ($info['key'] == 'completePercent') {

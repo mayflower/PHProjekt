@@ -343,7 +343,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $item     = new Project_Models_Project(array('db' => $this->sharedFixture));
         $result   = array();
         $result[] = array('field'    => 'currentStatus',
-                          'label'    => 'Status',
+                          'label'    => 'Current status',
                           'message'  => 'Value out of range');
         $item->projectId     = 1;
         $item->title         = 'TEST';
@@ -513,7 +513,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals('1', $field->value);
             }
             if ($key == 'title') {
-                $this->assertEquals('Invisible Root', $field->value);
+                $this->assertEquals('PHProjekt', $field->value);
             }
         }
     }

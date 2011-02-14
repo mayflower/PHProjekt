@@ -21,8 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
-
 /**
  * Tests for Todo Index Controller
  *
@@ -71,11 +69,11 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('endDate', '2009-05-17');
         $this->request->setParam('priority', 5);
         $this->request->setParam('currentStatus', 1);
-        $this->request->setParam('userId', 2);
+        $this->request->setParam('userId', 1);
         $this->request->setParam('string', 'My todo tag');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response, $this->errormessage);
     }
 
     /**
@@ -97,7 +95,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('sendNotification', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response, $this->errormessage);
     }
 
     /**
@@ -119,7 +117,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('sendNotification', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains(Todo_IndexController::EDIT_TRUE_TEXT, $response);
+        $this->assertContains(Todo_IndexController::EDIT_TRUE_TEXT, $response, $this->errormessage);
     }
 
     /**
@@ -180,7 +178,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('data', $items);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains(Todo_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
+        $this->assertContains(Todo_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response, $this->errormessage);
 
         // Check saved data
         $model = clone($this->_model);
@@ -202,8 +200,8 @@ class Todo_IndexController_Test extends FrontInit
         $this->setRequestUrl('Todo/index/jsonList');
         $this->request->setParam('nodeId', 2);
         $response = $this->getResponse();
-        $this->assertContains($this->_listingExpectedString, $response);
-        $this->assertContains('"numRows":2', $response);
+        $this->assertContains($this->_listingExpectedString, $response, $this->errormessage);
+        $this->assertContains('"numRows":3', $response, $this->errormessage);
     }
 
     /**
@@ -215,7 +213,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('id', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains($this->_listingExpectedString, $response);
-        $this->assertContains('"numRows":1', $response);
+        $this->assertContains($this->_listingExpectedString, $response, $this->errormessage);
+        $this->assertContains('"numRows":1', $response, $this->errormessage);
     }
 }
