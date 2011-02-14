@@ -40,8 +40,19 @@ require_once 'PHPUnit/Framework.php';
  * @group      phprojekt-converter
  * @group      phprojekt-converter-text
  */
-class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
+class Phprojekt_Converter_TextTest extends DatabaseTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * Test text converter
      */

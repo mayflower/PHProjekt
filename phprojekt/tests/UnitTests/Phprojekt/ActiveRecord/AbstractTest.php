@@ -48,8 +48,17 @@ class Phprojekt_ModuleInstance extends Phprojekt_ActiveRecord_Abstract
  * @group      activerecord
  * @group      phprojekt-activerecord
  */
-class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
+class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
 {
+    public function setUp() {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      *
      */

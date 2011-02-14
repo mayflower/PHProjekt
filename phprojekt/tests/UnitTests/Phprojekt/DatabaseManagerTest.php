@@ -39,8 +39,12 @@ require_once 'PHPUnit/Framework.php';
  * @group      phprojekt-databasemanager
  * @group      activerecord
  */
-class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
+class Phprojekt_DatabaseManagerTest extends DatabaseTest
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * setUp method for PHPUnit. We use a shared db connection
      */

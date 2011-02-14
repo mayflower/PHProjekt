@@ -38,8 +38,12 @@ require_once 'PHPUnit/Framework.php';
  * @group      loader
  * @group      phprojekt-loader
  */
-class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
+class Phprojekt_LoaderTest extends DatabaseTest
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * Test the loadClass functionality
      */

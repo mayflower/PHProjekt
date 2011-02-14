@@ -38,8 +38,19 @@ require_once 'PHPUnit/Framework.php';
  * @group      history
  * @group      phprojekt-history
  */
-class Phprojekt_HistoryTest extends PHPUnit_Framework_TestCase
+class Phprojekt_HistoryTest extends DatabaseTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * Test empty call
      */

@@ -38,8 +38,14 @@ require_once 'PHPUnit/Framework.php';
  * @group      tags
  * @group      phprojekt-tags
  */
-class Phprojekt_TagsTest extends PHPUnit_Framework_TestCase
+class Phprojekt_TagsTest extends DatabaseTest
 {
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * Test save
      *

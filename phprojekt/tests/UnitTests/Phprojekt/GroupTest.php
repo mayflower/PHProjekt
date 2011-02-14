@@ -38,8 +38,12 @@ require_once 'PHPUnit/Framework.php';
  * @group      group
  * @group      phprojekt-group
  */
-class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
+class Phprojekt_GroupTest extends DatabaseTest
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * Set user
      */

@@ -38,8 +38,19 @@ require_once 'PHPUnit/Framework.php';
  * @group      main
  * @group      phprojekt-main
  */
-class Phprojekt_SettingTest extends PHPUnit_Framework_TestCase
+class Phprojekt_SettingTest extends DatabaseTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * Test getModules
      */

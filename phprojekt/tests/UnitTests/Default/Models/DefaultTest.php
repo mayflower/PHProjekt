@@ -40,8 +40,12 @@ require_once 'PHPUnit/Framework.php';
  * @group      model
  * @group      default-model
  */
-class Phprojekt_DefaultModelDefault_Test extends PHPUnit_Framework_TestCase
+class Phprojekt_DefaultModelDefault_Test extends DatabaseTest
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * Test valid method
      *
