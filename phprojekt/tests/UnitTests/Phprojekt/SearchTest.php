@@ -63,7 +63,6 @@ class Phprojekt_SearchTest extends DatabaseTest
         $project->projectId = 1;
         $project->save();
         $project->saveRights(array(1 => 255, 2 => 255));
-        Zend_Registry::set('searchInsertedId', $project->id);
 
         $search = new Phprojekt_Search();
         $result = $search->search('CCÄC');
@@ -79,7 +78,7 @@ class Phprojekt_SearchTest extends DatabaseTest
     public function testSearch()
     {
         $search = new Phprojekt_Search();
-        $result = (array)$search->search('CCÄC DDÖD');
+        $result = (array)$search->search('Karlsruhe');
         $this->assertEquals(1, count($result));
 
         $result = (array)$search->search('NOTINDATABASE');
@@ -92,7 +91,7 @@ class Phprojekt_SearchTest extends DatabaseTest
     public function testSearchShortString()
     {
         $search = new Phprojekt_Search();
-        $result = (array)$search->search('CC');
+        $result = (array)$search->search('CCC');
         $this->assertEquals(0, count($result));
 
         $search = new Phprojekt_Search();
@@ -106,11 +105,11 @@ class Phprojekt_SearchTest extends DatabaseTest
     public function testDelete()
     {
         $project = new Project_Models_Project();
-        $project->find(Zend_Registry::get('searchInsertedId'));
+        $project->find(1);
         $project->delete();
 
         $search = new Phprojekt_Search();
-        $result = (array)$search->search('CCÄC DDÖD');
+        $result = (array)$search->search('Karlsruhe');
         $this->assertEquals(0, count($result));
     }
 }

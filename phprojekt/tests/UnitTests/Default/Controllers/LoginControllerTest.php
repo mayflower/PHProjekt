@@ -66,7 +66,7 @@ class Phprojekt_LoginController_Test extends FrontInit
         $this->setRequestUrl('Login/login');
 
         // This is the only way I found to set POST values on request
-        $_POST['username'] = 'david';
+        $_POST['username'] = 'David';
         $_POST['password'] = 'test';
 
         try {
