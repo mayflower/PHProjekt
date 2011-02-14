@@ -126,11 +126,7 @@ class Phprojekt_AuthTest extends DatabaseTest
      * This try has to log in the user
      */
     public function testLogin() {
-        try {
-            $tmp = Phprojekt_Auth::login('david', 'test');
-        } catch (Phprojekt_Auth_Exception $error) {
-            $this->fail($error->getMessage()." ".$error->getCode());
-        }
+        $tmp = Phprojekt_Auth::login('Test', 'test');
         $this->assertTrue($tmp);
 
         /* logged in needs to be true */
