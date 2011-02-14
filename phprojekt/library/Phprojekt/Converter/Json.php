@@ -193,7 +193,7 @@ class Phprojekt_Converter_Json
                     }
                 }
                 $ids[]          = $data['id'];
-                $data['rights'] = array();
+                $data['rights'] = $cmodel->getRights();
                 $datas[]        = $data;
             }
 
