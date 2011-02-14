@@ -64,26 +64,21 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
      */
     public function testFetchAllWithJoins()
     {
-        try {
-            $project  = new Phprojekt_Project(array('db' => $this->sharedFixture));
-            $project->fetchAll();
-            $this->assertEquals(7, $project->count());
+        $project  = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $project->fetchAll();
+        $this->assertEquals(5, $project->count());
 
-            $project->find(3);
-            $this->assertNull($project->title);
+        $project->find(3);
+        $this->assertNull($project->title);
 
-            $projects = $project->fetchAll(null, null, null, null, null,
-               'RIGHT JOIN project_role_user_permissions ON project_role_user_permissions.project_id = project.id');
-            $this->assertEquals(1, count($projects));
+        $projects = $project->fetchAll(null, null, null, null, null,
+            'RIGHT JOIN project_role_user_permissions ON project_role_user_permissions.project_id = project.id');
+        $this->assertEquals(2, count($projects));
 
-            $projects = $project->fetchAll(null, null, null, null, "project_role_user_permissions.role_id",
-               'LEFT JOIN project_role_user_permissions ON project_role_user_permissions.project_id = project.id');
+        $projects = $project->fetchAll(null, null, null, null, "project_role_user_permissions.role_id",
+            'LEFT JOIN project_role_user_permissions ON project_role_user_permissions.project_id = project.id');
 
-            $this->assertEquals(6, count($projects));
-
-        } catch (Exception $e) {
-            $this->fail($e->getMessage().$e->getTraceAsString());
-        }
+        $this->assertEquals(5, count($projects));
     }
 
     /**
@@ -91,22 +86,18 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
      */
     public function testCreateHasManyAndBelongsToMany()
     {
-        try {
-            $user = new Phprojekt_User_User(array('db' => $this->sharedFixture));
-            $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'david'));
+        $user = new Phprojekt_User_User(array('db' => $this->sharedFixture));
+        $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'Test'));
 
-            if ($users === null) {
-                $this->fail('No user found');
-            } else {
-                $david        = $users[0];
-                $group        = $david->groups->create();
-                $group->name  = 'TEST GROUP';
-                $this->assertTrue($group->save());
+        if ($users === null) {
+            $this->fail('No user found');
+        } else {
+            $test         = $users[0];
+            $group        = $test->groups->create();
+            $group->name  = 'TEST GROUP';
+            $this->assertTrue($group->save());
 
-                $this->assertNotNull($group->id);
-            }
-        } catch (Exception $e) {
-            $this->fail($e->getMessage().$e->getTraceAsString());
+            $this->assertNotNull($group->id);
         }
     }
 
@@ -124,31 +115,26 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $keepUser = $authNamespace->userId;
 
-        try {
-            $role = new Phprojekt_Role_Role(array('db' => $this->sharedFixture));
+        $role = new Phprojekt_Role_Role(array('db' => $this->sharedFixture));
 
-            $role->name = 'deleteMe';
-            $role->save();
+        $role->name = 'deleteMe';
+        $role->save();
 
-            $modulePermissions = $role->modulePermissions->create();
-            $modulePermissions->moduleId = 1;
-            $modulePermissions->roleId = $role->id;
-            $modulePermissions->access = 199;
+        $modulePermissions = $role->modulePermissions->create();
+        $modulePermissions->moduleId = 1;
+        $modulePermissions->roleId = $role->id;
+        $modulePermissions->access = 199;
 
-            $this->assertTrue($modulePermissions->save());
+        $this->assertTrue($modulePermissions->save());
 
-            $this->assertNotNull($role->id);
-            $this->assertEquals(8, $role->modulePermissions->count());
+        $this->assertNotNull($role->id);
+        $this->assertEquals(2, $role->modulePermissions->count());
 
-            $role->delete();
+        $role->delete();
 
-            $this->assertEquals(7, $role->modulePermissions->count());
-            $this->assertNull($role->id);
+        $this->assertEquals(1, $role->modulePermissions->count());
+        $this->assertNull($role->id);
 
-        } catch (Exception $e) {
-            $authNamespace->userId = $keepUser;
-            $this->fail($e->getMessage());
-        }
         $authNamespace->userId = $keepUser;
     }
 
@@ -276,23 +262,18 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
      */
     public function testUpdateHasManyAndBelongsToMany()
     {
-        try {
-            $group = new Phprojekt_Groups_Groups(array('db' => $this->sharedFixture));
-            $group->find(2);
-            $group->id = 10;
-            $group->save();
+        $group = new Phprojekt_Groups_Groups(array('db' => $this->sharedFixture));
+        $group->find(2);
+        $group->id = 10;
+        $group->save();
 
-            $users = $group->users->fetchAll();
-            $this->assertEquals(2, $users[0]->userId);
-            $this->assertEquals('gus', $users[0]->username);
+        $users = $group->users->fetchAll();
+        $this->assertEquals(1, $users[0]->userId);
+        $this->assertEquals('Test', $users[0]->username);
 
-            $group->find(10);
-            $group->id = 2;
-            $group->save();
-        }
-        catch(Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        $group->find(10);
+        $group->id = 2;
+        $group->save();
     }
 
     /**
