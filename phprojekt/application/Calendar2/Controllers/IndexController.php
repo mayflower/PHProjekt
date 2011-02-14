@@ -436,6 +436,63 @@ class Calendar2_IndexController extends IndexController
     }
 
     /**
+     * Checks if a given user is available.
+     * Takes and returns datetimes based on the user's timezone.
+     *
+     * Request parameters:
+     *  int         user    => The id of the user
+     *  datetime    start   => The start of the period to check.
+     *  datetime    end     => The end of the period to check.
+     *
+     * Response
+     *  boolean     available   => Whether the participant is available.
+     */
+    public function jsonCheckAvailabilityAction()
+    {
+        $user  = $this->getRequest()->getParam('user',
+                                               Phprojekt_Auth::getUserId());
+        $start = $this->getRequest()->getParam('start');
+        $end   = $this->getRequest()->getParam('end');
+
+        if (!Cleaner::validate('int', $user)) {
+            throw new Phprojekt_PublishedException("Invalid id '$id'");
+        }
+        $user = (int) $user;
+        if (!self::_validateTimestamp($start)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid start timestamp '$start'"
+            );
+        }
+        if (!self::_validateTimestamp($end)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid end timestamp '$start'"
+            );
+        }
+        $start = new Datetime($start, $this->_getUserTimezone());
+        $end   = new Datetime($end, $this->_getUserTimezone());
+
+        $model  = new Calendar2_Models_Calendar2();
+        $events = $model->fetchAllForPeriod($start, $end);
+
+        $available = true;
+        foreach ($events as $index => $event) {
+            // For availability purposes, we ignore events that the user has
+            // rejected.
+            if ($event->confirmationStatus
+                    != Calendar2_Models_Calendar2::STATUS_REJECTED) {
+                $available = false;
+                break;
+            }
+        }
+
+        Phprojekt_Converter_Json::echoConvert(
+            array(
+                'available' => $available
+            )
+        );
+    }
+
+    /**
      * Updates the current user's confirmation status on the given event.
      *
      * @param Calendar2_Models_Calendar2 $model  The model to update.

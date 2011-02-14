@@ -398,3 +398,7 @@ $lang["Content Help"]["History"] = "DEFAULT";
 $lang['Some participants have not accepted yet.'] = 'Einige Teilnehmer haben ihre Einladung noch nicht bestätigt.';
 $lang['Some participants have rejected your invitation.'] = 'Einige Teilnehmer haben ihre Einladung abgelehnt.';
 $lang['You did not respond to this invitation yet.'] = 'Sie haben noch nicht auf diese Einladung geantwortet.';
+$lang['Checking availability...'] = 'Überprüfe Verfügbarkeit...';
+$lang['The participant is available'] = 'Der Teilnehmer ist verfügbar';
+$lang['The participant is not available'] = 'Der Teilnehmer ist nicht verfügbar';
+$lang['Availability'] = 'Verfügbarkeit';

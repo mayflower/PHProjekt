@@ -239,11 +239,12 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
 
         // Template for the participants tab
         var participantData = this.render(["phpr.Calendar2.template", "participanttab.html"], null, {
-            participantUserText:    phpr.nls.get('User'),
-            participantActionText:  phpr.nls.get('Action'),
-            users:                  users,
-            currentUser:            currentUser,
-            participants:           participants
+            participantUserText:            phpr.nls.get('User'),
+            participantActionText:          phpr.nls.get('Action'),
+            participantAvailabilityText:    phpr.nls.get('Availability'),
+            users:                          users,
+            currentUser:                    currentUser,
+            participants:                   participants
         });
 
         this.addTab(participantData, 'tabParticipant', 'Participants', 'participantFormTab');
@@ -296,6 +297,33 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
                 + ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
             var cell = row.insertCell(1);
             cell.innerHTML = '<div id="participantDeleteButton' + userId + '"></div>';
+            var cell = row.insertCell(2);
+            cell.innerHTML = '<img src="/img/ajax-loader-small.gif" '
+                + 'title="' + phpr.nls.get('Checking availability...') + '"/>';
+
+            phpr.send({
+                url: phpr.webpath + 'index.php/Calendar2/Index/jsonCheckAvailability',
+                content: {
+                    user:  userId,
+                    start: dojo.byId('start').value,
+                    end:   dojo.byId('end').value
+                },
+                onSuccess: function(data) {
+                    if (data['available']) {
+                        cell.innerHTML = '<img '
+                            + 'src="/css/themes/phprojekt/images/tick.gif" '
+                            + 'title="'
+                            + phpr.nls.get('The participant is available')
+                            + '"/>';
+                    } else {
+                        cell.innerHTML = '<img '
+                            + 'src="/css/themes/phprojekt/images/warning.png" '
+                            + 'title="'
+                            + phpr.nls.get('The participant is not available')
+                            + '"/>';
+                    }
+                }
+            })
 
             dojo.parser.parse(row);
 
