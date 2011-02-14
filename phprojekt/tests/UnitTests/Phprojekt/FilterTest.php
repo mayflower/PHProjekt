@@ -96,6 +96,7 @@ class Phprojekt_FilterTest extends DatabaseTest
      */
     public function testConvertRulePart1()
     {
+        $this->markTestSkipped("We don't use Minutes");
         $item = new Minutes_Models_Minutes();
 
         $filter = new Phprojekt_Filter($item);
@@ -120,6 +121,7 @@ class Phprojekt_FilterTest extends DatabaseTest
      */
     public function testConvertRulePart2()
     {
+        $this->markTestSkipped("We don't use Minutes");
         $item   = new Project_Models_Project();
 
         $filter = new Phprojekt_Filter($item);
