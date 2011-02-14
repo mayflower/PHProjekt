@@ -97,6 +97,7 @@ class Phprojekt_Converter_TextTest extends DatabaseTest
      */
     public function testConvertPart2()
     {
+        $this->markTestIncomplete('do not use minutes');
         $model           = Phprojekt_Loader::getModel('Minutes', 'Minutes');
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $model->getInformation()->getFieldDefinition($order);
@@ -120,6 +121,7 @@ class Phprojekt_Converter_TextTest extends DatabaseTest
      */
     public function testConvertPart3()
     {
+        $this->markTestIncomplete('do not use helpdesk');
         $model           = Phprojekt_Loader::getModel('Helpdesk', 'Helpdesk');
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $model->getInformation()->getFieldDefinition($order);
