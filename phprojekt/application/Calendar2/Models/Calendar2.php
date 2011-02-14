@@ -149,6 +149,12 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function save()
     {
+        if (!$this->recordValidate()) {
+            $errors = $this->getError();
+            $error  = array_pop($errors);
+            throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
+        }
+
         if ($this->_isFirst) {
             if (!self::isValidVisibility($this->visibility)) {
                 throw new Phprojekt_PublishedException(
@@ -231,6 +237,12 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function saveSingleEvent()
     {
+        if (!$this->recordValidate()) {
+            $errors = $this->getError();
+            $error  = array_pop($errors);
+            throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
+        }
+
         if (is_null($this->_storedId)) {
             // This event is not saved yet. Reset the rrule and save it.
             $this->rrule = null;
