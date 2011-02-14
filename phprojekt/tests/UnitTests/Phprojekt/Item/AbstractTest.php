@@ -260,6 +260,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
             'current_status'   => $this->_formResult['currentStatus'],
             'complete_percent' => $this->_formResult['completePercent']
         );
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
     }
 
     /**
