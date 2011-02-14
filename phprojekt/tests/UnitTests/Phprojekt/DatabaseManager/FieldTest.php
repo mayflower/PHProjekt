@@ -42,6 +42,10 @@ require_once 'PHPUnit/Framework.php';
  */
 class Phprojekt_DatabaseManager_FieldTest extends PHPUnit_Framework_TestCase
 {
+    public function setUp() {
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
     /**
      * Test __get
      */

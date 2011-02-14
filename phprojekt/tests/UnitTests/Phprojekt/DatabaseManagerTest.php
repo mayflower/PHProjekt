@@ -69,6 +69,7 @@ class Phprojekt_DatabaseManagerTest extends DatabaseTest
         $this->_listLabelResult = array(
                         'Title','Start date','End date','Priority',
                         'Current status','Complete percent');
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
     }
 
     /**
