@@ -256,6 +256,12 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         $itemId   = $object->id;
         $where    = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
 
+        $fields = array();
+        $fieldDefinition = $object->getInformation()->getFieldDefinition();
+        foreach($fieldDefinition as $field) {
+            $fields[$field['key']] = $field;
+        }
+
         $datetime = null;
         $action   = null;
         $history  = $this->fetchAll($where, 'id DESC');
@@ -273,6 +279,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                                           'moduleId' => $row->moduleId,
                                           'itemId'   => $row->itemId,
                                           'field'    => $row->field,
+                                          'label'    => isset($fields[$row->field]) ?
+                                                            $fields[$row->field]['label'] : $row->field,
                                           'oldValue' => $row->oldValue,
                                           'newValue' => $row->newValue,
                                           'action'   => $row->action,
