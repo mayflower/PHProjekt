@@ -94,7 +94,7 @@ class Phprojekt_DatabaseManagerTest extends DatabaseTest
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $db      = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
-        $fields  = $db->getFieldDefinition(2);
+        $fields  = $db->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         foreach ($fields as $field) {
             $result[$field['key']] = $field['key'];
         }
