@@ -103,7 +103,7 @@ class Phprojekt_ConfigurationTest extends DatabaseTest
         $metadata = $configuration->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $records  = $configuration->getList(0, $metadata);
 
-        $data = array('id' => 0, 'companyName' => 'Invisible Root');
+        $data = array('id' => 0, 'companyName' => '');
         $this->assertEquals(array($data), $records);
     }
 }

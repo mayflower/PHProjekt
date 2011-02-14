@@ -60,8 +60,8 @@ class Phprojekt_LoaderTest extends DatabaseTest
     {
         $name = Phprojekt_Loader::getModel('Project', 'Project');
         $this->assertEquals('Project_Models_Project', get_class($name));
-        $instance = new $name(array('db'=>$this->sharedFixture));
-        $this->assertNotNull($instance);
+        $instance = new $name(array('db' => Phprojekt::getInstance()->getDb()));
+        $this->assertTrue($instance instanceof Project_Models_Project);
     }
 
     /**

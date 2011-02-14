@@ -50,21 +50,21 @@ class Todo_Models_Todo_Test extends DatabaseTest
     public function testGetNotificationRecipients()
     {
         $todoModel = new Todo_Models_Todo();
-        $todoModel->find(2);
+        $todoModel->find(1);
         $response = $todoModel->getNotification()->getTo();
-        $expected = array();
+        $expected = array(3);
         $this->assertEquals($expected, $response);
 
         $todoModel->userId = 2;
         $todoModel->save();
         $response   = $todoModel->getNotification()->getTo();
-        $expected = array(2);
+        $expected = array(3, 2);
         $this->assertEquals($expected, $response);
 
         $todoModel->userId = 3;
         $todoModel->save();
         $response   = $todoModel->getNotification()->getTo();
-        $expected = array(3, 2);
+        $expected = array(3);
         $this->assertEquals($expected, $response);
     }
 }

@@ -139,7 +139,7 @@ class Phprojekt_AuthTest extends DatabaseTest
     public function testUserId() {
         $user = new Phprojekt_User_User(array ('db' => $this->sharedFixture));
         $clone = $user->findUserById(1);
-        $this->assertEquals('david', $clone->username);
+        $this->assertEquals('Test', $clone->username);
 
         $clone = $user->findUserById(0);
         $this->assertEquals('', $clone->username);
