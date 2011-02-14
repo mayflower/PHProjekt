@@ -77,7 +77,6 @@ class Phprojekt_HistoryTest extends DatabaseTest
         $project->priority = 1;
         $project->currentStatus = 2;
         $project->save();
-        Zend_Registry::set('insertedId', $project->id);
 
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
         $data = $history->getHistoryData($project, $project->id);
@@ -113,7 +112,7 @@ class Phprojekt_HistoryTest extends DatabaseTest
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $project->find(Zend_Registry::get('insertedId'));
+        $project->find(1);
         $project->title = 'EDITED TEST';
         $project->save();
 
@@ -122,7 +121,7 @@ class Phprojekt_HistoryTest extends DatabaseTest
         $data = $history->getHistoryData($project, $project->id);
         $array = array('userId'   => '1',
                        'moduleId' => '1',
-                       'itemId'   => Zend_Registry::get('insertedId'),
+                       'itemId'   => '1',
                        'field'    => 'title',
                        'label'    => 'Title',
                        'oldValue' => 'TEST',
@@ -152,10 +151,10 @@ class Phprojekt_HistoryTest extends DatabaseTest
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $data  = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
+        $data  = $history->getHistoryData($project, 1);
         $array = array('userId'   => '1',
                        'moduleId' => '1',
-                       'itemId'   => Zend_Registry::get('insertedId'),
+                       'itemId'   => '1',
                        'field'    => 'title',
                        'label'    => 'Title',
                        'oldValue' => 'TEST',
@@ -183,10 +182,10 @@ class Phprojekt_HistoryTest extends DatabaseTest
     public function testGetLastHistoryData()
     {
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
-        $project->find(Zend_Registry::get('insertedId'));
+        $project->find(1);
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $data     = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
+        $data     = $history->getHistoryData($project, 1);
         $lastData = $history->getLastHistoryData($project);
 
         $this->assertEquals(7, count($data));
@@ -201,7 +200,6 @@ class Phprojekt_HistoryTest extends DatabaseTest
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $project->find(Zend_Registry::get('insertedId'));
         $project->delete();
 
         $data  = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
