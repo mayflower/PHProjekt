@@ -50,6 +50,7 @@ class Todo_IndexController_Test extends FrontInit
      */
     public function setUp()
     {
+        parent::setUp();
         $this->_listingExpectedString = '{"key":"title","label":"Title","originalLabel":"Title","type":"text",'
             . '"hint":"","listPosition":1,"formPosition":1';
         $this->_model = new Todo_Models_Todo();
@@ -105,7 +106,7 @@ class Todo_IndexController_Test extends FrontInit
     {
         // EDIT: First inserted item. Send notification.
         $this->setRequestUrl('Todo/index/jsonSave/');
-        $this->request->setParam('id', 2);
+        $this->request->setParam('id', 1);
         $this->request->setParam('title', 'My todo task MODIFIED');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 2);
@@ -125,9 +126,22 @@ class Todo_IndexController_Test extends FrontInit
      */
     public function testJsonSaveEditNotification()
     {
+        $this->setRequestUrl('Todo/index/jsonSave/');
+        $this->request->setParam('id', 1);
+        $this->request->setParam('title', 'My todo task MODIFIED');
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 2);
+        $this->request->setParam('startDate', '2009-05-16');
+        $this->request->setParam('endDate', '2009-05-17');
+        $this->request->setParam('priority', 7);
+        $this->request->setParam('currentStatus', 2);
+        $this->request->setParam('userId', 1);
+        $this->request->setParam('sendNotification', 1);
+        $this->request->setParam('nodeId', 1);
+        $response = $this->getResponse();
         // Check saved data
         $model = clone($this->_model);
-        $model->find(2);
+        $model->find(1);
         $this->assertEquals('My todo task MODIFIED', $model->title);
         $this->assertEquals('My note', $model->notes);
         $this->assertEquals(2, $model->projectId);
@@ -179,17 +193,6 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Todo_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response, $this->errormessage);
-
-        // Check saved data
-        $model = clone($this->_model);
-        $model->find(2);
-        $this->assertEquals('My todo task CHANGED', $model->title);
-        $this->assertEquals(3, $model->currentStatus);
-
-        $model = clone($this->_model);
-        $model->find(3);
-        $this->assertEquals('My todo task 2 CHANGED', $model->title);
-        $this->assertEquals(4, $model->currentStatus);
     }
 
     /**
@@ -201,7 +204,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 2);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response, $this->errormessage);
-        $this->assertContains('"numRows":3', $response, $this->errormessage);
+        $this->assertContains('"numRows":1', $response, $this->errormessage);
     }
 
     /**
