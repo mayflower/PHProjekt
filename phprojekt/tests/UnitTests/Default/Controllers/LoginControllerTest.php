@@ -42,6 +42,9 @@ require_once 'PHPUnit/Framework.php';
  */
 class Phprojekt_LoginController_Test extends FrontInit
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
     /**
      * Test if the login page is displayed correctly
      */
