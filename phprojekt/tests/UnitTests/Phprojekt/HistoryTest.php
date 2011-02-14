@@ -89,19 +89,11 @@ class Phprojekt_HistoryTest extends DatabaseTest
                        'newValue' => 'Ordered',
                        'action'   => 'add',
                        'datetime' => date("Y-m-d"));
-        $found = 0;
-        foreach ($data as $values) {
-            /* Remove the hour */
-            $values['datetime'] = substr($values['datetime'], 0, 10);
-            $result             = array_diff_assoc($values, $array);
+        foreach($data as &$e) {
+            $e['datetime'] = substr($e['datetime'], 0, 10);
+        }
 
-            if (empty($result)) {
-                $found = 1;
-            }
-        }
-        if (!$found) {
-            $this->fail('Save add history error');
-        }
+        $this->assertContains($array, $data);
     }
 
     /**
@@ -128,19 +120,11 @@ class Phprojekt_HistoryTest extends DatabaseTest
                        'newValue' => 'EDITED TEST',
                        'action'   => 'edit',
                        'datetime' => date("Y-m-d"));
-        $found = 0;
-        foreach ($data as $values) {
-            /* Remove the hour */
-            $values['datetime'] = substr($values['datetime'], 0, 10);
-            $result = array_diff_assoc($values, $array);
+        foreach($data as &$e) {
+            $e['datetime'] = substr($e['datetime'], 0, 10);
+        }
 
-            if (empty($result)) {
-                $found = 1;
-            }
-        }
-        if (!$found) {
-            $this->fail('Save edit history error');
-        }
+        $this->assertContains($array, $data);
     }
 
     /**
@@ -160,20 +144,8 @@ class Phprojekt_HistoryTest extends DatabaseTest
                        'oldValue' => 'TEST',
                        'newValue' => 'EDITED TEST',
                        'action'   => 'edit',
-                       'datetime' => date("Y-m-d"));
-        $found = 0;
-        foreach ($data as $values) {
-            /* Remove the hour */
-            $values['datetime'] = substr($values['datetime'], 0, 10);
-            $result = array_diff_assoc($values, $array);
-
-            if (empty($result)) {
-                $found = 1;
-            }
-        }
-        if (!$found) {
-            $this->fail('Get history error');
-        }
+                       'datetime' => '2001-02-23 23:23:42');
+        $this->assertContains($array, $data);
     }
 
     /**
