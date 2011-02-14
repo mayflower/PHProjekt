@@ -169,15 +169,35 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
             content[event]['endDate'] = phpr.Date.getIsoDate(dateTime);
             content[event]['endTime'] = phpr.Date.getIsoTime(dateTime);
             var warning = '';
-            for (p in content[event]['confirmationStatuses']) {
-                var status = content[event]['confirmationStatuses'][p];
-                if (1 == status) { // Pending
+            var currentUserId = content[event]["rights"]["currentUser"]["userId"];
+            if (currentUserId == content[event]['ownerId']) {
+                // This is our event, let's add a warning if somebody has not
+                // accepted (or beware, somebody rejected!) our invitation.
+                for (p in content[event]['confirmationStatuses']) {
+                    var status = content[event]['confirmationStatuses'][p];
+                    if (1 == status) { // Pending
+                        warning = '<img src="/css/themes/phprojekt/images/help.gif"'
+                            + ' title="'
+                            + phpr.nls.get('Some participants have not accepted yet.')
+                            + '"/>';
+                    } else if (3 == status) { //Rejected
+                        warning = '<img src="/css/themes/phprojekt/images/warning.png"'
+                            + ' title="'
+                            + phpr.nls.get('Some participants have rejected your invitation.')
+                            + '"/>';
+                        // Break to prevent warning from being overwritten if
+                        // someone after this participant is pending.
+                        break;
+                    }
+                }
+            } else {
+                // We're just invited. Let's remind the user if we didn't
+                // respond yet.
+                if (content[event]['confirmationStatus'] == 1) {
                     warning = '<img src="/css/themes/phprojekt/images/help.gif"'
-                        + ' alt="Some participants have not accepted yet."/>';
-                } else if (3 == status) { //Rejected
-                    warning = '<img src="/css/themes/phprojekt/images/warning.png"'
-                        + ' alt="Some participants have rejected your invitation."/>';
-                    break;
+                        + ' title="'
+                        + phpr.nls.get('You did not respond to this invitation yet.')
+                        + '"/>';
                 }
             }
 
