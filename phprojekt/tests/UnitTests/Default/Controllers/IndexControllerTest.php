@@ -108,7 +108,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonDetail');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains('"metadata":[]}', $response);
+        $this->assertContains('"metadata":[{"key":"title"', $response);
     }
 
     /**
