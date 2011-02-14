@@ -84,7 +84,7 @@ class Phprojekt_HistoryTest extends DatabaseTest
                        'moduleId' => '1',
                        'itemId'   => $project->id,
                        'field'    => 'currentStatus',
-                       'label'    => 'Status',
+                       'label'    => 'Current status',
                        'oldValue' => '',
                        'newValue' => 'Ordered',
                        'action'   => 'add',
@@ -124,7 +124,7 @@ class Phprojekt_HistoryTest extends DatabaseTest
                        'itemId'   => '1',
                        'field'    => 'title',
                        'label'    => 'Title',
-                       'oldValue' => 'TEST',
+                       'oldValue' => 'PHProjekt',
                        'newValue' => 'EDITED TEST',
                        'action'   => 'edit',
                        'datetime' => date("Y-m-d"));
@@ -188,8 +188,9 @@ class Phprojekt_HistoryTest extends DatabaseTest
         $data     = $history->getHistoryData($project, 1);
         $lastData = $history->getLastHistoryData($project);
 
-        $this->assertEquals(7, count($data));
-        $this->assertEquals(1, count($lastData));
+        $this->assertEquals(1, count($data));
+        $this->assertEquals($data, $lastData);
+        $this->assertequals(1, count($lastData));
     }
 
     /**
