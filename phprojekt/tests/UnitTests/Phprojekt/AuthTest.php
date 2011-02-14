@@ -38,8 +38,19 @@ require_once 'PHPUnit/Framework.php';
  * @group      auth
  * @group      phprojekt-auth
  */
-class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
+class Phprojekt_AuthTest extends DatabaseTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * Test if login passes with user not logged it
      */

@@ -38,8 +38,12 @@ require_once 'PHPUnit/Framework.php';
  * @group      model
  * @group      todo-model
  */
-class Todo_Models_Todo_Test extends PHPUnit_Framework_TestCase
+class Todo_Models_Todo_Test extends DatabaseTest
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * Test getTo method
      */

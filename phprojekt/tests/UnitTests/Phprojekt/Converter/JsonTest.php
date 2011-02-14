@@ -40,8 +40,18 @@ require_once 'PHPUnit/Framework.php';
  * @group      phprojekt-converter
  * @group      phprojekt-converter-json
  */
-class Phprojekt_Converter_JsonTest extends PHPUnit_Framework_TestCase
+class Phprojekt_Converter_JsonTest extends DatabaseTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
     /**
      * Test json converter
      */

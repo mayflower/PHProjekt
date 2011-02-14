@@ -40,8 +40,13 @@ require_once 'PHPUnit/Framework.php';
  * @group      phprojekt-converter
  * @group      phprojekt-converter-csv
  */
-class Phprojekt_Converter_CsvTest extends PHPUnit_Framework_TestCase
+class Phprojekt_Converter_CsvTest extends DatabaseTest
 {
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * Test csv converter
      */
