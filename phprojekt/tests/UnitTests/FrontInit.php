@@ -20,8 +20,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
-
 /**
  * Tests for Index Controller
  *
@@ -33,7 +31,7 @@ require_once 'PHPUnit/Framework.php';
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class FrontInit extends PHPUnit_Framework_TestCase
+abstract class FrontInit extends DatabaseTest
 {
     public $request      = null;
     public $response     = null;
@@ -48,6 +46,7 @@ class FrontInit extends PHPUnit_Framework_TestCase
      */
     public function __construct()
     {
+        parent::__construct();
         $this->request  = new Zend_Controller_Request_Http();
         $this->response = new Zend_Controller_Response_Http();
         $this->config   = Phprojekt::getInstance()->getConfig();

@@ -43,6 +43,10 @@ class Todo_IndexController_Test extends FrontInit
     private $_listingExpectedString = null;
     private $_model                 = null;
 
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(realpath(dirname(__FILE__) . '/../data.xml'));
+    }
+
     /**
      * setUp method for PHPUnit
      */
