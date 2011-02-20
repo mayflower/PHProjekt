@@ -493,6 +493,61 @@ class Calendar2_IndexController extends IndexController
     }
 
     /**
+     * Return ical busy times for the given time period and user. If no
+     * user is given, default to the currently logged in user.
+     *
+     * Request parameters:
+     *  int         user    => The id of the user. May be null.
+     *  datetime    start   => The start of the period to check.
+     *  datetime    end     => The end of the period to check.
+     *
+     * Response
+     *  Array of {
+     *      datetime start => The start of the busy period.
+     *      datetime end   => The end of the busy period.
+     *  }
+     */
+    public function jsonBusyTimesAction()
+    {
+        $user  = $this->getRequest()->getParam('user',
+                                               Phprojekt_Auth::getUserId());
+        $start = $this->getRequest()->getParam('start');
+        $end   = $this->getRequest()->getParam('end');
+
+        if (!Cleaner::validate('int', $user)) {
+            throw new Phprojekt_PublishedException("Invalid id '$id'");
+        }
+        $user = (int) $user;
+        if (!self::_validateTimestamp($start)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid start timestamp '$start'"
+            );
+        }
+        if (!self::_validateTimestamp($end)) {
+            throw new Phprojekt_PublishedException(
+                "Invalid end timestamp '$start'"
+            );
+        }
+        $start = new Datetime($start, $this->_getUserTimezone());
+        $end   = new Datetime($end, $this->_getUserTimezone());
+
+        $model  = new Calendar2_Models_Calendar2();
+        $events = $model->fetchAllForPeriod($start, $end);
+
+        $busyPeriods = array();
+        foreach ($events as $event) {
+            $busyPeriods[] = array(
+                'start' => new Datetime($event->start, new DateTimeZone('UTC')),
+                'end' => new Datetime($event->end, new DateTimeZone('UTC'))
+            );
+        }
+
+        Phprojekt_Converter_Json::echoConvert(
+            Calendar2_Helper_Time::compactPeriods($busyPeriods)
+        );
+    }
+
+    /**
      * Updates the current user's confirmation status on the given event.
      *
      * @param Calendar2_Models_Calendar2 $model  The model to update.
