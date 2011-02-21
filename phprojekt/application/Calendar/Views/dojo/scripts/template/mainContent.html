@@ -1,35 +1,122 @@
-<div dojoType="dijit.layout.BorderContainer" design="sidebar" id="calendarMain" persist="true"
-    style="width: 100%; height: 100%;">
+<div id="defaultMainContent-Calendar" dojoType="dijit.layout.BorderContainer" design="sidebar" persist="true"
+ liveSplitters="false"
+ style="width: 100%; height: 100%; background: #FFF;">
     <!-- List View -->
-    <div dojoType="dijit.layout.ContentPane" region="center" class="prepend-0 append-0">
-        <div dojoType="dijit.layout.BorderContainer" gutters="false"
+    <div dojoType="dijit.layout.ContentPane" region="top" class="prepend-0 append-0" splitter="true"
+    id="content-Calendar"
+    style="height: 30%; overflow: hidden;">
+        <!-- Grid view -->
+        <div dojoType="dijit.layout.BorderContainer" gutters="false" id="listContent-Calendar"
         style="height: 100%; overflow: hidden;">
-            <div dojoType="phpr.Filter.ExpandoPane" id="gridFiltersBox" title="" region="top"
+            <div dojoType="phpr.Grid.FilterExpandoPane" id="gridFiltersBox-Calendar" title="" region="top"
             startExpanded="false" maxHeight="200" style="height: 90px; z-index: 3; overflow-x: hidden;">
             </div>
-            <div dojoType="dijit.layout.ContentPane" id="gridBox" region="center" startExpanded="true"
-            style="overflow-x: hidden;">
+            <div dojoType="dijit.layout.ContentPane" id="gridBox-Calendar" region="center" startExpanded="true"
+            style="overflow: hidden;">
+            </div>
+        </div>
+        <!-- Day self view -->
+        <div dojoType="dijit.layout.BorderContainer" id="daySelfContent-Calendar"
+        style="height: 100%; overflow: hidden;">
+            <div dojoType="dijit.layout.ContentPane" id="daySelfScheduleBar-Calendar" region="top"
+            style="height: 10%; overflow: hidden;">
+                <table>
+                    <tr>
+                        <td>
+                            &nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [0]);">&lt;&lt;</a>&nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [1]);">{{today}}</a>&nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [2]);">&gt;&gt;</a>
+                        </td>
+                        <td style="width: 20px;"></td>
+                        <td>
+                            <div id="daySelfScheduleBarDate-Calendar" dojoType="dijit.layout.ContentPane"
+                            style="font-weight: bold;">&nbsp;&nbsp;</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div dojoType="dijit.layout.ContentPane" id="daySelfBox-Calendar" region="center"
+            style="height: 90%; overflow-x: hidden;">
+            </div>
+        </div>
+        <!-- Day select view -->
+        <div dojoType="dijit.layout.BorderContainer" id="daySelectContent-Calendar"
+        style="height: 100%; overflow: hidden;">
+            <div dojoType="dijit.layout.ContentPane" id="daySelectScheduleBar-Calendar" region="top"
+            style="height: 10%; overflow: hidden;">
+                <table>
+                    <tr>
+                        <td>
+                            &nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [0]);">&lt;&lt;</a>&nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [1]);">{{today}}</a>&nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [2]);">&gt;&gt;</a>
+                        </td>
+                        <td style="width: 20px;"></td>
+                        <td>
+                            <div id="daySelectScheduleBarDate-Calendar" dojoType="dijit.layout.ContentPane"
+                            style="font-weight: bold;">&nbsp;&nbsp;</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div dojoType="dijit.layout.ContentPane" id="daySelectBox-Calendar" region="center"
+            style="height: 90%; overflow-x: hidden;">
+            </div>
+        </div>
+        <!-- Week view -->
+        <div dojoType="dijit.layout.BorderContainer" id="weekContent-Calendar"
+        style="height: 100%; overflow: hidden;">
+            <div dojoType="dijit.layout.ContentPane" id="weekScheduleBar-Calendar" region="top"
+            style="height: 10%; overflow: hidden;">
+                <table>
+                    <tr>
+                        <td>
+                            &nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [0]);">&lt;&lt;</a>&nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [1]);">{{today}}</a>&nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [2]);">&gt;&gt;</a>
+                        </td>
+                        <td style="width: 20px;"></td>
+                        <td>
+                            <div id="weekScheduleBarDate-Calendar" dojoType="dijit.layout.ContentPane"
+                            style="font-weight: bold;">&nbsp;&nbsp;</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div dojoType="dijit.layout.ContentPane" id="weekBox-Calendar" region="center"
+            style="height: 90%; overflow-x: hidden;">
+            </div>
+        </div>
+        <!-- Month view -->
+        <div dojoType="dijit.layout.BorderContainer" id="monthContent-Calendar"
+        style="height: 100%; overflow: hidden;">
+            <div dojoType="dijit.layout.ContentPane" id="monthScheduleBar-Calendar" region="top"
+            style="height: 10%; overflow: hidden;">
+                <table>
+                    <tr>
+                        <td>
+                            &nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [0]);">&lt;&lt;</a>&nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [1]);">{{today}}</a>&nbsp;
+                            <a href="javascript: dojo.publish('Calendar.setDate', [2]);">&gt;&gt;</a>
+                        </td>
+                        <td style="width: 20px;"></td>
+                        <td>
+                            <div id="monthScheduleBarDate-Calendar" dojoType="dijit.layout.ContentPane"
+                            style="font-weight: bold;">&nbsp;&nbsp;</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div dojoType="dijit.layout.ContentPane" id="monthBox-Calendar" region="center"
+            style="height: 90%; overflow-x: hidden;">
             </div>
         </div>
     </div>
     <!-- Form View -->
-    <div dojoType="dijit.layout.ContentPane" id="detailsBox" region="bottom" splitter="true"
-    style="height: 60%;">
-    </div>
-</div>
-<!-- Users Selector -->
-<div dojoType="dijit.Dialog" id="selectorDialog" title="" draggable="false"
-    style="background-color: white; width: auto; height: auto; text-align: center;">
-    <h1 id="selectorTitle"></h1>
-    <div dojoType="dijit.layout.ContentPane" id="selectorContainer"
-        style="width: 330px; height: 310px; border: 2px solid #294064; padding-left: 7px;">
-    </div>
-</div>
-<!-- Event Selector -->
-<div dojoType="dijit.Dialog" id="eventSelectorDialog" title="" draggable="false"
-    style="background-color: white; width: auto; height: auto;">
-    <h2 id="eventSelectorTitle" style="text-align:center"></h2>
-    <div dojoType="dijit.layout.ContentPane" id="eventSelectorContainer"
-        style="border: 2px solid #294064; padding: 7px;">
+    <div dojoType="dijit.layout.ContentPane" id="detailsBox-Calendar" region="center">
     </div>
 </div>

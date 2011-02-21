@@ -16,10 +16,20 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Calendar.Grid");
 
 dojo.declare("phpr.Calendar.Grid", phpr.Default.Grid, {
+    init:function(id, needResize) {
+        // Summary:
+        //    Init the grid for a new render.
+        this.inherited(arguments);
+
+        // Set the resize routine
+        if (needResize) {
+            dijit.byId('content-Calendar').resize();
+        }
+    }
 });
