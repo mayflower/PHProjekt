@@ -16,17 +16,20 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Note.Main");
 
 dojo.declare("phpr.Note.Main", phpr.Default.Main, {
     constructor:function() {
-        this.module = 'Note';
-        this.loadFunctions(this.module);
+        // Summary:
+        //    Create a new instance of the module.
+        this._module = 'Note';
 
-        this.gridWidget = phpr.Note.Grid;
-        this.formWidget = phpr.Note.Form;
+        this._loadFunctions();
+
+        this._gridWidget = phpr.Note.Grid;
+        this._formWidget = phpr.Note.Form;
     }
 });
