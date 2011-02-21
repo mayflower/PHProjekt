@@ -16,51 +16,54 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.MinutesItem.Grid");
 
 dojo.declare("phpr.MinutesItem.Grid", phpr.Default.SubModule.Grid, {
-    useIdInGrid:function() {
+    _useIdInGrid:function() {
+        // Summary:
+        //    Draw the ID on the grid.
         return false;
     },
 
-    customGridLayout:function(meta) {
+    _customGridLayout:function(gridLayout) {
         // Summary:
-        //    Set a different layout for the grid
-        // Description:
-        //    Set a different layout for the grid
-        var deleteFields = new Array('sortOrder', 'minutesId', 'projectId', 'comment');
-        this.gridLayout = dojo.filter(this.gridLayout, function(item) {
-                return (!phpr.inArray(item['field'], deleteFields));
-            }
-        );
+        //    Custom functions for the layout.
+        var tmp = this.inherited(arguments);
 
-        for (cell in this.gridLayout) {
-            if (this.gridLayout[cell]['field'] == 'topicId') {
-                this.gridLayout[cell]['rowSpan'] = 2;
-                this.gridLayout[cell]['width']   = '9%';
-            } else if (this.gridLayout[cell]['field'] == 'gridEdit') {
-                this.gridLayout[cell]['rowSpan'] = 2;
-            } else if (this.gridLayout[cell]['field'] == 'title') {
-                this.gridLayout[cell]['width'] = '46%';
-            } else if (this.gridLayout[cell]['field'] == 'userId') {
-                this.gridLayout[cell]['width'] = '20%';
+        var deleteFields = new Array('sortOrder', 'minutesId', 'projectId', 'comment');
+        tmp = dojo.filter(gridLayout, function(item) {
+            return (!phpr.inArray(item['field'], deleteFields));
+        });
+
+        for (cell in tmp) {
+            if (tmp[cell]['field'] == 'topicId') {
+                tmp[cell]['rowSpan'] = 2;
+                tmp[cell]['width']   = '9%';
+            } else if (tmp[cell]['field'] == 'gridEdit') {
+                tmp[cell]['rowSpan'] = 2;
+            } else if (tmp[cell]['field'] == 'title') {
+                tmp[cell]['width'] = '46%';
+            } else if (tmp[cell]['field'] == 'userId') {
+                tmp[cell]['width'] = '20%';
             }
         }
 
-        this.gridLayout = [this.gridLayout, [
+        var newGridLayout = [tmp, [
             {
                 width:    'auto',
-                name:     phpr.nls.get('Comment', this.main.module),
+                name:     phpr.nls.get('Comment', this._module),
                 field:    'comment',
-                type:     phpr.grid.cells.Textarea,
-                styles:   "text-align: left;",
+                type:     phpr.Grid.Cells.Textarea,
+                styles:   'text-align: left;',
                 editable: false,
                 colSpan:  4
             }
         ]];
+
+        return newGridLayout;
     }
 });
 
