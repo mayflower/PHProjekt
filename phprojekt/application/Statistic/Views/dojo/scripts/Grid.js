@@ -16,10 +16,10 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Statistic.Grid");
 
-dojo.declare("phpr.Statistic.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Statistic.Grid", null, {
 });
