@@ -1,48 +1,48 @@
 /* MonthView */
-.phprojekt #tableMonthView {
+.phprojekt #tableMonthView-Timecard {
     width: 100%;
     line-height: 1.09;
 }
 
-.dj_ie7 .phprojekt #tableMonthView {
+.dj_ie7 .phprojekt #tableMonthView-Timecard {
     line-height: 1.04 !important;
 }
 
-.dj_ie .phprojekt #tableMonthView {
+.dj_ie .phprojekt #tableMonthView-Timecard {
     line-height: 1.15;
 }
 
-.phprojekt #tableMonthView .col1 {
+.phprojekt #tableMonthView-Timecard .col1 {
     width: 15%;
 }
 
-.phprojekt #tableMonthView .col2 {
+.phprojekt #tableMonthView-Timecard .col2 {
     width: 30%;
 }
 
-.phprojekt #tableMonthView .col3 {
+.phprojekt #tableMonthView-Timecard .col3 {
     width: 55%;
 }
 
-.phprojekt #tableMonthView td {
+.phprojekt #tableMonthView-Timecard td {
     padding: 0 0.5em 0 0.5em;
 }
 
-.phprojekt #tableMonthView .weekday,
-.phprojekt #tableMonthView .weekday a,
-.phprojekt #tableMonthView .weekend,
-.phprojekt #tableMonthView .weekend a {
+.phprojekt #tableMonthView-Timecard .weekday,
+.phprojekt #tableMonthView-Timecard .weekday a,
+.phprojekt #tableMonthView-Timecard .weekend,
+.phprojekt #tableMonthView-Timecard .weekend a {
     color: #000;
     text-decoration: none;
 }
 
-.phprojekt #tableMonthView .weekend,
-.phprojekt #tableMonthView .weekend a {
+.phprojekt #tableMonthView-Timecard .weekend,
+.phprojekt #tableMonthView-Timecard .weekend a {
     color: #ccc;
 }
 
-.phprojekt #tableMonthView .open,
-.phprojekt #tableMonthView .open a {
+.phprojekt #tableMonthView-Timecard .open,
+.phprojekt #tableMonthView-Timecard .open a {
     color: red;
 }
 
@@ -51,18 +51,18 @@
     height: 5px;
 }
 
-.dj_ie .phprojekt #tableMonthView .dijitButtonNode {
+.dj_ie .phprojekt #tableMonthView-Timecard .dijitButtonNode {
     padding: 0 0 0 5px;
 }
 
 /* DayView */
-.phprojekt #timecardDayView {
+.phprojekt #dayViewContent-Timecard {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
 }
 
-.phprojekt #timecardDayView .dayViewWhite,
-.phprojekt #timecardDayView .dayViewCelestial {
+.phprojekt #dayViewContent-Timecard .dayViewWhite,
+.phprojekt #dayViewContent-Timecard .dayViewCelestial {
     background-color: white;
     float: left;
     width: 100%;
@@ -72,8 +72,8 @@
     overflow: hidden;
 }
 
-.phprojekt #timecardDayView .dayViewWhite .hourBox,
-.phprojekt #timecardDayView .dayViewCelestial .hourBox {
+.phprojekt #dayViewContent-Timecard .dayViewWhite .hourBox,
+.phprojekt #dayViewContent-Timecard .dayViewCelestial .hourBox {
     background-color: #D4DFEA;
     border-top: 1px solid black;
     border-left: 1px solid black;
@@ -85,31 +85,31 @@
 }
 
 
-.dj_ie .phprojekt #timecardDayView .dayViewWhite .hourBox,
-.dj_ie .phprojekt #timecardDayView .dayViewCelestial .hourBox {
+.dj_ie .phprojekt #dayViewContent-Timecard .dayViewWhite .hourBox,
+.dj_ie .phprojekt #dayViewContent-Timecard .dayViewCelestial .hourBox {
     padding: 0 0 0 7px;
 }
 
-.phprojekt #timecardDayView .dayViewCelestial {
+.phprojekt #dayViewContent-Timecard .dayViewCelestial {
     background-color: #e9f3ff;
 }
 
-.phprojekt #timecardDayView .addButton .dijitButtonNode {
+.phprojekt #dayViewContent-Timecard .addButton .dijitButtonNode {
     width: 15px;
     border: none;
     background: none;
     padding: 0 3px 0 0;
 }
 
-.dj_ie .phprojekt #timecardDayView .addButton .dijitButtonNode {
+.dj_ie .phprojekt #dayViewContent-Timecard .addButton .dijitButtonNode {
     padding: 0 3px 0 5px;
 }
 
-.dj_ie .phprojekt #timecardDayView .addButton .dijitButtonContents {
+.dj_ie .phprojekt #dayViewContent-Timecard .addButton .dijitButtonContents {
     height: 15px;
 }
 
-.phprojekt #timecardDayView .add {
+.phprojekt #dayViewContent-Timecard .add {
     margin-left: 0;
 }
 
@@ -180,21 +180,21 @@
 }
 
 /* Tooltip */
-.phprojekt #timecardTooltipDialog {
+.phprojekt #tooltipDialog-Timecard {
     width: 460px;
     height: 165px;
 }
 
-.phprojekt #timecardTooltipDialog .dijitTooltipContainer {
+.phprojekt #tooltipDialog-Timecard .dijitTooltipContainer {
     background-color: #FFCC33;
     border: 1px solid #294064;
 }
 
-.phprojekt #timecardTooltipDialog .dijitTooltipConnector {
+.phprojekt #tooltipDialog-Timecard .dijitTooltipConnector {
     background: url("images/tooltipConnectorLeft_ffcc33.png") no-repeat top left;
 }
 
-.dj_ie .phprojekt #timecardTooltipDialog .dijitTooltipConnector {
+.dj_ie .phprojekt #tooltipDialog-Timecard .dijitTooltipConnector {
     background-image: url("images/tooltipConnectorLeft_ffcc33.gif");
 }
 

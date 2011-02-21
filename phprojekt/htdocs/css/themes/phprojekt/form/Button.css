@@ -131,6 +131,9 @@
     width: 13px;
     height: 13px;
 }
+.phprojekt #filesList .close {
+    background-position: center bottom;
+}
 
 .dj_ie .phprojekt span .close {
     width: 13px;
@@ -358,10 +361,18 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
     vertical-align: baseline;
 }
 
-.phprojekt #calendarSchedule .addButton .dijitButtonNode {
+.phprojekt .calendarSchedule .addButton .dijitButtonNode {
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
     width: 15px;
+    border: none;
+    background: none;
+}
+
+.phprojekt .calendarSchedule .tinyaddButton .dijitButtonNode {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    width: 8px;
     border: none;
     background: none;
 }

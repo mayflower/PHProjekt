@@ -177,12 +177,12 @@
     height: 22px;
 }
 
-.phprojekt .gridActions #gridComboAction .exportOption {
+.phprojekt .gridActions .exportOption {
     color: green;
     background-color: white;
 }
 
-.phprojekt .gridActions #gridComboAction .deleteOption {
+.phprojekt .gridActions .deleteOption {
     color: red;
     background-color: white;
 }

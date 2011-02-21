@@ -1,151 +1,151 @@
 /* Module Designer */
 
-#moduleDesignerContent .container {
+#content-ModuleDesigner .container {
     padding: 1em 3em;
     cursor: default;
     radius: 8pt;
     background: #fff;
 }
 
-#moduleDesignerContent .dojoDndContainerOver {
+#content-ModuleDesigner .dojoDndContainerOver {
 }
 
-#moduleDesignerContent .dojoDndTargetDisabled {
+#content-ModuleDesigner .dojoDndTargetDisabled {
     background: #eee;
 }
 
-#moduleDesignerContent .dojoDndItem {
+#content-ModuleDesigner .dojoDndItem {
     padding: 0 3px;
 }
 
-.dj_ff2 #moduleDesignerContent .dojoDndItem {
+.dj_ff2 #content-ModuleDesigner .dojoDndItem {
     -moz-user-select: none;
 }
 
-#moduleDesignerContent .dojoDndItemOver {
+#content-ModuleDesigner .dojoDndItemOver {
     background: #ededed;
     cursor: pointer;
 }
 
-#moduleDesignerContent .dojoDndItemSelected {
+#content-ModuleDesigner .dojoDndItemSelected {
     background: #ededed;
 }
 
-#moduleDesignerContent .dojoDndItemAnchor {
+#content-ModuleDesigner .dojoDndItemAnchor {
     background: #ededed;
 }
 
-#moduleDesignerContent .dojoDndItemOver .dojoDndItemSelected {
+#content-ModuleDesigner .dojoDndItemOver .dojoDndItemSelected {
     background: #ededed;
 }
 
-#moduleDesignerContent .dojoDndItemOver .dojoDndItemAnchor {
+#content-ModuleDesigner .dojoDndItemOver .dojoDndItemAnchor {
     background: #ededed;
 }
 
-#moduleDesignerContent .dojoDndItemBefore {
+#content-ModuleDesigner .dojoDndItemBefore {
 }
 
-#moduleDesignerContent .dojoDndItemAfter {
+#content-ModuleDesigner .dojoDndItemAfter {
 }
 
-#moduleDesignerContent .dojoDndAvatar {
+#content-ModuleDesigner .dojoDndAvatar {
     font-size: 75%;
     radius: 8pt;
 }
 
-#moduleDesignerContent .dojoDndAvatarHeader {
+#content-ModuleDesigner .dojoDndAvatarHeader {
     background: #aaa;
 }
 
-#moduleDesignerContent .dojoDndAvatarItem {
+#content-ModuleDesigner .dojoDndAvatarItem {
     background: #fff;
 }
 
-.phprojekt #moduleDesignerContent .dijitInputField INPUT,
-.phprojekt #moduleDesignerContent .dijitTextBox {
+.phprojekt #content-ModuleDesigner .dijitInputField INPUT,
+.phprojekt #content-ModuleDesigner .dijitTextBox {
     width: 209px;
 }
 
-.phprojekt #moduleDesignerContent .twoFields .dijitInputField INPUT,
-.phprojekt #moduleDesignerContent .twoFields .dijitTextBox {
+.phprojekt #content-ModuleDesigner .twoFields .dijitInputField INPUT,
+.phprojekt #content-ModuleDesigner .twoFields .dijitTextBox {
     width: 98px;
 }
 
-.dj_ie .phprojekt #moduleDesignerContent .file {
+.dj_ie .phprojekt #content-ModuleDesigner .file {
     width: 220px;
 }
 
-.phprojekt #moduleDesignerContent .dijitMultiSelect,
-.phprojekt #moduleDesignerContent select,
-.phprojekt #moduleDesignerContent .dijitComboBox,
-.phprojekt #moduleDesignerContent .dijitSpinner,
-.phprojekt #moduleDesignerContent .dijitSlider {
+.phprojekt #content-ModuleDesigner .dijitMultiSelect,
+.phprojekt #content-ModuleDesigner select,
+.phprojekt #content-ModuleDesigner .dijitComboBox,
+.phprojekt #content-ModuleDesigner .dijitSpinner,
+.phprojekt #content-ModuleDesigner .dijitSlider {
     width: 217px;
 }
 
-.phprojekt #moduleDesignerContent .dijitTextArea {
+.phprojekt #content-ModuleDesigner .dijitTextArea {
     width: 218px;
 }
 
-.dj_ie .phprojekt #moduleDesignerContent .dijitTextArea {
+.dj_ie .phprojekt #content-ModuleDesigner .dijitTextArea {
     width: 209px;
 }
 
-.phprojekt #moduleDesignerContent .form {
+.phprojekt #content-ModuleDesigner .form {
      margin-bottom: 0.1em;
      width: 100%;
 }
 
-.phprojekt #moduleDesignerContent .form .col1 {
+.phprojekt #content-ModuleDesigner .form .col1 {
      width: 19%;
 }
 
-.phprojekt #moduleDesignerContent .form .col2 {
+.phprojekt #content-ModuleDesigner .form .col2 {
      text-align: left;
      width: 50%;
 }
 
-.phprojekt #moduleDesignerContent .form .col3 {
+.phprojekt #content-ModuleDesigner .form .col3 {
      text-align: left;
      width: 31%;
 }
 
-.phprojekt #moduleDesignerContent #moduleDesignerEditor .form .col1 {
+.phprojekt #content-ModuleDesigner #editor-ModuleDesigner .form .col1 {
      width: 35%;
 }
 
-.phprojekt #moduleDesignerContent #moduleDesignerEditor .form .col2 {
+.phprojekt #content-ModuleDesigner #editor-ModuleDesigner .form .col2 {
      text-align: left;
      width: 50%;
 }
 
-.phprojekt #moduleDesignerContent #moduleDesignerEditor .form .col3 {
+.phprojekt #content-ModuleDesigner #editor-ModuleDesigner .form .col3 {
      text-align: left;
      width: 15%;
 }
 
-.phprojekt #moduleDesignerContent .form td {
+.phprojekt #content-ModuleDesigner .form td {
     vertical-align: top;
 }
 
-.phprojekt #moduleDesignerContent .dijitButton,
-.phprojekt #moduleDesignerContent .dijitDropDownButton,
-.phprojekt #moduleDesignerContent .dijitComboButton {
+.phprojekt #content-ModuleDesigner .dijitButton,
+.phprojekt #content-ModuleDesigner .dijitDropDownButton,
+.phprojekt #content-ModuleDesigner .dijitComboButton {
     margin: 0;
 }
 
-.phprojekt #moduleDesignerTarget .edit,
-.phprojekt #moduleDesignerTarget .cross {
+.phprojekt #target-ModuleDesigner .edit,
+.phprojekt #target-ModuleDesigner .cross {
     margin-left: -4px;
 }
 
 /* Dialog */
-.phprojekt .moduleManagerDialog {
+.phprojekt .moduleDesignerDialog {
     background: #294064;
 }
 
-.phprojekt .moduleManagerDialog .dijitDialogPaneContent {
+.phprojekt .moduleDesignerDialog .dijitDialogPaneContent {
     background: #294064;
     padding: 0px;
     border: 0px;
