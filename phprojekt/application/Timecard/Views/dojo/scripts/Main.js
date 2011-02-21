@@ -16,7 +16,7 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Timecard.Main");
@@ -25,45 +25,70 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     _date: new Date(),
 
     constructor:function() {
-        this.module = 'Timecard';
-        this.loadFunctions(this.module);
-
-        this.gridWidget = phpr.Timecard.Grid;
-        this.formWidget = phpr.Timecard.Form;
-
-        dojo.subscribe("Timecard.changeDate", this, "changeDate");
-    },
-
-    renderTemplate:function() {
         // Summary:
-        //   Custom renderTemplate for timecard
-        this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            manageFavoritesText: phpr.nls.get('Manage project list'),
-            monthTxt:            phpr.Date.getLongTranslateMonth(this._date.getMonth())
-        });
+        //    Create a new instance of the module.
+        this._module = 'Timecard';
+
+        this._loadFunctions();
+        dojo.subscribe('Timecard.changeDate', this, 'changeDate');
+        dojo.subscribe('Timecard.reloadGrid', this, 'reloadGrid');
+
+        this._gridWidget = phpr.Timecard.Grid;
+        this._formWidget = phpr.Timecard.Form;
     },
 
     setWidgets:function() {
         // Summary:
         //   Custom setWidgets for timecard
         phpr.Tree.loadTree();
-        this.grid = new this.gridWidget(this, this._date);
-        this.form = new this.formWidget(this, this._date);
-    },
+        if (!this._grid) {
+            this._grid = new this._gridWidget();
+        }
+        this._grid.init(this._date, false);
 
-    setSubGlobalModulesNavigation:function(currentModule) {
+        if (!this._form) {
+            this._form = new this._formWidget();
+        }
+        this._form.init(this._date);
     },
 
     changeDate:function(date) {
-        // summary:
-        //    Update the date and reload the views
-        // description:
-        //    Update the date and reload the views
+        // Summary:
+        //    Update the date and reload the views.
         this._date = date;
 
-        this.form.setDate(date);
-        this.form.drawDayView();
+        this._grid.init(date, false);
 
-        this.grid.reload(date);
+        this._form.setDate(date);
+        this._form.drawDayView();
+    },
+
+    reloadGrid:function(date) {
+        // Summary:
+        //    Call reload grid form the Form.
+        this._grid.init(date, true);
+    },
+
+    /************* Private functions *************/
+
+    _renderTemplate:function() {
+        // Summary:
+        //    Render the module layout only one time.
+        // Description:
+        //    Try to create the layout if not exists, or recover it from the garbage.
+        if (!dojo.byId('defaultMainContent-' + phpr.module)) {
+            phpr.Render.render(['phpr.Timecard.template', 'mainContent.html'], dojo.byId('centerMainContent'));
+        } else {
+            dojo.place('defaultMainContent-' + phpr.module, 'centerMainContent');
+            dojo.style(dojo.byId('defaultMainContent-' + phpr.module), 'display', 'block');
+        }
+    },
+
+    _customSetNavigationButtons:function() {
+        // Summary:
+        //     Called after the submodules are created.
+        //     Is used for extend the navigation routine.
+        // Description:
+        //     Do not add a new entry button.
     }
 });

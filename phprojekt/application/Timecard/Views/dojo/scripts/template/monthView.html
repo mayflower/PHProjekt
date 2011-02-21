@@ -1,46 +1,24 @@
-<table id="tableMonthView">
+<table id="tableMonthView-Timecard">
 <col class="col1" />
 <col class="col2" />
 <col class="col3" />
 <tr>
     <td colspan="2"
     style="text-align: center;">
-        <b>{{monthTxt}}</b>
+        <b><div id="monthTxt-Timecard"></div></b>
         <div class="timecardSeparator"></div>
     </td>
     <td>
-        <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox"
+        <input id="selectDate-Timecard" name="selectDate-Timecard" type="text" dojoType="phpr.Form.DateTextBox"
         constraints="{datePattern: 'yyyy-MM-dd', strict: true}"
         style="width: 90px;" />
         <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick" class="smallIcon"
         onClick="
-        if (dijit.byId('selectDate').get('value') != null) {
-            dojo.publish('Timecard.changeDate', [dijit.byId('selectDate').get('value')]);
+        if (dijit.byId('selectDate-Timecard').get('value') != null) {
+            dojo.publish('Timecard.changeDate', [dijit.byId('selectDate-Timecard').get('value')]);
         }">
         </button>
         <div class="timecardSeparator"></div>
     </td>
-</tr>
-{% for day in dates %}
-<tr class="{{day.weekClass}}">
-    <td style="text-align: right;">{{day.week}}</td>
-    <td>
-        <a href="javascript:
-        var date = phpr.Date.isoDateTojsDate('{{day.date}}');
-        dijit.byId('selectDate').set('value', new Date(date.getFullYear(), date.getMonth(), date.getDate()));
-        dojo.publish('Timecard.changeDate', [date]);">{{day.date}}</a>
-    </td>
-    <td class="{{day.sumClass}}">{{day.sum}}</td>
-</tr>
-{% endfor %}
-<tr>
-    <td colspan="2"
-    style="text-align: right;">
-    <div class="timecardSeparator"></div>
-    {{totalTxt}}
-    </td>
-    <td class="{{totalClass}}">
-    <div class="timecardSeparator"></div>
-    {{total}}</td>
 </tr>
 </table>
