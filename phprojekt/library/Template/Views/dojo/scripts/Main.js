@@ -15,17 +15,18 @@
  * @link      http://www.phprojekt.com
  * @since     File available since Release 6.0
  * @version   Release: @package_version@
- * @author    Gustavo Solt <solt@mayflower.de>
+ * @author    Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.##TEMPLATE##.Main");
 
 dojo.declare("phpr.##TEMPLATE##.Main", phpr.Default.Main, {
     constructor:function() {
-        this.module = "##TEMPLATE##";
-        this.loadFunctions(this.module);
+        this._module = "##TEMPLATE##";
 
-        this.gridWidget = phpr.##TEMPLATE##.Grid;
-        this.formWidget = phpr.##TEMPLATE##.Form;
+        this._loadFunctions();
+
+        this._gridWidget = phpr.##TEMPLATE##.Grid;
+        this._formWidget = phpr.##TEMPLATE##.Form;
     }
 });
