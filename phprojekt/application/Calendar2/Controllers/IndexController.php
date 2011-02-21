@@ -185,7 +185,7 @@ class Calendar2_IndexController extends IndexController
         $events = array();
         foreach ($users as $user) {
             $model    = new Calendar2_Models_Calendar2();
-            foreach ($model->fetchAllForPeriod($start, $end) as $event) {
+            foreach ($model->fetchAllForPeriod($start, $end, $user) as $event) {
                 $events[$event->id][$event->recurrenceId] = $event;
             }
         }

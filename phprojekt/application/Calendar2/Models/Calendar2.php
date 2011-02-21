@@ -401,17 +401,26 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      * Get all events in the period that the currently active user participates
      * in.  Both given times are inclusive.
      *
+     * Note that even if $user is given, only events that the current user is
+     * allowed to read will be shown.
+     *
      * @param Datetime $start The start of the period.
      * @param Datetime $end   The end of the period.
+     * @param int      $user  The id of the user to query for. If omitted or
+     *                        null, the currently logged in user is used.
      *
      * @return array of Calendar2_Models_Calendar
      */
-    public function fetchAllForPeriod(Datetime $start, Datetime $end)
+    public function fetchAllForPeriod(Datetime $start, Datetime $end,
+                                      $user = null)
     {
+        if (is_null($user)) {
+            $user = Phprojekt_Auth::getUserId();
+        }
         $db     = $this->getAdapter();
         $where  = $db->quoteInto(
             'calendar2_user_relation.user_id = ? ',
-            Phprojekt_Auth::getUserId()
+            (int) $user
         );
         //TODO: This might query a lot of objects. Consider saving the last
         //      date of occurrence too so this is faster.
@@ -419,8 +428,26 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $join   = 'JOIN calendar2_user_relation '
                     . 'ON calendar2.id = calendar2_user_relation.calendar2_id';
 
-        $models = $this->fetchAll($where, null, null, null, null, $join);
-        $ret    = array();
+        // This is a horrible hack. Phprojekt_ActiveRecord_Abstract::fetchAll is
+        // not static, but has to be called that way because we need events that
+        // the current user might not have rights to see.
+        $models = Phprojekt_ActiveRecord_Abstract::fetchAll(
+            $where, null, null, null, null, $join
+        );
+
+        if (Phprojekt_Auth::getUserId() != $user) {
+            // This is not the owner of the events, so we'll hide his private
+            // events.
+            $models = array_filter(
+                $models,
+                create_function(
+                    '$m',
+                    'return $m->visibility
+                            != Calendar2_Models_Calendar2::VISIBILITY_PRIVATE;'
+                )
+            );
+        }
+        $ret = array();
 
         foreach ($models as $model) {
             $startDt  = new Datetime($model->start);

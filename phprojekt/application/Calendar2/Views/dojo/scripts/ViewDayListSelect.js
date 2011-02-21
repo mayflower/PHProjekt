@@ -155,8 +155,12 @@ dojo.declare("phpr.Calendar2.ViewDayListSelect", phpr.Calendar2.DefaultView, {
 
         // For each event received from the DB
         for (var event in content) {
-            for (user in content[event]['participants']) {
-                var userId = content[event]['participants'][user];
+            // Add the owner to the participants
+            participants   = content[event]['participants'];
+            participants.push(content[event]['ownerId']);
+
+            for (user in participants) {
+                var userId = participants[user];
                 var requested = false;
                 for (u in this.users) {
                     if (this.users[u] == userId) {
