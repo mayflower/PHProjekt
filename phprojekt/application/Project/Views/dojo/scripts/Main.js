@@ -97,7 +97,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
 
         // _renderTemplate() for BasicData
         if (!dojo.byId('defaultMainContent-BasicData')) {
-            phpr.Render.render(['phpr.Project.template', 'BasicData.html'], dojo.byId('centerMainContent'));
+            phpr.Render.render(['phpr.Project.template', 'basicData.html'], dojo.byId('centerMainContent'));
         } else {
             dojo.place('defaultMainContent-BasicData', 'centerMainContent');
             dojo.style(dojo.byId('defaultMainContent-BasicData'), 'display', 'block');
