@@ -1,11 +1,10 @@
-<div>{{text|safe}}</div>
+<div id="contentForDialog-Gantt">{{text|safe}}</div>
+<input type="hidden" id="hiddenDialogId-Gantt" />
 <br />
 <button dojoType="dijit.form.Button" type="submit">
     {{ok}}
 </button>
 &nbsp;
-<button dojoType="dijit.form.Button" type="button" onclick="
-    dijit.byId(this.domNode.parentNode.parentNode.id).hide();
-    dojo.publish('Gantt.revertSlider', ['{{currentNode}}']);">
+<button id="buttonDialog-Gantt" dojoType="dijit.form.Button" type="button">
     {{reset}}
 </button>

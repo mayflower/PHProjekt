@@ -16,26 +16,26 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
-dojo.provide("phpr.form.HorizontalRangeSlider");
+dojo.provide("phpr.Form.HorizontalRangeSlider");
 
-dojo.declare("phpr.form._RangeSliderMixin", dojox.form._RangeSliderMixin, {
+dojo.declare("phpr.Form._RangeSliderMixin", dojox.form._RangeSliderMixin, {
     postCreate: function() {
         // Summary:
         //    Overwrite function for redefine the movers,
         //    since are wrong in the dojo distribution (1.5.0)
         this.inherited(arguments);
 
-        // define a custom constructor for a SliderMoverMax that points back to me
+        // Define a custom constructor for a SliderMoverMax that points back to me
         this._movableMax.destroy();
         var mover = dojo.declare(dijit.form._SliderMoverMax, {
             widget: this
         });
         this._movableMax = new dojo.dnd.Moveable(this.sliderHandleMax, {mover: mover});
 
-        // a dnd for the bar!
+        // A dnd for the bar
         this._movableBar.destroy();
         var barMover = dojo.declare(dijit.form._SliderBarMover, {
             widget: this
@@ -43,14 +43,14 @@ dojo.declare("phpr.form._RangeSliderMixin", dojox.form._RangeSliderMixin, {
         this._movableBar = new dojo.dnd.Moveable(this.progressBar, {mover: barMover});
     },
 
-    _onFocus: function() {
+    _onFocus:function() {
         // Summary:
-        //    Overwrite function for do nothing
+        //    Overwrite function for do nothing.
     },
 
-    _onHandleClick: function(e) {
+    _onHandleClick:function(e) {
         // Summary:
-        //    Overwrite function for do not focus
+        //    Overwrite function for do not focus.
         if (this.disabled || this.readOnly) {
             return;
         }
@@ -59,9 +59,9 @@ dojo.declare("phpr.form._RangeSliderMixin", dojox.form._RangeSliderMixin, {
         dojo.stopEvent(e);
     },
 
-    _onHandleClickMax: function(e) {
+    _onHandleClickMax:function(e) {
         // Summary:
-        //    Overwrite function for do not focus
+        //    Overwrite function for do not focus.
         if (this.disabled || this.readOnly) {
             return;
         }
@@ -70,9 +70,9 @@ dojo.declare("phpr.form._RangeSliderMixin", dojox.form._RangeSliderMixin, {
         dojo.stopEvent(e);
     },
 
-    _onBarClick: function(e) {
+    _onBarClick:function(e) {
         // Summary:
-        //    Overwrite function for do not focus
+        //    Overwrite function for do not focus.
         if (this.disabled || this.readOnly) {
             return;
         }
@@ -81,20 +81,26 @@ dojo.declare("phpr.form._RangeSliderMixin", dojox.form._RangeSliderMixin, {
         dojo.stopEvent(e);
     },
 
-    _selectBar:function(name) {
+    _selectBar:function(id) {
         // Summary:
-        //    Do not allow the focus
+        //    Do not allow the focus.
         // Description:
-        //    Focus the main content for prevent the focus on IE
-        //    Mark as select the current selected bar
+        //    Focus the main content for prevent the focus on IE.
+        //    Mark as select the current selected bar.
         dojo.byId('centerMainContent').focus();
-        if (name) {
-            dijit.byId('ganttObject').container.setActiveSlider(name);
+        if (id) {
+            dojo.publish('Gantt.setActiveSlider', [id]);
         }
+    },
+
+    onChange:function(values) {
+        // Summary:
+        //    Proxy for the _gantt object.
+        dojo.publish('Gantt.processUpdate', [values, this.id]);
     }
 });
 
-dojo.declare("phpr.form.HorizontalRangeSlider", [dijit.form.HorizontalSlider, phpr.form._RangeSliderMixin], {
+dojo.declare("phpr.Form.HorizontalRangeSlider", [dijit.form.HorizontalSlider, phpr.Form._RangeSliderMixin], {
     templateString: "<table class=\"dijit dijitReset dijitSlider dojoxRangeSlider\" cellspacing=\"0\" "
         + "cellpadding=\"0\" border=\"0\" rules=\"none\"\r\n    ><tr class=\"dijitReset\"\r\n        >"
         + "<td class=\"dijitReset\" colspan=\"2\"></td\r\n        >"
