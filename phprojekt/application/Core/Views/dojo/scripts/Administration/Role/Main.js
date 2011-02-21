@@ -16,21 +16,29 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Role.Main");
 
 dojo.declare("phpr.Role.Main", phpr.Core.Main, {
     constructor:function() {
-        this.module = "Role";
-        this.loadFunctions(this.module);
+        // Summary:
+        //    Create a new instance of the module.
+        this._module = 'Role';
 
-        this.gridWidget = phpr.Role.Grid;
-        this.formWidget = phpr.Role.Form;
+        this._loadFunctions();
+
+        this._gridWidget = phpr.Role.Grid;
+        this._formWidget = phpr.Role.Form;
     },
 
-    customSetSubmoduleNavigation:function() {
-        this.setNewEntry();
+    /************* Private functions *************/
+
+    _customSetNavigationButtons:function() {
+        // Summary:
+        //     Called after the submodules are created.
+        //     Is used for extend the navigation routine.
+        this._setNewEntry();
     }
 });
