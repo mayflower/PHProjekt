@@ -16,7 +16,7 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Url");
@@ -30,13 +30,13 @@ dojo.declare("phpr.Url", null, {
         // description:
         //    Check the first value in the hash and return it
         if (!window.location.hash) {
-            var module = "Project";
+            var module = 'Project';
         } else {
-            var data = recentHash.split(",");
+            var data = recentHash.split(',');
             if (data[0]) {
                 var module = data[0].replace(/.*#(.*)/, "$1");
             } else {
-                var module = "Project";
+                var module = 'Project';
             }
         }
 
@@ -62,7 +62,7 @@ dojo.declare("phpr.Url", null, {
         var module = this.getModule();
         if (module) {
             recentHash = window.location.hash;
-            dojo.publish(module + ".processUrlHash", [recentHash]);
+            dojo.publish(module + '.processUrlHash', [recentHash]);
         }
     },
 

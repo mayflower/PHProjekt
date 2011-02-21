@@ -16,7 +16,7 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Store");
@@ -27,14 +27,14 @@ dojo.provide("phpr.Store.RoleModuleAccess");
 dojo.provide("phpr.Store.Tab");
 dojo.provide("phpr.Store.Config");
 
-dojo.declare("phpr.Store", phpr.Component, {
+dojo.declare("phpr.Store", null, {
     // Summary:
     //    Get all the active users
     // Description:
     //    Get the users and return the list
     //    for use with dojo fields
     _url:  null,
-    _list: null,
+    _list: [],
 
     fetch:function(processData) {
         // Summary:
@@ -42,15 +42,18 @@ dojo.declare("phpr.Store", phpr.Component, {
         // Description:
         //    Get all the active users
         var self = this;
-        if (typeof processData == "undefined") {
+        if (typeof processData == 'undefined') {
             processData = null;
         }
         phpr.DataStore.addStore({url: this._url});
         phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
-            self.makeSelect();
+            if (self._list.length == 0) {
+                self.makeSelect();
+            }
             if (processData) {
                 processData.call();
             }
+            self = null;
         })});
     },
 
@@ -67,6 +70,7 @@ dojo.declare("phpr.Store", phpr.Component, {
         //    Delete de cache
         // Description:
         //    Delete de cache
+        this._list = [];
         phpr.DataStore.deleteData({url: this._url});
     }
 });
@@ -88,9 +92,9 @@ dojo.declare("phpr.Store.User", phpr.Store, {
         var users  = phpr.DataStore.getData({url: this._url});
         this._list = new Array();
         for (i in users) {
-            this._list.push({"id":      users[i]['id'],
-                             "display": users[i]['display'],
-                             "current": users[i]['current']});
+            this._list.push({id:      users[i]['id'],
+                             display: users[i]['display'],
+                             current: users[i]['current']});
         }
     }
 });
@@ -110,10 +114,10 @@ dojo.declare("phpr.Store.Module", phpr.Store, {
         var modules = phpr.DataStore.getData({url: this._url});
         this._list  = new Array();
         for (i in modules) {
-            this._list.push({"id":        modules[i]['id'],
-                             "name":      modules[i]['name'],
-                             "label":     modules[i]['label'],
-                             "inProject": modules[i]['inProject']})
+            this._list.push({id:        modules[i]['id'],
+                             name:      modules[i]['name'],
+                             label:     modules[i]['label'],
+                             inProject: modules[i]['inProject']})
         }
     }
 });
@@ -135,12 +139,17 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
         this._list         = new Array();
         this._relationList = new Array();
         for (i in roles) {
-            this._list.push({"id":roles[i]['id'], "name":roles[i]['name']});
+            this._list.push({
+                id:   roles[i]['id'],
+                name: roles[i]['name']
+            });
             for (j in roles[i]['users']) {
-                this._relationList.push({"roleId":      roles[i]['id'],
-                                         "roleName":    roles[i]['name'],
-                                         "userId":      roles[i]['users'][j]['id'],
-                                         "userDisplay": roles[i]['users'][j]['display']});
+                this._relationList.push({
+                    roleId:      roles[i]['id'],
+                    roleName:    roles[i]['name'],
+                    userId:      roles[i]['users'][j]['id'],
+                    userDisplay: roles[i]['users'][j]['display']
+                });
             }
         }
     },
@@ -163,13 +172,13 @@ dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
         var modules = phpr.DataStore.getData({url: this._url});
         this._list  = new Array();
         for (i in modules) {
-            this._list.push({"id":     modules[i]['id'],
-                             "name":   modules[i]['name'],
-                             "label":  modules[i]['label'],
-                             "read":   modules[i]['read'],
-                             "write":  modules[i]['write'],
-                             "create": modules[i]['create'],
-                             "admin":  modules[i]['admin']})
+            this._list.push({id:     modules[i]['id'],
+                             name:   modules[i]['name'],
+                             label:  modules[i]['label'],
+                             read:   modules[i]['read'],
+                             write:  modules[i]['write'],
+                             create: modules[i]['create'],
+                             admin:  modules[i]['admin']})
         }
     }
 });
@@ -188,9 +197,9 @@ dojo.declare("phpr.Store.Tab", phpr.Store, {
         this._list = new Array();
         for (i in tabs) {
             var nameId = tabs[i]['label'].toString().split(' ').join('');
-            this._list.push({"id":     tabs[i]['id'],
-                             "name":   tabs[i]['label'],
-                             "nameId": nameId})
+            this._list.push({id:     tabs[i]['id'],
+                             name:   tabs[i]['label'],
+                             nameId: nameId})
         }
     }
 });
