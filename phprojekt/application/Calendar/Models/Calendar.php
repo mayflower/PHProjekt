@@ -156,7 +156,7 @@ class Calendar_Models_Calendar extends Phprojekt_Item_Abstract
         if (!in_array($userId, $participants)) {
             $participantsList[$userId] = $userId;
         }
-        foreach ($participants as $oneParticipant) {
+        foreach (array_keys($participants) as $oneParticipant) {
             $participantsList[(int) $oneParticipant] = (int) $oneParticipant;
         }
         if ($id == 0) {
