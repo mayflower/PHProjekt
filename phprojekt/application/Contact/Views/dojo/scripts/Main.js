@@ -16,21 +16,28 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Contact.Main");
 
 dojo.declare("phpr.Contact.Main", phpr.Default.Main, {
     constructor:function() {
-        this.module = "Contact";
-        this.loadFunctions(this.module);
+        // Summary:
+        //    Create a new instance of the module.
+        this._module = 'Contact';
 
-        this.gridWidget = phpr.Contact.Grid;
-        this.formWidget = phpr.Contact.Form;
+        this._loadFunctions();
+
+        this._gridWidget = phpr.Contact.Grid;
+        this._formWidget = phpr.Contact.Form;
     },
 
     updateCacheData:function() {
+        // Summary:
+        //    Forces every widget of the page to update its data, by deleting its cache.
         phpr.DataStore.deleteAllCache();
+
+        this.inherited(arguments);
     }
 });
