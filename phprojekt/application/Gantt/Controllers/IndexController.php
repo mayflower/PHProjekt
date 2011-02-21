@@ -104,8 +104,8 @@ class Gantt_IndexController extends IndexController
                     if ($end > $max) {
                         $max = $end;
                     }
-                    $key                        = (int) $key;
-                    $ids[]                      = $key;
+                    $key                            = (int) $key;
+                    $ids[]                          = $key;
                     $data['data']["projects"][$key] = array('id'      => $key,
                                                             'level'   => (int) $node->getDepth() * 10,
                                                             'parent'  => (int) $parent,
@@ -198,12 +198,13 @@ class Gantt_IndexController extends IndexController
      */
     public function jsonSaveAction()
     {
-        $projects     = (array) $this->getRequest()->getParam('projects', array());
+        $projects     = $this->getRequest()->getParam('projects', array());
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
         $userId       = Phprojekt_Auth::getUserId();
         $this->setCurrentProjectId();
 
+        $projects     = Zend_Json::decode($projects);
         // Error check: no project received
         if (empty($projects)) {
             $label   = Phprojekt::getInstance()->translate('Projects');
@@ -212,7 +213,9 @@ class Gantt_IndexController extends IndexController
         }
 
         foreach ($projects as $project) {
-            list($id, $startDate, $endDate) = explode(",", $project);
+            $id        = Cleaner::sanitize('integer', $project['id'], 0);
+            $startDate = Cleaner::sanitize('date', $project['start'], null);
+            $endDate   = Cleaner::sanitize('date', $project['end'], null);
 
             // Check: are the three values available?
             if (empty($id) || empty($startDate) || empty($endDate)) {
