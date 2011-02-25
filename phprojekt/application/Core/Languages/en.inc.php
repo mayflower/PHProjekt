@@ -591,3 +591,6 @@ $lang["Upgrade controller idle (before link)"] = "This is the place where migrat
                 Visit the ";
 $lang["Upgrade controller idle (link text)"] = "main page";
 $lang["Upgrade controller idle (after link)"] = " for more interesting things.";
+$lang["upgrade_errorMessage_server"] = "There was an unknown problem on the server. We're really sorry. You can try again, but there might be problems in the future.";
+$lang["upgrade_errorMessage"] = "There was a problem upgrading, but we managed to keep the database in a consistent state. Please consult the logfiles to find out more.";
+$lang["upgrade_errorMessage_fatal"] = "We're sorry, but our upgrade attempt broke the database. Please recover your backups and consult the logfiles to get more information.";
