@@ -138,15 +138,15 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         //    User functions after render the form
         // Description:
         //    Apply for special events on the fields
-        if (dijit.byId('startDatetime_forDate')) {
-            this._currentDate = dijit.byId('startDatetime_forDate').value;
-            dojo.connect(dojo.byId('startDatetime_forDate'), "onblur", this, 'startDateBlur');
+        if (dijit.byId('start_forDate')) {
+            this._currentDate = dijit.byId('start_forDate').value;
+            dojo.connect(dojo.byId('start_forDate'), "onblur", this, 'startDateBlur');
         } else {
             this._currentDate = null;
         }
-        if (dijit.byId('startDatetime_forTime')) {
-            this._currentTime = dijit.byId('startDatetime_forTime').value;
-            dojo.connect(dojo.byId('startDatetime_forTime'), "onblur", this, 'startTimeBlur');
+        if (dijit.byId('start_forTime')) {
+            this._currentTime = dijit.byId('start_forTime').value;
+            dojo.connect(dojo.byId('start_forTime'), "onblur", this, 'startTimeBlur');
         } else {
             this._currentTime = null;
         }
@@ -158,12 +158,12 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         // Description:
         //   If it has changed to a valid date, then add or substract the difference between previous and current value
         // to the End date
-        if (this._currentDate != dijit.byId('startDatetime_forDate').value) {
-            if (dijit.byId('startDatetime_forDate').isValid()) {
-                diff = dojo.date.difference(this._currentDate, dijit.byId('startDatetime_forDate').value, 'day');
-                dijit.byId('endDatetime_forDate').set('value', dojo.date.add(dijit.byId('endDatetime_forDate').value,
+        if (this._currentDate != dijit.byId('start_forDate').value) {
+            if (dijit.byId('start_forDate').isValid()) {
+                diff = dojo.date.difference(this._currentDate, dijit.byId('start_forDate').value, 'day');
+                dijit.byId('end_forDate').set('value', dojo.date.add(dijit.byId('end_forDate').value,
                     'day', diff));
-                this._currentDate = dijit.byId('startDatetime_forDate').value;
+                this._currentDate = dijit.byId('start_forDate').value;
             }
         }
     },
@@ -174,12 +174,12 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         // Description:
         //    If it has changed to a valid time, then add or substract the difference between previous and current value
         // to the End time
-        if (this._currentTime != dijit.byId('startDatetime_forTime').value) {
-            if (dijit.byId('startDatetime_forTime').isValid()) {
-                diff = dojo.date.difference(this._currentTime, dijit.byId('startDatetime_forTime').value, 'minute');
-                dijit.byId('endDatetime_forTime').set('value', dojo.date.add(dijit.byId('endDatetime_forTime').value,
+        if (this._currentTime != dijit.byId('start_forTime').value) {
+            if (dijit.byId('start_forTime').isValid()) {
+                diff = dojo.date.difference(this._currentTime, dijit.byId('start_forTime').value, 'minute');
+                dijit.byId('end_forTime').set('value', dojo.date.add(dijit.byId('end_forTime').value,
                     'minute', diff));
-                this._currentTime = dijit.byId('startDatetime_forTime').value;
+                this._currentTime = dijit.byId('start_forTime').value;
             }
         }
     },
