@@ -110,22 +110,36 @@ class Core_UpgradeController extends Core_IndexController
         $extensions = new Phprojekt_Extensions(PHPR_CORE_PATH);
         $migration  = new Phprojekt_Migration($extensions);
 
+        $failed = true;
         try {
+            throw new Phprojekt_Migration_IKilledTheDatabaseException();
             $migration->performUpgrade(
                 $this->getRequest()->getParam('upgradeModule')
             );
+            $failed = false;
         } catch (Phprojekt_Migration_IKilledTheDatabaseException $e) {
-            // well...
+            Phprojekt_Converter_Json::echoConvert(
+                array(
+                    'type' => 'fatalFailure',
+                    'message' => 'A fatal error has occured.'
+                )
+            );
         } catch (Exception $e) {
-            // hm.
+            Phprojekt_Converter_Json::echoConvert(
+                array(
+                    'type' => 'failure',
+                    'message' => 'An error has occured.'
+                )
+            );
         }
 
-        Phprojekt_Converter_Json::echoConvert(
-            array(
-                'type' => 'success',
-                'message' => 'The module was upgraded correctly'
-            )
-        );
-
+        if (!$failed) {
+            Phprojekt_Converter_Json::echoConvert(
+                array(
+                    'type' => 'success',
+                    'message' => 'The module was upgraded correctly'
+                )
+            );
+        }
     }
 }
