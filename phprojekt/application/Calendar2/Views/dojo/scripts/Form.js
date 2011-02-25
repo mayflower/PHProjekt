@@ -138,17 +138,17 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         //    User functions after render the form
         // Description:
         //    Apply for special events on the fields
-        if (dijit.byId('start_forDate')) {
-            this._currentDate = dijit.byId('start_forDate').value;
-            dojo.connect(dojo.byId('start_forDate'), "onblur", this, 'startDateBlur');
-        } else {
-            this._currentDate = null;
+        startDate = dijit.byId('start_forDate');
+        startTime = dijit.byId('start_forTime');
+
+        if (startDate) {
+            this._currentDate = startDate.value;
+            dojo.connect(startDate, "onChange", this, 'startDateBlur');
         }
-        if (dijit.byId('start_forTime')) {
-            this._currentTime = dijit.byId('start_forTime').value;
-            dojo.connect(dojo.byId('start_forTime'), "onblur", this, 'startTimeBlur');
-        } else {
-            this._currentTime = null;
+
+        if (startTime) {
+            this._currentTime = startTime.value;
+            dojo.connect(startTime, "onChange", this, 'startTimeBlur');
         }
     },
 
