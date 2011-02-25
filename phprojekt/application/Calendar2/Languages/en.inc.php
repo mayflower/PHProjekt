@@ -396,3 +396,7 @@ $lang["Content Help"]["History"] = "DEFAULT";
 $lang['Some participants have not accepted yet.'] = 'Some participants have not accepted yet.';
 $lang['Some participants have rejected your invitation.'] = 'Some participants have rejected your invitation.';
 $lang['You did not respond to this invitation yet.'] = 'You did not respond to this invitation yet.';
+$lang['Checking availability...'] = 'Checking availability...';
+$lang['The participant is available'] = 'The participant is available';
+$lang['The participant is not available'] = 'The participant is not available';
+$lang['Availability'] = 'Availability';

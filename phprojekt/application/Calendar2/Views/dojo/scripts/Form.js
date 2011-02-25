@@ -141,6 +141,9 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         startDate = dijit.byId('start_forDate');
         startTime = dijit.byId('start_forTime');
 
+        endDate   = dijit.byId('end_forDate');
+        endTime   = dijit.byId('end_forTime');
+
         if (startDate) {
             this._currentDate = startDate.value;
             dojo.connect(startDate, "onChange", this, 'startDateBlur');
@@ -150,6 +153,14 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
             this._currentTime = startTime.value;
             dojo.connect(startTime, "onChange", this, 'startTimeBlur');
         }
+
+        if (endDate) {
+            dojo.connect(endDate, "onChange", this, 'updateAllAvailabilityStatuses');
+        }
+
+        if (endTime) {
+            dojo.connect(endTime, "onChange", this, 'updateAllAvailabilityStatuses');
+        }
     },
 
     startDateBlur:function() {
@@ -158,13 +169,21 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         // Description:
         //   If it has changed to a valid date, then add or substract the difference between previous and current value
         // to the End date
-        if (this._currentDate != dijit.byId('start_forDate').value) {
-            if (dijit.byId('start_forDate').isValid()) {
-                diff = dojo.date.difference(this._currentDate, dijit.byId('start_forDate').value, 'day');
-                dijit.byId('end_forDate').set('value', dojo.date.add(dijit.byId('end_forDate').value,
-                    'day', diff));
-                this._currentDate = dijit.byId('start_forDate').value;
-            }
+        if (this._currentDate != dijit.byId('start_forDate').value
+                    && dijit.byId('start_forDate').isValid()) {
+            diff = dojo.date.difference(
+                    this._currentDate,
+                    dijit.byId('start_forDate').value,
+                    'day'
+            );
+            dijit.byId('end_forDate').set(
+                    'value',
+                    dojo.date.add(dijit.byId('end_forDate').value, 'day', diff)
+            );
+            this._currentDate = dijit.byId('start_forDate').value;
+        } else {
+            // If we changed the end field, this gets triggered there.
+            this.updateAllAvailabilityStatuses();
         }
     },
 
@@ -174,13 +193,25 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         // Description:
         //    If it has changed to a valid time, then add or substract the difference between previous and current value
         // to the End time
-        if (this._currentTime != dijit.byId('start_forTime').value) {
-            if (dijit.byId('start_forTime').isValid()) {
-                diff = dojo.date.difference(this._currentTime, dijit.byId('start_forTime').value, 'minute');
-                dijit.byId('end_forTime').set('value', dojo.date.add(dijit.byId('end_forTime').value,
-                    'minute', diff));
-                this._currentTime = dijit.byId('start_forTime').value;
-            }
+        if (this._currentTime != dijit.byId('start_forTime').value
+                && dijit.byId('start_forTime').isValid()) {
+            diff = dojo.date.difference(
+                    this._currentTime,
+                    dijit.byId('start_forTime').value,
+                    'minute'
+            );
+            dijit.byId('end_forTime').set(
+                    'value',
+                    dojo.date.add(
+                        dijit.byId('end_forTime').value,
+                        'minute',
+                        diff
+                    )
+            );
+            this._currentTime = dijit.byId('start_forTime').value;
+        } else {
+            // If we changed the end field, this gets triggered there.
+            this.updateAllAvailabilityStatuses();
         }
     },
 
@@ -239,11 +270,12 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
 
         // Template for the participants tab
         var participantData = this.render(["phpr.Calendar2.template", "participanttab.html"], null, {
-            participantUserText:    phpr.nls.get('User'),
-            participantActionText:  phpr.nls.get('Action'),
-            users:                  users,
-            currentUser:            currentUser,
-            participants:           participants
+            participantUserText:            phpr.nls.get('User'),
+            participantActionText:          phpr.nls.get('Action'),
+            participantAvailabilityText:    phpr.nls.get('Availability'),
+            users:                          users,
+            currentUser:                    currentUser,
+            participants:                   participants
         });
 
         this.addTab(participantData, 'tabParticipant', 'Participants', 'participantFormTab');
@@ -296,6 +328,10 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
                 + ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
             var cell = row.insertCell(1);
             cell.innerHTML = '<div id="participantDeleteButton' + userId + '"></div>';
+            var cell = row.insertCell(2);
+            cell.innerHTML = '<img id="participantAvailabilityIndicator' + userId + '"/>';
+
+            this.updateAvailabilityStatus(userId);
 
             dojo.parser.parse(row);
 
@@ -312,6 +348,44 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
 
             this._participantsInTab += 1;
         }
+    },
+
+    updateAvailabilityStatus:function(userId) {
+        cell = dojo.byId('participantAvailabilityIndicator' + userId);
+        if (!cell) {
+            return
+        }
+        dojo.attr(cell, 'src', '/img/ajax-loader-small.gif');
+        dojo.attr(cell, 'title', phpr.nls.get('Checking availability...'));
+
+        phpr.send({
+            url: phpr.webpath + 'index.php/Calendar2/Index/jsonCheckAvailability',
+            content: {
+                user:  userId,
+                start: dojo.byId('start').value,
+                end:   dojo.byId('end').value
+            },
+            onSuccess: function(data) {
+                if (data['available']) {
+                    dojo.attr(cell, 'src', '/css/themes/phprojekt/images/tick.gif');
+                    dojo.attr(cell, 'title', phpr.nls.get('The participant is available'));
+                } else {
+                    dojo.attr(cell, 'src', '/css/themes/phprojekt/images/warning.png');
+                    dojo.attr(cell, 'title', phpr.nls.get('The participant is not available'));
+                }
+            }
+        })
+     },
+
+    updateAllAvailabilityStatuses:function(userId) {
+        dojo.query('[id^=participantAvailabilityIndicator]').forEach(
+            function(node) {
+                this.updateAvailabilityStatus(
+                        dojo.attr(node, 'id').match('[0-9]+$')
+                );
+            },
+            this
+        );
     },
 
     deleteParticipant:function(userId) {
