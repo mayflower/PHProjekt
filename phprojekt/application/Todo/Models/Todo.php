@@ -37,6 +37,14 @@
  */
 class Todo_Models_Todo extends Phprojekt_Item_Abstract
 {
+
+    /** Constants for $this->currentStatus */
+    const STATUS_WAITING  = 1;
+    const STATUS_ACCEPTED = 2;
+    const STATUS_WORKING  = 3;
+    const STATUS_STOPPED  = 4;
+    const STATUS_ENDED    = 5;
+
     /**
      * Returns an instance of notification class for this module
      *
