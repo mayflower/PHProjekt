@@ -227,5 +227,10 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         phpr.destroyWidget('timecardTooltipDialog');
         phpr.DataStore.deleteData({url: phpr.webpath + 'index.php/Timecard/index/jsonGetFavoritesProjects'});
         phpr.DataStore.deleteDataPartialString({url: phpr.webpath + 'index.php/Timecard/index/jsonDetail/'});
+    },
+
+    postRenderForm:function() {
+        this.inherited(arguments);
+        dijit.byId('calculatedCompletion').set('disabled', true);
     }
 });

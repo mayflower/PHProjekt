@@ -54,9 +54,11 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
     },
 
     postRenderForm:function() {
+        this.inherited(arguments);
         if (dijit.byId("deleteButton")) {
             dijit.byId("deleteButton").destroy();
         }
+        dijit.byId('calculatedCompletion').set('disabled', true);
     },
 
     submitForm:function() {
