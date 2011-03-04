@@ -231,6 +231,6 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
     postRenderForm:function() {
         this.inherited(arguments);
-        dijit.byId('calculatedCompletion').set('disabled', true);
+        dijit.byId('cumulativeCompletePercent').set('disabled', true);
     }
 });

@@ -468,9 +468,9 @@
 
                 {
                     "table_name":      "Project",
-                    "table_field":     "calculated_completion",
+                    "table_field":     "cumulative_complete_percent",
                     "form_tab":        "1",
-                    "form_label":      "Calculated Completion",
+                    "form_label":      "Cumulative complete percent",
                     "form_type":       "percentage",
                     "form_position":   "9",
                     "form_columns":    "1",
