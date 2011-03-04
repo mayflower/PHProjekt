@@ -297,7 +297,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             }
         }
 
-        $completion = ($count != 0) ? $sum / $count : 0;
+        $completion = ($count > 0) ? ($sum / $count) : 0;
         $cache->save($completion, $id);
         return $completion;
     }
