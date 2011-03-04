@@ -290,8 +290,10 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             case Todo_Models_Todo::STATUS_ENDED:    // Assume 100%
                 $count +=   1;
                 $sum   += 100;
+                break;
             default: // Assume 0% (accepted, working, stopped)
                 $count += 1;
+                break;
             }
         }
 
