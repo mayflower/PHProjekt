@@ -21,7 +21,6 @@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Default Search class

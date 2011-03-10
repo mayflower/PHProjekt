@@ -21,7 +21,6 @@
  * @author     Eduardo Polidor <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Groups
