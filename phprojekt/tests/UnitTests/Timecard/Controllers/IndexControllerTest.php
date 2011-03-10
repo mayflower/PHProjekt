@@ -21,7 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Index Controller
@@ -40,6 +39,14 @@ require_once 'PHPUnit/Framework.php';
  */
 class Timecard_IndexController_Test extends FrontInit
 {
+    protected function getDataSet()
+    {
+        return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
+            array(
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
+    }
+
     /**
      * Test of json Save
      */
@@ -47,7 +54,7 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // INSERT. Defined start and end time.
         $this->setRequestUrl('Timecard/index/jsonSave/');
-        $this->request->setParam('startDatetime', ' 2009-05-16 09:00:00');
+        $this->request->setParam('startDatetime', '2009-05-16 09:00:00');
         $this->request->setParam('endTime', '13:00:00');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
