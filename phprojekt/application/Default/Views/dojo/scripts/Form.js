@@ -523,7 +523,14 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
     setActionFormButtons:function() {
         // Summary:
         //    Connect the buttons to the actions
-        dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
+        var submitForm = dojo.hitch(this, "submitForm");
+        dojo.query('#detailsBox form').forEach(
+            function(item) {
+                item = dijit.getEnclosingWidget(item);
+                dojo.connect(item, 'onSubmit', submitForm);
+            },
+            this
+        );
         dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, function() {
             phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'))
         }));
