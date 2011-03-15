@@ -44,6 +44,10 @@ class Note_IndexController_Test extends FrontInit
     private $_listingExpectedString = null;
     private $_model                 = null;
 
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
+    }
+
     /**
      * setUp method for PHPUnit
      */
