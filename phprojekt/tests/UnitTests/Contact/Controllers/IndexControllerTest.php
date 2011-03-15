@@ -41,6 +41,10 @@
  */
 class Contact_IndexController_Test extends FrontInit
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
+    }
+
     /**
      * Test of json save
      */
@@ -141,24 +145,6 @@ class Contact_IndexController_Test extends FrontInit
         $this->assertContains($expected, $response);
     }
 
-    /**
-     * Test of json detail
-     */
-    public function testJsonDetailBeforeEdit()
-    {
-        // Check it
-        $this->setRequestUrl('Contact/index/jsonDetail/');
-        $this->request->setParam('id', 1);
-        $this->request->setParam('nodeId', 1);
-        $response = $this->getResponse();
-        $expected = '"data":[{"id":1,"name":"Mariano2","email":"mariano.lapenna@mayflower.de2",'
-            . '"company":"Mayflower2","firstphone":"12341234B","secondphone":"23452345B","mobilephone":"34563456B",'
-            . '"street":"Edison 1234B","city":"Buenos Aires2","zipcode":"1234AAA2","country":"Argentina2",'
-            . '"comment":"Very intelligent2","private":1,"rights":{"currentUser":{"moduleId":9,"itemId":1,'
-            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
-            . '"delete":true,"download":true,"admin":true}}}],"numRows":1})';
-        $this->assertContains($expected, $response);
-    }
 
     /**
      * Test of json delete - actually the Default functions

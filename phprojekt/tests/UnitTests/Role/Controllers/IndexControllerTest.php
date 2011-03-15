@@ -39,6 +39,10 @@
  */
 class Role_IndexController_Test extends FrontInit
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
+    }
+
     /**
      * Test the role list
      */
@@ -47,7 +51,7 @@ class Role_IndexController_Test extends FrontInit
         $this->setRequestUrl('Core/role/jsonList');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains('{"id":1,"name":"admin","rights":[]}],"numRows":1}', $response);
+        $this->assertContains('{"id":1,"name":"Admin","rights":[]}],"numRows":1}', $response);
     }
 
     /**
