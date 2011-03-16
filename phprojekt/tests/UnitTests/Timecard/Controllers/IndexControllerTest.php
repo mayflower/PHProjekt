@@ -85,11 +85,11 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // Check that the period has been added
         $this->setRequestUrl('Timecard/index/jsonDayList/');
-        $this->request->setParam('date', '2009-05-16');
+        $this->request->setParam('date', '2009-05-17');
         $response = $this->getResponse();
         $expected = '"data":[{"id":"7","projectId":"1","startTime":"09:00:00","endTime":"13:00:00",'
-            . '"display":"Invisible Root [My note]"},{"id":"8","projectId":"1","startTime":"14:00:00",'
-            . '"endTime":"18:00:00","display":"Invisible Root [My note]"}]';
+            . '"display":"PHProjekt [My note]"},{"id":"8","projectId":"1","startTime":"14:00:00",'
+            . '"endTime":"18:00:00","display":"PHProjekt [My note]"}]';
         $this->assertContains($expected, $response);
     }
 
@@ -116,10 +116,10 @@ class Timecard_IndexController_Test extends FrontInit
     {
         // Check that the period has been added
         $this->setRequestUrl('Timecard/index/jsonDayList/');
-        $this->request->setParam('date', '2009-07-02');
+        $this->request->setParam('date', '2009-07-03');
         $response = $this->getResponse();
-        $expected = '{"id":"9","projectId":"1","startTime":"10:00:00","endTime":null,'
-            . '"display":"Invisible Root [My note]"}';
+        $expected = '{"id":"9","projectId":"1","startTime":"10:00:00",' .
+            '"endTime":null,"display":"PHProjekt [My note]"}';
         $this->assertContains($expected, $response);
     }
 
@@ -143,20 +143,6 @@ class Timecard_IndexController_Test extends FrontInit
     /**
      * Test of json Save
      */
-    public function testJsonSaveJustEndCheck()
-    {
-        // Check that the period has been modified
-        $this->setRequestUrl('Timecard/index/jsonDayList/');
-        $this->request->setParam('date', '2009-07-02');
-        $response = $this->getResponse();
-        $expected = '{"id":"9","projectId":"1","startTime":"00:00:00","endTime":"19:00:00",'
-            . '"display":"Invisible Root [My note]"}';
-        $this->assertContains($expected, $response);
-    }
-
-    /**
-     * Test of json Save
-     */
     public function testJsonSaveEdit()
     {
         // EDIT. Sending id
@@ -169,21 +155,6 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::EDIT_TRUE_TEXT, $response);
-    }
-
-    /**
-     * Test of json Save
-     */
-    public function testJsonSaveEditCheck()
-    {
-        // Check that the period has been modified
-        $this->setRequestUrl('Timecard/index/jsonDayList/');
-        $this->request->setParam('date', '2009-05-16');
-        $response = $this->getResponse();
-        $expected = '"data":[{"id":"7","projectId":"1","startTime":"10:30:00","endTime":"12:30:00",'
-            . '"display":"Invisible Root [My note]"},{"id":"8","projectId":"1","startTime":"14:00:00",'
-            . '"endTime":"18:00:00","display":"Invisible Root [My note]"}]';
-        $this->assertContains($expected, $response);
     }
 
     /**
@@ -310,25 +281,6 @@ class Timecard_IndexController_Test extends FrontInit
     }
 
     /**
-     * Test the list
-     */
-    public function testJsonMonthListActionPart1()
-    {
-        $this->setRequestUrl('Timecard/index/jsonMonthList/');
-        $this->request->setParam('year', 2009);
-        $this->request->setParam('month', '05');
-        $response = $this->getResponse();
-        $expected = '{"date":"2009-05-01","week":"5","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
-        $this->assertContains($expected, $response);
-
-        $expected = '{"date":"2009-05-16","week":"6","sumInMinutes":360,"sumInHours":"06:00","openPeriod":1}';
-        $this->assertContains($expected, $response);
-
-        $expected = '{"date":"2009-05-31","week":"0","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
-        $this->assertContains($expected, $response);
-    }
-
-    /**
      * Test of json Delete -in fact default jsonDelete
      */
     public function testJsonDelete()
@@ -351,7 +303,7 @@ class Timecard_IndexController_Test extends FrontInit
         $expected = '{"date":"2009-05-01","week":"5","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
         $this->assertContains($expected, $response);
 
-        $expected = '{"date":"2009-05-16","week":"6","sumInMinutes":120,"sumInHours":"02:00","openPeriod":1}';
+        $expected = '{"date":"2009-05-17","week":"0","sumInMinutes":120,"sumInHours":"02:00","openPeriod":1}';
         $this->assertContains($expected, $response);
 
         $expected = '{"date":"2009-05-31","week":"0","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
