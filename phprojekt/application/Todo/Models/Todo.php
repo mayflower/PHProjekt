@@ -65,7 +65,12 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
      */
     public function recordValidate()
     {
-        if (!$this->_validate->validateDateRange($this->startDate, $this->endDate)) {
+        $validDate = $this->_validate->validateDateRange(
+            $this->startDate,
+            $this->endDate
+        );
+
+        if (!$validDate) {
             return false;
         } else {
             return parent::recordValidate();

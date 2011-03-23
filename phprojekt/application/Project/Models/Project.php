@@ -303,8 +303,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Calculates the cache id for getCumulativeCompletePercent of the project with
-     * the given id.
+     * Calculates the cache id for getCumulativeCompletePercent of the project
+     * with the given id.
      *
      * @param int id The id of the project. If null, use the current project.
      *
@@ -316,20 +316,21 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             $projectId = $this->id;
         }
 
-        return 'Project_Models_Project__getCumulativeCompletePercent__' . $projectId;
+        return 'Project_Models_Project__getCumulativeCompletePercent__'
+                . $projectId;
     }
 
     /**
-     * Delete the CumulativeCompletePercent caches for this project and its parent
-     * project.
+     * Delete the CumulativeCompletePercent caches for this project and its
+     * parent project.
      */
     public function deleteCumulativeCompletePercentCache()
     {
         $cache = Phprojekt::getInstance()->getCache();
         $cache->remove($this->getCumulativeCompletePercentCacheId());
         if (!is_null($this->projectId)) {
-            $cache->remove($this->getCumulativeCompletePercentCacheId(
-                $this->projectId)
+            $cache->remove(
+                $this->getCumulativeCompletePercentCacheId($this->projectId)
             );
         }
     }
