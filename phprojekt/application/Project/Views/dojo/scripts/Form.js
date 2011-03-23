@@ -201,6 +201,13 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         parent.removeChild(e);
     },
 
+    submitForm:function() {
+        phpr.Project.Form.superclass.submitForm.apply(this);
+        phpr.DataStore.deleteDataPartialString({
+            url: phpr.webpath + 'index.php/Project/index/jsonDetail'
+        });
+    },
+
     deleteForm:function() {
         // Summary:
         //    This function is responsible for deleting a dojo element
@@ -211,6 +218,10 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         result.type    = 'warning';
         result.message = phpr.nls.get('The deletion of a project and its subprojects might take a while');
         new phpr.handleResponse('serverFeedback', result);
+
+        phpr.DataStore.deleteDataPartialString({
+            url: phpr.webpath + 'index.php/Project/index/jsonDetail'
+        });
 
         this.inherited(arguments);
     },

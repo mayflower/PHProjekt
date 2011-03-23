@@ -49,5 +49,19 @@ dojo.declare("phpr.Todo.Form", phpr.Default.Form, {
                 });
             });
         }
+    },
+
+    submitForm:function() {
+        phpr.Todo.Form.superclass.submitForm.apply(this);
+        phpr.DataStore.deleteDataPartialString({
+            url: phpr.webpath + 'index.php/Project/index/jsonDetail'
+        });
+    },
+
+    deleteFrom:function() {
+        phpr.Todo.Form.superclass.deleteForm.apply(this);
+        phpr.DataStore.deleteDataPartialString({
+            url: phpr.webpath + 'index.php/Project/index/jsonDetail'
+        });
     }
 });

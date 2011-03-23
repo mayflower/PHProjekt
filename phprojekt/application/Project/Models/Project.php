@@ -323,7 +323,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      * Delete the CumulativeCompletePercent caches for this project and its parent
      * project.
      */
-    protected function deleteCumulativeCompletePercentCache()
+    public function deleteCumulativeCompletePercentCache()
     {
         $cache = Phprojekt::getInstance()->getCache();
         $cache->remove($this->getCumulativeCompletePercentCacheId());

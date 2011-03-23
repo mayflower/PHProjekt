@@ -71,4 +71,26 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
             return parent::recordValidate();
         }
     }
+
+    /**
+     * Overwrite the save function and delete this project's completion cache.
+     */
+    public function save()
+    {
+        parent::save();
+        $project = new Project_Models_Project();
+        $project->find(Phprojekt::getCurrentProjectId());
+        $project->deleteCumulativeCompletePercentCache();
+    }
+
+    /**
+     * Overwrite the delete function and delete this project's completion cache.
+     */
+    public function delete()
+    {
+        $project = new Project_Models_Project();
+        $project->find(Phprojekt::getCurrentProjectId());
+        $project->deleteCumulativeCompletePercentCache();
+        parent::delete();
+    }
 }
