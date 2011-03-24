@@ -164,12 +164,14 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
             $this->_fetchParticipantData();
 
+            // We need to check this before we call parent::save() as it will be
+            // set after.
             $isNew = empty($this->_storedId);
 
             $now = new Datetime('now', new DateTimeZone('UTC'));
             $this->lastModified = $now->format('Y-m-d H:i:s');
             parent::save();
-            $this->_saveParticipantData($isNew);
+            $this->_saveParticipantData();
             $this->_updateRights();
 
             // If the start time has changed, we have to adjust all the excluded
@@ -399,10 +401,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
     /**
      * Get all events in the period that the currently active user participates
-     * in.  Both given times are inclusive.
+     * in. Both given times are inclusive.
      *
-     * Note that even if $user is given, only events that the current user is
-     * allowed to read will be shown.
+     * Note that even if $user is given and different from the current user,
+     * only public events will be returned.
      *
      * @param Datetime $start The start of the period.
      * @param Datetime $end   The end of the period.
@@ -415,8 +417,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                                       $user = null)
     {
         if (is_null($user)) {
+            // Default to the current user.
             $user = Phprojekt_Auth::getUserId();
         }
+
         $db     = $this->getAdapter();
         $where  = $db->quoteInto(
             'calendar2_user_relation.user_id = ? ',
@@ -447,8 +451,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 )
             );
         }
-        $ret = array();
 
+        // Expand the recurrences.
+        $ret = array();
         foreach ($models as $model) {
             $startDt  = new Datetime($model->start);
             $endDt    = new Datetime($model->end);
@@ -992,11 +997,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      * Saves the participants for this event.
      * This object must have already been save()d for this method to work.
      *
-     * @param bool $isNew Whether this is a new event.
-     *
      * @return void
      */
-    private function _saveParticipantData($isNew = false)
+    private function _saveParticipantData()
     {
         $db = $this->getAdapter();
 
