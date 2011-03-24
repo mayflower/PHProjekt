@@ -426,6 +426,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             'calendar2_user_relation.user_id = ? ',
             (int) $user
         );
+
+        if (Phprojekt_Auth::getUserId() != $user) {
+            $where .= $db->quoteInto(
+                'AND calendar2.visibility != ?',
+                (int) self::VISIBILITY_PRIVATE
+            );
+        }
         //TODO: This might query a lot of objects. Consider saving the last
         //      date of occurrence too so this is faster.
         $where .= $db->quoteInto('AND start <= ?', $end->format('Y-m-d H:i:s'));
@@ -439,18 +446,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $where, null, null, null, null, $join
         );
 
-        if (Phprojekt_Auth::getUserId() != $user) {
-            // This is not the owner of the events, so we'll hide his private
-            // events.
-            $models = array_filter(
-                $models,
-                create_function(
-                    '$m',
-                    'return $m->visibility
-                            != Calendar2_Models_Calendar2::VISIBILITY_PRIVATE;'
-                )
-            );
-        }
 
         // Expand the recurrences.
         $ret = array();
