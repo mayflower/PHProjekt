@@ -690,37 +690,53 @@ dojo.declare("phpr.loading", null, {
 
 dojo.declare("phpr.translator", null, {
     // Summary:
-    //     Trasnlation class
+    //     Translation class
     // Description:
-    //     Collect all the trasnlated strings into an array
-    //     and return the request string translateds
+    //     Collect all the translated strings into an array
+    //     and return the request string translated.
     _strings: {},
 
     constructor:function(translatedStrings) {
        this._strings = translatedStrings;
     },
 
-    get:function(string, module) {
+    get:function(string, module, useFallback) {
         var returnValue;
+        var strings = this._strings;
+
+        if (useFallback) {
+            if (strings._fallback) {
+                strings = strings._fallback;
+            } else {
+                // We got no fallback from the server. Just return the string.
+                return string;
+            }
+        }
 
         // Special module
-        if (module && this._strings[module] && this._strings[module][string]) {
-            returnValue = this._strings[module][string];
+        if (module && strings[module] && strings[module][string]) {
+            returnValue = strings[module][string];
         // Current module
-        } else if (this._strings[phpr.module] && this._strings[phpr.module][string]) {
-            returnValue = this._strings[phpr.module][string];
+        } else if (strings[phpr.module] && strings[phpr.module][string]) {
+            returnValue = strings[phpr.module][string];
         // Core module
-        } else if (this._strings['Core'] && this._strings['Core'][string]) {
-            returnValue = this._strings['Core'][string];
+        } else if (strings['Core'] && strings['Core'][string]) {
+            returnValue = strings['Core'][string];
         // Default module
-        } else if (this._strings['Default'] && this._strings['Default'][string]) {
-            returnValue = this._strings['Default'][string];
+        } else if (strings['Default'] && strings['Default'][string]) {
+            returnValue = strings['Default'][string];
         } else {
-            // Unstranslated string
-            returnValue = string;
+            // Untranslated string
+            if (!useFallback) {
+                returnValue = this.get(string, module, true);
+            } else {
+                // We're already using the fallback. Just return the string now.
+                returnValue = string;
+            }
         }
         return returnValue;
     }
+
 });
 
 dojo.declare("phpr.Dialog", [dijit.Dialog], {
