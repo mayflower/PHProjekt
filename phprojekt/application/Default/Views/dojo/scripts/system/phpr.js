@@ -692,8 +692,7 @@ dojo.declare("phpr.translator", null, {
     // Summary:
     //     Translation class
     // Description:
-    //     Collect all the translated strings into an array
-    //     and return the request string translated.
+    //     Collect all the translated strings into an array and return the request string translated.
     _strings: {},
 
     constructor:function(translatedStrings) {
@@ -734,9 +733,9 @@ dojo.declare("phpr.translator", null, {
                 returnValue = string;
             }
         }
+
         return returnValue;
     }
-
 });
 
 dojo.declare("phpr.Dialog", [dijit.Dialog], {
