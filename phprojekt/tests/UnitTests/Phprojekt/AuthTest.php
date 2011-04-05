@@ -45,10 +45,9 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
      */
     public function testLoginWithoutSession()
     {
-        $this->setExpectedException('Phprojekt_Auth_UserNotLoggedInException');
         $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $authNamespace->unsetAll();
-        Phprojekt_Auth::isLoggedIn();
+        $this->assertFalse(Phprojekt_Auth::isLoggedIn());
     }
 
     /**
