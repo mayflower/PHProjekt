@@ -755,7 +755,7 @@ class IndexController extends Zend_Controller_Action
     {
         $language  = Cleaner::sanitize('alpha', $this->getRequest()->getParam('language', 'en'));
         $translate = Phprojekt::getInstance()->getTranslate();
-        $data = $translate->getTranslatedStrings($language);
+        $data      = $translate->getTranslatedStrings($language);
         if ('en' != $language) {
             $data['_fallback'] = $translate->getTranslatedStrings('en');
         }
