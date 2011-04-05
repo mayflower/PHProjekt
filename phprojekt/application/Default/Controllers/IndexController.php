@@ -154,10 +154,7 @@ class IndexController extends Zend_Controller_Action
             // If is a GET, show the index page with isLogged false
             // If is a POST, send message in json format
             if (!$this->getFrontController()->getRequest()->isGet()) {
-                throw new Phprojekt_PublishedException(
-                    Phprojekt_Auth::NOT_LOGGED_IN_MESSAGE,
-                    500
-                );
+                throw new Phprojekt_PublishedException(Phprojekt_Auth::NOT_LOGGED_IN_MESSAGE, 500);
             }
             $isLoggedIn = false;
         }

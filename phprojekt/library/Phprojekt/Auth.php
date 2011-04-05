@@ -56,8 +56,6 @@ class Phprojekt_Auth extends Zend_Auth
      * Checks in the session if user is loggued in or not.
      * If it is not logged, tries to log him/her using browser cookies.
      *
-     * @throws Phprojekt_Auth_UserNotLoggedInException On user not logged in.
-     *
      * @return boolean True if user is logued in.
      */
     static public function isLoggedIn()
