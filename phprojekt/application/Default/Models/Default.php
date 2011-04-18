@@ -193,14 +193,4 @@ class Default_Models_Default implements Phprojekt_Model_Interface
     {
         return true;
     }
-
-    /**
-     * Get an array with all the fields for make the filter select.
-     *
-     * @return array Empty array.
-     */
-    public function getFieldsForFilter()
-    {
-        return array();
-    }
 }
