@@ -142,15 +142,15 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Returns the field information of the item.
+     * Returns the current field of the item.
      *
-     * @return Phprojekt_DatabaseManager_Field An intance of Phprojekt_DatabaseManager_Field.
+     * @return mixed Value of the var.
      */
     public function current()
     {
         $key = $this->convertVarFromSql($this->key());
 
-        return new Phprojekt_DatabaseManager_Field($this->getInformation(), $key, parent::current());
+        return $this->$key;
     }
 
     /**

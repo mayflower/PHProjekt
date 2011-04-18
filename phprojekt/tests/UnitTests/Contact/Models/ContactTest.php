@@ -144,22 +144,18 @@ class Contact_Models_Contact_Test extends PHPUnit_Framework_TestCase
         $contactModel = clone($this->_model);
         $projectModel = new Project_Models_Project();
         $projectModel->find(1);
-        $field    = new Phprojekt_DatabaseManager_Field($projectModel->getInformation(), 'contactId');
-        $response = $contactModel->getRangeFromModel($field);
-        $expected = array(array('id' => 0,
-                                'name' => ''),
-                          array('id' => '2',
-                                'name' => 'Mariano10'));
-        $this->assertEquals($expected, $response);
-    }
-
-    /**
-     * Test save rights
-     */
-    public function testSaveRights()
-    {
-        $contactModel = clone($this->_model);
-        $contactModel->saveRights(null);
+        $fields = $projectModel->getInformation()->getFieldDefinition();
+        foreach ($fields as $field) {
+            if ($field['key'] == 'contactId') {
+                $response = $contactModel->getRangeFromModel($field);
+                $expected = array(array('id'   => 0,
+                                        'name' => ''),
+                                  array('id'   => '2',
+                                        'name' => 'Mariano10'));
+                $this->assertEquals($expected, $response);
+                break;
+            }
+        }
     }
 
     /**
@@ -168,9 +164,11 @@ class Contact_Models_Contact_Test extends PHPUnit_Framework_TestCase
     public function testRecordValidate()
     {
         $contactModel = clone($this->_model);
-        $contactModel->find(1);
-        $response = $contactModel->recordValidate();
-        $this->assertEquals(true, $response);
+        $contactModel->find(1); // Empty contact
+        $this->assertFalse($contactModel->recordValidate());
+
+        $contactModel->find(2); // Full filled contact
+        $this->assertTrue($contactModel->recordValidate());
     }
 
     /**
