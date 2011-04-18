@@ -37,20 +37,8 @@
  * @version    Release: @package_version@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Calendar_Models_CalendarInformation extends Phprojekt_DatabaseManager
-    implements Phprojekt_ModelInformation_Interface
+class Calendar_Models_Information extends Phprojekt_DatabaseManager implements Phprojekt_ModelInformation_Interface
 {
-    /**
-     * Set the db table name to use to this fixed value.
-     * The database used by the parent class must be used here as well, independent of the class name.
-     *
-     * @return string The table name.
-     */
-    public function getTableName()
-    {
-        return "database_manager";
-    }
-
     /**
      * Return an array of field information.
      *
