@@ -100,6 +100,7 @@ CREATE TABLE `module` (
   `save_type` int(1) NOT NULL default 0,
   `version` varchar(20) default NULL,
   `active` int(1) NOT NULL default 1,
+  `dependence` varchar(255) NOT NULL default 'Application',
   PRIMARY KEY (`id`)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -533,18 +534,24 @@ CREATE TABLE  `frontend_message` (
 -- INSERT DATA
 --
 
-INSERT INTO `module` (`id`, `name`, `label`, `save_type`, `version`, `active`) VALUES
-(1, 'Project', 'Project', 0, '6.0.0', 1),
-(2, 'Todo', 'Todo', 0, '6.0.0', 1),
-(3, 'Note', 'Note', 0, '6.0.0', 1),
-(4, 'Timecard', 'Timecard', 1, '6.0.0', 1),
-(5, 'Calendar', 'Calendar', 1, '6.0.0', 1),
-(6, 'Gantt', 'Gantt', 0, '6.0.0', 1),
-(7, 'Filemanager', 'Filemanager', 0, '6.0.0', 1),
-(8, 'Statistic', 'Statistic', 0, '6.0.0', 1),
-(9, 'Contact', 'Contact', 1, '6.0.0', 1),
-(10, 'Helpdesk', 'Helpdesk', 0, '6.0.0', 1),
-(11, 'Minutes','Minute', 0, '6.0.0', 1);
+INSERT INTO `module` (`id`, `name`, `label`, `save_type`, `version`, `active`, `dependence`) VALUES
+(1, 'Project', 'Project', 0, '6.0.0', 1, 'Application'),
+(2, 'Todo', 'Todo', 0, '6.0.0', 1, 'Application'),
+(3, 'Note', 'Note', 0, '6.0.0', 1, 'Application'),
+(4, 'Timecard', 'Timecard', 1, '6.0.0', 1, 'Application'),
+(5, 'Calendar', 'Calendar', 1, '6.0.0', 1, 'Application'),
+(6, 'Gantt', 'Gantt', 0, '6.0.0', 1, 'Application'),
+(7, 'Filemanager', 'Filemanager', 0, '6.0.0', 1, 'Application'),
+(8, 'Statistic', 'Statistic', 0, '6.0.0', 1, 'Application'),
+(9, 'Contact', 'Contact', 1, '6.0.0', 1, 'Application'),
+(10, 'Helpdesk', 'Helpdesk', 0, '6.0.0', 1, 'Application'),
+(11, 'Minutes','Minute', 0, '6.0.0', 1, 'Application'),
+(12, 'MinutesItem','MinutesItem', 0, '6.0.0', 1, 'Minutes'),
+(13, 'Module','Module', 1, '6.0.0', 1, 'Core'),
+(14, 'Tab','Tab', 1, '6.0.0', 1, 'Core'),
+(15, 'User','User', 1, '6.0.0', 1, 'Core'),
+(16, 'Rol','Rol', 1, '6.0.0', 1, 'Core'),
+(17, 'Groups','Groups', 1, '6.0.0', 1, 'Core');
 
 INSERT INTO `database_manager` (`id`, `table_name`, `table_field`, `form_tab`, `form_label`, `form_type`, `form_position`, `form_columns`, `form_regexp`, `form_range`, `default_value`, `list_position`, `list_align`, `list_use_filter`, `alt_position`, `status`, `is_integer`, `is_required`, `is_unique`) VALUES
 (1, 'Project', 'title', 1, 'Title', 'text', 1, 1, NULL, NULL, NULL, 1, 'left', 1, 2, '1', 0, 1, 0),
