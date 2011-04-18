@@ -52,6 +52,27 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     public $searchSecondDisplayField = 'company';
 
     /**
+     * Configuration to use or not the history class.
+     *
+     * @var boolean
+     */
+    public $useHistory = true;
+
+    /**
+     * Configuration to use or not the search class.
+     *
+     * @var boolean
+     */
+    public $useSearch = false;
+
+    /**
+     * Configuration to use or not the right class.
+     *
+     * @var boolean
+     */
+    public $useRights = false;
+
+    /**
      * Rewrites parent fetchAll, only public records are shown.
      *
      * @param string|array $where  Where clause.
@@ -76,44 +97,15 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Validate the data of the current record.
-     *
-     * @return boolean True for valid.
-     */
-    public function recordValidate()
-    {
-        return true;
-    }
-
-    /**
-     * Extension of saveRights() for don't save the rights.
-     *
-     * @param array $rights Array of user IDs with the bitmask access.
-     *
-     * @return void
-     */
-    public function saveRights($rights)
-    {
-    }
-
-    /**
-     * Extension of save() for don't save the search strings.
      * Only allow save if the contact is public or the ownerId is the current user.
      *
-     * @return void
+     * @return boolean True for a sucessful save.
      */
     public function save()
     {
         $result = true;
-
         if (!$this->private || ($this->private && $this->ownerId == Phprojekt_Auth::getUserId())) {
-            if ($this->id > 0) {
-                $this->_history->saveFields($this, 'edit');
-                $result = Phprojekt_ActiveRecord_Abstract::save();
-            } else {
-                $result = Phprojekt_ActiveRecord_Abstract::save();
-                $this->_history->saveFields($this, 'add');
-            }
+            $result = parent::save();
         }
 
         return $result;
@@ -121,7 +113,6 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
 
 
     /**
-     * Extension of delete() for don't save the search strings.
      * Only allow delete if the contact is public or the ownerId is the current user.
      *
      * @return void
@@ -129,8 +120,6 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     public function delete()
     {
         if (!$this->private || ($this->private && $this->ownerId == Phprojekt_Auth::getUserId())) {
-            $this->deleteUploadFiles();
-            $this->_history->saveFields($this, 'delete');
             parent::delete();
         }
     }
