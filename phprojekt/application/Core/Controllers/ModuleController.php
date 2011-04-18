@@ -121,16 +121,8 @@ class Core_ModuleController extends Core_IndexController
             $message = Phprojekt::getInstance()->translate('The module was edited correctly');
         }
 
-        // Set the hidden name to name or label
-        // use ucfirst and delete spaces
-        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
-        if (empty($module)) {
-            $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('label', null));
-        }
-        $module = ucfirst(str_replace(" ", "", $module));
-        $this->getRequest()->setParam('name', $module);
-
-        $model->saveModule($this->getRequest()->getParams());
+        $params = $this->setParams($this->getRequest()->getParams());
+        Default_Helpers_Save::save($model, $params);
 
         $return = array('type'    => 'success',
                         'message' => $message,
@@ -207,7 +199,7 @@ class Core_ModuleController extends Core_IndexController
         $model = $this->getModelObject()->find($id);
 
         if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
-            if (is_dir(PHPR_CORE_PATH . $model->name)) {
+            if (is_dir(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $model->name)) {
                 throw new Phprojekt_PublishedException(self::CAN_NOT_DELETE_SYSTEM_MODULE);
             }
 
@@ -242,5 +234,52 @@ class Core_ModuleController extends Core_IndexController
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
+    }
+
+    /**
+     * Sets some values depending on the parameters.
+     * Each module can implement this function to change their values.
+     *
+     * The function needs at least one parameter
+     * (The array of parameters itself for return it).
+     *
+     * @throws Phprojekt_PublishedException If the arguments are missing.
+     *
+     * @return array
+     */
+    public function setParams()
+    {
+        $args = func_get_args();
+        if (1 > count($args)) {
+            throw new InvalidArgumentException('Missing arguments in setParams function');
+        }
+        $params = $args[0];
+
+        // Set the hidden name to name or label
+        // use ucfirst and delete spaces
+        $module = null;
+        if (isset($params['name'])) {
+            $module = Cleaner::sanitize('alnum', $params['name'], null);
+        }
+        if (empty($module)) {
+            if (isset($params['label'])) {
+                $module = Cleaner::sanitize('alnum', $params['label'], null);
+            } else {
+                $module = null;
+            }
+        }
+        $params['name'] = ucfirst(str_replace(" ", "", $module));
+
+        if (isset($params['active'])) {
+            $params['active'] = (int) $params['active'];
+        }
+
+        if (isset($params['saveType'])) {
+            $params['saveType'] = (int) $params['saveType'];
+        }
+
+        $params['version'] = Phprojekt::getInstance()->getVersion();
+
+        return $params;
     }
 }

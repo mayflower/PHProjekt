@@ -35,131 +35,108 @@
  * @version    Release: @package_version@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
+class Phprojekt_Module_Module extends Phprojekt_Item_Abstract
 {
     /**
-     * The standard information manager with hardcoded field definitions.
+     * Field for display in the search results.
      *
-     * @var Phprojekt_ModelInformation_Interface
+     * @var string
      */
-    protected $_informationManager;
+    public $searchFirstDisplayField = 'name';
 
     /**
-     * Validate object.
+     * Field for display in the search results.
      *
-     * @var Phprojekt_Model_Validate
+     * @var string
      */
-    protected $_validate = null;
+    public $searchSecondDisplayField = 'label';
 
     /**
-     * Constructor.
+     * Configuration to use or not the history class.
      *
-     * @param array $db Configuration for Zend_Db_Table.
-     *
-     * @return void
+     * @var boolean
      */
-    public function __construct($db = null)
-    {
-        if (null === $db) {
-            $db = Phprojekt::getInstance()->getDb();
-        }
-        parent::__construct($db);
-
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Information');
-    }
+    public $useHistory = false;
 
     /**
-     * Define the clone function for prevent the same point to same object.
+     * Configuration to use or not the search class.
      *
-     * @return void
+     * @var boolean
      */
-    public function __clone()
-    {
-        parent::__clone();
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Information');
-    }
+    public $useSearch = false;
 
     /**
-     * Get the information manager.
+     * Configuration to use or not the right class.
      *
-     * @see Phprojekt_Model_Interface::getInformation()
+     * This variable MUST be false here, since the user can't have rights.
      *
-     * @return Phprojekt_ModelInformation_Interface An instance of Phprojekt_ModelInformation_Interface.
+     * @var boolean
+     */
+    public $useRights = false;
+
+    /**
+     * Returns the Model information manager.
+     *
+     * @return Phprojekt_ModelInformation_Interface An instance of a Phprojekt_ModelInformation_Interface.
      */
     public function getInformation()
     {
+        if (null == $this->_informationManager) {
+            $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Information');
+        }
+
         return $this->_informationManager;
     }
 
     /**
-     * Help to save a model by setting the models properties.
-     * Validation is based on the ModelInformation implementation.
-     *
-     * @param Phprojekt_Model_Interface $model  The model.
-     * @param array                     $params The parameters used to feed the model.
-     *
-     * @throws Phprojekt_PublishedException On no valid parameters.
+     * Extension of the Item to create the files on new modules.
      *
      * @return boolean True for a sucessful save.
      */
-    public function saveModule(array $params)
+    public function save()
     {
-        $this->name     = ucfirst($params['name']);
-        $this->label    = $params['label'];
-        $this->active   = (int) $params['active'];
-        $this->saveType = (int) $params['saveType'];
-        $this->version  = Phprojekt::getInstance()->getVersion();
-
-        if ($this->recordValidate()) {
-            $saveNewModule = false;
-            if ($this->id == 0) {
-                $saveNewModule = true;
-            }
-            $this->save();
-
-            // Add the new module to the root project
-            if ($saveNewModule) {
-                $project = Phprojekt_Loader::getModel('Project', 'Project')->find(1);
-                $project->addModule($this->id);
-
-                // Save Module into the role 1 with 255 access
-                $role  = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_RoleModulePermissions');
-                $role->addModuleToAdminRole($this->id);
-
-                // Get the first and second fields
-                $field  = Phprojekt_DatabaseManager::COLUMN_NAME;
-                $db     = Phprojekt::getInstance()->getDb();
-                $select = $db->select()
-                             ->from('database_manager')
-                             ->where(sprintf('table_name = %s AND status = 1 AND %s != %s', $db->quote($this->name),
-                                $field, $db->quote('project_id')));
-                $results     = $db->query($select)->fetchAll();
-                $firstField  = (isset($results[0][$field])) ? $results[0][$field] : 'id';
-                $secondField = (isset($results[1][$field])) ? $results[1][$field] : 'id';
-
-                // Copy Templates files
-                $this->_copyTemplates(array('Template'), $firstField, $secondField);
-
-                // Change SQL file
-                $this->_createSqlFile();
-            }
-
-            // Reset cache for modules
-            $moduleNamespace = new Zend_Session_Namespace('Phprojekt_Module_Module-_getCachedIds');
-            $moduleNamespace->unsetAll();
-
-            // Reset cache for relations
-            $aclNamespace = new Zend_Session_Namespace('Phprojekt_Acl');
-            $aclNamespace->unsetAll();
-
-            return $this->id;
-        } else {
-            $errors = $this->getError();
-            $error  = array_pop($errors);
-            throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
+        $saveNewModule = false;
+        if ($this->id == 0) {
+            $saveNewModule = true;
         }
+        $return = parent::save();
+
+        // Add the new module to the root project
+        if ($saveNewModule) {
+            $project = Phprojekt_Loader::getModel('Project', 'Project')->find(1);
+            $project->addModule($this->id);
+
+            // Save Module into the role 1 with 255 access
+            $role = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_RoleModulePermissions');
+            $role->addModuleToAdminRole($this->id);
+
+            // Get the first and second fields
+            $field  = Phprojekt_DatabaseManager::COLUMN_NAME;
+            $db     = Phprojekt::getInstance()->getDb();
+            $select = $db->select()
+                         ->from('database_manager')
+                         ->where(sprintf('table_name = %s AND status = 1 AND %s != %s', $db->quote($this->name),
+                            $field, $db->quote('project_id')));
+            $results     = $db->query($select)->fetchAll();
+            $firstField  = (isset($results[0][$field])) ? $results[0][$field] : 'id';
+            $secondField = (isset($results[1][$field])) ? $results[1][$field] : 'id';
+
+            // Copy Templates files
+            $this->_copyTemplates(array('Template'), $firstField, $secondField);
+
+            // Change SQL file
+            $this->_createSqlFile();
+        }
+
+        // Reset cache for modules
+        $moduleNamespace = new Zend_Session_Namespace('Phprojekt_Module_Module-_getCachedIds');
+        $moduleNamespace->unsetAll();
+
+        // Reset cache for relations
+        $aclNamespace = new Zend_Session_Namespace('Phprojekt_Acl');
+        $aclNamespace->unsetAll();
+
+        return $return;
     }
 
     /**
@@ -169,9 +146,6 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
      */
     public function recordValidate()
     {
-        $data   = $this->_data;
-        $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-
         if ($this->_data['id'] == 1 && $this->_data['saveType'] != 0) {
             $this->_validate->error->addError(array(
                 'field'   => 'Module',
@@ -180,12 +154,11 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                 return false;
         }
 
-        return $this->_validate->recordValidate($this, $data, $fields);
+        return parent::recordValidate();
     }
 
     /**
-     * Prevent delete modules from the Frontend.
-     * For delete modules use safeDelete.
+     * Delete a module.
      *
      * @return void
      */
@@ -218,25 +191,6 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
 
         // Delete module entry
         parent::delete();
-    }
-
-    /**
-     * Return the error data.
-     *
-     * @return array Array with errors.
-     */
-    public function getError()
-    {
-        return (array) $this->_validate->error->getError();
-    }
-
-    /**
-     * Save rights.
-     *
-     * @return void
-     */
-    public function saveRights()
-    {
     }
 
     /**
@@ -348,7 +302,17 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
         $content = str_replace("##MODULESAVETYPE##", $this->saveType, $content);
 
         $module = Phprojekt_Loader::getModel($this->name, $this->name);
-        $fields = $module->getInformation()->getDataDefinition();
+
+        // This function is called only from the ModuleDesigner for create new modules
+        // and are Items with Phprojekt_DatabaseManager as information manager,
+        // but this check is -just in case- since the getDataDefinition() function is only for the
+        // Phprojekt_DatabaseManager class.
+        $informationManager = $module->getInformation();
+        if ($informationManager instanceof Phprojekt_DatabaseManager) {
+            $fields = $module->getInformation()->getDataDefinition();
+        } else {
+            throw new Exception('The information manager must be an instance of Phprojekt_DatabaseManager');
+        }
 
         $structure   = '';
         $initialData = '';
