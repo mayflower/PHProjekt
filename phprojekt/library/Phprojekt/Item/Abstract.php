@@ -38,11 +38,19 @@
 abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
     /**
-     * Represents the database_manager class.
+     * Keep the Db Configuration.
+     *
+     * @var Configuration for Zend_Db_Table.
+     */
+    protected $_dbConfig = null;
+
+    /**
+     * Represents the model information manager.
+     * By default Items use the database_manager class.
      *
      * @var Phprojekt_ActiveRecord_Abstract
      */
-    protected $_dbManager = null;
+    protected $_informationManager = null;
 
     /**
      * Validate object.
@@ -87,6 +95,27 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public $searchSecondDisplayField = 'notes';
 
     /**
+     * Configuration to use or not the history class.
+     *
+     * @var boolean
+     */
+    public $useHistory = true;
+
+    /**
+     * Configuration to use or not the search class.
+     *
+     * @var boolean
+     */
+    public $useSearch = true;
+
+    /**
+     * Configuration to use or not the right class.
+     *
+     * @var boolean
+     */
+    public $useRights = true;
+
+    /**
      * Initialize new object.
      *
      * @param array $db Configuration for Zend_Db_Table.
@@ -96,12 +125,18 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function __construct($db = null)
     {
         parent::__construct($db);
+        $this->_dbConfig = $db;
+        $this->_validate = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
 
-        $this->_dbManager = new Phprojekt_DatabaseManager($this, $db);
-        $this->_validate  = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_history   = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $this->_search    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
-        $this->_rights    = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        if ($this->useHistory) {
+            $this->_history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+        }
+        if ($this->useSearch) {
+            $this->_search = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
+        }
+        if ($this->useRights) {
+            $this->_rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        }
     }
 
     /**
@@ -113,19 +148,31 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         parent::__clone();
         $this->_validate = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_history  = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $this->_search   = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
-        $this->_rights   = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+
+        if ($this->useHistory) {
+            $this->_history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+        }
+        if ($this->useSearch) {
+            $this->_search = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
+        }
+        if ($this->useRights) {
+            $this->_rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        }
     }
 
     /**
-     * Returns the database manager instance used by this phprojekt item.
+     * Returns the Model information manager.
+     * By default use the the database manager class.
      *
-     * @return Phprojekt_DatabaseManager An instance of Phprojekt_DatabaseManager.
+     * @return Phprojekt_ModelInformation_Interface An instance of a Phprojekt_ModelInformation_Interface.
      */
     public function getInformation()
     {
-        return $this->_dbManager;
+        if (null == $this->_informationManager) {
+            $this->_informationManager = new Phprojekt_DatabaseManager($this, $this->_dbConfig);
+        }
+
+        return $this->_informationManager;
     }
 
     /**
@@ -184,7 +231,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function recordValidate()
     {
         $data   = $this->_data;
-        $fields = $this->_dbManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        $fields = $this->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         return $this->_validate->recordValidate($this, $data, $fields);
     }
@@ -224,20 +271,26 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     /**
      * Extension of the Abstract Record to save the history.
      *
-     * @return void
+     * @return boolean True for a sucessful save.
      */
     public function save()
     {
         $result = true;
         if ($this->id > 0) {
-            $this->_history->saveFields($this, 'edit');
+            if ($this->useHistory) {
+                $this->_history->saveFields($this, 'edit');
+            }
             $result = parent::save();
         } else {
             $result = parent::save();
-            $this->_history->saveFields($this, 'add');
+            if ($this->useHistory) {
+                $this->_history->saveFields($this, 'add');
+            }
         }
 
-        $this->_search->indexObjectItem($this);
+        if ($this->useSearch) {
+            $this->_search->indexObjectItem($this);
+        }
 
         return $result;
     }
@@ -262,9 +315,15 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $moduleId = Phprojekt_Module::getId($this->getModelName());
 
         $this->deleteUploadFiles();
-        $this->_history->saveFields($this, 'delete');
-        $this->_search->deleteObjectItem($this);
-        $this->_rights->saveRights($moduleId, $this->id, array());
+        if ($this->useHistory) {
+            $this->_history->saveFields($this, 'delete');
+        }
+        if ($this->useSearch) {
+            $this->_search->deleteObjectItem($this);
+        }
+        if ($this->useRights) {
+            $this->_rights->saveRights($moduleId, $this->id, array());
+        }
 
         parent::delete();
     }
@@ -277,12 +336,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function deleteUploadFiles()
     {
         // Is there is any upload file, -> delete the files from the server
-        $fields = $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM,
-            Phprojekt_DatabaseManager::COLUMN_NAME);
+        $fields = $this->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         foreach ($fields as $field) {
-            $field = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field);
-            if ($this->getInformation()->getType($field) == 'upload') {
-                $filesField = $this->$field;
+            if ($this->getInformation()->getType($field['type']) == 'upload') {
+                $filesField = $this->$field['key'];
                 $files      = explode('||', $filesField);
                 foreach ($files as $file) {
                     $md5Name          = substr($file, 0, strpos($file, '|'));
@@ -309,19 +366,34 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
-        // Only fetch records with read access
-        $join .= sprintf(' INNER JOIN item_rights ON (item_rights.item_id = %s
-            AND item_rights.module_id = %d AND item_rights.user_id = %d) ',
-            $this->getAdapter()->quoteIdentifier($this->getTableName() . '.id'),
-            Phprojekt_Module::getId($this->getModelName()), Phprojekt_Auth::getUserId());
+        if ($this->useRights) {
+            // Join the item_rights table
+            $join .= sprintf(' INNER JOIN item_rights ON (item_rights.item_id = %s
+                AND item_rights.module_id = %d AND item_rights.user_id = %d) ',
+                $this->getAdapter()->quoteIdentifier($this->getTableName() . '.id'),
+                Phprojekt_Module::getId($this->getModelName()), Phprojekt_Auth::getUserId());
+        }
 
         // Set where
-        if (null !== $where) {
-            $where .= ' AND ';
+        if (isset($this->ownerId)) {
+            if (null !== $where) {
+                $where .= ' AND ';
+            }
+
+            // Only fetch own records if the field owner_id exists
+            $where .= ' (' . sprintf('(%s.owner_id = %d OR %s.owner_id IS NULL)', $this->getTableName(),
+                Phprojekt_Auth::getUserId(), $this->getTableName());
+
+            if ($this->useRights) {
+                // Only fetch records with read access
+                if (null !== $where) {
+                    $where .= ' OR';
+                }
+                $where .= ' (item_rights.access > 0)) ';
+            } else {
+                $where .= ' ) ';
+            }
         }
-        $where .= ' (' . sprintf('(%s.owner_id = %d OR %s.owner_id IS NULL)', $this->getTableName(),
-            Phprojekt_Auth::getUserId(), $this->getTableName());
-        $where .= ' OR (item_rights.access > 0)) ';
 
         return parent::fetchAll($where, $order, $count, $offset, $select, $join);
     }
@@ -333,9 +405,14 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getRights()
     {
-        $rights = $this->_rights->getRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
+        if ($this->useRights) {
+            $rights = $this->_rights->getRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
+            $return = $this->_mergeRightsAndRole($rights);
+        } else {
+            $return = parent::getRights();
+        }
 
-        return $this->_mergeRightsAndRole($rights);
+        return $return;
     }
 
     /**
@@ -347,11 +424,15 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getMultipleRights($ids)
     {
-        $allRights = $this->_rights->getMultipleRights(Phprojekt_Module::getId($this->getModelName()), $ids);
+        if ($this->useRights) {
+            $allRights = $this->_rights->getMultipleRights(Phprojekt_Module::getId($this->getModelName()), $ids);
 
-        $return = array();
-        foreach ($allRights as $user => $rights) {
-            $return[$user] = $this->_mergeRightsAndRole($rights);
+            $return = array();
+            foreach ($allRights as $user => $rights) {
+                $return[$user] = $this->_mergeRightsAndRole($rights);
+            }
+        } else {
+            $return = parent::getMultipleRights($ids);
         }
 
         return $return;
@@ -364,9 +445,14 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getUsersRights()
     {
-        $rights = $this->_rights->getUsersRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
+        if ($this->useRights) {
+            $rights = $this->_rights->getUsersRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
+            $return = $this->_mergeRightsAndRole($rights);
+        } else {
+            $return = parent::getUsersRights();
+        }
 
-        return $this->_mergeRightsAndRole($rights);
+        return $return;
     }
 
     /**
@@ -450,6 +536,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function saveRights($rights)
     {
-        $this->_rights->saveRights(Phprojekt_Module::getId($this->getModelName()), $this->id, $rights);
+        if ($this->useRights) {
+            $this->_rights->saveRights(Phprojekt_Module::getId($this->getModelName()), $this->id, $rights);
+        }
     }
 }
