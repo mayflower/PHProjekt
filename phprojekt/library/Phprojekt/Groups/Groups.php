@@ -35,8 +35,29 @@
  * @version    Release: @package_version@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
-class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
+class Phprojekt_Groups_Groups extends Phprojekt_Item_Abstract
 {
+    /**
+     * Configuration to use or not the history class.
+     *
+     * @var boolean
+     */
+    public $useHistory = false;
+
+    /**
+     * Configuration to use or not the search class.
+     *
+     * @var boolean
+     */
+    public $useSearch = false;
+
+    /**
+     * Configuration to use or not the right class.
+     *
+     * @var boolean
+     */
+    public $useRights = false;
+
     /**
      * Has many and belongs to many declrations.
      *
@@ -54,13 +75,6 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     private $_userId = null;
 
     /**
-     * The standard information manager with hardcoded field definitions
-     *
-     * @var Phprojekt_ModelInformation_Interface
-     */
-    protected $_informationManager;
-
-    /**
      * Constructor initializes additional Infomanager.
      *
      * @return void
@@ -69,19 +83,21 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
     {
         parent::__construct();
 
-        $this->_userId             = Phprojekt_Auth::getUserId();
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Groups_Information');
+        $this->_userId = Phprojekt_Auth::getUserId();
     }
 
     /**
-     * Define the clone function for prevent the same point to same object.
+     * Returns the Model information manager.
      *
-     * @return void
+     * @return Phprojekt_ModelInformation_Interface An instance of a Phprojekt_ModelInformation_Interface.
      */
-    public function __clone()
+    public function getInformation()
     {
-        parent::__clone();
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Groups_Information');
+        if (null == $this->_informationManager) {
+            $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Groups_Information');
+        }
+
+        return $this->_informationManager;
     }
 
     /**
@@ -139,27 +155,5 @@ class Phprojekt_Groups_Groups extends Phprojekt_ActiveRecord_Abstract implements
             $groupNamespace->groups = $groups;
         }
         return $groupNamespace->groups;
-    }
-
-    /**
-     * Get the information manager.
-     *
-     * @see Phprojekt_Model_Interface::getInformation().
-     *
-     * @return Phprojekt_ModelInformation_Interface An instance of Phprojekt_ModelInformation_Interface.
-     */
-    public function getInformation()
-    {
-        return $this->_informationManager;
-    }
-
-    /**
-     * Validate the current record.
-     *
-     * @return boolean Always true.
-     */
-    public function recordValidate()
-    {
-        return true;
     }
 }
