@@ -118,7 +118,7 @@ class Phprojekt_SettingTest extends PHPUnit_Framework_TestCase
         $records  = $setting->getList(4, $metadata);
 
         $data = array('id' => 0, 'favorites' => "1,2");
-        $this->assertEquals(array($data), $records);
+        $this->assertEquals($data, $records);
 
         $setting = new Phprojekt_Setting();
         $setting->setModule('Notification');
@@ -126,6 +126,6 @@ class Phprojekt_SettingTest extends PHPUnit_Framework_TestCase
         $records  = $setting->getList(0, $metadata);
 
         $data = array('id' => 0, 'loginlogout' => 0, 'datarecords' => 1, 'alerts' => 1);
-        $this->assertEquals(array($data), $records);
+        $this->assertEquals($data, $records);
     }
 }

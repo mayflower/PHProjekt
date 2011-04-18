@@ -112,7 +112,7 @@ class Core_AdministrationController extends Core_IndexController
         $records  = $configuration->getList($moduleId, $metadata);
 
         $data = array("metadata" => $metadata,
-                      "data"     => $records,
+                      "data"     => array($records),
                       "numRows"  => count($records));
 
         Phprojekt_Converter_Json::echoConvert($data);

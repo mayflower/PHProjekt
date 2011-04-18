@@ -177,9 +177,7 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
      */
     public function getList($moduleId, $metadata)
     {
-        $configurations  = array();
-        $record          = $this->fetchAll('module_id = ' . (int) $moduleId);
-
+        $record     = $this->fetchAll('module_id = ' . (int) $moduleId);
         $data       = array();
         $data['id'] = 0;
         foreach ($metadata as $meta) {
@@ -196,9 +194,8 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
                 }
             }
         }
-        $configurations[] = $data;
 
-        return $configurations;
+        return $data;
     }
 
     /**

@@ -86,48 +86,4 @@ class Core_Models_Notification_Setting extends Phprojekt_ModelInformation_Defaul
             'integer' => true,
             'default' => 1));
     }
-
-    /**
-     * Collect all the values of the settings and return it in one row.
-     *
-     * @param integer $moduleId The current moduleId.
-     * @param array   $metadata Array with all the fields.
-     * @param integer $userId   The user ID, if is not setted, the current user is used.
-     *
-     * @return array Array with all the settings and values.
-     */
-    public function getList($moduleId, $metadata, $userId = null)
-    {
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
-        $setting->setModule('Notification');
-
-        $settings = array();
-
-        if ($userId === null) {
-            $userId = (int) Phprojekt_Auth::getUserId();
-        }
-
-        $where  = sprintf('module_id = %d AND user_id = %d', (int) $moduleId, (int) $userId);
-        $record = $setting->fetchAll($where);
-
-        $data       = array();
-        $data['id'] = 0;
-        foreach ($metadata as $meta) {
-            $data[$meta['key']] = $meta['default']; // This is to use the default value defined in getFieldDefinition()
-            foreach ($record as $oneSetting) {
-                if ($oneSetting->keyValue == $meta['key']) {
-                    $getter = 'get' . ucfirst($oneSetting->keyValue);
-                    if (method_exists($this, $getter)) {
-                        $data[$meta['key']] = call_user_func(array($this, $getter), $oneSetting->value);
-                    } else {
-                        $data[$meta['key']] = $oneSetting->value;
-                    }
-                    break;
-                }
-            }
-        }
-        $settings[] = $data;
-
-        return $settings;
-    }
 }
