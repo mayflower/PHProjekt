@@ -209,15 +209,6 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(true, $response);
     }
 
-    /**
-     * Test for mock function
-     */
-    public function testMocks()
-    {
-        $timecardModel = clone($this->_model);
-        $this->assertEquals(array(), $timecardModel->getRights());
-    }
-
     public function testGetFieldDefinition()
     {
         // startDatetime
