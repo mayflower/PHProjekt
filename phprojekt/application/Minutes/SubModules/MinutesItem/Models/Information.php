@@ -37,7 +37,7 @@
  * @version    Release: @package_version@
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
-class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Phprojekt_ModelInformation_Default
+class Minutes_SubModules_MinutesItem_Models_Information extends Phprojekt_ModelInformation_Default
 {
     /**
      * List of available topic types.
