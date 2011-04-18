@@ -35,8 +35,45 @@
  * @version    Release: @package_version@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
+class Phprojekt_User_User extends Phprojekt_Item_Abstract
 {
+    /**
+     * Field for display in the search results.
+     *
+     * @var string
+     */
+    public $searchFirstDisplayField = 'username';
+
+    /**
+     * Field for display in the search results.
+     *
+     * @var string
+     */
+    public $searchSecondDisplayField = 'lastname';
+
+    /**
+     * Configuration to use or not the history class.
+     *
+     * @var boolean
+     */
+    public $useHistory = false;
+
+    /**
+     * Configuration to use or not the search class.
+     *
+     * @var boolean
+     */
+    public $useSearch = false;
+
+    /**
+     * Configuration to use or not the right class.
+     *
+     * This variable MUST be false here, since the user can't have rights.
+     *
+     * @var boolean
+     */
+    public $useRights = false;
+
     /**
      * Has many declrations.
      *
@@ -56,50 +93,17 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
                                                               'model'     => 'Groups'));
 
     /**
-     * The standard information manager with hardcoded field definitions.
+     * Returns the Model information manager.
      *
-     * @var Phprojekt_ModelInformation_Interface
+     * @return Phprojekt_ModelInformation_Interface An instance of a Phprojekt_ModelInformation_Interface.
      */
-    protected $_informationManager;
-
-    /**
-     * Validate object.
-     *
-     * @var Phprojekt_Model_Validate
-     */
-    protected $_validate = null;
-
-    /**
-     * Initialize new user.
-     *
-     * If is seted the user id in the session,
-     * the class will get all the values of these user.
-     *
-     * @param array $db Configuration for Zend_Db_Table.
-     *
-     * @return void
-     */
-    public function __construct($db = null)
+    public function getInformation()
     {
-        if (null === $db) {
-            $db = Phprojekt::getInstance()->getDb();
+        if (null == $this->_informationManager) {
+            $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_User_Information');
         }
-        parent::__construct($db);
 
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_User_Information');
-    }
-
-    /**
-     * Define the clone function for prevent the same point to same object.
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        parent::__clone();
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_User_Information');
+        return $this->_informationManager;
     }
 
     /**
@@ -182,7 +186,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
 
         if ($this->id == 0) {
             if (parent::save()) {
-                // adding default values
+                // Add default values
                 $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
                 $rights->saveDefaultRights($this->id);
                 return true;
@@ -202,65 +206,6 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     public function delete()
     {
         throw new Phprojekt_User_Exception("Users can't be deleted", 1);
-    }
-
-    /**
-     * Get the information manager.
-     *
-     * @see Phprojekt_Model_Interface::getInformation()
-     *
-     * @return Phprojekt_ModelInformation_Interface An instance of Phprojekt_ModelInformation_Interface.
-     */
-    public function getInformation()
-    {
-        return $this->_informationManager;
-    }
-
-    /**
-     * Save the rigths.
-     *
-     * @return void
-     */
-    public function saveRights()
-    {
-    }
-
-    /**
-     * Validate the current record.
-     *
-     * @return boolean True on valid.
-     */
-    public function recordValidate()
-    {
-        $data   = $this->_data;
-        $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        $result = $this->_validate->recordValidate($this, $data, $fields);
-
-        if ($result) {
-            // Username repeated?
-            $db      = Phprojekt::getInstance()->getDb();
-            $where   = sprintf("username = %s AND id != %d", $db->quote($this->username), (int) $this->id);
-            $records = $this->fetchAll($where);
-            if (count($records) > 0) {
-                $this->_validate->error->addError(array(
-                    'field'   => 'username',
-                    'label'   => Phprojekt::getInstance()->translate('Username'),
-                    'message' => Phprojekt::getInstance()->translate('Already exists, choose another one please')));
-                $result = false;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns the error data.
-     *
-     * @return array Array with errors.
-     */
-    public function getError()
-    {
-        return (array) $this->_validate->error->getError();
     }
 
     /**

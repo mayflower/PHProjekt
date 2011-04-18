@@ -91,53 +91,43 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonDetailAction()
     {
+        $id      = (int) $this->getRequest()->getParam("id");
+        $records = array();
+
+        // User fields
         $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $id   = (int) $this->getRequest()->getParam("id");
-
         $user->find($id);
-        $data = array();
+        $information = $user->getInformation(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        $userFields  = $information->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        foreach ($userFields as $field) {
+            $key           = $field['key'];
+            $value         = $user->$key;
+            $records[$key] = Phprojekt_Converter_Json::convertModelValue($value, $field);
+        }
 
-        $data['id']        = $user->id;
-        $data['username']  = (empty($user->username)) ? "" : $user->username;
-        $data['firstname'] = (empty($user->firstname)) ? "" : $user->firstname;
-        $data['lastname']  = (empty($user->lastname)) ? "" : $user->lastname;
-        $data['status']    = (empty($user->status)) ? "" : $user->status;
-        $data['admin']     = (empty($user->admin)) ? "" : $user->admin;
-
+        // Setting fields
         $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
         $setting->setModule('User');
-
-        $fields = $setting->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        $tmp    = $setting->getList(0, $fields, $user->id);
-
-        foreach ($tmp as $values) {
-            foreach ($values as $key => $value) {
-                if ($key != 'id') {
-                    if (!empty($data["id"])) {
-                        $data[$key] = $value;
-                    } else {
-                        foreach ($fields as $field) {
-                            if ($field['key'] == $key) {
-                                if (!is_null($field['default'])) {
-                                    $data[$key] = $field['default'];
-                                } else {
-                                    $data[$key] = "";
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
+        $settingFields = $setting->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        $userId        = (is_null($user->id)) ? 0 : $user->id;
+        $values        = $setting->getList(0, $settingFields, $userId);
+        foreach ($settingFields as $index => $field) {
+            $key           = $field['key'];
+            $value         = $values[$key];
+            if ($key == 'confirmValue' || $key == 'oldValue') {
+                // Remove these settings here
+                unset($settingFields[$index]);
+            } else {
+                $records[$key] = Phprojekt_Converter_Json::convertModelValue($value, $field);
             }
         }
 
-        $records = array($data);
-
-        $metadata = $user->getInformation(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        $metadata = $metadata->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        // Merge and sort user and setting fields
+        $metadata = array_merge($userFields, $settingFields);
+        usort($metadata, array("Phprojekt_ModelInformation_Default", "sortByFormPosition"));
 
         $data = array("metadata" => $metadata,
-                      "data"     => $records,
+                      "data"     => array($records),
                       "numRows"  => count($records));
 
         Phprojekt_Converter_Json::echoConvert($data);
