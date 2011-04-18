@@ -49,6 +49,15 @@ class Phprojekt_Module
     const TYPE_MIX    = 2; // Mix Under a project AND global.
 
     /**
+     * The module dependence.
+     *
+     * const DEPENDENCE_APPLICATION = Normal modules under Application or -user-/Application folder.
+     * const DEPENDENCE_CORE        = Core library modules.
+     */
+    const DEPENDENCE_APPLICATION = 'Application';
+    const DEPENDENCE_CORE        = 'Core';
+
+    /**
      * Saves the cache for our module entries, to minimize database lookups.
      *
      * @var array
@@ -83,9 +92,10 @@ class Phprojekt_Module
             $rows = $stmt->fetchAll();
 
             foreach ($rows as $row) {
-                self::$_cache[$row['name']] = array('id'       => $row['id'],
-                                                    'label'    => $row['label'],
-                                                    'saveType' => $row['save_type']);
+                self::$_cache[$row['name']] = array('id'         => $row['id'],
+                                                    'label'      => $row['label'],
+                                                    'saveType'   => $row['save_type'],
+                                                    'dependence' => $row['dependence']);
             }
             $moduleNamespace->modules = self::$_cache;
         } else {
@@ -160,7 +170,7 @@ class Phprojekt_Module
     /**
      * Returns the saveType for a given module.
      *
-     * @param string $name The Module name.
+     * @param integer $id The module ID.
      *
      * @return integer The module saveType.
      */
@@ -180,7 +190,7 @@ class Phprojekt_Module
     /**
      * Returns if the module is saved under a project.
      *
-     * @param string $name The Module name.
+     * @param integer $id The module ID.
      *
      * @return boolean True if the saveType is 0.
      */
@@ -192,12 +202,32 @@ class Phprojekt_Module
     /**
      * Returns if the module is saved as global.
      *
-     * @param string $name The Module name.
+     * @param integer $id The module ID.
      *
      * @return boolean True if the saveType is 1.
      */
     public static function saveTypeIsGlobal($id)
     {
         return (self::getSaveType($id) == self::TYPE_GLOBAL);
+    }
+
+    /**
+     * Returns the dependence for a given module.
+     *
+     * @param integer $id The module ID.
+     *
+     * @return string Dependence identifier.
+     */
+    public static function getDependence($id)
+    {
+        $modules = self::_getCachedIds();
+
+        foreach ($modules as $data) {
+            if ($data['id'] == $id) {
+                return $data['dependence'];
+            }
+        }
+
+        return self::DEPENDENCE_APPLICATION;
     }
 }
