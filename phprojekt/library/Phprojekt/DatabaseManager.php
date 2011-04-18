@@ -141,6 +141,16 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     }
 
     /**
+     * Define the table name so the class can be extend by other modules.
+     *
+     * @return string The table name.
+     */
+    public function getTableName()
+    {
+        return "database_manager";
+    }
+
+    /**
      * Return the associated model.
      *
      * @return Phprojekt_Item_Abstract An instance of Phprojekt_Item_Abstract.
