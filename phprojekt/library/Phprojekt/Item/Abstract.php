@@ -296,19 +296,6 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
-     * Return the fields that can be filtered.
-     *
-     * This function must be here for be overwrited by the default module.
-     *
-     * @return array Array with field names.
-     */
-    public function getFieldsForFilter()
-    {
-        return $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_LIST,
-            Phprojekt_DatabaseManager::COLUMN_NAME);
-    }
-
-    /**
      * Rewrites parent fetchAll, so that only records with read access are shown.
      *
      * @param string|array $where  Where clause.
