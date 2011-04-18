@@ -92,7 +92,8 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
                                 'tab'      => 1,
                                 'integer'  => false,
                                 'length'   => 0,
-                                'default'  => null);
+                                'default'  => null,
+                                'unique'   => false);
 
     /**
      * Fills the _field array with mandatory data and optional keys.

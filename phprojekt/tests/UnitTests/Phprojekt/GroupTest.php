@@ -106,6 +106,7 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
         $data['integer']  = false;
         $data['length']   = 255;
         $data['default']  = null;
+        $data['unique']   = false;
 
         $converted[] = $data;
 
