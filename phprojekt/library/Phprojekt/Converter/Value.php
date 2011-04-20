@@ -72,6 +72,7 @@ class Phprojekt_Converter_Value
                 $value = date("Y-m-d H:i:s", Phprojekt_Converter_Time::userToUtc($value));
                 break;
             case 'text':
+            default:
                 if (is_array($value)) {
                     // if given value for a text field is an array, it's from a MultiSelect field
                     $value = implode(',', $value);
@@ -82,9 +83,6 @@ class Phprojekt_Converter_Value
                 } else {
                     $value = Cleaner::sanitize('string', $value);
                 }
-                break;
-            default:
-                $value = Cleaner::sanitize('string', $value);
                 break;
         }
 
