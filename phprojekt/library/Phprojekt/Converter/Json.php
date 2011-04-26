@@ -134,9 +134,9 @@ class Phprojekt_Converter_Json
             $data['id'] = (int) $model->id;
             $ids[]      = $data['id'];
             foreach ($fieldDefinition as $field) {
-                $key   = $field['key'];
-                $value = $model->$key;
-                $data[$key] = self::_convertModelValue($value, $field);
+                $key        = $field['key'];
+                $value      = $model->$key;
+                $data[$key] = self::convertModelValue($value, $field);
             }
             $data['rights'] = array();
             $datas[]        = $data;
@@ -156,14 +156,16 @@ class Phprojekt_Converter_Json
     }
 
     /**
-     * Converts a single value. Helper function of _convertModel.
+     * Converts a single value.
+     *
+     * Helper function of _convertModel.
      *
      * @param mixed $value The value to convert.
      * @param array $field Information about the value type etc.
      *
      * @return mixed The converted value to give to self::_makeJsonString.
      */
-    final private static function _convertModelValue($value, $field)
+    final public static function convertModelValue($value, $field)
     {
         if (is_numeric($value) && $field['integer']) {
             return (int) $value;

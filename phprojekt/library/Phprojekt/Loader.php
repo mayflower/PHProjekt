@@ -253,6 +253,36 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
+     * Return the module using the dependence field of the module table.
+     *
+     * @param integer $id Id of the module for search.
+     *
+     * @return Phprojekt_Model_Interface Instance of the module found.
+     */
+    public static function getModelFromDependence($id)
+    {
+        $dependence = Phprojekt_Module::getDependence($id);
+        $module     = Phprojekt_Module::getModuleName($id);
+        switch ($dependence) {
+            case Phprojekt_Module::DEPENDENCE_APPLICATION:
+                $model = Phprojekt_Loader::getModel($module, $module);
+                break;
+            case Phprojekt_Module::DEPENDENCE_CORE:
+                $model = Phprojekt_Loader::getLibraryClass('PHProjekt_' . $module. '_' . $module);
+                break;
+            default: // SubModule
+                $model = Phprojekt_Loader::getModel($dependence . '_SubModules_' . $module, $module);
+                break;
+        }
+
+        if (null === $model) {
+            throw new InvalidArgumentException('The model do not exists');
+        }
+
+        return $model;
+    }
+
+    /**
      * Load a class from the library and return an new instance of the class.
      *
      * This method can take more than the two arguments.

@@ -435,16 +435,6 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test filters data
-     */
-    public function testGetFieldsForFilter()
-    {
-        $module = new Project_Models_Project(array('db' => $this->sharedFixture));
-        $array  = $module->getFieldsForFilter();
-        $this->assertEquals(array_keys($this->_filterResult), $array);
-    }
-
-    /**
      * Test getRights function
      */
     public function testGetUsersRights()
@@ -508,12 +498,12 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
     {
         $model = new Project_Models_Project(array('db' => $this->sharedFixture));
         $model->find(1);
-        foreach ($model as $key => $field) {
+        foreach ($model as $key => $value) {
             if ($key == 'id') {
-                $this->assertEquals('1', $field->value);
+                $this->assertEquals('1', $value);
             }
             if ($key == 'title') {
-                $this->assertEquals('Invisible Root', $field->value);
+                $this->assertEquals('Invisible Root', $value);
             }
         }
     }

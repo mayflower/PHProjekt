@@ -106,6 +106,7 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
         $data['integer']  = false;
         $data['length']   = 255;
         $data['default']  = null;
+        $data['unique']   = false;
 
         $converted[] = $data;
 
@@ -118,8 +119,11 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
     public function testMocks()
     {
         $group = new Phprojekt_Groups_Groups($this->sharedFixture);
-        $this->assertEquals(array(), $group->getRights());
 
+        // Empty row
+        $this->assertFalse($group->recordValidate());
+
+        $group->name = 'Test';
         $this->assertTrue($group->recordValidate());
     }
 }

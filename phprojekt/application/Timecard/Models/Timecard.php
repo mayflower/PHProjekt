@@ -35,72 +35,41 @@
  * @version    Release: @package_version@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
+class Timecard_Models_Timecard extends Phprojekt_Item_Abstract
 {
     /**
-     * The standard information manager with hardcoded
-     * field definitions
+     * Configuration to use or not the history class.
      *
-     * @var Phprojekt_ModelInformation_Interface
+     * @var boolean
      */
-    protected $_informationManager;
+    public $useHistory = false;
 
     /**
-     * Validate object
+     * Configuration to use or not the search class.
      *
-     * @var Phprojekt_Model_Validate
+     * @var boolean
      */
-    protected $_validate = null;
+    public $useSearch = false;
 
     /**
-     * Constructor initializes additional Infomanager.
+     * Configuration to use or not the right class.
      *
-     * @param array $db Configuration for Zend_Db_Table.
-     *
-     * @return void
+     * @var boolean
      */
-    public function __construct($db = null)
-    {
-        if (null === $db) {
-            $db = Phprojekt::getInstance()->getDb();
-        }
-        parent::__construct($db);
-
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getModel('Timecard', 'Information');
-    }
+    public $useRights = false;
 
     /**
-     * Define the clone function for prevent the same point to same object.
+     * Returns the Model information manager.
      *
-     * @return void
-     */
-    public function __clone()
-    {
-        parent::__clone();
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getModel('Timecard', 'Information');
-    }
-
-    /**
-     * Get the information manager
-     *
-     * @see Phprojekt_Model_Interface::getInformation()
-     *
-     * @return Phprojekt_ModelInformation_Interface
+     * @return Phprojekt_ModelInformation_Interface An instance of a Phprojekt_ModelInformation_Interface.
      */
     public function getInformation()
     {
-        return $this->_informationManager;
-    }
+        if (null == $this->_informationManager) {
+            $this->_informationManager = Phprojekt_Loader::getModel('Timecard', 'Information', $this, $this->_dbConfig);
+        }
 
-    /**
-     * Save the rigths
-     *
-     * @return void
-     */
-    public function saveRights()
-    {
+        return $this->_informationManager;
     }
 
     /**
@@ -110,8 +79,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function recordValidate()
     {
-        $data   = $this->_data;
-        $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        $data = $this->_data;
 
         if (isset($data['startDatetime'])) {
             $startTime = str_replace(":", "", substr($data['startDatetime'], 11));
@@ -234,7 +202,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             }
         }
 
-        return $this->_validate->recordValidate($this, $data, $fields);
+        return parent::recordValidate();
     }
 
     /**
@@ -268,16 +236,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
 
         return $where;
-    }
-
-    /**
-     * Return the error data
-     *
-     * @return array
-     */
-    public function getError()
-    {
-        return (array) $this->_validate->error->getError();
     }
 
     /**
@@ -457,5 +415,57 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         } else {
             return false;
         }
+    }
+
+    /**
+     * Assign a value to a var using some validations deppend on the type.
+     *
+     * Remove the sanitizer from date and datetime values for do not use the user timezone.
+     *
+     * @param string $varname Name of the var to assign.
+     * @param mixed  $value   Value for assign to the var.
+     *
+     * @return void
+     */
+    public function __set($varname, $value)
+    {
+        $var  = Phprojekt_ActiveRecord_Abstract::convertVarToSql($varname);
+        $info = $this->info();
+
+        if (true == isset($info['metadata'][$var])) {
+            $type = $info['metadata'][$var]['DATA_TYPE'];
+            if ($type != 'time' && $type != 'datetime' && $type != 'timestamp') {
+                $value = Phprojekt_Converter_Value::set($type, $value);
+            }
+        } else {
+            $value = Cleaner::sanitize('string', $value);
+        }
+
+        Phprojekt_ActiveRecord_Abstract::__set($varname, $value);
+    }
+
+    /**
+     * Get a value of a var.
+     *
+     * Remove the sanitizer from date and datetime values for do not use the user timezone.
+     *
+     * @param string $varname Name of the var to assign.
+     *
+     * @return mixed Value of the var.
+     */
+    public function __get($varname)
+    {
+        $info  = $this->info();
+        $value = Phprojekt_ActiveRecord_Abstract::__get($varname);
+        $var   = Phprojekt_ActiveRecord_Abstract::convertVarToSql($varname);
+
+        if (true == isset($info['metadata'][$var])) {
+            $type = $info['metadata'][$var]['DATA_TYPE'];
+            if ($type != 'time' && $type != 'datetime' && $type != 'timestamp') {
+                $value = Phprojekt_Converter_Value::get($type, $value);
+            }
+        }
+
+        return $value;
     }
 }

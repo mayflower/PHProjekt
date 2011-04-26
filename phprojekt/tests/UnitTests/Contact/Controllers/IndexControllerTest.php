@@ -76,9 +76,7 @@ class Contact_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"name":"Mariano","email":"mariano.lapenna@mayflower.de",'
-            . '"firstphone":"004912341234","street":"Edison 1234","private":0,"rights":{"currentUser":'
-            . '{"moduleId":9,"itemId":1,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,'
-            . '"copy":true,"delete":true,"download":true,"admin":true}}}],"numRows":1})';
+            . '"firstphone":"004912341234","street":"Edison 1234","private":0,"rights":[]}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 
@@ -95,9 +93,7 @@ class Contact_IndexController_Test extends FrontInit
         $expected = '"data":[{"id":1,"name":"Mariano","email":"mariano.lapenna@mayflower.de",'
             . '"company":"Mayflower","firstphone":"004912341234","secondphone":"004923452345",'
             . '"mobilephone":"004934563456","street":"Edison 1234","city":"Buenos Aires","zipcode":"1234AAA",'
-            . '"country":"Argentina","comment":"Very intelligent","private":0,"rights":{"currentUser":{"moduleId":9,'
-            . '"itemId":1,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
-            . '"delete":true,"download":true,"admin":true}}}],"numRows":1})';
+            . '"country":"Argentina","comment":"Very intelligent","private":0,"rights":[]}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 
@@ -136,9 +132,7 @@ class Contact_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $expected = '"data":[{"id":1,"name":"Mariano2","email":"mariano.lapenna@mayflower.de2",'
-            . '"firstphone":"12341234B","street":"Edison 1234B","private":1,"rights":{"currentUser":{"moduleId":9,'
-            . '"itemId":1,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
-            . '"delete":true,"download":true,"admin":true}}}],"numRows":1})';
+            . '"firstphone":"12341234B","street":"Edison 1234B","private":1,"rights":[]}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 
@@ -155,9 +149,7 @@ class Contact_IndexController_Test extends FrontInit
         $expected = '"data":[{"id":1,"name":"Mariano2","email":"mariano.lapenna@mayflower.de2",'
             . '"company":"Mayflower2","firstphone":"12341234B","secondphone":"23452345B","mobilephone":"34563456B",'
             . '"street":"Edison 1234B","city":"Buenos Aires2","zipcode":"1234AAA2","country":"Argentina2",'
-            . '"comment":"Very intelligent2","private":1,"rights":{"currentUser":{"moduleId":9,"itemId":1,'
-            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
-            . '"delete":true,"download":true,"admin":true}}}],"numRows":1})';
+            . '"comment":"Very intelligent2","private":1,"rights":[]}],"numRows":1})';
         $this->assertContains($expected, $response);
     }
 

@@ -65,6 +65,7 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $data['integer']  = false;
         $data['length']   = 255;
         $data['default']  = null;
+        $data['unique']   = false;
 
         $converted[] = $data;
 
@@ -87,6 +88,7 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $data['integer']  = false;
         $data['length']   = 255;
         $data['default']  = null;
+        $data['unique']   = false;
 
         $converted[] = $data;
 
@@ -112,6 +114,7 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $data['integer']  = true;
         $data['length']   = 0;
         $data['default']  = 0;
+        $data['unique']   = false;
 
         $converted[] = $data;
 
@@ -137,6 +140,7 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $data['integer']  = true;
         $data['length']   = 0;
         $data['default']  = 1;
+        $data['unique']   = false;
 
         $converted[] = $data;
         $this->assertEquals($converted, $module->getInformation()->getFieldDefinition());
@@ -161,13 +165,6 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
     public function testMocks()
     {
         $module = new Phprojekt_Module_Module();
-        $this->assertEquals(array(), $module->getRights());
-
-        $module->name     = 'Test';
-        $module->label    = 'Test';
-        $module->active   = 1;
-        $module->saveType = 0;
-        $module->saveRights();
         $this->assertEquals(array(), $module->getRights());
     }
 }

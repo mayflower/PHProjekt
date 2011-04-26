@@ -48,9 +48,12 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
      */
     function getProjectModulePermissionsById($projectId)
     {
+        $db      = Phprojekt::getInstance()->getDb();
         $modules = array();
         $model   = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
-        foreach ($model->fetchAll('active = 1 AND (save_type = 0 OR save_type = 2)', 'name ASC') as $module) {
+        $where   = 'active = 1 AND (save_type = 0 OR save_type = 2) AND dependence = '
+            . $db->quote(Phprojekt_Module::DEPENDENCE_APPLICATION);
+        foreach ($model->fetchAll($where, 'name ASC') as $module) {
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']    = (int) $module->id;
             $modules['data'][$module->id]['name']  = $module->name;
@@ -59,7 +62,8 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
             $modules['data'][$module->id]['inProject'] = false;
         }
 
-        $where  = sprintf('project_module_permissions.project_id = %d AND module.active = 1', (int) $projectId);
+        $where  = sprintf("project_module_permissions.project_id = %d AND module.active = 1 AND module.dependence = %s",
+            (int) $projectId, $db->quote(Phprojekt_Module::DEPENDENCE_APPLICATION));
         $select = ' module.id AS module_id ';
         $join   = ' RIGHT JOIN module ON ( module.id = project_module_permissions.module_id ';
         $join  .= ' AND (module.save_type = 0 OR module.save_type = 2) )';

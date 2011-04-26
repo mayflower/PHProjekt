@@ -43,6 +43,42 @@ class Core_ModuleController extends Core_IndexController
     const CAN_NOT_DELETE_SYSTEM_MODULE = "You can not delete system modules";
 
     /**
+     * Returns list of modules that DO NOT depend on -Core-.
+     *
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of all the rows.
+     *  - The number of rows.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b>     List only this id.
+     *  - integer <b>nodeId</b> List all the items with projectId == nodeId.
+     *  - integer <b>count</b>  Use for SQL LIMIT count.
+     *  - integer <b>offset</b> Use for SQL LIMIT offset.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonListAction()
+    {
+        $count     = (int) $this->getRequest()->getParam('count', null);
+        $offset    = (int) $this->getRequest()->getParam('start', null);
+        $this->setCurrentProjectId();
+
+        $where = sprintf('dependence = %s',
+            Phprojekt::getInstance()->getDb()->quote(Phprojekt_Module::DEPENDENCE_APPLICATION));
+        $where   = $this->getFilterWhere($where);
+        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
+
+        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
+
+    /**
      * Saves a module.
      *
      * If the request parameter "id" is null or 0, the function will add a new module,
@@ -85,16 +121,8 @@ class Core_ModuleController extends Core_IndexController
             $message = Phprojekt::getInstance()->translate('The module was edited correctly');
         }
 
-        // Set the hidden name to name or label
-        // use ucfirst and delete spaces
-        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
-        if (empty($module)) {
-            $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('label', null));
-        }
-        $module = ucfirst(str_replace(" ", "", $module));
-        $this->getRequest()->setParam('name', $module);
-
-        $model->saveModule($this->getRequest()->getParams());
+        $params = $this->setParams($this->getRequest()->getParams());
+        Default_Helpers_Save::save($model, $params);
 
         $return = array('type'    => 'success',
                         'message' => $message,
@@ -123,7 +151,9 @@ class Core_ModuleController extends Core_IndexController
     {
         $modules = array();
         $model   = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
-        foreach ($model->fetchAll('active = 1 AND (save_type = 1 OR save_type = 2)', 'name ASC') as $module) {
+        $where   = 'active = 1 AND (save_type = 1 OR save_type = 2) AND dependence = ' .
+            Phprojekt::getInstance()->getDb()->quote(Phprojekt_Module::DEPENDENCE_APPLICATION);
+        foreach ($model->fetchAll($where, 'name ASC') as $module) {
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']    = $module->id;
             $modules['data'][$module->id]['name']  = $module->name;
@@ -169,7 +199,7 @@ class Core_ModuleController extends Core_IndexController
         $model = $this->getModelObject()->find($id);
 
         if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
-            if (is_dir(PHPR_CORE_PATH . $model->name)) {
+            if (is_dir(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $model->name)) {
                 throw new Phprojekt_PublishedException(self::CAN_NOT_DELETE_SYSTEM_MODULE);
             }
 
@@ -204,5 +234,52 @@ class Core_ModuleController extends Core_IndexController
         } else {
             throw new Phprojekt_PublishedException(self::NOT_FOUND);
         }
+    }
+
+    /**
+     * Sets some values depending on the parameters.
+     * Each module can implement this function to change their values.
+     *
+     * The function needs at least one parameter
+     * (The array of parameters itself for return it).
+     *
+     * @throws Phprojekt_PublishedException If the arguments are missing.
+     *
+     * @return array
+     */
+    public function setParams()
+    {
+        $args = func_get_args();
+        if (1 > count($args)) {
+            throw new InvalidArgumentException('Missing arguments in setParams function');
+        }
+        $params = $args[0];
+
+        // Set the hidden name to name or label
+        // use ucfirst and delete spaces
+        $module = null;
+        if (isset($params['name'])) {
+            $module = Cleaner::sanitize('alnum', $params['name'], null);
+        }
+        if (empty($module)) {
+            if (isset($params['label'])) {
+                $module = Cleaner::sanitize('alnum', $params['label'], null);
+            } else {
+                $module = null;
+            }
+        }
+        $params['name'] = ucfirst(str_replace(" ", "", $module));
+
+        if (isset($params['active'])) {
+            $params['active'] = (int) $params['active'];
+        }
+
+        if (isset($params['saveType'])) {
+            $params['saveType'] = (int) $params['saveType'];
+        }
+
+        $params['version'] = Phprojekt::getInstance()->getVersion();
+
+        return $params;
     }
 }

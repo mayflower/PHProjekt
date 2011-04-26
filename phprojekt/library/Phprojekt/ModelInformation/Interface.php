@@ -40,9 +40,20 @@ interface Phprojekt_ModelInformation_Interface
     /**
      * Return an array of field definitions.
      *
+     * @param integer $ordering An ordering constant.
+     *
      * @return array Array with all the fields definitions.
      */
-     public function getFieldDefinition();
+     public function getFieldDefinition($ordering);
+
+    /**
+     * Return an array of short field information (Just key and type).
+     *
+     * @param integer $ordering An ordering constant.
+     *
+     * @return array Array with fields definitions.
+     */
+    public function getShortFieldDefinition($ordering);
 
     /**
      * Return the type of one field.

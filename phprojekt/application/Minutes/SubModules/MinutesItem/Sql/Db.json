@@ -21,6 +21,27 @@
             }
         }
     }
+},
+
+"6.1.0-dev":
+{
+    "initialData":
+    {
+        "module":
+        {
+            "insert":
+            [
+                {
+                    "name":       "MinutesItem",
+                    "label":      "MinutesItem",
+                    "save_type":  "0",
+                    "version":    "6.1.0-dev",
+                    "active":     "1",
+                    "dependence": "Minutes"
+                }
+            ]
+        }
+    }
 }
 
 }

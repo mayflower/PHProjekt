@@ -119,10 +119,11 @@ final class Minutes_Helpers_Pdf
         $items     = $minutesModel->items->fetchAll();
 
         foreach ($items as $item) {
+            $information  = $item->getInformation();
             $itemtable[]  = array(
                                 array('text'  => $item->topicId,
                                       'width' => 1.3 * Phprojekt_Pdf_Page::PT_PER_CM),
-                                array('text'  => $phpr->translate($item->information->getTopicType($item->topicType)),
+                                array('text'  => $phpr->translate($information->getTopicType($item->topicType)),
                                       'width' => 3.0 * Phprojekt_Pdf_Page::PT_PER_CM),
                                 array('text'  => $item->getDisplay(),
                                       'width' => 12.4 * Phprojekt_Pdf_Page::PT_PER_CM),

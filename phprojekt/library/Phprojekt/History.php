@@ -181,8 +181,7 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         }
 
         if (null === $object) {
-            $moduleName = Phprojekt_Module::getModuleName($moduleId);
-            $object     = Phprojekt_Loader::getModel($moduleName, $moduleName);
+            $object = Phprojekt_Loader::getModelFromDependence($moduleId);
         }
 
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;

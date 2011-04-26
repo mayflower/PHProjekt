@@ -44,6 +44,7 @@
  * integer       = Int field or not.
  * length        = Max lenght allowed. (0 for unlimited).
  * default       = Default value.
+ * unique        = Is it a unique field or not.
  *
  * The class itself is an ActiveRecord, so:
  * @see Phprojekt_ActiveRecord_Abstract
@@ -137,6 +138,16 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $this->_modelInfo = $this->_model->info();
         }
         $this->getTypes();
+    }
+
+    /**
+     * Define the table name so the class can be extend by other modules.
+     *
+     * @return string The table name.
+     */
+    public function getTableName()
+    {
+        return "database_manager";
     }
 
     /**
@@ -379,6 +390,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             (int) $this->_modelInfo['metadata'][$field->tableField]['LENGTH'] : 0;
         $converted['length']  = $maxLength;
         $converted['default'] = $field->defaultValue;
+        $converted['unique']  = (boolean) $field->isUnique;
 
         return $converted;
     }

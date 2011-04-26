@@ -103,9 +103,11 @@ class Phprojekt_Acl extends Zend_Acl
         $roles = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_Role');
         foreach ($roles->fetchAll() as $role) {
             if ($role->parent < 1) {
-                $role->parent = null;
+                $parent = null;
+            } else {
+                $parent = $role->parent;
             }
-            $this->addRole(new Zend_Acl_Role($role->id), $role->parent);
+            $this->addRole(new Zend_Acl_Role($role->id), $parent);
         }
     }
 

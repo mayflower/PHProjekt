@@ -134,8 +134,12 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
      */
     public function setModule($module)
     {
-        $this->_moduleId = Phprojekt_Module::getId($module);
-        $this->_module   = $module;
+        if ($module == 'User') {
+            $this->_moduleId = 0;
+        } else {
+            $this->_moduleId = Phprojekt_Module::getId($module);
+        }
+        $this->_module = $module;
     }
 
     /**
@@ -204,8 +208,6 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
             return $this->getModel()->getList($moduleId, $metadata, $userId = null);
         }
 
-        $settings = array();
-
         if ($userId === null) {
             $userId = (int) Phprojekt_Auth::getUserId();
         }
@@ -216,7 +218,12 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
         $data       = array();
         $data['id'] = 0;
         foreach ($metadata as $meta) {
-            $data[$meta['key']] = '';
+            if (isset($meta['default'])) {
+                // This is to use the default value defined in getFieldDefinition()
+                $data[$meta['key']] = $meta['default'];
+            } else {
+                $data[$meta['key']] = '';
+            }
             foreach ($record as $oneSetting) {
                 if ($oneSetting->keyValue == $meta['key']) {
                     $getter = 'get' . ucfirst($oneSetting->keyValue);
@@ -229,9 +236,8 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
                 }
             }
         }
-        $settings[] = $data;
 
-        return $settings;
+        return $data;
     }
 
     /**

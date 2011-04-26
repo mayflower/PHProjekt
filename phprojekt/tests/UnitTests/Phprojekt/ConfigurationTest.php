@@ -93,6 +93,6 @@ class Phprojekt_ConfigurationTest extends PHPUnit_Framework_TestCase
         $records  = $configuration->getList(0, $metadata);
 
         $data = array('id' => 0, 'companyName' => 'Invisible Root');
-        $this->assertEquals(array($data), $records);
+        $this->assertEquals($data, $records);
     }
 }

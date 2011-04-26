@@ -35,9 +35,36 @@
  * @version    Release: @package_version@
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
-class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract
-    implements Phprojekt_Model_Interface
+class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Item_Abstract
 {
+    /**
+     * Field for display in the search results.
+     *
+     * @var string
+     */
+    public $searchSecondDisplayField = 'comment';
+
+    /**
+     * Configuration to use or not the history class.
+     *
+     * @var boolean
+     */
+    public $useHistory = true;
+
+    /**
+     * Configuration to use or not the search class.
+     *
+     * @var boolean
+     */
+    public $useSearch = false;
+
+    /**
+     * Configuration to use or not the right class.
+     *
+     * @var boolean
+     */
+    public $useRights = true;
+
     /**
      * The Minutes object this item is related to.
      *
@@ -46,134 +73,25 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     protected $_minutes = null;
 
     /**
-     * The standard information manager with hardcoded field definitions.
-     *
-     * @var Phprojekt_ModelInformation_Interface
-     */
-    protected $_informationManager;
-
-    /**
-     * Validate object.
-     *
-     * @var Phprojekt_Model_Validate
-     */
-    protected $_validate = null;
-
-    /**
      * Initial state of the data after find().
      *
      * @var array
      */
-    protected $_history = null;
+    protected $_lastSortOrder = null;
 
     /**
-     * Initialize new minutes item.
+     * Returns the Model information manager.
      *
-     * @param array $db Configuration for Zend_Db_Table.
-     *
-     * @return void
-     */
-    public function __construct($db = null)
-    {
-        if (null === $db) {
-            $db = Phprojekt::getInstance()->getDb();
-        }
-        parent::__construct($db);
-
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
-            'MinutesItemInformation');
-    }
-
-    /**
-     * Define the clone function for prevent the same point to same object.
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        parent::__clone();
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
-            'MinutesItemInformation');
-    }
-
-    /**
-     * Return the information manager.
-     *
-     * @return Phprojekt_ModelInformation_Interface The Phprojekt_ModelInformation_Interface object.
+     * @return Phprojekt_ModelInformation_Interface An instance of a Phprojekt_ModelInformation_Interface.
      */
     public function getInformation()
     {
+        if (null == $this->_informationManager) {
+            $this->_informationManager = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem', 'Information',
+                $this, $this->_dbConfig);
+        }
+
         return $this->_informationManager;
-    }
-
-    /**
-     * Assign a value to a var using some validations from the table data.
-     *
-     * @param string $varname Name of the var to assign.
-     * @param mixed  $value   Value for assign to the var.
-     *
-     * @return void
-     */
-    public function __set($varname, $value)
-    {
-        $var  = Phprojekt_ActiveRecord_Abstract::convertVarToSql($varname);
-        $info = $this->info();
-
-        if (true == isset($info['metadata'][$var])) {
-            $type  = $info['metadata'][$var]['DATA_TYPE'];
-            $value = Phprojekt_Converter_Value::set($type, $value);
-        } else {
-            $value = Cleaner::sanitize('string', $value);
-        }
-
-        parent::__set($varname, $value);
-    }
-
-    /**
-     * Validate the current record.
-     *
-     * @return boolean True for valid.
-     */
-    public function recordValidate()
-    {
-        $data   = $this->_data;
-        $fields = $this->_informationManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-
-        return $this->_validate->recordValidate($this, $data, $fields);
-    }
-
-    /**
-     * Get a value of a var.
-     * Is the var is a float, return the locale float.
-     *
-     * @param string $varname Name of the var to assign.
-     *
-     * @return mixed Value of the var.
-     */
-    public function __get($varname)
-    {
-        $info  = $this->info();
-        $value = parent::__get($varname);
-        $var   = Phprojekt_ActiveRecord_Abstract::convertVarToSql($varname);
-
-        if (true == isset($info['metadata'][$var])) {
-            $type  = $info['metadata'][$var]['DATA_TYPE'];
-            $value = Phprojekt_Converter_Value::get($type, $value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * Get error message from model.
-     *
-     * @return array Array with errors.
-     */
-    public function getError()
-    {
-        return (array) $this->_validate->error->getError();
     }
 
     /**
@@ -209,18 +127,6 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     }
 
     /**
-     * Extension of saveRights() for don't save rights.
-     *
-     * @param array $rights Array of user IDs with the bitmask access.
-     *
-     * @return void
-     */
-    public function saveRights($rights)
-    {
-        // No code here as the rights are managed by the parent minutes model.
-    }
-
-    /**
      * Set the parent related minutes object.
      *
      * @param integer $minutesId Parent minute ID.
@@ -244,8 +150,8 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
 
     /**
      * Finds a record with current criteria key and populates the object with its data.
-     * Makes a copy of the data in the protected $_history array, to be able to detect changes
-     * made after calling find().
+     *
+     * Save the last sortOrder for detect changes made after calling find().
      *
      * @param mixed Optional criteria. Can be primary key value or array of field=>value pairs.
      *
@@ -261,7 +167,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
         }
 
         // Make a backup of the initial data to compare against in save() method
-        $this->_history = $this->_data;
+        $this->_lastSortOrder = $this->_data['sortOrder'];
 
         return $res;
     }
@@ -320,9 +226,9 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
                 $maxSort = 0;
             }
             $this->sortOrder = $maxSort + 1;
-        } elseif (is_numeric($this->sortOrder) && ($this->sortOrder > 0)) {
-            if ((!isset($this->_history['sortOrder']))
-                || (isset($this->_history['sortOrder']) && ($this->_history['sortOrder'] != $this->sortOrder))) {
+        } else if (is_numeric($this->sortOrder) && ($this->sortOrder > 0)) {
+            if ((!isset($this->_lastSortOrder))
+                || (isset($this->_lastSortOrder) && ($this->_lastSortOrder != $this->sortOrder))) {
                 // A sort order was given and differs from the initial value. We need to increment
                 // all sort order values equal or above the new value by one, and then update this
                 // record with the new value. That should ensure order value consistency.
