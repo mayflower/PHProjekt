@@ -1044,8 +1044,8 @@
                 },
 
                 {
-                    "name":       "Rol",
-                    "label":      "Rol",
+                    "name":       "Role",
+                    "label":      "Role",
                     "save_type":  "1",
                     "version":    "6.1.0-dev",
                     "active":     "1",
