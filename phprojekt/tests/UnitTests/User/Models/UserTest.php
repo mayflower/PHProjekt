@@ -47,7 +47,6 @@ class User_User_Test extends PHPUnit_Framework_TestCase
     {
         $user = new Phprojekt_User_User();
         $user->find(3);
-        $this->assertEquals($user->saveRights(), null);
         $this->assertEquals($user->recordValidate(), false);
         $error = $user->getError();
         $this->assertEquals('firstname', $error[0]['field']);

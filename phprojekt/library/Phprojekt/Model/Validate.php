@@ -68,6 +68,10 @@ class Phprojekt_Model_Validate
     /**
      * Return if the values are valid or not.
      *
+     * @param Phprojekt_Item_Abstract $class  Instance of the model to check.
+     * @param array                   $data   Array with the values of the model.
+     * @param array                   $fields Array with the metadate of the fields.
+     *
      * @return boolean True for valid.
      */
     public function recordValidate($class, $data, $fields)
@@ -143,7 +147,22 @@ class Phprojekt_Model_Validate
                                 'field'   => $varname,
                                 'label'   => $field['label'],
                                 'message' => Phprojekt::getInstance()->translate('Invalid Format')));
+                            break;
                         }
+
+                        // Check unique field
+                        if (true === $field['unique']) {
+                            $error = $this->validateIsUnique($class, $varname, $value);
+                            if (null !== $error) {
+                                $valid = false;
+                                $this->error->addError(array(
+                                    'field'   => $varname,
+                                    'label'   => $field['label'],
+                                    'message' => $error));
+                                break;
+                            }
+                        }
+
                         break;
                     }
                 }
@@ -250,5 +269,30 @@ class Phprojekt_Model_Validate
         }
 
         return true;
+    }
+
+    /**
+     * Validate unique fields.
+     *
+     * Return the msg error if exists.
+     *
+     * @param Phprojekt_Model_Interface $class   Model object.
+     * @param string                    $varname Name of the field.
+     * @param mix                       $value   Value to validate.
+     *
+     * @return string Error string or null.
+     */
+    public function validateIsUnique($class, $varname, $value)
+    {
+        $db    = Phprojekt::getInstance()->getDb();
+        $where = sprintf("%s = %s AND id != %d", $db->quoteIdentifier($varname), $db->quote($value),
+            (int) $class->id);
+        $records = $class->fetchAll($where);
+        $error   = null;
+        if (count($records) > 0) {
+            $error = Phprojekt::getInstance()->translate('Already exists, choose another one please');
+        }
+
+        return $error;
     }
 }

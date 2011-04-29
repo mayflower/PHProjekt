@@ -209,15 +209,6 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(true, $response);
     }
 
-    /**
-     * Test for mock function
-     */
-    public function testMocks()
-    {
-        $timecardModel = clone($this->_model);
-        $this->assertEquals(array(), $timecardModel->getRights());
-    }
-
     public function testGetFieldDefinition()
     {
         // startDatetime
@@ -238,6 +229,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data1['integer']  = false;
         $data1['length']   = 0;
         $data1['default']  = null;
+        $data1['unique']   = false;
 
         // endTtime
         $data2                  = array();
@@ -257,6 +249,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data2['integer']  = false;
         $data2['length']   = 0;
         $data2['default']  = null;
+        $data2['unique']   = false;
 
         $data3                  = array();
         $data3['key']           = 'minutes';
@@ -275,6 +268,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data3['integer']  = true;
         $data3['length']   = 0;
         $data3['default']  = null;
+        $data3['unique']   = false;
 
         $data4                  = array();
         $data4['key']           = 'projectId';
@@ -299,6 +293,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data4['integer']  = true;
         $data4['length']   = 0;
         $data4['default']  = null;
+        $data4['unique']   = false;
 
         $data5                  = array();
         $data5['key']           = 'notes';
@@ -317,6 +312,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $data5['integer']  = false;
         $data5['length']   = 0;
         $data5['default']  = null;
+        $data5['unique']   = false;
 
         $timecardModel = clone($this->_model);
         $expected      = array($data1, $data2, $data3, $data4, $data5);

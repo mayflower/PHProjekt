@@ -78,7 +78,11 @@ class Core_SettingController extends Core_IndexController
     public function jsonDetailAction()
     {
         $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
-        $moduleId = (int) Phprojekt_Module::getId($module);
+        if ($module != 'User') {
+            $moduleId = (int) Phprojekt_Module::getId($module);
+        } else {
+            $moduleId = 0;
+        }
 
         $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
         $setting->setModule($module);
@@ -86,7 +90,7 @@ class Core_SettingController extends Core_IndexController
         $records  = $setting->getList($moduleId, $metadata);
 
         $data = array("metadata" => $metadata,
-                      "data"     => $records,
+                      "data"     => array($records),
                       "numRows"  => count($records));
 
         Phprojekt_Converter_Json::echoConvert($data);

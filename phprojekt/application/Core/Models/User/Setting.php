@@ -70,19 +70,19 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
     public function setFields()
     {
         // password
-        $this->fillField('password', 'Password', 'password', 0, 1, array(
+        $this->fillField('password', 'Password', 'password', 0, 2, array(
             'length' => 50));
 
         // confirmValue
-        $this->fillField('confirmValue', 'Confirm Password', 'password', 0, 2, array(
+        $this->fillField('confirmValue', 'Confirm Password', 'password', 0, 3, array(
             'length' => 50));
 
         // oldValue
-        $this->fillField('oldValue', 'Old Password', 'password', 0, 3, array(
+        $this->fillField('oldValue', 'Old Password', 'password', 0, 4, array(
             'length' => 50));
 
         // email
-        $this->fillField('email', 'Email', 'text', 0, 4, array(
+        $this->fillField('email', 'Email', 'text', 0, 7, array(
             'length' => 255));
 
         // language
@@ -90,7 +90,7 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
         foreach ($this->_languageRange as $key => $value) {
             $range[] = $this->getRangeValues($key, $value);
         }
-        $this->fillField('language', 'Language', 'selectbox', 0, 5, array(
+        $this->fillField('language', 'Language', 'selectbox', 0, 8, array(
             'range'    => $range,
             'required' => true,
             'default'  => 'en'));
@@ -100,7 +100,7 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
         foreach ($this->_timeZoneRange as $key => $value) {
             $range[] = $this->getRangeValues($key, $value);
         }
-        $this->fillField('timeZone', 'Time zone', 'selectbox', 0, 6, array(
+        $this->fillField('timeZone', 'Time zone', 'selectbox', 0, 9, array(
             'range'    => $range,
             'required' => true,
             'default'  => '000'));

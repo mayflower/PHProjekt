@@ -40,7 +40,7 @@
 class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstract
 {
     /**
-     * Return all the modules in an array and the access if exists.
+     * Return all the modules with "Application dependence" in an array and the access if exists.
      *
      * @param integer $roleId The role ID.
      *
@@ -50,8 +50,11 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
     {
         $modules = array();
 
+        $db    = Phprojekt::getInstance()->getDb();
         $model = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
-        foreach ($model->fetchAll('(save_type = 0 OR save_type = 2)', 'name ASC') as $module) {
+        $where = '(save_type = 0 OR save_type = 2) AND dependence = '
+            . $db->quote(Phprojekt_Module::DEPENDENCE_APPLICATION);
+        foreach ($model->fetchAll($where, 'name ASC') as $module) {
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']    = $module->id;
             $modules['data'][$module->id]['name']  = $module->name;

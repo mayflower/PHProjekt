@@ -130,7 +130,7 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
         $secondDisplay = '';
         $firstField    = $object->searchFirstDisplayField;
         $secondField   = $object->searchSecondDisplayField;
-        $projectId     = $object->projectId;
+        $projectId     = (isset($object->projectId)) ? $object->projectId : 1;
 
         if (isset($object->$firstField)) {
             $firstDisplay = $object->$firstField;

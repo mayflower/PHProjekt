@@ -68,7 +68,8 @@ class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
                 'tab'      => 1,
                 'integer'  => false,
                 'length'   => 0,
-                'default'  => null);
+                'default'  => null,
+                'unique'   => false);
         $this->_testData[] = array(
                 'key'           => 'notes',
                 'label'         => Phprojekt::getInstance()->translate('Notes'),
@@ -85,7 +86,8 @@ class Phprojekt_ModelInformation_DefaultTest extends PHPUnit_Framework_TestCase
                 'tab'      => 1,
                 'integer'  => false,
                 'length'   => 255,
-                'default'  => '--');
+                'default'  => '--',
+                'unique'   => false);
     }
 
     /**

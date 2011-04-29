@@ -994,6 +994,75 @@
             ]
         }
     }
+},
+
+
+"6.1.0-dev":
+{
+    "structure":
+    {
+        "module":
+        {
+            "add":
+            {
+                "dependence": {"type": "varchar", "notNull": "true", "default": "Application"}
+            }
+        }
+    },
+
+    "initialData":
+    {
+        "module":
+        {
+            "insert":
+            [
+                {
+                    "name":       "Module",
+                    "label":      "Module",
+                    "save_type":  "1",
+                    "version":    "6.1.0-dev",
+                    "active":     "1",
+                    "dependence": "Core"
+                },
+
+                {
+                    "name":       "Tab",
+                    "label":      "Tab",
+                    "save_type":  "1",
+                    "version":    "6.1.0-dev",
+                    "active":     "1",
+                    "dependence": "Core"
+                },
+
+                {
+                    "name":       "User",
+                    "label":      "User",
+                    "save_type":  "1",
+                    "version":    "6.1.0-dev",
+                    "active":     "1",
+                    "dependence": "Core"
+                },
+
+                {
+                    "name":       "Role",
+                    "label":      "Role",
+                    "save_type":  "1",
+                    "version":    "6.1.0-dev",
+                    "active":     "1",
+                    "dependence": "Core"
+                },
+
+                {
+                    "name":       "Groups",
+                    "label":      "Groups",
+                    "save_type":  "1",
+                    "version":    "6.1.0-dev",
+                    "active":     "1",
+                    "dependence": "Core"
+                }
+            ]
+        }
+    }
 }
 
 }

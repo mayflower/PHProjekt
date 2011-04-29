@@ -443,7 +443,7 @@ class Minutes_IndexController extends IndexController
         foreach ($items as $item) {
             $data              = array();
             $data['topicId']   = $this->view->escape($item->topicId);
-            $data['topicType'] = $this->view->escape($item->information->getTopicType($item->topicType));
+            $data['topicType'] = $this->view->escape($item->getInformation()->getTopicType($item->topicType));
             $data['display']   = nl2br($this->view->escape($item->getDisplay()));
             $newitem[] = $data;
         }

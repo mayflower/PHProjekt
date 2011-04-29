@@ -69,6 +69,7 @@ class Phprojekt_TabModelInformation_Test extends PHPUnit_Framework_TestCase
         $data['integer']  = false;
         $data['length']   = 255;
         $data['default']  = null;
+        $data['unique']   = false;
 
         $expected[] = $data;
 

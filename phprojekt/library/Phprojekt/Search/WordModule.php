@@ -127,13 +127,13 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
             // Search by AND
             if ($operator == 'AND') {
                 $sqlString = '';
-                $selects = array();
-                $first   = true;
+                $selects   = array();
+                $first     = true;
 
                 while (!empty($ids)) {
                     $id = array_pop($ids);
                     if ($first) {
-                        $first     = false;
+                        $first = false;
                         if (!empty($ids)) {
                             $selects[] = $db->select()
                                             ->from('search_word_module', array('item_id'))
@@ -171,8 +171,8 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
                 $tmpResult = $stmt->fetchAll(Zend_Db::FETCH_ASSOC);
             } else {
                 // Search By OR
-                $where = 'word_id IN (' . implode(', ', $ids) . ')';
-                $order = array('module_id ASC', 'item_id DESC');
+                $where     = 'word_id IN (' . implode(', ', $ids) . ')';
+                $order     = array('module_id ASC', 'item_id DESC');
                 $tmpResult = $this->fetchAll($where, $order)->toArray();
             }
 
@@ -182,8 +182,20 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
                     break;
                 }
 
-                // Only fetch records with read access
-                if ($rights->getItemRight($data['module_id'], $data['item_id'], $userId) > 0) {
+                // Load the module for know if use rights or not
+                $object = Phprojekt_Loader::getModelFromDependence($data['module_id']);
+
+                // Allow the word depending on the right
+                $allow  = false;
+                if ($object->useRights) {
+                    // Only fetch records with read access
+                    if ($rights->getItemRight($data['module_id'], $data['item_id'], $userId) > 0) {
+                        $allow = true;
+                    }
+                } else {
+                    $allow = true;
+                }
+                if ($allow) {
                     $result[$data['module_id'] . '-' . $data['item_id']] = $data;
                 }
             }

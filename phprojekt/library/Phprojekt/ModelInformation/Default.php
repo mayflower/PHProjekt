@@ -92,7 +92,8 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
                                 'tab'      => 1,
                                 'integer'  => false,
                                 'length'   => 0,
-                                'default'  => null);
+                                'default'  => null,
+                                'unique'   => false);
 
     /**
      * Fills the _field array with mandatory data and optional keys.
@@ -155,7 +156,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     /**
      * Returns all the necessary field definitions based on the ordering const that's given.
      *
-     * @param integer $ordering Type of order.
+     * @param integer $ordering An ordering constant.
      *
      * @see Phprojekt_ModelInformation_Interface::getFieldDefinition()
      *
@@ -185,6 +186,28 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
             }
         }
         $fields = array_values($fields);
+
+        return $fields;
+    }
+
+    /**
+     * Return an array of short field information. (Just key and type)
+     *
+     * @param integer $ordering An ordering constant.
+     *
+     * @return array Array with fields definitions.
+     */
+    public function getShortFieldDefinition($ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    {
+        $fields = $this->getFieldDefinition($ordering);
+
+        foreach ($fields as $index => $field) {
+            foreach (array_keys($field) as $key) {
+                if ($key != 'key' && $key != 'type') {
+                    unset($fields[$index][$key]);
+                }
+            }
+        }
 
         return $fields;
     }

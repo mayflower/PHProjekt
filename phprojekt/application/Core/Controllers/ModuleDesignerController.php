@@ -53,11 +53,11 @@ class Core_ModuleDesignerController extends Core_IndexController
         $data         = array();
         $data['data'] = array();
         if (!empty($id)) {
-            $module          = Phprojekt_Module::getModuleName($id);
-            $model           = Phprojekt_Loader::getModel($module, $module);
-            if ($model instanceof Phprojekt_Item_Abstract) {
-                $databaseManager = new Phprojekt_DatabaseManager($model);
-                $data['data']['definition'] = $databaseManager->getDataDefinition();
+            $module             = Phprojekt_Module::getModuleName($id);
+            $model              = Phprojekt_Loader::getModel($module, $module);
+            $informationManager = $model->getInformation();
+            if ($informationManager instanceof Phprojekt_DatabaseManager) {
+                $data['data']['definition'] = $informationManager->getDataDefinition();
             } else {
                 $data['data']['definition'] = 'none';
             }
@@ -106,7 +106,6 @@ class Core_ModuleDesignerController extends Core_IndexController
         $id       = (int) $this->getRequest()->getParam('id');
         $data     = $this->getRequest()->getParam('designerData');
         $saveType = (int) $this->getRequest()->getParam('saveType');
-        $model    = null;
         $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
         $this->setCurrentProjectId();
 
@@ -115,23 +114,26 @@ class Core_ModuleDesignerController extends Core_IndexController
         }
         $module = ucfirst(str_replace(" ", "", $module));
         if ($id > 0) {
-            $model = Phprojekt_Loader::getModel($module, $module);
+            $model              = Phprojekt_Loader::getModel($module, $module);
+            $informationManager = $model->getInformation();
+        } else {
+            $model              = null;
+            $informationManager = new Phprojekt_DatabaseManager($model);
         }
 
-        if ($model instanceof Phprojekt_Item_Abstract || $id == 0) {
-            $databaseManager = new Phprojekt_DatabaseManager($model);
-            $data            = Zend_Json_Decoder::decode($data);
+        if ($informationManager instanceof Phprojekt_DatabaseManager || $id == 0) {
+            $data = Zend_Json_Decoder::decode($data);
 
             // Validate
-            if ($databaseManager->recordValidate($data, $saveType)) {
+            if ($informationManager->recordValidate($data, $saveType)) {
                 // Update Table Structure
                 $tableData = $this->_getTableData($data);
-                if (!$databaseManager->syncTable($data, $module, $tableData)) {
+                if (!$informationManager->syncTable($data, $module, $tableData)) {
                     $type    = 'error';
                     $message = Phprojekt::getInstance()->translate('There was an error writing the table');
                 } else {
                     // Update DatabaseManager Table
-                    $databaseManager->saveData($module, $data, $tableData);
+                    $informationManager->saveData($module, $data, $tableData);
 
                     if (empty($id)) {
                         $message = Phprojekt::getInstance()->translate('The table module was created correctly');
@@ -141,7 +143,7 @@ class Core_ModuleDesignerController extends Core_IndexController
                     $type = 'success';
                 }
             } else {
-                $error   = $databaseManager->getError();
+                $error   = $informationManager->getError();
                 $message = $error['label'] . ': ' . $error['message'];
                 $type    = 'error';
             }

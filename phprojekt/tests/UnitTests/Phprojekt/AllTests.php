@@ -32,7 +32,6 @@ require_once 'ActiveRecord/AbstractTest.php';
 require_once 'Tree/Node/DatabaseTest.php';
 require_once 'LoaderTest.php';
 require_once 'DatabaseManagerTest.php';
-require_once 'DatabaseManager/FieldTest.php';
 require_once 'Item/AbstractTest.php';
 require_once 'LanguageAdapterTest.php';
 require_once 'LanguageTest.php';
@@ -99,7 +98,6 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_GroupTest');
         $suite->addTestSuite('Phprojekt_LoaderTest');
         $suite->addTestSuite('Phprojekt_DatabaseManagerTest');
-        $suite->addTestSuite('Phprojekt_DatabaseManager_FieldTest');
         $suite->addTestSuite('Phprojekt_Item_AbstractTest');
         $suite->addTestSuite('Phprojekt_LanguageTest');
         $suite->addTestSuite('Phprojekt_LanguageAdapterTest');
