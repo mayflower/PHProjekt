@@ -383,7 +383,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     }
 
     /**
-     * Return all the trasnlated strings for the $locale.
+     * Return all the translated strings for the $locale.
      *
      * @param string|Zend_Locale $locale Locale/Language to set, identical with Locale identifiers
      *                                   see Zend_Locale for more information.
