@@ -325,11 +325,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     /**
      * Convert to a a selectbox.
      *
-     * @param Phprojekt_ModelInformation_Interface $field Class with data of the field.
+     * @param Phprojekt_DatabaseManager $field Class with data of the field.
      *
      * @return array Array with fields definitions.
      */
-    protected function _convertSelect(Phprojekt_ModelInformation_Interface $field)
+    protected function _convertSelect(Phprojekt_DatabaseManager $field)
     {
         $module             = $this->_getModuleName();
         $converted          = $this->_convertStandard($field);
@@ -361,11 +361,11 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * Fields from the database manager have a complete different
      * type than those that should be propagated into the PHProjekt core.
      *
-     * @param Phprojekt_ModelInformation_Interface $field Class with data of the field.
+     * @param Phprojekt_DatabaseManager $field Class with data of the field.
      *
      * @return array Array with fields definitions.
      */
-    protected function _convertStandard(Phprojekt_ModelInformation_Interface $field)
+    protected function _convertStandard(Phprojekt_DatabaseManager $field)
     {
         $converted = array();
         $key       = $index = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field->tableField);
