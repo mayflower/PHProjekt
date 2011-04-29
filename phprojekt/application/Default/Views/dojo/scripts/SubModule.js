@@ -19,6 +19,8 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
+dojo.require("dojo.NodeList-traverse");
+
 dojo.provide("phpr.Default.SubModule");
 dojo.provide("phpr.Default.SubModule.Grid");
 dojo.provide("phpr.Default.SubModule.Form");
@@ -296,7 +298,18 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
     setActionFormButtons:function() {
         // Summary:
         //    Connect the buttons to the actions
-        dojo.connect(dijit.byId("subModuleSubmitButton"), "onClick", dojo.hitch(this, "submitForm"));
+        var submitForm = dojo.hitch(this, "submitForm");
+
+        // Go up from the button to the submodule's tabcontainer, then down
+        // again to get all submodule form elements.
+        var button       = dojo.query("#subModuleSubmitButton")
+        var tabcontainer = button.parents(".dijitTabContainer").first();
+        var forms        = tabcontainer.query("form");
+        forms.forEach(function(form) {
+            form = dijit.getEnclosingWidget(form);
+            dojo.connect(form, 'onSubmit', submitForm);
+        })
+
         if (this.id > 0) {
             dojo.connect(dijit.byId("subModuleDeleteButton"), "onClick", dojo.hitch(this, function() {
                 phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'))
