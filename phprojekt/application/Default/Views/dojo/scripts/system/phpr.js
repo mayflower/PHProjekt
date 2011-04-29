@@ -690,10 +690,9 @@ dojo.declare("phpr.loading", null, {
 
 dojo.declare("phpr.translator", null, {
     // Summary:
-    //     Trasnlation class
+    //     Translation class
     // Description:
-    //     Collect all the trasnlated strings into an array
-    //     and return the request string translateds
+    //     Collect all the translated strings into an array and return the request string translated.
     _strings: {},
 
     constructor:function(translatedStrings) {
