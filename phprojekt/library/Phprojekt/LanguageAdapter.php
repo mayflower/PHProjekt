@@ -89,7 +89,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     protected $_langLoaded = array();
 
     /**
-     * A fallback language adapter to use as a fallback when we are not translating to english.
+     * A fallback language adapter to use as a fallback when we are not
+     * translating to english.
      *
      * @var Phprojekt_LanguageAdapter
      */
@@ -112,7 +113,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         parent::__construct($options);
 
         if ('en' != $options['locale']) {
-            $options['locale']      = 'en';
+            $options['locale'] = 'en';
             $this->_fallbackAdapter = new Phprojekt_LanguageAdapter($options);
         }
     }
@@ -442,8 +443,9 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             if ('en' != $locale) {
                 $toReturn = $this->_fallbackAdapter->get($message, $moduleName, 'en');
             } else {
-                // Either we're already in the fallback or english was requested.
-                // We can't don't have a translation for this, so we just return the message.
+                // Either we're already in the fallback or english was
+                // requested. We can't don't have a translation for this, so we
+                // just return the message.
                 $toReturn = $message;
             }
         }
