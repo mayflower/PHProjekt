@@ -40,7 +40,10 @@
 class Todo_Models_Todo_Test extends DatabaseTest
 {
     protected function getDataSet() {
-        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+        return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
+            array(
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
     }
 
     /**
@@ -51,19 +54,19 @@ class Todo_Models_Todo_Test extends DatabaseTest
         $todoModel = new Todo_Models_Todo();
         $todoModel->find(1);
         $response = $todoModel->getNotification()->getTo();
-        $expected = array(3);
+        $expected = array();
         $this->assertEquals($expected, $response);
 
         $todoModel->userId = 2;
         $todoModel->save();
         $response   = $todoModel->getNotification()->getTo();
-        $expected = array(3, 2);
+        $expected = array(2);
         $this->assertEquals($expected, $response);
 
         $todoModel->userId = 3;
         $todoModel->save();
         $response   = $todoModel->getNotification()->getTo();
-        $expected = array(3);
+        $expected = array(3, 2);
         $this->assertEquals($expected, $response);
     }
 }
