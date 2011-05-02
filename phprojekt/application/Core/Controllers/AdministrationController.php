@@ -38,7 +38,7 @@
 class Core_AdministrationController extends Core_IndexController
 {
     /**
-     * Init function.
+     * PreDispatch function.
      *
      * Only admin users can access to these actions,
      * if the user is not an admin, is redirected to the login form or throws an exception.
@@ -47,9 +47,9 @@ class Core_AdministrationController extends Core_IndexController
      *
      * @return void
      */
-    public function init()
+    public function preDispatch()
     {
-        parent::init();
+        parent::preDispatch();
 
         if (!Phprojekt_Auth::isAdminUser()) {
             // If is a GET, show the login page

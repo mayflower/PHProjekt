@@ -48,9 +48,9 @@ class Core_IndexController extends IndexController
      *
      * @return void
      */
-    public function init()
+    public function preDispatch()
     {
-        parent::init();
+        parent::preDispatch();
 
         if (!Phprojekt_Auth::isAdminUser()) {
             $valid = false;
