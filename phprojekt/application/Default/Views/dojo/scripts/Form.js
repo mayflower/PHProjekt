@@ -941,13 +941,17 @@ dojo.declare("phpr.Default.Form", null, {
                     subModules[index]['class'].fillTab(tabId);
 
                     this._eventForSubModulesTab[tabId] = dojo.connect(dijit.byId(tabId), 'onShow',
-                        dojo.hitch(this, function() {
-                            subModules[index]['class'].renderSubModule(this._id);
-                        })
+                        dojo.hitch(this, '_renderSubModule', subModules[index]['class'])
                     );
                 }
             }
         }
+    },
+
+    _renderSubModule:function(objectClass) {
+        // Summary:
+        //    Proxy for call the renderSubModule on the object.
+        objectClass.renderSubModule(this._id);
     },
 
     _useCache:function() {
