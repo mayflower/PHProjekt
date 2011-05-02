@@ -16,23 +16,26 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Setting.Form");
 
 dojo.declare("phpr.Setting.Form", phpr.Core.Form, {
-    customActionOnSuccess:function() {
+    _customActionOnSuccess:function() {
+        // Summary:
+        //    Display a warning for user sub-module.
         if (phpr.submodule == 'User') {
-            var result     = Array();
+            var result     = {};
             result.type    = 'warning';
             result.message = phpr.nls.get('You need to log out and log in again in order to let changes have effect');
             new phpr.handleResponse('serverFeedback', result);
         }
     },
 
-
-    setBreadCrumbItem:function() {
+    _setBreadCrumbItem:function() {
+        // Summary:
+        //    Set the Breadcrumb with the current sub-module.
         phpr.BreadCrumb.setItem(phpr.nls.get(phpr.submodule));
     }
 });

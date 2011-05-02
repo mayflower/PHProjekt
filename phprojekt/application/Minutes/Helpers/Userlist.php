@@ -43,7 +43,7 @@ final class Minutes_Helpers_Userlist
      * @param string $idList   Comma-separated list of user ids.
      * @param string $idListNN Optional additional lists of comma-separated user ids.
      *
-     * @return array Array with 'id' and 'display'
+     * @return array Array with 'id' and 'name'
      */
     public static function expandIdList($idList = '')
     {
@@ -63,8 +63,8 @@ final class Minutes_Helpers_Userlist
             $userList = $user->fetchAll(sprintf('id IN (%s)', $idList), $display);
 
             foreach ($userList as $record) {
-                $data[] = array('id'      => (int) $record->id,
-                                'display' => $record->applyDisplay($display, $record));
+                $data[] = array('id'   => (int) $record->id,
+                                'name' => $record->applyDisplay($display, $record));
             }
         }
 

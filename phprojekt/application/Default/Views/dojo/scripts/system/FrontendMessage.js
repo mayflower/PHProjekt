@@ -74,7 +74,7 @@ dojo.declare("phpr.FrontendMessage", null, {
         clearInterval(window.interval);
         window.getFrontendMessage();
 
-        var moduleUrl  = "#" + data.module + "," + data.projectId + ",id," + data.itemId;
+        var moduleUrl  = '#' + data.module + ',' + data.projectId + ',id,' + data.itemId;
         var currentUrl = window.location.hash;
 
         // Be fault tolerant and catch any error if the highlighting of a field does not run.
@@ -82,11 +82,11 @@ dojo.declare("phpr.FrontendMessage", null, {
             if ('edit' == data.process) {
                 // Check urls
                 if (moduleUrl == currentUrl) {
-                    dojo.publish(phpr.module + '.highlightChanges', [data]);
+                    dojo.publish(phpr.module + '.formProxy', ['highlightChanges', data]);
                 }
             }
         } catch (err) {
-            phpr.handleError(this.url, 'silence', "Can not highlight changes. " + err);
+            phpr.handleError(this.url, 'silence', 'Can not highlight changes. ' + err);
         }
 
         // Delete caches
@@ -117,13 +117,12 @@ dojo.declare("phpr.FrontendMessage", null, {
 
             // Restore the views
             if (data.module == phpr.module) {
-                dojo.publish(phpr.module + '.setNavigations');
                 dojo.publish(phpr.module + '.setWidgets');
             }
         }
 
         var template = this._templateString(data);
-        dojo.publish("FrontendMessage", [{
+        dojo.publish('FrontendMessage', [{
             message:  template,
             type:     'warning',
             duration: 0
@@ -138,12 +137,12 @@ dojo.declare("phpr.FrontendMessage", null, {
         // Description:
         //    Returns a string with the given data and html tags for the toaster.
         var template = '';
-        var project  = phpr.nls.get("in Project");
+        var project  = phpr.nls.get('in Project');
 
         if (phpr.isGlobalModule(data.module)) {
-            data.projectId = "";
+            data.projectId = '';
         } else {
-            data.projectId = data.projectId + ",";
+            data.projectId = data.projectId + ',';
         }
 
         switch (data.process) {

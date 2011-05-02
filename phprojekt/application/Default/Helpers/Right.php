@@ -62,7 +62,7 @@ final class Default_Helpers_Right
         }
 
         if (!isset($params['dataAccess'][$user])) {
-            $params['dataAccess'][$user] = $user;
+            $params['dataAccess'][$user] = '{}';
         }
 
         return $params;
@@ -78,7 +78,7 @@ final class Default_Helpers_Right
      */
     public static function allowNone($params, $user)
     {
-        return self::_addRight($params, $user, 'checkNoneAccess');
+        return self::_addRight($params, $user, 'none');
     }
 
     /**
@@ -91,7 +91,7 @@ final class Default_Helpers_Right
      */
     public static function allowRead($params, $user)
     {
-        return self::_addRight($params, $user, 'checkReadAccess');
+        return self::_addRight($params, $user, 'read');
     }
 
     /**
@@ -104,7 +104,7 @@ final class Default_Helpers_Right
      */
     public static function allowWrite($params, $user)
     {
-        return self::_addRight($params, $user, 'checkWriteAccess');
+        return self::_addRight($params, $user, 'write');
     }
 
     /**
@@ -117,7 +117,7 @@ final class Default_Helpers_Right
      */
     public static function allowAccess($params, $user)
     {
-        return self::_addRight($params, $user, 'checkAccessAccess');
+        return self::_addRight($params, $user, 'access');
     }
 
     /**
@@ -130,7 +130,7 @@ final class Default_Helpers_Right
      */
     public static function allowCreate($params, $user)
     {
-        return self::_addRight($params, $user, 'checkCreateAccess');
+        return self::_addRight($params, $user, 'create');
     }
 
     /**
@@ -143,7 +143,7 @@ final class Default_Helpers_Right
      */
     public static function allowCopy($params, $user)
     {
-        return self::_addRight($params, $user, 'checkCopyAccess');
+        return self::_addRight($params, $user, 'copy');
     }
 
     /**
@@ -156,7 +156,7 @@ final class Default_Helpers_Right
      */
     public static function allowDelete($params, $user)
     {
-        return self::_addRight($params, $user, 'checkDeleteAccess');
+        return self::_addRight($params, $user, 'delete');
     }
 
     /**
@@ -169,7 +169,7 @@ final class Default_Helpers_Right
      */
     public static function allowDownload($params, $user)
     {
-        return self::_addRight($params, $user, 'checkDownloadAccess');
+        return self::_addRight($params, $user, 'download');
     }
 
     /**
@@ -182,7 +182,7 @@ final class Default_Helpers_Right
      */
     public static function allowAdmin($params, $user)
     {
-        return self::_addRight($params, $user, 'checkAdminAccess');
+        return self::_addRight($params, $user, 'admin');
     }
 
     /**
@@ -268,19 +268,20 @@ final class Default_Helpers_Right
         $rights = array();
 
         if (isset($params['dataAccess'])) {
-            $ids = array_keys($params['dataAccess']);
-            foreach ($ids as $accessId) {
-                $right = array();
-                $right['none']     = self::_checked($params,'checkNoneAccess', $accessId);
-                $right['read']     = self::_checked($params,'checkReadAccess', $accessId);
-                $right['write']    = self::_checked($params,'checkWriteAccess', $accessId);
-                $right['access']   = self::_checked($params,'checkAccessAccess', $accessId);
-                $right['create']   = self::_checked($params,'checkCreateAccess', $accessId);
-                $right['copy']     = self::_checked($params,'checkCopyAccess', $accessId);
-                $right['delete']   = self::_checked($params,'checkDeleteAccess', $accessId);
-                $right['download'] = self::_checked($params,'checkDownloadAccess', $accessId);
-                $right['admin']    = self::_checked($params,'checkAdminAccess', $accessId);
-                $rights[$accessId] = Phprojekt_Acl::convertArrayToBitmask($right);
+            //$ids = array_keys($params['dataAccess']);
+            foreach ($params['dataAccess'] as $id => $jsonAccess) {
+                $access            = Zend_Json::decode($jsonAccess);
+                $right             = array();
+                $right['none']     = false;
+                $right['read']     = (isset($access['read'])) ? (boolean) $access['read'] : false;
+                $right['write']    = (isset($access['write'])) ? (boolean) $access['write'] : false;
+                $right['access']   = (isset($access['access'])) ? (boolean) $access['access'] : false;
+                $right['create']   = (isset($access['create'])) ? (boolean) $access['create'] : false;
+                $right['copy']     = (isset($access['copy'])) ? (boolean) $access['copy'] : false;
+                $right['delete']   = (isset($access['delete'])) ? (boolean) $access['delete'] : false;
+                $right['download'] = (isset($access['download'])) ? (boolean) $access['download'] : false;
+                $right['admin']    = (isset($access['admin'])) ? (boolean) $access['admin'] : false;
+                $rights[$id] = Phprojekt_Acl::convertArrayToBitmask($right);
             }
         }
 
@@ -330,11 +331,12 @@ final class Default_Helpers_Right
         // Add the user if don't exist
         $params = self::addUser($params, $user);
 
-        // Adds the specific right
-        if (!array_key_exists($right, $params)) {
-            $params[$right] = array();
-        }
-        $params[$right][$user] = 1;
+        $jsonData = $params['dataAccess'][$user];
+        $data     = Zend_Json::decode($jsonData);
+
+        $data[$right] = 1;
+
+        $params['dataAccess'][$user] = Zend_Json::encode($data);
 
         return $params;
     }
@@ -375,11 +377,32 @@ final class Default_Helpers_Right
                         foreach ($rightsType as $rightName) {
                             if (array_key_exists($rightName, $userRights)) {
                                 if ($userRights[$rightName] == 1) {
-                                    $rightCompleteName = 'check' . ucfirst($rightName) . 'Access';
-                                    if (!array_key_exists($rightCompleteName, $params)) {
-                                        $params[$rightCompleteName] = array();
+                                    switch ($rightName) {
+                                        case 'read':
+                                            $params = self::allowRead($params, $userId);
+                                            break;
+                                        case 'write':
+                                            $params = self::allowWrite($params, $userId);
+                                            break;
+                                        case 'access':
+                                            $params = self::allowAccess($params, $userId);
+                                            break;
+                                        case 'create':
+                                            $params = self::allowCreate($params, $userId);
+                                            break;
+                                        case 'copy':
+                                            $params = self::allowCopy($params, $userId);
+                                            break;
+                                        case 'delete':
+                                            $params = self::allowDelete($params, $userId);
+                                            break;
+                                        case 'download':
+                                            $params = self::allowDownload($params, $userId);
+                                            break;
+                                        case 'admin':
+                                            $params = self::allowAdmin($params, $userId);
+                                            break;
                                     }
-                                    $params[$rightCompleteName][$userId] = 1;
                                 }
                             }
                         }
@@ -397,25 +420,5 @@ final class Default_Helpers_Right
         }
 
         return $params;
-    }
-
-    /**
-     * Return true or false if the checkbox is checked.
-     *
-     * @param array   $params   The post value.
-     * @param string  $string   The key of the field.
-     * @param integer $accessId The user ID.
-     *
-     * @return boolean True for checked.
-     */
-    private static function _checked($params, $string, $accessId)
-    {
-        if (isset($params[$string][$accessId])) {
-            if ($params[$string][$accessId] == 1) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

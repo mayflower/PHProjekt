@@ -16,81 +16,108 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Statistic.Main");
 
 dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
     constructor:function() {
-        this.module = "Statistic";
-        this.loadFunctions(this.module);
-
-        this.gridWidget = phpr.Statistic.Grid;
-        this.formWidget = phpr.Statistic.Form;
-
-        dojo.subscribe("Statistic.changeDate", this, "changeDate");
-    },
-
-    renderTemplate:function() {
         // Summary:
-        //   Custom renderTemplate for statistic
-        this.render(["phpr.Statistic.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            webpath:            phpr.webpath,
-            selectedPeriodText: phpr.nls.get('Selected Statistic Period'),
-            selectedPeriodHelp: phpr.nls.get('Choose here the period for the statistics to be calculated.')
-        });
+        //    Create a new instance of the module.
+        this._module = 'Statistic';
+
+        this._loadFunctions();
+        dojo.subscribe('Statistic.changeDate', this, 'changeDate');
+
+        this._gridWidget = phpr.Statistic.Grid;
+        this._formWidget = phpr.Statistic.Form;
     },
 
     setWidgets:function() {
         // Summary:
-        //   Custom setWidgets for statistic
+        //    Set and start the widgets of the module.
         phpr.Tree.loadTree();
-        var today  = new Date();
-        var start  = new Date(today.getFullYear(), today.getMonth(), 1);
-        var end    = new Date(today.getFullYear(), today.getMonth(), 31);
+        var today = new Date();
+        var start = new Date(today.getFullYear(), today.getMonth(), 1);
+        var end   = new Date(today.getFullYear(), today.getMonth(), 31);
         while (end.getMonth() != start.getMonth()) {
             var end = new Date(start.getFullYear(), start.getMonth(), end.getDate() - 1);
         }
+
+        // Change the date and render the table
         this.changeDate(start, end);
 
-        var params = {
-            label:     phpr.nls.get('Export to CSV'),
-            showLabel: true,
-            baseClass: "positive",
-            iconClass: "export",
-            disabled:  false
-        };
-
-        var exportButton = new dijit.form.Button(params);
-        dojo.byId("buttonRow").appendChild(exportButton.domNode);
-        dojo.connect(exportButton, "onClick", dojo.hitch(this, "exportData"));
+        // Add an export button
+        var button = dijit.byId('exportCsvButton-Statistic');
+        if (!button) {
+            var params = {
+                id:        'exportCsvButton-Statistic',
+                label:     phpr.nls.get('Export to CSV'),
+                showLabel: true,
+                baseClass: 'positive',
+                iconClass: 'export',
+                disabled:  false,
+                onClick:   dojo.hitch(this, '_exportData')
+            };
+            var button = new dijit.form.Button(params);
+            dojo.byId('buttonRow').appendChild(button.domNode);
+        } else {
+            dojo.style(button.domNode, 'display', 'inline');
+        }
     },
 
     changeDate:function(start, end) {
         // summary:
-        //    Request a new data store for the dates
-        // description:
-        //    Request to the server the data for draw the statistics
-        dijit.byId("startDate").set('value', new Date(start.getFullYear(), start.getMonth(), start.getDate()));
-        dijit.byId("endDate").set('value', new Date(end.getFullYear(), end.getMonth(), end.getDate()));
+        //    Request a new data store for the dates and draw the statistics.
+        dijit.byId('startDate-' + this._module).set('value',
+            new Date(start.getFullYear(), start.getMonth(), start.getDate()));
+        dijit.byId('endDate-' + this._module).set('value',
+            new Date(end.getFullYear(), end.getMonth(), end.getDate()));
+
+        // Clean table
+        dijit.byId('content-' + this._module).set('content', '');
 
         this._url = phpr.webpath + 'index.php/Statistic/index/jsonGetStatistic'
             + '/nodeId/' + phpr.currentProjectId
             + '/startDate/' + phpr.Date.getIsoDate(start)
             + '/endDate/' + phpr.Date.getIsoDate(end);
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
-        phpr.DataStore.requestData({'url': this._url, 'processData': dojo.hitch(this, 'prepareData')});
+        phpr.DataStore.requestData({'url': this._url, 'processData': dojo.hitch(this, '_prepareData')});
     },
 
-   prepareData:function(items, request) {
-        // summary:
-        //    Process the data and draw the table
-        // description:
-        //    Process the data and draw the table
+    openForm:function(id, module) {
+        // Summary:
+        //     Open a new form.
+        // Description:
+        //     Disable for this module.
+    },
+
+    /************* Private functions *************/
+
+    _renderTemplate:function() {
+        // Summary:
+        //    Render the module layout only one time.
+        // Description:
+        //    Try to create the layout if not exists, or recover it from the garbage.
+        if (!dojo.byId('defaultMainContent-' + phpr.module)) {
+            phpr.Render.render(['phpr.Statistic.template', 'mainContent.html'], dojo.byId('centerMainContent'), {
+                module:             phpr.module,
+                selectedPeriodText: phpr.nls.get('Selected Statistic Period'),
+                selectedPeriodHelp: phpr.nls.get('Choose here the period for the statistics to be calculated.')
+            });
+        } else {
+            dojo.place('defaultMainContent-' + phpr.module, 'centerMainContent');
+            dojo.style(dojo.byId('defaultMainContent-' + phpr.module), 'display', 'block');
+        }
+    },
+
+   _prepareData:function(items, request) {
+        // Summary:
+        //    Process the data and draw the table.
         var data       = phpr.DataStore.getData({url: this._url});
-        var rows       = new Array();
-        var sumPerUser = new Array();
+        var rows       = [];
+        var sumPerUser = [];
         for (var p in data.projects) {
             if (!data.projects[p]) {
                 continue;
@@ -110,9 +137,9 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
                 }
             }
             rows.push({
-                "project":  data.projects[p],
-                "userData": userData,
-                "sum":      phpr.Date.convertMinutesToTime(sumPerProject)
+                project:  data.projects[p],
+                userData: userData,
+                sum:      phpr.Date.convertMinutesToTime(sumPerProject)
             });
         }
 
@@ -126,28 +153,99 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
                 total = Math.abs(total + sumPerUser[u]);
             }
         }
-        var totalRow = new Array();
-        totalRow.push({
-            "title":    phpr.nls.get('Total'),
-            "userData": totalPerUser,
-            "sum":      phpr.Date.convertMinutesToTime(total)
-        });
+        var totalRow = {
+            title:    phpr.nls.get('Total'),
+            userData: totalPerUser,
+            sum:      phpr.Date.convertMinutesToTime(total)
+        };
 
-        this.render(["phpr.Statistic.template", "table.html"], dojo.byId('statisticContent'), {
-            sumTxt:     phpr.nls.get('Sum'),
-            projectTxt: phpr.nls.get('Project'),
-            rows:       rows,
-            users:      data.users,
-            total:      totalRow
-        });
+        // Create the table
+        var table              = dojo.doc.createElement('table');
+        table.className        = 'statisticsTable';
+        table.style.marginLeft = '10px';
+        table.style.marginTop  = '10px';
+
+        // Titles
+        var row       = table.insertRow(table.rows.length);
+        var cellIndex = 0;
+
+        var cell       = row.insertCell(cellIndex);
+        cell.innerHTML = '<b>' + phpr.nls.get('Project') + '</b>';
+        cellIndex++;
+
+        for (var i in data.users) {
+            var cell       = row.insertCell(cellIndex);
+            cell.innerHTML = '<b>' + users[i].users + '</b>';
+            cellIndex++;
+        }
+
+        var cell       = row.insertCell(cellIndex);
+        cell.innerHTML = '<b>' + phpr.nls.get('Sum') + '</b>';
+        cellIndex++;
+
+        var cell       = row.insertCell(cellIndex);
+        cell.innerHTML = '<b>' + phpr.nls.get('Project') + '</b>';
+
+        // Rows
+        for (var r in rows) {
+            var row       = table.insertRow(table.rows.length);
+            var cellIndex = 0;
+
+            var cell       = row.insertCell(cellIndex);
+            cell.innerHTML = rows[r].project;
+            cellIndex++;
+
+            for (var i in rows[r].userData) {
+                var cell       = row.insertCell(cellIndex);
+                cell.innerHTML = rows[r].userData[i];
+                cellIndex++;
+            }
+
+            var cell       = row.insertCell(cellIndex);
+            cell.innerHTML = rows[r].sum;
+            cellIndex++;
+
+            var cell       = row.insertCell(cellIndex);
+            cell.innerHTML = rows[r].project;
+        }
+
+        // Total
+        var row       = table.insertRow(table.rows.length);
+        var cellIndex = 0;
+
+        var cell       = row.insertCell(cellIndex);
+        cell.innerHTML = '<b>' + totalRow.title + '</b>';
+        cellIndex++;
+
+        for (var i in totalRow.userData) {
+            var cell       = row.insertCell(cellIndex);
+            cell.innerHTML = '<b>' + totalRow.userData[i] + '</b>';
+            cellIndex++;
+        }
+
+        var cell       = row.insertCell(cellIndex);
+        cell.innerHTML = '<b>' + totalRow.sum + '</b>';
+        cellIndex++;
+
+        var cell       = row.insertCell(cellIndex);
+        cell.innerHTML = '<b>' + totalRow.title + '</b>';
+
+        // Replace the content with the new table
+        dijit.byId('content-' + this._module).set('content', table);
     },
 
-    setNewEntry:function() {
+    _setNewEntry:function() {
+        // Summary:
+        //    Create the Add button.
+        // Description:
+        //    Disable for this module.
     },
 
-    exportData:function() {
-        var start = dijit.byId("startDate").get('value');
-        var end   = dijit.byId("endDate").get('value');
+    _exportData:function() {
+        // Summary:
+        //    Export the table to an csv file.
+        var start = dijit.byId('startDate-' + this._module).get('value');
+        var end   = dijit.byId('endDate-' + this._module).get('value');
 
         window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList'
             + '/nodeId/' + phpr.currentProjectId
@@ -155,8 +253,5 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
             + '/endDate/' + phpr.Date.getIsoDate(end)
             + '/csrfToken/' + phpr.csrfToken);
         return false;
-    },
-
-    openForm:function(id, module) {
     }
 });

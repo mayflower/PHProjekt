@@ -16,62 +16,75 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Contact.Form");
 
 dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
-
-    initData:function() {
+    _initData:function() {
+        // Summary:
+        //    Init all the data before draw the form.
         // Get all the active users
-        this.userStore = new phpr.Store.User();
-        this._initData.push({'store': this.userStore});
+        this._userStore = new phpr.Store.User();
+        this._initDataArray.push({'store': this._userStore});
     },
 
-    addModuleTabs:function(data) {
-        this.addHistoryTab();
+    _addModuleTabs:function(data) {
+        // Summary:
+        //    Add extra tabs.
+        // Description:
+        //    Show only history tab for Contacts.
+        this._addHistoryTab();
     },
 
-    addBasicFields:function() {
+    _addBasicFields:function() {
+        // Summary:
+        //    Add some special fields.
+        // Description:
+        //    Remove tag field for Contacts.
     },
 
-    submitForm:function() {
-        if (!this.prepareSubmission()) {
+    _submitForm:function() {
+        // Summary:
+        //    Submit the forms.
+        // Description:
+        //    Remove save tags for Contacts.
+        if (!this._prepareSubmission()) {
             return false;
         }
 
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId
-                + '/id/' + this.id,
-            content:   this.sendData,
+                + '/id/' + this._id,
+            content:   this._sendData,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
-                if (!this.id) {
-                    this.id = data['id'];
+                if (!this._id) {
+                    this._id = data['id'];
                 }
                 if (data.type == 'success') {
-                    this.publish("updateCacheData");
-                    this.publish("setUrlHash", [phpr.module]);
+                    dojo.publish(phpr.module + '.updateCacheData');
+                    dojo.publish(phpr.module + '.setUrlHash', [phpr.module]);
                 }
             })
         });
     },
 
-    deleteForm:function() {
+    _deleteForm:function() {
+        // Summary:
+        //    Delete an item.
+        // Description:
+        //    Remove delete tags for Contacts.
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
+            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this._id,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
-                    this.publish("updateCacheData");
-                    this.publish("setUrlHash", [phpr.module]);
+                    dojo.publish(phpr.module + '.updateCacheData');
+                    dojo.publish(phpr.module + '.setUrlHash', [phpr.module]);
                 }
             })
         });
-    },
-
-    updateData:function() {
-        phpr.DataStore.deleteData({url: this._url});
     }
 });

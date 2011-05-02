@@ -16,13 +16,15 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Project.Grid");
 
 dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
     updateData:function() {
+        // Summary:
+        //    Delete the cache for this grid.
         this.inherited(arguments);
 
         // Delete parent cache
@@ -31,14 +33,22 @@ dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
         phpr.DataStore.deleteData({url: url});
 
         // Delete cache for Timecard on places where Projects are shown
-        phpr.destroyWidget('timecardTooltipDialog');
+        dojo.publish('Timecard.formProxy', ['forceUpdate']);
         phpr.DataStore.deleteData({url: phpr.webpath + 'index.php/Timecard/index/jsonGetFavoritesProjects'});
         phpr.DataStore.deleteDataPartialString({url: phpr.webpath + 'index.php/Timecard/index/jsonDetail/'});
     },
 
-    updateAfterSaveChanges:function() {
+    _setUpdateUrl:function() {
         // Summary:
-        //    Actions after the saveChanges call returns success
+        //    Sets the url for save the changes.
+        var parentId    = phpr.Tree.getParentId(phpr.currentProjectId);
+        this._updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
+            + parentId;
+    },
+
+    _updateAfterSaveChanges:function() {
+        // Summary:
+        //    Actions after the saveChanges call returns success.
         this.inherited(arguments);
         phpr.Tree.loadTree();
     }

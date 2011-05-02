@@ -1,19 +1,19 @@
 /* Gantt */
 
-.phprojekt #ganttChart ul,
-.phprojekt #ganttChart li {
+.phprojekt #defaultMainContent-Gantt ul,
+.phprojekt #defaultMainContent-Gantt li {
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.phprojekt #ganttChart .slider li {
+.phprojekt #defaultMainContent-Gantt .slider li {
     font-size: 8pt;
     font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
     text-align: center;
 }
 
-.phprojekt #ganttChart .ganttcontent {
+.phprojekt #defaultMainContent-Gantt .ganttcontent {
     position: absolute;
     left: 0;
     width: 100%;
@@ -21,21 +21,21 @@
     padding-bottom: 20px;
 }
 
-.phprojekt #ganttChart .timeline {
+.phprojekt #defaultMainContent-Gantt .timeline {
     position: absolute;
     left: 0;
     top: 0px;
     width: 100%;
 }
 
-.phprojekt #ganttChart .project_list {
+.phprojekt #defaultMainContent-Gantt .project_list {
     position: absolute;
     left: 0;
     width: 100%;
     top: 45px;
 }
 
-.phprojekt #ganttChart .sub_project .title {
+.phprojekt #defaultMainContent-Gantt .sub_project .title {
     width: 250px;
     border-left: 1px solid #7d7d7d;
     border-right: 1px solid #7d7d7d;
@@ -43,61 +43,61 @@
     float: left;
 }
 
-.phprojekt #ganttChart .sub_project .slider {
+.phprojekt #defaultMainContent-Gantt .sub_project .slider {
     margin-top: 0px;
     margin-left: 0px;
 }
 
-.phprojekt #ganttChart .sub_project .separator {
+.phprojekt #defaultMainContent-Gantt .sub_project .separator {
     width: 10px;
     float: left;
 }
 
-.phprojekt #ganttChart .dijitSliderProgressBarH {
+.phprojekt #defaultMainContent-Gantt .dijitSliderProgressBarH {
     border-color: #aab0bb;
     background: url("images/bg.gif");
 }
 
-.phprojekt #ganttChart .dijitSliderProgressBarV {
+.phprojekt #defaultMainContent-Gantt .dijitSliderProgressBarV {
     border-color: #aab0bb;
     display: none !important;
     background: #c0c2c5 url("images/sliderFullVertical.png") repeat-y bottom left;
 }
 
-.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderProgressBarH,
-.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderLeftBumper {
+.phprojekt #defaultMainContent-Gantt .dijitSliderPhprFocused .dijitSliderProgressBarH,
+.phprojekt #defaultMainContent-Gantt .dijitSliderPhprFocused .dijitSliderLeftBumper {
     background-image: url("images/sliderFullFocus.png");
 }
 
-.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderProgressBarV,
-.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderBottomBumper {
+.phprojekt #defaultMainContent-Gantt .dijitSliderPhprFocused .dijitSliderProgressBarV,
+.phprojekt #defaultMainContent-Gantt .dijitSliderPhprFocused .dijitSliderBottomBumper {
     background-image: url("images/sliderFullVerticalFocus.png");
 }
 
-.phprojekt #ganttChart .dijitSliderRemainingBarV {
+.phprojekt #defaultMainContent-Gantt .dijitSliderRemainingBarV {
     border-color: #b4b4b4;
     background: #dcdcdc url("images/sliderEmptyVertical.png") repeat-y bottom left;
 }
 
-.phprojekt #ganttChart .dijitSliderRemainingBarH {
+.phprojekt #defaultMainContent-Gantt .dijitSliderRemainingBarH {
     border-color: #b4b4b4;
     background: #dcdcdc url("images/sliderEmpty.png") repeat-x top left;
 }
 
-.phprojekt #ganttChart .dijitSliderBar {
+.phprojekt #defaultMainContent-Gantt .dijitSliderBar {
     border-style: solid;
     outline: 1px;
 }
 
-.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderBar {
+.phprojekt #defaultMainContent-Gantt .dijitSliderPhprFocused .dijitSliderBar {
     border-color: #888;
 }
 
-.dijit_a11y #ganttChart .dijitSliderProgressBar {
+.dijit_a11y #defaultMainContent-Gantt .dijitSliderProgressBar {
     background-color: #888 !important;
 }
 
-.phprojekt #ganttChart .dijitSliderImageHandleH {
+.phprojekt #defaultMainContent-Gantt .dijitSliderImageHandleH {
     background: #0000ff !important;
     width: 5px;
     height: 12px;
@@ -107,27 +107,27 @@
     top: 0 !important;
 }
 
-.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderImageHandleH {
+.phprojekt #defaultMainContent-Gantt .dijitSliderPhprFocused .dijitSliderImageHandleH {
     background-image: url("images/preciseSliderThumbFocus.png");
 }
 
-.dj_ie6 .phprojekt #ganttChart .dijitSliderImageHandleH {
+.dj_ie6 .phprojekt #defaultMainContent-Gantt .dijitSliderImageHandleH {
     background-image: url("images/preciseSliderThumb.gif");
 }
 
-.phprojekt #ganttChart .dijitSliderLeftBumper {
+.phprojekt #defaultMainContent-Gantt .dijitSliderLeftBumper {
     border-left-width: 1px;
     border-color: #aab0bb;
     background: #c0c2c5 url("images/sliderFull.png") repeat-x top left;
 }
 
-.phprojekt #ganttChart .dijitSliderRightBumper {
+.phprojekt #defaultMainContent-Gantt .dijitSliderRightBumper {
     background: #dcdcdc url("images/sliderEmpty.png") repeat-x top left;
     border-color: #b4b4b4;
     border-right-width: 1px;
 }
 
-.phprojekt #ganttChart .dijitSliderImageHandleV {
+.phprojekt #defaultMainContent-Gantt .dijitSliderImageHandleV {
     border: 0px;
     width: 16px;
     height: 16px;
@@ -135,85 +135,59 @@
     cursor: pointer;
 }
 
-.phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderImageHandleV {
+.phprojekt #defaultMainContent-Gantt .dijitSliderPhprFocused .dijitSliderImageHandleV {
     background-image: url("images/sliderThumbFocus.png");
 }
 
-.dj_ie6 .phprojekt #ganttChart .dijitSliderPhprFocused .dijitSliderImageHandleV {
+.dj_ie6 .phprojekt #defaultMainContent-Gantt .dijitSliderPhprFocused .dijitSliderImageHandleV {
     background-image: url("images/sliderThumbFocus.gif");
 }
 
-.phprojekt #ganttChart .dijitSliderBottomBumper {
+.phprojekt #defaultMainContent-Gantt .dijitSliderBottomBumper {
     border-bottom-width: 1px;
     border-color: #aab0bb;
     background: #c0c2c5 url("images/sliderFullVertical.png") repeat-y bottom left;
 }
 
-.phprojekt #ganttChart .dijitSliderTopBumper {
+.phprojekt #defaultMainContent-Gantt .dijitSliderTopBumper {
     background: #dcdcdc url("images/sliderEmptyVertical.png") repeat-y top left;
     border-color: #b4b4b4;
     border-top-width: 1px;
 }
 
-.phprojekt #ganttChart .dijitSliderDecrementIconH,
-.phprojekt #ganttChart .dijitSliderDecrementIconV,
-.phprojekt #ganttChart .dijitSliderIncrementIconH,
-.phprojekt #ganttChart .dijitSliderIncrementIconV {
-    cursor: pointer;
-    background-image: url("images/spriteArrows.png");
-    background-repeat: no-repeat;
-    margin: 5px;
-    height: 7px;
-    width: 7px;
-    font-size: 1px;
+.phprojekt #defaultMainContent-Gantt .dijitSliderDecrementIconH,
+.phprojekt #defaultMainContent-Gantt .dijitSliderDecrementIconV,
+.phprojekt #defaultMainContent-Gantt .dijitSliderIncrementIconH,
+.phprojekt #defaultMainContent-Gantt .dijitSliderIncrementIconV {
+    display: none;
 }
 
-.dj_ie6 .phprojekt #ganttChart .dijitSliderDecrementIconH,
-.dj_ie6 .phprojekt #ganttChart .dijitSliderDecrementIconV,
-.dj_ie6 .phprojekt #ganttChart .dijitSliderIncrementIconH,
-.dj_ie6 .phprojekt #ganttChart .dijitSliderIncrementIconV {
-    background-image: url("images/spriteArrows.gif");
-}
-
-.phprojekt #ganttChart .dijitSliderDecrementIconH {
-    background-position: -7px 0px;
-}
-.phprojekt #ganttChart .dijitSliderIncrementIconH {
-    background-position: -14px 0px;
-}
-.phprojekt #ganttChart .dijitSliderDecrementIconV {
-    background-position: 0px 0px;
-}
-.phprojekt #ganttChart .dijitSliderIncrementIconV {
-    background-position: -21px 0px;
-}
-
-.phprojekt #ganttChart .dijitSliderButtonInner {
+.phprojekt #defaultMainContent-Gantt .dijitSliderButtonInner {
     visibility: hidden;
 }
 
-.phprojekt #ganttChart .dijitSliderDisabled {
+.phprojekt #defaultMainContent-Gantt .dijitSliderDisabled {
     opacity: 0.6 !important;
 }
 
-.dj_ie6 .phprojekt #ganttChart .dijitSliderDisabled,
-.dj_ie6 .phprojekt #ganttChart .dijitSliderDisabled .dijitRuleContainer,
-.dj_ie6 .phprojekt #ganttChart .dijitSliderDisabled .dijitSliderRemainingBar,
-.dj_ie6 .phprojekt #ganttChart .dijitSliderDisabled .dijitSliderProgressBar {
+.dj_ie6 .phprojekt #defaultMainContent-Gantt .dijitSliderDisabled,
+.dj_ie6 .phprojekt #defaultMainContent-Gantt .dijitSliderDisabled .dijitRuleContainer,
+.dj_ie6 .phprojekt #defaultMainContent-Gantt .dijitSliderDisabled .dijitSliderRemainingBar,
+.dj_ie6 .phprojekt #defaultMainContent-Gantt .dijitSliderDisabled .dijitSliderProgressBar {
     filter: gray() alpha(opacity=40);
 }
 
-.phprojekt #ganttChart .dijitSliderDisabled * {
+.phprojekt #defaultMainContent-Gantt .dijitSliderDisabled * {
     cursor: not-allowed !important;
 }
 
-.phprojekt #ganttChart .dijitSliderProgressBar {
+.phprojekt #defaultMainContent-Gantt .dijitSliderProgressBar {
     height: 9px;
     overflow: visible;
     margin-top: -5px;
 }
 
-.phprojekt #ganttChart .dijitSliderImageHandleH {
+.phprojekt #defaultMainContent-Gantt .dijitSliderImageHandleH {
     background: #0000ff !important;
     width: 5px;
     height: 12px;
@@ -221,41 +195,41 @@
     cursor: e-resize;
 }
 
-.phprojekt #ganttChart .dijitSliderImageHandle {
+.phprojekt #defaultMainContent-Gantt .dijitSliderImageHandle {
     border: none;
 }
 
-.phprojekt #ganttChart .dijitSliderImageHandleH {
+.phprojekt #defaultMainContent-Gantt .dijitSliderImageHandleH {
     left: 0 !important;
     top: 0 !important;
 }
 
-.phprojekt #ganttChart .dojoxRangeSlider .dijitSliderLeftBumperH,
-.phprojekt #ganttChart .dojoxRangeSlider .dijitSliderBottomBumperV {
+.phprojekt #defaultMainContent-Gantt .dojoxRangeSlider .dijitSliderLeftBumperH,
+.phprojekt #defaultMainContent-Gantt .dojoxRangeSlider .dijitSliderBottomBumperV {
     display: none !important;
 }
 
-.phprojekt #ganttChart .dojoxRangeSliderBarContainer {
+.phprojekt #defaultMainContent-Gantt .dojoxRangeSliderBarContainer {
     position: relative;
     height: 22px;
     margin-top: 2px;
 }
 
-.phprojekt #ganttChart .slider .dojoxRangeSlider td {
+.phprojekt #defaultMainContent-Gantt .slider .dojoxRangeSlider td {
     vertical-align: middle;
 }
 
-.phprojekt #ganttChart .dojoxRangeSlider .dijitSliderProgressBarV,
-.phprojekt #ganttChart .dijitSliderRemainingBar,
-.phprojekt #ganttChart dijitSliderBumper {
+.phprojekt #defaultMainContent-Gantt .dojoxRangeSlider .dijitSliderProgressBarV,
+.phprojekt #defaultMainContent-Gantt .dijitSliderRemainingBar,
+.phprojekt #defaultMainContent-Gantt dijitSliderBumper {
     display: none !important;
 }
 
-.phprojekt #ganttChart .dijitSliderRightBumper {
+.phprojekt #defaultMainContent-Gantt .dijitSliderRightBumper {
     visibility: hidden;
 }
 
-.phprojekt #ganttChart .dojoxRangeSlider .dijitSliderProgressBar {
+.phprojekt #defaultMainContent-Gantt .dojoxRangeSlider .dijitSliderProgressBar {
     overflow: hidden;
     cursor: pointer;
     height: 10px;
@@ -264,6 +238,6 @@
     margin: 1px 0px;
 }
 
-.phprojekt #ganttChart .dojoxRangeSlider .dijitSliderProgressBarV {
+.phprojekt #defaultMainContent-Gantt .dojoxRangeSlider .dijitSliderProgressBarV {
     display: none !important;
 }

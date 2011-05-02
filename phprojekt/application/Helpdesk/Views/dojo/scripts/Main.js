@@ -16,17 +16,20 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Helpdesk.Main");
 
 dojo.declare("phpr.Helpdesk.Main", phpr.Default.Main, {
     constructor:function() {
-        this.module = "Helpdesk";
-        this.loadFunctions(this.module);
+        // Summary:
+        //    Create a new instance of the module.
+        this._module = 'Helpdesk';
 
-        this.gridWidget = phpr.Helpdesk.Grid;
-        this.formWidget = phpr.Helpdesk.Form;
+        this._loadFunctions();
+
+        this._gridWidget = phpr.Helpdesk.Grid;
+        this._formWidget = phpr.Helpdesk.Form;
     }
 });

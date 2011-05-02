@@ -74,13 +74,12 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
     /**
      * Save the roles-user relation for one projectId.
      *
-     * @param array   $roles     Array with the roles ID.
-     * @param array   users      Array with the users ID.
-     * @param integer $projectId The project ID.
+     * @param array   $userRoleRelation Array with the userId as key and the roleId as value.
+     * @param integer $projectId        The project ID.
      *
      * @return void
      */
-    public function saveRelation($roles, $users, $projectId)
+    public function saveRelation($userRoleRelation, $projectId)
     {
         $where = sprintf('project_id = %d', (int) $projectId);
         foreach ($this->fetchAll($where) as $relation) {
@@ -92,9 +91,9 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
         $result       = $activeRecord->getAllowedUsers();
         foreach ($result as $user) {
             $userId = $user['id'];
-            if (in_array($userId, $users)) {
-                $clone = clone $this;
-                $clone->roleId    = $roles[$userId];
+            if (in_array($userId, array_keys($userRoleRelation))) {
+                $clone            = clone $this;
+                $clone->roleId    = $userRoleRelation[$userId];
                 $clone->userId    = $userId;
                 $clone->projectId = $projectId;
                 $clone->save();

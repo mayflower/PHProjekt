@@ -16,13 +16,15 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Module.Grid");
 
 dojo.declare("phpr.Module.Grid", phpr.Core.Grid, {
-    canEdit:function(inRowIndex) {
+    _canEdit:function(inRowIndex) {
+        // Summary:
+        //    Check the user access on the item.
         return false;
     }
 });

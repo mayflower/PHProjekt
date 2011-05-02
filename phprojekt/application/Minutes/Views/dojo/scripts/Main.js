@@ -16,17 +16,20 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Minutes.Main");
 
 dojo.declare("phpr.Minutes.Main", phpr.Default.Main, {
     constructor:function() {
-        this.module = "Minutes";
-        this.loadFunctions(this.module);
+        // Summary:
+        //    Create a new instance of the module.
+        this._module = 'Minutes';
 
-        this.gridWidget = phpr.Minutes.Grid;
-        this.formWidget = phpr.Minutes.Form;
+        this._loadFunctions();
+
+        this._gridWidget = phpr.Minutes.Grid;
+        this._formWidget = phpr.Minutes.Form;
     }
 });

@@ -16,32 +16,35 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Module.Main");
 
 dojo.declare("phpr.Module.Main", phpr.Core.Main, {
     constructor:function() {
-        this.module = "Module";
-        this.loadFunctions(this.module);
+        // Summary:
+        //    Create a new instance of the module.
+        this._module = 'Module';
 
-        this.gridWidget = phpr.Module.Grid;
-        this.formWidget = phpr.Module.Form;
+        this._loadFunctions();
+        dojo.subscribe('Module.submitForm', this, 'submitForm');
+        dojo.subscribe('Module.setGlobalModulesNavigation', this, 'setGlobalModulesNavigation');
 
-        dojo.subscribe("Module.openDialog", this, "openDialog");
-        dojo.subscribe("Module.submitForm", this, "submitForm");
-    },
-
-    customSetSubmoduleNavigation:function() {
-        this.setNewEntry();
-    },
-
-    openDialog:function() {
-        this.form.openDialog();
+        this._gridWidget = phpr.Module.Grid;
+        this._formWidget = phpr.Module.Form;
     },
 
     submitForm:function() {
-        this.form.submitForm();
+        this._form.submitForm();
+    },
+
+    /************* Private functions *************/
+
+    _customSetNavigationButtons:function() {
+        // Summary:
+        //     Called after the submodules are created.
+        //     Is used for extend the navigation routine.
+        this._setNewEntry();
     }
 });

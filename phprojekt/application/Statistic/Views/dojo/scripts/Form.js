@@ -16,10 +16,10 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Statistic.Form");
 
-dojo.declare("phpr.Statistic.Form", phpr.Default.Form, {
+dojo.declare("phpr.Statistic.Form", null, {
 });

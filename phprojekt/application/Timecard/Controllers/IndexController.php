@@ -146,7 +146,7 @@ class Timecard_IndexController extends IndexController
                         $data['display'] = $node->getDepthDisplay('title');
                         $data['name']    = $node->title;
 
-                        $datas[] = $data;
+                        $datas[$projectId] = $data;
                     }
                 }
             }

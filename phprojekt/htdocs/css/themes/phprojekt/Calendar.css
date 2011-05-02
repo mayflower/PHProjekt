@@ -155,7 +155,7 @@
     font-weight: normal;
 }
 
-.phprojekt #calendarSchedule .hours {
+.phprojekt .calendarSchedule .hours {
     border: 1px solid;
     padding: 0;
     vertical-align: middle;
@@ -165,7 +165,7 @@
     border-color: black;
 }
 
-.phprojekt #calendarSchedule .weekDayHeaders {
+.phprojekt .calendarSchedule .weekDayHeaders {
     border: 1px solid black;
     padding: 0;
     vertical-align: middle;
@@ -174,13 +174,13 @@
     font-size: 10px;
 }
 
-.phprojekt #eventsArea .eventsDivSecond {
+.phprojekt .eventsArea .eventsDivSecond {
     border: solid #263349;
     background-color: linen;
     border-bottom-style: double;
 }
 
-.phprojekt #calendarSchedule .monthEvents {
+.phprojekt .calendarSchedule .monthEvents {
     border: 1px solid;
     height:80px;
     vertical-align:top;
@@ -188,7 +188,7 @@
     border-color: black;
 }
 
-.phprojekt #calendarSchedule .fixedEvents {
+.phprojekt .calendarSchedule .fixedEvents {
     border: 1px solid;
     padding: 4;
     vertical-align: middle;
@@ -196,69 +196,58 @@
     border-color: black;
 }
 
-.phprojekt #calendarSchedule .fixedEmptyCellSingle {
+.phprojekt .calendarSchedule .fixedEmptyCellSingle {
     border-left: 1px solid black;
     border-right: 1px solid black;
 }
 
-.phprojekt #calendarSchedule .fixedEmptyCellLeft {
+.phprojekt .calendarSchedule .fixedEmptyCellLeft {
     border-left: 1px solid black;
 }
 
-.phprojekt #calendarSchedule .fixedEmptyCellRight {
+.phprojekt .calendarSchedule .fixedEmptyCellRight {
     border-right: 1px solid black;
 }
 
-.phprojekt #calendarSchedule .fixedEmptyCellBottom {
+.phprojekt .calendarSchedule .fixedEmptyCellBottom {
     border-bottom: 1px solid black;
 }
 
-.phprojekt #calendarSchedule .horizontalLine {
+.phprojekt .calendarSchedule .horizontalLine {
     margin:3px;
     border-bottom:1px dashed #203040;
 }
 
-.phprojekt #calendarSchedule .emptyCellEven {
+.phprojekt .calendarSchedule .emptyCellEven {
     border-left: 1px solid black;
     border-right: 1px solid black;
     background-color: white;
 }
 
-.phprojekt #calendarSchedule .emptyCellOdd {
+.phprojekt .calendarSchedule .emptyCellOdd {
     border-left: 1px solid black;
     border-right: 1px solid black;
     background-color: #e9f3ff
 }
 
-.phprojekt #calendarSchedule  a:link,
-.phprojekt #calendarSchedule  a:visited,
-.phprojekt #calendarMain a:link,
-.phprojekt #calendarMain a:visited {
+.phprojekt .calendarSchedule  a:link,
+.phprojekt .calendarSchedule  a:visited,
+.phprojekt #defaultMainContent-Calendar a:link,
+.phprojekt #defaultMainContent-Calendar a:visited {
     text-decoration: none;
 }
 
-.phprojekt #calendarSchedule  a:hover,
-.phprojekt #calendarSchedule  a:active,
-.phprojekt #calendarMain a:hover,
-.phprojekt #calendarMain a:active {
+.phprojekt .calendarSchedule  a:hover,
+.phprojekt .calendarSchedule  a:active,
+.phprojekt #defaultMainContent-Calendar a:hover,
+.phprojekt #defaultMainContent-Calendar a:active {
     text-decoration: underline;
 }
 
-.phprojekt #calendarSchedule table {
+.phprojekt .calendarSchedule table {
     border-collapse: collapse;
 }
 
-.phprojekt #calendarSchedule td {
+.phprojekt .calendarSchedule td {
     padding: 4px 0px 4px 5px;
-}
-
-.phprojekt #calendarGroupSelection #instructions {
-    text-align: center;
-    font-weight: bold;
-}
-
-.phprojekt #calendarGroupSelection #usersSelectorError {
-    text-align: center;
-    font-weight: bold;
-    color: red;
 }

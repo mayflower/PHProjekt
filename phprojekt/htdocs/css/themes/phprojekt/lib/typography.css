@@ -208,8 +208,12 @@ tt {
 
 .phprojekt .form th,
 .phprojekt .form td,
-.phprojekt #statisticsTable td {
+.phprojekt .statisticsTable td {
     padding: 4px 0px 4px 5px;
+}
+
+.phprojekt .statisticsTable td {
+    border: 3px solid #efefef;
 }
 
 .phprojekt .form tfoot {

@@ -16,21 +16,39 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Administration.Main");
 
 dojo.declare("phpr.Administration.Main", phpr.Core.Main, {
     constructor:function() {
-        this.module = "Administration";
-        this.loadFunctions(this.module);
+        // Summary:
+        //    Create a new instance of the module.
+        this._module = 'Administration';
 
-        this.gridWidget = phpr.Administration.Grid;
-        this.formWidget = phpr.Administration.Form;
+        this._loadFunctions();
+
+        this._gridWidget = phpr.Administration.Grid;
+        this._formWidget = phpr.Administration.Form;
     },
 
-    getSummary:function() {
+    updateCacheData:function() {
+        // Summary:
+        //    Forces every widget of the page to update its data, by deleting its cache.
+        phpr.DataStore.deleteAllCache();
+        phpr.Tree.updateData();
+        phpr.treeLastProjectSelected = null;
+        if (this._forms[phpr.module + '-' + phpr.submodule]) {
+            this._forms[phpr.module + '-' + phpr.submodule].updateData();
+        }
+    },
+
+    /************* Private functions *************/
+
+    _getSummary:function() {
+        // Summary:
+        //    Returns a text info of the Parent module.
         return '<b>' + phpr.nls.get('Administration') + '</b>'
             + '<br /><br />'
             + phpr.nls.get('Here can be configured general settings of the site that affects all the users.')
@@ -38,18 +56,11 @@ dojo.declare("phpr.Administration.Main", phpr.Core.Main, {
             + phpr.nls.get('Please choose one of the tabs of above.');
     },
 
-    defineModules:function(module) {
-        phpr.module       = this.module;
+    _defineModules:function(module) {
+        // Summary:
+        //    Set the global vars for this module.
+        phpr.module       = this._module;
         phpr.submodule    = module;
         phpr.parentmodule = 'Administration';
-    },
-
-    updateCacheData:function() {
-        phpr.DataStore.deleteAllCache();
-        phpr.Tree.updateData();
-        phpr.treeLastProjectSelected = null;
-        if (this.form) {
-            this.form.updateData();
-        }
     }
 });
