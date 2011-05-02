@@ -662,7 +662,11 @@ dojo.declare("phpr.Default.Grid", null, {
         layout.addModuleFields(meta);
 
         if (this._extraColumns.length > 0) {
-            this._firstExtraCol = layout.gridLayout.length;
+            var count = 0;
+            for (var i in layout.gridLayout) {
+                count++;
+            }
+            this._firstExtraCol = count;
         }
 
         // Extra Columns for current module
