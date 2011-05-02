@@ -180,6 +180,14 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
         return false;
     },
 
+    _getModuleForGridProxy:function() {
+        // Summary:
+        //    Return the module to use in the gridProxy call.
+        // Description:
+        //    Since in sub-modules the module name is different, this function can be overwrited for that.
+        return this._module;
+    },
+
     _useIdInGrid:function() {
         // Summary:
         //    Draw the ID on the grid.

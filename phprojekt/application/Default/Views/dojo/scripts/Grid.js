@@ -407,12 +407,7 @@ dojo.declare("phpr.Default.Grid", null, {
                 var type   = this._useCheckbox() ? 'phpr.Grid._View' : 'dojox.grid._View';
 
                 // Discover the module
-                if (phpr.module == this._module || 'Administration' == phpr.parentmodule) {
-                    var module = phpr.module;
-                } else {
-                    // Sub-Module
-                    var module = this._module;
-                }
+                var module = this._getModuleForGridProxy();
                 this._grid = new dojox.grid.DataGrid({
                     store:     store,
                     structure: [{type:        type,
@@ -698,6 +693,14 @@ dojo.declare("phpr.Default.Grid", null, {
         // Summary:
         //    Whether to show or not the checkbox in the grid list.
         return true;
+    },
+
+    _getModuleForGridProxy:function() {
+        // Summary:
+        //    Return the module to use in the gridProxy call.
+        // Description:
+        //    Since in sub-modules the module name is different, this function can be overwrited for that.
+        return phpr.module;
     },
 
     _useIdInGrid:function() {
