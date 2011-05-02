@@ -84,6 +84,13 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         //    Add extra tabs.
     },
 
+    _setHistoryUrl:function() {
+        // Summary:
+        //    Set the url for get the history data.
+        this._historyUrl = phpr.webpath + 'index.php/Core/history/jsonList/nodeId/1/moduleName/' + phpr.module
+            + '/itemId/' + this._id
+    },
+
     _useCache:function() {
         // Summary:
         //    Return true or false if the cache is used.

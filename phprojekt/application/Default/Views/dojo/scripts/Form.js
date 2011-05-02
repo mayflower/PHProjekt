@@ -824,8 +824,7 @@ dojo.declare("phpr.Default.Form", null, {
                 dojo.destroy(ele);
             });
 
-            this._historyUrl = phpr.webpath + 'index.php/Core/history/jsonList/nodeId/1/moduleName/' + phpr.module
-                + '/itemId/' + this._id
+            this._setHistoryUrl();
             phpr.DataStore.addStore({'url': this._historyUrl, 'noCache': true});
             phpr.DataStore.requestData({'url': this._historyUrl, 'processData': dojo.hitch(this, function() {
                 // Headers
@@ -861,6 +860,13 @@ dojo.declare("phpr.Default.Form", null, {
                 }
             })});
         }
+    },
+
+    _setHistoryUrl:function() {
+        // Summary:
+        //    Set the url for get the history data.
+        this._historyUrl = phpr.webpath + 'index.php/Core/history/jsonList/nodeId/1/moduleName/' + this._module
+            + '/itemId/' + this._id
     },
 
     _getHistoryData:function() {
