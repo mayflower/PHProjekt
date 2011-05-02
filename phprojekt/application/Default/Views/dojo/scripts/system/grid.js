@@ -654,7 +654,8 @@ dojo.declare("phpr.Grid.Layout", null, {
 
         var field       = this._initData(meta);
         field.width     = '20px';
-        field.styles    = 'vertical-align: middle';
+        field.styles    = 'vertical-align: middle;';
+        field.formatter = phpr.Grid.formatIcon;
         field.filterKey = null;
 
         this.gridLayout[key] = field;
