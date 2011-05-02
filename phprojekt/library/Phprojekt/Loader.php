@@ -265,13 +265,18 @@ class Phprojekt_Loader extends Zend_Loader
         $module     = Phprojekt_Module::getModuleName($id);
         switch ($dependence) {
             case Phprojekt_Module::DEPENDENCE_APPLICATION:
-                $model = Phprojekt_Loader::getModel($module, $module);
+                $model = self::getModel($module, $module);
                 break;
             case Phprojekt_Module::DEPENDENCE_CORE:
-                $model = Phprojekt_Loader::getLibraryClass('PHProjekt_' . $module. '_' . $module);
+                $model = self::getLibraryClass('Phprojekt_' . $module. '_' . $module);
                 break;
             default: // SubModule
-                $model = Phprojekt_Loader::getModel($dependence . '_SubModules_' . $module, $module);
+                $subDependence = Phprojekt_Module::getDependence(Phprojekt_Module::getId($dependence));
+                if ($subDependence == Phprojekt_Module::DEPENDENCE_CORE) {
+                    $model = self::getModel('Core_SubModules_' . $dependence . '_' . $module, $module);
+                } else {
+                    $model = self::getModel($dependence . '_SubModules_' . $module, $module);
+                }
                 break;
         }
 
