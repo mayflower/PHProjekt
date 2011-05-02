@@ -15,8 +15,9 @@
     </script>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
     <script type="text/javascript">
-        var par   = window.parent.document;
-        var input = par.getElementById("<?php echo $this->field; ?>");
+        var par       = window.parent.document;
+        var fieldName = window.frameElement.id.replace('filesIframe_', '');
+        var input     = par.getElementById(fieldName);
         if (input) {
             input.value = "<?php echo $this->value; ?>";
         }
@@ -89,7 +90,7 @@
     <!-- Set the parent Iframe size -->
     <script type="text/javascript">
         // Just resize the iframe if we are inside a form (not in the module designer)
-        var id = 'filesIframe_' + '<?php echo $this->field; ?>' + '-' + window.parent.module;
+        var id = 'filesIframe_' + fieldName;
         if (window.parent.document.getElementById(id)) {
             window.parent.document.getElementById(id).height = '<?php echo $iframeSize; ?>px';
         }
