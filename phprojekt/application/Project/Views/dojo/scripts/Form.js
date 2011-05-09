@@ -16,189 +16,172 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Project.Form");
 
 dojo.declare("phpr.Project.Form", phpr.Default.Form, {
-    initData:function() {
-        // Get roles
-        this.roleStore = new phpr.Store.Role(phpr.currentProjectId, this.id);
-        this._initData.push({'store': this.roleStore});
+    // Event Tab
+    _eventForRoleTab:   null,
+    _eventForModuleTab: null,
 
-        // Get modules
-        this.moduleStore = new phpr.Store.Module(phpr.currentProjectId, this.id);
-        this._initData.push({'store': this.moduleStore});
+    // Modules
+    _hiddenModuleTab: true,
+    _moduleRender:    null,
+    _moduleStore:     null,
+
+    // Roles
+    _hiddenRoleTab: true,
+    _roleRender:    null,
+    _roleStore:     null,
+
+    init:function(id, params) {
+        // Summary:
+        //    Init the form for a new render.
+        this._moduleStore = null;
+        this._roleStore   = null;
 
         this.inherited(arguments);
     },
 
-    addModuleTab:function(data) {
+    updateData:function() {
         // Summary:
-        //    Add Tab for allow/disallow modules on the project
-        // Description:
-        //    Add Tab for allow/disallow modules on the project
-        var modulesData = this.render(["phpr.Project.template", "moduleTab.html"], null, {
-            moduleNameText:   phpr.nls.get('Module'),
-            moduleActiveText: phpr.nls.get('Active'),
-            modules:          this.moduleStore.getList(),
-            disabled:        (!this._accessPermissions) ? 'disabled="disabled"' : ''
-        });
+        //    Delete the cache for this form.
+        this.inherited(arguments);
 
-        this.addTab(modulesData, 'tabModules', 'Module', 'moduleFormTab');
+        var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this._id;
+        phpr.DataStore.deleteData({url: subModuleUrl});
+
+        this._moduleStore.update();
+        this._roleStore.update();
+
+        // Delete cache for Timecard on places where Projects are shown
+        dojo.publish('Timecard.formProxy', ['forceUpdate']);
+        phpr.DataStore.deleteData({url: phpr.webpath + 'index.php/Timecard/index/jsonGetFavoritesProjects'});
+        phpr.DataStore.deleteDataPartialString({url: phpr.webpath + 'index.php/Timecard/index/jsonDetail/'});
     },
 
-    addRoleTab:function(data) {
-        // Summary:
-        //    Add Tab for user-role relation into the project
-        // Description:
-        //    Add Tab for user-role relation into the project
-        var currentUser  = data[0]["rights"]["currentUser"]["userId"] || 0;
-        var users        = new Array();
-        var userList     = this.userStore.getList();
-        var relationList = this.roleStore.getRelationList();
+    /************* Private functions *************/
 
-        // Make an array with the users expect the current one
-        if (userList) {
-            for (var i in userList) {
-                if (userList[i].id != currentUser) {
-                    users.push({'id': userList[i].id, 'display': userList[i].display});
+    _constructor:function(module, subModules) {
+        // Summary:
+        //    Construct the form only one time.
+        this.inherited(arguments);
+
+        // Project vars
+        this._moduleRender      = new phpr.Project.Modules(this._module);
+        this._roleRender        = new phpr.Project.Roles(this._module);
+        this._eventForRoleTab   = null;
+        this._eventForModuleTab = null;
+    },
+
+    _initData:function() {
+        // Summary:
+        //    Init all the data before draw the form.
+        // Get roles
+        this._roleStore = new phpr.Store.Role(phpr.currentProjectId, this._id);
+        this._initDataArray.push({'store': this._roleStore});
+
+        // Get modules
+        this._moduleStore = new phpr.Store.Module(phpr.currentProjectId, this._id);
+        this._initDataArray.push({'store': this._moduleStore});
+
+        this.inherited(arguments);
+    },
+
+    _addModuleTabs:function(data) {
+        // Summary:
+        //    Add extra tabs.
+        this._addAccessTab(data);
+        this._addModuleTab(data);
+        this._addRoleTab(data);
+        this._addNotificationTab(data);
+        this._addHistoryTab();
+    },
+
+    _addModuleTab:function(data) {
+        // Summary:
+        //    Module tab.
+        // Description:
+        //    Display all the modules and a checkbox
+        //    for add or remove the module on this project.
+        this._hiddenModuleTab = true;
+
+        var tabId  = 'tabModules-' + this._module;
+        var formId = 'ModulesFormTab-' + this._module;
+        this._addTab(null, tabId, 'Module', formId);
+
+        // Create table only when the tab is required
+        if (!this._eventForModuleTab) {
+            this._eventForModuleTab = dojo.connect(dijit.byId(tabId), 'onShow', dojo.hitch(this, function() {
+                if (this._hiddenModuleTab) {
+                    // Do not refresh the data until the module is reloaded
+                    this._hiddenModuleTab = false;
+
+                    var data                  = this._getModuleData();
+                    data['accessPermissions'] = this._accessPermissions;
+
+                    this._moduleRender.createTable(data);
+
+                    if (dijit.byId(formId).getChildren().length == 0) {
+                        dijit.byId(formId).domNode.appendChild(this._moduleRender.getTable());
+                    }
                 }
-            }
-        }
-
-        var rows = '';
-        for (i in relationList) {
-            var userField = this.render(["phpr.Project.template", "roleInputUser.html"], null, {
-                userId:      relationList[i].userId,
-                disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
-                userDisplay: relationList[i].userDisplay,
-                currentUser: (relationList[i].userId == currentUser)
-            });
-
-            var roleField = this.render(["phpr.Project.template", "roleInputRole.html"], null, {
-                userId:      relationList[i].userId,
-                roleId:      relationList[i].roleId,
-                disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
-                currentUser: (relationList[i].userId == currentUser),
-                roleName:    relationList[i].roleName
-            });
-
-            var button = this.render(["phpr.Project.template", "roleButton.html"], null, {
-                userId:    relationList[i].userId,
-                useDelete: (relationList[i].userId != currentUser && this._accessPermissions)
-            });
-            rows += this.render(["phpr.Project.template", "roleRow.html"], null, {
-                userId:    relationList[i].userId,
-                userField: userField,
-                roleField: roleField,
-                button:    button
-            });
-        }
-        var rolesData = this.render(["phpr.Project.template", "roleTab.html"], null, {
-            accessUserText:   phpr.nls.get('User'),
-            accessRoleText:   phpr.nls.get('Role'),
-            accessActionText: phpr.nls.get('Action'),
-            disabled:         (users.length == 0 || !this._accessPermissions) ? 'disabled="disabled"' : '',
-            users:            users,
-            roles:            this.roleStore.getList(),
-            rows:             rows
-        });
-
-        this.addTab(rolesData, 'tabRoles', 'Role', 'roleFormTab');
-
-        // Add "add" button for role-user relation
-        if (this._accessPermissions && users.length > 0) {
-            this.addTinyButton('add', 'relationAddButton', 'newRoleUser');
-        }
-
-        // Add "delete" buttons for role-user relation
-        for (i in relationList) {
-            if (relationList[i].userId != currentUser && this._accessPermissions) {
-                var userId = relationList[i].userId;
-                this.addTinyButton('delete', 'relationDeleteButton' + userId, 'deleteUserRoleRelation', [userId]);
-            }
+            }));
         }
     },
 
-    addModuleTabs:function(data) {
-        this.addAccessTab(data);
-        this.addModuleTab(data);
-        this.addRoleTab(data);
-        this.addNotificationTab(data);
-        this.addHistoryTab();
-    },
-
-    newRoleUser:function() {
+    _getModuleData:function(data) {
         // Summary:
-        //    Add a new row of one user-role
+        //    Set the new data for show the tab.
+        return {
+            relationList: this._moduleStore.getList()
+        };
+    },
+
+    _addRoleTab:function(data) {
+        // Summary:
+        //    Role tab.
         // Description:
-        //    Add a new row of one user-role
-        //    with the values selected on the first row
-        var roleId = dijit.byId("relationRoleAdd").get('value');
-        var userId = dijit.byId("relationUserAdd").get('value');
-        if (!dojo.byId("trRelationFor" + userId) && userId > 0) {
-            phpr.destroyWidget("roleRelation[" + userId + "]");
-            phpr.destroyWidget("userRelation[" + userId + "]");
-            phpr.destroyWidget("relationDeleteButton" + userId);
+        //    Display all the user-role relation for this project.
+        //    Provide a form for add/edit/delete them.
+        var currentUser     = data[0]['rights']['currentUser']['userId'] || 0;
+        this._hiddenRoleTab = true;
 
-            var table = dojo.byId("relationTable");
-            var row   = table.insertRow(table.rows.length);
-            row.id    = "trRelationFor" + userId;
+        var tabId  = 'tabRoles-' + this._module;
+        var formId = 'RolesFormTab-' + this._module;
+        this._addTab(null, tabId, 'Roles', formId);
 
-            // User field
-            var cellIndex = 0;
-            var userField = this.render(["phpr.Project.template", "roleInputUser.html"], null, {
-                userId:      userId,
-                disabled:    '',
-                userDisplay: dijit.byId("relationUserAdd").get('displayedValue'),
-                currentUser: false
-            });
-            var cell = row.insertCell(cellIndex);
-            cell.innerHTML = userField;
-            cellIndex++;
+        // Create table only when the tab is required
+        if (!this._eventForRoleTab) {
+            this._eventForRoleTab = dojo.connect(dijit.byId(tabId), 'onShow', dojo.hitch(this, function() {
+                if (this._hiddenRoleTab) {
+                    // Do not refresh the data until the module is reloaded
+                    this._hiddenRoleTab = false;
 
-            // Role field
-            var roleField = this.render(["phpr.Project.template", "roleInputRole.html"], null, {
-                userId:      userId,
-                roleId:      roleId,
-                disabled:    '',
-                currentUser: false,
-                roleName:    dijit.byId("relationRoleAdd").get('displayedValue')
-            });
-            var cell = row.insertCell(cellIndex);
-            cell.innerHTML = roleField;
-            cellIndex++;
+                    var data                  = this._getRoleData();
+                    data['accessPermissions'] = this._accessPermissions;
+                    data['currentUser']       = currentUser;
 
-            // Delete button
-            var button = this.render(["phpr.Project.template", "roleButton.html"], null, {
-                userId:      userId,
-                useDelete:   true
-            });
-            var cell = row.insertCell(cellIndex);
-            cell.innerHTML = button;
-            cellIndex++;
+                    this._roleRender.createTable(data);
 
-            dojo.parser.parse(row);
-
-            this.addTinyButton('delete', 'relationDeleteButton' + userId, 'deleteUserRoleRelation', [userId]);
+                    if (dijit.byId(formId).getChildren().length == 0) {
+                        dijit.byId(formId).domNode.appendChild(this._roleRender.getTable());
+                    }
+                }
+            }));
         }
     },
 
-    deleteUserRoleRelation:function(userId) {
+    _getRoleData:function() {
         // Summary:
-        //    Remove the row of one user-accees
-        // Description:
-        //    Remove the row of one user-accees
-        //    and destroy all the used widgets
-        phpr.destroyWidget("roleRelation[" + userId + "]");
-        phpr.destroyWidget("userRelation[" + userId + "]");
-        phpr.destroyWidget("relationDeleteButton" + userId);
-
-        var e      = dojo.byId("trRelationFor" + userId);
-        var parent = e.parentNode;
-        parent.removeChild(e);
+        //    Set the new data for show the tab.
+        return {
+            relationList: this._roleStore.getRelationList(),
+            roleList:     this._roleStore.getList(),
+            userList:     this._userStore.getList()
+        };
     },
 
     submitForm:function() {
@@ -207,13 +190,31 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             url: phpr.webpath + 'index.php/Project/index/jsonDetail'
         });
     },
-
-    deleteForm:function() {
+    _getFieldForDelete:function() {
         // Summary:
-        //    This function is responsible for deleting a dojo element
-        // Description:
-        //    This function calls jsonDeleteAction
-        //    Also show a warning since the process can take some time
+        //    Return an array of fields for delete.
+        var fields = this.inherited(arguments);
+
+        // Module fields
+        if (this._hiddenModuleTab) {
+            // If the tab was not requested, delete any old values for modules
+            fields.push('moduleRelation*');
+        }
+
+        // Role fields
+        fields.push('relationUserAdd');
+        fields.push('relationRoleAdd');
+        if (this._hiddenRoleTab) {
+            // If the tab was not requested, delete any old values for roles
+            fields.push('userRoleRelation*');
+        }
+
+        return fields;
+    },
+
+    _deleteForm:function() {
+        // Summary:
+        //    Delete an item.
         var result     = Array();
         result.type    = 'warning';
         result.message = phpr.nls.get('The deletion of a project and its subprojects might take a while');
@@ -226,22 +227,8 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.inherited(arguments);
     },
 
-    updateData:function() {
-        this.inherited(arguments);
-
-        var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
-        phpr.DataStore.deleteData({url: subModuleUrl});
-        this.moduleStore.update();
-        this.roleStore.update();
-
-        // Delete cache for Timecard on places where Projects are shown
-        phpr.destroyWidget('timecardTooltipDialog');
-        phpr.DataStore.deleteData({url: phpr.webpath + 'index.php/Timecard/index/jsonGetFavoritesProjects'});
-        phpr.DataStore.deleteDataPartialString({url: phpr.webpath + 'index.php/Timecard/index/jsonDetail/'});
-    },
-
     postRenderForm:function() {
         this.inherited(arguments);
-        dijit.byId('cumulativeCompletePercent').set('disabled', true);
+        dijit.byId('cumulativeCompletePercent-BasicData').set('disabled', true);
     }
 });

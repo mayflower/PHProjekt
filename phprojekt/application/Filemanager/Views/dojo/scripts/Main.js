@@ -16,17 +16,20 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Filemanager.Main");
 
 dojo.declare("phpr.Filemanager.Main", phpr.Default.Main, {
     constructor:function() {
-        this.module = "Filemanager";
-        this.loadFunctions(this.module);
+        // Summary:
+        //    Create a new instance of the module.
+        this._module = 'Filemanager';
 
-        this.gridWidget = phpr.Filemanager.Grid;
-        this.formWidget = phpr.Filemanager.Form;
+        this._loadFunctions();
+
+        this._gridWidget = phpr.Filemanager.Grid;
+        this._formWidget = phpr.Filemanager.Form;
     }
 });

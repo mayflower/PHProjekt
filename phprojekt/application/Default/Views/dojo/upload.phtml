@@ -2,6 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta http-Equiv="Cache-Control" Content="no-cache">
+    <meta http-Equiv="Pragma" Content="no-cache">
+    <meta http-Equiv="Expires" Content="0">
     <title>PHProjekt</title>
     <link rel="shortcut icon" href="<?php echo $this->webpath; ?>img/favicon.ico" type="image/x-icon" />
     <style type="text/css">
@@ -11,16 +14,10 @@
         var djConfig = {isDebug: false, parseOnLoad: true, useCommentedJson: true};
     </script>
     <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
-    <?php
-    if ($this->compressedDojo) {
-    ?>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/mydojo.js"></script>
-    <?php
-    }
-    ?>
     <script type="text/javascript">
-        var par   = window.parent.document;
-        var input = par.getElementById("<?php echo $this->field; ?>");
+        var par       = window.parent.document;
+        var fieldName = window.frameElement.id.replace('filesIframe_', '');
+        var input     = par.getElementById(fieldName);
         if (input) {
             input.value = "<?php echo $this->value; ?>";
         }
@@ -51,7 +48,7 @@
         <div id="filesList" style="display:inline;">
             <table cellspacing="0" cellpadding="0">
         ';
-        $iframeSize += count($this->files)*20;
+        $iframeSize += count($this->files) * 20;
         foreach ($this->files as $file) {
             if (isset($file['fileName'])) {
                 echo '
@@ -59,7 +56,8 @@
                 <td style="padding: 0 0 0 5px; vertical-align: middle;">';
                 if (isset($file['downloadLink'])) {
                     echo '
-                    <a href="#" onClick="window.location.href=\''. $file['downloadLink'] . '\'; return false;" target="_blank">'
+                    <a href="#" onClick="window.location.href=\''. $file['downloadLink'] . '\';
+                    return false;" target="_blank">'
                     . $file['fileName'] . '</a>';
                 } else {
                     echo $file['fileName'];
@@ -72,9 +70,10 @@
                 if (isset($file['deleteLink'])) {
                     echo '
                 <td style="padding: 0 0 0 5px;">
-                    <button dojoType="dijit.form.Button" showLabel="false" iconClass="close" class="closeButton"
+                    <a href="#" style="text-decoration: none;"
                     onClick="window.location.href=\''. $file['deleteLink'] . '\';">
-                    </button>
+                    <span class="closeButton close">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span>
+                    </a>
                 </td>';
                 }
                 echo '
@@ -91,8 +90,9 @@
     <!-- Set the parent Iframe size -->
     <script type="text/javascript">
         // Just resize the iframe if we are inside a form (not in the module designer)
-        if (window.parent.document.getElementById('filesIframe_' + '<?php echo $this->field; ?>')) {
-            window.parent.document.getElementById('filesIframe_' + '<?php echo $this->field; ?>').height = <?php echo $iframeSize; ?>;
+        var id = 'filesIframe_' + fieldName;
+        if (window.parent.document.getElementById(id)) {
+            window.parent.document.getElementById(id).height = '<?php echo $iframeSize; ?>px';
         }
     </script>
 </body>

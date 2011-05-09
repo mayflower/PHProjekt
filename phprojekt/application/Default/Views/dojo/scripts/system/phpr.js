@@ -16,7 +16,7 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr");
@@ -399,50 +399,54 @@ phpr.isValidInputKey = function(key) {
 
 dojo.declare("phpr.DataStore", null, {
     // Summary:
-    //    Get and return data from the server
+    //    Get and return data from the server.
     // Description:
     //    The data is request to the server
     //    and then is cached for the future used.
-    _internalCache: new Array(),
+    _internalCache: [],
+    _active:        false,
+    _store:         null,
 
-    _active: false,
+    constructor:function() {
+        // Summary:
+        //    Init a new ReadStore only one time.
+        this._store = new phpr.ReadStore();
+    },
 
     addStore:function(params) {
         // Summary:
-        //    Set a new store for save the data
+        //    Set a new dataset for the url.
         // Description:
-        //    Set a new store for save the data
+        //    If the dataset don't exists, set a new one.
+        //    If params.noCache is true, delete the data.
         if (typeof this._internalCache[params.url] == 'undefined') {
-            store = new phpr.ReadStore({url: params.url});
             this._internalCache[params.url] = {
-                data:  new Array(),
-                store: store
+                cached: false,
+                data:   new Array()
             };
         } else if (params.noCache) {
-            store = new phpr.ReadStore({url: params.url});
-            this._internalCache[params.url] = {
-                data:  new Array(),
-                store: store
-            };
+            this._internalCache[params.url]['cached'] = false;
+            this._internalCache[params.url]['data']   = [];
         }
     },
 
     requestData:function(params) {
         // Summary:
-        //    Request the data
+        //    Request the data.
         // Description:
         //    If the data is not cached, request to the server.
         //    Then return to the processData function
         if (typeof params.processData == "undefined") {
             params.processData = null;
         }
-        if (this._internalCache[params.url]['data'].length == 0) {
+        if (!this._internalCache[params.url]['cached']) {
             phpr.loading.show();
             if (this._active == true) {
                 setTimeout(dojo.hitch(this, "requestData", params), 500);
             } else {
-                this._active = true;
-                this._internalCache[params.url]['store'].fetch({
+                this._active    = true;
+                this._store.url = params.url;
+                this._store.fetch({
                     serverQuery: params.serverQuery || {},
                     onComplete:  dojo.hitch(this, "saveData", {
                         url:         params.url,
@@ -461,12 +465,10 @@ dojo.declare("phpr.DataStore", null, {
 
     errorHandler:function(scope, error) {
         // Summary:
-        //    Display a PHP or JS error
+        //    Display a PHP or JS error.
         // Description:
-        //    If there is some data before the json
-        //    the error is cached and showed
-        //    Also is cached the JS error
-
+        //    If there is some data before the json, the error is cached and showed
+        //    Also is cached the JS error.
         // Get the message error
         if ((error.number && (error.number & 0xFFFF == 1002 || error.number & 0xFFFF == 1006)) // IE
             || (error.name && error.name == "SyntaxError")) { // FF
@@ -488,12 +490,20 @@ dojo.declare("phpr.DataStore", null, {
 
     saveData:function(params, data) {
         // Summary:
-        //    Store the data in the cache
-        // Description:
-        //    Store the data in the cache
-        //    Then return to the processData function
+        //    Store the data in the cache and call "processData" function.
         this._active = false;
-        this._internalCache[params.url]['data'] = data;
+        if (this._store.hasAttribute(data[0], "data")) {
+            this._internalCache[params.url]['data']['data'] = this._store.getValue(data[0], "data") || Array();
+        }
+        if (this._store.hasAttribute(data[1], "metadata")) {
+            this._internalCache[params.url]['data']['metadata'] = this._store.getValue(data[1], "metadata") || Array();
+        }
+        this._internalCache[params.url]['cached'] = true;
+
+        // Remove data fetched from the server
+        this._store.deleteData();
+
+        // Finish
         phpr.loading.hide();
         if (params.processData) {
             params.processData.call();
@@ -502,76 +512,76 @@ dojo.declare("phpr.DataStore", null, {
 
     getData:function(params) {
         // Summary:
-        //    Return the "data" tag from the server
-        // Description:
-        //    Return the "data" tag from the server
-        return this.getStore(params).getValue(this._internalCache[params.url]['data'][0], "data") || Array();
+        //    Return the "data" tag from the server.
+        return this._internalCache[params.url]['data']['data'];
     },
 
     getMetaData:function(params) {
         // Summary:
-        //    Return the "metadata" tag from the server
-        // Description:
-        //    Return the "metadata" tag from the server
-        return this.getStore(params).getValue(this._internalCache[params.url]['data'][1], "metadata") || Array();
+        //    Return the "metadata" tag from the server.
+        return this._internalCache[params.url]['data']['metadata'];
     },
 
     deleteData:function(params) {
         // Summary:
-        //    Delete the cache
-        // Description:
-        //    Delete the cache
-        if (this._internalCache[params.url]) {
-           this._internalCache[params.url]['data'] = new Array();
-        }
+        //    Delete the cache data.
+        this._deleteInternalCache(params.url);
     },
 
     deleteDataPartialString:function(params) {
         // Summary:
-        //    Deletes the cache for the urls that start with the received string.
-        for (url in this._internalCache) {
+        //    Deletes the cache data for the urls that start with the received string.
+        for (var url in this._internalCache) {
             var urlLeft = url.substring(0, params.url.length);
             if (urlLeft == params.url) {
-                this._internalCache[url]['data'] = new Array();
+                this._deleteInternalCache(url);
             }
         }
     },
 
-    getStore:function(params) {
-        // Summary:
-        //    Return the current data.store
-        // Description:
-        //    Return the current data.store
-        return this._internalCache[params.url]['store'];
-    },
-
     deleteAllCache:function() {
         // Summary:
-        //    Delete all the cache
-        // Description:
-        //    Delete all the cache
+        //    Delete all the cache data.
         for (var i in this._internalCache) {
             // Special case for global modules since are not reloaded
-            if (this._internalCache[i] && i != phpr.webpath + 'index.php/Core/module/jsonGetGlobalModules') {
-                this._internalCache[i]['data'] = new Array();
+            if (i != phpr.webpath + 'index.php/Core/module/jsonGetGlobalModules') {
+                this._deleteInternalCache(i);
             }
+        }
+    },
+
+    _deleteInternalCache:function(index) {
+        // Summary:
+        //    Delete the cache data
+        if (this._internalCache[index]) {
+            this._internalCache[index]['data']['data']     = [];
+            this._internalCache[index]['data']['metadata'] = [];
+            this._internalCache[index]['cached']           = false;
         }
     }
 });
 
 dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     // Summary:
-    //    Request to the server
+    //    Request to the server.
     // Description:
-    //    Request to the server and return an array with
-    //    data and metadata values
+    //    Request to the server and return an array with data and metadata values.
     requestMethod:  "post",
     doClientPaging: false,
+
+    deleteData:function() {
+        // Summary:
+        //    Remove data fetched from the server.
+        this._itemsByIdentity = [];
+        this._items           = [];
+    },
 
     _assertIsItem:function(item) {
     },
 
     _fetchItems:function(request, fetchHandler, errorHandler) {
+        // Summary:
+        //    Add the phpr.csrfToken to the request.
         if (request.serverQuery) {
             request.serverQuery.csrfToken = phpr.csrfToken;
         } else if (request.query) {
@@ -617,26 +627,6 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
         }
 
         return ret;
-    }
-});
-
-dojo.declare("phpr.DateTextBox", [dijit.form.DateTextBox], {
-    _blankValue: '', // used by filter() when the textbox is blank
-
-    parse:function(value, constraints) {
-        // Summary:
-        //    Parses as string as a Date, according to constraints
-        // Date
-        return this.dateLocaleModule.parse(value, constraints) || (this._isEmpty(value) ? '' : undefined);
-    },
-
-    serialize:function(d, options) {
-        // Summary:
-        //     This function overwrites the dijit.form.DateTextBox display
-        // Description:
-        //     Make sure that the date is not only displayed localized, but also
-        //     the value which is returned is set to this date format
-        return dojo.date.locale.format(d, {selector:'date', datePattern:'yyyy-MM-dd'}).toLowerCase();
     }
 });
 
@@ -973,13 +963,14 @@ dojo.declare("phpr.ScrollPane", [dijit.layout._LayoutWidget, dijit._Templated], 
         // Description:
         //    Set style and make the positions array
         dojo.style(this.wrapper, 'width', this.domNode.style['width']);
+        this._positions = new Array();
 
-        var node    = this.containerNode.firstChild.firstChild.firstChild.childNodes;
+        var node    = this.containerNode.firstChild.childNodes;
         var width   = 0;
         var curleft = 0;
         var medium  = Math.floor(this.wrapper["offsetWidth"] / 2);
         var max     = this.getMaxLeft();
-        for (var i in node) {
+        for (var i = 0; i < node.length; i++) {
             var offsetWidth = node[i].offsetWidth || 0;
             // Find left
             width += offsetWidth;
@@ -1147,100 +1138,6 @@ phpr.inArray = function(needle, haystack) {
     return false;
 };
 
-dojo.declare("phpr.FilteringSelect", dijit.form.FilteringSelect, {
-    // Summary:
-    //    Extend the dojo FilteringSelect for fix some bugs.
-    // Description:
-    //    The dojo select do not allow two or more labels with the same name,
-    //    for select users that is a problem (users with the same name),
-    //    See: http://trac.dojotoolkit.org/ticket/7279
-    //    Also change the query options and highlight for work with trees in select.
-
-    // Highlight any occurrence
-    highlightMatch: "all",
-
-    // `${0}*` means "starts with", `*${0}*` means "contains", `${0}` means "is"
-    queryExpr: "*${0}*",
-
-    // Internal var for fix the bug of items with the same display
-    _lastSelectedId: null,
-
-    _doSelect:function(/*Event*/ tgt) {
-        // Summary:
-        //    Overrides ComboBox._doSelect(), the method called when an item in the menu is selected.
-        // Description:
-        //    FilteringSelect overrides this to set both the visible and
-        //    hidden value from the information stored in the menu.
-        //    Also mark the last selected item.
-        this._setValueFromItem(tgt.item, true);
-        this._lastSelectedId = this.get('value');
-    },
-
-    _setDisplayedValueAttr:function(/*String*/ label, /*Boolean?*/ priorityChange) {
-        // Summary:
-        //    Overrides dijit.form.FilteringSelect._setDisplayedValueAttr().
-        // Description:
-        //    Change the query for search the id if an item is select,
-        //    or by the name is not (normal case)
-
-        // When this is called during initialization it'll ping the datastore
-        // for reverse lookup, and when that completes (after an XHR request)
-        // will call setValueAttr()... but that shouldn't trigger an onChange()
-        // event, even when it happens after creation has finished
-        if(!this._created){
-            priorityChange = false;
-        }
-
-        if(this.store) {
-            var query = dojo.clone(this.query); // #6196: populate query with user-specifics
-            // Escape meta characters of dojo.data.util.filter.patternToRegExp().
-            if (this._lastSelectedId != null) {
-                this._lastQuery = query['value'] = this._lastSelectedId;
-            } else {
-                this._lastQuery = query[this.searchAttr] = label.replace(/([\\\*\?])/g, "\\$1");
-            }
-            this._lastSelectedId = null;
-
-            // If the label is not valid, the callback will never set it,
-            // so the last valid value will get the warning textbox set the
-            // textbox value now so that the impending warning will make
-            // sense to the user
-            this.textbox.value = label;
-            this._lastDisplayedValue = label;
-            var _this = this;
-            var fetch = {
-                query:        query,
-                queryOptions: {
-                    ignoreCase: this.ignoreCase,
-                    deep:       true
-                },
-                onComplete: function(result, dataObject) {
-                    dojo.hitch(_this, "_callbackSetLabel")(result, dataObject, priorityChange);
-                },
-                onError: function(errText) {
-                    dojo.hitch(_this, "_setValue")("", label, false);
-                }
-            };
-            dojo.mixin(fetch, this.fetchProperties);
-            this.store.fetch(fetch);
-        }
-    },
-
-    doHighlight: function(/*String*/label, /*String*/find) {
-        // Summary:
-        //    Highlights the string entered by the user in the menu.
-        //    Change the function for Highlights all the occurences
-
-        // Add greedy when this.highlightMatch=="all"
-        var modifiers = "i"+(this.highlightMatch=="all"?"g":"");
-        var escapedLabel = this._escapeHtml(label);
-        find = dojo.regexp.escapeString(find); // escape regexp special chars
-        var ret = escapedLabel.replace(new RegExp("(^|\\s|\\w)("+ find +")", modifiers),
-            '$1<span class="dijitComboBoxHighlightMatch">$2</span>');
-        return ret; // Returns String, (almost) valid HTML (entities encoded)
-    }
-});
-
 phpr.isGlobalModule = function(module) {
     // Summary:
     //    Return if the module is global or per project
@@ -1341,4 +1238,76 @@ phpr.confirmDialog = function(callbackOk, message) {
 
     confirmDialog.containerNode.appendChild(content.domNode);
     confirmDialog.show();
+};
+
+dojo.extend(dijit.layout._Splitter, {
+    // Summary:
+    //    Extend dijit.layout._Splitter for use only one div.
+    // Description:
+    //    The div is attached into the body for don't start a resize.
+    _startDrag: function(e){
+        this.cover = dojo.byId('borderContainerCover');
+        dojo.addClass(this.cover, "dijitSplitterCoverActive");
+
+        // Safeguard in case the stop event was missed.  Shouldn't be necessary if we always get the mouse up.
+        if (this.fake) {
+            dojo.destroy(this.fake);
+        }
+
+        if (!(this._resize = this.live)) {
+            // TODO: disable live for IE6?
+            // create fake splitter to display at old position while we drag
+            (this.fake = this.domNode.cloneNode(true)).removeAttribute("id");
+            dojo.addClass(this.domNode, "dijitSplitterShadow");
+            dojo.place(this.fake, this.domNode, "after");
+        }
+        dojo.addClass(this.domNode, "dijitSplitterActive");
+        dojo.addClass(this.domNode, "dijitSplitter" + (this.horizontal ? "H" : "V") + "Active");
+        if(this.fake){
+            dojo.removeClass(this.fake, "dijitSplitterHover");
+            dojo.removeClass(this.fake, "dijitSplitter" + (this.horizontal ? "H" : "V") + "Hover");
+        }
+
+        // Performance: load data info local vars for onmousevent function closure
+        var factor = this._factor,
+            max = this._computeMaxSize(),
+            min = this.child.minSize || 20,
+            isHorizontal = this.horizontal,
+            axis = isHorizontal ? "pageY" : "pageX",
+            pageStart = e[axis],
+            splitterStyle = this.domNode.style,
+            dim = isHorizontal ? 'h' : 'w',
+            childStart = dojo.marginBox(this.child.domNode)[dim],
+            region = this.region,
+            splitterStart = parseInt(this.domNode.style[region], 10),
+            resize = this._resize,
+            childNode = this.child.domNode,
+            layoutFunc = dojo.hitch(this.container, this.container._layoutChildren),
+            de = dojo.doc;
+
+        this._handlers = (this._handlers || []).concat([
+            dojo.connect(de, "onmousemove", this._drag = function(e, forceResize) {
+                var delta = e[axis] - pageStart,
+                childSize = factor * delta + childStart,
+                boundChildSize = Math.max(Math.min(childSize, max), min);
+
+                if (resize || forceResize) {
+                    layoutFunc(region, boundChildSize);
+                }
+                splitterStyle[region] = factor * delta + splitterStart + (boundChildSize - childSize) + "px";
+            }),
+            dojo.connect(de, "ondragstart", dojo.stopEvent),
+            dojo.connect(dojo.body(), "onselectstart", dojo.stopEvent),
+            dojo.connect(de, "onmouseup", this, "_stopDrag")
+        ]);
+        dojo.stopEvent(e);
+    }
+});
+
+phpr.clone = function(obj) {
+    var outpurArr = new Array();
+    for (var i in obj) {
+        outpurArr[i] = typeof (obj[i]) == 'object' ? phpr.clone(obj[i]) : obj[i];
+    }
+    return outpurArr;
 };

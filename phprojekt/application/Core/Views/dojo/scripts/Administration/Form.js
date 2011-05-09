@@ -16,13 +16,15 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Administration.Form");
 
 dojo.declare("phpr.Administration.Form", phpr.Core.Form, {
-    setBreadCrumbItem:function() {
+    _setBreadCrumbItem:function() {
+        // Summary:
+        //    Set the Breadcrumb with the current sub-module.
         phpr.BreadCrumb.setItem(phpr.nls.get(phpr.submodule));
     }
 });

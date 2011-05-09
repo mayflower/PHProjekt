@@ -129,8 +129,8 @@ class Minutes_IndexController extends IndexController
      *
      * Returns a list of all the users with:
      * <pre>
-     *  - id      => id of user.
-     *  - display => Display for the user.
+     *  - id   => id of user.
+     *  - name => Display for the user.
      * </pre>
      *
      * REQUIRES request parameters:
@@ -194,6 +194,7 @@ class Minutes_IndexController extends IndexController
         $params = $this->getRequest()->getParams();
         $this->setCurrentProjectId();
 
+        print_r($params);
         // Sanity check
         if (empty($params['id']) || !is_numeric($params['id'])) {
             throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
@@ -233,12 +234,10 @@ class Minutes_IndexController extends IndexController
 
         if (!count($errors)) {
             // Handle PDF attachment if needed
-            if (!empty($params['options']) && is_array($params['options'])) {
-                if (in_array('pdf', $params['options'])) {
-                    $pdf = (string) Minutes_Helpers_Pdf::getPdf($minutes);
-                    $mail->createAttachment($pdf, 'application/x-pdf', Zend_Mime::DISPOSITION_ATTACHMENT,
-                        Zend_Mime::ENCODING_8BIT, 'minutes_' . $minutesId . '.pdf');
-                }
+            if (isset($params['pdf']) && $params['pdf'] == 1) {
+                $pdf = (string) Minutes_Helpers_Pdf::getPdf($minutes);
+                $mail->createAttachment($pdf, 'application/x-pdf', Zend_Mime::DISPOSITION_ATTACHMENT,
+                    Zend_Mime::ENCODING_8BIT, 'minutes_' . $minutesId . '.pdf');
             }
 
             // Set sender address

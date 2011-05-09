@@ -16,7 +16,7 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Date");
@@ -48,7 +48,7 @@ dojo.declare("phpr.Date", null, {
             var hour    = time.getHours();
             var minutes = time.getMinutes();
         } else {
-            var value   = time.toString().replace(/\D/g, "");
+            var value   = time.toString().replace(/\D/g, '');
             value       = value.substr(0, 4);
             var minutes = value.substr(value.length - 2);
             var hour    = value.substr(0, value.length - 2);

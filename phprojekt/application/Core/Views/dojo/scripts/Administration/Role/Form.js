@@ -16,39 +16,94 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.Role.Form");
 
 dojo.declare("phpr.Role.Form", phpr.Core.Form, {
-    roleModuleAccessStore: null,
+    // Roles
+    _roleModuleRender: null,
+    _roleModuleStore:  null,
 
-    initData:function() {
-        // Get modules
-        this.roleModuleAccessStore = new phpr.Store.RoleModuleAccess(this.id);
-        this._initData.push({'store': this.roleModuleAccessStore});
+    init:function(id, params) {
+        // Summary:
+        //    Init the form for a new render.
+        this._roleModuleStore = null;
+
+        this.inherited(arguments);
     },
 
-    setPermissions:function(data) {
+    /************* Private functions *************/
+
+    _constructor:function(module, subModules) {
+        // Summary:
+        //    Construct the form only one time.
+        this.inherited(arguments);
+
+        // Role vars
+        this._roleModuleRender = new phpr.Role.Roles(this._module);
+    },
+
+    _initData:function() {
+        // Summary:
+        //    Init all the data before draw the form.
+        // Get modules
+        this._roleModuleStore = new phpr.Store.RoleModuleAccess(this._id);
+        this._initDataArray.push({'store': this._roleModuleStore});
+    },
+
+    _setPermissions:function(data) {
+        // Summary:
+        //    Get the permission for the current user on the item.
         this._writePermissions  = true;
         this._deletePermissions = false;
-        if (this.id > 1) {
+        if (this._id > 1) {
             this._deletePermissions = true;
         }
         this._accessPermissions = true;
     },
 
-    addBasicFields:function() {
-        this.formdata[1] += this.render(["phpr.Core.Role.template", "formAccess.html"], null, {
-            accessModuleText: phpr.nls.get('Module'),
-            accessReadText:   phpr.nls.get('Read'),
-            accessWriteText:  phpr.nls.get('Write'),
-            accessCreateText: phpr.nls.get('Create'),
-            accessAdminText:  phpr.nls.get('Admin'),
-            labelfor:         phpr.nls.get('Access'),
-            label:            phpr.nls.get('Access'),
-            modules:          this.roleModuleAccessStore.getList()
-        });
+    _addBasicFields:function() {
+        // Summary:
+        //    Add some special fields.
+        // Description:
+        //    Add a module-row table.
+        var data = {
+            relationList: this._roleModuleStore.getList()
+        }
+        this._roleModuleRender.createTable(data);
+
+        var table = this._fieldTemplate.getTable(1);
+        if (table.rows.length == 1) {
+            var row = table.insertRow(table.rows.length);
+
+            // Label
+            var label = document.createElement('label');
+            var txt   = document.createTextNode(phpr.nls.get('Access') + ' ');
+            label.appendChild(txt);
+            var cell = row.insertCell(0);
+            cell.className = 'label';
+            cell.appendChild(label);
+
+            // Table
+            var cell = row.insertCell(1);
+            cell.setAttribute('colspan', 2);
+            cell.style.width = '100%';
+            cell.appendChild(this._roleModuleRender.getTable());
+        }
+    },
+
+    _getFieldForDelete:function() {
+        // Summary:
+        //    Return an array of fields for delete.
+        var fields = this.inherited(arguments);
+
+        fields.push('checkReadAccess*');
+        fields.push('checkWriteAccess*');
+        fields.push('checkCreateAcces*');
+        fields.push('checkAdminAccess*');
+
+        return fields;
     }
 });

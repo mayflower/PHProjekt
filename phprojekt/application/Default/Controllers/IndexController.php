@@ -319,12 +319,12 @@ class IndexController extends Zend_Controller_Action
 
         if (!empty($filters)) {
             $filterClass = new Phprojekt_Filter($this->getModelObject(), $where);
+            $filters     = Zend_Json::decode($filters);
             foreach ($filters as $filter) {
-                list($filterOperator, $filterField, $filterRule, $filterValue) = explode(";", $filter);
-                $filterOperator = Cleaner::sanitize('alpha', $filterOperator, null);
-                $filterField    = Cleaner::sanitize('alpha', $filterField, null);
-                $filterRule     = Cleaner::sanitize('alpha', $filterRule, null);
-                $filterValue    = Cleaner::sanitize('filter', $filterValue, null);
+                $filterOperator = Cleaner::sanitize('alpha', $filter['operator'], null);
+                $filterField    = Cleaner::sanitize('alpha', $filter['field'], null);
+                $filterRule     = Cleaner::sanitize('alpha', $filter['rule'], null);
+                $filterValue    = Cleaner::sanitize('filter', $filter['value'], null);
                 if (isset($filterOperator) && isset($filterField) &&  isset($filterRule) && isset($filterValue)) {
                     $filterClass->addFilter($filterField, $filterRule, $filterValue, $filterOperator);
                 }
@@ -510,6 +510,7 @@ class IndexController extends Zend_Controller_Action
 
         if ($model instanceof Phprojekt_Model_Interface) {
             $params = $this->setParams($this->getRequest()->getParams(), $model, $newItem);
+
             Default_Helpers_Save::save($model, $params);
 
             $return = array('type'    => 'success',

@@ -1,7 +1,7 @@
-<div id="timecardDayView"
+<div id="dayViewContent-Timecard"
 style="position: absolute; height: 960px; overflow: hidden;">
 {% for hour in hours %}
-    <div id="hours{{hour.hour}}" dojoType="dijit.layout.ContentPane" class="{{hour.class}}">
+    <div id="hours{{hour.hour}}-Timecard" dojoType="dijit.layout.ContentPane" class="{{hour.class}}">
         <div class="hourBox"
         {% ifequal hour.hour 0 %}
         style="border-top: 0px;"
@@ -15,15 +15,15 @@ style="position: absolute; height: 960px; overflow: hidden;">
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
             onClick="dojo.publish('Timecard.formProxy', ['fillFormTime', '{{hour.hour}}']);">
             </button>
-            <div dojoType="dijit.Tooltip" connectId="buttonHours{{hour.hour}}"
+            <div dojoType="dijit.Tooltip" connectId="buttonHours{{hour.hour}}-Timecard"
             label="{{tooltipHelpTxt}}">
             </div>
-            <div id="buttonHours{{hour.hour}}" dojoType="dijit.layout.ContentPane" class="hiddenTooltipPoint">
+            <div id="buttonHours{{hour.hour}}-Timecard" dojoType="dijit.layout.ContentPane" class="hiddenTooltipPoint">
             </div>
         </div>
     </div>
 {% endfor %}
-    <div id="projectBookingContainer" dojoType="dijit.layout.ContentPane"
+    <div id="projectBookingContainer-Timecard" dojoType="dijit.layout.ContentPane"
     style="position: absolute; top: 0%; left: 7em; margin: 0px; height: 960px; padding-top: 0px;
     overflow: hidden; width: 80%;">
     </div>

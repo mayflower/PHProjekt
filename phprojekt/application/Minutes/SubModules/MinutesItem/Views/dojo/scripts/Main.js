@@ -16,17 +16,20 @@
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 dojo.provide("phpr.MinutesItem.Main");
 
 dojo.declare("phpr.MinutesItem.Main", phpr.Default.SubModule, {
-    constructor:function(parentId) {
-        this.module     = "MinutesItem";
-        this.gridWidget = phpr.MinutesItem.Grid;
-        this.formWidget = phpr.MinutesItem.Form;
-        this.parentId   = parentId;
+    constructor:function() {
+        // Summary:
+        //    Create a new instance of the module.
+        this._module = 'MinutesItem';
+
+        this._loadFunctions();
+
+        this._gridWidget = phpr.MinutesItem.Grid;
+        this._formWidget = phpr.MinutesItem.Form;
     }
 });
-

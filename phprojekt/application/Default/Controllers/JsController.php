@@ -62,9 +62,10 @@ class JsController extends IndexController
     {
         // System files, must be parsed in this order
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/phpr.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Component.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/form.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/grid.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Render.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Form.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Field.js');
+        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Grid.js');
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Store.js');
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Date.js');
         echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Url.js');
@@ -87,6 +88,7 @@ class JsController extends IndexController
 
         // Preload all the templates and save them into __phpr_templateCache
         echo 'var __phpr_templateCache = {};';
+        echo 'var __phpr_templateObjectCache = {};';
 
         foreach ($this->_templates as $templateData) {
             $content = str_replace("'", "\'", $templateData['contents']);
@@ -118,7 +120,11 @@ class JsController extends IndexController
                 phpr.frontendMessage  = new phpr.FrontendMessage();
                 phpr.Tree             = new phpr.Tree();
                 phpr.regExpForFilter  = new phpr.regExpForFilter();
+                phpr.Render           = new phpr.Render();
+                phpr.TabStore         = new phpr.Store.Tab();
                 phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";
+                phpr.searchEvent      = null;
+                phpr.lastModule       = null;
         ';
 
         foreach ($this->_modules as $module) {

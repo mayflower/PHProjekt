@@ -39,7 +39,7 @@
 
 .phprojekt .displayFilerButton {
     background: #a4c0e8;
-    padding: 0px 2px 0px 0px;
+    padding: 2px 2px 0px 0px;
     float: left;
     height: 20px;
 }
@@ -72,7 +72,7 @@
     width: 14em;
 }
 
-.phprojekt #filterDisplayDiv {
+.phprojekt .filterDisplayDiv {
     border-top: 1px solid #294064;
     height: auto !important;
     overflow: visible;
@@ -81,13 +81,13 @@
     margin-top: 2px;
 }
 
-.phprojekt #filterDisplayDiv,
-.phprojekt #filterDisplayDelete {
+.phprojekt .filterDisplayDiv,
+.phprojekt .filterDisplayDelete {
     float: left;
     overflow: hidden;
 }
 
-.dj_ie .phprojekt #filterDisplayDiv {
+.dj_ie .phprojekt .filterDisplayDiv {
     padding-top: 0px;
 }
 
@@ -95,7 +95,6 @@
     padding-bottom: 0px;
 }
 
-.phprojekt #filesList .closeButton .dijitButtonNode,
 .phprojekt #gridFiltersBox .closeButton .dijitButtonNode {
     width: 13px;
     border: none;
@@ -103,7 +102,7 @@
     vertical-align: middle;
 }
 
-.phprojekt #filterDisplayDelete .dijitButtonNode,
+.phprojekt .filterDisplayDelete .dijitButtonNode,
 .phprojekt #filterButtonDiv .dijitButtonNode {
     padding: 0px
 }
