@@ -112,7 +112,6 @@ class Core_UpgradeController extends Core_IndexController
 
         $failed = true;
         try {
-            throw new Phprojekt_Migration_IKilledTheDatabaseException();
             $migration->performUpgrade(
                 $this->getRequest()->getParam('upgradeModule')
             );
