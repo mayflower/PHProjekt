@@ -30,20 +30,9 @@
         visibility: hidden;
         {% endifequal %}
         ">
-    <!--
-        The onclick is normally not handled here, but without resizing, the
-        relevant parts will not be called.
-    -->
         <div id="plainDiv{{event.order}}" class="eventsDivSecond"
-        onclick="javascript: dojo.publish('Calendar2.setUrlHash', ['Calendar2', {{event.id}}]);"
         style="border-width: {{eventsAttr.borderWidth}}px; cursor: pointer;"></div>
-    <!--
-        Disable resizing
-    -->
-    <!--
         <div dojoType="phpr.Calendar2.ResizeHandle" resizeAxis="y" activeResize="true" targetId="plainDiv{{event.order}}"
-    -->
-        <div                                       resizeAxis="y" activeResize="true" targetId="plainDiv{{event.order}}"
         id="eventResize{{event.order}}"
         style="bottom: 0; width: 100%; position: absolute;"></div>
     </div>

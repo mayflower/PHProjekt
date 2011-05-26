@@ -506,36 +506,34 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
         }
     },
 
-// Commenting this out disables drag&drop and resizing.
-// This will probably be readded in a later version.
     classesSetup:function(startup) {
         // Summary:
         //    On startup: creates dragging classes, provides the dragging and resize classes with a reference object
         //    variable to this class, establishes the cell height as the minimum height for the events.
         //    On startup and everytime it is called: activates or inactivates Y resize for each div.
-//        for (var i in this.events) {
-//            if (this.events[i]['editable']) {
-//                if (startup) {
-//                    new phpr.Calendar2.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
-//                    var resizeDiv         = dijit.byId('eventResize' + i);
-//                    resizeDiv.parentClass = this;
-//                    // Minimum size:
-//                    var minWidth      = this.cellColumnWidth - (2 * this.EVENTS_BORDER_WIDTH);
-//                    var minHeight     = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
-//                    resizeDiv.minSize = {w: minWidth, h: minHeight};
-//                }
-//
-//                if (this.events[i] != null && this.events[i]['shown']) {
-//                    var resizeDivPlain = dojo.byId('eventResize' + i);
-//                    if (this.events[i]['hasResizeHandler']) {
-//                        var displayMode = 'inline';
-//                    } else {
-//                        var displayMode = 'none';
-//                    }
-//                    dojo.style(resizeDivPlain, 'display', displayMode);
-//                }
-//            }
-//        }
+        for (var i in this.events) {
+            if (this.events[i]['editable']) {
+                if (startup) {
+                    new phpr.Calendar2.Moveable(this.EVENTS_MAIN_DIV_ID + i, null, this);
+                    var resizeDiv         = dijit.byId('eventResize' + i);
+                    resizeDiv.parentClass = this;
+                    // Minimum size:
+                    var minWidth      = this.cellColumnWidth - (2 * this.EVENTS_BORDER_WIDTH);
+                    var minHeight     = this.cellTimeHeight - (2 * this.EVENTS_BORDER_WIDTH);
+                    resizeDiv.minSize = {w: minWidth, h: minHeight};
+                }
+
+                if (this.events[i] != null && this.events[i]['shown']) {
+                    var resizeDivPlain = dojo.byId('eventResize' + i);
+                    if (this.events[i]['hasResizeHandler']) {
+                        var displayMode = 'inline';
+                    } else {
+                        var displayMode = 'none';
+                    }
+                    dojo.style(resizeDivPlain, 'display', displayMode);
+                }
+            }
+        }
     },
 
     eventMoved:function(node, dropped, resized) {
