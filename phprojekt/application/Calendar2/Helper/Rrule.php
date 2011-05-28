@@ -71,14 +71,21 @@ class Calendar2_Helper_Rrule
     private $_exceptions;
 
     /**
+     * @var int Timestamp delta that marks the duration of the events.
+     */
+    private $_duration;
+
+    /**
      * Constructor.
      *
-     * @param Datetime $first   The first occurence of the event.
-     * @param String   $rrule   The recurrence rule.
-     * @param Array of Datetime Exceptions from the recurrence.
+     * @param Datetime          $first      The first occurence of the event.
+     * @param String            $rrule      The recurrence rule.
+     * @param DateInterval      $duration   The duration of the events.
+     * @param Array of Datetime $exceptions Exceptions from the recurrence.
      */
     public function __construct(
             Datetime $first,
+            $duration,
             $rrule,
             Array $exceptions = array())
     {
@@ -86,6 +93,10 @@ class Calendar2_Helper_Rrule
         $this->_rrule       = $this->_parseRrule($rrule);
         $this->_rruleString = $rrule;
         $this->_exceptions  = $exceptions;
+
+        $tmp = clone $first;
+        $tmp->add($duration);
+        $this->_duration    = $tmp->getTimestamp() - $first->getTimestamp();
     }
 
     /**
@@ -105,7 +116,7 @@ class Calendar2_Helper_Rrule
 
         if (empty($this->_rrule)) {
             // There is no recurrence
-            if ($firstTs >= $startTs && $firstTs <= $endTs) {
+            if ($firstTs + $this->_duration >= $startTs && $firstTs <= $endTs) {
                 return array($this->_first);
             } else {
                 return array();
@@ -134,7 +145,7 @@ class Calendar2_Helper_Rrule
             $date       = new Datetime($datestring, new DateTimeZone('UTC'));
 
             $ts = $date->getTimestamp();
-            if ($startTs <= $ts
+            if ($startTs <= $ts + $this->_duration
                     && $ts <= $endTs
                     && !in_array($date, $this->_exceptions)) {
                 $ret[] = new Datetime($datestring, new DateTimeZone('UTC'));

@@ -759,19 +759,18 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     public function getRruleHelper()
     {
         if ($this->_isFirst) {
-            $start = new Datetime(
-                '@' . Phprojekt_Converter_Time::userToUtc($this->start)
-            );
+            $start = new Datetime('@' . Phprojekt_Converter_Time::userToUtc($this->start));
+            $end   = new Datetime('@' . Phprojekt_Converter_Time::userToUtc($this->end));
         } else {
             $original = $this->create();
             $original->find($this->id);
-            $start = new Datetime(
-                '@' . Phprojekt_Converter_Time::userToUtc($original->start)
-            );
+            $start = new Datetime('@' . Phprojekt_Converter_Time::userToUtc($original->start));
+            $end = new Datetime('@' . Phprojekt_Converter_Time::userToUtc($original->end));
         }
 
         return new Calendar2_Helper_Rrule(
             $start,
+            $start->diff($end),
             $this->rrule,
             $this->getExcludedDates()
         );
