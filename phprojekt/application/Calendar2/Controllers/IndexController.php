@@ -300,6 +300,28 @@ class Calendar2_IndexController extends IndexController
         );
     }
 
+    /**
+     * Returns the detail (fields and data) of one item from the model.
+     *
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of one item.
+     *  - The number of rows.
+     *
+     * If the request parameter "id" is null or 0, the data will be all values of a "new item",
+     * if the "id" is an existing item, the data will be all the values of the item.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_FORM for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b> id of the item to consult.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
     public function jsonDetailAction()
     {
         $id    = $this->getRequest()->getParam('id');
