@@ -694,14 +694,15 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
         for (var i in this.events) {
             if (this.events[i] != null && this.events[i]['hasChanged']) {
                 doSaving = true;
-                var id   = this.events[i]['id'];
+                var id           = this.events[i]['id'];
+                var recurrenceId = this.events[i]['recurrenceId'];
 
                 // Is it a multiple days event?
                 if (!this.events[i]['multDay']) {
                     // No
-                    content['data[' + id + '][start]'] = this.events[i]['date'] + ' '
+                    content['data[' + id + '][' + recurrenceId + '][start]'] = this.events[i]['date'] + ' '
                         + this.events[i]['startTime'];
-                    content['data[' + id + '][end]']   = this.events[i]['date'] + ' '
+                    content['data[' + id + '][' + recurrenceId + '][end]']   = this.events[i]['date'] + ' '
                         + this.events[i]['endTime'];
                 } else {
                     // Yes
@@ -1315,6 +1316,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
         for (var event in content) {
             var eventsInfo     = new Array();
             var id             = content[event]['id'];
+            var recurrenceId   = content[event]['recurrenceId'];
             var singleDayEvent = false;
 
             // Split datetime in date and time
@@ -1386,7 +1388,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
                 // Events inside the grid
                 if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
                     eventInfo['hasChanged'] = false;
-                    parent                  = this.addGridEventToArray(eventInfo, id, summary, comments, parent,
+                    parent                  = this.addGridEventToArray(eventInfo, id, recurrenceId, summary, comments, parent,
                         content[event]['startDate'], content[event]['startTime'], content[event]['endDate'],
                         content[event]['endTime'], column);
                 } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
@@ -1428,8 +1430,8 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
         }
     },
 
-    addGridEventToArray: function(eventInfo, id, summary, comments, parent, wholeStartDate, wholeStartTime, wholeEndDate,
-            wholeEndTime, column) {
+    addGridEventToArray: function(eventInfo, id, recurrenceId, summary, comments, parent, wholeStartDate,
+             wholeStartTime, wholeEndDate, wholeEndTime, column) {
         // Summary:
         //    Adds an event to 'events' class array. Returns parent index which is useful just for multiple day events.
         var nextEvent = 0;
@@ -1444,6 +1446,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
         newEventDiv['editable']    = true;
         newEventDiv['order']       = nextEvent; // For Django template
         newEventDiv['id']          = id;
+        newEventDiv['recurrenceId'] = recurrenceId;
         newEventDiv['summary']     = summary;
         newEventDiv['timeDescrip'] = eventInfo['timeDescrip'];
         newEventDiv['comments']    = comments;
@@ -1654,8 +1657,9 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Component, {
                 }
                 eventInfo['hasChanged'] = true;
             }
-            parent = this.addGridEventToArray(eventInfo, movedEvent['id'], movedEvent['summary'], movedEvent['comments'],
-                parent, wholeStartDate, wholeStartTime, wholeEndDate, wholeEndTime, column);
+            parent = this.addGridEventToArray(eventInfo, movedEvent['id'], movedEvent['recurrenceId'],
+                    movedEvent['summary'], movedEvent['comments'], parent, wholeStartDate, wholeStartTime, wholeEndDate,
+                    wholeEndTime, column);
         }
     }
 });

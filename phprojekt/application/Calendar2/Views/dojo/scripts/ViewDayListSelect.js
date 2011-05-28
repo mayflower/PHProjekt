@@ -172,6 +172,7 @@ dojo.declare("phpr.Calendar2.ViewDayListSelect", phpr.Calendar2.DefaultView, {
                 }
                 var eventsInfo     = new Array();
                 var id             = content[event]['id'];
+                var recurrenceId   = content[event]['recurrenceId'];
                 var singleDayEvent = false;
 
                 // Split datetime in date and time
@@ -243,9 +244,9 @@ dojo.declare("phpr.Calendar2.ViewDayListSelect", phpr.Calendar2.DefaultView, {
                     // Events inside the grid
                     if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
                         eventInfo['hasChanged'] = false;
-                        parent                  = this.addGridEventToArray(eventInfo, id, summary, comments, parent,
-                            content[event]['startDate'], content[event]['startTime'], content[event]['endDate'],
-                            content[event]['endTime'], column);
+                        parent                  = this.addGridEventToArray(eventInfo, id, recurrenceId, summary,
+                                comments, parent, content[event]['startDate'], content[event]['startTime'],
+                                content[event]['endDate'], content[event]['endTime'], column);
                     } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
                         // Events outside the grid: located under it as textual strings
                         furtherEventsTemp['show'] = true;
