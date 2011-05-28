@@ -475,6 +475,21 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Find a special occurrence based on a id and a recurrence id.
+     * Will throw an exception for invalid values.
+     *
+     * @param int    $id           The id of the event.
+     * @param string $recurrenceId The recurrence id of the occurrence to find.
+     *
+     * @return $this
+     */
+    public function findWithRecurrenceId($id, $recurrenceId)
+    {
+        $date = new Datetime($recurrenceId, new DateTimeZone('UTC'));
+        return $this->findOccurrence($id, $date);
+    }
+
+    /**
      * Finds a special occurence of an event. Will throw an exception
      * if the date is not part of this event.
      *

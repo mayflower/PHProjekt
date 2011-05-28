@@ -301,6 +301,65 @@ class Calendar2_IndexController extends IndexController
     }
 
     /**
+     * Save some fields for many items.
+     * Only edit existing items.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - array <b>data</b> Array with itemId and field as index, and the value.
+     *    ($data[2]['title'] = 'new tittle')
+     * </pre>
+     *
+     * The return is a string in JSON format with:
+     * <pre>
+     *  - type    => 'success' or 'error'.
+     *  - message => Success or error message.
+     *  - code    => 0.
+     *  - id      => Comma separated ids of the items.
+     * </pre>
+     *
+     * @return void
+     */
+    public function jsonSaveMultipleAction()
+    {
+        $data    = (array) $this->getRequest()->getParam('data');
+        $showId  = array();
+        $model   = new Calendar2_Models_Calendar2();
+        $success = true;
+        $this->setCurrentProjectId();
+
+        foreach ($data as $id => $occurrences) {
+            foreach ($occurrences as $recurrenceId => $fields) {
+                if ($recurrenceId == 'undefined') {
+                    throw new Phprojekt_PublishedException('\'undefined\' given as recurrence id!');
+                }
+
+                $model->findWithRecurrenceId($id, $recurrenceId);
+
+                foreach ($fields as $key => $value) {
+                    $model->$key = $value;
+                }
+                $model->save();
+                $showId[] = $id;
+            }
+        }
+
+        if ($success) {
+            $message    = Phprojekt::getInstance()->translate(self::EDIT_MULTIPLE_TRUE_TEXT);
+            $resultType = 'success';
+        } else {
+            $resultType = 'error';
+        }
+
+        $return = array('type'    => $resultType,
+                        'message' => $message,
+                        'code'    => 0,
+                        'id'      => implode(',', $showId));
+
+        Phprojekt_Converter_Json::echoConvert($return);
+    }
+
+    /**
      * Returns the detail (fields and data) of one item from the model.
      *
      * The return have:
