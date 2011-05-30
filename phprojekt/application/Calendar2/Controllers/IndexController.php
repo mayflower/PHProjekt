@@ -389,18 +389,19 @@ class Calendar2_IndexController extends IndexController
         if (!Cleaner::validate('int', $id) && 'null' !== $id) {
             throw new Phprojekt_PublishedException("Invalid id '$id'");
         }
-        if (!self::_validateTimestamp($start) && 'undefined' !== $start) {
-            throw new Phprojekt_PublishedException(
-                "Invalid start timestamp '$start'"
-            );
-        }
 
         $id = (int) $id;
 
         if ('undefined' === $start) {
             $start = null;
         } else {
-            $start = new Datetime($start, $this->_getUserTimezone());
+            try {
+                $start = new Datetime($start, $this->_getUserTimezone());
+            } catch (Exception $e) {
+                throw new Phprojekt_PublishedException(
+                    "Invalid start timestamp '$start'"
+                );
+            }
         }
         $this->setCurrentProjectId();
 
