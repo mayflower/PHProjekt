@@ -628,7 +628,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         // Summary:
         //    Override this method to save whether we have a recurrence set on
         //    the server.
-        phpr.Calendar.Form.superclass.getFormData.apply(this);
+        phpr.Calendar2.Form.superclass.getFormData.apply(this);
         var data = phpr.DataStore.getData({url: this._url});
         if (data.length > 0) {
             this._originalRrule = data[0].rrule;
