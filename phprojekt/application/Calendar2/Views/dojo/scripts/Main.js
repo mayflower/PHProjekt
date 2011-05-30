@@ -278,7 +278,8 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    openForm:function(/*int*/ id, /*String*/ module, /*String*/ startDate, /*String*/ startTime) {
+    openForm:function(/*int*/ id, /*String*/ module, /*String*/ startDate,
+                      /*String*/ startTime, /*String*/ recurrenceId) {
         // Summary:
         //    This function opens a new Detail View
         if (!dojo.byId('detailsBox')) {
@@ -347,12 +348,9 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
             }
             params['start'] = phpr.Date.getIsoDatetime(startDate, startTime);
             params['end']   = phpr.Date.getIsoDatetime(startDate, endTime);
-        } else {
-            var params = new Array();
-            params['start'] = startDate;
         }
 
-        this.form = new this.formWidget(this, id, module, params);
+        this.form = new this.formWidget(this, id, module, params, recurrenceId);
     },
 
     userSelfClick:function() {

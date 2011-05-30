@@ -575,9 +575,9 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         }
     },
 
-    setUrl:function() {
+    setUrl:function(args) {
         this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/'
-                  + phpr.currentProjectId + '/id/' + this.id + '/start/' + this._presetValues['start'];
+                  + phpr.currentProjectId + '/id/' + this.id + '/start/' + args[4];
     },
 
     // We have to overwrite this function here because we need to use the id

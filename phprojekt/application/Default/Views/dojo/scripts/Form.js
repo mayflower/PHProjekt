@@ -60,7 +60,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
             this._presetValues = params;
         }
 
-        this.setUrl();
+        this.setUrl(arguments);
         this.setNode();
 
         // Put loading
