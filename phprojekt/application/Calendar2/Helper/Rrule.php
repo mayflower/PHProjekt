@@ -349,6 +349,31 @@ class Calendar2_Helper_Rrule
     }
 
     /**
+     * Return the end of the last occurrence of this event.
+     *
+     * @return DateTime End of the last occurrence or null if infinite
+     */
+    public function getEndOfLastOccurrence()
+    {
+        if (empty($this->_rrule)) {
+            $tmp = clone $this->_first;
+            $tmp->add(new DateInterval("PT{$this->_duration}S"));
+            return $tmp;
+        }
+        $until = clone $this->_rrule['UNTIL'];
+        Phprojekt::getInstance()->getLog()->debug(print_r($until, true));
+        Phprojekt::getInstance()->getLog()->debug($until->format('Y-m-d H:i:s'));
+        Phprojekt::getInstance()->getLog()->debug($this->_duration);
+
+        if (is_null($until)) {
+            return null;
+        } else {
+            $until->add(new DateInterval("PT{$this->_duration}S"));
+            return $until;
+        }
+    }
+
+    /**
      * Parses a rrule string into a dictionary while working around all
      * specialities of iCalendar, so we have values in $this->_rrule that
      * a php programmer would expect. See there for exact documentation.

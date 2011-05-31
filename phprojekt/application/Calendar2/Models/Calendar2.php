@@ -156,6 +156,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         }
 
         if ($this->_isFirst) {
+            $this->lastEnd = Phprojekt_Converter_Time::utcToUser(
+                $this->getRruleHelper()->getEndOfLastOccurrence()->format('Y-m-d H:i:s')
+            );
             if (!self::isValidVisibility($this->visibility)) {
                 throw new Phprojekt_PublishedException(
                     "Invalid visibility {$this->visibility}"
@@ -435,7 +438,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         }
         //TODO: This might query a lot of objects. Consider saving the last
         //      date of occurrence too so this is faster.
-        $where .= $db->quoteInto('AND start <= ?', $end->format('Y-m-d H:i:s'));
+        $where .= $db->quoteInto('AND calendar2.start <= ?', $end->format('Y-m-d H:i:s'));
+        $where .= $db->quoteInto('AND calendar2.last_end >= ?', $start->format('Y-m-d H:i:s'));
         $join   = 'JOIN calendar2_user_relation '
                     . 'ON calendar2.id = calendar2_user_relation.calendar2_id';
 

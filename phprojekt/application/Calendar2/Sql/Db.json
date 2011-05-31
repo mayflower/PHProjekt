@@ -15,6 +15,7 @@
                 "location":             {"type": "varchar"},
                 "comments":             {"type": "varchar"},
                 "start":                {"type": "datetime"},
+                "last_end":             {"type": "datetime"},
                 "end":                  {"type": "datetime"},
                 "owner_id":             {"type": "int", "notNull": "true"},
                 "rrule":                {"type": "varchar"},
