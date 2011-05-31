@@ -85,7 +85,8 @@ class Calendar2_Helper_Time
         return $return;
     }
 
-    protected static function comparePeriods(array $a, array $b) {
+    protected static function comparePeriods(array $a, array $b)
+    {
         $diff = $a['start']->getTimestamp() - $b['start']->getTimestamp();
 
         if ($diff != 0) {

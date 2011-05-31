@@ -531,8 +531,7 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonCheckAvailabilityAction()
     {
-        $user  = $this->getRequest()->getParam('user',
-                                               Phprojekt_Auth::getUserId());
+        $user  = $this->getRequest()->getParam('user', Phprojekt_Auth::getUserId());
         $start = $this->getRequest()->getParam('start');
         $end   = $this->getRequest()->getParam('end');
 
@@ -591,8 +590,7 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonBusyTimesAction()
     {
-        $user  = $this->getRequest()->getParam('user',
-                                               Phprojekt_Auth::getUserId());
+        $user  = $this->getRequest()->getParam('user', Phprojekt_Auth::getUserId());
         $start = $this->getRequest()->getParam('start');
         $end   = $this->getRequest()->getParam('end');
 

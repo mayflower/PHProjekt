@@ -46,7 +46,8 @@ class Calendar2_Extension extends Phprojekt_Extension_Abstract
         return '6.1.0';
     }
 
-    public function getMigration() {
+    public function getMigration()
+    {
         return new Calendar2_Migration();
     }
 }
