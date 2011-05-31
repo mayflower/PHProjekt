@@ -1773,9 +1773,10 @@ dojo.declare("phpr.Calendar2.Moveable", dojo.dnd.Moveable, {
         } else {
             if (!this.parentClass.eventClickDisabled) {
                 // It was just a click - Open event in the form
-                var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);
-                var eventId    = this.parentClass.events[movedEvent]['id'];
-                dojo.publish('Calendar2.setUrlHash', [phpr.module, eventId]);
+                var movedEvent   = this.parentClass.nodeIdToEventOrder(this.node.id);
+                var eventId      = this.parentClass.events[movedEvent]['id'];
+                var recurrenceId = this.parentClass.events[movedEvent]['recurrenceId'];
+                dojo.publish('Calendar2.openForm', [eventId, null, null, null, recurrenceId]);
             }
         }
         this.parentClass.eventClickDisabled = false;
