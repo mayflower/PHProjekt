@@ -127,6 +127,13 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                     $this->_migrateRecurringEvent($series);
                 }
             }
+            $db->update(
+                'module',
+                array(
+                    'active' => 0
+                ),
+                '`name` = "Calendar"'
+            );
             $db->commit();
         } catch (Exception $e) {
             $db->rollback();

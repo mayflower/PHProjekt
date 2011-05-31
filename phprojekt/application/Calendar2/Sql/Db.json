@@ -341,7 +341,7 @@
             [
                 {
                     "name":       "Calendar2",
-                    "label":      "Calendar2",
+                    "label":      "Calendar",
                     "save_type":  "1",
                     "active":     "1",
                     "_relations":
