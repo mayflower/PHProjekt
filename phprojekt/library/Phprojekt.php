@@ -808,7 +808,6 @@ class Phprojekt
             'mbstring'   => 'http://us.php.net/manual/en/mbstring.installation.php',
             'iconv'      => 'http://us.php.net/manual/en/iconv.installation.php',
             'ctype'      => 'http://us.php.net/manual/en/ctype.installation.php',
-            'gd'         => 'http://us.php.net/manual/en/image.installation.php',
             'pcre'       => 'http://us.php.net/manual/en/pcre.installation.php',
             'pdo'        => 'http://us.php.net/manual/en/pdo.installation.php',
             'Reflection' => 'http://us.php.net/manual/en/reflection.installation.php',
