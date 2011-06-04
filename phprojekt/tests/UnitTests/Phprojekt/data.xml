@@ -132,5 +132,5 @@
     <setting user_id='1' module_id='0' key_value='alerts'
         value='1' identifier='notification' />
     <setting user_id='1' module_id='0' key_value='password'
-        value='156c3239dbfa5c5222b51514e9d12948' identifier='timecard' />
+        value='156c3239dbfa5c5222b51514e9d12948' identifier='Core' />
 </dataset>
