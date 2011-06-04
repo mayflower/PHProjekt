@@ -42,7 +42,10 @@ class Todo_IndexController_Test extends FrontInit
     private $_model                 = null;
 
     protected function getDataSet() {
-        return $this->createFlatXMLDataSet(realpath(dirname(__FILE__) . '/../data.xml'));
+        return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
+            array(
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
     }
 
     /**
@@ -186,8 +189,10 @@ class Todo_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Todo/index/jsonSaveMultiple/');
         $items = array(2 => array('title' => 'My todo task CHANGED',
+                                  'projectId' => 1,
                                   'currentStatus' => 3),
                        3 => array('title' => 'My todo task 2 CHANGED',
+                                  'projectId' => 1,
                                   'currentStatus' => 4));
         $this->request->setParam('data', $items);
         $this->request->setParam('nodeId', 1);
@@ -201,7 +206,7 @@ class Todo_IndexController_Test extends FrontInit
     public function testJsonList()
     {
         $this->setRequestUrl('Todo/index/jsonList');
-        $this->request->setParam('nodeId', 2);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains($this->_listingExpectedString, $response, $this->errormessage);
         $this->assertContains('"numRows":1', $response, $this->errormessage);

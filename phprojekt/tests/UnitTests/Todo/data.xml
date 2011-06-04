@@ -1,40 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dataset>
-    <project id="1" path="/" title="PHProjekt" notes="" owner_id="1"
-        start_date="2007-12-01" priority="1" current_status="3" />
-    <project id="2" path="/1/" title="Test Project" notes="" owner_id="1"
-        start_date="2007-12-01" priority="1" current_status="3" />
-    <todo id="1" title="1. Todo of Test Project" notes=""
-        owner_id="1" project_id="2" start_date="2007-12-12"
-        end_date="2007-12-31" priority="0" current_status="1"/>
-    <user username="Test"
-        firstname="Max" lastname="Mustermann" status="A" admin="0" />
-    <module id="2" name="Todo" label="Todo"
-        save_type="0" version="6.0.0" active="1" />
-    <module id="1" name="Project" label="Project"
-        save_type="0" version="6.0.0" active="1" />
-    <project_module_permissions
-        module_id="2" project_id="2" />
-    <project_module_permissions
-        module_id="1" project_id="2" />
-    <project_role_user_permissions
-        project_id="2" user_id="1" role_id="1" />
-    <item_rights
-        module_id="1" item_id="2" user_id="1" access="255" />
-    <item_rights
-        module_id="2" item_id="1" user_id="1" access="255" />
-    <item_rights
-        module_id="2" item_id="1" user_id="3" access="255" />
-    <!-- <item_rights
-        module_id="2" item_id="2" user_id="1" access="255" />
-    <item_rights
-        module_id="2" item_id="2" user_id="3" access="255" />-->
-    <role id="1" name="Admin" />
-    <role_module_permissions role_id="1" module_id="1" access="139" />
-    <role_module_permissions role_id="1" module_id="2" access="139" />
-    <database_manager table_name='Todo' table_field="title" form_tab="1" form_label="Title"
-        form_type="text" form_position="1" form_columns="1" form_regexp="NULL"
-        form_range="NULL" default_value="NULL" list_position="1" list_align="left"
-        list_use_filter="1" alt_position="2" status="1" is_integer="0"
-        is_required="1" is_unique="0" />
+  <todo id="1" title="Todo of Test Project" notes="" owner_id="1" project_id="1" start_date="2007-12-12" end_date="2007-12-31" priority="0" current_status="1" user_id=""/>
 </dataset>
