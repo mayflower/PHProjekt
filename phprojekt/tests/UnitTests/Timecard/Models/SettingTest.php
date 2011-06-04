@@ -59,7 +59,7 @@ class Timecard_Models_Setting_Test extends PHPUnit_Framework_TestCase
         $key             = $response[0]['key'];
         $total           = count($response[0]['range']);
         $this->assertEquals("favorites", $key);
-        $this->assertEquals(6, $total);
+        $this->assertEquals(5, $total);
     }
 
     /**
