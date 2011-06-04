@@ -38,13 +38,22 @@
  * @group      model
  * @group      timecard-model
  */
-class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
+class Timecard_Models_Timecard_Test extends DatabaseTest
 {
+    protected function getDataSet()
+    {
+        return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
+            array(
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
+    }
+
     /**
      * setUp method for PHPUnit
      */
     public function setUp()
     {
+        parent::setUp();
         $this->_model = new Timecard_Models_Timecard();
     }
 
@@ -55,9 +64,9 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
     {
         $timecardModel = clone($this->_model);
         $timecardModel->find(7);
-        $this->assertEquals("2009-05-16 10:30:00", $timecardModel->startDatetime);
-        $this->assertEquals("12:30:00", $timecardModel->endTime);
-        $this->assertEquals("120", $timecardModel->minutes);
+        $this->assertEquals("2009-05-17 09:00:00", $timecardModel->startDatetime);
+        $this->assertEquals("13:00:00", $timecardModel->endTime);
+        $this->assertEquals("0", $timecardModel->minutes);
         $this->assertEquals("1", $timecardModel->projectId);
         $this->assertEquals("My note", $timecardModel->notes);
     }
@@ -85,7 +94,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals('The start time is invalid', $error[0]['message']);
 
         // Wrong data, only start time but overlapping existing period
-        $timecardModel->startDatetime = '2009-05-16 11:00:00';
+        $timecardModel->startDatetime = '2009-05-17 11:00:00';
         $timecardModel->endTime       = null;
         $response                     = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
@@ -131,7 +140,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
         // Wrong data - Invalid start time
-        $timecardModel->startDatetime = '2009-05-17';
+        $timecardModel->startDatetime = '2009-05-18';
         $timecardModel->endTime       = '12:00:00';
         $response                     = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
@@ -158,7 +167,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         // Part 1 - Insert common period
         $timecardModel                = clone($this->_model);
         $timecardModel->ownerId       = 1;
-        $timecardModel->startDatetime = '2009-05-17 14:00:00';
+        $timecardModel->startDatetime = '2009-05-18 14:00:00';
         $timecardModel->endTime       = '18:00:00';
         $timecardModel->projectId     = 1;
         $timecardModel->notes         = 'TEST';
@@ -171,7 +180,7 @@ class Timecard_Models_Timecard_Test extends PHPUnit_Framework_TestCase
         unset($timecardModel);
         $timecardModel = clone($this->_model);
         $timecardModel->find($lastId);
-        $this->assertEquals('2009-05-17 14:00:00', $timecardModel->startDatetime);
+        $this->assertEquals('2009-05-18 14:00:00', $timecardModel->startDatetime);
         $this->assertEquals('18:00:00', $timecardModel->endTime);
 
         // Part 3 - Insert open period
