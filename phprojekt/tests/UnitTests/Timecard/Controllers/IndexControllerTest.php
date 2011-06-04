@@ -170,7 +170,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
         try {
-            $this->front->dispatch($this->request, $this->response);
+            $this->getResponse();
         } catch (Phprojekt_PublishedException $error) {
             $this->assertEquals("Time period: Can not save it because it overlaps existing one", $error->getMessage());
             return;
@@ -189,7 +189,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
         try {
-            $this->front->dispatch($this->request, $this->response);
+            $this->getResponse();
         } catch (Phprojekt_PublishedException $error) {
             $this->assertEquals("Time period: Can not Start Working Time because this moment is occupied by an "
                 . "existing period or an open one", $error->getMessage());
@@ -214,7 +214,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('startDatetime', '2009-05-16');
         $this->request->setParam('endTime', '12:00:00');
         try {
-            $this->front->dispatch($this->request, $this->response);
+            $this->getResponse();
         } catch (Phprojekt_PublishedException $error) {
             $this->assertEquals("Time period: Can not save it because it overlaps existing one", $error->getMessage());
             return;
@@ -233,7 +233,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
         try {
-            $this->front->dispatch($this->request, $this->response);
+            $this->getResponse();
         } catch (Phprojekt_PublishedException $error) {
             $this->assertEquals("Start: Is a required field", $error->getMessage());
             return;
@@ -253,7 +253,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
         try {
-            $this->front->dispatch($this->request, $this->response);
+            $this->getResponse();
         } catch (Phprojekt_PublishedException $error) {
             $this->assertEquals("Hours: The end time must be after the start time", $error->getMessage());
             return;
@@ -273,7 +273,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
         try {
-            $this->front->dispatch($this->request, $this->response);
+            $this->getResponse();
         } catch (Phprojekt_PublishedException $error) {
             $this->assertEquals("Hours: The end time must be after the start time", $error->getMessage());
             return;
@@ -298,12 +298,12 @@ class Timecard_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Timecard/index/jsonMonthList/');
         $this->request->setParam('year', 2009);
-        $this->request->setParam('month', '05');
+        $this->request->setParam('month', 5);
         $response = $this->getResponse();
         $expected = '{"date":"2009-05-01","week":"5","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
         $this->assertContains($expected, $response);
 
-        $expected = '{"date":"2009-05-17","week":"0","sumInMinutes":120,"sumInHours":"02:00","openPeriod":1}';
+        $expected = '{"date":"2009-05-17","week":"0","sumInMinutes":120,"sumInHours":"02:00","openPeriod":0}';
         $this->assertContains($expected, $response);
 
         $expected = '{"date":"2009-05-31","week":"0","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
@@ -333,18 +333,11 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('favorites', $favorites);
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::EDIT_TRUE_TEXT, $response);
-    }
 
-    /**
-     * Test of json Favorites Get
-     */
-    public function testJsonGetFavoritesProjects()
-    {
-        // INSERT
         $this->setRequestUrl('Timecard/index/jsonGetFavoritesProjects/');
         $response = $this->getResponse();
-        $this->assertContains('{"id":1,"display":"Invisible Root","name":"Invisible Root"},'
-            . '{"id":2,"display":"....Project 1","name":"Project 1"}', $response);
+        $this->assertContains('{"id":1,"display":"PHProjekt","name":"PHProjekt"},'
+            . '{"id":2,"display":"....Test Project","name":"Test Project"}', $response);
     }
 
     /**
@@ -358,8 +351,8 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains('"Start","End","Minutes","Project","Notes"'."\n"
-            .'"2009-05-16 09:00:00","","0","Invisible Root","My note"'."\n"
-            .'"2009-05-16 10:30:00","12:30","120","Invisible Root","My note"'."\n", $response);
+            .'"2009-05-17 09:00:00","13:00","0","PHProjekt","My note"'."\n"
+            .'"2009-05-17 14:00:00","18:00","120","PHProjekt","My note"'."\n", $response);
     }
 
     /**
