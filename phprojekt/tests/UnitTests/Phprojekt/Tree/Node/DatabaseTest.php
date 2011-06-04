@@ -37,17 +37,22 @@
  * @group      treenode
  * @group      phprojekt-treenode
  */
-class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
+class Phprojekt_Tree_Node_DatabaseTest extends DatabaseTest
 {
     private $_tree;
     private $_model;
+
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../../common.xml');
+    }
 
     /**
      * initialite
      */
     public function setUp()
     {
-        $this->_model = new Project_Models_Project($this->sharedFixture);
+        parent::setUp();
+        $this->_model = new Project_Models_Project();
         $this->_tree = new Phprojekt_Tree_Node_Database($this->_model, 1);
         $this->_tree = $this->_tree->setup();
     }
