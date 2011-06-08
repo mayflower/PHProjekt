@@ -72,7 +72,7 @@ class Contact_IndexController_Test extends FrontInit
     /**
      * Test of json list
      */
-    public function testJsonListBeforeAdd()
+    public function testJsonList()
     {
         // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
@@ -88,7 +88,7 @@ class Contact_IndexController_Test extends FrontInit
     /**
      * Test of json detail
      */
-    public function testJsonDetailBeforeAdd()
+    public function testJsonDetail()
     {
         // Check it
         $this->setRequestUrl('Contact/index/jsonDetail/');
@@ -98,7 +98,7 @@ class Contact_IndexController_Test extends FrontInit
         $expected = '"data":[{"id":1,"name":"Mariano","email":"mariano.lapenna@mayflower.de",'
             . '"company":"Mayflower","firstphone":"004912341234","secondphone":"004923452345",'
             . '"mobilephone":"004934563456","street":"Edison 1234","city":"Buenos Aires","zipcode":"1234AAA",'
-            . '"country":"Argentina","comment":"Very intelligent","private":0,"rights":{"currentUser":{"moduleId":9,'
+            . '"country":"Argentina","comment":"This is a comment","private":0,"rights":{"currentUser":{"moduleId":9,'
             . '"itemId":1,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
             . '"delete":true,"download":true,"admin":true}}}],"numRows":1})';
         $this->assertContains($expected, $response);
@@ -122,7 +122,7 @@ class Contact_IndexController_Test extends FrontInit
         $this->request->setParam('city', 'Buenos Aires2');
         $this->request->setParam('zipcode', '1234AAA2');
         $this->request->setParam('country', 'Argentina2');
-        $this->request->setParam('comment', 'Very intelligent2');
+        $this->request->setParam('comment', 'Foo');
         $this->request->setParam('private', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
