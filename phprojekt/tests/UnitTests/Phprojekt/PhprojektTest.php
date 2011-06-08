@@ -66,8 +66,6 @@ class Phprojekt_PhprojektTest extends PHPUnit_Framework_TestCase
                         'help' => 'http://us.php.net/manual/en/iconv.installation.php'),
                     'ctype' => array('required' => true, 'checked' => true,
                         'help' => 'http://us.php.net/manual/en/ctype.installation.php'),
-                    'gd' => array('required' => true, 'checked' => true,
-                        'help' => 'http://us.php.net/manual/en/image.installation.php'),
                     'pcre' => array('required' => true, 'checked' => true,
                         'help' => 'http://us.php.net/manual/en/pcre.installation.php'),
                     'pdo' => array('required' => true, 'checked' => true,
