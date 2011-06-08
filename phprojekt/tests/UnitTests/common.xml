@@ -238,5 +238,6 @@
         email="mariano.lapenna@mayflower.de" company="Mayflower"
         firstphone="004912341234" secondphone="004923452345"
         mobilephone="004934563456" city="Buenos Aires" zipcode="1234AAA"
-        country="Argentina" street="Edison 1234" private="0" />
+        country="Argentina" street="Edison 1234"
+        comment="This is a comment" private="0" />
 </dataset>
