@@ -47,26 +47,24 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 
 require_once 'PHPUnit/Autoload.php';
 
+require_once 'Todo/AllTests.php';
 require_once 'Default/AllTests.php';
 require_once 'Phprojekt/AllTests.php';
 require_once 'Timecard/AllTests.php';
-require_once 'History/AllTests.php';
+//require_once 'History/AllTests.php';
 require_once 'User/AllTests.php';
-require_once 'Calendar/AllTests.php';
+//require_once 'Calendar/AllTests.php';
 require_once 'Note/AllTests.php';
 require_once 'Role/AllTests.php';
-require_once 'Todo/AllTests.php';
 require_once 'Tab/AllTests.php';
-require_once 'Module/AllTests.php';
+//require_once 'Module/AllTests.php';
 require_once 'Project/AllTests.php';
-require_once 'Minutes/AllTests.php';
+//require_once 'Minutes/AllTests.php';
 require_once 'Helpdesk/AllTests.php';
 require_once 'Contact/AllTests.php';
-require_once 'Filemanager/AllTests.php';
-require_once 'Gantt/AllTests.php';
+//require_once 'Filemanager/AllTests.php';
+//require_once 'Gantt/AllTests.php';
 require_once 'Statistic/AllTests.php';
-
-// require_once 'Selenium/AllTests.php';
 
 /**
  * AllTests merges all test from the modules
@@ -99,12 +97,6 @@ class AllTests extends PHPUnit_Framework_TestSuite
      */
     public static function suite()
     {
-        // These directories are covered for the code coverage even they are not part of unit testing
-        PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/application');
-        PHPUnit_Util_Filter::addDirectoryToWhitelist(dirname(dirname(dirname(__FILE__))) . '/library/Phprojekt');
-        // Avoid Selenium checks
-        PHPUnit_Util_Filter::addDirectoryToFilter(dirname(__FILE__) . '/Selenium');
-
         $authNamespace         = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $authNamespace->userId = 1;
         $authNamespace->admin  = 1;
@@ -113,26 +105,25 @@ class AllTests extends PHPUnit_Framework_TestSuite
 
         $suite->sharedFixture = Phprojekt::getInstance()->getDb();
 
+        $suite->addTest(User_AllTests::suite());
         $suite->addTest(Timecard_AllTests::suite());
         $suite->addTest(Statistic_AllTests::suite());
-        $suite->addTest(User_AllTests::suite());
-        $suite->addTest(Calendar_AllTests::suite());
-        $suite->addTest(Note_AllTests::suite());
+        //$suite->addTest(Calendar_AllTests::suite());
+        //$suite->addTest(Note_AllTests::suite());
         $suite->addTest(Todo_AllTests::suite());
-        $suite->addTest(Helpdesk_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
-        $suite->addTest(History_AllTests::suite());
+        $suite->addTest(Helpdesk_AllTests::suite());
+        //$suite->addTest(History_AllTests::suite());
         $suite->addTest(Role_AllTests::suite());
         $suite->addTest(Tab_AllTests::suite());
         $suite->addTest(Project_AllTests::suite());
-        $suite->addTest(Module_AllTests::suite());
+        //$suite->addTest(Module_AllTests::suite());
         $suite->addTest(Contact_AllTests::suite());
-        $suite->addTest(Filemanager_AllTests::suite());
-        $suite->addTest(Gantt_AllTests::suite());
-        $suite->addTest(Minutes_AllTests::suite());
+        //$suite->addTest(Filemanager_AllTests::suite());
+        //$suite->addTest(Gantt_AllTests::suite());
+        //$suite->addTest(Minutes_AllTests::suite());
 
         // Add here additional test suites
-
 
         $suite->addTest(Default_AllTests::suite());
         //$suite->addTestSuite(Selenium_AllTests::suite());
