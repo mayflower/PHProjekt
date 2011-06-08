@@ -39,6 +39,10 @@
  */
 class User_IndexController_Test extends FrontInit
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
+    }
+
     /**
      * Test the user list
      */
