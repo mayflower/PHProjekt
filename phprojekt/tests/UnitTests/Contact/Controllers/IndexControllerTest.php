@@ -140,13 +140,7 @@ class Contact_IndexController_Test extends FrontInit
         $this->request->setParam('id', '1');
         $response = $this->getResponse();
         $this->assertContains(Contact_IndexController::DELETE_TRUE_TEXT, $response);
-    }
 
-    /**
-     * Test of json delete - actually the Default functions -> Check the item was deleted
-     */
-    public function testJsonDeleteCheck() {
-        // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
