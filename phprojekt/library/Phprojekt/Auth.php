@@ -235,6 +235,26 @@ class Phprojekt_Auth extends Zend_Auth
     }
 
     /**
+     * Check a username/password combination for validity.
+     *
+     * @param string $username The username
+     * @param string $password The password
+     *
+     * @return boolean Whether the password matches the user.
+     */
+    public static function checkCredentials($username, $password)
+    {
+        $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $userId = $user->findIdByUsername($username);
+        if (0 == $userId) {
+            return false;
+        }
+        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting->setModule('User');
+        return self::_compareStringWithPassword($password, $setting->getSetting("password", $userId));
+    }
+
+    /**
      * Compare a string with a user password.
      *
      * @param string $string   Key uncryted to check if it is the password.
