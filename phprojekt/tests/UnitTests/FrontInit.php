@@ -172,13 +172,7 @@ abstract class FrontInit extends DatabaseTest
         $this->request->setDispatched(false);
         ob_start();
         $this->error = false;
-        try {
-            $this->front->dispatch($this->request, $this->response);
-        } catch (Phprojekt_PublishedException $error) {
-            $this->error        = true;
-            $this->errormessage = $error->getMessage();
-            unset($error);
-        }
+        $this->front->dispatch($this->request, $this->response);
         $this->content = ob_get_contents();
         ob_end_clean();
 
