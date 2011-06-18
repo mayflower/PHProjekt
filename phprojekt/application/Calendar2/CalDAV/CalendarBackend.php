@@ -41,7 +41,19 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
 {
     public function getCalendarsForUser($principalUri)
     {
-        throw new Exception('Calendar2_CalDAV_CalendarBackend->getCalendarsForUser is not implemented yet');
+        // We have exactly one calendar per principal.
+        $user = new Phprojekt_User_User();
+        $user = $user->findByUsername(preg_filter('|.*principals/([^/]+)$|', '$1', $principalUri));
+        if (is_null($user)) {
+            throw new Exception("principal not found under $principalUri when retrieving calendars, username $username");
+        }
+        return array(
+            array(
+                'id' => $user->id,
+                'uri' => 'default',
+                'principaluri' => $principalUri
+            )
+        );
     }
 
     public function createCalendar($principalUri, $calendarUri, array $properties)
