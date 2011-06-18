@@ -61,7 +61,6 @@ class Calendar2_CalDAV_PrincipalBackend implements Sabre_DAVACL_IPrincipalBacken
     public function getGroupMembership($principal)
     {
         // TODO: Implement me
-        throw new Exception('not implemented2. $principal = ' . $principal);
         return array();
     }
 
