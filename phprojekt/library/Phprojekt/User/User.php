@@ -143,6 +143,26 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
+     * Finds a user based on the username
+     *
+     * @param string $username Username of the user to find.
+     *
+     * @return Phprojekt_User_User|null User object or null.
+     */
+    public function findByUsername($username)
+    {
+        $db = Phprojekt::getInstance()->getDb();
+
+        $users = $this->fetchAll($db->quoteInto('username = ?', $username), null, 1);
+
+        if (isset($users[0])) {
+            return $users[0];
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Found an user using the id and return this class for the new user.
      * If the ID is wrong, return the actual user.
      *
