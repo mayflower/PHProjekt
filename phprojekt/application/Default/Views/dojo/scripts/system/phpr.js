@@ -1137,12 +1137,11 @@ dojo.declare("phpr.ScrollPane", [dijit.layout._LayoutWidget, dijit._Templated], 
 });
 
 phpr.inArray = function(needle, haystack) {
-    var key = '';
-
-    for (key in haystack) {
-        if (haystack[key] === needle) {
-            return true;
-        }
+    //we need to check for this, because for some reason, the function is
+    //called with undefined as haystack very often
+    if("Array" == typeof haystack || "Object" == typeof haystack) {
+        console.log("use new");
+        return dojo.indexOf(haystack, needle)!=-1;
     }
 
     return false;
