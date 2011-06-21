@@ -21,6 +21,7 @@
  * @version    Release: @package_version@
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
+require_once 'SabreDAV/Sabre/VObject/includes.php';
 
 /**
  * Calendar2 model class.
@@ -864,6 +865,23 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
     {
         $this->_notify(null, $method);
+    }
+
+    /**
+     * Returns a Sabre_Vobject_Component representing this object.
+     *
+     * @return Sabre_VObject_Component representing $this.
+     */
+    public function asVObject()
+    {
+        $vobject = new Sabre_VObject_Component('vevent');
+        $vobject->add('summary', $this->summary);
+        $vobject->add('description', $this->description);
+        $start = new DateTime($this->start);
+        $vobject->add('dtstart', $start->format('Ymd\This\Z'));
+        $end = new DateTime($this->end);
+        $vobject->add('dtend', $end->format('Ymd\This\Z'));
+        return $vobject;
     }
 
     /**
