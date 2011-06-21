@@ -74,12 +74,48 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
 
     public function getCalendarObjects($calendarId)
     {
-        throw new Exception('Calendar2_CalDAV_CalendarBackend->getCalendarObjects is not implemented yet');
+        $calendar = new Calendar2_Models_Calendar2();
+        $events = $calendar->fetchAll();
+        $ret = array();
+        foreach ($events as $event) {
+            $calendarData = new Sabre_VObject_Component('vcalendar');
+            $calendarData->add('version', '2.0');
+            $calendarData->add('prodid', 'PHProjekt ' . Phprojekt::getVersion());
+            $calendarData->add($event->asVObject());
+            $ret[] = array(
+                'id' => $event->id,
+                'uri' => $event->uri,
+                'lastmodified' => $event->lastModified,
+                'etag' => $event->id, //TODO: This is used for caching and should change if the event is changed.
+                'calendardata' => $calendarData->serialize(),
+                'calendarid' => $calendarId
+            );
+        }
+        return $ret;
     }
 
     public function getCalendarObject($calendarId, $objectUri)
     {
-        throw new Exception('Calendar2_CalDAV_CalendarBackend->getCalendarObject is not implemented yet');
+        $db = Phprojekt::getInstance()->getDb();
+        $event = new Calendar2_Models_Calendar2();
+        $event = $event->fetchAll($db->quoteInto('uri = ?', $objectUri));
+        if (!is_array($event) || !array_key_exists(0, $event)) {
+            return array();
+        } else {
+            $event = $event[0];
+            $calendarData = new Sabre_VObject_Component('vcalendar');
+            $calendarData->add('version', '2.0');
+            $calendarData->add('prodid', 'Phprojekt ' . Phprojekt::getVersion());
+            $calendarData->add($event->asVObject());
+            return array(
+                'id' => $event->id,
+                'uri' => $event->uri,
+                'lastmodified' => $event->lastModified,
+                'etag' => $event->id, //TODO: This is used for caching and should change if the event is changed.
+                'calendarid' => $calendarId,
+                'calendardata' => $calendarData->serialize()
+            );
+        }
     }
 
     public function createCalendarObject($calendarId, $objectUri, $calendarData)
