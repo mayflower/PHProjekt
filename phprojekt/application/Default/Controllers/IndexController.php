@@ -145,6 +145,16 @@ class IndexController extends Zend_Controller_Action
      */
     public function init()
     {
+        $this->checkAuthentication();
+    }
+
+    /**
+     * Check if the user is logged in and everything is fine.
+     *
+     * @return void
+     */
+    public function checkAuthentication()
+    {
         $isLoggedIn = Phprojekt_Auth::isLoggedIn();
         if ($isLoggedIn) {
             // Check the CSRF token
