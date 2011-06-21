@@ -38,6 +38,15 @@ require_once 'Sabre.autoload.php';
  */
 class Calendar2_CaldavController extends IndexController
 {
+    public function preDispatch()
+    {
+        $this->_helper->viewRenderer->setNoRender(true);
+    }
+
+    public function checkAuthentication()
+    {
+    }
+
     public function indexAction() {
         // This is mostly copied from the sabredav wiki
         // Backends
