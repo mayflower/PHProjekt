@@ -21,7 +21,7 @@
  * @version    Release: @package_version@
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-require_once 'SabreDAV/Sabre.autoload.php';
+require_once 'Sabre.autoload.php';
 
 /**
  * Calendar2 Module CalDAV Controller.
