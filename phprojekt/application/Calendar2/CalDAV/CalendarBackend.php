@@ -51,7 +51,8 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
             array(
                 'id' => $user->id,
                 'uri' => 'default',
-                'principaluri' => $principalUri
+                'principaluri' => $principalUri,
+                '{' . Sabre_CalDAV_Plugin::NS_CALDAV . '}supported-calendar-component-set' => new Sabre_CalDAV_Property_SupportedCalendarComponentSet(array('VEVENT'))
             )
         );
     }
