@@ -959,14 +959,7 @@ dojo.declare("phpr.ScrollPane", [dijit.layout._LayoutWidget, dijit._Templated], 
     _positions: new Array(),
 
     // Template
-    templateString: "<div class=\"phprScrollWindow\" dojoAttachEvent=\"onmouseenter: _enter, ondijitclick: _leave, "
-        + "onmouseleave: _leave\">\r\n\t<div class=\"phprScrollArrowLeft\" dojoAttachPoint=\"scrollArrowLeft\" "
-        + "dojoAttachEvent=\"onmouseenter: _enterLeft, onmouseleave: _leave\">\r\n\t&nbsp;\r\n\t</div>\r\n\t"
-        + "<div class=\"phprScrollWrapper\" style=\"${style}\" dojoAttachPoint=\"wrapper\" "
-        + "dojoAttachEvent=\"onmousemove: _calc\">\r\n\t<div class=\"phprScrollPane\" "
-        + "dojoAttachPoint=\"containerNode\"></div>\r\n\t</div>\r\n\t<div class=\"phprScrollArrowRight\" "
-        + "dojoAttachPoint=\"scrollArrowRight\" dojoAttachEvent=\"onmouseenter: _enterRight, onmouseleave: _leave\">"
-        + "\r\n\t&nbsp;\r\n\t</div>\r\n\t</div>\r\n",
+    templateString: __phpr_templateCache["phpr.Default.template.ScrollPane.html"],
 
     layout:function() {
         // Summary:
