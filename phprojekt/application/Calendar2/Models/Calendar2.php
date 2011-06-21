@@ -428,6 +428,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $this->_isFirst             = true;
     }
 
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
+    {
+        return Phprojekt_ActiveRecord_Abstract::fetchAll($where, $order, $count, $offset, $select, $join);
+    }
+
     /**
      * Get all events in the period that the currently active user participates
      * in. Both given times are inclusive.
