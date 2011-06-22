@@ -74,9 +74,12 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
 
     public function getCalendarObjects($calendarId)
     {
+        $db = Phprojekt::getInstance()->getDb();
         $calendar = new Calendar2_Models_Calendar2();
-        $events = $calendar->fetchAll();
-        $ret = array();
+        $where    = $db->quoteInto('u.user_id = ?', $calendarId);
+        $join     = 'JOIN calendar2_user_relation AS u ON calendar2.id = u.calendar2_id';
+        $events   = $calendar->fetchAll($where, null, null, null, null, $join);
+        $ret      = array();
         foreach ($events as $event) {
             $calendarData = new Sabre_VObject_Component('vcalendar');
             $calendarData->add('version', '2.0');
