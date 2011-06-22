@@ -182,11 +182,10 @@ class JsController extends IndexController
         $templatetext = '';
         // Preload the templates and save them into __phpr_templateCache
         foreach ($this->_templates as $templateData) {
-            $content = str_replace("'", "\\" . "'", $templateData['contents']);
-            $content = str_replace("<", "<' + '", $content);
+            $content = json_encode($templateData['contents']);
             $templatetext .= '
                 __phpr_templateCache["phpr.' . $templateData['module'] . '.template.' . $templateData['name']
-                . '"] = \'' . $content . '\';';
+                . '"] = ' . $content . ';';
         }
 
         return $templatetext;
