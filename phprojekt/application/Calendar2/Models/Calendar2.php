@@ -199,6 +199,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
             $now = new Datetime('now', new DateTimeZone('UTC'));
             $this->lastModified = $now->format('Y-m-d H:i:s');
+            if (!$this->uri) {
+                $this->uri = $this->uid;
+            }
             parent::save();
             $this->_saveParticipantData();
             $this->_updateRights();
