@@ -356,21 +356,19 @@ class Calendar2_Helper_Rrule
     public function getEndOfLastOccurrence()
     {
         if (empty($this->_rrule)) {
+            // No recurrence at all
             $tmp = clone $this->_first;
             $tmp->add(new DateInterval("PT{$this->_duration}S"));
             return $tmp;
         }
-        $until = clone $this->_rrule['UNTIL'];
-        Phprojekt::getInstance()->getLog()->debug(print_r($until, true));
-        Phprojekt::getInstance()->getLog()->debug($until->format('Y-m-d H:i:s'));
-        Phprojekt::getInstance()->getLog()->debug($this->_duration);
-
-        if (is_null($until)) {
+        if (!array_key_exists('UNITL', $this->_rrule) || empty($this->_rrule['UNTIL'])) {
+            // Unlimited recurrence
             return null;
-        } else {
-            $until->add(new DateInterval("PT{$this->_duration}S"));
-            return $until;
         }
+
+        $until = clone $this->_rrule['UNTIL'];
+        $until->add(new DateInterval("PT{$this->_duration}S"));
+        return $until;
     }
 
     /**

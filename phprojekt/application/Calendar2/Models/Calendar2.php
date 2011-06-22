@@ -156,9 +156,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         }
 
         if ($this->_isFirst) {
-            $this->lastEnd = Phprojekt_Converter_Time::utcToUser(
-                $this->getRruleHelper()->getEndOfLastOccurrence()->format('Y-m-d H:i:s')
-            );
+            $endOfLast = $this->getRruleHelper()->getEndOfLastOccurrence();
+            if ($endOfLast) {
+                $this->lastEnd = $endOfLast->format('Y-m-d H:i:s');
+            } else {
+                // I hate to do this, but item casts null to '1970-01-01 00;00:00'.
+                $this->_data['lastEnd'] = null;
+            }
             if (!self::isValidVisibility($this->visibility)) {
                 throw new Phprojekt_PublishedException(
                     "Invalid visibility {$this->visibility}"
@@ -439,7 +443,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         //TODO: This might query a lot of objects. Consider saving the last
         //      date of occurrence too so this is faster.
         $where .= $db->quoteInto('AND calendar2.start <= ?', $end->format('Y-m-d H:i:s'));
-        $where .= $db->quoteInto('AND calendar2.last_end >= ?', $start->format('Y-m-d H:i:s'));
+        $where .= $db->quoteInto(
+            'AND (calendar2.last_end IS NULL OR calendar2.last_end >= ?)',
+            $start->format('Y-m-d H:i:s')
+        );
         $join   = 'JOIN calendar2_user_relation '
                     . 'ON calendar2.id = calendar2_user_relation.calendar2_id';
 
