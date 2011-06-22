@@ -52,6 +52,7 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
                 'id' => $user->id,
                 'uri' => 'default',
                 'principaluri' => $principalUri,
+                '{' . Sabre_CalDAV_Plugin::NS_CALENDARSERVER . '}getctag' => time(),
                 '{' . Sabre_CalDAV_Plugin::NS_CALDAV . '}supported-calendar-component-set' => new Sabre_CalDAV_Property_SupportedCalendarComponentSet(array('VEVENT'))
             )
         );
@@ -89,7 +90,6 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
                 'id' => $event->id,
                 'uri' => $event->uri,
                 'lastmodified' => $event->lastModified,
-                'etag' => $event->id, //TODO: This is used for caching and should change if the event is changed.
                 'calendardata' => $calendarData->serialize(),
                 'calendarid' => $calendarId
             );
@@ -114,7 +114,6 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
                 'id' => $event->id,
                 'uri' => $event->uri,
                 'lastmodified' => $event->lastModified,
-                'etag' => $event->id, //TODO: This is used for caching and should change if the event is changed.
                 'calendarid' => $calendarId,
                 'calendardata' => $calendarData->serialize()
             );
