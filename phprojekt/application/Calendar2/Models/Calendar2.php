@@ -885,10 +885,19 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $vobject = new Sabre_VObject_Component('vevent');
         $vobject->add('summary', $this->summary);
         $vobject->add('description', $this->description);
+        $vobject->add('comment', $this->comments);
+        $vobject->add('location', $this->location);
+        if ($this->rrule) {
+            $vobject->add('rrule', $this->rrule);
+        }
         $start = new DateTime($this->start);
         $vobject->add('dtstart', $start->format('Ymd\This\Z'));
         $end = new DateTime($this->end);
         $vobject->add('dtend', $end->format('Ymd\This\Z'));
+        $lastMod = new DateTime($this->lastModified);
+        $vobject->add('dtstamp', $lastMod->format('Ymd\This\Z'));
+        $vobject->add('last-modified', $lastMod->format('Ymd\This\Z'));
+        $vobject->add('uid', $this->uid);
         return $vobject;
     }
 
