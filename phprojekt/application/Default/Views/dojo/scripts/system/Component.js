@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Component");
 
+dojo.require("dojox.dtl.Inline");
+
 dojo.declare("phpr.Component", null, {
     main:   null,
     module: "",

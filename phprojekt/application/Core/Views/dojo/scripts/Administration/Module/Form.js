@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Module.Form");
 
+dojo.require("dijit.Dialog");
+
 dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     _dialog: null,
 

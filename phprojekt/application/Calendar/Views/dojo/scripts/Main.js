@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Calendar.Main");
 
+dojo.require("dijit.layout.ContentPane");
+
 dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     _date:                new Date(),
     _usersSelectionMode:  false,
