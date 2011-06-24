@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.layout._TabContainerBase"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.layout._TabContainerBase"] = true;
 dojo.provide("dijit.layout._TabContainerBase");
 
 dojo.require("dijit.layout.StackContainer");
@@ -41,7 +32,7 @@ dojo.declare("dijit.layout._TabContainerBase",
 	//		border since the outer TabContainer already has a border.
 	nested: false,
 
-	templateString: dojo.cache("dijit.layout", "templates/TabContainer.html", "<div class=\"dijitTabContainer\">\r\n\t<div class=\"dijitTabListWrapper\" dojoAttachPoint=\"tablistNode\"></div>\r\n\t<div dojoAttachPoint=\"tablistSpacer\" class=\"dijitTabSpacer ${baseClass}-spacer\"></div>\r\n\t<div class=\"dijitTabPaneWrapper ${baseClass}-container\" dojoAttachPoint=\"containerNode\"></div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dijit.layout", "templates/TabContainer.html"),
 
 	postMixInProperties: function(){
 		// set class name according to tab position, ex: dijitTabContainerTop
@@ -137,5 +128,3 @@ dojo.declare("dijit.layout._TabContainerBase",
 	}
 });
 
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.charting.Theme"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.Theme"] = true;
 dojo.provide("dojox.charting.Theme");
 
 dojo.require("dojox.color");
@@ -619,5 +610,3 @@ dojo.mixin(dojox.charting.Theme, {
 		return dojox.charting.Theme.generateGradient(fillPattern, colorFrom, colorTo);	// Object
 	}
 });
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource['dojox.widget.gauge.AnalogArcIndicator']){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource['dojox.widget.gauge.AnalogArcIndicator'] = true;
 dojo.provide('dojox.widget.gauge.AnalogArcIndicator');
 dojo.require('dojox.widget.AnalogGauge');
 
@@ -73,5 +64,3 @@ dojo.declare("dojox.widget.gauge.AnalogArcIndicator",[dojox.widget.gauge.AnalogL
 		}
 	}
 });
-
-}

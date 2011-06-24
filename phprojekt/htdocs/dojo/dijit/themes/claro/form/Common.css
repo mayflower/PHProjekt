@@ -84,7 +84,8 @@
 .claro .dijitTextBoxDisabled .dijitButtonNode {
 	border-color: #d3d3d3;
 }
-.claro .dijitTextBoxDisabled {
+.claro .dijitTextBoxDisabled,
+.claro .dijitTextBoxDisabled .dijitInputContainer {
 	background-color: #efefef;
 	background-image: none;
 	color: #818181;
@@ -102,6 +103,10 @@
 	width:16px;
 	height:100%;
 	border: 1px solid #fff;
+}
+
+.claro .dijitToolbar .dijitComboBox .dijitArrowButtonInner {
+	border: none;
 }
 
 .claro .dijitTextBox .dijitInputField {

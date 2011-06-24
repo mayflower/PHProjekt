@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.Editor"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.Editor"] = true;
 dojo.provide("dijit.Editor");
 dojo.require("dijit._editor.RichText");
 
@@ -19,7 +10,7 @@ dojo.require("dijit._Container");
 dojo.require("dojo.i18n");
 dojo.require("dijit.layout._LayoutWidget");
 dojo.require("dijit._editor.range");
-dojo.requireLocalization("dijit._editor", "commands", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit._editor", "commands");
 
 dojo.declare(
 	"dijit.Editor",
@@ -80,6 +71,18 @@ dojo.declare(
 			}
 		},
 
+		postMixInProperties: function() {
+			// summary:
+			//	Extension to make sure a deferred is in place before certain functions
+			//	execute, like making sure all the plugins are properly inserted.
+
+			// Set up a deferred so that the value isn't applied to the editor
+			// until all the plugins load, needed to avoid timing condition
+			// reported in #10537.
+			this.setValueDeferred = new dojo.Deferred();
+			this.inherited(arguments);
+		},
+	
 		postCreate: function(){
 			//for custom undo/redo, if enabled.
 			this._steps=this._steps.slice(0);
@@ -88,11 +91,6 @@ dojo.declare(
 			if(dojo.isArray(this.extraPlugins)){
 				this.plugins=this.plugins.concat(this.extraPlugins);
 			}
-
-			// Set up a deferred so that the value isn't applied to the editor 
-			// until all the plugins load, needed to avoid timing condition
-			// reported in #10537.
-			this.setValueDeferred = new dojo.Deferred();
 
 			this.inherited(arguments);
 
@@ -701,25 +699,27 @@ dojo.declare(
 		},
 
 		_setDisabledAttr: function(/*Boolean*/ value){
-			if(!this.disabled && value){
-				// Disable editor: disable all enabled buttons and remember that list
-				this._buttonEnabledPlugins = dojo.filter(this._plugins, function(p){
-					if (p && p.button && !p.button.get("disabled")) {
-						p.button.set("disabled", true);
-						return true;
-					}
-					return false;
-				});
-			}else if(this.disabled && !value){
-				// Enable editor: we only want to enable the buttons that should be
-				// enabled (for example, the outdent button shouldn't be enabled if the current
-				// text can't be outdented).
-				dojo.forEach(this._buttonEnabledPlugins, function(p){
-					p.button.attr("disabled", false);
-					p.updateState && p.updateState();	// just in case something changed, like caret position
-				});
-			}
-			
+			var disableFunc = dojo.hitch(this, function(){
+				if((!this.disabled && value) || (!this._buttonEnabledPlugins && value)){
+					// Disable editor: disable all enabled buttons and remember that list
+					this._buttonEnabledPlugins = dojo.filter(this._plugins, function(p){
+						if(p && p.button && !p.button.get("disabled")){
+							p.button.set("disabled", true);
+							return true;
+						}
+						return false;
+					});
+				}else if(this.disabled && !value){
+					// Enable editor: we only want to enable the buttons that should be
+					// enabled (for example, the outdent button shouldn't be enabled if the current
+					// text can't be outdented).
+					dojo.forEach(this._buttonEnabledPlugins, function(p){
+						p.button.attr("disabled", false);
+						p.updateState && p.updateState();	// just in case something changed, like caret position
+					});
+				}
+			});
+			this.setValueDeferred.addCallback(disableFunc);
 			this.inherited(arguments);
 		},
 		
@@ -761,5 +761,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 //	console.log('name',name,p);
 	o.plugin=p;
 });
-
-}

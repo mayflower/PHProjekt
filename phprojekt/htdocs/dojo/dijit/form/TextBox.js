@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.form.TextBox"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.TextBox"] = true;
 dojo.provide("dijit.form.TextBox");
 
 dojo.require("dijit.form._FormWidget");
@@ -47,7 +38,7 @@ dojo.declare(
 		//		This should only contain plain text (no html markup).
 		placeHolder: "",
 		
-		templateString: dojo.cache("dijit.form", "templates/TextBox.html", "<div class=\"dijit dijitReset dijitInline dijitLeft\" id=\"widget_${id}\" waiRole=\"presentation\"\r\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\r\n\t\t><input class=\"dijitReset dijitInputInner\" dojoAttachPoint='textbox,focusNode' autocomplete=\"off\"\r\n\t\t\t${!nameAttrSetting} type='${type}'\r\n\t/></div\r\n></div>\r\n"),
+		templateString: dojo.cache("dijit.form", "templates/TextBox.html"),
 		_singleNodeTemplate: '<input class="dijit dijitReset dijitLeft dijitInputField" dojoAttachPoint="textbox,focusNode" autocomplete="off" type="${type}" ${!nameAttrSetting} />',
 
 		_buttonInputDisabled: dojo.isIE ? "disabled" : "", // allows IE to disallow focus, but Firefox cannot be disabled for mousedown events
@@ -60,7 +51,7 @@ dojo.declare(
 		
 		postMixInProperties: function(){
 			var type = this.type.toLowerCase();
-			if(this.templateString.toLowerCase() == "input" || ((type == "hidden" || type == "file") && this.templateString == dijit.form.TextBox.prototype.templateString)){
+			if(this.templateString && this.templateString.toLowerCase() == "input" || ((type == "hidden" || type == "file") && this.templateString == dijit.form.TextBox.prototype.templateString)){
 				this.templateString = this._singleNodeTemplate;
 			}
 			this.inherited(arguments);
@@ -249,18 +240,21 @@ dojo.declare(
 			// setting the value here is needed since value="" in the template causes "undefined"
 			// and setting in the DOM (instead of the JS object) helps with form reset actions
 			if(dojo.isIE){ // IE INPUT tag fontFamily has to be set directly using STYLE
-				var s = dojo.getComputedStyle(this.domNode);
-				if(s){
-					var ff = s.fontFamily;
-					if(ff){
-						var inputs = this.domNode.getElementsByTagName("INPUT");
-						if(inputs){
-							for(var i=0; i < inputs.length; i++){
-								inputs[i].style.fontFamily = ff;
+				// the setTimeout gives IE a chance to render the TextBox and to deal with font inheritance
+				setTimeout(dojo.hitch(this, function(){
+					var s = dojo.getComputedStyle(this.domNode);
+					if(s){
+						var ff = s.fontFamily;
+						if(ff){
+							var inputs = this.domNode.getElementsByTagName("INPUT");
+							if(inputs){
+								for(var i=0; i < inputs.length; i++){
+									inputs[i].style.fontFamily = ff;
+								}
 							}
 						}
 					}
-				}
+				}), 0);
 			}
 			this.textbox.setAttribute("value", this.textbox.value); // DOM and JS values shuld be the same
 			this.inherited(arguments);
@@ -402,5 +396,3 @@ dijit.selectInputText = function(/*DomNode*/element, /*Number?*/ start, /*Number
 		}
 	}
 };
-
-}

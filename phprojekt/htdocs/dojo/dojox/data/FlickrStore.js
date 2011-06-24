@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.FlickrStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.FlickrStore"] = true;
 dojo.provide("dojox.data.FlickrStore");
 
 dojo.require("dojo.data.util.simpleFetch");
@@ -295,6 +286,4 @@ dojo.require("dojo.AdapterRegistry");
 //This somewhat stinks, but what can you do?
 if(!jsonFlickrFeed){
 	var jsonFlickrFeed = function(data){};
-}
-
 }

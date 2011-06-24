@@ -1,1 +1,5 @@
-({"redLabel":"r","valueLabel":"v","hexLabel":"hex","hueLabel":"t","saturationLabel":"s","greenLabel":"v","blueLabel":"b","saturationPickerTitle":"Saturation Selector","huePickerTitle":"Hue Selector","degLabel":"°"})
+({
+huePickerTitle: "Selettore tonalità",
+saturationPickerTitle: "Selettore saturazione"
+})
+

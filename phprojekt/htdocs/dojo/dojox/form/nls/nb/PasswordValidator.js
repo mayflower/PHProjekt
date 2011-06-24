@@ -1,1 +1,5 @@
-({"badPasswordMessage":"Ugyldig passord.","nomatchMessage":"Passordene samsvarer ikke."})
+({
+        nomatchMessage: "Passordene samsvarer ikke.",
+		badPasswordMessage: "Ugyldig passord."
+})
+

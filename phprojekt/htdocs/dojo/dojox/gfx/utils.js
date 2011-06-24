@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.gfx.utils"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx.utils"] = true;
 dojo.provide("dojox.gfx.utils");
 
 dojo.require("dojox.gfx");
@@ -284,5 +275,3 @@ dojo.require("dojox.gfx");
 		}
 	});
 })();
-
-}

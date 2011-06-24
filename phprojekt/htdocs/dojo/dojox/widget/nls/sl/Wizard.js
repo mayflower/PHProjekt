@@ -1,1 +1,6 @@
-({"next":"Naprej","done":"Opravljeno","previous":"Nazaj"})
+({
+next: "Naprej",
+previous: "Nazaj",
+done: "Opravljeno"
+})
+

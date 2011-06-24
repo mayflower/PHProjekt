@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.robot.recorder"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.robot.recorder"] = true;
 dojo.provide("dojox.robot.recorder");
 dojo.experimental("dojox.robot.recorder");
 // summary:
@@ -508,5 +499,3 @@ dojo.connect(dojo, "connect",
 		}
 	});
 })();
-
-}

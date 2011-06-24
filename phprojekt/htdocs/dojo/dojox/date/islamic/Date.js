@@ -1,16 +1,7 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.date.islamic.Date"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.date.islamic.Date"] = true;
 dojo.provide("dojox.date.islamic.Date");
 
 dojo.require("dojo.date");
-dojo.requireLocalization("dojo.cldr", "islamic", null, "ROOT,ar,he");
+dojo.requireLocalization("dojo.cldr", "islamic");
 
 dojo.declare("dojox.date.islamic.Date", null, {
 	// summary: The component defines the Islamic (Hijri) Calendar Object
@@ -397,8 +388,7 @@ dojo.declare("dojox.date.islamic.Date", null, {
 		var julianDay = (this._GREGORIAN_EPOCH - 1) + (365 * (gYear - 1)) + Math.floor((gYear - 1) / 4)
 					+ (-Math.floor((gYear - 1) / 100)) + Math.floor((gYear - 1) / 400)
 					+ Math.floor((((367 * (gMonth+1)) - 362) / 12)
-					+ (((gMonth+1) <= 2) ? 0 : (dojo.date.isLeapYear(date) ? -1 : -2)) + gDay) 
-					+(Math.floor(date.getSeconds() + 60 * (date.getMinutes() + 60 * date.getHours()) + 0.5) / 86400.0);
+					+ (((gMonth+1) <= 2) ? 0 : (dojo.date.isLeapYear(date) ? -1 : -2)) + gDay);
 		julianDay = Math.floor(julianDay) + 0.5;
 
 		var days = julianDay - this._ISLAMIC_EPOCH;
@@ -464,5 +454,3 @@ dojo.declare("dojox.date.islamic.Date", null, {
 dojox.date.islamic.Date.getDaysInIslamicMonth = function(/*dojox.date.islamic.Date*/month){
 	return new dojox.date.islamic.Date().getDaysInIslamicMonth(month.getMonth(),month.getFullYear()); // dojox.date.islamic.Date
 };
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.UploadImage"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.UploadImage"] = true;
 dojo.provide("dojox.editor.plugins.UploadImage");
 dojo.require("dijit._editor._Plugin");
 dojo.require("dojox.form.FileUploader");
@@ -103,5 +94,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 		o.plugin = new dojox.editor.plugins.UploadImage({url: o.args.url});
 	}
 });
-
-}

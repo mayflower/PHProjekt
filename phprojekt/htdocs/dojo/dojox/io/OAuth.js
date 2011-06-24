@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.io.OAuth"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.io.OAuth"] = true;
 dojo.provide("dojox.io.OAuth");
 dojo.require("dojox.encoding.digests.SHA1");
 
@@ -302,5 +293,3 @@ dojox.io.OAuth = new (function(){
 		return this.xhr("DELETE", args, oaa);
 	};
 })();
-
-}

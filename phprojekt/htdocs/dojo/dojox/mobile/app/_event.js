@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.mobile.app._event"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.mobile.app._event"] = true;
 dojo.provide("dojox.mobile.app._event");
 dojo.experimental("dojox.mobile.app._event.js");
 
@@ -125,6 +116,4 @@ dojo._connect = function(obj, event, context, method, dontFix){
 	}
 
 	return dojo._oldConnect(obj, event, context, method, dontFix);
-}
-
 }

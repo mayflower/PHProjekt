@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.tools.custom.Vector"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.tools.custom.Vector"] = true;
 dojo.provide("dojox.drawing.tools.custom.Vector");
 dojo.require("dojox.drawing.tools.Arrow");
 dojo.require("dojox.drawing.util.positioning");
@@ -409,5 +400,3 @@ if(dojox.drawing.defaults.zAxisEnabled){
 	};
 }
 dojox.drawing.register(dojox.drawing.tools.custom.Vector.setup, "tool");
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.data.util.sorter"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.data.util.sorter"] = true;
 dojo.provide("dojo.data.util.sorter");
 
 dojo.data.util.sorter.basicComparator = function(	/*anything*/ a, 
@@ -98,5 +89,3 @@ dojo.data.util.sorter.createSortFunction = function(	/* attributes array */sortS
 		return 0; //int  
 	}; // Function
 };
-
-}

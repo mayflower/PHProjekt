@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base._loader.loader_xd"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base._loader.loader_xd"] = true;
 //Cross-domain resource loader.
 dojo.provide("dojo._base._loader.loader_xd");
 
@@ -170,19 +161,23 @@ dojo._xdIsXDomainPath = function(/*string*/relpath) {
 	var colonIndex = relpath.indexOf(":");
 	var slashIndex = relpath.indexOf("/");
 
-	if(colonIndex > 0 && colonIndex < slashIndex){
+	if(colonIndex > 0 && colonIndex < slashIndex || relpath.indexOf("//") === 0){
 		return true;
 	}else{
 		//Is the base script URI-based URL a cross domain URL?
 		//If so, then the relpath will be evaluated relative to
 		//baseUrl, and therefore qualify as xdomain.
 		//Only treat it as xdomain if the page does not have a
-		//host (file:// url) or if the baseUrl does not match the
-		//current window's domain.
+		//host (file:// url), if the baseUrl does not match the
+		//current window's domain, or if the baseUrl starts with //.
+		//If baseUrl starts with // then it probably means that xdomain
+		//is wanted since it is such a specific path request. This is not completely robust,
+		//but something more robust would require normalizing the protocol on baseUrl and on the location
+		//to see if they differ. However, that requires more code, and // as a start path is unusual.
 		var url = dojo.baseUrl;
 		colonIndex = url.indexOf(":");
 		slashIndex = url.indexOf("/");
-		if(colonIndex > 0 && colonIndex < slashIndex && (!location.host || url.indexOf("http://" + location.host) != 0)){
+		if(url.indexOf("//") === 0 || (colonIndex > 0 && colonIndex < slashIndex && (!location.host || url.indexOf("http://" + location.host) != 0))){
 			return true;
 		}
 	}
@@ -718,6 +713,4 @@ dojo._xdNotifyLoaded = function(){
 	if(dojo._initFired && !dojo._loadNotifying){ 
 		dojo._callLoaded();
 	}
-}
-
 }

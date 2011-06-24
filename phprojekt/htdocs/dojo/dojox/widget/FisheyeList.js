@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.FisheyeList"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.FisheyeList"] = true;
 dojo.provide("dojox.widget.FisheyeList");
 
 dojo.require("dijit._Widget");
@@ -710,5 +701,3 @@ dojo.declare("dojox.widget.FisheyeListItem", [dijit._Widget, dijit._Templated, d
 		// summary: user overridable callback when user clicks this menu item
 	}
 });
-
-}

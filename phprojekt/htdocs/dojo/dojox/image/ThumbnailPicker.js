@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.image.ThumbnailPicker"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.image.ThumbnailPicker"] = true;
 dojo.provide("dojox.image.ThumbnailPicker");
 dojo.experimental("dojox.image.ThumbnailPicker");
 //
@@ -101,7 +92,7 @@ dojo.declare("dojox.image.ThumbnailPicker",
 	// The attribute name for accessing the title from the data store
 	titleAttr: "title",
 	
-	templateString: dojo.cache("dojox.image", "resources/ThumbnailPicker.html", "<div dojoAttachPoint=\"outerNode\" class=\"thumbOuter\">\r\n\t<div dojoAttachPoint=\"navPrev\" class=\"thumbNav thumbClickable\">\r\n\t  <img src=\"\" dojoAttachPoint=\"navPrevImg\"/>    \r\n\t</div>\r\n\t<div dojoAttachPoint=\"thumbScroller\" class=\"thumbScroller\">\r\n\t  <div dojoAttachPoint=\"thumbsNode\" class=\"thumbWrapper\"></div>\r\n\t</div>\r\n\t<div dojoAttachPoint=\"navNext\" class=\"thumbNav thumbClickable\">\r\n\t  <img src=\"\" dojoAttachPoint=\"navNextImg\"/>  \r\n\t</div>\r\n</div>\r\n"), 
+	templateString: dojo.cache("dojox.image", "resources/ThumbnailPicker.html"), 
 	
 	// thumbs: Array
 	// Stores the image nodes for the thumbnails.
@@ -590,5 +581,3 @@ dojo.declare("dojox.image.ThumbnailPicker",
 		change(this.navNext, addClass);
 	}
 });
-
-}

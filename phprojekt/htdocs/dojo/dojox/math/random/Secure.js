@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.math.random.Secure"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.math.random.Secure"] = true;
 dojo.provide("dojox.math.random.Secure");
 
 // Copyright (c) 2005  Tom Wu
@@ -101,5 +92,3 @@ dojo.declare("dojox.math.random.Secure", null, {
 		this.pptr = i;
 	}
 });
-
-}

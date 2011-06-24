@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.timing.doLater"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.timing.doLater"] = true;
 dojo.provide("dojox.timing.doLater");
 dojo.experimental("dojox.timing.doLater"); 
 
@@ -48,6 +39,4 @@ dojox.timing.doLater = function(/*anything*/conditional,/*Object ?*/context, /* 
 		callback.apply(context, args);
 	},interval);
 	return true; // Boolean
-}
-
 }

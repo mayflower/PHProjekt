@@ -1,1 +1,5 @@
-({"name":"Ad","size":"Boyut (bayt cinsinden)","path":"Yol"})
+({
+name: "Ad",
+path: "Yol",
+size: "Boyut (bayt cinsinden)"
+})
