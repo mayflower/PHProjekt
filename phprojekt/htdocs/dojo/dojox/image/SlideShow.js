@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.image.SlideShow"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.image.SlideShow"] = true;
 dojo.provide("dojox.image.SlideShow");
 //
 // dojox.image.SlideShow courtesy Shane O Sullivan, licensed under a Dojo CLA 
@@ -106,7 +97,7 @@ dojo.declare("dojox.image.SlideShow",
 	// Time, in seconds, between image transitions during a slideshow.
 	slideshowInterval: 3,
 	
-	templateString: dojo.cache("dojox.image", "resources/SlideShow.html", "<div dojoAttachPoint=\"outerNode\" class=\"slideShowWrapper\">\r\n\t<div style=\"position:relative;\" dojoAttachPoint=\"innerWrapper\">\r\n\t\t<div class=\"slideShowNav\" dojoAttachEvent=\"onclick: _handleClick\">\r\n\t\t\t<div class=\"dijitInline slideShowTitle\" dojoAttachPoint=\"titleNode\">${title}</div>\r\n\t\t</div>\r\n\t\t<div dojoAttachPoint=\"navNode\" class=\"slideShowCtrl\" dojoAttachEvent=\"onclick: _handleClick\">\r\n\t\t\t<span dojoAttachPoint=\"navPrev\" class=\"slideShowCtrlPrev\"></span>\r\n\t\t\t<span dojoAttachPoint=\"navPlay\" class=\"slideShowCtrlPlay\"></span>\r\n\t\t\t<span dojoAttachPoint=\"navNext\" class=\"slideShowCtrlNext\"></span>\r\n\t\t</div>\r\n\t\t<div dojoAttachPoint=\"largeNode\" class=\"slideShowImageWrapper\"></div>\t\t\r\n\t\t<div dojoAttachPoint=\"hiddenNode\" class=\"slideShowHidden\"></div>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.image", "resources/SlideShow.html"),
 	
 	// _imageCounter: Number
 	//	A counter to keep track of which index image is to be loaded next
@@ -683,5 +674,3 @@ dojo.declare("dojox.image.SlideShow",
 		);	//	boolean
 	}
 });
-
-}

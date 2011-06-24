@@ -1,1 +1,8 @@
-({"descending":"Descending","sortingState":"${0} - ${1}","ascending":"Ascending","nestedSort":"Nested Sort","unsorted":"Do not sort this column","singleSort":"Single Sort"})
+({
+	singleSort: "Single Sort",
+	nestedSort: "Nested Sort",
+	ascending: "Ascending",
+	descending: "Descending",
+	sortingState: "${0} - ${1}",
+	unsorted: "Do not sort this column"
+})

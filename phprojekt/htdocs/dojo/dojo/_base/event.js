@@ -1,18 +1,11 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.event"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.event"] = true;
 dojo.provide("dojo._base.event");
 dojo.require("dojo._base.connect");
 
 // this file courtesy of the TurboAjax Group, licensed under a Dojo CLA
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 (function(){
+//>>excludeEnd("webkitMobile");
 	// DOM event listener machinery
 	var del = (dojo._event_listener = {
 		add: function(/*DOMNode*/ node, /*String*/ name, /*Function*/ fp){
@@ -21,8 +14,10 @@ dojo.require("dojo._base.connect");
 			fp = del._fixCallback(name, fp);
 			var oname = name;
 			if(
-								!dojo.isIE && 
-								(name == "mouseenter" || name == "mouseleave")
+				//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+				!dojo.isIE && 
+				//>>excludeEnd("webkitMobile");
+				(name == "mouseenter" || name == "mouseleave")
 			){
 				var ofp = fp;
 				//oname = name;
@@ -280,7 +275,8 @@ dojo.require("dojo._base.connect");
 	};
 =====*/
 
-		if(dojo.isIE){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	if(dojo.isIE){
 		dojo.mouseButtons = {
 			LEFT:   1,
 			MIDDLE: 4,
@@ -292,7 +288,8 @@ dojo.require("dojo._base.connect");
 			isRight:  function(e){ return e.button & 2; }
 		};
 	}else{
-			dojo.mouseButtons = {
+	//>>excludeEnd("webkitMobile");
+		dojo.mouseButtons = {
 			LEFT:   0,
 			MIDDLE: 1,
 			RIGHT:  2,
@@ -302,9 +299,12 @@ dojo.require("dojo._base.connect");
 			isMiddle: function(e){ return e.button == 1; },
 			isRight:  function(e){ return e.button == 2; }
 		};
-		}
-	
-		// IE event normalization
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	}
+	//>>excludeEnd("webkitMobile");
+
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	// IE event normalization
 	if(dojo.isIE){ 
 		var _trySetKeyCode = function(e, code){
 			try{
@@ -507,7 +507,8 @@ dojo.require("dojo._base.connect");
 			del._preventDefault.call(evt);
 		}
 	}
-	
+	//>>excludeEnd("webkitMobile");
+
 	del._synthesizeEvent = function(evt, props){
 			var faux = dojo.mixin({}, evt, props);
 			del._setKeyChar(faux);
@@ -519,7 +520,8 @@ dojo.require("dojo._base.connect");
 			return faux;
 	}
 	
-		// Opera event normalization
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	// Opera event normalization
 	if(dojo.isOpera){
 		dojo.mixin(del, {
 			_fixEvent: function(evt, sender){
@@ -542,10 +544,13 @@ dojo.require("dojo._base.connect");
 			}
 		});
 	}
-	
-		// Webkit event normalization
+	//>>excludeEnd("webkitMobile");
+
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	// Webkit event normalization
 	if(dojo.isWebKit){
-				del._add = del.add;
+		//>>excludeEnd("webkitMobile");
+		del._add = del.add;
 		del._remove = del.remove;
 
 		dojo.mixin(del, {
@@ -605,9 +610,14 @@ dojo.require("dojo._base.connect");
 				return evt;
 			}
 		});
-		}
-	})();
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	}
+	//>>excludeEnd("webkitMobile");
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+})();
+//>>excludeEnd("webkitMobile");
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 if(dojo.isIE){
 	// keep this out of the closure
 	// closing over 'iel' or 'ieh' b0rks leak prevention
@@ -641,5 +651,4 @@ if(dojo.isIE){
 		return function(e){ return fp.call(this, f(e, this)); };
 	}
 }
-
-}
+//>>excludeEnd("webkitMobile");

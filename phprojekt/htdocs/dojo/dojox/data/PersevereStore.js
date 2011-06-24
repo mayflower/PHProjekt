@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.PersevereStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.PersevereStore"] = true;
 dojo.provide("dojox.data.PersevereStore");
 dojo.require("dojox.data.JsonQueryRestStore");
 dojo.require("dojox.rpc.Client"); // Persevere supports this and it improves reliability
@@ -117,5 +108,3 @@ dojox.data.PersevereStore.addProxy = function(){
 	dojo.require("dojox.io.xhrPlugins"); // also not necessary, but we can register that Persevere supports proxying
 	dojox.io.xhrPlugins.addProxy("/proxy/");
 };
-
-}

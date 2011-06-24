@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.tree._dndContainer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.tree._dndContainer"] = true;
 dojo.provide("dijit.tree._dndContainer");
 dojo.require("dojo.dnd.common");
 dojo.require("dojo.dnd.Container");
@@ -160,5 +151,3 @@ dojo.declare("dijit.tree._dndContainer",
 			this._changeState("Container", "");
 		}
 });
-
-}

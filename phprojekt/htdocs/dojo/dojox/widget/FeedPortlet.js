@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.FeedPortlet"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.FeedPortlet"] = true;
 dojo.provide("dojox.widget.FeedPortlet");
 dojo.require("dojox.widget.Portlet");
 dojo.require("dijit.Tooltip");
@@ -437,5 +428,3 @@ dojo.declare("dojox.widget.PortletFeedSettings",
 		return this.text.value;
 	}
 });
-
-}

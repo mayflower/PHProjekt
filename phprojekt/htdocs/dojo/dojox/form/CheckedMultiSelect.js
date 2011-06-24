@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.CheckedMultiSelect"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.CheckedMultiSelect"] = true;
 dojo.provide("dojox.form.CheckedMultiSelect");
 
 dojo.require("dijit.form.CheckBox");
@@ -19,7 +10,7 @@ dojo.declare("dojox.form._CheckedMultiSelectItem",
 	//		The individual items for a CheckedMultiSelect
 
 	widgetsInTemplate: true,
-	templateString: dojo.cache("dojox.form", "resources/_CheckedMultiSelectItem.html", "<div class=\"dijitReset ${baseClass}\"\r\n\t><input class=\"${baseClass}Box\" dojoType=\"dijit.form.CheckBox\" dojoAttachPoint=\"checkBox\" \r\n\t\tdojoAttachEvent=\"_onClick:_changeBox\" type=\"${_type.type}\" baseClass=\"${_type.baseClass}\"\r\n\t/><div class=\"dijitInline ${baseClass}Label\" dojoAttachPoint=\"labelNode\" dojoAttachEvent=\"onclick:_onClick\"></div\r\n></div>\r\n"),
+	templateString: dojo.cache("dojox.form", "resources/_CheckedMultiSelectItem.html"),
 
 	baseClass: "dojoxMultiSelectItem",
 
@@ -111,7 +102,7 @@ dojo.declare("dojox.form.CheckedMultiSelect", dijit.form._FormSelectWidget, {
 	// summary:
 	//		Extends the core dijit MultiSelect to provide a "checkbox" selector
 
-	templateString: dojo.cache("dojox.form", "resources/CheckedMultiSelect.html", "<div class=\"dijit dijitReset dijitInline\" dojoAttachEvent=\"onmousedown:_onMouseDown,onclick:focus\"\r\n\t><select class=\"${baseClass}Select\" multiple=\"true\" dojoAttachPoint=\"containerNode,focusNode\"></select\r\n\t><div dojoAttachPoint=\"wrapperDiv\"></div\r\n></div>\r\n"),
+	templateString: dojo.cache("dojox.form", "resources/CheckedMultiSelect.html"),
 
 	baseClass: "dojoxMultiSelect",
 
@@ -183,5 +174,3 @@ dojo.declare("dojox.form.CheckedMultiSelect", dijit.form._FormSelectWidget, {
 		this.inherited(arguments);
 	}
 });
-
-}

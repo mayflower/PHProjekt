@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource['dojox.widget.Dialog']){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource['dojox.widget.Dialog'] = true;
 dojo.provide('dojox.widget.Dialog');
 dojo.experimental('dojox.widget.Dialog');
 
@@ -31,7 +22,7 @@ dojo.declare('dojox.widget.Dialog',
 	//		It works identically to a `dijit.Dialog` with several 
 	//		additional parameters.
 	
-	templateString: dojo.cache("dojox.widget", "Dialog/Dialog.html", "<div class=\"dojoxDialog\" tabindex=\"-1\" waiRole=\"dialog\" waiState=\"labelledby-${id}_title\">\r\n\t<div dojoAttachPoint=\"titleBar\" class=\"dojoxDialogTitleBar\">\r\n\t\t<span dojoAttachPoint=\"titleNode\" class=\"dojoxDialogTitle\" id=\"${id}_title\">${title}</span>\r\n\t</div>\r\n\t<div dojoAttachPoint=\"dojoxDialogWrapper\">\r\n\t\t<div dojoAttachPoint=\"containerNode\" class=\"dojoxDialogPaneContent\"></div>\r\n\t</div>\r\n\t<div dojoAttachPoint=\"closeButtonNode\" class=\"dojoxDialogCloseIcon\" dojoAttachEvent=\"onclick: onCancel\">\r\n\t\t\t<span dojoAttachPoint=\"closeText\" class=\"closeText\">x</span>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache('dojox.widget','Dialog/Dialog.html'),
 	
 	// sizeToViewport: Boolean
 	//		If true, fix the size of the dialog to the Viewport based on 
@@ -256,5 +247,3 @@ dojo.declare('dojox.widget.Dialog',
 	}
 	
 });
-
-}

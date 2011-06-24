@@ -1,1 +1,8 @@
-({"descending":"Aflopend","ascending":"Oplopend","nestedSort":"Geneste sorteerbewerking","unsorted":"Deze kolom niet sorteren","singleSort":"Enkele sorteerbewerking","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Enkele sorteerbewerking",
+	nestedSort: "Geneste sorteerbewerking",
+	ascending: "Oplopend",
+	descending: "Aflopend",
+	unsorted: "Deze kolom niet sorteren"
+})
+

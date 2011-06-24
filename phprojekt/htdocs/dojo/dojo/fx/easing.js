@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.fx.easing"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.fx.easing"] = true;
 dojo.provide("dojo.fx.easing");
 
 dojo.fx.easing = {
@@ -282,5 +273,3 @@ dojo.fx.easing = {
 		return (dojo.fx.easing.bounceOut(n * 2 - 1) / 2) + 0.5; // Decimal
 	}
 };
-
-}

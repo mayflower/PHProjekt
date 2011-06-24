@@ -1,1 +1,8 @@
-({"descending":"Azalan","ascending":"Artan","nestedSort":"İç İçe Sıralama","unsorted":"Bu sütunu sıralama","singleSort":"Tek Sıralama","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Tek Sıralama",
+	nestedSort: "İç İçe Sıralama",
+	ascending: "Artan",
+	descending: "Azalan",
+	unsorted: "Bu sütunu sıralama"
+})
+

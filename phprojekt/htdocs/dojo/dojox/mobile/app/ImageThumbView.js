@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.mobile.app.ImageThumbView"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.mobile.app.ImageThumbView"] = true;
 dojo.provide("dojox.mobile.app.ImageThumbView");
 dojo.experimental("dojox.mobile.app.ImageThumbView");
 
@@ -261,5 +252,3 @@ dojo.declare("dojox.mobile.app.ImageThumbView", dijit._Widget, {
 	}
 
 });
-
-}

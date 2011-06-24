@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.data.ItemFileReadStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.data.ItemFileReadStore"] = true;
 dojo.provide("dojo.data.ItemFileReadStore");
 
 dojo.require("dojo.data.util.filter");
@@ -945,5 +936,3 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 });
 //Mix in the simple fetch implementation to this class.
 dojo.extend(dojo.data.ItemFileReadStore,dojo.data.util.simpleFetch);
-
-}

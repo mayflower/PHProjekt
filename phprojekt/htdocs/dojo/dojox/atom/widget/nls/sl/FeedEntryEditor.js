@@ -1,1 +1,7 @@
-({"edit":"[urejanje]","save":"[shrani]","cancel":"[prekliči]","doNew":"[novo]"})
+({
+	doNew: "[novo]",
+	edit: "[urejanje]",
+	save: "[shrani]",
+	cancel: "[prekliči]"
+})
+

@@ -1,1 +1,8 @@
-({"descending":"تنازلي","ascending":"تصاعدي","nestedSort":"فرز متداخل","unsorted":"عدم فرز هذا العمود","singleSort":"فرز منفرد","sortingState":"${0} - ${1}"})
+({
+	singleSort: "فرز منفرد",
+	nestedSort: "فرز متداخل",
+	ascending: "‏تصاعدي‏",
+	descending: "‏تنازلي‏",
+	unsorted: "لا تقم بفرز هذ العمود"
+})
+

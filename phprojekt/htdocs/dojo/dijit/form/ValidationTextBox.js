@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.form.ValidationTextBox"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.ValidationTextBox"] = true;
 dojo.provide("dijit.form.ValidationTextBox");
 
 dojo.require("dojo.i18n");
@@ -14,7 +5,7 @@ dojo.require("dojo.i18n");
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.Tooltip");
 
-dojo.requireLocalization("dijit.form", "validate", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit.form", "validate");
 
 /*=====
 	dijit.form.ValidationTextBox.__Constraints = function(){
@@ -36,7 +27,7 @@ dojo.declare(
 		// tags:
 		//		protected
 
-		templateString: dojo.cache("dijit.form", "templates/ValidationTextBox.html", "<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\r\n\tid=\"widget_${id}\" waiRole=\"presentation\"\r\n\t><div class='dijitReset dijitValidationContainer'\r\n\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&Chi; \" type=\"text\" tabIndex=\"-1\" readOnly waiRole=\"presentation\"\r\n\t/></div\r\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\r\n\t\t><input class=\"dijitReset dijitInputInner\" dojoAttachPoint='textbox,focusNode' autocomplete=\"off\"\r\n\t\t\t${!nameAttrSetting} type='${type}'\r\n\t/></div\r\n></div>\r\n"),
+		templateString: dojo.cache("dijit.form", "templates/ValidationTextBox.html"),
 		baseClass: "dijitTextBox dijitValidationTextBox",
 
 		// required: Boolean
@@ -125,7 +116,7 @@ dojo.declare(
 		_isEmpty: function(value){
 			// summary:
 			//		Checks for whitespace
-			return /^\s*$/.test(value); // Boolean
+			return (this.trim ? /^\s*$/ : /^$/).test(value); // Boolean
 		},
 
 		getErrorMessage: function(/*Boolean*/ isFocused){
@@ -474,5 +465,3 @@ dojo.declare(
 		}
 	}
 );
-
-}

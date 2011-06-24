@@ -1,1 +1,30 @@
-({"buttonSet":"Aseta","insertTableTitle":"Lisää taulukko","insertTableRowAfterLabel":"Lisää rivi jälkeen","center":"keskitetty","deleteTableColumnLabel":"Poista sarake","right":"oikea","insertTableColumnBeforeLabel":"Lisää sarake ennen","tableWidth":"Taulukon leveys:","buttonInsert":"Lisää","default":"oletus","align":"Tasaus:","insertTableRowBeforeLabel":"Lisää rivi ennen","cellSpacing":"Solujen väli:","pixels":"kuvapistettä","selectTableLabel":"Valitse taulukko","rows":"Rivit:","modifyTableTitle":"Muokkaa taulukkoa","cellPadding":"Solun täyttö:","deleteTableRowLabel":"Poista rivi","backgroundColor":"Taustaväri:","insertTableColumnAfterLabel":"Lisää sarake jälkeen","left":"vasen","borderThickness":"Kehyksen paksuus","columns":"Sarakkeet:","percent":"prosenttia","borderColor":"Kehyksen väri:"})
+({
+	insertTableTitle: "Lisää taulukko",
+	modifyTableTitle: "Muokkaa taulukkoa",
+	rows: "Rivit:",
+	columns: "Sarakkeet:",
+	align: "Tasaus:",
+	cellPadding: "Solun täyttö:",
+	cellSpacing: "Solujen väli:",
+	tableWidth: "Taulukon leveys:",
+	backgroundColor: "Taustaväri:",
+	borderColor: "Kehyksen väri:",
+	borderThickness: "Kehyksen paksuus",
+	percent: "prosenttia",
+	pixels: "kuvapistettä",
+	"default": "oletus",
+	left: "vasen",
+	center: "keskitetty",
+	right: "oikea",
+	buttonSet: "Aseta", // translated elsewhere?
+	buttonInsert: "Lisää",
+	buttonCancel: "Peruuta",
+
+	selectTableLabel: "Valitse taulukko",
+	insertTableRowBeforeLabel: "Lisää rivi ennen",
+	insertTableRowAfterLabel: "Lisää rivi jälkeen",
+	insertTableColumnBeforeLabel: "Lisää sarake ennen",
+	insertTableColumnAfterLabel: "Lisää sarake jälkeen",
+	deleteTableRowLabel: "Poista rivi",
+	deleteTableColumnLabel: "Poista sarake"
+})

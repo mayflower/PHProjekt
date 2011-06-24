@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.fx.scroll"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.fx.scroll"] = true;
 dojo.provide("dojox.fx.scroll");
 dojo.experimental("dojox.fx.scroll"); 
 
@@ -50,5 +41,3 @@ dojox.fx.smoothScroll = function(/* Object */args){
 	},args));
 	return anim; // dojo.Animation
 };
-
-}

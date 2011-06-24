@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.layout.TableContainer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.layout.TableContainer"] = true;
 dojo.experimental("dojox.layout.TableContainer");
 dojo.provide("dojox.layout.TableContainer");
 dojo.require("dijit.layout._LayoutWidget");
@@ -286,5 +277,3 @@ dojo.extend(dijit._Widget, {
 	//		The number of columns this widget should span.
 	colspan: 1
 });
-
-}

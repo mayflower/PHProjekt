@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.Declaration"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.Declaration"] = true;
 dojo.provide("dijit.Declaration");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
@@ -22,6 +13,10 @@ dojo.declare(
 		// _noScript: [private] Boolean
 		//		Flag to parser to leave alone the script tags contained inside of me
 		_noScript: true,
+
+		// stopParser: [private] Boolean
+		//		Flag to parser to not try and parse widgets declared inside of me
+		stopParser: true,
 
 		// widgetClass: String
 		//		Name of class being declared, ex: "acme.myWidget"
@@ -93,5 +88,3 @@ dojo.declare(
 		}
 	}
 );
-
-}

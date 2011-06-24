@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.form._FormSelectWidget"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form._FormSelectWidget"] = true;
 dojo.provide("dijit.form._FormSelectWidget");
 
 dojo.require("dijit.form._FormWidget");
@@ -579,5 +570,3 @@ dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
 		//		from that store are available
 	}
 });
-
-}

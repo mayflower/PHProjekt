@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.gauge._Gauge"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.gauge._Gauge"] = true;
 dojo.provide("dojox.widget.gauge._Gauge");
 
 dojo.require("dijit._Widget");
@@ -125,7 +116,7 @@ dojo.declare("dojox.widget.gauge._Gauge",[dijit._Widget, dijit._Templated, dijit
 
 	// internal data
 	gaugeContent: undefined,
-	templateString: dojo.cache("dojox.widget.gauge", "_Gauge.html", "<div>\r\n\t<div class=\"dojoxGaugeContent\" dojoAttachPoint=\"gaugeContent\"></div>\r\n\t<div dojoAttachPoint=\"containerNode\"></div>\r\n\t<div dojoAttachPoint=\"mouseNode\"></div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget.gauge", "_Gauge.html"),
 	_backgroundDefault: {color: '#E0E0E0'},
 	_rangeData: null,
 	_indicatorData: null,
@@ -690,7 +681,7 @@ dojo.declare("dojox.widget.gauge._Indicator",[dijit._Widget, dijit._Contained, d
 	// The title of the indicator, to be displayed next to it's input box for the text-representation.
 	title: "",
 
-	templateString: dojo.cache("dojox.widget.gauge", "_Indicator.html", "<div class=\"dojoxGaugeIndicatorDiv\">\r\n\t<label class=\"dojoxGaugeIndicatorLabel\" for=\"${title}\">${title}:</label>\r\n\t<input class=\"dojoxGaugeIndicatorInput\" name=\"${title}\" size=\"5\" value=\"${value}\" dojoAttachPoint=\"valueNode\" dojoAttachEvent=\"onchange:_update\"></input>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget.gauge", "_Indicator.html"),
 
 	startup: function(){
 		if(this.onDragMove){
@@ -763,5 +754,3 @@ dojo.declare("dojox.widget.gauge._Indicator",[dijit._Widget, dijit._Contained, d
 		}
 	}
 });
-
-}

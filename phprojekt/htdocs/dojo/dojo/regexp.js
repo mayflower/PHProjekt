@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.regexp"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.regexp"] = true;
 dojo.provide("dojo.regexp");
 
 /*=====
@@ -70,6 +61,4 @@ dojo.regexp.group = function(/*String*/expression, /*Boolean?*/nonCapture){
 	//		If true, uses non-capturing match, otherwise matches are retained
 	//		by regular expression. 
 	return "(" + (nonCapture ? "?:":"") + expression + ")"; // String
-}
-
 }

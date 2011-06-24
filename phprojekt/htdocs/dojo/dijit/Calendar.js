@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.Calendar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.Calendar"] = true;
 dojo.provide("dijit.Calendar");
 
 dojo.require("dojo.cldr.supplemental");
@@ -39,7 +30,7 @@ dojo.declare(
 		// example:
 		//	|	<div dojoType="dijit.Calendar"></div>
 
-		templateString: dojo.cache("dijit", "templates/Calendar.html", "<table cellspacing=\"0\" cellpadding=\"0\" class=\"dijitCalendarContainer\" role=\"grid\" dojoAttachEvent=\"onkeypress: _onKeyPress\">\r\n\t<thead>\r\n\t\t<tr class=\"dijitReset dijitCalendarMonthContainer\" valign=\"top\">\r\n\t\t\t<th class='dijitReset dijitCalendarArrow' dojoAttachPoint=\"decrementMonth\">\r\n\t\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarDecrease\" waiRole=\"presentation\"/>\r\n\t\t\t\t<span dojoAttachPoint=\"decreaseArrowNode\" class=\"dijitA11ySideArrow\">-</span>\r\n\t\t\t</th>\r\n\t\t\t<th class='dijitReset' colspan=\"5\">\r\n\t\t\t\t<div class=\"dijitVisible\">\r\n\t\t\t\t\t<div class=\"dijitPopup dijitMenu dijitMenuPassive dijitHidden\" dojoAttachPoint=\"monthDropDown\" dojoAttachEvent=\"onmouseup: _onMonthSelect, onmouseover: _onMenuHover, onmouseout: _onMenuHover\">\r\n\t\t\t\t\t\t<div class=\"dijitCalendarMonthLabelTemplate dijitCalendarMonthLabel\"></div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div dojoAttachPoint=\"monthLabelSpacer\" class=\"dijitSpacer\"></div>\r\n\t\t\t\t<div dojoAttachPoint=\"monthLabelNode\" class=\"dijitCalendarMonthLabel dijitInline dijitVisible\" dojoAttachEvent=\"onmousedown: _onMonthToggle\"></div>\r\n\t\t\t</th>\r\n\t\t\t<th class='dijitReset dijitCalendarArrow' dojoAttachPoint=\"incrementMonth\">\r\n\t\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarIncrease\" waiRole=\"presentation\"/>\r\n\t\t\t\t<span dojoAttachPoint=\"increaseArrowNode\" class=\"dijitA11ySideArrow\">+</span>\r\n\t\t\t</th>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<th class=\"dijitReset dijitCalendarDayLabelTemplate\" role=\"columnheader\"><span class=\"dijitCalendarDayLabel\"></span></th>\r\n\t\t</tr>\r\n\t</thead>\r\n\t<tbody dojoAttachEvent=\"onclick: _onDayClick, onmouseover: _onDayMouseOver, onmouseout: _onDayMouseOut, onmousedown: _onDayMouseDown, onmouseup: _onDayMouseUp\" class=\"dijitReset dijitCalendarBodyContainer\">\r\n\t\t<tr class=\"dijitReset dijitCalendarWeekTemplate\" role=\"row\">\r\n\t\t\t<td class=\"dijitReset dijitCalendarDateTemplate\" role=\"gridcell\"><span class=\"dijitCalendarDateLabel\"></span></td>\r\n\t\t</tr>\r\n\t</tbody>\r\n\t<tfoot class=\"dijitReset dijitCalendarYearContainer\">\r\n\t\t<tr>\r\n\t\t\t<td class='dijitReset' valign=\"top\" colspan=\"7\">\r\n\t\t\t\t<h3 class=\"dijitCalendarYearLabel\">\r\n\t\t\t\t\t<span dojoAttachPoint=\"previousYearLabelNode\" class=\"dijitInline dijitCalendarPreviousYear\"></span>\r\n\t\t\t\t\t<span dojoAttachPoint=\"currentYearLabelNode\" class=\"dijitInline dijitCalendarSelectedYear\"></span>\r\n\t\t\t\t\t<span dojoAttachPoint=\"nextYearLabelNode\" class=\"dijitInline dijitCalendarNextYear\"></span>\r\n\t\t\t\t</h3>\r\n\t\t\t</td>\r\n\t\t</tr>\r\n\t</tfoot>\r\n</table>\r\n"),
+		templateString: dojo.cache("dijit", "templates/Calendar.html"),
 
 		// value: Date
 		//		The currently selected Date
@@ -209,21 +200,6 @@ dojo.declare(
 				this._setText(this[name+"YearLabelNode"],
 					this.dateLocaleModule.format(d, {selector:'year', locale:this.lang}));
 			}, this);
-
-			// Set up repeating mouse behavior
-			var _this = this;
-			var typematic = function(nodeProp, dateProp, adj){
-//FIXME: leaks (collects) listeners if populateGrid is called multiple times.  Do this once?
-				_this._connects.push(
-					dijit.typematic.addMouseListener(_this[nodeProp], _this, function(count){
-						if(count >= 0){ _this._adjustDisplay(dateProp, adj); }
-					}, 0.8, 500)
-				);
-			};
-			typematic("incrementMonth", "month", 1);
-			typematic("decrementMonth", "month", -1);
-			typematic("nextYearLabelNode", "year", 1);
-			typematic("previousYearLabelNode", "year", -1);
 		},
 
 		goToToday: function(){
@@ -283,6 +259,20 @@ dojo.declare(
 
 			this.value = null;
 			this.set('value', dateObj);
+
+			// Set up repeating mouse behavior
+			var _this = this;
+			var typematic = function(nodeProp, dateProp, adj){
+				_this._connects.push(
+					dijit.typematic.addMouseListener(_this[nodeProp], _this, function(count){
+						if(count >= 0){ _this._adjustDisplay(dateProp, adj); }
+					}, 0.8, 500)
+				);
+			};
+			typematic("incrementMonth", "month", 1);
+			typematic("decrementMonth", "month", -1);
+			typematic("nextYearLabelNode", "year", 1);
+			typematic("previousYearLabelNode", "year", -1);
 		},
 
 		_onMenuHover: function(e){
@@ -513,5 +503,3 @@ dojo.declare(
 		}
 	}
 );
-
-}

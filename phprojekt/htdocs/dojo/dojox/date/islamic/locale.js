@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.date.islamic.locale"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.date.islamic.locale"] = true;
 dojo.provide("dojox.date.islamic.locale");
 
 dojo.require("dojox.date.islamic.Date");
@@ -15,7 +6,7 @@ dojo.require("dojo.string");
 dojo.require("dojo.i18n");
 dojo.require("dojo.date");
 
-dojo.requireLocalization("dojo.cldr", "islamic", null, "ROOT,ar,he");
+dojo.requireLocalization("dojo.cldr", "islamic");
 
 (function(){
 	// Format a pattern without literals
@@ -414,23 +405,21 @@ dojox.date.islamic.locale.getNames = function(/*String*/item, /*String*/type, /*
 	// summary:
 	//		Used to get localized strings from dojo.cldr for day or month names.
 	var label;
-	var lookup = dojox.date.islamic.locale._getIslamicBundle;
+	var lookup = dojox.date.islamic.locale._getIslamicBundle(locale);
 	var props = [item, context, type];
 	if(context == 'standAlone'){
 		var key = props.join('-');
-		label = lookup(locale)[key];
+		label = lookup[key];
 		// Fall back to 'format' flavor of name
-		if(label === lookup("ROOT")[key]){ label = undefined; } // a bit of a kludge, in the absense of real aliasing support in dojo.cldr
+		if(label[0] == 1){ label = undefined; } // kludge, in the absence of real aliasing support in dojo.cldr
 	}
 	props[1] = 'format';
 	
 	// return by copy so changes won't be made accidentally to the in-memory model
-	return (label || lookup(locale)[props.join('-')]).concat(); /*Array*/
+	return (label || lookup[props.join('-')]).concat(); /*Array*/
 };
 
 
 dojox.date.islamic.locale.weekDays = dojox.date.islamic.locale.getNames('days', 'wide', 'format');
 
 dojox.date.islamic.locale.months = dojox.date.islamic.locale.getNames('months', 'wide', 'format');
-
-}

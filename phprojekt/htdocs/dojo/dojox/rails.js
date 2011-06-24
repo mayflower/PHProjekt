@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.rails"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.rails"] = true;
 dojo.provide("dojox.rails");
 dojo.require("dojo.NodeList-traverse");
 
@@ -150,5 +141,3 @@ dojo.ready((function(d, dr, dg){
 		live("form", "submit", handleFormSubmit);
 	};
 })(dojo, dojox.rails, dojo.global));
-
-}

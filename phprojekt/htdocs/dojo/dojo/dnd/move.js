@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.dnd.move"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.dnd.move"] = true;
 dojo.provide("dojo.dnd.move");
 
 dojo.require("dojo.dnd.Mover");
@@ -250,5 +241,3 @@ dojo.dnd.move.parentConstrainedMover = function(area, within){
 dojo.dnd.constrainedMover = dojo.dnd.move.constrainedMover;
 dojo.dnd.boxConstrainedMover = dojo.dnd.move.boxConstrainedMover;
 dojo.dnd.parentConstrainedMover = dojo.dnd.move.parentConstrainedMover;
-
-}

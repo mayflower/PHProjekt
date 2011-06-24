@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.xmpp.ChatService"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.xmpp.ChatService"] = true;
 dojo.provide("dojox.xmpp.ChatService");
 
 dojox.xmpp.chat = {
@@ -148,5 +139,3 @@ dojo.declare("dojox.xmpp.ChatService", null, {
 	onNewMessage: function(msg){},
 	onInvite: function(contact){}
 });
-
-}

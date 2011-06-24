@@ -1,1 +1,5 @@
-({"badPasswordMessage":"無効なパスワードです。","nomatchMessage":"パスワードが一致しません。"})
+({
+        nomatchMessage: "パスワードが一致しません。",
+		badPasswordMessage: "無効なパスワードです。"
+})
+

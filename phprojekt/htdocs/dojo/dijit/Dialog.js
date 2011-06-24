@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.Dialog"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.Dialog"] = true;
 dojo.provide("dijit.Dialog");
 
 dojo.require("dojo.dnd.move");
@@ -21,7 +12,7 @@ dojo.require("dijit.form._FormMixin");
 dojo.require("dijit._DialogMixin");
 dojo.require("dijit.DialogUnderlay");
 dojo.require("dijit.layout.ContentPane");
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "common");
 
 /*=====
 dijit._underlay = function(kwArgs){
@@ -55,7 +46,7 @@ dojo.declare(
 		// |	dojo.body().appendChild(foo.domNode);
 		// |	foo.startup();
 
-		templateString: dojo.cache("dijit", "templates/Dialog.html", "<div class=\"dijitDialog\" tabindex=\"-1\" waiRole=\"dialog\" waiState=\"labelledby-${id}_title\">\r\n\t<div dojoAttachPoint=\"titleBar\" class=\"dijitDialogTitleBar\">\r\n\t<span dojoAttachPoint=\"titleNode\" class=\"dijitDialogTitle\" id=\"${id}_title\"></span>\r\n\t<span dojoAttachPoint=\"closeButtonNode\" class=\"dijitDialogCloseIcon\" dojoAttachEvent=\"onclick: onCancel\" title=\"${buttonCancel}\">\r\n\t\t<span dojoAttachPoint=\"closeText\" class=\"closeText\" title=\"${buttonCancel}\">x</span>\r\n\t</span>\r\n\t</div>\r\n\t\t<div dojoAttachPoint=\"containerNode\" class=\"dijitDialogPaneContent\"></div>\r\n</div>\r\n"),
+		templateString: dojo.cache("dijit", "templates/Dialog.html"),
 		
 		baseClass: "dijitDialog",
 		
@@ -186,7 +177,7 @@ dojo.declare(
 				this._moveable = (dojo.isIE == 6) ?
 					new dojo.dnd.TimedMoveable(node, { handle: this.titleBar }) :	// prevent overload, see #5285
 					new dojo.dnd.Moveable(node, { handle: this.titleBar, timeout: 0 });
-				dojo.subscribe("/dnd/move/stop",this,"_endDrag");
+				this._dndListener = dojo.subscribe("/dnd/move/stop",this,"_endDrag");
 			}else{
 				dojo.addClass(node,"dijitDialogFixed");
 			}
@@ -510,6 +501,9 @@ dojo.declare(
 			if(this.refocus && this.open){
 				setTimeout(dojo.hitch(dijit,"focus",this._savedFocus), 25);
 			}
+			if(this._dndListener){
+				dojo.unsubscribe(this._dndListener);
+			}
 			this.inherited(arguments);
 		}
 	}
@@ -526,5 +520,3 @@ dijit._dialogStack = [];
 
 // For back-compat.  TODO: remove in 2.0
 dojo.require("dijit.TooltipDialog");
-
-}
