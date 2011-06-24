@@ -21,6 +21,9 @@
 
 dojo.provide("phpr.form.HorizontalRangeSlider");
 
+dojo.require("dojo.dnd.Moveable");
+dojo.require("dijit.form.HorizontalSlider");
+
 dojo.declare("phpr.form._RangeSliderMixin", dojox.form._RangeSliderMixin, {
     postCreate: function() {
         // Summary:

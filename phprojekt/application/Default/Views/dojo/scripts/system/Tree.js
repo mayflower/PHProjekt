@@ -21,6 +21,10 @@
 
 dojo.provide("phpr.Tree");
 
+dojo.require("dojo.data.ItemFileWriteStore");
+dojo.require("dijit.Tree");
+dojo.require("dijit.tree.ForestStoreModel");
+
 phpr.treePaths               = new Array();
 phpr.treeLastProjectSelected = null;
 

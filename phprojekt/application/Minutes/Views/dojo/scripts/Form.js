@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Minutes.Form");
 
+dojo.require("dijit.Dialog");
+
 dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     // Request url for get the data
     _peopleUrl: null,
