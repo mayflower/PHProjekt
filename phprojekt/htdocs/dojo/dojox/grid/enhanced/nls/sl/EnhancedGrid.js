@@ -1,1 +1,8 @@
-({"descending":"Padajoče","ascending":"Naraščajoče","nestedSort":"Ugnezdena razvrstitev","unsorted":"Ne razvrsti tega stolpca","singleSort":"Razvrsti po vrsti","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Posamezna razvrstitev",
+	nestedSort: "Ugnezdena razvrstitev",
+	ascending: "Naraščajoče",
+	descending: "Padajoče",
+	unsorted: "Ne razvrsti tega stolpca"
+})
+

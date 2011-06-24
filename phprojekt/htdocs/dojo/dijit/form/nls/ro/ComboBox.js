@@ -1,1 +1,5 @@
-({"previousMessage":"Alegeri anterioare","nextMessage":"Mai multe alegeri"})
+({
+		previousMessage: "Alegeri anterioare",
+		nextMessage: "Mai multe alegeri"
+})
+

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.sketch.Annotation"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.sketch.Annotation"] = true;
 dojo.provide("dojox.sketch.Annotation");
 dojo.require("dojox.sketch.Anchor");
 dojo.require("dojox.sketch._Plugin");
@@ -278,5 +269,3 @@ dojo.require("dojox.sketch._Plugin");
 		});
 	};
 })();
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.cometd.RestChannels"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.cometd.RestChannels"] = true;
 dojo.provide("dojox.cometd.RestChannels");
  
 dojo.require("dojox.rpc.Client");
@@ -489,5 +480,3 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 		dojox.cometd.connectionTypes.register("rest-channels", Channels.check, Channels,false,true);
 	}
 })();
-
-}

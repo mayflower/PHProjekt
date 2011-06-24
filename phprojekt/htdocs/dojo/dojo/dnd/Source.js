@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.dnd.Source"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.dnd.Source"] = true;
 dojo.provide("dojo.dnd.Source");
 
 dojo.require("dojo.dnd.Selector");
@@ -545,5 +536,3 @@ dojo.declare("dojo.dnd.AutoSource", dojo.dnd.Source, {
 		return new dojo.dnd.AutoSource(node, params);
 	}
 });
-
-}

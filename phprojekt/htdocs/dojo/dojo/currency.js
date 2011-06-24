@@ -1,17 +1,8 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.currency"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.currency"] = true;
 dojo.provide("dojo.currency");
 
 dojo.require("dojo.number");
 dojo.require("dojo.i18n");
-dojo.requireLocalization("dojo.cldr", "currency", null, "ROOT,ar,ca,cs,da,de,el,en,en-au,en-ca,en-us,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dojo.cldr", "currency");
 dojo.require("dojo.cldr.monetary");
 
 /*=====
@@ -134,6 +125,4 @@ dojo.currency.parse = function(/*String*/expression, /*dojo.currency.__ParseOpti
 	// expression: A string representation of a currency value
 
 	return dojo.number.parse(expression, dojo.currency._mixInDefaults(options));
-}
-
 }

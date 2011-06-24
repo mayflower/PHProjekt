@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.av.widget.Player"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.av.widget.Player"] = true;
 dojo.provide("dojox.av.widget.Player");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
@@ -49,7 +40,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 	//videoHeight: 240,
 	
 	widgetsInTemplate:true,
-	templateString: dojo.cache("dojox.av.widget", "resources/Player.html", "<div class=\"playerContainer\">\r\n\t<div class=\"PlayerScreen\" dojoAttachPoint=\"playerScreen\"></div>\r\n\t<table class=\"Controls\">\r\n\t\t<tr>\r\n\t\t\t<td colspan=\"2\" dojoAttachPoint=\"progressContainer\"></td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td class=\"PlayContainer\" dojoAttachPoint=\"playContainer\"></td>\r\n\t\t\t<td class=\"ControlsRight\">\r\n\t\t\t<table class=\"StatusContainer\">\r\n\t\t\t\t<tr dojoAttachPoint=\"statusContainer\">\r\n\t\t\t\t</tr>\r\n\t\t\t\t<tr>\r\n\t\t\t\t\t<td colspan=\"3\" class=\"ControlsBottom\" dojoAttachPoint=\"controlsBottom\"></td>\r\n\t\t\t\t</tr>\r\n\t\t\t</table>\r\n\t\t</td>\r\n\t\t</tr>\r\n\t</table>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.av.widget","resources/Player.html"),
 	
 	_fillContent: function(){ 
 		// summary
@@ -134,5 +125,3 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 	}
 
 });
-
-}

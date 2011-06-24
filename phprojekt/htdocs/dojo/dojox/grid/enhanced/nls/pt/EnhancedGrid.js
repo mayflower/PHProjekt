@@ -1,1 +1,8 @@
-({"descending":"Descendente","ascending":"Ascendente","nestedSort":"Classificação Aninhada","unsorted":"Não classificar esta coluna","singleSort":"Classificação Única","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Classificação Única",
+	nestedSort: "Classificação Aninhada",
+	ascending: "Ascendente",
+	descending: "Descendente",
+	unsorted: "Não classificar esta coluna"
+})
+

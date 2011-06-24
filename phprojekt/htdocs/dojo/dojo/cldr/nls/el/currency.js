@@ -1,1 +1,13 @@
-({"HKD_displayName":"Δολάριο Χονγκ Κονγκ","CHF_displayName":"Φράγκο Ελβετίας","CAD_displayName":"Δολάριο Καναδά","CNY_displayName":"Γιουάν Ρενμίμπι Κίνας","AUD_displayName":"Δολάριο Αυστραλίας","JPY_displayName":"Γιεν Ιαπωνίας","USD_displayName":"Δολάριο ΗΠΑ","GBP_displayName":"Λίρα Στερλίνα Βρετανίας","EUR_displayName":"Ευρώ","USD_symbol":"US$","CAD_symbol":"CA$","GBP_symbol":"£","HKD_symbol":"HK$","JPY_symbol":"JP¥","AUD_symbol":"AU$","CNY_symbol":"CN¥","EUR_symbol":"€"})
+// generated from ldml/main/*.xml, xpath: ldml/numbers/currencies
+({
+	AUD_displayName:"Δολάριο Αυστραλίας",
+	CAD_displayName:"Δολάριο Καναδά",
+	CHF_displayName:"Φράγκο Ελβετίας",
+	CNY_displayName:"Γιουάν Ρενμίμπι Κίνας",
+	EUR_displayName:"Ευρώ",
+	GBP_displayName:"Λίρα Στερλίνα Βρετανίας",
+	HKD_displayName:"Δολάριο Χονγκ Κονγκ",
+	JPY_displayName:"Γιεν Ιαπωνίας",
+	USD_displayName:"Δολάριο ΗΠΑ"
+})
+                 

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._firebug.firebug"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._firebug.firebug"] = true;
 dojo.provide("dojo._firebug.firebug");
 	
 dojo.deprecated = function(/*String*/ behaviour, /*String?*/ extra, /*String?*/ removal){
@@ -1222,5 +1213,3 @@ dojo.experimental = function(/* String */ moduleName, /* String? */ extra){
 
 })();
 
-
-}

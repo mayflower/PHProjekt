@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.fx._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.fx._base"] = true;
 dojo.provide("dojox.fx._base");
 // summary: Experimental and extended Animations beyond Dojo Core / Base functionality. 
 //	Provides advanced Lines, Animations, and convenience aliases.
@@ -320,5 +311,3 @@ dojox.fx.wipeTo = function(/*Object*/ args){
 	var anim = dojo.animateProperty(dojo.mixin({ properties: props }, args));
 	return anim; // dojo.Animation
 };
-
-}

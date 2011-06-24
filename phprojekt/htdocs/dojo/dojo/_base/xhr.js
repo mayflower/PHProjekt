@@ -1,19 +1,12 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.xhr"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.xhr"] = true;
 dojo.provide("dojo._base.xhr");
 dojo.require("dojo._base.Deferred");
 dojo.require("dojo._base.json");
 dojo.require("dojo._base.lang");
 dojo.require("dojo._base.query");
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 (function(){
+//>>excludeEnd("webkitMobile");
 	var _d = dojo, cfg = _d.config;
 
 	function setValue(/*Object*/obj, /*String*/name, /*String*/value){
@@ -291,7 +284,8 @@ dojo.require("dojo._base.query");
 		xml: function(xhr){
 			// summary: A contentHandler returning an XML Document parsed from the response data
 			var result = xhr.responseXML;
-						if(_d.isIE && (!result || !result.documentElement)){
+			//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+			if(_d.isIE && (!result || !result.documentElement)){
 				//WARNING: this branch used by the xml handling in dojo.io.iframe,
 				//so be sure to test dojo.io.iframe if making changes below.
 				var ms = function(n){ return "MSXML" + n + ".DOMDocument"; }
@@ -306,7 +300,8 @@ dojo.require("dojo._base.query");
 					return true;
 				});
 			}
-						return result; // DOMDocument
+			//>>excludeEnd("webkitMobile");
+			return result; // DOMDocument
 		},
 		"json-comment-optional": function(xhr){
 			// summary: A contentHandler which checks the presence of comment-filtered JSON and 
@@ -711,10 +706,12 @@ dojo.require("dojo._base.query");
 
 	//Automatically call cancel all io calls on unload
 	//in IE for trac issue #2357.
-		if(_d.isIE){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	if(_d.isIE){
 		_d.addOnWindowUnload(_d._ioCancelAll);
 	}
-	
+	//>>excludeEnd("webkitMobile");
+
 	_d._ioNotifyStart = function(/*Deferred*/dfd){
 		// summary:
 		// 		If dojo.publish is available, publish topics
@@ -936,6 +933,6 @@ dojo.require("dojo._base.query");
 		throw new Error("dojo.wrapForm not yet implemented");
 	}
 	*/
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 })();
-
-}
+//>>excludeEnd("webkitMobile");

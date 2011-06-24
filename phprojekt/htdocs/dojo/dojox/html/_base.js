@@ -1,13 +1,4 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.html._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.html._base"] = true;
-/*
 	Status: dont know where this will all live exactly
 	Need to pull in the implementation of the various helper methods
 	Some can be static method, others maybe methods of the ContentSetter (?)
@@ -382,5 +373,3 @@ dojo.require("dojo.html");
 	};
 	
 })();
-
-}

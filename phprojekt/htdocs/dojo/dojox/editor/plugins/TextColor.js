@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.TextColor"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.TextColor"] = true;
 dojo.provide("dojox.editor.plugins.TextColor");
 
 dojo.require("dijit._editor._Plugin");
@@ -15,7 +6,7 @@ dojo.require("dijit.form.Button");
 dojo.require("dojox.widget.ColorPicker");
 
 dojo.require("dojo.i18n");
-dojo.requireLocalization("dojox.editor.plugins", "TextColor", null, "ROOT,ro");
+dojo.requireLocalization("dojox.editor.plugins", "TextColor");
 
 dojo.experimental("dojox.editor.plugins.TextColor");
 
@@ -198,5 +189,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin", null, function(o){
 			});
 	}
 });
-
-}

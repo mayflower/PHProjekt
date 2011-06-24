@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit._editor.RichText"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit._editor.RichText"] = true;
 dojo.provide("dijit._editor.RichText");
 
 dojo.require("dijit._Widget");
@@ -464,6 +455,15 @@ dojo.declare("dijit._editor.RichText", [dijit._Widget, dijit._CssStateMixin], {
 		var s = 'javascript:parent.' + dijit._scopeName + '.byId("'+this.id+'")._iframeSrc';
 		ifr.setAttribute('src', s);
 		this.editingArea.appendChild(ifr);
+		
+		if(dojo.isSafari <= 4){
+			var src = ifr.getAttribute("src");
+			if(!src || src.indexOf("javascript") == -1){ 
+				// Safari 4 and earlier sometimes act oddly
+				// So we have to set it again.
+				setTimeout(function(){ifr.setAttribute('src', s);},0);
+			}
+		}
 
 		// TODO: this is a guess at the default line-height, kinda works
 		if(dn.nodeName == "LI"){
@@ -1913,5 +1913,3 @@ dojo.declare("dijit._editor.RichText", [dijit._Widget, dijit._CssStateMixin], {
 		return h; // Number
 	}
 });
-
-}

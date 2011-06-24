@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.grid._TreeView"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.grid._TreeView"] = true;
 dojo.provide("dojox.grid._TreeView");
 
 dojo.require("dijit._Widget");
@@ -23,7 +14,7 @@ dojo.declare("dojox.grid._Expando", [ dijit._Widget, dijit._Templated ], {
 	rowIdx: -1,
 	expandoCell: null,
 	level: 0,
-	templateString:"<div class=\"dojoxGridExpando\"\r\n\t><div class=\"dojoxGridExpandoNode\" dojoAttachEvent=\"onclick:onToggle\"\r\n\t\t><div class=\"dojoxGridExpandoNodeInner\" dojoAttachPoint=\"expandoInner\"></div\r\n\t></div\r\n></div>\r\n",
+	templatePath: dojo.moduleUrl("dojox.grid", "resources/Expando.html"),
 	_toggleRows: function(toggleClass, open){
 		if(!toggleClass || !this.rowNode){ return; }
 		if(dojo.query("table.dojoxGridRowTableNeedsRowUpdate").length){
@@ -450,5 +441,3 @@ dojo.declare("dojox.grid._TreeView", [dojox.grid._View], {
 		}
 	}
 });
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.string.tokenize"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.string.tokenize"] = true;
 dojo.provide("dojox.string.tokenize");
 
 dojox.string.tokenize = function(/*String*/ str, /*RegExp*/ re, /*Function?*/ parseDelim, /*Object?*/ instance){
@@ -44,6 +35,4 @@ dojox.string.tokenize = function(/*String*/ str, /*RegExp*/ re, /*Function?*/ pa
 		tokens.push(content);
 	}
 	return tokens;
-}
-
 }

@@ -1,1 +1,6 @@
-({"name":"Naam","size":"Grootte (in bytes)","path":"Pad"})
+({
+name: "Naam",
+path: "Pad",
+size: "Grootte (in bytes)"
+})
+

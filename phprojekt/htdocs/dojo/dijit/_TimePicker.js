@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit._TimePicker"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit._TimePicker"] = true;
 dojo.provide("dijit._TimePicker");
 
 dojo.require("dijit.form._FormWidget");
@@ -40,7 +31,7 @@ dojo.declare("dijit._TimePicker",
 		//		This widget is used internally by other widgets and is not available
 		//		as a standalone widget due to lack of accessibility support.
 
-		templateString: dojo.cache("dijit", "templates/TimePicker.html", "<div id=\"widget_${id}\" class=\"dijitMenu\"\r\n    ><div dojoAttachPoint=\"upArrow\" class=\"dijitButtonNode dijitUpArrowButton\" dojoAttachEvent=\"onmouseenter:_buttonMouse,onmouseleave:_buttonMouse\"\r\n\t\t><div class=\"dijitReset dijitInline dijitArrowButtonInner\" wairole=\"presentation\" role=\"presentation\">&nbsp;</div\r\n\t\t><div class=\"dijitArrowButtonChar\">&#9650;</div></div\r\n    ><div dojoAttachPoint=\"timeMenu,focusNode\" dojoAttachEvent=\"onclick:_onOptionSelected,onmouseover,onmouseout\"></div\r\n    ><div dojoAttachPoint=\"downArrow\" class=\"dijitButtonNode dijitDownArrowButton\" dojoAttachEvent=\"onmouseenter:_buttonMouse,onmouseleave:_buttonMouse\"\r\n\t\t><div class=\"dijitReset dijitInline dijitArrowButtonInner\" wairole=\"presentation\" role=\"presentation\">&nbsp;</div\r\n\t\t><div class=\"dijitArrowButtonChar\">&#9660;</div></div\r\n></div>\r\n"),
+		templateString: dojo.cache("dijit", "templates/TimePicker.html"),
 
 		// baseClass: [protected] String
 		//		The root className to use for the various states of this widget
@@ -233,20 +224,26 @@ dojo.declare("dijit._TimePicker",
 			// dijit.focus(this.timeMenu);
 		},
 
-		postCreate: function(){
-			// instantiate constraints
-			if(this.constraints === dijit._TimePicker.prototype.constraints){
-				this.constraints={};
-			}
+		constructor: function(){
+			this.constraints = {}; // create instance object
+		},
 
+		postMixInProperties: function(){
+		        this.inherited(arguments);
+			this._setConstraintsAttr(this.constraints); // this needs to happen now (and later) due to codependency on _set*Attr calls
+		},
+
+		_setConstraintsAttr: function(/* Object */ constraints){
 			// brings in visibleRange, increments, etc.
-			dojo.mixin(this, this.constraints);
+			dojo.mixin(this, constraints);
 
 			// dojo.date.locale needs the lang in the constraints as locale
-			if(!this.constraints.locale){
-				this.constraints.locale=this.lang;
+			if(!constraints.locale){
+				constraints.locale = this.lang;
 			}
+		},
 
+		postCreate: function(){
 			// assign typematic mouse listeners to the arrow buttons
 			this.connect(this.timeMenu, dojo.isIE ? "onmousewheel" : 'DOMMouseScroll', "_mouseWheeled");
 			var _this = this;
@@ -499,6 +496,3 @@ dojo.declare("dijit._TimePicker",
 		}
 	}
 );
-
-
-}

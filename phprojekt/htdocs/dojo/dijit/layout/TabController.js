@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.layout.TabController"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.layout.TabController"] = true;
 dojo.provide("dijit.layout.TabController");
 
 dojo.require("dijit.layout.StackController");
@@ -15,7 +6,7 @@ dojo.require("dijit.layout.StackController");
 dojo.require("dijit.Menu");
 dojo.require("dijit.MenuItem");
 
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "common");
 
 dojo.declare("dijit.layout.TabController",
 	dijit.layout.StackController,
@@ -80,7 +71,7 @@ dojo.declare("dijit.layout._TabButton",
 		closeNode: "dijitTabCloseButton"
 	},
 
-	templateString: dojo.cache("dijit.layout", "templates/_TabButton.html", "<div waiRole=\"presentation\" dojoAttachPoint=\"titleNode\" dojoAttachEvent='onclick:onClick'>\r\n    <div waiRole=\"presentation\" class='dijitTabInnerDiv' dojoAttachPoint='innerDiv'>\r\n        <div waiRole=\"presentation\" class='dijitTabContent' dojoAttachPoint='tabContent'>\r\n        \t<div waiRole=\"presentation\" dojoAttachPoint='focusNode'>\r\n\t\t        <img src=\"${_blankGif}\" alt=\"\" class=\"dijitIcon\" dojoAttachPoint='iconNode' />\r\n\t\t        <span dojoAttachPoint='containerNode' class='tabLabel'></span>\r\n\t\t        <span class=\"dijitInline dijitTabCloseButton dijitTabCloseIcon\" dojoAttachPoint='closeNode'\r\n\t\t        \t\tdojoAttachEvent='onclick: onClickCloseButton' waiRole=\"presentation\">\r\n\t\t            <span dojoAttachPoint='closeText' class='dijitTabCloseText'>x</span\r\n\t\t        ></span>\r\n\t\t\t</div>\r\n        </div>\r\n    </div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dijit.layout","templates/_TabButton.html"),
 
 	// Override _FormWidget.scrollOnFocus.
 	// Don't scroll the whole tab container into view when the button is focused.
@@ -171,5 +162,3 @@ dojo.declare("dijit.layout._TabButton",
 		this.inherited(arguments);
 	}
 });
-
-}

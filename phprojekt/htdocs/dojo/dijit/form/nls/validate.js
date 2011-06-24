@@ -1,1 +1,5 @@
-({"rangeMessage":"This value is out of range.","invalidMessage":"The value entered is not valid.","missingMessage":"This value is required."})
+({
+	invalidMessage: "The value entered is not valid.",
+	missingMessage: "This value is required.",
+	rangeMessage: "This value is out of range."
+})

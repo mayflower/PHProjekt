@@ -1,1 +1,22 @@
-({"backwards":"Hacia atrás","findReplace":"Conmutar Buscar/Sustituir","replaceAll":"Todas las apariciones","replaceDialogText":"Se han sustituido ${0} apariciones.","replaceButton":"Sustituir","findButton":"Buscar","findLabel":"Buscar:","matchCase":"Coincidir mayúsculas y minúsculas","replaceLabel":"Sustituir por:","eofDialogTextFind":"found","eofDialogText":"Last occurrence ${0}","findTooltip":"Enter text to find","replaceTooltip":"Enter text to replace with","replaceAllButton":"Replace All","eofDialogTextReplace":"replaced","backwardsTooltip":"Search backwards for text","replaceAllButtonTooltip":"Replace all the text","replaceButtonTooltip":"Replace the text","matchCaseTooltip":"Match case","findButtonTooltip":"Find the text"})
+({
+	"findLabel": "Buscar:",
+	"findTooltip": "Especifique el texto que desee buscar",
+	"replaceLabel": "Sustituir por:",
+	"replaceTooltip": "Especifique el texto por el que se debe sustituir",
+	"findReplace": "Conmutar Buscar/Sustituir",
+	"matchCase": "Coincidir mayúsculas y minúsculas",
+	"matchCaseTooltip": "Coincidir mayúsculas y minúsculas",
+	"backwards": "Hacia atrás",
+	"backwardsTooltip": "Buscar texto hacia atrás",
+	"replaceAll": "Todas las apariciones",
+	"replaceAllButton": "Sustituir todo",
+	"replaceAllButtonTooltip": "Sustituir todo el texto",
+	"findButton": "Buscar",
+	"findButtonTooltip": "Buscar el texto",
+	"replaceButton": "Sustituir",
+	"replaceButtonTooltip": "Sustituir el texto",
+	"replaceDialogText": "Se han sustituido ${0} apariciones.",
+	"eofDialogText": "Última aparición ${0}",
+	"eofDialogTextFind": "encontrado",
+	"eofDialogTextReplace": "sustituido"
+})

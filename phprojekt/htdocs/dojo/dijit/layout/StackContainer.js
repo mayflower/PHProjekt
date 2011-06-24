@@ -1,17 +1,8 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.layout.StackContainer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.layout.StackContainer"] = true;
 dojo.provide("dijit.layout.StackContainer");
 
 dojo.require("dijit._Templated");
 dojo.require("dijit.layout._LayoutWidget");
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "common");
 dojo.require("dojo.cookie");
 
 dojo.declare(
@@ -325,5 +316,3 @@ dojo.extend(dijit._Widget, {
 	//		icon specified in iconClass
 	showTitle: true
 });
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.av.FLAudio"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.av.FLAudio"] = true;
 dojo.provide("dojox.av.FLAudio");
 dojo.experimental("dojox.av.FLAudio");
 dojo.require("dojox.embed.Flash");
@@ -375,5 +366,3 @@ dojo.declare("dojox.av.FLAudio", null, {
 	}
 
 });
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit._HasDropDown"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit._HasDropDown"] = true;
 dojo.provide("dijit._HasDropDown");
 
 dojo.require("dijit._base.place");
@@ -144,7 +135,7 @@ dojo.declare("dijit._HasDropDown",
 					}
 				}
 			}
-			if(this._opened && dropDown.focus){
+			if(this._opened && dropDown.focus && dropDown.autoFocus !== false){
 				// Focus the dropdown widget - do it on a delay so that we
 				// don't steal our own focus.
 				window.setTimeout(dojo.hitch(dropDown, "focus"), 1);
@@ -302,7 +293,7 @@ dojo.declare("dijit._HasDropDown",
 			// ie, dependent on how much space is available (BK)
 
 			if(!this._preparedNode){
-				dijit.popup.moveOffScreen(ddNode);
+				dijit.popup.moveOffScreen(dropDown);
 				this._preparedNode = true;			
 				// Check if we have explicitly set width and height on the dropdown widget dom node
 				if(ddNode.style.width){
@@ -404,5 +395,3 @@ dojo.declare("dijit._HasDropDown",
 
 	}
 );
-
-}
