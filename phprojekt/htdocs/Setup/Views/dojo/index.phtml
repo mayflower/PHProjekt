@@ -16,9 +16,18 @@
         var djConfig = {isDebug: false, parseOnLoad: false, bindEncoding: "utf-8",
                         locale: 'en', useCommentedJson: true};
     </script>
-    <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/dojo/dojo.js"></script>
-    <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/dojo/mydojo.js"></script>
+    <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/release/dojo/dojo/dojo.js"></script>
+    <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/release/dojo/dojo/setup.js"></script>
     <script type="text/javascript">
+        dojo.require("dijit.layout.BorderContainer");
+        dojo.require("dijit.layout.ContentPane");
+        dojo.require("dijit.Toolbar");
+        dojo.require("dijit.form.Form");
+        dojo.require("dijit.form.Button");
+        dojo.require("dijit.form.CheckBox");
+        dojo.require("dijit.form.TextBox");
+        dojo.require("dijit.TooltipDialog");
+        dojo.require("dijit.form.FilteringSelect");
         function getMaxHeight() {
             var availHeight = 0;
 

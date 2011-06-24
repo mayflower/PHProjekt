@@ -21,6 +21,11 @@
 
 dojo.provide("phpr.Default.Main");
 
+dojo.require("dijit.form.Button");
+dojo.require("dijit.layout.TabContainer");
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.Tooltip");
+
 // Event handler
 _searchEvent = null;
 

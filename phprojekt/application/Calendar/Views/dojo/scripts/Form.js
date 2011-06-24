@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Calendar.Form");
 
+dojo.require("dijit.form.Button");
+
 dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     _relatedDataUrl:       null,
     _relatedData:          null,

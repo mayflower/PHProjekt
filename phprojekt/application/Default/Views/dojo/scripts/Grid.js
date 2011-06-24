@@ -21,6 +21,10 @@
 
 dojo.provide("phpr.Default.Grid");
 
+dojo.require("dijit.form.Button");
+dojo.require("dojo.data.ItemFileWriteStore");
+dojo.require("dojox.grid.DataGrid");
+
 dojo.declare("phpr.Default.Grid", phpr.Component, {
     // Summary:
     //    Class for displaying a PHProjekt grid
