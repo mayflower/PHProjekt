@@ -19,6 +19,8 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
+dojo.require("dijit.Dialog");
+
 dojo.declare('phpr.Project.GanttBase', null, {
     constructor:function(main) {
         // Array of project names and its current min/max values

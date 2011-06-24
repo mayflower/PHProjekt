@@ -21,6 +21,9 @@
 
 dojo.provide("phpr.Timecard.Form");
 
+dojo.require("dijit.form.Button");
+dojo.require("dijit.TooltipDialog");
+
 dojo.declare("phpr.Timecard.Form", phpr.Component, {
     sendData:           new Array(),
     formdata:           new Array(),

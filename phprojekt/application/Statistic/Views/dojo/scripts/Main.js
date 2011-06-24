@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Statistic.Main");
 
+dojo.require("dijit.form.Button");
+
 dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
     constructor:function() {
         this.module = "Statistic";

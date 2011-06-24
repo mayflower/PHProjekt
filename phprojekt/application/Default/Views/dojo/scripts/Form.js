@@ -21,6 +21,10 @@
 
 dojo.provide("phpr.Default.Form");
 
+dojo.require("dijit.form.Button");
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.layout.TabContainer");
+
 dojo.declare("phpr.Default.Form", phpr.Component, {
     // Summary:
     //    Class for displaying a PHProjekt Detail View

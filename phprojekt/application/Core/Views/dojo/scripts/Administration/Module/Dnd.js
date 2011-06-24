@@ -19,7 +19,11 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
+dojo.provide("phpr.Module.Designer");
+
 contentModuleDesignerSource = new Array();
+
+dojo.require("dojo.dnd.Source");
 
 dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
     // Summary:

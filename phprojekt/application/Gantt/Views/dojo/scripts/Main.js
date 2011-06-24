@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Gantt.Main");
 
+dojo.require("dijit.form.DateTextBox");
+
 dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     gantt:   null,
     scale:   1.8,

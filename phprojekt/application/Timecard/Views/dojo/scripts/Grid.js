@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Timecard.Grid");
 
+dojo.require("dijit.form.Button");
+
 dojo.declare("phpr.Timecard.Grid", phpr.Component, {
     main:          null,
     _date:         null,
