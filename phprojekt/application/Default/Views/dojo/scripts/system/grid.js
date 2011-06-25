@@ -320,15 +320,7 @@ dojo.declare('phpr.grid._View', [dojox.grid._View], {
     //    Extend the normal grid view
     // Description
     //    Add a div after the grid for allow multiple actions
-    templateString: '<div class="dojoxGridView" wairole="presentation">\r\n\t<div class="dojoxGridHeader" '
-        + 'dojoAttachPoint="headerNode" wairole="presentation">\r\n\t\t<div dojoAttachPoint="headerNodeContainer" '
-        + 'style="width:9000em" wairole="presentation">\r\n\t\t\t<div dojoAttachPoint="headerContentNode" '
-        + 'wairole="row"></div>\r\n\t\t</div>\r\n\t</div>\r\n\t<input type="checkbox" class="dojoxGridHiddenFocus" '
-        + 'dojoAttachPoint="hiddenFocusNode" wairole="presentation" />\r\n\t<input type="checkbox" '
-        + 'class="dojoxGridHiddenFocus" wairole="presentation" />\r\n\t<div class="dojoxGridScrollbox" '
-        + 'dojoAttachPoint="scrollboxNode" wairole="presentation">\r\n\t\t<div class="dojoxGridContent" '
-        + 'dojoAttachPoint="contentNode" hidefocus="hidefocus" wairole="presentation"></div>\r\n\t\t'
-        + '<div dojoAttachPoint="gridActions"></div>\r\n\t</div>\r\n</div>\r\n',
+    templateString: __phpr_templateCache["phpr.Default.template.Grid.html"],
 
     doStyleRowNode:function(inRowIndex, inRowNode) {
         // Summary
