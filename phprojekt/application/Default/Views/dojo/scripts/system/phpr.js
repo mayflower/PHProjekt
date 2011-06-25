@@ -959,14 +959,7 @@ dojo.declare("phpr.ScrollPane", [dijit.layout._LayoutWidget, dijit._Templated], 
     _positions: new Array(),
 
     // Template
-    templateString: "<div class=\"phprScrollWindow\" dojoAttachEvent=\"onmouseenter: _enter, ondijitclick: _leave, "
-        + "onmouseleave: _leave\">\r\n\t<div class=\"phprScrollArrowLeft\" dojoAttachPoint=\"scrollArrowLeft\" "
-        + "dojoAttachEvent=\"onmouseenter: _enterLeft, onmouseleave: _leave\">\r\n\t&nbsp;\r\n\t</div>\r\n\t"
-        + "<div class=\"phprScrollWrapper\" style=\"${style}\" dojoAttachPoint=\"wrapper\" "
-        + "dojoAttachEvent=\"onmousemove: _calc\">\r\n\t<div class=\"phprScrollPane\" "
-        + "dojoAttachPoint=\"containerNode\"></div>\r\n\t</div>\r\n\t<div class=\"phprScrollArrowRight\" "
-        + "dojoAttachPoint=\"scrollArrowRight\" dojoAttachEvent=\"onmouseenter: _enterRight, onmouseleave: _leave\">"
-        + "\r\n\t&nbsp;\r\n\t</div>\r\n\t</div>\r\n",
+    templateString: __phpr_templateCache["phpr.Default.template.ScrollPane.html"],
 
     layout:function() {
         // Summary:
@@ -1137,12 +1130,11 @@ dojo.declare("phpr.ScrollPane", [dijit.layout._LayoutWidget, dijit._Templated], 
 });
 
 phpr.inArray = function(needle, haystack) {
-    var key = '';
-
-    for (key in haystack) {
-        if (haystack[key] === needle) {
-            return true;
-        }
+    //we need to check for this, because for some reason, the function is
+    //called with undefined as haystack very often
+    if("Array" == typeof haystack || "Object" == typeof haystack) {
+        console.log("use new");
+        return dojo.indexOf(haystack, needle)!=-1;
     }
 
     return false;
