@@ -585,7 +585,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
         case 'checkbox':
             formLabel = params['formLabel'] || 'Checkbox';
             labelFor = 'checkbox';
-            inputTxt = '<input type="checkbox" dojotype="phpr.form.CheckBox" value="1" />'
+            inputTxt = '<input type="checkbox" dojotype="phpr.Default.System.Form.CheckBox" value="1" />'
             break;
         case 'date':
             formLabel = params['formLabel'] || 'Date';
@@ -660,7 +660,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
         case 'percentage':
             formLabel = params['formLabel'] || 'Percentage';
             labelFor = 'percentage';
-            inputTxt = '<div dojoType="phpr.form.HorizontalSlider" maximum="100" minimum="0"';
+            inputTxt = '<div dojoType="phpr.Default.System.Form.HorizontalSlider" maximum="100" minimum="0"';
             inputTxt += ' pageIncrement="100" showButtons="false" intermediateChanges="true" style="height: 20px;">';
             inputTxt += '<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration"';
             inputTxt += ' style="height:1.2em;font-size:75%;color:gray;" count="5" numericMargin="1"></ol>';
@@ -674,7 +674,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
             var numStars = params['formRange'] || 10;
             formLabel = params['formLabel'] || 'Rating';
             labelFor = 'rating';
-            inputTxt = '<div name="rating" dojoType="phpr.form.Rating" numStars="' + numStars + '"></div>';
+            inputTxt = '<div name="rating" dojoType="phpr.Default.System.Form.Rating" numStars="' + numStars + '"></div>';
             break;
         case 'textarea':
             formLabel = params['formLabel'] || 'Textarea';
