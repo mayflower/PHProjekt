@@ -39,14 +39,14 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         //   Custom renderTemplate for timecard
         this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent'), {
             manageFavoritesText: phpr.nls.get('Manage project list'),
-            monthTxt:            phpr.Date.getLongTranslateMonth(this._date.getMonth())
+            monthTxt:            phpr.date.getLongTranslateMonth(this._date.getMonth())
         });
     },
 
     setWidgets:function() {
         // Summary:
         //   Custom setWidgets for timecard
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
         this.grid = new this.gridWidget(this, this._date);
         this.form = new this.formWidget(this, this._date);
     },

@@ -21,171 +21,26 @@
 
 dojo.provide("phpr");
 
-// Dojo Base
-dojo.require("dojo._base.Color");
-dojo.require("dojo._base.connect");
-dojo.require("dojo._base.declare");
-dojo.require("dojo._base.fx");
-dojo.require("dojo._base.html");
-dojo.require("dojo._base.lang");
-dojo.require("dojo.AdapterRegistry");
-dojo.require("dojo.cldr.monetary");
-dojo.require("dojo.cldr.supplemental");
-dojo.require("dojo.colors");
-dojo.require("dojo.cookie");
-dojo.require("dojo.currency");
-dojo.require("dojo.fx");
-dojo.require("dojo.html");
-dojo.require("dojo.i18n");
-dojo.require("dojo.number");
-dojo.require("dojo.parser");
-dojo.require("dojo.regexp");
-dojo.require("dojo.string");
+/* template deps */
 
-// Dojo Date
-dojo.require("dojo.date");
-dojo.require("dojo.date.locale");
-dojo.require("dojo.date.stamp");
-
-// Dojo Dnd
-dojo.require("dojo.dnd.autoscroll");
-dojo.require("dojo.dnd.Avatar");
-dojo.require("dojo.dnd.Container");
-dojo.require("dojo.dnd.common");
-dojo.require("dojo.dnd.Manager");
-dojo.require("dojo.dnd.move");
-dojo.require("dojo.dnd.Moveable");
-dojo.require("dojo.dnd.Mover");
-dojo.require("dojo.dnd.Selector");
-dojo.require("dojo.dnd.Source");
-dojo.require("dojo.dnd.TimedMoveable");
-
-// Dojo Data
-dojo.require("dojo.data.ItemFileReadStore");
-dojo.require("dojo.data.ItemFileWriteStore");
-dojo.require("dojo.data.util.filter");
-dojo.require("dojo.data.util.simpleFetch");
-dojo.require("dojo.data.util.sorter");
-
-// Dijit Base
-dojo.require("dijit._base");
-dojo.require("dijit._base.focus");
-dojo.require("dijit._base.manager");
-dojo.require("dijit._base.place");
-dojo.require("dijit._base.popup");
-dojo.require("dijit._base.scroll");
-dojo.require("dijit._base.sniff");
-dojo.require("dijit._base.typematic");
-dojo.require("dijit._base.wai");
-dojo.require("dijit._base.window");
-dojo.require("dijit._Container");
-dojo.require("dijit._Templated");
-dojo.require("dijit._TimePicker");
-dojo.require("dijit._Widget");
-
-// Dijit Misc
-dojo.require("dijit.Calendar");
-dojo.require("dijit.Dialog");
-dojo.require("dijit.Menu");
-dojo.require("dijit.TitlePane");
-dojo.require("dijit.Toolbar");
-dojo.require("dijit.Tooltip");
-dojo.require("dijit.Tree");
-
-// Dijit Layout
-dojo.require("dijit.layout._LayoutWidget");
-dojo.require("dijit.layout.BorderContainer");
-dojo.require("dijit.layout.ContentPane");
-dojo.require("dijit.layout.StackContainer");
-dojo.require("dijit.layout.TabContainer");
-
-// Dijit Form
-dojo.require("dijit.form._DateTimeTextBox");
-dojo.require("dijit.form._FormWidget");
-dojo.require("dijit.form._Spinner");
-dojo.require("dijit.form.Button");
-dojo.require("dijit.form.CheckBox");
-dojo.require("dijit.form.ComboBox");
-dojo.require("dijit.form.CurrencyTextBox");
-dojo.require("dijit.form.DateTextBox");
-dojo.require("dijit.form.FilteringSelect");
+dojo.require("dojo.hash");
 dojo.require("dijit.form.Form");
-dojo.require("dijit.form.HorizontalRule");
-dojo.require("dijit.form.HorizontalRuleLabels");
-dojo.require("dijit.form.HorizontalSlider");
-dojo.require("dijit.form.MultiSelect");
-dojo.require("dijit.form.NumberSpinner");
-dojo.require("dijit.form.NumberTextBox");
 dojo.require("dijit.form.Textarea");
-dojo.require("dijit.form.TextBox");
-dojo.require("dijit.form.TimeTextBox");
-dojo.require("dijit.form.ValidationTextBox");
-
-// Dijit Editor
-dojo.require("dijit.ColorPalette");
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit._editor.html");
-dojo.require("dijit._editor.plugins.EnterKeyHandling");
-dojo.require("dijit._editor.plugins.FontChoice");
-dojo.require("dijit._editor.plugins.LinkDialog");
-dojo.require("dijit._editor.plugins.TextColor");
-dojo.require("dijit._editor.range");
-dojo.require("dijit._editor.RichText");
-dojo.require("dijit._editor.selection");
-dojo.require("dijit.Editor");
-
-// Dojox base
-dojo.require("dojox.data.QueryReadStore");
-
-// Dojox form
-dojo.require("dojox.form.Rating");
-dojo.require("dojox.form.CheckedMultiSelect");
-
-// Dojox grid
-dojo.require("dojox.grid._EditManager");
-dojo.require("dojox.grid._Events");
-dojo.require("dojox.grid._FocusManager");
-dojo.require("dojox.grid._Grid");
-dojo.require("dojox.grid._Layout");
-dojo.require("dojox.grid._RowManager");
-dojo.require("dojox.grid._RowSelector");
-dojo.require("dojox.grid._Scroller");
-dojo.require("dojox.grid._View");
-dojo.require("dojox.grid._ViewManager");
-dojo.require("dojox.grid.cells");
-dojo.require("dojox.grid.cells._base");
-dojo.require("dojox.grid.cells.dijit");
-dojo.require("dojox.grid.DataSelection");
-dojo.require("dojox.grid.DataGrid");
-dojo.require("dojox.grid.Selection");
-dojo.require("dojox.grid.util");
-dojo.require("dojox.html.metrics");
-
-// Dojox strings
-dojo.require("dojox.string.Builder");
-dojo.require("dojox.string.sprintf");
-dojo.require("dojox.string.tokenize");
-
-// Dojox templates
-dojo.require("dojox.dtl");
-dojo.require("dojox.dtl._base");
-dojo.require("dojox.dtl._Templated");
-dojo.require("dojox.dtl.Context");
-dojo.require("dojox.dtl.filter.htmlstrings");
-dojo.require("dojox.dtl.filter.strings");
-dojo.require("dojox.dtl.tag.logic");
-
-// Dojox fx
-dojo.require("dojox.fx._base");
-dojo.require("dojox.fx._core");
-dojo.require("dojox.fx.scroll");
-
-// Dojox layout
-dojo.require("dojox.form.RangeSlider");
-dojo.require("dojox.layout.ExpandoPane");
-dojo.require("dojox.layout.ScrollPane");
+dojo.require("dijit.form.HorizontalRuleLabels");
 dojo.require("dojox.widget.Toaster");
-dojo.require("dojox.layout.ResizeHandle");
+
+/* phpr deps */
+
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.form.Button");
+dojo.require("dojox.data.QueryReadStore");
+dojo.require("dijit.form.DateTextBox");
+dojo.require("dijit._Widget");
+dojo.require("dijit.Dialog");
+dojo.require("dijit.layout._LayoutWidget");
+dojo.require("dijit._Templated");
+dojo.require("dijit.form.FilteringSelect");
+dojo.require("dijit.layout.ContentPane");
 
 // Global vars
 var module           = null;
@@ -959,14 +814,7 @@ dojo.declare("phpr.ScrollPane", [dijit.layout._LayoutWidget, dijit._Templated], 
     _positions: new Array(),
 
     // Template
-    templateString: "<div class=\"phprScrollWindow\" dojoAttachEvent=\"onmouseenter: _enter, ondijitclick: _leave, "
-        + "onmouseleave: _leave\">\r\n\t<div class=\"phprScrollArrowLeft\" dojoAttachPoint=\"scrollArrowLeft\" "
-        + "dojoAttachEvent=\"onmouseenter: _enterLeft, onmouseleave: _leave\">\r\n\t&nbsp;\r\n\t</div>\r\n\t"
-        + "<div class=\"phprScrollWrapper\" style=\"${style}\" dojoAttachPoint=\"wrapper\" "
-        + "dojoAttachEvent=\"onmousemove: _calc\">\r\n\t<div class=\"phprScrollPane\" "
-        + "dojoAttachPoint=\"containerNode\"></div>\r\n\t</div>\r\n\t<div class=\"phprScrollArrowRight\" "
-        + "dojoAttachPoint=\"scrollArrowRight\" dojoAttachEvent=\"onmouseenter: _enterRight, onmouseleave: _leave\">"
-        + "\r\n\t&nbsp;\r\n\t</div>\r\n\t</div>\r\n",
+    templateString: __phpr_templateCache["phpr.Default.template.ScrollPane.html"],
 
     layout:function() {
         // Summary:
@@ -1137,12 +985,11 @@ dojo.declare("phpr.ScrollPane", [dijit.layout._LayoutWidget, dijit._Templated], 
 });
 
 phpr.inArray = function(needle, haystack) {
-    var key = '';
-
-    for (key in haystack) {
-        if (haystack[key] === needle) {
-            return true;
-        }
+    //we need to check for this, because for some reason, the function is
+    //called with undefined as haystack very often
+    if("Array" == typeof haystack || "Object" == typeof haystack) {
+        console.log("use new");
+        return dojo.indexOf(haystack, needle)!=-1;
     }
 
     return false;

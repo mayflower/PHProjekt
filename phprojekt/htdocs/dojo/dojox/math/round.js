@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.math.round"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.math.round"] = true;
 dojo.provide("dojox.math.round");
 dojo.experimental("dojox.math.round");
 
@@ -67,6 +58,4 @@ if((0.9).toFixed() == 0){
 			return round(v, p, m) + (v > 0 ? d : -d);
 		}
 	})();
-}
-
 }

@@ -1,1 +1,4 @@
-({"collapse":"Collapse Editor Toolbar","expand":"Expand Editor Toolbar"})
+({
+	"collapse": "Collapse Editor Toolbar",
+	"expand": "Expand Editor Toolbar"
+})

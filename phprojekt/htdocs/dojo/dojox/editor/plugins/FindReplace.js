@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.FindReplace"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.FindReplace"] = true;
 dojo.provide("dojox.editor.plugins.FindReplace");
 
 dojo.require("dijit._editor._Plugin");
@@ -19,7 +10,7 @@ dojo.require("dojox.editor.plugins.ToolbarLineBreak");
 dojo.require("dojo.i18n");
 dojo.require("dojo.string");
 
-dojo.requireLocalization("dojox.editor.plugins", "FindReplace", null, "ROOT,cs,de,es,fr,hu,it,ja,ko,pl,pt,ro,ru,zh,zh-tw");
+dojo.requireLocalization("dojox.editor.plugins", "FindReplace");
 
 dojo.experimental("dojox.editor.plugins.FindReplace");
 
@@ -834,5 +825,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 		o.plugin = new dojox.editor.plugins.FindReplace({});
 	}
 });
-
-}

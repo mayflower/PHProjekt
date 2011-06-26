@@ -1,19 +1,12 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.foo"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.foo"] = true;
-/*
  * loader.js - A bootstrap module.  Runs before the hostenv_*.js file. Contains
  * all of the package loading methods.
  */
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 (function(){
 	var d = dojo;
+//>>excludeEnd("webkitMobile");
 
 	d.mixin(d, {
 		_loadedModules: {},
@@ -57,7 +50,8 @@ dojo._hasResource["dojo.foo"] = true;
 	});
 
 
-		dojo._loadPath = function(/*String*/relpath, /*String?*/module, /*Function?*/cb){
+	//>>excludeStart("xdomainExclude", fileName.indexOf("dojo.xd.js") != -1 && kwArgs.loader == "xdomain");
+	dojo._loadPath = function(/*String*/relpath, /*String?*/module, /*Function?*/cb){
 		// 	summary:
 		//		Load a Javascript module given a relative path
 		//
@@ -137,7 +131,8 @@ dojo._hasResource["dojo.foo"] = true;
 		}
 		return !!contents; // Boolean: contents? true : false
 	}
-	
+	//>>excludeEnd("xdomainExclude");
+
 	// FIXME: probably need to add logging to this method
 	dojo._loadUriAndCheck = function(/*String*/uri, /*String*/moduleName, /*Function?*/cb){
 		// summary: calls loadUri then findModule and returns true if both succeed
@@ -799,6 +794,6 @@ dojo._hasResource["dojo.foo"] = true;
 
 		return new d._Url(loc, url); // dojo._Url
 	}
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 })();
-
-}
+//>>excludeEnd("webkitMobile");

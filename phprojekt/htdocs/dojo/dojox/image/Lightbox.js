@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.image.Lightbox"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.image.Lightbox"] = true;
 dojo.provide("dojox.image.Lightbox");
 dojo.experimental("dojox.image.Lightbox");
 
@@ -200,7 +191,7 @@ dojo.declare("dojox.image.LightboxDialog",
 	//		Path to the image used when a 404 is encountered
 	errorImg: dojo.moduleUrl("dojox.image","resources/images/warning.png"),
 
-	templateString: dojo.cache("dojox.image", "resources/Lightbox.html", "<div class=\"dojoxLightbox\" dojoAttachPoint=\"containerNode\">\r\n\t<div style=\"position:relative\">\r\n\t\t<div dojoAttachPoint=\"imageContainer\" class=\"dojoxLightboxContainer\" dojoAttachEvent=\"onclick: _onImageClick\">\r\n\t\t\t<img dojoAttachPoint=\"imgNode\" src=\"${imgUrl}\" class=\"dojoxLightboxImage\" alt=\"${title}\">\r\n\t\t\t<div class=\"dojoxLightboxFooter\" dojoAttachPoint=\"titleNode\">\r\n\t\t\t\t<div class=\"dijitInline LightboxClose\" dojoAttachPoint=\"closeButtonNode\"></div>\r\n\t\t\t\t<div class=\"dijitInline LightboxNext\" dojoAttachPoint=\"nextButtonNode\"></div>\t\r\n\t\t\t\t<div class=\"dijitInline LightboxPrev\" dojoAttachPoint=\"prevButtonNode\"></div>\r\n\t\t\t\t<div class=\"dojoxLightboxText\" dojoAttachPoint=\"titleTextNode\"><span dojoAttachPoint=\"textNode\">${title}</span><span dojoAttachPoint=\"groupCount\" class=\"dojoxLightboxGroupText\"></span></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.image","resources/Lightbox.html"),
 
 	startup: function(){
 		// summary: Add some extra event handlers, and startup our superclass.
@@ -587,5 +578,3 @@ dojo.declare("dojox.image.LightboxDialog",
 		}
 	}
 });
-
-}

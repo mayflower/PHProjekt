@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.sql._crypto"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.sql._crypto"] = true;
 dojo.provide("dojox.sql._crypto");
 dojo.mixin(dojox.sql._crypto, {
 	// summary: dojox.sql cryptography code
@@ -447,5 +438,3 @@ dojo.mixin(dojox.sql._crypto, {
 		}
 	}
 });
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.JsonQueryRestStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.JsonQueryRestStore"] = true;
 dojo.provide("dojox.data.JsonQueryRestStore");
 dojo.require("dojox.data.JsonRestStore");
 dojo.require("dojox.data.util.JsonQuery");
@@ -22,5 +13,3 @@ dojo.declare("dojox.data.JsonQueryRestStore",[dojox.data.JsonRestStore,dojox.dat
 		return item.__id && (item.__id.indexOf("#") == -1) && this.inherited(arguments);
 	}
 });
-
-}

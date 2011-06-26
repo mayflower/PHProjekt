@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.date.islamic"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.date.islamic"] = true;
 dojo.provide("dojox.date.islamic");
 
 dojo.require("dojox.date.islamic.Date");
@@ -254,5 +245,3 @@ dojox.date.islamic.difference = function(/*dojox.date.islamic.Date*/date1, /*doj
 	// Round for fractional values and DST leaps
 	return Math.round(delta); // Number (integer) 
 };
-
-}

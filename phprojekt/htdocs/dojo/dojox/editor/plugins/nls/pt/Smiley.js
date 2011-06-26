@@ -1,1 +1,21 @@
-({"emoticonLaughing":"gargalhando","emoticonCool":"legal","emoticonTongue":"mostrando a língua","emoticonCrying":"chorando","emoticonOops":"surpreso","emoticonFrown":"sobrancelhas franzidas","emoticonAngry":"bravo","emoticonShy":"envergonhado","emoticonNo":"não","emoticonAngel":"angelical","smiley":"Inserir Emoticon","emoticonIdea":"ideia","emoticonEyebrow":"sarcástico","emoticonSmile":"sorriso","emoticonWink":"piscando","emoticonYes":"sim","emoticonGrin":"sorriso largo","emoticonGoofy":"tonto","emoticonHalf":"confuso"})
+({
+	smiley: "Inserir Emoticon",
+	emoticonSmile: "sorriso",
+	emoticonLaughing: "gargalhando",
+	emoticonWink: "piscando",
+	emoticonGrin: "sorriso largo",
+	emoticonCool: "legal",
+	emoticonAngry: "bravo",
+	emoticonHalf: "confuso",
+	emoticonEyebrow: "sarcástico",
+	emoticonFrown: "sobrancelhas franzidas",
+	emoticonShy: "envergonhado",
+	emoticonGoofy: "tonto",
+	emoticonOops: "surpreso",
+	emoticonTongue: "mostrando a língua",
+	emoticonIdea: "ideia",
+	emoticonYes: "sim",
+	emoticonNo: "não",
+	emoticonAngel: "angelical",
+	emoticonCrying: "chorando"
+})

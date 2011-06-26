@@ -26,25 +26,25 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
         // Summary:
         //    Set the url for get the data
         this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/'
-            + phpr.Tree.getParentId(this.id) + '/id/' + this.id;
+            + phpr.tree.getParentId(this.id) + '/id/' + this.id;
     },
 
     initData:function() {
         // Get the rights for other users
         this._accessUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetUsersRights'
-            + '/nodeId/' + phpr.Tree.getParentId(phpr.currentProjectId) + '/id/' + this.id;
+            + '/nodeId/' + phpr.tree.getParentId(phpr.currentProjectId) + '/id/' + this.id;
         this._initData.push({'url': this._accessUrl});
 
         // Get all the active users
-        this.userStore = new phpr.Store.User(phpr.Tree.getParentId(this.id));
+        this.userStore = new phpr.Default.System.Store.User(phpr.tree.getParentId(this.id));
         this._initData.push({'store': this.userStore});
 
         // Get roles
-        this.roleStore = new phpr.Store.Role(phpr.Tree.getParentId(phpr.currentProjectId), this.id);
+        this.roleStore = new phpr.Default.System.Store.Role(phpr.tree.getParentId(phpr.currentProjectId), this.id);
         this._initData.push({'store': this.roleStore});
 
         // Get modules
-        this.moduleStore = new phpr.Store.Module(phpr.Tree.getParentId(phpr.currentProjectId), this.id);
+        this.moduleStore = new phpr.Default.System.Store.Module(phpr.tree.getParentId(phpr.currentProjectId), this.id);
         this._initData.push({'store': this.moduleStore});
 
         // Get the tags
@@ -65,7 +65,7 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
         }
 
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.Tree.getParentId(this.id)
+            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.tree.getParentId(this.id)
                 + '/id/' + this.id,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {

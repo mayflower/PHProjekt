@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.lang.observable"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.lang.observable"] = true;
 dojo.provide("dojox.lang.observable");
 // Used to create a wrapper object with monitored reads and writes
 // 
@@ -271,5 +262,3 @@ dojox.lang.makeObservable(function(obj,i){
 	},function(obj,i,value){
 		// just ignore, exceptions don't seem to propagate through the VB stack.
 });
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.string"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.string"] = true;
 dojo.provide("dojo.string");
 
 /*=====
@@ -160,5 +151,3 @@ dojo.string.trim = String.prototype.trim ?
 		}
 		return str;
 	};
-
-}

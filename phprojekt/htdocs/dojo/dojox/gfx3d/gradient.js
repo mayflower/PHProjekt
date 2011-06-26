@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.gfx3d.gradient"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx3d.gradient"] = true;
 dojo.provide("dojox.gfx3d.gradient");
 
 dojo.require("dojox.gfx3d.vector");
@@ -44,5 +35,3 @@ dojo.require("dojox.gfx3d.matrix");
 		return {type: "linear", x1: 0, y1: -r, x2: 0, y2: r, colors: colors};
 	};
 })();
-
-}

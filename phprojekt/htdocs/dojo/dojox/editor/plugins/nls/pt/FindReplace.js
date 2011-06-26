@@ -1,1 +1,22 @@
-({"backwards":"Retroceder","findReplace":"Comutar Localizar/Substituir","replaceAll":"Todas as Ocorrências","replaceDialogText":"${0} ocorrências substituídas.","replaceButton":"Substituir","findButton":"Localizar","findLabel":"Localizar:","matchCase":"Caso de Correspondência","replaceLabel":"Substituir por:","eofDialogTextFind":"found","eofDialogText":"Last occurrence ${0}","findTooltip":"Enter text to find","replaceTooltip":"Enter text to replace with","replaceAllButton":"Replace All","eofDialogTextReplace":"replaced","backwardsTooltip":"Search backwards for text","replaceAllButtonTooltip":"Replace all the text","replaceButtonTooltip":"Replace the text","matchCaseTooltip":"Match case","findButtonTooltip":"Find the text"})
+({
+	"findLabel": "Localizar:",
+	"findTooltip": "Inserir texto a ser localizado",
+	"replaceLabel": "Substituir por:",
+	"replaceTooltip": "Inserir texto a ser substituído por",
+	"findReplace": "Localizar e Substituir",
+	"matchCase": "Coincidir maiúscula/minúscula",
+	"matchCaseTooltip": "Coincidir maiúscula/minúscula",
+	"backwards": "Retroceder",
+	"backwardsTooltip": "Procurar texto para trás",
+	"replaceAll": "Todas as Ocorrências",
+	"replaceAllButton": "Substituir Todos",
+	"replaceAllButtonTooltip": "Substituir todo o texto",
+	"findButton": "Localizar",
+	"findButtonTooltip": "Localizar o texto",
+	"replaceButton": "Substituir",
+	"replaceButtonTooltip": "Substituir o texto",
+	"replaceDialogText": "${0} ocorrências substituídas.",
+	"eofDialogText": "Última ocorrência ${0}",
+	"eofDialogTextFind": "localizado",
+	"eofDialogTextReplace": "substituído"
+})

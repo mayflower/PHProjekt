@@ -1,1 +1,5 @@
-({"hexLabel":"十六進位","saturationPickerTitle":"Saturation Selector","valueLabel":"v","blueLabel":"b","saturationLabel":"s","greenLabel":"g","redLabel":"r","hueLabel":"h","huePickerTitle":"Hue Selector","degLabel":"°"})
+({
+hexLabel: "十六進位",
+huePickerTitle: "色調選取元",
+saturationPickerTitle: "飽和度選取元"
+})

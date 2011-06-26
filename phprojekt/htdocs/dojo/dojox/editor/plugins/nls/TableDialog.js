@@ -1,1 +1,29 @@
-({"buttonSet":"Set","insertTableTitle":"Insert Table","insertTableRowAfterLabel":"Add Row After","center":"center","deleteTableColumnLabel":"Delete Column","right":"right","insertTableColumnBeforeLabel":"Add Column Before","tableWidth":"Table Width:","buttonInsert":"Insert","default":"default","align":"Align:","insertTableRowBeforeLabel":"Add Row Before","cellSpacing":"Cell Spacing:","pixels":"pixels","selectTableLabel":"Select Table","rows":"Rows:","modifyTableTitle":"Modify Table","cellPadding":"Cell Padding:","deleteTableRowLabel":"Delete Row","backgroundColor":"Background Color:","insertTableColumnAfterLabel":"Add Column After","left":"left","borderThickness":"BorderThickness","columns":"Columns:","percent":"percent","borderColor":"Border Color:"})
+({
+	insertTableTitle: "Insert Table",
+	modifyTableTitle: "Modify Table",
+	rows: "Rows:",
+	columns: "Columns:",
+	align: "Align:",
+	cellPadding: "Cell Padding:",
+	cellSpacing: "Cell Spacing:",
+	tableWidth: "Table Width:",
+	backgroundColor: "Background Color:",
+	borderColor: "Border Color:",
+	borderThickness: "BorderThickness",
+	percent: "percent",
+	pixels: "pixels",
+	"default": "default",
+	left: "left",
+	center: "center",
+	right: "right",
+	buttonSet: "Set", // translated elsewhere?
+	buttonInsert: "Insert",
+
+	selectTableLabel: "Select Table",
+	insertTableRowBeforeLabel: "Add Row Before",
+	insertTableRowAfterLabel: "Add Row After",
+	insertTableColumnBeforeLabel: "Add Column Before",
+	insertTableColumnAfterLabel: "Add Column After",
+	deleteTableRowLabel: "Delete Row",
+	deleteTableColumnLabel: "Delete Column"
+})

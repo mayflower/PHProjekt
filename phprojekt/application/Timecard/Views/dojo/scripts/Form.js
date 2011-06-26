@@ -21,7 +21,10 @@
 
 dojo.provide("phpr.Timecard.Form");
 
-dojo.declare("phpr.Timecard.Form", phpr.Component, {
+dojo.require("dijit.form.Button");
+dojo.require("dijit.TooltipDialog");
+
+dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
     sendData:           new Array(),
     formdata:           new Array(),
     dateObject:         null,
@@ -95,7 +98,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         } else {
             this.dateObject = date;
         }
-        this._date = phpr.Date.getIsoDate(this.dateObject);
+        this._date = phpr.date.getIsoDate(this.dateObject);
     },
 
     loadView:function() {
@@ -306,10 +309,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         // Description:
         //    Correct some data before send it to the server
         if (this.sendData.endTime) {
-            this.sendData.endTime = phpr.Date.getIsoTime(this.sendData.endTime);
+            this.sendData.endTime = phpr.date.getIsoTime(this.sendData.endTime);
         }
         if (this.sendData.startTime) {
-            this.sendData.startTime = phpr.Date.getIsoTime(this.sendData.startTime);
+            this.sendData.startTime = phpr.date.getIsoTime(this.sendData.startTime);
         }
         if (this.sendData.projectId < 0) {
             this.sendData.projectId = 0;
@@ -486,7 +489,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Fill the form with some data
         // Description:
         //    Fill the form with some data
-        dijit.byId("startDatetime_forDate").set('displayedValue', phpr.Date.getIsoDate(date));
+        dijit.byId("startDatetime_forDate").set('displayedValue', phpr.date.getIsoDate(date));
         dijit.byId('startDatetime_forTime').set('displayedValue', start);
         dijit.byId('endTime').set('displayedValue', end);
         dijit.byId('projectId').set('value', project);
@@ -512,7 +515,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
             var startTime = data[0]['startDatetime'].substr(11, 5);
             if (endTime == 0 || endTime == null) {
                 var hour    = parseInt(startTime) + 1;
-                var endTime = phpr.Date.getIsoTime(hour + '00');
+                var endTime = phpr.date.getIsoTime(hour + '00');
             }
 
             var temp  = startTime.split(':');
@@ -560,7 +563,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         var end   = temp[1];
 
         var hour = start + 1;
-        var end  = phpr.Date.getIsoTime(hour + ':' + end);
+        var end  = phpr.date.getIsoTime(hour + ':' + end);
 
         this.drawFormView(dojo.byId("buttonHours" + index), this.dateObject, index, end, '', "\n");
     },
@@ -570,6 +573,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Component, {
         //    Return the current HH:mm
         // Description:
         //    Return the current HH:mm
-        return phpr.Date.getIsoTime(new Date());
+        return phpr.date.getIsoTime(new Date());
     }
 });

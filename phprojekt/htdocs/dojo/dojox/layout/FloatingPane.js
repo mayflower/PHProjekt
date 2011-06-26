@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.layout.FloatingPane"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.layout.FloatingPane"] = true;
 dojo.provide("dojox.layout.FloatingPane");
 dojo.experimental("dojox.layout.FloatingPane"); 
 
@@ -86,7 +77,7 @@ dojo.declare("dojox.layout.FloatingPane",
 	_allFPs: [],
 	_startZ: 100,
 
-	templateString: dojo.cache("dojox.layout", "resources/FloatingPane.html", "<div class=\"dojoxFloatingPane\" id=\"${id}\">\r\n\t<div tabindex=\"0\" waiRole=\"button\" class=\"dojoxFloatingPaneTitle\" dojoAttachPoint=\"focusNode\">\r\n\t\t<span dojoAttachPoint=\"closeNode\" dojoAttachEvent=\"onclick: close\" class=\"dojoxFloatingCloseIcon\"></span>\r\n\t\t<span dojoAttachPoint=\"maxNode\" dojoAttachEvent=\"onclick: maximize\" class=\"dojoxFloatingMaximizeIcon\">&thinsp;</span>\r\n\t\t<span dojoAttachPoint=\"restoreNode\" dojoAttachEvent=\"onclick: _restore\" class=\"dojoxFloatingRestoreIcon\">&thinsp;</span>\t\r\n\t\t<span dojoAttachPoint=\"dockNode\" dojoAttachEvent=\"onclick: minimize\" class=\"dojoxFloatingMinimizeIcon\">&thinsp;</span>\r\n\t\t<span dojoAttachPoint=\"titleNode\" class=\"dijitInline dijitTitleNode\"></span>\r\n\t</div>\r\n\t<div dojoAttachPoint=\"canvas\" class=\"dojoxFloatingPaneCanvas\">\r\n\t\t<div dojoAttachPoint=\"containerNode\" waiRole=\"region\" tabindex=\"-1\" class=\"${contentClass}\">\r\n\t\t</div>\r\n\t\t<span dojoAttachPoint=\"resizeHandle\" class=\"dojoxFloatingResizeHandle\"></span>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.layout","resources/FloatingPane.html"),
 	
 	attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
 		title: { type:"innerHTML", node:"titleNode" }
@@ -410,5 +401,3 @@ dojo.declare("dojox.layout._DockNode",
 	}
 
 });
-
-}
