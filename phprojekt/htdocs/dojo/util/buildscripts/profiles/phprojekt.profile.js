@@ -87,6 +87,9 @@ dependencies = {
                             "dojox.grid.Selection",
                             "dojox.grid.DataSelection",
                             "dijit.layout.BorderContainer",
+                            "dijit._editor.plugins.LinkDialog",
+                            "dijit._editor.plugins.TextColor",
+                            "dijit._editor.plugins.FontChoice"
 			]
 		},
 	],
