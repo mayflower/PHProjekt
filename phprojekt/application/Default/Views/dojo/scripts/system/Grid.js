@@ -19,16 +19,16 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-dojo.provide("phpr.grid");
-dojo.provide("phpr.grid.cells.Select");
-dojo.provide("phpr.grid._View");
+dojo.provide("phpr.Default.System.Grid");
+dojo.provide("phpr.Default.System.Grid.cells.Select");
+dojo.provide("phpr.Default.System.Grid._View");
 dojo.provide("phpr.Filter.ExpandoPane");
 
 dojo.require("dojox.grid.cells");
 dojo.require("dojox.grid._View");
 dojo.require("dojox.layout.ExpandoPane");
 
-phpr.grid.formatDateTime = function(date) {
+phpr.Default.System.Grid.formatDateTime = function(date) {
     if (!date || !String(date).match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/)) {
         return date;
     }
@@ -37,7 +37,7 @@ phpr.grid.formatDateTime = function(date) {
     return dojo.date.locale.format(dateObj, {formatLength:'short', selector:'dateTime'});
 };
 
-phpr.grid.formatTime = function(value) {
+phpr.Default.System.Grid.formatTime = function(value) {
     var isoRegExp = /^(?:(\d{2})(\d{2})?)$/;
     var match = isoRegExp.exec(value);
     if (match) {
@@ -48,7 +48,7 @@ phpr.grid.formatTime = function(value) {
     }
 },
 
-phpr.grid.formatUpload = function(value) {
+phpr.Default.System.Grid.formatUpload = function(value) {
     if (value.indexOf('|') > 0) {
         files = value.split('||');
         value = '';
@@ -62,7 +62,7 @@ phpr.grid.formatUpload = function(value) {
     return value;
 },
 
-phpr.grid.formatIcon = function(value) {
+phpr.Default.System.Grid.formatIcon = function(value) {
     data = value.split('||');
     if (!data[1]) {
         data[1] = "";
@@ -71,7 +71,7 @@ phpr.grid.formatIcon = function(value) {
     return '<div class="' + data[0] + '" title="' + data[1] + '"></div>';
 },
 
-dojo.declare("phpr.grid.cells.Percentage", dojox.grid.cells._Widget, {
+dojo.declare("phpr.Default.System.Grid.cells.Percentage", dojox.grid.cells._Widget, {
     // summary:
     //    Redefine the function to return the correct value
     // description:
@@ -93,7 +93,7 @@ dojo.declare("phpr.grid.cells.Percentage", dojox.grid.cells._Widget, {
     }
 });
 
-dojo.declare("phpr.grid.cells.Select", dojox.grid.cells.Select, {
+dojo.declare("phpr.Default.System.Grid.cells.Select", dojox.grid.cells.Select, {
     // summary:
     //    Redefine the function to return the correct value
     // description:
@@ -114,7 +114,7 @@ dojo.declare("phpr.grid.cells.Select", dojox.grid.cells.Select, {
     }
 });
 
-dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
+dojo.declare("phpr.Default.System.Grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
     // summary:
     //    Redefine the function to work with iso format
     // description:
@@ -157,7 +157,7 @@ dojo.declare("phpr.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
     }
 });
 
-dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
+dojo.declare("phpr.Default.System.Grid.cells.Text", dojox.grid.cells._Widget, {
     setValue:function(inRowIndex, inValue) {
         if (this.widget && this.widget.setValue) {
             this.widget.set('value', inValue);
@@ -198,7 +198,7 @@ dojo.declare("phpr.grid.cells.Text", dojox.grid.cells._Widget, {
     }
 });
 
-dojo.declare("phpr.grid.cells.Textarea", phpr.grid.cells.Text, {
+dojo.declare("phpr.Default.System.Grid.cells.Textarea", phpr.Default.System.Grid.cells.Text, {
     format:function(inRowIndex, inItem) {
         var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
         if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
@@ -284,7 +284,7 @@ dojo.declare("phpr.grid.cells.Textarea", phpr.grid.cells.Text, {
     }
 });
 
-dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
+dojo.declare("phpr.Default.System.Grid.cells.Time", dojox.grid.cells._Widget, {
     setValue:function(inRowIndex, inValue) {
         inValue = phpr.date.getIsoTime(inValue);
         if (this.widget && this.widget.setValue) {
@@ -315,7 +315,7 @@ dgc.DateTextBox.markupFactory = function(node, cell){
     dgc._Widget.markupFactory(node, cell);
 };
 
-dojo.declare('phpr.grid._View', [dojox.grid._View], {
+dojo.declare('phpr.Default.System.Grid._View', [dojox.grid._View], {
     // Summary
     //    Extend the normal grid view
     // Description
