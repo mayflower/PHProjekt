@@ -194,7 +194,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 type:      dojox.grid.cells.Cell,
                 editable:  false,
                 styles:    "vertical-align: middle;",
-                formatter: phpr.grid.formatIcon
+                formatter: phpr.Default.System.Grid.formatIcon
             });
         }
 
@@ -235,7 +235,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         name:     meta[i]["label"],
                         field:    meta[i]["key"],
                         styles:   "text-align: center;",
-                        type:     phpr.grid.cells.Select,
+                        type:     phpr.Default.System.Grid.cells.Select,
                         width:    (maxLength * 8) + 'px',
                         options:  opts,
                         values:   vals,
@@ -255,7 +255,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         name:          meta[i]["label"],
                         field:         meta[i]["key"],
                         styles:        "text-align: center;",
-                        type:          phpr.grid.cells.DateTextBox,
+                        type:          phpr.Default.System.Grid.cells.DateTextBox,
                         promptMessage: 'yyyy-MM-dd',
                         constraint:    {formatLength: 'short', selector: "date", datePattern:'yyyy-MM-dd'},
                         editable:      meta[i]['readOnly'] ? false : true
@@ -273,7 +273,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         name:          meta[i]["label"] + ' (' + phpr.nls.get('Date') + ')',
                         field:         meta[i]["key"] + '_forDate',
                         styles:        "text-align: center;",
-                        type:          phpr.grid.cells.DateTextBox,
+                        type:          phpr.Default.System.Grid.cells.DateTextBox,
                         promptMessage: 'yyyy-MM-dd',
                         constraint:    {formatLength: 'short', selector: "date", datePattern:'yyyy-MM-dd'},
                         editable:      meta[i]['readOnly'] ? false : true
@@ -283,7 +283,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         name:     meta[i]["label"] + ' (' + phpr.nls.get('Hour') + ')',
                         field:    meta[i]["key"] + '_forTime',
                         styles:   "text-align: center;",
-                        type:     phpr.grid.cells.Time,
+                        type:     phpr.Default.System.Grid.cells.Time,
                         editable: meta[i]['readOnly'] ? false : true
                     });
                     this.filterField.push({
@@ -304,7 +304,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         name:     meta[i]["label"],
                         field:    meta[i]["key"],
                         styles:   "text-align: center;",
-                        type:     phpr.grid.cells.Percentage,
+                        type:     phpr.Default.System.Grid.cells.Percentage,
                         editable: meta[i]['readOnly'] ? false : true
                     });
                     this.filterField.push({
@@ -320,7 +320,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         name:     meta[i]["label"],
                         field:    meta[i]["key"],
                         styles:   "text-align: center;",
-                        type:     phpr.grid.cells.Time,
+                        type:     phpr.Default.System.Grid.cells.Time,
                         editable: meta[i]['readOnly'] ? false : true
                     });
                     this.filterField.push({
@@ -337,7 +337,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         field:     meta[i]["key"],
                         styles:    "text-align: center;",
                         type:      dojox.grid.cells._Widget,
-                        formatter: phpr.grid.formatUpload,
+                        formatter: phpr.Default.System.Grid.formatUpload,
                         editable:  false
                     });
                     this.filterField.push({
@@ -367,7 +367,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                             name:     meta[i]["label"],
                             field:    meta[i]["key"],
                             styles:   "text-align: center;",
-                            type:     phpr.grid.cells.Select,
+                            type:     phpr.Default.System.Grid.cells.Select,
                             width:    (maxLength * 8) + 'px',
                             options:  opts,
                             values:   vals,
@@ -385,7 +385,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                             width:    'auto',
                             name:     meta[i]["label"],
                             field:    meta[i]["key"],
-                            type:     phpr.grid.cells.Text,
+                            type:     phpr.Default.System.Grid.cells.Text,
                             styles:   "text-align: center;",
                             editable: false
                         });
@@ -402,7 +402,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         width:    'auto',
                         name:     meta[i]["label"],
                         field:    meta[i]["key"],
-                        type:     phpr.grid.cells.Text,
+                        type:     phpr.Default.System.Grid.cells.Text,
                         styles:   "",
                         editable: meta[i]['readOnly'] ? false : true
                     });
@@ -418,7 +418,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         width:    'auto',
                         name:     meta[i]["label"],
                         field:    meta[i]["key"],
-                        type:     phpr.grid.cells.Textarea,
+                        type:     phpr.Default.System.Grid.cells.Textarea,
                         styles:   "",
                         editable: false
                     });
@@ -442,7 +442,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         name:     meta[i]["label"],
                         field:    meta[i]["key"],
                         styles:   "text-align: center;",
-                        type:     phpr.grid.cells.Select,
+                        type:     phpr.Default.System.Grid.cells.Select,
                         width:    (maxLength * 8) + 'px',
                         options:  opts,
                         values:   vals,
@@ -461,7 +461,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         width:    'auto',
                         name:     meta[i]["label"],
                         field:    meta[i]["key"],
-                        type:     phpr.grid.cells.Text,
+                        type:     phpr.Default.System.Grid.cells.Text,
                         styles:   "",
                         editable: meta[i]['readOnly'] ? false : true
                     });
@@ -487,7 +487,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 type:      dojox.grid.cells.Cell,
                 editable:  false,
                 styles:    "vertical-align: middle;",
-                formatter: phpr.grid.formatIcon
+                formatter: phpr.Default.System.Grid.formatIcon
             });
         }
 
@@ -1006,14 +1006,14 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
             this.setGridLayout(meta);
 
-            var type   = this.useCheckbox() ? "phpr.grid._View" : "dojox.grid._View";
+            var type   = this.useCheckbox() ? "phpr.Default.System.Grid._View" : "dojox.grid._View";
             var p6Grid = this;
             this.grid  = new dojox.grid.DataGrid({
                 store:     store,
                 structure: [{type: type,
                             defaultCell: {
                                 editable: true,
-                                type:     phpr.grid.cells.Text,
+                                type:     phpr.Default.System.Grid.cells.Text,
                                 styles:   'text-align: left;'
                             },
                             rows: this.gridLayout
