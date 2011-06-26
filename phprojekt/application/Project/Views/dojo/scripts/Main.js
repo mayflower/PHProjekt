@@ -37,7 +37,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.cleanPage();
         phpr.parentmodule     = null;
         phpr.currentProjectId = id;
-        phpr.Tree.fadeIn();
+        phpr.tree.fadeIn();
         this.setUrlHash(module, null, ["basicData"]);
     },
 
@@ -48,8 +48,8 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.setSubmoduleNavigation('BasicData');
         this.hideSuggest();
         this.setSearchForm();
-        phpr.Tree.fadeIn();
-        phpr.Tree.loadTree();
+        phpr.tree.fadeIn();
+        phpr.tree.loadTree();
         if (!dojo.byId('detailsBox')) {
             this.reload();
         }
@@ -72,7 +72,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
     },
 
     updateCacheData:function() {
-        phpr.Tree.updateData();
+        phpr.tree.updateData();
         if (this.grid) {
             this.grid.updateData();
         }
