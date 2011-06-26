@@ -188,7 +188,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.hideSuggest();
 
         // Get all configuration.php vars for the front
-        var config = new phpr.Store.Config();
+        var config = new phpr.Default.System.Store.Config();
         config.fetch(dojo.hitch(this, function() {
             phpr.config        = config.getList();
             phpr.currentUserId = phpr.config.currentUserId ? phpr.config.currentUserId : 0;
@@ -220,10 +220,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                                 processData: dojo.hitch(this, function() {
                                     phpr.Tree.loadTree();
                                     // Get all the tabs
-                                    var tabStore = new phpr.Store.Tab();
+                                    var tabStore = new phpr.Default.System.Store.Tab();
                                     tabStore.fetch(dojo.hitch(this, function() {
                                         // Get all the active users
-                                        this.userStore = new phpr.Store.User();
+                                        this.userStore = new phpr.Default.System.Store.User();
                                         this.userStore.fetch(dojo.hitch(this, function() {
                                             this.addLogoTooltip();
                                             // Load the module

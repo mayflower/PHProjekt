@@ -19,15 +19,15 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-dojo.provide("phpr.Store");
-dojo.provide("phpr.Store.User");
-dojo.provide("phpr.Store.Module");
-dojo.provide("phpr.Store.Role");
-dojo.provide("phpr.Store.RoleModuleAccess");
-dojo.provide("phpr.Store.Tab");
-dojo.provide("phpr.Store.Config");
+dojo.provide("phpr.Default.System.Store");
+dojo.provide("phpr.Default.System.Store.User");
+dojo.provide("phpr.Default.System.Store.Module");
+dojo.provide("phpr.Default.System.Store.Role");
+dojo.provide("phpr.Default.System.Store.RoleModuleAccess");
+dojo.provide("phpr.Default.System.Store.Tab");
+dojo.provide("phpr.Default.System.Store.Config");
 
-dojo.declare("phpr.Store", phpr.Default.System.Component, {
+dojo.declare("phpr.Default.System.Store", phpr.Default.System.Component, {
     // Summary:
     //    Get all the active users
     // Description:
@@ -71,7 +71,7 @@ dojo.declare("phpr.Store", phpr.Default.System.Component, {
     }
 });
 
-dojo.declare("phpr.Store.User", phpr.Store, {
+dojo.declare("phpr.Default.System.Store.User", phpr.Default.System.Store, {
     constructor:function(projectId) {
         if (!projectId) {
             projectId = phpr.currentProjectId;
@@ -95,7 +95,7 @@ dojo.declare("phpr.Store.User", phpr.Store, {
     }
 });
 
-dojo.declare("phpr.Store.Module", phpr.Store, {
+dojo.declare("phpr.Default.System.Store.Module", phpr.Default.System.Store, {
     constructor:function(nodeId, id) {
         this._url = phpr.webpath + 'index.php/Project/index/jsonGetModulesProjectRelation'
             + '/nodeId/' + nodeId + '/id/' + id;
@@ -118,7 +118,7 @@ dojo.declare("phpr.Store.Module", phpr.Store, {
     }
 });
 
-dojo.declare("phpr.Store.Role", phpr.Store, {
+dojo.declare("phpr.Default.System.Store.Role", phpr.Default.System.Store, {
     _relationList: null,
 
     constructor:function(nodeId, id) {
@@ -150,7 +150,7 @@ dojo.declare("phpr.Store.Role", phpr.Store, {
     }
 });
 
-dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
+dojo.declare("phpr.Default.System.Store.RoleModuleAccess", phpr.Default.System.Store, {
     constructor:function(id) {
         this._url = phpr.webpath + 'index.php/Core/role/jsonGetModulesAccess/id/' + id;
     },
@@ -174,7 +174,7 @@ dojo.declare("phpr.Store.RoleModuleAccess", phpr.Store, {
     }
 });
 
-dojo.declare("phpr.Store.Tab", phpr.Store, {
+dojo.declare("phpr.Default.System.Store.Tab", phpr.Default.System.Store, {
     constructor:function(id) {
         this._url = phpr.webpath + 'index.php/Core/tab/jsonList/nodeId/1';
     },
@@ -195,7 +195,7 @@ dojo.declare("phpr.Store.Tab", phpr.Store, {
     }
 });
 
-dojo.declare("phpr.Store.Config", phpr.Store, {
+dojo.declare("phpr.Default.System.Store.Config", phpr.Default.System.Store, {
     constructor:function(id) {
         this._url = phpr.webpath + 'index.php/Default/index/jsonGetConfigurations/'
     },
