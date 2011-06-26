@@ -19,13 +19,13 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-dojo.provide("phpr.form.CheckBox");
-dojo.provide("phpr.form.HorizontalSlider");
-dojo.provide("phpr.form.Rating");
+dojo.provide("phpr.Default.System.Form.CheckBox");
+dojo.provide("phpr.Default.System.Form.HorizontalSlider");
+dojo.provide("phpr.Default.System.Form.Rating");
 
 dojo.require("dojox.form.Rating");
 
-dojo.declare("phpr.form.CheckBox", dijit.form.CheckBox, {
+dojo.declare("phpr.Default.System.Form.CheckBox", dijit.form.CheckBox, {
     // Summary:
     //    Re-write the widget for return 0 on no-checked
 
@@ -39,14 +39,14 @@ dojo.declare("phpr.form.CheckBox", dijit.form.CheckBox, {
     }
 });
 
-dojo.declare("phpr.form.HorizontalSlider", dijit.form.HorizontalSlider, {
+dojo.declare("phpr.Default.System.Form.HorizontalSlider", dijit.form.HorizontalSlider, {
     _layoutHackIE7: function() {
         // Summary:
         //    Disable work around table sizing bugs on IE7 by forcing redraw
     }
 });
 
-dojo.declare("phpr.form.Rating", [dojox.form.Rating], {
+dojo.declare("phpr.Default.System.Form.Rating", [dojox.form.Rating], {
     // Summary:
     //    Re-write the widget for fix some issues
     constructor:function(params) {

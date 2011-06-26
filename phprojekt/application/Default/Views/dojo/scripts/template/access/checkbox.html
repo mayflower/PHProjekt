@@ -4,10 +4,10 @@
     <input type="hidden" dojotype="dijit.form.TextBox" id="{{fieldId}}"
     name="{{fieldId}}" value="{{value}}" />
         {% endif %}
-    <input type="checkbox" dojotype="phpr.form.CheckBox"
+    <input type="checkbox" dojotype="phpr.Default.System.Form.CheckBox"
     {{checked}} {{disabled}} value="1" />
     {% else %}
-    <input type="checkbox" dojotype="phpr.form.CheckBox" id="{{fieldId}}"
+    <input type="checkbox" dojotype="phpr.Default.System.Form.CheckBox" id="{{fieldId}}"
     name="{{fieldId}}" {{checked}} {{disabled}} value="1" />
     {% endif %}
 </div>

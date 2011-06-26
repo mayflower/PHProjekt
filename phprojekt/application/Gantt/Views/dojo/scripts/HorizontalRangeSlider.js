@@ -19,12 +19,12 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-dojo.provide("phpr.form.HorizontalRangeSlider");
+dojo.provide("phpr.Default.System.Form.HorizontalRangeSlider");
 
 dojo.require("dojo.dnd.Moveable");
 dojo.require("dijit.form.HorizontalSlider");
 
-dojo.declare("phpr.form._RangeSliderMixin", dojox.form._RangeSliderMixin, {
+dojo.declare("phpr.Default.System.Form._RangeSliderMixin", dojox.form._RangeSliderMixin, {
     postCreate: function() {
         // Summary:
         //    Overwrite function for redefine the movers,
@@ -97,7 +97,7 @@ dojo.declare("phpr.form._RangeSliderMixin", dojox.form._RangeSliderMixin, {
     }
 });
 
-dojo.declare("phpr.form.HorizontalRangeSlider", [dijit.form.HorizontalSlider, phpr.form._RangeSliderMixin], {
+dojo.declare("phpr.Default.System.Form.HorizontalRangeSlider", [dijit.form.HorizontalSlider, phpr.Default.System.Form._RangeSliderMixin], {
     templateString: __phpr_templateCache['phpr.Gantt.template.HorizontalRangeSlider.html'],
     }
 );
