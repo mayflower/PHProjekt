@@ -101,7 +101,7 @@ class JsController extends IndexController
                 phpr.language         = language;
                 phpr.config           = new Array();
                 phpr.serverFeedback   = new phpr.ServerFeedback();
-                phpr.Default.System.Date             = new phpr.Default.System.Date();
+                phpr.date             = new phpr.Default.System.Date();
                 phpr.loading          = new phpr.loading();
                 phpr.DataStore        = new phpr.DataStore();
                 phpr.InitialScreen    = new phpr.InitialScreen();

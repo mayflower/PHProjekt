@@ -590,7 +590,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
         case 'date':
             formLabel = params['formLabel'] || 'Date';
             labelFor = 'date';
-            inputTxt = '<input type="text" dojoType="phpr.Default.System.DateTextBox" constraints="{datePattern:\'yyyy-MM-dd\'}"'
+            inputTxt = '<input type="text" dojoType="phpr.DateTextBox" constraints="{datePattern:\'yyyy-MM-dd\'}"'
                 + ' promptMessage="dd.mm.yy" />';
             break;
         case 'time':
@@ -603,7 +603,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
             formLabel = params['formLabel'] || 'Datetime';
             labelFor = 'datetime';
             inputTxt = '<div class="twoFields">';
-            inputTxt += '<input type="text" dojoType="phpr.Default.System.DateTextBox" constraints="{datePattern:\'yyyy-MM-dd\'}"'
+            inputTxt += '<input type="text" dojoType="phpr.DateTextBox" constraints="{datePattern:\'yyyy-MM-dd\'}"'
                 + ' promptMessage="dd.mm.yy" />';
             inputTxt += '<input type="text" dojoType="dijit.form.TimeTextBox"'
                 + ' constraints="{formatLength:\'short\', timePattern:\'HH:mm\'}" />';

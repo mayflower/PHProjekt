@@ -39,7 +39,7 @@ dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
 
         if (id == undefined || id == 0) {
             var params          = new Array();
-            params['startDate'] = phpr.Default.System.Date.getIsoDate(new Date());
+            params['startDate'] = phpr.date.getIsoDate(new Date());
         }
 
         this.form = new this.formWidget(this, id, module, params);
