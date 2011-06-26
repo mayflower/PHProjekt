@@ -23,6 +23,7 @@ dojo.provide("phpr");
 
 /* template deps */
 
+dojo.require("dojo.hash");
 dojo.require("dijit.form.Form");
 dojo.require("dijit.form.Textarea");
 dojo.require("dijit.form.HorizontalRuleLabels");
