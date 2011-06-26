@@ -76,7 +76,7 @@ dojo.declare("phpr.grid.cells.Percentage", dojox.grid.cells._Widget, {
     //    Redefine the function to return the correct value
     // description:
     //    Redefine the function to return the correct value
-    widgetClass: phpr.form.HorizontalSlider,
+    widgetClass: phpr.Default.System.Form.HorizontalSlider,
 
     getValue:function(inRowIndex) {
         return dojo.number.round(this.widget.get('value'), 1);

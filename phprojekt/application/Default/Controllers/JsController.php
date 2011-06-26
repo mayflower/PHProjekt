@@ -65,7 +65,7 @@ class JsController extends IndexController
         // System files, must be parsed in this order
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/phpr.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Component.js');
-        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/form.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Form.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/grid.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Store.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Date.js');
