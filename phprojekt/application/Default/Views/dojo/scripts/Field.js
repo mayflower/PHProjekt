@@ -21,7 +21,7 @@
 
 dojo.provide("phpr.Default.Field");
 
-dojo.declare("phpr.Default.Field", phpr.Component, {
+dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
     // summary:
     //    class for rendering form fields
     // description:
