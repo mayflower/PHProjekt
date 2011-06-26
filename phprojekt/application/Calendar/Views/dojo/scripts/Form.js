@@ -41,7 +41,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
     initData:function() {
         // Get all the active users
-        this.userStore = new phpr.Store.User();
+        this.userStore = new phpr.Default.System.Store.User();
         this._initData.push({'store': this.userStore});
 
         // Get the participants and related events

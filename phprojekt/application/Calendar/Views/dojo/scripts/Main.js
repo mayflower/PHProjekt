@@ -369,7 +369,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Description:
         //    Request the user list to the DB and then calls the next function of the process to show the selection
         // window.
-        this.userStore = new phpr.Store.User();
+        this.userStore = new phpr.Default.System.Store.User();
         this.userStore.fetch(dojo.hitch(this, "selectorRender"));
     },
 

@@ -36,15 +36,15 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
         this._initData.push({'url': this._accessUrl});
 
         // Get all the active users
-        this.userStore = new phpr.Store.User(phpr.Tree.getParentId(this.id));
+        this.userStore = new phpr.Default.System.Store.User(phpr.Tree.getParentId(this.id));
         this._initData.push({'store': this.userStore});
 
         // Get roles
-        this.roleStore = new phpr.Store.Role(phpr.Tree.getParentId(phpr.currentProjectId), this.id);
+        this.roleStore = new phpr.Default.System.Store.Role(phpr.Tree.getParentId(phpr.currentProjectId), this.id);
         this._initData.push({'store': this.roleStore});
 
         // Get modules
-        this.moduleStore = new phpr.Store.Module(phpr.Tree.getParentId(phpr.currentProjectId), this.id);
+        this.moduleStore = new phpr.Default.System.Store.Module(phpr.Tree.getParentId(phpr.currentProjectId), this.id);
         this._initData.push({'store': this.moduleStore});
 
         // Get the tags
