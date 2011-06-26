@@ -28,7 +28,7 @@ dojo.require("dijit.tree.ForestStoreModel");
 phpr.treePaths               = new Array();
 phpr.treeLastProjectSelected = null;
 
-dojo.declare("phpr.Tree", phpr.Component, {
+dojo.declare("phpr.Tree", phpr.Default.System.Component, {
     // Summary: This class is responsible for rendering the Tree of a default module
     _treeNode: null,
     _url:      null,

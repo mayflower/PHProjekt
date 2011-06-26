@@ -27,7 +27,7 @@ dojo.provide("phpr.Store.RoleModuleAccess");
 dojo.provide("phpr.Store.Tab");
 dojo.provide("phpr.Store.Config");
 
-dojo.declare("phpr.Store", phpr.Component, {
+dojo.declare("phpr.Store", phpr.Default.System.Component, {
     // Summary:
     //    Get all the active users
     // Description:

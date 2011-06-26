@@ -19,11 +19,11 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-dojo.provide("phpr.Component");
+dojo.provide("phpr.Default.System.Component");
 
 dojo.require("dojox.dtl.Inline");
 
-dojo.declare("phpr.Component", null, {
+dojo.declare("phpr.Default.System.Component", null, {
     main:   null,
     module: "",
 
