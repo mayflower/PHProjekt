@@ -616,7 +616,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         rulesOptions = new Array('equal', 'notEqual');
                         break;
                     case 'date':
-                        var input = '<input type="text" name="filterValue" dojoType="phpr.DateTextBox" '
+                        var input = '<input type="text" name="filterValue" dojoType="phpr.Default.System.DateTextBox" '
                             + 'constraints="{datePattern: \'yyyy-MM-dd\'}" promptMessage="yyyy-MM-dd" />';
                         rulesOptions = new Array('equal', 'notEqual', 'major', 'majorEqual', 'minor', 'minorEqual');
                         break;
@@ -672,11 +672,11 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
         if (sendData['filterField'].indexOf('_forDate') > 0) {
             // Convert date
-            sendData['filterValue'] = phpr.Date.getIsoDate(sendData['filterValue']);
+            sendData['filterValue'] = phpr.Default.System.Date.getIsoDate(sendData['filterValue']);
             sendData['filterField'] = sendData['filterField'].replace('_forDate', '');
         } else if (sendData['filterField'].indexOf('_forTime') > 0) {
             // Convert time
-            sendData['filterValue'] = phpr.Date.getIsoTime(sendData['filterValue']);
+            sendData['filterValue'] = phpr.Default.System.Date.getIsoTime(sendData['filterValue']);
             sendData['filterField'] = sendData['filterField'].replace('_forTime', '');
         } else {
             // Check for other date or times values
@@ -689,10 +689,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             }
             switch (type) {
                 case 'date':
-                    sendData['filterValue'] = phpr.Date.getIsoDate(sendData['filterValue']);
+                    sendData['filterValue'] = phpr.Default.System.Date.getIsoDate(sendData['filterValue']);
                     break;
                 case 'time':
-                    sendData['filterValue'] = phpr.Date.getIsoTime(sendData['filterValue']);
+                    sendData['filterValue'] = phpr.Default.System.Date.getIsoTime(sendData['filterValue']);
                     break;
                 default:
                     break;
@@ -872,11 +872,11 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                                 }
                                 break;
                             case 'date':
-                                value = new Date(phpr.Date.isoDateTojsDate(value));
+                                value = new Date(phpr.Default.System.Date.isoDateTojsDate(value));
                                 value = dojo.date.locale.format(value, {datePattern: 'yyyy-MM-dd', selector: 'date'});
                                 break;
                             case 'time':
-                                value = new Date(phpr.Date.isoTimeTojsDate(value));
+                                value = new Date(phpr.Default.System.Date.isoTimeTojsDate(value));
                                 value = dojo.date.locale.format(value, {datePattern: 'HH:mm', selector: 'time'});
                                 break;
                             default:
