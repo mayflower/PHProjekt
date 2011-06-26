@@ -25,7 +25,7 @@ dojo.provide("phpr.Calendar.ResizeHandle");
 
 dojo.require("dijit.form.Button");
 
-dojo.declare("phpr.Calendar.DefaultView", phpr.Component, {
+dojo.declare("phpr.Calendar.DefaultView", phpr.Default.System.Component, {
     // Summary:
     //    Parent class for displaying a Calendar Day Based List. Day based list: it means, not grid but Day List,
     //    Week List, etc. This should be inherited by each respective JS view.

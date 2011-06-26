@@ -26,7 +26,7 @@ dojo.provide("phpr.Default.SubModule.Form");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.layout.BorderContainer");
 
-dojo.declare("phpr.Default.SubModule", phpr.Component, {
+dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
     // Internal vars
     gridBox:      null,
     detailsBox:   null,

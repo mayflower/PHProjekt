@@ -29,7 +29,7 @@ dojo.require("dijit.Tooltip");
 // Event handler
 _searchEvent = null;
 
-dojo.declare("phpr.Default.Main", phpr.Component, {
+dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     // Summary: class for initialilzing a default module
     grid:       null,
     module:     null,
