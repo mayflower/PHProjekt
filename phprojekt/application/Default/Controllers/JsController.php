@@ -101,12 +101,12 @@ class JsController extends IndexController
                     phpr.language         = language;
                     phpr.config           = new Array();
                     phpr.serverFeedback   = new phpr.ServerFeedback();
-                    phpr.Date             = new phpr.Date();
+                    phpr.Date             = new phpr.Default.System.Date();
                     phpr.loading          = new phpr.loading();
                     phpr.DataStore        = new phpr.DataStore();
                     phpr.InitialScreen    = new phpr.InitialScreen();
                     phpr.BreadCrumb       = new phpr.BreadCrumb();
-                    phpr.frontendMessage  = new phpr.FrontendMessage();
+                    phpr.frontendMessage  = new phpr.Default.System.FrontendMessage();
                     phpr.Tree             = new phpr.Tree();
                     phpr.regExpForFilter  = new phpr.regExpForFilter();
                     phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";

@@ -19,9 +19,9 @@
  * @author     Martin Ruprecht <martin.ruprecht@mayflower.de>
  */
 
-dojo.provide("phpr.FrontendMessage");
+dojo.provide("phpr.Default.System.FrontendMessage");
 
-dojo.declare("phpr.FrontendMessage", null, {
+dojo.declare("phpr.Default.System.FrontendMessage", null, {
     url: null,
 
     constructor:function() {
