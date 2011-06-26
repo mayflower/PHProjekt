@@ -79,8 +79,8 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
 
         this._url = phpr.webpath + 'index.php/Statistic/index/jsonGetStatistic'
             + '/nodeId/' + phpr.currentProjectId
-            + '/startDate/' + phpr.Date.getIsoDate(start)
-            + '/endDate/' + phpr.Date.getIsoDate(end);
+            + '/startDate/' + phpr.Default.System.Date.getIsoDate(start)
+            + '/endDate/' + phpr.Default.System.Date.getIsoDate(end);
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
         phpr.DataStore.requestData({'url': this._url, 'processData': dojo.hitch(this, 'prepareData')});
     },
@@ -101,9 +101,9 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
             var sumPerProject = 0;
             for (var u in data.users) {
                 if (!data.rows[p] || !data.rows[p][u]) {
-                    userData.push(phpr.Date.convertMinutesToTime(0));
+                    userData.push(phpr.Default.System.Date.convertMinutesToTime(0));
                 } else {
-                    userData.push(phpr.Date.convertMinutesToTime(data.rows[p][u]));
+                    userData.push(phpr.Default.System.Date.convertMinutesToTime(data.rows[p][u]));
                     sumPerProject   = Math.abs(sumPerProject + data.rows[p][u]);
                     if (!sumPerUser[u]) {
                         sumPerUser[u] = 0;
@@ -114,7 +114,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
             rows.push({
                 "project":  data.projects[p],
                 "userData": userData,
-                "sum":      phpr.Date.convertMinutesToTime(sumPerProject)
+                "sum":      phpr.Default.System.Date.convertMinutesToTime(sumPerProject)
             });
         }
 
@@ -122,9 +122,9 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         var totalPerUser = new Array();
         for (var u in data.users) {
             if (!sumPerUser[u]) {
-                totalPerUser.push(phpr.Date.convertMinutesToTime(0));
+                totalPerUser.push(phpr.Default.System.Date.convertMinutesToTime(0));
             } else {
-                totalPerUser.push(phpr.Date.convertMinutesToTime(sumPerUser[u]));
+                totalPerUser.push(phpr.Default.System.Date.convertMinutesToTime(sumPerUser[u]));
                 total = Math.abs(total + sumPerUser[u]);
             }
         }
@@ -132,7 +132,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         totalRow.push({
             "title":    phpr.nls.get('Total'),
             "userData": totalPerUser,
-            "sum":      phpr.Date.convertMinutesToTime(total)
+            "sum":      phpr.Default.System.Date.convertMinutesToTime(total)
         });
 
         this.render(["phpr.Statistic.template", "table.html"], dojo.byId('statisticContent'), {
@@ -153,8 +153,8 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
 
         window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList'
             + '/nodeId/' + phpr.currentProjectId
-            + '/startDate/' + phpr.Date.getIsoDate(start)
-            + '/endDate/' + phpr.Date.getIsoDate(end)
+            + '/startDate/' + phpr.Default.System.Date.getIsoDate(start)
+            + '/endDate/' + phpr.Default.System.Date.getIsoDate(end)
             + '/csrfToken/' + phpr.csrfToken);
         return false;
     },
