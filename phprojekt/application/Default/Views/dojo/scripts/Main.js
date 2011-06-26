@@ -92,9 +92,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.cleanPage();
         phpr.currentProjectId = projectId;
         if (phpr.isGlobalModule(module)) {
-            phpr.Tree.fadeOut();
+            phpr.tree.fadeOut();
         } else {
-            phpr.Tree.fadeIn();
+            phpr.tree.fadeIn();
         }
         dojo.publish(module + ".reload");
         this.setUrlHash(module, id);
@@ -214,11 +214,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         url:         phpr.globalModuleUrl,
                         processData: dojo.hitch(this, function() {
                             // Get projects
-                            phpr.DataStore.addStore({url: phpr.Tree.getUrl()});
+                            phpr.DataStore.addStore({url: phpr.tree.getUrl()});
                             phpr.DataStore.requestData({
-                                url:         phpr.Tree.getUrl(),
+                                url:         phpr.tree.getUrl(),
                                 processData: dojo.hitch(this, function() {
-                                    phpr.Tree.loadTree();
+                                    phpr.tree.loadTree();
                                     // Get all the tabs
                                     var tabStore = new phpr.Default.System.Store.Tab();
                                     tabStore.fetch(dojo.hitch(this, function() {
@@ -280,10 +280,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    prepare the search box and fade out/in the tree
         this.cleanPage();
         if (phpr.isGlobalModule(this.module)) {
-            phpr.Tree.fadeOut();
+            phpr.tree.fadeOut();
             this.setSubGlobalModulesNavigation();
         } else {
-            phpr.Tree.fadeIn();
+            phpr.tree.fadeIn();
             this.setSubmoduleNavigation();
         }
         this.hideSuggest();
@@ -295,7 +295,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Set and start the widgets of the module
         // Description:
         //    Set and start the widgets of the module
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
@@ -894,10 +894,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         // Clean the navigation and forms buttons
         this.cleanPage();
-        phpr.Tree.fadeIn();
+        phpr.tree.fadeIn();
         this.hideSuggest();
         this.setSearchForm();
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
 
         phpr.send({
             url:       getDataUrl,
