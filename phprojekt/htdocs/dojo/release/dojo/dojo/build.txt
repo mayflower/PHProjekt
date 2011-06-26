@@ -268,3 +268,4 @@ phprojekt.js:
 ./../../release/dojo/dijit/ColorPalette.js
 ./../../release/dojo/dijit/_editor/plugins/TextColor.js
 ./../../release/dojo/dijit/_editor/plugins/FontChoice.js
+./../../release/dojo/dojo/hash.js
