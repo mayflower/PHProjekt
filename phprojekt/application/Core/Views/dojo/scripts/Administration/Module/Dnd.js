@@ -235,7 +235,7 @@ phpr.editModuleDesignerField = function(nodeId) {
     var fieldsList    = '';
     var fieldsGeneral = '';
     var template      = new phpr.Default.Field();
-    var render        = new phpr.Component();
+    var render        = new phpr.Default.System.Component();
 
     // Table
     fieldsTable += template.textFieldRender(phpr.nls.get('Field name'), 'tableField', tableField, 50, true,
