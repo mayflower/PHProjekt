@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.Menu"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.Menu"] = true;
 dojo.provide("dijit.Menu");
 
 dojo.require("dojo.window");
@@ -395,7 +386,7 @@ dojo.declare("dijit.Menu",
 		this._bindings = [];
 	},
 
-	templateString: dojo.cache("dijit", "templates/Menu.html", "<table class=\"dijit dijitMenu dijitMenuPassive dijitReset dijitMenuTable\" waiRole=\"menu\" tabIndex=\"${tabIndex}\" dojoAttachEvent=\"onkeypress:_onKeyPress\" cellspacing=0>\r\n\t<tbody class=\"dijitReset\" dojoAttachPoint=\"containerNode\"></tbody>\r\n</table>\r\n"),
+	templateString: dojo.cache("dijit", "templates/Menu.html"),
 
 	baseClass: "dijitMenu",
 
@@ -707,5 +698,3 @@ dojo.require("dijit.PopupMenuItem");
 dojo.require("dijit.CheckedMenuItem");
 dojo.require("dijit.MenuSeparator");
 
-
-}

@@ -1,19 +1,10 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.atom.widget.FeedViewer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.atom.widget.FeedViewer"] = true;
 dojo.provide("dojox.atom.widget.FeedViewer");
 
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 dojo.require("dijit._Container");
 dojo.require("dojox.atom.io.Connection");
-dojo.requireLocalization("dojox.atom.widget", "FeedViewerEntry", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dojox.atom.widget", "FeedViewerEntry");
 
 dojo.experimental("dojox.atom.widget.FeedViewer");
 
@@ -30,7 +21,7 @@ dojo.declare("dojox.atom.widget.FeedViewer",[dijit._Widget, dijit._Templated, di
 	localSaveOnly: false,
 
 	//Templates for the HTML rendering.  Need to figure these out better, admittedly.
-	templateString: dojo.cache("dojox.atom", "widget/templates/FeedViewer.html", "<div class=\"feedViewerContainer\" dojoAttachPoint=\"feedViewerContainerNode\">\r\n\t<table cellspacing=\"0\" cellpadding=\"0\" class=\"feedViewerTable\">\r\n\t\t<tbody dojoAttachPoint=\"feedViewerTableBody\" class=\"feedViewerTableBody\">\r\n\t\t</tbody>\r\n\t</table>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.atom", "widget/templates/FeedViewer.html"),
 
 	_feed: null,
 	_currentSelection: null, // Currently selected entry
@@ -621,7 +612,7 @@ dojo.declare("dojox.atom.widget.FeedViewerEntry",[dijit._Widget, dijit._Template
 	//		Widget for handling the display of an entry and specific events associated with it.
 	//		description: Widget for handling the display of an entry and specific events associated with it.
 
-	templateString: dojo.cache("dojox.atom", "widget/templates/FeedViewerEntry.html", "<tr class=\"feedViewerEntry\" dojoAttachPoint=\"entryNode\" dojoAttachEvent=\"onclick:onClick\">\r\n    <td class=\"feedViewerEntryUpdated\" dojoAttachPoint=\"timeNode\">\r\n    </td>\r\n    <td>\r\n        <table border=\"0\" width=\"100%\" dojoAttachPoint=\"titleRow\">\r\n            <tr padding=\"0\" border=\"0\">\r\n                <td class=\"feedViewerEntryTitle\" dojoAttachPoint=\"titleNode\">\r\n                </td>\r\n                <td class=\"feedViewerEntryDelete\" align=\"right\">\r\n                    <span dojoAttachPoint=\"deleteButton\" dojoAttachEvent=\"onclick:deleteEntry\" class=\"feedViewerDeleteButton\" style=\"display:none;\">[delete]</span>\r\n                </td>\r\n            <tr>\r\n        </table>\r\n    </td>\r\n</tr>\r\n"),
+	templateString: dojo.cache("dojox.atom", "widget/templates/FeedViewerEntry.html"),
 
 	entryNode: null,
 	timeNode: null,
@@ -724,7 +715,7 @@ dojo.declare("dojox.atom.widget.FeedViewerGrouping",[dijit._Widget, dijit._Templ
 	//		Grouping of feed entries.
 	//	description: 
 	//		Grouping of feed entries.
-	templateString: dojo.cache("dojox.atom", "widget/templates/FeedViewerGrouping.html", "<tr dojoAttachPoint=\"groupingNode\" class=\"feedViewerGrouping\">\r\n\t<td colspan=\"2\" dojoAttachPoint=\"titleNode\" class=\"feedViewerGroupingTitle\">\r\n\t</td>\r\n</tr>\r\n"),
+	templateString: dojo.cache("dojox.atom", "widget/templates/FeedViewerGrouping.html"),
 	
 	groupingNode: null,
 	titleNode: null,
@@ -805,5 +796,3 @@ dojo.declare("dojox.atom.widget.FeedViewer.CategoryIncludeFilter",null,{
 		return matched;
 	}
 });
-
-}

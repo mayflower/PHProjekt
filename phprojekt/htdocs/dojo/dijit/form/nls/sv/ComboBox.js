@@ -1,1 +1,4 @@
-({"previousMessage":"Föregående alternativ","nextMessage":"Fler alternativ"})
+({
+		previousMessage: "Föregående alternativ",
+		nextMessage: "Fler alternativ"
+})

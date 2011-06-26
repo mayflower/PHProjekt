@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.tree.dndSource"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.tree.dndSource"] = true;
 dojo.provide("dijit.tree.dndSource");
 
 dojo.require("dijit.tree._dndSelector");
@@ -533,5 +524,3 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 		this._changeState("Source", copy ? "Copied" : "Moved");
 	}
 });
-
-}

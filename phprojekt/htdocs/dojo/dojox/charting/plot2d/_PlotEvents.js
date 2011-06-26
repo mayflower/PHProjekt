@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.charting.plot2d._PlotEvents"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.plot2d._PlotEvents"] = true;
 dojo.provide("dojox.charting.plot2d._PlotEvents");
 
 dojo.declare("dojox.charting.plot2d._PlotEvents", null, {
@@ -130,5 +121,3 @@ dojo.declare("dojox.charting.plot2d._PlotEvents", null, {
 		}
 	}
 });
-
-}

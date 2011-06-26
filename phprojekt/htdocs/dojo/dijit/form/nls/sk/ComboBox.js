@@ -1,1 +1,5 @@
-({"previousMessage":"Predchádzajúce voľby","nextMessage":"Ďalšie voľby"})
+({
+		previousMessage: "Predchádzajúce voľby",
+		nextMessage: "Ďalšie voľby"
+})
+

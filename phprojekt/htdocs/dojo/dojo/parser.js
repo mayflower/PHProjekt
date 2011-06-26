@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.parser"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.parser"] = true;
 dojo.provide("dojo.parser");
 dojo.require("dojo.date.stamp");
 
@@ -377,7 +368,7 @@ dojo.parser = new function(){
 			});
 
 			// if parent is a widget, then search for <script type=dojo/*> tags and put them in scripts[].
-			var scripts = parent.scripts;
+			var scripts = parent.clsInfo && !parent.clsInfo.cls.prototype._noScript ? parent.scripts : null;
 
 			// unless parent is a widget with the stopParser flag set, continue search for dojoType, recursively
 			var recurse = !parent.clsInfo || !parent.clsInfo.cls.prototype.stopParser;
@@ -403,7 +394,7 @@ dojo.parser = new function(){
 					}else if(scripts && child.nodeName.toLowerCase() == "script"){
 						// if <script type="dojo/...">, save in scripts[]
 						type = child.getAttribute("type");
-						if (type && /^dojo\//i.test(type)) {
+						if (type && /^dojo\/\w/i.test(type)) {
 							scripts.push(child);
 						}
 					}else if(recurse){
@@ -448,5 +439,3 @@ dojo.parser = new function(){
 		dojo._loaders.unshift(parseRunner);
 	}
 })();
-
-}

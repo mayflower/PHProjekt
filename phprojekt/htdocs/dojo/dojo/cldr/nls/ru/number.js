@@ -1,1 +1,18 @@
-({"group":" ","percentSign":"%","exponential":"E","percentFormat":"#,##0 %","scientificFormat":"#E0","list":";","infinity":"∞","patternDigit":"#","minusSign":"-","decimal":",","nativeZeroDigit":"0","perMille":"‰","decimalFormat":"#,##0.###","currencyFormat":"#,##0.00 ¤","plusSign":"+","currencySpacing-afterCurrency-currencyMatch":"[:letter:]","currencySpacing-beforeCurrency-surroundingMatch":"[:digit:]","currencySpacing-afterCurrency-insertBetween":" ","nan":"NaN","currencySpacing-afterCurrency-surroundingMatch":"[:digit:]","currencySpacing-beforeCurrency-currencyMatch":"[:letter:]","currencySpacing-beforeCurrency-insertBetween":" "})
+// generated from ldml/main/*.xml, xpath: ldml/numbers
+({
+	'decimal':",",
+	'group':" ",
+	'list':";",
+	'percentSign':"%",
+	'nativeZeroDigit':"0",
+	'patternDigit':"#",
+	'plusSign':"+",
+	'minusSign':"-",
+	'exponential':"E",
+	'perMille':"‰",
+	'infinity':"∞",
+	'decimalFormat':"#,##0.###",
+	'scientificFormat':"#E0",
+	'percentFormat':"#,##0 %",
+	'currencyFormat':"#,##0.00 ¤"
+})

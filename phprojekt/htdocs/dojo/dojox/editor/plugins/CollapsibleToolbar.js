@@ -1,19 +1,10 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.CollapsibleToolbar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.CollapsibleToolbar"] = true;
 dojo.provide("dojox.editor.plugins.CollapsibleToolbar");
 
 dojo.require("dijit._Widget")
 dojo.require("dijit._Templated");
 dojo.require("dijit._editor._Plugin");
 
-dojo.requireLocalization("dojox.editor.plugins", "CollapsibleToolbar", null, "ROOT,ro");
+dojo.requireLocalization("dojox.editor.plugins", "CollapsibleToolbar");
 
 dojo.declare("dojox.editor.plugins._CollapsibleToolbarButton", [dijit._Widget, dijit._Templated], {
 	// summary:
@@ -181,5 +172,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 		o.plugin = new dojox.editor.plugins.CollapsibleToolbar({});
 	}
 });
-
-}

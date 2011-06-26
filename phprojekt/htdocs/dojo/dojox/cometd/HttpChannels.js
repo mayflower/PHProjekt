@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.cometd.HttpChannels"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.cometd.HttpChannels"] = true;
 dojo.provide("dojox.cometd.HttpChannels");
  
 dojo.require("dojox.io.httpParse");
@@ -39,5 +30,3 @@ dojo.require("dojox.cometd.RestChannels");
 // 	|	dojox.cometd.HttpChannels.autoReconnectTime = 60000; // reconnect after one minute
 //
 dojox.cometd.HttpChannels = dojox.cometd.RestChannels;  
-
-}

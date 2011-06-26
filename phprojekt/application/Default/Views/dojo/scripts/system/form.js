@@ -23,6 +23,8 @@ dojo.provide("phpr.form.CheckBox");
 dojo.provide("phpr.form.HorizontalSlider");
 dojo.provide("phpr.form.Rating");
 
+dojo.require("dojox.form.Rating");
+
 dojo.declare("phpr.form.CheckBox", dijit.form.CheckBox, {
     // Summary:
     //    Re-write the widget for return 0 on no-checked

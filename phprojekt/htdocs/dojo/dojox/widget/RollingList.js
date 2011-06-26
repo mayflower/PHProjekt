@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.RollingList"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.RollingList"] = true;
 dojo.provide("dojox.widget.RollingList");
 dojo.experimental("dojox.widget.RollingList");
 
@@ -22,7 +13,7 @@ dojo.require("dijit.form.Button");
 dojo.require("dojox.html.metrics");
 
 dojo.require("dojo.i18n"); 
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "common");
 
 dojo.declare("dojox.widget._RollingListPane",
 	[dijit.layout.ContentPane, dijit._Templated, dijit._Contained], {
@@ -566,7 +557,7 @@ dojo.declare("dojox.widget.RollingList",
 		
 	// templateString: String
 	//		The template to be used to construct the widget.
-	templateString: dojo.cache("dojox.widget", "RollingList/RollingList.html", "<div class=\"dojoxRollingList ${className}\"\r\n\t><div class=\"dojoxRollingListContainer\" dojoAttachPoint=\"containerNode\" dojoAttachEvent=\"onkeypress:_onKey\"\r\n\t></div\r\n\t><div class=\"dojoxRollingListButtons\" dojoAttachPoint=\"buttonsNode\"\r\n        ><button dojoType=\"dijit.form.Button\" dojoAttachPoint=\"okButton\"\r\n\t\t\t\tdojoAttachEvent=\"onClick:_onExecute\">${okButtonLabel}</button\r\n        ><button dojoType=\"dijit.form.Button\" dojoAttachPoint=\"cancelButton\"\r\n\t\t\t\tdojoAttachEvent=\"onClick:_onCancel\">${cancelButtonLabel}</button\r\n\t></div\r\n></div>\r\n"),
+	templateString: dojo.cache("dojox.widget", "RollingList/RollingList.html"),
 	widgetsInTemplate: true,
 	
 	// className: string
@@ -1210,5 +1201,3 @@ dojo.declare("dojox.widget.RollingList",
 	}
 	
 });
-
-}

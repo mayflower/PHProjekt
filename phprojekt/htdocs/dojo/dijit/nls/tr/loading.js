@@ -1,1 +1,4 @@
-({"loadingState":"Yükleniyor...","errorState":"Üzgünüz, bir hata oluştu"})
+({
+	loadingState: "Yükleniyor...",
+	errorState: "Üzgünüz, bir hata oluştu"
+})

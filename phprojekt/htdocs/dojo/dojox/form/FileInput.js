@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.FileInput"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.FileInput"] = true;
 dojo.provide("dojox.form.FileInput");
 dojo.experimental("dojox.form.FileInput"); 
 
@@ -34,7 +25,7 @@ dojo.declare("dojox.form.FileInput",
 	//	ugh, this should be pulled from this.domNode
 	name: "uploadFile",
 
-	templateString: dojo.cache("dojox.form", "resources/FileInput.html", "<div class=\"dijitFileInput\">\r\n\t<input id=\"${id}\" class=\"dijitFileInputReal\" type=\"file\" dojoAttachPoint=\"fileInput\" name=\"${name}\" />\r\n\t<div class=\"dijitFakeInput\">\r\n\t\t<input class=\"dijitFileInputVisible\" type=\"text\" dojoAttachPoint=\"focusNode, inputNode\" />\r\n\t\t<div class=\"dijitInline dijitFileInputText\" dojoAttachPoint=\"titleNode\">${label}</div>\r\n\t\t<div class=\"dijitInline dijitFileInputButton\" dojoAttachPoint=\"cancelNode\" \r\n\t\t\tdojoAttachEvent=\"onclick:reset\">${cancelText}</div>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.form","resources/FileInput.html"),
 	
 	startup: function(){
 		// summary: listen for changes on our real file input
@@ -87,5 +78,3 @@ dojo.declare("dojox.form.FileInput",
 	}
 
 });
-
-}
