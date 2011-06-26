@@ -113,7 +113,7 @@
                 }
             }
             recentHash = window.location.hash;
-            setInterval(initialiseStateFromUrl, 500);
+            dojo.subscribe("/dojo/hashchange", null, initialiseStateFromUrl);
             // Add shortcut icon
             var link  = document.createElement("link");
             link.type = "image/x-icon";
