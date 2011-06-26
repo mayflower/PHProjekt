@@ -286,7 +286,7 @@ dojo.declare("phpr.grid.cells.Textarea", phpr.grid.cells.Text, {
 
 dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
     setValue:function(inRowIndex, inValue) {
-        inValue = phpr.Date.getIsoTime(inValue);
+        inValue = phpr.Default.System.Date.getIsoTime(inValue);
         if (this.widget && this.widget.setValue) {
             this.widget.set('value', inValue);
         } else {
@@ -296,16 +296,16 @@ dojo.declare("phpr.grid.cells.Time", dojox.grid.cells._Widget, {
 
     getValue:function(inRowIndex) {
         var value = this.widget.get('value');
-        return phpr.Date.getIsoTime(value);
+        return phpr.Default.System.Date.getIsoTime(value);
     },
 
     format:function(inRowIndex, inItem) {
         var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
         if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
-            var d = phpr.Date.getIsoTime(d);
+            var d = phpr.Default.System.Date.getIsoTime(d);
             return this.formatEditing(d, inRowIndex);
         } else {
-            return phpr.Date.getIsoTime(d);
+            return phpr.Default.System.Date.getIsoTime(d);
         }
     }
 });

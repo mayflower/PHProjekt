@@ -98,9 +98,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             if (this.sendData['rruleUntil']) {
                 until = this.sendData['rruleUntil'];
                 if (!until.setHours) {
-                    until = phpr.Date.isoDateTojsDate(until);
+                    until = phpr.Default.System.Date.isoDateTojsDate(until);
                 }
-                var startDatetime = phpr.Date.isoDatetimeTojsDate(this.sendData['startDatetime']);
+                var startDatetime = phpr.Default.System.Date.isoDatetimeTojsDate(this.sendData['startDatetime']);
                 until.setHours(startDatetime.getHours());
                 until.setMinutes(startDatetime.getMinutes());
                 until.setSeconds(startDatetime.getSeconds());

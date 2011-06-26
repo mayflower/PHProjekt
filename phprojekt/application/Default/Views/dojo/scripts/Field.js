@@ -211,9 +211,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
     datetimeRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
-        var date         = (itemvalue) ? phpr.Date.isoDatetimeTojsDate(itemvalue) : new Date();
-        var valueForDate = phpr.Date.getIsoDate(date) || '';
-        var valueForTime = phpr.Date.getIsoTime(date) || '';
+        var date         = (itemvalue) ? phpr.Default.System.Date.isoDatetimeTojsDate(itemvalue) : new Date();
+        var valueForDate = phpr.Default.System.Date.getIsoDate(date) || '';
+        var valueForTime = phpr.Default.System.Date.getIsoTime(date) || '';
         var html = this.render(["phpr.Default.template.form", "datetime.html"], null, {
                             label:        itemlabel,
                             labelfor:     (itemdisabled) ? itemid + "_disabled" : itemid,

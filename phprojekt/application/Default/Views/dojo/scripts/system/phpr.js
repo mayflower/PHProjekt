@@ -474,7 +474,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     }
 });
 
-dojo.declare("phpr.DateTextBox", [dijit.form.DateTextBox], {
+dojo.declare("phpr.Default.System.DateTextBox", [dijit.form.DateTextBox], {
     _blankValue: '', // used by filter() when the textbox is blank
 
     parse:function(value, constraints) {

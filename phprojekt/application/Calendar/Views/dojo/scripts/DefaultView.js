@@ -178,8 +178,8 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Default.System.Component, {
         var temp              = endTimeRounded.split(':');
         var eventEndHour      = parseInt(temp[0], 10);
         var eventEndMinutes   = parseInt(temp[1], 10);
-        result['startTime']   = phpr.Date.getIsoTime(eventInfo['startTime']);
-        result['endTime']     = phpr.Date.getIsoTime(eventInfo['endTime']);
+        result['startTime']   = phpr.Default.System.Date.getIsoTime(eventInfo['startTime']);
+        result['endTime']     = phpr.Default.System.Date.getIsoTime(eventInfo['endTime']);
 
         // Is at least one minute of the event inside the schedule?
         if (eventStartHour < 20 && ((eventEndHour > 7) && !(eventEndHour == 8 && eventEndMinutes == 0))) {
@@ -1320,12 +1320,12 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Default.System.Component, {
             var singleDayEvent = false;
 
             // Split datetime in date and time
-            var dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['startDatetime']);
-            content[event]['startDate'] = phpr.Date.getIsoDate(dateTime);
-            content[event]['startTime'] = phpr.Date.getIsoTime(dateTime);
-            dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['endDatetime']);
-            content[event]['endDate'] = phpr.Date.getIsoDate(dateTime);
-            content[event]['endTime'] = phpr.Date.getIsoTime(dateTime);
+            var dateTime = phpr.Default.System.Date.isoDatetimeTojsDate(content[event]['startDatetime']);
+            content[event]['startDate'] = phpr.Default.System.Date.getIsoDate(dateTime);
+            content[event]['startTime'] = phpr.Default.System.Date.getIsoTime(dateTime);
+            dateTime = phpr.Default.System.Date.isoDatetimeTojsDate(content[event]['endDatetime']);
+            content[event]['endDate'] = phpr.Default.System.Date.getIsoDate(dateTime);
+            content[event]['endTime'] = phpr.Default.System.Date.getIsoTime(dateTime);
 
             // Process title and note
             var title = this.htmlEntities(content[event]['title']);
@@ -1542,7 +1542,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Default.System.Component, {
                     this._schedule[row][column] = new Array();
                 }
 
-                this._schedule[row]['hour'] = phpr.Date.getIsoTime(hour + ':' + minute);
+                this._schedule[row]['hour'] = phpr.Default.System.Date.getIsoTime(hour + ':' + minute);
 
                 var tmp = (row / 2);
                 if (Math.floor(tmp) == tmp) {
