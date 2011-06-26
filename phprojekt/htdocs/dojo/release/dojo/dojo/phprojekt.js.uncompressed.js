@@ -43020,5 +43020,2707 @@ dojo.declare("dijit.layout._Gutter", [dijit._Widget, dijit._Templated ],
 
 }
 
+if(!dojo._hasResource["dijit.form._FormSelectWidget"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit.form._FormSelectWidget"] = true;
+dojo.provide("dijit.form._FormSelectWidget");
+
+
+
+
+/*=====
+dijit.form.__SelectOption = function(){
+	// value: String
+	//		The value of the option.  Setting to empty (or missing) will
+	//		place a separator at that location
+	// label: String
+	//		The label for our option.  It can contain html tags.
+	//  selected: Boolean
+	//		Whether or not we are a selected option
+	// disabled: Boolean
+	//		Whether or not this specific option is disabled
+	this.value = value;
+	this.label = label;
+	this.selected = selected;
+	this.disabled = disabled;
+}
+=====*/
+
+dojo.declare("dijit.form._FormSelectWidget", dijit.form._FormValueWidget, {
+	// summary:
+	//		Extends _FormValueWidget in order to provide "select-specific"
+	//		values - i.e., those values that are unique to <select> elements.
+	//		This also provides the mechanism for reading the elements from
+	//		a store, if desired.
+
+	// multiple: Boolean
+	//		Whether or not we are multi-valued
+	multiple: false,
+
+	// options: dijit.form.__SelectOption[]
+	//		The set of options for our select item.  Roughly corresponds to
+	//      the html <option> tag.
+	options: null,
+
+	// store: dojo.data.api.Identity
+	//		A store which, at the very least impelements dojo.data.api.Identity
+	//		to use for getting our list of options - rather than reading them
+	//		from the <option> html tags.
+	store: null,
+
+	// query: object
+	//		A query to use when fetching items from our store
+	query: null,
+
+	// queryOptions: object
+	//		Query options to use when fetching from the store
+	queryOptions: null,
+
+	// onFetch: Function
+	//		A callback to do with an onFetch - but before any items are actually
+	//		iterated over (i.e. to filter even futher what you want to add)
+	onFetch: null,
+
+	// sortByLabel: boolean
+	//		Flag to sort the options returned from a store by the label of
+	//		the store.
+	sortByLabel: true,
+
+
+	// loadChildrenOnOpen: boolean
+	//		By default loadChildren is called when the items are fetched from the
+	//		store.  This property allows delaying loadChildren (and the creation
+	//		of the options/menuitems) until the user opens the click the button.
+	//		dropdown
+	loadChildrenOnOpen: false,
+
+	getOptions: function(/* anything */ valueOrIdx){
+		// summary:
+		//		Returns a given option (or options).
+		// valueOrIdx:
+		//		If passed in as a string, that string is used to look up the option
+		//		in the array of options - based on the value property.
+		//		(See dijit.form.__SelectOption).
+		//
+		//		If passed in a number, then the option with the given index (0-based)
+		//		within this select will be returned.
+		//
+		//		If passed in a dijit.form.__SelectOption, the same option will be
+		//		returned if and only if it exists within this select.
+		//
+		//		If passed an array, then an array will be returned with each element
+		//		in the array being looked up.
+		//
+		//		If not passed a value, then all options will be returned
+		//
+		// returns:
+		//		The option corresponding with the given value or index.  null
+		//		is returned if any of the following are true:
+		//			- A string value is passed in which doesn't exist
+		//			- An index is passed in which is outside the bounds of the array of options
+		//			- A dijit.form.__SelectOption is passed in which is not a part of the select
+
+		// NOTE: the compare for passing in a dijit.form.__SelectOption checks
+		//		if the value property matches - NOT if the exact option exists
+		// NOTE: if passing in an array, null elements will be placed in the returned
+		//		array when a value is not found.
+		var lookupValue = valueOrIdx, opts = this.options || [], l = opts.length;
+
+		if(lookupValue === undefined){
+			return opts; // dijit.form.__SelectOption[]
+		}
+		if(dojo.isArray(lookupValue)){
+			return dojo.map(lookupValue, "return this.getOptions(item);", this); // dijit.form.__SelectOption[]
+		}
+		if(dojo.isObject(valueOrIdx)){
+			// We were passed an option - so see if it's in our array (directly),
+			// and if it's not, try and find it by value.
+			if(!dojo.some(this.options, function(o, idx){
+				if(o === lookupValue ||
+					(o.value && o.value === lookupValue.value)){
+					lookupValue = idx;
+					return true;
+				}
+				return false;
+			})){
+				lookupValue = -1;
+			}
+		}
+		if(typeof lookupValue == "string"){
+			for(var i=0; i<l; i++){
+				if(opts[i].value === lookupValue){
+					lookupValue = i;
+					break;
+				}
+			}
+		}
+		if(typeof lookupValue == "number" && lookupValue >= 0 && lookupValue < l){
+			return this.options[lookupValue] // dijit.form.__SelectOption
+		}
+		return null; // null
+	},
+
+	addOption: function(/* dijit.form.__SelectOption, dijit.form.__SelectOption[] */ option){
+		// summary:
+		//		Adds an option or options to the end of the select.  If value
+		//		of the option is empty or missing, a separator is created instead.
+		//		Passing in an array of options will yield slightly better performance
+		//		since the children are only loaded once.
+		if(!dojo.isArray(option)){ option = [option]; }
+		dojo.forEach(option, function(i){
+			if(i && dojo.isObject(i)){
+				this.options.push(i);
+			}
+		}, this);
+		this._loadChildren();
+	},
+
+	removeOption: function(/* string, dijit.form.__SelectOption, number, or array */ valueOrIdx){
+		// summary:
+		//		Removes the given option or options.  You can remove by string
+		//		(in which case the value is removed), number (in which case the
+		//		index in the options array is removed), or select option (in
+		//		which case, the select option with a matching value is removed).
+		//		You can also pass in an array of those values for a slightly
+		//		better performance since the children are only loaded once.
+		if(!dojo.isArray(valueOrIdx)){ valueOrIdx = [valueOrIdx]; }
+		var oldOpts = this.getOptions(valueOrIdx);
+		dojo.forEach(oldOpts, function(i){
+			// We can get null back in our array - if our option was not found.  In
+			// that case, we don't want to blow up...
+			if(i){
+				this.options = dojo.filter(this.options, function(node, idx){
+					return (node.value !== i.value);
+				});
+				this._removeOptionItem(i);
+			}
+		}, this);
+		this._loadChildren();
+	},
+
+	updateOption: function(/* dijit.form.__SelectOption, dijit.form.__SelectOption[] */ newOption){
+		// summary:
+		//		Updates the values of the given option.  The option to update
+		//		is matched based on the value of the entered option.  Passing
+		//		in an array of new options will yeild better performance since
+		//		the children will only be loaded once.
+		if(!dojo.isArray(newOption)){ newOption = [newOption]; }
+		dojo.forEach(newOption, function(i){
+			var oldOpt = this.getOptions(i), k;
+			if(oldOpt){
+				for(k in i){ oldOpt[k] = i[k]; }
+			}
+		}, this);
+		this._loadChildren();
+	},
+
+	setStore: function(/* dojo.data.api.Identity */ store,
+						/* anything? */ selectedValue,
+						/* Object? */ fetchArgs){
+		// summary:
+		//		Sets the store you would like to use with this select widget.
+		//		The selected value is the value of the new store to set.  This
+		//		function returns the original store, in case you want to reuse
+		//		it or something.
+		// store: dojo.data.api.Identity
+		//		The store you would like to use - it MUST implement Identity,
+		//		and MAY implement Notification.
+		// selectedValue: anything?
+		//		The value that this widget should set itself to *after* the store
+		//		has been loaded
+		// fetchArgs: Object?
+		//		The arguments that will be passed to the store's fetch() function
+		var oStore = this.store;
+		fetchArgs = fetchArgs || {};
+		if(oStore !== store){
+			// Our store has changed, so update our notifications
+			dojo.forEach(this._notifyConnections || [], dojo.disconnect);
+			delete this._notifyConnections;
+			if(store && store.getFeatures()["dojo.data.api.Notification"]){
+				this._notifyConnections = [
+					dojo.connect(store, "onNew", this, "_onNewItem"),
+					dojo.connect(store, "onDelete", this, "_onDeleteItem"),
+					dojo.connect(store, "onSet", this, "_onSetItem")
+				];
+			}
+			this.store = store;
+		}
+
+		// Turn off change notifications while we make all these changes
+		this._onChangeActive = false;
+
+		// Remove existing options (if there are any)
+		if(this.options && this.options.length){
+			this.removeOption(this.options);
+		}
+
+		// Add our new options
+		if(store){
+			var cb = function(items){
+				if(this.sortByLabel && !fetchArgs.sort && items.length){
+					items.sort(dojo.data.util.sorter.createSortFunction([{
+						attribute: store.getLabelAttributes(items[0])[0]
+					}], store));
+				}
+
+				if(fetchArgs.onFetch){
+					items = fetchArgs.onFetch(items);
+				}
+				// TODO: Add these guys as a batch, instead of separately
+				dojo.forEach(items, function(i){
+					this._addOptionForItem(i);
+				}, this);
+
+				// Set our value (which might be undefined), and then tweak
+				// it to send a change event with the real value
+				this._loadingStore = false;
+				this.set("value", (("_pendingValue" in this) ? this._pendingValue : selectedValue));
+				delete this._pendingValue;
+
+				if(!this.loadChildrenOnOpen){
+					this._loadChildren();
+				}else{
+					this._pseudoLoadChildren(items);
+				}
+				this._fetchedWith = opts;
+				this._lastValueReported = this.multiple ? [] : null;
+				this._onChangeActive = true;
+				this.onSetStore();
+				this._handleOnChange(this.value);
+			};
+			var opts = dojo.mixin({onComplete:cb, scope: this}, fetchArgs);
+			this._loadingStore = true;
+			store.fetch(opts);
+		}else{
+			delete this._fetchedWith;
+		}
+		return oStore;	// dojo.data.api.Identity
+	},
+
+	_setValueAttr: function(/*anything*/ newValue, /*Boolean, optional*/ priorityChange){
+		// summary:
+		//		set the value of the widget.
+		//		If a string is passed, then we set our value from looking it up.
+		if(this._loadingStore){
+			// Our store is loading - so save our value, and we'll set it when
+			// we're done
+			this._pendingValue = newValue;
+			return;
+		}
+		var opts = this.getOptions() || [];
+		if(!dojo.isArray(newValue)){
+			newValue = [newValue];
+		}
+		dojo.forEach(newValue, function(i, idx){
+			if(!dojo.isObject(i)){
+				i = i + "";
+			}
+			if(typeof i === "string"){
+				newValue[idx] = dojo.filter(opts, function(node){
+					return node.value === i;
+				})[0] || {value: "", label: ""};
+			}
+		}, this);
+
+		// Make sure some sane default is set
+		newValue = dojo.filter(newValue, function(i){ return i && i.value; });
+		if(!this.multiple && (!newValue[0] || !newValue[0].value) && opts.length){
+			newValue[0] = opts[0];
+		}
+		dojo.forEach(opts, function(i){
+			i.selected = dojo.some(newValue, function(v){ return v.value === i.value; });
+		});
+		var val = dojo.map(newValue, function(i){ return i.value; }),
+			disp = dojo.map(newValue, function(i){ return i.label; });
+
+		this.value = this.multiple ? val : val[0];
+		this._setDisplay(this.multiple ? disp : disp[0]);
+		this._updateSelection();
+		this._handleOnChange(this.value, priorityChange);
+	},
+
+	_getDisplayedValueAttr: function(){
+		// summary:
+		//		returns the displayed value of the widget
+		var val = this.get("value");
+		if(!dojo.isArray(val)){
+			val = [val];
+		}
+		var ret = dojo.map(this.getOptions(val), function(v){
+			if(v && "label" in v){
+				return v.label;
+			}else if(v){
+				return v.value;
+			}
+			return null;
+		}, this);
+		return this.multiple ? ret : ret[0];
+	},
+
+	_getValueDeprecated: false, // remove when _FormWidget:getValue is removed
+	getValue: function(){
+		// summary:
+		//		get the value of the widget.
+		return this._lastValue;
+	},
+
+	undo: function(){
+		// summary:
+		//		restore the value to the last value passed to onChange
+		this._setValueAttr(this._lastValueReported, false);
+	},
+
+	_loadChildren: function(){
+		// summary:
+		//		Loads the children represented by this widget's options.
+		//		reset the menu to make it "populatable on the next click
+		if(this._loadingStore){ return; }
+		dojo.forEach(this._getChildren(), function(child){
+			child.destroyRecursive();
+		});
+		// Add each menu item
+		dojo.forEach(this.options, this._addOptionItem, this);
+
+		// Update states
+		this._updateSelection();
+	},
+
+	_updateSelection: function(){
+		// summary:
+		//		Sets the "selected" class on the item for styling purposes
+		this.value = this._getValueFromOpts();
+		var val = this.value;
+		if(!dojo.isArray(val)){
+			val = [val];
+		}
+		if(val && val[0]){
+			dojo.forEach(this._getChildren(), function(child){
+				var isSelected = dojo.some(val, function(v){
+					return child.option && (v === child.option.value);
+				});
+				dojo.toggleClass(child.domNode, this.baseClass + "SelectedOption", isSelected);
+				dijit.setWaiState(child.domNode, "selected", isSelected);
+			}, this);
+		}
+		this._handleOnChange(this.value);
+	},
+
+	_getValueFromOpts: function(){
+		// summary:
+		//		Returns the value of the widget by reading the options for
+		//		the selected flag
+		var opts = this.getOptions() || [];
+		if(!this.multiple && opts.length){
+			// Mirror what a select does - choose the first one
+			var opt = dojo.filter(opts, function(i){
+				return i.selected;
+			})[0];
+			if(opt && opt.value){
+				return opt.value
+			}else{
+				opts[0].selected = true;
+				return opts[0].value;
+			}
+		}else if(this.multiple){
+			// Set value to be the sum of all selected
+			return dojo.map(dojo.filter(opts, function(i){
+				return i.selected;
+			}), function(i){
+				return i.value;
+			}) || [];
+		}
+		return "";
+	},
+
+	// Internal functions to call when we have store notifications come in
+	_onNewItem: function(/* item */ item, /* Object? */ parentInfo){
+		if(!parentInfo || !parentInfo.parent){
+			// Only add it if we are top-level
+			this._addOptionForItem(item);
+		}
+	},
+	_onDeleteItem: function(/* item */ item){
+		var store = this.store;
+		this.removeOption(store.getIdentity(item));
+	},
+	_onSetItem: function(/* item */ item){
+		this.updateOption(this._getOptionObjForItem(item));
+	},
+
+	_getOptionObjForItem: function(item){
+		// summary:
+		//		Returns an option object based off the given item.  The "value"
+		//		of the option item will be the identity of the item, the "label"
+		//		of the option will be the label of the item.  If the item contains
+		//		children, the children value of the item will be set
+		var store = this.store, label = store.getLabel(item),
+			value = (label ? store.getIdentity(item) : null);
+		return {value: value, label: label, item:item}; // dijit.form.__SelectOption
+	},
+
+	_addOptionForItem: function(/* item */ item){
+		// summary:
+		//		Creates (and adds) the option for the given item
+		var store = this.store;
+		if(!store.isItemLoaded(item)){
+			// We are not loaded - so let's load it and add later
+			store.loadItem({item: item, onComplete: function(i){
+				this._addOptionForItem(item);
+			},
+			scope: this});
+			return;
+		}
+		var newOpt = this._getOptionObjForItem(item);
+		this.addOption(newOpt);
+	},
+
+	constructor: function(/* Object */ keywordArgs){
+		// summary:
+		//		Saves off our value, if we have an initial one set so we
+		//		can use it if we have a store as well (see startup())
+		this._oValue = (keywordArgs || {}).value || null;
+	},
+
+	_fillContent: function(){
+		// summary:
+		//		Loads our options and sets up our dropdown correctly.  We
+		//		don't want any content, so we don't call any inherit chain
+		//		function.
+		var opts = this.options;
+		if(!opts){
+			opts = this.options = this.srcNodeRef ? dojo.query(">",
+						this.srcNodeRef).map(function(node){
+							if(node.getAttribute("type") === "separator"){
+								return { value: "", label: "", selected: false, disabled: false };
+							}
+							return { value: node.getAttribute("value"),
+										label: String(node.innerHTML),
+										selected: node.getAttribute("selected") || false,
+										disabled: node.getAttribute("disabled") || false };
+						}, this) : [];
+		}
+		if(!this.value){
+			this.value = this._getValueFromOpts();
+		}else if(this.multiple && typeof this.value == "string"){
+			this.value = this.value.split(",");
+		}
+	},
+
+	postCreate: function(){
+		// summary:
+		//		sets up our event handling that we need for functioning
+		//		as a select
+		dojo.setSelectable(this.focusNode, false);
+		this.inherited(arguments);
+
+		// Make our event connections for updating state
+		this.connect(this, "onChange", "_updateSelection");
+		this.connect(this, "startup", "_loadChildren");
+
+		this._setValueAttr(this.value, null);
+	},
+
+	startup: function(){
+		// summary:
+		//		Connects in our store, if we have one defined
+		this.inherited(arguments);
+		var store = this.store, fetchArgs = {};
+		dojo.forEach(["query", "queryOptions", "onFetch"], function(i){
+			if(this[i]){
+				fetchArgs[i] = this[i];
+			}
+			delete this[i];
+		}, this);
+		if(store && store.getFeatures()["dojo.data.api.Identity"]){
+			// Temporarily set our store to null so that it will get set
+			// and connected appropriately
+			this.store = null;
+			this.setStore(store, this._oValue, fetchArgs);
+		}
+	},
+
+	destroy: function(){
+		// summary:
+		//		Clean up our connections
+		dojo.forEach(this._notifyConnections || [], dojo.disconnect);
+		this.inherited(arguments);
+	},
+
+	_addOptionItem: function(/* dijit.form.__SelectOption */ option){
+		// summary:
+		//		User-overridable function which, for the given option, adds an
+		//		item to the select.  If the option doesn't have a value, then a
+		//		separator is added in that place.  Make sure to store the option
+		//		in the created option widget.
+	},
+
+	_removeOptionItem: function(/* dijit.form.__SelectOption */ option){
+		// summary:
+		//		User-overridable function which, for the given option, removes
+		//		its item from the select.
+	},
+
+	_setDisplay: function(/*String or String[]*/ newDisplay){
+		// summary:
+		//		Overridable function which will set the display for the
+		//		widget.  newDisplay is either a string (in the case of
+		//		single selects) or array of strings (in the case of multi-selects)
+	},
+
+	_getChildren: function(){
+		// summary:
+		//		Overridable function to return the children that this widget contains.
+		return [];
+	},
+
+	_getSelectedOptionsAttr: function(){
+		// summary:
+		//		hooks into this.attr to provide a mechanism for getting the
+		//		option items for the current value of the widget.
+		return this.getOptions(this.get("value"));
+	},
+
+	_pseudoLoadChildren: function(/* item[] */ items){
+		// summary:
+		//		a function that will "fake" loading children, if needed, and
+		//		if we have set to not load children until the widget opens.
+		// items:
+		//		An array of items that will be loaded, when needed
+	},
+
+	onSetStore: function(){
+		// summary:
+		//		a function that can be connected to in order to receive a
+		//		notification that the store has finished loading and all options
+		//		from that store are available
+	}
+});
+
+}
+
+if(!dojo._hasResource["dijit.form.Select"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit.form.Select"] = true;
+dojo.provide("dijit.form.Select");
+
+
+
+
+
+
+
+
+dojo.declare("dijit.form._SelectMenu", dijit.Menu, {
+	// summary:
+	//		An internally-used menu for dropdown that allows us a vertical scrollbar
+	buildRendering: function(){
+		// summary:
+		//		Stub in our own changes, so that our domNode is not a table
+		//		otherwise, we won't respond correctly to heights/overflows
+		this.inherited(arguments);
+		var o = (this.menuTableNode = this.domNode);
+		var n = (this.domNode = dojo.create("div", {style: {overflowX: "hidden", overflowY: "scroll"}}));
+		if(o.parentNode){
+			o.parentNode.replaceChild(n, o);
+		}
+		dojo.removeClass(o, "dijitMenuTable");
+		n.className = o.className + " dijitSelectMenu";
+		o.className = "dijitReset dijitMenuTable";
+		dijit.setWaiRole(o,"listbox");
+		dijit.setWaiRole(n,"presentation");
+		n.appendChild(o);
+	},
+	resize: function(/*Object*/ mb){
+		// summary:
+		//		Overridden so that we are able to handle resizing our
+		//		internal widget.  Note that this is not a "full" resize
+		//		implementation - it only works correctly if you pass it a
+		//		marginBox.
+		//
+		// mb: Object
+		//		The margin box to set this dropdown to.
+		if(mb){
+			dojo.marginBox(this.domNode, mb);
+			if("w" in mb){
+				// We've explicitly set the wrapper <div>'s width, so set <table> width to match.
+				// 100% is safer than a pixel value because there may be a scroll bar with
+				// browser/OS specific width.
+				this.menuTableNode.style.width = "100%";
+			}
+		}
+	}
+});
+
+dojo.declare("dijit.form.Select", [dijit.form._FormSelectWidget, dijit._HasDropDown], {
+	// summary:
+	//		This is a "styleable" select box - it is basically a DropDownButton which
+	//		can take a <select> as its input.
+
+	baseClass: "dijitSelect",
+
+	templateString: dojo.cache("dijit.form", "templates/Select.html", "<table class=\"dijit dijitReset dijitInline dijitLeft\"\n\tdojoAttachPoint=\"_buttonNode,tableNode,focusNode\" cellspacing='0' cellpadding='0'\n\twaiRole=\"combobox\" waiState=\"haspopup-true\"\n\t><tbody waiRole=\"presentation\"><tr waiRole=\"presentation\"\n\t\t><td class=\"dijitReset dijitStretch dijitButtonContents dijitButtonNode\" waiRole=\"presentation\"\n\t\t\t><span class=\"dijitReset dijitInline dijitButtonText\"  dojoAttachPoint=\"containerNode,_popupStateNode\"></span\n\t\t\t><input type=\"hidden\" ${!nameAttrSetting} dojoAttachPoint=\"valueNode\" value=\"${value}\" waiState=\"hidden-true\"\n\t\t/></td><td class=\"dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton\"\n\t\t\t\tdojoAttachPoint=\"titleNode\" waiRole=\"presentation\"\n\t\t\t><div class=\"dijitReset dijitArrowButtonInner\" waiRole=\"presentation\"></div\n\t\t\t><div class=\"dijitReset dijitArrowButtonChar\" waiRole=\"presentation\">&#9660;</div\n\t\t></td\n\t></tr></tbody\n></table>\n"),
+
+	// attributeMap: Object
+	//		Add in our style to be applied to the focus node
+	attributeMap: dojo.mixin(dojo.clone(dijit.form._FormSelectWidget.prototype.attributeMap),{style:"tableNode"}),
+
+	// required: Boolean
+	//		Can be true or false, default is false.
+	required: false,
+
+	// state: String
+	//		Shows current state (ie, validation result) of input (Normal, Warning, or Error)
+	state: "",
+
+	//	tooltipPosition: String[]
+	//		See description of dijit.Tooltip.defaultPosition for details on this parameter.
+	tooltipPosition: [],
+
+	// emptyLabel: string
+	//		What to display in an "empty" dropdown
+	emptyLabel: "",
+
+	// _isLoaded: Boolean
+	//		Whether or not we have been loaded
+	_isLoaded: false,
+
+	// _childrenLoaded: Boolean
+	//		Whether or not our children have been loaded
+	_childrenLoaded: false,
+
+	_fillContent: function(){
+		// summary:
+		//		Set the value to be the first, or the selected index
+		this.inherited(arguments);
+		if(this.options.length && !this.value && this.srcNodeRef){
+			var si = this.srcNodeRef.selectedIndex;
+			this.value = this.options[si != -1 ? si : 0].value;
+		}
+
+		// Create the dropDown widget
+		this.dropDown = new dijit.form._SelectMenu({id: this.id + "_menu"});
+		dojo.addClass(this.dropDown.domNode, this.baseClass + "Menu");
+	},
+
+	_getMenuItemForOption: function(/*dijit.form.__SelectOption*/ option){
+		// summary:
+		//		For the given option, return the menu item that should be
+		//		used to display it.  This can be overridden as needed
+		if(!option.value){
+			// We are a separator (no label set for it)
+			return new dijit.MenuSeparator();
+		}else{
+			// Just a regular menu option
+			var click = dojo.hitch(this, "_setValueAttr", option);
+			var item = new dijit.MenuItem({
+				option: option,
+				label: option.label,
+				onClick: click,
+				disabled: option.disabled || false
+			});
+			dijit.setWaiRole(item.focusNode, "listitem");
+			return item;
+		}
+	},
+
+	_addOptionItem: function(/*dijit.form.__SelectOption*/ option){
+		// summary:
+		//		For the given option, add an option to our dropdown.
+		//		If the option doesn't have a value, then a separator is added
+		//		in that place.
+		if(this.dropDown){
+			this.dropDown.addChild(this._getMenuItemForOption(option));
+		}
+	},
+
+	_getChildren: function(){
+		if(!this.dropDown){
+			return [];
+		}
+		return this.dropDown.getChildren();
+	},
+
+	_loadChildren: function(/*Boolean*/ loadMenuItems){
+		// summary:
+		//		Resets the menu and the length attribute of the button - and
+		//		ensures that the label is appropriately set.
+		//	loadMenuItems: Boolean
+		//		actually loads the child menu items - we only do this when we are
+		//		populating for showing the dropdown.
+
+		if(loadMenuItems === true){
+			// this.inherited destroys this.dropDown's child widgets (MenuItems).
+			// Avoid this.dropDown (Menu widget) having a pointer to a destroyed widget (which will cause
+			// issues later in _setSelected). (see #10296)
+			if(this.dropDown){
+				delete this.dropDown.focusedChild;
+			}
+			if(this.options.length){
+				this.inherited(arguments);
+			}else{
+				// Drop down menu is blank but add one blank entry just so something appears on the screen
+				// to let users know that they are no choices (mimicing native select behavior)
+				dojo.forEach(this._getChildren(), function(child){ child.destroyRecursive(); });
+				var item = new dijit.MenuItem({label: "&nbsp;"});
+				this.dropDown.addChild(item);
+			}
+		}else{
+			this._updateSelection();
+		}
+
+		var len = this.options.length;
+		this._isLoaded = false;
+		this._childrenLoaded = true;
+
+		if(!this._loadingStore){
+			// Don't call this if we are loading - since we will handle it later
+			this._setValueAttr(this.value);
+		}
+	},
+
+	_setValueAttr: function(value){
+		this.inherited(arguments);
+		dojo.attr(this.valueNode, "value", this.get("value"));
+	},
+
+	_setDisplay: function(/*String*/ newDisplay){
+		// summary:
+		//		sets the display for the given value (or values)
+		this.containerNode.innerHTML = '<span class="dijitReset dijitInline ' + this.baseClass + 'Label">' +
+					(newDisplay || this.emptyLabel || "&nbsp;") +
+					'</span>';
+		dijit.setWaiState(this.focusNode, "valuetext", (newDisplay || this.emptyLabel || "&nbsp;") );
+	},
+
+	validate: function(/*Boolean*/ isFocused){
+		// summary:
+		//		Called by oninit, onblur, and onkeypress.
+		// description:
+		//		Show missing or invalid messages if appropriate, and highlight textbox field.
+		//		Used when a select is initially set to no value and the user is required to
+		//		set the value.
+		
+		var isValid = this.isValid(isFocused);
+		this.state = isValid ? "" : "Error";
+		this._setStateClass();
+		dijit.setWaiState(this.focusNode, "invalid", isValid ? "false" : "true");
+		var message = isValid ? "" : this._missingMsg;
+		if(this._message !== message){
+			this._message = message;
+			dijit.hideTooltip(this.domNode);
+			if(message){
+				dijit.showTooltip(message, this.domNode, this.tooltipPosition, !this.isLeftToRight());
+			}
+		}
+		return isValid;
+	},
+
+	isValid: function(/*Boolean*/ isFocused){
+		// summary:
+		//		Whether or not this is a valid value.   The only way a Select
+		//		can be invalid is when it's required but nothing is selected.
+		return (!this.required || !(/^\s*$/.test(this.value)));
+	},
+
+	reset: function(){
+		// summary:
+		//		Overridden so that the state will be cleared.
+		this.inherited(arguments);
+		dijit.hideTooltip(this.domNode);
+		this.state = "";
+		this._setStateClass();
+		delete this._message;
+	},
+
+	postMixInProperties: function(){
+		// summary:
+		//		set the missing message
+		this.inherited(arguments);
+		this._missingMsg = dojo.i18n.getLocalization("dijit.form", "validate",
+									this.lang).missingMessage;
+	},
+
+	postCreate: function(){
+		this.inherited(arguments);
+		if(this.tableNode.style.width){
+			dojo.addClass(this.domNode, this.baseClass + "FixedWidth");
+		}
+	},
+
+	isLoaded: function(){
+		return this._isLoaded;
+	},
+
+	loadDropDown: function(/*Function*/ loadCallback){
+		// summary:
+		//		populates the menu
+		this._loadChildren(true);
+		this._isLoaded = true;
+		loadCallback();
+	},
+
+	closeDropDown: function(){
+		// overriding _HasDropDown.closeDropDown()
+		this.inherited(arguments);
+
+		if(this.dropDown && this.dropDown.menuTableNode){
+			// Erase possible width: 100% setting from _SelectMenu.resize().
+			// Leaving it would interfere with the next openDropDown() call, which
+			// queries the natural size of the drop down.
+			this.dropDown.menuTableNode.style.width = "";
+		}
+	},
+
+	uninitialize: function(preserveDom){
+		if(this.dropDown && !this.dropDown._destroyed){
+			this.dropDown.destroyRecursive(preserveDom);
+			delete this.dropDown;
+		}
+		this.inherited(arguments);
+	}
+});
+
+}
+
+if(!dojo._hasResource["dijit._editor.plugins.LinkDialog"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit._editor.plugins.LinkDialog"] = true;
+dojo.provide("dijit._editor.plugins.LinkDialog");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
+	// summary:
+	//		This plugin provides the basis for an 'anchor' (link) dialog and an extension of it
+	//		provides the image link dialog.
+	//
+	// description:
+	//		The command provided by this plugin is:
+	//		* createLink
+
+	// Override _Plugin.buttonClass.   This plugin is controlled by a DropDownButton
+	// (which triggers a TooltipDialog).
+	buttonClass: dijit.form.DropDownButton,
+
+	// Override _Plugin.useDefaultCommand... processing is handled by this plugin, not by dijit.Editor.
+	useDefaultCommand: false,
+
+	// urlRegExp: [protected] String
+	//		Used for validating input as correct URL.  While file:// urls are not terribly
+	//		useful, they are technically valid.
+	urlRegExp: "((https?|ftps?|file)\\://|\./|/|)(/[a-zA-Z]{1,1}:/|)(((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)*(?:[a-zA-Z](?:[-\\da-zA-Z]{0,80}[\\da-zA-Z])?)\\.?)|(((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])|(0[xX]0*[\\da-fA-F]?[\\da-fA-F]\\.){3}0[xX]0*[\\da-fA-F]?[\\da-fA-F]|(0+[0-3][0-7][0-7]\\.){3}0+[0-3][0-7][0-7]|(0|[1-9]\\d{0,8}|[1-3]\\d{9}|4[01]\\d{8}|42[0-8]\\d{7}|429[0-3]\\d{6}|4294[0-8]\\d{5}|42949[0-5]\\d{4}|429496[0-6]\\d{3}|4294967[01]\\d{2}|42949672[0-8]\\d|429496729[0-5])|0[xX]0*[\\da-fA-F]{1,8}|([\\da-fA-F]{1,4}\\:){7}[\\da-fA-F]{1,4}|([\\da-fA-F]{1,4}\\:){6}((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])))(\\:\\d+)?(/(?:[^?#\\s/]+/)*(?:[^?#\\s/]+(?:\\?[^?#\\s/]*)?(?:#.*)?)?)?",
+
+	// emailRegExp: [protected] String
+	//		Used for validating input as correct email address.  Taken from dojox.validate
+	emailRegExp:  "<?(mailto\\:)([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+" /*username*/ + "@" +  
+        "((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)+(?:[a-zA-Z](?:[-\\da-zA-Z]{0,6}[\\da-zA-Z])?)\\.?)|localhost|^[^-][a-zA-Z0-9_-]*>?",	// host.
+
+	// htmlTemplate: [protected] String
+	//		String used for templating the HTML to insert at the desired point.
+	htmlTemplate: "<a href=\"${urlInput}\" _djrealurl=\"${urlInput}\"" +
+		" target=\"${targetSelect}\"" +
+		">${textInput}</a>",
+
+	// tag: [protected] String
+	//		Tag used for the link type.
+	tag: "a",
+
+	// _hostRxp [private] RegExp
+	//		Regular expression used to validate url fragments (ip address, hostname, etc)
+	_hostRxp:  new RegExp("^((([^\\[:]+):)?([^@]+)@)?(\\[([^\\]]+)\\]|([^\\[:]*))(:([0-9]+))?$"),
+
+	// _userAtRxp [private] RegExp
+	//		Regular expression used to validate e-mail address fragment.
+	_userAtRxp: new RegExp("^([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+@", "i"),
+
+	// linkDialogTemplate: [protected] String
+	//		Template for contents of TooltipDialog to pick URL
+	linkDialogTemplate: [
+		"<table><tr><td>",
+		"<label for='${id}_urlInput'>${url}</label>",
+		"</td><td>",
+		"<input dojoType='dijit.form.ValidationTextBox' required='true' " +
+		"id='${id}_urlInput' name='urlInput' intermediateChanges='true'>",
+		"</td></tr><tr><td>",
+		"<label for='${id}_textInput'>${text}</label>",
+		"</td><td>",
+		"<input dojoType='dijit.form.ValidationTextBox' required='true' id='${id}_textInput' " +
+		"name='textInput' intermediateChanges='true'>",
+		"</td></tr><tr><td>",
+		"<label for='${id}_targetSelect'>${target}</label>",
+		"</td><td>",
+		"<select id='${id}_targetSelect' name='targetSelect' dojoType='dijit.form.Select'>",
+		"<option selected='selected' value='_self'>${currentWindow}</option>",
+		"<option value='_blank'>${newWindow}</option>",
+		"<option value='_top'>${topWindow}</option>",
+		"<option value='_parent'>${parentWindow}</option>",
+		"</select>",
+		"</td></tr><tr><td colspan='2'>",
+		"<button dojoType='dijit.form.Button' type='submit' id='${id}_setButton'>${set}</button>",
+		"<button dojoType='dijit.form.Button' type='button' id='${id}_cancelButton'>${buttonCancel}</button>",
+		"</td></tr></table>"
+	].join(""),
+
+	_initButton: function(){
+		// Override _Plugin._initButton() to initialize DropDownButton and TooltipDialog.
+		var _this = this;
+		this.tag = this.command == 'insertImage' ? 'img' : 'a';
+		var messages = dojo.mixin(dojo.i18n.getLocalization("dijit", "common", this.lang),
+			dojo.i18n.getLocalization("dijit._editor", "LinkDialog", this.lang));
+		var dropDown = (this.dropDown = new dijit.TooltipDialog({
+			title: messages[this.command + "Title"],
+			execute: dojo.hitch(this, "setValue"),
+			onOpen: function(){
+				_this._onOpenDialog();
+				dijit.TooltipDialog.prototype.onOpen.apply(this, arguments);
+			},
+			onCancel: function(){
+				setTimeout(dojo.hitch(_this, "_onCloseDialog"),0);
+			}
+		}));
+		messages.urlRegExp = this.urlRegExp;
+		messages.id = dijit.getUniqueId(this.editor.id);
+		this._uniqueId = messages.id;
+		this._setContent(dropDown.title +
+			"<div style='border-bottom: 1px black solid;padding-bottom:2pt;margin-bottom:4pt'></div>" +
+			dojo.string.substitute(this.linkDialogTemplate, messages));
+		dropDown.startup();
+		this._urlInput = dijit.byId(this._uniqueId + "_urlInput");
+		this._textInput = dijit.byId(this._uniqueId + "_textInput");
+		this._setButton = dijit.byId(this._uniqueId + "_setButton");
+		this.connect(dijit.byId(this._uniqueId + "_cancelButton"), "onClick", function(){
+			this.dropDown.onCancel();
+		});
+		if(this._urlInput){
+			this.connect(this._urlInput, "onChange", "_checkAndFixInput");
+		}
+		if(this._textInput){
+			this.connect(this._textInput, "onChange", "_checkAndFixInput");
+		}
+
+		// Build up the dual check for http/https/file:, and mailto formats.
+		this._urlRegExp = new RegExp("^" + this.urlRegExp + "$", "i");
+		this._emailRegExp = new RegExp("^" + this.emailRegExp + "$", "i");
+		this._urlInput.isValid = dojo.hitch(this, function(){
+			// Function over-ride of isValid to test if the input matches a url or a mailto style link.
+			var value = this._urlInput.get("value");
+			return this._urlRegExp.test(value) || this._emailRegExp.test(value);
+		});
+
+		this._connectTagEvents();
+		this.inherited(arguments);
+	},
+
+	_checkAndFixInput: function(){
+		// summary:
+		//		A function to listen for onChange events and test the input contents
+		//		for valid information, such as valid urls with http/https/ftp and if
+		//		not present, try and guess if the input url is relative or not, and if
+		//		not, append http:// to it.  Also validates other fields as determined by
+		//		the internal _isValid function.
+		var self = this;
+		var url = this._urlInput.get("value");
+		var fixupUrl = function(url){
+			var appendHttp = false;
+			var appendMailto = false;
+			if(url && url.length > 1){
+				url = dojo.trim(url);
+				if(url.indexOf("mailto:") !== 0){
+					if(url.indexOf("/") > 0){
+						if(url.indexOf("://") === -1){
+							// Check that it doesn't start with / or ./, which would
+							// imply 'target server relativeness'
+							if(url.charAt(0) !== '/' && url.indexOf("./") !== 0){
+								if(self._hostRxp.test(url)){
+									appendHttp = true;
+								}
+							}
+						}
+					}else if(self._userAtRxp.test(url)){
+						// If it looks like a foo@, append a mailto.
+						appendMailto = true;
+					}
+				}
+			}
+			if(appendHttp){
+				self._urlInput.set("value", "http://" + url);
+			}
+			if(appendMailto){
+				self._urlInput.set("value", "mailto:" + url);
+			}
+			self._setButton.set("disabled", !self._isValid());
+		};
+		if(this._delayedCheck){
+			clearTimeout(this._delayedCheck);
+			this._delayedCheck = null;
+		}
+		this._delayedCheck = setTimeout(function(){
+			fixupUrl(url);
+		}, 250);
+	},
+
+	_connectTagEvents: function(){
+		// summary:
+		//		Over-ridable function that connects tag specific events.
+		this.editor.onLoadDeferred.addCallback(dojo.hitch(this, function(){
+			this.connect(this.editor.editNode, "ondblclick", this._onDblClick);
+		}));
+	},
+
+	_isValid: function(){
+		// summary:
+		//		Internal function to allow validating of the inputs
+		//		for a link to determine if set should be disabled or not
+		// tags:
+		//		protected
+		return this._urlInput.isValid() && this._textInput.isValid();
+	},
+
+	_setContent: function(staticPanel){
+		// summary:
+		//		Helper for _initButton above.   Not sure why it's a separate method.
+		this.dropDown.set('content', staticPanel);
+	},
+
+	_checkValues: function(args){
+		// summary:
+		//		Function to check the values in args and 'fix' them up as needed.
+		// args: Object
+		//		Content being set.		
+		// tags: 
+		//		protected
+		if(args && args.urlInput){
+			args.urlInput = args.urlInput.replace(/"/g, "&quot;");
+		}
+		return args;
+	},
+
+	setValue: function(args){
+		// summary:
+		//		Callback from the dialog when user presses "set" button.
+		// tags:
+		//		private
+		//TODO: prevent closing popup if the text is empty
+		this._onCloseDialog();
+		if(dojo.isIE){ //see #4151
+			var sel = dijit.range.getSelection(this.editor.window);
+			var range = sel.getRangeAt(0);
+			var a = range.endContainer;
+			if(a.nodeType === 3){
+				// Text node, may be the link contents, so check parent.
+				// This plugin doesn't really support nested HTML elements
+				// in the link, it assumes all link content is text.
+				a = a.parentNode;
+			}
+			if(a && (a.nodeName && a.nodeName.toLowerCase() !== this.tag)){
+				// Stll nothing, one last thing to try on IE, as it might be 'img'
+				// and thus considered a control.
+				a = dojo.withGlobal(this.editor.window,
+					"getSelectedElement", dijit._editor.selection, [this.tag]);
+			}
+			if(a && (a.nodeName && a.nodeName.toLowerCase() === this.tag)){
+				// Okay, we do have a match.  IE, for some reason, sometimes pastes before
+				// instead of removing the targetted paste-over element, so we unlink the
+				// old one first.  If we do not the <a> tag remains, but it has no content,
+				// so isn't readily visible (but is wrong for the action).
+				if(this.editor.queryCommandEnabled("unlink")){
+					// Select all the link childent, then unlink.  The following insert will
+					// then replace the selected text.
+					dojo.withGlobal(this.editor.window,
+						"selectElementChildren", dijit._editor.selection, [a]);
+					this.editor.execCommand("unlink");
+				}
+			}
+		}
+		// make sure values are properly escaped, etc.
+		args = this._checkValues(args); 
+		this.editor.execCommand('inserthtml',
+			dojo.string.substitute(this.htmlTemplate, args));
+	},
+
+	_onCloseDialog: function(){
+		// summary:
+		//		Handler for close event on the dialog
+		this.editor.focus();
+	},
+
+	_getCurrentValues: function(a){
+		// summary:
+		//		Over-ride for getting the values to set in the dropdown.
+		// a:
+		//		The anchor/link to process for data for the dropdown.
+		// tags:
+		//		protected
+		var url, text, target;
+		if(a && a.tagName.toLowerCase() === this.tag){
+			url = a.getAttribute('_djrealurl') || a.getAttribute('href');
+			target = a.getAttribute('target') || "_self";
+			text = a.textContent || a.innerText;
+			dojo.withGlobal(this.editor.window, "selectElement", dijit._editor.selection, [a, true]);
+		}else{
+			text = dojo.withGlobal(this.editor.window, dijit._editor.selection.getSelectedText);
+		}
+		return {urlInput: url || '', textInput: text || '', targetSelect: target || ''}; //Object;
+	},
+
+	_onOpenDialog: function(){
+		// summary:
+		//		Handler for when the dialog is opened.
+		//		If the caret is currently in a URL then populate the URL's info into the dialog.
+		var a;
+		if(dojo.isIE){
+			// IE is difficult to select the element in, using the range unified
+			// API seems to work reasonably well.
+			var sel = dijit.range.getSelection(this.editor.window);
+			var range = sel.getRangeAt(0);
+			a = range.endContainer;
+			if(a.nodeType === 3){
+				// Text node, may be the link contents, so check parent.
+				// This plugin doesn't really support nested HTML elements
+				// in the link, it assumes all link content is text.
+				a = a.parentNode;
+			}
+			if(a && (a.nodeName && a.nodeName.toLowerCase() !== this.tag)){
+				// Stll nothing, one last thing to try on IE, as it might be 'img'
+				// and thus considered a control.
+				a = dojo.withGlobal(this.editor.window,
+					"getSelectedElement", dijit._editor.selection, [this.tag]);
+			}
+		}else{
+			a = dojo.withGlobal(this.editor.window,
+				"getAncestorElement", dijit._editor.selection, [this.tag]);
+		}
+		this.dropDown.reset();
+		this._setButton.set("disabled", true);
+		this.dropDown.set("value", this._getCurrentValues(a));
+	},
+
+	_onDblClick: function(e){
+		// summary:
+		// 		Function to define a behavior on double clicks on the element
+		//		type this dialog edits to select it and pop up the editor
+		//		dialog.
+		// e: Object
+		//		The double-click event.
+		// tags:
+		//		protected.
+		if(e && e.target){
+			var t = e.target;
+			var tg = t.tagName? t.tagName.toLowerCase() : "";
+			if(tg === this.tag && dojo.attr(t,"href")){
+				dojo.withGlobal(this.editor.window,
+					 "selectElement",
+					 dijit._editor.selection, [t]);
+				this.editor.onDisplayChanged();
+				setTimeout(dojo.hitch(this, function(){
+					// Focus shift outside the event handler.
+					// IE doesn't like focus changes in event handles.
+					this.button.set("disabled", false);
+					this.button.openDropDown();
+				}), 10);
+			}
+		}
+	}
+});
+
+dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkDialog], {
+	// summary:
+	//		This plugin extends LinkDialog and adds in a plugin for handling image links.
+	//		provides the image link dialog.
+	//
+	// description:
+	//		The command provided by this plugin is:
+	//		* insertImage
+
+	// linkDialogTemplate: [protected] String
+	//		Over-ride for template since img dialog doesn't need target that anchor tags may.
+	linkDialogTemplate: [
+		"<table><tr><td>",
+		"<label for='${id}_urlInput'>${url}</label>",
+		"</td><td>",
+		"<input dojoType='dijit.form.ValidationTextBox' regExp='${urlRegExp}' " +
+		"required='true' id='${id}_urlInput' name='urlInput' intermediateChanges='true'>",
+		"</td></tr><tr><td>",
+		"<label for='${id}_textInput'>${text}</label>",
+		"</td><td>",
+		"<input dojoType='dijit.form.ValidationTextBox' required='false' id='${id}_textInput' " +
+		"name='textInput' intermediateChanges='true'>",
+		"</td></tr><tr><td>",
+		"</td><td>",
+		"</td></tr><tr><td colspan='2'>",
+		"<button dojoType='dijit.form.Button' type='submit' id='${id}_setButton'>${set}</button>",
+		"<button dojoType='dijit.form.Button' type='button' id='${id}_cancelButton'>${buttonCancel}</button>",
+		"</td></tr></table>"
+	].join(""),
+
+	// htmlTemplate: [protected] String
+	//		String used for templating the <img> HTML to insert at the desired point.
+	htmlTemplate: "<img src=\"${urlInput}\" _djrealurl=\"${urlInput}\" alt=\"${textInput}\" />",
+
+	// tag: [protected] String
+	//		Tag used for the link type (img).
+	tag: "img",
+
+	_getCurrentValues: function(img){
+		// summary:
+		//		Over-ride for getting the values to set in the dropdown.
+		// a:
+		//		The anchor/link to process for data for the dropdown.
+		// tags:
+		//		protected
+		var url, text;
+		if(img && img.tagName.toLowerCase() === this.tag){
+			url = img.getAttribute('_djrealurl') || img.getAttribute('src');
+			text = img.getAttribute('alt');
+			dojo.withGlobal(this.editor.window,
+				"selectElement", dijit._editor.selection, [img, true]);
+		}else{
+			text = dojo.withGlobal(this.editor.window, dijit._editor.selection.getSelectedText);
+		}
+		return {urlInput: url || '', textInput: text || ''}; //Object;
+	},
+
+	_isValid: function(){
+		// summary:
+		//		Over-ride for images.  You can have alt text of blank, it is valid.
+		// tags:
+		//		protected
+		return this._urlInput.isValid();
+	},
+
+	_connectTagEvents: function(){
+		// summary:
+		//		Over-ridable function that connects tag specific events.
+		this.inherited(arguments);
+		this.editor.onLoadDeferred.addCallback(dojo.hitch(this, function(){
+			// Use onmousedown instead of onclick.  Seems that IE eats the first onclick
+			// to wrap it in a selector box, then the second one acts as onclick.  See #10420
+			this.connect(this.editor.editNode, "onmousedown", this._selectTag);
+		}));
+	},
+
+	_selectTag: function(e){
+		// summary:
+		//		A simple event handler that lets me select an image if it is clicked on.
+		//		makes it easier to select images in a standard way across browsers.  Otherwise
+		//		selecting an image for edit becomes difficult.
+		// e: Event
+		//		The mousedown event.
+		// tags:
+		//		private
+		if(e && e.target){
+			var t = e.target;
+			var tg = t.tagName? t.tagName.toLowerCase() : "";
+			if(tg === this.tag){
+				dojo.withGlobal(this.editor.window,
+					"selectElement",
+					dijit._editor.selection, [t]);
+			}
+		}
+	},
+
+	_checkValues: function(args){
+		// summary:
+		//		Function to check the values in args and 'fix' them up as needed 
+		//		(special characters in the url or alt text)
+		// args: Object
+		//		Content being set.		
+		// tags: 
+		//		protected
+		if(args && args.urlInput){
+			args.urlInput = args.urlInput.replace(/"/g, "&quot;");
+		}
+		if(args && args.textInput){
+			args.textInput = args.textInput.replace(/"/g, "&quot;");
+		}
+		return args;
+	},
+
+	_onDblClick: function(e){
+		// summary:
+		// 		Function to define a behavior on double clicks on the element
+		//		type this dialog edits to select it and pop up the editor
+		//		dialog.
+		// e: Object
+		//		The double-click event.
+		// tags:
+		//		protected.
+		if(e && e.target){
+			var t = e.target;
+			var tg = t.tagName? t.tagName.toLowerCase() : "";
+			if(tg === this.tag && dojo.attr(t,"src")){
+				dojo.withGlobal(this.editor.window,
+					 "selectElement",
+					 dijit._editor.selection, [t]);
+				this.editor.onDisplayChanged();
+				setTimeout(dojo.hitch(this, function(){
+					// Focus shift outside the event handler.
+					// IE doesn't like focus changes in event handles.
+					this.button.set("disabled", false);
+					this.button.openDropDown();
+				}), 10);
+			}
+		}
+	}
+});
+
+// Register this plugin.
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+	if(o.plugin){ return; }
+	switch(o.args.name){
+		case "createLink":
+			o.plugin = new dijit._editor.plugins.LinkDialog({command: o.args.name});
+			break;
+		case "insertImage":
+			o.plugin = new dijit._editor.plugins.ImgLinkDialog({command: o.args.name});
+			break;
+	}
+});
+
+}
+
+if(!dojo._hasResource["dojo.colors"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dojo.colors"] = true;
+dojo.provide("dojo.colors");
+
+//TODO: this module appears to break naming conventions
+
+/*=====
+dojo.colors = {
+	// summary: Color utilities
+}
+=====*/
+
+(function(){
+	// this is a standard conversion prescribed by the CSS3 Color Module
+	var hue2rgb = function(m1, m2, h){
+		if(h < 0){ ++h; }
+		if(h > 1){ --h; }
+		var h6 = 6 * h;
+		if(h6 < 1){ return m1 + (m2 - m1) * h6; }
+		if(2 * h < 1){ return m2; }
+		if(3 * h < 2){ return m1 + (m2 - m1) * (2 / 3 - h) * 6; }
+		return m1;
+	};
+	
+	dojo.colorFromRgb = function(/*String*/ color, /*dojo.Color?*/ obj){
+		// summary:
+		//		get rgb(a) array from css-style color declarations
+		// description:
+		//		this function can handle all 4 CSS3 Color Module formats: rgb,
+		//		rgba, hsl, hsla, including rgb(a) with percentage values.
+		var m = color.toLowerCase().match(/^(rgba?|hsla?)\(([\s\.\-,%0-9]+)\)/);
+		if(m){
+			var c = m[2].split(/\s*,\s*/), l = c.length, t = m[1], a;
+			if((t == "rgb" && l == 3) || (t == "rgba" && l == 4)){
+				var r = c[0];
+				if(r.charAt(r.length - 1) == "%"){
+					// 3 rgb percentage values
+					a = dojo.map(c, function(x){
+						return parseFloat(x) * 2.56;
+					});
+					if(l == 4){ a[3] = c[3]; }
+					return dojo.colorFromArray(a, obj);	// dojo.Color
+				}
+				return dojo.colorFromArray(c, obj);	// dojo.Color
+			}
+			if((t == "hsl" && l == 3) || (t == "hsla" && l == 4)){
+				// normalize hsl values
+				var H = ((parseFloat(c[0]) % 360) + 360) % 360 / 360,
+					S = parseFloat(c[1]) / 100,
+					L = parseFloat(c[2]) / 100,
+					// calculate rgb according to the algorithm 
+					// recommended by the CSS3 Color Module 
+					m2 = L <= 0.5 ? L * (S + 1) : L + S - L * S, 
+					m1 = 2 * L - m2;
+				a = [
+					hue2rgb(m1, m2, H + 1 / 3) * 256,
+					hue2rgb(m1, m2, H) * 256,
+					hue2rgb(m1, m2, H - 1 / 3) * 256,
+					1
+				];
+				if(l == 4){ a[3] = c[3]; }
+				return dojo.colorFromArray(a, obj);	// dojo.Color
+			}
+		}
+		return null;	// dojo.Color
+	};
+	
+	var confine = function(c, low, high){
+		// summary:
+		//		sanitize a color component by making sure it is a number,
+		//		and clamping it to valid values
+		c = Number(c);
+		return isNaN(c) ? high : c < low ? low : c > high ? high : c;	// Number
+	};
+	
+	dojo.Color.prototype.sanitize = function(){
+		// summary: makes sure that the object has correct attributes
+		var t = this;
+		t.r = Math.round(confine(t.r, 0, 255));
+		t.g = Math.round(confine(t.g, 0, 255));
+		t.b = Math.round(confine(t.b, 0, 255));
+		t.a = confine(t.a, 0, 1);
+		return this;	// dojo.Color
+	};
+})();
+
+
+dojo.colors.makeGrey = function(/*Number*/ g, /*Number?*/ a){
+	// summary: creates a greyscale color with an optional alpha
+	return dojo.colorFromArray([g, g, g, a]);
+};
+
+// mixin all CSS3 named colors not already in _base, along with SVG 1.0 variant spellings
+dojo.mixin(dojo.Color.named, {
+	aliceblue:	[240,248,255],
+	antiquewhite:	[250,235,215],
+	aquamarine:	[127,255,212],
+	azure:	[240,255,255],
+	beige:	[245,245,220],
+	bisque:	[255,228,196],
+	blanchedalmond:	[255,235,205],
+	blueviolet:	[138,43,226],
+	brown:	[165,42,42],
+	burlywood:	[222,184,135],
+	cadetblue:	[95,158,160],
+	chartreuse:	[127,255,0],
+	chocolate:	[210,105,30],
+	coral:	[255,127,80],
+	cornflowerblue:	[100,149,237],
+	cornsilk:	[255,248,220],
+	crimson:	[220,20,60],
+	cyan:	[0,255,255],
+	darkblue:	[0,0,139],
+	darkcyan:	[0,139,139],
+	darkgoldenrod:	[184,134,11],
+	darkgray:	[169,169,169],
+	darkgreen:	[0,100,0],
+	darkgrey:	[169,169,169],
+	darkkhaki:	[189,183,107],
+	darkmagenta:	[139,0,139],
+	darkolivegreen:	[85,107,47],
+	darkorange:	[255,140,0],
+	darkorchid:	[153,50,204],
+	darkred:	[139,0,0],
+	darksalmon:	[233,150,122],
+	darkseagreen:	[143,188,143],
+	darkslateblue:	[72,61,139],
+	darkslategray:	[47,79,79],
+	darkslategrey:	[47,79,79],
+	darkturquoise:	[0,206,209],
+	darkviolet:	[148,0,211],
+	deeppink:	[255,20,147],
+	deepskyblue:	[0,191,255],
+	dimgray:	[105,105,105],
+	dimgrey:	[105,105,105],
+	dodgerblue:	[30,144,255],
+	firebrick:	[178,34,34],
+	floralwhite:	[255,250,240],
+	forestgreen:	[34,139,34],
+	gainsboro:	[220,220,220],
+	ghostwhite:	[248,248,255],
+	gold:	[255,215,0],
+	goldenrod:	[218,165,32],
+	greenyellow:	[173,255,47],
+	grey:	[128,128,128],
+	honeydew:	[240,255,240],
+	hotpink:	[255,105,180],
+	indianred:	[205,92,92],
+	indigo:	[75,0,130],
+	ivory:	[255,255,240],
+	khaki:	[240,230,140],
+	lavender:	[230,230,250],
+	lavenderblush:	[255,240,245],
+	lawngreen:	[124,252,0],
+	lemonchiffon:	[255,250,205],
+	lightblue:	[173,216,230],
+	lightcoral:	[240,128,128],
+	lightcyan:	[224,255,255],
+	lightgoldenrodyellow:	[250,250,210],
+	lightgray:	[211,211,211],
+	lightgreen:	[144,238,144],
+	lightgrey:	[211,211,211],
+	lightpink:	[255,182,193],
+	lightsalmon:	[255,160,122],
+	lightseagreen:	[32,178,170],
+	lightskyblue:	[135,206,250],
+	lightslategray:	[119,136,153],
+	lightslategrey:	[119,136,153],
+	lightsteelblue:	[176,196,222],
+	lightyellow:	[255,255,224],
+	limegreen:	[50,205,50],
+	linen:	[250,240,230],
+	magenta:	[255,0,255],
+	mediumaquamarine:	[102,205,170],
+	mediumblue:	[0,0,205],
+	mediumorchid:	[186,85,211],
+	mediumpurple:	[147,112,219],
+	mediumseagreen:	[60,179,113],
+	mediumslateblue:	[123,104,238],
+	mediumspringgreen:	[0,250,154],
+	mediumturquoise:	[72,209,204],
+	mediumvioletred:	[199,21,133],
+	midnightblue:	[25,25,112],
+	mintcream:	[245,255,250],
+	mistyrose:	[255,228,225],
+	moccasin:	[255,228,181],
+	navajowhite:	[255,222,173],
+	oldlace:	[253,245,230],
+	olivedrab:	[107,142,35],
+	orange:	[255,165,0],
+	orangered:	[255,69,0],
+	orchid:	[218,112,214],
+	palegoldenrod:	[238,232,170],
+	palegreen:	[152,251,152],
+	paleturquoise:	[175,238,238],
+	palevioletred:	[219,112,147],
+	papayawhip:	[255,239,213],
+	peachpuff:	[255,218,185],
+	peru:	[205,133,63],
+	pink:	[255,192,203],
+	plum:	[221,160,221],
+	powderblue:	[176,224,230],
+	rosybrown:	[188,143,143],
+	royalblue:	[65,105,225],
+	saddlebrown:	[139,69,19],
+	salmon:	[250,128,114],
+	sandybrown:	[244,164,96],
+	seagreen:	[46,139,87],
+	seashell:	[255,245,238],
+	sienna:	[160,82,45],
+	skyblue:	[135,206,235],
+	slateblue:	[106,90,205],
+	slategray:	[112,128,144],
+	slategrey:	[112,128,144],
+	snow:	[255,250,250],
+	springgreen:	[0,255,127],
+	steelblue:	[70,130,180],
+	tan:	[210,180,140],
+	thistle:	[216,191,216],
+	tomato:	[255,99,71],
+	transparent: [0, 0, 0, 0],
+	turquoise:	[64,224,208],
+	violet:	[238,130,238],
+	wheat:	[245,222,179],
+	whitesmoke:	[245,245,245],
+	yellowgreen:	[154,205,50]
+});
+
+}
+
+if(!dojo._hasResource["dijit._PaletteMixin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit._PaletteMixin"] = true;
+dojo.provide("dijit._PaletteMixin");
+
+
+dojo.declare("dijit._PaletteMixin",
+	[dijit._CssStateMixin],
+	{
+	// summary:
+	//		A keyboard accessible palette, for picking a color/emoticon/etc.
+	// description:
+	//		A mixin for a grid showing various entities, so the user can pick a certain entity.
+
+	// defaultTimeout: Number
+	//		Number of milliseconds before a held key or button becomes typematic
+	defaultTimeout: 500,
+
+	// timeoutChangeRate: Number
+	//		Fraction of time used to change the typematic timer between events
+	//		1.0 means that each typematic event fires at defaultTimeout intervals
+	//		< 1.0 means that each typematic event fires at an increasing faster rate
+	timeoutChangeRate: 0.90,
+
+	// value: String
+	//		Currently selected color/emoticon/etc.
+	value: null,
+	
+	// _selectedCell: [private] Integer
+	//		Index of the currently selected cell. Initially, none selected
+	_selectedCell: -1,
+
+	// _currentFocus: [private] DomNode
+	//		The currently focused cell (if the palette itself has focus), or otherwise
+	//		the cell to be focused when the palette itself gets focus.
+	//		Different from value, which represents the selected (i.e. clicked) cell.
+/*=====
+	_currentFocus: null,
+=====*/
+
+	// _xDim: [protected] Integer
+	//		This is the number of cells horizontally across.
+/*=====
+	_xDim: null,
+=====*/
+
+	// _yDim: [protected] Integer
+	//		This is the number of cells vertically down.
+/*=====
+	_yDim: null,
+=====*/
+
+	// tabIndex: String
+	//		Widget tab index.
+	tabIndex: "0",
+
+	// cellClass: [protected] String
+	//		CSS class applied to each cell in the palette
+	cellClass: "dijitPaletteCell",
+
+	// dyeClass: [protected] String
+	//	 Name of javascript class for Object created for each cell of the palette.
+	//	 dyeClass should implements dijit.Dye interface
+	dyeClass: '',
+
+	_preparePalette: function(choices, titles) {
+		// summary:
+		//		Subclass must call _preparePalette() from postCreate(), passing in the tooltip
+		//		for each cell
+		// choices: String[][]
+		//		id's for each cell of the palette, used to create Dye JS object for each cell
+		// titles: String[]
+		//		Localized tooltip for each cell
+
+		this._cells = [];
+		var url = this._blankGif;
+		
+		var dyeClassObj = dojo.getObject(this.dyeClass);
+
+		for(var row=0; row < choices.length; row++){
+			var rowNode = dojo.create("tr", {tabIndex: "-1"}, this.gridNode);
+			for(var col=0; col < choices[row].length; col++){
+				var value = choices[row][col];
+				if(value){
+					var cellObject = new dyeClassObj(value);
+					
+					var cellNode = dojo.create("td", {
+						"class": this.cellClass,
+						tabIndex: "-1",
+						title: titles[value]
+					});
+
+					// prepare cell inner structure
+					cellObject.fillCell(cellNode, url);
+
+					this.connect(cellNode, "ondijitclick", "_onCellClick");
+					this._trackMouseState(cellNode, this.cellClass);
+
+					dojo.place(cellNode, rowNode);
+
+					cellNode.index = this._cells.length;
+
+					// save cell info into _cells
+					this._cells.push({node:cellNode, dye:cellObject});
+				}
+			}
+		}
+		this._xDim = choices[0].length;
+		this._yDim = choices.length;
+
+		// Now set all events
+		// The palette itself is navigated to with the tab key on the keyboard
+		// Keyboard navigation within the Palette is with the arrow keys
+		// Spacebar selects the cell.
+		// For the up key the index is changed by negative the x dimension.
+
+		var keyIncrementMap = {
+			UP_ARROW: -this._xDim,
+			// The down key the index is increase by the x dimension.
+			DOWN_ARROW: this._xDim,
+			// Right and left move the index by 1.
+			RIGHT_ARROW: this.isLeftToRight() ? 1 : -1,
+			LEFT_ARROW: this.isLeftToRight() ? -1 : 1
+		};
+		for(var key in keyIncrementMap){
+			this._connects.push(
+				dijit.typematic.addKeyListener(
+					this.domNode,
+					{charOrCode:dojo.keys[key], ctrlKey:false, altKey:false, shiftKey:false},
+					this,
+					function(){
+						var increment = keyIncrementMap[key];
+						return function(count){ this._navigateByKey(increment, count); };
+					}(),
+					this.timeoutChangeRate,
+					this.defaultTimeout
+				)
+			);
+		}
+	},
+
+	postCreate: function(){
+		this.inherited(arguments);
+
+		// Set initial navigable node.
+		this._setCurrent(this._cells[0].node);
+	},
+
+	focus: function(){
+		// summary:
+		//		Focus this widget.  Puts focus on the most recently focused cell.
+
+		// The cell already has tabIndex set, just need to set CSS and focus it
+		dijit.focus(this._currentFocus);
+	},
+
+	_onCellClick: function(/*Event*/ evt){
+		// summary:
+		//		Handler for click, enter key & space key. Selects the cell.
+		// evt:
+		//		The event.
+		// tags:
+		//		private
+
+		var target = evt.currentTarget,	
+			value = this._getDye(target).getValue();
+
+		// First focus the clicked cell, and then send onChange() notification.
+		// onChange() (via _setValueAttr) must be after the focus call, because
+		// it may trigger a refocus to somewhere else (like the Editor content area), and that
+		// second focus should win.
+		// Use setTimeout because IE doesn't like changing focus inside of an event handler.
+		this._setCurrent(target);
+		setTimeout(dojo.hitch(this, function(){
+			dijit.focus(target);		
+			this._setValueAttr(value, true);		
+		}));
+
+		// workaround bug where hover class is not removed on popup because the popup is
+		// closed and then there's no onblur event on the cell
+		dojo.removeClass(target, "dijitPaletteCellHover");
+
+		dojo.stopEvent(evt);
+	},
+
+	_setCurrent: function(/*DomNode*/ node){
+		// summary:
+		//		Sets which node is the focused cell.
+		// description:
+   		//		At any point in time there's exactly one
+		//		cell with tabIndex != -1.   If focus is inside the palette then
+		// 		focus is on that cell.
+		//
+		//		After calling this method, arrow key handlers and mouse click handlers
+		//		should focus the cell in a setTimeout().
+		// tags:
+		//		protected
+		if("_currentFocus" in this){
+			// Remove tabIndex on old cell
+			dojo.attr(this._currentFocus, "tabIndex", "-1");
+		}
+
+		// Set tabIndex of new cell
+		this._currentFocus = node;
+		if(node){
+			dojo.attr(node, "tabIndex", this.tabIndex);
+		}
+	},
+
+	_setValueAttr: function(value, priorityChange){
+		// summary:
+		// 		This selects a cell. It triggers the onChange event.
+		// value: String value of the cell to select
+		// tags:
+		//		protected
+		// priorityChange:
+		//		Optional parameter used to tell the select whether or not to fire
+		//		onChange event.
+		
+		// clear old value and selected cell
+		this.value = null;
+		if(this._selectedCell >= 0){
+			dojo.removeClass(this._cells[this._selectedCell].node, "dijitPaletteCellSelected");
+		}
+		this._selectedCell = -1;
+
+		// search for cell matching specified value
+		if(value){
+			for(var i = 0; i < this._cells.length; i++){
+				if(value == this._cells[i].dye.getValue()){
+					this._selectedCell = i;
+					this.value = value;
+
+					dojo.addClass(this._cells[i].node, "dijitPaletteCellSelected");
+
+					if(priorityChange || priorityChange === undefined){
+						this.onChange(value);
+					}
+
+					break;
+				}
+			}
+		}
+	},
+
+	onChange: function(value){
+		// summary:
+		//		Callback when a cell is selected.
+		// value: String
+		//		Value corresponding to cell.
+	},
+
+	_navigateByKey: function(increment, typeCount){
+		// summary:
+		// 	  	This is the callback for typematic.
+		// 		It changes the focus and the highlighed cell.
+		// increment:
+		// 		How much the key is navigated.
+		// typeCount:
+		//		How many times typematic has fired.
+		// tags:
+		//		private
+
+		// typecount == -1 means the key is released.
+		if(typeCount == -1){ return; }
+
+		var newFocusIndex = this._currentFocus.index + increment;
+		if(newFocusIndex < this._cells.length && newFocusIndex > -1){
+			var focusNode = this._cells[newFocusIndex].node;
+			this._setCurrent(focusNode);
+
+			// Actually focus the node, for the benefit of screen readers.
+			// Use setTimeout because IE doesn't like changing focus inside of an event handler
+			setTimeout(dojo.hitch(dijit, "focus", focusNode), 0);
+		}
+	},
+
+	_getDye: function(/*DomNode*/ cell){
+		// summary:
+		//		Get JS object for given cell DOMNode
+
+		return this._cells[cell.index].dye;
+	}
+});
+
+/*=====
+dojo.declare("dijit.Dye",
+	null,
+	{
+		// summary:
+		//		Interface for the JS Object associated with a palette cell (i.e. DOMNode)
+
+		constructor: function(alias){
+			// summary:
+			//		Initialize according to value or alias like "white"
+			// alias: String
+		},
+
+		getValue: function(){
+			// summary:
+			//		Return "value" of cell; meaning of "value" varies by subclass.
+			// description:
+			//		For example color hex value, emoticon ascii value etc, entity hex value.
+		},
+
+		fillCell: function(cell, blankGif){
+			// summary:
+			//		Add cell DOMNode inner structure
+			//	cell: DomNode
+			//		The surrounding cell
+			//	blankGif: String
+			//		URL for blank cell image
+		}
+	}
+);
+=====*/
+
+}
+
+if(!dojo._hasResource["dijit.ColorPalette"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit.ColorPalette"] = true;
+dojo.provide("dijit.ColorPalette");
+
+
+
+
+
+
+
+
+
+
+dojo.declare("dijit.ColorPalette",
+	[dijit._Widget, dijit._Templated, dijit._PaletteMixin],
+	{
+	// summary:
+	//		A keyboard accessible color-picking widget
+	// description:
+	//		Grid showing various colors, so the user can pick a certain color.
+	//		Can be used standalone, or as a popup.
+	//
+	// example:
+	// |	<div dojoType="dijit.ColorPalette"></div>
+	//
+	// example:
+	// |	var picker = new dijit.ColorPalette({ },srcNode);
+	// |	picker.startup();
+
+
+	// palette: String
+	//		Size of grid, either "7x10" or "3x4".
+	palette: "7x10",
+
+	// _palettes: [protected] Map
+	// 		This represents the value of the colors.
+	//		The first level is a hashmap of the different palettes available.
+	//		The next two dimensions represent the columns and rows of colors.
+	_palettes: {
+		"7x10":	[["white", "seashell", "cornsilk", "lemonchiffon","lightyellow", "palegreen", "paleturquoise", "lightcyan",	"lavender", "plum"],
+				["lightgray", "pink", "bisque", "moccasin", "khaki", "lightgreen", "lightseagreen", "lightskyblue", "cornflowerblue", "violet"],
+				["silver", "lightcoral", "sandybrown", "orange", "palegoldenrod", "chartreuse", "mediumturquoise", 	"skyblue", "mediumslateblue","orchid"],
+				["gray", "red", "orangered", "darkorange", "yellow", "limegreen", 	"darkseagreen", "royalblue", "slateblue", "mediumorchid"],
+				["dimgray", "crimson", 	"chocolate", "coral", "gold", "forestgreen", "seagreen", "blue", "blueviolet", "darkorchid"],
+				["darkslategray","firebrick","saddlebrown", "sienna", "olive", "green", "darkcyan", "mediumblue","darkslateblue", "darkmagenta" ],
+				["black", "darkred", "maroon", "brown", "darkolivegreen", "darkgreen", "midnightblue", "navy", "indigo", 	"purple"]],
+
+		"3x4": [["white", "lime", "green", "blue"],
+			["silver", "yellow", "fuchsia", "navy"],
+			["gray", "red", "purple", "black"]]
+	},
+
+	// _imagePaths: [protected] Map
+	//		This is stores the path to the palette images
+	_imagePaths: {
+		"7x10": dojo.moduleUrl("dijit.themes", "a11y/colors7x10.png"),
+		"3x4": dojo.moduleUrl("dijit.themes", "a11y/colors3x4.png"),
+		"7x10-rtl": dojo.moduleUrl("dijit.themes", "a11y/colors7x10-rtl.png"),
+		"3x4-rtl": dojo.moduleUrl("dijit.themes", "a11y/colors3x4-rtl.png")
+	},
+
+	// templateString: String
+	//		The template of this widget.
+	templateString: dojo.cache("dijit", "templates/ColorPalette.html", "<div class=\"dijitInline dijitColorPalette\">\n\t<img class=\"dijitColorPaletteUnder\" dojoAttachPoint=\"imageNode\" waiRole=\"presentation\" alt=\"\"/>\n\t<table class=\"dijitPaletteTable\" cellSpacing=\"0\" cellPadding=\"0\">\n\t\t<tbody dojoAttachPoint=\"gridNode\"></tbody>\n\t</table>\n</div>\n"),
+
+	baseClass: "dijitColorPalette",
+
+	dyeClass: 'dijit._Color',
+
+	buildRendering: function(){
+		// Instantiate the template, which makes a skeleton into which we'll insert a bunch of
+		// <img> nodes
+
+		this.inherited(arguments);
+
+		this.imageNode.setAttribute("src", this._imagePaths[this.palette + (this.isLeftToRight() ? "" : "-rtl")].toString());
+
+		var i18nColorNames = dojo.i18n.getLocalization("dojo", "colors", this.lang);
+		this._preparePalette(
+			this._palettes[this.palette],
+			i18nColorNames
+		);
+	}
+});
+
+dojo.declare("dijit._Color", dojo.Color,
+	// summary:
+	//		Object associated with each cell in a ColorPalette palette.
+	//		Implements dijit.Dye.
+	{
+		constructor: function(/*String*/alias){
+			this._alias = alias;
+			this.setColor(dojo.Color.named[alias]);
+		},
+
+		getValue: function(){
+			// summary:
+			//		Note that although dijit._Color is initialized with a value like "white" getValue() always
+			//		returns a hex value
+			return this.toHex();
+		},
+
+		fillCell: function(/*DOMNode*/ cell, /*String*/ blankGif){
+			dojo.create("img", {
+				src: blankGif,
+				"class": "dijitPaletteImg",
+				alt: this._alias
+			}, cell);
+		}
+	}
+);
+
+}
+
+if(!dojo._hasResource["dijit._editor.plugins.TextColor"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit._editor.plugins.TextColor"] = true;
+dojo.provide("dijit._editor.plugins.TextColor");
+
+
+
+
+dojo.declare("dijit._editor.plugins.TextColor", dijit._editor._Plugin, {
+	// summary:
+	//		This plugin provides dropdown color pickers for setting text color and background color
+	//
+	// description:
+	//		The commands provided by this plugin are:
+	//		* foreColor - sets the text color
+	//		* hiliteColor - sets the background color
+	
+	// Override _Plugin.buttonClass to use DropDownButton (with ColorPalette) to control this plugin
+	buttonClass: dijit.form.DropDownButton,
+	
+	// useDefaultCommand: Boolean
+	//		False as we do not use the default editor command/click behavior.
+	useDefaultCommand: false,
+
+	constructor: function(){
+		this.dropDown = new dijit.ColorPalette();
+		this.connect(this.dropDown, "onChange", function(color){
+			this.editor.execCommand(this.command, color);
+			
+		});
+	},
+
+	updateState: function(){
+		// summary:
+		//		Overrides _Plugin.updateState().  This updates the ColorPalette
+		//		to show the color of the currently selected text.
+		// tags:
+		//		protected
+		
+		var _e = this.editor;
+		var _c = this.command;
+		if(!_e || !_e.isLoaded || !_c.length){
+			return;
+		}
+		
+		if(this.button){
+			var value;
+			try{
+				value = _e.queryCommandValue(_c)|| "";
+			}catch(e){
+				//Firefox may throw error above if the editor is just loaded, ignore it
+				value = "";
+			}
+		}
+		
+		if(value == ""){
+			value = "#000000";
+		}
+		if(value == "transparent"){
+			value = "#ffffff";
+		}
+
+		if(typeof value == "string"){
+			//if RGB value, convert to hex value	
+			if(value.indexOf("rgb")> -1){
+				value = dojo.colorFromRgb(value).toHex();
+			}
+		}else{	//it's an integer(IE returns an MS access #)
+			value =((value & 0x0000ff)<< 16)|(value & 0x00ff00)|((value & 0xff0000)>>> 16);
+			value = value.toString(16);
+			value = "#000000".slice(0, 7 - value.length)+ value;
+			
+		}
+		
+		if(value !== this.dropDown.get('value')){
+			this.dropDown.set('value', value, false);
+		}
+	}
+});
+
+// Register this plugin.
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin", null, function(o){
+	if(o.plugin){
+		return;
+	}
+	switch(o.args.name){
+		case "foreColor":
+		case "hiliteColor":
+			o.plugin = new dijit._editor.plugins.TextColor({
+				command: o.args.name
+			});
+	}
+});
+
+}
+
+if(!dojo._hasResource["dijit._editor.plugins.FontChoice"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dijit._editor.plugins.FontChoice"] = true;
+dojo.provide("dijit._editor.plugins.FontChoice");
+
+
+
+
+
+
+
+
+
+
+dojo.declare("dijit._editor.plugins._FontDropDown",
+	[dijit._Widget, dijit._Templated],{
+	// summary:
+	//		Base class for widgets that contains a label (like "Font:")
+	//		and a FilteringSelect drop down to pick a value.
+	//		Used as Toolbar entry.
+
+	// label: [public] String
+	//		The label to apply to this particular FontDropDown.
+	label: "",
+
+	// widgetsInTemplate: [public] boolean
+	//		Over-ride denoting the template has widgets to parse.
+	widgetsInTemplate: true,
+
+	// plainText: [public] boolean
+	//		Flag to indicate that the returned label should be plain text
+	//		instead of an example.
+	plainText: false,
+
+	// templateString: [public] String
+	//		The template used to construct the labeled dropdown.
+	templateString:
+		"<span style='white-space: nowrap' class='dijit dijitReset dijitInline'>" +
+			"<label class='dijitLeft dijitInline' for='${selectId}'>${label}</label>" +
+			"<input dojoType='dijit.form.FilteringSelect' required=false labelType=html labelAttr=label searchAttr=name " +
+					"tabIndex='-1' id='${selectId}' dojoAttachPoint='select' value=''/>" +
+		"</span>",
+
+	postMixInProperties: function(){
+		// summary:
+		//		Over-ride to misin specific properties.
+		this.inherited(arguments);
+
+		this.strings = dojo.i18n.getLocalization("dijit._editor", "FontChoice");
+
+		// Set some substitution variables used in the template
+		this.label = this.strings[this.command];
+		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));
+		this.selectId = this.id + "_select";
+
+		this.inherited(arguments);
+	},
+
+	postCreate: function(){
+		// summary:
+		//		Over-ride for the default postCreate action
+		//		This establishes the filtering selects and the like.
+
+		// Initialize the list of items in the drop down by creating data store with items like:
+		// {value: 1, name: "xx-small", label: "<font size=1>xx-small</font-size>" }
+		var	items = dojo.map(this.values, function(value){
+				var name = this.strings[value] || value;
+				return {
+					label: this.getLabel(value, name),
+					name: name,
+					value: value
+				};
+			}, this);
+
+		this.select.store = new dojo.data.ItemFileReadStore({
+			data: {
+				identifier: "value",
+				items: items
+			}
+		});
+
+		this.select.set("value", "", false);
+		this.disabled = this.select.get("disabled");
+	},
+
+	_setValueAttr: function(value, priorityChange){
+		// summary:
+		//		Over-ride for the default action of setting the
+		//		widget value, maps the input to known values
+		// value: Object|String
+		//		The value to set in the select.
+		// priorityChange:
+		//		Optional parameter used to tell the select whether or not to fire
+		//		onChange event.
+
+		//if the value is not a permitted value, just set empty string to prevent showing the warning icon
+		priorityChange = priorityChange !== false?true:false;
+		this.select.set('value', dojo.indexOf(this.values,value) < 0 ? "" : value, priorityChange);
+		if(!priorityChange){
+			// Clear the last state in case of updateState calls.  Ref: #10466
+			this.select._lastValueReported=null;
+		}
+	},
+
+	_getValueAttr: function(){
+		// summary:
+		//		Allow retreiving the value from the composite select on
+		//		call to button.get("value");
+		return this.select.get('value');
+	},
+
+	focus: function(){
+		// summary:
+		//		Over-ride for focus control of this widget.  Delegates focus down to the
+		//		filtering select.
+		this.select.focus();
+	},
+
+	_setDisabledAttr: function(value){
+		// summary:
+		//		Over-ride for the button's 'disabled' attribute so that it can be
+		//		disabled programmatically.
+
+		// Save off ths disabled state so the get retrieves it correctly
+		//without needing to have a function proxy it.
+		this.disabled = value;
+		this.select.set("disabled", value);
+	}
+});
+
+
+dojo.declare("dijit._editor.plugins._FontNameDropDown", dijit._editor.plugins._FontDropDown, {
+	// summary:
+	//		Dropdown to select a font; goes in editor toolbar.
+
+	// generic: Boolean
+	//		Use generic (web standard) font names
+	generic: false,
+
+	// command: [public] String
+	//		The editor 'command' implemented by this plugin.
+	command: "fontName",
+
+	postMixInProperties: function(){
+		// summary:
+		//		Over-ride for the default posr mixin control
+		if(!this.values){
+			this.values = this.generic ?
+				["serif", "sans-serif", "monospace", "cursive", "fantasy"] : // CSS font-family generics
+					["Arial", "Times New Roman", "Comic Sans MS", "Courier New"];
+		}
+		this.inherited(arguments);
+	},
+
+	getLabel: function(value, name){
+		// summary:
+		//		Function used to generate the labels of the format dropdown
+		//		will return a formatted, or plain label based on the value
+		//		of the plainText option.
+		// value: String
+		//		The 'insert value' associated with a name
+		// name: String
+		//		The text name of the value
+		if(this.plainText){
+			return name;
+		}else{
+			return "<div style='font-family: "+value+"'>" + name + "</div>";
+		}
+	},
+
+	_setValueAttr: function(value, priorityChange){
+		// summary:
+		//		Over-ride for the default action of setting the
+		//		widget value, maps the input to known values
+
+		priorityChange = priorityChange !== false?true:false;
+		if(this.generic){
+			var map = {
+				"Arial": "sans-serif",
+				"Helvetica": "sans-serif",
+				"Myriad": "sans-serif",
+				"Times": "serif",
+				"Times New Roman": "serif",
+				"Comic Sans MS": "cursive",
+				"Apple Chancery": "cursive",
+				"Courier": "monospace",
+				"Courier New": "monospace",
+				"Papyrus": "fantasy"
+//					,"????": "fantasy" TODO: IE doesn't map fantasy font-family?
+			};
+			value = map[value] || value;
+		}
+		this.inherited(arguments, [value, priorityChange]);
+	}
+});
+
+dojo.declare("dijit._editor.plugins._FontSizeDropDown", dijit._editor.plugins._FontDropDown, {
+	// summary:
+	//		Dropdown to select a font size; goes in editor toolbar.
+
+	// command: [public] String
+	//		The editor 'command' implemented by this plugin.
+	command: "fontSize",
+
+	// values: [public] Number[]
+	//		The HTML font size values supported by this plugin
+	values: [1,2,3,4,5,6,7], // sizes according to the old HTML FONT SIZE
+
+	getLabel: function(value, name){
+		// summary:
+		//		Function used to generate the labels of the format dropdown
+		//		will return a formatted, or plain label based on the value
+		//		of the plainText option.
+		//		We're stuck using the deprecated FONT tag to correspond
+		//		with the size measurements used by the editor
+		// value: String
+		//		The 'insert value' associated with a name
+		// name: String
+		//		The text name of the value
+		if(this.plainText){
+			return name;
+		}else{
+			return "<font size=" + value + "'>" + name + "</font>";
+		}
+	},
+
+	_setValueAttr: function(value, priorityChange){
+		// summary:
+		//		Over-ride for the default action of setting the
+		//		widget value, maps the input to known values
+		priorityChange = priorityChange !== false?true:false;
+		if(value.indexOf && value.indexOf("px") != -1){
+			var pixels = parseInt(value, 10);
+			value = {10:1, 13:2, 16:3, 18:4, 24:5, 32:6, 48:7}[pixels] || value;
+		}
+
+		this.inherited(arguments, [value, priorityChange]);
+	}
+});
+
+
+dojo.declare("dijit._editor.plugins._FormatBlockDropDown", dijit._editor.plugins._FontDropDown, {
+	// summary:
+	//		Dropdown to select a format (like paragraph or heading); goes in editor toolbar.
+
+	// command: [public] String
+	//		The editor 'command' implemented by this plugin.
+	command: "formatBlock",
+
+	// values: [public] Array
+	//		The HTML format tags supported by this plugin
+	values: ["noFormat", "p", "h1", "h2", "h3", "pre"],
+
+	postCreate: function(){
+		// Init and set the default value to no formatting.  Update state will adjust it
+		// as needed.
+		this.inherited(arguments);
+		this.set("value", "noFormat", false);
+	},
+
+	getLabel: function(value, name){
+		// summary:
+		//		Function used to generate the labels of the format dropdown
+		//		will return a formatted, or plain label based on the value
+		//		of the plainText option.
+		// value: String
+		//		The 'insert value' associated with a name
+		// name: String
+		//		The text name of the value
+		if(this.plainText){
+			return name;
+		}else{
+			return "<" + value + ">" + name + "</" + value + ">";
+		}
+	},
+
+	_execCommand: function(editor, command, choice){
+		// summary:
+		//		Over-ride for default exec-command label.
+		// 		Allows us to treat 'none' as special.
+		if(choice === "noFormat"){
+			var start;
+			var end;
+			var sel = dijit.range.getSelection(editor.window);
+			if(sel && sel.rangeCount > 0){
+				var range = sel.getRangeAt(0);
+				var node, tag;
+				if(range){
+					start = range.startContainer;
+					end = range.endContainer;
+
+					// find containing nodes of start/end.
+					while(start && start !== editor.editNode && 
+						  start !== editor.document.body && 
+						  start.nodeType !== 1){
+						start = start.parentNode;
+					}
+
+					while(end && end !== editor.editNode && 
+						  end !== editor.document.body && 
+						  end.nodeType !== 1){
+						end = end.parentNode;
+					}
+
+					var processChildren = dojo.hitch(this, function(node, array){
+						if(node.childNodes && node.childNodes.length){
+							var i;
+							for(i = 0; i < node.childNodes.length; i++){
+								var c = node.childNodes[i];
+								if(c.nodeType == 1){
+									if(dojo.withGlobal(editor.window, "inSelection", dijit._editor.selection, [c])){
+										var tag = c.tagName? c.tagName.toLowerCase(): "";
+										if(dojo.indexOf(this.values, tag) !== -1){
+											array.push(c);
+										}
+										processChildren(c,array);
+									}
+								}
+							}
+						}
+					});
+
+					var unformatNodes = dojo.hitch(this, function(nodes){
+						// summary:
+						//		Internal function to clear format nodes.
+						// nodes:
+						//		The array of nodes to strip formatting from.
+						if(nodes && nodes.length){
+							editor.beginEditing();
+							while(nodes.length){
+								this._removeFormat(editor, nodes.pop());
+							}
+							editor.endEditing();
+						}
+					});
+
+					var clearNodes = [];
+					if(start == end){
+						//Contained within the same block, may be collapsed, but who cares, see if we
+						// have a block element to remove.
+						var block;
+						node = start;
+						while(node && node !== editor.editNode && node !== editor.document.body){
+							if(node.nodeType == 1){
+								tag = node.tagName? node.tagName.toLowerCase(): "";
+								if(dojo.indexOf(this.values, tag) !== -1){
+									block = node;
+									break;
+								}
+							}
+							node = node.parentNode;
+						}
+
+						//Also look for all child nodes in the selection that may need to be 
+						//cleared of formatting
+						processChildren(start, clearNodes);
+						if(block) { clearNodes = [block].concat(clearNodes); }
+						unformatNodes(clearNodes);
+					}else{
+						// Probably a multi select, so we have to process it.  Whee.
+						node = start;
+						while(dojo.withGlobal(editor.window, "inSelection", dijit._editor.selection, [node])){
+							if(node.nodeType == 1){
+								tag = node.tagName? node.tagName.toLowerCase(): "";
+								if(dojo.indexOf(this.values, tag) !== -1){
+									clearNodes.push(node);
+								}
+								processChildren(node,clearNodes);
+							}
+							node = node.nextSibling;
+						}
+						unformatNodes(clearNodes);
+					}
+					editor.onDisplayChanged();
+				}
+			}
+		}else{
+			editor.execCommand(command, choice);
+		}
+	},
+
+	_removeFormat: function(editor, node){
+		// summary:
+		//		function to remove the block format node.
+		// node:
+		//		The block format node to remove (and leave the contents behind)
+		if(editor.customUndo){
+			// So of course IE doesn't work right with paste-overs.
+			// We have to do this manually, which is okay since IE already uses
+			// customUndo and we turned it on for WebKit.  WebKit pasted funny, 
+			// so couldn't use the execCommand approach
+			while(node.firstChild){
+				dojo.place(node.firstChild, node, "before");
+			}
+			node.parentNode.removeChild(node);
+		}else{
+			// Everyone else works fine this way, a paste-over and is native
+			// undo friendly.
+			dojo.withGlobal(editor.window, 
+				 "selectElementChildren", dijit._editor.selection, [node]);
+			var html = 	dojo.withGlobal(editor.window, 
+				 "getSelectedHtml", dijit._editor.selection, [null]);
+			dojo.withGlobal(editor.window, 
+				 "selectElement", dijit._editor.selection, [node]);
+			editor.execCommand("inserthtml", html||"");
+		}
+	}
+});
+
+// TODO: for 2.0, split into FontChoice plugin into three separate classes,
+// one for each command (and change registry below)
+dojo.declare("dijit._editor.plugins.FontChoice", dijit._editor._Plugin,{
+	// summary:
+	//		This plugin provides three drop downs for setting style in the editor
+	//		(font, font size, and format block), as controlled by command.
+	//
+	// description:
+	//		The commands provided by this plugin are:
+	//
+	//		* fontName
+	//	|		Provides a drop down to select from a list of font names
+	//		* fontSize
+	//	|		Provides a drop down to select from a list of font sizes
+	//		* formatBlock
+	//	|		Provides a drop down to select from a list of block styles
+	//	|
+	//
+	//		which can easily be added to an editor by including one or more of the above commands
+	//		in the `plugins` attribute as follows:
+	//
+	//	|	plugins="['fontName','fontSize',...]"
+	//
+	//		It is possible to override the default dropdown list by providing an Array for the `custom` property when
+	//		instantiating this plugin, e.g.
+	//
+	//	|	plugins="[{name:'dijit._editor.plugins.FontChoice', command:'fontName', custom:['Verdana','Myriad','Garamond']},...]"
+	//
+	//		Alternatively, for `fontName` only, `generic:true` may be specified to provide a dropdown with
+	//		[CSS generic font families](http://www.w3.org/TR/REC-CSS2/fonts.html#generic-font-families)
+	//
+	//		Note that the editor is often unable to properly handle font styling information defined outside
+	//		the context of the current editor instance, such as pre-populated HTML.
+
+	// useDefaultCommand: [protected] booleam
+	//		Override _Plugin.useDefaultCommand...
+	//		processing is handled by this plugin, not by dijit.Editor.
+	useDefaultCommand: false,
+
+	_initButton: function(){
+		// summary:
+		//		Overrides _Plugin._initButton(), to initialize the FilteringSelect+label in toolbar,
+		//		rather than a simple button.
+		// tags:
+		//		protected
+
+		// Create the widget to go into the toolbar (the so-called "button")
+		var clazz = {
+				fontName: dijit._editor.plugins._FontNameDropDown,
+				fontSize: dijit._editor.plugins._FontSizeDropDown,
+				formatBlock: dijit._editor.plugins._FormatBlockDropDown
+			}[this.command],
+		params = this.params;
+
+		// For back-compat reasons support setting custom values via "custom" parameter
+		// rather than "values" parameter
+		if(this.params.custom){
+			params.values = this.params.custom;
+		}
+
+		var editor = this.editor;
+		this.button = new clazz(dojo.delegate({dir: editor.dir, lang: editor.lang}, params));
+
+		// Reflect changes to the drop down in the editor
+		this.connect(this.button.select, "onChange", function(choice){
+			// User invoked change, since all internal updates set priorityChange to false and will
+			// not trigger an onChange event.
+			this.editor.focus();
+			
+			if(this.command == "fontName" && choice.indexOf(" ") != -1){ choice = "'" + choice + "'"; }
+
+			// Invoke, the editor already normalizes commands called through its
+			// execCommand.
+			if(this.button._execCommand){
+				this.button._execCommand(this.editor, this.command, choice);
+			}else{
+				this.editor.execCommand(this.command, choice);
+			}
+			
+			// Enable custom undo for webkit, needed for noFormat to work properly
+			// and still undo.
+			this.editor.customUndo = this.editor.customUndo || dojo.isWebKit;
+		});
+	},
+
+	updateState: function(){
+		// summary:
+		//		Overrides _Plugin.updateState().  This controls updating the menu
+		//		options to the right values on state changes in the document (that trigger a
+		//		test of the actions.)
+		//		It set value of drop down in toolbar to reflect font/font size/format block
+		//		of text at current caret position.
+		// tags:
+		//		protected
+		var _e = this.editor;
+		var _c = this.command;
+		if(!_e || !_e.isLoaded || !_c.length){ return; }
+		if(this.button){
+			var value;
+			try{
+				value = _e.queryCommandValue(_c) || "";
+			}catch(e){
+				//Firefox may throw error above if the editor is just loaded, ignore it
+				value = "";
+			}
+
+			// strip off single quotes, if any
+			var quoted = dojo.isString(value) && value.match(/'([^']*)'/);
+			if(quoted){ value = quoted[1]; }
+
+			if(_c === "formatBlock"){
+				if(!value || value == "p"){
+					// Some browsers (WebKit) doesn't actually get the tag info right.
+					// and IE returns paragraph when in a DIV!, so incorrect a lot,
+					// so we have double-check it.
+					value = null;
+					var elem;
+					// Try to find the current element where the caret is.
+					var sel = dijit.range.getSelection(this.editor.window);
+					if(sel && sel.rangeCount > 0){
+						var range = sel.getRangeAt(0);
+						if(range){
+							elem = range.endContainer;
+						}
+					}
+
+					// Okay, now see if we can find one of the formatting types we're in.
+					while(elem && elem !== _e.editNode && elem !== _e.document){
+						var tg = elem.tagName?elem.tagName.toLowerCase():"";
+						if(tg && dojo.indexOf(this.button.values, tg) > -1){
+							value = tg;
+							break;
+						}
+						elem = elem.parentNode;
+					}
+					if(!value){
+						// Still no value, so lets select 'none'.
+						value = "noFormat";
+					}
+				}else{
+					// Check that the block format is one allowed, if not,
+					// null it so that it gets set to empty.
+					if(dojo.indexOf(this.button.values, value) < 0){
+						value = "noFormat";
+					}
+				}
+			}
+			if(value !== this.button.get("value")){
+				// Set the value, but denote it is not a priority change, so no
+				// onchange fires.
+				this.button.set('value', value, false);
+			}
+		}
+	}
+});
+
+// Register this plugin.
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+	if(o.plugin){ return; }
+	switch(o.args.name){
+	case "fontName": case "fontSize": case "formatBlock":
+		o.plugin = new dijit._editor.plugins.FontChoice({
+			command: o.args.name,
+			plainText: o.args.plainText?o.args.plainText:false
+		});
+	}
+});
+
+}
+
 
 dojo.i18n._preloadLocalizations("dojo.nls.phprojekt", ["ROOT","ar","ca","cs","da","de","de-de","el","en","en-gb","en-us","es","es-es","fi","fi-fi","fr","fr-fr","he","he-il","hu","it","it-it","ja","ja-jp","ko","ko-kr","nb","nl","nl-nl","pl","pt","pt-br","pt-pt","ru","sk","sl","sv","th","tr","xx","zh","zh-cn","zh-tw"]);
