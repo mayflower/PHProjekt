@@ -91,6 +91,7 @@ dependencies = {
                             "dijit._editor.plugins.TextColor",
                             "dijit._editor.plugins.FontChoice",
                             "dojo.hash",
+                            "dojox.dtl.tag.logic",
 			]
 		},
 	],
