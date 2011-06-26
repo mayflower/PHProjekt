@@ -111,8 +111,8 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
                 var url = phpr.webpath + 'index.php/Timecard';
                 phpr.DataStore.deleteDataPartialString({url: url});
 
-                phpr.Tree.updateData();
-                phpr.Tree.loadTree();
+                phpr.tree.updateData();
+                phpr.tree.loadTree();
             }
 
             // Restore the views

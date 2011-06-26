@@ -82,7 +82,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     setWidgets:function() {
         // Summary:
         //   Custom setWidgets for calendar
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
         this.loadAppropriateList();
     },
 
