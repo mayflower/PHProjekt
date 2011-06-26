@@ -19,9 +19,9 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-dojo.provide("phpr.Date");
+dojo.provide("phpr.Default.System.Date");
 
-dojo.declare("phpr.Date", null, {
+dojo.declare("phpr.Default.System.Date", null, {
     getIsoDate:function(date) {
         // Summary:
         //    Convert a js date into ISO date

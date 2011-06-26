@@ -83,12 +83,12 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
     exportData:function() {
         // Summary:
         //    Opens a new window in CSV mode
-        var dateTemp = phpr.Date.isoDateTojsDate(this._date);
+        var dateTemp = phpr.Default.System.Date.isoDateTojsDate(this._date);
         dateTemp.setDate(1);
-        var firstDayMonth = phpr.Date.getIsoDate(dateTemp);
+        var firstDayMonth = phpr.Default.System.Date.getIsoDate(dateTemp);
         var daysInMonth   = dojo.date.getDaysInMonth(dateTemp);
         dateTemp.setDate(daysInMonth);
-        var lastDayMonth = phpr.Date.getIsoDate(dateTemp);
+        var lastDayMonth = phpr.Default.System.Date.getIsoDate(dateTemp);
 
         window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/'
             + firstDayMonth + '/dateEnd/' + lastDayMonth + '/csrfToken/' + phpr.csrfToken);
@@ -102,12 +102,12 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         //    It includes not only the days of this month but the necessary days of the previous and next month in
         //    order to fill 4 or 6 week rows, from Monday to Sunday.
         var today = new Date();
-        today     = phpr.Date.getIsoDate(today);
+        today     = phpr.Default.System.Date.getIsoDate(today);
 
         // First dimension is each row shown, the amount of rows depends on each month:
         this._schedule = new Array();
 
-        var dateTemp    = phpr.Date.isoDateTojsDate(this._date);
+        var dateTemp    = phpr.Default.System.Date.isoDateTojsDate(this._date);
         var daysInMonth = dojo.date.getDaysInMonth(dateTemp);
         dateTemp.setDate(1);
         var firstDayDiff = dateTemp.getDay() - 1;
@@ -127,7 +127,7 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
                 this._schedule[i][j]         = new Array();
                 dateTemp                     = dojo.date.add(firstDayShown, 'day', (i * 7) + j);
                 this._schedule[i][j]['day']  = dateTemp.getDate();
-                this._schedule[i][j]['date'] = phpr.Date.getIsoDate(dateTemp);
+                this._schedule[i][j]['date'] = phpr.Default.System.Date.getIsoDate(dateTemp);
                 if (this._schedule[i][j]['date'] == today) {
                     this._schedule[i][j]['color'] = this.COLOR_TODAY;
                 } else if (((i == 0) && (this._schedule[i][j]['day'] > 22))
@@ -162,12 +162,12 @@ dojo.declare("phpr.Calendar.ViewMonthList", phpr.Calendar.DefaultView, {
         for (var event in content) {
 
             // Split datetime in date and time
-            var dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['startDatetime']);
-            content[event]['startDate'] = phpr.Date.getIsoDate(dateTime);
-            content[event]['startTime'] = phpr.Date.getIsoTime(dateTime);
-            dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['endDatetime']);
-            content[event]['endDate'] = phpr.Date.getIsoDate(dateTime);
-            content[event]['endTime'] = phpr.Date.getIsoTime(dateTime);
+            var dateTime = phpr.Default.System.Date.isoDatetimeTojsDate(content[event]['startDatetime']);
+            content[event]['startDate'] = phpr.Default.System.Date.getIsoDate(dateTime);
+            content[event]['startTime'] = phpr.Default.System.Date.getIsoTime(dateTime);
+            dateTime = phpr.Default.System.Date.isoDatetimeTojsDate(content[event]['endDatetime']);
+            content[event]['endDate'] = phpr.Default.System.Date.getIsoDate(dateTime);
+            content[event]['endTime'] = phpr.Default.System.Date.getIsoTime(dateTime);
 
             for (var row in this._schedule) {
                 for (weekDay in this._schedule[row]) {
