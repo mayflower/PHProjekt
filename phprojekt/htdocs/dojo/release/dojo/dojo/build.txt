@@ -260,3 +260,11 @@ phprojekt.js:
 ./../../release/dojo/dojox/grid/DataSelection.js
 ./../../release/dojo/dojox/grid/DataGrid.js
 ./../../release/dojo/dijit/layout/BorderContainer.js
+./../../release/dojo/dijit/form/_FormSelectWidget.js
+./../../release/dojo/dijit/form/Select.js
+./../../release/dojo/dijit/_editor/plugins/LinkDialog.js
+./../../release/dojo/dojo/colors.js
+./../../release/dojo/dijit/_PaletteMixin.js
+./../../release/dojo/dijit/ColorPalette.js
+./../../release/dojo/dijit/_editor/plugins/TextColor.js
+./../../release/dojo/dijit/_editor/plugins/FontChoice.js

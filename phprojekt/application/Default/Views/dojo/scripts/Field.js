@@ -21,6 +21,10 @@
 
 dojo.provide("phpr.Default.Field");
 
+dojo.require("dijit._editor.plugins.LinkDialog");
+dojo.require("dijit._editor.plugins.TextColor");
+dojo.require("dijit._editor.plugins.FontChoice");
+
 dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
     // summary:
     //    class for rendering form fields
