@@ -63,6 +63,12 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     _filterSeparator:  ';',
     _filterData:       new Array(),
 
+    // Event handlers
+    _events: new Array(),
+
+    // Dom nodes
+    _domNodes: new Array(),
+
     // Constants
     MODE_XHR:        0,
     MODE_WINDOW:     1,
@@ -113,6 +119,50 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         });
     },
 
+    destroy:function() {
+        // Summary:
+        //    Destroys all nodes and event handlers previously added to
+        //    this._events and this._domNodes to prevent memleaks.
+        // Description:
+        //    This method should be called before the grid is replaced or
+        //    deleted. It ensures that all event handlers and dom nodes are
+        //    removed to prevent cyclic dependencies and therefore prevent
+        //    memory leaks
+
+        // Disconnect all events
+        while(this._events.length > 0) {
+            if(this._events[0]) {
+                dojo.disconnect(this._events[0]);
+            }
+            this._events.splice(0,1);
+        }
+
+        // Remove all dom nodes
+        while(this._domNodes.length > 0) {
+            var n = this._domNodes[0];
+            if(n) {
+                try {
+                    // If it is an dijit widget, call destroyRecursive
+                    if(dojo.isFunction(n.destroyRecursive) && n.domNode) {
+                        n.destroyRecursive();
+                    } else if(dijit.byNode(n)) { //this may throw an exception
+                        dijit.byNode(n).destroyRecursive();
+                    }
+                } catch(e) {
+                    dojo.query(n).orphan();
+                }
+            }
+            this._domNodes.splice(0, 1);
+        }
+        // Clean up all potential references
+        this.main          = null;
+        this.id            = null;
+        this.updateUrl     = null;
+        this._newRowValues = null; 
+        this._oldRowValues = null; 
+        this.gridData      = null; 
+    },
+
     setUrl:function() {
         // Summary:
         //    Set the url for getting the data
@@ -127,6 +177,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Description:
         //    Set the node to put the grid
         this._node = dijit.byId("gridBox");
+        this._domNodes.push(this._node);
     },
 
     showTags:function() {
@@ -523,8 +574,13 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 disabled:  false
             };
             this._exportButton = new dijit.form.Button(params);
+
+            this._domNodes.push(this._exportButton);
+
             dojo.byId("buttonRow").appendChild(this._exportButton.domNode);
-            dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"));
+            this._events.push(
+                dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"))
+            );
         }
     },
 
@@ -542,10 +598,15 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 disabled:  false
             };
             this._filterButton = new dijit.form.Button(params);
+
+            this._domNodes.push(this._filterButton);
+
             dojo.byId("buttonRow").appendChild(this._filterButton.domNode);            ;
-            dojo.connect(this._filterButton, "onClick", dojo.hitch(this, function() {
-                dijit.byId('gridFiltersBox').toggle();
-            }));
+            this._events.push(
+                dojo.connect(this._filterButton, "onClick", dojo.hitch(this, function() {
+                    dijit.byId('gridFiltersBox').toggle();
+                }))
+            );
         }
     },
 
@@ -908,8 +969,13 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     style:     'margin-left: 10px;'
                 };
                 this._deleteAllFilters = new dijit.form.Button(params);
+
+                this._domNodes.push(this._deleteAllFilters);
+
                 dojo.byId("filterDisplayDelete").appendChild(this._deleteAllFilters.domNode);
-                dojo.connect(this._deleteAllFilters, "onClick", dojo.hitch(this, "deleteFilter", ['all']));
+                this._events.push(
+                    dojo.connect(this._deleteAllFilters, "onClick", dojo.hitch(this, "deleteFilter", ['all']))
+                );
             }
         } else {
             phpr.destroySubWidgets('filterDisplayDelete');
@@ -925,6 +991,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    and renders the filter for the grid
         // Layout of the grid
         var meta = phpr.DataStore.getMetaData({url: this.url});
+        var that = this;
 
         if (meta.length == 0) {
             // Create a "ADD" button
@@ -936,118 +1003,146 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             };
 
             this._node.set('content', phpr.drawEmptyMessage('There are no entries on this level'));
-            var buttonRow = dojo.byId('buttonRow');
-            if (buttonRow.children.length != 0) {
-                var button = buttonRow.children[0].children[0].children[0].children[0];
-                if (button.className == 'dijitReset dijitInline dijitIcon add') {
+
+            var cb = dojo.hitch(this, function() {
+                this.main.newEntry();
+            });
+
+            // use closure to avoid cyclic refs
+            (function() {
+                var buttonRow = dojo.byId('buttonRow');
+                if (buttonRow.children.length != 0) {
                     // There is an 'add' button, so the user have create access
-                    var newEntry = new dijit.form.Button(params);
-                    dojo.addClass(this._node.domNode, 'addButtonText');
-                    this._node.domNode.appendChild(newEntry.domNode);
+                    var button = buttonRow.children[0].children[0].children[0].children[0];
+                    if (button.className == 'dijitReset dijitInline dijitIcon add') {
+                        var newEntry = new dijit.form.Button(params);
+                        that._domNodes.push(newEntry);;
+                        dojo.addClass(that._node.domNode, 'addButtonText');
+                        that._node.domNode.appendChild(newEntry.domNode);
 
-                    dojo.connect(newEntry, "onClick", dojo.hitch(this, function() {
-                        this.main.newEntry();
-                    }));
-                }
-            }
-        } else {
-            dojo.removeClass(this._node.domNode, 'addButtonText');
-            this.processActions();
-
-            // Data of the grid
-            this.gridData = {
-                items: []
-            };
-            var content = dojo.clone(phpr.DataStore.getData({url: this.url}));
-
-            // Get datetime keys
-            this.splitFields = new Array();
-            for (var i = 0; i < meta.length; i++) {
-                if (meta[i]['type'] == 'datetime') {
-                    if (!this.splitFields['datetime']) {
-                        this.splitFields['datetime'] = new Array();
+                        that._events.push(
+                            dojo.connect(newEntry, "onClick", cb)
+                        );
                     }
-                    this.splitFields['datetime'].push(meta[i]['key']);
-                }
-            }
-
-            for (var i in content) {
-                if (this.usePencilForEdit()) {
-                    content[i]['gridEdit'] = 'editButton || ' + phpr.nls.get('Open this item in the form to edit it');
-                }
-
-                // Split a value in two values
-                for (var index in content[i]) {
-                    // For datetime values
-                    if (phpr.inArray(index, this.splitFields['datetime'])) {
-                        var key         = index + '_forDate';
-                        var value       = content[i][index].substr(0, 10);
-                        content[i][key] = value;
-
-                        var key         = index + '_forTime';
-                        var value       = content[i][index].substr(11, 5);
-                        content[i][key] = value;
-                    }
-                }
-
-                // Extra Columns for current module
-                for (var indexCol in this.extraColumns) {
-                    var key         = this.extraColumns[indexCol]['key'];
-                    var divClass    = this.extraColumns[indexCol]['class'];
-                    var label       = this.extraColumns[indexCol]['label'];
-                    content[i][key] = divClass + ' || ' + phpr.nls.get(label);
                 };
-                this.gridData.items.push(content[i]);
-            }
-            var store = new dojo.data.ItemFileWriteStore({data: this.gridData});
+            })();
+        } else {
+            // use closure to avoid cyclic refs
+            (function() {
+                dojo.removeClass(that._node.domNode, 'addButtonText');
+                that.processActions();
 
-            // Render export Button
-            this.setExportButton(meta);
+                // Data of the grid
+                that.gridData = {
+                    items: []
+                };
+                var content = dojo.clone(phpr.DataStore.getData({url: that.url}));
 
-            this.setGridLayout(meta);
+                // Get datetime keys
+                that.splitFields = new Array();
+                for (var i = 0; i < meta.length; i++) {
+                    if (meta[i]['type'] == 'datetime') {
+                        if (!that.splitFields['datetime']) {
+                            that.splitFields['datetime'] = new Array();
+                        }
+                        that.splitFields['datetime'].push(meta[i]['key']);
+                    }
+                }
 
-            var type   = this.useCheckbox() ? "phpr.Default.System.Grid._View" : "dojox.grid._View";
-            var p6Grid = this;
-            this.grid  = new dojox.grid.DataGrid({
-                store:     store,
-                structure: [{type: type,
-                            defaultCell: {
-                                editable: true,
-                                type:     phpr.Default.System.Grid.cells.Text,
-                                styles:   'text-align: left;'
-                            },
-                            rows: this.gridLayout
-                }],
-                doclick:    function(e) { p6Grid.doClick(e); },
-                dodblclick: function(e) { p6Grid.doDblClick(e); },
-                onRowClick: function(e) { }
-            }, document.createElement('div'));
+                for (var i in content) {
+                    if (that.usePencilForEdit()) {
+                        content[i]['gridEdit'] = 'editButton || ' + phpr.nls.get('Open that item in the form to edit it');
+                    }
 
-            this.setClickEdit();
+                    // Split a value in two values
+                    for (var index in content[i]) {
+                        // For datetime values
+                        if (phpr.inArray(index, that.splitFields['datetime'])) {
+                            var key         = index + '_forDate';
+                            var value       = content[i][index].substr(0, 10);
+                            content[i][key] = value;
 
-            this._node.set('content', this.grid.domNode);
-            this.grid.startup();
-            this.loadGridSorting();
-            this.loadGridScroll();
+                            var key         = index + '_forTime';
+                            var value       = content[i][index].substr(11, 5);
+                            content[i][key] = value;
+                        }
+                    }
 
-            dojo.connect(this.grid, "onCellClick", dojo.hitch(this, "cellClick"));
-            dojo.connect(this.grid, "onApplyCellEdit", dojo.hitch(this, "cellEdited"));
-            dojo.connect(this.grid, "onStartEdit", dojo.hitch(this, "checkCanEdit"));
-            dojo.connect(this.grid, "onHeaderCellClick", this, "saveGridSorting");
-            dojo.connect(this.grid.views.views[0].scrollboxNode, "onscroll", this, "saveGridScroll");
-            dojo.connect(this.grid, "onCellMouseOver", dojo.hitch(this, "showTooltip"));
-            dojo.connect(this.grid, "onCellMouseOut", dojo.hitch(this, "hideTooltip"));
+                    // Extra Columns for current module
+                    for (var indexCol in that.extraColumns) {
+                        var key         = that.extraColumns[indexCol]['key'];
+                        var divClass    = that.extraColumns[indexCol]['class'];
+                        var label       = that.extraColumns[indexCol]['label'];
+                        content[i][key] = divClass + ' || ' + phpr.nls.get(label);
+                    };
+                    that.gridData.items.push(content[i]);
+                }
+                var store = new dojo.data.ItemFileWriteStore({data: that.gridData});
 
-            if (this.useCheckbox()) {
-                this.render(["phpr.Default.template", "gridActions.html"], this.grid.views.views[0].gridActions, {
-                    module:        phpr.module,
-                    actions:       this.comboActions,
-                    checkAllTxt:   phpr.nls.get('Check All'),
-                    uncheckAllTxt: phpr.nls.get('Uncheck All')
-                });
+                // Render export Button
+                that.setExportButton(meta);
 
-                dojo.connect(dojo.byId("gridComboAction"), "onchange", this, "doComboAction");
-            }
+                that.setGridLayout(meta);
+
+                var type   = that.useCheckbox() ? "phpr.Default.System.Grid._View" : "dojox.grid._View";
+                var p6Grid = that;
+                that.grid  = new dojox.grid.DataGrid({
+                    store:     store,
+                    structure: [{type: type,
+                                defaultCell: {
+                                    editable: true,
+                                    type:     phpr.Default.System.Grid.cells.Text,
+                                    styles:   'text-align: left;'
+                                },
+                                rows: that.gridLayout
+                    }],
+                    doclick: dojo.hitch(p6Grid, 'doClick'),
+                    dodblclick: dojo.hitch(p6Grid, 'doDblClick'),
+                }, document.createElement('div'));
+                that._domNodes.push(that.grid);
+
+                that.setClickEdit();
+
+                that._node.set('content', that.grid.domNode);
+                that.grid.startup();
+                that.loadGridSorting();
+                that.loadGridScroll();
+
+                that._events.push(
+                    dojo.connect(that.grid, "onCellClick", dojo.hitch(that, "cellClick"))
+                );
+                that._events.push(
+                    dojo.connect(that.grid, "onApplyCellEdit", dojo.hitch(that, "cellEdited"))
+                );
+                that._events.push(
+                    dojo.connect(that.grid, "onStartEdit", dojo.hitch(that, "checkCanEdit"))
+                );
+                that._events.push(
+                    dojo.connect(that.grid, "onHeaderCellClick", that, "saveGridSorting")
+                );
+                that._events.push(
+                    dojo.connect(that.grid.views.views[0].scrollboxNode, "onscroll", that, "saveGridScroll")
+                );
+                that._events.push(
+                    dojo.connect(that.grid, "onCellMouseOver", dojo.hitch(that, "showTooltip"))
+                );
+                that._events.push(
+                    dojo.connect(that.grid, "onCellMouseOut", dojo.hitch(that, "hideTooltip"))
+                );
+
+                if (that.useCheckbox()) {
+                    that.render(["phpr.Default.template", "gridActions.html"], that.grid.views.views[0].gridActions, {
+                        module:        phpr.module,
+                        actions:       that.comboActions,
+                        checkAllTxt:   phpr.nls.get('Check All'),
+                        uncheckAllTxt: phpr.nls.get('Uncheck All')
+                    });
+
+                    that._events.push(
+                        dojo.connect(dojo.byId("gridComboAction"), "onchange", that, "doComboAction")
+                    );
+                }
+            })();
         }
 
         // Filters
@@ -1505,6 +1600,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         + phpr.nls.get('rows selected') + ')');
                     select.selectedIndex = 0;
                 }
+                select = null;// avoid cyclic ref
             } else {
                 dojo.byId("gridComboAction").selectedIndex = 0;
             }

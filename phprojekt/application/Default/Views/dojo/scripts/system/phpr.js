@@ -1194,4 +1194,11 @@ phpr.confirmDialog = function(callbackOk, message) {
 
     confirmDialog.containerNode.appendChild(content.domNode);
     confirmDialog.show();
+    // avoid cyclic refs
+    content = null;
+    question = null;
+    buttonContent = null;
+    buttonOK = null;
+    buttonCancel = null;
+    confirmDialog = null;
 };
