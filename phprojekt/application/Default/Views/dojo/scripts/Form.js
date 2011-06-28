@@ -546,14 +546,17 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Set the Container
         // Description:
         //    Set the Container
-        var tabContainer = new dijit.layout.TabContainer({
-            style:   'height: 100%;',
-            useMenu: false
-        }, document.createElement('div'));
-        dojo.connect(tabContainer, 'selectChild', dojo.hitch(this, function() {
+        var cb = dojo.hitch(this, function() {
             dojo.byId('completeContent').focus();
-        }));
-        return tabContainer;
+        });
+        return (function() {  
+            var tabContainer = new dijit.layout.TabContainer({
+                style:   'height: 100%;',
+                useMenu: false
+            }, document.createElement('div'));
+            dojo.connect(tabContainer, 'selectChild', cb);
+            return tabContainer;
+        })();
     },
 
     addModuleTabs:function(data) {
