@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.image.Gallery"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.image.Gallery"] = true;
 dojo.provide("dojox.image.Gallery");
 dojo.experimental("dojox.image.Gallery");
 //
@@ -71,7 +62,7 @@ dojo.declare("dojox.image.Gallery",
 	//		Time, in seconds, between image changes in the slide show.
 	slideshowInterval: 3,
 	
-	templateString: dojo.cache("dojox.image", "resources/Gallery.html", "<div dojoAttachPoint=\"outerNode\" class=\"imageGalleryWrapper\">\r\n\t<div dojoAttachPoint=\"thumbPickerNode\"></div>\r\n\t<div dojoAttachPoint=\"slideShowNode\"></div>\r\n</div>\r\n"), 
+	templateString: dojo.cache("dojox.image", "resources/Gallery.html"), 
 
 	postCreate: function(){
 		// summary: 
@@ -197,5 +188,3 @@ dojo.declare("dojox.image.Gallery",
 		}
 	}
 });
-
-}

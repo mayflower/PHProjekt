@@ -1,19 +1,12 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.NodeList"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.NodeList"] = true;
 dojo.provide("dojo._base.NodeList");
 dojo.require("dojo._base.lang");
 dojo.require("dojo._base.array");
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 (function(){
 
 	var d = dojo;
+//>>excludeEnd("webkitMobile");
 
 	var ap = Array.prototype, aps = ap.slice, apc = ap.concat;
 
@@ -1011,6 +1004,6 @@ dojo.require("dojo._base.array");
 		}
 	);
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 })();
-
-}
+//>>excludeEnd("webkitMobile");

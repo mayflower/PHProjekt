@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.geo.charting._Marker"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.geo.charting._Marker"] = true;
 dojo.provide("dojox.geo.charting._Marker");
 
 dojo.declare("dojox.geo.charting._Marker", null, {
@@ -59,5 +50,3 @@ dojo.declare("dojox.geo.charting._Marker", null, {
 		arround.y += arround.height / 4;
 	}
 });
-
-}

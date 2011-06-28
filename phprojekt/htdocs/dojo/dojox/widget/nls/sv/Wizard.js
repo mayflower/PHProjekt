@@ -1,1 +1,5 @@
-({"next":"Nästa","done":"Stäng","previous":"Föregående"})
+({
+next: "Nästa",
+previous: "Föregående",
+done: "Stäng"
+})

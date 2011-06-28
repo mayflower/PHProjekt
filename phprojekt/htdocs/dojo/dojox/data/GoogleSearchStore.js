@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.GoogleSearchStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.GoogleSearchStore"] = true;
 dojo.provide("dojox.data.GoogleSearchStore");
 dojo.provide("dojox.data.GoogleWebSearchStore");
 dojo.provide("dojox.data.GoogleBlogSearchStore");
@@ -658,5 +649,3 @@ dojo.declare("dojox.data.GoogleImageSearchStore", dojox.data.GoogleSearchStore,{
 			"tbUrl", "content", "contentNoFormatting"],
 	_aggregatedAttributes: { }
 });
-
-}

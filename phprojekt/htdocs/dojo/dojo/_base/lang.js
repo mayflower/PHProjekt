@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.lang"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.lang"] = true;
 dojo.provide("dojo._base.lang");
 
 (function(){
@@ -207,19 +198,23 @@ dojo.provide("dojo._base.lang");
 		return (startWith||[]).concat(Array.prototype.slice.call(obj, offset||0));
 	};
 
-		var slow = function(obj, offset, startWith){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	var slow = function(obj, offset, startWith){
 		var arr = startWith||[];
 		for(var x = offset || 0; x < obj.length; x++){
 			arr.push(obj[x]);
 		}
 		return arr;
 	};
-	
+	//>>excludeEnd("webkitMobile");
+
 	dojo._toArray =
-				d.isIE ?  function(obj){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		d.isIE ?  function(obj){
 			return ((obj.item) ? slow : efficient).apply(this, arguments);
 		} :
-				efficient;
+		//>>excludeEnd("webkitMobile");
+		efficient;
 
 	dojo.partial = function(/*Function|String*/method /*, ...*/){
 		//	summary:
@@ -277,7 +272,8 @@ dojo.provide("dojo._base.lang");
 				r[name] = d.clone(s);
 			}
 		}
-				// IE doesn't recognize some custom functions in for..in
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		// IE doesn't recognize some custom functions in for..in
 		if(extraLen){
 			for(i = 0; i < extraLen; ++i){
 				name = extraNames[i];
@@ -287,7 +283,8 @@ dojo.provide("dojo._base.lang");
 				}
 			}
 		}
-				return r; // Object
+		//>>excludeEnd("webkitMobile");
+		return r; // Object
 	}
 
 	/*=====
@@ -388,5 +385,3 @@ dojo.provide("dojo._base.lang");
 			map : function(_, k){ return d.getObject(k, false, map); });
 	};
 })();
-
-}

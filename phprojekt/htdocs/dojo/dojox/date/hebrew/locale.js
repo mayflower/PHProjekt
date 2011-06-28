@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.date.hebrew.locale"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.date.hebrew.locale"] = true;
 dojo.provide("dojox.date.hebrew.locale");
 
 
@@ -19,7 +10,7 @@ dojo.require("dojo.i18n");
 
 //Load the bundles containing localization information for
 // names and formats 
-dojo.requireLocalization("dojo.cldr", "hebrew", null, "ROOT,ar,he");
+dojo.requireLocalization("dojo.cldr", "hebrew");
 
 (function(){
 	// Format a pattern without literals
@@ -500,25 +491,25 @@ dojox.date.hebrew.locale.getNames = function(/*String*/item, /*String*/type, /*S
 	// using  var monthNames = dojox.date.hebrew.locale.getNames('months', 'wide', 'format', 'he', new dojox.date.hebrew.Date(5768, 2, 12));
 
 	var label,
-		lookup = dojox.date.hebrew.locale._getHebrewBundle,
+		lookup = dojox.date.hebrew.locale._getHebrewBundle(locale),
 		props = [item, context, type];
 	if(context == 'standAlone'){
 		var key = props.join('-');
-		label = lookup(locale)[key];
+		label = lookup[key];
 		// Fall back to 'format' flavor of name
-		if(label === lookup("ROOT")[key]){ label = undefined; } // a bit of a kludge, in the absence of real aliasing support in dojo.cldr
+		if(label[0] == 1){ label = undefined; } // kludge, in the absence of real aliasing support in dojo.cldr
 	}
 	props[1] = 'format';
 	
 	// return by copy so changes won't be made accidentally to the in-memory model
-	var result = (label || lookup(locale)[props.join('-')]).concat();
+	var result = (label || lookup[props.join('-')]).concat();
 
 	if(item == "months"){
 		if(date.isLeapYear(date.getFullYear())){
 			// Adar I (6th position in the array) will be used.
 			// Substitute the leap month Adar II for the regular Adar (7th position)
 			props.push("leap");
-			result[6] = lookup(locale)[props.join('-')];
+			result[6] = lookup[props.join('-')];
 		}else{
 			// Remove Adar I but leave an empty position in the array
 			delete result[5];
@@ -527,5 +518,3 @@ dojox.date.hebrew.locale.getNames = function(/*String*/item, /*String*/type, /*S
 
 	return result; /*Array*/
 };
-
-}

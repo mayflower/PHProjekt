@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.html.ellipsis"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.html.ellipsis"] = true;
 dojo.provide("dojox.html.ellipsis");
 
 /*=====
@@ -21,6 +12,7 @@ dojox.html.ellipsis = {
 =====*/
 
 (function(d){
+    try{
 	if(d.isMoz){
 		// The delay (in ms) to wait so that we don't keep querying when many 
 		// changes happen at once - set config "dojoxFFEllipsisDelay" if you
@@ -196,6 +188,7 @@ dojox.html.ellipsis = {
 			connFx();
 		});
 	}
+    }catch(e){
+	console.warn("dojox.html.ellipsis does not work with Firefox >= 4");
+    }
 })(dojo);
-
-}

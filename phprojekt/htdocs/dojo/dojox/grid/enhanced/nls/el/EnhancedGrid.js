@@ -1,1 +1,8 @@
-({"descending":"Φθίνουσα","ascending":"Αύξουσα","nestedSort":"Ένθετη ταξινόμηση","unsorted":"Χωρίς ταξινόμηση αυτής της στήλης","singleSort":"Απλή ταξινόμηση","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Απλή ταξινόμηση",
+	nestedSort: "Ένθετη ταξινόμηση",
+	ascending: "Αύξουσα",
+	descending: "Φθίνουσα",
+	unsorted: "Χωρίς ταξινόμηση αυτής της στήλης"
+})
+

@@ -1,1 +1,7 @@
-({"descending":"降序","ascending":"升序","nestedSort":"嵌套排序","unsorted":"不要对此列排序","singleSort":"单一排序","sortingState":"${0} - ${1}"})
+({
+	singleSort: "单一排序",
+	nestedSort: "嵌套排序",
+	ascending: "升序",
+	descending: "降序",
+	unsorted: "请勿对此列排序"
+})

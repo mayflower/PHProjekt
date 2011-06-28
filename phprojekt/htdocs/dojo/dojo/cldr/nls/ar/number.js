@@ -1,1 +1,25 @@
-({"group":"٬","percentSign":"٪","exponential":"اس","list":"؛","infinity":"∞","patternDigit":"#","minusSign":"-","decimal":"٫","nan":"ليس رقم","nativeZeroDigit":"٠","perMille":"؉","decimalFormat":"#,##0.###;#,##0.###-","currencyFormat":"¤ #,##0.00;¤ #,##0.00-","plusSign":"+","scientificFormat":"#E0","currencySpacing-afterCurrency-currencyMatch":"[:letter:]","currencySpacing-beforeCurrency-surroundingMatch":"[:digit:]","currencySpacing-afterCurrency-insertBetween":" ","currencySpacing-afterCurrency-surroundingMatch":"[:digit:]","currencySpacing-beforeCurrency-currencyMatch":"[:letter:]","percentFormat":"#,##0%","currencySpacing-beforeCurrency-insertBetween":" "})
+// generated from ldml/main/*.xml, xpath: ldml/numbers
+({
+	'decimal':",",
+	'decimal':"٫",
+	'group':".",
+	'group':"٬",
+	'list':";",
+	'list':"؛",
+	'percentSign':"%",
+	'percentSign':"٪",
+	'nativeZeroDigit':"0",
+	'nativeZeroDigit':"٠",
+	'patternDigit':"#",
+	'plusSign':"+",
+	'minusSign':"-",
+	'exponential':"E",
+	'exponential':"اس",
+	'perMille':"‰",
+	'perMille':"؉",
+	'infinity':"∞",
+	'nan':"NaN",
+	'nan':"ليس رقم",
+	'decimalFormat':"#,##0.###;#,##0.###-",
+	'currencyFormat':"¤ #,##0.00;¤ #,##0.00-"
+})

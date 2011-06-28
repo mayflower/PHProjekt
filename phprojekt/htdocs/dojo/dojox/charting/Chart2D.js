@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.charting.Chart2D"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.Chart2D"] = true;
 dojo.provide("dojox.charting.Chart2D");
 
 dojo.require("dojox.gfx");
@@ -1064,5 +1055,3 @@ dojox.charting.__Chart2DCtorArgs = function(margins, stroke, fill, delayInMs){
 		});
 	}
 })();
-
-}

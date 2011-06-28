@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.layout.ContentPane"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.layout.ContentPane"] = true;
 dojo.provide("dijit.layout.ContentPane");
 
 dojo.require("dijit._Widget");
@@ -16,7 +7,7 @@ dojo.require("dijit.layout._LayoutWidget");	// for dijit.layout.marginBox2conten
 dojo.require("dojo.parser");
 dojo.require("dojo.string");
 dojo.require("dojo.html");
-dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "loading");
 
 dojo.declare(
 	"dijit.layout.ContentPane", dijit._Widget,
@@ -730,5 +721,3 @@ dojo.declare(
 		//		callback
 	}
 });
-
-}

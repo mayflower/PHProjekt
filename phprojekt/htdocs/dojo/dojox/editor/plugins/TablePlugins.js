@@ -1,18 +1,9 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.TablePlugins"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.TablePlugins"] = true;
 dojo.provide("dojox.editor.plugins.TablePlugins");
 dojo.require("dijit._editor._Plugin");
 dojo.require("dijit._editor.selection");
 dojo.require("dijit.Menu");
 dojo.require("dojo.i18n");
-dojo.requireLocalization("dojox.editor.plugins", "TableDialog", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dojox.editor.plugins", "TableDialog");
 
 dojo.experimental("dojox.editor.plugins.TablePlugins");
 
@@ -714,7 +705,18 @@ dojo.declare("dojox.editor.plugins.TableContextMenu",
 				}));
 				this.button.domNode.style.display = "none";
 			});
-		},	
+		},
+
+		destroy: function(){
+			// summary:
+			//	Over-ride to do menu cleanup.
+			if(this.menu){
+				this.menu.destroyRecursive();
+				delete this.menu;
+			}
+			this.inherited(arguments);
+		},
+	
 		
 		_initButton: function(){
 			this.inherited(arguments);
@@ -842,7 +844,7 @@ dojo.declare("dojox.editor.plugins.EditorTableDialog", [dijit.Dialog], {
 	baseClass:"EditorTableDialog",
 				
 	widgetsInTemplate:true,
-	templateString: dojo.cache("dojox.editor.plugins", "resources/insertTable.html", "<div class=\"dijitDialog\" tabindex=\"-1\" waiRole=\"dialog\" waiState=\"labelledby-${id}_title\">\r\n\t<div dojoAttachPoint=\"titleBar\" class=\"dijitDialogTitleBar\">\r\n\t<span dojoAttachPoint=\"titleNode\" class=\"dijitDialogTitle\" id=\"${id}_title\">${insertTableTitle}</span>\r\n\t<span dojoAttachPoint=\"closeButtonNode\" class=\"dijitDialogCloseIcon\" dojoAttachEvent=\"onclick: onCancel\" title=\"${buttonCancel}\">\r\n\t\t<span dojoAttachPoint=\"closeText\" class=\"closeText\" title=\"${buttonCancel}\">x</span>\r\n\t</span>\r\n\t</div>\r\n    <div dojoAttachPoint=\"containerNode\" class=\"dijitDialogPaneContent\">\r\n        <table class=\"etdTable\"><tr>\r\n            <td class=\"left\">\r\n                <span dojoAttachPoint=\"selectRow\" dojoType=\"dijit.form.TextBox\" value=\"2\"></span>\r\n                <label>${rows}</label>\r\n            </td><td class=\"right\">\r\n                <span dojoAttachPoint=\"selectCol\" dojoType=\"dijit.form.TextBox\" value=\"2\"></span>\r\n                <label>${columns}</label>\r\n            </td></tr><tr><td>\r\n                <span dojoAttachPoint=\"selectWidth\" dojoType=\"dijit.form.TextBox\" value=\"100\"></span>\r\n                <label>${tableWidth}</label>\r\n            </td><td>\r\n                <select dojoAttachPoint=\"selectWidthType\" hasDownArrow=\"true\" dojoType=\"dijit.form.FilteringSelect\">\r\n                  <option value=\"percent\">${percent}</option>\r\n                  <option value=\"pixels\">${pixels}</option>\r\n                </select></td></tr>\r\n          <tr><td>\r\n                <span dojoAttachPoint=\"selectBorder\" dojoType=\"dijit.form.TextBox\" value=\"1\"></span>\r\n                <label>${borderThickness}</label></td>\r\n            <td>\r\n                ${pixels}\r\n            </td></tr><tr><td>\r\n                <span dojoAttachPoint=\"selectPad\" dojoType=\"dijit.form.TextBox\" value=\"0\"></span>\r\n                <label>${cellPadding}</label></td>\r\n            <td class=\"cellpad\"></td></tr><tr><td>\r\n                <span dojoAttachPoint=\"selectSpace\" dojoType=\"dijit.form.TextBox\" value=\"0\"></span>\r\n                <label>${cellSpacing}</label>\r\n            </td><td class=\"cellspace\"></td></tr></table>\r\n        <div class=\"dialogButtonContainer\">\r\n            <div dojoType=\"dijit.form.Button\" dojoAttachEvent=\"onClick: onInsert\">${buttonInsert}</div>\r\n            <div dojoType=\"dijit.form.Button\" dojoAttachEvent=\"onClick: onCancel\">${buttonCancel}</div>\r\n        </div>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.editor.plugins", "resources/insertTable.html"),
 
 	postMixInProperties: function(){
 		var messages = dojo.i18n.getLocalization("dojox.editor.plugins", "TableDialog", this.lang);
@@ -922,7 +924,7 @@ dojo.declare("dojox.editor.plugins.EditorModifyTableDialog", [dijit.Dialog], {
 	widgetsInTemplate:true,
 	table:null, //html table to be modified
 	tableAtts:{},
-	templateString: dojo.cache("dojox.editor.plugins", "resources/modifyTable.html", "<div class=\"dijitDialog\" tabindex=\"-1\" waiRole=\"dialog\" waiState=\"labelledby-${id}_title\">\r\n\t<div dojoAttachPoint=\"titleBar\" class=\"dijitDialogTitleBar\">\r\n\t<span dojoAttachPoint=\"titleNode\" class=\"dijitDialogTitle\" id=\"${id}_title\">${modifyTableTitle}</span>\r\n\t<span dojoAttachPoint=\"closeButtonNode\" class=\"dijitDialogCloseIcon\" dojoAttachEvent=\"onclick: onCancel\" title=\"${buttonCancel}\">\r\n\t\t<span dojoAttachPoint=\"closeText\" class=\"closeText\" title=\"${buttonCancel}\">x</span>\r\n\t</span>\r\n\t</div>\r\n    <div dojoAttachPoint=\"containerNode\" class=\"dijitDialogPaneContent\">\r\n        <table class=\"etdTable\">\r\n          <tr><td class=\"left\">\r\n                <span class=\"colorSwatchBtn\" dojoAttachPoint=\"backgroundCol\"></span>\r\n                <label>${backgroundColor}</label>\r\n            </td><td class=\"right\">\r\n                <span class=\"colorSwatchBtn\" dojoAttachPoint=\"borderCol\"></span>\r\n                <label>${borderColor}</label>\r\n            </td></tr><tr><td>\r\n                <span dojoAttachPoint=\"selectBorder\" dojoType=\"dijit.form.TextBox\" value=\"1\"></span>\r\n                <label>${borderThickness}</label>\r\n            </td><td>\r\n            ${pixels}\r\n            </td></tr><tr><td>\r\n                <select class=\"floatDijit\" dojoAttachPoint=\"selectAlign\" dojoType=\"dijit.form.FilteringSelect\">\r\n                  <option value=\"default\">${default}</option>\r\n                  <option value=\"left\">${left}</option>\r\n                  <option value=\"center\">${center}</option>\r\n                  <option value=\"right\">${right}</option>\r\n                </select>\r\n                <label>${align}</label>\r\n            </td><td></td></tr><tr><td>\r\n                <span dojoAttachPoint=\"selectWidth\" dojoType=\"dijit.form.TextBox\" value=\"100\"></span>\r\n                <label>${tableWidth}</label>\r\n            </td><td>\r\n                <select dojoAttachPoint=\"selectWidthType\" hasDownArrow=\"true\" dojoType=\"dijit.form.FilteringSelect\">\r\n                  <option value=\"percent\">${percent}</option>\r\n                  <option value=\"pixels\">${pixels}</option>\r\n                </select>\r\n                </td></tr><tr><td>\r\n                <span dojoAttachPoint=\"selectPad\" dojoType=\"dijit.form.TextBox\" value=\"0\"></span>\r\n                <label>${cellPadding}</label></td>\r\n            <td class=\"cellpad\"></td></tr><tr><td>\r\n                <span dojoAttachPoint=\"selectSpace\" dojoType=\"dijit.form.TextBox\" value=\"0\"></span>\r\n                <label>${cellSpacing}</label>\r\n            </td><td class=\"cellspace\"></td></tr>\r\n        </table>\r\n        <div class=\"dialogButtonContainer\">\r\n            <div dojoType=\"dijit.form.Button\" dojoAttachEvent=\"onClick: onSet\">${buttonSet}</div>\r\n            <div dojoType=\"dijit.form.Button\" dojoAttachEvent=\"onClick: onCancel\">${buttonCancel}</div>\r\n        </div>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.editor.plugins", "resources/modifyTable.html"),
 
 	postMixInProperties: function(){
 		var messages = dojo.i18n.getLocalization("dojox.editor.plugins", "TableDialog", this.lang);
@@ -1085,5 +1087,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 		}
 	}
 });
-
-}

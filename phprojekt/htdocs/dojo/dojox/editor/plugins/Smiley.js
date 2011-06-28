@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.Smiley"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.Smiley"] = true;
 dojo.provide("dojox.editor.plugins.Smiley");
 dojo.experimental("dojox.editor.plugins.Smiley");
 
@@ -16,7 +7,7 @@ dojo.require("dijit.form.ToggleButton");
 dojo.require("dijit.form.DropDownButton");
 dojo.require("dojox.editor.plugins._SmileyPalette");
 
-dojo.requireLocalization("dojox.editor.plugins", "Smiley", null, "ROOT,cs,de,es,fr,hu,it,ja,ko,pl,pt,ro,ru,zh,zh-tw");
+dojo.requireLocalization("dojox.editor.plugins", "Smiley");
 
 dojo.declare("dojox.editor.plugins.Smiley", dijit._editor._Plugin, {
 	// summary:
@@ -123,5 +114,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 		o.plugin = new dojox.editor.plugins.Smiley();
 	}
 });
-
-}

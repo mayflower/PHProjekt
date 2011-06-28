@@ -1,22 +1,15 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.html"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.html"] = true;
 dojo.require("dojo._base.lang");
 dojo.provide("dojo._base.html");
 
 // FIXME: need to add unit tests for all the semi-public methods
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 try{
 	document.execCommand("BackgroundImageCache", false, true);
 }catch(e){
 	// sane browsers don't have cache "issues"
 }
+//>>excludeEnd("webkitMobile");
 
 // =============================
 // DOM Functions
@@ -53,6 +46,7 @@ dojo.byId = function(id, doc){
 	//	|	}
 =====*/
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 if(dojo.isIE || dojo.isOpera){
 	dojo.byId = function(id, doc){
 		if(typeof id != "string"){
@@ -79,25 +73,32 @@ if(dojo.isIE || dojo.isOpera){
 		}
 	};
 }else{
+//>>excludeEnd("webkitMobile");
 	dojo.byId = function(id, doc){
 		// inline'd type check
 		return (typeof id == "string") ? (doc || dojo.doc).getElementById(id) : id; // DomNode
 	};
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 }
+//>>excludeEnd("webkitMobile");
 /*=====
 };
 =====*/
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 (function(){
 	var d = dojo;
+//>>excludeEnd("webkitMobile");
 	var byId = d.byId;
 
 	var _destroyContainer = null,
 		_destroyDoc;
-		d.addOnWindowUnload(function(){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	d.addOnWindowUnload(function(){
 		_destroyContainer = null; //prevent IE leak
 	});
-	
+	//>>excludeEnd("webkitMobile");
+
 /*=====
 	dojo._destroyElement = function(node){
 		// summary:
@@ -178,15 +179,19 @@ if(dojo.isIE || dojo.isOpera){
 		//	Make the node id="bar" selectable
 		//	|	dojo.setSelectable("bar", true);
 		node = byId(node);
-				if(d.isMozilla){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		if(d.isMozilla){
 			node.style.MozUserSelect = selectable ? "" : "none";
 		}else if(d.isKhtml || d.isWebKit){
-					node.style.KhtmlUserSelect = selectable ? "auto" : "none";
-				}else if(d.isIE){
+		//>>excludeEnd("webkitMobile");
+			node.style.KhtmlUserSelect = selectable ? "auto" : "none";
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		}else if(d.isIE){
 			var v = (node.unselectable = selectable ? "" : "on");
 			d.query("*", node).forEach("item.unselectable = '"+v+"'");
 		}
-				//FIXME: else?  Opera?
+		//>>excludeEnd("webkitMobile");
+		//FIXME: else?  Opera?
 	};
 
 	var _insertBefore = function(/*DomNode*/node, /*DomNode*/ref){
@@ -311,11 +316,13 @@ if(dojo.isIE || dojo.isOpera){
 	// IIRC, earlier versions of Opera did in fact use border-box.
 	// Opera guys, this is really confusing. Opera being broken in quirks mode is not our fault.
 
-		if(d.isIE /*|| dojo.isOpera*/){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	if(d.isIE /*|| dojo.isOpera*/){
 		// client code may have to adjust if compatMode varies across iframes
 		d.boxModel = document.compatMode == "BackCompat" ? "border-box" : "content-box";
 	}
-	
+	//>>excludeEnd("webkitMobile");
+
 	// =============================
 	// Style Functions
 	// =============================
@@ -368,8 +375,10 @@ if(dojo.isIE || dojo.isOpera){
 	// it is frequently sent to this function even 
 	// though it is not Element.
 	var gcs;
-		if(d.isWebKit){
-			gcs = function(/*DomNode*/node){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	if(d.isWebKit){
+	//>>excludeEnd("webkitMobile");
+		gcs = function(/*DomNode*/node){
 			var s;
 			if(node.nodeType == 1){
 				var dv = node.ownerDocument.defaultView;
@@ -381,7 +390,8 @@ if(dojo.isIE || dojo.isOpera){
 			}
 			return s || {};
 		};
-		}else if(d.isIE){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	}else if(d.isIE){
 		gcs = function(node){
 			// IE (as of 7) doesn't expose Element like sane browsers
 			return node.nodeType == 1 /* ELEMENT_NODE*/ ? node.currentStyle : {};
@@ -392,15 +402,19 @@ if(dojo.isIE || dojo.isOpera){
 				node.ownerDocument.defaultView.getComputedStyle(node, null) : {};
 		};
 	}
-		dojo.getComputedStyle = gcs;
+	//>>excludeEnd("webkitMobile");
+	dojo.getComputedStyle = gcs;
 
-		if(!d.isIE){
-			d._toPixelValue = function(element, value){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	if(!d.isIE){
+	//>>excludeEnd("webkitMobile");
+		d._toPixelValue = function(element, value){
 			// style values can be floats, client code may want
 			// to round for integer pixels.
 			return parseFloat(value) || 0;
 		};
-		}else{
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	}else{
 		d._toPixelValue = function(element, avalue){
 			if(!avalue){ return 0; }
 			// on IE7, medium is usually 4 pixels
@@ -428,7 +442,8 @@ if(dojo.isIE || dojo.isOpera){
 			return avalue;
 		}
 	}
-		var px = d._toPixelValue;
+	//>>excludeEnd("webkitMobile");
+	var px = d._toPixelValue;
 
 	// FIXME: there opacity quirks on FF that we haven't ported over. Hrm.
 	/*=====
@@ -444,7 +459,8 @@ if(dojo.isIE || dojo.isOpera){
 	}
 	=====*/
 
-		var astr = "DXImageTransform.Microsoft.Alpha";
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	var astr = "DXImageTransform.Microsoft.Alpha";
 	var af = function(n, f){
 		try{
 			return n.filters.item(astr);
@@ -453,15 +469,18 @@ if(dojo.isIE || dojo.isOpera){
 		}
 	};
 
-		dojo._getOpacity =
-			d.isIE ? function(node){
+	//>>excludeEnd("webkitMobile");
+	dojo._getOpacity =
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		d.isIE ? function(node){
 			try{
 				return af(node).Opacity / 100; // Number
 			}catch(e){
 				return 1; // Number
 			}
 		} :
-			function(node){
+	//>>excludeEnd("webkitMobile");
+		function(node){
 			return gcs(node).opacity;
 		};
 
@@ -481,7 +500,8 @@ if(dojo.isIE || dojo.isOpera){
 	=====*/
 
 	dojo._setOpacity =
-				d.isIE ? function(/*DomNode*/node, /*Number*/opacity){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		d.isIE ? function(/*DomNode*/node, /*Number*/opacity){
 			var ov = opacity * 100, opaque = opacity == 1;
 			node.style.zoom = opaque ? "" : 1;
 
@@ -505,7 +525,8 @@ if(dojo.isIE || dojo.isOpera){
 			}
 			return opacity;
 		} :
-				function(node, opacity){
+		//>>excludeEnd("webkitMobile");
+		function(node, opacity){
 			return node.style.opacity = opacity;
 		};
 
@@ -515,7 +536,8 @@ if(dojo.isIE || dojo.isOpera){
 	var _pixelRegExp = /margin|padding|width|height|max|min|offset/;  // |border
 	var _toStyleValue = function(node, type, value){
 		type = type.toLowerCase(); // FIXME: should we really be doing string case conversion here? Should we cache it? Need to profile!
-				if(d.isIE){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		if(d.isIE){
 			if(value == "auto"){
 				if(type == "height"){ return node.offsetHeight; }
 				if(type == "width"){ return node.offsetWidth; }
@@ -528,7 +550,8 @@ if(dojo.isIE || dojo.isOpera){
 				}
 			}
 		}
-				if(!(type in _pixelNamesCache)){
+		//>>excludeEnd("webkitMobile");
+		if(!(type in _pixelNamesCache)){
 			_pixelNamesCache[type] = _pixelRegExp.test(type);
 		}
 		return _pixelNamesCache[type] ? px(node, value) : value;
@@ -758,7 +781,8 @@ if(dojo.isIE || dojo.isOpera){
 		//		positions of the node's margin box.
 		var s = computedStyle || gcs(node), me = d._getMarginExtents(node, s);
 		var l = node.offsetLeft - me.l, t = node.offsetTop - me.t, p = node.parentNode;
-				if(d.isMoz){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		if(d.isMoz){
 			// Mozilla:
 			// If offsetParent has a computed overflow != visible, the offsetLeft is decreased
 			// by the parent's border.
@@ -786,7 +810,8 @@ if(dojo.isIE || dojo.isOpera){
 				t -= be.t;
 			}
 		}
-				return {
+		//>>excludeEnd("webkitMobile");
+		return {
 			l: l,
 			t: t,
 			w: node.offsetWidth + me.w,
@@ -814,8 +839,10 @@ if(dojo.isIE || dojo.isOpera){
 			h = node.clientHeight, be.w = be.h = 0;
 		}
 		// On Opera, offsetLeft includes the parent's border
-				if(d.isOpera){ pe.l += be.l; pe.t += be.t; };
-				return {
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		if(d.isOpera){ pe.l += be.l; pe.t += be.t; };
+		//>>excludeEnd("webkitMobile");
+		return {
 			l: pe.l,
 			t: pe.t,
 			w: w - pe.w - be.w,
@@ -1039,7 +1066,8 @@ if(dojo.isIE || dojo.isOpera){
 			d._bodyLtr = (d.body().dir || d.doc.documentElement.dir || "ltr").toLowerCase() == "ltr"; // Boolean 
 	}
 
-		dojo._getIeDocumentElementOffset = function(){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	dojo._getIeDocumentElementOffset = function(){
 		//	summary:
 		//		returns the offset in x and y from the document body to the
 		//		visual edge of the page
@@ -1081,19 +1109,22 @@ if(dojo.isIE || dojo.isOpera){
 		}
 
 	};
-	
+	//>>excludeEnd("webkitMobile");
+
 	dojo._fixIeBiDiScrollLeft = function(/*Integer*/ scrollLeft){
 		// In RTL direction, scrollLeft should be a negative value, but IE < 8
 		// returns a positive one. All codes using documentElement.scrollLeft
 		// must call this function to fix this error, otherwise the position
 		// will offset to right when there is a horizontal scrollbar.
 
-				var dd = d.doc;
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		var dd = d.doc;
 		if(d.isIE < 8 && !d._isBodyLtr()){
 			var de = d.isQuirks ? dd.body : dd.documentElement;
 			return scrollLeft + de.clientWidth - de.scrollWidth; // Integer
 		}
-				return scrollLeft; // Integer
+		//>>excludeEnd("webkitMobile");
+		return scrollLeft; // Integer
 	}
 
 	// FIXME: need a setter for coords or a moveTo!!
@@ -1118,7 +1149,8 @@ if(dojo.isIE || dojo.isOpera){
 			// IE6+, FF3+, super-modern WebKit, and Opera 9.6+ all take this branch
 			ret = node.getBoundingClientRect();
 			ret = { x: ret.left, y: ret.top, w: ret.right - ret.left, h: ret.bottom - ret.top };
-					if(d.isIE){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+			if(d.isIE){
 				// On IE there's a 2px offset that we need to adjust for, see _getIeDocumentElementOffset()
 				var offset = d._getIeDocumentElementOffset();
 
@@ -1132,7 +1164,8 @@ if(dojo.isIE || dojo.isOpera){
 				ret.x -= px(dh, cs.marginLeft) + px(dh, cs.borderLeftWidth);
 				ret.y -= px(dh, cs.marginTop) + px(dh, cs.borderTopWidth);
 			}
-				}else{
+		//>>excludeEnd("webkitMobile");
+		}else{
 			// FF2 and older WebKit
 			ret = {
 				x: 0,
@@ -1153,19 +1186,24 @@ if(dojo.isIE || dojo.isOpera){
 
 					cs = gcs(curnode);
 					if(curnode != node){
-								if(d.isMoz){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+						if(d.isMoz){
 							// tried left+right with differently sized left/right borders
 							// it really is 2xleft border in FF, not left+right, even in RTL!
 							ret.x += 2 * px(curnode,cs.borderLeftWidth);
 							ret.y += 2 * px(curnode,cs.borderTopWidth);
 						}else{
-									ret.x += px(curnode, cs.borderLeftWidth);
+		//>>excludeEnd("webkitMobile");
+							ret.x += px(curnode, cs.borderLeftWidth);
 							ret.y += px(curnode, cs.borderTopWidth);
-								}
-							}
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+						}
+		//>>excludeEnd("webkitMobile");
+					}
 					// static children in a static div in FF2 are affected by the div's border as well
 					// but offsetParent will skip this div!
-							if(d.isMoz && cs.position=="static"){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+					if(d.isMoz && cs.position=="static"){
 						var parent=curnode.parentNode;
 						while(parent!=curnode.offsetParent){
 							var pcs=gcs(parent);
@@ -1176,7 +1214,8 @@ if(dojo.isIE || dojo.isOpera){
 							parent=parent.parentNode;
 						}
 					}
-							curnode = curnode.offsetParent;
+		//>>excludeEnd("webkitMobile");
+					curnode = curnode.offsetParent;
 				}while((curnode != dh) && curnode);
 			}else if(node.x && node.y){
 				ret.x += isNaN(node.x) ? 0 : node.x;
@@ -1390,13 +1429,17 @@ if(dojo.isIE || dojo.isOpera){
 				}
 				if(propName == "innerHTML"){
 					// special case: assigning HTML
-										if(d.isIE && node.tagName.toLowerCase() in _roInnerHtml){
+					//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+					if(d.isIE && node.tagName.toLowerCase() in _roInnerHtml){
 						d.empty(node);
 						node.appendChild(d._toDom(value, node.ownerDocument));
 					}else{
-											node[propName] = value;
-										}
-										break;
+					//>>excludeEnd("webkitMobile");
+						node[propName] = value;
+					//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+					}
+					//>>excludeEnd("webkitMobile");
+					break;
 				}
 				if(d.isFunction(value)){
 					// special case: assigning an event handler
@@ -1578,13 +1621,15 @@ if(dojo.isIE || dojo.isOpera){
 	=====*/
 
 	d.empty =
-				d.isIE ?  function(node){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		d.isIE ?  function(node){
 			node = byId(node);
 			for(var c; c = node.lastChild;){ // intentional assignment
 				d.destroy(c);
 			}
 		} :
-				function(node){
+		//>>excludeEnd("webkitMobile");
+		function(node){
 			byId(node).innerHTML = "";
 		};
 
@@ -1829,6 +1874,6 @@ if(dojo.isIE || dojo.isOpera){
 		d[condition ? "addClass" : "removeClass"](node, classStr);
 	};
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 })();
-
-}
+//>>excludeEnd("webkitMobile");

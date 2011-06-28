@@ -1,1 +1,12 @@
-({"close":"[închidere]","title":"Titlu","authors":"Autori","summary":"Sumar","content":"Conţinut","contributors":"Contribuitori","updated":"Actualizat","displayOptions":"[opţiuni afişare]","id":"ID"})
+({
+	displayOptions: "[opţiuni afişare]",
+	title: "Titlu",
+	authors: "Autori",
+	contributors: "Contribuitori",
+	id: "ID",
+	close: "[închidere]",
+	updated: "Actualizat",
+	summary: "Sumar",
+	content: "Conţinut"
+})
+

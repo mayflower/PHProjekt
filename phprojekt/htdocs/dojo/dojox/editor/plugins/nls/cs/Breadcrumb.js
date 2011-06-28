@@ -1,1 +1,10 @@
-({"selectContents":"Vybrat obsah","deleteElement":"Odstranit prvek","moveEnd":"Přesunout ukazatel na konec","deleteContents":"Odstranit obsah","nodeActions":"Akce uzlu ${nodeName}","selectElement":"Vybrat prvek","moveStart":"Přesunout ukazatel na začátek"})
+({
+	"nodeActions": "Akce uzlu ${nodeName}",
+	"selectContents": "Vybrat obsah",
+	"selectElement": "Vybrat prvek",
+	"deleteElement": "Odstranit prvek",
+	"deleteContents": "Odstranit obsah",
+	"moveStart": "Přesunout ukazatel na začátek",
+	"moveEnd": "Přesunout ukazatel na konec"
+})
+

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.collections._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.collections._base"] = true;
 dojo.provide("dojox.collections._base");
 
 dojox.collections.DictionaryEntry=function(/* string */k, /* object */v){
@@ -103,5 +94,3 @@ dojox.collections.DictionaryIterator=function(/* object */obj){
 		this.element=a[position];
 	};
 };
-
-}

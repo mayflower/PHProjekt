@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.dijit-all"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.dijit-all"] = true;
 console.warn("dijit-all may include much more code than your application actually requires. We strongly recommend that you investigate a custom build or the web build tool");
 dojo.provide("dijit.dijit-all");
 
@@ -92,5 +83,3 @@ dojo.require("dijit.layout.LinkPane");
 dojo.require("dijit.layout.SplitContainer"); //deprecated
 dojo.require("dijit.layout.StackContainer");
 dojo.require("dijit.layout.TabContainer");
-
-}
