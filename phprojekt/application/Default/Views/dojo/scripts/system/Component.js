@@ -22,17 +22,21 @@
 dojo.provide("phpr.Default.System.Component");
 
 dojo.require("dojox.dtl.Inline");
+dojo.require("dojo.NodeList-traverse");
 
 dojo.declare("phpr.Default.System.Component", null, {
     main:   null,
     module: "",
-
     render:function(template, node, content) {
+
         var context = new dojox.dtl.Context(content);
         // Use the cached template
         var tplContent = __phpr_templateCache[template[0] + "." + template[1]];
         var tpl        = new dojox.dtl.Template(tplContent);
         var content    = tpl.render(context);
+        tpl = null;
+        tplContent = null;
+        context = null;
 
         // [a-zA-Z1-9[]:|]
         var eregId = /id=\\?["'][\w\x5b\x5d\x3a\x7c]*\\?["']/gi;
@@ -41,7 +45,7 @@ dojo.declare("phpr.Default.System.Component", null, {
             for (var i = 0; i < result.length; i++) {
                 var id = result[i].replace(/id=\\?["']/gi, '').replace(/\\?["']/gi, '');
                 if (dijit.byId(id)) {
-                    dijit.byId(id).destroy();
+                    dijit.byId(id).destroyRecursive();
                 }
             }
         }
@@ -50,10 +54,10 @@ dojo.declare("phpr.Default.System.Component", null, {
             var dojoType = node.getAttribute('dojoType');
             if ((dojoType == 'dijit.layout.ContentPane') ||
                 (dojoType == 'dijit.layout.BorderContainer') ) {
-                dijit.byId(node.getAttribute('id')).set('content', content);
-                dojo.addOnLoad(function(){
-                    dijit.byId(node.getAttribute('id')).resize();
-                });
+                    dijit.byId(node.getAttribute('id')).set('content', content);
+                    dojo.addOnLoad(function() {
+                        dijit.byId(node.getAttribute('id')).resize();
+                    });
             } else {
                 node.innerHTML = content;
                 phpr.initWidgets(node);
