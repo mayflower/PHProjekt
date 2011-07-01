@@ -87,6 +87,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     protected $_originalStart = null;
 
     /**
+     * The ModelInformation object.
+     *
+     * @var Phprojekt_ModelInformation_Interface
+     */
+    protected $_information;
+
+    /**
      * Checks if the given value is a valid status.
      *
      * @param mixed $value The value to check.
@@ -131,14 +138,28 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         parent::__construct($db);
 
         // This is needed to make fields read-only if we're not the owner.
-        $this->_dbManager
-            = new Calendar2_Models_CalendarInformation($this, $db);
+        $this->_information
+            = new Calendar2_Models_CalendarInformation();
 
         // UID generation method taken from rfc 5545
         $this->uid = rand()
                    . '-' . time()
                    . '-' . getMyPid()
                    . '@' . php_uname('n');
+    }
+
+    /**
+     * Return the Phprojekt_ModelInformation object for this model.
+     *
+     * @return Phprojekt_ModelInformation_Interface
+     */
+    public function getInformation()
+    {
+        if ($this->ownerId && (Phprojekt_Auth::getUserId() != $this->ownerId)) {
+            return new Calendar2_Models_InformationDecoratorReadonly($this->_information);
+        } else {
+            return $this->_information;
+        }
     }
 
     /**

@@ -39,43 +39,69 @@
  * @version    Release: @package_version@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class Calendar2_Models_CalendarInformation extends Phprojekt_DatabaseManager
-    implements Phprojekt_ModelInformation_Interface
+class Calendar2_Models_CalendarInformation extends Phprojekt_ModelInformation_Default
 {
-    /**
-     * Set the db table name to use to this fixed value.
-     * The database used by the parent class must be used here as well,
-     * independent of the class name.
-     *
-     * @return string The table name.
-     */
-    public function getTableName()
+    public function setFields()
     {
-        return "database_manager";
+        $this->fillField('summary', 'Summary', 'text', 1, 1, array('required' => true));
+        $this->fillField('description', 'Description', 'text', 2, 2);
+        $this->fillField('location', 'Location', 'text', 3, 3);
+        $this->fillField('comments', 'Comments', 'textarea', 0, 4);
+        $this->fillField('start', 'Start', 'datetime', 6, 5, array('required' => true));
+        $this->fillField('end', 'End', 'datetime', 7, 6, array('required' => true));
+        $this->fillField(
+            'confirmationStatus',
+            'Confirmation Status',
+            'selectbox',
+            0,
+            7,
+            array(
+                'range'   => array(
+                    $this->getFullRangeValues(1, 'Pending'),
+                    $this->getFullRangeValues(2, 'Accepted'),
+                    $this->getFullRangeValues(3, 'Rejected')
+                ),
+                'default' => 2
+            )
+        );
+        $this->fillField(
+            'visibility',
+            'Visibility',
+            'selectbox',
+            0,
+            8,
+            array(
+                'range' => array(
+                    $this->getFullRangeValues(1, 'Public'),
+                    $this->getFullRangeValues(2, 'Private')
+                ),
+                'default' => 1,
+                'integer' => true
+            )
+        );
+        $this->fillField('participants', 'Participants', 'hidden', 0, 0);
+        $this->fillField('rrule', 'Rrule', 'hidden', 0, 10);
+        $this->fillField('recurrence', 'Recurrence', 'hidden', 5, 0);
+        $this->fillField('confirmation_statuses', 'Confirmation Statuses', 'hidden', 0, 0);
+        $this->fillField('owner_id', 'ownerId', 'hidden', 0, 0, array('integer' => true));
     }
 
     /**
-     * Return an array of field information.
-     *
-     * @param integer $ordering An ordering constant.
-     *
-     * @return array Array with fields definitions.
+     * This function is copied from the database manager because Phprojekt_Item_Abstract is too cool to work with the
+     * documented input data. It takes a modelinterface, but expects it to be a database manager. This sucks.
      */
-    public function getFieldDefinition(
-            $ordering = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    public function getInfo($order, $column)
     {
-        $meta = parent::getFieldDefinition($ordering);
+        $column = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($column);
+        $fields = $this->_getFields($this->_mapping[$order]);
+        $result = array();
 
-        // If ownerId != currentUser then set all fields except status readonly
-        if ($this->_model->ownerId
-                && (Phprojekt_Auth::getUserId() != $this->_model->ownerId)) {
-            foreach (array_keys($meta) as $key) {
-                if ('confirmationStatus' != $meta[$key]['key']) {
-                    $meta[$key]['readOnly'] = 1;
-                }
+        foreach ($fields as $field) {
+            if (isset($field->$column)) {
+                $result[] = $field->$column;
             }
         }
 
-        return $meta;
+        return $result;
     }
 }
