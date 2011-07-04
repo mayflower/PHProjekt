@@ -266,7 +266,20 @@ class Phprojekt_Auth extends Zend_Auth
                $ldap->connect();
                $ldap->bind($username, $password);
 
-               $filter = sprintf("(&(objectclass=Person)(sAMAccountName=%s))", $username);
+               $filter = sprintf(
+                   "(
+                       &(
+                          |(objectclass=posixAccount)
+                           (objectclass=Person)
+                       )
+                       (
+                           |(uid=%s)
+                            (samAccountName=%s)
+                        )
+                   )",
+                   $username,
+                  $username
+                );
                $result = $ldap->search($filter, $searchOpts['baseDn']);
 
                $account = $result->getFirst();
