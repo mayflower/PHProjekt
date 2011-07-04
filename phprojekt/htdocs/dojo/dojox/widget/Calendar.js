@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.Calendar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.Calendar"] = true;
 dojo.provide("dojox.widget.Calendar");
 dojo.experimental("dojox.widget.Calendar");
 
@@ -19,7 +10,7 @@ dojo.declare("dojox.widget._CalendarBase", [dijit._Widget, dijit._Templated, dij
 
 	// templateString: String
 	//		The template to be used to construct the widget.
-	templateString: dojo.cache("dojox.widget", "Calendar/Calendar.html", "<div class=\"dojoxCalendar\">\r\n    <div tabindex=\"0\" class=\"dojoxCalendarContainer\" style=\"visibility: visible;\" dojoAttachPoint=\"container\">\r\n\t\t<div style=\"display:none\">\r\n\t\t\t<div dojoAttachPoint=\"previousYearLabelNode\"></div>\r\n\t\t\t<div dojoAttachPoint=\"nextYearLabelNode\"></div>\r\n\t\t\t<div dojoAttachPoint=\"monthLabelSpacer\"></div>\r\n\t\t</div>\r\n        <div class=\"dojoxCalendarHeader\">\r\n            <div>\r\n                <div class=\"dojoxCalendarDecrease\" dojoAttachPoint=\"decrementMonth\"></div>\r\n            </div>\r\n            <div class=\"\">\r\n                <div class=\"dojoxCalendarIncrease\" dojoAttachPoint=\"incrementMonth\"></div>\r\n            </div>\r\n            <div class=\"dojoxCalendarTitle\" dojoAttachPoint=\"header\" dojoAttachEvent=\"onclick: onHeaderClick\">\r\n            </div>\r\n        </div>\r\n        <div class=\"dojoxCalendarBody\" dojoAttachPoint=\"containerNode\"></div>\r\n        <div class=\"\">\r\n            <div class=\"dojoxCalendarFooter\" dojoAttachPoint=\"footer\">                        \r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget","Calendar/Calendar.html"),
 
 	// _views: Array
 	//		The list of mixin views available on this calendar.
@@ -427,7 +418,7 @@ dojo.declare("dojox.widget._CalendarDayView", [dojox.widget._CalendarView, dijit
 
 	// templateString: String
 	//		The template to be used to construct the widget.
-	templateString: dojo.cache("dojox.widget", "Calendar/CalendarDay.html", "<div class=\"dijitCalendarDayLabels\" style=\"left: 0px;\" dojoAttachPoint=\"dayContainer\">\r\n\t<div dojoAttachPoint=\"header\">\r\n\t\t<div dojoAttachPoint=\"monthAndYearHeader\">\r\n\t\t\t<span dojoAttachPoint=\"monthLabelNode\" class=\"dojoxCalendarMonthLabelNode\"></span>\r\n\t\t\t<span dojoAttachPoint=\"headerComma\" class=\"dojoxCalendarComma\">,</span>\r\n\t\t\t<span dojoAttachPoint=\"yearLabelNode\" class=\"dojoxCalendarDayYearLabel\"></span>\r\n\t\t</div>\r\n\t</div>\r\n\t<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\r\n\t\t<thead>\r\n\t\t\t<tr>\r\n\t\t\t\t<td class=\"dijitCalendarDayLabelTemplate\"><div class=\"dijitCalendarDayLabel\"></div></td>\r\n\t\t\t</tr>\r\n\t\t</thead>\r\n\t\t<tbody dojoAttachEvent=\"onclick: _onDayClick\">\r\n\t\t\t<tr class=\"dijitCalendarWeekTemplate\">\r\n\t\t\t\t<td class=\"dojoxCalendarNextMonth dijitCalendarDateTemplate\">\r\n\t\t\t\t\t<div class=\"dijitCalendarDateLabel\"></div>\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</tbody>\r\n\t</table>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget","Calendar/CalendarDay.html"),
 
 	// datePart: String
 	//		Specifies how much to increment the displayed date when the user
@@ -610,7 +601,7 @@ dojo.declare("dojox.widget._CalendarMonthYearView", [dojox.widget._CalendarView,
 
 	// templateString: String
 	//		The template to be used to construct the widget.
-	templateString: dojo.cache("dojox.widget", "Calendar/CalendarMonthYear.html", "<div class=\"dojoxCal-MY-labels\" style=\"left: 0px;\"\t\r\n\tdojoAttachPoint=\"myContainer\" dojoAttachEvent=\"onclick: onClick\">\r\n\t\t<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\r\n\t\t\t\t<tbody>\r\n\t\t\t\t\t\t<tr class=\"dojoxCal-MY-G-Template\">\r\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\r\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\r\n\t\t\t\t\t\t\t\t</td>\r\n\t\t\t\t\t\t </tr>\r\n\t\t\t\t\t\t <tr class=\"dojoxCal-MY-btns\">\r\n\t\t\t\t\t\t \t <td class=\"dojoxCal-MY-btns\" colspan=\"4\">\r\n\t\t\t\t\t\t \t\t <span class=\"dijitReset dijitInline dijitButtonNode ok-btn\" dojoAttachEvent=\"onclick: onOk\" dojoAttachPoint=\"okBtn\">\r\n\t\t\t\t\t\t \t \t \t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">OK</button>\r\n\t\t\t\t\t\t\t\t </span>\r\n\t\t\t\t\t\t\t\t <span class=\"dijitReset dijitInline dijitButtonNode cancel-btn\" dojoAttachEvent=\"onclick: onCancel\" dojoAttachPoint=\"cancelBtn\">\r\n\t\t\t\t\t\t \t \t\t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">Cancel</button>\r\n\t\t\t\t\t\t\t\t </span>\r\n\t\t\t\t\t\t \t </td>\r\n\t\t\t\t\t\t </tr>\r\n\t\t\t\t</tbody>\r\n\t\t</table>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget","Calendar/CalendarMonthYear.html"),
 
 	// datePart: String
 	//		Specifies how much to increment the displayed date when the user
@@ -892,5 +883,3 @@ dojo.declare("dojox.widget.MonthAndYearlyCalendar",
 	 	// summary: A calendar withonly a daily view.
 	 }
 );
-
-}

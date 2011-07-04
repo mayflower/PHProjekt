@@ -1,15 +1,7 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.array"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.array"] = true;
 dojo.require("dojo._base.lang");
 dojo.provide("dojo._base.array");
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 (function(){
 	var _getParts = function(arr, obj, cb){
 		return [ 
@@ -256,7 +248,22 @@ dojo.provide("dojo._base.array");
 		}
 	});
 })();
+//>>excludeEnd("webkitMobile");
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 /*
+//>>excludeEnd("webkitMobile");
+//>>includeStart("webkitMobile", kwArgs.webkitMobile);
+["indexOf", "lastIndexOf", "forEach", "map", "some", "every", "filter"].forEach(
+	function(name, idx){
+		dojo[name] = function(arr, callback, thisObj){
+			if((idx > 1) && (typeof callback == "string")){
+				callback = new Function("item", "index", "array", callback);
+			}
+			return Array.prototype[name].call(arr, callback, thisObj);
+		}
+	}
+);
+//>>includeEnd("webkitMobile");
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 */
-
-}
+//>>excludeEnd("webkitMobile");

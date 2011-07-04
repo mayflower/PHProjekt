@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.gfx.canvas"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx.canvas"] = true;
 dojo.provide("dojox.gfx.canvas");
 
 dojo.require("dojox.gfx._base");
@@ -702,5 +693,3 @@ dojo.experimental("dojox.gfx.canvas");
 	d.extend(g.Surface, Container);
 	d.extend(g.Surface, gs.Creator);
 })();
-
-}

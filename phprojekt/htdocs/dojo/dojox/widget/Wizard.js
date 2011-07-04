@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.Wizard"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.Wizard"] = true;
 dojo.provide("dojox.widget.Wizard");
 
 dojo.require("dijit.layout.StackContainer");
@@ -14,8 +5,8 @@ dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.form.Button");
 
 dojo.require("dojo.i18n"); 
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw"); 
-dojo.requireLocalization("dojox.widget", "Wizard", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw"); 
+dojo.requireLocalization("dijit", "common"); 
+dojo.requireLocalization("dojox.widget", "Wizard"); 
 
 dojo.declare(
 	"dojox.widget.Wizard",
@@ -27,7 +18,7 @@ dojo.declare(
 	//
 	
 	widgetsInTemplate: true,
-	templateString: dojo.cache("dojox.widget", "Wizard/Wizard.html", "<div class=\"dojoxWizard\" dojoAttachPoint=\"wizardNode\">\r\n    <div class=\"dojoxWizardContainer\" dojoAttachPoint=\"containerNode\"></div>\r\n    <div class=\"dojoxWizardButtons\" dojoAttachPoint=\"wizardNav\">\r\n        <button dojoType=\"dijit.form.Button\" type=\"button\" dojoAttachPoint=\"previousButton\">${previousButtonLabel}</button>\r\n        <button dojoType=\"dijit.form.Button\" type=\"button\" dojoAttachPoint=\"nextButton\">${nextButtonLabel}</button>\r\n        <button dojoType=\"dijit.form.Button\" type=\"button\" dojoAttachPoint=\"doneButton\" style=\"display:none\">${doneButtonLabel}</button>\r\n        <button dojoType=\"dijit.form.Button\" type=\"button\" dojoAttachPoint=\"cancelButton\">${cancelButtonLabel}</button>\r\n    </div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget", "Wizard/Wizard.html"),
 	
 	// nextButtonLabel: String
 	//		Label override for the "Next" button.
@@ -206,5 +197,3 @@ dojo.declare("dojox.widget.WizardPane",
 	}
 
 });
-
-}

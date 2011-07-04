@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.layout.ScrollPane"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.layout.ScrollPane"] = true;
 dojo.provide("dojox.layout.ScrollPane");
 dojo.experimental("dojox.layout.ScrollPane");
 
@@ -49,7 +40,7 @@ dojo.declare("dojox.layout.ScrollPane",
 	// alwaysShow: Boolean
 	//		whether the scroll helper should hide when mouseleave
 	autoHide: true,
-	templateString: dojo.cache("dojox.layout", "resources/ScrollPane.html", "<div class=\"dojoxScrollWindow\" dojoAttachEvent=\"onmouseenter: _enter, onmouseleave: _leave\">\r\n    <div class=\"dojoxScrollWrapper\" style=\"${style}\" dojoAttachPoint=\"wrapper\" dojoAttachEvent=\"onmousemove: _calc\">\r\n\t<div class=\"dojoxScrollPane\" dojoAttachPoint=\"containerNode\"></div>\r\n    </div>\r\n    <div dojoAttachPoint=\"helper\" class=\"dojoxScrollHelper\"><span class=\"helperInner\">|</span></div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.layout","resources/ScrollPane.html"),
 	
 	resize: function(size){
 		// summary: calculates required sizes. Call this if you add/remove content manually, or reload the content.
@@ -154,5 +145,3 @@ dojo.declare("dojox.layout.ScrollPane",
 	}
     
 });
-
-}

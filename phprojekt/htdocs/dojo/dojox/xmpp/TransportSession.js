@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.xmpp.TransportSession"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.xmpp.TransportSession"] = true;
 dojo.provide("dojox.xmpp.TransportSession");
 dojo.require("dojox.xmpp.bosh");
 dojo.require("dojox.xmpp.util");
@@ -514,5 +505,3 @@ dojo.extend(dojox.xmpp.TransportSession, {
 		onProcessProtocolResponse: function(msg){},
 		onReady: function(newState, oldState){}
 });
-
-}

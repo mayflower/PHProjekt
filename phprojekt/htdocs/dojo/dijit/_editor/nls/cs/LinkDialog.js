@@ -1,1 +1,13 @@
-({"text":"Popis:","insertImageTitle":"Vlastnosti obrázku","set":"Nastavit","newWindow":"Nové okno","topWindow":"Okno nejvyšší úrovně","target":"Cíl:","createLinkTitle":"Vlastnosti odkazu","parentWindow":"Nadřízené okno","currentWindow":"Aktuální okno","url":"Adresa URL:"})
+({
+	createLinkTitle: "Vlastnosti odkazu",
+	insertImageTitle: "Vlastnosti obrázku",
+	url: "Adresa URL:",
+	text: "Popis:",
+	target: "Cíl:",
+	set: "Nastavit",
+	currentWindow: "Aktuální okno",
+	parentWindow: "Nadřízené okno",
+	topWindow: "Okno nejvyšší úrovně",
+	newWindow: "Nové okno"
+})
+

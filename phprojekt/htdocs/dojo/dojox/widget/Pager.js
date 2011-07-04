@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.Pager"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.Pager"] = true;
 dojo.provide("dojox.widget.Pager");
 dojo.experimental("dojox.widget.Pager");
 
@@ -20,7 +11,7 @@ dojo.declare("dojox.widget.Pager",
 	// summary: A Pager, displaying a list of sized nodes
 	
 	
-	templateString: dojo.cache("dojox.widget", "Pager/Pager.html", "<div dojoAttachPoint=\"pagerContainer\" tabIndex=\"0\" dojoAttachEvent=\"onkeypress: _handleKey, onfocus: _a11yStyle, onblur:_a11yStyle\" class=\"${orientation}PagerContainer\">\r\n    <div class=\"pagerContainer\">\r\n\t\t<div dojoAttachPoint=\"pagerContainerStatus\" class=\"${orientation}PagerStatus\"></div>\r\n\t\t<div dojoAttachPoint=\"pagerContainerView\" class=\"${orientation}PagerView\">\r\n\t\t    <div dojoAttachPoint=\"pagerItemContainer\"><ul dojoAttachPoint=\"pagerItems\" class=\"pagerItems\"></ul></div>\r\n\t\t</div>\r\n\t\t<div dojoAttachPoint=\"pagerContainerPager\" class=\"${orientation}PagerPager\">\r\n\t\t\t<div tabIndex=\"0\" dojoAttachPoint=\"pagerNext\" class=\"pagerIconContainer\" dojoAttachEvent=\"onclick: _pagerNext\"><img dojoAttachPoint=\"pagerIconNext\" src=\"${iconNext}\" alt=\"Next\" /></div>\r\n\t\t\t<div tabIndex=\"0\" dojoAttachPoint=\"pagerPrevious\" class=\"pagerIconContainer\" dojoAttachEvent=\"onclick: _pagerPrevious\"><img dojoAttachPoint=\"pagerIconPrevious\" src=\"${iconPrevious}\" alt=\"Previous\" /></div>\r\n\t\t</div>\r\n    </div>\r\n\t<div dojoAttachPoint=\"containerNode\" style=\"display:none\"></div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget", "Pager/Pager.html"),
 
 /*=====	
 	// iconPrevious: String?
@@ -557,5 +548,3 @@ dojo.declare("dojox.widget._PagerItem",
 		dojo.parser.parse(this.containerNode);
 	}
 });
-
-}

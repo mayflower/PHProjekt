@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.FileInputAuto"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.FileInputAuto"] = true;
 dojo.provide("dojox.form.FileInputAuto");
 
 dojo.require("dojox.form.FileInput");
@@ -56,7 +47,7 @@ dojo.declare("dojox.form.FileInputAuto",
 	_sent: false,
 	
 	// small template changes, new attachpoint: overlay
-	templateString: dojo.cache("dojox.form", "resources/FileInputAuto.html", "<div class=\"dijitFileInput\">\r\n\t<input id=\"${id}\" name=\"${name}\" class=\"dijitFileInputReal\" type=\"file\" dojoAttachPoint=\"fileInput\" />\r\n\t<div class=\"dijitFakeInput\" dojoAttachPoint=\"fakeNodeHolder\">\r\n\t\t<input class=\"dijitFileInputVisible\" type=\"text\" dojoAttachPoint=\"focusNode, inputNode\" />\r\n\t\t<div class=\"dijitInline dijitFileInputText\" dojoAttachPoint=\"titleNode\">${label}</div>\r\n\t\t<div class=\"dijitInline dijitFileInputButton\" dojoAttachPoint=\"cancelNode\" dojoAttachEvent=\"onclick:reset\">${cancelText}</div>\r\n\t</div>\r\n\t<div class=\"dijitProgressOverlay\" dojoAttachPoint=\"overlay\">&nbsp;</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.form","resources/FileInputAuto.html"),
 	
 	onBeforeSend: function(){
 		// summary: Called immediately before a FileInput sends it's file via io.iframe.send. 
@@ -216,5 +207,3 @@ dojo.declare("dojox.form.FileInputBlind",
 		this._fixPosition(); 
 	}
 });
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.av.widget.Status"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.av.widget.Status"] = true;
 dojo.provide("dojox.av.widget.Status");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
@@ -20,7 +11,7 @@ dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
 	//		(playing, paused, buffering, etc.) in the middle. Displays
 	//		the playhead time on the left and the duration on the right.
 	//
-	templateString: dojo.cache("dojox.av.widget", "resources/Status.html", "<table class=\"Status\">\r\n    <tr>\r\n        <td class=\"Time\"><span dojoAttachPoint=\"timeNode\">0.00</span></td>\r\n        <td class=\"Status\"><div dojoAttachPoint=\"titleNode\">Loading...</div></td>\r\n        <td class=\"Duration\"><span dojoAttachPoint=\"durNode\">0.00</span></td>\r\n    </tr>\r\n</table>\r\n"),
+	templateString: dojo.cache("dojox.av.widget","resources/Status.html"),
 	//
 	postCreate: function(){
 		this.titleNode = dojo.query(".Status", this.domNode);
@@ -131,5 +122,3 @@ dojo.declare("dojox.av.widget.Status", [dijit._Widget, dijit._Templated], {
 	}
 	
 });
-
-}

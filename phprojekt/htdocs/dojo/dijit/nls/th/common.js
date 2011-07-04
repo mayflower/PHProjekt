@@ -1,1 +1,7 @@
-({"buttonOk":"ตกลง","buttonCancel":"ยกเลิก","buttonSave":"บันทึก","itemClose":"ปิด"})
+({
+	buttonOk: "ตกลง",
+	buttonCancel: "ยกเลิก",
+	buttonSave: "บันทึก",
+	itemClose: "ปิด"
+})
+

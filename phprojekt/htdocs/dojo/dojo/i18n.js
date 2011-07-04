@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.i18n"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.i18n"] = true;
 dojo.provide("dojo.i18n");
 
 /*=====
@@ -254,5 +245,3 @@ dojo.i18n._preloadLocalizations = function(/*String*/bundlePrefix, /*Array*/loca
 		preload(extra[i]);
 	}
 };
-
-}

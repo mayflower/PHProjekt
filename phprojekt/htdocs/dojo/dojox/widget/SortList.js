@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.SortList"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.SortList"] = true;
 dojo.provide("dojox.widget.SortList");
 dojo.experimental("dojox.widget.SortList"); // level: prototype, designed for dijit.chat.demo
 
@@ -48,7 +39,7 @@ dojo.declare("dojox.widget.SortList",
 	
 	baseClass: "dojoxSortList",
 
-	templateString: dojo.cache("dojox.widget", "SortList/SortList.html", "<div class=\"sortList\" id=\"${id}\">\r\n\t\t<div class=\"sortListTitle\" dojoAttachPoint=\"titleNode\">\r\n\t\t<div class=\"dijitInline sortListIcon\">&thinsp;</div>\r\n\t\t<span dojoAttachPoint=\"focusNode\">${title}</span>\r\n\t\t</div>\r\n\t\t<div class=\"sortListBodyWrapper\" dojoAttachEvent=\"onmouseover: _set, onmouseout: _unset, onclick:_handleClick\" dojoAttachPoint=\"bodyWrapper\">\r\n\t\t<ul dojoAttachPoint=\"containerNode\" class=\"sortListBody\"></ul>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget","SortList/SortList.html"),
 
 	_addItem: function(item){
 		dojo.create("li", {
@@ -157,5 +148,3 @@ dojo.declare("dojox.widget.SortList",
 	}
 	
 });
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.gfx.path"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx.path"] = true;
 dojo.provide("dojox.gfx.path");
 
 dojo.require("dojox.gfx.matrix");
@@ -426,5 +417,3 @@ dojo.declare("dojox.gfx.path.TextPath", dojox.gfx.path.Path, {
 		return this;	// self
 	}
 });
-
-}

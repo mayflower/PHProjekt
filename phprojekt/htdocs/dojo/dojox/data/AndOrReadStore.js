@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.AndOrReadStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.AndOrReadStore"] = true;
 dojo.provide("dojox.data.AndOrReadStore");
 
 dojo.require("dojo.data.util.filter");
@@ -1050,5 +1041,3 @@ dojo.declare("dojox.data.AndOrReadStore", null,{
 dojo.extend(dojox.data.AndOrReadStore,dojo.data.util.simpleFetch);
 
 
-
-}

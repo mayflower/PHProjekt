@@ -1,1 +1,10 @@
-({"selectContents":"Tartalom kiválasztása","deleteElement":"Elem törlése","moveEnd":"Kurzor mozgatása a végére","deleteContents":"Tartalom törlése","nodeActions":"${nodeName} műveletek","selectElement":"Elem kiválasztása","moveStart":"Kurzor mozgatása az elejére"})
+({
+	"nodeActions": "${nodeName} műveletek",
+	"selectContents": "Tartalom kiválasztása",
+	"selectElement": "Elem kiválasztása",
+	"deleteElement": "Elem törlése",
+	"deleteContents": "Tartalom törlése",
+	"moveStart": "Kurzor mozgatása az elejére",
+	"moveEnd": "Kurzor mozgatása a végére"
+})
+

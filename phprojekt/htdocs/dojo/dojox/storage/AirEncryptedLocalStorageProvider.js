@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.storage.AirEncryptedLocalStorageProvider"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.storage.AirEncryptedLocalStorageProvider"] = true;
 dojo.provide("dojox.storage.AirEncryptedLocalStorageProvider");
 dojo.require("dojox.storage.manager");
 dojo.require("dojox.storage.Provider");
@@ -223,6 +214,4 @@ if (dojo.isAIR) {
 		dojox.storage.manager.register("dojox.storage.AirEncryptedLocalStorageProvider", new dojox.storage.AirEncryptedLocalStorageProvider());
 		dojox.storage.manager.initialize();
 	})();
-}
-
 }

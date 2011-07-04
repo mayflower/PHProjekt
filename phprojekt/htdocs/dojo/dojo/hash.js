@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.hash"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.hash"] = true;
 dojo.provide("dojo.hash");
 //TODOC: where does this go?
 // summary:
@@ -53,8 +44,7 @@ dojo.provide("dojo.hash");
 	}
 
 	// Global vars
-	var _recentHash = null,
-		_ieUriMonitor = null,
+	var _recentHash, _ieUriMonitor, _connect,
 		_pollFrequency = dojo.config.hashPollFrequency || 100;
 
 	//Internal functions
@@ -92,7 +82,7 @@ dojo.provide("dojo.hash");
 			return;
 		}
 		location.replace("#"+hash);
-		_pollLocation();
+		!_connect && _pollLocation();
 	}
 
 	function IEUriMonitor(){
@@ -222,7 +212,7 @@ dojo.provide("dojo.hash");
 	}
 	dojo.addOnLoad(function(){
 		if("onhashchange" in dojo.global && (!dojo.isIE || (dojo.isIE >= 8 && document.compatMode != "BackCompat"))){	//need this IE browser test because "onhashchange" exists in IE8 in IE7 mode
-			dojo.connect(dojo.global,"onhashchange",_dispatchEvent);
+			_connect = dojo.connect(dojo.global,"onhashchange",_dispatchEvent);
 		}else{
 			if(document.addEventListener){ // Non-IE
 				_recentHash = _getHash();
@@ -235,5 +225,3 @@ dojo.provide("dojo.hash");
 		}
 	});
 })();
-
-}

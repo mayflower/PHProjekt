@@ -1,1 +1,13 @@
-({"text":"Beschreibung:","insertImageTitle":"Grafikeigenschaften","set":"Festlegen","newWindow":"Neues Fenster","topWindow":"Aktives Fenster","target":"Ziel:","createLinkTitle":"Linkeigenschaften","parentWindow":"Übergeordnetes Fenster","currentWindow":"Aktuelles Fenster","url":"URL:"})
+({
+	createLinkTitle: "Linkeigenschaften",
+	insertImageTitle: "Grafikeigenschaften",
+	url: "URL:",
+	text: "Beschreibung:",
+	target: "Ziel:",
+	set: "Festlegen",
+	currentWindow: "Aktuelles Fenster",
+	parentWindow: "Übergeordnetes Fenster",
+	topWindow: "Aktives Fenster",
+	newWindow: "Neues Fenster"
+})
+

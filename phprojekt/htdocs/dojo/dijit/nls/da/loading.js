@@ -1,1 +1,4 @@
-({"loadingState":"Indlæser...","errorState":"Der er opstået en fejl"})
+({
+	loadingState: "Indlæser...",
+	errorState: "Der er opstået en fejl"
+})

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.storage.WhatWGStorageProvider"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.storage.WhatWGStorageProvider"] = true;
 dojo.provide("dojox.storage.WhatWGStorageProvider");
 dojo.require("dojox.storage.Provider");
 dojo.require("dojox.storage.manager");
@@ -279,5 +270,3 @@ dojo.declare("dojox.storage.WhatWGStorageProvider", [ dojox.storage.Provider ], 
 
 dojox.storage.manager.register("dojox.storage.WhatWGStorageProvider", 
 								new dojox.storage.WhatWGStorageProvider());
-
-}

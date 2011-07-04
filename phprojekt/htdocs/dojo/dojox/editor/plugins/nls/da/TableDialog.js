@@ -1,1 +1,30 @@
-({"buttonSet":"Definér","insertTableTitle":"Indsæt tabel","insertTableRowAfterLabel":"Tilføj række efter","center":"centreret","deleteTableColumnLabel":"Slet kolonne","right":"højre","insertTableColumnBeforeLabel":"Tilføj kolonne før","tableWidth":"Tabelbredde:","buttonInsert":"Indsæt","default":"standard","align":"Justér:","insertTableRowBeforeLabel":"Tilføj række før","cellSpacing":"Celleafstand:","pixels":"pixel","selectTableLabel":"Markér tabel","rows":"Rækker:","modifyTableTitle":"Revidér tabel","cellPadding":"Cellemargen:","deleteTableRowLabel":"Slet række","backgroundColor":"Baggrundsfarve:","insertTableColumnAfterLabel":"Tilføj kolonne efter","left":"venstre","borderThickness":"Kanttykkelse","columns":"Kolonner:","percent":"percent","borderColor":"Kantfarve:"})
+({
+	insertTableTitle: "Indsæt tabel",
+	modifyTableTitle: "Revidér tabel",
+	rows: "Rækker:",
+	columns: "Kolonner:",
+	align: "Justér:",
+	cellPadding: "Cellemargen:",
+	cellSpacing: "Celleafstand:",
+	tableWidth: "Tabelbredde:",
+	backgroundColor: "Baggrundsfarve:",
+	borderColor: "Kantfarve:",
+	borderThickness: "Kanttykkelse",
+	percent: "procent",
+	pixels: "pixel",
+	"default": "standard",
+	left: "venstre",
+	center: "centreret",
+	right: "højre",
+	buttonSet: "Definér", // translated elsewhere?
+	buttonInsert: "Indsæt",
+	buttonCancel: "Annullér",
+
+	selectTableLabel: "Markér tabel",
+	insertTableRowBeforeLabel: "Tilføj række før",
+	insertTableRowAfterLabel: "Tilføj række efter",
+	insertTableColumnBeforeLabel: "Tilføj kolonne før",
+	insertTableColumnAfterLabel: "Tilføj kolonne efter",
+	deleteTableRowLabel: "Slet række",
+	deleteTableColumnLabel: "Slet kolonne"
+})

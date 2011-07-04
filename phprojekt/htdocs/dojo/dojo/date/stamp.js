@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.date.stamp"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.date.stamp"] = true;
 dojo.provide("dojo.date.stamp");
 
 // Methods to convert dates to or from a wire (string) format using well-known conventions
@@ -143,6 +134,4 @@ dojo.date.stamp.toISOString = function(/*Date*/dateObject, /*dojo.date.stamp.__O
 		formattedDate.push(time);
 	}
 	return formattedDate.join('T'); // String
-}
-
 }

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.charting.themes.ET.greys"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.themes.ET.greys"] = true;
 dojo.provide("dojox.charting.themes.ET.greys");
 dojo.require("dojox.charting.Theme");
 dojo.deprecated("dojox.charting.themes.ET.greys", "1.3");
@@ -62,5 +53,3 @@ dojo.deprecated("dojox.charting.themes.ET.greys", "1.3");
 		]
 	});
 })();
-
-}

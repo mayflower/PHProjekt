@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.CalendarViews"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.CalendarViews"] = true;
 dojo.provide("dojox.widget.CalendarViews");
 dojo.experimental("dojox.widget.CalendarViews");
 
@@ -29,7 +20,7 @@ dojo.declare("dojox.widget._CalendarMonthView", [dojox.widget._CalendarView, dij
 
 	// templateString: String
 	//	The template to be used to construct the widget.
-	templateString: dojo.cache("dojox.widget", "Calendar/CalendarMonth.html", "<div class=\"dojoxCalendarMonthLabels\" style=\"left: 0px;\"  \r\n\tdojoAttachPoint=\"monthContainer\" dojoAttachEvent=\"onclick: onClick\">\r\n    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\r\n        <tbody>\r\n            <tr class=\"dojoxCalendarMonthGroupTemplate\">\r\n                <td class=\"dojoxCalendarMonthTemplate\">\r\n                    <div class=\"dojoxCalendarMonthLabel\"></div>\r\n                </td>\r\n             </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget","Calendar/CalendarMonth.html"),
 
 	// datePart: String
 	//	Specifies how much to increment the displayed date when the user
@@ -85,7 +76,7 @@ dojo.declare("dojox.widget._CalendarYearView", [dojox.widget._CalendarView, diji
 
 	// templateString: String
 	//		The template to be used to construct the widget.
-	templateString: dojo.cache("dojox.widget", "Calendar/CalendarYear.html", "<div class=\"dojoxCalendarYearLabels\" style=\"left: 0px;\" dojoAttachPoint=\"yearContainer\">\r\n    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\" dojoAttachEvent=\"onclick: onClick\">\r\n        <tbody>\r\n            <tr class=\"dojoxCalendarYearGroupTemplate\">\r\n                <td class=\"dojoxCalendarNextMonth dojoxCalendarYearTemplate\">\r\n                    <div class=\"dojoxCalendarYearLabel\">\r\n                    </div>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget","Calendar/CalendarYear.html"),
 
 	displayedYears: 6,
 
@@ -141,5 +132,3 @@ dojo.declare("dojox.widget.YearlyCalendar",
 	 	// summary: A calendar with only a year view.
 	 }
 );
-
-}

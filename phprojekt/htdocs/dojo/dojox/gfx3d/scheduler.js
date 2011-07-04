@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.gfx3d.scheduler"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx3d.scheduler"] = true;
 dojo.provide("dojox.gfx3d.scheduler");
 dojo.provide("dojox.gfx3d.drawer");
 dojo.require("dojox.gfx3d.vector");
@@ -149,5 +140,3 @@ dojo.mixin(dojox.gfx3d.drawer, {
 	// More aggrasive optimization may re-order the DOM nodes using the order 
 	// of objects, and only elements of todos call setShape.
 });
-
-}

@@ -1,1 +1,5 @@
-({"badPasswordMessage":"Érvénytelen jelszó.","nomatchMessage":"A jelszavak nem egyeznek."})
+({
+        nomatchMessage: "A jelszavak nem egyeznek.",
+		badPasswordMessage: "Érvénytelen jelszó."
+})
+
