@@ -213,3 +213,53 @@ smtpServer    = "localhost"
 
 compressedDojo     = true;
 useCacheForClasses = true;
+
+;;;;;;;;;;;;;;;
+; PRETTY URLS ;
+;;;;;;;;;;;;;;;
+prettyUrls = true
+
+;;;;;;;;;;;;;;;;;;
+; AUTHENTICATION ;
+;;;;;;;;;;;;;;;;;;
+
+; Options: default/ldap
+authentication.mode = 'ldap'
+
+; Default values for new users
+; If language is not set, default config parameter 'language' is used
+authentication.integration.admin = 0
+authentication.integration.status = 'A'
+authentication.integration.language = 'en'
+authentication.integration.timeZone = '0000002'
+
+; A comma separated list of users who should have admin privileges in PHProjekt.
+; This will override the authentication.integration.admin parameter for the
+; specified users if the default is 0. Changes to the list also
+; affect to old users during their login. However, if user is already admin,
+; the setting cannot unset by removing the username from the list!
+; Default PHProjekt admin with id=1 is not authenticated through LDAP!
+authentication.integration.systemAdmins = username,username2
+
+; PLEASE NOTE THAT THESE CONFIGURATIONS SHOULD BE CAREFULLY SET
+; FOR THE LDAP AUTHENTICATION TO WORK!
+
+; If you are not an expert in LDAP configurations, please
+; consult the following references.
+; LDAP configuration vars explainded at:
+; http://framework.zend.com/manual/en/zend.ldap.api.html
+; Example at:
+; http://framework.zend.com/manual/en/zend.auth.adapter.ldap.html
+
+authentication.ldap.server1.host					= "ldaphost"
+authentication.ldap.server1.port					= 389
+authentication.ldap.server1.useSsl					= false
+authentication.ldap.server1.useStartTls				= false
+authentication.ldap.server1.accountDomainName		= "domain.com"
+authentication.ldap.server1.accountDomainNameShort	= "DOMAIN"
+authentication.ldap.server1.baseDn					= "OU=OrgUnit,DC=domain,DC=com"
+authentication.ldap.server1.allowEmptyPassword		= false
+; authentication.ldap.server1.bindRequiresDn		= false
+; authentication.ldap.server1.optReferrals			= false
+; authentication.ldap.server1.tryUsernameSplit		= false
+; authentication.ldap.server1.accountFilterFormat	= null
