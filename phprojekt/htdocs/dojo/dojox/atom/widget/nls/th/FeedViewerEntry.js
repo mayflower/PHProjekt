@@ -1,1 +1,4 @@
-({"deleteButton":"[ลบ]"})
+({
+	deleteButton: "[ลบ]"
+})
+

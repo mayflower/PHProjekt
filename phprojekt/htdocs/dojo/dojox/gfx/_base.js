@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.gfx._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx._base"] = true;
 dojo.provide("dojox.gfx._base");
 
 (function(){
@@ -64,8 +55,8 @@ dojo.provide("dojox.gfx._base");
 		var div = dojo.doc.createElement("div");
 		var s = div.style;
 		s.position = "absolute";
-		s.left = "-100px";
-		s.top = "0px";
+		s.top = "-100px";
+		s.left = "0px";
 		s.width = "30px";
 		s.height = "1000em";
 		s.borderWidth = "0px";
@@ -107,8 +98,8 @@ dojo.provide("dojox.gfx._base");
 			m = measuringNode = dojo.doc.createElement("div");
 			s = m.style;
 			s.position = "absolute";
-			s.left = "-10000px";
-			s.top = "0";
+			s.top = "-10000px";
+			s.left = "0";
 			dojo.body().appendChild(m);
 		}else{
 			m = measuringNode;
@@ -377,5 +368,3 @@ dojo.mixin(dojox.gfx, {
 		return a && b && a == b;
 	}
 });
-
-}

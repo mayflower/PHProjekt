@@ -21,7 +21,11 @@
 
 dojo.provide("phpr.Default.Field");
 
-dojo.declare("phpr.Default.Field", phpr.Component, {
+dojo.require("dijit._editor.plugins.LinkDialog");
+dojo.require("dijit._editor.plugins.TextColor");
+dojo.require("dijit._editor.plugins.FontChoice");
+
+dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
     // summary:
     //    class for rendering form fields
     // description:
@@ -211,9 +215,9 @@ dojo.declare("phpr.Default.Field", phpr.Component, {
     datetimeRender:function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
-        var date         = (itemvalue) ? phpr.Date.isoDatetimeTojsDate(itemvalue) : new Date();
-        var valueForDate = phpr.Date.getIsoDate(date) || '';
-        var valueForTime = phpr.Date.getIsoTime(date) || '';
+        var date         = (itemvalue) ? phpr.date.isoDatetimeTojsDate(itemvalue) : new Date();
+        var valueForDate = phpr.date.getIsoDate(date) || '';
+        var valueForTime = phpr.date.getIsoTime(date) || '';
         var html = this.render(["phpr.Default.template.form", "datetime.html"], null, {
                             label:        itemlabel,
                             labelfor:     (itemdisabled) ? itemid + "_disabled" : itemid,

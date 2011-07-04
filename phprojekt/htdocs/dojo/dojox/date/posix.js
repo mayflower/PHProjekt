@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.date.posix"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.date.posix"] = true;
 dojo.provide("dojox.date.posix");
 
 dojo.require("dojo.date");
@@ -295,6 +286,4 @@ dojox.date.posix.getIsoWeeksInYear = function(/*Date*/dateObject) {
 	}
 	var y = dateObject.getFullYear();
 	return ( p(y) % 7 == 4 || p(y-1) % 7 == 3 ) ? 53 : 52;	//	Integer
-}
-
 }

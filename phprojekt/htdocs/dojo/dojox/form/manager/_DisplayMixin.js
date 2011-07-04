@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.manager._DisplayMixin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.manager._DisplayMixin"] = true;
 dojo.provide("dojox.form.manager._DisplayMixin");
 
 dojo.declare("dojox.form.manager._DisplayMixin", null, {
@@ -68,5 +59,3 @@ dojo.declare("dojox.form.manager._DisplayMixin", null, {
 		return this.show(state, false);	// self
 	}
 });
-
-}

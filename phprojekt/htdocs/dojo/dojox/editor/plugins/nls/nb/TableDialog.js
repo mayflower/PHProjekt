@@ -1,1 +1,30 @@
-({"buttonSet":"Definer","insertTableTitle":"Sett inn tabell","insertTableRowAfterLabel":"Legg til rad etter","center":"midtstill","deleteTableColumnLabel":"Slett kolonne","right":"høyre","insertTableColumnBeforeLabel":"Legg til kolonne foran","tableWidth":"Tabellbredde:","buttonInsert":"Sett inn","default":"standard","align":"Juster:","insertTableRowBeforeLabel":"Legg til rad foran","cellSpacing":"Celleavstand:","pixels":"piksler","selectTableLabel":"Velg tabell","rows":"Rader:","modifyTableTitle":"Endre tabell","cellPadding":"Celleutfylling:","deleteTableRowLabel":"Slett rad","backgroundColor":"Bakgrunnsfarge:","insertTableColumnAfterLabel":"Legg til kolonne etter","left":"venstre","borderThickness":"Kanttykkelse","columns":"Kolonner:","percent":"prosent","borderColor":"Kantlinjefarge:"})
+({
+	insertTableTitle: "Sett inn tabell",
+	modifyTableTitle: "Endre tabell",
+	rows: "Rader:",
+	columns: "Kolonner:",
+	align: "Juster:",
+	cellPadding: "Celleutfylling:",
+	cellSpacing: "Celleavstand:",
+	tableWidth: "Tabellbredde:",
+	backgroundColor: "Bakgrunnsfarge:",
+	borderColor: "Kantlinjefarge:",
+	borderThickness: "Kanttykkelse",
+	percent: "prosent",
+	pixels: "piksler",
+	"default": "standard",
+	left: "venstre",
+	center: "midtstill",
+	right: "høyre",
+	buttonSet: "Definer", // translated elsewhere?
+	buttonInsert: "Sett inn",
+	buttonCancel: "Avbryt",
+
+	selectTableLabel: "Velg tabell",
+	insertTableRowBeforeLabel: "Legg til rad foran",
+	insertTableRowAfterLabel: "Legg til rad etter",
+	insertTableColumnBeforeLabel: "Legg til kolonne foran",
+	insertTableColumnAfterLabel: "Legg til kolonne etter",
+	deleteTableRowLabel: "Slett rad",
+	deleteTableColumnLabel: "Slett kolonne"
+})

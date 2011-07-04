@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.NodeList-manipulate"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.NodeList-manipulate"] = true;
 dojo.provide("dojo.NodeList-manipulate");
 
 /*=====
@@ -727,5 +718,3 @@ dojo["NodeList-manipulate"] = {
 		dojo.NodeList.prototype.html = dojo.NodeList.prototype.innerHTML;
 	}
 })();
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins._SmileyPalette"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins._SmileyPalette"] = true;
 dojo.provide("dojox.editor.plugins._SmileyPalette");
 
 dojo.require("dijit._Widget");
@@ -15,7 +6,7 @@ dojo.require("dojo.i18n");
 
 dojo.require("dijit._PaletteMixin");
 
-dojo.requireLocalization("dojox.editor.plugins", "Smiley", null, "ROOT,cs,de,es,fr,hu,it,ja,ko,pl,pt,ro,ru,zh,zh-tw");
+dojo.requireLocalization("dojox.editor.plugins", "Smiley");
 
 dojo.experimental("dojox.editor.plugins._SmileyPalette");
 
@@ -149,5 +140,3 @@ dojox.editor.plugins.Emoticon.fromAscii = function(/*String*/str){
 	}
 	return null;
 };
-
-}

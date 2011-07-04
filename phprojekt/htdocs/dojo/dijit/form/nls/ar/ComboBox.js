@@ -1,1 +1,4 @@
-({"previousMessage":"الاختيارات السابقة","nextMessage":"مزيد من الاختيارات"})
+({
+		previousMessage: "الاختيارات السابقة",
+		nextMessage: "مزيد من الاختيارات"
+})

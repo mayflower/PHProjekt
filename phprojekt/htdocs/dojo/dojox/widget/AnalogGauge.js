@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.AnalogGauge"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.AnalogGauge"] = true;
 dojo.provide("dojox.widget.AnalogGauge");
 
 dojo.require("dojox.gfx");
@@ -365,5 +356,3 @@ dojo.declare("dojox.widget.AnalogGauge",dojox.widget.gauge._Gauge,{
 		dojo.stopEvent(event);
 	}
 });
-
-}

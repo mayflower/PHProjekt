@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.charting.themes.Electric"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.themes.Electric"] = true;
 dojo.provide("dojox.charting.themes.Electric");
 
 dojo.require("dojox.gfx.gradutils");
@@ -99,5 +90,3 @@ dojo.require("dojox.charting.Theme");
 		return theme;
 	};
 })();
-
-}

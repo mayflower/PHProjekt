@@ -1,0 +1,1 @@
+({"descending":"降冪","ascending":"遞增","nestedSort":"巢狀排序","unsorted":"本欄不進行排序","singleSort":"單一排序","sortingState":"${0} - ${1}"})

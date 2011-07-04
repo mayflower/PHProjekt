@@ -1,1 +1,13 @@
-({"text":"説明:","insertImageTitle":"イメージ・プロパティー","set":"設定","newWindow":"新規ウィンドウ","topWindow":"最上位ウィンドウ","target":"ターゲット:","createLinkTitle":"リンク・プロパティー","parentWindow":"親ウィンドウ","currentWindow":"現行ウィンドウ","url":"URL:"})
+({
+	createLinkTitle: "リンク・プロパティー",
+	insertImageTitle: "イメージ・プロパティー",
+	url: "URL:",
+	text: "説明:",
+	target: "ターゲット:",
+	set: "設定",
+	currentWindow: "現行ウィンドウ",
+	parentWindow: "親ウィンドウ",
+	topWindow: "最上位ウィンドウ",
+	newWindow: "新規ウィンドウ"
+})
+

@@ -1,1 +1,6 @@
-({"name":"Názov","size":"Veľkosť (v bajtoch)","path":"Cesta"})
+({
+name: "Názov",
+path: "Cesta",
+size: "Veľkosť (v bajtoch)"
+})
+

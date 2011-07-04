@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.layout.ScrollingTabController"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.layout.ScrollingTabController"] = true;
 dojo.provide("dijit.layout.ScrollingTabController");
 
 dojo.require("dijit.layout.TabController");
@@ -23,7 +14,7 @@ dojo.declare("dijit.layout.ScrollingTabController",
 	// tags:
 	//		private
 
-	templateString: dojo.cache("dijit.layout", "templates/ScrollingTabController.html", "<div class=\"dijitTabListContainer-${tabPosition}\" style=\"visibility:hidden\">\r\n\t<div dojoType=\"dijit.layout._ScrollingTabControllerButton\"\r\n\t\t\tclass=\"tabStripButton-${tabPosition}\"\r\n\t\t\tid=\"${id}_menuBtn\" iconClass=\"dijitTabStripMenuIcon\"\r\n\t\t\tdojoAttachPoint=\"_menuBtn\" showLabel=false>&#9660;</div>\r\n\t<div dojoType=\"dijit.layout._ScrollingTabControllerButton\"\r\n\t\t\tclass=\"tabStripButton-${tabPosition}\"\r\n\t\t\tid=\"${id}_leftBtn\" iconClass=\"dijitTabStripSlideLeftIcon\"\r\n\t\t\tdojoAttachPoint=\"_leftBtn\" dojoAttachEvent=\"onClick: doSlideLeft\" showLabel=false>&#9664;</div>\r\n\t<div dojoType=\"dijit.layout._ScrollingTabControllerButton\"\r\n\t\t\tclass=\"tabStripButton-${tabPosition}\"\r\n\t\t\tid=\"${id}_rightBtn\" iconClass=\"dijitTabStripSlideRightIcon\"\r\n\t\t\tdojoAttachPoint=\"_rightBtn\" dojoAttachEvent=\"onClick: doSlideRight\" showLabel=false>&#9654;</div>\r\n\t<div class='dijitTabListWrapper' dojoAttachPoint='tablistWrapper'>\r\n\t\t<div wairole='tablist' dojoAttachEvent='onkeypress:onkeypress'\r\n\t\t\t\tdojoAttachPoint='containerNode' class='nowrapTabStrip'></div>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dijit.layout", "templates/ScrollingTabController.html"),
 
 	// useMenu:[const] Boolean
 	//		True if a menu should be used to select tabs when they are too
@@ -457,12 +448,10 @@ dojo.declare("dijit.layout._ScrollingTabControllerButton",
 	{
 		baseClass: "dijitTab tabStripButton",
 
-		templateString: dojo.cache("dijit.layout", "templates/_ScrollingTabControllerButton.html", "<div dojoAttachEvent=\"onclick:_onButtonClick\">\r\n\t<div waiRole=\"presentation\" class=\"dijitTabInnerDiv\" dojoattachpoint=\"innerDiv,focusNode\">\r\n\t\t<div waiRole=\"presentation\" class=\"dijitTabContent dijitButtonContents\" dojoattachpoint=\"tabContent\">\r\n\t\t\t<img waiRole=\"presentation\" alt=\"\" src=\"${_blankGif}\" class=\"dijitTabStripIcon\" dojoAttachPoint=\"iconNode\"/>\r\n\t\t\t<span dojoAttachPoint=\"containerNode,titleNode\" class=\"dijitButtonText\"></span>\r\n\t\t</div>\r\n\t</div>\r\n</div>\r\n"),
+		templateString: dojo.cache("dijit.layout","templates/_ScrollingTabControllerButton.html"),
 
 		// Override inherited tabIndex: 0 from dijit.form.Button, because user shouldn't be
 		// able to tab to the left/right/menu buttons
 		tabIndex: "-1"
 	}
 );
-
-}

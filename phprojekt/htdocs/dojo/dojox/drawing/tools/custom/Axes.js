@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.tools.custom.Axes"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.tools.custom.Axes"] = true;
 dojo.provide("dojox.drawing.tools.custom.Axes");
 dojo.require("dojox.drawing.stencil.Path");
 
@@ -580,5 +571,3 @@ dojox.drawing.tools.custom.Axes.setup = {
 	iconClass:"iconAxes"
 };
 dojox.drawing.register(dojox.drawing.tools.custom.Axes.setup, "tool");
-
-}

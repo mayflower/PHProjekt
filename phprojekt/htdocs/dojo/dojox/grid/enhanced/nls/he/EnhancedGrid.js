@@ -1,1 +1,8 @@
-({"descending":"יורד","ascending":"עולה","nestedSort":"מיון מקונן ","unsorted":"לא למיין עמודה זו ","singleSort":"מיון יחיד","sortingState":"${0} - ${1}"})
+({
+	singleSort: "מיון יחיד",
+	nestedSort: "מיון מקונן",
+	ascending: "עולה",
+	descending: "יורד",
+	unsorted: "לא למיין עמודה זו"
+})
+

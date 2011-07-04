@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.av._Media"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.av._Media"] = true;
 dojo.provide("dojox.av._Media");
 
 dojo.declare("dojox.av._Media", null, {
@@ -339,5 +330,3 @@ dojo.declare("dojox.av._Media", null, {
 		
 	}
 });
-
-}

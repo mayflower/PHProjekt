@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.layout.GridContainerLite"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.layout.GridContainerLite"] = true;
 dojo.provide("dojox.layout.GridContainerLite");
 
 dojo.require("dijit._Templated");
@@ -69,7 +60,7 @@ dojo.declare(
 
 	// templateString: String
 	//		template of gridContainer.
-	templateString: dojo.cache("dojox.layout", "resources/GridContainer.html", "<div id=\"${id}\" class=\"gridContainer\" dojoAttachPoint=\"containerNode\" tabIndex=\"0\" dojoAttachEvent=\"onkeypress:_selectFocus\">\r\n\t<div dojoAttachPoint=\"gridContainerDiv\">\r\n\t\t<table class=\"gridContainerTable\" dojoAttachPoint=\"gridContainerTable\" cellspacing=\"0\" cellpadding=\"0\">\r\n\t\t\t<tbody>\r\n\t\t\t\t<tr dojoAttachPoint=\"gridNode\" >\r\n\t\t\t\t\t\r\n\t\t\t\t</tr>\r\n\t\t\t</tbody>\r\n\t\t</table>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.layout", "resources/GridContainer.html"),
 
 	// dragHandleClass: Array :
 	//		CSS class enabling a drag handle on a child.
@@ -818,5 +809,3 @@ dojo.extend(dijit._Widget, {
 	//		Defined only if dojo.require("dojox.layout.GridContainerLite") is done.
 	dragRestriction : false
 });
-
-}
