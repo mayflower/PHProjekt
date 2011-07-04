@@ -240,4 +240,43 @@
         mobilephone="004934563456" city="Buenos Aires" zipcode="1234AAA"
         country="Argentina" street="Edison 1234"
         comment="This is a comment" private="0" />
+
+    <!-- FILEMANAGER TESTS -->
+    <project_module_permissions
+        module_id="7" project_id="1" />
+    <role_module_permissions role_id="1" module_id="7" access="139" />
+    <database_manager table_name="Filemanager" table_field="title"
+        form_tab="1" form_label="Title" form_type="text"
+        form_position="1" form_columns="1"  
+        list_position="1"
+        list_align="center" list_use_filter="1" alt_position="0"
+        status="1" is_integer="0" is_required="1" />
+    <database_manager table_name="Filemanager" table_field="comments"
+        form_tab="1" form_label="Comments" form_type="textarea"
+        form_position="2" form_columns="1" list_position="0"
+        list_use_filter="1" alt_position="0"
+        status="1" is_integer="0" is_required="0"
+        is_unique="0" />
+    <database_manager table_name="Filemanager" table_field="project_id"
+        form_tab="1" form_label="Project" form_type="selectValues"
+        form_position="3" form_columns="1"
+        form_range="Project#id#title" list_position="0"
+        list_use_filter="1" alt_position="0"
+        status="1" is_integer="1" is_required="1"
+        is_unique="0" />
+    <database_manager table_name="Filemanager" table_field="files"
+        form_tab="1" form_label="Upload" form_type="upload"
+        form_position="5" form_columns="1" list_position="3"
+        list_align="center" list_use_filter="1" alt_position="0"
+        status="1" is_integer="0" is_required="1"
+        is_unique="0" />
+    <filemanager id="1" owner_id="1" title="Test" project_id="1"
+        comments="Foobar" files="966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt" />
+    <filemanager id="2" owner_id="1" title="Test" project_id="1"
+        comments="einself" files="deadbeef01ec4a2a3fa6282bb8fa8d56|articles.txt" />
+    <item_rights
+        module_id="7" item_id="1" user_id="1" access="255" />
+    <item_rights
+        module_id="7" item_id="2" user_id="1" access="255" />
+    <!-- /FILEMANAGER TESTS -->
 </dataset>
