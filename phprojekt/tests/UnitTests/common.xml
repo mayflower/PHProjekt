@@ -3,9 +3,11 @@
     <project id="1" path="/" title="PHProjekt" notes="" owner_id="1"
         start_date="2007-12-01" priority="1" current_status="3" />
     <project id="2" path="/1/" title="Test Project" notes="" owner_id="1"
-        project_id="1" start_date="2007-12-01" priority="1" current_status="3" />
+        project_id="1" start_date="2009-06-01" end_date="2009-10-31"
+        priority="1" current_status="3" />
     <project id="5" path="/1/2/" title="Sub Project" notes="" owner_id="1"
-        project_id="2" start_date="1987-03-22" priority="1" current_status="3" />
+        project_id="2" start_date="2009-06-02" end_date="2009-07-31"
+        priority="1" current_status="3" />
     <project id="6" path="/1/2/5/" title="Sub Sub Project 1" notes="" owner_id="1"
         project_id="5" start_date="2007-12-01" priority="1" current_status="3" />
     <project id="7" path="/1/2/5/" title="Sub Sub Project 2" notes="" owner_id="1"

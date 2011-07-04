@@ -99,7 +99,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends DatabaseTest
         $this->assertEquals('....Test Project', $node->getDepthDisplay('title'));
         $node = $this->_tree->getNodeById(5);
         $this->assertEquals('........Sub Project', $node->getDepthDisplay('title'));
-        $this->assertEquals('........1987-03-22', $node->getDepthDisplay('startDate'));
+        $this->assertEquals('........2009-06-02', $node->getDepthDisplay('startDate'));
     }
 
     /**
