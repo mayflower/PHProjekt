@@ -57,7 +57,7 @@ require_once 'User/AllTests.php';
 require_once 'Note/AllTests.php';
 require_once 'Role/AllTests.php';
 require_once 'Tab/AllTests.php';
-require_once 'Module/AllTests.php';
+//require_once 'Module/AllTests.php';
 require_once 'Project/AllTests.php';
 require_once 'Helpdesk/AllTests.php';
 require_once 'Contact/AllTests.php';
