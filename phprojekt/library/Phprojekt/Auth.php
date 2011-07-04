@@ -137,26 +137,19 @@ class Phprojekt_Auth extends Zend_Auth
     public static function login($username, $password, $loginOptions = array())
     {
        $mode = self::getLoginMode();
-       $defaults = array(
+       $options = array(
            'keepLogged' => false,
            'loginServer' => null
        );
-       if (!is_array($loginOptions)) {
-           $loginOptions = array();
-       }
-       $options = array();
-       foreach ($defaults as $key => $val) {
-           if (array_key_exists($key, $loginOptions)) {
-               $val = $loginOptions[$key];
-           }
-           $$key = $val;
+       if (is_array($loginOptions)) {
+           $options = array_merge($options, $loginOptions);
        }
 
        $success = false;
-        if ($mode == 'default') {
-           $success = self::_defaultLogin($username, $password, $keepLogged);
+       if ($mode == 'default') {
+           $success = self::_defaultLogin($username, $password, $options['keepLogged']);
        } else if ($mode == 'ldap') {
-           $success = self::_ldapLogin($username, $password, $keepLogged, $loginServer);
+           $success = self::_ldapLogin($username, $password, $options['keepLogged'], $options['loginServer']);
        } else {
            throw new Phprojekt_Auth_Exception('Invalid user or password', 4);
        }
