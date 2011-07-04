@@ -30,7 +30,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
     _updateCacheIds:       null,
     _participantsInDb:     null,
     _participantsInTab:    null,
-    _originalRrule:        null,
+    _originalData:         null,
 
     _FRMWIDG_BASICDATA:  0,
     _FRMWIDG_PARTICIP:   1,
@@ -61,7 +61,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         }
 
         if (this.id > 0) {
-            if (this._originalRrule && null === this._multipleEvents) {
+            if (this._originalData && this._originalData.rrule && null === this._multipleEvents) {
                 // If the event has recurrence ask what to modify
                 this.showEventSelector('Edit', "submitForm");
                 return false;
@@ -499,7 +499,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
 
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
-                                                                 + '/start/' + this._presetValues['start'],
+                                    + '/start/' + this._originalData.start,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
@@ -596,11 +596,12 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
 
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId
-                + '/id/' + this.id,
+                + '/id/' + this.id + '/start/' + this._originalData.start,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
     // Only change: these two lines have been commented out.
+    //  We need this because the id on the server might have changed when the event has been split.
     //           if (!this.id) {
                    this.id = data['id'];
     //           }
@@ -631,9 +632,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         phpr.Calendar2.Form.superclass.getFormData.apply(this);
         var data = phpr.DataStore.getData({url: this._url});
         if (data.length > 0) {
-            this._originalRrule = data[0].rrule;
-        } else {
-            this._originalRrule = '';
+            this._originalData = data[0];
         }
     }
 });

@@ -754,19 +754,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Retrieves the recurrenceId as specified by the iCalendar standard.
-     *
-     * @return string The recurrence Id.
-     */
-    public function getRecurrenceId()
-    {
-        $dt = new Datetime(
-            '@' . Phprojekt_Converter_Time::userToUtc($this->start)
-        );
-        return $dt->format('Ymd\THis');
-    }
-
-    /**
      * Returns the dates excluded from this reccurring event.
      *
      * @return array of Datetime
