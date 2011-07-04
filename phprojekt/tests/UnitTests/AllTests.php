@@ -57,13 +57,12 @@ require_once 'User/AllTests.php';
 require_once 'Note/AllTests.php';
 require_once 'Role/AllTests.php';
 require_once 'Tab/AllTests.php';
-//require_once 'Module/AllTests.php';
+require_once 'Module/AllTests.php';
 require_once 'Project/AllTests.php';
-//require_once 'Minutes/AllTests.php';
 require_once 'Helpdesk/AllTests.php';
 require_once 'Contact/AllTests.php';
-//require_once 'Filemanager/AllTests.php';
-//require_once 'Gantt/AllTests.php';
+require_once 'Filemanager/AllTests.php';
+require_once 'Gantt/AllTests.php';
 require_once 'Statistic/AllTests.php';
 
 /**
@@ -112,16 +111,15 @@ class AllTests extends PHPUnit_Framework_TestSuite
         //$suite->addTest(Note_AllTests::suite());
         $suite->addTest(Todo_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
-        $suite->addTest(Helpdesk_AllTests::suite());
+        //$suite->addTest(Helpdesk_AllTests::suite());
         //$suite->addTest(History_AllTests::suite());
         $suite->addTest(Role_AllTests::suite());
         $suite->addTest(Tab_AllTests::suite());
         $suite->addTest(Project_AllTests::suite());
         //$suite->addTest(Module_AllTests::suite());
         $suite->addTest(Contact_AllTests::suite());
-        //$suite->addTest(Filemanager_AllTests::suite());
-        //$suite->addTest(Gantt_AllTests::suite());
-        //$suite->addTest(Minutes_AllTests::suite());
+        $suite->addTest(Filemanager_AllTests::suite());
+        $suite->addTest(Gantt_AllTests::suite());
 
         // Add here additional test suites
 
