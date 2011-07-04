@@ -33,7 +33,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Index Controller
@@ -52,6 +51,12 @@ require_once 'PHPUnit/Framework.php';
  */
 class Statistic_IndexController_Test extends FrontInit
 {
+    protected function getDataSet() {
+        return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
+            array(
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml')));
+    }
+
     /**
      * Test noraml call
      */
@@ -63,9 +68,8 @@ class Statistic_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
 
         $response = $this->getResponse();
-        $this->assertContains('{"data":{"users":{"1":"david"},"projects":{"1":"Invisible Root","2":"....Project 1",'
-            . '"4":"........Sub Project","6":"............Sub Sub Project 1","7":"............Sub Sub Project 2",'
-            . '"5":"........Test Project"},"rows":{"1":{"1":120}}}})', $response);
+        $this->assertContains('{"data":{"users":{"1":"Test"},"projects":{"1":"PHProjekt","2":"....Test Project",'
+            . '"5":"........Sub Project","6":"............Sub Sub Project 1","7":"............Sub Sub Project 2"},"rows":{"1":{"1":120}}}})', $response);
     }
 
     /**
@@ -97,13 +101,12 @@ class Statistic_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
 
         $response = $this->getResponse();
-        $this->assertContains('"Project","david","Total"'."\n"
-            . '"Invisible Root","02:00","02:00"'."\n"
-            . '"....Project 1","00:00","00:00"'."\n"
+        $this->assertContains('"Project","Test","Total"'."\n"
+            . '"PHProjekt","02:00","02:00"'."\n"
+            . '"....Test Project","00:00","00:00"'."\n"
             . '"........Sub Project","00:00","00:00"'."\n"
             . '"............Sub Sub Project 1","00:00","00:00"'."\n"
             . '"............Sub Sub Project 2","00:00","00:00"'."\n"
-            . '"........Test Project","00:00","00:00"'."\n"
             . '"Total","02:00","02:00"'."\n", $response);
     }
 }

@@ -22,7 +22,6 @@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests Module Model class

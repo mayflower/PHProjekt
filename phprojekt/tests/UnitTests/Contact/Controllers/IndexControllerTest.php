@@ -22,7 +22,6 @@
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Contact Index Controller
@@ -42,6 +41,10 @@ require_once 'PHPUnit/Framework.php';
  */
 class Contact_IndexController_Test extends FrontInit
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
+    }
+
     /**
      * Test of json save
      */
@@ -69,7 +72,7 @@ class Contact_IndexController_Test extends FrontInit
     /**
      * Test of json list
      */
-    public function testJsonListBeforeAdd()
+    public function testJsonList()
     {
         // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
@@ -85,7 +88,7 @@ class Contact_IndexController_Test extends FrontInit
     /**
      * Test of json detail
      */
-    public function testJsonDetailBeforeAdd()
+    public function testJsonDetail()
     {
         // Check it
         $this->setRequestUrl('Contact/index/jsonDetail/');
@@ -95,7 +98,7 @@ class Contact_IndexController_Test extends FrontInit
         $expected = '"data":[{"id":1,"name":"Mariano","email":"mariano.lapenna@mayflower.de",'
             . '"company":"Mayflower","firstphone":"004912341234","secondphone":"004923452345",'
             . '"mobilephone":"004934563456","street":"Edison 1234","city":"Buenos Aires","zipcode":"1234AAA",'
-            . '"country":"Argentina","comment":"Very intelligent","private":0,"rights":{"currentUser":{"moduleId":9,'
+            . '"country":"Argentina","comment":"This is a comment","private":0,"rights":{"currentUser":{"moduleId":9,'
             . '"itemId":1,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
             . '"delete":true,"download":true,"admin":true}}}],"numRows":1})';
         $this->assertContains($expected, $response);
@@ -119,47 +122,13 @@ class Contact_IndexController_Test extends FrontInit
         $this->request->setParam('city', 'Buenos Aires2');
         $this->request->setParam('zipcode', '1234AAA2');
         $this->request->setParam('country', 'Argentina2');
-        $this->request->setParam('comment', 'Very intelligent2');
+        $this->request->setParam('comment', 'Foo');
         $this->request->setParam('private', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Contact_IndexController::EDIT_TRUE_TEXT, $response);
     }
 
-    /**
-     * Test of json list
-     */
-    public function testJsonListBeforeEdit()
-    {
-        // Check it
-        $this->setRequestUrl('Contact/index/jsonList/');
-        $this->request->setParam('nodeId', 1);
-        $response = $this->getResponse();
-        $expected = '"data":[{"id":1,"name":"Mariano2","email":"mariano.lapenna@mayflower.de2",'
-            . '"firstphone":"12341234B","street":"Edison 1234B","private":1,"rights":{"currentUser":{"moduleId":9,'
-            . '"itemId":1,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
-            . '"delete":true,"download":true,"admin":true}}}],"numRows":1})';
-        $this->assertContains($expected, $response);
-    }
-
-    /**
-     * Test of json detail
-     */
-    public function testJsonDetailBeforeEdit()
-    {
-        // Check it
-        $this->setRequestUrl('Contact/index/jsonDetail/');
-        $this->request->setParam('id', 1);
-        $this->request->setParam('nodeId', 1);
-        $response = $this->getResponse();
-        $expected = '"data":[{"id":1,"name":"Mariano2","email":"mariano.lapenna@mayflower.de2",'
-            . '"company":"Mayflower2","firstphone":"12341234B","secondphone":"23452345B","mobilephone":"34563456B",'
-            . '"street":"Edison 1234B","city":"Buenos Aires2","zipcode":"1234AAA2","country":"Argentina2",'
-            . '"comment":"Very intelligent2","private":1,"rights":{"currentUser":{"moduleId":9,"itemId":1,'
-            . '"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,"copy":true,'
-            . '"delete":true,"download":true,"admin":true}}}],"numRows":1})';
-        $this->assertContains($expected, $response);
-    }
 
     /**
      * Test of json delete - actually the Default functions
@@ -171,13 +140,7 @@ class Contact_IndexController_Test extends FrontInit
         $this->request->setParam('id', '1');
         $response = $this->getResponse();
         $this->assertContains(Contact_IndexController::DELETE_TRUE_TEXT, $response);
-    }
 
-    /**
-     * Test of json delete - actually the Default functions -> Check the item was deleted
-     */
-    public function testJsonDeleteCheck() {
-        // Check it
         $this->setRequestUrl('Contact/index/jsonList/');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();

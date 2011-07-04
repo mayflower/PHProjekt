@@ -22,7 +22,6 @@
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Helpdesk Index Controller
@@ -44,6 +43,10 @@ class Helpdesk_IndexController_Test extends FrontInit
 {
     private $_listingExpectedString = null;
     private $_model                 = null;
+
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
+    }
 
     /**
      * setUp method for PHPUnit

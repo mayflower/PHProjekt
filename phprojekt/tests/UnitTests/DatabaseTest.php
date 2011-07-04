@@ -1,6 +1,6 @@
 <?php
 /**
- * Unit test
+ * Test framework to test databases using DBUnit.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -13,47 +13,37 @@
  *
  * @category   PHProjekt
  * @package    UnitTests
- * @subpackage Tab
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 
-
 /**
- * Tests for Index Controller
+ * A DBUnit test case framework.
  *
  * @category   PHProjekt
  * @package    UnitTests
- * @subpackage Tab
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
- * @group      tab
- * @group      controller
- * @group      tab-controller
+ * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
-class Tab_IndexController_Test extends FrontInit
-{
-    protected function getDataSet() {
-        return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
-            array(
-                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
-                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
+abstract class DatabaseTest extends PHPUnit_Extensions_Database_TestCase {
+    public function setUp () {
+        parent::setUp();
+        Phprojekt::getInstance();
+        Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
     }
 
-    /**
-     * Test of json list Tabe -in fact, default json list
-     */
-    public function testJsonList()
-    {
-        $this->setRequestUrl('Core/tab/jsonList');
-        $this->request->setParam('nodeId', 1);
-        $response = $this->getResponse();
-        $this->assertContains('"numRows":3}', $response);
+    protected function getConnection() {
+        /* @todo read from settings later */
+
+        $pdo = new PDO('mysql:host=localhost;dbname=phprojekttest',
+            'phprojekt', 'phprojekt');
+        return $this->createDefaultDBConnection($pdo, 'phprojekttest');
     }
 }
+

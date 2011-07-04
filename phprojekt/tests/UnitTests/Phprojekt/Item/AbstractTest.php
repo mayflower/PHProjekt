@@ -21,7 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 class Customized_Project extends Project_Models_Project
 {
@@ -260,6 +259,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
             'current_status'   => $this->_formResult['currentStatus'],
             'complete_percent' => $this->_formResult['completePercent']
         );
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
     }
 
     /**
@@ -343,7 +343,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
         $item     = new Project_Models_Project(array('db' => $this->sharedFixture));
         $result   = array();
         $result[] = array('field'    => 'currentStatus',
-                          'label'    => 'Status',
+                          'label'    => 'Current status',
                           'message'  => 'Value out of range');
         $item->projectId     = 1;
         $item->title         = 'TEST';
@@ -406,6 +406,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testTime()
     {
+        $this->markTestSkipped('Do not use Minute model outside of Minutes test');
         $item          = new Minutes_Models_Minutes(array('db' => $this->sharedFixture));
         $item->endTime = '12:00:00';
         $this->assertEquals(array(), $item->getError());
@@ -417,6 +418,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testHtml()
     {
+        $this->markTestSkipped('Do not use Note model outside of Minutes test');
         $item           = new Note_Models_Note(array('db' => $this->sharedFixture));
         $item->comments = '<b>HELLO</b>';
         $this->assertEquals(array(), $item->getError());
@@ -428,6 +430,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testArray()
     {
+        $this->markTestSkipped('Do not use Minute model outside of Minutes test');
         $item                      = new Minutes_Models_Minutes(array('db' => $this->sharedFixture));
         $item->participantsInvited = array(1,2,3);
         $this->assertEquals(array(), $item->getError());
@@ -468,6 +471,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testDelete()
     {
+        $this->markTestSkipped('Do not use Helpdesk model outside of Helpdesk tests');
         $model              = new Helpdesk_Models_Helpdesk(array('db' => $this->sharedFixture));
         $model->title       = 'test';
         $model->projectId   = 1;
@@ -486,6 +490,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
 
     public function testSaveRights()
     {
+        $this->markTestSkipped('Do not use Helpdesk model outside of Helpdesk tests');
         $model = new Helpdesk_Models_Helpdesk(array('db' => $this->sharedFixture));
         $model->title       = 'test';
         $model->projectId   = 1;
@@ -513,7 +518,7 @@ class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals('1', $field->value);
             }
             if ($key == 'title') {
-                $this->assertEquals('Invisible Root', $field->value);
+                $this->assertEquals('PHProjekt', $field->value);
             }
         }
     }

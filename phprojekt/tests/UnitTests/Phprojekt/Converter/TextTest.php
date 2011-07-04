@@ -21,7 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests Converter text class
@@ -40,8 +39,19 @@ require_once 'PHPUnit/Framework.php';
  * @group      phprojekt-converter
  * @group      phprojekt-converter-text
  */
-class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
+class Phprojekt_Converter_TextTest extends DatabaseTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * Test text converter
      */
@@ -56,7 +66,7 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
             // Selectbox
             if ($info['key'] == 'currentStatus') {
                 $value = Phprojekt_Converter_Text::convert($object, $info);
-                $this->assertEquals('Offered', $value);
+                $this->assertEquals('Working', $value);
             }
             // Percentage
             if ($info['key'] == 'completePercent') {
@@ -86,6 +96,7 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertPart2()
     {
+        $this->markTestIncomplete('do not use minutes');
         $model           = Phprojekt_Loader::getModel('Minutes', 'Minutes');
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $model->getInformation()->getFieldDefinition($order);
@@ -109,6 +120,7 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertPart3()
     {
+        $this->markTestIncomplete('do not use helpdesk');
         $model           = Phprojekt_Loader::getModel('Helpdesk', 'Helpdesk');
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $model->getInformation()->getFieldDefinition($order);

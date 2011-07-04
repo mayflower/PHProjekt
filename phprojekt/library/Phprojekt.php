@@ -73,6 +73,11 @@ class Phprojekt
     const DEFAULT_MAX_UPLOAD_SIZE = 512000;
 
     /**
+     * Integer that define the current API version.
+     */
+    const API_VERSION = 0;
+
+    /**
      * Singleton instance.
      *
      * @var Phprojekt
@@ -127,6 +132,18 @@ class Phprojekt
         } else {
             return sprintf("%d.%d.%d", self::VERSION_MAJOR, self::VERSION_MINOR, self::VERSION_RELEASE);
         }
+    }
+
+    /**
+     * Returns the current api verison of PHProjekt.
+     *
+     * The Api version is an integer that is incremented everytime a
+     * method is added or modified.
+     *
+     * @return integer
+     */
+    public static function getApiVersion() {
+        return self::API_VERSION;
     }
 
     /**
@@ -339,10 +356,12 @@ class Phprojekt
      *
      * @return string Tooltip message.
      */
-    public function getTooltip($field)
+    public function getTooltip($field, $moduleName = null)
     {
         $translate  = Phprojekt::getInstance()->getTranslate();
-        $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+        if (null == $moduleName) {
+            $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+        }
 
         $hints = $translate->translate('Tooltip', $moduleName);
         if (!is_array($hints)) {
@@ -522,6 +541,12 @@ class Phprojekt
 
         // Define general error handler
         set_error_handler(Array("Phprojekt", "errorHandler"));
+
+        /* initialize PHPRojekt Extensions */
+        $extensions = new Phprojekt_Extensions(PHPR_CORE_PATH);
+
+        /* call init method on every extension */
+        $extensions->init();
     }
 
     /**

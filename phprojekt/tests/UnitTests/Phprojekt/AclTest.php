@@ -21,7 +21,6 @@
  * @author     Nina Schmitt <nina.schmitt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Acls
@@ -44,6 +43,8 @@ class Phprojekt_AclTest extends PHPUnit_Framework_TestCase
     /**
      * This function constructs the Acl list and checks whether all Rights are
      * registered and returned correctly
+     *
+     * @expectedException Zend_Acl_Exception
      */
     public function testRegisterRights()
     {
@@ -51,7 +52,7 @@ class Phprojekt_AclTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($acl->has(2));
         $this->assertFalse($acl->has(4));
         $this->assertTrue($acl->has(1));
-        $this->assertTrue($acl->has(3));
+        $this->assertFalse($acl->has(3));
         $this->assertTrue($acl->isAllowed('1', 1, 'write'));
         $this->assertTrue($acl->isAllowed('1', 2, 'write'));
         $this->assertTrue($acl->isAllowed('1', 3, 'write'));
