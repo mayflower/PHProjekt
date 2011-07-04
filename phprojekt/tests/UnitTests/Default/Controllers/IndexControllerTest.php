@@ -146,12 +146,12 @@ class Phprojekt_IndexController_Test extends FrontInit
 
     /**
      * Test of json delete project -without a project Id-
+     * @expectedException Phprojekt_PublishedException
      */
     public function testJsonDeleteNoId()
     {
         $this->setRequestUrl('Project/index/jsonDelete');
         $this->getResponse();
-        $this->assertTrue($this->error);
     }
 
     /**
