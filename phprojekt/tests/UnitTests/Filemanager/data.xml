@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+    <!--<filemanager />-->
+    <filemanager id="1" owner_id="1" title="Test" project_id="1"
+        comments="Foobar" files="966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt" />
+</dataset>
