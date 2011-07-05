@@ -39,10 +39,16 @@
  * @group      phprojekt-databasemanager
  * @group      phprojekt-databasemanager-field
  */
-class Phprojekt_DatabaseManager_FieldTest extends PHPUnit_Framework_TestCase
+class Phprojekt_DatabaseManager_FieldTest extends DatabaseTest
 {
     public function setUp() {
+        parent::setUp();
         $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
     }
 
     /**
