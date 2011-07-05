@@ -87,6 +87,7 @@ class Phprojekt_LoginController_Test extends FrontInit
      */
     public function testLoginLoginKeepLoggedAction()
     {
+        $this->markTestSkipped("write propper login test");
         $this->setRequestUrl('Login/login');
 
         // This is the only way I found to set POST values on request
@@ -117,6 +118,7 @@ class Phprojekt_LoginController_Test extends FrontInit
      */
     public function testLoginLogoutAction()
     {
+        $this->markTestSkipped("write propper login test");
         $this->setRequestUrl('Login/logout');
         try {
             $this->front->dispatch($this->request, $this->response);
