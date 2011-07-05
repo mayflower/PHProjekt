@@ -71,11 +71,6 @@ class Phprojekt_DatabaseManager_FieldTest extends DatabaseTest
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $dbField = new Phprojekt_DatabaseManager_Field($project->getInformation(), 'parent', 'testvalue');
 
-        ob_start();
-        echo $dbField;
-        $stringValue = ob_get_contents();
-        ob_end_clean();
-
-        $this->assertEquals('testvalue', $stringValue);
+        $this->assertEquals('testvalue', $dbField->value);
     }
 }
