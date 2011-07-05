@@ -37,15 +37,19 @@
  * @group      module
  * @group      phprojekt-module
  */
-class Phprojekt_ModuleTest extends PHPUnit_Framework_TestCase
+class Phprojekt_ModuleTest extends DatabaseTest
 {
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * Test getId
      */
     public function testGetId()
     {
         $this->assertEquals(1, Phprojekt_Module::getId('Project'));
-        $this->assertEquals(2, Phprojekt_Module::getId('Todo'));
     }
 
 
@@ -55,6 +59,5 @@ class Phprojekt_ModuleTest extends PHPUnit_Framework_TestCase
     public function testGetModuleName()
     {
         $this->assertEquals('Project', Phprojekt_Module::getModuleName(1));
-        $this->assertEquals('Todo', Phprojekt_Module::getModuleName(2));
     }
 }
