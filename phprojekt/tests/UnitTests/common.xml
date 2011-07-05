@@ -100,14 +100,14 @@
     <database_manager table_name='Project' table_field="priority"
         form_tab="1" form_label="Priority"
         form_type="rating" form_position="6" form_columns="1"
-          form_range="10" default_value="5"
-        list_position="5" list_align="center" list_use_filter="1"
+        form_range="10" default_value="5"
+        list_position="4" list_align="center" list_use_filter="1"
         alt_position="5" status="1" is_integer="1" is_required="0"
         is_unique="0" />
     <database_manager table_name='Project' table_field="current_status"
         form_tab="1" form_label="Current status"
         form_type="selectValues" form_position="7"
-        form_columns="1"  
+        form_columns="1"
         form_range="1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting"
         list_position="5" list_align="left"
         list_use_filter="1" alt_position="2" status="1" is_integer="1"
@@ -289,4 +289,5 @@
     <item_rights
         module_id="7" item_id="2" user_id="1" access="255" />
     <!-- /FILEMANAGER TESTS -->
+    <frontend_message />
 </dataset>

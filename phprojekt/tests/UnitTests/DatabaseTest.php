@@ -41,9 +41,7 @@ abstract class DatabaseTest extends PHPUnit_Extensions_Database_TestCase {
     protected function getConnection() {
         /* @todo read from settings later */
 
-        $pdo = new PDO('mysql:host=localhost;dbname=phprojekttest',
-            'phprojekt', 'phprojekt');
-        return $this->createDefaultDBConnection($pdo, 'phprojekttest');
+        return $this->createDefaultDBConnection(Phprojekt::getInstance()->getDb()->getConnection());
     }
 }
 
