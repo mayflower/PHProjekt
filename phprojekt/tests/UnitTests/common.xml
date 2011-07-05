@@ -289,4 +289,5 @@
     <item_rights
         module_id="7" item_id="2" user_id="1" access="255" />
     <!-- /FILEMANAGER TESTS -->
+    <frontend_message />
 </dataset>
