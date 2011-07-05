@@ -49,6 +49,7 @@ class Phprojekt_DatabaseManagerTest extends DatabaseTest
      */
     public function setUp()
     {
+        parent::setUp();
         $this->_emptyResult = array();
 
         $this->_formResult = array(
