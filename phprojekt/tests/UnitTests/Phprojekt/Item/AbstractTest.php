@@ -50,13 +50,18 @@ class Customized_Project extends Project_Models_Project
  * @group      phprojekt-item
  * @group      activerecord
  */
-class Phprojekt_Item_AbstractTest extends PHPUnit_Framework_TestCase
+class Phprojekt_Item_AbstractTest extends DatabaseTest
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * setUp method for PHPUnit. We use a shared db connection
      */
     public function setUp()
     {
+        parent::setUp();
         $this->_emptyResult = array();
 
         $this->_formResult = array(
