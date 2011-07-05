@@ -317,6 +317,22 @@ CREATE TABLE `module` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `module_instance`
+--
+
+DROP TABLE IF EXISTS `module_instance`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `module_instance` (
+      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+      `project_id` int(10) unsigned NOT NULL,
+      `module` varchar(255) DEFAULT NULL,
+      `name` varchar(255) DEFAULT NULL,
+      PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `module_tab_relation`
 --
 
