@@ -102,7 +102,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
                 showRoot: false,
                 persist:  false,
                 _onNodeMouseEnter: cb1,
-                _onNodeMouseLeave: cb2,
+                _onNodeMouseLeave: cb2
             }, document.createElement('div'));
         })();
     },

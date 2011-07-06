@@ -1097,7 +1097,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                                 rows: that.gridLayout
                     }],
                     doclick: dojo.hitch(p6Grid, 'doClick'),
-                    dodblclick: dojo.hitch(p6Grid, 'doDblClick'),
+                    dodblclick: dojo.hitch(p6Grid, 'doDblClick')
                 }, document.createElement('div'));
                 that._domNodes.push(that.grid);
 
