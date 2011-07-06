@@ -25,6 +25,12 @@
 /**
  * Calendar model class.
  *
+ * The term 'rrule' originates from the iCal Standard, RFC 5545, which can be
+ * found at http://tools.ietf.org/html/rfc5545.
+ * It is short for recurrence rule and describes how the recurrence is structed.
+ * Together with the start date of the first occurrence, all single occurrences
+ * can be calculated.
+ *
  * @category   PHProjekt
  * @package    Application
  * @subpackage Calendar
