@@ -145,17 +145,19 @@ class IndexController extends Zend_Controller_Action
      */
     public function init()
     {
-        $isLoggedIn = true;
-        try {
-            Phprojekt_Auth::isLoggedIn();
+        $isLoggedIn = Phprojekt_Auth::isLoggedIn();
+        if ($isLoggedIn) {
             // Check the CSRF token
             $this->checkCsrfToken();
-        } catch (Phprojekt_Auth_UserNotLoggedInException $error) {
+        } else {
             // User not logged in, display login page
             // If is a GET, show the index page with isLogged false
             // If is a POST, send message in json format
             if (!$this->getFrontController()->getRequest()->isGet()) {
-                throw new Phprojekt_PublishedException($error->message, 500);
+                throw new Phprojekt_PublishedException(
+                    Phprojekt_Auth::NOT_LOGGED_IN_MESSAGE,
+                    500
+                );
             }
             $isLoggedIn = false;
         }
