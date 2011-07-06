@@ -21,7 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for database manager
@@ -39,13 +38,18 @@ require_once 'PHPUnit/Framework.php';
  * @group      phprojekt-databasemanager
  * @group      activerecord
  */
-class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
+class Phprojekt_DatabaseManagerTest extends DatabaseTest
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * setUp method for PHPUnit. We use a shared db connection
      */
     public function setUp()
     {
+        parent::setUp();
         $this->_emptyResult = array();
 
         $this->_formResult = array(
@@ -65,6 +69,7 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
         $this->_listLabelResult = array(
                         'Title','Start date','End date','Priority',
                         'Current status','Complete percent');
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
     }
 
     /**
@@ -89,7 +94,7 @@ class Phprojekt_DatabaseManagerTest extends PHPUnit_Framework_TestCase
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $db      = new Phprojekt_DatabaseManager($project, array('db' => $this->sharedFixture));
-        $fields  = $db->getFieldDefinition(2);
+        $fields  = $db->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         foreach ($fields as $field) {
             $result[$field['key']] = $field['key'];
         }

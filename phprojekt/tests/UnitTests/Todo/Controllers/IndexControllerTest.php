@@ -21,8 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
-
 /**
  * Tests for Todo Index Controller
  *
@@ -43,11 +41,19 @@ class Todo_IndexController_Test extends FrontInit
     private $_listingExpectedString = null;
     private $_model                 = null;
 
+    protected function getDataSet() {
+        return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
+            array(
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
+    }
+
     /**
      * setUp method for PHPUnit
      */
     public function setUp()
     {
+        parent::setUp();
         $this->_listingExpectedString = '{"key":"title","label":"Title","originalLabel":"Title","type":"text",'
             . '"hint":"","listPosition":1,"formPosition":1';
         $this->_model = new Todo_Models_Todo();
@@ -67,11 +73,11 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('endDate', '2009-05-17');
         $this->request->setParam('priority', 5);
         $this->request->setParam('currentStatus', 1);
-        $this->request->setParam('userId', 2);
+        $this->request->setParam('userId', 1);
         $this->request->setParam('string', 'My todo tag');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response, $this->errormessage);
     }
 
     /**
@@ -93,7 +99,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('sendNotification', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response);
+        $this->assertContains(Todo_IndexController::ADD_TRUE_TEXT, $response, $this->errormessage);
     }
 
     /**
@@ -103,7 +109,7 @@ class Todo_IndexController_Test extends FrontInit
     {
         // EDIT: First inserted item. Send notification.
         $this->setRequestUrl('Todo/index/jsonSave/');
-        $this->request->setParam('id', 2);
+        $this->request->setParam('id', 1);
         $this->request->setParam('title', 'My todo task MODIFIED');
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 2);
@@ -115,7 +121,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('sendNotification', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains(Todo_IndexController::EDIT_TRUE_TEXT, $response);
+        $this->assertContains(Todo_IndexController::EDIT_TRUE_TEXT, $response, $this->errormessage);
     }
 
     /**
@@ -123,9 +129,22 @@ class Todo_IndexController_Test extends FrontInit
      */
     public function testJsonSaveEditNotification()
     {
+        $this->setRequestUrl('Todo/index/jsonSave/');
+        $this->request->setParam('id', 1);
+        $this->request->setParam('title', 'My todo task MODIFIED');
+        $this->request->setParam('notes', 'My note');
+        $this->request->setParam('projectId', 2);
+        $this->request->setParam('startDate', '2009-05-16');
+        $this->request->setParam('endDate', '2009-05-17');
+        $this->request->setParam('priority', 7);
+        $this->request->setParam('currentStatus', 2);
+        $this->request->setParam('userId', 1);
+        $this->request->setParam('sendNotification', 1);
+        $this->request->setParam('nodeId', 1);
+        $response = $this->getResponse();
         // Check saved data
         $model = clone($this->_model);
-        $model->find(2);
+        $model->find(1);
         $this->assertEquals('My todo task MODIFIED', $model->title);
         $this->assertEquals('My note', $model->notes);
         $this->assertEquals(2, $model->projectId);
@@ -170,24 +189,15 @@ class Todo_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Todo/index/jsonSaveMultiple/');
         $items = array(2 => array('title' => 'My todo task CHANGED',
+                                  'projectId' => 1,
                                   'currentStatus' => 3),
                        3 => array('title' => 'My todo task 2 CHANGED',
+                                  'projectId' => 1,
                                   'currentStatus' => 4));
         $this->request->setParam('data', $items);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains(Todo_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response);
-
-        // Check saved data
-        $model = clone($this->_model);
-        $model->find(2);
-        $this->assertEquals('My todo task CHANGED', $model->title);
-        $this->assertEquals(3, $model->currentStatus);
-
-        $model = clone($this->_model);
-        $model->find(3);
-        $this->assertEquals('My todo task 2 CHANGED', $model->title);
-        $this->assertEquals(4, $model->currentStatus);
+        $this->assertContains(Todo_IndexController::EDIT_MULTIPLE_TRUE_TEXT, $response, $this->errormessage);
     }
 
     /**
@@ -196,10 +206,10 @@ class Todo_IndexController_Test extends FrontInit
     public function testJsonList()
     {
         $this->setRequestUrl('Todo/index/jsonList');
-        $this->request->setParam('nodeId', 2);
+        $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains($this->_listingExpectedString, $response);
-        $this->assertContains('"numRows":2', $response);
+        $this->assertContains($this->_listingExpectedString, $response, $this->errormessage);
+        $this->assertContains('"numRows":1', $response, $this->errormessage);
     }
 
     /**
@@ -211,7 +221,7 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('id', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains($this->_listingExpectedString, $response);
-        $this->assertContains('"numRows":1', $response);
+        $this->assertContains($this->_listingExpectedString, $response, $this->errormessage);
+        $this->assertContains('"numRows":1', $response, $this->errormessage);
     }
 }

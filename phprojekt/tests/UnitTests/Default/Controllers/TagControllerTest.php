@@ -22,7 +22,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Tag Controller
@@ -42,6 +41,10 @@ require_once 'PHPUnit/Framework.php';
  */
 class Phprojekt_TagController_Test extends FrontInit
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * Test of json get tags
      */

@@ -1,4 +1,4 @@
-<project name="PHP_CodeBrowser" default="build" basedir=".">
+<project name="PHP_CodeBrowser" default="build">
   <property name='sources'
             value='phprojekt/application,phprojekt/library/Phprojekt'/>
  <target name="clean">
@@ -15,9 +15,12 @@
 
  <!-- Run unit tests and generate junit.xml and clover.xml -->
  <target name="phpunit">
-   <!--
-  <exec executable="phpunit" failonerror="true"/>
-  -->
+  <exec executable="phpunit" dir="phprojekt/tests/UnitTests/">
+   <arg line="--strict
+       --coverage-clover='${basedir}/build/logs/coverage.xml'
+       --log-junit='${basedir}/build/logs/junit.xml'
+       AllTests.php" />
+  </exec>
  </target>
 
  <!-- Run pdepend, phpmd, phpcpd, and phpcs in parallel -->

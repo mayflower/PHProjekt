@@ -364,7 +364,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted['label']         = Phprojekt::getInstance()->translate($field->formLabel, null, $module);
         $converted['originalLabel'] = $field->formLabel;
         $converted['type']          = $field->formType;
-        $converted['hint']          = Phprojekt::getInstance()->getTooltip($key);
+        $converted['hint']          = Phprojekt::getInstance()->getTooltip($key, $module);
         $converted['listPosition']  = (int) $field->listPosition;
         $converted['formPosition']  = (int) $field->formPosition;
         $converted['fieldset']      = '';

@@ -33,4 +33,5 @@ rules in mind.
 
 Happy hacking.
 
-(c) 2010 Mayflower GmbH and Contributors
+(c) 2011 Mayflower GmbH and Contributors
+

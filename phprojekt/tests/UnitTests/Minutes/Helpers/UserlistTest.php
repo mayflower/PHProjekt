@@ -22,7 +22,6 @@
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Minutes Userlist Helper
