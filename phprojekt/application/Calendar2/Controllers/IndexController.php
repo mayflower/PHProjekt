@@ -236,7 +236,7 @@ class Calendar2_IndexController extends IndexController
     public function jsonSaveAction()
     {
         $id                = $this->getRequest()->getParam('id');
-        $recurrenceId      = $this->getRequest()->getParam('recurrenceId');
+        $occurrence        = $this->getRequest()->getParam('occurrence');
         $sendNotifications = $this->getRequest()->getParam(
             'sendNotification',
             'false'
@@ -247,9 +247,10 @@ class Calendar2_IndexController extends IndexController
                 && 'undefined' !== $id) {
             throw new Phprojekt_PublishedException("Invalid id '$id'");
         }
-        if (!preg_match('/\d{8}T\d{6}/', $recurrenceId)) {
+        //TODO: Handling of recurrence selection when saving is currently b0rked
+        if (!empty($occurrence) && !preg_match('/\d{8}T\d{6}/', $occurrence)) {
             throw new Phprojekt_PublishedException(
-                "Invalid reucrrenceId '$recurrenceId'"
+                "Invalid occurrence '$occurrence'"
             );
         }
         if ('1' === $sendNotifications) {
@@ -271,13 +272,9 @@ class Calendar2_IndexController extends IndexController
         $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
 
         if (!empty($id)) {
-            $start = new Datetime(
-                $this->getRequest()->getParam('recurrenceId'),
-                new DateTimeZone('UTC')
-            );
+            $start = new Datetime($occurrence, new DateTimeZone('UTC'));
             $model->findOccurrence($id, $start);
-            $message
-                = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
+            $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
         if (!empty($id) && $model->ownerId != Phprojekt_Auth::getUserId()) {
@@ -383,8 +380,8 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonDetailAction()
     {
-        $id    = $this->getRequest()->getParam('id');
-        $start = $this->getRequest()->getParam('start');
+        $id         = $this->getRequest()->getParam('id');
+        $occurrence = $this->getRequest()->getParam('occurrence');
 
         if (!Cleaner::validate('int', $id) && 'null' !== $id) {
             throw new Phprojekt_PublishedException("Invalid id '$id'");
@@ -392,14 +389,14 @@ class Calendar2_IndexController extends IndexController
 
         $id = (int) $id;
 
-        if ('undefined' === $start) {
-            $start = null;
+        if ('undefined' === $occurrence) {
+            $occurrence = null;
         } else {
             try {
-                $start = new Datetime($start, $this->_getUserTimezone());
+                $occurrence = new Datetime($occurrence, $this->_getUserTimezone());
             } catch (Exception $e) {
                 throw new Phprojekt_PublishedException(
-                    "Invalid start timestamp '$start'"
+                    "Invalid occurrence timestamp '$occurrence'"
                 );
             }
         }
@@ -408,10 +405,10 @@ class Calendar2_IndexController extends IndexController
         $record = new Calendar2_Models_Calendar2();
 
         if (!empty($id)) {
-            if (empty($start)) {
+            if (empty($occurrence)) {
                 $record = $record->find($id);
             } else {
-                $record = $record->findOccurrence($id, $start);
+                $record = $record->findOccurrence($id, $occurrence);
             }
         }
 
@@ -455,7 +452,7 @@ class Calendar2_IndexController extends IndexController
     public function jsonDeleteAction()
     {
         $id                = $this->getRequest()->getParam('id');
-        $start             = $this->getRequest()->getParam('start');
+        $occurrence        = $this->getRequest()->getParam('occurrence');
         $multiple          = $this->getRequest()->getParam(
             'multipleEvents',
             'true'
@@ -468,9 +465,9 @@ class Calendar2_IndexController extends IndexController
         if (!Cleaner::validate('int', $id)) {
             throw new Phprojekt_PublishedException("Invalid id '$id'");
         }
-        if (!self::_validateTimestamp($start)) {
+        if (!self::_validateTimestamp($occurrence)) {
             throw new Phprojekt_PublishedException(
-                "Invalid start timestamp '$start'"
+                "Invalid occurrence timestamp '$occurrence'"
             );
         }
         if (!Cleaner::validate('boolean', $multiple)) {
@@ -492,11 +489,11 @@ class Calendar2_IndexController extends IndexController
 
         $model = new Calendar2_Models_Calendar2;
 
-        if (empty($start)) {
+        if (empty($occurrence)) {
             $model = $model->find($id);
         } else {
-            $start = new Datetime($start, $this->_getUserTimezone());
-            $model = $model->findOccurrence($id, $start);
+            $occurrence = new Datetime($occurrence, $this->_getUserTimezone());
+            $model      = $model->findOccurrence($id, $occurrence);
         }
 
         if ($multiple) {

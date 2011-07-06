@@ -499,7 +499,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
 
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
-                                    + '/start/' + this._originalData.start,
+                                    + '/occurrence/' + this._originalData.start,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
@@ -577,7 +577,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
 
     setUrl:function(args) {
         this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/'
-                  + phpr.currentProjectId + '/id/' + this.id + '/start/' + args[4];
+                  + phpr.currentProjectId + '/id/' + this.id + '/occurrence/' + args[4];
     },
 
     // We have to overwrite this function here because we need to use the id
@@ -596,7 +596,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
 
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId
-                + '/id/' + this.id + '/start/' + this._originalData.start,
+                + '/id/' + this.id + '/occurrence/' + this._originalData.start,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
