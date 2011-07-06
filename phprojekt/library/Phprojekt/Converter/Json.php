@@ -130,15 +130,15 @@ class Phprojekt_Converter_Json
         $fieldDefinition = $information->getFieldDefinition($order);
 
         $datas   = array();
+        $ids  = array();
         foreach ($models as $model) {
             $data = array();
-            $ids  = array();
 
-            $data['id'] = (int) $models->id;
+            $data['id'] = (int) $model->id;
             $ids[]      = $data['id'];
             foreach ($fieldDefinition as $field) {
                 $key   = $field['key'];
-                $value = $models->$key;
+                $value = $model->$key;
                 $data[$key] = self::_convertModelValue($value, $field);
             }
             $data['rights'] = array();
@@ -146,6 +146,8 @@ class Phprojekt_Converter_Json
         }
 
         $rights = $models[0]->getMultipleRights($ids);
+        // We need the $idx to modify the $datas elements instead of just
+        // copies.
         foreach ($datas as $index => $data) {
             $datas[$index]['rights'] = $rights[$datas[$index]['id']];
         }
