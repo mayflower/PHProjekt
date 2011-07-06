@@ -19,7 +19,7 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-dojo.provide("phpr.Default.System.Form.HorizontalRangeSlider");
+dojo.provide("phpr.Gantt.Form.HorizontalRangeSlider");
 
 dojo.require("dojo.dnd.Moveable");
 dojo.require("dijit.form.HorizontalSlider");
@@ -97,7 +97,7 @@ dojo.declare("phpr.Default.System.Form._RangeSliderMixin", dojox.form._RangeSlid
     }
 });
 
-dojo.declare("phpr.Default.System.Form.HorizontalRangeSlider", [dijit.form.HorizontalSlider, phpr.Default.System.Form._RangeSliderMixin], {
-    templateString: __phpr_templateCache['phpr.Gantt.template.HorizontalRangeSlider.html'],
+dojo.declare("phpr.Gantt.Form.HorizontalRangeSlider", [dijit.form.HorizontalSlider, phpr.Default.System.Form._RangeSliderMixin], {
+    templateString: __phpr_templateCache['phpr.Gantt.template.HorizontalRangeSlider.html']
     }
 );

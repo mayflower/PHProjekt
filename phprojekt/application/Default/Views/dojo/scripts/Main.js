@@ -298,6 +298,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         phpr.tree.loadTree();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
+        if(this.grid) {
+            if("function" == typeof this.grid.destroy) {
+                this.grid.destroy();
+            }
+        }
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
@@ -323,6 +328,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 })
             });
             toolbar.addChild(button);
+            button = null;
         }
 
         // Setting
@@ -337,6 +343,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             })
         });
         toolbar.addChild(button);
+        button = null;
 
         if (isAdmin > 0) {
             // Administration
@@ -351,6 +358,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 })
             });
             toolbar.addChild(button);
+            button = null;
         }
 
         // Help
@@ -364,6 +372,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 })
             });
             systemToolbar.addChild(button);
+            button = null;
         }
 
         // Logout
@@ -377,7 +386,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 })
             });
             systemToolbar.addChild(button);
+            button = null;
         }
+        // destroy cyclic refs
+        toolbar = null;
+        systemToolbar = null;
     },
 
     setSubmoduleNavigation:function(currentModule) {
@@ -456,6 +469,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 dojo.byId("subModuleNavigation").appendChild(widget.domNode);
                 phpr.initWidgets(dojo.byId("subModuleNavigation"));
                 widget.layout();
+
+                // avoid cyclic refs
+                tmp = null;
+                widget = null;
 
                 this.customSetSubmoduleNavigation();
             })
