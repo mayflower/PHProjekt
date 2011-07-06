@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Calendar.Main");
 
+dojo.require("dijit.layout.ContentPane");
+
 dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     _date:                new Date(),
     _usersSelectionMode:  false,
@@ -80,7 +82,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     setWidgets:function() {
         // Summary:
         //   Custom setWidgets for calendar
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
         this.loadAppropriateList();
     },
 
@@ -126,7 +128,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('dayListSelf');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        var dateString = phpr.Date.getIsoDate(this._date);
+        var dateString = phpr.date.getIsoDate(this._date);
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.dayListSelf = new this.dayListSelfWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
@@ -142,7 +144,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('dayListSelect');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        var dateString = phpr.Date.getIsoDate(this._date);
+        var dateString = phpr.date.getIsoDate(this._date);
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.dayListSelect = new this.dayListSelectWidget(updateUrl, phpr.currentProjectId, dateString,
@@ -159,7 +161,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('weekList');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        var dateString = phpr.Date.getIsoDate(this._date);
+        var dateString = phpr.date.getIsoDate(this._date);
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.weekList = new this.weekListWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
@@ -175,7 +177,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         this.destroyOtherLists('monthList');
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
-        var dateString = phpr.Date.getIsoDate(this._date);
+        var dateString = phpr.date.getIsoDate(this._date);
         this.monthList = new this.monthListWidget(this, phpr.currentProjectId, dateString);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
@@ -345,8 +347,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                     startDate = today;
                 }
             }
-            params['startDatetime'] = phpr.Date.getIsoDatetime(startDate, startTime);
-            params['endDatetime']   = phpr.Date.getIsoDatetime(startDate, endTime);
+            params['startDatetime'] = phpr.date.getIsoDatetime(startDate, startTime);
+            params['endDatetime']   = phpr.date.getIsoDatetime(startDate, endTime);
         }
 
         this.form = new this.formWidget(this, id, module, params);
@@ -367,7 +369,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         // Description:
         //    Request the user list to the DB and then calls the next function of the process to show the selection
         // window.
-        this.userStore = new phpr.Store.User();
+        this.userStore = new phpr.Default.System.Store.User();
         this.userStore.fetch(dojo.hitch(this, "selectorRender"));
     },
 
@@ -561,7 +563,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             }
 
             if (this.isListActive('dayList')) {
-                var dateString  = phpr.Date.getIsoDate(this._date);
+                var dateString  = phpr.date.getIsoDate(this._date);
                 var dateDescrip = this.dateDescripDay() + ', ' + dateString;
             } else if (this.isListActive(this.weekList)) {
                 var dateDescrip = this.getWeek() + ' . ' + phpr.nls.get('Calendar week');

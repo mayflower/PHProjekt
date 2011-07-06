@@ -21,7 +21,9 @@
 
 dojo.provide("phpr.Timecard.Grid");
 
-dojo.declare("phpr.Timecard.Grid", phpr.Component, {
+dojo.require("dijit.form.Button");
+
+dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
     main:          null,
     _date:         null,
     _node:         null,
@@ -79,7 +81,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         for (var i in content) {
             var weekClass = (content[i]['week'] == 0 || content[i]['week'] == 6) ? 'weekend' : 'weekday';
             dates.push({
-                week:      phpr.Date.getShortTranslateWeekDay(content[i]['week']),
+                week:      phpr.date.getShortTranslateWeekDay(content[i]['week']),
                 weekClass: weekClass,
                 date:      content[i]['date'],
                 sum:       (content[i]['sumInHours'] != '0') ? content[i]['sumInHours'] : "-",
@@ -94,9 +96,9 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         }
 
         this.render(["phpr.Timecard.template", "monthView.html"], this._node.domNode, {
-            monthTxt:   phpr.Date.getLongTranslateMonth(this._month) + ' ' + this._year,
+            monthTxt:   phpr.date.getLongTranslateMonth(this._month) + ' ' + this._year,
             totalTxt:   phpr.nls.get('Total hours'),
-            total:      phpr.Date.convertMinutesToTime(total),
+            total:      phpr.date.convertMinutesToTime(total),
             totalClass: totalClass,
             dates:      dates
         });

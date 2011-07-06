@@ -25,7 +25,7 @@ dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
 
     initData:function() {
         // Get all the active users
-        this.userStore = new phpr.Store.User();
+        this.userStore = new phpr.Default.System.Store.User();
         this._initData.push({'store': this.userStore});
     },
 

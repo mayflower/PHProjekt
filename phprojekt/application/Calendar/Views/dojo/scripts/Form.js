@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Calendar.Form");
 
+dojo.require("dijit.form.Button");
+
 dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     _relatedDataUrl:       null,
     _relatedData:          null,
@@ -39,7 +41,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
     initData:function() {
         // Get all the active users
-        this.userStore = new phpr.Store.User();
+        this.userStore = new phpr.Default.System.Store.User();
         this._initData.push({'store': this.userStore});
 
         // Get the participants and related events
@@ -96,9 +98,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             if (this.sendData['rruleUntil']) {
                 until = this.sendData['rruleUntil'];
                 if (!until.setHours) {
-                    until = phpr.Date.isoDateTojsDate(until);
+                    until = phpr.date.isoDateTojsDate(until);
                 }
-                var startDatetime = phpr.Date.isoDatetimeTojsDate(this.sendData['startDatetime']);
+                var startDatetime = phpr.date.isoDatetimeTojsDate(this.sendData['startDatetime']);
                 until.setHours(startDatetime.getHours());
                 until.setMinutes(startDatetime.getMinutes());
                 until.setSeconds(startDatetime.getSeconds());

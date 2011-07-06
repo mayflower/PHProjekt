@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Gantt.Main");
 
+dojo.require("dijit.form.DateTextBox");
+
 dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     gantt:   null,
     scale:   1.8,
@@ -53,7 +55,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     setWidgets:function() {
         // Summary:
         //   Custom setWidgets for gantt
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
         this.gantt = new phpr.Project.GanttBase(this);
         this._url  = phpr.webpath + 'index.php/Gantt/index/jsonGetProjects/nodeId/' + phpr.currentProjectId;
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
@@ -454,7 +456,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // Description:
         //    Update list, parent and form cached for the changed projects
         for (var i in ids) {
-            var parentId = phpr.Tree.getParentId(ids[i]);
+            var parentId = phpr.tree.getParentId(ids[i]);
             // List
             var listUrl = phpr.webpath + 'index.php/Project/index/jsonList/nodeId/' + ids[i];
             phpr.DataStore.deleteDataPartialString({url: listUrl});
