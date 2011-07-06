@@ -154,10 +154,7 @@ class IndexController extends Zend_Controller_Action
             // If is a GET, show the index page with isLogged false
             // If is a POST, send message in json format
             if (!$this->getFrontController()->getRequest()->isGet()) {
-                throw new Phprojekt_PublishedException(
-                    Phprojekt_Auth::NOT_LOGGED_IN_MESSAGE,
-                    500
-                );
+                throw new Phprojekt_PublishedException(Phprojekt_Auth::NOT_LOGGED_IN_MESSAGE, 500);
             }
             $isLoggedIn = false;
         }
@@ -755,8 +752,12 @@ class IndexController extends Zend_Controller_Action
     {
         $language  = Cleaner::sanitize('alpha', $this->getRequest()->getParam('language', 'en'));
         $translate = Phprojekt::getInstance()->getTranslate();
+        $data = $translate->getTranslatedStrings($language);
+        if ('en' != $language) {
+            $data['_fallback'] = $translate->getTranslatedStrings('en');
+        }
 
-        Phprojekt_Converter_Json::echoConvert($translate->getTranslatedStrings($language));
+        Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**
