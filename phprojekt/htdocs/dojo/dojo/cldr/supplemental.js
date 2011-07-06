@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.cldr.supplemental"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.cldr.supplemental"] = true;
 dojo.provide("dojo.cldr.supplemental");
 
 dojo.require("dojo.i18n");
@@ -77,5 +68,3 @@ dojo.cldr.supplemental.getWeekend = function(/*String?*/locale){
 	if(end === undefined){end=0;}
 	return {start:start, end:end}; /*Object {start,end}*/
 };
-
-}

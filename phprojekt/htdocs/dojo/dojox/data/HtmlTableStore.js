@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.HtmlTableStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.HtmlTableStore"] = true;
 dojo.provide("dojox.data.HtmlTableStore");
 
 dojo.require("dojox.xml.parser");
@@ -477,5 +468,3 @@ dojo.declare("dojox.data.HtmlTableStore", null, {
 	}
 });
 dojo.extend(dojox.data.HtmlTableStore,dojo.data.util.simpleFetch);
-
-}

@@ -21,7 +21,11 @@
 
 dojo.provide("phpr.Default.Form");
 
-dojo.declare("phpr.Default.Form", phpr.Component, {
+dojo.require("dijit.form.Button");
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.layout.TabContainer");
+
+dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     // Summary:
     //    Class for displaying a PHProjekt Detail View
     // Description:
@@ -69,7 +73,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         });
 
         this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
-        this.tabStore = new phpr.Store.Tab();
+        this.tabStore = new phpr.Default.System.Store.Tab();
         this._initData.push({'store': this.tabStore});
         this.initData();
         this.getInitData();
@@ -130,7 +134,7 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         this._initData.push({'url': this._accessUrl});
 
         // Get all the active users
-        this.userStore = new phpr.Store.User();
+        this.userStore = new phpr.Default.System.Store.User();
         this._initData.push({'store': this.userStore});
 
         // Get the tags
@@ -542,14 +546,17 @@ dojo.declare("phpr.Default.Form", phpr.Component, {
         //    Set the Container
         // Description:
         //    Set the Container
-        var tabContainer = new dijit.layout.TabContainer({
-            style:   'height: 100%;',
-            useMenu: false
-        }, document.createElement('div'));
-        dojo.connect(tabContainer, 'selectChild', dojo.hitch(this, function() {
+        var cb = dojo.hitch(this, function() {
             dojo.byId('completeContent').focus();
-        }));
-        return tabContainer;
+        });
+        return (function() {  
+            var tabContainer = new dijit.layout.TabContainer({
+                style:   'height: 100%;',
+                useMenu: false
+            }, document.createElement('div'));
+            dojo.connect(tabContainer, 'selectChild', cb);
+            return tabContainer;
+        })();
     },
 
     addModuleTabs:function(data) {

@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.PlaceholderMenuItem"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.PlaceholderMenuItem"] = true;
 dojo.provide("dojox.widget.PlaceholderMenuItem");
+
+dojo.experimental("dojox.widget.PlaceholderMenuItem");
 
 dojo.require("dijit.Menu");
 
@@ -86,17 +79,17 @@ dojo.declare("dojox.widget.PlaceholderMenuItem", dijit.MenuItem, {
 dojo.extend(dijit.Menu, { 
 	getPlaceholders: function(/*String?*/ label){ 
 		// summary:
-		//		returns an array of placeholders with the given label.  There
+		//		Returns an array of placeholders with the given label.  There
 		//		can be multiples.
 		// label:
 		//		Label to search for - if not specified, then all placeholders
 		//		are returned
-		// returns:
+		// returns: Array
 		//		An array of placeholders that match the given label
 		var r = []; 
 
 		var children = this.getChildren(); 
-		children.forEach(function(child){ 
+		dojo.forEach(children, function(child){ 
 			if(child._isPlaceholder && (!label || child.label == label)){
 				r.push(child); 
 			}else if(child._started && child.popup && child.popup.getPlaceholders){
@@ -109,8 +102,6 @@ dojo.extend(dijit.Menu, {
 				}
 			}
 		}, this); 
-		return r; // dojox.widget.PlaceholderMenuItem[]
+		return r;
 	}
 }); 
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.mobile.app._FormWidget"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.mobile.app._FormWidget"] = true;
 dojo.provide("dojox.mobile.app._FormWidget");
 dojo.experimental("dojox.mobile.app._FormWidget");
 
@@ -301,5 +292,3 @@ dojo.declare("dojox.mobile.app._FormValueWidget", dojox.mobile.app._FormWidget,
 		this._setValueAttr(this._resetValue, true);
 	}
 });
-
-}

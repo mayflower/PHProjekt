@@ -1,1 +1,32 @@
-({"buttonSet":"Nastavi","insertTableTitle":"Vstavi tabelo","insertTableRowAfterLabel":"Dodaj vrstico za","center":"na sredini","deleteTableColumnLabel":"Izbriši stolpec","right":"desno","insertTableColumnBeforeLabel":"Dodaj stolpec pred","tableWidth":"Širina tabele:","buttonInsert":"Vstavi","default":"privzeto","align":"Poravnaj:","insertTableRowBeforeLabel":"Dodaj vrstico pred","cellSpacing":"Razmik med celicami:","pixels":"pikslov","selectTableLabel":"Izberi tabelo","rows":"Vrstice:","modifyTableTitle":"Spremeni tabelo","cellPadding":"Odmik celic:","deleteTableRowLabel":"Izbriši vrstico","backgroundColor":"Barva ozadja:","insertTableColumnAfterLabel":"Dodaj stolpec za","left":"levo","borderThickness":"Debelina obrobe","columns":"Stolpci:","percent":"odstotkov","borderColor":"Barva obrobe:"})
+({
+	insertTableTitle: "Vstavi tabelo",
+	modifyTableTitle: "Spremeni tabelo",
+	rows: "Vrstice:",
+	columns: "Stolpci:",
+	align: "Poravnaj:",
+	cellPadding: "Polnjenje celic:",
+	cellSpacing: "Razmik celic:",
+	tableWidth: "Širina tabele:",
+	backgroundColor: "Barva ozadja:",
+	borderColor: "Barva obrobe:",
+	borderThickness: "Debelina obrobe",
+	percent: "odstotkov",
+	pixels: "pikslov",
+	"default": "privzeto",
+	left: "levo",
+	center: "na sredini",
+	right: "desno",
+	buttonSet: "Nastavi", // translated elsewhere?
+	buttonInsert: "Vstavi",
+	buttonCancel: "Prekliči",
+
+	selectTableLabel: "Izberi tabelo",
+	insertTableRowBeforeLabel: "Dodaj vrstico pred",
+	insertTableRowAfterLabel: "Dodaj vrstico za",
+	insertTableColumnBeforeLabel: "Dodaj stolpec pred",
+	insertTableColumnAfterLabel: "Dodaj stolpec za",
+	deleteTableRowLabel: "Izbriši vrstico",
+	deleteTableColumnLabel: "Izbriši stolpec"
+})
+	
+

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.grid.enhanced.dnd._DndBuilder"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.grid.enhanced.dnd._DndBuilder"] = true;
 dojo.provide("dojox.grid.enhanced.dnd._DndBuilder");
 dojo.declare("dojox.grid.enhanced.dnd._DndBuilder", null, {
 	//summary:
@@ -43,5 +34,3 @@ dojo.declare("dojox.grid.enhanced.dnd._DndHeaderBuilder", null, {
 		this.grid.onMouseUp(e);
 	}
 });
-
-}

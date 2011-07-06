@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.CdfStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.CdfStore"] = true;
 dojo.provide("dojox.data.CdfStore");
 dojo.require("dojo.data.util.sorter");
 
@@ -604,5 +595,3 @@ dojo.declare("dojox.data.CdfStore", null, {
 	
 });
 
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.io.xhrWindowNamePlugin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.io.xhrWindowNamePlugin"] = true;
 dojo.provide("dojox.io.xhrWindowNamePlugin");
 dojo.require("dojox.io.xhrPlugins");
 dojo.require("dojox.io.windowName");
@@ -59,5 +50,3 @@ dojox.io.xhrWindowNamePlugin = function(/*String*/url, /*Function?*/httpAdapter,
 		}
 	);
 };
-
-}

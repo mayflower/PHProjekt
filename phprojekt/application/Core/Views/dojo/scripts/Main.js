@@ -95,11 +95,11 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
             });
         }
         this.cleanPage();
-        phpr.Tree.fadeOut();
+        phpr.tree.fadeOut();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
         if (this.isSystemModule(this.module)) {
             var updateUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSaveMultiple/nodeId/1';
             this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);

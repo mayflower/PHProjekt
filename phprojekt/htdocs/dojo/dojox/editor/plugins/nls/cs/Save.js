@@ -1,1 +1,4 @@
-({"save":"Uložit"})
+({
+	"save": "Uložit"
+})
+

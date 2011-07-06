@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.connect"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.connect"] = true;
 dojo.provide("dojo._base.connect");
 dojo.require("dojo._base.lang");
 
@@ -29,8 +20,25 @@ dojo._listener = {
 			var r = t && t.apply(this, arguments);
 			// make local copy of listener array so it is immutable during processing
 			var i, lls;
-											lls = [].concat(ls);
-							
+			//>>includeStart("connectRhino", kwArgs.profileProperties.hostenvType == "rhino");
+			if(!dojo.isRhino){
+			//>>includeEnd("connectRhino");
+				//>>includeStart("connectBrowser", kwArgs.profileProperties.hostenvType != "rhino");
+				lls = [].concat(ls);
+				//>>includeEnd("connectBrowser");
+			//>>includeStart("connectRhino", kwArgs.profileProperties.hostenvType == "rhino");
+			}else{
+				// FIXME: in Rhino, using concat on a sparse Array results in a dense Array.
+				// IOW, if an array A has elements [0, 2, 4], then under Rhino, "concat [].A"
+				// results in [0, 1, 2, 3, 4], where element 1 and 3 have value 'undefined'
+				// "A.slice(0)" has the same behavior.
+				lls = [];
+				for(i in ls){
+					lls[i] = ls[i];
+				}
+			}
+			//>>includeEnd("connectRhino");
+
 			// invoke listeners after target function
 			for(i in lls){
 				if(!(i in ap)){
@@ -306,5 +314,3 @@ dojo.connectPublisher = function(	/*String*/ topic,
 	var pf = function(){ dojo.publish(topic, arguments); }
 	return event ? dojo.connect(obj, event, pf) : dojo.connect(obj, pf); //Handle
 };
-
-}

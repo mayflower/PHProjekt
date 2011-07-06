@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.Breadcrumb"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.Breadcrumb"] = true;
 dojo.provide("dojox.editor.plugins.Breadcrumb");
 
 dojo.require("dijit._editor._Plugin");
@@ -22,7 +13,7 @@ dojo.require("dijit.MenuSeparator");
 
 dojo.experimental("dojox.editor.plugins.Breadcrumb");
 
-dojo.requireLocalization("dojox.editor.plugins", "Breadcrumb", null, "ROOT,cs,de,es,fr,hu,it,ja,ko,pl,pt,ro,ru,zh,zh-tw");
+dojo.requireLocalization("dojox.editor.plugins", "Breadcrumb");
 
 dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitle",[dijit._Widget, dijit._Templated, dijit._Contained],{
 	// summary:
@@ -337,8 +328,12 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		// summary:
 		//		Over-ride to clean up the breadcrumb toolbar.
 		if(this.breadcrumbBar){
-			this.breadcrumbBar.destroy();
+			this.breadcrumbBar.destroyRecursive();
 			this.breadcrumbBar = null;
+		}
+		if(this._menu){
+			this._menu.destroyRecursive();
+			delete this._menu;
 		}
 		this._buttons = null;
 		delete this.editor.breadcrumbBar;
@@ -354,5 +349,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 		o.plugin = new dojox.editor.plugins.Breadcrumb({});
 	}
 });
-
-}

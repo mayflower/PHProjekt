@@ -21,10 +21,15 @@
 
 dojo.provide("phpr.Default.Main");
 
+dojo.require("dijit.form.Button");
+dojo.require("dijit.layout.TabContainer");
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.Tooltip");
+
 // Event handler
 _searchEvent = null;
 
-dojo.declare("phpr.Default.Main", phpr.Component, {
+dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     // Summary: class for initialilzing a default module
     grid:       null,
     module:     null,
@@ -87,9 +92,9 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.cleanPage();
         phpr.currentProjectId = projectId;
         if (phpr.isGlobalModule(module)) {
-            phpr.Tree.fadeOut();
+            phpr.tree.fadeOut();
         } else {
-            phpr.Tree.fadeIn();
+            phpr.tree.fadeIn();
         }
         dojo.publish(module + ".reload");
         this.setUrlHash(module, id);
@@ -183,7 +188,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         this.hideSuggest();
 
         // Get all configuration.php vars for the front
-        var config = new phpr.Store.Config();
+        var config = new phpr.Default.System.Store.Config();
         config.fetch(dojo.hitch(this, function() {
             phpr.config        = config.getList();
             phpr.currentUserId = phpr.config.currentUserId ? phpr.config.currentUserId : 0;
@@ -209,16 +214,16 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                         url:         phpr.globalModuleUrl,
                         processData: dojo.hitch(this, function() {
                             // Get projects
-                            phpr.DataStore.addStore({url: phpr.Tree.getUrl()});
+                            phpr.DataStore.addStore({url: phpr.tree.getUrl()});
                             phpr.DataStore.requestData({
-                                url:         phpr.Tree.getUrl(),
+                                url:         phpr.tree.getUrl(),
                                 processData: dojo.hitch(this, function() {
-                                    phpr.Tree.loadTree();
+                                    phpr.tree.loadTree();
                                     // Get all the tabs
-                                    var tabStore = new phpr.Store.Tab();
+                                    var tabStore = new phpr.Default.System.Store.Tab();
                                     tabStore.fetch(dojo.hitch(this, function() {
                                         // Get all the active users
-                                        this.userStore = new phpr.Store.User();
+                                        this.userStore = new phpr.Default.System.Store.User();
                                         this.userStore.fetch(dojo.hitch(this, function() {
                                             this.addLogoTooltip();
                                             // Load the module
@@ -275,10 +280,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    prepare the search box and fade out/in the tree
         this.cleanPage();
         if (phpr.isGlobalModule(this.module)) {
-            phpr.Tree.fadeOut();
+            phpr.tree.fadeOut();
             this.setSubGlobalModulesNavigation();
         } else {
-            phpr.Tree.fadeIn();
+            phpr.tree.fadeIn();
             this.setSubmoduleNavigation();
         }
         this.hideSuggest();
@@ -290,9 +295,14 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
         //    Set and start the widgets of the module
         // Description:
         //    Set and start the widgets of the module
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
+        if(this.grid) {
+            if("function" == typeof this.grid.destroy) {
+                this.grid.destroy();
+            }
+        }
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
@@ -318,6 +328,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 })
             });
             toolbar.addChild(button);
+            button = null;
         }
 
         // Setting
@@ -332,6 +343,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
             })
         });
         toolbar.addChild(button);
+        button = null;
 
         if (isAdmin > 0) {
             // Administration
@@ -346,6 +358,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 })
             });
             toolbar.addChild(button);
+            button = null;
         }
 
         // Help
@@ -359,6 +372,7 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 })
             });
             systemToolbar.addChild(button);
+            button = null;
         }
 
         // Logout
@@ -372,7 +386,11 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 })
             });
             systemToolbar.addChild(button);
+            button = null;
         }
+        // destroy cyclic refs
+        toolbar = null;
+        systemToolbar = null;
     },
 
     setSubmoduleNavigation:function(currentModule) {
@@ -451,6 +469,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
                 dojo.byId("subModuleNavigation").appendChild(widget.domNode);
                 phpr.initWidgets(dojo.byId("subModuleNavigation"));
                 widget.layout();
+
+                // avoid cyclic refs
+                tmp = null;
+                widget = null;
 
                 this.customSetSubmoduleNavigation();
             })
@@ -889,10 +911,10 @@ dojo.declare("phpr.Default.Main", phpr.Component, {
 
         // Clean the navigation and forms buttons
         this.cleanPage();
-        phpr.Tree.fadeIn();
+        phpr.tree.fadeIn();
         this.hideSuggest();
         this.setSearchForm();
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
 
         phpr.send({
             url:       getDataUrl,

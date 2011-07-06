@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit._editor._Plugin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit._editor._Plugin"] = true;
 dojo.provide("dijit._editor._Plugin");
 dojo.require("dijit._Widget");
 dojo.require("dijit.form.Button");
@@ -179,5 +170,3 @@ dojo.declare("dijit._editor._Plugin", null, {
 		// console.debug("adding", this.button, "to:", toolbar);
 	}
 });
-
-}

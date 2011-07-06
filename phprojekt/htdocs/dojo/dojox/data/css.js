@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource['dojox.data.css']){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource['dojox.data.css'] = true;
 dojo.provide('dojox.data.css');
 dojo.provide('dojox.data.css.rules');
 
@@ -102,5 +93,3 @@ dojox.data.css.determineContext = function(initialStylesheets){
 	dojo.forEach(initialStylesheets,_processSS);
 	return ret;
 };
-
-}

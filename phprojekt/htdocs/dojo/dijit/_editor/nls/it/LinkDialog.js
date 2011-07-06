@@ -1,1 +1,13 @@
-({"text":"Descrizione:","insertImageTitle":"Proprietà immagine","set":"Imposta","newWindow":"Nuova finestra","topWindow":"Finestra superiore","target":"Destinazione:","createLinkTitle":"Proprietà collegamento","parentWindow":"Finestra padre","currentWindow":"Finestra corrente","url":"URL:"})
+({
+	createLinkTitle: "Proprietà collegamento",
+	insertImageTitle: "Proprietà immagine",
+	url: "URL:",
+	text: "Descrizione:",
+	target: "Destinazione:",
+	set: "Imposta",
+	currentWindow: "Finestra corrente",
+	parentWindow: "Finestra parent",
+	topWindow: "Finestra in primo piano",
+	newWindow: "Nuova finestra"
+})
+

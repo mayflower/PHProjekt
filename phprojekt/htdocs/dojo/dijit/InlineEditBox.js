@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.InlineEditBox"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.InlineEditBox"] = true;
 dojo.provide("dijit.InlineEditBox");
 
 dojo.require("dojo.i18n");
@@ -16,7 +7,7 @@ dojo.require("dijit._Container");
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.TextBox");
 
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "common");
 
 dojo.declare("dijit.InlineEditBox",
 	dijit._Widget,
@@ -386,7 +377,7 @@ dojo.declare(
 	// value: String
 	//		Value as an HTML string or plain text string, depending on renderAsHTML flag
 
-	templateString: dojo.cache("dijit", "templates/InlineEditBox.html", "<span dojoAttachPoint=\"editNode\" waiRole=\"presentation\" style=\"position: absolute; visibility:hidden\" class=\"dijitReset dijitInline\"\r\n\tdojoAttachEvent=\"onkeypress: _onKeyPress\"\r\n\t><span dojoAttachPoint=\"editorPlaceholder\"></span\r\n\t><span dojoAttachPoint=\"buttonContainer\"\r\n\t\t><button class='saveButton' dojoAttachPoint=\"saveButton\" dojoType=\"dijit.form.Button\" dojoAttachEvent=\"onClick:save\" label=\"${buttonSave}\"></button\r\n\t\t><button class='cancelButton' dojoAttachPoint=\"cancelButton\" dojoType=\"dijit.form.Button\" dojoAttachEvent=\"onClick:cancel\" label=\"${buttonCancel}\"></button\r\n\t></span\r\n></span>\r\n"),
+	templateString: dojo.cache("dijit", "templates/InlineEditBox.html"),
 	widgetsInTemplate: true,
 
 	postMixInProperties: function(){
@@ -569,5 +560,3 @@ dojo.declare(
 		}), 0);
 	}
 });
-
-}

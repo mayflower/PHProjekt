@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.InsertAnchor"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.InsertAnchor"] = true;
 dojo.provide("dojox.editor.plugins.InsertAnchor");
 
 dojo.require("dijit._Widget");
@@ -19,8 +10,8 @@ dojo.require("dijit.form.Select");
 dojo.require("dijit._editor.range");
 dojo.require("dojo.i18n");
 dojo.require("dojo.string");
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
-dojo.requireLocalization("dojox.editor.plugins", "InsertAnchor", null, "ROOT,ro");
+dojo.requireLocalization("dijit", "common");
+dojo.requireLocalization("dojox.editor.plugins", "InsertAnchor");
 
 dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 	// summary:
@@ -437,5 +428,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 		o.plugin = new dojox.editor.plugins.InsertAnchor();
 	}
 });
-
-}

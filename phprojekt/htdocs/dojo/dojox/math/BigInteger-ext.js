@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.math.BigInteger-ext"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.math.BigInteger-ext"] = true;
 dojo.provide("dojox.math.BigInteger-ext");
 dojo.experimental("dojox.math.BigInteger-ext");
 
@@ -665,5 +656,3 @@ dojo.require("dojox.math.BigInteger");
 	// static BigInteger valueOf(long val)
 
 })();
-
-}

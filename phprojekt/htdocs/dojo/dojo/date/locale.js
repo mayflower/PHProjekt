@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.date.locale"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.date.locale"] = true;
 dojo.provide("dojo.date.locale");
 
 // Localization methods for Date.   Honor local customs using locale-dependent dojo.cldr data.
@@ -19,7 +10,7 @@ dojo.require("dojo.i18n");
 
 // Load the bundles containing localization information for
 // names and formats
-dojo.requireLocalization("dojo.cldr", "gregorian", null, "ROOT,ar,ca,cs,da,de,el,en,en-au,en-ca,en-gb,es,es-es,fi,fr,he,hu,it,it-it,ja,ko,ko-kr,nb,nl,pl,pt,pt-br,pt-pt,ru,sk,sl,sv,th,tr,zh,zh-cn,zh-tw");
+dojo.requireLocalization("dojo.cldr", "gregorian");
 
 //NOTE: Everything in this module assumes Gregorian calendars.
 // Other calendars will be implemented in separate modules.
@@ -91,7 +82,7 @@ dojo.requireLocalization("dojo.cldr", "gregorian", null, "ROOT,ar,ca,cs,da,de,el
 					break;
 				case 'a':
 					var timePeriod = (dateObject.getHours() < 12) ? 'am' : 'pm';
-					s = bundle['dayPeriods-format-wide-' + timePeriod];
+					s = options[timePeriod] || bundle['dayPeriods-format-wide-' + timePeriod];
 					break;
 				case 'h':
 				case 'H':
@@ -302,10 +293,13 @@ dojo.date.locale.parse = function(/*String*/value, /*dojo.date.locale.__FormatOp
 	// value:
 	//		A string representation of a date
 
-	var info = dojo.date.locale._parseInfo(options),
+	// remove non-printing bidi control chars from input and pattern
+	var controlChars = /[\u200E\u200F\u202A\u202E]/g,
+		info = dojo.date.locale._parseInfo(options),
 		tokens = info.tokens, bundle = info.bundle,
-		re = new RegExp("^" + info.regexp + "$", info.strict ? "" : "i"),
-		match = re.exec(value);
+		re = new RegExp("^" + info.regexp.replace(controlChars, "") + "$",
+			info.strict ? "" : "i"),
+		match = re.exec(value && value.replace(controlChars, ""));
 
 	if(!match){ return null; } // null
 
@@ -670,5 +664,3 @@ dojo.date.locale._getWeekOfYear = function(/*Date*/dateObject, /*Number*/firstDa
 
 	return week; // Number
 };
-
-}

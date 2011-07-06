@@ -1,1 +1,15 @@
-({"HKD_displayName":"Hong Kong Dollar","CHF_displayName":"Swiss Franc","JPY_symbol":"¥","CAD_displayName":"Canadian Dollar","CNY_displayName":"Chinese Yuan Renminbi","USD_symbol":"$","AUD_displayName":"Australian Dollar","JPY_displayName":"Japanese Yen","USD_displayName":"US Dollar","GBP_displayName":"British Pound Sterling","EUR_displayName":"Euro","CAD_symbol":"CA$","GBP_symbol":"£","HKD_symbol":"HK$","AUD_symbol":"AU$","CNY_symbol":"CN¥","EUR_symbol":"€"})
+// generated from ldml/main/*.xml, xpath: ldml/numbers/currencies
+({
+	AUD_displayName:"Australian Dollar",
+	CAD_displayName:"Canadian Dollar",
+	CHF_displayName:"Swiss Franc",
+	CNY_displayName:"Chinese Yuan Renminbi",
+	EUR_displayName:"Euro",
+	GBP_displayName:"British Pound Sterling",
+	HKD_displayName:"Hong Kong Dollar",
+	JPY_displayName:"Japanese Yen",
+	JPY_symbol:"¥",
+	USD_displayName:"US Dollar",
+	USD_symbol:"$"
+})
+                 
