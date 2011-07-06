@@ -37,11 +37,6 @@ dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
             this.reload();
         }
 
-        if (id == undefined || id == 0) {
-            var params          = new Array();
-            params['startDate'] = phpr.Date.getIsoDate(new Date());
-        }
-
-        this.form = new this.formWidget(this, id, module, params);
-    }
+        this.form = new this.formWidget(this, id, module);
+   }
 });

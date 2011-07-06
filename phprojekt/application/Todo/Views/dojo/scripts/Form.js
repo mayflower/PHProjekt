@@ -22,4 +22,46 @@
 dojo.provide("phpr.Todo.Form");
 
 dojo.declare("phpr.Todo.Form", phpr.Default.Form, {
+
+    postRenderForm:function() {
+        var data = phpr.DataStore.getData({url: this._url});
+        if (data.length > 0 && data[0]['id'] == 0) {
+            dojo.connect(dijit.byId('projectId'), 'onChange', null, function() {
+                var url = phpr.webpath + 'index.php/Project/index/jsonDetail/'
+                        + 'nodeId/1/id/' + dijit.byId('projectId').value;
+                phpr.DataStore.addStore({url: url});
+                start = dijit.byId('startDate');
+                end   = dijit.byId('endDate');
+                start.setValue('');
+                end.setValue('');
+
+                phpr.DataStore.requestData({
+                    url:         url,
+                    processData: function() {
+                        var data = phpr.DataStore.getData({url: url});
+                        if (data.length > 0) {
+                            start.setValue(new Date(data[0]['startDate']));
+                            end.setValue(new Date(data[0]['endDate']));
+                        } else {
+                            start.setValue(new Date());
+                        }
+                    }
+                });
+            });
+        }
+    },
+
+    submitForm:function() {
+        phpr.Todo.Form.superclass.submitForm.apply(this);
+        phpr.DataStore.deleteDataPartialString({
+            url: phpr.webpath + 'index.php/Project/index/jsonDetail'
+        });
+    },
+
+    deleteFrom:function() {
+        phpr.Todo.Form.superclass.deleteForm.apply(this);
+        phpr.DataStore.deleteDataPartialString({
+            url: phpr.webpath + 'index.php/Project/index/jsonDetail'
+        });
+    }
 });
