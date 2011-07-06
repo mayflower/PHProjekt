@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.date.buddhist.Date"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.date.buddhist.Date"] = true;
 dojo.provide("dojox.date.buddhist.Date");
 dojo.experimental("dojox.date.buddhist.Date");
 
@@ -317,5 +308,3 @@ dojo.declare("dojox.date.buddhist.Date", null, {
 dojox.date.buddhist.Date.prototype.valueOf = function(){
 	return this.toGregorian().valueOf();
 };
-
-}

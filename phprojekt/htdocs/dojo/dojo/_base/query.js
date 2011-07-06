@@ -1,17 +1,83 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.query"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.query"] = true;
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 if(typeof dojo != "undefined"){
+//>>excludeEnd("webkitMobile");
 	dojo.provide("dojo._base.query");
 	dojo.require("dojo._base.NodeList");
 	dojo.require("dojo._base.lang");
 
+//>>excludeStart("acmeExclude", fileName.indexOf("dojo") != -1);
+
+}else if(!this["acme"] && !this["queryPortability"]){
+	// NOTE: 
+	//		the functions and properties are duplicates of things found
+	//		elsewhere in Dojo. They've been copied here to make query.js a
+	//		stand-alone system.  The "acmeExclude" ensures that it *never*
+	//		shows up in builds of Dojo.
+	(function(){
+		// a self-sufficient query impl
+		acme = {
+			trim: function(/*String*/ str){
+				// summary:
+				//		trims whitespaces from both sides of the string
+				str = str.replace(/^\s+/, '');
+				for(var i = str.length - 1; i >= 0; i--){
+					if(/\S/.test(str.charAt(i))){
+						str = str.substring(0, i + 1);
+						break;
+					}
+				}
+				return str;	// String
+			},
+			forEach: function(/*String*/ arr, /*Function*/ callback, /*Object?*/ thisObject){
+				//	summary:
+				// 		an iterator function that passes items, indexes,
+				// 		and the array to a callback
+				if(!arr || !arr.length){ return; }
+				for(var i=0,l=arr.length; i<l; ++i){ 
+					callback.call(thisObject||window, arr[i], i, arr);
+				}
+			},
+			byId: function(id, doc){
+				// 	summary:
+				//		a function that return an element by ID, but also
+				//		accepts nodes safely
+				if(typeof id == "string"){
+					return (doc||document).getElementById(id); // DomNode
+				}else{
+					return id; // DomNode
+				}
+			},
+			// the default document to search
+			doc: document,
+			// the constructor for node list objects returned from query()
+			NodeList: Array
+		};
+
+		// define acme.isIE, acme.isSafari, acme.isOpera, etc.
+		var n = navigator;
+		var dua = n.userAgent;
+		var dav = n.appVersion;
+		var tv = parseFloat(dav);
+		acme.isOpera = (dua.indexOf("Opera") >= 0) ? tv: undefined;
+		acme.isKhtml = (dav.indexOf("Konqueror") >= 0) ? tv : undefined;
+		acme.isWebKit = parseFloat(dua.split("WebKit/")[1]) || undefined;
+		acme.isChrome = parseFloat(dua.split("Chrome/")[1]) || undefined;
+		var index = Math.max(dav.indexOf("WebKit"), dav.indexOf("Safari"), 0);
+		if(index && !acme.isChrome){
+			acme.isSafari = parseFloat(dav.split("Version/")[1]);
+			if(!acme.isSafari || parseFloat(dav.substr(index + 7)) <= 419.3){
+				acme.isSafari = 2;
+			}
+		}
+		if(document.all && !acme.isOpera){
+			acme.isIE = parseFloat(dav.split("MSIE ")[1]) || undefined;
+		}
+
+		Array._wrap = function(arr){ return arr; };
+	})();
+
+//>>excludeEnd("acmeExclude");
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 }
 
 /*
@@ -1517,8 +1583,58 @@ if(typeof dojo != "undefined"){
 		return tmpNodeList;
 	}
 })(this["queryPortability"]||this["acme"]||dojo);
+//>>excludeEnd("webkitMobile");
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 /*
-*/
+//>>excludeEnd("webkitMobile");
+//>>includeStart("webkitMobile", kwArgs.webkitMobile);
+if(!dojo["query"]){
+	(function(){
+		var ctr = 0;
+		// QSA-only for webkit mobile. Welcome to the future.
+		dojo.query = function(query, root){
+			d._NodeListCtor = dojo.NodeList;
+			if(!query){
+				return new d._NodeListCtor();
+			}
 
+			if(query.constructor == d._NodeListCtor){
+				return query;
+			}
+
+			if(typeof query != "string"){ // inline'd type check
+				return new d._NodeListCtor(query); // dojo.NodeList
+			}
+
+			if(typeof root == "string"){ // inline'd type check
+				root = dojo.byId(root);
+				if(!root){ return new d._NodeListCtor(); }
+			}
+
+			root = root||dojo.doc;
+			var rootIsDoc = (root.nodeType == 9);
+			var doc = rootIsDoc ? root : (root.ownerDocument||dojo.doc);
+			// rewrite the query to be ID rooted
+			if(!rootIsDoc || (">~+".indexOf(query.charAt(0)) >= 0)){
+				root.id = root.id||("qUnique"+(ctr++));
+				query = "#"+root.id+" "+query;
+			}
+			// rewrite the query to not choke on something like ".yada.yada >"
+			// by adding a final descendant component
+
+			if(">~+".indexOf(query.slice(-1)) >= 0){
+				query += " *";
+			}
+			return d._NodeListCtor._wrap(
+				Array.prototype.slice.call(
+					doc.querySelectorAll(query)
+				)
+			);
+		};
+	})();
 }
+//>>includeEnd("webkitMobile");
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+*/
+//>>excludeEnd("webkitMobile");

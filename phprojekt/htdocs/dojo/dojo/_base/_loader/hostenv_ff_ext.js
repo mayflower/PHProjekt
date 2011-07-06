@@ -1,10 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
 // a host environment specifically built for Mozilla extensions, but derived
 // from the browser host environment
 if(typeof window != 'undefined'){

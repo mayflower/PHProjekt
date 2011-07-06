@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.math.random.prng4"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.math.random.prng4"] = true;
 dojo.provide("dojox.math.random.prng4");
 
 // Copyright (c) 2005  Tom Wu
@@ -62,5 +53,3 @@ dojo.provide("dojox.math.random.prng4");
 	// An array of bytes the size of the pool will be passed to init()
 	dojox.math.random.prng4.size = 256;
 })();
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.cometd.callbackPollTransport"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.cometd.callbackPollTransport"] = true;
 dojo.provide("dojox.cometd.callbackPollTransport");
 dojo.require("dojox.cometd._base");
 dojo.require("dojox.cometd.longPollTransport");
@@ -109,5 +100,3 @@ dojox.cometd.callbackPollTransport = new function(){
 
 dojox.cometd.connectionTypes.register("callback-polling", dojox.cometd.callbackPollTransport.check, dojox.cometd.callbackPollTransport);
 
-
-}

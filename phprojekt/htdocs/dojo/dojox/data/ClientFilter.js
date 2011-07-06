@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.ClientFilter"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.ClientFilter"] = true;
 dojo.provide("dojox.data.ClientFilter");
 dojo.require("dojo.data.util.filter"); 
 // This is an abstract data store module for adding updateable result set functionality to an existing data store class
@@ -299,5 +290,3 @@ dojo.require("dojo.data.util.filter");
 	);
 	cf.onUpdate = function(){};
 })();
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.grid.cells.dijit"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.grid.cells.dijit"] = true;
 dojo.provide("dojox.grid.cells.dijit");
 
 dojo.require("dojox.grid.cells");
@@ -109,6 +100,9 @@ dojo.require("dijit.Editor");
 		_finish: function(inRowIndex){
 			this.inherited(arguments);
 			dojox.grid.util.removeNode(this.widget.domNode);
+			if(dojo.isIE){
+				dojo.setSelectable(this.widget.domNode, true);
+			}
 		}
 	});
 	dgc._Widget.markupFactory = function(node, cell){
@@ -241,5 +235,3 @@ dojo.require("dijit.Editor");
 		}
 	};
 })();
-
-}

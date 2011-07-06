@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.mdnd.DropIndicator"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.mdnd.DropIndicator"] = true;
 dojo.provide("dojox.mdnd.DropIndicator");
 
 dojo.require("dojox.mdnd.AreaManager");
@@ -93,5 +84,3 @@ dojo.declare(
 (function(){
 	dojox.mdnd.areaManager()._dropIndicator = new dojox.mdnd.DropIndicator();
 }());
-
-}

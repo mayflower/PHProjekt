@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.date.hebrew.Date"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.date.hebrew.Date"] = true;
 dojo.provide("dojox.date.hebrew.Date");
 
 dojo.require("dojox.date.hebrew.numerals");
@@ -709,5 +700,3 @@ dojo.declare("dojox.date.hebrew.Date", null, {
 dojox.date.hebrew.Date.prototype.valueOf = function(){
 	return this.toGregorian().valueOf();
 };
-
-}

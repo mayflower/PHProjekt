@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.PasteFromWord"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.PasteFromWord"] = true;
 dojo.provide("dojox.editor.plugins.PasteFromWord");
 
 dojo.require("dijit._editor._Plugin");
@@ -16,7 +7,7 @@ dojo.require("dojo.i18n");
 dojo.require("dojo.string");
 dojo.require("dojox.html.format");
 
-dojo.requireLocalization("dojox.editor.plugins", "PasteFromWord", null, "ROOT,ro");
+dojo.requireLocalization("dojox.editor.plugins", "PasteFromWord");
 
 dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 	// summary:
@@ -213,5 +204,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 		});
 	}
 });
-
-}

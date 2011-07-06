@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.TooltipDialog"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.TooltipDialog"] = true;
 dojo.provide("dijit.TooltipDialog");
 
 dojo.require("dijit.layout.ContentPane");
@@ -52,7 +43,7 @@ dojo.declare(
 			//		Set by `dijit._DialogMixin._getFocusItems`.
 			_lastFocusItem: null,
 
-			templateString: dojo.cache("dijit", "templates/TooltipDialog.html", "<div waiRole=\"presentation\">\r\n\t<div class=\"dijitTooltipContainer\" waiRole=\"presentation\">\r\n\t\t<div class =\"dijitTooltipContents dijitTooltipFocusNode\" dojoAttachPoint=\"containerNode\" tabindex=\"-1\" waiRole=\"dialog\"></div>\r\n\t</div>\r\n\t<div class=\"dijitTooltipConnector\" waiRole=\"presentation\"></div>\r\n</div>\r\n"),
+			templateString: dojo.cache("dijit", "templates/TooltipDialog.html"),
 
 			postCreate: function(){
 				this.inherited(arguments);
@@ -76,6 +67,13 @@ dojo.declare(
 				this._currentOrientClass = c;
 			},
 
+			focus: function(){
+				// summary:
+				//		Focus on first field
+				this._getFocusItems(this.containerNode);
+				dijit.focus(this._firstFocusItem);
+			},
+
 			onOpen: function(/*Object*/ pos){
 				// summary:
 				//		Called when dialog is displayed.
@@ -85,11 +83,6 @@ dojo.declare(
 
 				this.orient(this.domNode,pos.aroundCorner, pos.corner);
 				this._onShow(); // lazy load trigger
-
-				if(this.autofocus){
-					this._getFocusItems(this.containerNode);
-					dijit.focus(this._firstFocusItem);
-				}
 			},
 
 			onClose: function(){
@@ -137,5 +130,3 @@ dojo.declare(
 			}
 		}
 	);
-
-}

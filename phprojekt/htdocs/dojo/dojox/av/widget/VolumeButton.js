@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.av.widget.VolumeButton"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.av.widget.VolumeButton"] = true;
 dojo.provide("dojox.av.widget.VolumeButton");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
@@ -21,7 +12,7 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 	//		opens a slider on click that is used to adjust the volume.
 	//		The icon changes according to the volume level.
 	//
-	templateString: dojo.cache("dojox.av.widget", "resources/VolumeButton.html", "<div class=\"Volume\" dojoAttachEvent=\"mousedown:onShowVolume\">\r\n\t<div class=\"VolumeSlider\" dojoAttachPoint=\"volumeSlider\">\r\n    \t<div class=\"VolumeSliderBack\" dojoAttachPoint=\"volumeSliderBack\"></div>\r\n    \t<div class=\"VolumeSliderHandle\" dojoAttachPoint=\"handle\" dojoAttachEvent=\"mousedown:startDrag, mouseup:endDrag, mouseover:handleOver, mouseout:handleOut\"></div>\t\r\n    </div>\r\n    <div class=\"icon\"></div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.av.widget","resources/VolumeButton.html"),
 	//
 	postCreate: function(){
 		// summary:
@@ -193,5 +184,3 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._Templated], 
 		this._domCoords = null;
 	}
 });
-
-}

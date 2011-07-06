@@ -1,1 +1,8 @@
-({"descending":"Faldende","ascending":"Stigende","nestedSort":"Indlejret sortering","unsorted":"Sortér ikke denne kolonne","singleSort":"Enkel sortering","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Enkel sortering",
+	nestedSort: "Indlejret sortering",
+	ascending: "Stigende",
+	descending: "Faldende",
+	unsorted: "Sortér ikke denne kolonne"
+})
+

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.fx.ext-dojo.complex"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.fx.ext-dojo.complex"] = true;
 dojo.provide("dojox.fx.ext-dojo.complex");
 
 (function(){
@@ -176,5 +167,3 @@ dojo.declare("dojox.fx._Complex", null, {
 });
 
 
-
-}

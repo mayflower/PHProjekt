@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.cometd.timesync"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.cometd.timesync"] = true;
 dojo.provide("dojox.cometd.timesync");
 dojo.require("dojox.cometd._base");
 
@@ -148,5 +139,3 @@ dojox.cometd.timesync = new function(){
 
 dojox.cometd._extendInList.push(dojo.hitch(dojox.cometd.timesync, "_in"));
 dojox.cometd._extendOutList.push(dojo.hitch(dojox.cometd.timesync, "_out"));
-
-}

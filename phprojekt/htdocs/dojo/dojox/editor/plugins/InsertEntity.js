@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.InsertEntity"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.InsertEntity"] = true;
 dojo.provide("dojox.editor.plugins.InsertEntity");
 
 dojo.require("dijit._editor._Plugin");
@@ -17,7 +8,7 @@ dojo.require("dojox.html.entities");
 
 dojo.require("dojo.i18n");
 
-dojo.requireLocalization("dojox.editor.plugins", "InsertEntity", null, "ROOT,cs,de,es,fr,hu,it,ja,ko,pl,pt,ro,ru,zh,zh-tw");
+dojo.requireLocalization("dojox.editor.plugins", "InsertEntity");
 
 dojo.declare("dojox.editor.plugins.InsertEntity",dijit._editor._Plugin,{
 	// summary:
@@ -101,5 +92,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 		});
 	}
 });
-
-}
