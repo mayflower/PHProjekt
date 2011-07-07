@@ -16,6 +16,7 @@
  <!-- Run unit tests and generate junit.xml and clover.xml -->
  <target name="phpunit">
   <exec executable="phpunit" dir="phprojekt/tests/UnitTests/">
+   <env key="P6_TEST_CONFIG" value="configuration-jenkins.php" />
    <arg line="--strict
        --coverage-clover='${basedir}/build/logs/coverage.xml'
        --log-junit='${basedir}/build/logs/junit.xml'

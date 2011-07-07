@@ -29,9 +29,14 @@ ini_set("magic_quotes_gpc", 0);
 ini_set("magic_quotes_runtime", 0);
 ini_set("magic_quotes_sybase", 0);
 
+$config = "configuration.php";
+if(getenv('P6_TEST_CONFIG')) {
+    $config = getenv('P6_TEST_CONFIG');
+}
+
 /* use command line switches to overwrite this */
-define("DEFAULT_CONFIG_FILE", "configuration.php");
-define("PHPR_CONFIG_FILE", "configuration.php");
+define("DEFAULT_CONFIG_FILE", $config);
+define("PHPR_CONFIG_FILE", $config);
 define("DEFAULT_CONFIG_SECTION", "testing-mysql");
 define("PHPR_CONFIG_SECTION", "testing-mysql");
 
