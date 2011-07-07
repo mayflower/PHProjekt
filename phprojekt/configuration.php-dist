@@ -219,13 +219,15 @@ useCacheForClasses = true;
 ;;;;;;;;;;;;;;;;;;
 
 ; Options: default/ldap
-authentication.mode = 'ldap'
+authentication.mode = 'default'
 
-; Default values for new users
-; If language is not set, default config parameter 'language' is used
+; Default values for new users [0/1]. DO NOT SET THIS TO 1 WITHOUT KNOWING WHAT YOU DO!
 authentication.integration.admin = 0
+; default status. 'A' for Active, 'I' for Inactive
 authentication.integration.status = 'A'
+; If not set, default config parameter 'language' will be used
 authentication.integration.language = 'en'
+; default timezone for new users. Look into phprojekt/library/Phprojekt/Converter/Time.php line 119ff
 authentication.integration.timeZone = '0000002'
 
 ; A comma separated list of users who should have admin privileges in PHProjekt.
@@ -234,7 +236,7 @@ authentication.integration.timeZone = '0000002'
 ; affect to old users during their login. However, if user is already admin,
 ; the setting cannot unset by removing the username from the list!
 ; Default PHProjekt admin with id=1 is not authenticated through LDAP!
-authentication.integration.systemAdmins = username,username2
+;authentication.integration.systemAdmins = 'username,username2'
 
 ; PLEASE NOTE THAT THESE CONFIGURATIONS SHOULD BE CAREFULLY SET
 ; FOR THE LDAP AUTHENTICATION TO WORK!
@@ -246,15 +248,15 @@ authentication.integration.systemAdmins = username,username2
 ; Example at:
 ; http://framework.zend.com/manual/en/zend.auth.adapter.ldap.html
 
-authentication.ldap.server1.host					= "ldaphost"
-authentication.ldap.server1.port					= 389
-authentication.ldap.server1.useSsl					= false
-authentication.ldap.server1.useStartTls				= false
-authentication.ldap.server1.accountDomainName		= "domain.com"
-authentication.ldap.server1.accountDomainNameShort	= "DOMAIN"
-authentication.ldap.server1.baseDn					= "OU=OrgUnit,DC=domain,DC=com"
-authentication.ldap.server1.allowEmptyPassword		= false
-; authentication.ldap.server1.bindRequiresDn		= false
-; authentication.ldap.server1.optReferrals			= false
-; authentication.ldap.server1.tryUsernameSplit		= false
-; authentication.ldap.server1.accountFilterFormat	= null
+;authentication.ldap.server1.host                   = 'ldaphost'
+;authentication.ldap.server1.port                   = 389
+;authentication.ldap.server1.useSsl                 = false
+;authentication.ldap.server1.useStartTls            = false
+;authentication.ldap.server1.accountDomainName      = 'domain.com'
+;authentication.ldap.server1.accountDomainNameShort = 'DOMAIN'
+;authentication.ldap.server1.baseDn                 = 'OU=OrgUnit,DC=domain,DC=com'
+;authentication.ldap.server1.allowEmptyPassword     = false
+;authentication.ldap.server1.bindRequiresDn         = false
+;authentication.ldap.server1.optReferrals           = false
+;authentication.ldap.server1.tryUsernameSplit       = false
+;authentication.ldap.server1.accountFilterFormat    = null
