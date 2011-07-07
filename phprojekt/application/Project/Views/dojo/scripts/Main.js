@@ -83,7 +83,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
     },
 
     processActionFromUrlHash:function(data) {
-        if (data[0] == 'basicData') {
+        if (data.action == 'basicData') {
             this.basicData();
         } else {
             this.reload();

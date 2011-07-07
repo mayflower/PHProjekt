@@ -96,8 +96,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         } else {
             phpr.tree.fadeIn();
         }
-        dojo.publish(module + ".reload");
-        this.setUrlHash(module, id);
+
+        phpr.changePage({
+            moduleName: module,
+            id: id
+        });
     },
 
     loadSubElements:function(projectId, functionFrom) {
@@ -126,7 +129,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 phpr.submodule    = null;
                 phpr.parentmodule = null;
                 if (functionFrom && functionFrom == 'loadResult') {
-                    this.setUrlHash(this.module);
+                    phpr.pageManager.changePage({moduleName: this.module});
                 } else {
                     dojo.publish("Project.changeProject", [phpr.currentProjectId]);
                 }
@@ -157,12 +160,20 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         }
                     }
 
+                    console.log("a");
                     if (currentModule) {
-                        this.setUrlHash(currentModule);
+                        phpr.pageManager.changePage({
+                            moduleName:currentModule,
+                            projectId:phpr.currentProjectId});
                     } else if (firstModule && usefirstModule) {
-                        this.setUrlHash(firstModule);
+                        phpr.pageManager.changePage({
+                            moduleName:firstModule,
+                            projectId:phpr.currentProjectId});
                     } else {
-                        this.setUrlHash("Project", null, ["basicData"]);
+                        phpr.pageManager.changePage({
+                            moduleName:firstModule,
+                            action:"basicData",
+                            projectId:phpr.currentProjectId});
                     }
                 }
             )})
@@ -186,6 +197,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         phpr.InitialScreen.start();
         this.hideSuggest();
+        console.log("load");
 
         // Get all configuration.php vars for the front
         var config = new phpr.Default.System.Store.Config();
@@ -228,7 +240,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                                             this.addLogoTooltip();
                                             // Load the module
                                             this.setGlobalModulesNavigation();
-                                            this.processUrlHash(window.location.hash);
+                                            phpr.pageManager.init();
                                             phpr.InitialScreen.end();
                                         }));
                                     }));
@@ -324,7 +336,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 onClick:   dojo.hitch(this, function(e) {
                     phpr.currentProjectId = phpr.rootProjectId;
                     var module            = e.target.id.replace('globalModule_', '').replace('_label', '');
-                    this.setUrlHash(module);
+                    phpr.pageManager.changePage({moduleName: module});
                 })
             });
             toolbar.addChild(button);
@@ -339,7 +351,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
                 phpr.currentProjectId = phpr.rootProjectId;
-                this.setUrlHash("Setting", null, ["User"]);
+                phpr.pageManager.changePage({
+                    moduleName: "Setting",
+                    action: "User"
+                });
             })
         });
         toolbar.addChild(button);
@@ -354,7 +369,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 showLabel: true,
                 onClick:   dojo.hitch(this, function() {
                     phpr.currentProjectId = phpr.rootProjectId;
-                    this.setUrlHash("Administration");
+                    phpr.pageManager.changePage({
+                        moduleName: "Administration",
+                    });
                 })
             });
             toolbar.addChild(button);
@@ -531,6 +548,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     },
 
     setUrlHash:function(module, id, params) {
+        // TODO: this description is wrong, nothing is returned
         // Summary:
         //    Return the hash url
         // Description:
@@ -541,32 +559,45 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Third value (or Second for global modules):
         //      "id", and the next value a number
         //    After that, add all the params
+
+        var config = {};
+        console.log("seturlhash",module,id,params);
         if (id && module) {
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,xx (Open form for edit in normal modules)
-                var url = new Array([module, phpr.currentProjectId, "id", id]);
+                config.moduleName = module;
+                config.projectId = phpr.currentProjectId;
+                config.id = id;
             } else {
                 phpr.currentProjectId = phpr.rootProjectId;
                 if (params && params.length > 0) {
                     // GlobalModule,Module,id,xx (Open form for edit in Adminisration)
-                    var url = new Array([module, params.shift(), "id", id]);
+                    config.moduleName = params.shift();
+                    config.globalModuleName = module;
+                    config.id = id;
                 } else {
                     // GlobalModule,id,xx (Open form for edit in global modules)
-                    var url = new Array([module, "id", id]);
+                    config.moduleName = module;
+                    config.id = id;
                 }
             }
         } else if (module && id == 0) {
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,0 (Open form for add in normal modules)
-                var url = new Array([module, phpr.currentProjectId, "id", 0]);
+                config.moduleName = module;
+                config.projectId = phpr.currentProjectId;
+                config.id = 0;
             } else {
                 phpr.currentProjectId = phpr.rootProjectId;
                 if (params && params.length > 0) {
                     // GlobalModule,Module,id,xx (Open form for add in Adminisration)
-                    var url = new Array([module, params.shift(), "id", 0]);
+                    config.globalModuleName = module;
+                    config.moduleName = params.shift();
+                    config.id = 0;
                 } else {
                     // GlobalModule,id,xx (Open a form for add in global modules)
-                    var url = new Array([module, "id", 0]);
+                    config.moduleName = params.shift();
+                    config.id = 0;
                 }
             }
         } else {
@@ -575,28 +606,23 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             }
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId (Reload a module -> List view)
-                var url = new Array([module, phpr.currentProjectId]);
+                config.moduleName = module;
+                config.projectId = phpr.currentProjectId;
             } else {
                 // GlobalModule (Reload a global module -> List view)
                 phpr.currentProjectId = phpr.rootProjectId;
-                var url = new Array([module]);
+                config.moduleName = module;
             }
         }
 
-        for (var i in params) {
-            url.push(params[i]);
-        }
+        if(params[0])
+            config.action = params[0];
 
-        var hash = url.join(",");
-        phpr.Url.addUrl(hash);
-
-        if (hash.indexOf('Administration') < 0) {
-            // Stores the hash in a browser cookie (Only normal url, no Administration one)
-            dojo.cookie('location.hash', hash, {expires: 365});
-        }
+        phpr.pageManager.changePage(config);
     },
 
     processUrlHash:function(hash) {
+        /*
         // Summary:
         //    Process the hash and run the correct function
         // Description:
@@ -672,6 +698,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             // Dafault value, only one parameter, and must be the module
             dojo.publish(module + ".reload");
         }
+        */
     },
 
     processActionFromUrlHash:function(data) {
@@ -685,7 +712,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Summary:
         //     This function is responsible for displaying the form for a new entry in the
         //     current Module
-        this.setUrlHash(phpr.module, 0);
+        phpr.pageManager.changePage({
+            moduleName: phpr.module,
+            id: 0
+        })
     },
 
     setSearchForm:function() {
