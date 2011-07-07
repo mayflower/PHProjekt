@@ -83,21 +83,28 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
     },
 
     getTree:function() {
-        return new dijit.Tree({
-            model:    this._model,
-            showRoot: false,
-            persist:  false,
-           _onNodeMouseEnter: function(node) {
-               if (node.item.cut == 'true') {
-                   dijit.showTooltip(node.item.longName, node.domNode);
-               }
-           },
-           _onNodeMouseLeave: function(node) {
-                if (node.item.cut == 'true') {
-                    dijit.hideTooltip(node.domNode);
-                }
+        var cb1 = function(node) {
+            if (node.item.cut == 'true') {
+                dijit.showTooltip(node.item.longName, node.domNode);
             }
-        }, document.createElement('div'));
+        };
+
+        var cb2 = function(node) {
+            if (node.item.cut == 'true') {
+                dijit.hideTooltip(node.domNode);
+            }
+        };
+
+        var that = this;
+        return (function() {
+            return new dijit.Tree({
+                model:    that._model,
+                showRoot: false,
+                persist:  false,
+                _onNodeMouseEnter: cb1,
+                _onNodeMouseLeave: cb2
+            }, document.createElement('div'));
+        })();
     },
 
     getUrl:function() {
