@@ -48,33 +48,37 @@ class Phprojekt_ModuleInstance extends Phprojekt_ActiveRecord_Abstract
  * @group      activerecord
  * @group      phprojekt-activerecord
  */
-class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
+class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
 {
+    public function setUp() {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      *
      */
     public function testFetchAllWithJoins()
     {
-        try {
-            $project  = new Phprojekt_Project(array('db' => $this->sharedFixture));
-            $project->fetchAll();
-            $this->assertEquals(7, $project->count());
+        $project  = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $project->fetchAll();
+        $this->assertEquals(5, $project->count());
 
-            $project->find(3);
-            $this->assertNull($project->title);
+        $project->find(3);
+        $this->assertNull($project->title);
 
-            $projects = $project->fetchAll(null, null, null, null, null,
-               'RIGHT JOIN project_role_user_permissions ON project_role_user_permissions.project_id = project.id');
-            $this->assertEquals(1, count($projects));
+        $projects = $project->fetchAll(null, null, null, null, null,
+            'RIGHT JOIN project_role_user_permissions ON project_role_user_permissions.project_id = project.id');
+        $this->assertEquals(2, count($projects));
 
-            $projects = $project->fetchAll(null, null, null, null, "project_role_user_permissions.role_id",
-               'LEFT JOIN project_role_user_permissions ON project_role_user_permissions.project_id = project.id');
+        $projects = $project->fetchAll(null, null, null, null, "project_role_user_permissions.role_id",
+            'LEFT JOIN project_role_user_permissions ON project_role_user_permissions.project_id = project.id');
 
-            $this->assertEquals(6, count($projects));
-
-        } catch (Exception $e) {
-            $this->fail($e->getMessage().$e->getTraceAsString());
-        }
+        $this->assertEquals(5, count($projects));
     }
 
     /**
@@ -82,22 +86,18 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateHasManyAndBelongsToMany()
     {
-        try {
-            $user = new Phprojekt_User_User(array('db' => $this->sharedFixture));
-            $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'david'));
+        $user = new Phprojekt_User_User(array('db' => $this->sharedFixture));
+        $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'Test'));
 
-            if ($users === null) {
-                $this->fail('No user found');
-            } else {
-                $david        = $users[0];
-                $group        = $david->groups->create();
-                $group->name  = 'TEST GROUP';
-                $this->assertTrue($group->save());
+        if ($users === null) {
+            $this->fail('No user found');
+        } else {
+            $test         = $users[0];
+            $group        = $test->groups->create();
+            $group->name  = 'TEST GROUP';
+            $this->assertTrue($group->save());
 
-                $this->assertNotNull($group->id);
-            }
-        } catch (Exception $e) {
-            $this->fail($e->getMessage().$e->getTraceAsString());
+            $this->assertNotNull($group->id);
         }
     }
 
@@ -115,31 +115,26 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $keepUser = $authNamespace->userId;
 
-        try {
-            $role = new Phprojekt_Role_Role(array('db' => $this->sharedFixture));
+        $role = new Phprojekt_Role_Role(array('db' => $this->sharedFixture));
 
-            $role->name = 'deleteMe';
-            $role->save();
+        $role->name = 'deleteMe';
+        $role->save();
 
-            $modulePermissions = $role->modulePermissions->create();
-            $modulePermissions->moduleId = 1;
-            $modulePermissions->roleId = $role->id;
-            $modulePermissions->access = 199;
+        $modulePermissions = $role->modulePermissions->create();
+        $modulePermissions->moduleId = 1;
+        $modulePermissions->roleId = $role->id;
+        $modulePermissions->access = 199;
 
-            $this->assertTrue($modulePermissions->save());
+        $this->assertTrue($modulePermissions->save());
 
-            $this->assertNotNull($role->id);
-            $this->assertEquals(8, $role->modulePermissions->count());
+        $this->assertNotNull($role->id);
+        $this->assertEquals(2, $role->modulePermissions->count());
 
-            $role->delete();
+        $role->delete();
 
-            $this->assertEquals(7, $role->modulePermissions->count());
-            $this->assertNull($role->id);
+        $this->assertEquals(1, $role->modulePermissions->count());
+        $this->assertNull($role->id);
 
-        } catch (Exception $e) {
-            $authNamespace->userId = $keepUser;
-            $this->fail($e->getMessage());
-        }
         $authNamespace->userId = $keepUser;
     }
 
@@ -192,16 +187,16 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $user->find(1);
         $group = $user->groups->fetchAll();
 
-        $this->assertEquals('default', $user->groups->find(1)->name);
-        $this->assertEquals('ninasgruppe', $group[1]->name);
-        $this->assertEquals('TEST GROUP', $group[2]->name);
-        $this->assertEquals(5, $user->groups->count());
+        $this->assertEquals('Group 1', $user->groups->find(1)->name);
+        $this->assertEquals('Group 2', $group[1]->name);
+        $this->assertEquals(2, $user->groups->count());
 
         $group = new Phprojekt_Groups_Groups(array('db' => $this->sharedFixture));
         $group->find(1);
         $users = $group->users->fetchAll();
-        $this->assertEquals('david', $users[0]->username);
-        $this->assertEquals(5, $group->users->count());
+        $this->assertEquals('Test', $users[0]->username);
+        $this->assertEquals('Marie', $users[1]->username);
+        $this->assertEquals(2, $group->users->count());
     }
 
     /**
@@ -214,18 +209,18 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
     public function testHasMany()
     {
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $project->find(5);
-        $this->assertEquals(5, $project->id);
+        $project->find(2);
+        $this->assertEquals(2, $project->id);
         $this->assertEquals('Developer Tasks', $project->instances->find(1)->name);
         $this->assertEquals('Project Tasks', $project->instances->find(2)->name);
 
-        $this->assertEquals(3, $project->instances->count());
-        $this->assertEquals(7, $project->count());
+        $this->assertEquals(2, $project->instances->count());
+        $this->assertEquals(5, $project->count());
 
         // same but with fetch all
         $rows = $project->fetchAll();
-        $this->assertEquals(5, $rows[3]->id);
-        $this->assertEquals('Developer Tasks', $rows[3]->instances->find(1)->name);
+        $this->assertEquals(6, $rows[3]->id);
+        $this->assertEquals('Developer Tasks', $rows[1]->instances->find(1)->name);
     }
 
     /**
@@ -240,7 +235,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $instance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
 
         $instance->find(1);
-        $this->assertEquals(3, $instance->count());
+        $this->assertEquals(2, $instance->count());
     }
 
     /**
@@ -254,9 +249,9 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $instance->notes = '';
         $this->assertTrue($instance->save());
 
-        $instance->find(8);
+        $instance->find(2);
         $this->assertEquals('Developer Tasks', $instance->instances->find(1)->name);
-        $this->assertEquals(8, $instance->instances->find(1)->projectId);
+        $this->assertEquals(2, $instance->instances->find(1)->projectId);
 
         $instance->id = 5;
         $this->assertTrue($instance->save());
@@ -267,23 +262,18 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testUpdateHasManyAndBelongsToMany()
     {
-        try {
-            $group = new Phprojekt_Groups_Groups(array('db' => $this->sharedFixture));
-            $group->find(2);
-            $group->id = 10;
-            $group->save();
+        $group = new Phprojekt_Groups_Groups(array('db' => $this->sharedFixture));
+        $group->find(2);
+        $group->id = 10;
+        $group->save();
 
-            $users = $group->users->fetchAll();
-            $this->assertEquals(2, $users[0]->userId);
-            $this->assertEquals('gus', $users[0]->username);
+        $users = $group->users->fetchAll();
+        $this->assertEquals(1, $users[0]->userId);
+        $this->assertEquals('Test', $users[0]->username);
 
-            $group->find(10);
-            $group->id = 2;
-            $group->save();
-        }
-        catch(Exception $e) {
-            $this->fail($e->getMessage());
-        }
+        $group->find(10);
+        $group->id = 2;
+        $group->save();
     }
 
     /**
@@ -296,7 +286,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $instance->find(5);
 
-        $this->assertEquals('Test Project', $instance->title);
+        $this->assertEquals('Sub Project', $instance->title);
 
         $instance->title = 'PHPUnit Test Project';
         $this->assertEquals('PHPUnit Test Project', $instance->title);
@@ -424,14 +414,14 @@ class Phprojekt_ActiveRecord_AbstractTest extends PHPUnit_Framework_TestCase
         $expected = array('id'              => 1,
                           'projectId'       => "",
                           'path'            => '/',
-                          'title'           => 'Invisible Root',
+                          'title'           => 'PHProjekt',
                           'notes'           => "",
                           'ownerId'         => 1,
-                          'startDate'       => "",
+                          'startDate'       => "2007-12-01",
                           'endDate'         => "",
-                          'priority'        => "",
-                          'currentStatus'   => 1,
-                          'completePercent' => 0,
+                          'priority'        => 1,
+                          'currentStatus'   => 3,
+                          'completePercent' => null,
                           'hourlyWageRate'  => "",
                           'budget'          => "",
                           'contactId'       => "");

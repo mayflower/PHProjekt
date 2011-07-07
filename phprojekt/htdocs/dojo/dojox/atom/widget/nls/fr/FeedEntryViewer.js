@@ -1,1 +1,11 @@
-({"close":"[fermer]","title":"Titre","authors":"Auteurs","summary":"Récapitulatif","content":"Contenu","contributors":"Collaborateurs","updated":"Mis à jour","displayOptions":"[options d'affichage]","id":"ID"})
+({
+	displayOptions: "[options d'affichage]",
+	title: "Titre",
+	authors: "Auteurs",
+	contributors: "Collaborateurs",
+	id: "ID",
+	close: "[fermer]",
+	updated: "Mis à jour",
+	summary: "Récapitulatif",
+	content: "Contenu"
+})

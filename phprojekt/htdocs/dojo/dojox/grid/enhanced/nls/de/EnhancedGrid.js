@@ -1,1 +1,8 @@
-({"descending":"Absteigend","ascending":"Aufsteigend","nestedSort":"Verschachtelte Sortierung","unsorted":"Spalte nicht sortieren","singleSort":"Einfache Sortierung","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Einfache Sortierung",
+	nestedSort: "Verschachtelte Sortierung",
+	ascending: "Aufsteigend",
+	descending: "Absteigend",
+	unsorted: "Spalte nicht sortieren"
+})
+

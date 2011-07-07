@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.cometd.ack"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.cometd.ack"] = true;
 dojo.provide("dojox.cometd.ack");
 dojo.require("dojox.cometd._base");
 
@@ -57,5 +48,3 @@ dojox.cometd._ack = new function(){
 dojox.cometd._extendInList.push(dojo.hitch(dojox.cometd._ack, "_in"));
 dojox.cometd._extendOutList.push(dojo.hitch(dojox.cometd._ack, "_out"));
 dojox.cometd.ackEnabled = true;
-
-}

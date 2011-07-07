@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.layout.AccordionContainer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.layout.AccordionContainer"] = true;
 dojo.provide("dijit.layout.AccordionContainer");
 
 dojo.require("dojo.fx");
@@ -163,7 +154,9 @@ dojo.declare(
 		removeChild: function(child){
 			// Overrides _LayoutWidget.removeChild().
 
-			// destroy wrapper widget first, before StackContainer.getChildren() call
+			// Destroy wrapper widget first, before StackContainer.getChildren() call.
+			// Replace wrapper widget with true child widget (ContentPane etc.)
+			dojo.place(child.domNode, child._wrapperWidget.domNode, "after");
 			child._wrapperWidget.destroy();
 			delete child._wrapperWidget;
 			dojo.removeClass(child.domNode, "dijitHidden");
@@ -398,7 +391,7 @@ dojo.declare("dijit.layout._AccordionButton",
 	// tags:
 	//		private
 
-	templateString: dojo.cache("dijit.layout", "templates/AccordionButton.html", "<div dojoAttachEvent='onclick:_onTitleClick' class='dijitAccordionTitle'>\r\n\t<div dojoAttachPoint='titleNode,focusNode' dojoAttachEvent='onkeypress:_onTitleKeyPress'\r\n\t\t\tclass='dijitAccordionTitleFocus' wairole=\"tab\" waiState=\"expanded-false\"\r\n\t\t><span class='dijitInline dijitAccordionArrow' waiRole=\"presentation\"></span\r\n\t\t><span class='arrowTextUp' waiRole=\"presentation\">+</span\r\n\t\t><span class='arrowTextDown' waiRole=\"presentation\">-</span\r\n\t\t><img src=\"${_blankGif}\" alt=\"\" class=\"dijitIcon\" dojoAttachPoint='iconNode' style=\"vertical-align: middle\" waiRole=\"presentation\"/>\r\n\t\t<span waiRole=\"presentation\" dojoAttachPoint='titleTextNode' class='dijitAccordionText'></span>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dijit.layout", "templates/AccordionButton.html"),
 	attributeMap: dojo.mixin(dojo.clone(dijit.layout.ContentPane.prototype.attributeMap), {
 		label: {node: "titleTextNode", type: "innerHTML" },
 		title: {node: "titleTextNode", type: "attribute", attribute: "title"},
@@ -452,5 +445,3 @@ dojo.declare("dijit.layout._AccordionButton",
 		this.focusNode.setAttribute("tabIndex", isSelected ? "0" : "-1");
 	}
 });
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.ui.dom.Pan"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.ui.dom.Pan"] = true;
 dojo.provide("dojox.drawing.ui.dom.Pan");
 dojo.require("dojox.drawing.plugins._Plugin");
 dojo.deprecated("dojox.drawing.ui.dom.Pan", "It may not even make it to the 1.4 release.", 1.4);
@@ -216,5 +207,3 @@ dojox.drawing.ui.dom.Pan.setup = {
 };
 
 dojox.drawing.register(dojox.drawing.ui.dom.Pan.setup, "plugin");
-
-}

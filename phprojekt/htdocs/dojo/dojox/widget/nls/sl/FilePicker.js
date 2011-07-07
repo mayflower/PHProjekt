@@ -1,1 +1,6 @@
-({"name":"Ime","size":"Velikost (v bajtih)","path":"Pot"})
+({
+name: "Ime",
+path: "Pot",
+size: "Velikost (v bajtih)"
+})
+

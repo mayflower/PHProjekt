@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.CouchDBRestStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.CouchDBRestStore"] = true;
 dojo.provide("dojox.data.CouchDBRestStore");
 dojo.require("dojox.data.JsonRestStore");
 
@@ -86,5 +77,3 @@ dojox.data.CouchDBRestStore.getStores = function(couchServerUrl){
 	});
 	return stores;
 };
-
-}

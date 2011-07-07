@@ -1,18 +1,9 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.PasswordValidator"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.PasswordValidator"] = true;
 dojo.provide("dojox.form.PasswordValidator");
 
 dojo.require("dijit.form._FormWidget");
 dojo.require("dijit.form.ValidationTextBox");
 
-dojo.requireLocalization("dojox.form", "PasswordValidator", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dojox.form", "PasswordValidator");
 
 dojo.declare("dojox.form._ChildTextBox", dijit.form.ValidationTextBox, {
 	// summary:
@@ -162,7 +153,7 @@ dojo.declare("dojox.form.PasswordValidator", dijit.form._FormValueWidget, {
 	//		The name to send our old password as (when form is posted)
 	oldName: "",
 	
-	templateString: dojo.cache("dojox.form", "resources/PasswordValidator.html", "<div dojoAttachPoint=\"containerNode\">\r\n\t<input type=\"hidden\" name=\"${name}\" value=\"\" dojoAttachPoint=\"focusNode\" />\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.form", "resources/PasswordValidator.html"),
 	
 	_hasBeenBlurred: false,
 
@@ -319,5 +310,3 @@ dojo.declare("dojox.form.PasswordValidator", dijit.form._FormValueWidget, {
 		if(!f){ this._inputWidgets[1].focus(); }
 	}
 });
-
-}

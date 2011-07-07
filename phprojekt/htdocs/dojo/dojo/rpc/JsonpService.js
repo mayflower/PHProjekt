@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.rpc.JsonpService"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.rpc.JsonpService"] = true;
 dojo.provide("dojo.rpc.JsonpService");
 dojo.require("dojo.rpc.RpcService");
 dojo.require("dojo.io.script");
@@ -68,5 +59,3 @@ dojo.declare("dojo.rpc.JsonpService", dojo.rpc.RpcService, {
 		return params;
 	}
 });
-
-}

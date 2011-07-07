@@ -21,7 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Index Controller
@@ -40,6 +39,13 @@ require_once 'PHPUnit/Framework.php';
  */
 class Tab_IndexController_Test extends FrontInit
 {
+    protected function getDataSet() {
+        return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
+            array(
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
+    }
+
     /**
      * Test of json list Tabe -in fact, default json list
      */

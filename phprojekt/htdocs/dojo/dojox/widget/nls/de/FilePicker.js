@@ -1,1 +1,5 @@
-({"name":"Name","size":"Größe (in Byte)","path":"Pfad"})
+({
+name: "Name",
+path: "Pfad",
+size: "Größe (in Byte)"
+})

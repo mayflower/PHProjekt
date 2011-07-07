@@ -145,17 +145,16 @@ class IndexController extends Zend_Controller_Action
      */
     public function init()
     {
-        $isLoggedIn = true;
-        try {
-            Phprojekt_Auth::isLoggedIn();
+        $isLoggedIn = Phprojekt_Auth::isLoggedIn();
+        if ($isLoggedIn) {
             // Check the CSRF token
             $this->checkCsrfToken();
-        } catch (Phprojekt_Auth_UserNotLoggedInException $error) {
+        } else {
             // User not logged in, display login page
             // If is a GET, show the index page with isLogged false
             // If is a POST, send message in json format
             if (!$this->getFrontController()->getRequest()->isGet()) {
-                throw new Phprojekt_PublishedException($error->message, 500);
+                throw new Phprojekt_PublishedException(Phprojekt_Auth::NOT_LOGGED_IN_MESSAGE, 500);
             }
             $isLoggedIn = false;
         }
@@ -164,6 +163,22 @@ class IndexController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender();
         $this->view->clearVars();
         $this->view->isLoggedIn = $isLoggedIn;
+
+       // Setting the domain selection
+       $conf = Phprojekt::getInstance()->getConfig();
+       $authMode = isset($conf->authentication->mode) ? strtolower($conf->authentication->mode) : 'default';
+       if ($authMode == 'ldap') {
+           $ldapOptions = isset($conf->authentication->ldap) ? $conf->authentication->ldap->toArray() : array();
+           $domains = array();
+           foreach ($ldapOptions as $server => $opts) {
+               $serverName = isset($opts['accountDomainNameShort']) ? trim($opts['accountDomainNameShort']) :
+                               (isset($opts['accountDomainName']) ? trim($opts['accountDomainName']) : $server);
+               $domains[$server] = $serverName;
+           }
+           if (sizeof($domains) > 0) {
+               $this->view->domains = $domains;
+           }
+       }
     }
 
     /**
@@ -753,8 +768,12 @@ class IndexController extends Zend_Controller_Action
     {
         $language  = Cleaner::sanitize('alpha', $this->getRequest()->getParam('language', 'en'));
         $translate = Phprojekt::getInstance()->getTranslate();
+        $data = $translate->getTranslatedStrings($language);
+        if ('en' != $language) {
+            $data['_fallback'] = $translate->getTranslatedStrings('en');
+        }
 
-        Phprojekt_Converter_Json::echoConvert($translate->getTranslatedStrings($language));
+        Phprojekt_Converter_Json::echoConvert($data);
     }
 
     /**

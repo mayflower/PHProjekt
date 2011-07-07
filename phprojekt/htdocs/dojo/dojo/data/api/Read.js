@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.data.api.Read"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.data.api.Read"] = true;
 dojo.provide("dojo.data.api.Read");
 dojo.require("dojo.data.api.Request");
 
@@ -509,5 +500,3 @@ dojo.declare("dojo.data.api.Read", null, {
 		return null;
 	}
 });
-
-}

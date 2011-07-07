@@ -307,7 +307,11 @@ class Phprojekt
     {
         $translate = Phprojekt::getInstance()->getTranslate($locale);
         if (null === $moduleName) {
-            $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+            if (Zend_Controller_Front::getInstance()->getRequest()) {
+                $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+            } else {
+                return $message;
+            }
         }
 
         // Fix for request to the core
@@ -339,10 +343,12 @@ class Phprojekt
      *
      * @return string Tooltip message.
      */
-    public function getTooltip($field)
+    public function getTooltip($field, $moduleName = null)
     {
         $translate  = Phprojekt::getInstance()->getTranslate();
-        $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+        if (null == $moduleName) {
+            $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+        }
 
         $hints = $translate->translate('Tooltip', $moduleName);
         if (!is_array($hints)) {
@@ -418,7 +424,18 @@ class Phprojekt
             $this->_config->webpath = $response->getScheme() . '://' . $response->getHttpHost()
                 . $response->getBasePath() . '/';
         }
-        define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
+
+       $path = "index.php/";
+       if (isset($this->_config->prettyUrls) && (bool)$this->_config->prettyUrls) {
+           $path = "";
+           $ruri = $_SERVER['REQUEST_URI'];
+           if (($pos = strrpos($ruri, "/index.php")) !== false && $pos == strlen($ruri)-strlen("/index.php")) {
+               header("Location: " . $this->_config->webpath);
+               exit;
+           }
+       }
+        define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . $path);
+
         define('PHPR_TEMP_PATH', $this->_config->tmpPath);
         define('PHPR_USER_CORE_PATH', $this->_config->applicationPath);
 
@@ -808,7 +825,6 @@ class Phprojekt
             'mbstring'   => 'http://us.php.net/manual/en/mbstring.installation.php',
             'iconv'      => 'http://us.php.net/manual/en/iconv.installation.php',
             'ctype'      => 'http://us.php.net/manual/en/ctype.installation.php',
-            'gd'         => 'http://us.php.net/manual/en/image.installation.php',
             'pcre'       => 'http://us.php.net/manual/en/pcre.installation.php',
             'pdo'        => 'http://us.php.net/manual/en/pdo.installation.php',
             'Reflection' => 'http://us.php.net/manual/en/reflection.installation.php',

@@ -1,1 +1,5 @@
-({"next":"Næste","done":"Udført","previous":"Forrige"})
+({
+next: "Næste",
+previous: "Forrige",
+done: "Udført"
+})

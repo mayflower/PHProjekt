@@ -1,1 +1,6 @@
-({"edit":"[rediger]","save":"[lagre]","cancel":"[avbryt]","doNew":"[ny(tt)]"})
+({
+	doNew: "[ny(tt)]",
+	edit: "[rediger]",
+	save: "[lagre]",
+	cancel: "[avbryt]"
+})

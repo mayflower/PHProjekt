@@ -1,1 +1,8 @@
-({"descending":"Sestupně","ascending":"Vzestupně","nestedSort":"Vnořené řazení","unsorted":"Tento sloupec neřadit","singleSort":"Jednoduché řazení","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Jednoduché řazení",
+	nestedSort: "Vnořené řazení",
+	ascending: "Vzestupně",
+	descending: "Sestupně",
+	unsorted: "Tento sloupec neřadit"
+})
+

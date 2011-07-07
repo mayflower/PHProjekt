@@ -1,1 +1,30 @@
-({"buttonSet":"הגדרה","insertTableTitle":"הוספת טבלה","insertTableRowAfterLabel":"הוספת שורה אחרי","center":"מרכז","deleteTableColumnLabel":"מחיקת עמודה","right":"שמאל","insertTableColumnBeforeLabel":"הוספת עמודה לפני","tableWidth":"רוחב טבלה:","buttonInsert":"הוספה","default":"ברירת מחדל","align":"יישור:","insertTableRowBeforeLabel":"הוספת שורה לפני","cellSpacing":"ריווח תאים:","pixels":"פיקסלים","selectTableLabel":"בחירת טבלה","rows":"שורות:","modifyTableTitle":"שינוי טבלה","cellPadding":"ריפוד תאים:","deleteTableRowLabel":"מחיקת שורה","backgroundColor":"צבע רקע:","insertTableColumnAfterLabel":"הוספת עמודה אחרי","left":"ימין","borderThickness":"עובי גבול","columns":"עמודות:","percent":"אחוז","borderColor":"צבע גבול:"})
+({
+	insertTableTitle: "הוספת טבלה",
+	modifyTableTitle: "שינוי טבלה",
+	rows: "שורות:",
+	columns: "עמודות:",
+	align: "יישור:",
+	cellPadding: "ריפוד תאים:",
+	cellSpacing: "ריווח תאים:",
+	tableWidth: "רוחב טבלה:‏",
+	backgroundColor: "צבע רקע:",
+	borderColor: "צבע גבול:",
+	borderThickness: "עובי גבול",
+	percent: "אחוזים",
+	pixels: "פיקסלים",
+	"default": "ברירת מחדל",
+	left: "ימין",
+	center: "מרכז",
+	right: "שמאל",
+	buttonSet: "הגדרה", // translated elsewhere?
+	buttonInsert: "הוספה",
+	buttonCancel: "ביטול",
+
+	selectTableLabel: "בחירת טבלה",
+	insertTableRowBeforeLabel: "הוספת שורה לפני",
+	insertTableRowAfterLabel: "הוספת שורה אחרי",
+	insertTableColumnBeforeLabel: "הוספת עמודה לפני",
+	insertTableColumnAfterLabel: "הוספת עמודה אחרי",
+	deleteTableRowLabel: "מחיקת שורה",
+	deleteTableColumnLabel: "מחיקת עמודה"
+})

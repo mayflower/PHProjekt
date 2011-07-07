@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.lang.docs"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.lang.docs"] = true;
 dojo.provide("dojox.lang.docs");
 
 // Extracts information from the API docs to apply a schema representation to dojo classes.
@@ -221,5 +212,3 @@ dojo.provide("dojox.lang.docs");
 		return null;
 	}
 })();
-
-}

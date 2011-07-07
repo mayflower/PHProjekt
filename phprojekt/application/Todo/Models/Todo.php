@@ -37,6 +37,14 @@
  */
 class Todo_Models_Todo extends Phprojekt_Item_Abstract
 {
+
+    /** Constants for $this->currentStatus */
+    const STATUS_WAITING  = 1;
+    const STATUS_ACCEPTED = 2;
+    const STATUS_WORKING  = 3;
+    const STATUS_STOPPED  = 4;
+    const STATUS_ENDED    = 5;
+
     /**
      * Returns an instance of notification class for this module
      *
@@ -57,10 +65,37 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
      */
     public function recordValidate()
     {
-        if (!$this->_validate->validateDateRange($this->startDate, $this->endDate)) {
+        $validDate = $this->_validate->validateDateRange(
+            $this->startDate,
+            $this->endDate
+        );
+
+        if (!$validDate) {
             return false;
         } else {
             return parent::recordValidate();
         }
+    }
+
+    /**
+     * Overwrite the save function and delete this project's completion cache.
+     */
+    public function save()
+    {
+        parent::save();
+        $project = new Project_Models_Project();
+        $project->find(Phprojekt::getCurrentProjectId());
+        $project->deleteCumulativeCompletePercentCache();
+    }
+
+    /**
+     * Overwrite the delete function and delete this project's completion cache.
+     */
+    public function delete()
+    {
+        $project = new Project_Models_Project();
+        $project->find(Phprojekt::getCurrentProjectId());
+        $project->deleteCumulativeCompletePercentCache();
+        parent::delete();
     }
 }

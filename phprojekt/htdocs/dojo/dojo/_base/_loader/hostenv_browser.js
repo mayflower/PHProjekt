@@ -1,10 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
 /*=====
 dojo.isBrowser = {
 	//	example:
@@ -72,14 +65,18 @@ dojo = {
 }
 =====*/
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 if(typeof window != 'undefined'){
+//>>excludeEnd("webkitMobile");
 	dojo.isBrowser = true;
 	dojo._name = "browser";
 
 
 	// attempt to figure out the path to dojo if it isn't set in the config
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 	(function(){
 		var d = dojo;
+//>>excludeEnd("webkitMobile");
 
 		// this is a scope protection closure. We set browser versions and grab
 		// the URL we were loaded from here.
@@ -138,7 +135,8 @@ if(typeof window != 'undefined'){
 			}
 		}
 
-				if(dua.indexOf("Gecko") >= 0 && !d.isKhtml && !d.isWebKit){ d.isMozilla = d.isMoz = tv; }
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		if(dua.indexOf("Gecko") >= 0 && !d.isKhtml && !d.isWebKit){ d.isMozilla = d.isMoz = tv; }
 		if(d.isMoz){
 			//We really need to get away from this. Consider a sane isGecko approach for the future.
 			d.isFF = parseFloat(dua.split("Firefox/")[1] || dua.split("Minefield/")[1]) || undefined;
@@ -162,22 +160,28 @@ if(typeof window != 'undefined'){
 		if(dojo.isIE && window.location.protocol === "file:"){
 			dojo.config.ieForceActiveXXhr=true;
 		}
-		
+		//>>excludeEnd("webkitMobile");
+
 		d.isQuirks = document.compatMode == "BackCompat";
 
 		// TODO: is the HTML LANG attribute relevant?
 		d.locale = dojo.config.locale || (d.isIE ? n.userLanguage : n.language).toLowerCase();
 
 		// These are in order of decreasing likelihood; this will change in time.
-				d._XMLHTTP_PROGIDS = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'];
-		
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		d._XMLHTTP_PROGIDS = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'];
+		//>>excludeEnd("webkitMobile");
+
 		d._xhrObj = function(){
 			// summary: 
 			//		does the work of portably generating a new XMLHTTPRequest object.
 			var http, last_e;
-						if(!dojo.isIE || !dojo.config.ieForceActiveXXhr){
-							try{ http = new XMLHttpRequest(); }catch(e){}
-						}
+			//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+			if(!dojo.isIE || !dojo.config.ieForceActiveXXhr){
+			//>>excludeEnd("webkitMobile");
+				try{ http = new XMLHttpRequest(); }catch(e){}
+			//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+			}
 			if(!http){
 				for(var i=0; i<3; ++i){
 					var progid = d._XMLHTTP_PROGIDS[i];
@@ -193,7 +197,8 @@ if(typeof window != 'undefined'){
 					}
 				}
 			}
-			
+			//>>excludeEnd("webkitMobile");
+
 			if(!http){
 				throw new Error("XMLHTTP not available: "+last_e);
 			}
@@ -360,7 +365,9 @@ if(typeof window != 'undefined'){
 			}
 		};
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 	})();
+//>>excludeEnd("webkitMobile");
 
 	//START DOMContentLoaded
 	dojo._initFired = false;
@@ -417,7 +424,8 @@ if(typeof window != 'undefined'){
 		}
 	}
 
-		if(dojo.isIE){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	if(dojo.isIE){
 		try{
 			(function(){
 				document.namespaces.add("v", "urn:schemas-microsoft-com:vml");
@@ -433,7 +441,8 @@ if(typeof window != 'undefined'){
 			})();
 		}catch(e){}
 	}
-		//END DOMContentLoaded
+	//>>excludeEnd("webkitMobile");
+	//END DOMContentLoaded
 
 
 	/*
@@ -447,19 +456,23 @@ if(typeof window != 'undefined'){
 		dojo.unloaded();
 	});
 	*/
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 } //if (typeof window != 'undefined')
 
 //Register any module paths set up in djConfig. Need to do this
 //in the hostenvs since hostenv_browser can read djConfig from a
 //script tag's attribute.
 (function(){
+//>>excludeEnd("webkitMobile");
 	var mp = dojo.config["modulePaths"];
 	if(mp){
 		for(var param in mp){
 			dojo.registerModulePath(param, mp[param]);
 		}
 	}
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 })();
+//>>excludeEnd("webkitMobile");
 
 //Load debug code if necessary.
 if(dojo.config.isDebug){

@@ -21,7 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Filters
@@ -38,8 +37,19 @@ require_once 'PHPUnit/Framework.php';
  * @group      main
  * @group      phprojekt-main
  */
-class Phprojekt_FilterTest extends PHPUnit_Framework_TestCase
+class Phprojekt_FilterTest extends DatabaseTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * Test addFilter and getWhere
      */
@@ -85,6 +95,7 @@ class Phprojekt_FilterTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertRulePart1()
     {
+        $this->markTestSkipped("We don't use Minutes");
         $item = new Minutes_Models_Minutes();
 
         $filter = new Phprojekt_Filter($item);
@@ -109,6 +120,7 @@ class Phprojekt_FilterTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertRulePart2()
     {
+        $this->markTestSkipped("We don't use Minutes");
         $item   = new Project_Models_Project();
 
         $filter = new Phprojekt_Filter($item);

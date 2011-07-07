@@ -21,7 +21,6 @@
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for active records
@@ -38,8 +37,12 @@ require_once 'PHPUnit/Framework.php';
  * @group      loader
  * @group      phprojekt-loader
  */
-class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
+class Phprojekt_LoaderTest extends DatabaseTest
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * Test the loadClass functionality
      */
@@ -56,8 +59,8 @@ class Phprojekt_LoaderTest extends PHPUnit_Framework_TestCase
     {
         $name = Phprojekt_Loader::getModel('Project', 'Project');
         $this->assertEquals('Project_Models_Project', get_class($name));
-        $instance = new $name(array('db'=>$this->sharedFixture));
-        $this->assertNotNull($instance);
+        $instance = new $name(array('db' => Phprojekt::getInstance()->getDb()));
+        $this->assertTrue($instance instanceof Project_Models_Project);
     }
 
     /**

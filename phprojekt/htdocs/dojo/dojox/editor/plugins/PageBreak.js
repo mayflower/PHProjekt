@@ -1,18 +1,9 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.PageBreak"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.PageBreak"] = true;
 dojo.provide("dojox.editor.plugins.PageBreak");
 
 dojo.require("dijit._editor._Plugin");
 dojo.require("dojo.i18n");
 
-dojo.requireLocalization("dojox.editor.plugins", "PageBreak", null, "ROOT,cs,de,es,fr,hu,it,ja,ko,pl,pt,ro,ru,zh,zh-tw");
+dojo.requireLocalization("dojox.editor.plugins", "PageBreak");
 
 dojo.declare("dojox.editor.plugins.PageBreak",dijit._editor._Plugin,{
 	//	summary:
@@ -166,5 +157,3 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 		o.plugin = new dojox.editor.plugins.PageBreak({});
 	}
 });
-
-}

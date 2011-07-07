@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.layout.ExpandoPane"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.layout.ExpandoPane"] = true;
 dojo.provide("dojox.layout.ExpandoPane");
 dojo.experimental("dojox.layout.ExpandoPane"); // just to show it can be done?
 
@@ -28,7 +19,7 @@ dojo.declare("dojox.layout.ExpandoPane",
 	//maxWidth: "",
 	//splitter: false,
 	
-	templateString: dojo.cache("dojox.layout", "resources/ExpandoPane.html", "<div class=\"dojoxExpandoPane\">\r\n\t<div dojoAttachPoint=\"titleWrapper\" class=\"dojoxExpandoTitle\">\r\n\t\t<div class=\"dojoxExpandoIcon\" dojoAttachPoint=\"iconNode\" dojoAttachEvent=\"onclick:toggle\"><span class=\"a11yNode\">X</span></div>\t\t\t\r\n\t\t<span class=\"dojoxExpandoTitleNode\" dojoAttachPoint=\"titleNode\">${title}</span>\r\n\t</div>\r\n\t<div class=\"dojoxExpandoWrapper\" dojoAttachPoint=\"cwrapper\" dojoAttachEvent=\"ondblclick:_trap\">\r\n\t\t<div class=\"dojoxExpandoContent\" dojoAttachPoint=\"containerNode\"></div>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.layout","resources/ExpandoPane.html"),
 
 	// easeOut: String|Function
 	//		easing function used to hide pane
@@ -288,5 +279,3 @@ dojo.declare("dojox.layout.ExpandoPane",
 	}
 
 });
-
-}

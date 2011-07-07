@@ -21,7 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for database manager field
@@ -40,8 +39,18 @@ require_once 'PHPUnit/Framework.php';
  * @group      phprojekt-databasemanager
  * @group      phprojekt-databasemanager-field
  */
-class Phprojekt_DatabaseManager_FieldTest extends PHPUnit_Framework_TestCase
+class Phprojekt_DatabaseManager_FieldTest extends DatabaseTest
 {
+    public function setUp() {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * Test __get
      */
@@ -62,11 +71,6 @@ class Phprojekt_DatabaseManager_FieldTest extends PHPUnit_Framework_TestCase
         $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $dbField = new Phprojekt_DatabaseManager_Field($project->getInformation(), 'parent', 'testvalue');
 
-        ob_start();
-        echo $dbField;
-        $stringValue = ob_get_contents();
-        ob_end_clean();
-
-        $this->assertEquals('testvalue', $stringValue);
+        $this->assertEquals('testvalue', $dbField->value);
     }
 }

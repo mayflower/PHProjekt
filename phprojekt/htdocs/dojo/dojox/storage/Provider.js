@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.storage.Provider"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.storage.Provider"] = true;
 dojo.provide("dojox.storage.Provider");
 
 dojo.declare("dojox.storage.Provider", null, {
@@ -347,5 +338,3 @@ dojo.declare("dojox.storage.Provider", null, {
 		return [];
 	}
 });
-
-}

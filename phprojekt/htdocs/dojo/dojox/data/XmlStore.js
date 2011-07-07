@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.XmlStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.XmlStore"] = true;
 dojo.provide("dojox.data.XmlStore");
 dojo.provide("dojox.data.XmlItem");
 
@@ -1524,5 +1515,3 @@ dojo.declare("dojox.data.XmlItem", null, {
 	}
 });
 dojo.extend(dojox.data.XmlStore,dojo.data.util.simpleFetch);
-
-}

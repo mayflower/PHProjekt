@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.layout.ToggleSplitter"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.layout.ToggleSplitter"] = true;
 dojo.provide("dojox.layout.ToggleSplitter");
 dojo.experimental("dojox.layout.ToggleSplitter"); 
 
@@ -268,5 +259,3 @@ dojo.extend(dijit._Widget, {
 	// 		a css size value (e.g. "100px")
 	toggleSplitterOpenSize: ""
 });
-
-}
