@@ -214,11 +214,6 @@ smtpServer    = "localhost"
 compressedDojo     = true;
 useCacheForClasses = true;
 
-;;;;;;;;;;;;;;;
-; PRETTY URLS ;
-;;;;;;;;;;;;;;;
-prettyUrls = true
-
 ;;;;;;;;;;;;;;;;;;
 ; AUTHENTICATION ;
 ;;;;;;;;;;;;;;;;;;

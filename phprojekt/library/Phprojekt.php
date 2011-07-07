@@ -441,18 +441,7 @@ class Phprojekt
             $this->_config->webpath = $response->getScheme() . '://' . $response->getHttpHost()
                 . $response->getBasePath() . '/';
         }
-
-       $path = "index.php/";
-       if (isset($this->_config->prettyUrls) && (bool)$this->_config->prettyUrls) {
-           $path = "";
-           $ruri = $_SERVER['REQUEST_URI'];
-           if (($pos = strrpos($ruri, "/index.php")) !== false && $pos == strlen($ruri)-strlen("/index.php")) {
-               header("Location: " . $this->_config->webpath);
-               exit;
-           }
-       }
-        define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . $path);
-
+        define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
         define('PHPR_TEMP_PATH', $this->_config->tmpPath);
         define('PHPR_USER_CORE_PATH', $this->_config->applicationPath);
 
