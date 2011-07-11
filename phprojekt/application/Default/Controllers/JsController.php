@@ -64,6 +64,7 @@ class JsController extends IndexController
         $scripttext = "";
         // System files, must be parsed in this order
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/phpr.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/GarbageCollector.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Component.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Form.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Grid.js');
@@ -111,6 +112,7 @@ class JsController extends IndexController
                     phpr.tree             = new phpr.Default.System.Tree();
                     phpr.regExpForFilter  = new phpr.regExpForFilter();
                     phpr.pageManager      = new phpr.Default.System.PageManager();
+                    phpr.garbageCollector = new phpr.Default.System.GarbageCollector();
                     phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";
         ';
 

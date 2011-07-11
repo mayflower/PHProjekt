@@ -49,11 +49,14 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         //      This function changes the page hash, and loads the new module
         // Description:
         //      This is the replacement for the indirection through the url 
-        //      hash
+        //      hash.
+        //      The config is a javascrip object describing the state of the
+        //      page we are going to change to, there could be custom parameters
+        //      but the most important ones are:
+        //      projectId, moduleName, action, id
         if(!config.moduleName) {
             config.moduleName = this._defaultModule;
         }
-        console.log("changepage",config);
 
         if(this.getModule(config.moduleName)) {
             this._changeModule(config);
@@ -63,7 +66,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     },
 
     _setHash:function(config) {
-        var newHash = dojo.objectToQuery(config);
+        var newHash = dojo.objectToQuery(config)||"";
         if(newHash != this._recentHash) {
             this._recentHash = newHash;
             dojo.hash(newHash);
@@ -76,11 +79,15 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     },
 
     _changeModule:function(config) {
-        if(this._activeModule && this._activeModule.module != config.moduleName) {
-            if(dojo.isFunction(this._activeModule.hide)) {
-                this._activeModule.hide();
+        if(this._activeModule) {
+            if(dojo.isFunction(this._activeModule.destroy)) {
+                this._activeModule.destroy();
+                phpr.garbageCollector.collect(this._activeModule); // collect by ref
+                phpr.garbageCollector.collect(this._activeModule.module); // collect by name
             }
         }
+
+        phpr.garbageCollector.collect(); // collect general garbage
 
         this._setHash(config);
         
@@ -108,19 +115,19 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             phpr.currentProjectId = phpr.rootProjectId;
         }
 
-        if (config.id) {
+        if ("undefined" != typeof config.id) {
             // If is an id, open a form
             if (module && (config.id > 0 || config.id == 0)) {
                 if (module !== phpr.module || newProject) {
                     this._reloadModule(module);
                 }
-                dojo.publish(module + ".openForm", [id, module]);
+                dojo.publish(module + ".openForm", [config.id, module]);
             }
-        } else if (config.search) {
+        } else if ("undefined" != typeof config.search) {
             mod.showSearchResults(config.search||"");
-        } else if (config.tag) {
+        } else if ("undefined" != typeof config.tag) {
             mod.showTagsResults(config.tag||"");
-        } else if (config.action) {
+        } else if ("undefined" != typeof config.action) {
             // TODO: create better semantics for custom function calls
             if(dojo.isFunction(mod.processActionFromUrlHash)) {
                 mod.processActionFromUrlHash(config);
@@ -128,7 +135,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
                 dojo.publish(module + ".processActionFromUrlHash", [config]);
             }
         } else {
-            // Dafault value, only one parameter, and must be the module
+            // Default value, only one parameter, and must be the module
             this._reloadModule(module);
         }
 
@@ -140,10 +147,8 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         if(mod) {
             params = []&&params;
             if(dojo.isFunction(mod.reload)){
-                console.log("reloading module through function", mod.module);
-                mod.reload.apply(mod, params);
+                mod.reload.apply(mod, params||[]);
             } else {
-                console.log("reloading module through event", mod.module);
                 // fallback
                 // TODO: delete if unused
                 dojo.publish(mod.module + ".reload", params)
@@ -152,6 +157,8 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     },
 
     getModule:function(name) {
+        // Summary:
+        //      returns a module by its name or null if it is not registered
         var mod = this._modules[name];
         if(mod)
             return mod;
@@ -160,6 +167,8 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     },
 
     getActiveModule:function() {
+        // Summary:
+        //      returns the active module
         return this._activeModule;
     },
 
@@ -170,22 +179,28 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     },
 
     init:function() {
-        console.log("pagemanager init");
+        // Summary:
+        //      Initilizes the pageManager
+        // Description:
+        //      This will fetch the url hash from the cookie if none is found
+        //      and if no moduleName is provided, loads the Project module.
         if (!window.location.hash) {
             // Try loading hash from cookie, or use default config
-            var hash = dojo.cookie('location.hash');
-            if (hash != undefined) {
+            var hash = dojo.cookie('location.hash')||"";
+            if (hash != "") {
                 dojo.hash(hash,true);
+                this.changePage({
+                    moduleName:"Project"
+                });
             } else {
                 this.changePage({
                     moduleName:"Project"
                 });
             }
         } else {
-            console.log("use existing has",dojo.hash());
             this._hashChange();
         }
-    },
+    }
 });
 
 

@@ -45,7 +45,13 @@ dojo.declare("phpr.Default.System.Component", null, {
             for (var i = 0; i < result.length; i++) {
                 var id = result[i].replace(/id=\\?["']/gi, '').replace(/\\?["']/gi, '');
                 if (dijit.byId(id)) {
-                    dijit.byId(id).destroyRecursive();
+                    try { // may fail due to already removed dom node
+                        dijit.byId(id).destroyRecursive();
+                    } catch (e) {
+                        try { // if this fails, it's probably long gone
+                            dijit.byId(id).destroy();
+                        } catch(e) {}
+                    }
                 }
             }
         }

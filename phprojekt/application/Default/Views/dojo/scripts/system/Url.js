@@ -34,9 +34,10 @@ dojo.declare("phpr.Url", null, {
         if(dojo.hash()) {
             var data = dojo.queryToObject(dojo.hash());
             if (data.moduleName) {
-                return data.moduleName;
+                module = data.moduleName;
             }
         }
+        return module;
     },
 
     addUrl:function(id) {

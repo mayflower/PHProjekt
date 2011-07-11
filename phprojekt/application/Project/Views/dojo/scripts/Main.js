@@ -33,6 +33,14 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.formBasicDataWidget = phpr.Project.FormBasicData;
     },
 
+    destroy:function() {
+        if(this.form&&this.form.destroy&&!this.form._beingDestroyed) {
+            this.form.destroy();
+        }
+        this.form = null;
+        this.inherited(arguments);
+    },
+
     loadResult:function(id, module, projectId) {
         this.cleanPage();
         phpr.parentmodule     = null;
@@ -44,8 +52,8 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
     basicData:function() {
         phpr.module = this.module;
         this.cleanPage();
-        this.render(["phpr.Project.template", "BasicData.html"], dojo.byId('centerMainContent'));
         this.setSubmoduleNavigation('BasicData');
+        this.render(["phpr.Project.template", "BasicData.html"], dojo.byId('centerMainContent'));
         this.hideSuggest();
         this.setSearchForm();
         phpr.tree.fadeIn();

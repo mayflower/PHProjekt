@@ -230,7 +230,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Add "add" button for access
         if (this._accessPermissions && users.length > 0) {
             this.addTinyButton('add', 'accessAddButton', 'newAccess');
-            dojo.connect(dijit.byId("checkAdminAccessAdd"), "onClick", dojo.hitch(this, "checkAllAccess", "Add"));
+            phpr.garbageCollector.addEvent(
+                dojo.connect(dijit.byId("checkAdminAccessAdd"), 
+                    "onClick", dojo.hitch(this, "checkAllAccess", "Add")));
         }
 
         if (this._accessPermissions) {
@@ -241,8 +243,12 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     var userId = accessContent[i]["userId"];
                     if (userId != currentUser && userId != 1) {
                         this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
-                        dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick",
-                            dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
+
+                        phpr.garbageCollector.addEvent(
+                            dojo.connect(
+                                dijit.byId("checkAdminAccess[" + userId + "]"),
+                                "onClick",
+                                dojo.hitch(this, "checkAllAccess", "[" + userId + "]")));
                     }
                 }
             }
@@ -261,8 +267,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             baseClass: 'dijitButton, smallIcon'
         };
         var button = new dijit.form.Button(params);
+        phpr.garbageCollector.addNode(button);
+
         dojo.byId(nodeId).appendChild(button.domNode);
-        dojo.connect(button, "onClick", dojo.hitch(this, functionName, extraParams));
+
+        phpr.garbageCollector.addEvent(
+            dojo.connect(button, "onClick", 
+                dojo.hitch(this, functionName, extraParams)));
     },
 
     setPermissions:function(data) {
@@ -299,6 +310,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             id:    id,
             title: phpr.nls.get(title)
         });
+        phpr.garbageCollector.addNode(tab);
+
         tab.set('content', html);
         this.form.addChild(tab);
         if (typeof formId != "undefined") {
@@ -468,7 +481,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             }
 
             if (this.id > 0 && this.useHistoryTab()) {
-                dojo.connect(dijit.byId("tabHistory"), "onShow", dojo.hitch(this, "showHistory"));
+                var that = this;
+                phpr.garbageCollector.addEvent(
+                    dojo.connect(dijit.byId("tabHistory"), 
+                        "onShow", that.showHistory));
             }
 
             // Set cursor to the first required field
@@ -527,10 +543,20 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     setActionFormButtons:function() {
         // Summary:
         //    Connect the buttons to the actions
-        dojo.connect(dijit.byId("submitButton"), "onClick", dojo.hitch(this, "submitForm"));
-        dojo.connect(dijit.byId("deleteButton"), "onClick", dojo.hitch(this, function() {
-            phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'))
-        }));
+
+        var that = this;
+        phpr.garbageCollector.addEvent(
+            dojo.connect(dijit.byId("submitButton"), 
+                "onClick", dojo.hitch(this, "submitForm")));
+
+        phpr.garbageCollector.addEvent(
+            dojo.connect(dijit.byId("deleteButton"),
+                "onClick", dojo.hitch(this, function() {
+                    phpr.garbageCollector.addNode(
+                        phpr.confirmDialog(
+                        dojo.hitch(this, "deleteForm"),
+                        phpr.nls.get('Are you sure you want to delete?')));
+                })));
     },
 
     useCache:function() {
@@ -549,12 +575,20 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var cb = dojo.hitch(this, function() {
             dojo.byId('completeContent').focus();
         });
+
+        var that = this;
+
         return (function() {  
             var tabContainer = new dijit.layout.TabContainer({
                 style:   'height: 100%;',
                 useMenu: false
             }, document.createElement('div'));
-            dojo.connect(tabContainer, 'selectChild', cb);
+
+            phpr.garbageCollector.addNode(tabContainer);
+
+            phpr.garbageCollector.addEvent(
+                dojo.connect(tabContainer, 'selectChild', cb));
+
             return tabContainer;
         })();
     },
@@ -698,8 +732,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             dojo.parser.parse(row);
 
             this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
-            dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"), "onClick",
-                dojo.hitch(this, "checkAllAccess", "[" + userId + "]"));
+            phpr.garbageCollector.addEvent(
+                dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"),
+                    "onClick",
+                    dojo.hitch(this, "checkAllAccess", "[" + userId + "]")));
         }
     },
 

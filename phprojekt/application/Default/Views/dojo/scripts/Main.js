@@ -27,7 +27,7 @@ dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.Tooltip");
 
 // Event handler
-_searchEvent = null;
+var _searchEvent = null;
 
 dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     // Summary: class for initialilzing a default module
@@ -41,6 +41,22 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
     constructor:function(subModules) {
         this.subModules = subModules;
+    },
+
+    destroy:function() {
+        if(this.form) {
+            if(dojo.isFunction(this.form.destroy)) {
+                this.form.destroy();
+            }
+            this.form = null;
+        }
+        if(this.grid) {
+            if(dojo.isFunction(this.grid.destroy)) {
+                this.grid.destroy();
+            }
+            this.grid = null;
+        }
+        this.inherited(arguments);
     },
 
     loadFunctions:function(module) {
@@ -97,9 +113,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             phpr.tree.fadeIn();
         }
 
-        phpr.changePage({
+        phpr.pageManager.changePage({
             moduleName: module,
-            id: id
+            id: id,
+            projectId: projectId
         });
     },
 
@@ -160,7 +177,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         }
                     }
 
-                    console.log("a");
                     if (currentModule) {
                         phpr.pageManager.changePage({
                             moduleName:currentModule,
@@ -197,7 +213,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         phpr.InitialScreen.start();
         this.hideSuggest();
-        console.log("load");
 
         // Get all configuration.php vars for the front
         var config = new phpr.Default.System.Store.Config();
@@ -260,6 +275,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
         //    The function is splitted in four for customize it
+        this.destroy();
         this.setGlobalVars();
         this.renderTemplate();
         this.setNavigations();
@@ -311,7 +327,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         if(this.grid) {
-            if("function" == typeof this.grid.destroy) {
+            if(dojo.isFunction(this.grid.destroy)) {
                 this.grid.destroy();
             }
         }
@@ -370,7 +386,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 onClick:   dojo.hitch(this, function() {
                     phpr.currentProjectId = phpr.rootProjectId;
                     phpr.pageManager.changePage({
-                        moduleName: "Administration",
+                        moduleName: "Administration"
                     });
                 })
             });
@@ -480,8 +496,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 }
                 navigation += "</tr></table>";
 
-                var tmp       = document.createElement('div');
-                tmp.innerHTML = navigation;
+                var tmp = dojo.create('div',{innerHTML:navigation});
                 var widget    = new phpr.ScrollPane({}, tmp);
                 dojo.byId("subModuleNavigation").appendChild(widget.domNode);
                 phpr.initWidgets(dojo.byId("subModuleNavigation"));
@@ -561,7 +576,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    After that, add all the params
 
         var config = {};
-        console.log("seturlhash",module,id,params);
         if (id && module) {
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,xx (Open form for edit in normal modules)
@@ -615,7 +629,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             }
         }
 
-        if(params[0])
+        if(params && params[0])
             config.action = params[0];
 
         phpr.pageManager.changePage(config);
@@ -725,7 +739,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             dijit.byId("searchfield").regExp         = phpr.regExpForFilter.getExp();
             dijit.byId("searchfield").invalidMessage = phpr.regExpForFilter.getMsg();
             _searchEvent = dojo.connect(dojo.byId("searchfield"), "onkeyup",
-                dojo.hitch(this, "waitForSubmitSearchForm"));
+                    dojo.hitch(this, "waitForSubmitSearchForm"));
         }
     },
 

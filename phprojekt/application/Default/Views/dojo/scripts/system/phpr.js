@@ -62,10 +62,13 @@ phpr.initWidgets = function(el) {
 phpr.destroySubWidgets = function(el) {
     // Destroy all the old widgets, so dojo can init the new ones with the same IDs again.
     if (dojo.byId(el)) {
-        var oldWidgetNodes = dojo.query("[widgetId]", dojo.byId(el));
-        for (var i = 0; i < oldWidgetNodes.length; i++) {
-            if (dijit.byNode(oldWidgetNodes[i])) {
-                dijit.byNode(oldWidgetNodes[i]).destroyRecursive();
+        var nodes = dijit.findWidgets(dojo.byId(el));
+        for(var node in nodes) {
+            console.log(nodes[node]);
+            try { // may fail due to already removed dom node
+                nodes[node].destroyRecursive();
+            } catch (e) {
+                
             }
         }
     } else if (dijit.byId(el)) {
@@ -1216,5 +1219,5 @@ phpr.confirmDialog = function(callbackOk, message) {
     buttonContent = null;
     buttonOK = null;
     buttonCancel = null;
-    confirmDialog = null;
+    return confirmDialog;
 };

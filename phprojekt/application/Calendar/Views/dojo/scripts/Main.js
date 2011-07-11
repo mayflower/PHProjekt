@@ -22,6 +22,7 @@
 dojo.provide("phpr.Calendar.Main");
 
 dojo.require("dijit.layout.ContentPane");
+dojo.require("dojox.form.CheckedMultiSelect");
 
 dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     _date:                new Date(),

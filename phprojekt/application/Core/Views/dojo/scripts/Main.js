@@ -190,13 +190,13 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         //    Rewritten the function for work like a system module and like a form
 
         // Module name
-        if (data.moduleName) {
-            if (this.isSystemModule(data.moduleName)) {
-                var module    = data.moduleName;
+        if (data.action) {
+            if (this.isSystemModule(data.action)) {
+                var module    = data.action;
                 var subModule = module;
             } else {
                 var module    = this.module;
-                var subModule = data.subModule;
+                var subModule = data.action;
             }
 
             if (data.id) {

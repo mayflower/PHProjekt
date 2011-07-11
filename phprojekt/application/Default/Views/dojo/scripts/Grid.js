@@ -63,12 +63,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     _filterSeparator:  ';',
     _filterData:       new Array(),
 
-    // Event handlers
-    _events: new Array(),
-
-    // Dom nodes
-    _domNodes: new Array(),
-
     // Constants
     MODE_XHR:        0,
     MODE_WINDOW:     1,
@@ -129,31 +123,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    removed to prevent cyclic dependencies and therefore prevent
         //    memory leaks
 
-        // Disconnect all events
-        while(this._events.length > 0) {
-            if(this._events[0]) {
-                dojo.disconnect(this._events[0]);
-            }
-            this._events.splice(0,1);
-        }
-
-        // Remove all dom nodes
-        while(this._domNodes.length > 0) {
-            var n = this._domNodes[0];
-            if(n) {
-                try {
-                    // If it is an dijit widget, call destroyRecursive
-                    if(dojo.isFunction(n.destroyRecursive) && n.domNode) {
-                        n.destroyRecursive();
-                    } else if(dijit.byNode(n)) { //this may throw an exception
-                        dijit.byNode(n).destroyRecursive();
-                    }
-                } catch(e) {
-                    dojo.query(n).orphan();
-                }
-            }
-            this._domNodes.splice(0, 1);
-        }
         // Clean up all potential references
         this.main          = null;
         this.id            = null;
@@ -177,7 +146,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Description:
         //    Set the node to put the grid
         this._node = dijit.byId("gridBox");
-        this._domNodes.push(this._node);
+        phpr.garbageCollector.addNode(this._node);
     },
 
     showTags:function() {
@@ -575,10 +544,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             };
             this._exportButton = new dijit.form.Button(params);
 
-            this._domNodes.push(this._exportButton);
+            phpr.garbageCollector.addNode(this._exportButton);
 
             dojo.byId("buttonRow").appendChild(this._exportButton.domNode);
-            this._events.push(
+            phpr.garbageCollector.addEvent(
                 dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"))
             );
         }
@@ -599,10 +568,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             };
             this._filterButton = new dijit.form.Button(params);
 
-            this._domNodes.push(this._filterButton);
+            phpr.garbageCollector.addNode(this._filterButton);
 
             dojo.byId("buttonRow").appendChild(this._filterButton.domNode);            ;
-            this._events.push(
+            phpr.garbageCollector.addEvent(
                 dojo.connect(this._filterButton, "onClick", dojo.hitch(this, function() {
                     dijit.byId('gridFiltersBox').toggle();
                 }))
@@ -970,10 +939,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 };
                 this._deleteAllFilters = new dijit.form.Button(params);
 
-                this._domNodes.push(this._deleteAllFilters);
+                phpr.garbageCollector.addNode(this._deleteAllFilters);
 
                 dojo.byId("filterDisplayDelete").appendChild(this._deleteAllFilters.domNode);
-                this._events.push(
+                phpr.garbageCollector.addEvent(
                     dojo.connect(this._deleteAllFilters, "onClick", dojo.hitch(this, "deleteFilter", ['all']))
                 );
             }
@@ -1016,11 +985,13 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     var button = buttonRow.children[0].children[0].children[0].children[0];
                     if (button.className == 'dijitReset dijitInline dijitIcon add') {
                         var newEntry = new dijit.form.Button(params);
-                        that._domNodes.push(newEntry);;
+
+                        phpr.garbageCollector.addNode(newEntry);;
+
                         dojo.addClass(that._node.domNode, 'addButtonText');
                         that._node.domNode.appendChild(newEntry.domNode);
 
-                        that._events.push(
+                        phpr.garbageCollector.addEvent(
                             dojo.connect(newEntry, "onClick", cb)
                         );
                     }
@@ -1099,7 +1070,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     doclick: dojo.hitch(p6Grid, 'doClick'),
                     dodblclick: dojo.hitch(p6Grid, 'doDblClick')
                 }, document.createElement('div'));
-                that._domNodes.push(that.grid);
+                phpr.garbageCollector.addNode(that.grid);
 
                 that.setClickEdit();
 
@@ -1108,25 +1079,25 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 that.loadGridSorting();
                 that.loadGridScroll();
 
-                that._events.push(
+                phpr.garbageCollector.addEvent(
                     dojo.connect(that.grid, "onCellClick", dojo.hitch(that, "cellClick"))
                 );
-                that._events.push(
+                phpr.garbageCollector.addEvent(
                     dojo.connect(that.grid, "onApplyCellEdit", dojo.hitch(that, "cellEdited"))
                 );
-                that._events.push(
+                phpr.garbageCollector.addEvent(
                     dojo.connect(that.grid, "onStartEdit", dojo.hitch(that, "checkCanEdit"))
                 );
-                that._events.push(
+                phpr.garbageCollector.addEvent(
                     dojo.connect(that.grid, "onHeaderCellClick", that, "saveGridSorting")
                 );
-                that._events.push(
+                phpr.garbageCollector.addEvent(
                     dojo.connect(that.grid.views.views[0].scrollboxNode, "onscroll", that, "saveGridScroll")
                 );
-                that._events.push(
+                phpr.garbageCollector.addEvent(
                     dojo.connect(that.grid, "onCellMouseOver", dojo.hitch(that, "showTooltip"))
                 );
-                that._events.push(
+                phpr.garbageCollector.addEvent(
                     dojo.connect(that.grid, "onCellMouseOut", dojo.hitch(that, "hideTooltip"))
                 );
 
@@ -1138,7 +1109,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         uncheckAllTxt: phpr.nls.get('Uncheck All')
                     });
 
-                    that._events.push(
+                    phpr.garbageCollector.addEvent(
                         dojo.connect(dojo.byId("gridComboAction"), "onchange", that, "doComboAction")
                     );
                 }
@@ -1594,10 +1565,12 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
                     // Check for multiple rows
                     var actionName = select.children[select.selectedIndex].text;
-                    phpr.confirmDialog(dojo.hitch(this, function() {
-                        this.doAction(action, idsSend, mode, this.TARGET_MULTIPLE);
-                    }), phpr.nls.get('Please confirm implement') + ' "' + actionName + '"<br />(' + ids.length + ' '
-                        + phpr.nls.get('rows selected') + ')');
+                    phpr.garbageCollector.addNode(
+                        phpr.confirmDialog(dojo.hitch(this, function() {
+                                this.doAction(action, idsSend, mode, this.TARGET_MULTIPLE);
+                            }), 
+                            phpr.nls.get('Please confirm implement') + ' "' + actionName + '"<br />(' + ids.length + ' '
+                            + phpr.nls.get('rows selected') + ')'));
                     select.selectedIndex = 0;
                 }
                 select = null;// avoid cyclic ref
