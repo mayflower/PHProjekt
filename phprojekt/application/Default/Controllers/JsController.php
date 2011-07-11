@@ -64,6 +64,7 @@ class JsController extends IndexController
         $scripttext = "";
         // System files, must be parsed in this order
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/phpr.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/GarbageCollector.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Component.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Form.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Grid.js');
@@ -72,6 +73,7 @@ class JsController extends IndexController
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Url.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Tree.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/FrontendMessage.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/PageManager.js');
 
         // Default Folder
         $scripts = scandir(PHPR_CORE_PATH . '/Default/Views/dojo/scripts');
@@ -109,6 +111,8 @@ class JsController extends IndexController
                     phpr.frontendMessage  = new phpr.Default.System.FrontendMessage();
                     phpr.tree             = new phpr.Default.System.Tree();
                     phpr.regExpForFilter  = new phpr.regExpForFilter();
+                    phpr.pageManager      = new phpr.Default.System.PageManager();
+                    phpr.garbageCollector = new phpr.Default.System.GarbageCollector();
                     phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";
         ';
 
@@ -119,13 +123,15 @@ class JsController extends IndexController
                 $subModules = '';
             }
             $scripttext .= '
-                this.' . $module . ' = new phpr.' . $module . '.Main([' . $subModules . ']);
+                phpr.pageManager.register(
+                    this.' . $module . ' = new phpr.' . $module . '.Main([' . $subModules . ']));
             ';
         }
 
         // The load method of the currentModule is called
         $scripttext .= '
                     dojo.publish(phpr.module + ".load");
+
                 }
             });
         ';

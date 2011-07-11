@@ -62,10 +62,12 @@ phpr.initWidgets = function(el) {
 phpr.destroySubWidgets = function(el) {
     // Destroy all the old widgets, so dojo can init the new ones with the same IDs again.
     if (dojo.byId(el)) {
-        var oldWidgetNodes = dojo.query("[widgetId]", dojo.byId(el));
-        for (var i = 0; i < oldWidgetNodes.length; i++) {
-            if (dijit.byNode(oldWidgetNodes[i])) {
-                dijit.byNode(oldWidgetNodes[i]).destroyRecursive();
+        var nodes = dijit.findWidgets(dojo.byId(el));
+        for(var node in nodes) {
+            try { // may fail due to already removed dom node
+                nodes[node].destroyRecursive();
+            } catch (e) {
+                
             }
         }
     } else if (dijit.byId(el)) {
@@ -1009,7 +1011,6 @@ phpr.inArray = function(needle, haystack) {
     // we need to check for this, because for some reason, the function is
     // called with undefined as haystack very often
     if("Array" == typeof haystack || "Object" == typeof haystack) {
-        console.log("use new");
         return dojo.indexOf(haystack, needle) != -1;
     }
 
@@ -1216,5 +1217,5 @@ phpr.confirmDialog = function(callbackOk, message) {
     buttonContent = null;
     buttonOK = null;
     buttonCancel = null;
-    confirmDialog = null;
+    return confirmDialog;
 };
