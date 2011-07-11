@@ -64,7 +64,6 @@ phpr.destroySubWidgets = function(el) {
     if (dojo.byId(el)) {
         var nodes = dijit.findWidgets(dojo.byId(el));
         for(var node in nodes) {
-            console.log(nodes[node]);
             try { // may fail due to already removed dom node
                 nodes[node].destroyRecursive();
             } catch (e) {
@@ -1012,7 +1011,6 @@ phpr.inArray = function(needle, haystack) {
     // we need to check for this, because for some reason, the function is
     // called with undefined as haystack very often
     if("Array" == typeof haystack || "Object" == typeof haystack) {
-        console.log("use new");
         return dojo.indexOf(haystack, needle) != -1;
     }
 

@@ -79,7 +79,6 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget,phpr.Default.System.
 
     },
     _getValueAttr:function() {
-        console.log("value", this.editor.get('value'))
         return this.editor.get('value');
     },
     _setValueAttr:function(arg) {

@@ -37,7 +37,6 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
         if(!this._domNodes[context]) {
             this._domNodes[context] = new Array();
         }
-        console.log("add node",context,node);
         this._domNodes[context].push(node);
     },
     addEvent:function(handler,context) {
@@ -63,7 +62,6 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
         if(this._eventHandler[context] && dojo.isArray(this._eventHandler[context])) {
             while(this._eventHandler[context].length > 0) {
                 if(this._eventHandler[context][0]) {
-                    console.log("collect event");
                     dojo.disconnect(this._eventHandler[context][0]);
                 }
                 this._eventHandler[context].splice(0,1);
@@ -72,7 +70,6 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
 
         if(this._domNodes[context] && dojo.isArray(this._domNodes[context])) {
             while(this._domNodes[context].length > 0) {
-                console.log("collect dom node");
                 var n = this._domNodes[context][0];
 
                 if(dojo.isString(n)) {
@@ -86,10 +83,8 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
                         var nodes = dijit.findWidgets(n);
                         for(var node in nodes) {
                             try {
-                                console.log(nodes[node]);
                                 nodes[node].destroyRecursive();
                             } catch (e) {
-                                console.log("fail",e);
                             }
                         }
 
