@@ -44,9 +44,11 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     _accessUrl:         null,
     _historyUrl:        null,
     _presetValues:      null,
-    _htmlEditorWidget:  null,
     _meta:              null,
     _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
+
+    // garbage collector
+    garbageCollector:   new phpr.Default.System.GarbageCollector(),
 
     constructor:function(main, id, module, params) {
         // Summary:
@@ -68,6 +70,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.setNode();
 
         // Put loading
+        phpr.destroySubWidgets(this._formNode);
         this.render(["phpr.Default.template.form", "loading.html"], this._formNode.domNode, {
             webpath: phpr.webpath
         });
@@ -77,6 +80,18 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this._initData.push({'store': this.tabStore});
         this.initData();
         this.getInitData();
+    },
+
+    destroy:function() {
+        // Summary:
+        //    Destroy the form
+        // Description:
+        //    Destroys the form and collects all events and widgets
+        this.garbageCollector.collect();
+        this.garbageCollector.destroy();
+        this._formNode = null;
+        this.form = null;
+        this.inherited(arguments);
     },
 
     setUrl:function() {
@@ -230,7 +245,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Add "add" button for access
         if (this._accessPermissions && users.length > 0) {
             this.addTinyButton('add', 'accessAddButton', 'newAccess');
-            phpr.garbageCollector.addEvent(
+            this.garbageCollector.addEvent(
                 dojo.connect(dijit.byId("checkAdminAccessAdd"), 
                     "onClick", dojo.hitch(this, "checkAllAccess", "Add")));
         }
@@ -244,7 +259,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     if (userId != currentUser && userId != 1) {
                         this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
 
-                        phpr.garbageCollector.addEvent(
+                        this.garbageCollector.addEvent(
                             dojo.connect(
                                 dijit.byId("checkAdminAccess[" + userId + "]"),
                                 "onClick",
@@ -267,11 +282,11 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             baseClass: 'dijitButton, smallIcon'
         };
         var button = new dijit.form.Button(params);
-        phpr.garbageCollector.addNode(button);
+        this.garbageCollector.addNode(button);
 
         dojo.byId(nodeId).appendChild(button.domNode);
 
-        phpr.garbageCollector.addEvent(
+        this.garbageCollector.addEvent(
             dojo.connect(button, "onClick", 
                 dojo.hitch(this, functionName, extraParams)));
     },
@@ -300,7 +315,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Add a tab and if have form, add the values
         //    to the array of values for save it later
+        phpr.destroySubWidgets(id);
         phpr.destroyWidget(id);
+        phpr.destroySubWidgets(formId);
         phpr.destroyWidget(formId);
         var html = this.render(["phpr.Default.template.form", "tabs.html"], null, {
             innerTabs: innerTabs,
@@ -310,12 +327,15 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             id:    id,
             title: phpr.nls.get(title)
         });
-        phpr.garbageCollector.addNode(tab);
 
         tab.set('content', html);
+
+        this.garbageCollector.addNode(tab);
+
         this.form.addChild(tab);
         if (typeof formId != "undefined") {
             this.formsWidget.push(dijit.byId(formId));
+            this.garbageCollector.addNode(dijit.byId(formId));
         }
     },
 
@@ -482,7 +502,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
             if (this.id > 0 && this.useHistoryTab()) {
                 var that = this;
-                phpr.garbageCollector.addEvent(
+                this.garbageCollector.addEvent(
                     dojo.connect(dijit.byId("tabHistory"), 
                         "onShow", that.showHistory));
             }
@@ -545,16 +565,16 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Connect the buttons to the actions
 
         var that = this;
-        phpr.garbageCollector.addEvent(
+        this.garbageCollector.addEvent(
             dojo.connect(dijit.byId("submitButton"), 
                 "onClick", dojo.hitch(this, "submitForm")));
 
-        phpr.garbageCollector.addEvent(
+        this.garbageCollector.addEvent(
             dojo.connect(dijit.byId("deleteButton"),
                 "onClick", dojo.hitch(this, function() {
-                    phpr.garbageCollector.addNode(
+                    that.garbageCollector.addNode(
                         phpr.confirmDialog(
-                        dojo.hitch(this, "deleteForm"),
+                        dojo.hitch(that, "deleteForm"),
                         phpr.nls.get('Are you sure you want to delete?')));
                 })));
     },
@@ -567,30 +587,27 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return true;
     },
 
+    _formCallback:function() {
+        dojo.byId('completeContent').focus();
+    },
+
     setFormContent:function() {
         // Summary:
         //    Set the Container
         // Description:
         //    Set the Container
-        var cb = dojo.hitch(this, function() {
-            dojo.byId('completeContent').focus();
-        });
+        var tabContainer = new dijit.layout.TabContainer({
+            style:   'height: 100%;',
+            useMenu: false
+        }, dojo.create('div'));
 
-        var that = this;
+        this.garbageCollector.addNode(tabContainer);
 
-        return (function() {  
-            var tabContainer = new dijit.layout.TabContainer({
-                style:   'height: 100%;',
-                useMenu: false
-            }, document.createElement('div'));
+        this.garbageCollector.addEvent(
+                dojo.connect(tabContainer, 'selectChild', 
+                    dojo.hitch(this,'_formCallback')));
 
-            phpr.garbageCollector.addNode(tabContainer);
-
-            phpr.garbageCollector.addEvent(
-                dojo.connect(tabContainer, 'selectChild', cb));
-
-            return tabContainer;
-        })();
+        return tabContainer;
     },
 
     addModuleTabs:function(data) {
@@ -702,6 +719,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 currentUser: false
             });
             cell.innerHTML = input;
+            this.garbageCollector.addNode(cell);
             cellIndex++;
 
             // CheckBoxs
@@ -717,6 +735,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     disabled: ''
                 });
                 cell.innerHTML = checkBox;
+                this.garbageCollector.addNode(cell);
                 cellIndex++;
             }
 
@@ -727,12 +746,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 useDelete: true
             });
             cell.innerHTML = button;
+            this.garbageCollector.addNode(cell);
             cellIndex++;
 
             dojo.parser.parse(row);
 
             this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
-            phpr.garbageCollector.addEvent(
+            this.garbageCollector.addEvent(
                 dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"),
                     "onClick",
                     dojo.hitch(this, "checkAllAccess", "[" + userId + "]")));
