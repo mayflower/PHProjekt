@@ -67,9 +67,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
     openForm:function(id, module) {
         // Summary:
         //    This function opens a new Detail View
-        if (!dojo.byId('detailsBox')) {
-            this.reload();
-        }
+        this.preOpenForm();
 
         if (id == undefined || id == 0) {
             var params          = new Array();

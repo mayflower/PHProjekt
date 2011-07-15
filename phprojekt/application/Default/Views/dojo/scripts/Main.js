@@ -109,12 +109,29 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         dojo.subscribe(module + ".formProxy", this, "formProxy");
     },
 
-    openForm:function(/*int*/id, /*String*/module) {
-        //Summary: this function opens a new Detail View
+    preOpenForm:function() {
+        // Summary: 
+        //      Destroy existing form before a new one is opened
+        // Description:
+        //      This function should be the first function called in
+        //      openForm() to tear down old forms
+        this.destroyForm();
+
         if (!dojo.byId('detailsBox')) {
             this.reload();
+        } else {
+            phpr.destroySubWidgets('detailsBox');
         }
+
+        this.inherited(arguments);
+    },
+
+    openForm:function(/*int*/id, /*String*/module) {
+        //Summary: this function opens a new Detail View
+        this.preOpenForm();
+
         this.form = new this.formWidget(this, id, module);
+        this.inherited(arguments);
     },
 
     loadResult:function(/*int*/id, /*String*/module, /*int*/projectId) {
