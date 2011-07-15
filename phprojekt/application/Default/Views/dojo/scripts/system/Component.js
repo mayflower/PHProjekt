@@ -58,9 +58,10 @@ dojo.declare("phpr.Default.System.Component", null, {
 
         if (node) {
             var dojoType = node.getAttribute('dojoType');
+            phpr.destroySubWidgets(node);
             if ((dojoType == 'dijit.layout.ContentPane') ||
                 (dojoType == 'dijit.layout.BorderContainer') ) {
-                    dijit.byId(node.getAttribute('id')).set('content', content);
+                    dijit.byNode(node).set('content', content);
                     dojo.addOnLoad(function() {
                         dijit.byId(node.getAttribute('id')).resize();
                     });
