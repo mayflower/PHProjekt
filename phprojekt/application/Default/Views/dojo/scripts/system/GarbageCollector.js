@@ -27,6 +27,27 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
     // Event handler
     _eventHandler: {},
 
+    constructor: function() {
+        this._domNodes = new Object();
+        this._eventHandler = new Object();
+    },
+
+    destroy:function() {
+        for(var i in this._eventHandler) {
+            for(var e in this._eventHandler[i]) {
+                this._eventHandler[i][e] = null;
+            }
+            this._eventHandler[i] = null;
+        }
+
+        for(var i in this._domNodes) {
+            for(var e in this._domNodes[i]) {
+                this._domNodes[i][e] = null;
+            }
+            this._domNodes[i] = null;
+        }
+    },
+
     addNode:function(node,context) {
         // Summary:
         //      Adds a domNode to the garbage collection watch
