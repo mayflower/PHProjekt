@@ -70,6 +70,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     TARGET_SINGLE:   0,
     TARGET_MULTIPLE: 1,
 
+    // garbage collector
+    garbageCollector:   new phpr.Default.System.GarbageCollector(),
+
     constructor:function(/*String*/updateUrl, /*Object*/main, /*Int*/ id) {
         // Summary:
         //    render the grid on construction
@@ -124,12 +127,20 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    memory leaks
 
         // Clean up all potential references
+        this.garbageCollector.collect();
+        this.garbageCollector.destroy();
         this.main          = null;
         this.id            = null;
         this.updateUrl     = null;
         this._newRowValues = null; 
         this._oldRowValues = null; 
         this.gridData      = null; 
+        this.grid          = null;
+        this._node         = null;
+        this._exportButton = null;
+        this._deleteAllFilters = null;
+
+        this.inherited(arguments);
     },
 
     setUrl:function() {
@@ -146,7 +157,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Description:
         //    Set the node to put the grid
         this._node = dijit.byId("gridBox");
-        phpr.garbageCollector.addNode(this._node);
+        this.garbageCollector.addNode(this._node);
     },
 
     showTags:function() {
@@ -544,10 +555,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             };
             this._exportButton = new dijit.form.Button(params);
 
-            phpr.garbageCollector.addNode(this._exportButton);
+            this.garbageCollector.addNode(this._exportButton);
 
             dojo.byId("buttonRow").appendChild(this._exportButton.domNode);
-            phpr.garbageCollector.addEvent(
+            this.garbageCollector.addEvent(
                 dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"))
             );
         }
@@ -568,10 +579,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             };
             this._filterButton = new dijit.form.Button(params);
 
-            phpr.garbageCollector.addNode(this._filterButton);
+            this.garbageCollector.addNode(this._filterButton);
 
             dojo.byId("buttonRow").appendChild(this._filterButton.domNode);            ;
-            phpr.garbageCollector.addEvent(
+            this.garbageCollector.addEvent(
                 dojo.connect(this._filterButton, "onClick", dojo.hitch(this, function() {
                     dijit.byId('gridFiltersBox').toggle();
                 }))
@@ -611,8 +622,13 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     okTxt:   phpr.nls.get("OK")
                 });
 
+                phpr.destroySubWidgets(dijit.byId('gridFiltersBox'));
+
                 dijit.byId('gridFiltersBox').set('content', html);
+
                 this.drawFilters(filters);
+
+                this.garbageCollector.addNode(dijit.byId('gridFilterBox'));
 
                 // Only open div if there is any filter
                 if (filters.length > 0) {
@@ -939,10 +955,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 };
                 this._deleteAllFilters = new dijit.form.Button(params);
 
-                phpr.garbageCollector.addNode(this._deleteAllFilters);
+                this.garbageCollector.addNode(this._deleteAllFilters);
 
                 dojo.byId("filterDisplayDelete").appendChild(this._deleteAllFilters.domNode);
-                phpr.garbageCollector.addEvent(
+                this.garbageCollector.addEvent(
                     dojo.connect(this._deleteAllFilters, "onClick", dojo.hitch(this, "deleteFilter", ['all']))
                 );
             }
@@ -971,6 +987,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 iconClass: 'add'
             };
 
+            phpr.destroySubWidgets(this._node);
             this._node.set('content', phpr.drawEmptyMessage('There are no entries on this level'));
 
             var cb = dojo.hitch(this, function() {
@@ -1565,7 +1582,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
                     // Check for multiple rows
                     var actionName = select.children[select.selectedIndex].text;
-                    phpr.garbageCollector.addNode(
+                    this.garbageCollector.addNode(
                         phpr.confirmDialog(dojo.hitch(this, function() {
                                 this.doAction(action, idsSend, mode, this.TARGET_MULTIPLE);
                             }), 
