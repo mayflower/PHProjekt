@@ -61,17 +61,22 @@ phpr.initWidgets = function(el) {
 
 phpr.destroySubWidgets = function(el) {
     // Destroy all the old widgets, so dojo can init the new ones with the same IDs again.
-    if (dojo.byId(el)) {
-        var nodes = dijit.findWidgets(dojo.byId(el));
-        for(var node in nodes) {
-            try { // may fail due to already removed dom node
-                nodes[node].destroyRecursive();
-            } catch (e) {
-                
-            }
+    if (dijit.byId(el) && dijit.byId(el).destroyDescendants) { // dijit widget id?
+        dijit.byId(el).destroyDescendants();
+        console.log(el);
+    } else if (dojo.byId(el)) { // dom node id?
+        try {
+            var widget = dijit.byNode(dojo.byId(el));
+            if (widget && widget.destroyDescendants) {
+                widget.destroyDescendants();
+            } else
+                throw new Error("");
+        } catch (e) {
+            dojo.forEach(dijit.findWidgets(dojo.byId(el)), function(w) {
+                w.destroyRecursive();
+            });
+            dojo.byId(el).innerHTML = '';
         }
-    } else if (dijit.byId(el)) {
-        dijit.byId(el).destroyRecursive();
     }
 };
 
