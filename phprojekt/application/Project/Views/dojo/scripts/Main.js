@@ -44,15 +44,23 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
     basicData:function() {
         phpr.module = this.module;
         this.cleanPage();
+        if (!dojo.byId('detailsBox')) {
+            this.reload();
+        } else {
+            phpr.destroySubWidgets('detailsBox');
+        }
+
+        this.destroyForm();
+        this.destroyGrid();
+
         this.setSubmoduleNavigation('BasicData');
+        phpr.destroySubWidgets('centerMainContent');
         this.render(["phpr.Project.template", "BasicData.html"], dojo.byId('centerMainContent'));
         this.hideSuggest();
         this.setSearchForm();
         phpr.tree.fadeIn();
         phpr.tree.loadTree();
-        if (!dojo.byId('detailsBox')) {
-            this.reload();
-        }
+
         this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, phpr.module);
     },
 
