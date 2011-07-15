@@ -26,7 +26,7 @@ dojo.require("dijit._editor.plugins.TextColor");
 dojo.require("dijit._editor.plugins.FontChoice");
 dojo.require("dijit.Editor");
 
-dojo.declare("phpr.Default.EditorContainer", [dijit._Widget,phpr.Default.System.Component], {
+dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
     domNode: null,
     loaded: false,
     style: "",
