@@ -95,9 +95,8 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
                 var n = this._domNodes[context][0];
 
                 if (dijit.byId(n) && dijit.byId(n).destroyRecursive) { // dijit widget?
-                    console.log('dijit widget');
                     try {
-                    dijit.byId(n).destroyRecursive();
+                        dijit.byId(n).destroyRecursive();
                     } catch (e) { // throws error if already destroyed
                     }
                 } else if (dojo.byId(n)) { // dom node id?
