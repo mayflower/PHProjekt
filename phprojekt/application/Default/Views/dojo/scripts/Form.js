@@ -108,7 +108,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Set the node where put the form
         // Description:
         //    Set the node where put the form
-        this._formNode = dijit.byId("detailsBox");
+        this._formNode = new dijit.layout.ContentPane({style: "height: 100%;"});
+        dijit.byId('detailsBox').set('content',this._formNode);
+        this.garbageCollector.addNode(this._formNode);
     },
 
     getInitData:function() {
