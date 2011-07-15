@@ -85,6 +85,7 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
                 if(this._eventHandler[context][0]) {
                     dojo.disconnect(this._eventHandler[context][0]);
                 }
+                this._eventHandler[context][0] = null;
                 this._eventHandler[context].splice(0,1);
             }
         }
@@ -93,33 +94,29 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
             while(this._domNodes[context].length > 0) {
                 var n = this._domNodes[context][0];
 
-                if(dojo.isString(n)) {
-                    n = dojo.byId(n);
-                } else {
-                    n = dijit.byId(n);
-                }
-
-                if(n) {
+                if (dijit.byId(n) && dijit.byId(n).destroyRecursive) { // dijit widget?
+                    console.log('dijit widget');
                     try {
-                        var nodes = dijit.findWidgets(n);
-                        for(var node in nodes) {
-                            try {
-                                nodes[node].destroyRecursive();
-                            } catch (e) {
-                            }
+                    dijit.byId(n).destroyRecursive();
+                    } catch (e) { // throws error if already destroyed
+                    }
+                } else if (dojo.byId(n)) { // dom node id?
+                    try {
+                        var widget = dijit.byNode(dojo.byId(n));
+                        if (widget.destroyRecursive) {
+                            widget.destroyRecursive();
+                        } else if (widget.destroy) {
+                            widget.destroy();
                         }
-
-                        // If it is an dijit widget, call destroyRecursive
-                        if(dojo.isFunction(n.destroyRecursive) && n.domNode) {
-                            n.destroyRecursive();
-                        } else if(dijit.byNode(n)) { //this may throw an exception
-                            dijit.byNode(n).destroyRecursive();
-                        }
-                    } catch(e) {
-                        // Hopefully already destroyed
-                        dojo.destroy(n);
+                    } catch (e) {
+                        dojo.forEach(dijit.findWidgets(dojo.byId(n)), function(w) {
+                            w.destroyRecursive();
+                        });
+                        dojo.destroy(dojo.byId(n));
                     }
                 }
+
+                this._domNodes[context][0] = null;
                 this._domNodes[context].splice(0, 1);
             }
         }
