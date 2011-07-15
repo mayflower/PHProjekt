@@ -39,24 +39,37 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     userStore:  null,
     subModules: new Array(),
 
+    // garbage collector
+    garbageCollector:   new phpr.Default.System.GarbageCollector(),
+
     constructor:function(subModules) {
         this.subModules = subModules;
     },
 
     destroy:function() {
+        this.garbageCollector.collect();
+        this._searchEvent = null;
+        this.destroyForm();
+        this.destroyGrid();
+        this.inherited(arguments);
+    },
+
+    destroyForm:function() {
         if(this.form) {
             if(dojo.isFunction(this.form.destroy)) {
                 this.form.destroy();
             }
             this.form = null;
         }
+    },
+
+    destroyGrid:function() {
         if(this.grid) {
             if(dojo.isFunction(this.grid.destroy)) {
                 this.grid.destroy();
             }
             this.grid = null;
         }
-        this.inherited(arguments);
     },
 
     loadFunctions:function(module) {
