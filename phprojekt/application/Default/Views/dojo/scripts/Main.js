@@ -26,9 +26,6 @@ dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.Tooltip");
 
-// Event handler
-var _searchEvent = null;
-
 dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     // Summary: class for initialilzing a default module
     grid:       null,
@@ -38,6 +35,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     _langUrl:   null,
     userStore:  null,
     subModules: new Array(),
+
+    // Event handler
+    _searchEvent:null,
 
     // garbage collector
     garbageCollector:   new phpr.Default.System.GarbageCollector(),
@@ -765,11 +765,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     setSearchForm:function() {
         // Summary:
         //    Add the onkeyup to the search field
-        if (_searchEvent == null) {
+        if (this._searchEvent == null) {
             dijit.byId("searchfield").regExp         = phpr.regExpForFilter.getExp();
             dijit.byId("searchfield").invalidMessage = phpr.regExpForFilter.getMsg();
-            _searchEvent = dojo.connect(dojo.byId("searchfield"), "onkeyup",
+            this._searchEvent = dojo.connect(dojo.byId("searchfield"), "onkeyup",
                     dojo.hitch(this, "waitForSubmitSearchForm"));
+            this.garbageCollector.addEvent(this._searchEvent);
         }
     },
 
