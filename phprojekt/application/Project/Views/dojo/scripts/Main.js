@@ -33,14 +33,6 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.formBasicDataWidget = phpr.Project.FormBasicData;
     },
 
-    destroy:function() {
-        if(this.form&&this.form.destroy&&!this.form._beingDestroyed) {
-            this.form.destroy();
-        }
-        this.form = null;
-        this.inherited(arguments);
-    },
-
     loadResult:function(id, module, projectId) {
         this.cleanPage();
         phpr.parentmodule     = null;
