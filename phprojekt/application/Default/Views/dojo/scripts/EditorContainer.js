@@ -52,9 +52,6 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
         this.domNode = null;
         this.inherited(arguments);
     },
-    destroyRecursive:function() {
-        this.destroy();
-    },
     postCreate:function() {
         dojo.attr(this.domNode, 'style', this.style);
     },
