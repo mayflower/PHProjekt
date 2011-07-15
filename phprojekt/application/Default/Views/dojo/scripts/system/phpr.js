@@ -61,17 +61,22 @@ phpr.initWidgets = function(el) {
 
 phpr.destroySubWidgets = function(el) {
     // Destroy all the old widgets, so dojo can init the new ones with the same IDs again.
-    if (dojo.byId(el)) {
-        var nodes = dijit.findWidgets(dojo.byId(el));
-        for(var node in nodes) {
-            try { // may fail due to already removed dom node
-                nodes[node].destroyRecursive();
-            } catch (e) {
-                
-            }
+    if (dijit.byId(el) && dijit.byId(el).destroyDescendants) { // dijit widget id?
+        dijit.byId(el).destroyDescendants();
+        console.log(el);
+    } else if (dojo.byId(el)) { // dom node id?
+        try {
+            var widget = dijit.byNode(dojo.byId(el));
+            if (widget && widget.destroyDescendants) {
+                widget.destroyDescendants();
+            } else
+                throw new Error("");
+        } catch (e) {
+            dojo.forEach(dijit.findWidgets(dojo.byId(el)), function(w) {
+                w.destroyRecursive();
+            });
+            dojo.byId(el).innerHTML = '';
         }
-    } else if (dijit.byId(el)) {
-        dijit.byId(el).destroyRecursive();
     }
 };
 
@@ -811,195 +816,6 @@ dojo.declare("phpr.BreadCrumb", null, {
         dojo.byId("breadCrumb").innerHTML = breadCrumb;
     }
 
-});
-
-dojo.declare("phpr.ScrollPane", [dijit.layout._LayoutWidget, dijit._Templated], {
-    // Summary:
-    //    Scroll widget for manage the module tabs
-    // Description:
-    //    Scroll widget for manage the module tabs
-
-    // How much incress/decress the left on arrow mouse over
-    _scrollRatio: 20,
-
-    // Internal var for stop the propagation
-    _allow: true,
-
-    // Current left
-    _left: 0,
-
-    // Array with modules and left positions
-    _positions: new Array(),
-
-    // Template
-    templateString: __phpr_templateCache["phpr.Default.template.ScrollPane.html"],
-
-    layout:function() {
-        // Summary:
-        //    Initial the widget
-        // Description:
-        //    Set style and make the positions array
-        dojo.style(this.wrapper, 'width', this.domNode.style['width']);
-
-        var node    = this.containerNode.firstChild.firstChild.firstChild.childNodes;
-        var width   = 0;
-        var curleft = 0;
-        var medium  = Math.floor(this.wrapper["offsetWidth"] / 2);
-        var max     = this.getMaxLeft();
-        for (var i in node) {
-            var offsetWidth = node[i].offsetWidth || 0;
-            // Find left
-            width += offsetWidth;
-            if (width < medium) {
-                curleft = 0;
-            } else if (width > max) {
-                curleft = max;
-            } else {
-                curleft += offsetWidth;
-            }
-
-            if (node[i].id) {
-                var id = node[i].id.toString().replace(/navigation_/, "");
-                this._positions.push({"id": id, "left": curleft});
-            }
-        }
-
-        var pos = this.getPosition(phpr.module);
-        if (pos) {
-            this._left = pos;
-        }
-        this._set()
-    },
-
-    postCreate:function() {
-        // Summary:
-        //    Initial the widget
-        // Description:
-        //    Initial the widget
-        this.inherited(arguments);
-        dojo.style(this.wrapper, "overflow", "hidden");
-    },
-
-    _set:function() {
-        // Summary:
-        //    Set the left scroll
-        // Description:
-        //    Set the left scroll
-        this.wrapper["scrollLeft"] = this._left;
-        this._calcButtons();
-    },
-
-    _calc:function(e) {
-        // Summary:
-        //    Move the scroll depending on the mouse movement
-        // Description:
-        //    If the last position of the mouse and the current one exceeed 100,
-        //    move the scroll
-        //    100 is for a normal "speed"
-        if (this._allow) {
-            if ((this._lastPageX - e.pageX) > 100) {
-                this._lastPageX = e.pageX;
-                this._enterLeft();
-            } else if ((this._lastPageX - e.pageX) < -100) {
-                this._lastPageX = e.pageX;
-                this._enterRight();
-           }
-        }
-    },
-
-    _enter:function(e) {
-        // Summary:
-        //    Enter to the widget
-        // Description:
-        //    Set the current mouse position
-        this._lastPageX = e.pageX;
-    },
-
-    _enterLeft:function() {
-        // Summary:
-        //    Move the scroll to the left
-        // Description:
-        //    Move the scroll on left arrow over
-        if (this._allow) {
-            if (this._left > 1) {
-                this._left -= this._scrollRatio;
-                if (this._left < 0) {
-                    this._left = 0;
-                }
-                this._set();
-                setTimeout(dojo.hitch(this, "_enterLeft"), 50);
-            }
-        }
-    },
-
-    _enterRight:function() {
-        // Summary:
-        //    Move the scroll to the right
-        // Description:
-        //    Move the scroll on right arrow over
-        if (this._allow) {
-            var maxLeft = this.getMaxLeft();
-            if (this._left < maxLeft) {
-                this._left += this._scrollRatio;
-                if (this._left > this.maxLeft) {
-                    this._left = this.maxLeft;
-                }
-                this._set();
-                setTimeout(dojo.hitch(this, "_enterRight"), 50);
-            }
-        }
-    },
-
-    _leave:function() {
-        // Summary:
-        //    Leave the widget
-        // Description:
-        //    Stop events
-        this._allow = false;
-        setTimeout(dojo.hitch(this, function() {this._allow = true}), 50);
-    },
-
-    _calcButtons:function() {
-        // Summary:
-        //    Show or hide the arrows
-        // Description:
-        //    Change the style of the arrow buttons depending on the current scroll
-        if (this.wrapper["scrollLeft"] == 0) {
-            this.scrollArrowLeft.className = "phprScrollArrowLeftHide";
-            this._leave();
-        } else {
-            this.scrollArrowLeft.className = "phprScrollArrowLeft";
-        }
-
-        if (this.wrapper["scrollLeft"] == this.getMaxLeft()) {
-            this.scrollArrowRight.className = "phprScrollArrowRightHide";
-            this._leave();
-        } else {
-            this.scrollArrowRight.className = "phprScrollArrowRight";
-        }
-    },
-
-    getPosition:function(module) {
-        // Summary:
-        //    Return the module position
-        // Description:
-        //    Return the left for a module
-        for (var i in this._positions) {
-            if (this._positions[i].id == module) {
-                return this._positions[i].left;
-            }
-        }
-
-        return null;
-    },
-
-    getMaxLeft:function() {
-        // Summary:
-        //    Get max left available for the scroll
-        // Description:
-        //    Get max left available for the scroll
-        return this.wrapper["scrollWidth"] - this.wrapper["offsetWidth"];
-    }
 });
 
 phpr.inArray = function(needle, haystack) {

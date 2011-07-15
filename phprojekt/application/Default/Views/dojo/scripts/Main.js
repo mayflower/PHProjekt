@@ -26,9 +26,6 @@ dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.Tooltip");
 
-// Event handler
-var _searchEvent = null;
-
 dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     // Summary: class for initialilzing a default module
     grid:       null,
@@ -39,24 +36,40 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     userStore:  null,
     subModules: new Array(),
 
+    // Event handler
+    _searchEvent:null,
+
+    // garbage collector
+    garbageCollector:   new phpr.Default.System.GarbageCollector(),
+
     constructor:function(subModules) {
         this.subModules = subModules;
     },
 
     destroy:function() {
+        this.garbageCollector.collect();
+        this._searchEvent = null;
+        this.destroyForm();
+        this.destroyGrid();
+        this.inherited(arguments);
+    },
+
+    destroyForm:function() {
         if(this.form) {
             if(dojo.isFunction(this.form.destroy)) {
                 this.form.destroy();
             }
             this.form = null;
         }
+    },
+
+    destroyGrid:function() {
         if(this.grid) {
             if(dojo.isFunction(this.grid.destroy)) {
                 this.grid.destroy();
             }
             this.grid = null;
         }
-        this.inherited(arguments);
     },
 
     loadFunctions:function(module) {
@@ -96,12 +109,29 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         dojo.subscribe(module + ".formProxy", this, "formProxy");
     },
 
-    openForm:function(/*int*/id, /*String*/module) {
-        //Summary: this function opens a new Detail View
+    preOpenForm:function() {
+        // Summary: 
+        //      Destroy existing form before a new one is opened
+        // Description:
+        //      This function should be the first function called in
+        //      openForm() to tear down old forms
+        this.destroyForm();
+
         if (!dojo.byId('detailsBox')) {
             this.reload();
+        } else {
+            phpr.destroySubWidgets('detailsBox');
         }
+
+        this.inherited(arguments);
+    },
+
+    openForm:function(/*int*/id, /*String*/module) {
+        //Summary: this function opens a new Detail View
+        this.preOpenForm();
+
         this.form = new this.formWidget(this, id, module);
+        this.inherited(arguments);
     },
 
     loadResult:function(/*int*/id, /*String*/module, /*int*/projectId) {
@@ -274,8 +304,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Description:
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
-        //    The function is splitted in four for customize it
         this.destroy();
+        this.cleanPage();
         this.setGlobalVars();
         this.renderTemplate();
         this.setNavigations();
@@ -496,11 +526,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 }
                 navigation += "</tr></table>";
 
-                var tmp = dojo.create('div',{innerHTML:navigation});
-                var widget    = new phpr.ScrollPane({}, tmp);
+                var widget    = new dijit.layout.ContentPane({
+                    content: navigation
+                });
+                this.garbageCollector.addNode(widget);
                 dojo.byId("subModuleNavigation").appendChild(widget.domNode);
-                phpr.initWidgets(dojo.byId("subModuleNavigation"));
-                widget.layout();
 
                 // avoid cyclic refs
                 tmp = null;
@@ -543,6 +573,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Summary:
         //     Clean the submodule div and destroy all the buttons
         phpr.destroySubWidgets('buttonRow');
+        dojo.byId("buttonRow").innerHTML = '';
 
         // Remove all children from element
         phpr.destroySubWidgets("subModuleNavigation");
@@ -735,11 +766,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     setSearchForm:function() {
         // Summary:
         //    Add the onkeyup to the search field
-        if (_searchEvent == null) {
+        if (this._searchEvent == null) {
             dijit.byId("searchfield").regExp         = phpr.regExpForFilter.getExp();
             dijit.byId("searchfield").invalidMessage = phpr.regExpForFilter.getMsg();
-            _searchEvent = dojo.connect(dojo.byId("searchfield"), "onkeyup",
+            this._searchEvent = dojo.connect(dojo.byId("searchfield"), "onkeyup",
                     dojo.hitch(this, "waitForSubmitSearchForm"));
+            this.garbageCollector.addEvent(this._searchEvent);
         }
     },
 
@@ -1103,6 +1135,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             useMenu:   false,
             useSlider: false
         }, document.createElement('div'));
+
+        this.garbageCollector.addNode(container);
+
         dijit.byId('helpContainer').set("content", container);
         dijit.byId('helpDialog').show();
 
@@ -1123,11 +1158,13 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     + ' <b>' + support + '</b>.<br /><br /><br />';
             }
 
-            container.addChild(new dijit.layout.ContentPane({
+            var content = new dijit.layout.ContentPane({
                 title:   tab,
                 content: text,
                 style:   'width: 100%; padding-left: 10px; padding-right: 10px;'
-            }));
+            });
+            container.addChild(content);
+            this.garbageCollector.addNode(content);
         }
     },
 

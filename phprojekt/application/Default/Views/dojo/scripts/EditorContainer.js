@@ -26,7 +26,7 @@ dojo.require("dijit._editor.plugins.TextColor");
 dojo.require("dijit._editor.plugins.FontChoice");
 dojo.require("dijit.Editor");
 
-dojo.declare("phpr.Default.EditorContainer", [dijit._Widget,phpr.Default.System.Component], {
+dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
     domNode: null,
     loaded: false,
     style: "",
@@ -51,9 +51,6 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget,phpr.Default.System.
         this.editorNode = null;
         this.domNode = null;
         this.inherited(arguments);
-    },
-    destroyRecursive:function() {
-        this.destroy();
     },
     postCreate:function() {
         dojo.attr(this.domNode, 'style', this.style);
