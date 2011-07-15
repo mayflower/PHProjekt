@@ -628,7 +628,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Display all the history of the item
         if (this.id > 0 && this.useHistoryTab()) {
-            this.addTab(this.render(["phpr.Default.template.history", "content.html"]), 'tabHistory', 'History');
+            var html = this.render(["phpr.Default.template.history", "content.html"]);
+            this.addTab(html, 'tabHistory', 'History', 'accesshistoryTab');
         }
     },
 
