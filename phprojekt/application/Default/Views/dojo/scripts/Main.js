@@ -304,8 +304,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Description:
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
-        //    The function is splitted in four for customize it
         this.destroy();
+        this.cleanPage();
         this.setGlobalVars();
         this.renderTemplate();
         this.setNavigations();
@@ -526,11 +526,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 }
                 navigation += "</tr></table>";
 
-                var tmp = dojo.create('div',{innerHTML:navigation});
-                var widget    = new phpr.ScrollPane({}, tmp);
+                var widget    = new dijit.layout.ContentPane({
+                    content: navigation
+                });
+                this.garbageCollector.addNode(widget);
                 dojo.byId("subModuleNavigation").appendChild(widget.domNode);
-                phpr.initWidgets(dojo.byId("subModuleNavigation"));
-                widget.layout();
 
                 // avoid cyclic refs
                 tmp = null;
@@ -573,6 +573,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Summary:
         //     Clean the submodule div and destroy all the buttons
         phpr.destroySubWidgets('buttonRow');
+        dojo.byId("buttonRow").innerHTML = '';
 
         // Remove all children from element
         phpr.destroySubWidgets("subModuleNavigation");
@@ -1134,6 +1135,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             useMenu:   false,
             useSlider: false
         }, document.createElement('div'));
+
+        this.garbageCollector.addNode(container);
+
         dijit.byId('helpContainer').set("content", container);
         dijit.byId('helpDialog').show();
 
@@ -1154,11 +1158,13 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     + ' <b>' + support + '</b>.<br /><br /><br />';
             }
 
-            container.addChild(new dijit.layout.ContentPane({
+            var content = new dijit.layout.ContentPane({
                 title:   tab,
                 content: text,
                 style:   'width: 100%; padding-left: 10px; padding-right: 10px;'
-            }));
+            });
+            container.addChild(content);
+            this.garbageCollector.addNode(content);
         }
     },
 
