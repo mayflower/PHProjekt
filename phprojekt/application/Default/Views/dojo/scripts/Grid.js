@@ -1085,8 +1085,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 structure: [{type: type,
                     defaultCell: {
                         editable: true,
-                type:     phpr.Default.System.Grid.cells.Text,
-                styles:   'text-align: left;'
+                        type:     phpr.Default.System.Grid.cells.Text,
+                        styles:   'text-align: left;'
                     },
                 rows: this.gridLayout
                 }]
