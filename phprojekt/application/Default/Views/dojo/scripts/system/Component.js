@@ -66,8 +66,12 @@ dojo.declare("phpr.Default.System.Component", null, {
                         dijit.byId(node.getAttribute('id')).resize();
                     });
             } else {
-                node.innerHTML = content;
-                phpr.initWidgets(node);
+                if(dijit.byId(node) && dijit.byId(node).set) {
+                    dijit.byId(node).set('content', content);
+                } else {
+                    node.innerHTML = content;
+                    phpr.initWidgets(node);
+                }
             }
         } else {
             return content;

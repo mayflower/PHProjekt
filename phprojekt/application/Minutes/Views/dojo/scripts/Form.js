@@ -79,21 +79,23 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
 
         this.addTab(mailForm, 'tabMail', 'Mail', 'mailFormTab');
 
-        dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick', dojo.hitch(this, function() {
-            phpr.send({
-                url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId
-                    + '/id/' + this.id,
-                content:   dijit.byId('mailFormTab').get('value'),
-                onSuccess: dojo.hitch(this, function(data) {
-                    new phpr.handleResponse('serverFeedback', data);
-                })
-            })
-        }));
+        this.garbageCollector.addEvent(
+                dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick', dojo.hitch(this, function() {
+                    phpr.send({
+                        url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId
+                        + '/id/' + this.id,
+                        content:   dijit.byId('mailFormTab').get('value'),
+                        onSuccess: dojo.hitch(this, function(data) {
+                            new phpr.handleResponse('serverFeedback', data);
+                        })
+                    })
+                })));
 
-        dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', dojo.hitch(this, function() {
-            window.open(phpr.webpath + 'index.php/Minutes/index/pdf/nodeId/' + phpr.currentProjectId
-                + '/id/' + this.id + '/csrfToken/' + phpr.csrfToken, 'pdf');
-        }));
+        this.garbageCollector.addEvent(
+                dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', dojo.hitch(this, function() {
+                    window.open(phpr.webpath + 'index.php/Minutes/index/pdf/nodeId/' + phpr.currentProjectId
+                        + '/id/' + this.id + '/csrfToken/' + phpr.csrfToken, 'pdf');
+                })));
     },
 
     postRenderForm:function() {
@@ -203,8 +205,10 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
 
         dojo.body().appendChild(confirmDialog.domNode);
         confirmDialog.startup();
-        dojo.connect(dijit.byId('minutesConfirmDialogButtonOK'), 'onClick', options.callbackOk);
-        dojo.connect(dijit.byId('minutesConfirmDialogButtonCancel'), 'onClick', options.callbackCancel);
+        this.garbageCollector.addEvent(
+            dojo.connect(dijit.byId('minutesConfirmDialogButtonOK'), 'onClick', options.callbackOk));
+        this.garbageCollector.addEvent(
+            dojo.connect(dijit.byId('minutesConfirmDialogButtonCancel'), 'onClick', options.callbackCancel));
         confirmDialog.show();
     },
 

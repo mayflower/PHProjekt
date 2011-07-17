@@ -43,12 +43,9 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
 
     basicData:function() {
         phpr.module = this.module;
+        this.destroy();
+
         this.cleanPage();
-        if (!dojo.byId('detailsBox')) {
-            this.reload();
-        } else {
-            phpr.destroySubWidgets('detailsBox');
-        }
 
         this.destroyForm();
         this.destroyGrid();

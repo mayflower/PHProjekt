@@ -109,6 +109,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Set the node where put the form
         this._formNode = new dijit.layout.ContentPane({style: "height: 100%;"});
+        phpr.destroySubWidgets('detailsBox');
         dijit.byId('detailsBox').set('content',this._formNode);
         this.garbageCollector.addNode(this._formNode);
     },
@@ -503,10 +504,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             }
 
             if (this.id > 0 && this.useHistoryTab()) {
-                var that = this;
                 this.garbageCollector.addEvent(
                     dojo.connect(dijit.byId("tabHistory"), 
-                        "onShow", that.showHistory));
+                        "onShow", dojo.hitch(this,"showHistory")));
             }
 
             // Set cursor to the first required field
@@ -566,7 +566,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Summary:
         //    Connect the buttons to the actions
 
-        var that = this;
         this.garbageCollector.addEvent(
             dojo.connect(dijit.byId("submitButton"), 
                 "onClick", dojo.hitch(this, "submitForm")));
@@ -574,9 +573,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.garbageCollector.addEvent(
             dojo.connect(dijit.byId("deleteButton"),
                 "onClick", dojo.hitch(this, function() {
-                    that.garbageCollector.addNode(
+                    this.garbageCollector.addNode(
                         phpr.confirmDialog(
-                        dojo.hitch(that, "deleteForm"),
+                        dojo.hitch(this, "deleteForm"),
                         phpr.nls.get('Are you sure you want to delete?')));
                 })));
     },

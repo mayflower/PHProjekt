@@ -81,7 +81,9 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         //    Rewritten the function for work like a system module and like a form
         // Description:
         //    Rewritten the function for work like a system module and like a form
+        this.destroy();
         this.defineModules(module);
+        this.cleanPage();
         if (this.isSystemModule(this.module)) {
             this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
         } else {
@@ -94,7 +96,6 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 summaryTxt: summaryTxt
             });
         }
-        this.cleanPage();
         phpr.tree.fadeOut();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
@@ -162,8 +163,12 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                     });
                 }
                 navigation += "</tr></table>";
-                dojo.byId("subModuleNavigation").innerHTML = navigation;
-                phpr.initWidgets(dojo.byId("subModuleNavigation"));
+
+                phpr.destroySubWidgets('subModuleNavigation');
+                dijit.byId("subModuleNavigation").set('content', navigation);
+
+                this.garbageCollector.addNode(widget);
+
                 this.customSetSubmoduleNavigation();
             })
         })

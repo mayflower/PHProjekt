@@ -49,6 +49,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     _lastTime:     null,
     _active:       false,
 
+    // rowId of the currently open form
+    // Used to prevent double-opening of a form
+    _openForm:     null,
+
     // Grid cookies
     _sortColumnCookie: null,
     _sortAscCookie:    null,
@@ -1085,8 +1089,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 structure: [{type: type,
                     defaultCell: {
                         editable: true,
-                type:     phpr.Default.System.Grid.cells.Text,
-                styles:   'text-align: left;'
+                        type:     phpr.Default.System.Grid.cells.Text,
+                        styles:   'text-align: left;'
                     },
                 rows: this.gridLayout
                 }]
@@ -1242,10 +1246,13 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     }
 
             // Open the form
-            if (openForm) {
+            if (openForm && !this.grid.edit.isEditing()) {
                 var item  = this.grid.getItem(e.rowIndex);
                 var rowId = this.grid.store.getValue(item, 'id');
-                this.getLinkForEdit(rowId);
+                if(rowId != this._openForm) {
+                    this._openForm = rowId;
+                    this.getLinkForEdit(rowId);
+                }
             }
         }
     },

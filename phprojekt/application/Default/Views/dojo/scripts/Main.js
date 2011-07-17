@@ -356,11 +356,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         phpr.tree.loadTree();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
-        if(this.grid) {
-            if(dojo.isFunction(this.grid.destroy)) {
-                this.grid.destroy();
-            }
-        }
+        this.destroyGrid();
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
@@ -464,7 +460,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    are received from the server and the Navigation is rendered accordingly
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/'
             + phpr.currentProjectId;
-        var self              = this;
         var createPermissions = false;
         phpr.DataStore.addStore({url: subModuleUrl});
         phpr.DataStore.requestData({
@@ -512,7 +507,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                             liclass   = 'class = active';
                             activeTab = true;
                         }
-                        navigation += self.render(["phpr.Default.template", "navigation.html"], null, {
+                        navigation += this.render(["phpr.Default.template", "navigation.html"], null, {
                             moduleName :    moduleName,
                             moduleLabel:    moduleLabel,
                             liclass:        liclass,
@@ -526,15 +521,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 }
                 navigation += "</tr></table>";
 
-                var widget    = new dijit.layout.ContentPane({
-                    content: navigation
-                });
-                this.garbageCollector.addNode(widget);
-                dojo.byId("subModuleNavigation").appendChild(widget.domNode);
+                phpr.destroySubWidgets('subModuleNavigation');
+                dijit.byId("subModuleNavigation").set('content', navigation);
 
                 // avoid cyclic refs
                 tmp = null;
-                widget = null;
 
                 this.customSetSubmoduleNavigation();
             })
@@ -572,6 +563,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     cleanPage:function() {
         // Summary:
         //     Clean the submodule div and destroy all the buttons
+        this.garbageCollector.collect();
+
         phpr.destroySubWidgets('buttonRow');
         dojo.byId("buttonRow").innerHTML = '';
 
@@ -811,7 +804,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         if (words.length >= 3) {
             // hide the suggestBox
             var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch';
-            var self       = this;
             phpr.send({
                 url:       getDataUrl,
                 content:   new Object({words: words, count: 10}),
@@ -824,7 +816,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         if (!results[modulesData.moduleLabel]) {
                             results[modulesData.moduleLabel] = '';
                         }
-                        results[modulesData.moduleLabel] += self.render(["phpr.Default.template.results",
+                        results[modulesData.moduleLabel] += this.render(["phpr.Default.template.results",
                             "results.html"], null, {
                             id :           modulesData.id,
                             moduleId :     modulesData.modulesId,
@@ -840,7 +832,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     for (var i in results) {
                         moduleLabel = i;
                         html       = results[i];
-                        search += self.render(["phpr.Default.template.results", "suggestBlock.html"], null, {
+                        search += this.render(["phpr.Default.template.results", "suggestBlock.html"], null, {
                             moduleLabel:   moduleLabel,
                             results:       html
                         });
@@ -983,7 +975,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    This function reload the grid place with the result of a search or a tagt
         // Description:
         //    The server return the found records and the function display it
-        var self = this;
 
         // Clean the navigation and forms buttons
         this.cleanPage();
@@ -1008,7 +999,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     if (!results[modulesData.moduleLabel]) {
                         results[modulesData.moduleLabel] = '';
                     }
-                    results[modulesData.moduleLabel] += self.render(["phpr.Default.template.results", "results.html"],
+                    results[modulesData.moduleLabel] += this.render(["phpr.Default.template.results", "results.html"],
                         null, {
                         id:            modulesData.id,
                         moduleId:      modulesData.modulesId,
@@ -1024,7 +1015,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 for (var i in results) {
                     moduleLabel = i;
                     html       = results[i];
-                    search += self.render(["phpr.Default.template.results", "resultsBlock.html"], null, {
+                    search += this.render(["phpr.Default.template.results", "resultsBlock.html"], null, {
                         moduleLabel:   moduleLabel,
                         results:       html
                     });
@@ -1032,6 +1023,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 if (search == '') {
                     search += phpr.drawEmptyMessage('There are no Results');
                 }
+                phpr.destroySubWidgets('gridBox');
                 dijit.byId("gridBox").set('content', search);
             })
         });
@@ -1138,6 +1130,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         this.garbageCollector.addNode(container);
 
+        phpr.destroySubWidgets('helpContainer');
         dijit.byId('helpContainer').set("content", container);
         dijit.byId('helpDialog').show();
 
@@ -1163,8 +1156,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 content: text,
                 style:   'width: 100%; padding-left: 10px; padding-right: 10px;'
             });
+
             container.addChild(content);
+
             this.garbageCollector.addNode(content);
+
+            content = null;
         }
     },
 
