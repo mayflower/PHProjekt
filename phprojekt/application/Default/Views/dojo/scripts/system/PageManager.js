@@ -76,7 +76,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         var newHash = dojo.objectToQuery(config)||"";
         if(newHash != this._recentHash) {
             this._recentHash = newHash;
-            dojo.hash(replaceHash,newItem);
+            dojo.hash(newHash, replaceItem);
 
             if (newHash.indexOf('Administration') < 0) {
                 // Stores the hash in a browser cookie (Only normal url, no Administration one)
