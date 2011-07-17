@@ -63,7 +63,6 @@ phpr.destroySubWidgets = function(el) {
     // Destroy all the old widgets, so dojo can init the new ones with the same IDs again.
     if (dijit.byId(el) && dijit.byId(el).destroyDescendants) { // dijit widget id?
         dijit.byId(el).destroyDescendants();
-        console.log(el);
     } else if (dojo.byId(el)) { // dom node id?
         try {
             var widget = dijit.byNode(dojo.byId(el));
