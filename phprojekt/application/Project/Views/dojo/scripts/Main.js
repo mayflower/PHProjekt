@@ -43,25 +43,28 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
 
     basicData:function() {
         phpr.module = this.module;
+        this.destroy();
+
         this.cleanPage();
-        this.render(["phpr.Project.template", "BasicData.html"], dojo.byId('centerMainContent'));
+
+        this.destroyForm();
+        this.destroyGrid();
+
         this.setSubmoduleNavigation('BasicData');
+        phpr.destroySubWidgets('centerMainContent');
+        this.render(["phpr.Project.template", "BasicData.html"], dojo.byId('centerMainContent'));
         this.hideSuggest();
         this.setSearchForm();
         phpr.tree.fadeIn();
         phpr.tree.loadTree();
-        if (!dojo.byId('detailsBox')) {
-            this.reload();
-        }
+
         this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, phpr.module);
     },
 
     openForm:function(id, module) {
         // Summary:
         //    This function opens a new Detail View
-        if (!dojo.byId('detailsBox')) {
-            this.reload();
-        }
+        this.preOpenForm();
 
         if (id == undefined || id == 0) {
             var params          = new Array();
@@ -83,7 +86,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
     },
 
     processActionFromUrlHash:function(data) {
-        if (data[0] == 'basicData') {
+        if (data.action == 'basicData') {
             this.basicData();
         } else {
             this.reload();
