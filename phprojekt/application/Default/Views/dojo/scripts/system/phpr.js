@@ -826,7 +826,7 @@ phpr.inArray = function(needle, haystack) {
 
     // we need to check for this, because for some reason, the function is
     // called with undefined as haystack very often
-    if("Array" == typeof haystack || "Object" == typeof haystack) {
+    if(dojo.isArray(haystack) || "Object" == typeof haystack) {
         return dojo.indexOf(haystack, needle) != -1;
     }
 
