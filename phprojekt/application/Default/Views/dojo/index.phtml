@@ -135,9 +135,6 @@
             }
             ?>
         });
-        dojo.addOnLoad(function() {
-            //phpr.pageManager.init();
-        });
         window.onresize = function() {
             init();
         };
@@ -148,9 +145,7 @@
     if (true === $this->isLoggedIn) {
     ?>
     <script type="text/javascript">
-        phpr.Url   = new phpr.Url();
-        var module = phpr.Url.getModule();
-        var main   = new phpr.Main("<?php echo $this->webpath; ?>", module, 1, '<?php echo $this->language; ?>');
+        var main   = new phpr.Main("<?php echo $this->webpath; ?>", 1, '<?php echo $this->language; ?>');
     </script>
     <?php
     } else {

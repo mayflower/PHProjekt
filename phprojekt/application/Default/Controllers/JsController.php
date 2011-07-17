@@ -70,7 +70,6 @@ class JsController extends IndexController
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Grid.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Store.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Date.js');
-        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Url.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Tree.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/FrontendMessage.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/PageManager.js');
@@ -93,8 +92,9 @@ class JsController extends IndexController
 
         $scripttext .= '
             dojo.declare("phpr.Main", null, {
-                constructor:function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId,/*String*/language) {
-                    phpr.module           = currentModule;
+                constructor:function(/*String*/webpath, /*Int*/rootProjectId,/*String*/language) {
+                    phpr.pageManager      = new phpr.Default.System.PageManager();
+                    phpr.module           = phpr.pageManager.getConfigFromWindow().moduleName;
                     phpr.submodule        = null;
                     phpr.webpath          = webpath;
                     phpr.rootProjectId    = rootProjectId;
@@ -111,7 +111,6 @@ class JsController extends IndexController
                     phpr.frontendMessage  = new phpr.Default.System.FrontendMessage();
                     phpr.tree             = new phpr.Default.System.Tree();
                     phpr.regExpForFilter  = new phpr.regExpForFilter();
-                    phpr.pageManager      = new phpr.Default.System.PageManager();
                     phpr.garbageCollector = new phpr.Default.System.GarbageCollector();
                     phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";
         ';
@@ -124,7 +123,7 @@ class JsController extends IndexController
             }
             $scripttext .= '
                 phpr.pageManager.register(
-                    this.' . $module . ' = new phpr.' . $module . '.Main([' . $subModules . ']));
+                    new phpr.' . $module . '.Main([' . $subModules . ']));
             ';
         }
 

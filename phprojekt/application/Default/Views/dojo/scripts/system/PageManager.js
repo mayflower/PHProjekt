@@ -193,6 +193,29 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         }
     },
 
+    getConfigFromWindow:function() {
+        // Summary:
+        //      determines the current configuration from the window state
+        // Description:
+        //      At first it checks for an existing location hash
+        //      if none is found, it checks the cookie
+        //      if none is found, it defaults to Project
+        var config = {};
+        if (!dojo.hash()) {
+            var hash = dojo.cookie('location.hash')||"";
+            if (hash != "") {
+                config = dojo.queryToObject(hash);
+            } else {
+                config = {
+                    moduleName: "Project"
+                }
+            }
+        } else {
+            config = dojo.queryToObject(dojo.hash());
+        }
+        return config;
+    },
+
     init:function() {
         // Summary:
         //      Initilizes the pageManager
@@ -204,14 +227,10 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             var hash = dojo.cookie('location.hash')||"";
             if (hash != "") {
                 this._setHash(hash,true);
-                this.changePage({
-                    moduleName:"Project"
-                });
-            } else {
-                this.changePage({
-                    moduleName:"Project"
-                });
             }
+            this.changeState({
+                moduleName:"Project"
+            });
         } else {
             this._hashChange();
         }
