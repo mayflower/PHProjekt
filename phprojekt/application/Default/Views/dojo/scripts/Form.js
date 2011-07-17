@@ -503,10 +503,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             }
 
             if (this.id > 0 && this.useHistoryTab()) {
-                var that = this;
                 this.garbageCollector.addEvent(
                     dojo.connect(dijit.byId("tabHistory"), 
-                        "onShow", that.showHistory));
+                        "onShow", dojo.hitch(this,"showHistory")));
             }
 
             // Set cursor to the first required field
