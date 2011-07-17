@@ -356,11 +356,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         phpr.tree.loadTree();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
-        if(this.grid) {
-            if(dojo.isFunction(this.grid.destroy)) {
-                this.grid.destroy();
-            }
-        }
+        this.destroyGrid();
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
@@ -1027,6 +1023,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 if (search == '') {
                     search += phpr.drawEmptyMessage('There are no Results');
                 }
+                phpr.destroySubWidgets('gridBox');
                 dijit.byId("gridBox").set('content', search);
             })
         });
