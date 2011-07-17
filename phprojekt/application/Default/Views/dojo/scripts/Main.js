@@ -571,6 +571,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     cleanPage:function() {
         // Summary:
         //     Clean the submodule div and destroy all the buttons
+        this.garbageCollector.collect();
+
         phpr.destroySubWidgets('buttonRow');
         dojo.byId("buttonRow").innerHTML = '';
 
@@ -1135,6 +1137,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         this.garbageCollector.addNode(container);
 
+        phpr.destroySubWidgets('helpContainer');
         dijit.byId('helpContainer').set("content", container);
         dijit.byId('helpDialog').show();
 
@@ -1160,8 +1163,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 content: text,
                 style:   'width: 100%; padding-left: 10px; padding-right: 10px;'
             });
+
             container.addChild(content);
+
             this.garbageCollector.addNode(content);
+
+            content = null;
         }
     },
 
