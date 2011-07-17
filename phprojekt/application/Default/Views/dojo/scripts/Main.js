@@ -525,15 +525,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 }
                 navigation += "</tr></table>";
 
-                var widget    = new dijit.layout.ContentPane({
-                    content: navigation
-                });
-                this.garbageCollector.addNode(widget);
-                dojo.byId("subModuleNavigation").appendChild(widget.domNode);
+                phpr.destroySubWidgets('subModuleNavigation');
+                dijit.byId("subModuleNavigation").set('content', navigation);
 
                 // avoid cyclic refs
                 tmp = null;
-                widget = null;
 
                 this.customSetSubmoduleNavigation();
             })
