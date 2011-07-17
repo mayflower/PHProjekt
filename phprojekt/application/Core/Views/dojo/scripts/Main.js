@@ -167,8 +167,6 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 phpr.destroySubWidgets('subModuleNavigation');
                 dijit.byId("subModuleNavigation").set('content', navigation);
 
-                this.garbageCollector.addNode(widget);
-
                 this.customSetSubmoduleNavigation();
             })
         })
