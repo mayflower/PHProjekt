@@ -29,17 +29,14 @@ dojo.declare("phpr.Url", null, {
         //    Return the module form the hash
         // description:
         //    Check the first value in the hash and return it
-        if (!window.location.hash) {
-            var module = "Project";
-        } else {
-            var data = recentHash.split(",");
-            if (data[0]) {
-                var module = data[0].replace(/.*#(.*)/, "$1");
-            } else {
-                var module = "Project";
+        
+        var module = "Project";
+        if(dojo.hash()) {
+            var data = dojo.queryToObject(dojo.hash());
+            if (data.moduleName) {
+                module = data.moduleName;
             }
         }
-
         return module;
     },
 

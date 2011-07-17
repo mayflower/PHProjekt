@@ -315,12 +315,14 @@ dgc.DateTextBox.markupFactory = function(node, cell){
     dgc._Widget.markupFactory(node, cell);
 };
 
-dojo.declare('phpr.Default.System.Grid._View', [dojox.grid._View], {
+dojo.declare('phpr.Default.System.Grid._View', [dijit._Widget, dijit._Templated, dojox.grid._View], {
     // Summary
     //    Extend the normal grid view
     // Description
     //    Add a div after the grid for allow multiple actions
     templateString: __phpr_templateCache["phpr.Default.template.Grid.html"],
+
+    widgetsInTemplate: true,
 
     doStyleRowNode:function(inRowIndex, inRowNode) {
         // Summary

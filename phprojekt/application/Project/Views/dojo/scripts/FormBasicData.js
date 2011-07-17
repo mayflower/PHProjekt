@@ -58,7 +58,6 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
         if (dijit.byId("deleteButton")) {
             dijit.byId("deleteButton").destroy();
         }
-        dijit.byId('cumulativeCompletePercent').set('disabled', true);
     },
 
     submitForm:function() {

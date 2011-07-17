@@ -45,22 +45,33 @@ dojo.declare("phpr.Default.System.Component", null, {
             for (var i = 0; i < result.length; i++) {
                 var id = result[i].replace(/id=\\?["']/gi, '').replace(/\\?["']/gi, '');
                 if (dijit.byId(id)) {
-                    dijit.byId(id).destroyRecursive();
+                    try { // may fail due to already removed dom node
+                        dijit.byId(id).destroyRecursive();
+                    } catch (e) {
+                        try { // if this fails, it's probably long gone
+                            dijit.byId(id).destroy();
+                        } catch(e) {}
+                    }
                 }
             }
         }
 
         if (node) {
             var dojoType = node.getAttribute('dojoType');
+            phpr.destroySubWidgets(node);
             if ((dojoType == 'dijit.layout.ContentPane') ||
                 (dojoType == 'dijit.layout.BorderContainer') ) {
-                    dijit.byId(node.getAttribute('id')).set('content', content);
+                    dijit.byNode(node).set('content', content);
                     dojo.addOnLoad(function() {
                         dijit.byId(node.getAttribute('id')).resize();
                     });
             } else {
-                node.innerHTML = content;
-                phpr.initWidgets(node);
+                if(dijit.byId(node) && dijit.byId(node).set) {
+                    dijit.byId(node).set('content', content);
+                } else {
+                    node.innerHTML = content;
+                    phpr.initWidgets(node);
+                }
             }
         } else {
             return content;
