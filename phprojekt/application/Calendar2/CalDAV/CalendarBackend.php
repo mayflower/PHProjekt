@@ -45,7 +45,7 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $user = new Phprojekt_User_User();
         $user = $user->findByUsername(preg_filter('|.*principals/([^/]+)$|', '$1', $principalUri));
         if (is_null($user)) {
-            throw new Exception("principal not found under $principalUri when retrieving calendars, username $username");
+            throw new Exception("principal not found under $principalUri when retrieving calendars for $username");
         }
         return array(
             array(
@@ -53,7 +53,8 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
                 'uri' => 'default',
                 'principaluri' => $principalUri,
                 '{' . Sabre_CalDAV_Plugin::NS_CALENDARSERVER . '}getctag' => time(),
-                '{' . Sabre_CalDAV_Plugin::NS_CALDAV . '}supported-calendar-component-set' => new Sabre_CalDAV_Property_SupportedCalendarComponentSet(array('VEVENT'))
+                '{' . Sabre_CalDAV_Plugin::NS_CALDAV . '}supported-calendar-component-set'
+                    => new Sabre_CalDAV_Property_SupportedCalendarComponentSet(array('VEVENT'))
             )
         );
     }
