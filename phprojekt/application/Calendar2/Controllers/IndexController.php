@@ -247,8 +247,9 @@ class Calendar2_IndexController extends IndexController
                 && 'undefined' !== $id) {
             throw new Phprojekt_PublishedException("Invalid id '$id'");
         }
-        //TODO: Handling of recurrence selection when saving is currently b0rked
-        if (!empty($occurrence) && !preg_match('/\d{8}T\d{6}/', $occurrence)) {
+        $id = (int) $id;
+
+        if (!empty($id) && !self::_validateTimestamp($occurrence)) {
             throw new Phprojekt_PublishedException(
                 "Invalid occurrence '$occurrence'"
             );
@@ -261,8 +262,6 @@ class Calendar2_IndexController extends IndexController
             );
         }
         $sendNotifications = ($sendNotifications == 'true') ? true : false;
-
-        $id = (int) $id;
 
         // Note that all function this gets passed to must validate the
         // parameters they use.
