@@ -293,6 +293,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $series->save();
 
         $this->_data['rrule'] = null;
+        $this->_data['recurrenceId'] = $this->_originalStart->format('Y-m-d h:i:s');
         $this->_isFirst       = true;
         $this->_saveToNewRow();
 
@@ -887,8 +888,18 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $vobject->add('description', $this->description);
         $vobject->add('comment', $this->comments);
         $vobject->add('location', $this->location);
-        if ($this->rrule) {
+        if ($this->recurrenceId) {
+            $recurrenceId = new Datetime($this->recurrenceId);
+            $vobject->add('recurrence-id', $recurrenceId->format('Ymd\This\Z'));
+        } else if ($this->rrule) {
             $vobject->add('rrule', $this->rrule);
+            $exdates = array();
+            foreach ($this->getExcludedDates() as $d) {
+                $exdates[] = $d->format('Ymd\This\Z');
+            }
+            if (!empty($exdates)) {
+                $vobject->add('exdate', implode(',', $exdates));
+            }
         }
         $start = new DateTime($this->start);
         $vobject->add('dtstart', $start->format('Ymd\This\Z'));
@@ -896,7 +907,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $vobject->add('dtend', $end->format('Ymd\This\Z'));
         $lastMod = new DateTime($this->lastModified);
         $vobject->add('dtstamp', $lastMod->format('Ymd\This\Z'));
-        $vobject->add('last-modified', $lastMod->format('Ymd\This\Z'));
         $vobject->add('uid', $this->uid);
         return $vobject;
     }

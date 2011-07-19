@@ -19,6 +19,7 @@
                 "end":                  {"type": "datetime"},
                 "owner_id":             {"type": "int", "notNull": "true"},
                 "rrule":                {"type": "varchar"},
+                "recurrence_id":        {"type": "datetime"},
                 "visibility":           {"type": "int", "length": "1", "default": "1"},
                 "uid":                  {"type": "varchar", "notNull": "true"},
                 "last_modified":        {"type": "datetime", "notNull": "true"},
