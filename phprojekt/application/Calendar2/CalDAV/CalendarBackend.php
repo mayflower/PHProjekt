@@ -83,42 +83,49 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $events   = $calendar->fetchAll($where, null, null, null, null, $join);
         $ret      = array();
         foreach ($events as $event) {
-            $calendarData = new Sabre_VObject_Component('vcalendar');
-            $calendarData->add('version', '2.0');
-            $calendarData->add('prodid', 'PHProjekt ' . Phprojekt::getVersion());
-            $calendarData->add($event->asVObject());
-            $ret[] = array(
-                'id' => $event->id,
+            $lastModified = $event->lastModified;
+            if (array_key_exists($event->uri, $ret)) {
+                $lastModified = max($event->lastModified, $ret[$event->uri]['lastmodified']);
+            }
+            $ret[$event->uri] = array(
+                'id' => $event->uid,
                 'uri' => $event->uri,
-                'lastmodified' => $event->lastModified,
-                'calendardata' => $calendarData->serialize(),
+                'lastmodified' => $lastModified,
                 'calendarid' => $calendarId
             );
         }
-        return $ret;
+        return array_values($ret);
     }
 
     public function getCalendarObject($calendarId, $objectUri)
     {
         $db = Phprojekt::getInstance()->getDb();
-        $event = new Calendar2_Models_Calendar2();
-        $event = $event->fetchAll($db->quoteInto('uri = ?', $objectUri));
-        if (!is_array($event) || !array_key_exists(0, $event)) {
+        $events = new Calendar2_Models_Calendar2();
+        $events = $events->fetchByUid($objectUri);
+        if (!is_array($events) || empty($events)) {
             return array();
-        } else {
-            $event = $event[0];
-            $calendarData = new Sabre_VObject_Component('vcalendar');
-            $calendarData->add('version', '2.0');
-            $calendarData->add('prodid', 'Phprojekt ' . Phprojekt::getVersion());
-            $calendarData->add($event->asVObject());
-            return array(
-                'id' => $event->id,
-                'uri' => $event->uri,
-                'lastmodified' => $event->lastModified,
-                'calendarid' => $calendarId,
-                'calendardata' => $calendarData->serialize()
-            );
         }
+
+        $calendarData = new Sabre_VObject_Component('vcalendar');
+        $calendarData->add('version', '2.0');
+        $calendarData->add('prodid', 'Phprojekt ' . Phprojekt::getVersion());
+        $lastModified = $events[0]->lastModified;
+        foreach ($events as $e) {
+            $calendarData->add($e->asVObject());
+                if ($e->lastModified > $lastModified) {
+                    $lastModified = $e->lastModified;
+                }
+        }
+        $lastModified = new Datetime($lastModified);
+
+
+        return array(
+            'id' => $events[0]->uid,
+            'uri' => $objectUri,
+            'lastmodified' => $lastModified->format('Ymd\This\Z'),
+            'calendarid' => $calendarId,
+            'calendardata' => $calendarData->serialize()
+        );
     }
 
     public function createCalendarObject($calendarId, $objectUri, $calendarData)

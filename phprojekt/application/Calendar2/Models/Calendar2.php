@@ -532,6 +532,20 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Returns an array of all calendar objects for the given uid.
+     *
+     * @param string The uid of the calendar collection
+     *
+     * @return array of Calendar2_Models_Calendar2 All objects belonging to that uid
+     */
+    public function fetchByUid($uid)
+    {
+        $db    = Phprojekt::getInstance()->getDb();
+        $where = $db->quoteInto('uid = ?', $uid);
+        return Phprojekt_ActiveRecord_Abstract::fetchAll($where);
+    }
+
+    /**
      * Finds a special occurence of an event. Will throw an exception
      * if the date is not part of this event.
      *

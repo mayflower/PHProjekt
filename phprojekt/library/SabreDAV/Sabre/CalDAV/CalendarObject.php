@@ -67,7 +67,7 @@ class Sabre_CalDAV_CalendarObject extends Sabre_DAV_File implements Sabre_DAV_IP
         // Pre-populating the 'calendardata' is optional, if we don't have it
         // already we fetch it from the backend.
         if (!isset($this->objectData['calendardata'])) {
-            $this->objectData = $this->calendarBackend->getCalendarObject($this->objectData['calendarid'], $this->objectData['uri']);
+            $this->objectData = $this->caldavBackend->getCalendarObject($this->objectData['calendarid'], $this->objectData['uri']);
         }
         return $this->objectData['calendardata'];
 
