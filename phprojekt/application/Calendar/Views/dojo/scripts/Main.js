@@ -284,9 +284,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     openForm:function(/*int*/ id, /*String*/ module, /*String*/ startDate, /*String*/ startTime) {
         // Summary:
         //    This function opens a new Detail View
-        if (!dojo.byId('detailsBox')) {
-            this.reload();
-        }
+        this.preOpenForm();
 
         if (id == undefined || id == 0) {
             var params           = new Array();
