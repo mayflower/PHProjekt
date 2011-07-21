@@ -706,8 +706,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                     this._scrollDelayed       = 0;
                     dojo.disconnect(this._scrollConnection);
                     this._dateWheelChanged = true;
-                    dojo.publish('Calendar.saveChanges');
-                    dojo.publish('Calendar.setDate', [0]);
+                    this.saveChanges();
+                    this.setDate(0);
 
                 }
             } else {
@@ -727,8 +727,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                     this._scrollDelayed       = 0;
                     dojo.disconnect(this._scrollConnection);
                     this._dateWheelChanged = true;
-                    dojo.publish('Calendar.saveChanges');
-                    dojo.publish('Calendar.setDate', [2])
+                    this.saveChanges();
+                    this.setDate(2);
                 }
             } else {
                 this._scrollLastDirection = this.SCROLL_DOWN;
