@@ -422,9 +422,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 id:        "globalModule_Help",
                 label:     phpr.nls.get('Help'),
                 showLabel: true,
-                onClick:   dojo.hitch(this, function() {
-                    dojo.publish(this.module + ".showHelp");
-                })
+                onClick:   dojo.hitch(this, "showHelp")
             });
             systemToolbar.addChild(button);
             button = null;
