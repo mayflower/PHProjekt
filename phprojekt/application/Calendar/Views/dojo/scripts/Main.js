@@ -178,7 +178,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
         var dateString = phpr.date.getIsoDate(this._date);
-        this.monthList = new this.monthListWidget(this, phpr.currentProjectId, dateString);
+        this.monthList = new this.monthListWidget(null, phpr.currentProjectId, dateString, null, this);
         this.garbageCollector.addNode(this.monthList);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
