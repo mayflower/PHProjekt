@@ -89,9 +89,15 @@
         <?php $p = Phprojekt::getInstance(); ?>
         <h2><?php echo $p->translate('Migration neccessary'); ?></h2>
             <p>
-                <?php echo $p->translate('Upgrade controller locked (before version)');
+                <?php echo $p->translate('Thank you for upgrading to PHProjekt version ');
                       echo $this->newVersion;
-                      echo $p->translate('Upgrade controller locked (after version)'); ?>
+                      echo $p->translate(<<<HERE
+.<br/>
+We're sorry to disrupt your Work, but we need to do some things to the database.<br/><br/>
+You can use Phprojekt again after an administrator initiated the upgrade.
+HERE
+);
+                ?>
                 <br/>
                     <a href="<?php echo $this->webPath; ?>index.php/Login/logout">
                         <?php echo $p->translate('Logout'); ?>

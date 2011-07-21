@@ -44,7 +44,8 @@ class Core_UpgradeController extends Core_IndexController
      * Else, print a message depending on the situation.
      *
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $config = Phprojekt::getInstance()->getConfig();
         $language = Phprojekt_User_User::getSetting(
             "language",
@@ -80,7 +81,8 @@ class Core_UpgradeController extends Core_IndexController
      *
      * @return void
      */
-    public function upgradeAction() {
+    public function upgradeAction()
+    {
         if (!Phprojekt_Auth::isAdminUser()) {
             throw new Phprojekt_PublishedException('Insufficient rights.', 500);
         }
@@ -102,7 +104,8 @@ class Core_UpgradeController extends Core_IndexController
      *
      * @return void
      */
-    public function jsonUpgradeAction() {
+    public function jsonUpgradeAction()
+    {
         if (!Phprojekt_Auth::isAdminUser()) {
             throw new Phprojekt_PublishedException('Insufficient rights.', 500);
         }

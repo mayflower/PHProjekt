@@ -567,30 +567,25 @@ $lang["Content Help Setting"]["Timecard"] = "<br />
 
 // Upgrade Controller
 $lang["Migration neccessary"] = "Migration neccessary";
-$lang["Upgrade controller locked (before version)"] = "Thank you for upgrading to PHProjekt version ";
-$lang["Upgrade controller locked (after version)"] = ".<br/>
-                We're sorry to disrupt your Work, but we need to do some things to the database.<br/><br/>
-                You can use Phprojekt again after an administrator initiated the upgrade.";
+$lang["Thank you for upgrading to PHProjekt version "] = "Thank you for upgrading to PHProjekt version ";
+$lang[".<br/>\nWe're sorry to disrupt your Work, but we need to do some things to the database.<br/><br/>\nYou can use Phprojekt again after an administrator initiated the upgrade."] = ".<br/>\nWe're sorry to disrupt your Work, but we need to do some things to the database.<br/><br/>\nYou can use Phprojekt again after an administrator initiated the upgrade.";
 $lang["Logout"] = "Logout";
 $lang["Migration"] = "Migration";
-$lang["Upgrade controller (before version)"] = "Thank you for upgrading to PHProjekt version ";
-$lang["Upgrade controller (after version)"] = ".<br/>
-                We're sorry to bother you, but we need to upgrade the database to the current version.<br/><br/>
-                When you're ready, just click the button. Please note that the upgrade might take a few moments.";
-$lang["Upgrade warning"] = "<h4>Warning!</h4>
-                <p>
-                    This feature is still new, and we really don't want you to lose
-                    your data.<br/>
-                    So please, back up your data before clicking the button.
-                    <br/><br/>Thank you.
-                </p>";
+$lang["Thank you for upgrading to PHProjekt version "] = "Thank you for upgrading to PHProjekt version ";
+$lang[".<br/>We're sorry to bother you, but we need to upgrade the database to the current version.<br/><br/>\nWhen you're ready, just click the button. Please note that the upgrade might take a few moments."] = ".<br/>We're sorry to bother you, but we need to upgrade the database to the current version.<br/><br/>\nWhen you're ready, just click the button. Please note that the upgrade might take a few moments.";
+$lang["<h4>Warning!</h4><p>This feature is still new, and we really don't want you to lose your data.<br/>\nSo please, back up your data before clicking the button.<br/><br/>Thank you.</p>"] = "<h4>Warning!</h4><p>This feature is still new, and we really don't want you to lose your data.<br/>\nSo please, back up your data before clicking the button.<br/><br/>Thank you.</p>";
 $lang["Not installed"] = "Not installed";
-$lang["Upgrade controller idle (before link)"] = "This is the place where migration happens after installing a new
-                Version. Currently, there's nothing to upgrade, so this page is
-                quite boring.<br/>
-                Visit the ";
+$lang["Upgrade controller idle (before link)"] = "This is the place where migration happens after installing a new Version.\nCurrently, there's nothing to upgrade, so this page is quite boring.<br/>\nVisit the ";
 $lang["Upgrade controller idle (link text)"] = "main page";
 $lang["Upgrade controller idle (after link)"] = " for more interesting things.";
-$lang["upgrade_errorMessage_server"] = "There was an unknown problem on the server. We're really sorry. You can try again, but there might be problems in the future.";
-$lang["upgrade_errorMessage"] = "There was a problem upgrading, but we managed to keep the database in a consistent state. Please consult the logfiles to find out more.";
-$lang["upgrade_errorMessage_fatal"] = "We're sorry, but our upgrade attempt broke the database. Please recover your backups and consult the logfiles to get more information.";
+$lang["There was an unknown problem on the server. We're really sorry.\nYou can try again, but there might be problems in the future."] = "There was an unknown problem on the server. We're really sorry.\nYou can try again, but there might be problems in the future.";
+$lang["There was a problem upgrading, but we managed to keep the database in a consistent state.\nPlease consult the logfiles to find out more."] = "There was a problem upgrading, but we managed to keep the database in a consistent state.\nPlease consult the logfiles to find out more.";
+$lang["We're sorry, but our upgrade attempt broke the database.\nPlease recover your backups and consult the logfiles to get more information."] = "We're sorry, but our upgrade attempt broke the database.\nPlease recover your backups and consult the logfiles to get more information.";
+$lang["An error occured while upgrading this module."] = "An error occured while upgrading this module.";
+$lang["Old Version"] = "Old Version";
+$lang["New Version"] = "New Version";
+$lang["Status"] = "Status";
+$lang["Upgrade now"] = "Upgrade now";
+$lang["Continue"] = "Continue";
+$lang["Upgrading"] = "Upgrading";
+$lang["Done"] = "Done";

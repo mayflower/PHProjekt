@@ -89,11 +89,16 @@
         <div class="prepend-0" id="content">
             <h2><?php echo $p->translate('Migration'); ?></h2>
             <p>
-                <?php echo $p->translate('Upgrade controller idle (before link)'); ?>
+                <?php echo $p->translate(<<<HERE
+This is the place where migration happens after installing a new Version.
+Currently, there's nothing to upgrade, so this page is quite boring.<br/>
+Visit the 
+HERE
+); ?>
                 <a href="<?php echo $this->webPath; ?>index.php">
-                    <?php echo $p->translate('Upgrade controller idle (link text)'); ?>
+                    <?php echo $p->translate('main page'); ?>
                 </a>
-                <?php echo $p->translate('Upgrade controller idle (after link)'); ?>
+                <?php echo $p->translate(' for more interesting things.'); ?>
             </p>
         </div>
     </div>

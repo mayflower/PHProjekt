@@ -90,9 +90,13 @@
             <h2><?php echo $p->translate('Migration'); ?></h2>
             <p>
                 <?php
-                    echo $p->translate('Upgrade controller (before version)');
+                    echo $p->translate('Thank you for upgrading to PHProjekt version ');
                     echo $this->newVersion;
-                    echo $p->translate('Upgrade controller (after version)');
+                    echo $p->translate(<<<HERE
+.<br/>We're sorry to bother you, but we need to upgrade the database to the current version.<br/><br/>
+When you're ready, just click the button. Please note that the upgrade might take a few moments.
+HERE
+);
                 ?>
            </p>
             <style type='text/css'>
@@ -105,17 +109,33 @@
             </style>
 
             <div class='warning'>
-                <?php echo $p->translate('Upgrade warning'); ?>
+                <?php echo $p->translate(<<<HERE
+<h4>Warning!</h4><p>This feature is still new, and we really don't want you to lose your data.<br/>
+So please, back up your data before clicking the button.<br/><br/>Thank you.</p>
+HERE
+); ?>
             </div>
             <br/>
             <div id='errorMessageServer' class='warning' style="display: none;">
-                <?php echo $p->translate('upgrade_errorMessage_server'); ?>
+                <?php echo $p->translate(<<<HERE
+There was an unknown problem on the server. We're really sorry.
+You can try again, but there might be problems in the future.
+HERE
+); ?>
             </div>
             <div id='errorMessage' class='warning' style="display: none;">
-                <?php echo $p->translate('upgrade_errorMessage'); ?>
+                <?php echo $p->translate(<<<HERE
+There was a problem upgrading, but we managed to keep the database in a consistent state.
+Please consult the logfiles to find out more.
+HERE
+); ?>
             </div>
             <div id='errorMessageFatal' class='warning' style="display: none;">
-                <?php echo $p->translate('upgrade_errorMessage_fatal'); ?>
+                <?php echo $p->translate(<<<HERE
+We're sorry, but our upgrade attempt broke the database.
+Please recover your backups and consult the logfiles to get more information.
+HERE
+); ?>
             </div>
             <style type="text/css">
                 .modulesTable, .modulesTable td, .modulesTable th {
