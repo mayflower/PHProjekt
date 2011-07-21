@@ -71,13 +71,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     renderTemplate:function() {
         // Summary:
         //   Custom renderTemplate for calendar
-        this.render(["phpr.Calendar.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            changeDate: phpr.nls.get('Change date'),
-            today:      phpr.nls.get('Today'),
-            user:       phpr.nls.get('User'),
-            self:       phpr.nls.get('Self'),
-            selection:  phpr.nls.get('Selection')
-        });
+        this.render(["phpr.Calendar.template", "mainContent.html"],
+            dojo.byId('centerMainContent'), {});
     },
 
     setWidgets:function() {
