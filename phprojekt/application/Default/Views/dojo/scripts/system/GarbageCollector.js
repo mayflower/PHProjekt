@@ -20,6 +20,7 @@
  */
 
 dojo.provide("phpr.Default.System.GarbageCollector");
+dojo.provide("phpr.Default.System.GarbageCollected");
 
 dojo.declare("phpr.Default.System.GarbageCollector", null, {
     // Dom nodes
@@ -121,3 +122,16 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
         }
     }
 });
+
+dojo.declare("phpr.Default.System.GarbageCollected", null, {
+    garbageCollector: null,
+
+    constructor:function() {
+        this.garbageCollector = new phpr.Default.System.GarbageCollector();
+    },
+
+    destroy: function() {
+        this.garbageCollector.collect();
+    }
+});
+
