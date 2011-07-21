@@ -139,9 +139,6 @@ dojo.declare("phpr.Default.System.PageManager", null, {
                     this._reloadModule(module);
                 }
                 if(dojo.isFunction(mod.openForm)) {
-                    if(dojo.isFunction(mod.preOpenForm)) {
-                        mod.preOpenForm();
-                    }
                     mod.openForm(config.id, module);
                 } else {
                     dojo.publish(module + ".openForm", [config.id, module]);
