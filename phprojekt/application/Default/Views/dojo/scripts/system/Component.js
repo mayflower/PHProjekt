@@ -28,9 +28,9 @@ dojo.require("phpr.Default.System.GarbageCollector");
 dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollected, {
     main:   null,
     module: "",
-    render:function(template, node, content) {
+    render:function(template, node, data) {
 
-        var context = new dojox.dtl.Context(content);
+        var context = new dojox.dtl.Context(data);
         // Use the cached template
         var tplContent = __phpr_templateCache[template[0] + "." + template[1]];
         var tpl        = new dojox.dtl.Template(tplContent);
@@ -63,9 +63,7 @@ dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollect
             if ((dojoType == 'dijit.layout.ContentPane') ||
                 (dojoType == 'dijit.layout.BorderContainer') ) {
                     dijit.byNode(node).set('content', content);
-                    dojo.addOnLoad(function() {
                         dijit.byId(node.getAttribute('id')).resize();
-                    });
             } else {
                 if(dijit.byId(node) && dijit.byId(node).set) {
                     dijit.byId(node).set('content', content);
