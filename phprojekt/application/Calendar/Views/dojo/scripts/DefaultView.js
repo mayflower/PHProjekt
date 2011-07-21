@@ -1769,13 +1769,16 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
             this.parentClass.eventMoved(this.node, true);
             // Allow the event to be just clicked to open it in the form, but wait a while first...
             this.eventDivMoved = false;
-            setTimeout('dojo.publish("Calendar.enableEventDivClick")', 500);
+            setTimeout(dojo.hitch(phpr.pageManager.getModule('Calendar'), "enableEventDivClick"), 500);
         } else {
             if (!this.parentClass.eventClickDisabled) {
                 // It was just a click - Open event in the form
                 var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);
                 var eventId    = this.parentClass.events[movedEvent]['id'];
-                dojo.publish('Calendar.setUrlHash', [phpr.module, eventId]);
+                phpr.pageManager.changeState({
+                    moduleName: phpr.module,
+                    id: eventId
+                });
             }
         }
         this.parentClass.eventClickDisabled = false;
