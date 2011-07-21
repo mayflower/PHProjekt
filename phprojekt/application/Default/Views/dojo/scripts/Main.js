@@ -75,7 +75,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Add the all the functions for the current module
         //    So is possible use Module.Function
         dojo.subscribe(module + ".load", this, "load");
-        dojo.subscribe(module + ".changeProject", this, "loadSubElements");
+        dojo.subscribe(module + ".changeProject", this, "changeProject");
         dojo.subscribe(module + ".reload", this, "reload");
         dojo.subscribe(module + ".openForm", this, "openForm");
         dojo.subscribe(module + ".showSuggest", this, "showSuggest");
@@ -146,7 +146,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         });
     },
 
-    loadSubElements:function(projectId, functionFrom) {
+    changeProject:function(projectId, functionFrom) {
         // Summary:
         //    this function loads a new project with the default submodule
         // Description:
@@ -166,7 +166,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 phpr.module       = null;
                 phpr.submodule    = null;
                 phpr.parentmodule = null;
-                dojo.publish("Project.changeProject", [phpr.currentProjectId]);
+                phpr.pageManager.getModule("Project").changeProject(phpr.currentProjectId);
             } else {
                 phpr.module       = null;
                 phpr.submodule    = null;
@@ -174,7 +174,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 if (functionFrom && functionFrom == 'loadResult') {
                     phpr.pageManager.changeState({moduleName: this.module});
                 } else {
-                    dojo.publish("Project.changeProject", [phpr.currentProjectId]);
+                    phpr.pageManager.getModule("Project").changeProject(phpr.currentProjectId);
                 }
             }
         } else {
