@@ -521,8 +521,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         navigation += '   </tr></table>'
                    + '</div>';
 
-        dojo.byId("subModuleNavigation").innerHTML = navigation;
-        phpr.initWidgets(dojo.byId("subModuleNavigation"));
+        phpr.destroySubWidgets('subModuleNavigation');
+        dijit.byId("subModuleNavigation").set('content', navigation);
     },
 
     addModuleView:function(moduleViews, label, functionName, activeTab) {
