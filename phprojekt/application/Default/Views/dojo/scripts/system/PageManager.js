@@ -44,7 +44,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         this._modules[module.module] = module;
     },
 
-    changePage:function(config) {
+    changeState:function(config) {
         // Summary:
         //      This function changes the page hash, and loads the new module
         // Description:
@@ -189,7 +189,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
 
     _hashChange:function() {
         if(dojo.hash() != this._recentHash) {
-            this.changePage(dojo.queryToObject(dojo.hash()));
+            this.changeState(dojo.queryToObject(dojo.hash()));
         }
     },
 

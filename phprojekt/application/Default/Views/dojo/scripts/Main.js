@@ -139,7 +139,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             phpr.tree.fadeIn();
         }
 
-        phpr.pageManager.changePage({
+        phpr.pageManager.changeState({
             moduleName: module,
             id: id,
             projectId: projectId
@@ -172,7 +172,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 phpr.submodule    = null;
                 phpr.parentmodule = null;
                 if (functionFrom && functionFrom == 'loadResult') {
-                    phpr.pageManager.changePage({moduleName: this.module});
+                    phpr.pageManager.changeState({moduleName: this.module});
                 } else {
                     dojo.publish("Project.changeProject", [phpr.currentProjectId]);
                 }
@@ -204,15 +204,15 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     }
 
                     if (currentModule) {
-                        phpr.pageManager.changePage({
+                        phpr.pageManager.changeState({
                             moduleName:currentModule,
                             projectId:phpr.currentProjectId});
                     } else if (firstModule && usefirstModule) {
-                        phpr.pageManager.changePage({
+                        phpr.pageManager.changeState({
                             moduleName:firstModule,
                             projectId:phpr.currentProjectId});
                     } else {
-                        phpr.pageManager.changePage({
+                        phpr.pageManager.changeState({
                             moduleName:firstModule,
                             action:"basicData",
                             projectId:phpr.currentProjectId});
@@ -374,7 +374,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 onClick:   dojo.hitch(this, function(e) {
                     phpr.currentProjectId = phpr.rootProjectId;
                     var module            = e.target.id.replace('globalModule_', '').replace('_label', '');
-                    phpr.pageManager.changePage({moduleName: module});
+                    phpr.pageManager.changeState({moduleName: module});
                 })
             });
             toolbar.addChild(button);
@@ -389,7 +389,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
                 phpr.currentProjectId = phpr.rootProjectId;
-                phpr.pageManager.changePage({
+                phpr.pageManager.changeState({
                     moduleName: "Setting",
                     action: "User"
                 });
@@ -407,7 +407,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 showLabel: true,
                 onClick:   dojo.hitch(this, function() {
                     phpr.currentProjectId = phpr.rootProjectId;
-                    phpr.pageManager.changePage({
+                    phpr.pageManager.changeState({
                         moduleName: "Administration"
                     });
                 })
@@ -652,7 +652,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         if(params && params[0])
             config.action = params[0];
 
-        phpr.pageManager.changePage(config);
+        phpr.pageManager.changeState(config);
     },
 
     processUrlHash:function(hash) {
@@ -746,7 +746,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Summary:
         //     This function is responsible for displaying the form for a new entry in the
         //     current Module
-        phpr.pageManager.changePage({
+        phpr.pageManager.changeState({
             moduleName: phpr.module,
             id: 0
         })
