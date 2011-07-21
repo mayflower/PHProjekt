@@ -39,19 +39,15 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     // Event handler
     _searchEvent:null,
 
-    // garbage collector
-    garbageCollector:   new phpr.Default.System.GarbageCollector(),
-
     constructor:function(subModules) {
         this.subModules = subModules;
     },
 
     destroy:function() {
-        this.garbageCollector.collect();
+        this.inherited(arguments);
         this._searchEvent = null;
         this.destroyForm();
         this.destroyGrid();
-        this.inherited(arguments);
     },
 
     destroyForm:function() {

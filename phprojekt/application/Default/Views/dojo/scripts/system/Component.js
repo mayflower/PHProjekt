@@ -23,8 +23,9 @@ dojo.provide("phpr.Default.System.Component");
 
 dojo.require("dojox.dtl.Inline");
 dojo.require("dojo.NodeList-traverse");
+dojo.require("phpr.Default.System.GarbageCollector");
 
-dojo.declare("phpr.Default.System.Component", null, {
+dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollected, {
     main:   null,
     module: "",
     render:function(template, node, content) {

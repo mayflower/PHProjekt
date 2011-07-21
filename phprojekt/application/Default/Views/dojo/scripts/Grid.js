@@ -73,9 +73,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     TARGET_SINGLE:   0,
     TARGET_MULTIPLE: 1,
 
-    // garbage collector
-    garbageCollector:   new phpr.Default.System.GarbageCollector(),
-
     constructor:function(/*String*/updateUrl, /*Object*/main, /*Int*/ id) {
         // Summary:
         //    render the grid on construction
@@ -130,8 +127,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    memory leaks
 
         // Clean up all potential references
-        this.garbageCollector.collect();
-        this.garbageCollector.destroy();
+        this.inherited(arguments);
+
         this.main          = null;
         this.id            = null;
         this.updateUrl     = null;
@@ -142,8 +139,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this._node         = null;
         this._exportButton = null;
         this._deleteAllFilters = null;
-
-        this.inherited(arguments);
     },
 
     setUrl:function() {

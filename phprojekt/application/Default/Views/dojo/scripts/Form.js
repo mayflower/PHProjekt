@@ -47,9 +47,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     _meta:              null,
     _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
 
-    // garbage collector
-    garbageCollector:   new phpr.Default.System.GarbageCollector(),
-
     constructor:function(main, id, module, params) {
         // Summary:
         //    render the form on construction
@@ -87,11 +84,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Destroy the form
         // Description:
         //    Destroys the form and collects all events and widgets
-        this.garbageCollector.collect();
-        this.garbageCollector.destroy();
+        this.inherited(arguments);
         this._formNode = null;
         this.form = null;
-        this.inherited(arguments);
     },
 
     setUrl:function() {
