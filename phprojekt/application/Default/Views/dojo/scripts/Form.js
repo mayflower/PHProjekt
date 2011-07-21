@@ -995,6 +995,11 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         phpr.DataStore.deleteData({url: this._url});
         phpr.DataStore.deleteData({url: this._tagUrl});
         phpr.DataStore.deleteData({url: this._accessUrl});
+        this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
+        this.tabStore = new phpr.Default.System.Store.Tab();
+        this._initData.push({'store': this.tabStore});
+        this.initData();
+        this.getInitData();
     },
 
     addNotificationTab:function(data) {
