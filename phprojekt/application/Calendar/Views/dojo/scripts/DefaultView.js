@@ -134,7 +134,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Default.System.Component, {
         this._tagUrl = phpr.webpath + 'index.php/Default/Tag/jsonGetTags'; // Get the module tags
         phpr.DataStore.addStore({url: this._tagUrl});
         phpr.DataStore.requestData({url: this._tagUrl, processData: dojo.hitch(this, function() {
-            this.publish("drawTagsBox", [phpr.DataStore.getData({url: this._tagUrl})]);
+            this.main.drawTagsBox(phpr.DataStore.getData({url: this._tagUrl}));
         })});
     },
 
@@ -738,7 +738,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Default.System.Component, {
                     } else {
                         this._newRowValues = {};
                         this._oldRowValues = {};
-                        this.publish("updateCacheData");
+                        this.main.updateCacheData();
                     }
                 })
             });
