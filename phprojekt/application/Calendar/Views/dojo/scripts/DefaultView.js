@@ -153,7 +153,9 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Default.System.Component, {
             };
             this._exportButton = new dijit.form.Button(params);
             dojo.byId("buttonRow").appendChild(this._exportButton.domNode);
-            dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"));
+            this.garbageCollector.addNode(this._exportButton);
+            this.garbageCollector.addEvent(
+                dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData")));
         }
     },
 
