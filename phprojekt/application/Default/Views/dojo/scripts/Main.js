@@ -39,18 +39,18 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     // Event handler
     _searchEvent:null,
 
-    constructor:function(subModules) {
+    constructor: function(subModules) {
         this.subModules = subModules;
     },
 
-    destroy:function() {
+    destroy: function() {
         this.inherited(arguments);
         this._searchEvent = null;
         this.destroyForm();
         this.destroyGrid();
     },
 
-    destroyForm:function() {
+    destroyForm: function() {
         if(this.form) {
             if(dojo.isFunction(this.form.destroy)) {
                 this.form.destroy();
@@ -59,7 +59,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    destroyGrid:function() {
+    destroyGrid: function() {
         if(this.grid) {
             if(dojo.isFunction(this.grid.destroy)) {
                 this.grid.destroy();
@@ -68,7 +68,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    loadFunctions:function(module) {
+    loadFunctions: function(module) {
         // Summary:
         //    Add the all the functions for the current module
         // Description:
@@ -105,7 +105,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         dojo.subscribe(module + ".formProxy", this, "formProxy");
     },
 
-    preOpenForm:function() {
+    preOpenForm: function() {
         // Summary: 
         //      Destroy existing form before a new one is opened
         // Description:
@@ -122,7 +122,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.inherited(arguments);
     },
 
-    openForm:function(/*int*/id, /*String*/module) {
+    openForm: function(/*int*/id, /*String*/module) {
         //Summary: this function opens a new Detail View
         this.preOpenForm();
 
@@ -130,7 +130,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.inherited(arguments);
     },
 
-    loadResult:function(/*int*/id, /*String*/module, /*int*/projectId) {
+    loadResult: function(/*int*/id, /*String*/module, /*int*/projectId) {
         this.cleanPage();
         phpr.currentProjectId = projectId;
         if (phpr.isGlobalModule(module)) {
@@ -146,7 +146,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         });
     },
 
-    changeProject:function(projectId, functionFrom) {
+    changeProject: function(projectId, functionFrom) {
         // Summary:
         //    this function loads a new project with the default submodule
         // Description:
@@ -178,51 +178,53 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 }
             }
         } else {
-            var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/'
-                + phpr.currentProjectId;
+            var subModuleUrl = phpr.webpath +
+                'index.php/Default/index/jsonGetModulesPermission/nodeId/' +
+                phpr.currentProjectId;
             phpr.DataStore.addStore({url: subModuleUrl});
             phpr.DataStore.requestData({
                 url:         subModuleUrl,
-                processData: dojo.hitch(this, function() {
-                    var usefirstModule = true;
-                    var firstModule    = null;
-                    var currentModule  = null;
-                    var modules = phpr.DataStore.getData({url: subModuleUrl}) || array();
-                    for (var i = 0; i < modules.length; i++) {
-                        var moduleName     = modules[i].name;
-                        var moduleFunction = modules[i].moduleFunction || null;
-                        var functionParams = modules[i].functionParams;
-                        if (modules[i].rights.read) {
-                            if (moduleName == this.module && functionParams != "'Project', null, ['basicData']") {
-                                usefirstModule = false;
-                                currentModule  = moduleName;
-                            }
-                            if (!firstModule && (moduleName != this.module)) {
-                                firstModule = moduleName;
+                processData: dojo.hitch(this,
+                    function() {
+                        var usefirstModule = true;
+                        var firstModule    = null;
+                        var currentModule  = null;
+                        var modules = phpr.DataStore.getData({url: subModuleUrl}) || array();
+                        for (var i = 0; i < modules.length; i++) {
+                            var moduleName     = modules[i].name;
+                            var moduleFunction = modules[i].moduleFunction || null;
+                            var functionParams = modules[i].functionParams;
+                            if (modules[i].rights.read) {
+                                if (moduleName == this.module && functionParams != "'Project', null, ['basicData']") {
+                                    usefirstModule = false;
+                                    currentModule  = moduleName;
+                                }
+                                if (!firstModule && (moduleName != this.module)) {
+                                    firstModule = moduleName;
+                                }
                             }
                         }
-                    }
 
-                    if (currentModule) {
-                        phpr.pageManager.changeState({
-                            moduleName:currentModule,
-                            projectId:phpr.currentProjectId});
-                    } else if (firstModule && usefirstModule) {
-                        phpr.pageManager.changeState({
-                            moduleName:firstModule,
-                            projectId:phpr.currentProjectId});
-                    } else {
-                        phpr.pageManager.changeState({
-                            moduleName:firstModule,
-                            action:"basicData",
-                            projectId:phpr.currentProjectId});
-                    }
-                }
-            )})
+                        if (currentModule) {
+                            phpr.pageManager.changeState({
+                                moduleName:currentModule,
+                                projectId:phpr.currentProjectId});
+                        } else if (firstModule && usefirstModule) {
+                            phpr.pageManager.changeState({
+                                moduleName:firstModule,
+                                projectId:phpr.currentProjectId});
+                        } else {
+                            phpr.pageManager.changeState({
+                                moduleName:firstModule,
+                                action:"basicData",
+                                projectId:phpr.currentProjectId});
+                        }
+                    })
+            });
         }
     },
 
-    load:function() {
+    load: function() {
         // Summary:
         //    This function initially renders the page
         // Description:
@@ -294,7 +296,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }));
     },
 
-    reload:function() {
+    reload: function() {
         // Summary:
         //    This function reloads the current module
         // Description:
@@ -308,7 +310,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.setWidgets();
     },
 
-    setGlobalVars:function() {
+    setGlobalVars: function() {
         // Summary:
         //    Set the current module vars
         // Description:
@@ -318,7 +320,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         phpr.parentmodule = '';
     },
 
-    renderTemplate:function() {
+    renderTemplate: function() {
         // Summary:
         //    Render the module
         // Description:
@@ -326,7 +328,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
     },
 
-    setNavigations:function() {
+    setNavigations: function() {
         // Summary:
         //    Set some navigation stuff
         // Description:
@@ -344,30 +346,34 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.setSearchForm();
     },
 
-    setWidgets:function() {
+    setWidgets: function() {
         // Summary:
         //    Set and start the widgets of the module
         // Description:
         //    Set and start the widgets of the module
         phpr.tree.loadTree();
-        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
-            + phpr.currentProjectId;
+        var updateUrl = phpr.webpath +
+            'index.php/' +
+            phpr.module +
+            '/index/jsonSaveMultiple/nodeId/' +
+            phpr.currentProjectId;
         this.destroyGrid();
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
     },
 
-    setGlobalModulesNavigation:function() {
+    setGlobalModulesNavigation: function() {
         var toolbar       = dijit.byId('mainNavigation');
         var systemToolbar = dijit.byId('systemNavigation');
         var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
         var isAdmin       = phpr.DataStore.getMetaData({url: phpr.globalModuleUrl});
+        var button = null;
 
         phpr.destroySubWidgets("mainNavigation");
         dojo.byId("mainNavigation").innerHTML = '';
 
         for (i in globalModules) {
             phpr.destroyWidget("globalModule_" + globalModules[i].name);
-            var button = new dijit.form.Button({
+            button = new dijit.form.Button({
                 id:        "globalModule_" + globalModules[i].name,
                 label:     globalModules[i].label,
                 showLabel: true,
@@ -383,7 +389,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         // Setting
         phpr.destroyWidget("globalModule_Setting");
-        var button = new dijit.form.Button({
+        button = new dijit.form.Button({
             id:        "globalModule_Setting",
             label:     phpr.nls.get('Setting'),
             showLabel: true,
@@ -401,7 +407,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         if (isAdmin > 0) {
             // Administration
             phpr.destroyWidget("globalModule_Administration");
-            var button = new dijit.form.Button({
+            button = new dijit.form.Button({
                 id:        "globalModule_Administration",
                 label:     phpr.nls.get('Administration'),
                 showLabel: true,
@@ -418,7 +424,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         // Help
         if (!dojo.byId('globalModule_Help')) {
-            var button = new dijit.form.Button({
+            button = new dijit.form.Button({
                 id:        "globalModule_Help",
                 label:     phpr.nls.get('Help'),
                 showLabel: true,
@@ -430,7 +436,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         // Logout
         if (!dojo.byId('globalModule_Logout')) {
-            var button = new dijit.form.Button({
+            button = new dijit.form.Button({
                 id:        "globalModule_Logout",
                 label:     phpr.nls.get('Logout'),
                 showLabel: true,
@@ -446,14 +452,15 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         systemToolbar = null;
     },
 
-    setSubmoduleNavigation:function(currentModule) {
+    setSubmoduleNavigation: function(currentModule) {
         // Summary:
         //    This function is responsible for displaying the Navigation of the current Module
         // Description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
-        var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/'
-            + phpr.currentProjectId;
+        var subModuleUrl = phpr.webpath +
+            'index.php/Default/index/jsonGetModulesPermission/nodeId/' +
+            phpr.currentProjectId;
         var createPermissions = false;
         phpr.DataStore.addStore({url: subModuleUrl});
         phpr.DataStore.requestData({
@@ -461,7 +468,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             processData: dojo.hitch(this, function() {
                 var modules        = phpr.DataStore.getData({url: subModuleUrl});
                 var foundBasicData = false;
-                for (var i = 0; i < modules.length; i++) {
+                var i = 0;
+
+                for (i = 0; i < modules.length; i++) {
                     if (modules[i].label == 'Basic Data') {
                         foundBasicData = true;
                         break;
@@ -484,20 +493,23 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
                 var navigation = '<table id="nav_main"><tr>';
                 var activeTab  = false;
-                var modules    = this.sortModuleTabs(modules);
-                for (var i = 0; i < modules.length; i++) {
+                modules    = this.sortModuleTabs(modules);
+                for (i = 0; i < modules.length; i++) {
                     var liclass        = '';
                     var moduleName     = modules[i].name;
                     var moduleLabel    = modules[i].label;
                     var moduleFunction = modules[i].moduleFunction || "setUrlHash";
-                    var functionParams = modules[i].functionParams || "\'" + modules[i].name + "\'";
+                    var functionParams = modules[i].functionParams || "\'" +
+                                                        modules[i].name + "\'";
                     if (modules[i].rights.read) {
-                       if (functionParams == "'Project', null, ['basicData']" && currentModule == 'BasicData'
-                            && !activeTab) {
+                       if (functionParams == "'Project', null, ['basicData']" &&
+                               currentModule == 'BasicData' &&
+                               !activeTab) {
                             liclass   = 'class = active';
                             activeTab = true;
-                        } else if (moduleName == phpr.module && functionParams != "'Project', null, ['basicData']"
-                            && !activeTab) {
+                        } else if (moduleName == phpr.module &&
+                                functionParams != "'Project', null, ['basicData']" &&
+                                !activeTab) {
                             liclass   = 'class = active';
                             activeTab = true;
                         }
@@ -523,10 +535,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
                 this.customSetSubmoduleNavigation();
             })
-        })
+        });
     },
 
-    setNewEntry:function() {
+    setNewEntry: function() {
         // Summary:
         //    Create the Add button
         var params = {
@@ -540,7 +552,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         dojo.connect(newEntry, "onClick", dojo.hitch(this, "newEntry"));
     },
 
-    setSubGlobalModulesNavigation:function(currentModule) {
+    setSubGlobalModulesNavigation: function(currentModule) {
         // Summary:
         //    This function is responsible for displaying the Navigation of the current Global Module
         // Description:
@@ -548,13 +560,13 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.setNewEntry();
     },
 
-    customSetSubmoduleNavigation:function() {
+    customSetSubmoduleNavigation: function() {
         // Summary:
         //     This function is called after the submodules are created
         //     Is used for extend the navigation routine
     },
 
-    cleanPage:function() {
+    cleanPage: function() {
         // Summary:
         //     Clean the submodule div and destroy all the buttons
         this.garbageCollector.collect();
@@ -580,7 +592,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    setUrlHash:function(module, id, params) {
+    setUrlHash: function(module, id, params) {
         // TODO: this description is wrong, nothing is returned
         // Summary:
         //    Return the hash url
@@ -613,7 +625,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     config.id = id;
                 }
             }
-        } else if (module && id == 0) {
+        } else if (module && id === 0) {
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,0 (Open form for add in normal modules)
                 config.moduleName = module;
@@ -634,7 +646,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             }
         } else {
             if (!module) {
-                var module = this.module;
+                module = this.module;
             }
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId (Reload a module -> List view)
@@ -647,13 +659,14 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             }
         }
 
-        if(params && params[0])
+        if(params && params[0]) {
             config.action = params[0];
+        }
 
         phpr.pageManager.changeState(config);
     },
 
-    processUrlHash:function(hash) {
+    processUrlHash: function(hash) {
         /*
         // Summary:
         //    Process the hash and run the correct function
@@ -733,27 +746,27 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         */
     },
 
-    processActionFromUrlHash:function(data) {
+    processActionFromUrlHash: function(data) {
         // Summary:
         //     Check the action params and run the correct function
         //     reload is the default, but each function can redefine it
         this.reload();
     },
 
-    newEntry:function() {
+    newEntry: function() {
         // Summary:
         //     This function is responsible for displaying the form for a new entry in the
         //     current Module
         phpr.pageManager.changeState({
             moduleName: phpr.module,
             id: 0
-        })
+        });
     },
 
-    setSearchForm:function() {
+    setSearchForm: function() {
         // Summary:
         //    Add the onkeyup to the search field
-        if (this._searchEvent == null) {
+        if (this._searchEvent === null) {
             dijit.byId("searchfield").regExp         = phpr.regExpForFilter.getExp();
             dijit.byId("searchfield").invalidMessage = phpr.regExpForFilter.getMsg();
             this._searchEvent = dojo.connect(dojo.byId("searchfield"), "onkeyup",
@@ -762,7 +775,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    waitForSubmitSearchForm:function(event) {
+    waitForSubmitSearchForm: function(event) {
         // Summary:
         //    This function call the search itself After 1000ms of the last letter
         // Description:
@@ -770,7 +783,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    call the search query when the user finish to write the text
         //    If the enter is presses, the suggest disapear.
         //    If some "user" key is presses, the function don´t run.
-        key = event.keyCode
+        key = event.keyCode;
         if (key == dojo.keys.ENTER || key == dojo.keys.NUMPAD_ENTER) {
             // hide the suggestBox and delete the time
             // for not show the suggest
@@ -788,7 +801,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    showSearchSuggest:function() {
+    showSearchSuggest: function() {
         // Summary:
         //    This function show a box with suggest or quick result of the search
         // Description:
@@ -805,7 +818,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     var search        = '';
                     var results       = {};
                     var index         = 0;
-                    for (var i = 0; i < data.length; i++) {
+                    var i = 0;
+
+                    for (i = 0; i < data.length; i++) {
                         modulesData = data[i];
                         if (!results[modulesData.moduleLabel]) {
                             results[modulesData.moduleLabel] = '';
@@ -823,7 +838,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     }
                     var moduleLabel = '';
                     var html        = '';
-                    for (var i in results) {
+                    for (i in results) {
                         moduleLabel = i;
                         html       = results[i];
                         search += this.render(["phpr.Default.template.results", "suggestBlock.html"], null, {
@@ -832,16 +847,16 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         });
                     }
 
-                    if (search == '') {
+                    if (search === '') {
                         search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
                         search += phpr.drawEmptyMessage('There are no Results');
                         search += "</div>";
                     } else {
                         search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
-                        search += "<a class=\"searchsuggesttitle\" href='javascript: dojo.publish(\""
-                            + this.module + ".clickResult\", [\"search\"]); dojo.publish(\""
-                            + this.module + ".setUrlHash\", [\"" + this.module
-                            + "\",  null, [\"Search\", \"" + words + "\"]])'>" + phpr.nls.get('View all') + "</a>";
+                        search += "<a class=\"searchsuggesttitle\" href='javascript: dojo.publish(\"" +
+                            this.module + ".clickResult\", [\"search\"]); dojo.publish(\"" +
+                            this.module + ".setUrlHash\", [\"" + this.module +
+                            "\",  null, [\"Search\", \"" + words + "\"]])'>" + phpr.nls.get('View all') + "</a>";
                         search += "</div>";
                     }
 
@@ -854,7 +869,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    showSearchResults:function(/*String*/words) {
+    showSearchResults: function(/*String*/words) {
         // Summary:
         //    This function reload the grid place with a search template
         //    And show the detail view of the item selected
@@ -871,71 +886,71 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    clickResult:function(/*String*/type) {
+    clickResult: function(/*String*/type) {
         if (type == 'search') {
             this.hideSuggest();
         }
     },
 
-    showSuggest:function() {
-        if (dojo.byId("searchsuggest").innerHTML != '') {
+    showSuggest: function() {
+        if (dojo.byId("searchsuggest").innerHTML !== '') {
             dojo.byId("searchsuggest").style.display = 'inline';
         }
     },
 
-    hideSuggest:function() {
+    hideSuggest: function() {
         dojo.byId("searchsuggest").style.display = 'none';
     },
 
-    setSuggest:function(html) {
+    setSuggest: function(html) {
         dojo.byId("searchsuggest").innerHTML = html;
     },
 
-    drawTagsBox:function(/*Array*/data) {
+    drawTagsBox: function(/*Array*/data) {
         var value   = '';
         var newline = false;
         var size    = '';
         for (var i = 0; i < data.length; i++) {
-            if (((i % 3) == 0) && i != 0) {
+            if (((i % 3) === 0) && i !== 0) {
                 newline = true;
             } else {
                 newline = false;
             }
-            if (data[i]['count'] < 5) {
+            if (data[i].count < 5) {
                 size = 10;
-            } else if (data[i]['count'] < 10) {
+            } else if (data[i].count < 10) {
                 size = 12;
-            } else if (data[i]['count'] < 15) {
+            } else if (data[i].count < 15) {
                 size = 14;
-            } else if (data[i]['count'] < 20) {
+            } else if (data[i].count < 20) {
                 size = 16;
-            } else if (data[i]['count'] < 25) {
+            } else if (data[i].count < 25) {
                 size = 18;
-            } else if (data[i]['count'] < 30) {
+            } else if (data[i].count < 30) {
                 size = 20;
-            } else if (data[i]['count'] < 35) {
+            } else if (data[i].count < 35) {
                 size = 22;
-            } else if (data[i]['count'] < 40) {
+            } else if (data[i].count < 40) {
                 size = 24;
-            } else if (data[i]['count'] < 45) {
+            } else if (data[i].count < 45) {
                 size = 26;
-            } else if (data[i]['count'] < 50) {
+            } else if (data[i].count < 50) {
                 size = 28;
-            } else if (data[i]['count'] < 55) {
+            } else if (data[i].count < 55) {
                 size = 30;
-            } else if (data[i]['count'] < 60) {
+            } else if (data[i].count < 60) {
                 size = 32;
-            } else if (data[i]['count'] < 65) {
+            } else if (data[i].count < 65) {
                 size = 33;
-            } else if (data[i]['count'] < 70) {
+            } else if (data[i].count < 70) {
                 size = 34;
-            } else if (data[i]['count'] < 75) {
+            } else if (data[i].count < 75) {
                 size = 36;
-            } else if (data[i]['count'] < 80) {
+            } else if (data[i].count < 80) {
                 size = 38;
-            } else if (data[i]['count'] < 85) {
+            } else if (data[i].count < 85) {
                 size = 40;
-            } else if (data[i]['count'] < 90) {
+            } else if (data[i].count < 90) {
                 size = 42;
             } else {
                 size = 48;
@@ -944,16 +959,16 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 moduleName: phpr.module,
                 size: size,
                 newline: newline,
-                tag: data[i]['string']
+                tag: data[i].string
             });
         }
-        if (value == '') {
+        if (value === '') {
             value += phpr.drawEmptyMessage('There are no Tags');
         }
         dijit.byId("tagsbox").set('content', value);
     },
 
-    showTagsResults:function(/*String*/tag) {
+    showTagsResults: function(/*String*/tag) {
         // Summary:
         //    This function reload the grid place with the result of the tag search
         // Description:
@@ -964,7 +979,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.showResults(getDataUrl, content, resultsTitle);
     },
 
-    showResults:function(/*String*/getDataUrl, /*Object*/content, /*String*/resultsTitle) {
+    showResults: function(/*String*/getDataUrl, /*Object*/content, /*String*/resultsTitle) {
         // Summary:
         //    This function reload the grid place with the result of a search or a tagt
         // Description:
@@ -988,7 +1003,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 var search  = '';
                 var results = {};
                 var index   = 0;
-                for (var i = 0; i < data.length; i++) {
+                var i = 0;
+
+                for (i = 0; i < data.length; i++) {
                     modulesData = data[i];
                     if (!results[modulesData.moduleLabel]) {
                         results[modulesData.moduleLabel] = '';
@@ -1006,7 +1023,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 }
                 var moduleLabel = '';
                 var html       = '';
-                for (var i in results) {
+                for (i in results) {
                     moduleLabel = i;
                     html       = results[i];
                     search += this.render(["phpr.Default.template.results", "resultsBlock.html"], null, {
@@ -1014,7 +1031,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         results:       html
                     });
                 }
-                if (search == '') {
+                if (search === '') {
                     search += phpr.drawEmptyMessage('There are no Results');
                 }
                 phpr.destroySubWidgets('gridBox');
@@ -1023,7 +1040,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         });
     },
 
-    updateCacheData:function() {
+    updateCacheData: function() {
         // Summary:
         //    Forces every widget of the page to update its data, by deleting its cache.
         if (this.grid) {
@@ -1034,7 +1051,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    setLanguage:function(language) {
+    setLanguage: function(language) {
         // Summary:
         //    Request to the server the languagues strings and change the current lang
         // Description:
@@ -1050,7 +1067,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         });
     },
 
-    showHelp:function() {
+    showHelp: function() {
         // Summary:
         //    Display the Help for one module
         // Description:
@@ -1060,19 +1077,21 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         // Get the current module or use the parent
         var currentModule = phpr.module;
+        var helpData = null;
+
         if (phpr.parentmodule && ('Administration' == phpr.parentmodule || 'Setting' == phpr.parentmodule)) {
             currentModule = 'Core';
             dijit.byId('helpDialog').set('title', phpr.nls.get('Help', currentModule));
             dojo.byId('helpTitle').innerHTML = phpr.nls.get(phpr.parentmodule);
-            var helpData = phpr.nls.get('Content Help ' + phpr.parentmodule, currentModule);
+            helpData = phpr.nls.get('Content Help ' + phpr.parentmodule, currentModule);
         } else {
             dijit.byId('helpDialog').set('title', phpr.nls.get('Help', currentModule));
             dojo.byId('helpTitle').innerHTML = phpr.nls.get(currentModule, currentModule);
-            var helpData = phpr.nls.get('Content Help', currentModule);
+            helpData = phpr.nls.get('Content Help', currentModule);
             if (this.subModules.length > 0) {
                 for (var index in this.subModules) {
                     var subModuleName = this.subModules[index];
-                    var helpData      = dojo.mixin(helpData, phpr.nls.get('Content Help', subModuleName));
+                    helpData      = dojo.mixin(helpData, phpr.nls.get('Content Help', subModuleName));
                 }
             }
         }
@@ -1111,7 +1130,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    showHelp_part2:function(helpData, nlsSource) {
+    showHelp_part2: function(helpData, nlsSource) {
         // Summary:
         //    Continuation of showHelp function
 
@@ -1140,9 +1159,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
             // Add support address?
             var support = phpr.config.supportAddress ? phpr.config.supportAddress : '';
-            if (tab == 'General' &&  support != '') {
-                text += phpr.nls.get('If you have problems or questions with PHProjekt, please write an email to')
-                    + ' <b>' + support + '</b>.<br /><br /><br />';
+            if (tab == 'General' &&  support !== '') {
+                text += phpr.nls.get('If you have problems or questions with PHProjekt, please write an email to') +
+                    ' <b>' + support + '</b>.<br /><br /><br />';
             }
 
             var content = new dijit.layout.ContentPane({
@@ -1159,7 +1178,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    addLogoTooltip:function() {
+    addLogoTooltip: function() {
         // Summary:
         //    Add a tooltip to the logo with the current user and p6 version
         // Description:
@@ -1172,10 +1191,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 var version = (phpr.config.phprojektVersion) ? phpr.config.phprojektVersion : '';
                 var support = (phpr.config.supportAddress) ? phpr.config.supportAddress : '';
                 var label   = '<div style="text-align: center;">PHProjekt ' + version + ' - ';
-                if (support != '') {
-                    label += support + '<br />'
+                if (support !== '') {
+                    label += support + '<br />';
                 }
-                label += userList[i].display + ' (ID: ' + userList[i].id + ')</div>'
+                label += userList[i].display + ' (ID: ' + userList[i].id + ')</div>';
                 new dijit.Tooltip({
                     label:     label,
                     connectId: ["PHProjektLogo"],
@@ -1185,17 +1204,18 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    sortModuleTabs:function(modules) {
+    sortModuleTabs: function(modules) {
         // Summary:
         //    Sort the system modules in a fixed order
         // Description:
         //    Sort the system modules in a fixed order
         var sort          = new Array('Project', 'Gantt', 'Statistic', 'Todo', 'Note', 'Filemanager', 'Minutes');
         var sortedModules = new Array();
+        var i, j;
 
         // Sort the modules with the sort array
-        for (var i in sort) {
-            for (var j in modules) {
+        for (i in sort) {
+            for (j in modules) {
                 if (modules[j].name == sort[i]) {
                     sortedModules.push(modules[j]);
                 }
@@ -1203,10 +1223,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
 
         // Include modules out of the sort array
-        for (var j in modules) {
+        for (j in modules) {
             if (modules[j].name) {
                 var found = false;
-                for (var i in sortedModules) {
+                for (i in sortedModules) {
                     if (modules[j].name == sortedModules[i].name) {
                         found = true;
                     }
@@ -1220,7 +1240,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         return sortedModules;
     },
 
-    gridProxy:function(functionName, params) {
+    gridProxy: function(functionName, params) {
         // Summary:
         //    Proxy for run grid functions
         // Description:
@@ -1230,7 +1250,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    formProxy:function(functionName, params) {
+    formProxy: function(functionName, params) {
         // Summary:
         //    Proxy for run form functions
         // Description:
@@ -1240,7 +1260,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
     },
 
-    highlightChanges:function(params) {
+    highlightChanges: function(params) {
         // Summary:
         //    Proxy for the highlightChanges function
         // Description:

@@ -34,34 +34,34 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
     editorNode: null,
     params: {},
     value: "",
-    constructor:function(params, srcNodeRef) {
+    constructor: function(params, srcNodeRef) {
         this.domNode = srcNodeRef;
-        if(params.style) { this.style = params.style; };
+        if(params.style) { this.style = params.style; }
         this.params = params;
         this.editorNode = dojo.create('div');
-        
     },
-    destroy:function() {
+    destroy: function() {
         if(this.editor && this.editor.destroy && !this.editor._beingDestroyed) {
             this.editor.destroy();
         }
         this.editor = null;
-        if(this.editorNode)
+        if(this.editorNode) {
             dojo.destroy(this.editorNode);
+        }
         this.editorNode = null;
         this.domNode = null;
         this.inherited(arguments);
     },
-    postCreate:function() {
+    postCreate: function() {
         dojo.attr(this.domNode, 'style', this.style);
     },
-    show:function() {
+    show: function() {
         if(!this.loaded) {
             this.loadEditor();
             this.loaded = true;
         }
     },
-    loadEditor:function() {
+    loadEditor: function() {
         if(this.editor&&this.editor.destroy) {
             this.editor.destroy();
             this.editor = null;
@@ -75,12 +75,13 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
         this.editor.set('value', this.value);
 
     },
-    _getValueAttr:function() {
+    _getValueAttr: function() {
         return this.editor.get('value');
     },
-    _setValueAttr:function(arg) {
+    _setValueAttr: function(arg) {
         this.value = arg;
-        if(this.editor)
+        if(this.editor) {
             this.editor.set('value', arg);
+        }
     }
 });
