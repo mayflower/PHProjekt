@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Størrelse",
 	fontName: "Skrift",
@@ -24,3 +26,5 @@
 	6: "x-stor",
 	7: "xx-stor"
 })
+//end v1.x content
+);

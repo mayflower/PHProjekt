@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Өлшемі",
 	fontName: "Қаріп",
@@ -24,3 +26,5 @@
 	6: "x-үлкен",
 	7: "xx-үлкен"
 })
+//end v1.x content
+);

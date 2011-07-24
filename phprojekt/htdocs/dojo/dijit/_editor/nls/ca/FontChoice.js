@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Mida",
 	fontName: "Tipus de lletra",
@@ -24,3 +26,5 @@
 	6: "x-gran",
 	7: "xx-gran"
 })
+//end v1.x content
+);

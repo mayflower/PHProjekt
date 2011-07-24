@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "链接属性",
 	insertImageTitle: "图像属性",
@@ -11,3 +13,5 @@
 	newWindow: "新建窗口"
 })
 
+//end v1.x content
+);

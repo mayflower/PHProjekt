@@ -143,6 +143,62 @@ function dojo_get_files($limit=null) {
     return $files;
 }
 
+function _slashtoname($thing){
+    return str_replace("/", ".", $thing);
+}
+
+function _amd_unwrap($text){
+
+    $re = '/\/\/\s*AMD\-ID\s*"([^\n]+)"/i';
+    $bre = '/define\(([^\]]+)\]\s*\,[\s\n]*function.+/';
+    $depre = '/^[\'"]([-_a-zA-Z\/]+)[\'"]\s*,\s*\[(.*)$/';
+
+    preg_match($re, $text, $foo);
+    $anonmoduleid = $foo[1];
+    
+    // either speciam AMD-ID string found, or file startswith("define(")
+    if($anonmoduleid || substr($text, 0, 8) == "define(\""){
+
+        preg_match($bre, $text, $matches);
+        preg_match($depre, $matches[1], $parts);
+
+        $provide = _slashtoname($anonmoduleid ? $anonmoduleid : $parts[1]);
+        preg_match_all('/[\'"]([\w\/-_\!]+)[\'"],?/', $anonmoduleid ? $matches[0] : $parts[2], $deps);
+        $requires = $deps[1];
+        
+        $prefixtext = 'dojo.provide("' . $provide . '");';
+        $prefixtext .= "\n";
+        
+        preg_match_all('/[\'"]([\w\/-_\!]+)[\'"],?/', $parts[2], $deps);        
+        if(is_array($requires)){
+            foreach($requires as $dep){
+                $firstbit = substr($dep, 0, 5);
+                if($firstbit == "text!"){
+                    // do nothing
+                }else if($firstbit == "i18n!"){
+                    preg_match('/i18n\!(.+)\/nls\/(\w+)/', $dep, $bundlebits);
+                    $prefixtext .= 'dojo.requireLocalization("' . $bundlebits[1] . '", "' . $bundlebits[2] . '");';
+                    $prefixtext .= "\n";
+                }else if($dep != "dojo" && $dep != "dijit" && $dep != "dojox"){
+                    $prefixtext .= 'dojo.require("' . _slashtoname($dep) . '");';
+                    $prefixtext .= "\n";
+                }
+            }
+        }
+        
+        // strip out "AMD-result" comments? not sure what these are. 
+
+        $text = preg_replace($bre, "", $text);        
+        $text = preg_replace('/\s*(return\s+[_a-zA-Z\.0-9]+\s*;\s)?(\/\/.+)?\s*\}\);\s*$/', "", $text);
+
+        $text = $prefixtext . $text;
+        
+    }
+
+    return $text; 
+
+}
+
 function dojo_get_contents($namespace, $file_name) {
   if (function_exists($namespace . '_code_location')) {
     $location = _dojo_ensure_directory(call_user_func($namespace . '_code_location'));
@@ -152,7 +208,10 @@ function dojo_get_contents($namespace, $file_name) {
     $location = $_dojo_properties_modules[$namespace]['location'];
   }
 
-  $lines = preg_replace('%/\*={3,}|={3,}\*/%', '', file_get_contents($location . '/' . $file_name));
+  $filedata = file_get_contents($location . '/' . $file_name);
+  $filedata = _amd_unwrap($filedata);
+
+  $lines = preg_replace('%/\*={3,}|={3,}\*/%', '', $filedata);
   $parser = new JavaScriptParser(JavaScriptLanguage::tokenize($lines));
   // print '<pre>';
   // $statements = $parser->statements();

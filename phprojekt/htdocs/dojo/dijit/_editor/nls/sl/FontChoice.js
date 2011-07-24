@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Velikost",
 	fontName: "Pisava",
@@ -25,3 +27,5 @@
 	7: "xx-veliko"
 })
 
+//end v1.x content
+);

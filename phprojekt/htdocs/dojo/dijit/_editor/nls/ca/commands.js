@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': 'Negreta',
 	'copy': 'Copia',
@@ -46,3 +48,5 @@
 	'systemShortcut': 'L\'acció "${0}" és l\'única disponible al navegador utilitzant una drecera del teclat. Utilitzeu ${1}.',
 	'ctrlKey':'control+${0}'
 })
+//end v1.x content
+);

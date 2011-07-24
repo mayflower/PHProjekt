@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "Proprietà collegamento",
 	insertImageTitle: "Proprietà immagine",
@@ -11,3 +13,5 @@
 	newWindow: "Nuova finestra"
 })
 
+//end v1.x content
+);
