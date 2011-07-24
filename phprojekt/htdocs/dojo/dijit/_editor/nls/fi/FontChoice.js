@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Koko",
 	fontName: "Fontti",
@@ -24,3 +26,5 @@
 	6: "x-large",
 	7: "xx-large"
 })
+//end v1.x content
+);

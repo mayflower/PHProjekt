@@ -5,7 +5,7 @@ if(this["dojo"]){
 doh.debug = print;
 doh.error = print;
 
-// Override the doh._report method to make it quit with an 
+// Override the doh._report method to make it quit with an
 // appropriate exit code in case of test failures.
 (function(){
 	var oldReport = doh._report;

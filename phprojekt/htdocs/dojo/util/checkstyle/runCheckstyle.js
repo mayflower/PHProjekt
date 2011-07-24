@@ -77,7 +77,7 @@ function checkstyle(){
 		var fileList = fileUtil.getFilteredFileList("../../" + dirs[i], /\.js$/, true);
 		for(var j = 0; j < fileList.length; j++){
 			if(fileList[j].indexOf("/test") < 0
-				&& fileList[j].indexOf("/nls") < 0 
+				&& fileList[j].indexOf("/nls") < 0
 				&& fileList[j].indexOf("/demos") < 0){
 				
 				var ignore = false;
@@ -112,7 +112,7 @@ function runCommit(){
 		
 		for(var j = 0; j < fileList.length; j++){
 			if(fileList[j].indexOf("/test") < 0
-				&& fileList[j].indexOf("/nls") < 0 
+				&& fileList[j].indexOf("/nls") < 0
 				&& fileList[j].indexOf("/demos") < 0){
 				var fileName = fileList[j].substring(0, fileList[j].length - ".checkstyle.js".length);
 				fileUtil.saveUtf8File(fileName, fileUtil.readFile(fileList[j]));

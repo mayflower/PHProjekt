@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': 'Қалың',
 	'copy': 'Көшіру',
@@ -45,3 +47,5 @@
 	/* Error messages */
 	'systemShortcut': '"${0}" әрекеті шолғышта тек пернелер тіркесімі арқылы қол жетімді. ${1} пайдаланыңыз.'
 })
+//end v1.x content
+);

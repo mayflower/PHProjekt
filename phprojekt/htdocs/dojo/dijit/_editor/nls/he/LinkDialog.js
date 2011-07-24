@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "תכונות קישור",
 	insertImageTitle: "תכונות תמונה",
@@ -10,4 +12,6 @@
 	topWindow: "חלון עליון",
 	newWindow: "חלון חדש"
 })
+//end v1.x content
+);
 

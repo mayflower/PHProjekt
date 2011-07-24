@@ -1,10 +1,10 @@
-if(window["dojo"]){
-	dojo.provide("doh._browserRunner");
-}
-
 // FIXME: need to add prompting for monkey-do testing
 
 (function(){
+
+//here's the definition of doh/_browserRunner
+
+var d= function(doh) {
 	try{
 		var topdog = (window.parent == window) || !Boolean(window.parent.doh);
 	}catch(e){
@@ -224,7 +224,7 @@ if(window["dojo"]){
 				var standby;
 				if(doh.perfTestResults){
 					if(window.dojo){
-						//If we have dojo and here are perf tests results, 
+						//If we have dojo and here are perf tests results,
 						//well, we'll use the dojo charting functions
 						dojo.require("dojox.charting.Chart2D");
 						dojo.require("dojox.charting.DataChart");
@@ -345,7 +345,7 @@ if(window["dojo"]){
 					sendToLogPane.call(window, arguments);
 					console.error.apply(console, arguments);
 				};
-			} 
+			}
 			if(console.debug){
 				doh.debug = function(){
 					sendToLogPane.call(window, arguments);
@@ -602,8 +602,8 @@ if(window["dojo"]){
 		}
 
 		// FIXME: move implementation to _browserRunner?
-		doh.registerUrl = function(	/*String*/ group, 
-										/*String*/ url, 
+		doh.registerUrl = function(	/*String*/ group,
+										/*String*/ url,
 										/*Integer*/ timeout){
 			var tg = new String(group);
 			this.register(group, {
@@ -635,7 +635,7 @@ if(window["dojo"]){
 			});
 		}
 
-		// 
+		//
 		// Utility code for runner.html
 		//
 		// var isSafari = navigator.appVersion.indexOf("Safari") >= 0;
@@ -704,7 +704,7 @@ if(window["dojo"]){
 			if(loaded){ return; }
 			loaded = true;
 			groupTemplate = byId("groupTemplate");
-			if(!groupTemplate){ 
+			if(!groupTemplate){
 				// make sure we've got an ammenable DOM structure
 				return;
 			}
@@ -716,7 +716,7 @@ if(window["dojo"]){
 			doh._updateTestList();
 		});
 
-		_addOnEvt("load", 
+		_addOnEvt("load",
 			function(){
 				// let robot code run if it gets to this first
 				var __onEnd = doh._onEnd;
@@ -732,7 +732,7 @@ if(window["dojo"]){
 						toggleRunning();
 					}
 				}
-				if(!byId("play")){ 
+				if(!byId("play")){
 					// make sure we've got an amenable DOM structure
 					return;
 				}
@@ -840,6 +840,7 @@ if(window["dojo"]){
 				return tObj;
 			}
 			doh.debug = doh.hitch(_doh, "debug");
+			doh.error = doh.hitch(_doh, "error");
 			doh.registerUrl = doh.hitch(_doh, "registerUrl");
 			doh._testStarted = function(group, fixture){
 				_doh._testStarted(_thisGroup, fixture);
@@ -879,5 +880,21 @@ if(window["dojo"]){
 			};
 		}
 	}
+};
 
-})();
+// this is guaranteed in the global scope, not matter what kind of eval is thrown at us
+// define global doh
+if(typeof doh == "undefined"){
+	doh = {};
+}
+if (typeof define == "undefined" || define.vendor=="dojotoolkit.org") {
+	// using dojo 1.x loader or no dojo on the page
+	if(typeof dojo !== "undefined"){
+		dojo.provide("doh._browserRunner");
+	}
+	d(doh);
+}else{
+	// using an AMD loader
+	doh.browserRunnerFactory= d;
+}
+}).call(null);

@@ -81,7 +81,7 @@ checkstyleUtil.getComments = function(contents){
 		}
 		
 		// Now look for all the lines that declare a regex variable, e.g.
-		// var begRegExp = /^,|^NOT |^AND |^OR |^\(|^\)|^!|^&&|^\|\|/i; 
+		// var begRegExp = /^,|^NOT |^AND |^OR |^\(|^\)|^!|^&&|^\|\|/i;
 		
 		idx = contents.indexOf(" = /");
 		
@@ -167,7 +167,7 @@ checkstyleUtil.getComments = function(contents){
 				break;
 		
 		}
-		if (marker != null) {	
+		if (marker != null) {
 			comments[i] = 1;
 		}
 		if (marker == UNMARK){
@@ -215,8 +215,8 @@ checkstyleUtil.getNextChar = function(contents, start, comments, ignoreNewLine){
 		if(comments && comments[i]){
 			continue;
 		}
-		if(contents.charAt(i) != " " 
-			&& contents.charAt(i) != "\t" 
+		if(contents.charAt(i) != " "
+			&& contents.charAt(i) != "\t"
 			&& (!ignoreNewLine || contents.charCodeAt(i) != 13)){
 			return {
 				value: contents[i],
@@ -227,7 +227,7 @@ checkstyleUtil.getNextChar = function(contents, start, comments, ignoreNewLine){
 	return null;
 };
 
-// Find the next occurrence of the character in the 
+// Find the next occurrence of the character in the
 // 'contents' array after the index 'start'
 checkstyleUtil.findNextCharPos = function(contents, start, character){
 	for(var i = start; i < contents.length; i++){
@@ -238,7 +238,7 @@ checkstyleUtil.findNextCharPos = function(contents, start, character){
 	return -1;
 };
 
-// Creates a simple function that searches for the token, and 
+// Creates a simple function that searches for the token, and
 // adds an error if it is found
 checkstyleUtil.createSimpleSearch = function(token, message){
 	return function(fileName, contents, comments){
@@ -266,22 +266,22 @@ checkstyleUtil.createSpaceWrappedSearch = function(token, message){
 		while(idx > -1){
 			before = contents.charAt(idx - 1);
 			after = contents.charAt(idx + tokenLength);
-			if(!comments[idx] && 
-				((before != " " && before != "\t" 
+			if(!comments[idx] &&
+				((before != " " && before != "\t"
 					&& (token != "==" || before != "!")
-					&& (token != "=" || 
-						(before != "<" && 
-						 before != ">" && 
-						 before != "=" && 
-						 before != "!" && 
-						 before != "+" && 
-						 before != "-" && 
-						 before != "*" && 
-						 before != "/" && 
-						 before != "&" && 
-						 before != "|" ))) || 
+					&& (token != "=" ||
+						(before != "<" &&
+						 before != ">" &&
+						 before != "=" &&
+						 before != "!" &&
+						 before != "+" &&
+						 before != "-" &&
+						 before != "*" &&
+						 before != "/" &&
+						 before != "&" &&
+						 before != "|" ))) ||
 				(
-					(after != " " && contents.charCodeAt(idx + tokenLength) != 13 
+					(after != " " && contents.charCodeAt(idx + tokenLength) != 13
 						&& contents.charCodeAt(idx + tokenLength) != 10)
 					&& (token != "==" || after != "=")
 					&& (token != "!=" || after != "=")
@@ -358,13 +358,13 @@ checkstyleUtil.rules = {
 					
 					for(var i = eolIdx; i > idx + 4; i--){
 						var c = contents.charAt(i);
-						if(!comments[i] 
+						if(!comments[i]
 							&& c != ' '
 							&& c != '\t'
 							&& c != ':'
 							&& !checkstyleUtil.isEOL(contents, i)){
 							checkstyleUtil.addError(
-								"A CASE statement should be followed by a new line", 
+								"A CASE statement should be followed by a new line",
 								fileName, contents, idx);
 							break;
 						}
@@ -460,7 +460,7 @@ checkstyleUtil.rules = {
 					// Make sure that there is nothing after the comment name on the same line.
 					while(!checkstyleUtil.isEOL(contents, search)){
 						if(contents[search] != " " && contents[search] != "\t"){
-							checkstyleUtil.addError("The comment \"" + comment + "\" must be followed by a new line" , 
+							checkstyleUtil.addError("The comment \"" + comment + "\" must be followed by a new line" ,
 										fileName, contents, idx);
 							break;
 						}
@@ -485,9 +485,9 @@ var noSpaceAfter = ["catch","do","finally","for","if","switch","try","while","wi
 
 // Add checks for all the elements that are not allowed to have a space after them.
 checkstyleUtil.createNoSpaceAfterFunction = function(name){
-	checkstyleUtil.rules["noSpaceAfter" + noSpaceAfter[i] + "1"] = 
+	checkstyleUtil.rules["noSpaceAfter" + noSpaceAfter[i] + "1"] =
 		checkstyleUtil.createSimpleSearch(" " + name +" ", "\" " + name + " \" cannot be followed by a space");
-	checkstyleUtil.rules["noSpaceAfter" + noSpaceAfter[i] + "2"] = 
+	checkstyleUtil.rules["noSpaceAfter" + noSpaceAfter[i] + "2"] =
 		checkstyleUtil.createSimpleSearch("\t" + name +" ", "\" " + name + " \" cannot be followed by a space");
 }
 
@@ -632,7 +632,7 @@ checkstyleUtil.replaceAllExceptComments = function(contents, old, newStr, commen
 	
 	while(idx > -1){
 		if(!comments[idx]){
-			toRemove.push(idx);		
+			toRemove.push(idx);
 		}
 
 		idx = contents.indexOf(old, idx + old.length);
@@ -708,18 +708,18 @@ checkstyleUtil.fixSpaceBeforeAndAfter = function(contents, token, comments){
 			// - char before is not a space or a tab
 			// - token is "==" and the char before is neither "!" or "="
 		
-			if(before != " " && before != "\t" 
+			if(before != " " && before != "\t"
 				&& (token != "==" || (before != "!" && before != "="))
-				&& (token != "=" || 
-						(before != "<" && 
-						 before != ">" && 
-						 before != "=" && 
-						 before != "!" && 
-						 before != "+" && 
-						 before != "-" && 
-						 before != "*" && 
-						 before != "/" && 
-						 before != "&" && 
+				&& (token != "=" ||
+						(before != "<" &&
+						 before != ">" &&
+						 before != "=" &&
+						 before != "!" &&
+						 before != "+" &&
+						 before != "-" &&
+						 before != "*" &&
+						 before != "/" &&
+						 before != "&" &&
 						 before != "|" ))
 				){
 				
@@ -731,7 +731,7 @@ checkstyleUtil.fixSpaceBeforeAndAfter = function(contents, token, comments){
 			// - char after is not a space
 			// - char after is not a new line
 			// - char after is not "="
-			if((after != " " && contents.charCodeAt(idx + len) != 13 
+			if((after != " " && contents.charCodeAt(idx + len) != 13
 					&& contents.charCodeAt(idx + len) != 10)
 					&& (token != "==" || after != "=")
 					&& (token != "!=" || after != "=")
@@ -790,8 +790,8 @@ checkstyleUtil.generateReport = function(skipPrint){
 			messageId = "m" + messageCounter++;
 			messageIds[message] = messageId;
 			
-			json.push("{id:'" + messageId + 
-					"',msg:'" + message + 
+			json.push("{id:'" + messageId +
+					"',msg:'" + message +
 					"'}");
 		}
 	}
@@ -804,10 +804,10 @@ checkstyleUtil.generateReport = function(skipPrint){
 		var folderName = getFolderName(err.file);
 		pushFolder(folderName);
 		
-		json.push("{id:'" +(ids++) + 
-					"', file:'" + err.file + 
-					"',line:" + err.line + 
-					",msg:{'_reference':'" + messageIds[err.message] + 
+		json.push("{id:'" +(ids++) +
+					"', file:'" + err.file +
+					"',line:" + err.line +
+					",msg:{'_reference':'" + messageIds[err.message] +
 					//"'},folder:'" + folderName +
 					"'},folder: 0" +
 					"}");

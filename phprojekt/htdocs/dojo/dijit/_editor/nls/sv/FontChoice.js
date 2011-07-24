@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	fontSize: "Storlek",
 	fontName: "Teckensnitt",
@@ -24,3 +26,5 @@
 	6: "extra stort",
 	7: "extra extra stort"
 })
+//end v1.x content
+);

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': '굵게',
 	'copy': '복사',
@@ -45,3 +47,5 @@
 	/* Error messages */
 	'systemShortcut': '"${0}" 조치는 브라우저에서 키보드 단축키를 통해서만 사용 가능합니다. ${1}을(를) 사용하십시오.'
 })
+//end v1.x content
+);
