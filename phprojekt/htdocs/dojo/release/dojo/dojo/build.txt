@@ -12,7 +12,6 @@ dojo.js:
 ./../../release/dojo/dojo/_base/Deferred.js
 ./../../release/dojo/dojo/_base/json.js
 ./../../release/dojo/dojo/_base/Color.js
-./../../release/dojo/dojo/_base.js
 ./../../release/dojo/dojo/_base/window.js
 ./../../release/dojo/dojo/_base/event.js
 ./../../release/dojo/dojo/_base/html.js
@@ -21,6 +20,7 @@ dojo.js:
 ./../../release/dojo/dojo/_base/xhr.js
 ./../../release/dojo/dojo/_base/fx.js
 ./../../release/dojo/dojo/_base/browser.js
+./../../release/dojo/dojo/_base.js
 ./jslib/dojoGuardEnd.jsfrag
 
 setup.js:
@@ -39,6 +39,8 @@ setup.js:
 ./../../release/dojo/dijit/_base.js
 ./../../release/dojo/dojo/date/stamp.js
 ./../../release/dojo/dojo/parser.js
+./../../release/dojo/dojo/Stateful.js
+./../../release/dojo/dijit/_WidgetBase.js
 ./../../release/dojo/dijit/_Widget.js
 ./../../release/dojo/dojo/string.js
 ./../../release/dojo/dojo/cache.js
@@ -52,6 +54,7 @@ setup.js:
 ./../../release/dojo/dojo/regexp.js
 ./../../release/dojo/dojo/cookie.js
 ./../../release/dojo/dijit/layout/BorderContainer.js
+./../../release/dojo/dijit/layout/_ContentPaneResizeMixin.js
 ./../../release/dojo/dojo/html.js
 ./../../release/dojo/dojo/i18n.js
 ./../../release/dojo/dijit/layout/ContentPane.js
@@ -78,8 +81,10 @@ setup.js:
 login.js:
 ./../../release/dojo/dojo/date/stamp.js
 ./../../release/dojo/dojo/parser.js
-./../../release/dojo/dojo/window.js
 ./../../release/dojo/dijit/_base/manager.js
+./../../release/dojo/dojo/Stateful.js
+./../../release/dojo/dijit/_WidgetBase.js
+./../../release/dojo/dojo/window.js
 ./../../release/dojo/dijit/_base/focus.js
 ./../../release/dojo/dojo/AdapterRegistry.js
 ./../../release/dojo/dijit/_base/place.js
@@ -101,6 +106,7 @@ login.js:
 ./../../release/dojo/dojo/cache.js
 ./../../release/dojo/dijit/_Templated.js
 ./../../release/dojo/dijit/layout/BorderContainer.js
+./../../release/dojo/dijit/layout/_ContentPaneResizeMixin.js
 ./../../release/dojo/dojo/html.js
 ./../../release/dojo/dojo/i18n.js
 ./../../release/dojo/dijit/layout/ContentPane.js
@@ -133,6 +139,8 @@ phprojekt.js:
 ./../../release/dojo/dijit/_base.js
 ./../../release/dojo/dojo/date/stamp.js
 ./../../release/dojo/dojo/parser.js
+./../../release/dojo/dojo/Stateful.js
+./../../release/dojo/dijit/_WidgetBase.js
 ./../../release/dojo/dijit/_Widget.js
 ./../../release/dojo/dojo/string.js
 ./../../release/dojo/dojo/cache.js
@@ -150,6 +158,9 @@ phprojekt.js:
 ./../../release/dojo/dojo/date.js
 ./../../release/dojo/dojo/regexp.js
 ./../../release/dojo/dojo/date/locale.js
+./../../release/dojo/dijit/_HasDropDown.js
+./../../release/dojo/dijit/form/Button.js
+./../../release/dojo/dijit/form/DropDownButton.js
 ./../../release/dojo/dijit/Calendar.js
 ./../../release/dojo/dijit/form/TextBox.js
 ./../../release/dojo/dijit/Tooltip.js
@@ -167,6 +178,7 @@ phprojekt.js:
 ./../../release/dojo/dijit/form/_FormMixin.js
 ./../../release/dojo/dijit/_DialogMixin.js
 ./../../release/dojo/dijit/DialogUnderlay.js
+./../../release/dojo/dijit/layout/_ContentPaneResizeMixin.js
 ./../../release/dojo/dojo/html.js
 ./../../release/dojo/dijit/layout/ContentPane.js
 ./../../release/dojo/dijit/TooltipDialog.js
@@ -175,8 +187,6 @@ phprojekt.js:
 ./../../release/dojo/dojo/data/util/filter.js
 ./../../release/dojo/dijit/form/ComboBox.js
 ./../../release/dojo/dijit/form/FilteringSelect.js
-./../../release/dojo/dijit/_HasDropDown.js
-./../../release/dojo/dijit/form/Button.js
 ./../../release/dojo/dijit/form/ToggleButton.js
 ./../../release/dojo/dijit/form/CheckBox.js
 ./../../release/dojo/dojo/number.js
@@ -235,6 +245,8 @@ phprojekt.js:
 ./../../release/dojo/dojox/dtl/Inline.js
 ./../../release/dojo/dojo/DeferredList.js
 ./../../release/dojo/dojo/cookie.js
+./../../release/dojo/dijit/tree/_dndContainer.js
+./../../release/dojo/dijit/tree/_dndSelector.js
 ./../../release/dojo/dijit/Tree.js
 ./../../release/dojo/dijit/layout/StackController.js
 ./../../release/dojo/dijit/layout/StackContainer.js

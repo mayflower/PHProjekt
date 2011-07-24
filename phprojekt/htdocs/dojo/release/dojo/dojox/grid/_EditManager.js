@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -18,9 +18,10 @@ dojo.declare("dojox.grid._EditManager", null, {
 		// inGrid: dojox.Grid
 		//		The dojox.Grid this editor should be attached to
 		this.grid = inGrid;
-		this.connections = [];
 		if(dojo.isIE){
-			this.connections.push(dojo.connect(document.body, "onfocus", dojo.hitch(this, "_boomerangFocus")));
+			this.connections = [dojo.connect(document.body, "onfocus", dojo.hitch(this, "_boomerangFocus"))];
+		}else{
+			this.connections = [dojo.connect(this.grid, 'onBlur', this, 'apply')];
 		}
 	},
 	
@@ -152,7 +153,7 @@ dojo.declare("dojox.grid._EditManager", null, {
 		}
 		if(inEditing){
 			this.info = { cell: inCell, rowIndex: inRowIndex };
-			this.grid.doStartEdit(inCell, inRowIndex); 
+			this.grid.doStartEdit(inCell, inRowIndex);
 			this.grid.updateRow(inRowIndex);
 		}else{
 			this.info = {};

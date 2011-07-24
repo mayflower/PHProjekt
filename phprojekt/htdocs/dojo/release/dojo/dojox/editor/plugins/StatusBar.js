@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,21 +8,21 @@
 if(!dojo._hasResource["dojox.editor.plugins.StatusBar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.editor.plugins.StatusBar"] = true;
 dojo.provide("dojox.editor.plugins.StatusBar");
-
-dojo.require("dijit._editor._Plugin");
 dojo.require("dijit.Toolbar");
+dojo.require("dijit._editor._Plugin");
 dojo.require("dojox.layout.ResizeHandle");
+dojo.require("dojo.i18n");
+dojo.requireLocalization("dojox.editor.plugins", "StatusBar", null, "");
+
 
 dojo.experimental("dojox.editor.plugins.StatusBar");
-
-
 dojo.declare("dojox.editor.plugins._StatusBar", [dijit._Widget, dijit._Templated],{
 	// templateString: String
 	//		Template for the widget.  Currently using table to get the alignment behavior and
 	//		bordering I wanted.  Would prefer not to use table, though.
 	templateString: '<div class="dojoxEditorStatusBar">' +
 		'<table><tbody><tr>'+
-		'<td class="dojoxEditorStatusBarText" tabindex="-1" aria-role="presentation" aria-live="aggressive"><span dojoAttachPoint="barContent">&nbsp;</span></td>' + 
+		'<td class="dojoxEditorStatusBarText" tabindex="-1" aria-role="presentation" aria-live="aggressive"><span dojoAttachPoint="barContent">&nbsp;</span></td>' +
 		'<td><span dojoAttachPoint="handle"></span></td>' +
 		'</tr></tbody><table>'+
 	'</div>',

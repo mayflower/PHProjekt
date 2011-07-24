@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,7 +15,7 @@ dojox.gfx3d.matrix._radToDeg = function(radian){ return radian / Math.PI * 180; 
 
 dojox.gfx3d.matrix.Matrix3D = function(arg){
 	// summary: a 3D matrix object
-	// description: Normalizes a 3D matrix-like object. If arrays is passed, 
+	// description: Normalizes a 3D matrix-like object. If arrays is passed,
 	//		all objects of the array are normalized and multiplied sequentially.
 	// arg: Object
 	//		a 3D matrix-like object, a number, or an array of such objects
@@ -101,7 +101,7 @@ dojo.mixin(dojox.gfx3d.matrix, {
 	},
 	rotateX: function(angle){
 		// summary: forms a rotating matrix (about the x axis)
-		// description: The resulting matrix is used to rotate points 
+		// description: The resulting matrix is used to rotate points
 		//		around the origin of coordinates (0, 0) by specified angle.
 		// angle: Number: an angle of rotation in radians (>0 for CW)
 		var c = Math.cos(angle);
@@ -118,7 +118,7 @@ dojo.mixin(dojox.gfx3d.matrix, {
 	},
 	rotateY: function(angle){
 		// summary: forms a rotating matrix (about the y axis)
-		// description: The resulting matrix is used to rotate points 
+		// description: The resulting matrix is used to rotate points
 		//		around the origin of coordinates (0, 0) by specified angle.
 		// angle: Number: an angle of rotation in radians (>0 for CW)
 		var c = Math.cos(angle);
@@ -135,7 +135,7 @@ dojo.mixin(dojox.gfx3d.matrix, {
 	},
 	rotateZ: function(angle){
 		// summary: forms a rotating matrix (about the z axis)
-		// description: The resulting matrix is used to rotate points 
+		// description: The resulting matrix is used to rotate points
 		//		around the origin of coordinates (0, 0) by specified angle.
 		// angle: Number: an angle of rotation in radians (>0 for CW)
 		var c = Math.cos(angle);
@@ -168,7 +168,7 @@ dojo.mixin(dojox.gfx3d.matrix, {
 	},
 	cameraRotateX: function(angle){
 		// summary: forms a rotating matrix (about the x axis) in cameraTransform manner
-		// description: The resulting matrix is used to rotate points 
+		// description: The resulting matrix is used to rotate points
 		//		around the origin of coordinates (0, 0) by specified angle.
 		// angle: Number: an angle of rotation in radians (>0 for CW)
 		var c = Math.cos(-angle);
@@ -185,7 +185,7 @@ dojo.mixin(dojox.gfx3d.matrix, {
 	},
 	cameraRotateY: function(angle){
 		// summary: forms a rotating matrix (about the y axis) in cameraTransform manner
-		// description: The resulting matrix is used to rotate points 
+		// description: The resulting matrix is used to rotate points
 		//		around the origin of coordinates (0, 0) by specified angle.
 		// angle: Number: an angle of rotation in radians (>0 for CW)
 		var c = Math.cos(-angle);
@@ -202,7 +202,7 @@ dojo.mixin(dojox.gfx3d.matrix, {
 	},
 	cameraRotateZ: function(angle){
 		// summary: forms a rotating matrix (about the z axis) in cameraTransform manner
-		// description: The resulting matrix is used to rotate points 
+		// description: The resulting matrix is used to rotate points
 		//		around the origin of coordinates (0, 0) by specified angle.
 		// angle: Number: an angle of rotation in radians (>0 for CW)
 		var c = Math.cos(-angle);
@@ -286,7 +286,7 @@ dojo.mixin(dojox.gfx3d.matrix, {
 	},
 	multiply: function(matrix){
 		// summary: combines matrices by multiplying them sequentially in the given order
-		// matrix: dojox.gfx3d.matrix.Matrix3D...: a 3D matrix-like object, 
+		// matrix: dojox.gfx3d.matrix.Matrix3D...: a 3D matrix-like object,
 		//		all subsequent arguments are matrix-like objects too
 		var m = dojox.gfx3d.matrix.normalize(matrix);
 		// combine matrices
@@ -317,8 +317,8 @@ dojo.mixin(dojox.gfx3d.matrix, {
 		// y: Number: a y coordinate of a point
 		// z: Number: a z coordinate of a point
 		return {	// Object
-			x: m.xx * x + m.xy * y + m.xz * z + m.dx, 
-			y: m.yx * x + m.yy * y + m.yz * z + m.dy, 
+			x: m.xx * x + m.xy * y + m.xz * z + m.dx,
+			y: m.yx * x + m.yy * y + m.yz * z + m.dy,
 			z: m.zx * x + m.zy * y + m.zz * z + m.dz};
 	},
 	project: function(matrix, /* Number||Point */ a, /* Number, optional */ b, /* Number, optional */ c){

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,7 +15,7 @@ dojo.require("dojox.charting.plot3d.Base");
 
 	// reduce function borrowed from dojox.fun
 	var reduce = function(/*Array*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-		// summary: repeatedly applies a binary function to an array from left 
+		// summary: repeatedly applies a binary function to an array from left
 		//	to right; returns the final value.
 		a = typeof a == "string" ? a.split("") : a; o = o || dojo.global;
 		var z = a[0];
@@ -62,8 +62,8 @@ dojo.require("dojox.charting.plot3d.Base");
 			for(var i = 0; i < this.data.length; ++i, org += step){
 				creator
 					.createCylinder({
-						center: {x: org + step / 2, y: 0, z: 0}, 
-						radius: step / 2 - this.gap, 
+						center: {x: org + step / 2, y: 0, z: 0},
+						radius: step / 2 - this.gap,
 						height: this.data[i] * scale
 					})
 					.setTransform(dojox.gfx3d.matrix.rotateXg(-90))

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,7 +14,7 @@ dojo.require("dojox.string.tokenize");
 dojox.date.php.format = function(/*Date*/ date, /*String*/ format){
 	// summary: Get a formatted string for a given date object
 	var df = new dojox.date.php.DateFormat(format);
-	return df.format(date);	
+	return df.format(date);
 }
 
 dojox.date.php.DateFormat = function(/*String*/ format){

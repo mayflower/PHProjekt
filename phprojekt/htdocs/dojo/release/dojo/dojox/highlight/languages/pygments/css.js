@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -78,7 +78,7 @@ dojo.require("dojox.highlight.languages.pygments._html");
 			},
 			{
 				className: "string double",
-				begin: '"', 
+				begin: '"',
 				end: '"',
 				illegal: "\\n",
 				relevance: 0
@@ -204,7 +204,7 @@ dojo.require("dojox.highlight.languages.pygments._html");
 					}
 				},
 				contains: [
-					"comment", "comment preproc", 
+					"comment", "comment preproc",
 					"number",
 					"string single", "string double",
 					"punctuation",

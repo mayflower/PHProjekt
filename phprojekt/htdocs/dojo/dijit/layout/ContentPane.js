@@ -469,7 +469,7 @@ dojo.declare(
 		var setterParams = dojo.mixin({
 			cleanContent: this.cleanContent,
 			extractContent: this.extractContent,
-			parseContent: this.parseOnLoad,
+			parseContent: !cont.domNode && this.parseOnLoad,
 			parserScope: this.parserScope,
 			startup: false,
 			dir: this.dir,

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -21,10 +21,10 @@ dojox.string.Builder = function(/*String?*/str){
 	var b = "";
 	this.length = 0;
 	
-	this.append = function(/* String... */s){ 
-		// summary: Append all arguments to the end of the buffer 
+	this.append = function(/* String... */s){
+		// summary: Append all arguments to the end of the buffer
 		if(arguments.length>1){
-			/*  
+			/*
 				This is a loop unroll was designed specifically for Firefox;
 				it would seem that static index access on an Arguments
 				object is a LOT faster than doing dynamic index access.
@@ -39,10 +39,10 @@ dojox.string.Builder = function(/*String?*/str){
 				Safari or Opera, so we just use it for all.
 
 				It turns out also that this loop unroll can increase performance
-				significantly with Internet Explorer, particularly when 
+				significantly with Internet Explorer, particularly when
 				as many arguments are provided as possible.
 
-				Loop unroll per suggestion from Kris Zyp, implemented by 
+				Loop unroll per suggestion from Kris Zyp, implemented by
 				Tom Trenka.
 
 				Note: added empty string to force a string cast if needed.
@@ -90,7 +90,7 @@ dojox.string.Builder = function(/*String?*/str){
 	};
 	
 	this.clear = function(){
-		//	summary: 
+		//	summary:
 		//		Remove all characters from the buffer.
 		b = "";
 		this.length = 0;
@@ -98,7 +98,7 @@ dojox.string.Builder = function(/*String?*/str){
 	};
 	
 	this.replace = function(/* String */oldStr, /* String */ newStr){
-		// 	summary: 
+		// 	summary:
 		//		Replace instances of one string with another in the buffer.
 		b = b.replace(oldStr,newStr);
 		this.length = b.length;
@@ -117,7 +117,7 @@ dojox.string.Builder = function(/*String?*/str){
 	};
 	
 	this.insert = function(/* Number */index, /* String */str){
-		//	summary: 
+		//	summary:
 		//		Insert string str starting at index.
 		if(index == 0){
 			b = str + b;

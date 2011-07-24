@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,10 +8,12 @@
 if(!dojo._hasResource["dijit._editor.plugins.TabIndent"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit._editor.plugins.TabIndent"] = true;
 dojo.provide("dijit._editor.plugins.TabIndent");
-dojo.experimental("dijit._editor.plugins.TabIndent");
-
 dojo.require("dijit._editor._Plugin");
 dojo.require("dijit.form.ToggleButton");
+
+
+dojo.experimental("dijit._editor.plugins.TabIndent");
+
 
 dojo.declare("dijit._editor.plugins.TabIndent",
 	dijit._editor._Plugin,
@@ -45,7 +47,11 @@ dojo.declare("dijit._editor.plugins.TabIndent",
 		updateState: function(){
 			// Overrides _Plugin.updateState().
 			// Ctrl-m in the editor will switch tabIndent mode on/off, so we need to react to that.
-
+			var disabled = this.get("disabled");
+			this.button.set("disabled", disabled);
+			if(disabled){
+				return;
+			}
 			this.button.set('checked', this.editor.isTabIndent, false);
 		}
 	}

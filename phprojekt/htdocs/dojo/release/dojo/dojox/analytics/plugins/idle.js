@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -25,7 +25,7 @@ dojox.analytics.plugins.idle = new (function(){
 	dojo.addOnLoad(dojo.hitch(this, function(){
 		var idleResets=["onmousemove","onkeydown","onclick","onscroll"];
 		for (var i=0;i<idleResets.length;i++){
-			dojo.connect(dojo.doc,idleResets[i],this, function(e){ 
+			dojo.connect(dojo.doc,idleResets[i],this, function(e){
 				if (this.idle){
 					this.idle=false;
 					this.addData("isActive");

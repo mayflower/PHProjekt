@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -51,7 +51,8 @@ dojo.require("dojox.gfx.gradutils");
 			//	kwArgs: dojox.charting.plot2d.__DefaultCtorArgs?
 			//		An optional keyword arguments object to help define this plot's parameters.
 			this.opt = dojo.clone(this.defaultParams);
-			du.updateWithObject(this.opt, kwArgs);
+            du.updateWithObject(this.opt, kwArgs);
+            du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
 			this.series = [];
 			this.hAxis = this.opt.hAxis;
 			this.vAxis = this.opt.vAxis;

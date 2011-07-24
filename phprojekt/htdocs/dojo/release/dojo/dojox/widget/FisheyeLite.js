@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -17,7 +17,7 @@ dojo.declare("dojox.widget.FisheyeLite",
 	dijit._Widget,
 	{
 	// summary:  A Light-weight Fisheye Component, or an exhanced version
-	//		of dojo.fx.Toggler ... 
+	//		of dojo.fx.Toggler ...
 	//
 	// description:
 	//		A Simple FisheyeList-like widget which (in the interest of
@@ -42,7 +42,7 @@ dojo.declare("dojox.widget.FisheyeLite",
 	//
 	//
 	// example:
-	//	|	new dojox.widget.FisheyeLite({ 
+	//	|	new dojox.widget.FisheyeLite({
 	//	|		properties:{
 	//	|			// height is literal, width is multiplied
 	//	|			height:{ end: 200 }, width:2.3
@@ -61,7 +61,7 @@ dojo.declare("dojox.widget.FisheyeLite",
 	//		The Time (in ms) to run the hide animation
 	durationOut: 1420,
 	
-	// easeOut: Function	
+	// easeOut: Function
 	// 		An easing function to use for the hide animation
 	easeOut: dojo.fx.easing.elasticOut,
 
@@ -98,7 +98,7 @@ dojo.declare("dojox.widget.FisheyeLite",
 	
 	show: function(){
 		// summary:
-		//		Show this Fisheye item. 
+		//		Show this Fisheye item.
 		this._runningOut.stop();
 		this._runningIn.play();
 	},

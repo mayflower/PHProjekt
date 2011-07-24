@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,6 +15,7 @@ dojo.require("dojox.gfx");
 dojo.require("dojox.drawing.Drawing");
 dojo.require("dojox.drawing.util.oo");
 dojo.require("dojox.drawing.util.common");
+dojo.require("dojox.drawing.util.typeset");
 dojo.require("dojox.drawing.defaults");
 dojo.require("dojox.drawing.manager.Canvas");
 

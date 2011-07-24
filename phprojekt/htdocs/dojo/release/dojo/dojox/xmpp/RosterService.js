@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -88,7 +88,7 @@ dojo.declare("dojox.xmpp.RosterService", null, {
 		}
 		request.append(dojox.xmpp.util.createElement("item",item,false));
 		
-		var newGroups = groups ? groups : this.session.roster[i].groups; 
+		var newGroups = groups ? groups : this.session.roster[i].groups;
 		
 		if (newGroups){
 			for (var x=0;x<newGroups.length;x++){
@@ -107,7 +107,7 @@ dojo.declare("dojox.xmpp.RosterService", null, {
 
 	verifyRoster: function(res){
 		if (res.getAttribute('type')=='result'){
-			//this.onAddRosterItem(res.getAttribute('id'));	
+			//this.onAddRosterItem(res.getAttribute('id'));
 		}else{
 			var err=this.session.processXmppError(res);
 			this.onAddRosterItemFailed(err);
@@ -125,16 +125,16 @@ dojo.declare("dojox.xmpp.RosterService", null, {
 		var item = this.session.roster[index];
 		var tgroups = [];
 
-		var found = false; 
+		var found = false;
 
 		for (var i=0; ((item<item.groups.length) && (!found)); i++){
-			if (item.groups[i]!=group){continue;}	
+			if (item.groups[i]!=group){continue;}
 			found=true;
-		} 	
+		}
 	
 		if(!found){
 			return this.updateRosterItem(jid, item.name, item.groups.concat(group),index);
-		}	
+		}
 	
 		return dojox.xmpp.xmpp.INVALID_ID;
 	},
@@ -150,7 +150,7 @@ dojo.declare("dojox.xmpp.RosterService", null, {
 						item.groups.splice(j,1);
 						this.updateRosterItem(item.jid, item.name, item.groups);
 						//found=true;
-					}				
+					}
 				}
 			}
 		}
@@ -167,7 +167,7 @@ dojo.declare("dojox.xmpp.RosterService", null, {
 						item.groups[j] = newGroup;
 						this.updateRosterItem(item.jid, item.name, item.groups);
 				//		found=true;
-					}				
+					}
 				}
 			}
 		}
@@ -181,18 +181,18 @@ dojo.declare("dojox.xmpp.RosterService", null, {
 		if (index==-1){return;}
 
 		var item = this.session.roster[index];
-		var found = false; 
+		var found = false;
 
 		for (var i=0; ((i<item.groups.length) && (!found)); i++){
-			if (item.groups[i]!=group){continue;}	
+			if (item.groups[i]!=group){continue;}
 			found=true;
 			index = i;
-		} 	
+		}
 
 		if(found==true){
 			item.groups.splice(index,1);
 			return this.updateRosterItem(jid, item.name, item.groups);
-		}		
+		}
 		
 		return dojox.xmpp.xmpp.INVALID_ID;
 	},
@@ -205,18 +205,18 @@ dojo.declare("dojox.xmpp.RosterService", null, {
 		if (index==-1){return;}
 
 		var item = this.session.roster[index];
-		var found = false; 
+		var found = false;
 
 		for (var i=0; ((i<item.groups.length) && (!found)); i++){
 			if (item.groups[i]==oldGroup){
 				item.groups[i] = newGroup;
 				found=true;
 			}
-		} 	
+		}
 
 		if(found==true){
 			return this.updateRosterItem(jid, item.name, item.groups);
-		}		
+		}
 		
 		return dojox.xmpp.xmpp.INVALID_ID;
 	},
@@ -245,7 +245,7 @@ dojo.declare("dojox.xmpp.RosterService", null, {
 
 		if (jid.indexOf('@')== -1){
 			jid += jid + '@' + this.session.domain;
-		}	
+		}
 
 		request.append(dojox.xmpp.util.createElement('item',{jid:jid,subscription:"remove"},true));
 
@@ -257,7 +257,7 @@ dojo.declare("dojox.xmpp.RosterService", null, {
 	},
 
 	//Avatar functions...I removed this stuff for now..can we even do anything useful
-	//with this data even if we have it? 	
+	//with this data even if we have it?
 	getAvatar: function(jid){
 	},
 
@@ -268,7 +268,7 @@ dojo.declare("dojox.xmpp.RosterService", null, {
 	//EVENTS
 
 	onVerifyRoster: function(id){
-		//console.log("Roster::onVerifyRoster() - ", id);	
+		//console.log("Roster::onVerifyRoster() - ", id);
 	},
 
 	onVerifyRosterFailed: function(err){

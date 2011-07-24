@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -36,7 +36,7 @@ dojo.require("dojo.io.iframe");
 		},
 
 		_fixAttachUrl: function(/*String*/url){
-			//summary: fixes the URL so that 		
+			//summary: fixes the URL so that
 		},
 
 		_loaded: function(/*String*/frameId){

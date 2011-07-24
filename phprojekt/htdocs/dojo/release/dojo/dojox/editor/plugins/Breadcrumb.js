@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,21 +8,20 @@
 if(!dojo._hasResource["dojox.editor.plugins.Breadcrumb"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.editor.plugins.Breadcrumb"] = true;
 dojo.provide("dojox.editor.plugins.Breadcrumb");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit._editor.range");
-dojo.require("dojo.i18n");
 dojo.require("dojo.string");
 dojo.require("dijit.Toolbar");
-dojo.require("dijit.form.Button");
-dojo.require("dijit._editor.selection");
 dojo.require("dijit.Menu");
 dojo.require("dijit.MenuItem");
 dojo.require("dijit.MenuSeparator");
+dojo.require("dijit._editor.range");
+dojo.require("dijit._editor.selection");
+dojo.require("dijit._editor._Plugin");
+dojo.require("dijit.form.Button");
+dojo.require("dojo.i18n");
+dojo.requireLocalization("dojox.editor.plugins", "Breadcrumb", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+
 
 dojo.experimental("dojox.editor.plugins.Breadcrumb");
-
-dojo.requireLocalization("dojox.editor.plugins", "Breadcrumb", null, "ROOT,cs,de,es,fr,hu,it,ja,kk,ko,pl,pt,ro,ru,zh,zh-tw");
 
 dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitle",[dijit._Widget, dijit._Templated, dijit._Contained],{
 	// summary:
@@ -48,8 +47,8 @@ dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitle",[dijit._Widget, dijit._
 
 dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 	// summary:
-	//		This plugin provides Breadcrumb cabability to the editor.  When 
-	//		As you move around the editor, it updates with your current indention 
+	//		This plugin provides Breadcrumb cabability to the editor.  When
+	//		As you move around the editor, it updates with your current indention
 	//		depth.
 
 	//	_menu: [private]
@@ -97,14 +96,14 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 			this._moveSMenu = new dijit.MenuItem({label: strings.moveStart, onClick: dojo.hitch(this, this._moveCToStart)});
 			this._moveEMenu = new dijit.MenuItem({label: strings.moveEnd, onClick: dojo.hitch(this, this._moveCToEnd)});
 
-			this._menu.addChild(this._menuTitle); 
-			this._menu.addChild(this._selCMenu); 
-			this._menu.addChild(this._delCMenu); 
-			this._menu.addChild(new dijit.MenuSeparator({})); 
-			this._menu.addChild(this._selEMenu); 
-			this._menu.addChild(this._delEMenu); 
-			this._menu.addChild(new dijit.MenuSeparator({})); 
-			this._menu.addChild(this._moveSMenu); 
+			this._menu.addChild(this._menuTitle);
+			this._menu.addChild(this._selCMenu);
+			this._menu.addChild(this._delCMenu);
+			this._menu.addChild(new dijit.MenuSeparator({}));
+			this._menu.addChild(this._selEMenu);
+			this._menu.addChild(this._delEMenu);
+			this._menu.addChild(new dijit.MenuSeparator({}));
+			this._menu.addChild(this._moveSMenu);
 			this._menu.addChild(this._moveEMenu);
 
 			body._ddConnect = dojo.connect(body, "openDropDown", dojo.hitch(this, function(){
@@ -145,11 +144,11 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 				case 'area':
 				case 'basefont':
 						break;
-				default: 
+				default:
 					try{
-						dojo.withGlobal(this.editor.window, 
+						dojo.withGlobal(this.editor.window,
 							"collapse", dijit._editor.selection, [null]);
-						dojo.withGlobal(this.editor.window, 
+						dojo.withGlobal(this.editor.window,
 							"selectElementChildren", dijit._editor.selection, [this._menuTarget]);
 						this.editor.onDisplayChanged();
 					}catch(e){/*squelch*/}
@@ -163,7 +162,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		if(this._menuTarget){
 			this.editor.beginEditing();
 			this._selectContents();
-			dojo.withGlobal(this.editor.window, 
+			dojo.withGlobal(this.editor.window,
 				"remove", dijit._editor.selection, [this._menuTarget]);
 			this.editor.endEditing();
 			this._updateBreadcrumb();
@@ -176,9 +175,9 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		//		Internal function for selecting the contents of a node.
 		this.editor.focus();
 		if(this._menuTarget){
-			dojo.withGlobal(this.editor.window, 
+			dojo.withGlobal(this.editor.window,
 				"collapse", dijit._editor.selection, [null]);
-			dojo.withGlobal(this.editor.window, 
+			dojo.withGlobal(this.editor.window,
 				"selectElement", dijit._editor.selection, [this._menuTarget]);
 			this.editor.onDisplayChanged();
 			
@@ -191,7 +190,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		if(this._menuTarget){
 			this.editor.beginEditing();
 			this._selectElement();
-			dojo.withGlobal(this.editor.window, 
+			dojo.withGlobal(this.editor.window,
 				"remove", dijit._editor.selection, [this._menuTarget]);
 			this.editor.endEditing();
 			this._updateBreadcrumb();
@@ -205,7 +204,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		this.editor.focus();
 		if(this._menuTarget){
 			this._selectContents();
-			dojo.withGlobal(this.editor.window, 
+			dojo.withGlobal(this.editor.window,
 				"collapse", dijit._editor.selection, [true]);
 		}
 	},
@@ -216,7 +215,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		this.editor.focus();
 		if(this._menuTarget){
 			this._selectContents();
-			dojo.withGlobal(this.editor.window, 
+			dojo.withGlobal(this.editor.window,
 				"collapse", dijit._editor.selection, [false]);
 		}
 	},
@@ -233,7 +232,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 				var range = sel.getRangeAt(0);
                 
 				// Check the getSelectedElement call.  Needed when dealing with img tags.
-				var node = dojo.withGlobal(ed.window, 
+				var node = dojo.withGlobal(ed.window,
 					"getSelectedElement", dijit._editor.selection) || range.startContainer;
 				//var node = range.startContainer;
 				var bcList = [];
@@ -243,7 +242,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 				if(node && node.ownerDocument === ed.document){
 					while(node && node !== ed.editNode && node != ed.document.body && node != ed.document){
 						if(node.nodeType === 1){
-							bcList.push({type: node.tagName.toLowerCase(), node: node}); 
+							bcList.push({type: node.tagName.toLowerCase(), node: node});
 						}
 						node = node.parentNode;
 					}
@@ -319,7 +318,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		// summary:
 		//		Over-ride of updateState to hide the toolbar when the iframe is not visible.
 		//		Also triggers the breadcrumb update.
-		if(dojo.style(this.editor.iframe, "display") === "none"){
+		if(dojo.style(this.editor.iframe, "display") === "none" || this.get("disabled")){
 			dojo.style(this.breadcrumbBar.domNode, "display", "none");
 		}else{
 			if(dojo.style(this.breadcrumbBar.domNode, "display") === "none"){

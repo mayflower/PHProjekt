@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -21,18 +21,18 @@ dojox.analytics.plugins.mouseOver = new (function(){
 			dojo.disconnect(this._watchingMouse);
 			delete this._watchingMouse;
 			return;
-		}	
+		}
 		dojo.connect(dojo.doc, "onmousemove", this, "sampleMouse");
 	}
 
 	if (this.watchMouse){
-		dojo.connect(dojo.doc, "onmouseover", this, "toggleWatchMouse");	
+		dojo.connect(dojo.doc, "onmouseover", this, "toggleWatchMouse");
 		dojo.connect(dojo.doc, "onmouseout", this, "toggleWatchMouse");
 	}
 
 	this.sampleMouse=function(e){
 		if (!this._rateLimited){
-			this.addData("sample",this.trimMouseEvent(e));	
+			this.addData("sample",this.trimMouseEvent(e));
 			this._rateLimited=true;
 			setTimeout(dojo.hitch(this, function(){
 				if (this._rateLimited){
@@ -42,7 +42,7 @@ dojox.analytics.plugins.mouseOver = new (function(){
 					delete this._rateLimited;
 				}
 			}), this.mouseSampleDelay);
-		}	
+		}
 		this._lastMouseEvent = e;
 		return e;
 	}
@@ -83,16 +83,16 @@ dojox.analytics.plugins.mouseOver = new (function(){
 						//console.log("Attempting: " + i);
 						var val = e[i];
 						//console.log("val: " +  val); console.log(i + "e of i: " + val);
-						t[i]=val + '';							
+						t[i]=val + '';
 					}
 					break;
-				default: 
+				default:
 					//console.log("Skipping: ", i);
 					break;
 			}
 		}
 		return t;
-	}	
+	}
 })();
 
 }

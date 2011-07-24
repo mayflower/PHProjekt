@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,6 +8,7 @@
 if(!dojo._hasResource["dijit._Container"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit._Container"] = true;
 dojo.provide("dijit._Container");
+
 
 dojo.declare("dijit._Container",
 	null,
@@ -71,7 +72,7 @@ dojo.declare("dijit._Container",
 			//		not destroy it.  You can also pass in an integer indicating
 			//		the index within the container to remove
 
-			if(typeof widget == "number" && widget > 0){
+			if(typeof widget == "number"){
 				widget = this.getChildren()[widget];
 			}
 

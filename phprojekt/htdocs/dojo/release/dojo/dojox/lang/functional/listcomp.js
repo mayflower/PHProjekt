@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -13,7 +13,7 @@ dojo.provide("dojox.lang.functional.listcomp");
 //	- list comprehensions similar to JavaScript 1.7
 
 // Notes:
-//	- listcomp() produces functions, which after the compilation step are 
+//	- listcomp() produces functions, which after the compilation step are
 //		as fast as regular JS functions (at least theoretically).
 
 (function(){
@@ -37,17 +37,17 @@ dojo.provide("dojox.lang.functional.listcomp");
 		buildListcomp: function(/*String*/ s){
 			// summary: builds a function from a text snippet, which represents a valid
 			//	JS 1.7 list comprehension, returns a string, which represents the function.
-			// description: This method returns a textual representation of a function 
-			//	built from the list comprehension text snippet (conformant to JS 1.7). 
-			//	It is meant to be evaled in the proper context, so local variable can be 
+			// description: This method returns a textual representation of a function
+			//	built from the list comprehension text snippet (conformant to JS 1.7).
+			//	It is meant to be evaled in the proper context, so local variable can be
 			//	pulled from the environment.
 			return "function(){" + listcomp(s) + "}";	// String
 		},
 		compileListcomp: function(/*String*/ s){
 			// summary: builds a function from a text snippet, which represents a valid
 			//	JS 1.7 list comprehension, returns a function object.
-			// description: This method returns a function built from the list 
-			//	comprehension text snippet (conformant to JS 1.7). It is meant to be 
+			// description: This method returns a function built from the list
+			//	comprehension text snippet (conformant to JS 1.7). It is meant to be
 			//	reused several times.
 			return new Function([], listcomp(s));	// Function
 		},

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -26,9 +26,9 @@ dojox.analytics.plugins.window = new (function(){
 				switch(i){
 					case "location":
 					case "console":
-						data[i]=window[i];	
+						data[i]=window[i];
 						break;
-					default:	
+					default:
 						break;
 				}
 			}else{

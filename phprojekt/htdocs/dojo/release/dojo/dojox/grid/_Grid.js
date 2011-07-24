@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -190,7 +190,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 		//	|		structure="structure"
 		//	|		dojoType="dojox.grid._Grid"></div>
 
-		templateString:"<div hidefocus=\"hidefocus\" wairole=\"grid\" dojoAttachEvent=\"onmouseout:_mouseOut\">\n\t<div class=\"dojoxGridMasterHeader\" dojoAttachPoint=\"viewsHeaderNode\" wairole=\"presentation\"></div>\n\t<div class=\"dojoxGridMasterView\" dojoAttachPoint=\"viewsNode\" wairole=\"presentation\"></div>\n\t<div class=\"dojoxGridMasterMessages\" style=\"display: none;\" dojoAttachPoint=\"messagesNode\"></div>\n\t<span dojoAttachPoint=\"lastFocusNode\" tabindex=\"0\"></span>\n</div>\n",
+		templateString:"<div hidefocus=\"hidefocus\" role=\"grid\" dojoAttachEvent=\"onmouseout:_mouseOut\">\n\t<div class=\"dojoxGridMasterHeader\" dojoAttachPoint=\"viewsHeaderNode\" role=\"presentation\"></div>\n\t<div class=\"dojoxGridMasterView\" dojoAttachPoint=\"viewsNode\" role=\"presentation\"></div>\n\t<div class=\"dojoxGridMasterMessages\" style=\"display: none;\" dojoAttachPoint=\"messagesNode\"></div>\n\t<span dojoAttachPoint=\"lastFocusNode\" tabindex=\"0\"></span>\n</div>\n",
 
 		// classTag: String
 		// 		CSS class applied to the grid's domNode
@@ -216,7 +216,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 		// initialWidth: String
 		//		A css string to use to set our initial width (only used if autoWidth
 		//		is true).  The first rendering of the grid will be this width, any
-		//		resizing of columns, etc will result in the grid switching to 
+		//		resizing of columns, etc will result in the grid switching to
 		//		autoWidth mode.  Note, this width will override any styling in a
 		//		stylesheet or directly on the node.
 		initialWidth: "",
@@ -232,7 +232,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 		//		If rowHeight is set to a positive number, it will define the height of the rows
 		//		in pixels. This can provide a significant performance advantage, since it
 		//		eliminates the need to measure row sizes during rendering, which is one
-		// 		the primary bottlenecks in the DataGrid's performance. 
+		// 		the primary bottlenecks in the DataGrid's performance.
 		rowHeight: 0,
 		
 		// autoRender: Boolean
@@ -299,21 +299,21 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 		errorMessage: "<span class='dojoxGridError'>${errorState}</span>",
 
 		// noDataMessage: String
-		//  Message that shows if the grid has no data - wrap it in a 
+		//  Message that shows if the grid has no data - wrap it in a
 		//  span with class 'dojoxGridNoData' if you want it to be
 		//  styled similar to the loading and error messages
 		noDataMessage: "",
 		
 		// escapeHTMLInData: Boolean
-		//		This will escape HTML brackets from the data to prevent HTML from 
-		// 		user-inputted data being rendered with may contain JavaScript and result in 
-		// 		XSS attacks. This is true by default, and it is recommended that it remain 
-		// 		true. Setting this to false will allow data to be displayed in the grid without 
-		// 		filtering, and should be only used if it is known that the data won't contain 
-		// 		malicious scripts. If HTML is needed in grid cells, it is recommended that 
-		// 		you use the formatter function to generate the HTML (the output of 
+		//		This will escape HTML brackets from the data to prevent HTML from
+		// 		user-inputted data being rendered with may contain JavaScript and result in
+		// 		XSS attacks. This is true by default, and it is recommended that it remain
+		// 		true. Setting this to false will allow data to be displayed in the grid without
+		// 		filtering, and should be only used if it is known that the data won't contain
+		// 		malicious scripts. If HTML is needed in grid cells, it is recommended that
+		// 		you use the formatter function to generate the HTML (the output of
 		// 		formatter functions is not filtered, even with escapeHTMLInData set to true).
-		escapeHTMLInData: true,	
+		escapeHTMLInData: true,
 		
 		// formatterScope: Object
 		//		An object to execute format functions within.  If not set, the
@@ -323,7 +323,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 		
 		// editable: boolean
 		// indicates if the grid contains editable cells, default is false
-		// set to true if editable cell encountered during rendering 
+		// set to true if editable cell encountered during rendering
 		editable: false,
 		
 		// private
@@ -435,7 +435,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 					ah = false;
 				}
 				// Autoheight must be at least 1, if it's a number.  If it's
-				// less than 0, we'll take that to mean "all" rows (same as 
+				// less than 0, we'll take that to mean "all" rows (same as
 				// autoHeight=true - if it is equal to zero, we'll take that
 				// to mean autoHeight=false
 				if(ah < 0){
@@ -523,6 +523,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 			this.viewsNode.appendChild(view.domNode);
 			this.viewsHeaderNode.appendChild(view.headerNode);
 			this.views.addView(view);
+			dojo.attr(this.domNode, "align", dojo._isBodyLtr() ? 'left' : 'right');
 			return view;
 		},
 
@@ -536,7 +537,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 		_setStructureAttr: function(structure){
 			var s = structure;
 			if(s && dojo.isString(s)){
-				dojo.deprecated("dojox.grid._Grid.attr('structure', 'objVar')", "use dojox.grid._Grid.attr('structure', objVar) instead", "2.0");
+				dojo.deprecated("dojox.grid._Grid.set('structure', 'objVar')", "use dojox.grid._Grid.set('structure', objVar) instead", "2.0");
 				s=dojo.getObject(s);
 			}
 			this.structure = s;
@@ -548,6 +549,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 				}
 			}
 			this.views.destroyViews();
+			this.focus.focusView = null;
 			if(s !== this.layout.structure){
 				this.layout.setStructure(s);
 			}
@@ -557,7 +559,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 		setStructure: function(/* dojox.grid.__ViewDef|dojox.grid.__ViewDef[]|dojox.grid.__CellDef[]|Array[dojox.grid.__CellDef[]] */ inStructure){
 			// summary:
 			//		Install a new structure and rebuild the grid.
-			dojo.deprecated("dojox.grid._Grid.setStructure(obj)", "use dojox.grid._Grid.attr('structure', obj) instead.", "2.0");
+			dojo.deprecated("dojox.grid._Grid.setStructure(obj)", "use dojox.grid._Grid.set('structure', obj) instead.", "2.0");
 			this._setStructureAttr(inStructure);
 		},
 		
@@ -584,14 +586,14 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 							}
 							checked = dojo.filter(self.layout.cells, function(c){
 								if(c.menuItems.length > 1){
-									dojo.forEach(c.menuItems, "item.attr('disabled', false);");
+									dojo.forEach(c.menuItems, "item.set('disabled', false);");
 								}else{
-									c.menuItems[0].attr('disabled', false);
+									c.menuItems[0].set('disabled', false);
 								}
 								return !c.hidden;
 							});
 							if(checked.length == 1){
-								dojo.forEach(checked[0].menuItems, "item.attr('disabled', true);");
+								dojo.forEach(checked[0].menuItems, "item.set('disabled', true);");
 							}
 						}
 					},
@@ -627,7 +629,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 		},
 
 		setHeaderMenu: function(/* dijit.Menu */ menu){
-			dojo.deprecated("dojox.grid._Grid.setHeaderMenu(obj)", "use dojox.grid._Grid.attr('headerMenu', obj) instead.", "2.0");
+			dojo.deprecated("dojox.grid._Grid.setHeaderMenu(obj)", "use dojox.grid._Grid.set('headerMenu', obj) instead.", "2.0");
 			this._setHeaderMenuAttr(menu);
 		},
 		
@@ -677,7 +679,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 			//		Update the grid's rendering dimensions and resize it
 			
 			// Calling sizeChange calls update() which calls _resize...so let's
-			// save our input values, if any, and use them there when it gets 
+			// save our input values, if any, and use them there when it gets
 			// called.  This saves us an extra call to _resize(), which can
 			// get kind of heavy.
 			this._pendingChangeSize = changeSize;
@@ -717,7 +719,6 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 			// grid height
 			if(this._autoHeight){
 				this.domNode.style.height = 'auto';
-				this.viewsNode.style.height = '';
 			}else if(typeof this.autoHeight == "number"){
 				h = hh = this._getHeaderHeight();
 				h += (this.scroller.averageRowHeight * this.autoHeight);
@@ -978,7 +979,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 				if(this.layout.cells.length){
 					this.scroller.updateRowCount(inRowCount);
 				}
-				this._resize();				
+				this._resize();
 				if(this.layout.cells.length){
 					this.setScrollTop(this.scrollTop);
 				}
@@ -1354,7 +1355,7 @@ dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi
 						cell.relWidth = window.parseInt(dojo.attr(th, "relWidth"), 10);
 					}
 					if(d.hasAttr(th, "hidden")){
-						cell.hidden = d.attr(th, "hidden") == "true";
+						cell.hidden = (d.attr(th, "hidden") == "true" || d.attr(th, "hidden") === true/*always boolean true in Chrome*/);
 					}
 
 					if(cellFunc){

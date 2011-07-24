@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,8 +8,8 @@
 if(!dojo._hasResource["dojox.encoding.digests.MD5"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.encoding.digests.MD5"] = true;
 dojo.provide("dojox.encoding.digests.MD5");
-
 dojo.require("dojox.encoding.digests._base");
+
 
 /*	A port of Paul Johnstone's MD5 implementation
  *	http://pajhome.org.uk/crypt/md5/index.html
@@ -124,7 +124,7 @@ dojo.require("dojox.encoding.digests._base");
 
 	function hmac(data, key){
 		var wa=dxd.stringToWord(key);
-		if(wa.length>16){ 
+		if(wa.length>16){
 			wa=core(wa, key.length*chrsz);
 		}
 		var l=[], r=[];

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -84,7 +84,7 @@ dojox.date.relative.format = function(/*Date*/dateObject, /*dojox.date.relative.
 		return fmt(dateObject, del(fmtOpts, {selector: "time"}));
 	}else if(diff <= SIX_DAYS && diff > 0 && options.weekCheck !== false){
 		// within the last week: Mon 9:32 am
-		return fmt(dateObject, del(fmtOpts, {selector: "date", datePattern: "EEE"})) + 
+		return fmt(dateObject, del(fmtOpts, {selector: "date", datePattern: "EEE"})) +
 				" " +
 				fmt(dateObject, del(fmtOpts, {selector: "time", formatLength: "short"}));
 	}else if(dateObject.getFullYear() == today.getFullYear()){

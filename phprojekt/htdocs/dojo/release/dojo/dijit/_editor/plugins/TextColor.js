@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,9 +8,9 @@
 if(!dojo._hasResource["dijit._editor.plugins.TextColor"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit._editor.plugins.TextColor"] = true;
 dojo.provide("dijit._editor.plugins.TextColor");
-
 dojo.require("dijit._editor._Plugin");
 dojo.require("dijit.ColorPalette");
+
 
 dojo.declare("dijit._editor.plugins.TextColor", dijit._editor._Plugin, {
 	// summary:
@@ -50,6 +50,10 @@ dojo.declare("dijit._editor.plugins.TextColor", dijit._editor._Plugin, {
 		}
 		
 		if(this.button){
+			var disabled = this.get("disabled");
+			this.button.set("disabled", disabled);
+			if(disabled){ return; }
+			
 			var value;
 			try{
 				value = _e.queryCommandValue(_c)|| "";
@@ -67,7 +71,7 @@ dojo.declare("dijit._editor.plugins.TextColor", dijit._editor._Plugin, {
 		}
 
 		if(typeof value == "string"){
-			//if RGB value, convert to hex value	
+			//if RGB value, convert to hex value
 			if(value.indexOf("rgb")> -1){
 				value = dojo.colorFromRgb(value).toHex();
 			}

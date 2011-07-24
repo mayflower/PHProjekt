@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -101,7 +101,7 @@ dojo.require("dojox.form.manager._Mixin");
 				var eventName = ce(n);
 				dojo.forEach(observers, function(o){
 					c.push(dojo.connect(n, eventName, this, function(evt){
-						if(this.watch){
+						if(this.watching){
 							this[o](this.formNodeValue(name), name, n, evt);
 						}
 					}));

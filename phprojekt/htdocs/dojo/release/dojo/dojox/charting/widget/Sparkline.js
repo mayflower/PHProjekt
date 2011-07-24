@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,7 +10,9 @@ dojo._hasResource["dojox.charting.widget.Sparkline"] = true;
 dojo.provide("dojox.charting.widget.Sparkline");
 
 dojo.require("dojox.charting.widget.Chart2D");
-dojo.require("dojox.charting.themes.ET.greys");
+dojo.require("dojox.charting.themes.GreySkies");
+
+dojo.require("dojox.charting.plot2d.Lines");
 
 (function(){
 
@@ -19,7 +21,7 @@ dojo.require("dojox.charting.themes.ET.greys");
 	dojo.declare("dojox.charting.widget.Sparkline",
 		dojox.charting.widget.Chart2D,
 		{
-			theme: dojox.charting.themes.ET.greys,
+			theme: dojox.charting.themes.GreySkies,
 			margins: { l: 0, r: 0, t: 0, b: 0 },
 			type: "Lines",
 			valueFn: "Number(x)",

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,8 +8,8 @@
 if(!dojo._hasResource["dijit.layout.LayoutContainer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit.layout.LayoutContainer"] = true;
 dojo.provide("dijit.layout.LayoutContainer");
-
 dojo.require("dijit.layout._LayoutWidget");
+
 
 dojo.declare("dijit.layout.LayoutContainer",
 	dijit.layout._LayoutWidget,

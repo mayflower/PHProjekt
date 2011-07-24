@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,7 +11,7 @@ dojo.provide("dojox.charting.themes.Harmony");
 dojo.require("dojox.charting.Theme");
 (function(){
 	var dxc=dojox.charting;
-		dxc.themes.Harmony=new dxc.Theme({ 
+		dxc.themes.Harmony=new dxc.Theme({
 		colors: [
 			"#497c91",
 			"#59a0bd",

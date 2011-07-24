@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,9 +8,9 @@
 if(!dojo._hasResource["dijit.form.HorizontalRule"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit.form.HorizontalRule"] = true;
 dojo.provide("dijit.form.HorizontalRule");
-
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
+
 
 dojo.declare("dijit.form.HorizontalRule", [dijit._Widget, dijit._Templated],
 {
@@ -44,7 +44,9 @@ dojo.declare("dijit.form.HorizontalRule", [dijit._Widget, dijit._Templated],
 	//		VerticalRule will override this...
 	_isHorizontal: true,
 
-	postCreate: function(){
+	buildRendering: function(){
+		this.inherited(arguments);
+
 		var innerHTML;
 		if(this.count == 1){
 			innerHTML = this._genHTML(50, 0);

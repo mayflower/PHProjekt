@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,8 +19,6 @@ dojox.drawing.tools.custom.Vector = dojox.drawing.util.oo.declare(
 	//		head is only at the end. There is additionaly functionality
 	//		to allow for a 'zero vector' - one with no length.
 	//
-	// 	TODO: Zero Vectors are less than the minimumSize. But if
-	//	you get the radius, it will report a length.
 	//
 	dojox.drawing.tools.Arrow,
 	function(options){
@@ -33,17 +31,7 @@ dojox.drawing.tools.custom.Vector = dojox.drawing.util.oo.declare(
 		minimumSize:30,
 		showAngle:true,
 		
-		labelPosition: function(){
-			// summary:
-			//		The custom position used for the label
-			//
-			var d = this.data;
-			var pt = dojox.drawing.util.positioning.label({x:d.x1,y:d.y1},{x:d.x2,y:d.y2});
-			return {
-				x:pt.x,
-				y:pt.y
-			}
-		},
+		
 		
 		changeAxis: function(cosphi){
 			//	summary:
@@ -152,7 +140,7 @@ dojox.drawing.tools.custom.Vector = dojox.drawing.util.oo.declare(
 			// is for stencil move:
 			
 			this.setPoints(this.points);
-			this.render();			
+			this.render();
 		},
 		
 		anchorConstrain: function(x, y){
@@ -162,7 +150,7 @@ dojox.drawing.tools.custom.Vector = dojox.drawing.util.oo.declare(
 			var radians = this.style.zAngle*Math.PI/180;
 			//Constrain to angle
 			var test = x<0 ? x>-y : x<-y;
-			var dx = test ? x : -y/Math.tan(radians); 
+			var dx = test ? x : -y/Math.tan(radians);
 			var dy = !test ? y : -Math.tan(radians)*x;
 			return {x:dx, y:dy}
 		},
@@ -279,17 +267,15 @@ dojox.drawing.tools.custom.Vector = dojox.drawing.util.oo.declare(
 				this.render();
 			}
 			
-			// if too small, need to reset
-			// 		This sets the zero length vector to zero within the minimum size 
-			
+			// When within minimum size this sets zero vector length to zero
 			if(this.getRadius()<this.minimumSize){
-				var p = this.points; 
-				this.setPoints([ 
-					{x:p[0].x, y:p[0].y}, 
-					{x:p[0].x, y:p[0].y} 
-				]); 
-			}else{ 			
-				//needed as else to avoid zero length problem in snapAngle 
+				var p = this.points;
+				this.setPoints([
+					{x:p[0].x, y:p[0].y},
+					{x:p[0].x, y:p[0].y}
+				]);
+			}else{
+				//SnapAngle fails for the zero length vector
 				var p = this.points;
 				var pt = this.style.zAxis ? this.zPoint(obj) : this.util.snapAngle(obj, this.angleSnap/180);
 				this.setPoints([
@@ -317,7 +303,7 @@ if(dojox.drawing.defaults.zAxisEnabled){
 		// summary:
 		//		Creates a secondary tool for the Vector Stencil.
 		// description:
-		//		See Toolbar.js makeButtons function.  The toolbar 
+		//		See Toolbar.js makeButtons function.  The toolbar
 		//		checks Vector.setup for a secondary tool and requires
 		//		name, label, and funct.  Currently it doesn't accept icon
 		//		and only uses text from label for the button.  Funct is the
@@ -369,7 +355,7 @@ if(dojox.drawing.defaults.zAxisEnabled){
 				dojo.forEach(this.buttons, function(b){
 					if(b.toolType=="vector" && b.selected){
 						this.drawing.currentStencil.style.zAxis = zAxis;
-					} 
+					}
 				},this);
 			};
 			dojo.connect(this, "onRenderStencil", this, function(){ if(this.zSelected){ this.zDeselect(this.zSelected)}});

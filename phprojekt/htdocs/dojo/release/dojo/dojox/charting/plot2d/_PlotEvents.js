@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -92,14 +92,16 @@ dojo.declare("dojox.charting.plot2d._PlotEvents", null, {
 		});
 	},
 	_connectEvents: function(o){
-		o.chart = this.chart;
-		o.plot  = this;
-		o.hAxis = this.hAxis || null;
-		o.vAxis = this.vAxis || null;
-		o.eventMask = o.eventMask || o.shape;
-		this._connectSingleEvent(o, "onmouseover");
-		this._connectSingleEvent(o, "onmouseout");
-		this._connectSingleEvent(o, "onclick");
+        if(o){
+            o.chart = this.chart;
+            o.plot  = this;
+            o.hAxis = this.hAxis || null;
+            o.vAxis = this.vAxis || null;
+            o.eventMask = o.eventMask || o.shape;
+            this._connectSingleEvent(o, "onmouseover");
+            this._connectSingleEvent(o, "onmouseout");
+            this._connectSingleEvent(o, "onclick");
+        }
 	},
 	_reconnectEvents: function(seriesName){
 		var a = this._eventSeries[seriesName];

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -70,7 +70,7 @@ dojo.provide("dojox.html.metrics");
 			m = measuringNode = dojo.doc.createElement("div");
 			// Container that we can set contraints on so that it doesn't
 			// trigger a scrollbar.
-			var c = dojo.doc.createElement("div"); 
+			var c = dojo.doc.createElement("div");
 			c.appendChild(m);
 			s = c.style;
 			s.overflow='scroll';

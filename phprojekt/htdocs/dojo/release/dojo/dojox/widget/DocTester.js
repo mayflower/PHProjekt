@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,11 +15,11 @@ dojo.require("dijit._Templated");
 dojo.require("dojox.form.BusyButton");
 dojo.require("dojox.testing.DocTest");
 
-dojo.declare('dojox.widget.DocTester', 
+dojo.declare('dojox.widget.DocTester',
 	[dijit._Widget, dijit._Templated],
 	{
 		// summary: A widget to run DocTests inside an HTML page.
-		// 
+		//
 		templateString: dojo.cache("dojox.widget", "DocTester/DocTester.html", "<div dojoAttachPoint=\"domNode\" class=\"dojoxDocTester\">\n\t<div dojoAttachPoint=\"containerNode\"></div>\n\t<button dojoType=\"dojox.form.BusyButton\" busyLabel=\"Testing...\" dojoAttachPoint=\"runButtonNode\">Run tests</button>\n\t<button dojoType=\"dijit.form.Button\" dojoAttachPoint=\"resetButtonNode\" style=\"display:none;\">Reset</button>\n\t<span>\n\t\t<span dojoAttachPoint=\"numTestsNode\">0</span> tests,\n\t\t<span dojoAttachPoint=\"numTestsOkNode\">0</span> passed,\n\t\t<span dojoAttachPoint=\"numTestsNokNode\">0</span> failed\n\t</span>\n</div>\n"),
 		widgetsInTemplate: true,
 	

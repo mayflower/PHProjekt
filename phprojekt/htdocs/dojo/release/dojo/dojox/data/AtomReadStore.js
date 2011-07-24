@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,9 +8,8 @@
 if(!dojo._hasResource["dojox.data.AtomReadStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.data.AtomReadStore"] = true;
 dojo.provide("dojox.data.AtomReadStore");
-
-dojo.require("dojo.data.util.simpleFetch");
 dojo.require("dojo.data.util.filter");
+dojo.require("dojo.data.util.simpleFetch");
 dojo.require("dojo.date.stamp");
 
 dojo.experimental("dojox.data.AtomReadStore");
@@ -483,8 +482,8 @@ dojo.declare("dojox.data.AtomReadStore", null, {
 							case "name":
 								nameNode = child;
 								break;
-							case "uri": 
-								uriNode = child; 
+							case "uri":
+								uriNode = child;
 								break;
 						}
 					});
@@ -497,13 +496,13 @@ dojo.declare("dojox.data.AtomReadStore", null, {
 					}
 					attribs[tagName] = author;
 					break;
-				case "id": 
-					attribs[tagName] = getNodeText(node); 
+				case "id":
+					attribs[tagName] = getNodeText(node);
 					break;
-				case "updated": 
+				case "updated":
 					attribs[tagName] = dojo.date.stamp.fromISOString(getNodeText(node) );
 					break;
-				case "published": 
+				case "published":
 					attribs[tagName] = dojo.date.stamp.fromISOString(getNodeText(node));
 					break;
 				case "category":

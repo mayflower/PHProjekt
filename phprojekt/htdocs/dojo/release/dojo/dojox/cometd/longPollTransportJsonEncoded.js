@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,8 +11,8 @@ dojo.provide("dojox.cometd.longPollTransportJsonEncoded");
 dojo.require("dojox.cometd._base");
 
 dojox.cometd.longPollTransportJsonEncoded = new function(){
-	// This is an alternative implementation to that provided in logPollTransportFormEncoded.js 
-	// that sends messages as text/json rather than form encoding them. 
+	// This is an alternative implementation to that provided in logPollTransportFormEncoded.js
+	// that sends messages as text/json rather than form encoding them.
 	
 	this._connectionType="long-polling";
 	this._cometd=null;

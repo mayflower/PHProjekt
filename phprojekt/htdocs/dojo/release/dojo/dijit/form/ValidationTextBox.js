@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,13 +8,11 @@
 if(!dojo._hasResource["dijit.form.ValidationTextBox"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit.form.ValidationTextBox"] = true;
 dojo.provide("dijit.form.ValidationTextBox");
-
 dojo.require("dojo.i18n");
-
 dojo.require("dijit.form.TextBox");
 dojo.require("dijit.Tooltip");
-
 dojo.requireLocalization("dijit.form", "validate", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+
 
 /*=====
 	dijit.form.ValidationTextBox.__Constraints = function(){
@@ -36,7 +34,7 @@ dojo.declare(
 		// tags:
 		//		protected
 
-		templateString: dojo.cache("dijit.form", "templates/ValidationTextBox.html", "<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\n\tid=\"widget_${id}\" waiRole=\"presentation\"\n\t><div class='dijitReset dijitValidationContainer'\n\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&Chi; \" type=\"text\" tabIndex=\"-1\" readOnly waiRole=\"presentation\"\n\t/></div\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\n\t\t><input class=\"dijitReset dijitInputInner\" dojoAttachPoint='textbox,focusNode' autocomplete=\"off\"\n\t\t\t${!nameAttrSetting} type='${type}'\n\t/></div\n></div>\n"),
+		templateString: dojo.cache("dijit.form", "templates/ValidationTextBox.html", "<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\n\tid=\"widget_${id}\" role=\"presentation\"\n\t><div class='dijitReset dijitValidationContainer'\n\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&#935; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\n\t/></div\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\n\t\t><input class=\"dijitReset dijitInputInner\" dojoAttachPoint='textbox,focusNode' autocomplete=\"off\"\n\t\t\t${!nameAttrSetting} type='${type}'\n\t/></div\n></div>\n"),
 		baseClass: "dijitTextBox dijitValidationTextBox",
 
 		// required: Boolean
@@ -45,6 +43,7 @@ dojo.declare(
 
 		// promptMessage: String
 		//		If defined, display this hint string immediately on focus to the textbox, if empty.
+		//		Also displays if the textbox value is Incomplete (not yet valid but will be with additional input).
 		//		Think of this like a tooltip that tells the user what to do, not an error message
 		//		that tells the user what they've done wrong.
 		//
@@ -63,6 +62,12 @@ dojo.declare(
 		// 		Set to "" to use the invalidMessage instead.
 		missingMessage: "$_unset_$",
 
+		// message: String
+		//		Currently error/prompt message.
+		//		When using the default tooltip implementation, this will only be
+		//		displayed when the field is focused.
+		message: "",
+
 		// constraints: dijit.form.ValidationTextBox.__Constraints
 		//		user-defined object needed to pass parameters to the validator functions
 		constraints: {},
@@ -72,7 +77,7 @@ dojo.declare(
 		//		Do not specify both regExp and regExpGen
 		regExp: ".*",
 
-		regExpGen: function(/*dijit.form.ValidationTextBox.__Constraints*/constraints){
+		regExpGen: function(/*dijit.form.ValidationTextBox.__Constraints*/ constraints){
 			// summary:
 			//		Overridable function used to generate regExp when dependent on constraints.
 			//		Do not specify both regExp and regExpGen.
@@ -82,7 +87,7 @@ dojo.declare(
 		},
 
 		// state: [readonly] String
-		//		Shows current state (ie, validation result) of input (Normal, Warning, or Error)
+		//		Shows current state (ie, validation result) of input (""=Normal, Incomplete, or Error)
 		state: "",
 
 		// tooltipPosition: String[]
@@ -91,12 +96,12 @@ dojo.declare(
 
 		_setValueAttr: function(){
 			// summary:
-			//		Hook so attr('value', ...) works.
+			//		Hook so set('value', ...) works.
 			this.inherited(arguments);
 			this.validate(this._focused);
 		},
 
-		validator: function(/*anything*/value, /*dijit.form.ValidationTextBox.__Constraints*/constraints){
+		validator: function(/*anything*/ value, /*dijit.form.ValidationTextBox.__Constraints*/ constraints){
 			// summary:
 			//		Overridable function used to validate the text input against the regular expression.
 			// tags:
@@ -156,26 +161,23 @@ dojo.declare(
 			var isValid = this.disabled || this.isValid(isFocused);
 			if(isValid){ this._maskValidSubsetError = true; }
 			var isEmpty = this._isEmpty(this.textbox.value);
-			var isValidSubset = !isValid && !isEmpty && isFocused && this._isValidSubset();
-			this.state = ((isValid || ((!this._hasBeenBlurred || isFocused) && isEmpty) || isValidSubset) && this._maskValidSubsetError) ? "" : "Error";
-			if(this.state == "Error"){ this._maskValidSubsetError = isFocused; } // we want the error to show up afer a blur and refocus
-			this._setStateClass();
+			var isValidSubset = !isValid && isFocused && this._isValidSubset();
+			this._set("state", isValid ? "" : (((((!this._hasBeenBlurred || isFocused) && isEmpty) || isValidSubset) && this._maskValidSubsetError) ? "Incomplete" : "Error"));
 			dijit.setWaiState(this.focusNode, "invalid", isValid ? "false" : "true");
-			if(isFocused){
-				if(this.state == "Error"){
-					message = this.getErrorMessage(true);
-				}else{
-					message = this.getPromptMessage(true); // show the prompt whever there's no error
-				}
-				this._maskValidSubsetError = true; // since we're focused, always mask warnings
+
+			if(this.state == "Error"){
+				this._maskValidSubsetError = isFocused && isValidSubset; // we want the error to show up after a blur and refocus
+				message = this.getErrorMessage(isFocused);
+			}else if(this.state == "Incomplete"){
+				message = this.getPromptMessage(isFocused); // show the prompt whenever the value is not yet complete
+				this._maskValidSubsetError = !this._hasBeenBlurred || isFocused; // no Incomplete warnings while focused
+			}else if(isEmpty){
+				message = this.getPromptMessage(isFocused); // show the prompt whenever there's no error and no text
 			}
-			this.displayMessage(message);
+			this.set("message", message);
+
 			return isValid;
 		},
-
-		// _message: String
-		//		Currently displayed message
-		_message: "",
 
 		displayMessage: function(/*String*/ message){
 			// summary:
@@ -183,10 +185,8 @@ dojo.declare(
 			//		By default uses a tooltip.
 			// tags:
 			//		extension
-			if(this._message == message){ return; }
-			this._message = message;
 			dijit.hideTooltip(this.domNode);
-			if(message){
+			if(message && this._focused){
 				dijit.showTooltip(message, this.domNode, this.tooltipPosition, !this.isLeftToRight());
 			}
 		},
@@ -203,11 +203,11 @@ dojo.declare(
 			this.constraints = {};
 		},
 
-		_setConstraintsAttr: function(/* Object */ constraints){
+		_setConstraintsAttr: function(/*Object*/ constraints){
 			if(!constraints.locale && this.lang){
 				constraints.locale = this.lang;
 			}
-			this.constraints = constraints;
+			this._set("constraints", constraints);
 			this._computePartialRE();
 		},
 
@@ -264,9 +264,14 @@ dojo.declare(
 		},
 
 		_setRequiredAttr: function(/*Boolean*/ value){
-			this.required = value;
+			this._set("required", value);
 			dijit.setWaiState(this.focusNode, "required", value);
 			this._refreshState();
+		},
+
+		_setMessageAttr: function(/*String*/ message){
+			this._set("message", message);
+			this.displayMessage(message);
 		},
 
 		reset:function(){
@@ -277,7 +282,10 @@ dojo.declare(
 		},
 
 		_onBlur: function(){
+			// the message still exists but for back-compat, and to erase the tooltip
+			// (if the message is being displayed as a tooltip), call displayMessage('')
 			this.displayMessage('');
+
 			this.inherited(arguments);
 		}
 	}
@@ -308,9 +316,9 @@ dojo.declare(
 			this.nameAttrSetting = "";
 		},
 
-		serialize: function(/*anything*/val, /*Object?*/options){
+		serialize: function(/*anything*/ val, /*Object?*/ options){
 			// summary:
-			//		Overridable function used to convert the attr('value') result to a canonical
+			//		Overridable function used to convert the get('value') result to a canonical
 			//		(non-localized) string.  For example, will print dates in ISO format, and
 			//		numbers the same way as they are represented in javascript.
 			// tags:
@@ -342,10 +350,10 @@ dojo.declare(
 			// (as opposed to the displayed value).
 			// Passing in name as markup rather than calling dojo.create() with an attrs argument
 			// to make dojo.query(input[name=...]) work on IE. (see #8660)
-			this.valueNode = dojo.place("<input type='hidden'" + (this.name ? " name='" + this.name + "'" : "") + ">", this.textbox, "after");
+			this.valueNode = dojo.place("<input type='hidden'" + (this.name ? " name='" + this.name.replace(/'/g, "&quot;") + "'" : "") + "/>", this.textbox, "after");
 		},
 
-		reset:function(){
+		reset: function(){
 			// Overrides `dijit.form.ValidationTextBox.reset` to
 			// reset the hidden textbox value to ''
 			this.valueNode.value = '';
@@ -449,7 +457,7 @@ dojo.declare(
 			}
 		},
 
-		_setConstraintsAttr: function(/* Object */ constraints){
+		_setConstraintsAttr: function(/*Object*/ constraints){
 			this.inherited(arguments);
 			if(this.focusNode){ // not set when called from postMixInProperties
 				if(this.constraints.min !== undefined){
@@ -467,7 +475,7 @@ dojo.declare(
 
 		_setValueAttr: function(/*Number*/ value, /*Boolean?*/ priorityChange){
 			// summary:
-			//		Hook so attr('value', ...) works.
+			//		Hook so set('value', ...) works.
 
 			dijit.setWaiState(this.focusNode, "valuenow", value);
 			this.inherited(arguments);

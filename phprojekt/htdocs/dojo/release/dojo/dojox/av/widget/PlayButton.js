@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -39,7 +39,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 		//		Fired on play or pause click.
 		//
 		if(this._mode=="play"){
-			this.onPlay();	
+			this.onPlay();
 		}else{
 			this.onPause();
 		}
@@ -65,7 +65,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 	},
 	showPlay: function(){
 		// summary:
-		//		Toggles the pause button invisible and the play 
+		//		Toggles the pause button invisible and the play
 		//		button visible..
 		//
 		this._mode = "play";
@@ -74,7 +74,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 	},
 	showPause: function(){
 		// summary:
-		//		Toggles the play button invisible and the pause 
+		//		Toggles the play button invisible and the pause
 		//		button visible.
 		//
 		this._mode = "pause";

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -163,7 +163,7 @@ dojo.provide("dojox.lang.aspect");
 		//		satisfy the RegExp condition are processed. This function
 		//		returns a handle, which can be used to unadvise, or null,
 		//		if advising has failed.
-		//		
+		//
 		//		This function is a convenience wrapper for
 		//		dojox.lang.aspect.adviseRaw().
 		//

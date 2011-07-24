@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -160,7 +160,7 @@ StencilPoints: [
 
 
 dojox.drawing.register({
-	name:"dojox.drawing.stencil.Image"	
+	name:"dojox.drawing.stencil.Image"
 }, "stencil");
 
 }

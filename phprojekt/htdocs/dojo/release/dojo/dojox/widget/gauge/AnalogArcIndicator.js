@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,7 +15,7 @@ dojo.experimental("dojox.widget.gauge.AnalogArcIndicator");
 dojo.declare("dojox.widget.gauge.AnalogArcIndicator",[dojox.widget.gauge.AnalogLineIndicator],{
 	_createArc: function(val){
 		// Creating the Arc Path string manually.  This is instead of creating new dojox.gfx.Path object
-		// each time since we really just need the Path string (to use with setShape) and we don't want to 
+		// each time since we really just need the Path string (to use with setShape) and we don't want to
 		// have to redo the connects, etc.
 		if(this.shapes[0]){
 			var a = this._gauge._getRadians(this._gauge._getAngle(val));
@@ -42,7 +42,7 @@ dojo.declare("dojox.widget.gauge.AnalogArcIndicator",[dojox.widget.gauge.AnalogL
 		}
 	},
 	draw: function(/*Boolean?*/ dontAnimate){
-		// summary: 
+		// summary:
 		//		Override of dojox.widget._Indicator.draw
 		var v = this.value;
 		if(v < this._gauge.min){v = this._gauge.min;}

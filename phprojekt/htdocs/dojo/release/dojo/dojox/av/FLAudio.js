@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -75,17 +75,26 @@ dojo.declare("dojox.av.FLAudio", null, {
 	_swfPath: dojo.moduleUrl("dojox.av", "resources/audio.swf"),
 	//
 	//
+	// allowScriptAccess: String
+	//		Whether the SWF can access the container JS
+	allowScriptAccess:"always",
+	//
+	// allowNetworking: String
+	//		Whether SWF is restricted to a domain
+	allowNetworking: "all",
+	//
+
 	constructor: function(/*Object*/options){
-		
+
 		// Provide this function for the SWF to ensure that the it is playing
-		// in HTML. 
+		// in HTML.
 		dojo.global.swfIsInHTML = function(){ return true; }
-		
+
 		dojo.mixin(this, options || {});
 		if(!this.id){ this.id = "flaudio_"+new Date().getTime(); }
 		this.domNode = dojo.doc.createElement("div");
 		dojo.style(this.domNode, {
-			postion:"relative",
+			position:"relative",
 			width:"1px",
 			height:"1px",
 			top:"1px",
@@ -110,7 +119,9 @@ dojo.declare("dojox.av.FLAudio", null, {
 			minimumVersion:9, // this may need to be 10, not sure
 			expressInstall:true,
 			params:{
-				wmode:"transparent"
+				wmode:"transparent",
+				allowScriptAccess:this.allowScriptAccess,
+				allowNetworking:this.allowNetworking
 			},
 			// only pass in simple variables - no deep objects
 			vars:{
@@ -133,7 +144,6 @@ dojo.declare("dojox.av.FLAudio", null, {
 		this._flashObject = new dojox.embed.Flash(args, this.domNode);
 		this._flashObject.onError = function(err){
 			console.warn("Flash Error:", err);
-			alert(err);
 		};
 		this._flashObject.onLoad = dojo.hitch(this, function(mov){
 			this.flashMedia = mov;

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -102,7 +102,7 @@ dojo.require("dojox.gfx._base");
 		specular: function(normal, v, roughness, lights){
 			var c = lite.black();
 			for(var i = 0; i < lights.length; ++i){
-				var l = lights[i], 
+				var l = lights[i],
 					h = lite.normalize(lite.add(lite.normalize(l.direction), v)),
 					s = Math.pow(Math.max(0, lite.dot(normal, h)), 1 / roughness);
 				c = lite.addColor(c, lite.scaleColor(s, l.color));

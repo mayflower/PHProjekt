@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -18,7 +18,7 @@ dojo.extend(dojox.dtl.utils.date.DateFormat, dojox.date.php.DateFormat.prototype
 	f: function(){
 		// summary:
 		//		Time, in 12-hour hours and minutes, with minutes left off if they're zero.
-		// description: 
+		// description:
 		//		Examples: '1', '1:30', '2:05', '2'
 		//		Proprietary extension.
 		return (!this.date.getMinutes()) ? this.g() : this.g() + ":" + this.i();

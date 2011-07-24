@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,6 +8,8 @@
 if(!dojo._hasResource["dojo.hash"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojo.hash"] = true;
 dojo.provide("dojo.hash");
+
+
 //TODOC: where does this go?
 // summary:
 //		Methods for monitoring and updating the hash in the browser URL.
@@ -27,11 +29,11 @@ dojo.provide("dojo.hash");
 		//		Handles getting and setting of location.hash.
 		//		 - If no arguments are passed, acts as a getter.
 		//		 - If a string is passed, acts as a setter.
-		//	hash: 
-		//		String: the hash is set - #string.
+		//	hash:
+		//		the hash is set - #string.
 		//	replace:
-		//		Boolean: If true, updates the hash value in the current history 
-		//			state instead of creating a new history state.
+		//		If true, updates the hash value in the current history
+		//		state instead of creating a new history state.
 		//	returns:
 		//		when used as a getter, returns the current hash string.
 		//		when used as a setter, returns the new hash string.
@@ -50,7 +52,7 @@ dojo.provide("dojo.hash");
 			location.href = "#" + hash;
 		}
 		return hash; // String
-	}
+	};
 
 	// Global vars
 	var _recentHash, _ieUriMonitor, _connect,
@@ -59,7 +61,7 @@ dojo.provide("dojo.hash");
 	//Internal functions
 	function _getSegment(str, delimiter){
 		var i = str.indexOf(delimiter);
-		return (i >= 0) ? str.substring(i+1) : "";  
+		return (i >= 0) ? str.substring(i+1) : "";
 	}
 	
 	function _getHash(){
@@ -96,7 +98,7 @@ dojo.provide("dojo.hash");
 
 	function IEUriMonitor(){
 		// summary:
-		//		Determine if the browser's URI has changed or if the user has pressed the 
+		//		Determine if the browser's URI has changed or if the user has pressed the
 		//		back or forward button. If so, call _dispatchEvent.
 		//
 		//	description:
@@ -146,6 +148,13 @@ dojo.provide("dojo.hash");
 		var ifr = document.createElement("iframe"),
 			IFRAME_ID = "dojo-hash-iframe",
 			ifrSrc = dojo.config.dojoBlankHtmlUrl || dojo.moduleUrl("dojo", "resources/blank.html");
+
+		if(dojo.config.useXDomain && !dojo.config.dojoBlankHtmlUrl){
+			console.warn("dojo.hash: When using cross-domain Dojo builds,"
+				+ " please save dojo/resources/blank.html to your domain and set djConfig.dojoBlankHtmlUrl"
+				+ " to the path on your domain to blank.html");
+		}
+
 		ifr.id = IFRAME_ID;
 		ifr.src = ifrSrc + "?" + _getHash();
 		ifr.style.display = "none";
@@ -164,7 +173,7 @@ dojo.provide("dojo.hash");
 
 		this.isTransitioning = function(){
 			return transitioning;
-		}
+		};
 		
 		this.pollLocation = function(){
 			if(!ifrOffline) {
@@ -215,7 +224,7 @@ dojo.provide("dojo.hash");
 				}
 			}
 			setTimeout(dojo.hitch(this,this.pollLocation), _pollFrequency);
-		}
+		};
 		resetState(); // initialize state (transition to s1)
 		setTimeout(dojo.hitch(this,this.pollLocation), _pollFrequency);
 	}
@@ -229,7 +238,7 @@ dojo.provide("dojo.hash");
 			}else if(document.attachEvent){ // IE7-
 				//Use hidden iframe in versions of IE that don't have onhashchange event
 				_ieUriMonitor = new IEUriMonitor();
-			} 
+			}
 			// else non-supported browser, do nothing.
 		}
 	});

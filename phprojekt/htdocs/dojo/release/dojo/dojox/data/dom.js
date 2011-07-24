@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,6 +9,7 @@ if(!dojo._hasResource["dojox.data.dom"]){ //_hasResource checks added by build. 
 dojo._hasResource["dojox.data.dom"] = true;
 dojo.provide("dojox.data.dom");
 dojo.require("dojox.xml.parser");
+
 
 //DOM type to int value for reference.
 //Ints make for more compact code than full constant names.
@@ -34,7 +35,7 @@ dojox.data.dom.createDocument = function(/*string?*/ str, /*string?*/ mimetype){
 	//		cross-browser implementation of creating an XML document object.
 	//
 	//	str:
-	//		Optional text to create the document from.  If not provided, an empty XML document will be created.  
+	//		Optional text to create the document from.  If not provided, an empty XML document will be created.
 	//		If str is empty string "", then a new empty document will be created.
 	//	mimetype:
 	//		Optional mimetype of the text.  Typically, this is text/xml.  Will be defaulted to text/xml if not provided.
@@ -52,7 +53,7 @@ dojox.data.dom.textContent = function(/*Node*/node, /*string?*/text){
 	//		Implementation of the DOM Level 3 attribute; scan node for text
 	//	description:
 	//		Implementation of the DOM Level 3 attribute; scan node for text
-	//		This function can also update the text of a node by replacing all child 
+	//		This function can also update the text of a node by replacing all child
 	//		content of the node.
 	//	node:
 	//		The node to get the text off of or set the text on.
@@ -101,6 +102,5 @@ dojox.data.dom.innerXML = function(/*Node*/node){
 	dojo.deprecated("dojox.data.dom.innerXML()", "Use dojox.xml.parser.innerXML() instead.", "2.0");
 	return dojox.xml.parser.innerXML(node); //string||null
 };
-
 
 }

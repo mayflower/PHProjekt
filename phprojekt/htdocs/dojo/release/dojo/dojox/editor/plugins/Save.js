@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,32 +8,31 @@
 if(!dojo._hasResource["dojox.editor.plugins.Save"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.editor.plugins.Save"] = true;
 dojo.provide("dojox.editor.plugins.Save");
-
-dojo.require("dijit._editor._Plugin");
 dojo.require("dijit.form.Button");
+dojo.require("dijit._editor._Plugin");
 dojo.require("dojo.i18n");
+dojo.requireLocalization("dojox.editor.plugins", "Save", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
-dojo.requireLocalization("dojox.editor.plugins", "Save", null, "ROOT,cs,de,es,fr,hu,it,ja,kk,ko,pl,pt,ro,ru,zh,zh-tw");
 
 dojo.declare("dojox.editor.plugins.Save",dijit._editor._Plugin,{
 	// summary:
-	//		This plugin provides Save cabability to the editor.  When 
+	//		This plugin provides Save cabability to the editor.  When
 	//		clicked, the document in the editor frame will be osted to the URL
 	//		provided, or none, if none provided.  Users who desire a different save
-	//		function can extend this plugin (via dojo.extend) and over-ride the 
+	//		function can extend this plugin (via dojo.extend) and over-ride the
 	//		save method	while save is in process, the save button is disabled.
 
 	// iconClassPrefix: [const] String
-	//		The CSS class name for the button node is formed from `iconClassPrefix` 
+	//		The CSS class name for the button node is formed from `iconClassPrefix`
 	//		and `command`
 	iconClassPrefix: "dijitAdditionalEditorIcon",
 
 	// url [public]	String
-	//		The URL to POST the content back to.  Used by the save function. 
+	//		The URL to POST the content back to.  Used by the save function.
 	url: "",
 
 	// logErrors [public] boolean
-	//		Boolean flag to indicate that the default action for save and 
+	//		Boolean flag to indicate that the default action for save and
 	//		error handlers is to just log to console.  Default is true.
 	logResults: true,
 
@@ -48,6 +47,12 @@ dojo.declare("dojox.editor.plugins.Save",dijit._editor._Plugin,{
 			tabIndex: "-1",
 			onClick: dojo.hitch(this, "_save")
 		});
+	},
+	
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
 	},
 
 	setEditor: function(editor){
@@ -99,7 +104,7 @@ dojo.declare("dojox.editor.plugins.Save",dijit._editor._Plugin,{
 
 	onSuccess: function(resp, ioargs){
 		// summary:
-		//		User over-ridable save success function for editor content.  
+		//		User over-ridable save success function for editor content.
 		//		Be sure to call this.inherited(arguments) if over-riding this method.
 		// resp:
 		//		The response from the server, if any, in text format.
@@ -113,7 +118,7 @@ dojo.declare("dojox.editor.plugins.Save",dijit._editor._Plugin,{
 
 	onError: function(error, ioargs){
 		// summary:
-		//		User over-ridable save success function for editor content.  
+		//		User over-ridable save success function for editor content.
 		//		Be sure to call this.inherited(arguments) if over-riding this method.
 		// resp:
 		//		The response from the server, if any, in text format.

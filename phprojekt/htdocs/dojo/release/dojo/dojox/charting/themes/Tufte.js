@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -26,14 +26,14 @@ dojox.charting.themes.Tufte = new dojox.charting.Theme({
 	},
 	axis: {
 		stroke: {width: 1, color: "#ccc"},
-		majorTick:{ 
-			color:	"black", 
+		majorTick:{
+			color:	"black",
 			width:	1,
 			length: 5
 		},
-		minorTick: { 
-			color:	"#666", 
-			width:	1, 
+		minorTick: {
+			color:	"#666",
+			width:	1,
 			length:	2
 		},
 		font: "normal normal normal 8pt Tahoma",
@@ -54,11 +54,11 @@ dojox.charting.themes.Tufte = new dojox.charting.Theme({
 		fontColor: "black"
 	},
 	colors:[
-		dojo.colorFromHex("#8a8c8f"), 
+		dojo.colorFromHex("#8a8c8f"),
 		dojo.colorFromHex("#4b4b4b"),
-		dojo.colorFromHex("#3b444b"), 
+		dojo.colorFromHex("#3b444b"),
 		dojo.colorFromHex("#2e2d30"),
-		dojo.colorFromHex("#000000") 
+		dojo.colorFromHex("#000000")
 	]
 });
 

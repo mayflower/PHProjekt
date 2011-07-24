@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -13,7 +13,7 @@ dojo.provide("dojox.lang.docs");
 // This can be utilized for runtime metadata retrieval and type checking
 (function(){
 	function error(error){
-		console.log("Warning, the API docs must be available at ../util/docscripts/api.json "+ 
+		console.log("Warning, the API docs must be available at ../util/docscripts/api.json "+
 		"or ../util/docscripts/api/*.json "+
 		"in order for dojox.lang.docs to supply schema information, but it could not be loaded: " + error);
 	}
@@ -27,7 +27,7 @@ dojo.provide("dojox.lang.docs");
 		declaredClasses[name] = clazz;
 	};
 	var getType = function(typeDef){
-		var type = typeDef.type || '';		
+		var type = typeDef.type || '';
 		var typeObj, optional = false, array = false, dontModify;
 		type = type.replace(/\?/, function(){
 			optional = true;
@@ -143,9 +143,9 @@ dojo.provide("dojox.lang.docs");
 
 	dojox.lang.docs.init = function(/*Boolean*/async){
 		// summary:
-		//		Loads the documentation and applies it to the previously defined classes 
+		//		Loads the documentation and applies it to the previously defined classes
 		// 		and any future defined classes
-		// 
+		//
 		// async:
 		// 		 If true, the documentation will be loaded asynchronously
 		function loadFullDocs(){

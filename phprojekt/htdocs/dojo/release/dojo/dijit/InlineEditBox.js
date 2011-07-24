@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,15 +8,13 @@
 if(!dojo._hasResource["dijit.InlineEditBox"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit.InlineEditBox"] = true;
 dojo.provide("dijit.InlineEditBox");
-
 dojo.require("dojo.i18n");
-
 dojo.require("dijit._Widget");
 dojo.require("dijit._Container");
 dojo.require("dijit.form.Button");
 dojo.require("dijit.form.TextBox");
-
 dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+
 
 dojo.declare("dijit.InlineEditBox",
 	dijit._Widget,
@@ -61,18 +59,22 @@ dojo.declare("dijit.InlineEditBox",
 	//		rather than plain text (ex: `dijit.Editor`)
 	renderAsHtml: false,
 
-	// editor: String
-	//		Class name for Editor widget
+	// editor: String|Function
+	//		Class name (or reference to the Class) for Editor widget
 	editor: "dijit.form.TextBox",
 
-	// editorWrapper: String
-	//		Class name for widget that wraps the editor widget, displaying save/cancel
+	// editorWrapper: String|Function
+	//		Class name (or reference to the Class) for widget that wraps the editor widget, displaying save/cancel
 	//		buttons.
 	editorWrapper: "dijit._InlineEditor",
 
 	// editorParams: Object
 	//		Set of parameters for editor, like {required: true}
 	editorParams: {},
+
+	// disabled: Boolean
+	//		If true, clicking the InlineEditBox to edit it will have no effect.
+	disabled: false,
 
 	onChange: function(value){
 		// summary:
@@ -156,7 +158,6 @@ dojo.declare("dijit.InlineEditBox",
 		// summary:
 		//		Hook to make set("disabled", ...) work.
 		//		Set disabled state of widget.
-		this.disabled = disabled;
 		dijit.setWaiState(this.domNode, "disabled", disabled);
 		if(disabled){
 			this.displayNode.removeAttribute("tabIndex");
@@ -164,6 +165,7 @@ dojo.declare("dijit.InlineEditBox",
 			this.displayNode.setAttribute("tabIndex", 0);
 		}
 		dojo.toggleClass(this.displayNode, "dijitInlineEditBoxDisplayModeDisabled", disabled);
+		this._set("disabled", disabled);
 	},
 
 	_onMouseOver: function(){
@@ -221,7 +223,7 @@ dojo.declare("dijit.InlineEditBox",
 			var placeholder = dojo.create("span", null, this.domNode, "before");
 
 			// Create the editor wrapper (the thing that holds the editor widget and the save/cancel buttons)
-			var ewc = dojo.getObject(this.editorWrapper);
+			var ewc = typeof this.editorWrapper == "string" ? dojo.getObject(this.editorWrapper) : this.editorWrapper;
 			this.wrapperWidget = new ewc({
 				value: this.value,
 				buttonSave: this.buttonSave,
@@ -235,6 +237,9 @@ dojo.declare("dijit.InlineEditBox",
 				save: dojo.hitch(this, "save"),
 				cancel: dojo.hitch(this, "cancel")
 			}, placeholder);
+			if(!this._started){
+				this.startup();
+			}
 		}
 		var ww = this.wrapperWidget;
 
@@ -280,7 +285,7 @@ dojo.declare("dijit.InlineEditBox",
 	},
 
 	destroy: function(){
-		if(this.wrapperWidget){
+		if(this.wrapperWidget && !this.wrapperWidget._destroyed){
 			this.wrapperWidget.destroy();
 			delete this.wrapperWidget;
 		}
@@ -317,9 +322,6 @@ dojo.declare("dijit.InlineEditBox",
 		var value = ww.getValue();
 		this.set('value', value); // display changed, formatted value
 
-		// tell the world that we have changed
-		setTimeout(dojo.hitch(this, "onChange", value), 0); // setTimeout prevents browser freeze for long-running event handlers
-
 		this._showText(focus); // set focus as needed
 	},
 
@@ -337,11 +339,15 @@ dojo.declare("dijit.InlineEditBox",
 		// 		Hook to make set("value", ...) work.
 		//		Inserts specified HTML value into this node, or an "input needed" character if node is blank.
 
-		this.value = val = dojo.trim(val);
-		if(!this.renderAsHtml){
-			val = val.replace(/&/gm, "&amp;").replace(/</gm, "&lt;").replace(/>/gm, "&gt;").replace(/"/gm, "&quot;").replace(/\n/g, "<br>");
+		val = dojo.trim(val);
+		var renderVal = this.renderAsHtml ? val : val.replace(/&/gm, "&amp;").replace(/</gm, "&lt;").replace(/>/gm, "&gt;").replace(/"/gm, "&quot;").replace(/\n/g, "<br>");
+		this.displayNode.innerHTML = renderVal || this.noValueIndicator;
+		this._set("value", val);
+
+		if(this._started){
+			// tell the world that we have changed
+			setTimeout(dojo.hitch(this, "onChange", val), 0); // setTimeout prevents browser freeze for long-running event handlers
 		}
-		this.displayNode.innerHTML = val || this.noValueIndicator;
 	},
 
 	getValue: function(){
@@ -386,7 +392,7 @@ dojo.declare(
 	// value: String
 	//		Value as an HTML string or plain text string, depending on renderAsHTML flag
 
-	templateString: dojo.cache("dijit", "templates/InlineEditBox.html", "<span dojoAttachPoint=\"editNode\" waiRole=\"presentation\" style=\"position: absolute; visibility:hidden\" class=\"dijitReset dijitInline\"\n\tdojoAttachEvent=\"onkeypress: _onKeyPress\"\n\t><span dojoAttachPoint=\"editorPlaceholder\"></span\n\t><span dojoAttachPoint=\"buttonContainer\"\n\t\t><button class='saveButton' dojoAttachPoint=\"saveButton\" dojoType=\"dijit.form.Button\" dojoAttachEvent=\"onClick:save\" label=\"${buttonSave}\"></button\n\t\t><button class='cancelButton' dojoAttachPoint=\"cancelButton\" dojoType=\"dijit.form.Button\" dojoAttachEvent=\"onClick:cancel\" label=\"${buttonCancel}\"></button\n\t></span\n></span>\n"),
+	templateString: dojo.cache("dijit", "templates/InlineEditBox.html", "<span data-dojo-attach-point=\"editNode\" role=\"presentation\" style=\"position: absolute; visibility:hidden\" class=\"dijitReset dijitInline\"\n\tdata-dojo-attach-event=\"onkeypress: _onKeyPress\"\n\t><span data-dojo-attach-point=\"editorPlaceholder\"></span\n\t><span data-dojo-attach-point=\"buttonContainer\"\n\t\t><button data-dojo-type=\"dijit.form.Button\" data-dojo-props=\"label: '${buttonSave}', 'class': 'saveButton'\"\n\t\t\tdata-dojo-attach-point=\"saveButton\" data-dojo-attach-event=\"onClick:save\"></button\n\t\t><button data-dojo-type=\"dijit.form.Button\"  data-dojo-props=\"label: '${buttonCancel}', 'class': 'cancelButton'\"\n\t\t\tdata-dojo-attach-point=\"cancelButton\" data-dojo-attach-event=\"onClick:cancel\"></button\n\t></span\n></span>\n"),
 	widgetsInTemplate: true,
 
 	postMixInProperties: function(){
@@ -397,9 +403,11 @@ dojo.declare(
 		}, this);
 	},
 
-	postCreate: function(){
+	buildRendering: function(){
+		this.inherited(arguments);
+
 		// Create edit widget in place in the template
-		var cls = dojo.getObject(this.editor);
+		var cls = typeof this.editor == "string" ? dojo.getObject(this.editor) : this.editor;
 
 		// Copy the style from the source
 		// Don't copy ALL properties though, just the necessary/applicable ones.
@@ -434,13 +442,21 @@ dojo.declare(
 			lang: this.lang
 		});
 		editorParams[ "displayedValue" in cls.prototype ? "displayedValue" : "value"] = this.value;
-		var ew = (this.editWidget = new cls(editorParams, this.editorPlaceholder));
+		this.editWidget = new cls(editorParams, this.editorPlaceholder);
 
 		if(this.inlineEditBox.autoSave){
 			// Remove the save/cancel buttons since saving is done by simply tabbing away or
 			// selecting a value from the drop down list
 			dojo.destroy(this.buttonContainer);
+		}
+	},
 
+	postCreate: function(){
+		this.inherited(arguments);
+
+		var ew = this.editWidget;
+
+		if(this.inlineEditBox.autoSave){
 			// Selecting a value from a drop down list causes an onChange event and then we save
 			this.connect(ew, "onChange", "_onChange");
 
@@ -450,7 +466,7 @@ dojo.declare(
 			this.connect(ew, "onKeyPress", "_onKeyPress");
 		}else{
 			// If possible, enable/disable save button based on whether the user has changed the value
-			if("intermediateChanges" in cls.prototype){
+			if("intermediateChanges" in ew){
 				ew.set("intermediateChanges", true);
 				this.connect(ew, "onChange", "_onIntermediateChange");
 				this.saveButton.set("disabled", true);

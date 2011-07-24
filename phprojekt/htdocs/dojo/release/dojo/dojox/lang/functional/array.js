@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,7 +15,7 @@ dojo.require("dojox.lang.functional.lambda");
 //	- array-processing functions similar to standard JS functions
 
 // Notes:
-//	- this module provides JS standard methods similar to high-level functions in dojo/_base/array.js: 
+//	- this module provides JS standard methods similar to high-level functions in dojo/_base/array.js:
 //		forEach, map, filter, every, some
 
 // Defined methods:
@@ -31,7 +31,7 @@ dojo.require("dojox.lang.functional.lambda");
 		// JS 1.6 standard array functions, which can take a lambda as a parameter.
 		// Consider using dojo._base.array functions, if you don't need the lambda support.
 		filter: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: creates a new array with all elements that pass the test 
+			// summary: creates a new array with all elements that pass the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || d.global; f = df.lambda(f);
@@ -81,7 +81,7 @@ dojo.require("dojox.lang.functional.lambda");
 			return o;	// Object
 		},
 		map: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: creates a new array with the results of calling 
+			// summary: creates a new array with the results of calling
 			//	a provided function on every element in this array.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || d.global; f = df.lambda(f);
@@ -106,7 +106,7 @@ dojo.require("dojox.lang.functional.lambda");
 			return t;	// Array
 		},
 		every: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: tests whether all elements in the array pass the test 
+			// summary: tests whether all elements in the array pass the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || d.global; f = df.lambda(f);
@@ -138,7 +138,7 @@ dojo.require("dojox.lang.functional.lambda");
 			return true;	// Boolean
 		},
 		some: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: tests whether some element in the array passes the test 
+			// summary: tests whether some element in the array passes the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || d.global; f = df.lambda(f);

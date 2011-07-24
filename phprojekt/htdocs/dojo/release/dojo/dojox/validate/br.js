@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,7 +11,7 @@ dojo.provide("dojox.validate.br");
 dojo.require("dojox.validate._base");
 
 dojox.validate.br.isValidCnpj = function(/*String*/value){
-	// summary: 
+	// summary:
 	//		Validates a CNPJ/CGC number
 	//
 	// value: String
@@ -35,7 +35,7 @@ dojox.validate.br.isValidCnpj = function(/*String*/value){
 		]
 	};
 	if(dojox.validate.isNumberFormat(value, flags)){
-		// Matched the initial test, so break this down into the 
+		// Matched the initial test, so break this down into the
 		// parts to be validated.
 		value = value.replace("/", "").replace(/\./g, "").replace("-", "");
 		var cgc = [];
@@ -47,7 +47,7 @@ dojox.validate.br.isValidCnpj = function(/*String*/value){
 		for(i = 0; i < 10; i++){
 			tmp = "";
 			for(j = 0; j < value.length; j++){
-				tmp += "" + i; 
+				tmp += "" + i;
 			}
 			if(value === tmp){
 				return false;
@@ -107,7 +107,7 @@ dojox.validate.br.computeCnpjDv = function(/*String*/value){
 		]
 	};
 	if(dojox.validate.isNumberFormat(value, flags)){
-		// Matched the initial test, so break this down into the 
+		// Matched the initial test, so break this down into the
 		// parts to compute the DV.
 		value = value.replace("/", "").replace(/\./g, "");
 		var cgc = [];
@@ -118,7 +118,7 @@ dojox.validate.br.computeCnpjDv = function(/*String*/value){
 		for(i = 0; i < 10; i++){
 			tmp = "";
 			for(j = 0; j < value.length; j++){
-				tmp += "" + i; 
+				tmp += "" + i;
 			}
 			if(value === tmp){
 				return "";
@@ -148,7 +148,7 @@ dojox.validate.br.computeCnpjDv = function(/*String*/value){
 
 
 dojox.validate.br.isValidCpf = function(/*String*/value){
-	// summary: 
+	// summary:
 	//		Validates a CPF number
 	//
 	// value: String
@@ -171,7 +171,7 @@ dojox.validate.br.isValidCpf = function(/*String*/value){
 		]
 	};
 	if(dojox.validate.isNumberFormat(value, flags)){
-		// Matched the initial test, so break this down into the 
+		// Matched the initial test, so break this down into the
 		// parts to be validated.
 		value = value.replace("-", "").replace(/\./g, "");
 		var cpf = [];
@@ -183,7 +183,7 @@ dojox.validate.br.isValidCpf = function(/*String*/value){
 		for(i = 0; i < 10; i++){
 			tmp = "";
 			for(j = 0; j < value.length; j++){
-				tmp += "" + i; 
+				tmp += "" + i;
 			}
 			if(value === tmp){
 				return false;
@@ -223,7 +223,7 @@ dojox.validate.br.isValidCpf = function(/*String*/value){
 };
 
 dojox.validate.br.computeCpfDv = function(/*String*/value){
-	// summary: 
+	// summary:
 	//		Generate the DV code (checksum part) for a CPF number
 	//
 	// value: String
@@ -244,7 +244,7 @@ dojox.validate.br.computeCpfDv = function(/*String*/value){
 		]
 	};
 	if(dojox.validate.isNumberFormat(value, flags)){
-		// Matched the initial test, so break this down into the 
+		// Matched the initial test, so break this down into the
 		// parts to compute the DV.
 		value = value.replace(/\./g, "");
 		var cpf = [];
@@ -254,7 +254,7 @@ dojox.validate.br.computeCpfDv = function(/*String*/value){
 		for(i = 0; i < 10; i++){
 			tmp = "";
 			for(j = 0; j < value.length; j++){
-				tmp += "" + i; 
+				tmp += "" + i;
 			}
 			if(value === tmp){
 				return "";

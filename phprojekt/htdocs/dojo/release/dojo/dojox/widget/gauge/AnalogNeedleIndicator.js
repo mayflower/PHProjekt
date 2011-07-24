@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,7 +14,7 @@ dojo.experimental("dojox.widget.gauge.AnalogNeedleIndicator");
 
 dojo.declare("dojox.widget.gauge.AnalogNeedleIndicator",[dojox.widget.gauge.AnalogLineIndicator],{
 	_getShapes: function(){
-		// summary: 
+		// summary:
 		//		Override of dojox.widget.AnalogLineIndicator._getShapes
 		if(!this._gauge){
 			return null;

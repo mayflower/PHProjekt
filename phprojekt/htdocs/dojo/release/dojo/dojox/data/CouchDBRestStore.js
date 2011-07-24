@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,6 +9,7 @@ if(!dojo._hasResource["dojox.data.CouchDBRestStore"]){ //_hasResource checks add
 dojo._hasResource["dojox.data.CouchDBRestStore"] = true;
 dojo.provide("dojox.data.CouchDBRestStore");
 dojo.require("dojox.data.JsonRestStore");
+
 
 // A CouchDBRestStore is an extension of JsonRestStore to handle CouchDB's idiosyncrasies, special features,
 // and deviations from standard HTTP Rest.

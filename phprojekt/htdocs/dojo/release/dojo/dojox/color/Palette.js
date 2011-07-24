@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -89,7 +89,7 @@ dojo.require("dojox.color");
 		var ret = new dojox.color.Palette();
 		ret.colors = [];
 		dojo.forEach(p.colors, function(item){
-			var o=item.toCmy(), 
+			var o=item.toCmy(),
 				c=(param=="dc")?o.c+val:o.c,
 				m=(param=="dm")?o.m+val:o.m,
 				y=(param=="dy")?o.y+val:o.y;
@@ -106,7 +106,7 @@ dojo.require("dojox.color");
 		var ret = new dojox.color.Palette();
 		ret.colors = [];
 		dojo.forEach(p.colors, function(item){
-			var o=item.toCmyk(), 
+			var o=item.toCmyk(),
 				c=(param=="dc")?o.c+val:o.c,
 				m=(param=="dm")?o.m+val:o.m,
 				y=(param=="dy")?o.y+val:o.y,
@@ -125,7 +125,7 @@ dojo.require("dojox.color");
 		var ret = new dojox.color.Palette();
 		ret.colors = [];
 		dojo.forEach(p.colors, function(item){
-			var o=item.toHsl(), 
+			var o=item.toHsl(),
 				h=(param=="dh")?o.h+val:o.h,
 				s=(param=="ds")?o.s+val:o.s,
 				l=(param=="dl")?o.l+val:o.l;
@@ -138,7 +138,7 @@ dojo.require("dojox.color");
 		var ret = new dojox.color.Palette();
 		ret.colors = [];
 		dojo.forEach(p.colors, function(item){
-			var o=item.toHsv(), 
+			var o=item.toHsv(),
 				h=(param=="dh")?o.h+val:o.h,
 				s=(param=="ds")?o.s+val:o.s,
 				v=(param=="dv")?o.v+val:o.v;
@@ -266,7 +266,7 @@ dojox.color.Palette.__generatorArgs = function(base){
 	//	base: dojo.Color
 	//		The base color to be used to generate the palette.
 	this.base = base;
-} 
+}
 dojox.color.Palette.__analogousArgs = function(base, high, low){
 	//	summary:
 	//		The keyword arguments object that is used to create a 5 color palette based on the
@@ -281,7 +281,7 @@ dojox.color.Palette.__analogousArgs = function(base, high, low){
 	this.base = base;
 	this.high = high;
 	this.low = low;
-} 
+}
 dojox.color.Palette.__splitComplementaryArgs = function(base, da){
 	//	summary:
 	//		The keyword arguments object used to create a palette based on the split complementary rules
@@ -294,7 +294,7 @@ dojox.color.Palette.__splitComplementaryArgs = function(base, da){
 	//		In degrees, the default is 30.
 	this.base = base;
 	this.da = da;
-} 
+}
 =====*/
 	dojo.mixin(dxc.Palette, {
 		generators: {

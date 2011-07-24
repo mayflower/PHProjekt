@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -20,7 +20,7 @@ dojox.fx.animateTimeline = function(/* Object */options, /* DomNode|String */nod
 	// 				Defaults to 1000.
 	// node: DomNode
 	// 		The DomNode or id to be animated.
-	// 			
+	//
 	// summary:
 	//		An add-on to dojo.fx that provides the ability to create
 	//		a complex property animation based on an array of "keyframes".
@@ -43,7 +43,7 @@ dojox.fx.animateTimeline = function(/* Object */options, /* DomNode|String */nod
 	//	ease: String
 	//		The string name of a dojo.fx.easing ease. Defaults to "linear". Use
 	//		the suffix name of the ease, like: "quadIn", not: "dojo.fx.quadIn".
-	//		
+	//
 	// example:
 	// 		|	var keys = [
 	// 		|	{
@@ -69,7 +69,7 @@ dojox.fx.animateTimeline = function(/* Object */options, /* DomNode|String */nod
 		properties:_curve._properties,
 		// don't change! This easing is for the timeline,
 		// not individual properties
-		easing:dojo.fx.easing.linear, 
+		easing:dojo.fx.easing.linear,
 		onAnimate: function(v){
 			//console.log("   ani:", v);
 		}
@@ -128,7 +128,7 @@ dojox.fx._Timeline.prototype.flatten = function(keys){
 				};
 				p[nm] = {};
 				if(!/#/.test(k[nm])){
-					p[nm].units = o[nm].units = /\D{1,}/.exec(k[nm]).join("");	
+					p[nm].units = o[nm].units = /\D{1,}/.exec(k[nm]).join("");
 				}else{
 					p[nm].units = o[nm].units = "isColor";
 				}
@@ -187,7 +187,7 @@ dojox.fx._Timeline.prototype.getValue = function(/*float*/ p){
 			
 			}else if(p > step){
 				
-				if(next && p < k.steps[i+1]){ 
+				if(next && p < k.steps[i+1]){
 					// inbetween steps
 					var end = k.values[i+1];
 					var beg = k.values[i];
@@ -196,7 +196,7 @@ dojox.fx._Timeline.prototype.getValue = function(/*float*/ p){
 					seg = ease(seg);
 					
 					if(beg instanceof dojo.Color){
-						o[nm] = dojo.blendColors(beg, end, seg).toCss(false);	
+						o[nm] = dojo.blendColors(beg, end, seg).toCss(false);
 					}else{
 						var df = end - beg;
 						o[nm] = beg + seg * df + this._properties[nm].units;

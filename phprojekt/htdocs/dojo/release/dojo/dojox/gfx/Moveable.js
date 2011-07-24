@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -42,8 +42,9 @@ dojo.declare("dojox.gfx.Moveable", null, {
 		// summary: event processor for onmousedown, creates a Mover for the shape
 		// e: Event: mouse event
 		if(this.delay){
-			this.events.push(this.shape.connect("onmousemove", this, "onMouseMove"));
-			this.events.push(this.shape.connect("onmouseup", this, "onMouseUp"));
+			this.events.push(
+				this.shape.connect("onmousemove", this, "onMouseMove"),
+				this.shape.connect("onmouseup", this, "onMouseUp"));
 			this._lastX = e.clientX;
 			this._lastY = e.clientY;
 		}else{

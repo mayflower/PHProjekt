@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,10 +8,10 @@
 if(!dojo._hasResource["dojox.form.FileInput"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.form.FileInput"] = true;
 dojo.provide("dojox.form.FileInput");
-dojo.experimental("dojox.form.FileInput"); 
+dojo.experimental("dojox.form.FileInput");
 
 dojo.require("dijit.form._FormWidget");
-dojo.require("dijit._Templated"); 
+dojo.require("dijit._Templated");
 
 dojo.declare("dojox.form.FileInput",
 	dijit.form._FormWidget,
@@ -20,7 +20,7 @@ dojo.declare("dojox.form.FileInput",
 	//
 	// description: A input type="file" form widget, with a button for uploading to be styled via css,
 	//	a cancel button to clear selection, and FormWidget mixin to provide standard dijit.form.Form
-	//	support (FIXME: maybe not fully implemented) 
+	//	support (FIXME: maybe not fully implemented)
 
 	// label: String
 	//	the title text of the "Browse" button
@@ -68,12 +68,12 @@ dojo.declare("dojox.form.FileInput",
 		if(this.fileInput){
 			this.domNode.removeChild(this.fileInput);
 		}
-		dojo.fadeOut({ node: this.cancelNode, duration:275 }).play(); 
+		dojo.fadeOut({ node: this.cancelNode, duration:275 }).play();
 
 		// should we use cloneNode()? can we?
 		this.fileInput = document.createElement('input');
 		// dojo.attr(this.fileInput,{
-		//	"type":"file", "id":this.id, "name": this.name	
+		//	"type":"file", "id":this.id, "name": this.name
 		//});
 		this.fileInput.setAttribute("type","file");
 		this.fileInput.setAttribute("id", this.id);
@@ -82,8 +82,8 @@ dojo.declare("dojox.form.FileInput",
 		this.domNode.appendChild(this.fileInput);
 
 		this._keyListener = this.connect(this.fileInput, "onkeyup", "_matchValue");
-		this._listener = this.connect(this.fileInput, "onchange", "_matchValue"); 
-		this.inputNode.value = ""; 
+		this._listener = this.connect(this.fileInput, "onchange", "_matchValue");
+		this.inputNode.value = "";
 	}
 
 });

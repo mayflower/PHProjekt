@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -24,33 +24,33 @@ dojox.xmpp.util.encodeJid = function(jid) {
 			var ch = jid.charAt(i);
 			var rep = ch;
 			switch(ch){
-				case ' ' : 
+				case ' ' :
 					rep = "\\20";
 				break;
 				case '"' :
-					rep = "\\22"; 
+					rep = "\\22";
 				break;
 				case '#' :
-					rep = "\\23"; 
+					rep = "\\23";
 				break;
 				case '&' :
-					rep = "\\26"; 
+					rep = "\\26";
 				break;
 				case "'" :
-					rep = "\\27"; 
+					rep = "\\27";
 				break;
 				case '/' :
-					rep = "\\2f"; 
+					rep = "\\2f";
 				break;
 				case ':' :
-					rep = "\\3a"; 
+					rep = "\\3a";
 				break;
 				case '<' :
-					rep = "\\3c"; 
+					rep = "\\3c";
 				break;
 				case '>' :
-					rep = "\\3e"; 
-				break;			
+					rep = "\\3e";
+				break;
 			}
 			buffer.append(rep);
 		}
@@ -61,24 +61,24 @@ dojox.xmpp.util.decodeJid = function(jid) {
 	
 	jid = jid.replace(/\\([23][02367acef])/g, function(match) {
 			switch(match){
-				case "\\20" : 
+				case "\\20" :
 					return  ' ';
 				case "\\22"  :
-					return '"'; 
+					return '"';
 				case "\\23" :
-					return '#' ; 
+					return '#' ;
 				case "\\26" :
-					return  '&'; 
+					return  '&';
 				case "\\27" :
-					return   "'"; 
+					return   "'";
 				case "\\2f" :
-					return  '/'; 
+					return  '/';
 				case "\\3a" :
-					return ':' ; 
+					return ':' ;
 				case "\\3c" :
-					return  '<'; 
+					return  '<';
 				case "\\3e" :
-					return  '>'; 
+					return  '>';
 			}
 			return "ARG";
 	});
@@ -95,10 +95,10 @@ dojox.xmpp.util.createElement = function(tag, attributes, terminal){
 		elem.append(attr + '="');
 		elem.append(attributes[attr]);
 		elem.append('" ');
-	}	
+	}
 	
 	if (terminal){
-		elem.append("/>");		
+		elem.append("/>");
 	}else{
 		elem.append(">");
 	}
@@ -117,7 +117,7 @@ dojox.xmpp.util.stripHtml = function(str){
 }
 
 dojox.xmpp.util.decodeHtmlEntities = function(str){
-	// Summary: decodes HTML entities to js characters so the string can be 
+	// Summary: decodes HTML entities to js characters so the string can be
 	// fed to a textarea.value
 	var ta = dojo.doc.createElement("textarea");
 	ta.innerHTML = str.replace(/</g,"&lt;").replace(/>/g,"&gt;");

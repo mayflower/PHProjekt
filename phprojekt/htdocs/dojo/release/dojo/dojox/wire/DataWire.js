@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -141,7 +141,7 @@ dojo.declare("dojox.wire.DataWire", dojox.wire.Wire, {
 		}else{
 			value = this.dataStore.getValue(item, attribute);
 		}
-		return value; //anything 
+		return value; //anything
 	},
 
 	_setAttributeValue: function(/*Object*/item, /*String*/attribute, /*anything*/value){

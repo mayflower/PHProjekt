@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,12 +8,11 @@
 if(!dojo._hasResource["dijit._editor.plugins.NewPage"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit._editor.plugins.NewPage"] = true;
 dojo.provide("dijit._editor.plugins.NewPage");
-
 dojo.require("dijit._editor._Plugin");
 dojo.require("dijit.form.Button");
 dojo.require("dojo.i18n");
-
 dojo.requireLocalization("dijit._editor", "commands", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+
 
 dojo.declare("dijit._editor.plugins.NewPage",dijit._editor._Plugin,{
 	// summary:
@@ -48,6 +47,12 @@ dojo.declare("dijit._editor.plugins.NewPage",dijit._editor._Plugin,{
 		//		The editor object to attach the newPage capability to.
 		this.editor = editor;
 		this._initButton();
+	},
+
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
 	},
 
 	_newPage: function(){

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -20,7 +20,7 @@ dojo.declare('dojox.grid._RowSelector', dojox.grid._View, {
 		this.inherited('buildRendering', arguments);
 		this.scrollboxNode.style.overflow = "hidden";
 		this.headerNode.style.visibility = "hidden";
-	},	
+	},
 	getWidth: function(){
 		return this.viewWidth || this.defaultWidth;
 	},

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,8 +10,7 @@ dojo._hasResource["dojox.image.Gallery"] = true;
 dojo.provide("dojox.image.Gallery");
 dojo.experimental("dojox.image.Gallery");
 //
-// dojox.image.Gallery courtesy Shane O Sullivan, licensed under a Dojo CLA 
-// @author  Copyright 2007 Shane O Sullivan (shaneosullivan1@gmail.com)
+// dojox.image.Gallery courtesy Shane O Sullivan, licensed under a Dojo CLA
 //
 // For a sample usage, see http://www.skynet.ie/~sos/photos.php
 //
@@ -71,10 +70,10 @@ dojo.declare("dojox.image.Gallery",
 	//		Time, in seconds, between image changes in the slide show.
 	slideshowInterval: 3,
 	
-	templateString: dojo.cache("dojox.image", "resources/Gallery.html", "<div dojoAttachPoint=\"outerNode\" class=\"imageGalleryWrapper\">\n\t<div dojoAttachPoint=\"thumbPickerNode\"></div>\n\t<div dojoAttachPoint=\"slideShowNode\"></div>\n</div>\n"), 
+	templateString: dojo.cache("dojox.image", "resources/Gallery.html", "<div dojoAttachPoint=\"outerNode\" class=\"imageGalleryWrapper\">\n\t<div dojoAttachPoint=\"thumbPickerNode\"></div>\n\t<div dojoAttachPoint=\"slideShowNode\"></div>\n</div>\n"),
 
 	postCreate: function(){
-		// summary: 
+		// summary:
 		//		Initializes the widget, creates the ThumbnailPicker and SlideShow widgets
 		this.widgetid = this.id;
 		this.inherited(arguments)
@@ -90,14 +89,14 @@ dojo.declare("dojox.image.Gallery",
 		
 		
 		this.slideShow = new dojox.image.SlideShow({
-			imageHeight: this.imageHeight, 
+			imageHeight: this.imageHeight,
 			imageWidth: this.imageWidth,
 			autoLoad: this.autoLoad,
 			linkAttr: this.linkAttr,
 			imageLargeAttr: this.imageLargeAttr,
 			titleAttr: this.titleAttr,
 			slideshowInterval: this.slideshowInterval,
-			pageSize: this.pageSize 
+			pageSize: this.pageSize
 		}, this.slideShowNode);
 		
 		var _this = this;
@@ -105,7 +104,7 @@ dojo.declare("dojox.image.Gallery",
 		//in the ThumbnailPicker
 		dojo.subscribe(this.slideShow.getShowTopicName(), function(packet){
 			_this.thumbPicker._showThumbs(packet.index);
-		});	
+		});
 		//When the user clicks a thumbnail, show that image
 		dojo.subscribe(this.thumbPicker.getClickTopicName(), function(evt){
 			_this.slideShow.showImage(evt.index);
@@ -124,7 +123,7 @@ dojo.declare("dojox.image.Gallery",
 	},
 	  
   	setDataStore: function(dataStore, request, /*optional*/paramNames){
-		// summary: 
+		// summary:
 		//		Sets the data store and request objects to read data from.
 		// dataStore:
 		//		An implementation of the dojo.data.api.Read API. This accesses the image
@@ -148,7 +147,7 @@ dojo.declare("dojox.image.Gallery",
   	},
   
 	showNextImage: function(inTimer){
-		// summary: 
+		// summary:
 		//		Changes the image being displayed in the SlideShow to the next
 		//		image in the data store
 		// inTimer: Boolean
@@ -182,7 +181,7 @@ dojo.declare("dojox.image.Gallery",
 	},
 	
 	_centerChildren: function() {
-		// summary: 
+		// summary:
 		//		Ensures that the ThumbnailPicker and the SlideShow widgets
 		//		are centered.
 		var thumbSize = dojo.marginBox(this.thumbPicker.outerNode);

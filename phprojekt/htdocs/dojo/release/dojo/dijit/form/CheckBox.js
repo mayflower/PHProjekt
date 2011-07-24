@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,8 +8,8 @@
 if(!dojo._hasResource["dijit.form.CheckBox"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit.form.CheckBox"] = true;
 dojo.provide("dijit.form.CheckBox");
-
 dojo.require("dijit.form.ToggleButton");
+
 
 dojo.declare(
 	"dijit.form.CheckBox",
@@ -32,26 +32,26 @@ dojo.declare(
 		//		In case 2, the regular html inputs are invisible but still used by
 		//		the user. They are turned quasi-invisible and overlay the background-image.
 
-		templateString: dojo.cache("dijit.form", "templates/CheckBox.html", "<div class=\"dijit dijitReset dijitInline\" waiRole=\"presentation\"\n\t><input\n\t \t${!nameAttrSetting} type=\"${type}\" ${checkedAttrSetting}\n\t\tclass=\"dijitReset dijitCheckBoxInput\"\n\t\tdojoAttachPoint=\"focusNode\"\n\t \tdojoAttachEvent=\"onclick:_onClick\"\n/></div>\n"),
+		templateString: dojo.cache("dijit.form", "templates/CheckBox.html", "<div class=\"dijit dijitReset dijitInline\" role=\"presentation\"\n\t><input\n\t \t${!nameAttrSetting} type=\"${type}\" ${checkedAttrSetting}\n\t\tclass=\"dijitReset dijitCheckBoxInput\"\n\t\tdojoAttachPoint=\"focusNode\"\n\t \tdojoAttachEvent=\"onclick:_onClick\"\n/></div>\n"),
 
 		baseClass: "dijitCheckBox",
 
 		// type: [private] String
 		//		type attribute on <input> node.
-		//		Overrides `dijit.form.Button.type`.   Users should not change this value.
+		//		Overrides `dijit.form.Button.type`.  Users should not change this value.
 		type: "checkbox",
 
 		// value: String
 		//		As an initialization parameter, equivalent to value field on normal checkbox
 		//		(if checked, the value is passed as the value when form is submitted).
 		//
-		//		However, attr('value') will return either the string or false depending on
+		//		However, get('value') will return either the string or false depending on
 		//		whether or not the checkbox is checked.
 		//
-		//		attr('value', string) will check the checkbox and change the value to the
+		//		set('value', string) will check the checkbox and change the value to the
 		//		specified string
 		//
-		//		attr('value', boolean) will change the checked state.
+		//		set('value', boolean) will change the checked state.
 		value: "on",
 
 		// readOnly: Boolean
@@ -60,22 +60,22 @@ dojo.declare(
 		//		Similar to disabled except readOnly form values are submitted.
 		readOnly: false,
 		
-		// the attributeMap should inherit from dijit.form._FormWidget.prototype.attributeMap 
+		// the attributeMap should inherit from dijit.form._FormWidget.prototype.attributeMap
 		// instead of ToggleButton as the icon mapping has no meaning for a CheckBox
 		attributeMap: dojo.delegate(dijit.form._FormWidget.prototype.attributeMap, {
 			readOnly: "focusNode"
 		}),
 
 		_setReadOnlyAttr: function(/*Boolean*/ value){
-			this.readOnly = value;
+			this._set("readOnly", value);
 			dojo.attr(this.focusNode, 'readOnly', value);
 			dijit.setWaiState(this.focusNode, "readonly", value);
 		},
 
-		_setValueAttr: function(/*String or Boolean*/ newValue, /*Boolean*/ priorityChange){
+		_setValueAttr: function(/*String|Boolean*/ newValue, /*Boolean*/ priorityChange){
 			// summary:
 			//		Handler for value= attribute to constructor, and also calls to
-			//		attr('value', val).
+			//		set('value', val).
 			// description:
 			//		During initialization, just saves as attribute to the <input type=checkbox>.
 			//
@@ -85,7 +85,7 @@ dojo.declare(
 			//		specified as "value" when the CheckBox was constructed (ex: <input
 			//		dojoType="dijit.CheckBox" value="chicken">)
 			if(typeof newValue == "string"){
-				this.value = newValue;
+				this._set("value", newValue);
 				dojo.attr(this.focusNode, 'value', newValue);
 				newValue = true;
 			}
@@ -95,7 +95,7 @@ dojo.declare(
 		},
 		_getValueAttr: function(){
 			// summary:
-			//		Hook so attr('value') works.
+			//		Hook so get('value') works.
 			// description:
 			//		If the CheckBox is checked, returns the value attribute.
 			//		Otherwise returns false.
@@ -132,7 +132,7 @@ dojo.declare(
 			this.set('checked', this.params.checked || false);
 
 			// Handle unlikely event that the <input type=checkbox> value attribute has changed
-			this.value = this.params.value || "on";
+			this._set("value", this.params.value || "on");
 			dojo.attr(this.focusNode, 'value', this.value);
 		},
 
@@ -155,6 +155,7 @@ dojo.declare(
 			//		Internal function to handle click actions - need to check
 			//		readOnly, since button no longer does that check.
 			if(this.readOnly){
+				dojo.stopEvent(e);
 				return false;
 			}
 			return this.inherited(arguments);

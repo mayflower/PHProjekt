@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -81,9 +81,9 @@ StencilPoints: [
 			//		Uses function dojox.drawing.stencil.Text.typeset
 			//		for typesetting, if it exists.
 			//
-			if(dojox.drawing.stencil.Text.typeset){
+			if(dojox.drawing.util.typeset){
 				this._rawText = text;
-				return dojox.drawing.stencil.Text.typeset(text);
+				return dojox.drawing.util.typeset.convertLaTeX(text);
 			}
 			return text;
 		},
@@ -108,7 +108,7 @@ StencilPoints: [
 			// summary:
 			//		Getter for text.
 			//
-			return this._rawText || this._text;	
+			return this._rawText || this._text;
 		},
 		
 		dataToPoints: function(/*Object*/o){
@@ -155,9 +155,9 @@ StencilPoints: [
 			this.remove(this.shape, this.hit);
 			//console.log("text render, outline:", !this.annotation, this.renderHit, (!this.annotation && this.renderHit))
 			!this.annotation && this.renderHit && this._renderOutline();
-			if(text){
+			if(text!=undefined){
 				this._text = text;
-				this._textArray = this._text.split("\n");	
+				this._textArray = this._text.split("\n");
 			}
 			
 			var d = this.pointsToData();
@@ -233,7 +233,7 @@ StencilPoints: [
 	}
 );
 dojox.drawing.register({
-	name:"dojox.drawing.stencil.Text"	
+	name:"dojox.drawing.stencil.Text"
 }, "stencil");
 
 }

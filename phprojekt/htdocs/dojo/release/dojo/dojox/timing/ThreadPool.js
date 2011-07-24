@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,31 +14,31 @@ dojo.experimental("dojox.timing.ThreadPool");
 
 //	dojox.timing.Timer is included as part of _base
 /********************************************************************
-	This is a port of the original System.Threading.ThreadPool from 
+	This is a port of the original System.Threading.ThreadPool from
 	the f(m) class library.
 	
 	Donated to the Dojo toolkit by the author :)
 *********************************************************************/
 (function(){
 	var t=dojox.timing;
-	t.threadStates={ 
-		UNSTARTED:"unstarted", 
-		STOPPED:"stopped", 
-		PENDING:"pending", 
-		RUNNING:"running", 
-		SUSPENDED:"suspended", 
-		WAITING:"waiting", 
+	t.threadStates={
+		UNSTARTED:"unstarted",
+		STOPPED:"stopped",
+		PENDING:"pending",
+		RUNNING:"running",
+		SUSPENDED:"suspended",
+		WAITING:"waiting",
 		COMPLETE:"complete",
 		ERROR:"error"
 	};
 
 	//	Before rar says a word, we actually *use* these numbers for a purpose :)
-	t.threadPriorities={ 
-		LOWEST:1, 
-		BELOWNORMAL:2, 
-		NORMAL:3, 
-		ABOVENORMAL:4, 
-		HIGHEST:5 
+	t.threadPriorities={
+		LOWEST:1,
+		BELOWNORMAL:2,
+		NORMAL:3,
+		ABOVENORMAL:4,
+		HIGHEST:5
 	};
 	
 	t.Thread=function(/* Function */fn, /* dojox.timing.threadPriorities? */priority){

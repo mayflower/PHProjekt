@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,20 +8,18 @@
 if(!dojo._hasResource["dojox.editor.plugins.InsertEntity"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.editor.plugins.InsertEntity"] = true;
 dojo.provide("dojox.editor.plugins.InsertEntity");
-
+dojo.require("dijit.TooltipDialog");
 dojo.require("dijit._editor._Plugin");
 dojo.require("dijit.form.Button");
-dojo.require("dijit.TooltipDialog");
-dojo.require("dojox.editor.plugins.EntityPalette");
 dojo.require("dojox.html.entities");
-
+dojo.require("dojox.editor.plugins.EntityPalette");
 dojo.require("dojo.i18n");
+dojo.requireLocalization("dojox.editor.plugins", "InsertEntity", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
-dojo.requireLocalization("dojox.editor.plugins", "InsertEntity", null, "ROOT,cs,de,es,fr,hu,it,ja,kk,ko,pl,pt,ro,ru,zh,zh-tw");
 
 dojo.declare("dojox.editor.plugins.InsertEntity",dijit._editor._Plugin,{
 	// summary:
-	//		This plugin allows the user to select from standard Symbols (HTML Entities) 
+	//		This plugin allows the user to select from standard Symbols (HTML Entities)
 	//		to insert at the current cursor position.  It binds to the key pattern:
 	//		ctrl-shift-s for opening the insert symbol dropdown.
 	//
@@ -50,6 +48,12 @@ dojo.declare("dojox.editor.plugins.InsertEntity",dijit._editor._Plugin,{
 			tabIndex: "-1",
 			dropDown: this.dropDown
 		});
+	},
+
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
 	},
 
 	setEditor: function(editor){
@@ -81,8 +85,8 @@ dojo.declare("dojox.editor.plugins.InsertEntity",dijit._editor._Plugin,{
 
 	_postFilterEntities: function(s/*String content passed in*/){
 		// summary:
-		//		A function to filter out entity characters into encoded form so they 
-		//		are properly displayed in the editor.  It gets registered with the 
+		//		A function to filter out entity characters into encoded form so they
+		//		are properly displayed in the editor.  It gets registered with the
 		//		postFilters of the editor.
 		// tags:
 		//		private.

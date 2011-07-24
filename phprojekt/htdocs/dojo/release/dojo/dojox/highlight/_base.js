@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,16 +10,16 @@ dojo._hasResource["dojox.highlight._base"] = true;
 dojo.provide("dojox.highlight._base");
 /*=====
 	dojox.highlight = {
-		//	summary: 
+		//	summary:
 		//		Syntax highlighting with language auto-detection package
 		//
 		//	description:
-		//		
+		//
 		//		Syntax highlighting with language auto-detection package.
-		//		Released under CLA by the Dojo Toolkit, original BSD release 
+		//		Released under CLA by the Dojo Toolkit, original BSD release
 		//		available from: http://softwaremaniacs.org/soft/highlight/
 		//
-		//		
+		//
 	};
 =====*/
 
@@ -44,7 +44,7 @@ dojo.provide("dojox.highlight._base");
 		},
 		QUOTE_STRING_MODE: {
 			className: 'string',
-			begin: '"', 
+			begin: '"',
 			end: '"',
 			illegal: '\\n',
 			contains: ['escape'],
@@ -107,7 +107,7 @@ dojo.provide("dojox.highlight._base");
 				var kw = mode.keywords[key];
     			if(kw instanceof Object){  // dojo.isObject?
 					mode.keywordGroups = mode.keywords;
-				}else{ 
+				}else{
 					mode.keywordGroups = {keyword: mode.keywords};
 				}
 				break;
@@ -371,7 +371,7 @@ dojo.provide("dojox.highlight._base");
 	}
 	function highlightStringLanguage(lang, str){
 		var highlight = new Highlighter(lang, str);
-		return {result:highlight.result, langName:lang, partialResult:highlight.partialResult};		
+		return {result:highlight.result, langName:lang, partialResult:highlight.partialResult};
 	}
 
 	function highlightLanguage(block, lang){
@@ -416,15 +416,15 @@ dojo.provide("dojox.highlight._base");
 
 	dojox.highlight.init = function(/* String|DomNode */ node){
 		//	summary: Highlight a passed node
-		//	
+		//
 		//	description:
-		//		
+		//
 		//		Syntax highlight a passed DomNode or String ID of a DomNode
 		//
-		// 
+		//
 		//	example:
 		//	|	dojox.highlight.init("someId");
-		//		
+		//
 		node = dojo.byId(node);
 		if(dojo.hasClass(node, "no-highlight")){ return; }
 		if(!verifyText(node)){ return; }
@@ -450,11 +450,11 @@ dojo.provide("dojox.highlight._base");
 		//		`dojox.highlight.init` directly.
 		//
 		//	props: Object?
-		//		Unused. Pass 'null' or {}. Positional usage to allow `dojo.parser` to instantiate 
+		//		Unused. Pass 'null' or {}. Positional usage to allow `dojo.parser` to instantiate
 		//		this class as other Widgets would be.
-		// 
+		//
 		//	node: String|DomNode
-		//		A String ID or DomNode reference to use as the root node of this instance. 
+		//		A String ID or DomNode reference to use as the root node of this instance.
 		//
 		//	example:
 		//	|	<pre><code dojoType="dojox.highlight.Code">for(var i in obj){ ... }</code></pre>

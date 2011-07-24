@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -45,7 +45,7 @@ dojo.declare("dojox.sketch.Toolbar", dijit.Toolbar, {
 		this.shapeGroup=new dojox.sketch.ButtonGroup;
 
 		if(!this.plugins){
-			this.plugins=['Slider','Lead','SingleArrow','DoubleArrow','Underline','Preexisting'];
+			this.plugins=['Lead','SingleArrow','DoubleArrow','Underline','Preexisting','Slider'];
 		}
 		this._plugins=[];
 

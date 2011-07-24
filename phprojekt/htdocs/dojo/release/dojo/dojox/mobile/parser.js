@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,7 +19,7 @@ dojox.mobile.parser = new function(){
 		var ws = [];
 		if(list){
 			var i, len;
-			len = list.length
+			len = list.length;
 			for(i = 0; i < len; i++){
 				var node = list[i];
 				var cls = dojo.getObject(dojo.attr(node, "dojoType"));
@@ -46,11 +46,16 @@ dojox.mobile.parser = new function(){
 				}
 				params["class"] = node.className;
 				params["style"] = node.style && node.style.cssText;
-				ws.push(new cls(params, node));
+				var instance = new cls(params, node);
+				ws.push(instance);
+				var jsId = node.getAttribute("jsId");
+				if(jsId){
+					dojo.setObject(jsId, instance);
+				}
 			}
-			len = ws.length
+			len = ws.length;
 			for(i = 0; i < len; i++){
-				var w = ws[i]
+				var w = ws[i];
 				w.startup && !w._started && (!w.getParent || !w.getParent()) && w.startup();
 			}
 		}
@@ -80,7 +85,7 @@ dojox.mobile.parser = new function(){
 		}
 		return this.instantiate(list, defaultParams);
 	};
-};
+}();
 dojo._loaders.unshift(function(){
 	if(dojo.config.parseOnLoad){
 		dojox.mobile.parser.parse();

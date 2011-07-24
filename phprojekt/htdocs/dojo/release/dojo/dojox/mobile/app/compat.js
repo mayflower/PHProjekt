@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -94,7 +94,7 @@ dojo.extend(dojox.mobile.app.List, {
 if(dojox.mobile.app.ImageView && !dojo.create("canvas").getContext){
 	dojo.extend(dojox.mobile.app.ImageView, {
 		buildRendering: function(){
-			this.domNode.innerHTML = 
+			this.domNode.innerHTML =
 				"ImageView widget is not supported on this browser."
 				+ "Please try again with a modern browser, e.g. "
 				+ "Safari, Chrome or Firefox";

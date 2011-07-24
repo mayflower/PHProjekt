@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,6 +8,8 @@
 if(!dojo._hasResource["dojox.encoding.easy64"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.encoding.easy64"] = true;
 dojo.provide("dojox.encoding.easy64");
+
+dojo.getObject("encoding.easy64", true, dojox);
 
 (function(){
 	var c = function(input, length, result){
@@ -20,7 +22,7 @@ dojo.provide("dojox.encoding.easy64");
 			);
 		}
 	};
-	
+
 	dojox.encoding.easy64.encode = function(input){
 		// summary: encodes input data in easy64 string
 		// input: Array: an array of numbers (0-255) to encode

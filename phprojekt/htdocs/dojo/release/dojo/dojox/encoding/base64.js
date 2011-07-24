@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,6 +8,8 @@
 if(!dojo._hasResource["dojox.encoding.base64"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.encoding.base64"] = true;
 dojo.provide("dojox.encoding.base64");
+
+dojo.getObject("encoding.base64", true, dojox);
 
 (function(){
 	var p="=";
@@ -22,7 +24,7 @@ dojo.provide("dojox.encoding.base64");
 		var x=l-rm;
 		for (var i=0; i<x;){
 			var t=ba[i++]<<16|ba[i++]<<8|ba[i++];
-			s.push(tab.charAt((t>>>18)&0x3f)); 
+			s.push(tab.charAt((t>>>18)&0x3f));
 			s.push(tab.charAt((t>>>12)&0x3f));
 			s.push(tab.charAt((t>>>6)&0x3f));
 			s.push(tab.charAt(t&0x3f));

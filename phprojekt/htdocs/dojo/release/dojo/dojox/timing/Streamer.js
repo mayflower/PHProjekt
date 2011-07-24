@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -12,9 +12,9 @@ dojo.provide("dojox.timing.Streamer");
 dojo.require("dojox.timing._base");
 
 dojox.timing.Streamer = function(
-	/* function */input, 
-	/* function */output, 
-	/* int */interval, 
+	/* function */input,
+	/* function */output,
+	/* int */interval,
 	/* int */minimum,
 	/* array */initialData
 ){

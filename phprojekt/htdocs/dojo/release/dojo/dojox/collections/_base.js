@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,11 +14,11 @@ dojox.collections.DictionaryEntry=function(/* string */k, /* object */v){
 	//	return an object of type dojox.collections.DictionaryEntry
 	this.key=k;
 	this.value=v;
-	this.valueOf=function(){ 
+	this.valueOf=function(){
 		return this.value; 	//	object
 	};
-	this.toString=function(){ 
-		return String(this.value);	//	string 
+	this.toString=function(){
+		return String(this.value);	//	string
 	};
 }
 
@@ -96,10 +96,10 @@ dojox.collections.DictionaryIterator=function(/* object */obj){
 		//	Functional iteration with optional scope.
 		return dojo.map(a, fn, scope);
 	};
-	this.reset=function() { 
+	this.reset=function() {
 		//	summary
 		//	reset the internal cursor.
-		position=0; 
+		position=0;
 		this.element=a[position];
 	};
 };

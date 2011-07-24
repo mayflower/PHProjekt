@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -14,6 +14,7 @@ dojo.require("dojox.charting.plot2d.Columns");
 
 dojo.require("dojox.lang.functional");
 dojo.require("dojox.lang.functional.reversed");
+dojo.require("dojox.lang.functional.sequence");
 
 (function(){
 	var df = dojox.lang.functional, dc = dojox.charting.plot2d.common,

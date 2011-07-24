@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -98,6 +98,7 @@ dojo.declare("dojox.charting.Theme", null, {
 	//	|		fill:    "#ccc",							// fill, if appropriate
 	//	|		font:    "normal normal normal 8pt Tahoma",	// if there's a label
 	//	|		fontColor: "#000"							// color of labels
+	//	|		labelWiring: {width: 1, color: "#ccc"},		// connect marker and target data item(slice, column, bar...)
 	//	|	},
 	//	|	marker: {	// any markers on a series
 	//	|		symbol:  "m-3,3 l3,-6 3,6 z",				// symbol
@@ -143,7 +144,7 @@ dojo.declare("dojox.charting.Theme", null, {
 		if(kwArgs.markerThemes && kwArgs.markerThemes.length){
 			this.markerThemes = kwArgs.markerThemes.slice(0);
 		}
-		this.markers = dojo.delegate(dojox.charting.Theme.defaultMarkers, kwArgs.markers);
+		this.markers = kwArgs.markers ? dojo.clone(kwArgs.markers) : dojo.delegate(dojox.charting.Theme.defaultMarkers);
 
 		// set flags
 		this.noGradConv = kwArgs.noGradConv;
@@ -304,7 +305,7 @@ dojo.declare("dojox.charting.Theme", null, {
 					dojo.setObject("series.fill", mixin.color, t);
 				}
 			}
-			dojo.forEach(["stroke", "outline", "shadow", "fill", "font", "fontColor"], function(name){
+			dojo.forEach(["stroke", "outline", "shadow", "fill", "font", "fontColor", "labelWiring"], function(name){
 				var markerName = "marker" + name.charAt(0).toUpperCase() + name.substr(1),
 					b = markerName in mixin;
 				if(name in mixin){
@@ -490,7 +491,11 @@ dojo.mixin(dojox.charting.Theme, {
 		chart:{
 			stroke: null,
 			fill: "white",
-			pageStyle: null
+			pageStyle: null,
+			titleGap:		20,
+			titlePos:		"top",
+			titleFont:      "normal normal bold 14pt Tahoma",	// labels on axis
+			titleFontColor: "#333"
 		},
 		plotarea:{
 			stroke: null,
@@ -506,7 +511,11 @@ dojo.mixin(dojox.charting.Theme, {
 				color:     "#666",
 				position:  "center",
 				font:      "normal normal normal 7pt Tahoma",	// labels on axis
-				fontColor: "#333"								// color of labels
+				fontColor: "#333",								// color of labels
+				titleGap:  15,
+				titleFont: "normal normal normal 11pt Tahoma",	// labels on axis
+				titleFontColor: "#333",							// color of labels
+				titleOrientation: "axis"						// "axis": facing the axis, "away": facing away
 			},
 			majorTick:	{ // major ticks on axis, and used for major gridlines
 				width:  1,
@@ -529,7 +538,8 @@ dojo.mixin(dojox.charting.Theme, {
 			shadow: null,								// no shadow
 			fill:    "#ccc",							// fill, if appropriate
 			font:    "normal normal normal 8pt Tahoma",	// if there's a label
-			fontColor: "#000"							// color of labels
+			fontColor: "#000",							// color of labels
+			labelWiring: {width: 1, color: "#ccc"}		// connect marker and target data item(slice, column, bar...)
 		},
 		marker: {	// any markers on a series
 			stroke:  {width: 1.5, color: "#333"},		// stroke

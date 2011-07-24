@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,8 +8,8 @@
 if(!dojo._hasResource["dijit.form.MultiSelect"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit.form.MultiSelect"] = true;
 dojo.provide("dijit.form.MultiSelect");
-
 dojo.require("dijit.form._FormWidget");
+
 
 dojo.declare("dijit.form.MultiSelect", dijit.form._FormValueWidget, {
 	// summary:
@@ -37,7 +37,7 @@ dojo.declare("dijit.form.MultiSelect", dijit.form._FormValueWidget, {
 		this._setValueAttr(this._resetValue, true);
 	},
 
-	addSelected: function(/* dijit.form.MultiSelect */ select){
+	addSelected: function(/*dijit.form.MultiSelect*/ select){
 		// summary:
 		//		Move the selected nodes of a passed Select widget
 		//		instance to this Select widget.
@@ -69,7 +69,7 @@ dojo.declare("dijit.form.MultiSelect", dijit.form._FormValueWidget, {
 
 	_getValueAttr: function(){
 		// summary:
-		//		Hook so attr('value') works.
+		//		Hook so get('value') works.
 		// description:
 		//		Returns an array of the selected options' values.
 		return this.getSelected().map(function(n){
@@ -79,9 +79,9 @@ dojo.declare("dijit.form.MultiSelect", dijit.form._FormValueWidget, {
 
 	multiple: true, // for Form
 
-	_setValueAttr: function(/* Array */values){
+	_setValueAttr: function(/*Array*/ values){
 		// summary:
-		//		Hook so attr('value', values) works.
+		//		Hook so set('value', values) works.
 		// description:
 		//		Set the value(s) of this Select based on passed values
 		dojo.query("option",this.containerNode).forEach(function(n){
@@ -105,7 +105,7 @@ dojo.declare("dijit.form.MultiSelect", dijit.form._FormValueWidget, {
 	},
 
 	// for layout widgets:
-	resize: function(/* Object */size){
+	resize: function(/*Object*/ size){
 		if(size){
 			dojo.marginBox(this.domNode, size);
 		}

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,8 +8,8 @@
 if(!dojo._hasResource["dojox.data.CssClassStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.data.CssClassStore"] = true;
 dojo.provide("dojox.data.CssClassStore");
-
 dojo.require("dojox.data.CssRuleStore");
+
 
 dojo.declare("dojox.data.CssClassStore", dojox.data.CssRuleStore, {
 	//	summary:
@@ -25,23 +25,23 @@ dojo.declare("dojox.data.CssClassStore", dojox.data.CssRuleStore, {
 	_cName: "dojox.data.CssClassStore",
 
 	getFeatures: function(){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getFeatures()
-		return { 
+		return {
 			"dojo.data.api.Read" : true,
-			"dojo.data.api.Identity" : true 
+			"dojo.data.api.Identity" : true
 		};
 	},
 
 	getAttributes: function(item){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getAttributes()
 		this._assertIsItem(item);
 		return ['class', 'classSans'];
 	},
 
 	getValue: function(item, attribute, defaultValue){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
 		if(values && values.length > 0){
@@ -51,7 +51,7 @@ dojo.declare("dojox.data.CssClassStore", dojox.data.CssRuleStore, {
 	},
 
 	getValues: function(item, attribute){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getValues()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -93,7 +93,7 @@ dojo.declare("dojox.data.CssClassStore", dojox.data.CssRuleStore, {
 		//	summary:
 		//		Handles the return from a fetching action.  Delegates requests to act on the resulting
 		//		item set to eitehr the _handleFetchReturn or _handleFetchByIdentityReturn depending on
-		//		where the request originated.  
+		//		where the request originated.
 		var _inProgress = [];
 		
 		var items = {};
@@ -122,7 +122,7 @@ dojo.declare("dojox.data.CssClassStore", dojox.data.CssRuleStore, {
 		//	summary:
 		//		Handles a fetchByIdentity request by finding the correct item.
 		var items = request._items;
-		// Per https://bugs.webkit.org/show_bug.cgi?id=17935 , Safari 3.x always returns the selectorText 
+		// Per https://bugs.webkit.org/show_bug.cgi?id=17935 , Safari 3.x always returns the selectorText
 		// of a rule in full lowercase.
 		var item = items[(dojo.isWebKit?request.identity.toLowerCase():request.identity)];
 		if(!this.isItem(item)){
@@ -136,21 +136,21 @@ dojo.declare("dojox.data.CssClassStore", dojox.data.CssRuleStore, {
 
 	/* Identity API */
 	getIdentity: function(/* item */ item){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Identity.getIdentity()
 		this._assertIsItem(item);
 		return this.getValue(item, this._idAttribute);
 	},
 
 	getIdentityAttributes: function(/* item */ item){
-		 //	summary: 
+		 //	summary:
 		 //		See dojo.data.api.Identity.getIdentityAttributes()
 		this._assertIsItem(item);
 		return [this._idAttribute];
 	},
 
 	fetchItemByIdentity: function(/* request */ request){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Identity.fetchItemByIdentity()
 		request = request || {};
 		if(!request.store){

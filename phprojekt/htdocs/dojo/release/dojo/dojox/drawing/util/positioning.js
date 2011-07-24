@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -7,7 +7,7 @@
 
 if(!dojo._hasResource["dojox.drawing.util.positioning"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.drawing.util.positioning"] = true;
-dojo.provide("dojox.drawing.util.positioning");	
+dojo.provide("dojox.drawing.util.positioning");
 
 (function(){
 	
@@ -17,29 +17,28 @@ dojo.provide("dojox.drawing.util.positioning");
 	
 	dojox.drawing.util.positioning.label = function(/*Object*/start, /*Object*/end){
 		// summary:
-		//		Returns the optimal position for annotations.Label.
-		//
-		// 	text position
+		//		Returns the optimal text positions for annotations.Label.
+		
 		// label at middle of vector
 		var x = 0.5*(start.x+end.x);
 		var y = 0.5*(start.y+end.y);
 		
 		// move label a set distance from the line
 		var slope = dojox.drawing.util.common.slope(start, end);
-		
 		var deltay = textOffset/Math.sqrt(1.0+slope*slope);
-		if(end.y>start.y){deltay = -deltay;}
+		
+		if(end.y>start.y && end.x>start.x || end.y<start.y && end.x<start.x){
+			// Position depending on quadrant.  Y offset
+			// positions box aligned vertically from top
+			deltay = -deltay;
+			y -= textYOffset;
+		}
 		x += -deltay*slope;
 		y += deltay;
 		
 		// want text to be away from start of vector
 		// This will make force diagrams less crowded
 		var align = end.x<start.x ? "end" : "start";
-		
-	        // box vertical aligned from top
-		if(end.y>start.y){
-			y -= textYOffset;
-		}
 		
 		return { x:x, y:y, foo:"bar", align:align}; // Object
 	};

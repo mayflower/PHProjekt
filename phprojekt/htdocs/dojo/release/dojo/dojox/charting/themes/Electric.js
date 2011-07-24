@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -53,19 +53,19 @@ dojo.require("dojox.charting.Theme");
 		},
 		seriesThemes: [
 			{fill: g(defaultFill, "#004cbf", "#06f")},
-			{fill: g(defaultFill, "#bf004c", "#f06")},	
-			{fill: g(defaultFill, "#43bf00", "#6f0")},	
-			{fill: g(defaultFill, "#7300bf", "#90f")},	
-			{fill: g(defaultFill, "#bf7300", "#f90")},	
-			{fill: g(defaultFill, "#00bf73", "#0f9")}	
+			{fill: g(defaultFill, "#bf004c", "#f06")},
+			{fill: g(defaultFill, "#43bf00", "#6f0")},
+			{fill: g(defaultFill, "#7300bf", "#90f")},
+			{fill: g(defaultFill, "#bf7300", "#f90")},
+			{fill: g(defaultFill, "#00bf73", "#0f9")}
 		],
 		markerThemes: [
-			{fill: "#06f", stroke: {color: "#06f"}},	
+			{fill: "#06f", stroke: {color: "#06f"}},
 			{fill: "#f06", stroke: {color: "#f06"}},
-			{fill: "#6f0", stroke: {color: "#6f0"}},	
-			{fill: "#90f", stroke: {color: "#90f"}},	
-			{fill: "#f90", stroke: {color: "#f90"}},	
-			{fill: "#0f9", stroke: {color: "#0f9"}}	
+			{fill: "#6f0", stroke: {color: "#6f0"}},
+			{fill: "#90f", stroke: {color: "#90f"}},
+			{fill: "#f90", stroke: {color: "#f90"}},
+			{fill: "#0f9", stroke: {color: "#0f9"}}
 		]
 	});
 	

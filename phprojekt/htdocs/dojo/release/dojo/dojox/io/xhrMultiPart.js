@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -110,7 +110,7 @@ dojo.require("dojox.uuid.generateRandomUuid");
 		//	error: Function?
 		//		function(response, ioArgs){}. response is an Object, ioArgs
 		//		is of type dojo.__IoCallbackArgs. The error function will
-		//		be called in an error case. 
+		//		be called in an error case.
 		//	handle: Function?
 		//		function(response, ioArgs){}. response is an Object, ioArgs
 		//		is of type dojo.__IoCallbackArgs. The handle function will

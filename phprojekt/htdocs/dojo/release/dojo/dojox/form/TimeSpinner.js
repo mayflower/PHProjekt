@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -34,7 +34,7 @@ dojo.declare(
 
 	largeDelta: 30,
 
-	timeoutChangeRate: 0.50,	
+	timeoutChangeRate: 0.50,
 
 	parse: function(time, locale){
 		return dojo.date.locale.parse(time, {selector:"time", formatLength:"short"});

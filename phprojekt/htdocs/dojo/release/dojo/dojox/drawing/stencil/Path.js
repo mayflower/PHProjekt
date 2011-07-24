@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -62,7 +62,7 @@ StencilPoints: [
 							if(o.x===undefined){// Z + undefined works here, but checking anyway
 								strAr.push(cmd);
 							}else{
-								strAr.push(cmd + o.x +" "+ o.y); 
+								strAr.push(cmd + o.x +" "+ o.y);
 							}
 						}
 					}
@@ -174,7 +174,7 @@ StencilPoints: [
 );
 
 dojox.drawing.register({
-	name:"dojox.drawing.stencil.Path"	
+	name:"dojox.drawing.stencil.Path"
 }, "stencil");
 
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -27,17 +27,18 @@ dojox.drawing.annotations.Label = dojox.drawing.util.oo.declare(
 		this.master = options.stencil;
 		this.labelPosition = options.labelPosition || "BR"; // TL, TR, BR, BL, or function
 		if(dojo.isFunction(this.labelPosition)){
-			this.setLabel = this.setLabelCustom;	
+			this.setLabel = this.setLabelCustom;
 		}
 		this.setLabel(options.text || "");
 		this.connect(this.master, "onTransform", this, "setLabel");
 		this.connect(this.master, "destroy", this, "destroy");
 		
 		if(this.style.labelSameColor){
-			this.connect(this.master, "attr", this, "beforeAttr");		
+			this.connect(this.master, "attr", this, "beforeAttr");
 		}
 	},{
 		_align:"start",
+		drawingType:"label",
 		
 		setLabelCustom: function(/* ? String */text){
 			// summary:
@@ -51,8 +52,8 @@ dojox.drawing.annotations.Label = dojox.drawing.util.oo.declare(
 				height:d.h || this._lineHeight
 			});
 			
-			// is an event, not text:
-			if(text && !text.split){ text = null; }
+			// is an event, not text, so keep the old label:
+			if(text && !text.split){ text = this.getText(); }
 			
 			this.render(this.typesetter(text));
 		},
@@ -78,7 +79,7 @@ dojox.drawing.annotations.Label = dojox.drawing.util.oo.declare(
 				this._align = "end";
 			}
 			
-			if(!this.labelWidth || (text && text.split && text != this.getText())){ //????????????????????????????????????
+			if(!this.labelWidth || (text && text.split && text != this.getText())){
 				this.setData({
 					x:x,
 					y:y,
@@ -105,7 +106,7 @@ dojox.drawing.annotations.Label = dojox.drawing.util.oo.declare(
 		beforeAttr: function(key, value){
 			if(value!==undefined){
 				// make it an object
-				var k = key; key = {}; key[k] = value;	
+				var k = key; key = {}; key[k] = value;
 			}
 			delete key.x;
 			delete key.y;

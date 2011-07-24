@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,7 +19,7 @@ dojo.declare("dojox.image.Magnifier",
 	//
 	// description:
 	//		An unobtrusive way to add an unstyled overlay
-	// 		above the srcNode image element. The overlay/glass is a 
+	// 		above the srcNode image element. The overlay/glass is a
 	//		scaled version of the src image (so larger images sized down
 	//		are clearer).
 	//
@@ -58,7 +58,7 @@ dojo.declare("dojox.image.Magnifier",
 		;
 		
 		// with svg, our mouseout connection to the image surface doesn't
-		// fire, so we'r have to manually calculate offsets	
+		// fire, so we'r have to manually calculate offsets
 		if(x < this.offset.x || y < this.offset.y || x > xMax || y > yMax){
 			this._hideGlass();
 		}else{
@@ -75,7 +75,7 @@ dojo.declare("dojox.image.Magnifier",
 			y = (this._zoomSize.h * yOff * -1)+(this.glassSize*yOff)
 		;
 		// set the image offset
-		this.img.setShape({ x: x, y: y });	
+		this.img.setShape({ x: x, y: y });
 
 	}
 

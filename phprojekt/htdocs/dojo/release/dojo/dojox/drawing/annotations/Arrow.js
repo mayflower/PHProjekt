@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -60,7 +60,7 @@ dojox.drawing.annotations.Arrow = dojox.drawing.util.oo.declare(
 			}
 			var angle = this.util.angle(obj);
 			
-			var lineLength = this.util.length(obj); 
+			var lineLength = this.util.length(obj);
 			var al = style.arrows.length;
 			var aw = style.arrows.width/2;
 			if(lineLength<al){

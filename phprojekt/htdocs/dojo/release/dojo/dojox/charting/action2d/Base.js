@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -19,9 +19,9 @@ dojox.charting.action2d.__BaseCtorArgs = function(duration, easing){
 	//		The base keyword arguments object for creating an action2d.
 	//	duration: Number?
 	//		The amount of time in milliseconds for an animation to last.  Default is 400.
-	//	easing: dojox.fx.easing.*?
+	//	easing: dojo.fx.easing.*?
 	//		An easing object (see dojo.fx.easing) for use in an animation.  The
-	//		default is dojox.fx.easing.backOut.
+	//		default is dojo.fx.easing.backOut.
 	this.duration = duration;
 	this.easing = easing;
 }

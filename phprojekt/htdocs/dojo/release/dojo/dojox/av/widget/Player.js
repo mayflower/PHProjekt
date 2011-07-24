@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -20,7 +20,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 	// description:
 	//		Currently for markup only. All controls should reside as child
 	//		nodes within the Player node. 'controlType' is used to determine
-	//		the placement of the control. If no type or an unrecoginized type 
+	//		the placement of the control. If no type or an unrecoginized type
 	//		is used, it will be left-aligned in the same row as the volume.
 	//	Note:
 	//		Be sure to use 'controlType' as a node attribute. It is not a
@@ -29,7 +29,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 	// example:
 	//		|	<div dojoType="dojox.av.widget.Player" playerWidth="100%">
     //		| 		<div controlType="video" initialVolume=".1"
-	//		| 			mediaUrl="video/Grog.flv" autoPlay="true" 
+	//		| 			mediaUrl="video/Grog.flv" autoPlay="true"
 	//		|			isDebug="false" dojoType="dojox.av.FLVideo"></div>
     //		|     	<div controlType="play" dojoType="dojox.av.widget.PlayButton"></div>
     //		|     	<div controlType="volume" dojoType="dojox.av.widget.VolumeButton"></div>
@@ -41,7 +41,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 	//		Sets the width of the player (not the video size)
 	//		Number will be converted to pixels
 	//		String will be used literally. EX: "320px" or "100%"
-	playerWidth: "480px", 
+	playerWidth: "480px",
 	//
 	// TODO:
 	//playerHeight
@@ -51,7 +51,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 	widgetsInTemplate:true,
 	templateString: dojo.cache("dojox.av.widget", "resources/Player.html", "<div class=\"playerContainer\">\n\t<div class=\"PlayerScreen\" dojoAttachPoint=\"playerScreen\"></div>\n\t<table class=\"Controls\">\n\t\t<tr>\n\t\t\t<td colspan=\"2\" dojoAttachPoint=\"progressContainer\"></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td class=\"PlayContainer\" dojoAttachPoint=\"playContainer\"></td>\n\t\t\t<td class=\"ControlsRight\">\n\t\t\t<table class=\"StatusContainer\">\n\t\t\t\t<tr dojoAttachPoint=\"statusContainer\">\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=\"3\" class=\"ControlsBottom\" dojoAttachPoint=\"controlsBottom\"></td>\n\t\t\t\t</tr>\n\t\t\t</table>\n\t\t</td>\n\t\t</tr>\n\t</table>\n</div>\n"),
 	
-	_fillContent: function(){ 
+	_fillContent: function(){
 		// summary
 		//		Finding and collecting child nodes
 		if(!this.items && this.srcNodeRef){
@@ -70,7 +70,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 		dojo.style(this.domNode, "width", this.playerWidth+(dojo.isString(this.playerWidth)?"":"px"));
 		
 		if(dojo.isString(this.playerWidth) && this.playerWidth.indexOf("%")){
-			dojo.connect(window, "resize", this, "onResize");	
+			dojo.connect(window, "resize", this, "onResize");
 		}
 		this.children = [];
 		var domNode;
@@ -98,7 +98,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 	},
 	startup: function(){
 		// summary:
-		//		Fired when all children are ready. Set the media in 
+		//		Fired when all children are ready. Set the media in
 		//		all children with setMedia()
 		//
 		this.media = dijit.byId(this.mediaNode.id);
@@ -109,7 +109,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 		dojo.forEach(this.items, function(id){
 			if(id !== this.mediaNode.id){
 				var child = dijit.byId(id);
-				this.children.push(child);	
+				this.children.push(child);
 				if(child){
 					child.setMedia(this.media, this);
 				}
@@ -124,7 +124,7 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._Templated], {
 		//
 		var dim = dojo.marginBox(this.domNode);
 		if(this.media && this.media.onResize !== null){
-			this.media.onResize(dim);	
+			this.media.onResize(dim);
 		}
 		dojo.forEach(this.children, function(child){
 			if(child.onResize){

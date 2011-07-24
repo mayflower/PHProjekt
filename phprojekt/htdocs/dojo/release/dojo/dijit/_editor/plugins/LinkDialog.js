@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,12 +8,10 @@
 if(!dojo._hasResource["dijit._editor.plugins.LinkDialog"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit._editor.plugins.LinkDialog"] = true;
 dojo.provide("dijit._editor.plugins.LinkDialog");
-
 dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
 dojo.require("dijit._editor._Plugin");
 dojo.require("dijit.TooltipDialog");
-dojo.require("dijit.form.Button");
+dojo.require("dijit.form.DropDownButton");
 dojo.require("dijit.form.ValidationTextBox");
 dojo.require("dijit.form.Select");
 dojo.require("dijit._editor.range");
@@ -21,6 +19,7 @@ dojo.require("dojo.i18n");
 dojo.require("dojo.string");
 dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 dojo.requireLocalization("dijit._editor", "LinkDialog", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+
 
 dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 	// summary:
@@ -41,11 +40,11 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 	// urlRegExp: [protected] String
 	//		Used for validating input as correct URL.  While file:// urls are not terribly
 	//		useful, they are technically valid.
-	urlRegExp: "((https?|ftps?|file)\\://|\./|/|)(/[a-zA-Z]{1,1}:/|)(((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)*(?:[a-zA-Z](?:[-\\da-zA-Z]{0,80}[\\da-zA-Z])?)\\.?)|(((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])|(0[xX]0*[\\da-fA-F]?[\\da-fA-F]\\.){3}0[xX]0*[\\da-fA-F]?[\\da-fA-F]|(0+[0-3][0-7][0-7]\\.){3}0+[0-3][0-7][0-7]|(0|[1-9]\\d{0,8}|[1-3]\\d{9}|4[01]\\d{8}|42[0-8]\\d{7}|429[0-3]\\d{6}|4294[0-8]\\d{5}|42949[0-5]\\d{4}|429496[0-6]\\d{3}|4294967[01]\\d{2}|42949672[0-8]\\d|429496729[0-5])|0[xX]0*[\\da-fA-F]{1,8}|([\\da-fA-F]{1,4}\\:){7}[\\da-fA-F]{1,4}|([\\da-fA-F]{1,4}\\:){6}((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])))(\\:\\d+)?(/(?:[^?#\\s/]+/)*(?:[^?#\\s/]+(?:\\?[^?#\\s/]*)?(?:#.*)?)?)?",
+	urlRegExp: "((https?|ftps?|file)\\://|\./|/|)(/[a-zA-Z]{1,1}:/|)(((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)*(?:[a-zA-Z](?:[-\\da-zA-Z]{0,80}[\\da-zA-Z])?)\\.?)|(((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])|(0[xX]0*[\\da-fA-F]?[\\da-fA-F]\\.){3}0[xX]0*[\\da-fA-F]?[\\da-fA-F]|(0+[0-3][0-7][0-7]\\.){3}0+[0-3][0-7][0-7]|(0|[1-9]\\d{0,8}|[1-3]\\d{9}|4[01]\\d{8}|42[0-8]\\d{7}|429[0-3]\\d{6}|4294[0-8]\\d{5}|42949[0-5]\\d{4}|429496[0-6]\\d{3}|4294967[01]\\d{2}|42949672[0-8]\\d|429496729[0-5])|0[xX]0*[\\da-fA-F]{1,8}|([\\da-fA-F]{1,4}\\:){7}[\\da-fA-F]{1,4}|([\\da-fA-F]{1,4}\\:){6}((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5])))(\\:\\d+)?(/(?:[^?#\\s/]+/)*(?:[^?#\\s/]{0,}(?:\\?[^?#\\s/]*)?(?:#.*)?)?)?",
 
 	// emailRegExp: [protected] String
 	//		Used for validating input as correct email address.  Taken from dojox.validate
-	emailRegExp:  "<?(mailto\\:)([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+" /*username*/ + "@" +  
+	emailRegExp:  "<?(mailto\\:)([!#-'*+\\-\\/-9=?A-Z^-~]+[.])*[!#-'*+\\-\\/-9=?A-Z^-~]+" /*username*/ + "@" +
         "((?:(?:[\\da-zA-Z](?:[-\\da-zA-Z]{0,61}[\\da-zA-Z])?)\\.)+(?:[a-zA-Z](?:[-\\da-zA-Z]{0,6}[\\da-zA-Z])?)\\.?)|localhost|^[^-][a-zA-Z0-9_-]*>?",	// host.
 
 	// htmlTemplate: [protected] String
@@ -73,12 +72,12 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		"<label for='${id}_urlInput'>${url}</label>",
 		"</td><td>",
 		"<input dojoType='dijit.form.ValidationTextBox' required='true' " +
-		"id='${id}_urlInput' name='urlInput' intermediateChanges='true'>",
+		"id='${id}_urlInput' name='urlInput' intermediateChanges='true'/>",
 		"</td></tr><tr><td>",
 		"<label for='${id}_textInput'>${text}</label>",
 		"</td><td>",
 		"<input dojoType='dijit.form.ValidationTextBox' required='true' id='${id}_textInput' " +
-		"name='textInput' intermediateChanges='true'>",
+		"name='textInput' intermediateChanges='true'/>",
 		"</td></tr><tr><td>",
 		"<label for='${id}_targetSelect'>${target}</label>",
 		"</td><td>",
@@ -212,15 +211,18 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 	_setContent: function(staticPanel){
 		// summary:
 		//		Helper for _initButton above.   Not sure why it's a separate method.
-		this.dropDown.set('content', staticPanel);
+		this.dropDown.set({
+			parserScope: "dojo",		// make parser search for dojoType/data-dojo-type even if page is multi-version
+			content: staticPanel
+		});
 	},
 
 	_checkValues: function(args){
 		// summary:
 		//		Function to check the values in args and 'fix' them up as needed.
 		// args: Object
-		//		Content being set.		
-		// tags: 
+		//		Content being set.
+		// tags:
 		//		protected
 		if(args && args.urlInput){
 			args.urlInput = args.urlInput.replace(/"/g, "&quot;");
@@ -235,7 +237,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		//		private
 		//TODO: prevent closing popup if the text is empty
 		this._onCloseDialog();
-		if(dojo.isIE){ //see #4151
+		if(dojo.isIE < 9){ //see #4151
 			var sel = dijit.range.getSelection(this.editor.window);
 			var range = sel.getRangeAt(0);
 			var a = range.endContainer;
@@ -266,7 +268,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 			}
 		}
 		// make sure values are properly escaped, etc.
-		args = this._checkValues(args); 
+		args = this._checkValues(args);
 		this.editor.execCommand('inserthtml',
 			dojo.string.substitute(this.htmlTemplate, args));
 	},
@@ -301,7 +303,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 		//		Handler for when the dialog is opened.
 		//		If the caret is currently in a URL then populate the URL's info into the dialog.
 		var a;
-		if(dojo.isIE){
+		if(dojo.isIE < 9){
 			// IE is difficult to select the element in, using the range unified
 			// API seems to work reasonably well.
 			var sel = dijit.range.getSelection(this.editor.window);
@@ -345,6 +347,7 @@ dojo.declare("dijit._editor.plugins.LinkDialog", dijit._editor._Plugin, {
 					 "selectElement",
 					 dijit._editor.selection, [t]);
 				this.editor.onDisplayChanged();
+				
 				setTimeout(dojo.hitch(this, function(){
 					// Focus shift outside the event handler.
 					// IE doesn't like focus changes in event handles.
@@ -372,12 +375,12 @@ dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkD
 		"<label for='${id}_urlInput'>${url}</label>",
 		"</td><td>",
 		"<input dojoType='dijit.form.ValidationTextBox' regExp='${urlRegExp}' " +
-		"required='true' id='${id}_urlInput' name='urlInput' intermediateChanges='true'>",
+		"required='true' id='${id}_urlInput' name='urlInput' intermediateChanges='true'/>",
 		"</td></tr><tr><td>",
 		"<label for='${id}_textInput'>${text}</label>",
 		"</td><td>",
 		"<input dojoType='dijit.form.ValidationTextBox' required='false' id='${id}_textInput' " +
-		"name='textInput' intermediateChanges='true'>",
+		"name='textInput' intermediateChanges='true'/>",
 		"</td></tr><tr><td>",
 		"</td><td>",
 		"</td></tr><tr><td colspan='2'>",
@@ -454,11 +457,11 @@ dojo.declare("dijit._editor.plugins.ImgLinkDialog", [dijit._editor.plugins.LinkD
 
 	_checkValues: function(args){
 		// summary:
-		//		Function to check the values in args and 'fix' them up as needed 
+		//		Function to check the values in args and 'fix' them up as needed
 		//		(special characters in the url or alt text)
 		// args: Object
-		//		Content being set.		
-		// tags: 
+		//		Content being set.
+		// tags:
 		//		protected
 		if(args && args.urlInput){
 			args.urlInput = args.urlInput.replace(/"/g, "&quot;");

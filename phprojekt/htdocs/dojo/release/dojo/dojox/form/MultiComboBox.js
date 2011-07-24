@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,7 +8,7 @@
 if(!dojo._hasResource["dojox.form.MultiComboBox"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.form.MultiComboBox"] = true;
 dojo.provide("dojox.form.MultiComboBox");
-dojo.experimental("dojox.form.MultiComboBox"); 
+dojo.experimental("dojox.form.MultiComboBox");
 dojo.require("dijit.form.ComboBox");
 dojo.require("dijit.form.ValidationTextBox");
 
@@ -62,7 +62,7 @@ dojo.declare("dojox.form.MultiComboBox",
 			arguments[0] = text.replace(re, "");
 		}
 		this.inherited(arguments);
-	}		
+	}
 });
 
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -9,6 +9,7 @@ if(!dojo._hasResource["dojox.data.CdfStore"]){ //_hasResource checks added by bu
 dojo._hasResource["dojox.data.CdfStore"] = true;
 dojo.provide("dojox.data.CdfStore");
 dojo.require("dojo.data.util.sorter");
+
 
 dojox.data.ASYNC_MODE = 0;
 dojox.data.SYNC_MODE = 1;
@@ -27,13 +28,13 @@ dojo.declare("dojox.data.CdfStore", null, {
 	//
 	//		While a CDF document is an XML file, other than the initial input, all data returned
 	//		from and written to this store should be in object format.
-	//		
+	//
 	// identity: [const] String
 	//		The unique identifier for each item. Defaults to "jsxid" which is standard for a CDF
 	//		document. Should not be changed.
 	identity: "jsxid",
 	//
-	//	url : String 
+	//	url : String
 	//		The location from which to fetch the XML (CDF) document.
 	url: "",
 	//
@@ -58,7 +59,7 @@ dojo.declare("dojox.data.CdfStore", null, {
 	
 	constructor: function(/* Object */ args){
 		// summary:
-		//	Constructor for the CDF store. Instantiate a new CdfStore. 
+		//	Constructor for the CDF store. Instantiate a new CdfStore.
 		//
 		if(args){
 			this.url = args.url;
@@ -168,7 +169,7 @@ dojo.declare("dojox.data.CdfStore", null, {
 	},
 
 	getLabel: function(/* jsx3.xml.Entity */ item){
-		//	summary: 
+		//	summary:
 		//		See dojo.data.api.Read.getLabel()
 		//
 		if((this.label !== "") && this.isItem(item)){
@@ -230,7 +231,7 @@ dojo.declare("dojox.data.CdfStore", null, {
 		//		|	"//record"
 		//		Only the records beneath the root (data) node:
 		//		|	"//data/record"
-		//		
+		//
 		//	See:
 		//	http://www.tibco.com/devnet/resources/gi/3_7/api/html/jsx3/xml/Entity.html#method:selectNodes
 		//	http://www.w3.org/TR/xpath
@@ -302,14 +303,14 @@ dojo.declare("dojox.data.CdfStore", null, {
 				if(!requestObject.onItem){
 					items = items.slice(startIndex, endIndex);
 					if(requestObject.byId){
-						items = items[0];	
+						items = items[0];
 					}
 				}
 				requestObject.onComplete.call(scope, items, requestObject);
 			}else{
 				items = items.slice(startIndex, endIndex);
 				if(requestObject.byId){
-					items = items[0];	
+					items = items[0];
 				}
 			}
 			return items;
@@ -322,7 +323,7 @@ dojo.declare("dojox.data.CdfStore", null, {
 		var localRequest = request || "*"; // use request for _getItems()
 		
 		if(this.mode == dojox.data.SYNC_MODE){
-			// sync mode. items returned directly	
+			// sync mode. items returned directly
 			var res = this._loadCDF();
 			if(res instanceof Error){
 				if(request.onError){
@@ -344,7 +345,7 @@ dojo.declare("dojox.data.CdfStore", null, {
 		
 		}else{
 			
-			// async mode. Return a Deferred.			
+			// async mode. Return a Deferred.
 			var dfd = this._loadCDF();
 			dfd.addCallbacks(dojo.hitch(this, function(cdfDoc){
 				var items = this._getItems(this.cdfDoc, localRequest);
@@ -419,7 +420,7 @@ dojo.declare("dojox.data.CdfStore", null, {
 	},
 
 	close: function(/*dojo.data.api.Request || keywordArgs || null */ request){
-		 //	summary: 
+		 //	summary:
 		 //		See dojo.data.api.Read.close()
 	},
 
@@ -525,7 +526,7 @@ dojo.declare("dojox.data.CdfStore", null, {
 		//		Internal method.
 		//		Marks items as modified, deleted or new.
 		var id = this.getIdentity(item);
-		this._modifiedItems[id] = item;	
+		this._modifiedItems[id] = item;
 	},
 	
 	
@@ -566,7 +567,7 @@ dojo.declare("dojox.data.CdfStore", null, {
 	 *************************************/
 	getIdentity: function(/* jsx3.xml.Entity */ item){
 		//	summary:
-		//		Returns the identifier for an item.  
+		//		Returns the identifier for an item.
 		//
 		return this.getValue(item, this.identity); // String
 	},
@@ -603,6 +604,5 @@ dojo.declare("dojox.data.CdfStore", null, {
 	}
 	
 });
-
 
 }

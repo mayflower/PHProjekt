@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -10,9 +10,10 @@ dojo._hasResource["dojox.form.CheckedMultiSelect"] = true;
 dojo.provide("dojox.form.CheckedMultiSelect");
 
 dojo.require("dijit.form.CheckBox");
+dojo.require("dijit.Tooltip");
 dojo.require("dijit.form._FormSelectWidget");
 
-dojo.declare("dojox.form._CheckedMultiSelectItem", 
+dojo.declare("dojox.form._CheckedMultiSelectItem",
 	[dijit._Widget, dijit._Templated],
 	{
 	// summary:
@@ -60,13 +61,13 @@ dojo.declare("dojox.form._CheckedMultiSelectItem",
 	_changeBox: function(){
 		// summary:
 		//		Called to force the select to match the state of the check box
-		//		(only on click of the checkbox)  Radio-based calls _setValueAttr
+		//		(only on click of the checkbox)	 Radio-based calls _setValueAttr
 		//		instead.
 		if(this.get("disabled") || this.get("readOnly")){ return; }
 		if(this.parent.multiple){
-			this.option.selected = this.checkBox.attr('value') && true;
+			this.option.selected = this.checkBox.get('value') && true;
 		}else{
-			this.parent.attr('value', this.option.value);
+			this.parent.set('value', this.option.value);
 		}
 		// fire the parent's change
 		this.parent._updateSelection();
@@ -88,21 +89,21 @@ dojo.declare("dojox.form._CheckedMultiSelectItem",
 	_updateBox: function(){
 		// summary:
 		//		Called to force the box to match the state of the select
-		this.checkBox.attr('value', this.option.selected);
+		this.checkBox.set('value', this.option.selected);
 	},
 	
 	_setDisabledAttr: function(value){
 		// summary:
 		//		Disables (or enables) all the children as well
 		this.disabled = value||this.option.disabled;
-		this.checkBox.attr("disabled", this.disabled);
+		this.checkBox.set("disabled", this.disabled);
 		dojo.toggleClass(this.domNode, "dojoxMultiSelectDisabled", this.disabled);
 	},
 	
 	_setReadOnlyAttr: function(value){
 		// summary:
 		//		Sets read only (or unsets) all the children as well
-		this.checkBox.attr("readOnly", value);
+		this.checkBox.set("readOnly", value);
 		this.readOnly = value;
 	}
 });
@@ -114,6 +115,22 @@ dojo.declare("dojox.form.CheckedMultiSelect", dijit.form._FormSelectWidget, {
 	templateString: dojo.cache("dojox.form", "resources/CheckedMultiSelect.html", "<div class=\"dijit dijitReset dijitInline\" dojoAttachEvent=\"onmousedown:_onMouseDown,onclick:focus\"\n\t><select class=\"${baseClass}Select\" multiple=\"true\" dojoAttachPoint=\"containerNode,focusNode\"></select\n\t><div dojoAttachPoint=\"wrapperDiv\"></div\n></div>\n"),
 
 	baseClass: "dojoxMultiSelect",
+	
+	// required: Boolean
+	//		User is required to check at least one item.
+	required: false,
+	
+	// invalidMessage: String
+	//		The message to display if value is invalid.
+	invalidMessage: "At least one item must be selected.",
+	
+	// _message: String
+	//		Currently displayed message
+	_message: "",
+	
+	// tooltipPosition: String[]
+	//		See description of `dijit.Tooltip.defaultPosition` for details on this parameter.
+	tooltipPosition: [],
 
 	_onMouseDown: function(e){
 		// summary:
@@ -122,15 +139,90 @@ dojo.declare("dojox.form.CheckedMultiSelect", dijit.form._FormSelectWidget, {
 		dojo.stopEvent(e);
 	},
 	
+	validator: function() {
+		// summary:
+		//		Overridable function used to validate that an item is selected if required =
+		//		true.
+		// tags:
+		//		protected
+		if (!this.required){ return true; }
+		return dojo.some(this.getOptions(), function(opt){
+			return opt.selected && opt.value != null && opt.value.toString().length != 0;
+		});
+	},
+	
+	validate: function(isFocused) {
+		dijit.hideTooltip(this.domNode);
+		var isValid = this.isValid(isFocused);
+		if(!isValid){ this.displayMessage(this.invalidMessage); }
+		return isValid;
+	},
+	
+	isValid: function(/*Boolean*/ isFocused) {
+		// summary:
+		//		Tests if the required items are selected.
+		//		Can override with your own routine in a subclass.
+		// tags:
+		//		protected
+		return this.validator();
+	},
+
+	getErrorMessage: function(/*Boolean*/ isFocused) {
+		// summary:
+		//		Return an error message to show if appropriate
+		// tags:
+		//		protected
+		return this.invalidMessage;
+	},
+	
+	displayMessage: function(/*String*/ message) {
+		// summary:
+		//		Overridable method to display validation errors/hints.
+		//		By default uses a tooltip.
+		// tags:
+		//		extension
+		dijit.hideTooltip(this.domNode);
+		if(message){
+			dijit.showTooltip(message, this.domNode, this.tooltipPosition);
+		}
+	},
+	
+	onAfterAddOptionItem: function(item, option){
+		// summary:
+		//		a function that can be connected to in order to receive a
+		//		notification that an item as been added to this dijit.
+	},
+	
 	_addOptionItem: function(/* dojox.form.__SelectOption */ option){
-		this.wrapperDiv.appendChild(new dojox.form._CheckedMultiSelectItem({
+		var item = new dojox.form._CheckedMultiSelectItem({
 			option: option,
 			parent: this
-		}).domNode);
+		});
+		this.wrapperDiv.appendChild(item.domNode);
+		this.onAfterAddOptionItem(item, option);
+	},
+	
+	_refreshState: function(){
+		// summary:
+		//		Validate if selection changes.
+		this.validate(this._focused);
+	},
+
+	onChange: function(newValue){
+		// summary:
+		//		Validate if selection changes.
+		this._refreshState();
+	},
+	
+	reset: function(){
+		// summary: Overridden so that the state will be cleared.
+		this.inherited(arguments);
+		dijit.hideTooltip(this.domNode);
 	},
 	
 	_updateSelection: function(){
 		this.inherited(arguments);
+		this._handleOnChange(this.value);
 		dojo.forEach(this._getChildren(), function(c){ c._updateBox(); });
 	},
 	
@@ -155,8 +247,8 @@ dojo.declare("dojox.form.CheckedMultiSelect", dijit.form._FormSelectWidget, {
 		//		Disable (or enable) all the children as well
 		this.inherited(arguments);
 		dojo.forEach(this._getChildren(), function(node){
-			if(node && node.attr){
-				node.attr("disabled", value);
+			if(node && node.set){
+				node.set("disabled", value);
 			}
 		});
 	},
@@ -169,13 +261,14 @@ dojo.declare("dojox.form.CheckedMultiSelect", dijit.form._FormSelectWidget, {
 		}
 		this.readOnly = value;
 		dojo.forEach(this._getChildren(), function(node){
-			if(node && node.attr){
-				node.attr("readOnly", value);
+			if(node && node.set){
+				node.set("readOnly", value);
 			}
 		});
 	},
 
 	uninitialize: function(){
+		dijit.hideTooltip(this.domNode);
 		// Make sure these children are destroyed
 		dojo.forEach(this._getChildren(), function(child){
 			child.destroyRecursive();

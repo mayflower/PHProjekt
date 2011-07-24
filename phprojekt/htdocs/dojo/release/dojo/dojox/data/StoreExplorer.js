@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -18,7 +18,9 @@ dojo.declare("dojox.data.StoreExplorer", dijit.layout.BorderContainer, {
 		dojo.mixin(this, options);
 	},
 	store: null,
+	columnWidth: '',
 	stringQueries: false,
+	showAllColumns: false,
 	postCreate: function(){
 		var self = this;
 		this.inherited(arguments);
@@ -52,7 +54,7 @@ dojo.declare("dojox.data.StoreExplorer", dijit.layout.BorderContainer, {
 		this.setItemName = function(name){
 			createNewButton.attr('label',"<img style='width:12px; height:12px' src='" + dojo.moduleUrl("dijit.themes.tundra.images","dndCopy.png") + "' /> Create New " + name);
 			deleteButton.attr('label',"Delete " + name);
-		}
+		};
 		addButton("Save",function(){
 			self.store.save({onError:function(error){
 				alert(error);
@@ -162,16 +164,18 @@ dojo.declare("dojox.data.StoreExplorer", dijit.layout.BorderContainer, {
 				}
 			}
 			layout = layout.sort(function(a, b){
-				return a._score > b._score ? -1 : 1;
+				return  b._score - a._score;
 			});
-			for(j=0; column = layout[j]; j++){
-				if(column._score < items.length/40 * j){
-					layout.splice(j,layout.length-j);
-					break;
+			if(!self.showAllColumns){
+				for(j=0; column=layout[j]; j++){
+					if(column._score < items.length/40 * j) {
+						layout.splice(j, layout.length-j);
+						break;
+					}
 				}
 			}
 			for(j=0; column = layout[j++];){
-				column.width=Math.round(100/layout.length) + '%';
+				column.width=self.columnWidth || Math.round(100/layout.length) + '%';
 			}
 			grid._onFetchComplete = defaultOnComplete;
 			grid.attr("structure",layout);

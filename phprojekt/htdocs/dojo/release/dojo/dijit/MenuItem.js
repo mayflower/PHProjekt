@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,11 +8,11 @@
 if(!dojo._hasResource["dijit.MenuItem"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit.MenuItem"] = true;
 dojo.provide("dijit.MenuItem");
-
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 dojo.require("dijit._Contained");
 dojo.require("dijit._CssStateMixin");
+
 
 dojo.declare("dijit.MenuItem",
 		[dijit._Widget, dijit._Templated, dijit._Contained, dijit._CssStateMixin],
@@ -22,7 +22,7 @@ dojo.declare("dijit.MenuItem",
 
 		// Make 3 columns
 		// icon, label, and expand arrow (BiDi-dependent) indicating sub-menu
-		templateString: dojo.cache("dijit", "templates/MenuItem.html", "<tr class=\"dijitReset dijitMenuItem\" dojoAttachPoint=\"focusNode\" waiRole=\"menuitem\" tabIndex=\"-1\"\n\t\tdojoAttachEvent=\"onmouseenter:_onHover,onmouseleave:_onUnhover,ondijitclick:_onClick\">\n\t<td class=\"dijitReset dijitMenuItemIconCell\" waiRole=\"presentation\">\n\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitIcon dijitMenuItemIcon\" dojoAttachPoint=\"iconNode\"/>\n\t</td>\n\t<td class=\"dijitReset dijitMenuItemLabel\" colspan=\"2\" dojoAttachPoint=\"containerNode\"></td>\n\t<td class=\"dijitReset dijitMenuItemAccelKey\" style=\"display: none\" dojoAttachPoint=\"accelKeyNode\"></td>\n\t<td class=\"dijitReset dijitMenuArrowCell\" waiRole=\"presentation\">\n\t\t<div dojoAttachPoint=\"arrowWrapper\" style=\"visibility: hidden\">\n\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitMenuExpand\"/>\n\t\t\t<span class=\"dijitMenuExpandA11y\">+</span>\n\t\t</div>\n\t</td>\n</tr>\n"),
+		templateString: dojo.cache("dijit", "templates/MenuItem.html", "<tr class=\"dijitReset dijitMenuItem\" dojoAttachPoint=\"focusNode\" role=\"menuitem\" tabIndex=\"-1\"\n\t\tdojoAttachEvent=\"onmouseenter:_onHover,onmouseleave:_onUnhover,ondijitclick:_onClick\">\n\t<td class=\"dijitReset dijitMenuItemIconCell\" role=\"presentation\">\n\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitIcon dijitMenuItemIcon\" dojoAttachPoint=\"iconNode\"/>\n\t</td>\n\t<td class=\"dijitReset dijitMenuItemLabel\" colspan=\"2\" dojoAttachPoint=\"containerNode\"></td>\n\t<td class=\"dijitReset dijitMenuItemAccelKey\" style=\"display: none\" dojoAttachPoint=\"accelKeyNode\"></td>\n\t<td class=\"dijitReset dijitMenuArrowCell\" role=\"presentation\">\n\t\t<div dojoAttachPoint=\"arrowWrapper\" style=\"visibility: hidden\">\n\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitMenuExpand\"/>\n\t\t\t<span class=\"dijitMenuExpandA11y\">+</span>\n\t\t</div>\n\t</td>\n</tr>\n"),
 
 		attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
 			label: { node: "containerNode", type: "innerHTML" },
@@ -59,9 +59,8 @@ dojo.declare("dijit.MenuItem",
 			}
 		},
 
-		postCreate: function(){
+		buildRendering: function(){
 			this.inherited(arguments);
-			dojo.setSelectable(this.domNode, false);
 			var label = this.id+"_text";
 			dojo.attr(this.containerNode, "id", label);
 			if(this.accelKeyNode){
@@ -69,6 +68,7 @@ dojo.declare("dijit.MenuItem",
 				label += " " + this.id + "_accel";
 			}
 			dijit.setWaiState(this.domNode, "labelledby", label);
+			dojo.setSelectable(this.domNode, false);
 		},
 
 		_onHover: function(){
@@ -91,11 +91,10 @@ dojo.declare("dijit.MenuItem",
 			// then unselect it
 			this.getParent().onItemUnhover(this);
 
-			// _onUnhover() is called when the menu is hidden (collapsed), due to clicking
-			// a MenuItem and having it execut.  When that happens, FF and IE don't generate
-			// an onmouseout event for the MenuItem, so give _CssStateMixin some help
-			this._hovering = false;
-			this._setStateClass();
+			// When menu is hidden (collapsed) due to clicking a MenuItem and having it execute,
+			// FF and IE don't generate an onmouseout event for the MenuItem.
+			// So, help out _CssStateMixin in this case.
+			this._set("hovering", false);
 		},
 
 		_onClick: function(evt){
@@ -180,19 +179,21 @@ dojo.declare("dijit.MenuItem",
 			// summary:
 			//		Hook for attr('disabled', ...) to work.
 			//		Enable or disable this menu item.
-			this.disabled = value;
+
 			dijit.setWaiState(this.focusNode, 'disabled', value ? 'true' : 'false');
+			this._set("disabled", value);
 		},
 		_setAccelKeyAttr: function(/*String*/ value){
 			// summary:
 			//		Hook for attr('accelKey', ...) to work.
 			//		Set accelKey on this menu item.
-			this.accelKey=value;
 
 			this.accelKeyNode.style.display=value?"":"none";
 			this.accelKeyNode.innerHTML=value;
 			//have to use colSpan to make it work in IE
 			dojo.attr(this.containerNode,'colSpan',value?"1":"2");
+			
+			this._set("accelKey", value);
 		}
 	});
 

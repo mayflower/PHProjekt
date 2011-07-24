@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -60,7 +60,7 @@ dojo.provide("dojox.lang.utils");
 			// summary: Updates an existing object in place with properties from an "source" object.
 			// target: Object: the "target" object to be updated
 			// source: Object: the "source" object, whose properties will be used to source the existed object.
-			// pattern: Array: an array of properties to be copied
+			// pattern: Object: object, whose properties will be used to pull values from the "source"
 			// conv: Boolean?: force conversion to the original type
 			if(!source || !pattern){ return target; }
 			for(var x in pattern){

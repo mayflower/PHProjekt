@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,6 +8,8 @@
 if(!dojo._hasResource["dijit._editor.html"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit._editor.html"] = true;
 dojo.provide("dijit._editor.html");
+
+dojo.getObject("_editor", true, dijit);
 
 dijit._editor.escapeXml=function(/*String*/str, /*Boolean?*/noSingleQuotes){
 	// summary:

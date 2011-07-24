@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -38,7 +38,7 @@ dojox.validate.isUrl = function(/*String*/value, /*Object?*/flags) {
 	// summary: Checks if a string could be a valid URL
 	// value: A string
 	// flags: An object
-	//    flags.scheme  Can be true, false, or [true, false]. 
+	//    flags.scheme  Can be true, false, or [true, false].
 	//      This means: required, not allowed, or either.
 	//    flags in regexp.host can be applied.
 	//    flags in regexp.ipAddress can be applied.

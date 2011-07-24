@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,6 +8,8 @@
 if(!dojo._hasResource["dojox.math.curves"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.math.curves"] = true;
 dojo.provide("dojox.math.curves");
+
+dojo.getObject("math.curves", true, dojox);
 
 dojo.mixin(dojox.math.curves, {
 	Line:function (start, end) {
@@ -28,7 +30,7 @@ dojo.mixin(dojox.math.curves, {
 			return retVal;
 		};
 		return this;
-	}, 
+	},
 	Bezier:function(pnts) {
 		this.getValue = function (step) {
 			if (step >= 1) {
@@ -56,7 +58,7 @@ dojo.mixin(dojox.math.curves, {
 		};
 		this.p = pnts;
 		return this;
-	}, 
+	},
 	CatmullRom:function (pnts, c) {
 		this.getValue = function (step) {
 			var percent = step * (this.p.length - 1);
@@ -95,7 +97,7 @@ dojo.mixin(dojox.math.curves, {
 		}
 		this.p = pnts;
 		return this;
-	}, 
+	},
 	Arc:function (start, end, ccw){
 		function translate(a,b){
 			var c=new Array(a.length);
@@ -117,7 +119,7 @@ dojo.mixin(dojox.math.curves, {
 			theta += 90;
 		}
 		dojox.math.curves.CenteredArc.call(this, center, rad, theta, theta + (ccw ? -180 : 180));
-	}, 
+	},
 	CenteredArc:function (center, radius, start, end) {
 		this.center = center;
 		this.radius = radius;
@@ -131,11 +133,11 @@ dojo.mixin(dojox.math.curves, {
 			return retVal;
 		};
 		return this;
-	}, 
+	},
 	Circle:function(center, radius){
 		dojox.math.curves.CenteredArc.call(this, center, radius, 0, 360);
 		return this;
-	}, 
+	},
 	Path:function () {
 		var curves = [];
 		var weights = [];

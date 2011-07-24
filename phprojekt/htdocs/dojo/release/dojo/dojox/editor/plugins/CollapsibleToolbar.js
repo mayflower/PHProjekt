@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,12 +8,13 @@
 if(!dojo._hasResource["dojox.editor.plugins.CollapsibleToolbar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.editor.plugins.CollapsibleToolbar"] = true;
 dojo.provide("dojox.editor.plugins.CollapsibleToolbar");
-
-dojo.require("dijit._Widget")
+dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 dojo.require("dijit._editor._Plugin");
+dojo.require("dijit.form.Button");
+dojo.require("dojo.i18n");
+dojo.requireLocalization("dojox.editor.plugins", "CollapsibleToolbar", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
-dojo.requireLocalization("dojox.editor.plugins", "CollapsibleToolbar", null, "ROOT,kk,ro");
 
 dojo.declare("dojox.editor.plugins._CollapsibleToolbarButton", [dijit._Widget, dijit._Templated], {
 	// summary:
@@ -70,7 +71,7 @@ dojo.declare("dojox.editor.plugins.CollapsibleToolbar",dijit._editor._Plugin,{
 	_constructContainer: function(){
 		// summary:
 		//		Internal function to construct a wrapper for the toolbar/header that allows
-		//		it to expand and collapse.  It effectively builds a containing table, 
+		//		it to expand and collapse.  It effectively builds a containing table,
 		//		which handles the layout nicely and gets BIDI support by default.
 		// tags:
 		//		private

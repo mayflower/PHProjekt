@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,12 +8,11 @@
 if(!dojo._hasResource["dijit.TitlePane"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dijit.TitlePane"] = true;
 dojo.provide("dijit.TitlePane");
-
 dojo.require("dojo.fx");
-
 dojo.require("dijit._Templated");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit._CssStateMixin");
+
 
 dojo.declare(
 	"dijit.TitlePane",
@@ -67,7 +66,7 @@ dojo.declare(
 	//		The root className to be placed on this widget's domNode.
 	baseClass: "dijitTitlePane",
 
-	templateString: dojo.cache("dijit", "templates/TitlePane.html", "<div>\n\t<div dojoAttachEvent=\"onclick:_onTitleClick, onkeypress:_onTitleKey\"\n\t\t\tclass=\"dijitTitlePaneTitle\" dojoAttachPoint=\"titleBarNode\">\n\t\t<div class=\"dijitTitlePaneTitleFocus\" dojoAttachPoint=\"focusNode\">\n\t\t\t<img src=\"${_blankGif}\" alt=\"\" dojoAttachPoint=\"arrowNode\" class=\"dijitArrowNode\" waiRole=\"presentation\"\n\t\t\t/><span dojoAttachPoint=\"arrowNodeInner\" class=\"dijitArrowNodeInner\"></span\n\t\t\t><span dojoAttachPoint=\"titleNode\" class=\"dijitTitlePaneTextNode\"></span>\n\t\t</div>\n\t</div>\n\t<div class=\"dijitTitlePaneContentOuter\" dojoAttachPoint=\"hideNode\" waiRole=\"presentation\">\n\t\t<div class=\"dijitReset\" dojoAttachPoint=\"wipeNode\" waiRole=\"presentation\">\n\t\t\t<div class=\"dijitTitlePaneContentInner\" dojoAttachPoint=\"containerNode\" waiRole=\"region\" tabindex=\"-1\" id=\"${id}_pane\">\n\t\t\t\t<!-- nested divs because wipeIn()/wipeOut() doesn't work right on node w/padding etc.  Put padding on inner div. -->\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"),
+	templateString: dojo.cache("dijit", "templates/TitlePane.html", "<div>\n\t<div dojoAttachEvent=\"onclick:_onTitleClick, onkeypress:_onTitleKey\"\n\t\t\tclass=\"dijitTitlePaneTitle\" dojoAttachPoint=\"titleBarNode\">\n\t\t<div class=\"dijitTitlePaneTitleFocus\" dojoAttachPoint=\"focusNode\">\n\t\t\t<img src=\"${_blankGif}\" alt=\"\" dojoAttachPoint=\"arrowNode\" class=\"dijitArrowNode\" role=\"presentation\"\n\t\t\t/><span dojoAttachPoint=\"arrowNodeInner\" class=\"dijitArrowNodeInner\"></span\n\t\t\t><span dojoAttachPoint=\"titleNode\" class=\"dijitTitlePaneTextNode\"></span>\n\t\t</div>\n\t</div>\n\t<div class=\"dijitTitlePaneContentOuter\" dojoAttachPoint=\"hideNode\" role=\"presentation\">\n\t\t<div class=\"dijitReset\" dojoAttachPoint=\"wipeNode\" role=\"presentation\">\n\t\t\t<div class=\"dijitTitlePaneContentInner\" dojoAttachPoint=\"containerNode\" role=\"region\" id=\"${id}_pane\">\n\t\t\t\t<!-- nested divs because wipeIn()/wipeOut() doesn't work right on node w/padding etc.  Put padding on inner div. -->\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"),
 
 	attributeMap: dojo.delegate(dijit.layout.ContentPane.prototype.attributeMap, {
 		title: { node: "titleNode", type: "innerHTML" },
@@ -75,10 +74,13 @@ dojo.declare(
 		id:""
 	}),
 
+	buildRendering: function(){
+		this.inherited(arguments);
+		dojo.setSelectable(this.titleNode, false);
+	},
+
 	postCreate: function(){
-		if(!this.open){
-			this.hideNode.style.display = this.wipeNode.style.display = "none";
-		}
+		this.inherited(arguments);
 		
 		// Hover and focus effect on title bar, except for non-toggleable TitlePanes
 		// This should really be controlled from _setToggleableAttr() but _CssStateMixin
@@ -86,8 +88,6 @@ dojo.declare(
 		if(this.toggleable){
 			this._trackMouseState(this.titleBarNode, "dijitTitlePaneTitle");
 		}
-		this._setCss();
-		dojo.setSelectable(this.titleNode, false);
 
 		// setup open/close animations
 		var hideNode = this.hideNode, wipeNode = this.wipeNode;
@@ -105,40 +105,70 @@ dojo.declare(
 				hideNode.style.display="none";
 			}
 		});
-		this.inherited(arguments);
 	},
 
-	_setOpenAttr: function(/* Boolean */ open){
+	_setOpenAttr: function(/*Boolean*/ open, /*Boolean*/ animate){
 		// summary:
-		//		Hook to make attr("open", boolean) control the open/closed state of the pane.
+		//		Hook to make set("open", boolean) control the open/closed state of the pane.
 		// open: Boolean
 		//		True if you want to open the pane, false if you want to close it.
-		if(this.open !== open){ this.toggle(); }
-		dijit.setWaiState(this.containerNode,"hidden", this.open ? "false" : "true");
-		dijit.setWaiState(this.focusNode, "pressed", this.open ? "true" : "false");
-	},
 
-	_setToggleableAttr: function(/* Boolean */ canToggle){
-		// summary:
-		//		Hook to make attr("canToggle", boolean) work.
-		// canToggle: Boolean
-		//		True to allow user to open/close pane by clicking title bar.
-		this.toggleable = canToggle;
-		dijit.setWaiRole(this.focusNode, canToggle ? "button" : "heading");
-		if(canToggle){
-			// TODO: if canToggle is switched from true false shouldn't we remove this setting?
-			dijit.setWaiState(this.focusNode, "controls", this.id+"_pane");
-			dojo.attr(this.focusNode, "tabIndex", this.tabIndex);
+		dojo.forEach([this._wipeIn, this._wipeOut], function(animation){
+			if(animation && animation.status() == "playing"){
+				animation.stop();
+			}
+		});
+
+		if(animate){
+			var anim = this[open ? "_wipeIn" : "_wipeOut"];
+			anim.play();
+		}else{
+			this.hideNode.style.display = this.wipeNode.style.display = open ? "" : "none";
 		}
-		else{
-			dojo.removeAttr(this.focusNode, "tabIndex");
+
+		// load content (if this is the first time we are opening the TitlePane
+		// and content is specified as an href, or href was set when hidden)
+		if(this._started){
+			if(open){
+				this._onShow();
+			}else{
+				this.onHide();
+			}
 		}
+
+		this.arrowNodeInner.innerHTML = open ? "-" : "+";
+
+		dijit.setWaiState(this.containerNode,"hidden", open ? "false" : "true");
+		dijit.setWaiState(this.focusNode, "pressed", open ? "true" : "false");
+
+		this._set("open", open);
+
 		this._setCss();
 	},
 
-	_setContentAttr: function(content){
+	_setToggleableAttr: function(/*Boolean*/ canToggle){
 		// summary:
-		//		Hook to make attr("content", ...) work.
+		//		Hook to make set("toggleable", boolean) work.
+		// canToggle: Boolean
+		//		True to allow user to open/close pane by clicking title bar.
+
+		dijit.setWaiRole(this.focusNode, canToggle ? "button" : "heading");
+		if(canToggle){
+			// TODO: if canToggle is switched from true to false shouldn't we remove this setting?
+			dijit.setWaiState(this.focusNode, "controls", this.id+"_pane");
+			dojo.attr(this.focusNode, "tabIndex", this.tabIndex);
+		}else{
+			dojo.removeAttr(this.focusNode, "tabIndex");
+		}
+
+		this._set("toggleable", canToggle);
+
+		this._setCss();
+	},
+
+	_setContentAttr: function(/*String|DomNode|Nodelist*/ content){
+		// summary:
+		//		Hook to make set("content", ...) work.
 		// 		Typically called when an href is loaded.  Our job is to make the animation smooth.
 
 		if(!this.open || !this._wipeOut || this._wipeOut.status() == "playing"){
@@ -170,29 +200,7 @@ dojo.declare(
 		// tags:
 		//		private
 
-		dojo.forEach([this._wipeIn, this._wipeOut], function(animation){
-			if(animation && animation.status() == "playing"){
-				animation.stop();
-			}
-		});
-
-		var anim = this[this.open ? "_wipeOut" : "_wipeIn"]
-		if(anim){
-			anim.play();
-		}else{
-			this.hideNode.style.display = this.open ? "" : "none";
-		}
-		this.open =! this.open;
-
-		// load content (if this is the first time we are opening the TitlePane
-		// and content is specified as an href, or href was set when hidden)
-		if(this.open){
-			this._onShow();
-		}else{
-			this.onHide();
-		}
-
-		this._setCss();
+		this._setOpenAttr(!this.open, true);
 	},
 
 	_setCss: function(){
@@ -202,12 +210,10 @@ dojo.declare(
 		//		private
 
 		var node = this.titleBarNode || this.focusNode;
-
-		if(this._titleBarClass){
-			dojo.removeClass(node, this._titleBarClass);
-		}
+		var oldCls = this._titleBarClass;
 		this._titleBarClass = "dijit" + (this.toggleable ? "" : "Fixed") + (this.open ? "Open" : "Closed");
-		dojo.addClass(node, this._titleBarClass);
+		dojo.replaceClass(node, this._titleBarClass, oldCls || "");
+
 		this.arrowNodeInner.innerHTML = this.open ? "-" : "+";
 	},
 

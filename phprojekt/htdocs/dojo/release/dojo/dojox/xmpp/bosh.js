@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -135,7 +135,7 @@ dojox.xmpp.bosh = {
 	},
 
 	_makeScriptDeferred: function(/*Object*/args){
-		//summary: 
+		//summary:
 		//		sets up a Deferred object for an IO request.
 		var dfd = dojo._ioSetArgs(args, this._deferredCancel, this._deferredOk, this._deferredError);
 
@@ -167,7 +167,7 @@ dojox.xmpp.bosh = {
 		//DO NOT use "this" and expect it to be dojo.xmpp.bosh.
 		var ioArgs = dfd.ioArgs;
 
-		//Add script to list of things that can be removed.		
+		//Add script to list of things that can be removed.
 		if(ioArgs.canDelete){
 			dojox.xmpp.bosh._addDeadScript(ioArgs);
 		}

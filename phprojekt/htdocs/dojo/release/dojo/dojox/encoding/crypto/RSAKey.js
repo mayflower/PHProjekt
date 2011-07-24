@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,10 +8,12 @@
 if(!dojo._hasResource["dojox.encoding.crypto.RSAKey"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.encoding.crypto.RSAKey"] = true;
 dojo.provide("dojox.encoding.crypto.RSAKey");
-dojo.experimental("dojox.encoding.crypto.RSAKey");
-
 dojo.require("dojox.math.BigInteger");
 dojo.require("dojox.math.random.Simple");
+
+
+dojo.experimental("dojox.encoding.crypto.RSAKey");
+
 
 // Copyright (c) 2005  Tom Wu
 // All Rights Reserved.

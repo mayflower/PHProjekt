@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -179,7 +179,7 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 
 		if(idx >= 0){
 			// When a row is deleted, all rest rows are shifted down,
-			// and migrate from page to page. If some page is not 
+			// and migrate from page to page. If some page is not
 			// loaded yet empty rows can migrate to initialized pages
 			// without refreshing. It causes empty rows in some pages, see:
 			// http://bugs.dojotoolkit.org/ticket/6818
@@ -221,14 +221,12 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 	
 	_setQuery: function(query, queryOptions){
 		this.query = query;
-		this.queryOptions = queryOptions || this.queryOptions;		
+		this.queryOptions = queryOptions || this.queryOptions;
 	},
 
 	_setStore: function(store){
-		if(this.store&&this._store_connects){
-			dojo.forEach(this._store_connects,function(arr){
-				dojo.forEach(arr, dojo.disconnect);
-			});
+		if(this.store && this._store_connects){
+			dojo.forEach(this._store_connects, this.disconnect, this);
 		}
 		this.store = store;
 
@@ -283,13 +281,7 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 			dojo.forEach(items, function(item, idx){
 				this._addItem(item, req.start+idx, true);
 			}, this);
-			if(this._autoHeight){
-				this._skipRowRenormalize = true;
-			}
 			this.updateRows(req.start, items.length);
-			if(this._autoHeight){
-				this._skipRowRenormalize = false;
-			}			
 			if(req.isRender){
 				this.setScrollTop(0);
 				this.postrender();
@@ -493,6 +485,7 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 	},
 
 	sort: function(){
+		this.edit.apply();
 		this._lastScrollTop = this.scrollTop;
 		this._refresh();
 	},
@@ -607,11 +600,11 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 				if(items.length){
 					dojo.forEach(items, this.store.deleteItem, this.store);
 					this.selection.clear();
-				}			
+				}
 			});
 			if(this.allItemsSelected){
 				this.store.fetch({
-							query: this.query, 
+							query: this.query,
 							queryOptions: this.queryOptions,
 							onComplete: fx});
 			}else{
@@ -637,7 +630,7 @@ dojox.grid.DataGrid.cell_markupFactory = function(cellFunc, node, cellDef){
 };
 
 dojox.grid.DataGrid.markupFactory = function(props, node, ctor, cellFunc){
-	return dojox.grid._Grid.markupFactory(props, node, ctor, 
+	return dojox.grid._Grid.markupFactory(props, node, ctor,
 					dojo.partial(dojox.grid.DataGrid.cell_markupFactory, cellFunc));
 };
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -41,7 +41,7 @@ dojox.drawing.plugins.drawing.Silverlight = dojox.drawing.util.oo.declare(
 			var conMouse = function(){
 				//console.info("------connect shape", item.id)
 				
-				// Connect to PARENT (SL Canvas) , not SHAPE 
+				// Connect to PARENT (SL Canvas) , not SHAPE
 				c1 = item.container.connect("onmousedown", function(evt){
 					//console.info("----------------------------------SHAPE DOWN", item.container)
 					evt.superTarget = item;
@@ -121,7 +121,7 @@ dojox.drawing.plugins.drawing.Silverlight = dojox.drawing.util.oo.declare(
 			clearTimeout(this.__downInv);
 			if(this.util.attr(evt, "drawingType")=="surface"){
 				this.__downInv = setTimeout(dojo.hitch(this, function(){
-					this._down(evt);		
+					this._down(evt);
 				}),500);
 				return;
 			}
@@ -163,7 +163,7 @@ dojox.drawing.plugins.drawing.Silverlight = dojox.drawing.util.oo.declare(
 				if(elem.superTarget){
 					t = elem.superTarget;
 				}else if(elem.superClass){
-					t = elem.superClass; 
+					t = elem.superClass;
 				}else if(elem.target){
 					t = elem.target;
 				}else{

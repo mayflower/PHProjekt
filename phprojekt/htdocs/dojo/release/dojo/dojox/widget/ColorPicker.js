@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -11,11 +11,11 @@ dojo.provide("dojox.widget.ColorPicker");
 dojo.experimental("dojox.widget.ColorPicker"); // level: beta //TODO: which?
 
 dojo.requireLocalization("dojox.widget","ColorPicker", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
-dojo.requireLocalization("dojo.cldr","number", null, "ROOT,ar,ca,cs,da,de,el,en,en-au,en-gb,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ru,sk,sl,sv,th,tr,zh");
+dojo.requireLocalization("dojo.cldr","number", null, "ROOT,ar,ca,cs,da,de,el,en,en-au,en-gb,es,fi,fr,fr-ch,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-hant,zh-hk");
 
 dojo.require("dijit.form._FormWidget");
-dojo.require("dojo.dnd.move"); 
-dojo.require("dojo.fx"); 
+dojo.require("dojo.dnd.move");
+dojo.require("dojo.fx");
 dojo.require("dojox.color");
 dojo.require("dojo.i18n");
 
@@ -31,9 +31,9 @@ dojo.require("dojo.i18n");
 		{
 		// summary: a HSV color picker - similar to Photoshop picker
 		//
-		// description: 
+		// description:
 		//		Provides an interactive HSV ColorPicker similar to
-		//		PhotoShop's color selction tool. This is an enhanced 
+		//		PhotoShop's color selction tool. This is an enhanced
 		//		version of the default dijit.ColorPalette, though provides
 		//		no accessibility.
 		//
@@ -45,8 +45,8 @@ dojo.require("dojo.i18n");
 		// |		webSafe: false,
 		// |		showRgb: false
 		// |	});
-		//	
-		// example: 
+		//
+		// example:
 		// |	<!-- markup: -->
 		// |	<div dojoType="dojox.widget.ColorPicker"></div>
 		//
@@ -72,22 +72,22 @@ dojo.require("dojo.i18n");
 
 		// slideDuration: Integer
 		//	time in ms picker node will slide to next location (non-dragging) when animatePoint=true
-		slideDuration: 250, 
+		slideDuration: 250,
 
 		// liveUpdate: Boolean
 		//		Set to true to fire onChange in an indeterminate way
-		liveUpdate: false, 
+		liveUpdate: false,
 
 		// PICKER_HUE_H: int
-		//     Height of the hue picker, used to calculate positions    
+		//     Height of the hue picker, used to calculate positions
 		PICKER_HUE_H: 150,
 		
 		// PICKER_SAT_VAL_H: int
-		//     Height of the 2d picker, used to calculate positions    
+		//     Height of the 2d picker, used to calculate positions
 		PICKER_SAT_VAL_H: 150,
 		
 		// PICKER_SAT_VAL_W: int
-		//     Width of the 2d picker, used to calculate positions    
+		//     Width of the 2d picker, used to calculate positions
 		PICKER_SAT_VAL_W: 150,
 
 		// PICKER_HUE_SELECTOR_H: int
@@ -108,7 +108,7 @@ dojo.require("dojo.i18n");
 		// value: String
 		//	Default color for this component. Only hex values are accepted as incoming/returned
 		//	values. Adjust this value with `.attr`, eg: dijit.byId("myPicker").attr("value", "#ededed");
-		//	to cause the points to adjust and the values to reflect the current color. 
+		//	to cause the points to adjust and the values to reflect the current color.
 		value: "#ffffff",
 		
 		_underlay: d.moduleUrl("dojox.widget","ColorPicker/images/underlay.png"),
@@ -136,20 +136,20 @@ dojo.require("dojo.i18n");
 		},
 
 		postCreate: function(){
-			// summary: 
+			// summary:
 			//		As quickly as we can, set up ie6 alpha-filter support for our
-			//		underlay.  we don't do image handles (done in css), just the 'core' 
-			//		of this widget: the underlay. 
+			//		underlay.  we don't do image handles (done in css), just the 'core'
+			//		of this widget: the underlay.
 			this.inherited(arguments);
-			if(d.isIE < 7){ 
+			if(d.isIE < 7){
 				this.colorUnderlay.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+this._underlay+"', sizingMethod='scale')";
 				this.colorUnderlay.src = this._blankGif.toString();
 			}
 			// hide toggle-able nodes:
 			if(!this.showRgb){ this.rgbNode.style.visibility = "hidden"; }
 			if(!this.showHsv){ this.hsvNode.style.visibility = "hidden"; }
-			if(!this.showHex){ this.hexNode.style.visibility = "hidden"; } 
-			if(!this.webSafe){ this.safePreviewNode.style.visibility = "hidden"; } 
+			if(!this.showHex){ this.hexNode.style.visibility = "hidden"; }
+			if(!this.webSafe){ this.safePreviewNode.style.visibility = "hidden"; }
 		},
 		
 		startup: function(){
@@ -235,7 +235,7 @@ dojo.require("dojo.i18n");
 		setColor: function(/* String */color, force){
 			// summary: Set a color on a picker. Usually used to set
 			//          initial color as an alternative to passing defaultColor option
-			//          to the constructor. 
+			//          to the constructor.
 			var col = dojox.color.fromString(color);
 			this._updatePickerLocations(col);
 			this._updateColorInputs(col);
@@ -246,7 +246,7 @@ dojo.require("dojo.i18n");
 			// FIXME: should I assume this? focus on mouse down so on mouse up
 			dijit.focus(mover.node);
 			d.setSelectable(this.domNode,false);
-			this._timer = setInterval(d.hitch(this, "_updateColor"), 45);	
+			this._timer = setInterval(d.hitch(this, "_updateColor"), 45);
 		},
 		
 		_clearTimer: function(/* d.dnd.Mover */mover){
@@ -257,10 +257,10 @@ dojo.require("dojo.i18n");
 		},
 		
 		_setHue: function(/* Decimal */h){
-			// summary: 
-			//		Sets a natural color background for the 
-			//		underlay image against closest hue value (full saturation) 
-			//		h: 0..360 
+			// summary:
+			//		Sets a natural color background for the
+			//		underlay image against closest hue value (full saturation)
+			//		h: 0..360
 			d.style(this.colorUnderlay, "backgroundColor", dojox.color.fromHsv(h,100,100).toHex());
 			
 		},
@@ -295,7 +295,7 @@ dojo.require("dojo.i18n");
 				}
 				y -= selCenter;
 				if(update){
-					dojo.style(this.hueCursorNode, "top", y + "px");	
+					dojo.style(this.hueCursorNode, "top", y + "px");
 				}
 			}else{
 				this._updateColor(true);
@@ -349,8 +349,8 @@ dojo.require("dojo.i18n");
 					// Account for our offsets to center
 					y -= selCenterH;
 					x -= selCenterW;
-					dojo.style(this.cursorNode, "top", y + "px");	
-					dojo.style(this.cursorNode, "left", x + "px");	
+					dojo.style(this.cursorNode, "top", y + "px");
+					dojo.style(this.cursorNode, "left", x + "px");
 				}
 			}else{
 				this._updateColor(true);
@@ -364,7 +364,7 @@ dojo.require("dojo.i18n");
 				satSelCenterH = this.PICKER_SAT_SELECTOR_H/2,
 				satSelCenterW = this.PICKER_SAT_SELECTOR_W/2;
 
-			var _huetop = d.style(this.hueCursorNode,"top") + hueSelCenter, 
+			var _huetop = d.style(this.hueCursorNode,"top") + hueSelCenter,
 				_pickertop = d.style(this.cursorNode,"top") + satSelCenterH,
 				_pickerleft = d.style(this.cursorNode,"left") + satSelCenterW,
 				h = Math.round(360 - (_huetop / this.PICKER_HUE_H * 360)),
@@ -381,7 +381,7 @@ dojo.require("dojo.i18n");
 		},
 		
 		_colorInputChange: function(e){
-			//summary: updates picker position and inputs 
+			//summary: updates picker position and inputs
 			//         according to rgb, hex or hsv input changes
 			var col, hasit = false;
 			switch (e.target) {
@@ -501,13 +501,13 @@ dojo.require("dojo.i18n");
 			}
 		},
 		
-		_setHuePoint: function(/* Event */evt){ 
+		_setHuePoint: function(/* Event */evt){
 			// summary: set the hue picker handle on relative y coordinates
 			var selCenter = (this.PICKER_HUE_SELECTOR_H/2);
 			var ypos = evt.layerY - selCenter;
 			if(this.animatePoint){
-				d.fx.slideTo({ 
-					node: this.hueCursorNode, 
+				d.fx.slideTo({
+					node: this.hueCursorNode,
 					duration:this.slideDuration,
 					top: ypos,
 					left: 0,
@@ -515,7 +515,7 @@ dojo.require("dojo.i18n");
 				}).play();
 			}else{
 				d.style(this.hueCursorNode, "top", ypos + "px");
-				this._updateColor(false); 
+				this._updateColor(false);
 			}
 		},
 		
@@ -530,8 +530,8 @@ dojo.require("dojo.i18n");
 			if(evt){ dijit.focus(evt.target); }
 
 			if(this.animatePoint){
-				d.fx.slideTo({ 
-					node: this.cursorNode, 
+				d.fx.slideTo({
+					node: this.cursorNode,
 					duration: this.slideDuration,
 					top: newTop,
 					left: newLeft,
@@ -540,9 +540,9 @@ dojo.require("dojo.i18n");
 			}else{
 				d.style(this.cursorNode, {
 					left: newLeft + "px",
-					top: newTop + "px"	
+					top: newTop + "px"
 				});
-				this._updateColor(false); 
+				this._updateColor(false);
 			}
 		},
 		

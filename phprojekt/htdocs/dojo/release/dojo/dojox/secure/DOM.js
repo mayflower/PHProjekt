@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -41,7 +41,7 @@ dojox.secure.DOM = function(element){
 				return wrapped;
 			}
 			if(result && typeof result == 'object'){
-				if(result.__observable){ 
+				if(result.__observable){
 					// we have already wrapped it, this helps prevent circular/infinite loops
 					return result.__observable;
 				}
@@ -60,8 +60,8 @@ dojox.secure.DOM = function(element){
 			if(typeof result == 'function'){
 				var unwrap = function(result){
 					if(typeof result == 'function'){
-						// if untrusted code passes a function to trusted code, we want the trusted code to be 
-						// able to execute it and have the arguments automatically wrapped 
+						// if untrusted code passes a function to trusted code, we want the trusted code to be
+						// able to execute it and have the arguments automatically wrapped
 						return function(){
 							for (var i = 0; i < arguments.length; i++){
 								arguments[i] = wrap(arguments[i]);
@@ -69,10 +69,10 @@ dojox.secure.DOM = function(element){
 							return unwrap(result.apply(wrap(this),arguments));
 						}
 					}
-					return dojox.secure.unwrap(result);	
+					return dojox.secure.unwrap(result);
 				};
-				// when we wrap a function we make it so that we can untrusted code can execute 
-				// the function and the arguments will be unwrapped for the trusted code 
+				// when we wrap a function we make it so that we can untrusted code can execute
+				// the function and the arguments will be unwrapped for the trusted code
 				return function(){
 					if(result.safetyCheck){
 						result.safetyCheck.apply(unwrap(this),arguments);
@@ -100,7 +100,7 @@ dojox.secure.DOM = function(element){
 	}
 	function safeURL(url){
 		// test a url to see if it is safe
-		if(url.match(/:/) && !url.match(/^(http|ftp|mailto)/)){ 
+		if(url.match(/:/) && !url.match(/^(http|ftp|mailto)/)){
 			throw new Error("Unsafe URL " + url);
 		}
 	}
@@ -111,7 +111,7 @@ dojox.secure.DOM = function(element){
 				var src = el.src;
 				if (src && src != ""){
 					// load the src and evaluate it safely
-					el.parentNode.removeChild(el);					
+					el.parentNode.removeChild(el);
 					dojo.xhrGet({url:src,secure:true}).addCallback(function(result){
 						safeDoc.evaluate(result);
 					});
@@ -132,9 +132,9 @@ dojox.secure.DOM = function(element){
 						el.styleSheet.cssText = cssStr;
 					} else {// w3c
 						var cssText = doc.createTextNode(cssStr);
-						if (el.childNodes[0]) 
+						if (el.childNodes[0])
 							el.replaceChild(cssText,el.childNodes[0])
-						else 
+						else
 							el.appendChild(cssText);
 					 }
 					
@@ -153,9 +153,9 @@ dojox.secure.DOM = function(element){
 			if(el.style){
 				safeCSS(el.style.cssText);
 			}
-			if(el.href){		
+			if(el.href){
 				safeURL(el.href);
-			}		
+			}
 			if(el.src){
 				safeURL(el.src);
 			}
@@ -164,7 +164,7 @@ dojox.secure.DOM = function(element){
 				if(attr.name.substring(0,2)== "on" && attr.value != "null" && attr.value != ""){ // must remove all the event handlers
 					throw new Error("event handlers not allowed in the HTML, they must be set with element.addEventListener");
 				}
-			}		
+			}
 			var children = el.childNodes;
 			for (var i =0, l = children.length; i < l; i++){
 				safeElement(children[i]);
@@ -213,7 +213,7 @@ dojox.secure.DOM = function(element){
 			safeElement(args[newNodeArg]);  // check to make sure the new node is safe
 			return node[name](args[0]);// execute the method
 		};
-	} 
+	}
 	var invokers = {
 		appendChild : domChanger("appendChild",0),
 		insertBefore : domChanger("insertBefore",0),
@@ -228,7 +228,7 @@ dojox.secure.DOM = function(element){
 			});
 		}
 	};
-	invokers.childNodes = invokers.style = invokers.ownerDocument = function(){}; // this is a trick to get these property slots available, they will be overridden  
+	invokers.childNodes = invokers.style = invokers.ownerDocument = function(){}; // this is a trick to get these property slots available, they will be overridden
 	function makeObserver(setter){ // we make two of these, but the setter for style nodes is different
 		return dojox.lang.makeObservable(
 			function(node, prop){
@@ -249,20 +249,20 @@ dojox.secure.DOM = function(element){
 			if(setters[prop]){
 				setters[prop](node,value);
 			}
-			node[prop] = value; 
+			node[prop] = value;
 		});
-	var blockedStyles = {behavior:1,MozBinding:1}; 
+	var blockedStyles = {behavior:1,MozBinding:1};
 	var styleObserver = makeObserver(function(node, prop, value){
 			if(!blockedStyles[prop]){
 				node[prop] = safeCSS(value);
-			} 
-		}); 
+			}
+		});
 	wrap.safeHTML = safeHTML;
 	wrap.safeCSS = safeCSS;
 	return wrap;
 };
 dojox.secure.unwrap = function unwrap(result){
-	return (result && result.data__) || result; 
+	return (result && result.data__) || result;
 };
 
 }

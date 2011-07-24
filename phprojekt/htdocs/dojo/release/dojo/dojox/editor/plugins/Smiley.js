@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -8,15 +8,16 @@
 if(!dojo._hasResource["dojox.editor.plugins.Smiley"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.editor.plugins.Smiley"] = true;
 dojo.provide("dojox.editor.plugins.Smiley");
-dojo.experimental("dojox.editor.plugins.Smiley");
-
-dojo.require("dojo.i18n");
 dojo.require("dijit._editor._Plugin");
 dojo.require("dijit.form.ToggleButton");
 dojo.require("dijit.form.DropDownButton");
 dojo.require("dojox.editor.plugins._SmileyPalette");
+dojo.require("dojo.i18n");
+dojo.require("dojox.html.format");
+dojo.requireLocalization("dojox.editor.plugins", "Smiley", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
-dojo.requireLocalization("dojox.editor.plugins", "Smiley", null, "ROOT,cs,de,es,fr,hu,it,ja,kk,ko,pl,pt,ro,ru,zh,zh-tw");
+
+dojo.experimental("dojox.editor.plugins.Smiley");
 
 dojo.declare("dojox.editor.plugins.Smiley", dijit._editor._Plugin, {
 	// summary:
@@ -60,6 +61,12 @@ dojo.declare("dojox.editor.plugins.Smiley", dijit._editor._Plugin, {
 		});
 		this.emoticonImageRegexp = new RegExp("class=(\"|\')" + this.emoticonImageClass + "(\"|\')");
 	},
+	
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
+	},
 
 	setEditor: function(editor){
 		// summary:
@@ -98,7 +105,7 @@ dojo.declare("dojox.editor.plugins.Smiley", dijit._editor._Plugin, {
 		// summary:
 		//		Pre-filter for editor to convert strings like [:-)] into an <img> of the corresponding smiley
 		var emoticon = dojox.editor.plugins.Emoticon.fromAscii(ascii);
-		return emoticon ? emoticon.imgHtml(this.emoticonImageClass) : ascii;
+		return emoticon ? emoticon.imgHtml(this.emoticonImageClass) : str;
 	},
 
 	_encode: function(str){

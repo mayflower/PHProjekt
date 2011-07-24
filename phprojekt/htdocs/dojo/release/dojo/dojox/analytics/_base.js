@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -36,7 +36,7 @@ dojox.analytics = function(){
 dojo.extend(dojox.analytics, {
 	schedulePusher: function(/* Int */interval){
 		// summary: Schedule the data pushing routines to happen in interval ms
-		setTimeout(dojo.hitch(this, "checkData"), interval || this.sendInterval); 
+		setTimeout(dojo.hitch(this, "checkData"), interval || this.sendInterval);
 	},
 
 	addData: function(dataType, data){

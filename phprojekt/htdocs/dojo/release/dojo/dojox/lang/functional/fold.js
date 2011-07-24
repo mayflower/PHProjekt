@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -15,9 +15,9 @@ dojo.require("dojox.lang.functional.lambda");
 //	- "fold" family of functions
 
 // Notes:
-//	- missing high-level functions are provided with the compatible API: 
+//	- missing high-level functions are provided with the compatible API:
 //		foldl, foldl1, foldr, foldr1
-//	- missing JS standard functions are provided with the compatible API: 
+//	- missing JS standard functions are provided with the compatible API:
 //		reduce, reduceRight
 //	- the fold's counterpart: unfold
 
@@ -89,7 +89,7 @@ dojo.require("dojox.lang.functional.lambda");
 		},
 		foldr: function(/*Array|String*/ a, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){
 			// summary: repeatedly applies a binary function to an array from right
-			//	to left using a seed value as a starting point; returns the final 
+			//	to left using a seed value as a starting point; returns the final
 			//	value.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || d.global; f = df.lambda(f);

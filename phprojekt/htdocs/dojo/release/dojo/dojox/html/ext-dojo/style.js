@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
@@ -109,7 +109,7 @@ dojo.mixin(dojox.html["ext-dojo"].style, {
 		});
 	},
 	_notSupported: function(){
-		console.warn("Sorry, this browser doesn't support transform and transform-origin");	
+		console.warn("Sorry, this browser doesn't support transform and transform-origin");
 	},
 	_setTransformOriginFilter: function(/*DomNode*/ node, /*String*/ transformOrigin){
 		var to = dojo.trim(transformOrigin)
