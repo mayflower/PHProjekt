@@ -28,7 +28,7 @@ dojo.require("phpr.Default.System.GarbageCollector");
 dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollected, {
     main:   null,
     module: "",
-    render:function(template, node, data) {
+    render: function(template, node, data) {
 
         var context = new dojox.dtl.Context(data);
         // Use the cached template
@@ -51,7 +51,7 @@ dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollect
                     } catch (e) {
                         try { // if this fails, it's probably long gone
                             dijit.byId(id).destroy();
-                        } catch(e) {}
+                        } catch (e) {}
                     }
                 }
             }
@@ -61,11 +61,11 @@ dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollect
             var dojoType = node.getAttribute('dojoType');
             phpr.destroySubWidgets(node);
             if ((dojoType == 'dijit.layout.ContentPane') ||
-                (dojoType == 'dijit.layout.BorderContainer') ) {
-                    dijit.byNode(node).set('content', content);
-                        dijit.byId(node.getAttribute('id')).resize();
+                    (dojoType == 'dijit.layout.BorderContainer')) {
+                dijit.byNode(node).set('content', content);
+                dijit.byId(node.getAttribute('id')).resize();
             } else {
-                if(dijit.byId(node) && dijit.byId(node).set) {
+                if (dijit.byId(node) && dijit.byId(node).set) {
                     dijit.byId(node).set('content', content);
                 } else {
                     node.innerHTML = content;
@@ -77,7 +77,7 @@ dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollect
         }
     },
 
-    publish:function(/*String*/ name, /*array*/args){
+    publish: function(/*String*/ name, /*Array*/ args) {
         // summary:
         //    Publish the topic for the current module, its always prefixed with the module.
         // description:
@@ -87,10 +87,10 @@ dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollect
         //    The topic of this module that shall be published.
         // args: Array
         //    Arguments that should be published with the topic
-        dojo.publish(phpr.module+"."+name, args);
+        dojo.publish(phpr.module + "." + name, args);
     },
 
-    subscribe:function(/*String*/name, /*String or null*/ context, /*String or function*/ method ){
+    subscribe: function(/*String*/ name, /*String or null*/ context, /*String or function*/ method) {
         // summary:
         //    Subcribe topic which was published for the current module, its always prefixed with the module.
         // description:
@@ -100,6 +100,6 @@ dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollect
         //    The topic of this module that shall be published.
         // args: Array
         //    Arguments that should be published with the topic
-        dojo.subscribe(phpr.module+"."+name, context, method);
+        dojo.subscribe(phpr.module + "." + name, context, method);
     }
 });
