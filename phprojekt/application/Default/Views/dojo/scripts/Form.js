@@ -32,14 +32,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     //    This Class takes care of displaying the form information we receive from our Server
     //    in a dojo form with tabs
 
-    sendData:           new Array(),
-    formdata:           new Array(),
+    sendData:           [],
+    formdata:           [],
     _url:               null,
     _formNode:          null,
     _writePermissions:  true,
     _deletePermissions: false,
     _accessPermissions: true,
-    _initData:          new Array(),
+    _initData:          [],
     _tagUrl:            null,
     _accessUrl:         null,
     _historyUrl:        null,
@@ -47,7 +47,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     _meta:              null,
     _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
 
-    constructor:function(main, id, module, params) {
+    constructor: function(main, id, module, params) {
         // Summary:
         //    render the form on construction
         // Description:
@@ -56,10 +56,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.main = main;
         this.id   = id;
 
-        if (undefined != module) {
-            phpr.module = module
+        if (undefined !== module) {
+            phpr.module = module;
         }
-        if (undefined != params) {
+        if (undefined !== params) {
             this._presetValues = params;
         }
 
@@ -79,7 +79,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.getInitData();
     },
 
-    destroy:function() {
+    destroy: function() {
         // Summary:
         //    Destroy the form
         // Description:
@@ -89,27 +89,27 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.form = null;
     },
 
-    setUrl:function() {
+    setUrl: function() {
         // Summary:
         //    Set the url for get the data
         // Description:
         //    Set the url for get the data
-        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/' + phpr.currentProjectId
-            + '/id/' + this.id;
+        this._url = phpr.webpath + 'index.php/' + phpr.module +
+            '/index/jsonDetail/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
     },
 
-    setNode:function() {
+    setNode: function() {
         // Summary:
         //    Set the node where put the form
         // Description:
         //    Set the node where put the form
         this._formNode = new dijit.layout.ContentPane({style: "height: 100%;"});
         phpr.destroySubWidgets('detailsBox');
-        dijit.byId('detailsBox').set('content',this._formNode);
+        dijit.byId('detailsBox').set('content', this._formNode);
         this.garbageCollector.addNode(this._formNode);
     },
 
-    getInitData:function() {
+    getInitData: function() {
         // Summary:
         //    Process all the POST in cascade for get all the data from the server
         // Description:
@@ -133,7 +133,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    initData:function() {
+    initData: function() {
         // Summary:
         //    Init all the data before draw the form
         // Description:
@@ -142,8 +142,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Each module can overwrite this function for load the own data
 
         // Get the rights for other users
-        this._accessUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetUsersRights'
-            + '/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
+        this._accessUrl = phpr.webpath + 'index.php/' + phpr.module +
+            '/index/jsonGetUsersRights' + '/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
         this._initData.push({'url': this._accessUrl});
 
         // Get all the active users
@@ -151,12 +151,12 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this._initData.push({'store': this.userStore});
 
         // Get the tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
-            + '/id/' + this.id;
+        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' +
+            phpr.module + '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
     },
 
-    addAccessTab:function(data) {
+    addAccessTab: function(data) {
         // Summary:
         //    Access tab
         // Description:
@@ -164,8 +164,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    The user can assign to each user different access on the item
         var userList      = this.userStore.getList();
         var accessContent = phpr.DataStore.getData({url: this._accessUrl});
-        var currentUser   = data[0]["rights"]["currentUser"]["userId"] || 0;
-        var users         = new Array();
+        var currentUser   = data[0].rights.currentUser.userId || 0;
+        var users         = [];
 
         if (userList) {
             for (var i in userList) {
@@ -174,7 +174,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     users.push({'id': userList[i].id, 'display': userList[i].display});
                 }
                 // Found the name of each user
-                for (j in accessContent) {
+                for (var j in accessContent) {
                     if (userList[i].id == accessContent[j].userId) {
                         accessContent[j].userDisplay = userList[i].display;
                         break;
@@ -185,10 +185,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         var rows = '';
         for (var id in accessContent) {
-            if (accessContent[id]['userDisplay']) {
+            if (accessContent[id].userDisplay) {
                 var isCurrentUser = (id == 'currentUser');
-                var checkBoxs     = new Array();
-                var userId        = isCurrentUser ? currentUser : accessContent[id]['userId'];
+                var checkBoxs     = [];
+                var userId        = isCurrentUser ? currentUser : accessContent[id].userId;
                 if (userId == 1 && currentUser != 1) {
                     continue;
                 }
@@ -205,7 +205,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 var input = this.render(["phpr.Default.template.access", "input.html"], null, {
                     id:          userId,
                     disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
-                    userDisplay: accessContent[id]['userDisplay'],
+                    userDisplay: accessContent[id].userDisplay,
                     currentUser: isCurrentUser
                 });
                 var button = this.render(["phpr.Default.template.access", "button.html"], null, {
@@ -244,16 +244,16 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         if (this._accessPermissions && users.length > 0) {
             this.addTinyButton('add', 'accessAddButton', 'newAccess');
             this.garbageCollector.addEvent(
-                dojo.connect(dijit.byId("checkAdminAccessAdd"), 
+                dojo.connect(dijit.byId("checkAdminAccessAdd"),
                     "onClick", dojo.hitch(this, "checkAllAccess", "Add")));
         }
 
         if (this._accessPermissions) {
             // Add "delete" buttons for access
             // Add "check all" functions
-            for (i in accessContent) {
-                if (accessContent[i]['userDisplay']) {
-                    var userId = accessContent[i]["userId"];
+            for (var i in accessContent) {
+                if (accessContent[i].userDisplay) {
+                    var userId = accessContent[i].userId;
                     if (userId != currentUser && userId != 1) {
                         this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
 
@@ -268,7 +268,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    addTinyButton:function(type, nodeId, functionName, extraParams) {
+    addTinyButton: function(type, nodeId, functionName, extraParams) {
         // Summary:
         //    Add a button
         // Description:
@@ -285,11 +285,11 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         dojo.byId(nodeId).appendChild(button.domNode);
 
         this.garbageCollector.addEvent(
-            dojo.connect(button, "onClick", 
+            dojo.connect(button, "onClick",
                 dojo.hitch(this, functionName, extraParams)));
     },
 
-    setPermissions:function(data) {
+    setPermissions: function(data) {
         // Summary:
         //    Get the permission
         // Description:
@@ -300,14 +300,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 this._deletePermissions = true;
                 this._accessPermissions = false;
             } else {
-                this._writePermissions  = data[0]["rights"]["currentUser"]["write"];
-                this._deletePermissions = data[0]["rights"]["currentUser"]["delete"];
-                this._accessPermissions = data[0]["rights"]["currentUser"]["admin"];
+                this._writePermissions  = data[0].rights.currentUser.write;
+                this._deletePermissions = data[0].rights.currentUser['delete'];
+                this._accessPermissions = data[0].rights.currentUser.admin;
             }
         }
     },
 
-    addTab:function(innerTabs, id, title, formId) {
+    addTab: function(innerTabs, id, title, formId) {
         // Summary:
         //    Add a tab
         // Description:
@@ -337,7 +337,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    getTabs:function() {
+    getTabs: function() {
         // Summary:
         //    Return the tab list for make the form
         // Description:
@@ -348,18 +348,18 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return result;
     },
 
-    getFormData:function(items, request) {
+    getFormData: function(items, request) {
         // Summary:
         //    This function renders the form data according to the database manager settings
         // Description:
         //    This function processes the form data which is stored in a phpr.DataStore and
         //    renders the actual form according to the received data
-        this.formdata    = new Array();
-        this.formdata[0] = new Array();
+        this.formdata    = [];
+        this.formdata[0] = [];
 
         this._meta = phpr.DataStore.getMetaData({url: this._url});
         var data   = phpr.DataStore.getData({url: this._url});
-        if (data.length == 0) {
+        if (data.length === 0) {
             this._formNode.set('content', phpr.drawEmptyMessage('The Item was not found'));
         } else {
             var tabs               = this.getTabs();
@@ -371,19 +371,19 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
             for (var i = 0; i < this._meta.length; i++) {
                 var fieldValues  = this.setFieldValues(this._meta[i], data[0]);
-                var itemtype     = fieldValues['type'];
-                var itemid       = fieldValues['id'];
-                var itemlabel    = fieldValues['label'];
-                var itemdisabled = fieldValues['disabled'];
-                var itemrequired = fieldValues['required'];
-                var itemlabel    = fieldValues['label'];
-                var itemvalue    = fieldValues['value'];
-                var itemrange    = fieldValues['range'];
-                var itemtab      = fieldValues['tab'];
-                var itemhint     = fieldValues['hint'];
-                var itemlength   = fieldValues['length'];
+                var itemtype     = fieldValues.type;
+                var itemid       = fieldValues.id;
+                var itemlabel    = fieldValues.label;
+                var itemdisabled = fieldValues.disabled;
+                var itemrequired = fieldValues.required;
+                var itemlabel    = fieldValues.label;
+                var itemvalue    = fieldValues.value;
+                var itemrange    = fieldValues.range;
+                var itemtab      = fieldValues.tab;
+                var itemhint     = fieldValues.hint;
+                var itemlength   = fieldValues.length;
 
-                if (i == 0) {
+                if (i === 0) {
                     this.setBreadCrumbItem(itemvalue);
                     phpr.BreadCrumb.draw();
                 }
@@ -394,7 +394,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 }
 
                 // Special workaround for new projects - set parent to current ProjectId
-                if (itemid == 'projectId' && !itemvalue){
+                if (itemid == 'projectId' && !itemvalue) {
                     itemvalue = phpr.currentProjectId;
                 }
 
@@ -473,12 +473,12 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this.addBasicFields();
 
             this.form        = this.setFormContent();
-            this.formsWidget = new Array();
+            this.formsWidget = [];
 
             this._formNode.set('content', this.form.domNode);
 
             var firstTab = true;
-            for (t in tabs) {
+            for (var t in tabs) {
                 if (this.formdata[tabs[t].id]) {
                     if (firstTab) {
                         this.setFormButtons(tabs[t].id);
@@ -500,8 +500,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
             if (this.id > 0 && this.useHistoryTab()) {
                 this.garbageCollector.addEvent(
-                    dojo.connect(dijit.byId("tabHistory"), 
-                        "onShow", dojo.hitch(this,"showHistory")));
+                    dojo.connect(dijit.byId("tabHistory"),
+                        "onShow", dojo.hitch(this, "showHistory")));
             }
 
             // Set cursor to the first required field
@@ -514,29 +514,28 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    setFieldValues:function(meta, data) {
+    setFieldValues: function(meta, data) {
         // Summary:
         //    Set the fields values for render the form
         // Description:
         //    Set the fields values for render the form
         var fieldValues = {
-            type:     meta['type'],
-            id:       meta['key'],
-            label:    meta['label'],
-            disabled: meta['readOnly'],
-            required: meta['required'],
-            label:    meta['label'],
-            value:    data[meta['key']],
-            range:    meta['range'],
-            tab:      meta['tab'] || 1,
-            hint:     meta['hint'],
-            length:   meta['length'] || 0
+            type:     meta.type,
+            id:       meta.key,
+            label:    meta.label,
+            disabled: meta.readOnly,
+            required: meta.required,
+            value:    data[meta.key],
+            range:    meta.range,
+            tab:      meta.tab || 1,
+            hint:     meta.hint,
+            length:   meta.length || 0
         };
 
         return this.setCustomFieldValues(fieldValues);
     },
 
-    setCustomFieldValues:function(fieldValues) {
+    setCustomFieldValues: function(fieldValues) {
         // Summary:
         //    Custom function for setFieldValues
         // Description:
@@ -544,7 +543,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return fieldValues;
     },
 
-    setFormButtons:function(tabId) {
+    setFormButtons: function(tabId) {
         // Summary:
         //    Render the save and delete buttons
         // Description:
@@ -557,12 +556,12 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         });
     },
 
-    setActionFormButtons:function() {
+    setActionFormButtons: function() {
         // Summary:
         //    Connect the buttons to the actions
 
         this.garbageCollector.addEvent(
-            dojo.connect(dijit.byId("submitButton"), 
+            dojo.connect(dijit.byId("submitButton"),
                 "onClick", dojo.hitch(this, "submitForm")));
 
         this.garbageCollector.addEvent(
@@ -575,7 +574,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 })));
     },
 
-    useCache:function() {
+    useCache: function() {
         // Summary:
         //    Return true or false if the cache is used
         // Description:
@@ -583,30 +582,32 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return true;
     },
 
-    _formCallback:function() {
+    _formCallback: function() {
         dojo.byId('completeContent').focus();
     },
 
-    setFormContent:function() {
+    setFormContent: function() {
         // Summary:
         //    Set the Container
         // Description:
         //    Set the Container
-        var tabContainer = new dijit.layout.TabContainer({
-            style:   'height: 100%;',
-            useMenu: false
-        }, dojo.create('div'));
+        var tabContainer = new dijit.layout.TabContainer(
+            {
+                style:   'height: 100%;',
+                useMenu: false
+            },
+            dojo.create('div'));
 
         this.garbageCollector.addNode(tabContainer);
 
         this.garbageCollector.addEvent(
-                dojo.connect(tabContainer, 'selectChild', 
-                    dojo.hitch(this,'_formCallback')));
+                dojo.connect(tabContainer, 'selectChild',
+                    dojo.hitch(this, '_formCallback')));
 
         return tabContainer;
     },
 
-    addModuleTabs:function(data) {
+    addModuleTabs: function(data) {
         // Summary:
         //    Add all the tabs
         // Description:
@@ -616,7 +617,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.addHistoryTab();
     },
 
-    addHistoryTab:function() {
+    addHistoryTab: function() {
         // Summary:
         //    History tab
         // Description:
@@ -627,14 +628,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    addSubModulesTab:function() {
+    addSubModulesTab: function() {
         // Summary:
         //    Add SubModules tabs
         // Description:
         //    Add all the SubModules that have the current module
         if (this.id > 0) {
             // Set the sub modules data
-            var subModules   = new Array();
+            var subModules   = [];
             var nextPosition = 0;
             for (var index in this.main.subModules) {
                 var subModuleName  = this.main.subModules[index];
@@ -650,12 +651,12 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
             // Sort the sub modules
             subModules.sort(function(a, b) {
-                return a['sort'] - b['sort'];
+                return a.sort - b.sort;
             });
 
             // Add the tabs
             for (var index in subModules) {
-                var subModuleName = subModules[index]['name'];
+                var subModuleName = subModules[index].name;
                 this.addTab('', 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
                     subModuleName + 'FormTab');
                 dojo.addClass('tab' + subModuleName, 'subModuleDiv');
@@ -664,14 +665,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    useHistoryTab:function() {
+    useHistoryTab: function() {
         //    Return true or false if the history tab is used
         // Description:
         //    Return true or false if the history tab is used
         return true;
     },
 
-    addBasicFields:function() {
+    addBasicFields: function() {
         // Summary:
         //    Add some special fields
         // Description:
@@ -679,14 +680,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.formdata[1] += this.displayTagInput();
     },
 
-    postRenderForm:function() {
+    postRenderForm: function() {
         // Summary:
         //    User functions after render the form
         // Description:
         //    Apply for special events on the fields
     },
 
-    newAccess:function() {
+    newAccess: function() {
         // Summary:
         //    Add a new row of one user-accees
         // Description:
@@ -756,7 +757,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    deleteAccess:function(userId) {
+    deleteAccess: function(userId) {
         // Summary:
         //    Remove the row of one user-accees
         // Description:
@@ -774,7 +775,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         parent.removeChild(e);
     },
 
-    checkAllAccess:function(str) {
+    checkAllAccess: function(str) {
         // Summary:
         //    Select all the access
         // Description:
@@ -787,13 +788,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    prepareSubmission:function() {
+    prepareSubmission: function() {
         // Summary:
         //    This function prepares the data for submission
         // Description:
         //    This function prepares the content of this.sendData before it is
         //    submitted to the Server.
-        this.sendData = new Array();
+        this.sendData = [];
         for (var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
                 var parent = this.formsWidget[i].containerNode.parentNode.id;
@@ -807,7 +808,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             } else {
                 for (var k in sendData) {
                     // Allow empty arrays, set the value to an empty string
-                    if (sendData[k] && typeof(sendData[k]) == 'object' && sendData[k].length == 0) {
+                    if (sendData[k] && typeof(sendData[k]) == 'object' && sendData[k].length === 0) {
                         sendData[k] = new Array("");
                     }
                 }
@@ -818,7 +819,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return true;
     },
 
-    submitForm:function() {
+    submitForm: function() {
         // Summary:
         //    This function is responsible for submitting the formdata
         // Description:
@@ -829,21 +830,22 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
 
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId
-                + '/id/' + this.id,
+            url: phpr.webpath + 'index.php/' + phpr.module +
+                '/index/jsonSave/nodeId/' + phpr.currentProjectId +
+                '/id/' + this.id,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (!this.id) {
-                   this.id = data['id'];
-               }
-               if (data.type == 'success') {
-                   phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module
-                            + '/id/' + this.id,
+                new phpr.handleResponse('serverFeedback', data);
+                if (!this.id) {
+                    this.id = data.id;
+                }
+                if (data.type == 'success') {
+                    phpr.send({
+                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' +
+                            phpr.module + '/id/' + this.id,
                         content:   this.sendData,
                         onSuccess: dojo.hitch(this, function(data) {
-                            if (this.sendData['string']) {
+                            if (this.sendData.string) {
                                 new phpr.handleResponse('serverFeedback', data);
                             }
                             if (data.type == 'success') {
@@ -857,7 +859,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         });
     },
 
-    deleteForm:function() {
+    deleteForm: function() {
         // Summary:
         //    This function is responsible for deleting a dojo element
         // Description:
@@ -865,11 +867,11 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
             onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (data.type == 'success') {
-                   phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonDeleteTags/moduleName/' + phpr.module
-                            + '/id/' + this.id,
+                new phpr.handleResponse('serverFeedback', data);
+                if (data.type == 'success') {
+                    phpr.send({
+                        url: phpr.webpath + 'index.php/Default/Tag/jsonDeleteTags/moduleName/' +
+                            phpr.module + '/id/' + this.id,
                         onSuccess: dojo.hitch(this, function(data) {
                             new phpr.handleResponse('serverFeedback', data);
                             if (data.type == 'success') {
@@ -878,12 +880,12 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             }
                         })
                     });
-               }
+                }
             })
         });
     },
 
-    displayTagInput:function() {
+    displayTagInput: function() {
         // Summary:
         // This function manually receives the Tags for the current element
         // Description:
@@ -896,7 +898,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         if (this.id > 0) {
             for (var i = 0; i < currentTags.length; i++) {
-                value += currentTags[i]['string'];
+                value += currentTags[i].string;
                 if (i != currentTags.length - 1) {
                     value += ', ';
                 }
@@ -906,18 +908,18 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Draw the tags
         this.publish("drawTagsBox", [currentTags]);
 
-        return this.fieldTemplate.textFieldRender(meta[0]['label'], meta[0]['key'], value, 0, false, false);
+        return this.fieldTemplate.textFieldRender(meta[0].label, meta[0].key, value, 0, false, false);
     },
 
-    showHistory:function() {
+    showHistory: function() {
         // Summary:
         //    This function renders the history data
         // Description:
         //    This function renders the history data
         if (this.id > 0) {
             dojo.byId('historyContent').innerHTML = '';
-            this._historyUrl = phpr.webpath + 'index.php/Core/history/jsonList/nodeId/1/moduleName/' + phpr.module
-                + '/itemId/' + this.id
+            this._historyUrl = phpr.webpath + 'index.php/Core/history/jsonList/nodeId/1/moduleName/' +
+                phpr.module + '/itemId/' + this.id;
             phpr.DataStore.addStore({'url': this._historyUrl, 'noCache': true});
             phpr.DataStore.requestData({'url': this._historyUrl, 'processData': dojo.hitch(this, function() {
                 this.render(["phpr.Default.template.history", "data.html"], dojo.byId('historyContent'), {
@@ -932,44 +934,45 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    getHistoryData:function() {
+    getHistoryData: function() {
         // Summary:
         //    This function collect and process the history data
         // Description:
         //    This function collect and process the history data
         var history     = phpr.DataStore.getData({url: this._historyUrl});
         var userList    = this.userStore.getList();
-        var historyData = new Array();
-        var userDisplay = new Array();
+        var historyData = [];
+        var userDisplay = [];
         var row         = 0;
+        var trClass;
 
         for (var i = 0; i < history.length; i++) {
             // Search for the user name
-            if (!userDisplay[history[i]["userId"]]) {
+            if (!userDisplay[history[i].userId]) {
                 for (var u in userList) {
-                    if (userList[u].id == history[i]["userId"]) {
-                        userDisplay[history[i]["userId"]] = userList[u].display;
+                    if (userList[u].id == history[i].userId) {
+                        userDisplay[history[i].userId] = userList[u].display;
                         break;
                     }
                 }
             }
-            if (userDisplay[history[i]["userId"]]) {
-                historyUser = userDisplay[history[i]["userId"]];
+            if (userDisplay[history[i].userId]) {
+                historyUser = userDisplay[history[i].userId];
             } else {
                 historyUser = '';
             }
-            historyModule   = history[i]["moduleId"];
-            historyItemId   = history[i]["itemId"];
-            historyField    = history[i]["label"] || '';
-            historyOldValue = history[i]["oldValue"] || '';
-            historyNewValue = history[i]["newValue"] || '';
-            historyAction   = history[i]["action"];
-            historyDate     = history[i]["datetime"];
+            historyModule   = history[i].moduleId;
+            historyItemId   = history[i].itemId;
+            historyField    = history[i].label || '';
+            historyOldValue = history[i].oldValue || '';
+            historyNewValue = history[i].newValue || '';
+            historyAction   = history[i].action;
+            historyDate     = history[i].datetime;
 
             if (Math.floor(row / 2) == (row / 2)) {
-                var trClass = 'grey';
+                trClass = 'grey';
             } else {
-                var trClass = 'white';
+                trClass = 'white';
             }
 
             historyData.push({
@@ -987,7 +990,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return historyData;
     },
 
-    updateData:function() {
+    updateData: function() {
         // Summary:
         //    Delete the cache for this form
         // Description:
@@ -1002,7 +1005,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.getInitData();
     },
 
-    addNotificationTab:function(data) {
+    addNotificationTab: function(data) {
         // Summary:
         //    Adds a tab for sending a notification.
         // Description:
@@ -1017,7 +1020,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.addTab(notificationTab, 'tabNotify', 'Notification', 'accessnotificationTab');
     },
 
-    presetValues:function(data) {
+    presetValues: function(data) {
         // Summary:
         //    Function used to preset values in the form.
         // Description:
@@ -1030,7 +1033,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    setBreadCrumbItem:function(itemValue) {
+    setBreadCrumbItem: function(itemValue) {
         // Summary:
         //    Set the Breadcrumb with the first item value
         // Description:
@@ -1038,7 +1041,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         phpr.BreadCrumb.setItem(itemValue);
     },
 
-    highlightChanges:function(data) {
+    highlightChanges: function(data) {
         // Summary:
         //    Highlights changes done by any other user with a style comming from the CSS class "highlightChanges".
         // Description:
@@ -1053,68 +1056,77 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
             // Search the field
             for (var k = 0; k < this._meta.length; k++) {
-                if (this._meta[k]['key'] == field) {
-                    switch (this._meta[k]['type']) {
+                if (this._meta[k].key == field) {
+                    switch (this._meta[k].type) {
                         case 'datetime':
                             // Split the value to two values
                             var dateTime = value.split(" ");
-                            var time     = dateTime[1].slice(0,5);
+                            var time     = dateTime[1].slice(0, 5);
 
                             var key          = field + '_forDate';
                             var displayfield = 'widget_' + key;
-                            if (fieldWidget = dijit.byId(key)) {
+                            var fieldWidget = dijit.byId(key);
+                            if (fieldWidget) {
                                 fieldWidget.set("displayedValue", dateTime[0]);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
 
                             var key          = field + '_forTime';
                             var displayfield = 'widget_' + key;
-                            if (fieldWidget = dijit.byId(key)) {
+                            fieldWidget = dijit.byId(key);
+                            if (fieldWidget) {
                                 fieldWidget.set("displayedValue", time);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;
                         case 'selectbox':
                             var displayfield = 'widget_' + field;
-                            if (fieldWidget = dijit.byId(field)) {
+                            var fieldWidget = dijit.byId(field);
+                            if (fieldWidget) {
                                 fieldWidget.set("value", value);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;
                         case 'date':
                             var displayfield = 'widget_' + field;
-                            if (fieldWidget = dojo.byId(field)) {
+                            var fieldWidget = dojo.byId(field);
+                            if (fieldWidget) {
                                 fieldWidget.value = value;
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;
                         case 'time':
                             var displayfield = 'widget_' + field;
-                            if (fieldWidget = dojo.byId(field)) {
-                                fieldWidget.value = value.slice(0,5);
+                            var fieldWidget = dojo.byId(field);
+                            if (fieldWidget) {
+                                fieldWidget.value = value.slice(0, 5);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;
                         case 'percentage':
                             var displayfield = field;
-                            if (fieldWidget = dijit.byId(field)) {
+                            var fieldWidget = dijit.byId(field);
+                            if (fieldWidget) {
                                 fieldWidget.set('value', value);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;
                         case 'upload':
                             var displayfield = 'filesIframe_' + field;
-                            if (fieldWidget = dijit.byId(field)) {
+                            var fieldWidget = dijit.byId(field);
+                            if (fieldWidget) {
                                 fieldWidget.set('value', value);
-                                dojo.byId('filesIframe_files').contentDocument.location.href = phpr.webpath
-                                    + 'index.php/Default/File/fileForm/moduleName/' + phpr.module + '/id/'
-                                    + this.id + '/field/' + field + '/value/' + value;
+                                dojo.byId('filesIframe_files').contentDocument.location.href =
+                                    phpr.webpath + 'index.php/Default/File/fileForm/moduleName/' +
+                                    phpr.module + '/id/' + this.id + '/field/' +
+                                    field + '/value/' + value;
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
                             break;
                         case 'checkbox':
                             var displayfield = field;
-                            if (fieldWidget = dijit.byId(field)) {
+                            var fieldWidget = dijit.byId(field);
+                            if (fieldWidget) {
                                 value = (value == 1) ? true : false;
                                 fieldWidget.set('checked', value);
                                 dojo.addClass(dojo.byId(displayfield).parentNode, "highlightChanges");
@@ -1122,7 +1134,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             break;
                         case 'multipleselectbox':
                             var displayfield = field + '[]';
-                            if (fieldWidget = dijit.byId(displayfield)) {
+                            var fieldWidget = dijit.byId(displayfield);
+                            if (fieldWidget) {
                                 value = value.split(',');
                                 fieldWidget.set("value", value);
                                 dojo.addClass(dojo.byId(displayfield).parentNode, "highlightChanges");
@@ -1130,14 +1143,16 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             break;
                         case 'rating':
                             var displayfield = field;
-                            if (fieldWidget = dijit.byId(field)) {
+                            var fieldWidget = dijit.byId(field);
+                            if (fieldWidget) {
                                 fieldWidget.setAttribute('value', value);
                                 dojo.addClass(dojo.byId(displayfield).parentNode, "highlightChanges");
                             }
                             break;
                         default:
                             var displayfield = field;
-                            if (fieldWidget = dijit.byId(field)) {
+                            var fieldWidget = dijit.byId(field);
+                            if (fieldWidget) {
                                 fieldWidget.set("displayedValue", value);
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
                             }
@@ -1149,9 +1164,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    getUploadIframePath:function(itemid) {
-        return phpr.webpath + 'index.php/' + phpr.module + '/index/fileForm'
-            + '/nodeId/' + phpr.currentProjectId + '/id/' + this.id + '/field/' + itemid
-            + '/csrfToken/' + phpr.csrfToken;
+    getUploadIframePath: function(itemid) {
+        return phpr.webpath + 'index.php/' + phpr.module + '/index/fileForm' +
+            '/nodeId/' + phpr.currentProjectId + '/id/' + this.id + '/field/' +
+            itemid + '/csrfToken/' + phpr.csrfToken;
     }
 });
