@@ -28,11 +28,17 @@ dojo.require("dijit.Editor");
 
 dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
     domNode: null,
+    // Has the editore been loaded yet?
     loaded: false,
+    // The css style of the editor
     style: "",
+    // The editor widget
     editor: null,
+    // The editor Dom node
     editorNode: null,
+    // Editor parameters
     params: {},
+    // Editor value
     value: "",
     constructor: function(params, srcNodeRef) {
         this.domNode = srcNodeRef;
@@ -44,10 +50,13 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
         if(this.editor && this.editor.destroy && !this.editor._beingDestroyed) {
             this.editor.destroy();
         }
+
         this.editor = null;
+
         if(this.editorNode) {
             dojo.destroy(this.editorNode);
         }
+
         this.editorNode = null;
         this.domNode = null;
         this.inherited(arguments);
@@ -56,13 +65,20 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
         dojo.attr(this.domNode, 'style', this.style);
     },
     show: function() {
+        // Summary:
+        //    Show the Editor
+        // Description:
+        //    Checks whether the editor has been loaded, if not, load it and
+        //    show it.
         if(!this.loaded) {
             this.loadEditor();
             this.loaded = true;
         }
     },
     loadEditor: function() {
-        if(this.editor&&this.editor.destroy) {
+        // Summary:
+        //    Instantiate the dijit editor
+        if(this.editor && this.editor.destroy) {
             this.editor.destroy();
             this.editor = null;
         }
@@ -70,8 +86,7 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
         if(newpar.id) {
             newpar.id = "EditorContainer_" + newpar.id;
         }
-        this.editor = new dijit.Editor(
-                newpar, this.domNode);
+        this.editor = new dijit.Editor(newpar, this.domNode);
         this.editor.set('value', this.value);
 
     },
