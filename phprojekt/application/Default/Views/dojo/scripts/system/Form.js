@@ -29,7 +29,7 @@ dojo.declare("phpr.Default.System.Form.CheckBox", dijit.form.CheckBox, {
     // Summary:
     //    Re-write the widget for return 0 on no-checked
 
-    _getValueAttr: function(){
+    _getValueAttr: function() {
         // Summary:
         //    Hook so attr('value') works.
         // Description:
@@ -49,28 +49,28 @@ dojo.declare("phpr.Default.System.Form.HorizontalSlider", dijit.form.HorizontalS
 dojo.declare("phpr.Default.System.Form.Rating", [dojox.form.Rating], {
     // Summary:
     //    Re-write the widget for fix some issues
-    constructor:function(params) {
+    constructor: function(params) {
         dojo.mixin(this, params);
-        var tpl = '<div class="dojoxRating dijitInline">'
-            + '<input type="hidden" value="0" dojoAttachPoint="focusNode" name="${name}" /><ul>${stars}</ul>'
-            + '</div>';
+        var tpl = '<div class="dojoxRating dijitInline">' +
+            '<input type="hidden" value="0" dojoAttachPoint="focusNode" name="${name}" /><ul>${stars}</ul>' +
+            '</div>';
 
-        var starTpl = '<li class="dojoxRatingStar dijitInline" '
-          + 'dojoAttachEvent="onclick:onStarClick,onmouseover:_onMouse,onmouseout:_onMouse" value="${value}"></li>';
+        var starTpl = '<li class="dojoxRatingStar dijitInline" ' +
+            'dojoAttachEvent="onclick:onStarClick, onmouseover:_onMouse, onmouseout:_onMouse" value="${value}"></li>';
         var rendered = "";
-        for(var i = 0; i < this.numStars; i++) {
+        for (var i = 0; i < this.numStars; i++) {
             rendered += dojo.string.substitute(starTpl, {value: i + 1});
         }
         this.templateString = dojo.string.substitute(tpl, {stars: rendered, name: params.name});
     },
 
-    onStarClick:function(evt) {
+    onStarClick: function(evt) {
         if (!this.disabled) {
             this.inherited("onStarClick", arguments);
         }
     },
 
-    setAttribute:function(key, value){
+    setAttribute: function(key, value) {
         this.set('value', value);
         if (key == "value") {
             this._renderStars(this.value);
