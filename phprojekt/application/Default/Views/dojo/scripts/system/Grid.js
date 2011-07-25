@@ -34,7 +34,7 @@ phpr.Default.System.Grid.formatDateTime = function(date) {
     }
     var iso = String(date).replace(" ", "T"); // Make it a real date ISO string
     var dateObj = dojo.date.stamp.fromISOString(iso);
-    return dojo.date.locale.format(dateObj, {formatLength:'short', selector:'dateTime'});
+    return dojo.date.locale.format(dateObj, {formatLength: 'short', selector: 'dateTime'});
 };
 
 phpr.Default.System.Grid.formatTime = function(value) {
@@ -46,13 +46,13 @@ phpr.Default.System.Grid.formatTime = function(value) {
     } else {
         return value;
     }
-},
+};
 
 phpr.Default.System.Grid.formatUpload = function(value) {
     if (value.indexOf('|') > 0) {
         files = value.split('||');
         value = '';
-        for (p in files) {
+        for (var p in files) {
             if (p > 0) {
                 value += ', ';
             }
@@ -60,7 +60,7 @@ phpr.Default.System.Grid.formatUpload = function(value) {
         }
     }
     return value;
-},
+};
 
 phpr.Default.System.Grid.formatIcon = function(value) {
     data = value.split('||');
@@ -69,7 +69,7 @@ phpr.Default.System.Grid.formatIcon = function(value) {
     }
 
     return '<div class="' + data[0] + '" title="' + data[1] + '"></div>';
-},
+};
 
 dojo.declare("phpr.Default.System.Grid.cells.Percentage", dojox.grid.cells._Widget, {
     // summary:
@@ -78,13 +78,14 @@ dojo.declare("phpr.Default.System.Grid.cells.Percentage", dojox.grid.cells._Widg
     //    Redefine the function to return the correct value
     widgetClass: phpr.Default.System.Form.HorizontalSlider,
 
-    getValue:function(inRowIndex) {
+    getValue: function(inRowIndex) {
         return dojo.number.round(this.widget.get('value'), 1);
     },
 
-    format:function(inRowIndex, inItem) {
-        var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
-        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
+    format: function(inRowIndex, inItem) {
+        var f,
+            i = this.grid.edit.info, d = this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
+        if (this.editable && (this.alwaysEditing || (i.rowIndex == inRowIndex && i.cell == this))) {
             return this.formatEditing(d, inRowIndex);
         } else {
             var v = dojo.number.round(d, 1);
@@ -98,13 +99,14 @@ dojo.declare("phpr.Default.System.Grid.cells.Select", dojox.grid.cells.Select, {
     //    Redefine the function to return the correct value
     // description:
     //    Redefine the function to return the correct value
-    format:function(inRowIndex, inItem) {
-        var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
-        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
+    format: function(inRowIndex, inItem) {
+        var f,
+            i = this.grid.edit.info, d = this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
+        if (this.editable && (this.alwaysEditing || (i.rowIndex == inRowIndex && i.cell == this))) {
             return this.formatEditing(d, inRowIndex);
         } else {
             var v = '';
-            for (var i=0, o; ((o=this.options[i]) !== undefined); i++){
+            for (var i = 0, o; ((o = this.options[i]) !== undefined); i++) {
                 if (d == this.values[i]) {
                     v = o;
                 }
@@ -121,24 +123,24 @@ dojo.declare("phpr.Default.System.Grid.cells.DateTextBox", dojox.grid.cells.Date
     //    Redefine the function to work with iso format
     widgetClass: dijit.form.DateTextBox,
 
-    getValue:function(inRowIndex) {
+    getValue: function(inRowIndex) {
         var date = this.widget.get('value');
         var day = date.getDate();
         if (day < 10) {
-            day = '0'+day;
+            day = '0' + day;
         }
-        var month = (date.getMonth()+1);
+        var month = (date.getMonth() + 1);
         if (month < 10) {
-            month = '0'+month
+            month = '0' + month;
         }
         return date.getFullYear() + '-' + month + '-' + day;
     },
 
-    setValue:function(inRowIndex, inValue) {
+    setValue: function(inRowIndex, inValue) {
         if (this.widget) {
             var parts = inValue.split("-");
             var year  = parts[0];
-            var month = parts[1]-1;
+            var month = parts[1] - 1;
             var day   = parts[2];
             this.widget.set('value', new Date(year, month, day));
         } else {
@@ -146,10 +148,10 @@ dojo.declare("phpr.Default.System.Grid.cells.DateTextBox", dojox.grid.cells.Date
         }
     },
 
-    getWidgetProps:function(inDatum) {
+    getWidgetProps: function(inDatum) {
         var parts = inDatum.split("-");
         var year  = parts[0];
-        var month = parts[1]-1;
+        var month = parts[1] - 1;
         var day   = parts[2];
         return dojo.mixin(this.inherited(arguments), {
             value: new Date(year, month, day)
@@ -158,7 +160,7 @@ dojo.declare("phpr.Default.System.Grid.cells.DateTextBox", dojox.grid.cells.Date
 });
 
 dojo.declare("phpr.Default.System.Grid.cells.Text", dojox.grid.cells._Widget, {
-    setValue:function(inRowIndex, inValue) {
+    setValue: function(inRowIndex, inValue) {
         if (this.widget && this.widget.setValue) {
             this.widget.set('value', inValue);
         } else {
@@ -166,14 +168,16 @@ dojo.declare("phpr.Default.System.Grid.cells.Text", dojox.grid.cells._Widget, {
         }
     },
 
-    format:function(inRowIndex, inItem) {
-        var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
-        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
+    format: function(inRowIndex, inItem) {
+        var f,
+            i = this.grid.edit.info, d = this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue),
+            output;
+        if (this.editable && (this.alwaysEditing || (i.rowIndex == inRowIndex && i.cell == this))) {
             return this.formatEditing(d, inRowIndex);
         } else {
             if (d) {
                 var maxLength = (this.getHeaderNode().offsetWidth - 21) / 7;
-                var output    = d.toString();
+                output    = d.toString();
 
                 if (output.length > maxLength) {
                     output = output.substr(0, maxLength) + '...';
@@ -182,14 +186,14 @@ dojo.declare("phpr.Default.System.Grid.cells.Text", dojox.grid.cells._Widget, {
                 output = output.replace(/</g, "&lt;");
                 output = output.replace(/>/g, "&gt;");
             } else {
-                var output = '';
+                output = '';
             }
 
             return output;
         }
     },
 
-    attachWidget:function(inNode, inDatum, inRowIndex){
+    attachWidget: function(inNode, inDatum, inRowIndex) {
         // Add fix for IE
         if (dojo.isIE) {
             this.widget.domNode.unselectable = 'off';
@@ -199,13 +203,15 @@ dojo.declare("phpr.Default.System.Grid.cells.Text", dojox.grid.cells._Widget, {
 });
 
 dojo.declare("phpr.Default.System.Grid.cells.Textarea", phpr.Default.System.Grid.cells.Text, {
-    format:function(inRowIndex, inItem) {
-        var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
-        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
+    format: function(inRowIndex, inItem) {
+        var f,
+            i = this.grid.edit.info, d = this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue),
+            output;
+        if (this.editable && (this.alwaysEditing || (i.rowIndex == inRowIndex && i.cell == this))) {
             return this.formatEditing(d, inRowIndex);
         } else {
             var maxLength = (this.getHeaderNode().offsetWidth - 21) / 7;
-            var output    = this.strip_tags(d);
+            output    = this.strip_tags(d);
             if (output.length > maxLength) {
                 output = output.substr(0, maxLength) + '...';
             }
@@ -217,7 +223,7 @@ dojo.declare("phpr.Default.System.Grid.cells.Textarea", phpr.Default.System.Grid
         }
     },
 
-    strip_tags:function(str, allowed_tags) {
+    strip_tags: function(str, allowed_tags) {
         // Summary
         //    Strip tags function by Kevin van Zonneveld (http://kevin.vanzonneveld.net) improved by Luke Godfrey
         // Example of use
@@ -265,12 +271,18 @@ dojo.declare("phpr.Default.System.Grid.cells.Textarea", phpr.Default.System.Grid
                 allowed_tag = allowed_array[k];
                 i = -1;
 
-                if (i != 0) { i = html.toLowerCase().indexOf('<'+allowed_tag+'>');}
-                if (i != 0) { i = html.toLowerCase().indexOf('<'+allowed_tag+' ');}
-                if (i != 0) { i = html.toLowerCase().indexOf('</'+allowed_tag)   ;}
+                if (i !== 0) {
+                    i = html.toLowerCase().indexOf('<' + allowed_tag + '>');
+                }
+                if (i !== 0) {
+                    i = html.toLowerCase().indexOf('<' + allowed_tag + ' ');
+                }
+                if (i !== 0) {
+                    i = html.toLowerCase().indexOf('</' + allowed_tag);
+                }
 
                 // Determine
-                if (i == 0) {
+                if (i === 0) {
                     allowed = true;
                     break;
                 }
@@ -285,7 +297,7 @@ dojo.declare("phpr.Default.System.Grid.cells.Textarea", phpr.Default.System.Grid
 });
 
 dojo.declare("phpr.Default.System.Grid.cells.Time", dojox.grid.cells._Widget, {
-    setValue:function(inRowIndex, inValue) {
+    setValue: function(inRowIndex, inValue) {
         inValue = phpr.date.getIsoTime(inValue);
         if (this.widget && this.widget.setValue) {
             this.widget.set('value', inValue);
@@ -294,14 +306,15 @@ dojo.declare("phpr.Default.System.Grid.cells.Time", dojox.grid.cells._Widget, {
         }
     },
 
-    getValue:function(inRowIndex) {
+    getValue: function(inRowIndex) {
         var value = this.widget.get('value');
         return phpr.date.getIsoTime(value);
     },
 
-    format:function(inRowIndex, inItem) {
-        var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
-        if (this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
+    format: function(inRowIndex, inItem) {
+        var f,
+            i = this.grid.edit.info, d = this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
+        if (this.editable && (this.alwaysEditing || (i.rowIndex == inRowIndex && i.cell == this))) {
             var d = phpr.date.getIsoTime(d);
             return this.formatEditing(d, inRowIndex);
         } else {
@@ -311,7 +324,7 @@ dojo.declare("phpr.Default.System.Grid.cells.Time", dojox.grid.cells._Widget, {
 });
 
 var dgc = dojox.grid.cells;
-dgc.DateTextBox.markupFactory = function(node, cell){
+dgc.DateTextBox.markupFactory = function(node, cell) {
     dgc._Widget.markupFactory(node, cell);
 };
 
@@ -324,7 +337,7 @@ dojo.declare('phpr.Default.System.Grid._View', [dijit._Widget, dijit._Templated,
 
     widgetsInTemplate: true,
 
-    doStyleRowNode:function(inRowIndex, inRowNode) {
+    doStyleRowNode: function(inRowIndex, inRowNode) {
         // Summary
         //    Change the style of the row
         // Description
@@ -334,7 +347,7 @@ dojo.declare('phpr.Default.System.Grid._View', [dijit._Widget, dijit._Templated,
             this.grid.onStyleRow(row);
             var item = this.grid.getItem(inRowIndex);
             if (item) {
-                if (item['gridComboBox'] == "true") {
+                if (item.gridComboBox == "true") {
                     row.customClasses += " dojoxGridRowChecked";
                 }
             }
@@ -342,12 +355,12 @@ dojo.declare('phpr.Default.System.Grid._View', [dijit._Widget, dijit._Templated,
         }
     },
 
-    doHeaderEvent:function(e) {
+    doHeaderEvent: function(e) {
         // Summary
         //    Re-write the function for remove effect on the action bar
         // Description
         //    Re-write the function for remove effect on the action bar
-        if(this.header.decorateEvent(e)){
+        if (this.header.decorateEvent(e)) {
             if (e.type == 'click') {
                 dojo.style(this.gridActions, 'display', 'none');
                 this.grid.onHeaderEvent(e);
@@ -360,7 +373,7 @@ dojo.declare('phpr.Default.System.Grid._View', [dijit._Widget, dijit._Templated,
 });
 
 dojo.declare('phpr.Filter.ExpandoPane', [dojox.layout.ExpandoPane], {
-    _startupSizes:function() {
+    _startupSizes: function() {
         // Summary
         //    Re-write the function for allow height 0
         // Description
@@ -370,7 +383,7 @@ dojo.declare('phpr.Filter.ExpandoPane', [dojox.layout.ExpandoPane], {
         this._closedSize  = 0;
 
         this._currentSize = dojo.contentBox(this.domNode);
-        this._showSize    = this._currentSize["h"];
+        this._showSize    = this._currentSize.h;
         this._setupAnims();
 
         if (this.startExpanded) {
@@ -384,7 +397,7 @@ dojo.declare('phpr.Filter.ExpandoPane', [dojox.layout.ExpandoPane], {
         this._hasSizes = true;
     },
 
-    resize:function(/* Object? */psize) {
+    resize: function(/* Object? */psize) {
         // Summary
         //    Re-write the function for allow height 0
         // Description
