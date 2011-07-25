@@ -172,11 +172,11 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
         // Description:
         //    Set all the field as not editables
         this.inherited(arguments);
-        for (cell in this.gridLayout) {
+        for (var cell in this.gridLayout) {
             if (typeof(this.gridLayout[cell].editable) == 'boolean') {
                 this.gridLayout[cell].editable = false;
             } else {
-                for (index in this.gridLayout[cell]) {
+                for (var index in this.gridLayout[cell]) {
                     if (typeof(this.gridLayout[cell][index].editable) == 'boolean') {
                         this.gridLayout[cell][index].editable = false;
                     }
@@ -331,7 +331,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
         //    Return the field names with the original name
         // Description:
         //    Return the field names with the original name
-        this.sendData = new Array();
+        this.sendData = [];
         for (var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
                 var parent = this.formsWidget[i].containerNode.parentNode.id;
