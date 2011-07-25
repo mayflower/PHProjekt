@@ -42,18 +42,20 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
     value: "",
     constructor: function(params, srcNodeRef) {
         this.domNode = srcNodeRef;
-        if(params.style) { this.style = params.style; }
+        if (params.style) {
+            this.style = params.style;
+        }
         this.params = params;
         this.editorNode = dojo.create('div');
     },
     destroy: function() {
-        if(this.editor && this.editor.destroy && !this.editor._beingDestroyed) {
+        if (this.editor && this.editor.destroy && !this.editor._beingDestroyed) {
             this.editor.destroy();
         }
 
         this.editor = null;
 
-        if(this.editorNode) {
+        if (this.editorNode) {
             dojo.destroy(this.editorNode);
         }
 
@@ -70,7 +72,7 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
         // Description:
         //    Checks whether the editor has been loaded, if not, load it and
         //    show it.
-        if(!this.loaded) {
+        if (!this.loaded) {
             this.loadEditor();
             this.loaded = true;
         }
@@ -78,12 +80,12 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
     loadEditor: function() {
         // Summary:
         //    Instantiate the dijit editor
-        if(this.editor && this.editor.destroy) {
+        if (this.editor && this.editor.destroy) {
             this.editor.destroy();
             this.editor = null;
         }
         var newpar = dojo.clone(this.params);
-        if(newpar.id) {
+        if (newpar.id) {
             newpar.id = "EditorContainer_" + newpar.id;
         }
         this.editor = new dijit.Editor(newpar, this.domNode);
@@ -95,7 +97,7 @@ dojo.declare("phpr.Default.EditorContainer", [dijit._Widget], {
     },
     _setValueAttr: function(arg) {
         this.value = arg;
-        if(this.editor) {
+        if (this.editor) {
             this.editor.set('value', arg);
         }
     }
