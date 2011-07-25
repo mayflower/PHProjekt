@@ -54,18 +54,18 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         //      page we are going to change to, there could be custom parameters
         //      but the most important ones are:
         //      projectId, moduleName, action, id
-        if(!config.moduleName) {
+        if (!config.moduleName) {
             config.moduleName = this._defaultModule;
         }
 
-        if(this.getModule(config.moduleName)) {
+        if (this.getModule(config.moduleName)) {
             this._changeModule(config);
         } else {
             throw new Error("Invalid name provided.");
         }
     },
 
-    _setHash: function(config,replaceItem) {
+    _setHash: function(config, replaceItem) {
         // Summary:
         //      Sets the page hash
         //  Description:
@@ -74,7 +74,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         //      replaceItem is a boolean value and indicates whether the current
         //      hash value should be replaces or a new one should be created
         var newHash = dojo.objectToQuery(config) || "";
-        if(newHash != this._recentHash) {
+        if (newHash != this._recentHash) {
             this._recentHash = newHash;
             dojo.hash(newHash, replaceItem);
 
@@ -89,10 +89,10 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     _changeModule: function(config) {
         // Submodule handling is not functional yet
         // TODO: refactor submodules to be real child of their parents
-        if(this._activeModule
-                && this._activeModule.module != config.moduleName
-                && this._activeModule.module != config.globalModuleName) {
-            if(dojo.isFunction(this._activeModule.destroy)) {
+        if (this._activeModule &&
+                this._activeModule.module != config.moduleName &&
+                this._activeModule.module != config.globalModuleName) {
+            if (dojo.isFunction(this._activeModule.destroy)) {
                 this._activeModule.destroy();
             }
 
@@ -114,9 +114,8 @@ dojo.declare("phpr.Default.System.PageManager", null, {
 
         // replacement for processUrlHash in every module
 
-        if (config.projectId
-                && config.globalModuleName
-                && !phpr.isGlobalModule(config.globalModuleName)) {
+        if (config.projectId && config.globalModuleName &&
+                !phpr.isGlobalModule(config.globalModuleName)) {
             var projectId = config.projectId;
             if (projectId < 1) {
                 projectId = 1;
@@ -134,11 +133,11 @@ dojo.declare("phpr.Default.System.PageManager", null, {
 
         if ("undefined" != typeof config.id) {
             // If is an id, open a form
-            if (module && (config.id > 0 || config.id == 0)) {
+            if (module && (config.id > 0 || config.id === 0)) {
                 if (module !== phpr.module || newProject) {
                     this._reloadModule(module);
                 }
-                if(dojo.isFunction(mod.openForm)) {
+                if (dojo.isFunction(mod.openForm)) {
                     mod.openForm(config.id, module);
                 } else {
                     dojo.publish(module + ".openForm", [config.id, module]);
@@ -150,7 +149,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             mod.showTagsResults(config.tag || "");
         } else if ("undefined" != typeof config.action) {
             // TODO: create better semantics for custom function calls
-            if(dojo.isFunction(mod.processActionFromUrlHash)) {
+            if (dojo.isFunction(mod.processActionFromUrlHash)) {
                 mod.processActionFromUrlHash(config);
             } else {
                 dojo.publish(module + ".processActionFromUrlHash", [config]);
@@ -165,13 +164,13 @@ dojo.declare("phpr.Default.System.PageManager", null, {
 
     _reloadModule: function(name, params) {
         var mod = this.getModule(name);
-        if(mod) {
-            if(dojo.isFunction(mod.reload)){
-                mod.reload.apply(mod, params||[]);
+        if (mod) {
+            if (dojo.isFunction(mod.reload)) {
+                mod.reload.apply(mod, params || []);
             } else {
                 // fallback
                 // TODO: delete if unused
-                dojo.publish(mod.module + ".reload", params)
+                dojo.publish(mod.module + ".reload", params);
             }
         }
     },
@@ -180,10 +179,11 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         // Summary:
         //      returns a module by its name or null if it is not registered
         var mod = this._modules[name];
-        if(mod)
+        if (mod) {
             return mod;
-        else
+        } else {
             return null;
+        }
     },
 
     getActiveModule: function() {
@@ -193,7 +193,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     },
 
     _hashChange: function() {
-        if(dojo.hash() != this._recentHash) {
+        if (dojo.hash() != this._recentHash) {
             this.changeState(dojo.queryToObject(dojo.hash()));
         }
     },
@@ -227,14 +227,14 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         // Description:
         //      This will fetch the url hash from the cookie if none is found
         //      and if no moduleName is provided, loads the Project module.
-        if (dojo.hash() == "") {
+        if (dojo.hash() === "") {
             // Try loading hash from cookie, or use default config
             var hash = dojo.cookie('location.hash') || null;
             if (hash) {
                 this._setHash(hash, true);
             }
             this.changeState({
-                moduleName:"Project"
+                moduleName: "Project"
             });
         } else {
             this._hashChange();
