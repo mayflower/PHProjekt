@@ -25,7 +25,7 @@ dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("dijit.Tree");
 dojo.require("dijit.tree.ForestStoreModel");
 
-phpr.treePaths               = new Array();
+phpr.treePaths               = [];
 phpr.treeLastProjectSelected = null;
 
 dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
@@ -36,12 +36,12 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
     _store:    null,
     _model:    null,
 
-    constructor:function() {
+    constructor: function() {
         this.setUrl();
         this.setId(null);
     },
 
-    loadTree:function() {
+    loadTree: function() {
         if (!this._idName || !dijit.byId(this._idName)) {
             this.setNode();
             // Data of the tree
@@ -65,7 +65,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         }
     },
 
-    finishDraw:function() {
+    finishDraw: function() {
         // Summary:
         //    Finish the draw process
         // Description:
@@ -75,14 +75,14 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         this.selecteCurrent(phpr.currentProjectId);
     },
 
-    getModel:function() {
+    getModel: function() {
         this._model = new dijit.tree.ForestStoreModel({
             store: this._store,
-            query: {parent:'1'}
+            query: {parent: '1'}
         });
     },
 
-    getTree:function() {
+    getTree: function() {
         var cb1 = function(node) {
             if (node.item.cut == 'true') {
                 dijit.showTooltip(node.item.longName, node.domNode);
@@ -107,7 +107,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         })();
     },
 
-    getUrl:function() {
+    getUrl: function() {
         // Summary:
         //    Return the url for get the tree
         // Description:
@@ -115,7 +115,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         return this._url;
     },
 
-    setUrl:function() {
+    setUrl: function() {
         // Summary:
         //    Set the url for get the tree
         // Description:
@@ -123,7 +123,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         this._url = phpr.webpath + 'index.php/Project/index/jsonTree';
     },
 
-    setNode:function() {
+    setNode: function() {
         // Summary:
         //    Set the node to put the tree
         // Description:
@@ -131,7 +131,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         this._treeNode = dijit.byId("treeBox");
     },
 
-    setId:function(id) {
+    setId: function(id) {
         // Summary:
         //    Set the id of the widget
         // Description:
@@ -139,20 +139,20 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         this._idName = id;
     },
 
-    updateData:function() {
+    updateData: function() {
         phpr.destroyWidget(this._idName);
         phpr.DataStore.deleteData({url: this._url});
     },
 
-    onItemClick:function(item) {
+    onItemClick: function(item) {
         // Summary: publishes "changeProject" as soon as a tree Node is clicked
         if (!item) {
-          item = [];
+            item = [];
         }
         this.publish("changeProject", [item.id]);
     },
 
-    selecteCurrent:function(id) {
+    selecteCurrent: function(id) {
         // Summary:
         //    Select the current projects and all the parents
         // Description:
@@ -168,17 +168,19 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
 
         if (id > 1) {
             // Expan the parents
-            this.tree.model.store.fetchItemByIdentity({identity: id,
-                onItem:function(item) {
+            this.tree.model.store.fetchItemByIdentity({
+                identity: id,
+                onItem: function(item) {
                     if (item) {
                         var paths = item.path.toString().split("\/");
-                        for (i in paths) {
+                        for (var i in paths) {
                             if (Math.abs(paths[i]) > 1) {
                                 _tree._expandNode(_this.getNodeByidentity(paths[i]));
                             }
                         }
                     }
-            }});
+                }
+            });
 
             // Add new bold
             var node = _this.getNodeByidentity(id);
@@ -190,13 +192,13 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         }
     },
 
-    getNodeByidentity:function(identity) {
+    getNodeByidentity: function(identity) {
         // Summary:
         //    Return the node by identity
         // Description:
         //    Return the node by identity
         var nodes = this.tree._itemNodesMap[identity];
-        if (nodes && nodes.length){
+        if (nodes && nodes.length) {
             // Select the first item
             node = nodes[0];
         } else {
@@ -206,39 +208,39 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         return node;
     },
 
-    processData:function(data) {
+    processData: function(data) {
         // Summary:
         //    Process the data for the tree
         // Description:
         //    Collect path and change the long names
         var width = dojo.byId('navigation-container').style.width.replace(/px/, "");
-        for(var i in data.items) {
-            var name  = data.items[i]['name'].toString();
-            var depth = data.items[i]['path'].match(/\//g).length;
-                if (depth > 5) {
+        for (var i in data.items) {
+            var name  = data.items[i].name.toString();
+            var depth = data.items[i].path.match(/\//g).length;
+            if (depth > 5) {
                 depth = 5;
             }
             var maxLength = Math.round((width / 11) - (depth - 1));
-            data.items[i]['cut'] = false;
+            data.items[i].cut = false;
             if (name.length > maxLength) {
-                data.items[i]['longName'] = name;
-                data.items[i]['name']     = name.substr(0, maxLength) + '...';
-                data.items[i]['cut']      = true;
+                data.items[i].longName = name;
+                data.items[i].name     = name.substr(0, maxLength) + '...';
+                data.items[i].cut      = true;
             }
-            phpr.treePaths[data.items[i]['id']] = data.items[i]['path'];
+            phpr.treePaths[data.items[i].id] = data.items[i].path;
         }
 
         return data;
     },
 
-    getParentId:function(id) {
+    getParentId: function(id) {
         // Summary:
         //    Return the parent id of one project
         // Description:
         //    Return the parent id of one project
         if (phpr.treePaths[id]) {
             var paths = phpr.treePaths[id].toString().split("\/").reverse();
-            for (i in paths) {
+            for (var i in paths) {
                 if (paths[i] > 0) {
                     return paths[i];
                 }
@@ -247,7 +249,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         return 1;
     },
 
-    checkTreeSize:function() {
+    checkTreeSize: function() {
         // Summary
         //    This avoids unwanted vertical scrollbar in the tree when general height is not too much
         var treeHeight = dojo.byId('treeBox').offsetHeight;
@@ -256,31 +258,35 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         }
     },
 
-    drawBreadCrumb:function() {
-        var projects = new Array();
+    drawBreadCrumb: function() {
+        var projects = [];
         var _this    = this;
 
         if (!phpr.isGlobalModule(phpr.module)) {
             if (phpr.treeLastProjectSelected != phpr.currentProjectId || phpr.currentProjectId == 1) {
-                this.tree.model.store.fetchItemByIdentity({identity: phpr.currentProjectId,
-                    onItem:function(item) {
+                this.tree.model.store.fetchItemByIdentity({
+                    identity: phpr.currentProjectId,
+                    onItem: function(item) {
                         if (item) {
                             var paths = phpr.treePaths[phpr.currentProjectId].toString().split("\/");
-                            for (i in paths) {
+                            for (var i in paths) {
                                 if (paths[i] > 0 && paths[i] != phpr.currentProjectId) {
-                                    _this.tree.model.store.fetchItemByIdentity({identity: paths[i],
-                                        onItem:function(item) {
+                                    _this.tree.model.store.fetchItemByIdentity({
+                                        identity: paths[i],
+                                        onItem: function(item) {
                                             if (item) {
                                                 projects.push({"id":   item.id,
                                                                "name": item.name});
                                             }
-                                    }});
+                                        }
+                                    });
                                 }
                             }
                             projects.push({"id":   item.id,
                                            "name": item.name});
                         }
-                }});
+                    }
+                });
                 phpr.BreadCrumb.setProjects(projects);
             }
         } else {
@@ -290,7 +296,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         phpr.BreadCrumb.draw();
     },
 
-    fadeOut:function() {
+    fadeOut: function() {
         // Summary:
         //     Manage the visibility of the tree panel
         if (dojo.style("treeBox", "opacity") != 0.5) {
@@ -298,7 +304,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         }
     },
 
-    fadeIn:function() {
+    fadeIn: function() {
         // Summary:
         //     Manage the visibility of the tree panel
         if (dojo.style("treeBox", "opacity") != 1) {

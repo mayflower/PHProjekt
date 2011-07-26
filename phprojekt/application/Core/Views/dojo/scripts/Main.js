@@ -81,7 +81,9 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         //    Rewritten the function for work like a system module and like a form
         // Description:
         //    Rewritten the function for work like a system module and like a form
+        this.destroy();
         this.defineModules(module);
+        this.cleanPage();
         if (this.isSystemModule(this.module)) {
             this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
         } else {
@@ -94,7 +96,6 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 summaryTxt: summaryTxt
             });
         }
-        this.cleanPage();
         phpr.tree.fadeOut();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
@@ -162,8 +163,10 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                     });
                 }
                 navigation += "</tr></table>";
-                dojo.byId("subModuleNavigation").innerHTML = navigation;
-                phpr.initWidgets(dojo.byId("subModuleNavigation"));
+
+                phpr.destroySubWidgets('subModuleNavigation');
+                dijit.byId("subModuleNavigation").set('content', navigation);
+
                 this.customSetSubmoduleNavigation();
             })
         })
@@ -190,21 +193,20 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         //    Rewritten the function for work like a system module and like a form
 
         // Module name
-        if (data[0]) {
-            if (this.isSystemModule(data[0])) {
-                var module    = data.shift();
+        if (data.action) {
+            if (this.isSystemModule(data.action)) {
+                var module    = data.action;
                 var subModule = module;
             } else {
                 var module    = this.module;
-                var subModule = data.shift();
+                var subModule = data.action;
             }
 
-            if (data[0] && data[1] && data[0] == 'id') {
+            if (data.id) {
                 // If is an id, open a form
-                var id = parseInt(data[1]);
-                if (subModule && (id > 0 || id == 0)) {
+                if (subModule && (data.id > 0 || data.id == 0)) {
                     dojo.publish(module + ".reload", [subModule]);
-                    dojo.publish(module + ".openForm", [id, subModule]);
+                    dojo.publish(module + ".openForm", [data.id, subModule]);
                 }
             } else {
                 dojo.publish(module + ".reload", [subModule]);
