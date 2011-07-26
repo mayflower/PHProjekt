@@ -101,19 +101,6 @@
             <?php
             if (true === $this->isLoggedIn) {
             ?>
-            if (!window.location.hash) {
-                // If current hash if empty,
-                // try to fetch one from browser cookies
-                // or use the default
-                var hash = dojo.cookie('location.hash');
-                if (hash != undefined) {
-                    window.location.hash = hash;
-                } else {
-                    window.location.hash = "Project";
-                }
-            }
-            recentHash = window.location.hash;
-            dojo.subscribe("/dojo/hashchange", null, initialiseStateFromUrl);
             // Add shortcut icon
             var link  = document.createElement("link");
             link.type = "image/x-icon";
@@ -148,7 +135,6 @@
             }
             ?>
         });
-
         window.onresize = function() {
             init();
         };
@@ -159,9 +145,7 @@
     if (true === $this->isLoggedIn) {
     ?>
     <script type="text/javascript">
-        phpr.Url   = new phpr.Url();
-        var module = phpr.Url.getModule();
-        var main   = new phpr.Main("<?php echo $this->webpath; ?>", module, 1, '<?php echo $this->language; ?>');
+        var main   = new phpr.Main("<?php echo $this->webpath; ?>", 1, '<?php echo $this->language; ?>');
     </script>
     <?php
     } else {

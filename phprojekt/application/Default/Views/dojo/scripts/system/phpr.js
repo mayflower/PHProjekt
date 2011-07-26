@@ -61,15 +61,22 @@ phpr.initWidgets = function(el) {
 
 phpr.destroySubWidgets = function(el) {
     // Destroy all the old widgets, so dojo can init the new ones with the same IDs again.
-    if (dojo.byId(el)) {
-        var oldWidgetNodes = dojo.query("[widgetId]", dojo.byId(el));
-        for (var i = 0; i < oldWidgetNodes.length; i++) {
-            if (dijit.byNode(oldWidgetNodes[i])) {
-                dijit.byNode(oldWidgetNodes[i]).destroyRecursive();
+    if (dijit.byId(el) && dijit.byId(el).destroyDescendants) { // dijit widget id?
+        dijit.byId(el).destroyDescendants();
+    } else if (dojo.byId(el)) { // dom node id?
+        try {
+            var widget = dijit.byNode(dojo.byId(el));
+            if (widget && widget.destroyDescendants) {
+                widget.destroyDescendants();
+            } else {
+                throw new Error("");
             }
+        } catch (e) {
+            dojo.forEach(dijit.findWidgets(dojo.byId(el)), function(w) {
+                w.destroyRecursive();
+            });
+            dojo.byId(el).innerHTML = '';
         }
-    } else if (dijit.byId(el)) {
-        dijit.byId(el).destroyRecursive();
     }
 };
 
@@ -85,7 +92,7 @@ phpr.send = function(/*Object*/paramsIn) {
     // if you need something special dont use this function.
     //
     //  Example call:
-    //      phpr.send({url:"/live-save/", content:{data:1}, chunkMap:{tags:"tagsEl"}, onSuccess:function() {...}});
+    //      phpr.send({url:"/live-save/", content:{data:1}, chunkMap:{tags:"tagsEl"}, onSuccess: function() {...}});
 
     // onEnd: Is always called after the onSuccess and onError have finished.
     //     This might be used for resetting things that are common for both cases.
@@ -100,7 +107,7 @@ phpr.send = function(/*Object*/paramsIn) {
         onEnd:     null,
         sync:      false,
         chunkMap:  {}
-    }
+    };
     if (dojo.isObject(paramsIn)) {
         dojo.mixin(params, paramsIn);
     }
@@ -111,12 +118,12 @@ phpr.send = function(/*Object*/paramsIn) {
         _onError = function(response, ioArgs) {
             params.onError(response, ioArgs);
             _onEnd();
-        }
+        };
     } else {
         _onError = function(response, ioArgs) {
             phpr.handleError(params.url, 'php');
             _onEnd();
-        }
+        };
     }
 
     _onSuccess = function(data, ioArgs) {
@@ -134,7 +141,7 @@ phpr.send = function(/*Object*/paramsIn) {
                 _onEnd();
                 phpr.loading.hide();
             }
-        } catch(e) {
+        } catch (e) {
             phpr.handleError(params.url, 'exception');
             return;
         }
@@ -165,11 +172,11 @@ phpr.handleResponse = function(resultArea, result) {
     } else if (result.type == 'warning') {
         css = 'warning';
     }
-    var message= result.message
+    var message = result.message;
     if (!message) {
         return;
     }
-    phpr.serverFeedback.addMessage({cssClass: css, output:message});
+    phpr.serverFeedback.addMessage({cssClass: css, output: message});
 };
 
 phpr.getCurrent = function(data, identifier, value) {
@@ -246,9 +253,9 @@ phpr.isValidInputKey = function(key) {
        (key != dojo.keys.F15) &&
        (key != dojo.keys.NUM_LOCK) &&
        (key != dojo.keys.SCROLL_LOCK)) {
-      return true;
+        return true;
     } else {
-       return false;
+        return false;
     }
 };
 
@@ -258,11 +265,11 @@ dojo.declare("phpr.DataStore", null, {
     // Description:
     //    The data is request to the server
     //    and then is cached for the future used.
-    _internalCache: new Array(),
+    _internalCache: [],
 
     _active: false,
 
-    addStore:function(params) {
+    addStore: function(params) {
         // Summary:
         //    Set a new store for save the data
         // Description:
@@ -270,19 +277,19 @@ dojo.declare("phpr.DataStore", null, {
         if (typeof this._internalCache[params.url] == 'undefined') {
             store = new phpr.ReadStore({url: params.url});
             this._internalCache[params.url] = {
-                data:  new Array(),
+                data:  [],
                 store: store
             };
         } else if (params.noCache) {
             store = new phpr.ReadStore({url: params.url});
             this._internalCache[params.url] = {
-                data:  new Array(),
+                data:  [],
                 store: store
             };
         }
     },
 
-    requestData:function(params) {
+    requestData: function(params) {
         // Summary:
         //    Request the data
         // Description:
@@ -291,13 +298,13 @@ dojo.declare("phpr.DataStore", null, {
         if (typeof params.processData == "undefined") {
             params.processData = null;
         }
-        if (this._internalCache[params.url]['data'].length == 0) {
+        if (this._internalCache[params.url].data.length === 0) {
             phpr.loading.show();
-            if (this._active == true) {
+            if (this._active === true) {
                 setTimeout(dojo.hitch(this, "requestData", params), 500);
             } else {
                 this._active = true;
-                this._internalCache[params.url]['store'].fetch({
+                this._internalCache[params.url].store.fetch({
                     serverQuery: params.serverQuery || {},
                     onComplete:  dojo.hitch(this, "saveData", {
                         url:         params.url,
@@ -306,15 +313,15 @@ dojo.declare("phpr.DataStore", null, {
                     onError: dojo.hitch(this, "errorHandler", {
                         url:         params.url,
                         processData: params.processData
-                    })}
-                );
+                    })
+                });
             }
         } else if (params.processData) {
             params.processData.call();
         }
     },
 
-    errorHandler:function(scope, error) {
+    errorHandler: function(scope, error) {
         // Summary:
         //    Display a PHP or JS error
         // Description:
@@ -323,8 +330,8 @@ dojo.declare("phpr.DataStore", null, {
         //    Also is cached the JS error
 
         // Get the message error
-        if ((error.number && (error.number & 0xFFFF == 1002 || error.number & 0xFFFF == 1006)) // IE
-            || (error.name && error.name == "SyntaxError")) { // FF
+        if ((error.number && (error.number & 0xFFFF == 1002 || error.number & 0xFFFF == 1006)) || // IE
+            (error.name && error.name == "SyntaxError")) { // FF
             // PHP Error
             phpr.handleError(scope.url, 'php');
         } else {
@@ -341,66 +348,66 @@ dojo.declare("phpr.DataStore", null, {
         }
     },
 
-    saveData:function(params, data) {
+    saveData: function(params, data) {
         // Summary:
         //    Store the data in the cache
         // Description:
         //    Store the data in the cache
         //    Then return to the processData function
         this._active = false;
-        this._internalCache[params.url]['data'] = data;
+        this._internalCache[params.url].data = data;
         phpr.loading.hide();
         if (params.processData) {
             params.processData.call();
         }
     },
 
-    getData:function(params) {
+    getData: function(params) {
         // Summary:
         //    Return the "data" tag from the server
         // Description:
         //    Return the "data" tag from the server
-        return this.getStore(params).getValue(this._internalCache[params.url]['data'][0], "data") || Array();
+        return this.getStore(params).getValue(this._internalCache[params.url].data[0], "data") || [];
     },
 
-    getMetaData:function(params) {
+    getMetaData: function(params) {
         // Summary:
         //    Return the "metadata" tag from the server
         // Description:
         //    Return the "metadata" tag from the server
-        return this.getStore(params).getValue(this._internalCache[params.url]['data'][1], "metadata") || Array();
+        return this.getStore(params).getValue(this._internalCache[params.url].data[1], "metadata") || [];
     },
 
-    deleteData:function(params) {
+    deleteData: function(params) {
         // Summary:
         //    Delete the cache
         // Description:
         //    Delete the cache
         if (this._internalCache[params.url]) {
-           this._internalCache[params.url]['data'] = new Array();
+            this._internalCache[params.url].data = [];
         }
     },
 
-    deleteDataPartialString:function(params) {
+    deleteDataPartialString: function(params) {
         // Summary:
         //    Deletes the cache for the urls that start with the received string.
-        for (url in this._internalCache) {
+        for (var url in this._internalCache) {
             var urlLeft = url.substring(0, params.url.length);
             if (urlLeft == params.url) {
-                this._internalCache[url]['data'] = new Array();
+                this._internalCache[url].data = [];
             }
         }
     },
 
-    getStore:function(params) {
+    getStore: function(params) {
         // Summary:
         //    Return the current data.store
         // Description:
         //    Return the current data.store
-        return this._internalCache[params.url]['store'];
+        return this._internalCache[params.url].store;
     },
 
-    deleteAllCache:function() {
+    deleteAllCache: function() {
         // Summary:
         //    Delete all the cache
         // Description:
@@ -408,7 +415,7 @@ dojo.declare("phpr.DataStore", null, {
         for (var i in this._internalCache) {
             // Special case for global modules since are not reloaded
             if (this._internalCache[i] && i != phpr.webpath + 'index.php/Core/module/jsonGetGlobalModules') {
-                this._internalCache[i]['data'] = new Array();
+                this._internalCache[i].data = [];
             }
         }
     }
@@ -423,10 +430,10 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
     requestMethod:  "post",
     doClientPaging: false,
 
-    _assertIsItem:function(item) {
+    _assertIsItem: function(item) {
     },
 
-    _fetchItems:function(request, fetchHandler, errorHandler) {
+    _fetchItems: function(request, fetchHandler, errorHandler) {
         if (request.serverQuery) {
             request.serverQuery.csrfToken = phpr.csrfToken;
         } else if (request.query) {
@@ -438,9 +445,9 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
         this.inherited(arguments);
     },
 
-    _filterResponse:function(data) {
-        var retData     = new Array();
-        var retMetaData = new Array();
+    _filterResponse: function(data) {
+        var retData     = [];
+        var retMetaData = [];
 
         if (!data) {
             phpr.handleError(this.url, 'exception');
@@ -453,10 +460,10 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
             var customData = false;
             if (typeof data.data == 'undefined') {
                 customData = true;
-                data.data  = new Array();
+                data.data  = [];
             }
 
-            if (true == customData && data.data.length == 0 && typeof data.metadata == 'undefined') {
+            if (true === customData && data.data.length === 0 && typeof data.metadata == 'undefined') {
                 retData     = data;
             } else {
                 retData     = data.data;
@@ -469,7 +476,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
                 {"data":     retData},
                 {"metadata": retMetaData}
             ]
-        }
+        };
 
         return ret;
     }
@@ -478,20 +485,20 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
 dojo.declare("phpr.DateTextBox", [dijit.form.DateTextBox], {
     _blankValue: '', // used by filter() when the textbox is blank
 
-    parse:function(value, constraints) {
+    parse: function(value, constraints) {
         // Summary:
         //    Parses as string as a Date, according to constraints
         // Date
         return this.dateLocaleModule.parse(value, constraints) || (this._isEmpty(value) ? '' : undefined);
     },
 
-    serialize:function(d, options) {
+    serialize: function(d, options) {
         // Summary:
         //     This function overwrites the dijit.form.DateTextBox display
         // Description:
         //     Make sure that the date is not only displayed localized, but also
         //     the value which is returned is set to this date format
-        return dojo.date.locale.format(d, {selector:'date', datePattern:'yyyy-MM-dd'}).toLowerCase();
+        return dojo.date.locale.format(d, {selector: 'date', datePattern: 'yyyy-MM-dd'}).toLowerCase();
     }
 });
 
@@ -500,25 +507,25 @@ dojo.declare("phpr.ServerFeedback", [dijit._Widget], {
     //     A class for displaying the ServerFeedback
     // Description:
     //     This class receives the Server Feedback and displays it to the User
-    messages:[],
-    displayedMessages:[],
+    messages: [],
+    displayedMessages: [],
 
-    addMessage:function(message) {
+    addMessage: function(message) {
         this.messages.push(message);
         this.displayMessage(message);
     },
 
-    deleteLastMessage:function(message) {
+    deleteLastMessage: function(message) {
         this.messages.pop();
     },
 
-    displayMessage:function(message) {
+    displayMessage: function(message) {
         this.displayedMessages = [message];
-        for (i in this.displayedMessages) {
+        for (var i in this.displayedMessages) {
             out = this.displayedMessages[i];
             dojo.publish("ServerFeedback", [{
-                message: out.output,
-                type:    out.cssClass
+                    message: out.output,
+                    type:    out.cssClass
                 }]
             );
         }
@@ -530,13 +537,13 @@ dojo.declare("phpr.loading", null, {
     //     Simple class for show or hide the loading icon
     // Description:
     //     Simple class for show or hide the loading icon
-    hide:function() {
+    hide: function() {
         if (dojo.byId('loadingIcon')) {
             dojo.byId('loadingIcon').style.display = 'none';
         }
     },
 
-    show:function() {
+    show: function() {
         if (dojo.byId('loadingIcon')) {
             dojo.byId('loadingIcon').style.display = 'inline';
         }
@@ -551,11 +558,11 @@ dojo.declare("phpr.translator", null, {
     //     and return the request string translated.
     _strings: {},
 
-    constructor:function(translatedStrings) {
-       this._strings = translatedStrings;
+    constructor: function(translatedStrings) {
+        this._strings = translatedStrings;
     },
 
-    get:function(string, module, useFallback) {
+    get: function(string, module, useFallback) {
         var returnValue;
         var strings = this._strings;
 
@@ -575,11 +582,11 @@ dojo.declare("phpr.translator", null, {
         } else if (strings[phpr.module] && strings[phpr.module][string]) {
             returnValue = strings[phpr.module][string];
         // Core module
-        } else if (strings['Core'] && strings['Core'][string]) {
-            returnValue = strings['Core'][string];
+        } else if (strings.Core && strings.Core[string]) {
+            returnValue = strings.Core[string];
         // Default module
-        } else if (strings['Default'] && strings['Default'][string]) {
-            returnValue = strings['Default'][string];
+        } else if (strings.Default && strings.Default[string]) {
+            returnValue = strings.Default[string];
         } else {
             // Untranslated string
             if (!useFallback) {
@@ -599,7 +606,7 @@ dojo.declare("phpr.Dialog", [dijit.Dialog], {
     //     Provide a dialog with some changes
     // Description:
     //     Allow dialog into other dialog and fix the key input
-    _onKey:function(/*Event*/ evt) {
+    _onKey: function(/*Event*/ evt) {
     // Summary: handles the keyboard events for accessibility reasons
         if (evt.charOrCode) {
             var dk   = dojo.keys;
@@ -639,7 +646,7 @@ dojo.declare("phpr.Dialog", [dijit.Dialog], {
                 } else if (!dojo.isOpera) {
                     try {
                         this._firstFocusItem.focus();
-                    } catch(e) {
+                    } catch (e) {
                         /*squelch*/
                     }
                 }
@@ -653,11 +660,11 @@ dojo.declare("phpr.InitialScreen", null, {
     //     Manage the visibility of the page on init
     // Description:
     //     Manage the visibility of the page on init
-    start:function() {
+    start: function() {
         dojo.style("completeContent", "opacity", 0);
     },
 
-    end:function() {
+    end: function() {
         dojo.style("completeContent", "opacity", 1);
         dojo.style("initLoading", "display", "none");
     }
@@ -665,22 +672,22 @@ dojo.declare("phpr.InitialScreen", null, {
 
 phpr.loadJsFile = function(fileName) {
     // Load a js and insert into the head
-    var fileRef = document.createElement('script')
-    fileRef.setAttribute("type" ,"text/javascript");
+    var fileRef = document.createElement('script');
+    fileRef.setAttribute("type", "text/javascript");
     fileRef.setAttribute("src", fileName);
     if (typeof fileRef != "undefined") {
-        document.getElementsByTagName("head")[0].appendChild(fileRef)
+        document.getElementsByTagName("head")[0].appendChild(fileRef);
     }
 };
 
 phpr.loadCssFile = function(fileName) {
     // Load a css and insert into the head
-    var fileRef = document.createElement("link")
+    var fileRef = document.createElement("link");
     fileRef.setAttribute("rel", "stylesheet");
     fileRef.setAttribute("type", "text/css");
     fileRef.setAttribute("href", fileName);
-    if (typeof fileRef!="undefined") {
-        document.getElementsByTagName("head")[0].appendChild(fileRef)
+    if (typeof fileRef != "undefined") {
+        document.getElementsByTagName("head")[0].appendChild(fileRef);
     }
 };
 
@@ -715,14 +722,13 @@ phpr.handleError = function(url, type, message) {
         case 'silence':
             console.log(phpr.nls.get('Server unreachable! ') + message);
             return;
-            break;
         default:
             response.message += phpr.nls.get('Unexpected error');
             break;
     }
 
     // Show support address?
-    if (phpr.config.supportAddress != undefined && phpr.config.supportAddress != '') {
+    if (phpr.config.supportAddress !== undefined && phpr.config.supportAddress !== '') {
         response.message += '<br /> ' + phpr.nls.get('Support address:') + ' ' + phpr.config.supportAddress;
     }
 
@@ -735,14 +741,14 @@ dojo.declare("phpr.BreadCrumb", null, {
     // Description:
     //     Manage the Breadcrumb
     _module:       '',
-    _projects:     new Array(),
+    _projects:     [],
     _item:         '',
     _lastModule:   null,
     _lastParent:   null,
     _separatorOne: ' / ',
     _separatorTwo: ' > ',
 
-    setProjects:function(projects) {
+    setProjects: function(projects) {
         // Summary:
         //     Set the projects tree as one string
         // Description:
@@ -752,7 +758,7 @@ dojo.declare("phpr.BreadCrumb", null, {
         this._item     = null;
     },
 
-    setModule:function() {
+    setModule: function() {
         // Summary:
         //     Set the module and sub-module
         // Description:
@@ -769,7 +775,7 @@ dojo.declare("phpr.BreadCrumb", null, {
         }
     },
 
-    setItem:function(item) {
+    setItem: function(item) {
         // Summary:
         //     Set the item value
         // Description:
@@ -781,25 +787,27 @@ dojo.declare("phpr.BreadCrumb", null, {
         this._item = item;
     },
 
-    draw:function() {
+    draw: function() {
         // Summary:
         //     Draw the breadcrumb
         // Description:
         //     Show the breadcrumb in the title
+        var breadCrumb, breadCrumbTitle;
         if (this._projects.length > 0) {
-            var titleArray    = new Array();
-            var projectsArray = new Array();
+            var titleArray    = [];
+            var projectsArray = [];
             for (var i in this._projects) {
-                var link = '<a href="javascript: dojo.publish(\'' + phpr.module + '.changeProject\', ['
-                    + this._projects[i].id + ']);">' + this._projects[i].name + '</a>';
+                var link = '<a href="javascript: dojo.publish(\'' + phpr.module +
+                    '.changeProject\', [' + this._projects[i].id + ']);">' +
+                    this._projects[i].name + '</a>';
                 projectsArray.push(link);
                 titleArray.push(this._projects[i].name);
             }
-            var breadCrumb      = projectsArray.join(this._separatorTwo.toString()) + this._separatorOne + this._module;
-            var breadCrumbTitle = titleArray.join(this._separatorTwo.toString()) + this._separatorOne + this._module;
+            breadCrumb      = projectsArray.join(this._separatorTwo.toString()) + this._separatorOne + this._module;
+            breadCrumbTitle = titleArray.join(this._separatorTwo.toString()) + this._separatorOne + this._module;
         } else {
-            var breadCrumb      = this._module;
-            var breadCrumbTitle = this._module;
+            breadCrumb      = this._module;
+            breadCrumbTitle = this._module;
         }
         if (this._item) {
             breadCrumb      += this._separatorOne + this._item;
@@ -811,205 +819,15 @@ dojo.declare("phpr.BreadCrumb", null, {
 
 });
 
-dojo.declare("phpr.ScrollPane", [dijit.layout._LayoutWidget, dijit._Templated], {
-    // Summary:
-    //    Scroll widget for manage the module tabs
-    // Description:
-    //    Scroll widget for manage the module tabs
-
-    // How much incress/decress the left on arrow mouse over
-    _scrollRatio: 20,
-
-    // Internal var for stop the propagation
-    _allow: true,
-
-    // Current left
-    _left: 0,
-
-    // Array with modules and left positions
-    _positions: new Array(),
-
-    // Template
-    templateString: __phpr_templateCache["phpr.Default.template.ScrollPane.html"],
-
-    layout:function() {
-        // Summary:
-        //    Initial the widget
-        // Description:
-        //    Set style and make the positions array
-        dojo.style(this.wrapper, 'width', this.domNode.style['width']);
-
-        var node    = this.containerNode.firstChild.firstChild.firstChild.childNodes;
-        var width   = 0;
-        var curleft = 0;
-        var medium  = Math.floor(this.wrapper["offsetWidth"] / 2);
-        var max     = this.getMaxLeft();
-        for (var i in node) {
-            var offsetWidth = node[i].offsetWidth || 0;
-            // Find left
-            width += offsetWidth;
-            if (width < medium) {
-                curleft = 0;
-            } else if (width > max) {
-                curleft = max;
-            } else {
-                curleft += offsetWidth;
-            }
-
-            if (node[i].id) {
-                var id = node[i].id.toString().replace(/navigation_/, "");
-                this._positions.push({"id": id, "left": curleft});
-            }
-        }
-
-        var pos = this.getPosition(phpr.module);
-        if (pos) {
-            this._left = pos;
-        }
-        this._set()
-    },
-
-    postCreate:function() {
-        // Summary:
-        //    Initial the widget
-        // Description:
-        //    Initial the widget
-        this.inherited(arguments);
-        dojo.style(this.wrapper, "overflow", "hidden");
-    },
-
-    _set:function() {
-        // Summary:
-        //    Set the left scroll
-        // Description:
-        //    Set the left scroll
-        this.wrapper["scrollLeft"] = this._left;
-        this._calcButtons();
-    },
-
-    _calc:function(e) {
-        // Summary:
-        //    Move the scroll depending on the mouse movement
-        // Description:
-        //    If the last position of the mouse and the current one exceeed 100,
-        //    move the scroll
-        //    100 is for a normal "speed"
-        if (this._allow) {
-            if ((this._lastPageX - e.pageX) > 100) {
-                this._lastPageX = e.pageX;
-                this._enterLeft();
-            } else if ((this._lastPageX - e.pageX) < -100) {
-                this._lastPageX = e.pageX;
-                this._enterRight();
-           }
-        }
-    },
-
-    _enter:function(e) {
-        // Summary:
-        //    Enter to the widget
-        // Description:
-        //    Set the current mouse position
-        this._lastPageX = e.pageX;
-    },
-
-    _enterLeft:function() {
-        // Summary:
-        //    Move the scroll to the left
-        // Description:
-        //    Move the scroll on left arrow over
-        if (this._allow) {
-            if (this._left > 1) {
-                this._left -= this._scrollRatio;
-                if (this._left < 0) {
-                    this._left = 0;
-                }
-                this._set();
-                setTimeout(dojo.hitch(this, "_enterLeft"), 50);
-            }
-        }
-    },
-
-    _enterRight:function() {
-        // Summary:
-        //    Move the scroll to the right
-        // Description:
-        //    Move the scroll on right arrow over
-        if (this._allow) {
-            var maxLeft = this.getMaxLeft();
-            if (this._left < maxLeft) {
-                this._left += this._scrollRatio;
-                if (this._left > this.maxLeft) {
-                    this._left = this.maxLeft;
-                }
-                this._set();
-                setTimeout(dojo.hitch(this, "_enterRight"), 50);
-            }
-        }
-    },
-
-    _leave:function() {
-        // Summary:
-        //    Leave the widget
-        // Description:
-        //    Stop events
-        this._allow = false;
-        setTimeout(dojo.hitch(this, function() {this._allow = true}), 50);
-    },
-
-    _calcButtons:function() {
-        // Summary:
-        //    Show or hide the arrows
-        // Description:
-        //    Change the style of the arrow buttons depending on the current scroll
-        if (this.wrapper["scrollLeft"] == 0) {
-            this.scrollArrowLeft.className = "phprScrollArrowLeftHide";
-            this._leave();
-        } else {
-            this.scrollArrowLeft.className = "phprScrollArrowLeft";
-        }
-
-        if (this.wrapper["scrollLeft"] == this.getMaxLeft()) {
-            this.scrollArrowRight.className = "phprScrollArrowRightHide";
-            this._leave();
-        } else {
-            this.scrollArrowRight.className = "phprScrollArrowRight";
-        }
-    },
-
-    getPosition:function(module) {
-        // Summary:
-        //    Return the module position
-        // Description:
-        //    Return the left for a module
-        for (var i in this._positions) {
-            if (this._positions[i].id == module) {
-                return this._positions[i].left;
-            }
-        }
-
-        return null;
-    },
-
-    getMaxLeft:function() {
-        // Summary:
-        //    Get max left available for the scroll
-        // Description:
-        //    Get max left available for the scroll
-        return this.wrapper["scrollWidth"] - this.wrapper["offsetWidth"];
-    }
-});
-
 phpr.inArray = function(needle, haystack) {
     // Summary:
-    //    Checks whether the given needle is in the haystack 
+    //    Checks whether the given needle is in the haystack
     // Description:
     //    Checks whether the given needle is in the haystack
 
     // we need to check for this, because for some reason, the function is
     // called with undefined as haystack very often
-    if("Array" == typeof haystack || "Object" == typeof haystack) {
-        console.log("use new");
+    if (dojo.isArray(haystack) || "Object" == typeof haystack) {
         return dojo.indexOf(haystack, needle) != -1;
     }
 
@@ -1034,7 +852,7 @@ dojo.declare("phpr.FilteringSelect", dijit.form.FilteringSelect, {
     // Internal var for fix the bug of items with the same display
     _lastSelectedId: null,
 
-    _doSelect:function(/*Event*/ tgt) {
+    _doSelect: function(/*Event*/ tgt) {
         // Summary:
         //    Overrides ComboBox._doSelect(), the method called when an item in the menu is selected.
         // Description:
@@ -1045,7 +863,7 @@ dojo.declare("phpr.FilteringSelect", dijit.form.FilteringSelect, {
         this._lastSelectedId = this.get('value');
     },
 
-    _setDisplayedValueAttr:function(/*String*/ label, /*Boolean?*/ priorityChange) {
+    _setDisplayedValueAttr: function(/*String*/ label, /*Boolean?*/ priorityChange) {
         // Summary:
         //    Overrides dijit.form.FilteringSelect._setDisplayedValueAttr().
         // Description:
@@ -1056,15 +874,15 @@ dojo.declare("phpr.FilteringSelect", dijit.form.FilteringSelect, {
         // for reverse lookup, and when that completes (after an XHR request)
         // will call setValueAttr()... but that shouldn't trigger an onChange()
         // event, even when it happens after creation has finished
-        if(!this._created){
+        if (!this._created) {
             priorityChange = false;
         }
 
-        if(this.store) {
+        if (this.store) {
             var query = dojo.clone(this.query); // #6196: populate query with user-specifics
             // Escape meta characters of dojo.data.util.filter.patternToRegExp().
-            if (this._lastSelectedId != null) {
-                this._lastQuery = query['value'] = this._lastSelectedId;
+            if (this._lastSelectedId !== null) {
+                this._lastQuery = query.value = this._lastSelectedId;
             } else {
                 this._lastQuery = query[this.searchAttr] = label.replace(/([\\\*\?])/g, "\\$1");
             }
@@ -1101,10 +919,10 @@ dojo.declare("phpr.FilteringSelect", dijit.form.FilteringSelect, {
         //    Change the function for Highlights all the occurences
 
         // Add greedy when this.highlightMatch=="all"
-        var modifiers = "i"+(this.highlightMatch=="all"?"g":"");
+        var modifiers = "i" + (this.highlightMatch == "all" ? "g" : "");
         var escapedLabel = this._escapeHtml(label);
         find = dojo.regexp.escapeString(find); // escape regexp special chars
-        var ret = escapedLabel.replace(new RegExp("(^|\\s|\\w)("+ find +")", modifiers),
+        var ret = escapedLabel.replace(new RegExp("(^|\\s|\\w)(" + find + ")", modifiers),
             '$1<span class="dijitComboBoxHighlightMatch">$2</span>');
         return ret; // Returns String, (almost) valid HTML (entities encoded)
     }
@@ -1123,8 +941,8 @@ phpr.isGlobalModule = function(module) {
     } else if (phpr.parentmodule == 'Administration' || phpr.parentmodule == 'Setting') {
         return true;
     } else {
-        for (index in globalModules) {
-            if (globalModules[index]['name'] == module) {
+        for (var index in globalModules) {
+            if (globalModules[index].name == module) {
                 return true;
             }
         }
@@ -1137,18 +955,18 @@ dojo.declare("phpr.regExpForFilter", null, {
     //    Return the regular expresion used for parse filter values
     // Description:
     //    Reject all the characters except letters, numbers, dash, underscore and colon
-    getExp:function() {
-        return '[^\\x21\\x22\\x23\\x24\\x25\\x26\\x27\\x28\\x29\\x2A\\x2B\\x2C\\x2E\\x2F\\x3B'
-            + '\\x3C\\x3D\\x3E\\x3F\\x5B\\x5C\\x5D\\x5E\\x60\\x7B\\x7C\\x7D\\x7E\\x82\\x83\\x84\\x85'
-            + '\\x86\\x87\\x88\\x89\\x8B\\x91\\x92\\x93\\x94\\x95\\x98\\x99\\x9B\\xA1\\xA6\\xAC\\xAE'
-            + '\\xAF\xA8\\xB0\\xB1\\xB2\\xB3\\xB4\\xB6\\xB7\\xB8\\xB9\\xBA\\xBB\\xBC\\xBD\\xBE\\xBF]*';
+    getExp: function() {
+        return '[^\\x21\\x22\\x23\\x24\\x25\\x26\\x27\\x28\\x29\\x2A\\x2B\\x2C\\x2E\\x2F\\x3B' +
+            '\\x3C\\x3D\\x3E\\x3F\\x5B\\x5C\\x5D\\x5E\\x60\\x7B\\x7C\\x7D\\x7E\\x82\\x83\\x84\\x85' +
+            '\\x86\\x87\\x88\\x89\\x8B\\x91\\x92\\x93\\x94\\x95\\x98\\x99\\x9B\\xA1\\xA6\\xAC\\xAE' +
+            '\\xAF\xA8\\xB0\\xB1\\xB2\\xB3\\xB4\\xB6\\xB7\\xB8\\xB9\\xBA\\xBB\\xBC\\xBD\\xBE\\xBF]*';
     },
 
     // Summary:
     //    Return the message used for invalid values
-    getMsg:function() {
-        return '<b>' + phpr.nls.get('Invalid string') + '</b><br />'
-            + phpr.nls.get('Allowed values are: Letters, numbers, space, dash, underscore and colon');
+    getMsg: function() {
+        return '<b>' + phpr.nls.get('Invalid string') + '</b><br />' +
+            phpr.nls.get('Allowed values are: Letters, numbers, space, dash, underscore and colon');
     }
 });
 
@@ -1163,7 +981,7 @@ phpr.confirmDialog = function(callbackOk, message) {
         if (confirm) {
             callbackOk.call();
         }
-    }
+    };
 
     var content = new dijit.layout.ContentPane({
         region: 'center',
@@ -1216,5 +1034,5 @@ phpr.confirmDialog = function(callbackOk, message) {
     buttonContent = null;
     buttonOK = null;
     buttonCancel = null;
-    confirmDialog = null;
+    return confirmDialog;
 };

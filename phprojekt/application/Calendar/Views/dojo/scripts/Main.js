@@ -22,6 +22,7 @@
 dojo.provide("phpr.Calendar.Main");
 
 dojo.require("dijit.layout.ContentPane");
+dojo.require("dojox.form.CheckedMultiSelect");
 
 dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     _date:                new Date(),
@@ -70,13 +71,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     renderTemplate:function() {
         // Summary:
         //   Custom renderTemplate for calendar
-        this.render(["phpr.Calendar.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            changeDate: phpr.nls.get('Change date'),
-            today:      phpr.nls.get('Today'),
-            user:       phpr.nls.get('User'),
-            self:       phpr.nls.get('Self'),
-            selection:  phpr.nls.get('Selection')
-        });
+        this.render(["phpr.Calendar.template", "mainContent.html"],
+            dojo.byId('centerMainContent'), {});
     },
 
     setWidgets:function() {
@@ -114,6 +110,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+        this.garbageCollector.addNode(this.grid);
         this.setSubmoduleNavigation();
         this.setScheduleBar(false, false);
         this._actionPending = false;
@@ -132,6 +129,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.dayListSelf = new this.dayListSelfWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
+        this.garbageCollector.addNode(this.dayListSelf);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, true);
     },
@@ -149,6 +147,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             + phpr.currentProjectId;
         this.dayListSelect = new this.dayListSelectWidget(updateUrl, phpr.currentProjectId, dateString,
             this._usersSelected, this);
+        this.garbageCollector.addNode(this.dayListSelect);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, true);
     },
@@ -165,6 +164,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
         this.weekList = new this.weekListWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
+        this.garbageCollector.addNode(this.weekList);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
     },
@@ -178,7 +178,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         phpr.destroySubWidgets('buttonRow');
         this.setNewEntry();
         var dateString = phpr.date.getIsoDate(this._date);
-        this.monthList = new this.monthListWidget(this, phpr.currentProjectId, dateString);
+        this.monthList = new this.monthListWidget(null, phpr.currentProjectId, dateString, null, this);
+        this.garbageCollector.addNode(this.monthList);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
     },
@@ -283,9 +284,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
     openForm:function(/*int*/ id, /*String*/ module, /*String*/ startDate, /*String*/ startTime) {
         // Summary:
         //    This function opens a new Detail View
-        if (!dojo.byId('detailsBox')) {
-            this.reload();
-        }
+        this.preOpenForm();
 
         if (id == undefined || id == 0) {
             var params           = new Array();
@@ -352,6 +351,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         }
 
         this.form = new this.formWidget(this, id, module, params);
+        this.garbageCollector.addNode(this.form);
     },
 
     userSelfClick:function() {
@@ -401,6 +401,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
             noUsersSelected: phpr.nls.get('You have to select at least one user!')
         });
 
+        this.garbageCollector.addNode(dojo.byId('selectorContainer'));
         dijit.byId('selectorDialog').show();
     },
 
@@ -520,8 +521,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         navigation += '   </tr></table>'
                    + '</div>';
 
-        dojo.byId("subModuleNavigation").innerHTML = navigation;
-        phpr.initWidgets(dojo.byId("subModuleNavigation"));
+        phpr.destroySubWidgets('subModuleNavigation');
+        dijit.byId("subModuleNavigation").set('content', navigation);
     },
 
     addModuleView:function(moduleViews, label, functionName, activeTab) {
@@ -558,6 +559,7 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                                                                 style:'height: 6%; overflow: hidden;'});
                 // This should be here, and not in the scheduleBar definition, to avoid a bug on IE
                 scheduleBar.set('class', 'prepend-0 append-0');
+                this.garbageCollector.addNode(scheduleBar);
             } else {
                 var scheduleBar = dijit.byId('scheduleBar');
             }
@@ -648,24 +650,29 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
         //    Makes the connection between the Grid event for Mouse Wheel Scroll, and the 'scrollDone' function
         var grid = dojo.byId("gridBox");
 
-        this._scrollConnection = dojo.connect(grid, (!dojo.isMozilla ? "onmousewheel" : "DOMMouseScroll"), function(e){
-           // except the direction is REVERSED, and the event isn't normalized! one more line to normalize that:
-           var scrollValue = e[(!dojo.isMozilla ? "wheelDelta" : "detail")] * (!dojo.isMozilla ? 1 : -1);
-           dojo.publish('Calendar.scrollDone', [scrollValue]);
-        });
+        this.garbageCollector.addEvent(
+            this._scrollConnection = dojo.connect(grid,
+                (!dojo.isMozilla ? "onmousewheel" : "DOMMouseScroll"),
+                dojo.hitch(this, function(e){
+                    // except the direction is REVERSED, and the event isn't normalized! one more line to normalize that:
+                    var scrollValue = e[(!dojo.isMozilla ? "wheelDelta" : "detail")] * (!dojo.isMozilla ? 1 : -1);
+                    this.scrollDone(scrollValue);
+            })));
         if (this._dateWheelChanged) {
             this.highlightScheduleBarDate();
             this._dateWheelChanged         = false;
             dojo.byId('gridBox').scrollTop = 0;
         }
         this._actionPending = false;
+        grid = null;
     },
 
     connectViewResize:function() {
         // Summary:
         //    Connects the resize event of the Grid box to its appropriate function. Used in Day, Week and Month views
         var gridBox            = dijit.byId('gridBox');
-        this._resizeConnection = dojo.connect(gridBox, 'resize',  dojo.hitch(this, "gridResized"));
+        this.garbageCollector.addEvent(
+            this._resizeConnection = dojo.connect(gridBox, 'resize',  dojo.hitch(this, "gridResized")));
     },
 
     gridResized:function() {
@@ -699,8 +706,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                     this._scrollDelayed       = 0;
                     dojo.disconnect(this._scrollConnection);
                     this._dateWheelChanged = true;
-                    dojo.publish('Calendar.saveChanges');
-                    dojo.publish('Calendar.setDate', [0]);
+                    this.saveChanges();
+                    this.setDate(0);
 
                 }
             } else {
@@ -720,8 +727,8 @@ dojo.declare("phpr.Calendar.Main", phpr.Default.Main, {
                     this._scrollDelayed       = 0;
                     dojo.disconnect(this._scrollConnection);
                     this._dateWheelChanged = true;
-                    dojo.publish('Calendar.saveChanges');
-                    dojo.publish('Calendar.setDate', [2])
+                    this.saveChanges();
+                    this.setDate(2);
                 }
             } else {
                 this._scrollLastDirection = this.SCROLL_DOWN;

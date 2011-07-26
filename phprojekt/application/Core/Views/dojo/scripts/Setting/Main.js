@@ -50,8 +50,8 @@ dojo.declare("phpr.Setting.Main", phpr.Core.Main, {
     },
 
     processActionFromUrlHash:function(data) {
-        if (data[0]) {
-            dojo.publish(this.module + ".reload", [data[0]]);
+        if (data.action) {
+            dojo.publish(this.module + ".reload", [data.action]);
         }
     }
 });
