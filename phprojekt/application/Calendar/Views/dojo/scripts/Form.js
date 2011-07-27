@@ -34,6 +34,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     _updateCacheIds:       null,
     _participantsInDb:     null,
     _participantsInTab:    null,
+    _originalRrule:        null,
 
     _FRMWIDG_BASICDATA:  0,
     _FRMWIDG_PARTICIP:   1,
@@ -68,6 +69,15 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         }
 
         if (this.id > 0) {
+            if (!this._originalRrule
+                    && this.sendData['rruleFreq']
+                    && null === this._multipleEvents) {
+                // The recurrence has been added by this edit. We set
+                // multipleEvents to true so the server correctly adds it and
+                // the user won't get prompted.
+                this._multipleEvents = true;
+            }
+
             if (this.sendData['rruleFreq'] && null === this._multipleEvents) {
                 // If the event has recurrence ask what to modify
                 this.showEventSelector('Edit', "submitForm");
@@ -576,5 +586,14 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             phpr.DataStore.deleteData({url: relatedUrl});
             phpr.DataStore.deleteData({url: tagUrl});
         }
+    },
+
+    getFormData:function() {
+        // Summary:
+        //    Override this method to save whether we have a recurrence set on
+        //    the server.
+        phpr.Calendar.Form.superclass.getFormData.apply(this);
+        var data = phpr.DataStore.getData({url: this._url});
+        this._originalRrule = data[0].rrule;
     }
 });

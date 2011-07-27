@@ -45,17 +45,17 @@ class Phprojekt
     /**
      * The second part of the version number.
      */
-    const VERSION_MINOR = 1;
+    const VERSION_MINOR = 0;
 
     /**
      * The third part of the version number.
      */
-    const VERSION_RELEASE = 0;
+    const VERSION_RELEASE = 6;
 
     /**
      * The extra part of the version number.
      */
-    const VERSION_EXTRA = 'dev';
+    const VERSION_EXTRA = null;
 
     /**
      * Name of the Registry for current project.

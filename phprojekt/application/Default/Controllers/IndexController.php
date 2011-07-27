@@ -143,7 +143,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    public function init()
+    public function preDispatch()
     {
         $isLoggedIn = Phprojekt_Auth::isLoggedIn();
         if ($isLoggedIn) {
@@ -153,10 +153,16 @@ class IndexController extends Zend_Controller_Action
             // User not logged in, display login page
             // If is a GET, show the index page with isLogged false
             // If is a POST, send message in json format
-            if (!$this->getFrontController()->getRequest()->isGet()) {
-                throw new Phprojekt_PublishedException(Phprojekt_Auth::NOT_LOGGED_IN_MESSAGE, 500);
+            if ($this->getRequest()->getActionName() == 'index') {
+                $isLoggedIn = false;
+                if ($this->getRequest()->getModuleName() != 'Default') {
+                    $this->_forward('index', 'Default', 'Default', null);
+                }
+            } else {
+                $this->getResponse()->setRawHeader('HTTP/1.1 401 Authorization Required');
+                $this->getResponse()->sendHeaders();
+                exit;
             }
-            $isLoggedIn = false;
         }
 
         // This is a work around as we cannot set this in the front
