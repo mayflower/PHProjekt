@@ -161,20 +161,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $cache = Phprojekt::getInstance()->getCache();
         if ($this->_requestedId == 0) {
             return $this;
-        } else if ($this->_requestedId > 1) {
-            if (!($object = $cache->load(self::CACHE_NAME))) {
-                $tree   = new Phprojekt_Tree_Node_Database($this->_activeRecord, 1);
-                $object = $tree->setup();
-            }
-
-            $tree = $object->getNodeById($this->_requestedId);
-            if (null === $tree) {
-                throw new Phprojekt_Tree_Node_Exception('Requested node not found');
-            }
-            $tree->_parentNode = null;
-
-            return $this->applyRights($tree);
-        } else if (!($object = $cache->load(self::CACHE_NAME))) {
+        } else {
             $database = $this->getActiveRecord()->getAdapter();
             $table    = $this->getActiveRecord()->getTableName();
             $select   = $database->select();
@@ -223,6 +210,28 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         }
 
         return $this->applyRights($object);
+    }
+
+    /**
+     * Returns a set of records of the given active record that are associated
+     * with the selected tree nodes.
+     *
+     * For example, you can get all todo recrods of projects in a given subtree.
+     *
+     * @param $model The active record used to get the data
+     * @param $count How many records should be retreived. null if unlimited.
+     * @param $offset The initial offset. null for no offset.
+     */
+    public function getRecordsFor(Phprojekt_ActiveRecord_Abstract $model, $count = null, $offset = null)
+    {
+        $projectIds = array_keys($this->_index);
+        if (count($projectIds) == 0) {
+            return array();
+        } else {
+            $database   = $model->getAdapter();
+            $where = $database->quoteInto('project_id IN (?)', $projectIds);
+            return $model->fetchAll($where, null, $count, $offset);
+        }
     }
 
     /**
