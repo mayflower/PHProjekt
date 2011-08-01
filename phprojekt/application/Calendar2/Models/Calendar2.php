@@ -21,6 +21,7 @@
  * @version    Release: @package_version@
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
+require_once 'SabreDAV/Sabre/VObject/includes.php';
 
 /**
  * Calendar2 model class.
@@ -198,6 +199,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
             $now = new Datetime('now', new DateTimeZone('UTC'));
             $this->lastModified = $now->format('Y-m-d H:i:s');
+            if (!$this->uri) {
+                $this->uri = $this->uid;
+            }
             parent::save();
             $this->_saveParticipantData();
             $this->_updateRights();
@@ -289,6 +293,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $series->save();
 
         $this->_data['rrule'] = null;
+        $this->_data['recurrenceId'] = $this->_originalStart->format('Y-m-d h:i:s');
         $this->_isFirst       = true;
         $this->_saveToNewRow();
 
@@ -427,6 +432,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $this->_isFirst             = true;
     }
 
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
+    {
+        return Phprojekt_ActiveRecord_Abstract::fetchAll($where, $order, $count, $offset, $select, $join);
+    }
+
     /**
      * Get all events in the period that the currently active user participates
      * in. Both given times are inclusive.
@@ -519,6 +529,20 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     {
         $date = new Datetime($recurrenceId, new DateTimeZone('UTC'));
         return $this->findOccurrence($id, $date);
+    }
+
+    /**
+     * Returns an array of all calendar objects for the given uid.
+     *
+     * @param string The uid of the calendar collection
+     *
+     * @return array of Calendar2_Models_Calendar2 All objects belonging to that uid
+     */
+    public function fetchByUid($uid)
+    {
+        $db    = Phprojekt::getInstance()->getDb();
+        $where = $db->quoteInto('uid = ?', $uid);
+        return Phprojekt_ActiveRecord_Abstract::fetchAll($where);
     }
 
     /**
@@ -864,6 +888,41 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
     {
         $this->_notify(null, $method);
+    }
+
+    /**
+     * Returns a Sabre_Vobject_Component representing this object.
+     *
+     * @return Sabre_VObject_Component representing $this.
+     */
+    public function asVObject()
+    {
+        $vobject = new Sabre_VObject_Component('vevent');
+        $vobject->add('summary', $this->summary);
+        $vobject->add('description', $this->description);
+        $vobject->add('comment', $this->comments);
+        $vobject->add('location', $this->location);
+        if ($this->recurrenceId) {
+            $recurrenceId = new Datetime($this->recurrenceId);
+            $vobject->add('recurrence-id', $recurrenceId->format('Ymd\This\Z'));
+        } else if ($this->rrule) {
+            $vobject->add('rrule', $this->rrule);
+            $exdates = array();
+            foreach ($this->getExcludedDates() as $d) {
+                $exdates[] = $d->format('Ymd\This\Z');
+            }
+            if (!empty($exdates)) {
+                $vobject->add('exdate', implode(',', $exdates));
+            }
+        }
+        $start = new DateTime($this->start);
+        $vobject->add('dtstart', $start->format('Ymd\This\Z'));
+        $end = new DateTime($this->end);
+        $vobject->add('dtend', $end->format('Ymd\This\Z'));
+        $lastMod = new DateTime($this->lastModified);
+        $vobject->add('dtstamp', $lastMod->format('Ymd\This\Z'));
+        $vobject->add('uid', $this->uid);
+        return $vobject;
     }
 
     /**
