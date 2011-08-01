@@ -178,7 +178,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         }
 
         if ($this->_isFirst) {
-            $endOfLast = $this->getRruleHelper()->getEndOfLastOccurrence();
+            $endOfLast = $this->getRruleHelper()->getUpperTimeBoundary();
             if ($endOfLast) {
                 $this->lastEnd = $endOfLast->format('Y-m-d H:i:s');
             } else {

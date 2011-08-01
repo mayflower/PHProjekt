@@ -131,29 +131,50 @@ class Calendar2_Helper_Rrule
         // php datePeriod also excludes the last occurence. we need it, so
         // we add one second.
         $until->modify('+1 second');
-        $period = new DatePeriod(
-            $this->_first,
-            $this->_rrule['FREQINTERVAL'],
-            $until
-        );
 
-        $ret = array();
-        foreach ($period as $date) {
-            // Work around http://bugs.php.net/bug.php?id=52454
-            // 'Relative dates and getTimestamp increments by one day'
-            $datestring = $date->format('Y-m-d H:i:s');
-            $date       = new Datetime($datestring, new DateTimeZone('UTC'));
-
-            $ts = $date->getTimestamp();
-            if ($startTs <= $ts + $this->_duration
-                    && $ts <= $endTs
-                    && !in_array($date, $this->_exceptions)) {
-                $ret[] = new Datetime($datestring, new DateTimeZone('UTC'));
-            } else if ($ts > $endTs) {
-               break;
+        $datePeriods = array();
+        if ($this->_rrule['ORIGINAL_FREQ'] != 'WEEKLY' || empty($this->_rrule['BYDAY'])) {
+            $datePeriods[] = new DatePeriod(
+                $this->_first,
+                $this->_rrule['FREQINTERVAL'],
+                $until
+            );
+        } else {
+            $first  = clone $this->_first;
+            $oneDay = new DateInterval('P1D');
+            for ($i = 0; $i < 7; $i++) {
+                $day = strtoupper(substr($first->format('D'), 0, 2));
+                if (in_array($day, $this->_rrule['BYDAY'])) {
+                    $datePeriods[] = new DatePeriod(
+                        $first,
+                        $this->_rrule['FREQINTERVAL'],
+                        $until
+                    );
+                }
+                $first->add($oneDay);
             }
         }
-        return $ret;
+
+        $dates = array();
+
+        foreach ($datePeriods as $period) {
+            foreach ($period as $date){
+                // Work around http://bugs.php.net/bug.php?id=52454
+                // 'Relative dates and getTimestamp increments by one day'
+                $datestring = $date->format('Y-m-d H:i:s');
+                $date       = new Datetime($datestring, new DateTimeZone('UTC'));
+
+                $ts = $date->getTimestamp();
+                if ($startTs <= $ts + $this->_duration
+                        && $ts <= $endTs
+                        && !in_array($date, $this->_exceptions)) {
+                    $dates[] = new Datetime($datestring, new DateTimeZone('UTC'));
+                } else if ($ts > $endTs) {
+                   break;
+                }
+            }
+        }
+        return $dates;
     }
 
     /**
@@ -222,7 +243,9 @@ class Calendar2_Helper_Rrule
         if (is_null($until)) {
             return false;
         } else {
-            return $datetime->getTimestamp() == $until->getTimestamp();
+            $events = $this->getDatesInPeriod($this->_first, $until);
+            $last   = $events[count($events) - 1];
+            return $datetime->getTimestamp() == $last->getTimestamp();
         }
     }
 
@@ -235,7 +258,19 @@ class Calendar2_Helper_Rrule
      */
     public function isFirstOccurrence(Datetime $datetime)
     {
-        return $this->_first == $datetime;
+        if ($this->_rrule['ORIGINAL_FREQ'] != 'WEEKLY' || empty($this->_rrule['BYDAY'])) {
+            return $this->_first == $datetime;
+        } else {
+            $first = clone $this->_first;
+            $oneDay = new DateInterval('P1D');
+            for ($i = 0; $i < 7; $i++) {
+                $day = strtoupper(substr($first->format('D'), 0, 2));
+                if (in_array($day, $this->_rrule['BYDAY'])) {
+                    return $datetime->getTimestamp() == $first->getTimestamp();
+                }
+            }
+            throw new Exception('Could not find first occurrence. Invalid BYDAY?');
+        }
     }
 
     /**
@@ -257,21 +292,37 @@ class Calendar2_Helper_Rrule
             return null;
         }
 
-        $occurrence = clone $datetime;
-        do {
-            $occurrence->add($this->_rrule['FREQINTERVAL']);
-        } while (in_array($occurrence, $this->_exceptions));
+        $datetime = clone $datetime;
 
-        $until = $this->_rrule['UNTIL'];
-        if (!is_null($until)) {
-            $untilTs = $until->getTimestamp();
-            $occurrenceTs = $occurrence->getTimestamp();
-            if ($untilTs < $occurrenceTs) {
-                return null;
+        if ($this->_rrule['ORIGINAL_FREQ'] == 'WEEKLY' && !empty($this->_rrule['BYDAY'])) {
+            $oneDay = new DateInterval('P1D');
+            for ($i = 0; $i <= 7; $i++) {
+                $datetime->add($oneDay);
+                if ($datetime->getTimestamp > $this->_rrule['UNTIL']->getTimestamp()) {
+                    // The event doesn't occur any more.
+                    return null;
+                }
+                $day = strtoupper(substr($datetime->format('D'), 0, 2));
+                if (in_array($day, $this->_rrule['BYDAY'])) {
+                    if (in_array($datetime, $this->_exceptions)) {
+                        $i = 0; // Give it another full week from here.
+                    } else {
+                        return $datetime;
+                    }
+                }
             }
-        }
+            throw new Exception('Unable to find next occurrence. Invalid BYDAY?');
+        } else {
+            do {
+                $datetime->add($this->_rrule['FREQINTERVAL']);
+            } while (in_array($datetime, $this->_exceptions));
 
-        return $occurrence;
+            $until = $this->_rrule['UNTIL'];
+            if (!is_null($until) && $until->getTimestamp() < $datetime->getTimestamp()) {
+                    return null;
+            }
+            return $datetime;
+        }
     }
     /**
      * Returns the last occurrence before the given datetime
@@ -292,12 +343,36 @@ class Calendar2_Helper_Rrule
             return null;
         }
 
-        $occurrence = clone $datetime;
-        do {
-            $occurrence->sub($this->_rrule['FREQINTERVAL']);
-        } while (in_array($occurrence, $this->_exceptions));
+        $datetime = clone $datetime;
 
-        return $occurrence;
+        if ($this->_rrule['ORIGINAL_FREQ'] == 'WEEKLY' && !empty($this->_rrule['BYDAY'])) {
+            $oneDay = new DateInterval('P1D');
+            for ($i = 0; $i < 7; $i++) {
+                $datetime->sub($oneDay);
+                if ($datetime->getTimestamp < $this->_first->getTimestamp()) {
+                    // The event doesn't occur any more.
+                    return null;
+                }
+                $day = strtoupper(substr($datetime->format('D'), 0, 2));
+                if (in_array($day, $this->_rrule['BYDAY'])) {
+                    if (in_array($datetime, $this->_exceptions)) {
+                        $i = 0; // Give it another full week from here.
+                    } else {
+                        return $datetime;
+                    }
+                }
+            }
+            throw new Exception('Unable to find next occurrence. Invalid BYDAY?');
+        } else {
+            do {
+                $datetime->sub($this->_rrule['FREQINTERVAL']);
+            } while (in_array($datetime, $this->_exceptions));
+
+            if ($datetime->getTimestamp() < $this->_first->getTimestamp()) {
+                return null;
+            }
+            return $datetime;
+        }
     }
 
     /**
@@ -324,21 +399,43 @@ class Calendar2_Helper_Rrule
                 break;
         }
 
-        $wordsFromFreq = array(
-            'DAILY'   => 'day',
-            'WEEKLY'  => 'week',
-            'MONTHLY' => 'month',
-            'YEARLY'  => 'year'
-        );
-        $freq = self::_extractFromRrule($this->_rruleString, 'FREQ');
-        if (!array_key_exists($freq, $wordsFromFreq)) {
-            // This should be found on __construct
-            throw new Exception('No valid FREQ found in rrule');
-        }
-        $ret .= $wordsFromFreq[$freq];
+        if (empty($this->_rrule['BYDAY'])) {
+            $wordsFromFreq = array(
+                'DAILY'   => 'day',
+                'WEEKLY'  => 'week',
+                'MONTHLY' => 'month',
+                'YEARLY'  => 'year'
+            );
+            $freq = self::_extractFromRrule($this->_rruleString, 'FREQ');
+            if (!array_key_exists($freq, $wordsFromFreq)) {
+                // This should be found on __construct
+                throw new Exception('No valid FREQ found in rrule');
+            }
+            $ret .= $wordsFromFreq[$freq];
 
-        if ($interval > 2) {
-            $ret .= 's';
+            if ($interval > 2) {
+                $ret .= 's';
+            }
+        } else {
+            $realDays = array(
+                'MO' => 'Monday',
+                'TU' => 'Tuesday',
+                'WE' => 'Wednesday',
+                'TH' => 'Thursday',
+                'FR' => 'Friday',
+                'SA' => 'Saturday',
+                'SU' => 'Sunday'
+            );
+            $days = $this->_rrule['BYDAY'];
+            $day  = array_shift($days);
+            $ret .= $realDays[$day];
+            $count = count($days);
+            for ($i = 0; $i < $count - 1; $i++) {
+                $ret .= ', ' . $realDays[$days[$i]];
+            }
+            if ($count > 0) {
+                $ret .= ' and ' . $realDays[$days[$count - 1]];
+            }
         }
 
         if (!is_null($this->_rrule['UNTIL'])) {
@@ -349,11 +446,12 @@ class Calendar2_Helper_Rrule
     }
 
     /**
-     * Return the end of the last occurrence of this event.
+     * Returns a point in time that lies after the last event of this occurrence has finished.
+     * The point of this is to get an upper bound for efficiency reasons.
      *
-     * @return DateTime End of the last occurrence or null if infinite
+     * @return DateTime Some time after the last event has finished.
      */
-    public function getEndOfLastOccurrence()
+    public function getUpperTimeBoundary()
     {
         if (empty($this->_rrule)) {
             // No recurrence at all
@@ -387,9 +485,11 @@ class Calendar2_Helper_Rrule
         }
 
         $ret = array();
-        $ret['INTERVAL']  = self::_parseInterval($rrule);
-        $ret['FREQ']      = self::_parseFreq($rrule);
-        $ret['UNTIL']     = self::_parseUntil($rrule);
+        $ret['INTERVAL']      = self::_parseInterval($rrule);
+        $ret['ORIGINAL_FREQ'] = self::_extractFromRrule($rrule, 'FREQ');
+        $ret['FREQ']          = self::_parseFreq($rrule);
+        $ret['UNTIL']         = self::_parseUntil($rrule);
+        $ret['BYDAY']         = self::_parseByDay($rrule);
 
         // Apply FREQ INTERVAL times
         $tmp    = new Datetime();
@@ -462,6 +562,15 @@ class Calendar2_Helper_Rrule
                 new DateTimeZone('UTC')
             );
             return $return;
+        }
+        return null;
+    }
+
+    private static function _parseByDay($rrule)
+    {
+        $byday = self::_extractFromRrule($rrule, 'BYDAY');
+        if (!empty($byday)) {
+            return explode(',', $byday);
         }
         return null;
     }
