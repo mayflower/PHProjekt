@@ -359,6 +359,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         this._meta = phpr.DataStore.getMetaData({url: this._url});
         var data   = phpr.DataStore.getData({url: this._url});
+
         if (data.length === 0) {
             this._formNode.set('content', phpr.drawEmptyMessage('The Item was not found'));
         } else {
@@ -849,8 +850,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                                 new phpr.handleResponse('serverFeedback', data);
                             }
                             if (data.type == 'success') {
-                                this.publish("updateCacheData");
-                                this.publish("setUrlHash", [phpr.module]);
+                                // reload the page and trigger the form load
+                                phpr.pageManager.changeState({
+                                    moduleName: phpr.module
+                                });
+                                phpr.pageManager.changeState({
+                                    moduleName: phpr.module,
+                                    id: this.id
+                                });
                             }
                         })
                     });
@@ -875,8 +882,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                         onSuccess: dojo.hitch(this, function(data) {
                             new phpr.handleResponse('serverFeedback', data);
                             if (data.type == 'success') {
-                                this.publish("updateCacheData");
-                                this.publish("setUrlHash", [phpr.module]);
+                                // reload the page and trigger the form load
+                                phpr.pageManager.changeState({
+                                    moduleName: phpr.module
+                                });
+                                phpr.pageManager.changeState({
+                                    moduleName: phpr.module,
+                                    id: this.id
+                                });
                             }
                         })
                     });
