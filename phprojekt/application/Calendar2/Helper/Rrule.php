@@ -133,6 +133,7 @@ class Calendar2_Helper_Rrule
         $until->modify('+1 second');
 
         $datePeriods = array();
+        $dates = array();
         if ($this->_rrule['ORIGINAL_FREQ'] != 'WEEKLY' || empty($this->_rrule['BYDAY'])) {
             $datePeriods[] = new DatePeriod(
                 $this->_first,
@@ -140,6 +141,9 @@ class Calendar2_Helper_Rrule
                 $until
             );
         } else {
+            if ($firstTs > $startTs && $firstTs < $endTs) {
+                $dates[] = clone $this->_first;
+            }
             $first  = clone $this->_first;
             $oneDay = new DateInterval('P1D');
             for ($i = 0; $i < 7; $i++) {
@@ -155,7 +159,6 @@ class Calendar2_Helper_Rrule
             }
         }
 
-        $dates = array();
 
         foreach ($datePeriods as $period) {
             foreach ($period as $date){
