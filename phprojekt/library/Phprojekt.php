@@ -475,7 +475,7 @@ class Phprojekt
         Zend_Db_Table_Abstract::setDefaultMetadataCache($this->_cache);
 
         // Use for Debug only
-        //Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
+        Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
 
         // Check Logs
         $this->getLog();
@@ -546,11 +546,7 @@ class Phprojekt
         // Define general error handler
         set_error_handler(Array("Phprojekt", "errorHandler"));
 
-        /* initialize PHPRojekt Extensions */
-        $extensions = new Phprojekt_Extensions(PHPR_CORE_PATH);
-
-        /* call init method on every extension */
-        $extensions->init();
+        $front->registerPlugin(new Phprojekt_ExtensionsPlugin());
     }
 
     /**
