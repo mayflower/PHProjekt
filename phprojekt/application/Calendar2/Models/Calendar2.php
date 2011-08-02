@@ -202,15 +202,24 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             if (!$this->uri) {
                 $this->uri = $this->uid;
             }
+
+            $start = new Datetime(
+                '@' . Phprojekt_Converter_Time::userToUtc($this->start)
+            );
+            // This is here to fix a special case where P6 interprets things different from iCalendar. Assume a event
+            // starts on tuesdays, has bi-weekly recurrence and BYDAY monday and wednesday. P6 will have the tuesday,
+            // the wednesday after that and monday on the next week, wednesday the week after that, etc. Caldav will
+            // have one week pause and then monday and wednesday in the same week.
+            // TODO: Remove this after we changed to a predicate-based generation of events.
+            if (strpos($this->rrule, ';BYDAY=') && ! strpos($this->rrule, ';WKST=')) {
+                $this->rrule = $this->rrule . ';WKST=' . strtoupper(substr($start->format('D'), 0, 2));
+            }
             parent::save();
             $this->_saveParticipantData();
             $this->_updateRights();
 
             // If the start time has changed, we have to adjust all the excluded
             // dates.
-            $start = new Datetime(
-                '@' . Phprojekt_Converter_Time::userToUtc($this->start)
-            );
             if (!$isNew && $start != $this->_originalStart) {
                 $delta = $this->_originalStart->diff($start);
                 $db = $this->getAdapter();
