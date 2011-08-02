@@ -8,8 +8,11 @@
         @import "<?php echo $this->webPath; ?>css/themes/phprojekt/phprojektCssCompiler.php";
     </style>
     <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/dojo/dojo.js"></script>
-    <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/dojo/mydojo.js"></script>
     <script type="text/javascript">
+        dojo.require('dojo.parser');
+        dojo.require('dijit.layout.BorderContainer');
+        dojo.require('dijit.layout.ContentPane');
+        dojo.require('dijit.Toolbar');
         function getMaxHeight() {
             var availHeight = 0;
 
