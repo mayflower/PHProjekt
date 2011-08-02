@@ -107,12 +107,12 @@ dojo.declare("phpr.Calendar2.ViewWeekList", phpr.Calendar2.DefaultView, {
     setWeekDays:function() {
         // Summary:
         //    Fills the weekDays array with all the dates of the selected week in string format.
-        var selectedDate = phpr.Date.isoDateTojsDate(this._date);
+        var selectedDate = phpr.date.isoDateTojsDate(this._date);
         var dayTemp;
 
         for (var i = 0; i < 7; i ++) {
             dayTemp           = dojo.date.add(selectedDate, 'day', i + 1 - selectedDate.getDay());
-            this._weekDays[i] = phpr.Date.getIsoDate(dayTemp);
+            this._weekDays[i] = phpr.date.getIsoDate(dayTemp);
         }
     },
 
@@ -124,7 +124,7 @@ dojo.declare("phpr.Calendar2.ViewWeekList", phpr.Calendar2.DefaultView, {
         for (var i = 0; i < 7; i ++) {
             var index                            = (i + 1) < 7 ? i + 1 : 0;
             this._header['days'][i]              = new Array();
-            this._header['days'][i]['dayAbbrev'] = phpr.Date.getShortTranslateWeekDay(index);
+            this._header['days'][i]['dayAbbrev'] = phpr.date.getShortTranslateWeekDay(index);
             this._header['days'][i]['date']      = this._weekDays[i];
         }
     },

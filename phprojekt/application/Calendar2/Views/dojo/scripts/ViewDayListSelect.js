@@ -176,12 +176,12 @@ dojo.declare("phpr.Calendar2.ViewDayListSelect", phpr.Calendar2.DefaultView, {
                 var singleDayEvent = false;
 
                 // Split datetime in date and time
-                var dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['start']);
-                content[event]['startDate'] = phpr.Date.getIsoDate(dateTime);
-                content[event]['startTime'] = phpr.Date.getIsoTime(dateTime);
-                dateTime = phpr.Date.isoDatetimeTojsDate(content[event]['end']);
-                content[event]['endDate'] = phpr.Date.getIsoDate(dateTime);
-                content[event]['endTime'] = phpr.Date.getIsoTime(dateTime);
+                var dateTime = phpr.date.isoDatetimeTojsDate(content[event]['start']);
+                content[event]['startDate'] = phpr.date.getIsoDate(dateTime);
+                content[event]['startTime'] = phpr.date.getIsoTime(dateTime);
+                dateTime = phpr.date.isoDatetimeTojsDate(content[event]['end']);
+                content[event]['endDate'] = phpr.date.getIsoDate(dateTime);
+                content[event]['endTime'] = phpr.date.getIsoTime(dateTime);
 
                 // Process summary and note
                 var summary = this.htmlEntities(content[event]['summary']);
