@@ -845,7 +845,7 @@ class IndexController extends Zend_Controller_Action
         try {
             Zend_Session::writeClose(false);
         } catch (Exception $error) {
-            Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->message);
+            Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->getMessage());
         }
 
         $notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification_FrontendMessage');
@@ -871,7 +871,7 @@ class IndexController extends Zend_Controller_Action
             $message    = Phprojekt::getInstance()->translate(self::DISABLE_FRONTEND_MESSAGES_TRUE_TEXT);
             $resultType = 'success';
         } catch (Exception $error) {
-            Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->message);
+            Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->getMessage());
             $message    = Phprojekt::getInstance()->translate(self::DISABLE_FRONTEND_MESSAGES_FALSE_TEXT);
             $resultType = 'error';
         }
