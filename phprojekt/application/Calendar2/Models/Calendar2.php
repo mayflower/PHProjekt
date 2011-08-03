@@ -926,23 +926,24 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $vobject->add('recurrence-id', $recurrenceId->format('Ymd\This\Z'));
         } else if ($this->rrule) {
             $vobject->add('rrule', $this->rrule);
-            // The problem here ist that if we change a single occurrence of an recurring event in P6, we mark the
-            // occurrence as excluded in the original event. In caldav, the exclusion takes precedence over the
-            // extracted event, which means that events that have been changed will not show up in caldav clients.
-            // To go around this, we filter these dates out of the excluded dates.
-            $subEvents = $this->fetchByUid($this->uid);
-            $subEventDates = array();
-            foreach ($subEvents as $e) {
-                if ($e->recurrenceId) {
-                    $dt = new Datetime($e->recurrenceId);
-                    $subEventDates[] = $dt->format('Ymd\This\Z');
-                }
-            }
+            $exdates = array();
             foreach ($this->getExcludedDates() as $d) {
                 $exdates[] = $d->format('Ymd\This\Z');
             }
-            $exdates = array_diff($exdates, $subEventDates);
             if (!empty($exdates)) {
+                // The problem here ist that if we change a single occurrence of an recurring event in P6, we mark the
+                // occurrence as excluded in the original event. In caldav, the exclusion takes precedence over the
+                // extracted event, which means that events that have been changed will not show up in caldav clients.
+                // To go around this, we filter these dates out of the excluded dates.
+                $subEvents = $this->fetchByUid($this->uid);
+                $subEventDates = array();
+                foreach ($subEvents as $e) {
+                    if ($e->recurrenceId) {
+                        $dt = new Datetime($e->recurrenceId);
+                        $subEventDates[] = $dt->format('Ymd\This\Z');
+                    }
+                }
+                $exdates = array_diff($exdates, $subEventDates);
                 $vobject->add('exdate', implode(',', $exdates));
             }
         }
