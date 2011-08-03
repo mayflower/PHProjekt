@@ -141,7 +141,7 @@ class Calendar2_Helper_Rrule
                 $until
             );
         } else {
-            if ($firstTs > $startTs && $firstTs < $endTs) {
+            if ($firstTs >= $startTs && $firstTs <= $endTs) {
                 $dates[] = clone $this->_first;
             }
             $first  = clone $this->_first;
@@ -300,7 +300,8 @@ class Calendar2_Helper_Rrule
             $oneDay = new DateInterval('P1D');
             for ($i = 0; $i <= 7; $i++) {
                 $datetime->add($oneDay);
-                if ($datetime->getTimestamp > $this->_rrule['UNTIL']->getTimestamp()) {
+                if (!is_null($this->_rrule['UNTIL'])
+                        && $datetime->getTimestamp() > $this->_rrule['UNTIL']->getTimestamp()) {
                     // The event doesn't occur any more.
                     return null;
                 }
