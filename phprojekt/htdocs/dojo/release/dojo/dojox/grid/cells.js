@@ -5,9 +5,4 @@
 */
 
 
-if(!dojo._hasResource["dojox.grid.cells"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.grid.cells"] = true;
-dojo.provide("dojox.grid.cells");
-dojo.require("dojox.grid.cells._base");
-
-}
+dojo._hasResource["dojox.grid.cells"]||(dojo._hasResource["dojox.grid.cells"]=!0,dojo.provide("dojox.grid.cells"),dojo.require("dojox.grid.cells._base"));

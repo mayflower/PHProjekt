@@ -5,51 +5,5 @@
 */
 
 
-if(!dojo._hasResource["dojox.lang.aspect.tracer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.lang.aspect.tracer"] = true;
-dojo.provide("dojox.lang.aspect.tracer");
-
-(function(){
-	var aop = dojox.lang.aspect;
-	
-	var Tracer = function(/*Boolean*/ grouping){
-		this.method   = grouping ? "group" : "log";
-		if(grouping){
-			this.after = this._after;
-		}
-	};
-	dojo.extend(Tracer, {
-		before: function(/*arguments*/){
-			var context = aop.getContext(), joinPoint = context.joinPoint,
-				args = Array.prototype.join.call(arguments, ", ");
-			console[this.method](context.instance, "=>", joinPoint.targetName + "(" + args + ")");
-		},
-		afterReturning: function(retVal){
-			var joinPoint = aop.getContext().joinPoint;
-			if(typeof retVal != "undefined"){
-				console.log(joinPoint.targetName + "() returns:", retVal);
-			}else{
-				console.log(joinPoint.targetName + "() returns");
-			}
-		},
-		afterThrowing: function(excp){
-			console.log(aop.getContext().joinPoint.targetName + "() throws:", excp);
-		},
-		_after: function(excp){
-			console.groupEnd();
-		}
-	});
-	
-	aop.tracer = function(/*Boolean*/ grouping){
-		// summary:
-		//		Returns an object, which can be used to trace calls with Firebug's console.
-		//		Prints argument, a return value, or an exception.
-		//
-		// grouping:
-		//		The flag to group output. If true, indents embedded console messages.
-	
-		return new Tracer(grouping);	// Object
-	};
-})();
-
-}
+dojo._hasResource["dojox.lang.aspect.tracer"]||(dojo._hasResource["dojox.lang.aspect.tracer"]=!0,dojo.provide("dojox.lang.aspect.tracer"),function(){var c=dojox.lang.aspect,b=function(a){this.method=a?"group":"log";if(a)this.after=this._after};dojo.extend(b,{before:function(){var a=c.getContext(),d=a.joinPoint,b=Array.prototype.join.call(arguments,", ");console[this.method](a.instance,"=>",d.targetName+"("+b+")")},afterReturning:function(a){var b=c.getContext().joinPoint;typeof a!="undefined"?console.log(b.targetName+
+"() returns:",a):console.log(b.targetName+"() returns")},afterThrowing:function(a){console.log(c.getContext().joinPoint.targetName+"() throws:",a)},_after:function(){console.groupEnd()}});c.tracer=function(a){return new b(a)}}());

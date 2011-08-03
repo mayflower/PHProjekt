@@ -5,41 +5,5 @@
 */
 
 
-if(!dojo._hasResource["dojox.io.xhrScriptPlugin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.io.xhrScriptPlugin"] = true;
-dojo.provide("dojox.io.xhrScriptPlugin");
-dojo.require("dojox.io.xhrPlugins");
-dojo.require("dojo.io.script");
-dojo.require("dojox.io.scriptFrame");
-
-dojox.io.xhrScriptPlugin = function(/*String*/url, /*String*/callbackParamName, /*Function?*/httpAdapter){
-	// summary:
-	//		Adds the script transport (JSONP) as an XHR plugin for the given site. See
-	//		dojox.io.script for more information on the transport. Note, that JSONP
-	//		is *not* a secure transport, by loading data from a third-party site using JSONP
-	//		the site has full access to your JavaScript environment.
-	//	url:
-	//		Url prefix of the site which can handle JSONP requests.
-	// 	httpAdapter: This allows for adapting HTTP requests that could not otherwise be
-	// 		sent with JSONP, so you can use a convention for headers and PUT/DELETE methods.
-	dojox.io.xhrPlugins.register(
-		"script",
-		function(method,args){
-			 return args.sync !== true &&
-				(method == "GET" || httpAdapter) &&
-				(args.url.substring(0,url.length) == url);
-		},
-		function(method,args,hasBody){
-			var send = function(){
-				args.callbackParamName = callbackParamName;
-				if(dojo.body()){
-					args.frameDoc = "frame" + Math.random();
-				}
-				return dojo.io.script.get(args);
-			}
-			return (httpAdapter ? httpAdapter(send, true) : send)(method, args, hasBody); // use the JSONP transport
-		}
-	);
-};
-
-}
+if(!dojo._hasResource["dojox.io.xhrScriptPlugin"])dojo._hasResource["dojox.io.xhrScriptPlugin"]=!0,dojo.provide("dojox.io.xhrScriptPlugin"),dojo.require("dojox.io.xhrPlugins"),dojo.require("dojo.io.script"),dojo.require("dojox.io.scriptFrame"),dojox.io.xhrScriptPlugin=function(b,f,c){dojox.io.xhrPlugins.register("script",function(d,a){return a.sync!==!0&&(d=="GET"||c)&&a.url.substring(0,b.length)==b},function(d,a,b){var e=function(){a.callbackParamName=f;if(dojo.body())a.frameDoc="frame"+Math.random();
+return dojo.io.script.get(a)};return(c?c(e,!0):e)(d,a,b)})};

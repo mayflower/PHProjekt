@@ -5,41 +5,5 @@
 */
 
 
-if(!dojo._hasResource["dojox.grid.enhanced.plugins.Dialog"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.grid.enhanced.plugins.Dialog"] = true;
-dojo.provide("dojox.grid.enhanced.plugins.Dialog");
-
-dojo.require("dijit.Dialog");
-dojo.require("dojo.window");
-
-dojo.declare("dojox.grid.enhanced.plugins.Dialog", dijit.Dialog, {
-	refNode: null,
-	_position: function(){
-		if(this.refNode && !this._relativePosition){
-			var refPos = dojo.position(dojo.byId(this.refNode)),
-				thisPos = dojo.position(this.domNode),
-				viewPort = dojo.window.getBox();
-			if(refPos.x < 0){
-				refPos.x = 0;
-			}
-			if(refPos.x + refPos.w > viewPort.w){
-				refPos.w = viewPort.w - refPos.x;
-			}
-			if(refPos.y < 0){
-				refPos.y = 0;
-			}
-			if(refPos.y + refPos.h > viewPort.h){
-				refPos.h = viewPort.h - refPos.y;
-			}
-			refPos.x = refPos.x + refPos.w / 2 - thisPos.w / 2;
-			refPos.y = refPos.y + refPos.h / 2 - thisPos.h / 2;
-			if(refPos.x >= 0 && refPos.x + thisPos.w <= viewPort.w &&
-				refPos.y >= 0 && refPos.y + thisPos.h <= viewPort.h){
-				this._relativePosition = refPos;
-			}
-		}
-		this.inherited(arguments);
-	}
-});
-
-}
+dojo._hasResource["dojox.grid.enhanced.plugins.Dialog"]||(dojo._hasResource["dojox.grid.enhanced.plugins.Dialog"]=!0,dojo.provide("dojox.grid.enhanced.plugins.Dialog"),dojo.require("dijit.Dialog"),dojo.require("dojo.window"),dojo.declare("dojox.grid.enhanced.plugins.Dialog",dijit.Dialog,{refNode:null,_position:function(){if(this.refNode&&!this._relativePosition){var a=dojo.position(dojo.byId(this.refNode)),c=dojo.position(this.domNode),b=dojo.window.getBox();if(a.x<0)a.x=0;if(a.x+a.w>b.w)a.w=b.w-
+a.x;if(a.y<0)a.y=0;if(a.y+a.h>b.h)a.h=b.h-a.y;a.x=a.x+a.w/2-c.w/2;a.y=a.y+a.h/2-c.h/2;if(a.x>=0&&a.x+c.w<=b.w&&a.y>=0&&a.y+c.h<=b.h)this._relativePosition=a}this.inherited(arguments)}}));

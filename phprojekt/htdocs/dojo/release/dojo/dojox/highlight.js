@@ -5,9 +5,4 @@
 */
 
 
-if(!dojo._hasResource["dojox.highlight"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.highlight"] = true;
-dojo.provide("dojox.highlight");
-dojo.require("dojox.highlight._base");
-
-}
+dojo._hasResource["dojox.highlight"]||(dojo._hasResource["dojox.highlight"]=!0,dojo.provide("dojox.highlight"),dojo.require("dojox.highlight._base"));

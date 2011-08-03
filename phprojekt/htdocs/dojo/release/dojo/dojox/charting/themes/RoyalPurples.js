@@ -5,22 +5,4 @@
 */
 
 
-if(!dojo._hasResource["dojox.charting.themes.RoyalPurples"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.themes.RoyalPurples"] = true;
-dojo.provide("dojox.charting.themes.RoyalPurples");
-dojo.require("dojox.charting.Theme");
-
-(function(){
-	var dxc=dojox.charting;
-	dxc.themes.RoyalPurples=new dxc.Theme({
-		colors: [
-			"#473980",
-			"#685aa7",
-			"#7970b3",
-			"#231c3f",
-			"#7267ae"
-		]
-	});
-})();
-
-}
+dojo._hasResource["dojox.charting.themes.RoyalPurples"]||(dojo._hasResource["dojox.charting.themes.RoyalPurples"]=!0,dojo.provide("dojox.charting.themes.RoyalPurples"),dojo.require("dojox.charting.Theme"),function(){var a=dojox.charting;a.themes.RoyalPurples=new a.Theme({colors:["#473980","#685aa7","#7970b3","#231c3f","#7267ae"]})}());

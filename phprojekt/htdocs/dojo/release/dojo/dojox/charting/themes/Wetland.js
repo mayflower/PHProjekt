@@ -5,22 +5,4 @@
 */
 
 
-if(!dojo._hasResource["dojox.charting.themes.Wetland"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.themes.Wetland"] = true;
-dojo.provide("dojox.charting.themes.Wetland");
-dojo.require("dojox.charting.Theme");
-
-(function(){
-	var dxc=dojox.charting;
-	dxc.themes.Wetland=new dxc.Theme({
-		colors: [
-			"#bfbc64",
-			"#737130",
-			"#73373b",
-			"#7dafca",
-			"#8d3c42"
-		]
-	});
-})();
-
-}
+dojo._hasResource["dojox.charting.themes.Wetland"]||(dojo._hasResource["dojox.charting.themes.Wetland"]=!0,dojo.provide("dojox.charting.themes.Wetland"),dojo.require("dojox.charting.Theme"),function(){var a=dojox.charting;a.themes.Wetland=new a.Theme({colors:["#bfbc64","#737130","#73373b","#7dafca","#8d3c42"]})}());

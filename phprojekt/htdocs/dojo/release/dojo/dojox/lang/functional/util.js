@@ -5,53 +5,5 @@
 */
 
 
-if(!dojo._hasResource["dojox.lang.functional.util"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.lang.functional.util"] = true;
-dojo.provide("dojox.lang.functional.util");
-
-dojo.require("dojox.lang.functional.lambda");
-
-// This module provides helpers:
-//	- inlining string lambda functions.
-
-(function(){
-	var df = dojox.lang.functional;
-
-	dojo.mixin(df, {
-		inlineLambda: function(/*String*/ lambda, /*String|Array*/ init, /*Function?*/ add2dict){
-			// summary:
-			//		Creates the inlined version of a string lambda.
-			// lambda:
-			//		The String variable representing the lambda function.
-			// init:
-			//		Conveys how to initialize parameters. If it is a String, then the apply() method
-			//		would be emulated treating "init" as a list of input parameters.
-			//		It it is an Array, then the call() method is emulated treating array members
-			//		as input parameters.
-			// add2dict:
-			//		The optional function, which is used to record names of lambda parameters.
-			//		If supplied, this function is called with a name of every parameter.
-
-			var s = df.rawLambda(lambda);
-			if(add2dict){
-				df.forEach(s.args, add2dict);
-			}
-			var ap = typeof init == "string",	// apply or call?
-				n = ap ? s.args.length : Math.min(s.args.length, init.length),
-				a = new Array(4 * n + 4), i, j = 1;
-			for(i = 0; i < n; ++i){
-				a[j++] = s.args[i];
-				a[j++] = "=";
-				a[j++] = ap ? init + "[" + i + "]": init[i];
-				a[j++] = ",";
-			}
-			a[0] = "(";
-			a[j++] = "(";
-			a[j++] = s.body;
-			a[j] = "))";
-			return a.join("");	// String
-		}
-	});
-})();
-
-}
+dojo._hasResource["dojox.lang.functional.util"]||(dojo._hasResource["dojox.lang.functional.util"]=!0,dojo.provide("dojox.lang.functional.util"),dojo.require("dojox.lang.functional.lambda"),function(){var g=dojox.lang.functional;dojo.mixin(g,{inlineLambda:function(b,e,f){b=g.rawLambda(b);f&&g.forEach(b.args,f);var h=(f=typeof e=="string")?b.args.length:Math.min(b.args.length,e.length),a=Array(4*h+4),d,c=1;for(d=0;d<h;++d)a[c++]=b.args[d],a[c++]="=",a[c++]=f?e+"["+d+"]":e[d],a[c++]=",";a[0]="(";a[c++]=
+"(";a[c++]=b.body;a[c]="))";return a.join("")}})}());

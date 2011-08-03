@@ -5,40 +5,4 @@
 */
 
 
-if(!dojo._hasResource["dojox.lang.aspect.timer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.lang.aspect.timer"] = true;
-dojo.provide("dojox.lang.aspect.timer");
-
-(function(){
-	var aop = dojox.lang.aspect,
-		uniqueNumber = 0;
-	
-	var Timer = function(name){
-		this.name = name || ("DojoAopTimer #" + ++uniqueNumber);
-		this.inCall = 0;
-	};
-	dojo.extend(Timer, {
-		before: function(/*arguments*/){
-			if(!(this.inCall++)){
-				console.time(this.name);
-			}
-		},
-		after: function(/*excp*/){
-			if(!--this.inCall){
-				console.timeEnd(this.name);
-			}
-		}
-	});
-	
-	aop.timer = function(/*String?*/ name){
-		// summary:
-		//		Returns an object, which can be used to time calls to methods.
-		//
-		// name:
-		//		The optional unique name of the timer.
-
-		return new Timer(name);	// Object
-	};
-})();
-
-}
+dojo._hasResource["dojox.lang.aspect.timer"]||(dojo._hasResource["dojox.lang.aspect.timer"]=!0,dojo.provide("dojox.lang.aspect.timer"),function(){var c=dojox.lang.aspect,d=0,b=function(a){this.name=a||"DojoAopTimer #"+ ++d;this.inCall=0};dojo.extend(b,{before:function(){this.inCall++||console.time(this.name)},after:function(){--this.inCall||console.timeEnd(this.name)}});c.timer=function(a){return new b(a)}}());

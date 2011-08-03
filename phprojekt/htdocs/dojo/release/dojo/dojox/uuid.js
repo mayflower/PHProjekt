@@ -5,9 +5,4 @@
 */
 
 
-if(!dojo._hasResource["dojox.uuid"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.uuid"] = true;
-dojo.provide("dojox.uuid");
-dojo.require("dojox.uuid._base");
-
-}
+dojo._hasResource["dojox.uuid"]||(dojo._hasResource["dojox.uuid"]=!0,dojo.provide("dojox.uuid"),dojo.require("dojox.uuid._base"));

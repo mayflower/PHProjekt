@@ -5,11 +5,4 @@
 */
 
 
-if(!dojo._hasResource["dijit.form.ComboButton"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.ComboButton"] = true;
-dojo.provide("dijit.form.ComboButton");
-dojo.require("dijit.form.Button");
-
-
-
-}
+dojo._hasResource["dijit.form.ComboButton"]||(dojo._hasResource["dijit.form.ComboButton"]=!0,dojo.provide("dijit.form.ComboButton"),dojo.require("dijit.form.Button"));

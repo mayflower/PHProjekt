@@ -5,56 +5,6 @@
 */
 
 
-if(!dojo._hasResource["dojox.charting.themes.ThreeD"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.themes.ThreeD"] = true;
-dojo.provide("dojox.charting.themes.ThreeD");
-
-dojo.require("dojo.colors"); // for dojo.Color.sanitize()
-dojo.require("dojox.charting.Theme");
-dojo.require("dojox.charting.themes.gradientGenerator");
-
-dojo.require("dojox.charting.themes.PrimaryColors"); // as a baseline theme
-
-(function(){
-	var dc = dojox.charting, themes = dc.themes, Theme = dc.Theme,
-		gi = themes.gradientGenerator.generateGradientByIntensity,
-		colors = ["#f00", "#0f0", "#00f", "#ff0", "#0ff", "#f0f"],	// the same is in PrimaryColors
-		defaultFill = {type: "linear", space: "shape", x1: 0, y1: 0, x2: 100, y2: 0},
-		// 3D cylinder map is calculated using dojox.gfx3d
-		cyl3dMap = [
-			{o: 0.00, i: 174}, {o: 0.08, i: 231}, {o: 0.18, i: 237}, {o: 0.30, i: 231},
-			{o: 0.39, i: 221}, {o: 0.49, i: 206}, {o: 0.58, i: 187}, {o: 0.68, i: 165},
-			{o: 0.80, i: 128}, {o: 0.90, i: 102}, {o: 1.00, i: 174}
-		],
-		hiliteIndex = 2, hiliteIntensity = 100, lumStroke = 50,
-		cyl3dFills = dojo.map(colors, function(c){
-			var fill = dojo.delegate(defaultFill),
-				colors = fill.colors = themes.gradientGenerator.generateGradientByIntensity(c, cyl3dMap),
-				hilite = colors[hiliteIndex].color;
-			// add highlight
-			hilite.r += hiliteIntensity;
-			hilite.g += hiliteIntensity;
-			hilite.b += hiliteIntensity;
-			hilite.sanitize();
-			return fill;
-		});
-
-	themes.ThreeD = themes.PrimaryColors.clone();
-	themes.ThreeD.series.shadow = {dx: 1, dy: 1, width: 3, color: [0, 0, 0, 0.15]};
-
-	themes.ThreeD.next = function(elementType, mixin, doPost){
-		if(elementType == "bar" || elementType == "column"){
-			// custom processing for bars and columns: substitute fills
-			var index = this._current % this.seriesThemes.length,
-				s = this.seriesThemes[index], old = s.fill;
-			s.fill = cyl3dFills[index];
-			var theme = Theme.prototype.next.apply(this, arguments);
-			// cleanup
-			s.fill = old;
-			return theme;
-		}
-		return Theme.prototype.next.apply(this, arguments);
-	};
-})();
-
-}
+dojo._hasResource["dojox.charting.themes.ThreeD"]||(dojo._hasResource["dojox.charting.themes.ThreeD"]=!0,dojo.provide("dojox.charting.themes.ThreeD"),dojo.require("dojo.colors"),dojo.require("dojox.charting.Theme"),dojo.require("dojox.charting.themes.gradientGenerator"),dojo.require("dojox.charting.themes.PrimaryColors"),function(){var d=dojox.charting,b=d.themes,g=d.Theme,e={type:"linear",space:"shape",x1:0,y1:0,x2:100,y2:0},i=[{o:0,i:174},{o:0.08,i:231},{o:0.18,i:237},{o:0.3,i:231},{o:0.39,i:221},
+{o:0.49,i:206},{o:0.58,i:187},{o:0.68,i:165},{o:0.8,i:128},{o:0.9,i:102},{o:1,i:174}],j=dojo.map(["#f00","#0f0","#00f","#ff0","#0ff","#f0f"],function(a){var h=dojo.delegate(e),a=(h.colors=b.gradientGenerator.generateGradientByIntensity(a,i))[2].color;a.r+=100;a.g+=100;a.b+=100;a.sanitize();return h});b.ThreeD=b.PrimaryColors.clone();b.ThreeD.series.shadow={dx:1,dy:1,width:3,color:[0,0,0,0.15]};b.ThreeD.next=function(a,b,d){if(a=="bar"||a=="column"){var c=this._current%this.seriesThemes.length,f=this.seriesThemes[c],
+e=f.fill;f.fill=j[c];c=g.prototype.next.apply(this,arguments);f.fill=e;return c}return g.prototype.next.apply(this,arguments)}}());

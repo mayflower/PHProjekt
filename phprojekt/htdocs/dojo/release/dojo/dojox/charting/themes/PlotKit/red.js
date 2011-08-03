@@ -5,17 +5,4 @@
 */
 
 
-if(!dojo._hasResource["dojox.charting.themes.PlotKit.red"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.themes.PlotKit.red"] = true;
-dojo.provide("dojox.charting.themes.PlotKit.red");
-dojo.require("dojox.charting.themes.PlotKit.base");
-
-(function(){
-	var dc = dojox.charting, pk = dc.themes.PlotKit;
-
-	pk.red = pk.base.clone();
-	pk.red.chart.fill = pk.red.plotarea.fill = "#f5e6e6";
-	pk.red.colors = dc.Theme.defineColors({hue: 1, saturation: 60, low: 40, high: 88});
-})();
-
-}
+dojo._hasResource["dojox.charting.themes.PlotKit.red"]||(dojo._hasResource["dojox.charting.themes.PlotKit.red"]=!0,dojo.provide("dojox.charting.themes.PlotKit.red"),dojo.require("dojox.charting.themes.PlotKit.base"),function(){var b=dojox.charting,a=b.themes.PlotKit;a.red=a.base.clone();a.red.chart.fill=a.red.plotarea.fill="#f5e6e6";a.red.colors=b.Theme.defineColors({hue:1,saturation:60,low:40,high:88})}());

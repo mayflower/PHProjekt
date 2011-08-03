@@ -5,38 +5,5 @@
 */
 
 
-if(!dojo._hasResource["dojox.analytics.plugins.idle"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.analytics.plugins.idle"] = true;
-dojo.require("dojox.analytics._base");
-dojo.provide("dojox.analytics.plugins.idle");
-
-// window startup data
-dojox.analytics.plugins.idle = new (function(){
-	this.addData = dojo.hitch(dojox.analytics, "addData", "idle");
-	this.idleTime=dojo.config["idleTime"] || 60000;
-	this.idle=true;
-
-	this.setIdle = function(){
-		this.addData("isIdle");
-		this.idle=true;
-
-	}
-	
-	dojo.addOnLoad(dojo.hitch(this, function(){
-		var idleResets=["onmousemove","onkeydown","onclick","onscroll"];
-		for (var i=0;i<idleResets.length;i++){
-			dojo.connect(dojo.doc,idleResets[i],this, function(e){
-				if (this.idle){
-					this.idle=false;
-					this.addData("isActive");
-					this.idleTimer=setTimeout(dojo.hitch(this,"setIdle"), this.idleTime);
-				}else{
-					clearTimeout(this.idleTimer);
-					this.idleTimer=setTimeout(dojo.hitch(this,"setIdle"), this.idleTime);
-				}
-			});
-		}
-	}));
-})();
-
-}
+if(!dojo._hasResource["dojox.analytics.plugins.idle"])dojo._hasResource["dojox.analytics.plugins.idle"]=!0,dojo.require("dojox.analytics._base"),dojo.provide("dojox.analytics.plugins.idle"),dojox.analytics.plugins.idle=new function(){this.addData=dojo.hitch(dojox.analytics,"addData","idle");this.idleTime=dojo.config.idleTime||6E4;this.idle=!0;this.setIdle=function(){this.addData("isIdle");this.idle=!0};dojo.addOnLoad(dojo.hitch(this,function(){for(var b=["onmousemove","onkeydown","onclick","onscroll"],
+a=0;a<b.length;a++)dojo.connect(dojo.doc,b[a],this,function(){this.idle?(this.idle=!1,this.addData("isActive")):clearTimeout(this.idleTimer);this.idleTimer=setTimeout(dojo.hitch(this,"setIdle"),this.idleTime)})}))};

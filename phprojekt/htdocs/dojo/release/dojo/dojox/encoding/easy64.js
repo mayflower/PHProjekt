@@ -5,55 +5,5 @@
 */
 
 
-if(!dojo._hasResource["dojox.encoding.easy64"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.encoding.easy64"] = true;
-dojo.provide("dojox.encoding.easy64");
-
-dojo.getObject("encoding.easy64", true, dojox);
-
-(function(){
-	var c = function(input, length, result){
-		for(var i = 0; i < length; i += 3){
-			result.push(
-				String.fromCharCode((input[i] >>> 2) + 33),
-				String.fromCharCode(((input[i] & 3) << 4) + (input[i + 1] >>> 4) + 33),
-				String.fromCharCode(((input[i + 1] & 15) << 2) + (input[i + 2] >>> 6) + 33),
-				String.fromCharCode((input[i + 2] & 63) + 33)
-			);
-		}
-	};
-
-	dojox.encoding.easy64.encode = function(input){
-		// summary: encodes input data in easy64 string
-		// input: Array: an array of numbers (0-255) to encode
-		var result = [], reminder = input.length % 3, length = input.length - reminder;
-		c(input, length, result);
-		if(reminder){
-			var t = input.slice(length);
-			while(t.length < 3){ t.push(0); }
-			c(t, 3, result);
-			for(var i = 3; i > reminder; result.pop(), --i);
-		}
-		return result.join("");	// String
-	};
-
-	dojox.encoding.easy64.decode = function(input){
-		// summary: decodes the input string back to array of numbers
-		// input: String: the input string to decode
-		var n = input.length, r = [], b = [0, 0, 0, 0], i, j, d;
-		for(i = 0; i < n; i += 4){
-			for(j = 0; j < 4; ++j){ b[j] = input.charCodeAt(i + j) - 33; }
-			d = n - i;
-			for(j = d; j < 4; b[++j] = 0);
-			r.push(
-				(b[0] << 2) + (b[1] >>> 4),
-				((b[1] & 15) << 4) + (b[2] >>> 2),
-				((b[2] & 3) << 6) + b[3]
-			);
-			for(j = d; j < 4; ++j, r.pop());
-		}
-		return r;
-	};
-})();
-
-}
+dojo._hasResource["dojox.encoding.easy64"]||(dojo._hasResource["dojox.encoding.easy64"]=!0,dojo.provide("dojox.encoding.easy64"),dojo.getObject("encoding.easy64",!0,dojox),function(){var f=function(a,d,e){for(var b=0;b<d;b+=3)e.push(String.fromCharCode((a[b]>>>2)+33),String.fromCharCode(((a[b]&3)<<4)+(a[b+1]>>>4)+33),String.fromCharCode(((a[b+1]&15)<<2)+(a[b+2]>>>6)+33),String.fromCharCode((a[b+2]&63)+33))};dojox.encoding.easy64.encode=function(a){var d=[],e=a.length%3,b=a.length-e;f(a,b,d);if(e){for(a=
+a.slice(b);a.length<3;)a.push(0);f(a,3,d);for(a=3;a>e;d.pop(),--a);}return d.join("")};dojox.encoding.easy64.decode=function(a){var d=a.length,e=[],b=[0,0,0,0],g,c,f;for(g=0;g<d;g+=4){for(c=0;c<4;++c)b[c]=a.charCodeAt(g+c)-33;for(c=f=d-g;c<4;b[++c]=0);e.push((b[0]<<2)+(b[1]>>>4),((b[1]&15)<<4)+(b[2]>>>2),((b[2]&3)<<6)+b[3]);for(c=f;c<4;++c,e.pop());}return e}}());

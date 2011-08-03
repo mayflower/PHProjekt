@@ -5,14 +5,4 @@
 */
 
 
-if(!dojo._hasResource["dojox.charting.themes.GreySkies"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.themes.GreySkies"] = true;
-dojo.provide("dojox.charting.themes.GreySkies");
-dojo.require("dojox.charting.Theme");
-
-(function(){
-	var dxc=dojox.charting;
-	dxc.themes.GreySkies=new dxc.Theme(dxc.Theme._def);
-})();
-
-}
+dojo._hasResource["dojox.charting.themes.GreySkies"]||(dojo._hasResource["dojox.charting.themes.GreySkies"]=!0,dojo.provide("dojox.charting.themes.GreySkies"),dojo.require("dojox.charting.Theme"),function(){var a=dojox.charting;a.themes.GreySkies=new a.Theme(a.Theme._def)}());

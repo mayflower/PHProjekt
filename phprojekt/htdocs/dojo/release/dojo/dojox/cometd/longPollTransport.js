@@ -5,9 +5,4 @@
 */
 
 
-if(!dojo._hasResource["dojox.cometd.longPollTransport"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.cometd.longPollTransport"] = true;
-dojo.provide("dojox.cometd.longPollTransport");
-dojo.require("dojox.cometd.longPollTransportJsonEncoded");
-
-}
+dojo._hasResource["dojox.cometd.longPollTransport"]||(dojo._hasResource["dojox.cometd.longPollTransport"]=!0,dojo.provide("dojox.cometd.longPollTransport"),dojo.require("dojox.cometd.longPollTransportJsonEncoded"));
