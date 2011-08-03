@@ -270,14 +270,15 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Delete a children node.
+     * Delete a children node from the current tree, but leave it in the 
+     * database
      *
      * @param Phprojekt_Tree_Node_Database $object Tree class.
      * @param integer                      $id     IF for delete.
      *
      * @return void
      */
-    public function deleteNode($object, $id)
+    private function deleteNode($object, $id)
     {
         if (isset($object->_children[$id])) {
             unset($object->_children[$id]);
