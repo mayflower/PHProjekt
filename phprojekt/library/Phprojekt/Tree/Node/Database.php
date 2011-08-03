@@ -179,27 +179,17 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             $table    = $this->getActiveRecord()->getTableName();
             $select   = $database->select();
 
-            $select->from($table, 'path')
-                   ->where(sprintf('id = %d', (int) $this->_requestedId))
-                   ->limit(1);
+            $select->from(array('t' => $table), array())
+                   ->join(array('tt' => $table),
+                       sprintf('t.id = %d AND (tt.path like CONCAT(t.path, t.id, "/%%") OR tt.id = t.id)', (int) $this->_requestedId),
+                       '*')
+                   ->order('path')
+                   ->order('id');
 
             if (null !== $filter) {
                 $filter->filter($select, $this->getActiveRecord()->getAdapter());
             }
 
-            $rootPath = $database->fetchOne($select);
-
-            if (null === $rootPath) {
-                throw new Phprojekt_Tree_Node_Exception('Requested node not found');
-            }
-
-            // Get all the projects
-            $where  = sprintf("(%s OR id = %d)", $database->quoteInto("path LIKE ?", $rootPath . '%'), (int) $this->id);
-            $select = $database->select();
-            $select->from($table)
-                   ->where($where)
-                   ->order('path')
-                   ->order('id');
             $treeData = $select->query()->fetchAll(Zend_Db::FETCH_CLASS);
             foreach ($treeData as $index => $record) {
                 foreach ($record as $key => $value) {
