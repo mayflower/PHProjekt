@@ -101,7 +101,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         this._dialog = new dijit.Dialog({
             title:     phpr.nls.get('Module Designer') + ' [' + dijit.byId('label').value + ']',
             id:        "moduleManagerDialog",
-            style:     "width:95%; height:" + (getMaxHeight() - 28) + "px;",
+            style:     "width:95%; height:" + (phpr.viewManager.getMaxHeight() - 28) + "px;",
             baseClass: 'moduleManagerDialog'
         });
         dojo.body().appendChild(this._dialog.domNode);
