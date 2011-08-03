@@ -73,6 +73,7 @@ class JsController extends IndexController
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Tree.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/FrontendMessage.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/PageManager.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/ViewManager.js');
 
         // Default Folder
         $scripts = scandir(PHPR_CORE_PATH . '/Default/Views/dojo/scripts');
@@ -92,11 +93,13 @@ class JsController extends IndexController
 
         $scripttext .= '
             dojo.declare("phpr.Main", null, {
-                constructor:function(/*String*/webpath, /*Int*/rootProjectId,/*String*/language) {
+                constructor:function(/*String*/webpath, /*Int*/rootProjectId, /*String*/language) {
+                    phpr.webpath          = webpath;
+                    phpr.DefaultModule    = "Project";
+                    phpr.viewManager      = new phpr.Default.System.ViewManager();
                     phpr.pageManager      = new phpr.Default.System.PageManager();
                     phpr.module           = phpr.pageManager.getConfigFromWindow().moduleName;
                     phpr.submodule        = null;
-                    phpr.webpath          = webpath;
                     phpr.rootProjectId    = rootProjectId;
                     phpr.currentProjectId = rootProjectId ;
                     phpr.currentUserId    = 0;
@@ -130,7 +133,6 @@ class JsController extends IndexController
         // The load method of the currentModule is called
         $scripttext .= '
                     dojo.publish(phpr.module + ".load");
-
                 }
             });
         ';
