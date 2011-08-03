@@ -242,9 +242,7 @@ class Calendar2_IndexController extends IndexController
             'false'
         );
 
-        if (!Cleaner::validate('int', $id, true)
-                && 'null'      !== $id
-                && 'undefined' !== $id) {
+        if (!Cleaner::validate('int', $id, true) && 'null' !== $id && 'undefined' !== $id) {
             throw new Phprojekt_PublishedException("Invalid id '$id'");
         }
         $id = (int) $id;
@@ -382,7 +380,7 @@ class Calendar2_IndexController extends IndexController
         $id         = $this->getRequest()->getParam('id');
         $occurrence = $this->getRequest()->getParam('occurrence');
 
-        if (!Cleaner::validate('int', $id) && 'null' !== $id) {
+        if (!Cleaner::validate('int', $id) && 'null' !== $id && 'undefined' !== $id) {
             throw new Phprojekt_PublishedException("Invalid id '$id'");
         }
 
@@ -532,7 +530,7 @@ class Calendar2_IndexController extends IndexController
         $end   = $this->getRequest()->getParam('end');
 
         if (!Cleaner::validate('int', $user)) {
-            throw new Phprojekt_PublishedException("Invalid id '$id'");
+            throw new Phprojekt_PublishedException("Invalid user id '$id'");
         }
         $user = (int) $user;
         if (!self::_validateTimestamp($start)) {
