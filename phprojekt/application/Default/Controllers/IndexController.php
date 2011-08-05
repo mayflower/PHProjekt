@@ -169,6 +169,21 @@ class IndexController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender();
         $this->view->clearVars();
         $this->view->isLoggedIn = $isLoggedIn;
+
+       // Setting the domain selection
+       $authMode = Phprojekt_Auth::getLoginMode();
+       if ($authMode == 'ldap') {
+           $ldapOptions = isset($conf->authentication->ldap) ? $conf->authentication->ldap->toArray() : array();
+           $domains = array();
+           foreach ($ldapOptions as $server => $opts) {
+               $serverName = isset($opts['accountDomainNameShort']) ? trim($opts['accountDomainNameShort']) :
+                               (isset($opts['accountDomainName']) ? trim($opts['accountDomainName']) : $server);
+               $domains[$server] = $serverName;
+           }
+           if (sizeof($domains) > 0) {
+               $this->view->domains = $domains;
+           }
+       }
     }
 
     /**

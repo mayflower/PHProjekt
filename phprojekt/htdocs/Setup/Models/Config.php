@@ -111,6 +111,7 @@ class Setup_Models_Config
         $content .= $this->_getMisc();
         $content .= $this->_getFront();
         $content .= $this->_getFrontendMessage();
+        $content .= $this->_getAuthentication();
 
         return $content;
     }
@@ -465,5 +466,65 @@ class Setup_Models_Config
         $content .= 'pollingLoop = 30' . $this->_eol;
 
         return $content;
+    }
+
+    /*
+     * Return the authentication text.
+     *
+     * @return string
+     */
+    private function _getAuthentication()
+    {
+        return <<<HERE
+
+;;;;;;;;;;;;;;;;;;
+; AUTHENTICATION ;
+;;;;;;;;;;;;;;;;;;
+
+; Options: default/ldap
+authentication.mode = 'default'
+
+; Please make sure that your ldap users have 'givenname', 'sn' and 'mail' properties when using ldap.
+
+; Default values for new users [0/1]. DO NOT SET THIS TO 1 WITHOUT KNOWING WHAT YOU DO!
+authentication.integration.admin = 0
+; default status. 'A' for Active, 'I' for Inactive
+authentication.integration.status = 'A'
+; If not set, default config parameter 'language' will be used
+authentication.integration.language = 'en'
+; default timezone for new users. Look into phprojekt/library/Phprojekt/Converter/Time.php line 119ff
+authentication.integration.timeZone = '0000002'
+
+; A comma separated list of users who should have admin privileges in PHProjekt.
+; This will override the authentication.integration.admin parameter for the
+; specified users if the default is 0. Changes to the list also
+; affect to old users during their login. However, if user is already admin,
+; the setting cannot unset by removing the username from the list!
+; Default PHProjekt admin with id=1 is not authenticated through LDAP!
+;authentication.integration.systemAdmins = 'username,username2'
+
+; PLEASE NOTE THAT THESE CONFIGURATIONS SHOULD BE CAREFULLY SET
+; FOR THE LDAP AUTHENTICATION TO WORK!
+
+; If you are not an expert in LDAP configurations, please
+; consult the following references.
+; LDAP configuration vars explainded at:
+; http://framework.zend.com/manual/en/zend.ldap.api.html
+; Example at:
+; http://framework.zend.com/manual/en/zend.auth.adapter.ldap.html
+
+authentication.ldap.server1.host                   = 'ldaphost'
+authentication.ldap.server1.port                   = 389
+authentication.ldap.server1.useSsl                 = false
+authentication.ldap.server1.useStartTls            = false
+authentication.ldap.server1.accountDomainName      = 'domain.com'
+authentication.ldap.server1.accountDomainNameShort = 'DOMAIN'
+authentication.ldap.server1.baseDn                 = 'OU=OrgUnit,DC=domain,DC=com'
+authentication.ldap.server1.allowEmptyPassword     = false
+authentication.ldap.server1.bindRequiresDn         = false
+authentication.ldap.server1.optReferrals           = false
+authentication.ldap.server1.tryUsernameSplit       = false
+authentication.ldap.server1.accountFilterFormat    = null
+HERE;
     }
 }
