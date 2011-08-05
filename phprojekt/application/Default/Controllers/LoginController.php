@@ -86,7 +86,11 @@ class LoginController extends Zend_Controller_Action
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         try {
-            $success = Phprojekt_Auth::login($username, $password, array('keepLogged' => $keepLogged, 'loginServer' => $loginServer));
+            $success = Phprojekt_Auth::login(
+                $username,
+                $password,
+                array('keepLogged' => $keepLogged, 'loginServer' => $loginServer)
+            );
             if ($success === true) {
                 $config = Phprojekt::getInstance()->getConfig();
                 $frontendMessage = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification');

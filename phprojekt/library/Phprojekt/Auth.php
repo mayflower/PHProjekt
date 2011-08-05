@@ -166,8 +166,8 @@ class Phprojekt_Auth extends Zend_Auth
        }
     }
 
-   private static function _defaultLogin($username, $password, $keepLogged = false)
-   {
+    private static function _defaultLogin($username, $password, $keepLogged = false)
+    {
         $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
         $userId = $user->findIdByUsername($username);
 
@@ -245,207 +245,216 @@ class Phprojekt_Auth extends Zend_Auth
 
     private static function _ldapIntegration($userId, $username, $password, $loginServer = null)
     {
-       $userId = intval($userId);
+        $userId = intval($userId);
 
-       $conf = Phprojekt::getInstance()->getConfig();
-       $ldapOptions = $conf->authentication->ldap->toArray();
+        $conf = Phprojekt::getInstance()->getConfig();
+        $ldapOptions = $conf->authentication->ldap->toArray();
 
-       // Zend library does not allow determining from which server the user was found from
-       // That's why we need to request the server from the user during login.
-       $account = null;
-       if ($loginServer !== null && array_key_exists($loginServer, $ldapOptions)) {
-           $searchOpts = $ldapOptions[$loginServer];
-           try {
-               $ldap = new Zend_Ldap($searchOpts);
-               $ldap->connect();
-               $ldap->bind($username, $password);
+        // Zend library does not allow determining from which server the user was found from
+        // That's why we need to request the server from the user during login.
+        $account = null;
+        if ($loginServer !== null && array_key_exists($loginServer, $ldapOptions)) {
+            $searchOpts = $ldapOptions[$loginServer];
+            try {
+                $ldap = new Zend_Ldap($searchOpts);
+                $ldap->connect();
+                $ldap->bind($username, $password);
 
-               $filter = sprintf(
-                   "(
-                       &(
-                          |(objectclass=posixAccount)
-                           (objectclass=Person)
-                       )
-                       (
-                           |(uid=%s)
-                            (samAccountName=%s)
+                $filter = sprintf(
+                    "(
+                        &(
+                           |(objectclass=posixAccount)
+                            (objectclass=Person)
                         )
-                   )",
-                   $username,
-                  $username
+                        (
+                            |(uid=%s)
+                             (samAccountName=%s)
+                         )
+                    )",
+                    $username,
+                    $username
                 );
-               $result = $ldap->search($filter, $searchOpts['baseDn']);
+                $result = $ldap->search($filter, $searchOpts['baseDn']);
 
-               $account = $result->getFirst();
+                $account = $result->getFirst();
 
-               $ldap->disconnect();
-           } catch (Exception $e) {
-               throw new Phprojekt_Auth_Exception('Failed to establish a search connection to the LDAP server:' . ' ' . $server . ' ' . 'Please check your configuration for that server.', 8);
-           }
-       } else {
-           throw new Phprojekt_Auth_Exception('Server not specified during login! Please check that your login screen contains the login domain selection.', 9);
-       }
+                $ldap->disconnect();
+            } catch (Exception $e) {
+                throw new Phprojekt_Auth_Exception(
+                    'Failed to establish a search connection to the LDAP server:'
+                    . ' ' . $server . ' ' . 'Please check your configuration for that server.',
+                    8
+                );
+            }
+        } else {
+            throw new Phprojekt_Auth_Exception(
+                'Server not specified during login! "
+                . "Please check that your login screen contains the login domain selection.',
+                9
+            );
+        }
 
-       if ($account !== null) {
-           // User found
+        if ($account !== null) {
+            // User found
 
-           $integration = isset($conf->authentication->integration) ? $conf->authentication->integration->toArray() : array();
+            $integration = isset($conf->authentication->integration) ? $conf->authentication->integration->toArray()
+                                                                     : array();
 
-           $firstname = "";
-           $lastname = "";
-           $email = "";
+            $firstname = "";
+            $lastname = "";
+            $email = "";
 
-           if (isset($account['givenname'])) {
-               $firstname = $account['givenname'][0];
-           }
-           if (isset($account['sn'])) {
-               $lastname = $account['sn'][0];
-           }
-           if (isset($account['mail'])) {
-               $email = $account['mail'][0];
-           }
+            if (isset($account['givenname'])) {
+                $firstname = $account['givenname'][0];
+            }
+            if (isset($account['sn'])) {
+                $lastname = $account['sn'][0];
+            }
+            if (isset($account['mail'])) {
+                $email = $account['mail'][0];
+            }
 
-           // Set user params
-           $params = array();
-           $params['id']       = intval($userId); // New user has id = 0
-           $params['username'] = $username;
-           $params['password'] = $password;
+            // Set user params
+            $params = array();
+            $params['id']       = intval($userId); // New user has id = 0
+            $params['username'] = $username;
+            $params['password'] = $password;
 
-           $admins = array();
-           if (isset($integration['systemAdmins'])) {
-               $admins = split(",", $integration['systemAdmins']);
-               foreach ($admins as $key => $admin) {
-                   $admins[$key] = trim($admin);
-               }
-           }
-           $params['admin'] = in_array($username, $admins) ? 1 : 0; // Default to non-admin (0)
-           if ($userId > 0) {
-               $user = self::_getUser($userId);
-               $params['admin'] = intval($user->admin);
-           }
+            $admins = array();
+            if (isset($integration['systemAdmins'])) {
+                $admins = split(",", $integration['systemAdmins']);
+                foreach ($admins as $key => $admin) {
+                    $admins[$key] = trim($admin);
+                }
+            }
+            $params['admin'] = in_array($username, $admins) ? 1 : 0; // Default to non-admin (0)
+            if ($userId > 0) {
+                $user = self::_getUser($userId);
+                $params['admin'] = intval($user->admin);
+            }
 
-           // Integrate with parameters found from LDAP server
-           $params['firstname'] = $firstname;
-           $params['lastname'] = $lastname;
-           $params['email'] = $email;
+            // Integrate with parameters found from LDAP server
+            $params['firstname'] = $firstname;
+            $params['lastname'] = $lastname;
+            $params['email'] = $email;
 
-           if ($userId > 0) {
-               // Update user parameters with those found from LDAP server
-               $user->find($userId);
+            if ($userId > 0) {
+                // Update user parameters with those found from LDAP server
+                $user->find($userId);
 
-               $params['id'] = $userId;
-               if (!self::_saveUser($params)) {
-                   throw new Phprojekt_Auth_Exception('User update failed for LDAP parameters', 10);
-               }
-           } else {
-               // Add new user to PHProjekt
+                $params['id'] = $userId;
+                if (!self::_saveUser($params)) {
+                    throw new Phprojekt_Auth_Exception('User update failed for LDAP parameters', 10);
+                }
+            } else {
+                // Add new user to PHProjekt
 
-               // TODO: Default conf could be defined in configuration
-               // Lists needed for checks ?
+                // TODO: Default conf could be defined in configuration
+                // Lists needed for checks ?
 
-               // Set default parameters for users
-               $params['status']   = "A";          // Active user
-               $params['language'] =
-                   isset($conf->language) ?
-                       $conf->language : "en";     // Conf language / English
-               $params['timeZone'] = "0000";       // (GMT) Greenwich Mean Time: Dublin, Edinburgh, Lisbon, London
+                // Set default parameters for users
+                $params['status']   = "A";          // Active user
+                $params['language'] =
+                    isset($conf->language) ?
+                        $conf->language : "en";     // Conf language / English
+                $params['timeZone'] = "0000";       // (GMT) Greenwich Mean Time: Dublin, Edinburgh, Lisbon, London
 
-               // Default integration vals from config
-               if (isset($integration['admin']) && $params['admin'] == 0) {
-                   $val = intval($integration['admin']);
-                   if ($val == 1 || $val == 0) {
-                       $params['admin'] = $val;
-                   }
-               }
-               if (isset($integration['status'])) {
-                   $val = trim(strtoupper($integration['status']));
-                   if (in_array($val, array("A", "I"))) {
-                       $params['status'] = $val;
-                   }
-               }
-               if (isset($integration['language'])) {
-                   $val = trim(strtolower($integration['language']));
+                // Default integration vals from config
+                if (isset($integration['admin']) && $params['admin'] == 0) {
+                    $val = intval($integration['admin']);
+                    if ($val == 1 || $val == 0) {
+                        $params['admin'] = $val;
+                    }
+                }
+                if (isset($integration['status'])) {
+                    $val = trim(strtoupper($integration['status']));
+                    if (in_array($val, array("A", "I"))) {
+                        $params['status'] = $val;
+                    }
+                }
+                if (isset($integration['language'])) {
+                    $val = trim(strtolower($integration['language']));
 
-                   $languages = Phprojekt_LanguageAdapter::getLanguageList();
-                   if (array_key_exists($val, $languages)) {
-                       $params['language'] = $val;
-                   } else if (($val = array_search('(' . $val . ')', $languages)) !== false) {
-                       $params['language'] = $val;
-                   }
-               }
-               if (isset($integration['timeZone'])) {
-                   $val = trim(strtolower($integration['timeZone']));
+                    $languages = Phprojekt_LanguageAdapter::getLanguageList();
+                    if (array_key_exists($val, $languages)) {
+                        $params['language'] = $val;
+                    } else if (($val = array_search('(' . $val . ')', $languages)) !== false) {
+                        $params['language'] = $val;
+                    }
+                }
+                if (isset($integration['timeZone'])) {
+                    $val = trim(strtolower($integration['timeZone']));
 
-                   $timezones = Phprojekt_Converter_Time::getTimeZones();
-                   if (array_key_exists($val, $timezones)) {
-                       $params['timeZone'] = $val;
-                   } else if (($val = array_search($val, $timezones)) !== false) {
-                       $params['timeZone'] = $val;
-                   }
-               }
+                    $timezones = Phprojekt_Converter_Time::getTimeZones();
+                    if (array_key_exists($val, $timezones)) {
+                        $params['timeZone'] = $val;
+                    } else if (($val = array_search($val, $timezones)) !== false) {
+                        $params['timeZone'] = $val;
+                    }
+                }
 
-               if (!self::_saveUser($params)) {
-                   throw new Phprojekt_Auth_Exception('User creation failed after LDAP authentication', 10);
-               }
-           }
+                if (!self::_saveUser($params)) {
+                    throw new Phprojekt_Auth_Exception('User creation failed after LDAP authentication', 10);
+                }
+            }
 
-       } else {
-           throw new Phprojekt_Auth_Exception('Failed to find the LDAP user with the given username', 11);
-       }
-   }
+        } else {
+            throw new Phprojekt_Auth_Exception('Failed to find the LDAP user with the given username', 11);
+        }
+    }
 
-   /**
-    * This function is used only for integration purposes and should only
-    * be called when integrating the user data!
-    *
-   **/
-   static private function _saveUser($params)
-   {
-       $moduleName = "Phprojekt_User_User";
-       if (Phprojekt_Loader::tryToLoadLibClass($moduleName)) {
-           // Temporarily login as admin user
-           // This is only to get rights to add user
-           // Ugly hack but PHProjekt backend has not thought of this situation
-           $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
-           $authNamespace->userId = 1;
-           $authNamespace->admin  = true;
+    /**
+     * This function is used only for integration purposes and should only
+     * be called when integrating the user data!
+     *
+    **/
+    static private function _saveUser($params)
+    {
+        $moduleName = "Phprojekt_User_User";
+        if (Phprojekt_Loader::tryToLoadLibClass($moduleName)) {
+            // Temporarily login as admin user
+            // This is only to get rights to add user
+            // Ugly hack but PHProjekt backend has not thought of this situation
+            $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
+            $authNamespace->userId = 1;
+            $authNamespace->admin  = true;
 
-           $exc = null;
-           try {
-               $db = Phprojekt::getInstance()->getDb();
-               $model = new $moduleName($db);
-               if ($params['id'] > 0) {
-                   $model = $model->find($params['id']);
-               }
-               Default_Helpers_Save::save($model, $params);
+            $exc = null;
+            try {
+                $db = Phprojekt::getInstance()->getDb();
+                $model = new $moduleName($db);
+                if ($params['id'] > 0) {
+                    $model = $model->find($params['id']);
+                }
+                Default_Helpers_Save::save($model, $params);
 
-               $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
-               $setting->setModule('User');
-               $setting->setSettings($params, $model->id);
-           } catch (Exception $e) {
-               $exc = $e;
-           }
+                $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+                $setting->setModule('User');
+                $setting->setSettings($params, $model->id);
+            } catch (Exception $e) {
+                $exc = $e;
+            }
 
-           // Set user not logged in
-           unset($authNamespace->userId);
-           unset($authNamespace->admin);
-           if ($exc instanceof Exception) {
-               // Throw exception if user creation failed
-               throw $exc;
-           }
+            // Set user not logged in
+            unset($authNamespace->userId);
+            unset($authNamespace->admin);
+            if ($exc instanceof Exception) {
+                // Throw exception if user creation failed
+                throw $exc;
+            }
 
-           return true;
-       }
-       return false;
-   }
+            return true;
+        }
+        return false;
+    }
 
-   static private function _getUser($id)
-   {
-        $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $user->find($id);
+    static private function _getUser($id)
+    {
+         $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+         $user->find($id);
 
-       return $user;
-   }
+        return $user;
+    }
 
     /**
      * Gets from auth namespace the user ID logged in.
@@ -606,7 +615,7 @@ class Phprojekt_Auth extends Zend_Auth
         $user->find($userId);
         $settings = $user->settings->fetchAll();
 
-        foreach($pair as $key => $value) {
+        foreach ($pair as $key => $value) {
             $found = false;
             foreach ($settings as $setting) {
                 // Update
