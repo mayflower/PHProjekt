@@ -103,10 +103,17 @@ class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
      *
      * @return void
      */
-    public function filter(Zend_Db_Select $select)
+    public function filter(Zend_Db_Select $select, $tableName = null)
     {
-        $select->where(sprintf('%s = %s', $this->_adapter->quote($this->_identifier),
-            $this->_adapter->quote($this->_value)));
+        $db = $this->_adapter;
+        if (null !== $tableName) {
+            $query = sprintf("%s.%s = ?", $db->quoteIdentifier($tableName),
+                $db->quoteIdentifier($this->_identifier));
+        } else {
+            $query = sprintf("%s = ?", $db->quoteIdentifier($this->_identifier));
+        }
+
+        $select->where($query, $this->_value);
     }
 
     /**

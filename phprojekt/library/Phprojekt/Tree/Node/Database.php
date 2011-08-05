@@ -174,7 +174,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                    ->order('id');
 
             if (null !== $filter) {
-                $filter->filter($select, $this->getActiveRecord()->getAdapter());
+                $filter->filter($select, 'tt');
             }
 
             $treeData = $select->query()->fetchAll(Zend_Db::FETCH_CLASS);
