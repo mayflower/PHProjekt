@@ -265,12 +265,12 @@ dojo.declare('phpr.Project.GanttBase', null, {
             dojo.fadeIn({
                 node:        "gantSelectDates",
                 duration:    1000,
-                beforeBegin: function() {
-                    var pos = dojo.byId('centerMainContent').scrollLeft;
+                beforeBegin: dojo.hitch(this, function() {
+                    var pos = this.main.ganttContainer.domNode.scrollLeft;
                     dojo.style("gantSelectDates", "margin", "10px " + pos + "px");
                     dojo.style("gantSelectDates", "opacity", 0);
                     dojo.style("gantSelectDates", "display", "block");
-                }
+                })
             }).play();
             if (this.activeSlider && this.activeSlider == sliderName) {
                 return;
