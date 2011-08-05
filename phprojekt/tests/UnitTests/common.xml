@@ -12,21 +12,24 @@
         project_id="5" start_date="2007-12-01" priority="1" current_status="3" />
     <project id="7" path="/1/2/5/" title="Sub Sub Project 2" notes="" owner_id="1"
         project_id="5" start_date="2007-12-01" priority="1" current_status="3" />
+
     <user id="1" username="Test"
         firstname="Max" lastname="Mustermann" status="A" admin="0" />
     <user id="2" username="Marie"
         firstname="Luise Marie" lastname="" status="A" admin="0" />
+
     <module id="1" name="Project" label="Project" save_type="0" version="6.0.0" active="1"/>
     <module id="2" name="Todo" label="Todo" save_type="0" version="6.0.0" active="1"/>
     <module id="3" name="Note" label="Note" save_type="0" version="6.0.0" active="1"/>
     <module id="4" name="Timecard" label="Timecard" save_type="1" version="6.0.0" active="1"/>
-    <module id="5" name="Calendar" label="Calendar" save_type="1" version="6.0.0" active="1"/>
+    <module id="5" name="Calendar" label="Calendar" save_type="1" version="6.0.0" active="0"/>
     <module id="6" name="Gantt" label="Gantt" save_type="0" version="6.0.0" active="1"/>
     <module id="7" name="Filemanager" label="Filemanager" save_type="0" version="6.0.0" active="1"/>
     <module id="8" name="Statistic" label="Statistic" save_type="0" version="6.0.0" active="1"/>
     <module id="9" name="Contact" label="Contact" save_type="1" version="6.0.0" active="1"/>
     <module id="10" name="Helpdesk" label="Helpdesk" save_type="0" version="6.0.0" active="1"/>
     <module id="11" name="Minutes" label="Minute" save_type="0" version="6.0.0" active="1"/>
+    <module id="12" name="Calendar2" label="Calendar2" save_type="1" version="6.1.0-dev" active="1"/>
 
     <project_module_permissions
         module_id="1" project_id="1" />
@@ -36,10 +39,14 @@
         module_id="2" project_id="1" />
     <project_module_permissions
         module_id="2" project_id="2" />
+    <project_module_permissions
+        module_id="12" project_id="1"/>
+
     <project_role_user_permissions
         project_id="2" user_id="1" role_id="1" />
     <project_role_user_permissions
         project_id="1" user_id="1" role_id="1" />
+
     <item_rights
         module_id="1" item_id="1" user_id="1" access="255" />
     <item_rights
@@ -61,6 +68,7 @@
     <role id="1" name="Admin" />
     <role_module_permissions role_id="1" module_id="1" access="139" />
     <role_module_permissions role_id="1" module_id="2" access="139" />
+    <role_module_permissions role_id="1" module_id="12" access="139"/>
 
     <groups id="1" name="Group 1" />
     <groups id="2" name="Group 2" />

@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.13, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.1.54, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: phprojekt
 -- ------------------------------------------------------
--- Server version	5.5.13
+-- Server version	5.1.54-1ubuntu4
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -36,6 +36,65 @@ CREATE TABLE `calendar` (
   `rrule` text,
   `visibility` int(1) DEFAULT '0',
   `participant_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `calendar2`
+--
+
+DROP TABLE IF EXISTS `calendar2`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `calendar2` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL DEFAULT '1',
+  `summary` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `comments` varchar(255) DEFAULT NULL,
+  `start` datetime DEFAULT NULL,
+  `last_end` datetime DEFAULT NULL,
+  `end` datetime DEFAULT NULL,
+  `owner_id` int(11) NOT NULL,
+  `rrule` varchar(255) DEFAULT NULL,
+  `recurrence_id` datetime DEFAULT NULL,
+  `visibility` int(1) DEFAULT '1',
+  `uid` varchar(255) NOT NULL,
+  `last_modified` datetime NOT NULL,
+  `uri` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `calendar2_excluded_dates`
+--
+
+DROP TABLE IF EXISTS `calendar2_excluded_dates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `calendar2_excluded_dates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `calendar2_id` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `calendar2_user_relation`
+--
+
+DROP TABLE IF EXISTS `calendar2_user_relation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `calendar2_user_relation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `calendar2_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `confirmation_status` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -154,7 +213,7 @@ CREATE TABLE `frontend_message` (
   `details` text NOT NULL,
   `delivered` int(3) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -231,7 +290,7 @@ CREATE TABLE `history` (
   `action` varchar(50) NOT NULL,
   `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -311,9 +370,8 @@ CREATE TABLE `module` (
   `save_type` int(1) NOT NULL DEFAULT '0',
   `version` varchar(20) DEFAULT NULL,
   `active` int(1) NOT NULL DEFAULT '1',
-  `dependence` varchar(255) NOT NULL DEFAULT 'Application',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -386,7 +444,7 @@ CREATE TABLE `project` (
   `budget` varchar(10) DEFAULT NULL,
   `contact_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -401,7 +459,7 @@ CREATE TABLE `project_module_permissions` (
   `module_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -417,7 +475,7 @@ CREATE TABLE `project_role_user_permissions` (
   `user_id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -432,7 +490,7 @@ CREATE TABLE `role` (
   `name` varchar(255) NOT NULL,
   `parent` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -448,7 +506,7 @@ CREATE TABLE `role_module_permissions` (
   `module_id` int(11) NOT NULL,
   `access` int(3) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -495,7 +553,7 @@ CREATE TABLE `search_words` (
   `word` varchar(255) NOT NULL,
   `count` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -542,7 +600,7 @@ CREATE TABLE `tags` (
   `word` varchar(255) NOT NULL,
   `crc32` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -572,7 +630,7 @@ CREATE TABLE `tags_users` (
   `user_id` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -646,4 +704,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-07-04 17:37:00
+-- Dump completed on 2011-08-03 19:03:53

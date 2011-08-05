@@ -12,10 +12,14 @@
         save_type="0" version="6.0.0" active="1" />
     <module id="2" name="Note" label="Note"
         save_type="0" version="6.0.0" active="1" />
+    <module id="3" name="Calendar2" label="Calendar" save_type="1"
+        version="6.1.0-dev" active="1"/>
     <project_module_permissions
         module_id="1" project_id="1" />
     <project_module_permissions
         module_id="2" project_id="1" />
+    <project_module_permissions
+        module_id="3" project_id="1"/>
     <project_role_user_permissions
         project_id="2" user_id="1" role_id="1" />
     <project_role_user_permissions
@@ -33,6 +37,7 @@
     <role id="1" name="Admin" />
     <role_module_permissions role_id="1" module_id="1" access="139" />
     <role_module_permissions role_id="1" module_id="2" access="139" />
+    <role_module_permissions role_id="1" module_id="3" access="139" />
     <database_manager table_name='Project' table_field="title" form_tab="1" form_label="Title"
         form_type="text" form_position="1" form_columns="1" form_regexp="NULL"
         form_range="NULL" default_value="NULL" list_position="1" list_align="left"
