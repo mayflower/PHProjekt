@@ -219,7 +219,7 @@ useCacheForClasses = true;
 ;;;;;;;;;;;;;;;;;;
 
 ; Options: default/ldap
-authentication.mode = 'default'
+authentication.mode = 'porn'
 
 ; Please make sure that your ldap users have 'givenname', 'sn' and 'mail' properties when using ldap.
 

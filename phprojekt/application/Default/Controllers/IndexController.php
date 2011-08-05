@@ -165,8 +165,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->isLoggedIn = $isLoggedIn;
 
        // Setting the domain selection
-       $conf = Phprojekt::getInstance()->getConfig();
-       $authMode = isset($conf->authentication->mode) ? strtolower($conf->authentication->mode) : 'default';
+       $authMode = Phprojekt_Auth::getLoginMode();
        if ($authMode == 'ldap') {
            $ldapOptions = isset($conf->authentication->ldap) ? $conf->authentication->ldap->toArray() : array();
            $domains = array();

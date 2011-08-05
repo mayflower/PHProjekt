@@ -151,7 +151,8 @@ class Phprojekt_Auth extends Zend_Auth
        } else if ($mode == 'ldap') {
            $success = self::_ldapLogin($username, $password, $options['keepLogged'], $options['loginServer']);
        } else {
-           throw new Phprojekt_Auth_Exception('Invalid user or password', 4);
+           Phprojekt::getInstance()->getLog()->err('Invalid authentication mode, please check configuration.php');
+           throw new Phprojekt_Auth_Exception('Configuration error. Please contact your administrator', 4);
        }
 
        if ($success) {
@@ -159,8 +160,7 @@ class Phprojekt_Auth extends Zend_Auth
            if (!headers_sent()) {
                Zend_Session::regenerateId();
            }
-
-           return $success;
+           return true;
        } else {
            throw new Phprojekt_Auth_Exception('Invalid user or password', 4);
        }
@@ -194,62 +194,63 @@ class Phprojekt_Auth extends Zend_Auth
             throw new Phprojekt_Auth_Exception('Invalid user or password', 3);
         }
 
-       // If the user was found we will save the user information on the session
-       $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
-       $authNamespace->userId = $user->id;
-       $authNamespace->admin  = $user->admin;
+        // If the user was found we will save the user information on the session
+        $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
+        $authNamespace->userId = $user->id;
+        $authNamespace->admin  = $user->admin;
 
-       if ($keepLogged) {
-           // Delete previous existing data, just in case
-           self::_deleteDbAndCookies($userId);
-           // Store matching keepLogged data in DB and browser
-           self::_saveLoginData($userId);
-       }
+        if ($keepLogged) {
+            // Delete previous existing data, just in case
+            self::_deleteDbAndCookies($userId);
+            // Store matching keepLogged data in DB and browser
+            self::_saveLoginData($userId);
+        }
 
         // Please, put any extra info of user to be saved on session here
         return true;
-   }
+    }
 
-   private static function _ldapLogin($username, $password, $keepLogged = false, $loginServer = null)
-   {
-       if (!function_exists('ldap_connect')) {
-           throw new Phprojekt_Auth_Exception('LDAP extension not loaded for PHP', 7);
-       }
+    private static function _ldapLogin($username, $password, $keepLogged = false, $loginServer = null)
+    {
+        if (!function_exists('ldap_connect')) {
+            throw new Phprojekt_Auth_Exception('LDAP extension not loaded for PHP', 7);
+        }
 
-       // Get PHProjekt user for integration purposes
-       $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-       $userId = $user->findIdByUsername($username);
+        // Get PHProjekt user for integration purposes
+        $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $userId = $user->findIdByUsername($username);
 
-       // We don't want LDAP authentication for PHProjekt system admin
-       if ($userId !== 1) {
-           $auth = Zend_Auth::getInstance();
-           $conf = Phprojekt::getInstance()->getConfig();
-           $ldapOptions = $conf->authentication->ldap->toArray();
+        // We don't want LDAP authentication for PHProjekt system admin
+        if ($userId !== 1) {
+            $auth = Zend_Auth::getInstance();
+            $conf = Phprojekt::getInstance()->getConfig();
+            $ldapOptions = $conf->authentication->ldap->toArray();
 
-           try {
-               $adapter = new Zend_Auth_Adapter_Ldap($ldapOptions, $username, $password);
-               $result = $auth->authenticate($adapter);
-           } catch (Exception $e) {
-               throw new Phprojekt_Auth_Exception('Failed to authenticate with the ldap server', 6);
-           }
+            try {
+                $adapter = new Zend_Auth_Adapter_Ldap($ldapOptions, $username, $password);
+                $result = $auth->authenticate($adapter);
+            } catch (Exception $e) {
+                throw new Phprojekt_Auth_Exception('Failed to authenticate with the ldap server', 6);
+            }
 
-           if ($result->isValid()) {
-               // Authentication ok with LDAP
-               self::_ldapIntegration($userId, $username, $password, $loginServer);
-           }
-       }
+            if ($result->isValid()) {
+                // Authentication ok with LDAP
+                self::_ldapIntegration($userId, $username, $password, $loginServer);
+            }
+        }
 
-       // Default login after LDAP authentication and integration
-       return self::_defaultLogin($username, $password, $keepLogged);
-   }
+        // Default login after LDAP authentication and integration
+        return self::_defaultLogin($username, $password, $keepLogged);
+    }
 
-   static private function _ldapIntegration($userId, $username, $password, $loginServer = null) {
+    private static function _ldapIntegration($userId, $username, $password, $loginServer = null)
+    {
        $userId = intval($userId);
 
        $conf = Phprojekt::getInstance()->getConfig();
        $ldapOptions = $conf->authentication->ldap->toArray();
 
-       // Zend library does not allow determing from which server the user was found from
+       // Zend library does not allow determining from which server the user was found from
        // That's why we need to request the server from the user during login.
        $account = null;
        if ($loginServer !== null && array_key_exists($loginServer, $ldapOptions)) {
@@ -328,7 +329,7 @@ class Phprojekt_Auth extends Zend_Auth
            $params['lastname'] = $lastname;
            $params['email'] = $email;
 
-           if ($userId > 0 && is_array($params)) {
+           if ($userId > 0) {
                // Update user parameters with those found from LDAP server
                $user->find($userId);
 
