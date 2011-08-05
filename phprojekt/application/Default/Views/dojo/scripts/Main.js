@@ -20,11 +20,107 @@
  */
 
 dojo.provide("phpr.Default.Main");
+dojo.provide("phpr.Default.SearchContentMixin");
 
 dojo.require("dijit.form.Button");
 dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.TitlePane");
 dojo.require("dijit.Tooltip");
+
+/**
+ * this mixin is used to render the content of a search onto the page.
+ *
+ * exported view properties:
+ *
+ * clear(): clears the mixin's content
+ * update(config): takes the search content as a parameter
+ *
+ * exported after the first update:
+ * defaultMainContent: the content box in which the search results get rendered
+ * resultsTitleBox: the title of the search result
+ * detailsBox: the container in which the search results are rendered
+ */
+dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewContentMixin, {
+    mixin: function() {
+        this.inherited(arguments);
+        this.view.clear = dojo.hitch(this, "clear");
+    },
+    destroyMixin: function() {
+        this.clear();
+        this._clearCenterMainContent();
+        delete this.view.clear;
+        delete this.view.defaultMainContent;
+        delete this.view.resultsTitleBox;
+        delete this.view.detailsBox;
+    },
+    update: function(config) {
+        this.clear();
+        this._renderSearchResults(config || {});
+    },
+    clear: function() {
+        this._clearCenterMainContent();
+        return this.view;
+    },
+    _renderSearchResults: function(config) {
+        // Create our container layout
+        var mainContent = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.results.mainContentResults.html"
+        });
+
+        this.view.defaultMainContent = mainContent.mainContent;
+        this.view.resultsTitleBox = mainContent.resultsTitleBox;
+        // set the title
+        this.view.resultsTitleBox.set('content', config.resultsTitle || "");
+
+        this.view.detailsBox = mainContent.detailsBox;
+
+        var results = {};
+        var data = config.results;
+
+        // iterate over all search results
+        for (var i = 0; i < data.length; i++) {
+            var modulesData = data[i];
+            // create result lists for each module
+            if (!results[modulesData.moduleLabel]) {
+                results[modulesData.moduleLabel] = [];
+            }
+
+            // append each result to the results list of the module
+            results[modulesData.moduleLabel].push(
+                    new phpr.Default.System.TemplateWrapper({
+                        templateName: "phpr.Default.template.results.results.html",
+                        templateData: {
+                            id:            modulesData.id,
+                            moduleId:      modulesData.modulesId,
+                            moduleName:    modulesData.moduleName,
+                            projectId:     modulesData.projectId,
+                            firstDisplay:  modulesData.firstDisplay,
+                            secondDisplay: modulesData.secondDisplay,
+                            resultType:    "tag"
+                        }
+                    }));
+        }
+
+        for (var i in results) {
+            // create the module block of the results list
+            var block = new dijit.layout.ContentPane({
+                title: i + " (" + results[i].length + ")"
+            });
+
+            // and append all items of of that module to the block
+            for (var entry in results[i]) {
+                block.domNode.appendChild(results[i][entry].domNode);
+            }
+
+            this.view.detailsBox.addChild(block);
+        }
+
+        this.view.centerMainContent.set('content', mainContent);
+        this.view.defaultMainContent.startup();
+        this.view.detailsBox.startup();
+    }
+});
 
 dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     // Summary: class for initialilzing a default module
