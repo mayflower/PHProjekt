@@ -772,7 +772,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     },
 
     processUrlHash: function(hash) {
-        /*
+        // WARNING:
+        //    Replaced by pagemanager
         // Summary:
         //    Process the hash and run the correct function
         // Description:
@@ -785,70 +786,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //      "Search" => open the search page with the next value as word
         //      "Tag" => open the tag page with the next value as tag
         //      other, call the processActionFromUrlHash function for parse it
-        var data   = hash.split(",");
-        var module = "Project";
-
-        // Module name
-        if (data[0]) {
-            var module = data.shift().replace(/.*#(.*)/, "$1");
-        }
-
-        var newProject = false;
-        // Normal modules use the project as second parameter
-        if (data[0] && !phpr.isGlobalModule(module)) {
-            var projectId = data.shift();
-            if (projectId < 1) {
-                projectId = 1;
-            }
-            if (phpr.currentProjectId != projectId) {
-                newProject = true;
-            }
-            phpr.currentProjectId = projectId;
-        } else if (phpr.isGlobalModule(module)) {
-            if (phpr.currentProjectId != phpr.rootProjectId) {
-                newProject = true;
-            }
-            phpr.currentProjectId = phpr.rootProjectId;
-        }
-
-        // The second paremater (for global)
-        // The third paremater (for all)
-        if (data[0] && data[1] && data[0] == 'id') {
-            // If is an id, open a form
-            var id = parseInt(data[1]);
-            if (module && (id > 0 || id == 0)) {
-                if (module !== phpr.module || newProject) {
-                    dojo.publish(module + ".reload");
-                }
-                dojo.publish(module + ".openForm", [id, module]);
-            }
-        } else if (data[0]) {
-            // Check general words like "Search or Tag"
-            // If is other, call the module function for process it
-            switch (data[0]) {
-                case 'Search':
-                    var words = '';
-                    if (data[1]) {
-                        words = data[1];
-                    }
-                    this.showSearchResults(words);
-                    break;
-                case 'Tag':
-                    var tag = '';
-                    if (data[1]) {
-                        tag = data[1];
-                    }
-                    this.showTagsResults(tag);
-                    break;
-                default:
-                    dojo.publish(module + ".processActionFromUrlHash", [data]);
-                    break;
-            }
-        } else {
-            // Dafault value, only one parameter, and must be the module
-            dojo.publish(module + ".reload");
-        }
-        */
     },
 
     processActionFromUrlHash: function(data) {
