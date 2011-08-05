@@ -82,7 +82,9 @@
   <exec executable="phpcb">
    <arg line="--log    '${basedir}/build/logs'
               --source 'phprojekt'
-              --output '${basedir}/build/code-browser'" />
+              --output '${basedir}/build/code-browser'
+              --exclude '*htdocs/dojo/*'
+              --exclude '*phprojekt/library/Zend/*'" />
   </exec>
  </target>
 

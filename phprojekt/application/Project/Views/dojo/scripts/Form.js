@@ -157,6 +157,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             });
             var cell = row.insertCell(cellIndex);
             cell.innerHTML = userField;
+            this.garbageCollector.addNode(cell);
             cellIndex++;
 
             // Role field
@@ -169,6 +170,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             });
             var cell = row.insertCell(cellIndex);
             cell.innerHTML = roleField;
+            this.garbageCollector.addNode(cell);
             cellIndex++;
 
             // Delete button
@@ -178,6 +180,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             });
             var cell = row.insertCell(cellIndex);
             cell.innerHTML = button;
+            this.garbageCollector.addNode(cell);
             cellIndex++;
 
             dojo.parser.parse(row);

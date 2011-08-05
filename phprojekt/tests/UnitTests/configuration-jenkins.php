@@ -19,9 +19,9 @@ database.params.password    = "phprojekt"
 
 applicationDir       = "/var/lib/hudson/jobs/PHProjekt (next)/workspace/phprojekt/"
 
-tmpPath            = "/var/lib/hudson/jobs/PHProjekt (next)/workspace/phprojekt/tests/tmp/"
-applicationPath    = "/var/lib/hudson/jobs/PHProjekt (next)/workspace/phprojekt/application/"
-log.debug.filename = "/var/lib/hudson/jobs/PHProjekt (next)/workspace/phprojekt/tests/logs/debug.log"
+tmpPath            = "/var/lib/hudson/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/tmp/"
+applicationPath    = "/var/lib/hudson/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/application/"
+log.debug.filename = "/var/lib/hudson/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/logs/debug.log"
 
 itemsPerPage         = 3;
 userDisplayFormat    = 0

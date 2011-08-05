@@ -94,8 +94,8 @@ dojo.declare("phpr.Calendar.ViewDayListSelect", phpr.Calendar.DefaultView, {
             eventsAttr:           eventsAttr
         });
 
-        dojo.publish('Calendar.connectMouseScroll');
-        dojo.publish('Calendar.connectViewResize');
+        this.main.connectMouseScroll();
+        this.main.connectViewResize();
 
         this.setVarsAndDivs();
         this.classesSetup(true);

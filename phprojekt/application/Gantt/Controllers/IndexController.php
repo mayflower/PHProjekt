@@ -78,7 +78,7 @@ class Gantt_IndexController extends IndexController
     public function jsonGetProjectsAction()
     {
         $projectId    = (int) $this->getRequest()->getParam('nodeId', null);
-        $data['data'] = array();
+        $data['data'] = array('projects' => array());
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, $projectId);
         $tree         = $tree->setup();

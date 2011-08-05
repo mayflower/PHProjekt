@@ -19,9 +19,9 @@ database.params.password    = "phprojekt"
 
 applicationDir       = "/home/dsp/public_html/phprojekt-mvc"
 
-tmpPath            = "/home/dsp/phprojekt_private/tmp/"
-applicationPath    = "/home/dsp/phprojekt_private/application/"
-log.debug.filename = "/home/dsp/phprojekt_private/logs/debug.log"
+tmpPath            = "/home/dsp/phprojekt_private/tests/private_folder/tmp/"
+applicationPath    = "/home/dsp/phprojekt_private/tests/private_folder/application/"
+log.debug.filename = "/home/dsp/phprojekt_private/tests/private_folder/logs/debug.log"
 
 itemsPerPage         = 3;
 userDisplayFormat    = 0

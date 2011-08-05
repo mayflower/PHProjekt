@@ -159,6 +159,7 @@ class Timecard_IndexController_Test extends FrontInit
 
     /**
      * Test of json Save
+     *
      */
     public function testJsonSaveOverlapping()
     {
@@ -169,16 +170,13 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
-        try {
-            $this->getResponse();
-        } catch (Phprojekt_PublishedException $error) {
-            $this->assertEquals("Time period: Can not save it because it overlaps existing one", $error->getMessage());
-            return;
-        }
+        // throws exception
+        $this->getResponse();
     }
 
     /**
      * Test of json Save
+     *
      */
     public function testJsonSaveJustStartOverlapping()
     {
@@ -188,17 +186,13 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
-        try {
-            $this->getResponse();
-        } catch (Phprojekt_PublishedException $error) {
-            $this->assertEquals("Time period: Can not Start Working Time because this moment is occupied by an "
-                . "existing period or an open one", $error->getMessage());
-            return;
-        }
+        // throws exception
+        $this->getResponse();
     }
 
     /**
      * Test of json Save
+     *
      */
     public function testJsonSaveJustEndOverlapping()
     {
@@ -213,16 +207,14 @@ class Timecard_IndexController_Test extends FrontInit
 
         $this->request->setParam('startDatetime', '2009-05-16');
         $this->request->setParam('endTime', '12:00:00');
-        try {
-            $this->getResponse();
-        } catch (Phprojekt_PublishedException $error) {
-            $this->assertEquals("Time period: Can not save it because it overlaps existing one", $error->getMessage());
-            return;
-        }
+        // throws exception
+        $this->getResponse();
     }
 
     /**
      * Test of json Save
+     *
+     * @expectedException Phprojekt_PublishedException
      */
     public function testJsonSaveWrongStartTime()
     {
@@ -232,16 +224,14 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
-        try {
-            $this->getResponse();
-        } catch (Phprojekt_PublishedException $error) {
-            $this->assertEquals("Start: Is a required field", $error->getMessage());
-            return;
-        }
+        // throws exception
+        $this->getResponse();
     }
 
     /**
      * Test of json Save
+     *
+     * @expectedException Phprojekt_PublishedException
      */
     public function testJsonSaveStartAfterEndTime()
     {
@@ -252,16 +242,14 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
-        try {
-            $this->getResponse();
-        } catch (Phprojekt_PublishedException $error) {
-            $this->assertEquals("Hours: The end time must be after the start time", $error->getMessage());
-            return;
-        }
+        // throws exception
+        $this->getResponse();
     }
 
     /**
      * Test of json Save
+     *
+     * @expectedException Phprojekt_PublishedException
      */
     public function testJsonSaveEndTimeInvalid()
     {
@@ -272,12 +260,8 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('notes', 'My note');
         $this->request->setParam('projectId', 1);
         $this->request->setParam('nodeId', 1);
-        try {
-            $this->getResponse();
-        } catch (Phprojekt_PublishedException $error) {
-            $this->assertEquals("Hours: The end time must be after the start time", $error->getMessage());
-            return;
-        }
+        // throws exception
+        $this->getResponse();
     }
 
     /**

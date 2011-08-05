@@ -198,7 +198,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             $select = $database->select();
             $select->from($table)
                    ->where($where)
-                   ->order('path');
+                   ->order('path')
+                   ->order('id');
             $treeData = $select->query()->fetchAll(Zend_Db::FETCH_CLASS);
             foreach ($treeData as $index => $record) {
                 foreach ($record as $key => $value) {

@@ -34,6 +34,7 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
     _updateCacheIds:       null,
     _participantsInDb:     null,
     _participantsInTab:    null,
+    _originalRrule:        null,
 
     _FRMWIDG_BASICDATA:  0,
     _FRMWIDG_PARTICIP:   1,
@@ -68,6 +69,15 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         }
 
         if (this.id > 0) {
+            if (!this._originalRrule
+                    && this.sendData['rruleFreq']
+                    && null === this._multipleEvents) {
+                // The recurrence has been added by this edit. We set
+                // multipleEvents to true so the server correctly adds it and
+                // the user won't get prompted.
+                this._multipleEvents = true;
+            }
+
             if (this.sendData['rruleFreq'] && null === this._multipleEvents) {
                 // If the event has recurrence ask what to modify
                 this.showEventSelector('Edit', "submitForm");
@@ -159,13 +169,15 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         //    Apply for special events on the fields
         if (dijit.byId('startDatetime_forDate')) {
             this._currentDate = dijit.byId('startDatetime_forDate').value;
-            dojo.connect(dojo.byId('startDatetime_forDate'), "onblur", this, 'startDateBlur');
+            this.garbageCollector.addEvent(
+                dojo.connect(dojo.byId('startDatetime_forDate'), "onblur", this, 'startDateBlur'));
         } else {
             this._currentDate = null;
         }
         if (dijit.byId('startDatetime_forTime')) {
             this._currentTime = dijit.byId('startDatetime_forTime').value;
-            dojo.connect(dojo.byId('startDatetime_forTime'), "onblur", this, 'startTimeBlur');
+            this.garbageCollector.addEvent(
+                dojo.connect(dojo.byId('startDatetime_forTime'), "onblur", this, 'startTimeBlur'));
         } else {
             this._currentTime = null;
         }
@@ -261,7 +273,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         };
         newParticipant = new dijit.form.Button(params);
         dojo.byId("participantAddButton").appendChild(newParticipant.domNode);
-        dojo.connect(newParticipant, "onClick", dojo.hitch(this, "newParticipant"));
+        this.garbageCollector.addNode(newParticipant);
+        this.garbageCollector.addEvent(
+            dojo.connect(newParticipant, "onClick", dojo.hitch(this, "newParticipant")));
 
         // Delete buttons for participant
         for (i in participants) {
@@ -276,7 +290,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
 
             var tmp = new dijit.form.Button(params);
             dojo.byId(buttonName).appendChild(tmp.domNode);
-            dojo.connect(tmp, "onClick", dojo.hitch(this, "deleteParticipant", userId));
+            this.garbageCollector.addNode(tmp);
+            this.garbageCollector.addEvent(
+                dojo.connect(tmp, "onClick", dojo.hitch(this, "deleteParticipant", userId)));
         }
     },
 
@@ -312,7 +328,9 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             };
             var tmp = new dijit.form.Button(params);
             dojo.byId(buttonName).appendChild(tmp.domNode);
-            dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteParticipant", userId));
+            this.garbageCollector.addNode(tmp);
+            this.garbageCollector.addEvent(
+                dojo.connect(dijit.byId(tmp.id), "onClick", dojo.hitch(this, "deleteParticipant", userId)));
 
             this._participantsInTab += 1;
         }
@@ -474,11 +492,13 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         };
         var singleEvent = new dijit.form.Button(params);
         dojo.byId("eventSelectorContainer").appendChild(singleEvent.domNode);
-        dojo.connect(singleEvent, "onClick", dojo.hitch(this, function() {
-            this._multipleEvents = false;
-            dijit.byId('eventSelectorDialog').hide();
-            eval('this.' + nextFunction + '()');
-        }));
+        this.garbageCollector.addNode(singleEvent);
+        this.garbageCollector.addEvent(
+            dojo.connect(singleEvent, "onClick", dojo.hitch(this, function() {
+                    this._multipleEvents = false;
+                    dijit.byId('eventSelectorDialog').hide();
+                    eval('this.' + nextFunction + '()');
+                })));
 
         // Add button for multiple event
         var params = {
@@ -487,11 +507,12 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         };
         var multipleEvent = new dijit.form.Button(params);
         dojo.byId("eventSelectorContainer").appendChild(multipleEvent.domNode);
-        dojo.connect(multipleEvent, "onClick", dojo.hitch(this, function() {
-            this._multipleEvents = true;
-            dijit.byId('eventSelectorDialog').hide();
-            eval('this.' + nextFunction + '()');
-        }));
+        this.garbageCollector.addEvent(
+            dojo.connect(multipleEvent, "onClick", dojo.hitch(this, function() {
+                this._multipleEvents = true;
+                dijit.byId('eventSelectorDialog').hide();
+                eval('this.' + nextFunction + '()');
+            })));
 
         dijit.byId('eventSelectorDialog').show();
     },
@@ -512,11 +533,13 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         };
         var singleParticipant = new dijit.form.Button(params);
         dojo.byId("eventSelectorContainer").appendChild(singleParticipant.domNode);
-        dojo.connect(singleParticipant, "onClick", dojo.hitch(this, function() {
-            this._multipleParticipants = false;
-            dijit.byId('eventSelectorDialog').hide();
-            eval('this.' + nextFunction + '()');
-        }));
+        this.garbageCollector.addNode(singleParticipant);
+        this.garbageCollector.addEvent(
+            dojo.connect(singleParticipant, "onClick", dojo.hitch(this, function() {
+                this._multipleParticipants = false;
+                dijit.byId('eventSelectorDialog').hide();
+                eval('this.' + nextFunction + '()');
+            })));
 
         // Add button for multiple Participants
         var params = {
@@ -525,11 +548,13 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
         };
         var multipleParticipants = new dijit.form.Button(params);
         dojo.byId("eventSelectorContainer").appendChild(multipleParticipants.domNode);
-        dojo.connect(multipleParticipants, "onClick", dojo.hitch(this, function() {
-            this._multipleParticipants = true;
-            dijit.byId('eventSelectorDialog').hide();
-            eval('this.' + nextFunction + '()');
-        }));
+        this.garbageCollector.addNode(multipleParticipants);
+        this.garbageCollector.addEvent(
+            dojo.connect(multipleParticipants, "onClick", dojo.hitch(this, function() {
+                this._multipleParticipants = true;
+                dijit.byId('eventSelectorDialog').hide();
+                eval('this.' + nextFunction + '()');
+            })));
 
         dijit.byId('eventSelectorDialog').show();
     },
@@ -561,5 +586,14 @@ dojo.declare("phpr.Calendar.Form", phpr.Default.Form, {
             phpr.DataStore.deleteData({url: relatedUrl});
             phpr.DataStore.deleteData({url: tagUrl});
         }
+    },
+
+    getFormData:function() {
+        // Summary:
+        //    Override this method to save whether we have a recurrence set on
+        //    the server.
+        phpr.Calendar.Form.superclass.getFormData.apply(this);
+        var data = phpr.DataStore.getData({url: this._url});
+        this._originalRrule = data[0].rrule;
     }
 });

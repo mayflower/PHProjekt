@@ -86,8 +86,8 @@ dojo.declare("phpr.Calendar.ViewWeekList", phpr.Calendar.DefaultView, {
             furtherEventsMessage: phpr.nls.get('Further events'),
             eventsAttr:           eventsAttr
         });
-        dojo.publish('Calendar.connectMouseScroll');
-        dojo.publish('Calendar.connectViewResize');
+        this.main.connectMouseScroll();
+        this.main.connectViewResize();
 
         this._htmlEventDivsAmount = this.events.length;
 

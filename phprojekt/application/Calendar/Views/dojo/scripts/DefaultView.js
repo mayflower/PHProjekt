@@ -134,7 +134,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Default.System.Component, {
         this._tagUrl = phpr.webpath + 'index.php/Default/Tag/jsonGetTags'; // Get the module tags
         phpr.DataStore.addStore({url: this._tagUrl});
         phpr.DataStore.requestData({url: this._tagUrl, processData: dojo.hitch(this, function() {
-            this.publish("drawTagsBox", [phpr.DataStore.getData({url: this._tagUrl})]);
+            this.main.drawTagsBox(phpr.DataStore.getData({url: this._tagUrl}));
         })});
     },
 
@@ -153,7 +153,9 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Default.System.Component, {
             };
             this._exportButton = new dijit.form.Button(params);
             dojo.byId("buttonRow").appendChild(this._exportButton.domNode);
-            dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"));
+            this.garbageCollector.addNode(this._exportButton);
+            this.garbageCollector.addEvent(
+                dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData")));
         }
     },
 
@@ -736,7 +738,7 @@ dojo.declare("phpr.Calendar.DefaultView", phpr.Default.System.Component, {
                     } else {
                         this._newRowValues = {};
                         this._oldRowValues = {};
-                        this.publish("updateCacheData");
+                        this.main.updateCacheData();
                     }
                 })
             });
@@ -1767,13 +1769,16 @@ dojo.declare("phpr.Calendar.Moveable", dojo.dnd.Moveable, {
             this.parentClass.eventMoved(this.node, true);
             // Allow the event to be just clicked to open it in the form, but wait a while first...
             this.eventDivMoved = false;
-            setTimeout('dojo.publish("Calendar.enableEventDivClick")', 500);
+            setTimeout(dojo.hitch(phpr.pageManager.getModule('Calendar'), "enableEventDivClick"), 500);
         } else {
             if (!this.parentClass.eventClickDisabled) {
                 // It was just a click - Open event in the form
                 var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);
                 var eventId    = this.parentClass.events[movedEvent]['id'];
-                dojo.publish('Calendar.setUrlHash', [phpr.module, eventId]);
+                phpr.pageManager.changeState({
+                    moduleName: phpr.module,
+                    id: eventId
+                });
             }
         }
         this.parentClass.eventClickDisabled = false;
