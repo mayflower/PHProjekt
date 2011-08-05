@@ -484,6 +484,8 @@ class Setup_Models_Config
 ; Options: default/ldap
 authentication.mode = 'default'
 
+; Please make sure that your ldap users have 'givenname', 'sn' and 'mail' properties when using ldap.
+
 ; Default values for new users [0/1]. DO NOT SET THIS TO 1 WITHOUT KNOWING WHAT YOU DO!
 authentication.integration.admin = 0
 ; default status. 'A' for Active, 'I' for Inactive
