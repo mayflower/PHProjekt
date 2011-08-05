@@ -130,7 +130,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     formWidget: null,
     _langUrl:   null,
     userStore:  null,
-    subModules: new Array(),
+    subModules: [],
     globalModuleNavigationButtons: {},
     subModuleNavigationButtons: {},
 
@@ -213,7 +213,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     },
 
     preOpenForm: function() {
-        // Summary: 
+        // Summary:
         //      Destroy existing form before a new one is opened
         // Description:
         //      This function should be the first function called in
