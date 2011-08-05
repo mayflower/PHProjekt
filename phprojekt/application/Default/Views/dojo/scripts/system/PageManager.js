@@ -108,11 +108,15 @@ dojo.declare("phpr.Default.System.PageManager", null, {
 
         var module = config.moduleName;
 
+        var oldmodule = phpr.module;
+
         var mod = this.getModule(module);
 
         var newProject = false;
 
         // replacement for processUrlHash in every module
+
+        phpr.module = module;
 
         if (config.projectId
                 && config.moduleName
@@ -135,7 +139,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         if ("undefined" != typeof config.id) {
             // If is an id, open a form
             if (module && (config.id > 0 || config.id === 0)) {
-                if (module !== phpr.module || newProject) {
+                if (module !== oldmodule || newProject) {
                     this._reloadModule(module);
                 }
                 if (dojo.isFunction(mod.openForm)) {
