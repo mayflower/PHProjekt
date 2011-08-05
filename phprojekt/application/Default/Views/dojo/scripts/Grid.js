@@ -1068,7 +1068,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 // Extra Columns for current module
                 for (var indexCol in this.extraColumns) {
                     var key         = this.extraColumns[indexCol].key;
-                    var divClass    = this.extraColumns[indexCol].class;
+                    var divClass    = this.extraColumns[indexCol]["class"];
                     var label       = this.extraColumns[indexCol].label;
                     content[i][key] = divClass + ' || ' + phpr.nls.get(label);
                 };
@@ -1468,13 +1468,13 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             this.comboActions[0]          = new Array();
             this.comboActions[0].key   = '';
             this.comboActions[0].label = phpr.nls.get('With selected');
-            this.comboActions[0].class = '';
+            this.comboActions[0]["class"] = '';
 
             for (var i = 0; i < actions.length; i ++) {
                 var actionData      = new Array();
                 actionData.key   = actions[i].action + '|' + actions[i].mode;
                 actionData.label = actions[i].label;
-                actionData.class = actions[i].class;
+                actionData["class"] = actions[i]["class"];
                 switch (actions[i].target) {
                     case this.TARGET_SINGLE:
                     default:
