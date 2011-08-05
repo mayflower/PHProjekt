@@ -39,8 +39,13 @@
  * @group      timecard-model
  * @group      timecard-model-setting
  */
-class Timecard_Models_Setting_Test extends PHPUnit_Framework_TestCase
+class Timecard_Models_Setting_Test extends DatabaseTest
 {
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
+    }
+
     /**
      * setUp method for PHPUnit
      */

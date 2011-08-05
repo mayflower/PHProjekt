@@ -172,9 +172,15 @@ abstract class FrontInit extends DatabaseTest
         $this->request->setDispatched(false);
         ob_start();
         $this->error = false;
-        $this->front->dispatch($this->request, $this->response);
-        $this->content = ob_get_contents();
-        ob_end_clean();
+        try {
+            $this->front->dispatch($this->request, $this->response);
+            $this->content = ob_get_contents();
+            ob_end_clean();
+        } catch(Exception $e) {
+            /* make sure we end the output buffering in case of an exception */
+            ob_end_clean();
+            throw $e;
+        }
 
         $this->request->setParams(array());
 

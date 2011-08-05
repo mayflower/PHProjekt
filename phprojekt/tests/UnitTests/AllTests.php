@@ -112,23 +112,23 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->addTest(User_AllTests::suite());
         $suite->addTest(Timecard_AllTests::suite());
         $suite->addTest(Statistic_AllTests::suite());
-        //$suite->addTest(Calendar_AllTests::suite());
-        //$suite->addTest(Note_AllTests::suite());
         $suite->addTest(Todo_AllTests::suite());
         $suite->addTest(Phprojekt_AllTests::suite());
-        //$suite->addTest(Helpdesk_AllTests::suite());
-        //$suite->addTest(History_AllTests::suite());
         $suite->addTest(Role_AllTests::suite());
         $suite->addTest(Tab_AllTests::suite());
         $suite->addTest(Project_AllTests::suite());
-        //$suite->addTest(Module_AllTests::suite());
         $suite->addTest(Contact_AllTests::suite());
         $suite->addTest(Filemanager_AllTests::suite());
         $suite->addTest(Gantt_AllTests::suite());
+        $suite->addTest(Default_AllTests::suite());
 
+        //$suite->addTest(Calendar_AllTests::suite());
+        //$suite->addTest(Note_AllTests::suite());
+        //$suite->addTest(Helpdesk_AllTests::suite());
+        //$suite->addTest(History_AllTests::suite());
+        //$suite->addTest(Module_AllTests::suite());
         // Add here additional test suites
 
-        $suite->addTest(Default_AllTests::suite());
         //$suite->addTestSuite(Selenium_AllTests::suite());
 
         return $suite;
