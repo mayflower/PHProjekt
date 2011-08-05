@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "Свойства ссылки",
 	insertImageTitle: "Свойства изображения",
@@ -11,3 +13,5 @@
 	newWindow: "Новое окно"
 })
 
+//end v1.x content
+);

@@ -185,7 +185,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 disabled:  false
             };
             this._favoriteButton = new dijit.form.Button(params);
-            dojo.byId("buttonRow").appendChild(this._favoriteButton.domNode);
+            phpr.viewManager.getView().buttonRow.domNode.appendChild(this._favoriteButton.domNode);
             dojo.connect(this._favoriteButton, "onClick",  dojo.hitch(this, "openManageFavorites"));
         }
     },

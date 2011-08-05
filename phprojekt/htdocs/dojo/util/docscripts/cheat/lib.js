@@ -1,4 +1,5 @@
 dojo.provide("util.docscripts.cheat.lib");
+dojo.require("util.docscripts.cheat.floatup");
 (function(){
 	
 	var api = util.docscripts.cheat.lib;
@@ -21,16 +22,16 @@ dojo.provide("util.docscripts.cheat.lib");
 
 		ignore:[
 			// stuff to ignore:
-			"keys", "NodeList", "fx", "prototype", 
+			"keys", "NodeList", "fx", "prototype", "lib", /* AMD package module */
 			
 			// lifecycle stuff to hide
-			"loaded", "unloaded", "loadInit", "windowUnloaded",
+			"loaded", "unloaded", "loadInit", "windowUnloaded", "simulatedLoading", "floatup",
 			"preamble", "WidgetSet", "registry", "inherited", "postscript",
 
 			// dijit.WidgetSet
-			"add", "remove", 
+			"add", "remove",
 
-			// 
+			//
 			"dijit", "form", "layout", "lang", "dir", "class",
 			"declaredClass", "wai", "typematic", "popup",
 
@@ -45,7 +46,7 @@ dojo.provide("util.docscripts.cheat.lib");
 		tags: {
 			dojo:{
 				"Effects":[
-					"anim", "animateProperty", "fadeIn", "fadeOut", "animate", "fx.chain", "fx.combine", 
+					"anim", "animateProperty", "fadeIn", "fadeOut", "animate", "fx.chain", "fx.combine",
 					"_Animation", "_Line", "Animation" /* _Animation deprecated in 1.4 */
 				],
 
@@ -54,7 +55,7 @@ dojo.provide("util.docscripts.cheat.lib");
 				],
 
 				"Language-Helpers":[
-					"isArray", "isFunction", "isString", "isObject", "isArrayLike", "unique", 
+					"isArray", "isFunction", "isString", "isObject", "isArrayLike", "unique",
 					"eval", "isAlien", "trim", "Deferred", "_toArray", "replace", "when"
 				],
 
@@ -64,13 +65,13 @@ dojo.provide("util.docscripts.cheat.lib");
 				],
 
 				"Event-System":[
-					"connect", "publish", "subscribe", "pub", "sub", "unsubscribe", "disconnect", 
+					"connect", "publish", "subscribe", "pub", "sub", "unsubscribe", "disconnect",
 					"fixEvent", "stopEvent", "connectPublisher", "isCopyKey", "mouseButtons"
 				],
 
 				"NodeList-Events":[
 					"onmousedown", "onmouseenter", "onmouseleave", "onmousemove", "onmouseover",
-					 "onmouseout", "onblur", 
+					 "onmouseout", "onblur",
 					"onfocus", "onclick", "onchange", "onload", "onmousedown", "onmouseup", "onsubmit",
 					"onerror", "onkeydown", "onkeypress", "onkeyup", "hover"
 				],
@@ -90,7 +91,7 @@ dojo.provide("util.docscripts.cheat.lib");
 				],
 
 				"Document-Lifecycle":[
-					"addOnLoad", "addOnUnload", "addOnWindowUnload","loaded", 
+					"addOnLoad", "addOnUnload", "addOnWindowUnload","loaded",
 					"unloaded", "loadInit",  "windowUnloaded", "ready"
 				],
 
@@ -110,12 +111,12 @@ dojo.provide("util.docscripts.cheat.lib");
 				],
 
 				"Styles-CSS":[
-					"style", "addClass", "removeClass", "toggleClass", "hasClass", "getComputedStyle", "boxModel", 
+					"style", "addClass", "removeClass", "toggleClass", "replaceClass", "hasClass", "getComputedStyle", "boxModel",
 					"show", "hide", "toggle", "hoverClass"
 				],
 
 				"JSON":[
-					"fromJson", "toJson", "toJsonIndentStr", "formToObject", "queryToObject", "formToQuery", 
+					"fromJson", "toJson", "toJsonIndentStr", "formToObject", "queryToObject", "formToQuery",
 					"formToJson", "objectToQuery", "fieldToObject"
 				],
 
@@ -125,10 +126,10 @@ dojo.provide("util.docscripts.cheat.lib");
 
 				"Advanced-Scope":[
 					"conflict", "withDoc", "withGlobal", "setContext", "doc", "global"
-				], 
+				],
 
 				"Sniffing":[
-					"isBrowser", "isFF", "isKhtml", "isMoz", "isMozilla", "isIE", "isOpera", "isBrowser", 
+					"isBrowser", "isFF", "isKhtml", "isMoz", "isMozilla", "isIE", "isOpera", "isBrowser",
 					"isQuirks", "isWebKit", "isChrome", /* new 1.4 */ "isMac"
 				]
 			},
@@ -173,14 +174,14 @@ dojo.provide("util.docscripts.cheat.lib");
 				"Dijit-Utils":[
 					"getUniqueId", "getDocumentWindow", "getViewport", "scrollIntoView", "BackgroundIframe",
 					"registerIframe", "moveToBookmark", "getBookmark", "isCollapsed", "placementRegistry",
-					"registerWin" 
+					"registerWin"
 				]
-			}	
+			}
 		},
 
 		getTag: function(key, part){
 			part = part || "dojo";
-			if(api.tags[part]){ 
+			if(api.tags[part]){
 				// summary: find the first matching function name in the tagMap
 				for(var i in api.tags[part]){
 					if(dojo.indexOf(api.tags[part][i], key) >= 0){
@@ -192,7 +193,7 @@ dojo.provide("util.docscripts.cheat.lib");
 		},
 
 		getUl: function(tag){
-			// find the UL within a <div> with this tag's id, or make it. 
+			// find the UL within a <div> with this tag's id, or make it.
 			// return the UL node
 			var n = dojo.byId(tag);
 			if(!n){
@@ -205,7 +206,7 @@ dojo.provide("util.docscripts.cheat.lib");
 
 		getSig: function(key, member, fn){
 			// makup up a function signature for this object
-			if(!dojo.isFunction(fn)){ 
+			if(!dojo.isFunction(fn)){
 //				var t = (typeof fn).toLowerCase()
 //				switch(t){
 //					case "boolean" :
@@ -219,28 +220,29 @@ dojo.provide("util.docscripts.cheat.lib");
 //							console.log(i);
 //						}
 //						break;
-//					default: 
+//					default:
 //						console.log(t);
 //						break;
 //				}
-				return key + member; 
+				return key + member;
 			}
 			if(/^_?[A-Z]/.test(member)){
 				key = "<span class='sig'>new</span> " + key;
 
 // FIXME: determine the actual signature for the a declaredclass?
 //				if(fn.prototype._constructor){
-//					console.log(fn.prototype._constructor)	
+//					console.log(fn.prototype._constructor)
 //				}
 				
 			}
+			// FIXME: unwrap key (refactor all this) so we can link around it to API docs
 			return key + member + "<span class='sig'>" + fn.toString().replace(/function\s+/, "").split(")")[0] + ")" + "</span>";
 		},
 
 		save: function(){
-			dojo.xhrPost({ 
+			dojo.xhrPost({
 				url:"cheat.php",
-				content: { body: dojo.body().innerHTML, version: dojo.version.toString() },
+				content: { body: dojo.body().innerHTML },
 				load: function(response){
 					window.location.href = "./cheat.html";
 				},
@@ -252,7 +254,7 @@ dojo.provide("util.docscripts.cheat.lib");
 
 		buildNav: function(){
 
-			dojo.query("#container > fieldset").forEach(function(n){
+			dojo.query("#container fieldset").forEach(function(n){
 
 				var id = n.id;
 				var mySize = dojo.query(n).query("li").length;
@@ -273,7 +275,7 @@ dojo.provide("util.docscripts.cheat.lib");
 			}else if(dojo.exists(strsomething)){
 				something = dojo.getObject(strsomething);
 			}
-			if(!something){ return; } 
+			if(!something){ return; }
 			
 			var k = api.varmap[strsomething] || (strsomething + ".");
 			for(var i in something){
@@ -291,23 +293,13 @@ dojo.provide("util.docscripts.cheat.lib");
 		},
 		
 		sortFields: function(id){
-			// stolen from demos/faces/src.js
-			var d = dojo;
-			// don't ever let me see you doing this outside of a demo situation. there has
-			// got to be a better way.
-			id = d.byId(id);
-			d.query("> fieldset", id).sort(function(a,b){
-				var q = "ul > li", al = d.query(q, a).length, bl = d.query(q, b).length;
-				return al > bl ? 0 : al < bl ? 1 : -1;
-			}).forEach(function(n){
-				id.appendChild(n);
-			});
+			dojo.query("#" + id).floatup();
 		},
 		
 		hasTag: function(tag){
 			return window.location.href.indexOf(tag) >= 0;
 		}
 
-	});	
+	});
 
 })();

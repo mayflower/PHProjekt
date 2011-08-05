@@ -35,34 +35,36 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
     _idName:   null,
     _store:    null,
     _model:    null,
+    tree:      null,
 
     constructor: function() {
         this.setUrl();
         this.setId(null);
     },
 
-    loadTree: function() {
-        if (!this._idName || !dijit.byId(this._idName)) {
-            this.setNode();
-            // Data of the tree
-            var _this = this;
-            phpr.DataStore.addStore({url: this._url});
-            phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
-                var content = _this.processData(dojo.clone(phpr.DataStore.getData({url: _this._url})));
-                _this._store = new dojo.data.ItemFileWriteStore({data: content});
-                _this.getModel();
-                _this.tree = _this.getTree();
-                _this.setId(_this.tree.id);
-                _this._treeNode.set('content', _this.tree.domNode);
-                _this.tree.startup();
-                dojo.connect(_this.tree, "onClick", dojo.hitch(this, "onItemClick"));
-                dojo.byId("navigation-container-title").innerHTML = phpr.nls.get('Projects');
-                _this.finishDraw();
-            })});
-        } else {
-            this.tree = dijit.byId(this._idName);
-            this.finishDraw();
-        }
+    loadTree:function() {
+        var tree = phpr.viewManager.getView().treeBox;
+        // Data of the tree
+        phpr.DataStore.addStore({url: this._url});
+        phpr.DataStore.requestData({
+            url: this._url,
+            processData: dojo.hitch(this, function(treeNode) {
+                var content = this.processData(dojo.clone(phpr.DataStore.getData({url: this._url})));
+                this._store = new dojo.data.ItemFileWriteStore({data: content});
+                this.getModel();
+                if (this.tree && dojo.isFunction(this.tree.destroyRecursive)) {
+                    this.tree.destroyRecursive();
+                    this.tree = null;
+                }
+                this.tree = this.getTree();
+                this.setId(this.tree.id);
+                treeNode.set('content', this.tree.domNode);
+                this.tree.startup();
+                dojo.connect(this.tree, "onClick", dojo.hitch(this, "onItemClick"));
+                phpr.viewManager.getView().navigationContainerTitle.set('content', phpr.nls.get('Projects'));
+                this.finishDraw();
+            }, tree)});
+        tree = null;
     },
 
     finishDraw: function() {
@@ -82,29 +84,28 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         });
     },
 
-    getTree: function() {
-        var cb1 = function(node) {
-            if (node.item.cut == 'true') {
-                dijit.showTooltip(node.item.longName, node.domNode);
-            }
-        };
+    _treeOnNodeMouseEnter: function(node) {
+        if (node.item.cut == 'true') {
+            dijit.showTooltip(node.item.longName, node.domNode);
+        }
+    },
 
-        var cb2 = function(node) {
-            if (node.item.cut == 'true') {
-                dijit.hideTooltip(node.domNode);
-            }
-        };
+    _treeOnNodeMouseLeave: function(node) {
+        if (node.item.cut == 'true') {
+            dijit.hideTooltip(node.domNode);
+        }
+    },
 
-        var that = this;
-        return (function() {
-            return new dijit.Tree({
-                model:    that._model,
+    getTree:function() {
+        var treeWidget = new dijit.Tree({
+                model:    this._model,
                 showRoot: false,
                 persist:  false,
-                _onNodeMouseEnter: cb1,
-                _onNodeMouseLeave: cb2
-            }, document.createElement('div'));
-        })();
+                _onNodeMouseEnter: dojo.hitch(this, "_treeOnNodeMouseEnter"),
+                _onNodeMouseLeave: dojo.hitch(this, "_treeOnNodeMouseLeave")
+            },
+            document.createElement('div'));
+        return treeWidget;
     },
 
     getUrl: function() {
@@ -123,15 +124,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         this._url = phpr.webpath + 'index.php/Project/index/jsonTree';
     },
 
-    setNode: function() {
-        // Summary:
-        //    Set the node to put the tree
-        // Description:
-        //    Set the node to put the tree
-        this._treeNode = dijit.byId("treeBox");
-    },
-
-    setId: function(id) {
+    setId:function(id) {
         // Summary:
         //    Set the id of the widget
         // Description:
@@ -213,10 +206,11 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         //    Process the data for the tree
         // Description:
         //    Collect path and change the long names
-        var width = dojo.byId('navigation-container').style.width.replace(/px/, "");
-        for (var i in data.items) {
-            var name  = data.items[i].name.toString();
-            var depth = data.items[i].path.match(/\//g).length;
+        var node = phpr.viewManager.getView().navigationContainer.domNode;
+        var width = node.style.width.replace(/px/, "");
+        for(var i in data.items) {
+            var name  = data.items[i]['name'].toString();
+            var depth = data.items[i]['path'].match(/\//g).length;
             if (depth > 5) {
                 depth = 5;
             }
@@ -252,9 +246,9 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
     checkTreeSize: function() {
         // Summary
         //    This avoids unwanted vertical scrollbar in the tree when general height is not too much
-        var treeHeight = dojo.byId('treeBox').offsetHeight;
+        var treeHeight = phpr.viewManager.getView().treeBox.offsetHeight;
         if (treeHeight < 300) {
-            dojo.byId('tree-navigation').style.height = '90%';
+            phpr.viewManager.getView().treeBox.style.height = '90%';
         }
     },
 
@@ -299,16 +293,18 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
     fadeOut: function() {
         // Summary:
         //     Manage the visibility of the tree panel
-        if (dojo.style("treeBox", "opacity") != 0.5) {
-            dojo.style("treeBox", "opacity", 0.5);
+        var treeBox = phpr.viewManager.getView().treeBox.domNode;
+        if (dojo.style(treeBox, "opacity") != 0.5) {
+            dojo.style(treeBox, "opacity", 0.5);
         }
     },
 
     fadeIn: function() {
         // Summary:
         //     Manage the visibility of the tree panel
-        if (dojo.style("treeBox", "opacity") != 1) {
-            dojo.style("treeBox", "opacity", 1);
+        var treeBox = phpr.viewManager.getView().treeBox.domNode;
+        if (dojo.style(treeBox, "opacity") != 1) {
+            dojo.style(treeBox, "opacity", 1);
         }
     }
 });

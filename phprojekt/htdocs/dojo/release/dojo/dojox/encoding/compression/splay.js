@@ -1,71 +1,10 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
 
 
-if(!dojo._hasResource["dojox.encoding.compression.splay"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.encoding.compression.splay"] = true;
-dojo.provide("dojox.encoding.compression.splay");
-dojo.require("dojox.encoding.bits");
-
-dojox.encoding.compression.Splay = function(n){
-	this.up = new Array(2 * n + 1);
-	this.left = new Array(n);
-	this.right = new Array(n);
-	this.reset();
-};
-
-dojo.extend(dojox.encoding.compression.Splay, {
-	reset: function(){
-		for(var i = 1; i < this.up.length; this.up[i] = Math.floor((i - 1) / 2), ++i);
-		for(var i = 0; i < this.left.length; this.left[i] = 2 * i + 1, this.right[i] = 2 * i + 2, ++i);
-	},
-	splay: function(i){
-		var a = i + this.left.length;
-		do{
-			var c = this.up[a];
-			if(c){	// root
-				// rotated pair
-				var d = this.up[c];
-				// swap descendants
-				var b = this.left[d];
-				if(c == b){
-					b = this.right[d];
-					this.right[d] = a;
-				} else {
-					this.left[d] = a;
-				}
-				this[a == this.left[c] ? "left" : "right"][c] = b;
-				this.up[a] = d;
-				this.up[b] = c;
-				a = d;
-			}else{
-				a = c;
-			}
-		}while(a);	// root
-	},
-	encode: function(value, stream){
-		var s = [], a = value + this.left.length;
-		do{
-			s.push(this.right[this.up[a]] == a);
-			a = this.up[a];
-		}while(a);	// root
-		this.splay(value);
-		var l = s.length;
-		while(s.length){ stream.putBits(s.pop() ? 1 : 0, 1); }
-		return	l;
-	},
-	decode: function(stream){
-		var a = 0;	// root;
-		do{
-			a = this[stream.getBits(1) ? "right" : "left"][a];
-		}while(a < this.left.length);
-		a -= this.left.length;
-		this.splay(a);
-		return	a;
-	}
-});
-
-}
+if(!dojo._hasResource["dojox.encoding.compression.splay"])dojo._hasResource["dojox.encoding.compression.splay"]=!0,dojo.provide("dojox.encoding.compression.splay"),dojo.require("dojox.encoding.bits"),dojo.getObject("encoding.compression.splay",!0,dojox),dojox.encoding.compression.Splay=function(a){this.up=Array(2*a+1);this.left=Array(a);this.right=Array(a);this.reset()},dojo.extend(dojox.encoding.compression.Splay,{reset:function(){for(var a=1;a<this.up.length;this.up[a]=Math.floor((a-1)/2),++a);
+for(a=0;a<this.left.length;this.left[a]=2*a+1,this.right[a]=2*a+2,++a);},splay:function(a){a+=this.left.length;do{var b=this.up[a];if(b){var d=this.up[b],c=this.left[d];b==c?(c=this.right[d],this.right[d]=a):this.left[d]=a;this[a==this.left[b]?"left":"right"][b]=c;this.up[a]=d;this.up[c]=b;a=d}else a=b}while(a)},encode:function(a,b){var d=[],c=a+this.left.length;do d.push(this.right[this.up[c]]==c),c=this.up[c];while(c);this.splay(a);for(c=d.length;d.length;)b.putBits(d.pop()?1:0,1);return c},decode:function(a){var b=
+0;do b=this[a.getBits(1)?"right":"left"][b];while(b<this.left.length);b-=this.left.length;this.splay(b);return b}});

@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.mobile.ScrollableView"]||(dojo._hasResource["dojox.mobile.ScrollableView"]=!0,dojo.provide("dojox.mobile.ScrollableView"),dojo.require("dijit._WidgetBase"),dojo.require("dojox.mobile"),dojo.require("dojox.mobile._ScrollableMixin"),dojo.declare("dojox.mobile.ScrollableView",[dojox.mobile.View,dojox.mobile._ScrollableMixin],{flippable:!1,buildRendering:function(){this.inherited(arguments);dojo.addClass(this.domNode,"mblScrollableView");this.domNode.style.overflow="hidden";this.domNode.style.top=
+"0px";this.domNode.style.height="100%";this.containerNode=dojo.create("DIV",{className:"mblScrollableViewContainer"},this.domNode);this.containerNode.style.position="absolute";if(this.scrollDir==="v"||this.flippable)this.containerNode.style.width="100%";this.reparent();this.findAppBars()},addChild:function(a){var a=a.domNode,b=this._checkFixedBar(a,!0);if(b){this.domNode.appendChild(a);if(b==="top")this.fixedHeaderHeight=a.offsetHeight,this.containerNode.style.paddingTop=this.fixedHeaderHeight+"px";
+else if(b==="bottom")this.fixedFooterHeight=a.offsetHeight,this.isLocalFooter=!0,a.style.bottom="0px";this.resizeView()}else this.containerNode.appendChild(a)},reparent:function(){var a,b,c,d;b=a=0;for(c=this.domNode.childNodes.length;a<c;a++)d=this.domNode.childNodes[b],d===this.containerNode||this._checkFixedBar(d,!0)?b++:this.containerNode.appendChild(this.domNode.removeChild(d))},findAppBars:function(){var a,b,c;a=0;for(b=dojo.body().childNodes.length;a<b;a++)c=dojo.body().childNodes[a],this._checkFixedBar(c,
+!1);if(this.domNode.parentNode){a=0;for(b=this.domNode.parentNode.childNodes.length;a<b;a++)c=this.domNode.parentNode.childNodes[a],this._checkFixedBar(c,!1)}this.fixedHeaderHeight=this.fixedHeader?this.fixedHeader.offsetHeight:0;this.fixedFooterHeight=this.fixedFooter?this.fixedFooter.offsetHeight:0},_checkFixedBar:function(a){if(a.nodeType===1){var b=a.getAttribute("fixed")||dijit.byNode(a)&&dijit.byNode(a).fixed;b&&dojo.style(a,{position:"absolute",width:"100%",zIndex:1});if(b==="top")return a.style.top=
+"0px",this.fixedHeader=a,b;else if(b==="bottom")return this.fixedFooter=a,b}return null},onAfterTransitionIn:function(){this.flashScrollBar()}}));

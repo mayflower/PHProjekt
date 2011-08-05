@@ -1,49 +1,8 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
 
 
-if(!dojo._hasResource["dojox.string.tokenize"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.string.tokenize"] = true;
-dojo.provide("dojox.string.tokenize");
-
-dojox.string.tokenize = function(/*String*/ str, /*RegExp*/ re, /*Function?*/ parseDelim, /*Object?*/ instance){
-	// summary:
-	//		Split a string by a regular expression with the ability to capture the delimeters
-	// parseDelim:
-	//		Each group (excluding the 0 group) is passed as a parameter. If the function returns
-	//		a value, it's added to the list of tokens.
-	// instance:
-	//		Used as the "this" instance when calling parseDelim
-	var tokens = [];
-	var match, content, lastIndex = 0;
-	while(match = re.exec(str)){
-		content = str.slice(lastIndex, re.lastIndex - match[0].length);
-		if(content.length){
-			tokens.push(content);
-		}
-		if(parseDelim){
-			if(dojo.isOpera){
-				var copy = match.slice(0);
-				while(copy.length < match.length){
-					copy.push(null);
-				}
-				match = copy;
-			}
-			var parsed = parseDelim.apply(instance, match.slice(1).concat(tokens.length));
-			if(typeof parsed != "undefined"){
-				tokens.push(parsed);
-			}
-		}
-		lastIndex = re.lastIndex;
-	}
-	content = str.slice(lastIndex);
-	if(content.length){
-		tokens.push(content);
-	}
-	return tokens;
-}
-
-}
+if(!dojo._hasResource["dojox.string.tokenize"])dojo._hasResource["dojox.string.tokenize"]=!0,dojo.provide("dojox.string.tokenize"),dojox.string.tokenize=function(d,e,f,g){var c=[],b,a;for(a=0;b=e.exec(d);){a=d.slice(a,e.lastIndex-b[0].length);a.length&&c.push(a);if(f){if(dojo.isOpera){for(a=b.slice(0);a.length<b.length;)a.push(null);b=a}b=f.apply(g,b.slice(1).concat(c.length));typeof b!="undefined"&&c.push(b)}a=e.lastIndex}a=d.slice(a);a.length&&c.push(a);return c};

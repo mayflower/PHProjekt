@@ -21,6 +21,80 @@
 
 dojo.provide("phpr.Core.Main");
 
+dojo.provide("phpr.Core.ViewMixin");
+
+// This ist our view mixin, it provides us with a border container without the overview box
+// this is only needed because the pagestyle is relative to the bordercontainer
+// TODO: make all stylings work without the bordercontainer if no overview is required
+dojo.declare("phpr.Core.ViewMixin", phpr.Default.System.ViewContentMixin, {
+    mixin: function() {
+        // Insert our api into the view
+        this.inherited(arguments);
+        this.view.clear = dojo.hitch(this, "clear");
+        this.view.clearDetails = dojo.hitch(this, "clearDetails");
+    },
+    destroyMixin: function() {
+        // Remove our inserted content from the view
+        this.clear();
+        this._clearCenterMainContent();
+        delete this.view.clear;
+        delete this.view.clearDetails;
+        delete this.view.detailsBox;
+        delete this.view.defaultMainContent;
+    },
+    update: function(config) {
+        // Render the new content onto the page
+        this.inherited(arguments);
+        this.clear();
+        this._clearCenterMainContent();
+        this._renderBorderContainer(config ? config.summaryTxt : "");
+        return this.view;
+    },
+    clearDetails: function() {
+        // remove the content of the detailsbox
+        if (this.view.detailsBox && this.view.detailsBox.destroyDescendants) {
+            this.view.detailsBox.destroyDescendants();
+        }
+
+        return this.view;
+    },
+    clear: function() {
+        // clear the content of the mixin
+        this.clearDetails();
+        return this.view;
+    },
+    _clearCenterMainContent: function() {
+        // clear everything inside the centerMainContent (our dom container)
+        // thereby remove all our inserted widgets
+        if (this.view.centerMainContent && this.view.centerMainContent.destroyDescendants) {
+            this.view.centerMainContent.destroyDescendants();
+        }
+        this.view.defaultMainContent = null;
+    },
+    _renderBorderContainer: function(summaryTxt) {
+        // render the bordercontainer which lies inside the centerMainContent
+        var mainContent = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.mainContent.html"
+        });
+
+        this.view.defaultMainContent = mainContent.mainContent;
+
+        var details = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Core.template.DetailsBox.html",
+            templateData: {
+                summaryTxt: summaryTxt
+            }
+        });
+
+        this._detailsBox = details;
+        this.view.detailsBox = details.detailsBox;
+        this.view.defaultMainContent.addChild(details);
+
+        this.view.centerMainContent.set('content', this.view.defaultMainContent);
+        this.view.defaultMainContent.startup();
+    }
+});
+
 dojo.declare("phpr.Core.Main", phpr.Default.Main, {
     constructor:function() {
         this.module = "Core";
@@ -84,18 +158,16 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         this.destroy();
         this.defineModules(module);
         this.cleanPage();
-        if (this.isSystemModule(this.module)) {
-            this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
-        } else {
-            if (!module) {
-                var summaryTxt = this.getSummary();
-            } else {
-                var summaryTxt = '';
-            }
-            this.render(["phpr.Core.template", "mainContent.html"], dojo.byId('centerMainContent'), {
+        var summaryTxt = '';
+
+        if (!this.isSystemModule(this.module) && !module) {
+                summaryTxt = this.getSummary();
+        }
+
+        var view = phpr.viewManager.setView(phpr.Default.System.DefaultView, phpr.Core.ViewMixin, {
                 summaryTxt: summaryTxt
             });
-        }
+
         phpr.tree.fadeOut();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
@@ -103,9 +175,10 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         phpr.tree.loadTree();
         if (this.isSystemModule(this.module)) {
             var updateUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSaveMultiple/nodeId/1';
-            this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+            view = phpr.viewManager.useDefaultView().clear();
+            this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId, view.overviewBox);
         } else if (module) {
-            this.form = new this.formWidget(this, 0, this.module);
+            this.form = new this.formWidget(this, 0, this.module, null, view.detailsBox);
         }
     },
 
@@ -144,7 +217,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                         "moduleFunction": "setUrlHash",
                         "functionParams": "'" + parentModule + "', null, ['" + tmp[i].name + "']"});
                 }
-                var navigation = '<table id="nav_main"><tr>';
+                var navigation = '<table class="nav_main"><tr>';
                 for (var i = 0; i < modules.length; i++) {
                     var liclass        = '';
                     var moduleName     = modules[i].name;
@@ -154,7 +227,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                     if (moduleName == phpr.submodule) {
                         liclass = 'class = active';
                     }
-                    navigation += self.render(["phpr.Core.template", "navigation.html"], null, {
+                    navigation += phpr.fillTemplate("phpr.Core.template.navigation.html", {
                         moduleName:     parentModule,
                         moduleLabel:    moduleLabel,
                         liclass:        liclass,
@@ -164,8 +237,8 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 }
                 navigation += "</tr></table>";
 
-                phpr.destroySubWidgets('subModuleNavigation');
-                dijit.byId("subModuleNavigation").set('content', navigation);
+                var subModuleNavigation = phpr.viewManager.getView().subModuleNavigation;
+                subModuleNavigation.set('content', navigation);
 
                 this.customSetSubmoduleNavigation();
             })

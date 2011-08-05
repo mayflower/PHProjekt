@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojox.socket"]){dojo._hasResource["dojox.socket"]=!0;dojo.provide("dojox.socket");dojo.require("dojo.cookie");var WebSocket=window.WebSocket,Socket=function(a){typeof a=="string"&&(a={url:a});return WebSocket?dojox.socket.WebSocket(a,!0):dojox.socket.LongPoll(a)};dojox.socket=Socket;Socket.WebSocket=function(a,c){var b=new WebSocket(new dojo._Url(document.baseURI.replace(/^http/i,"ws"),a.url));b.on=function(a,c){b.addEventListener(a,c,!0)};var f;dojo.connect(b,"onopen",function(){f=
+!0});dojo.connect(b,"onclose",function(){f||c&&Socket.replace(b,dojox.socket.LongPoll(a),!0)});return b};Socket.replace=function(a,c,b){function f(b){(c.addEventListener||c.on).call(c,b,function(b){var d=document.createEvent("MessageEvent");d.initMessageEvent(b.type,!1,!1,b.data,b.origin,b.lastEventId,b.source);a.dispatchEvent(d)},!0)}a.send=dojo.hitch(c,"send");a.close=dojo.hitch(c,"close");b&&f("open");dojo.forEach(["message","close","error"],f)};Socket.LongPoll=function(a){function c(){e.readyState==
+0&&b("open",{});d.length||e.send()}function b(b,a,d){if(e["on"+b]){var c=document.createEvent("HTMLEvents");c.initEvent(b,!1,!1);dojo.mixin(c,a);c.ioArgs=d&&d.ioArgs;e["on"+b](c)}}var f=!1,j=!0,k,d=[],e={send:function(h){var i=dojo.delegate(a);i.rawBody=h;clearTimeout(k);var g=j?(j=!1)||e.firstRequest(i):e.transport(i);d.push(g);g.then(function(h){e.readyState=1;d.splice(dojo.indexOf(d,g),1);d.length||(k=setTimeout(c,a.interval));h&&b("message",{data:h},g)},function(a){d.splice(dojo.indexOf(d,g),
+1);if(!f&&(b("error",{error:a},g),!d.length))e.readyState=3,b("close",{wasClean:!1},g)});return g},close:function(){e.readyState=2;f=!0;for(var a=0;a<d.length;a++)d[a].cancel();e.readyState=3;b("close",{wasClean:!0})},transport:a.transport||dojo.xhrPost,args:a,url:a.url,readyState:0,CONNECTING:0,OPEN:1,CLOSING:2,CLOSED:3,dispatchEvent:function(a){b(a.type,a)},on:function(a,b){return dojo.connect(this,"on"+a,b)},firstRequest:function(a){var b=a.headers||(a.headers={});b.Pragma="start-long-poll";try{return this.transport(a)}finally{delete b.Pragma}}};
+e.connect=e.on;setTimeout(c);return e}};

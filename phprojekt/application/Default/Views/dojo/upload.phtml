@@ -10,14 +10,17 @@
     <script type="text/javascript">
         var djConfig = {isDebug: false, parseOnLoad: true, useCommentedJson: true};
     </script>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
-    <?php
-    if ($this->compressedDojo) {
-    ?>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/mydojo.js"></script>
-    <?php
-    }
-    ?>
+        <?php
+        if ($this->compressedDojo) {
+        ?>
+            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/dojo.js"></script>
+        <?php
+        } else {
+        ?>
+            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/dojo.js.uncompressed.js"></script>
+        <?php
+        }
+        ?>
     <script type="text/javascript">
         var par   = window.parent.document;
         var input = par.getElementById("<?php echo $this->field; ?>");

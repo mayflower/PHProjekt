@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "링크 등록 정보",
 	insertImageTitle: "이미지 등록 정보",
@@ -11,3 +13,5 @@
 	newWindow: "새 창"
 })
 
+//end v1.x content
+);
