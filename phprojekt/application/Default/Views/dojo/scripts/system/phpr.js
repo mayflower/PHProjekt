@@ -556,14 +556,16 @@ dojo.declare("phpr.loading", null, {
     // Description:
     //     Simple class for show or hide the loading icon
     hide:function() {
-        if (dojo.byId('loadingIcon')) {
-            dojo.byId('loadingIcon').style.display = 'none';
+        var view = phpr.viewManager.getView();
+        if (view.loadingIcon) {
+            view.loadingIcon.style.display = 'none';
         }
     },
 
     show:function() {
-        if (dojo.byId('loadingIcon')) {
-            dojo.byId('loadingIcon').style.display = 'inline';
+        var view = phpr.viewManager.getView();
+        if (view.loadingIcon) {
+            view.loadingIcon.style.display = 'inline';
         }
     }
 });
@@ -679,12 +681,13 @@ dojo.declare("phpr.InitialScreen", null, {
     // Description:
     //     Manage the visibility of the page on init
     start:function() {
-        dojo.style("completeContent", "opacity", 0);
+        dojo.style(phpr.viewManager.getView().completeContent.domNode, "opacity", 0);
     },
 
     end:function() {
-        dojo.style("completeContent", "opacity", 1);
-        dojo.style("initLoading", "display", "none");
+        var view = phpr.viewManager.getView();
+        dojo.style(view.completeContent.domNode, "opacity", 1);
+        dojo.style(view.initLoading, "display", "none");
     }
 });
 
@@ -831,7 +834,7 @@ dojo.declare("phpr.BreadCrumb", null, {
             breadCrumbTitle += this._separatorOne + this._item;
         }
         document.title                    = breadCrumbTitle;
-        dojo.byId("breadCrumb").innerHTML = breadCrumb;
+        phpr.viewManager.getView().breadCrumb.innerHTML = breadCrumb;
     }
 
 });
