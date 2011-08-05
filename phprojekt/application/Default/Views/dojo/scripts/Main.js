@@ -763,8 +763,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             }
         }
 
-        if(params && params[0]) {
-            config.action = params[0];
+        if (params && params[0]) {
+            config.action = params.shift();
+            config.actionData = params;
         }
 
         phpr.pageManager.changeState(config);
