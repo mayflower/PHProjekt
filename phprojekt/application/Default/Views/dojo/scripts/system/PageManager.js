@@ -55,13 +55,13 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         //      but the most important ones are:
         //      projectId, moduleName, action, id
         if(!config.moduleName) {
-            config.moduleName = this._defaultModule;
+            config.moduleName = (this.getActiveModule() ? this.getActiveModule().module : this._defaultModule);
         }
 
         if(this.getModule(config.moduleName)) {
             this._changeModule(config);
         } else {
-            throw new Error("Invalid name provided.");
+            throw new Error("Invalid name provided: " + config.moduleName);
         }
     },
 
@@ -115,8 +115,8 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         // replacement for processUrlHash in every module
 
         if (config.projectId
-                && config.globalModuleName
-                && !phpr.isGlobalModule(config.globalModuleName)) {
+                && config.moduleName
+                && !config.globalModuleName) {
             var projectId = config.projectId;
             if (projectId < 1) {
                 projectId = 1;
