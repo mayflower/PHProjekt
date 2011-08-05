@@ -57,9 +57,7 @@ class Phprojekt_ConfigurationTest extends DatabaseTest
     {
         $configuration = new Phprojekt_Configuration();
         $data          = array(array('name'  => 'General',
-                                     'label' => Phprojekt::getInstance()->translate('General')),
-                               array('name'  => 'Default',
-                                     'label' => Phprojekt::getInstance()->translate('Default')));
+                                     'label' => Phprojekt::getInstance()->translate('General')));
 
         $this->assertEquals($data, $configuration->getModules());
     }
