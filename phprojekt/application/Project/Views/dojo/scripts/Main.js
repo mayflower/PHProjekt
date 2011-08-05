@@ -38,7 +38,12 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         phpr.parentmodule     = null;
         phpr.currentProjectId = id;
         phpr.tree.fadeIn();
-        this.setUrlHash(module, null, ["basicData"]);
+        phpr.pageManager.changeState({
+            moduleName: this.module,
+            action: 'basicData',
+            projectId: projectId,
+            id: id
+        })
     },
 
     basicData:function() {
