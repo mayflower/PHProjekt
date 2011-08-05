@@ -133,7 +133,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     subModules: new Array(),
 
     // Event handler
-    _searchEvent:null,
+    _searchEvent: null,
 
     constructor: function(subModules) {
         this.subModules = subModules;
@@ -161,6 +161,13 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 this.grid.destroy();
             }
             this.grid = null;
+        }
+    },
+
+    destroySearchEvent: function() {
+        if (this._searchEvent !== null) {
+            dojo.disconnect(this._searchEvent);
+            this._searchEvent = null;
         }
     },
 
@@ -665,6 +672,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     cleanPage: function() {
         // Summary:
         //     Clean the submodule div and destroy all the buttons
+        this.destroySearchEvent();
         this.garbageCollector.collect();
 
         phpr.destroySubWidgets('buttonRow');
