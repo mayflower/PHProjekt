@@ -41,6 +41,7 @@ dojo.require("dijit.layout._LayoutWidget");
 dojo.require("dijit._Templated");
 dojo.require("dijit.form.FilteringSelect");
 dojo.require("dijit.layout.ContentPane");
+dojo.require("dojox.dtl.Inline");
 
 // Global vars
 var module           = null;
@@ -85,6 +86,24 @@ phpr.destroyWidget = function(el) {
         dijit.byId(el).destroyRecursive();
     }
 };
+
+phpr.fillTemplate = function(templateName, data) {
+    // Summary:
+    //  fills a template with the data
+    // Description:
+    //  The template is fetched from the templateCache and filled with the data.
+    //  The resulting string is then returned
+    data = data || {};
+    var context = new dojox.dtl.Context(data);
+    // Use the cached template
+    var tplContent = __phpr_templateCache[templateName];
+    var tpl        = new dojox.dtl.Template(tplContent);
+    var content    = tpl.render(context);
+    tpl = null;
+    tplContent = null;
+    context = null;
+    return content;
+}
 
 phpr.send = function(/*Object*/paramsIn) {
     // Send the given content to the server using the Default values,
