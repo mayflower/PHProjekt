@@ -1,8 +1,11 @@
-<div dojoType="dijit.layout.ContentPane" id="resultstitle" region="top" style="width: 50%; height: 8%;">
-    {{resultsTitle}}
-</div>
-<div dojoType="dijit.layout.BorderContainer" design="sidebar" style="width: 100%; height: 92%; background-color: #fff;">
-    <!-- List View: -->
-    <div dojoType="dijit.layout.ContentPane" id="gridBox" region="top" class="prepend-0 append-0" style="height: 100%;" splitter="false">
+<div>
+    <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="resultsTitleBox"
+        style="width: 50%; height: 30px;" class="resultsTitleBox">
+    </div>
+    <div dojoType="dijit.layout.BorderContainer" design="sidebar" dojoAttachPoint="mainContent"
+        style="width: 100%; height: 100%; background-color: #fff;">
+        <div dojoType="dijit.layout.TabContainer" dojoAttachPoint="detailsBox" region="top"
+            style="height: 100%;" splitter="false">
+        </div>
     </div>
 </div>
