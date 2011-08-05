@@ -20,6 +20,80 @@
  */
 
 dojo.provide("phpr.Calendar2.Main");
+dojo.provide("phpr.Calendar2.CalendarViewMixin");
+dojo.require("dijit.Dialog");
+
+// This ist our view mixin, it provides us with a border container without the overview box
+// this is only needed because the pagestyle is relative to the bordercontainer
+// TODO: make all stylings work without the bordercontainer if no overview is required
+dojo.declare("phpr.Calendar2.CalendarViewMixin", phpr.Default.System.ViewContentMixin, {
+    mainContent: null,
+    mixin: function() {
+        this.inherited(arguments);
+        this.view.clear = dojo.hitch(this, "clear");
+        this.view.clearDetails = dojo.hitch(this, "clearDetails");
+        this.view.clearGridBox = dojo.hitch(this, "clearGridBox");
+    },
+    update: function() {
+        this.inherited(arguments);
+        this._renderMainContainer();
+    },
+    destroyMixin: function() {
+        this.clear();
+        this._clearCenterMainContent();
+
+        for (var id in this.mainContent._attachPoints) {
+            var name = this.mainContent._attachPoints[id];
+            if (this.view[name] && dojo.isFunction(this.view[name].destroyDescendants)) {
+                this.view[name].destroyDescendants();
+            }
+            delete this.view[name];
+        }
+
+        delete this.view.clear;
+        delete this.view.clearDetails;
+        delete this.view.clearGridBox;
+        this.mainContent.destroyRecursive();
+        this.mainContent = null;
+    },
+    clearDetails: function() {
+        this.view.detailsBox.destroyDescendants();
+
+        return this.view;
+    },
+    clearGridBox: function() {
+        this.view.gridBox.destroyDescendants();
+
+        return this.view;
+    },
+    clear: function() {
+        this.clearDetails();
+        this.clearGridBox();
+
+        return this.view;
+    },
+    _clearCenterMainContent: function() {
+        this.view.centerMainContent.destroyDescendants();
+    },
+    _renderMainContainer: function() {
+        this._clearCenterMainContent();
+
+        var mainContent = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Calendar2.template.mainContent.html"
+        });
+
+        this.mainContent = mainContent;
+
+        this.view.centerMainContent.set('content', mainContent);
+        mainContent.startup();
+
+        // mix in all template attach points, we don't need to be picky here
+        for (var id in mainContent._attachPoints) {
+            var name = mainContent._attachPoints[id];
+            this.view[name] = mainContent[name];
+        }
+    }
+})
 
 dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     _date:                new Date(),
@@ -68,13 +142,8 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     renderTemplate:function() {
         // Summary:
         //   Custom renderTemplate for calendar
-        this.render(["phpr.Calendar2.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            changeDate: phpr.nls.get('Change date'),
-            today:      phpr.nls.get('Today'),
-            user:       phpr.nls.get('User'),
-            self:       phpr.nls.get('Self'),
-            selection:  phpr.nls.get('Selection')
-        });
+        var view = phpr.viewManager.setView(phpr.Default.System.DefaultView,
+                phpr.Calendar2.CalendarViewMixin, {}).clear();
     },
 
     setWidgets:function() {
