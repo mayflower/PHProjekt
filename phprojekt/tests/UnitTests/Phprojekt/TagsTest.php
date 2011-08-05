@@ -55,14 +55,15 @@ class Phprojekt_TagsTest extends DatabaseTest
         // Test add
         $tag = Phprojekt_Tags::getInstance();
         $tag->saveTags(1, 1, 'This is a tag test');
-        $result = array(array('string' => 'this',
-                              'count'  => 1),
-                        array('string' => 'tag',
-                             'count'  => 1),
-                        array('string' => 'test',
+        $result = array(array('string' => 'test',
                               'count'  => 1));
 
-        $this->assertEquals($result, $tag->getTagsByModule(1, 1));
+        $this->assertContains(array('string' => 'test', 'count' => 1),
+            $tag->getTagsByModule(1, 1));
+        $this->assertContains(array('string' => 'tag', 'count' => 1),
+            $tag->getTagsByModule(1, 1));
+        $this->assertContains(array('string' => 'this', 'count' => 1),
+            $tag->getTagsByModule(1, 1));
 
         // Test update
         $tag->saveTags(1, 1, 'This is a tag');
@@ -70,7 +71,10 @@ class Phprojekt_TagsTest extends DatabaseTest
                               'count'  => 1),
                         array('string' => 'tag',
                               'count'  => 1));
-        $this->assertEquals($result, $tag->getTagsByModule(1, 1));
+        $this->assertContains(array('string' => 'this', 'count' => 1),
+            $tag->getTagsByModule(1, 1));
+        $this->assertContains(array('string' => 'tag', 'count' => 1),
+            $tag->getTagsByModule(1, 1));
     }
 
     /**
