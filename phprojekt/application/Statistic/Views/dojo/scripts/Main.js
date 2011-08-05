@@ -37,11 +37,18 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
     renderTemplate:function() {
         // Summary:
         //   Custom renderTemplate for statistic
-        this.render(["phpr.Statistic.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            webpath:            phpr.webpath,
-            selectedPeriodText: phpr.nls.get('Selected Statistic Period'),
-            selectedPeriodHelp: phpr.nls.get('Choose here the period for the statistics to be calculated.')
+        var view = phpr.viewManager.useDefaultView({blank: true}).clear();
+
+        var content = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Statistic.template.mainContent.html",
+            templateData: {
+                webpath:            phpr.webpath,
+                selectedPeriodText: phpr.nls.get('Selected Statistic Period'),
+                selectedPeriodHelp: phpr.nls.get('Choose here the period for the statistics to be calculated.')
+            }
         });
+
+        view.centerMainContent.set('content', content);
     },
 
     setWidgets:function() {
@@ -65,7 +72,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         };
 
         var exportButton = new dijit.form.Button(params);
-        dojo.byId("buttonRow").appendChild(exportButton.domNode);
+        phpr.viewManager.getView().buttonRow.domNode.appendChild(exportButton.domNode);
         dojo.connect(exportButton, "onClick", dojo.hitch(this, "exportData"));
     },
 
