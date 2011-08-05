@@ -45,11 +45,22 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //   Custom renderTemplate for gantt
         var projectPeriodHelp = phpr.nls.get('Click on a Project timeline and see and/or change here the Start and End '
             + 'dates.');
-        this.render(["phpr.Gantt.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            webpath:                     phpr.webpath,
-            selectedProjectTimelineText: phpr.nls.get('Selected Project Timeline'),
-            projectPeriodHelp:           projectPeriodHelp
+
+        var view = phpr.viewManager.useDefaultView({blank: true}).clear();
+
+        var content = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Gantt.template.mainContent.html",
+            templateData: {
+                webpath:                     phpr.webpath,
+                selectedProjectTimelineText: phpr.nls.get('Selected Project Timeline'),
+                projectPeriodHelp:           projectPeriodHelp
+            }
         });
+
+        view.centerMainContent.set('content', content);
+
+        this.ganttContainer = content;
+        this.ganttChart = content.ganttChart;
     },
 
     setWidgets:function() {
@@ -364,7 +375,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var maxWidth  = 268 + (365 * 2 * years);
 
         // Change the width to the maxWidth
-        dojo.style(dojo.byId('ganttChart'), "width", maxWidth + "px");
+        dojo.style(this.ganttChart, "width", maxWidth + "px");
 
         // Draw the timeline with the correct scale
         var totalWidth = 0;
