@@ -47,7 +47,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     _meta:              null,
     _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
 
-    constructor:function(main, id, module, params) {
+    constructor:function(main, id, module, params, formContainer) {
         // Summary:
         //    render the form on construction
         // Description:
@@ -55,6 +55,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    If the module is a param, is setted
         this.main = main;
         this.id   = id;
+        this.node = formContainer;
 
         if (undefined != module) {
             phpr.module = module
@@ -64,13 +65,11 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
 
         this.setUrl();
-        this.setNode();
 
         // Put loading
-        phpr.destroySubWidgets(this._formNode);
-        this.render(["phpr.Default.template.form", "loading.html"], this._formNode.domNode, {
-            webpath: phpr.webpath
-        });
+        this.node.set('content', phpr.fillTemplate("phpr.Default.template.form.loading.html", {
+                webpath: phpr.webpath
+            }));
 
         this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
         this.tabStore = new phpr.Default.System.Store.Tab();
@@ -85,7 +84,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Destroys the form and collects all events and widgets
         this.inherited(arguments);
-        this._formNode = null;
+        this.node = null;
         this.form = null;
     },
 
@@ -96,17 +95,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Set the url for get the data
         this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/' + phpr.currentProjectId
             + '/id/' + this.id;
-    },
-
-    setNode:function() {
-        // Summary:
-        //    Set the node where put the form
-        // Description:
-        //    Set the node where put the form
-        this._formNode = new dijit.layout.ContentPane({style: "height: 100%;"});
-        phpr.destroySubWidgets('detailsBox');
-        dijit.byId('detailsBox').set('content',this._formNode);
-        this.garbageCollector.addNode(this._formNode);
     },
 
     getInitData:function() {
@@ -360,7 +348,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this._meta = phpr.DataStore.getMetaData({url: this._url});
         var data   = phpr.DataStore.getData({url: this._url});
         if (data.length == 0) {
-            this._formNode.set('content', phpr.drawEmptyMessage('The Item was not found'));
+            this.node.set('content', phpr.drawEmptyMessage('The Item was not found'));
         } else {
             var tabs               = this.getTabs();
             var firstRequiredField = null;
@@ -475,7 +463,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this.form        = this.setFormContent();
             this.formsWidget = new Array();
 
-            this._formNode.set('content', this.form.domNode);
+            this.node.set('content', this.form.domNode);
 
             var firstTab = true;
             for (t in tabs) {
@@ -500,13 +488,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
             if (this.id > 0 && this.useHistoryTab()) {
                 this.garbageCollector.addEvent(
-                    dojo.connect(dijit.byId("tabHistory"), 
-                        "onShow", dojo.hitch(this,"showHistory")));
+                    dojo.connect(dijit.byId("tabHistory"),
+                        "onShow", dojo.hitch(this, "showHistory")));
             }
 
             // Set cursor to the first required field
             if (dojo.byId(firstRequiredField)) {
-                dojo.byId('completeContent').focus();
+                phpr.viewManager.getView().completeContent.domNode.focus();
                 dojo.byId(firstRequiredField).focus();
             }
 
@@ -584,7 +572,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     },
 
     _formCallback:function() {
-        dojo.byId('completeContent').focus();
+        phpr.viewManager.getView().completeContent.domNode.focus();
     },
 
     setFormContent:function() {
