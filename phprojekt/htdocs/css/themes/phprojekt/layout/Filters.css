@@ -16,28 +16,28 @@
     height: 20px;
 }
 
-.phprojekt .displayFilerField {
+.phprojekt .displayFilterField {
     background: #a4c0e8;
     padding: 0px 2px 0px 2px;
     float: left;
     height: 20px;
 }
 
-.phprojekt .displayFilerRule {
+.phprojekt .displayFilterRule {
     background: #a4c0e8;
     padding: 0px 4px 0px 2px;
     float: left;
     height: 20px;
 }
 
-.phprojekt .displayFilerValue {
+.phprojekt .displayFilterValue {
     background: #a4c0e8;
     padding: 0px 2px 0px 2px;
     float: left;
     height: 20px;
 }
 
-.phprojekt .displayFilerButton {
+.phprojekt .displayFilterButton {
     background: #a4c0e8;
     padding: 0px 2px 0px 0px;
     float: left;
