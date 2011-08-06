@@ -150,7 +150,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
                 disabled:  false
             };
             this._exportButton = new dijit.form.Button(params);
-            dojo.byId("buttonRow").appendChild(this._exportButton.domNode);
+            phpr.viewManager.getView().buttonRow.domNode.appendChild(this._exportButton.domNode);
             dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"));
         }
     },
@@ -956,10 +956,10 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         //    The first time this function is called (on class load) sets / updates class variables of div sizes,
         //    steps, limits, etc. and updates sizes of the eventsArea and events on screen.
         //    The following times does the same things only if the gridBox width has changed.
-        var gridBox          = dojo.byId('gridBox');
-        var gridBoxWidth     = dojo.style(gridBox, "width");
+        var gridBox          = phpr.viewManager.getView().gridBox;
+        var gridBoxWidth     = dojo.style(gridBox.domNode, "width");
         var calendarSchedule = dojo.byId('calendarSchedule');
-        var calenSchedWidth  = dojo.style(calendarSchedule,"width");
+        var calenSchedWidth  = dojo.style(calendarSchedule, "width");
 
         if (gridBoxWidth != this._gridBoxWidthPrev || calenSchedWidth != this._calenSchedWidthPrev) {
             var doUpdateAndResize = true;
