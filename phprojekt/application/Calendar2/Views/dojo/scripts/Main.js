@@ -139,6 +139,11 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.formWidget          = phpr.Calendar2.Form;
     },
 
+    destroy: function() {
+        this.inherited(arguments);
+        var view = phpr.viewManager.getView().clear();
+    },
+
     renderTemplate:function() {
         // Summary:
         //   Custom renderTemplate for calendar
