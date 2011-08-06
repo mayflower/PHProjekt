@@ -421,7 +421,9 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
             params['end']   = phpr.date.getIsoDatetime(startDate, endTime);
         }
 
-        this.form = new this.formWidget(this, id, module, params, recurrenceId);
+        params.recurrenceId = recurrenceId || 0;
+
+        this.form = new this.formWidget(this, id, module, params, view.detailsBox);
     },
 
     userSelfClick:function() {

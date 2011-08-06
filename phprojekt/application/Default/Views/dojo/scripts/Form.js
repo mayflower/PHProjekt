@@ -61,7 +61,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this._presetValues = params;
         }
 
-        this.setUrl();
+        this.setUrl(params);
 
         // Put loading
         this.node.set('content', phpr.fillTemplate("phpr.Default.template.form.loading.html", {
