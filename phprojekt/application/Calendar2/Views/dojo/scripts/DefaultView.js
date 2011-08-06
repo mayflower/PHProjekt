@@ -97,7 +97,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
 
         this.beforeConstructor();
 
-        if (users != null) {
+        if (dojo.isArray(users)) {
             // Just for the Day group view
             this.users = users;
         }
