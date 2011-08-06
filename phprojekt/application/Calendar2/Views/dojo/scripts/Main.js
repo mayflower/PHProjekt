@@ -487,12 +487,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         dojo.byId("usersSelectorError").style.visibility = 'hidden';
         phpr.viewManager.getView().selectorDialog.hide();
 
-        // The userList array comes with lots and lots of string indexes apart from the number indexes (these last ones
-        // are the correct ones). This seems to be a Dojo bug. So, here it will be picked up the only the ones that
-        // matter.
-        for (var i = 0; i < userList.length; i ++) {
-            this._usersSelected[i] = userList[i];
-        }
+        this._usersSelected = userList;
         this.loadDayListSelect();
     },
 
@@ -598,11 +593,11 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     addModuleView:function(moduleViews, label, functionName, activeTab) {
         // Summary:
         //    Adds a specific view to the moduleViews array
-        var i                          = moduleViews.length;
-        moduleViews[i]                 = new Array();
-        moduleViews[i]['label']        = label;
-        moduleViews[i]['functionName'] = functionName;
-        moduleViews[i]['activeTab']    = activeTab;
+        moduleViews.push({
+            label: label,
+            functionName: functionName,
+            activeTab: activeTab
+        });
     },
 
     isListActive:function(list) {

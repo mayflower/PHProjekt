@@ -57,10 +57,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.id   = id;
         this.node = formContainer;
 
-        if (undefined !== module) {
-            phpr.module = module;
-        }
-        if (undefined !== params) {
+        if (undefined != params) {
             this._presetValues = params;
         }
 
