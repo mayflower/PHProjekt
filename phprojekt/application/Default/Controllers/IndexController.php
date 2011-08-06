@@ -402,7 +402,7 @@ class IndexController extends Zend_Controller_Action
      * Returns the project tree.
      *
      * The return is a tree compatible format, with identifier, label,
-     * and the list of items, each one with the name, id, parent, path and children´s id.
+     * and the list of items, each one with the name, id, parent, path and childrenï¿½s id.
      *
      * The tree is stored as a file until a user add, edit or delete a project
      * (tmp/ZendCache/zend_cache---Phprojekt_Tree_Node_Database_setup).
@@ -435,6 +435,7 @@ class IndexController extends Zend_Controller_Action
      *  - integer <b>nodeId</b> List all the items with projectId == nodeId.
      *  - integer <b>count</b>  Use for SQL LIMIT count.
      *  - integer <b>offset</b> Use for SQL LIMIT offset.
+     *  - boolean <b>recursive</b> Include items of subprojects.
      * </pre>
      *
      * The return is in JSON format.
@@ -447,20 +448,33 @@ class IndexController extends Zend_Controller_Action
         $projectId = (int) $this->getRequest()->getParam('nodeId', null);
         $count     = (int) $this->getRequest()->getParam('count', null);
         $offset    = (int) $this->getRequest()->getParam('start', null);
+        $recursive = $this->getRequest()->getParam('recursive', 'false');
         $this->setCurrentProjectId();
 
         if (!empty($itemId)) {
             $where = sprintf('id = %d', (int) $itemId);
         } else if (!empty($projectId) && isset($this->getModelObject()->projectId)) {
-            $where = sprintf('project_id = %d', (int) $projectId);
+            $where  = sprintf('project_id = %d', (int) $projectId);
         } else {
             $where = null;
         }
 
-        $where   = $this->getFilterWhere($where);
-        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
+        /* recursive is only supported if nodeId is specified */
+        if (!empty($projectId) && isset($this->getModelObject()->projectId)
+            && 'true' === $recursive) {
+            $tree = new Phprojekt_Tree_Node_Database(
+                Phprojekt_Loader::getModel('Project', 'Project'),
+                $projectId);
+            $tree->setup();
+            Phprojekt_Converter_Json::echoConvert(
+                $tree->getRecordsFor($this->getModelObject()),
+                Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        } else  {
+            $where   = $this->getFilterWhere($where);
+            $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
-        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+            Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        }
     }
 
     /**
