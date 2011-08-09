@@ -68,6 +68,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                 || Phprojekt::compareVersion($currentVersion, '6.1.0-dev') < 0) {
             $this->parseDbFile('Calendar2');
             $this->_migrateFromOldCalendar();
+            $this->_removeOldCalendar();
         }
     }
 
@@ -80,6 +81,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
     private $_tagsObj  = null;
     private $_oldCalId = null;
     private $_newCalId = null;
+    private $_search   = null;
 
     private function _migrateFromOldCalendar()
     {
@@ -91,9 +93,10 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                 throw new Exception('Old Calendar is gone, cannot migrate');
             }
 
-            $this->_tagsObj = Phprojekt_Tags::getInstance();
+            $this->_tagsObj  = Phprojekt_Tags::getInstance();
             $this->_oldCalId = Phprojekt_Module::getId('Calendar');
             $this->_newCalId = Phprojekt_Module::getId('Calendar2');
+            $this->_search   = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
 
             // Clear the calendar2 tables.
             $db->delete('calendar2');
@@ -129,7 +132,6 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             }
 
             $db->update('calendar2',  array('uri' => 'id'));
-            $db->update('module', array('active' => 0), '`name` = "Calendar"');
             $db->commit();
         } catch (Exception $e) {
             $db->rollback();
@@ -169,6 +171,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                 $status                    = (int) $entry['status'] + 1;
                 $participantStatuses[$pId] = $status;
             }
+            $this->_search->deleteObjectItemByIds($this->_oldCalId, $entry['id']);
         }
 
         if (is_null($ownerEntry)) {
@@ -261,6 +264,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             if ($start > $maxStart) {
                 $maxStart = $start;
             }
+            $this->_search->deleteObjectItemByIds($this->_oldCalId, $entry['id']);
         }
 
         if ($this->_debug) $log->debug("ByStart:\n" . print_r($byStart, true));
@@ -407,5 +411,18 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             }
         }
         return $rootEvent;
+    }
+
+    /**
+     * Removes the old calendar.
+     */
+    private function _removeOldCalendar()
+    {
+        $db = Phprojekt::getInstance()->getDb();
+
+        $db->query('DROP TABLE calendar');
+        $db->delete('module', 'name = "Calendar"');
+        $db->delete('item_rights', $db->quoteInto('module_id = ?', $this->_oldCalId));
+        $db->delete('database_manager', 'table_name = "Calendar"');
     }
 }

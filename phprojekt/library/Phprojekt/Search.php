@@ -151,6 +151,11 @@ class Phprojekt_Search
         $moduleId = Phprojekt_Module::getId($object->getModelName());
         $itemId   = $object->id;
 
+        $this->deleteObjectItemByIds($moduleId, $itemId);
+    }
+
+    public function deleteObjectItemByIds($moduleId, $itemId)
+    {
         $wordsId = $this->_wordModule->deleteWords($moduleId, $itemId);
         $this->_words->decreaseWords($wordsId);
         $this->_display->deleteDisplay($moduleId, $itemId);
