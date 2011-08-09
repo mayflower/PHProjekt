@@ -137,7 +137,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
                 disabled:  false
             };
             this._exportButton = new dijit.form.Button(params);
-            dojo.byId("buttonRow").appendChild(this._exportButton.domNode);
+            phpr.viewManager.getView().buttonRow.domNode.appendChild(this._exportButton.domNode);
             dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"));
         }
     },

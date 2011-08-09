@@ -1,0 +1,14 @@
+<div>
+    <div data-dojo-type="dijit.layout.BorderContainer"
+        style="height: 100%; width:100%; overflow: hidden;"
+        data-dojo-attach-point="borderContainer"
+        data-dojo-props='gutters: false'>
+        <div data-dojo-type="phpr.Filter.ExpandoPane" data-dojo-attach-point="gridFiltersBox" data-dojo-props='region: "top", startExpanded: false, title: "", maxHeight: 200, style: "height: 90px; z-index: 3; overflow-x: hidden;", baseClass:"gridFiltersBox"'>
+        </div>
+        <div data-dojo-type="dijit.layout.ContentPane"
+            style="overflow: hidden; height:100%; width:100%;"
+            class="gridBox" data-dojo-attach-point="gridBox"
+            data-dojo-props='region: "center", startExpanded: true'>
+        </div>
+    </div>
+</div>

@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "Propriétés du lien",
 	insertImageTitle: "Propriétés de l'image",
@@ -10,3 +12,5 @@
 	topWindow: "Fenêtre supérieure",
 	newWindow: "Nouvelle fenêtre"
 })
+//end v1.x content
+);

@@ -1,76 +1,9 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
 
 
-if(!dojo._hasResource["dojox.drawing.util.positioning"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.util.positioning"] = true;
-dojo.provide("dojox.drawing.util.positioning");	
-
-(function(){
-	
-	var textOffset = 4;  // distance from line to text box
-	var textYOffset = 20;  // height of text box
-	
-	
-	dojox.drawing.util.positioning.label = function(/*Object*/start, /*Object*/end){
-		// summary:
-		//		Returns the optimal position for annotations.Label.
-		//
-		// 	text position
-		// label at middle of vector
-		var x = 0.5*(start.x+end.x);
-		var y = 0.5*(start.y+end.y);
-		
-		// move label a set distance from the line
-		var slope = dojox.drawing.util.common.slope(start, end);
-		
-		var deltay = textOffset/Math.sqrt(1.0+slope*slope);
-		if(end.y>start.y){deltay = -deltay;}
-		x += -deltay*slope;
-		y += deltay;
-		
-		// want text to be away from start of vector
-		// This will make force diagrams less crowded
-		var align = end.x<start.x ? "end" : "start";
-		
-	        // box vertical aligned from top
-		if(end.y>start.y){
-			y -= textYOffset;
-		}
-		
-		return { x:x, y:y, foo:"bar", align:align}; // Object
-	};
-	
-	dojox.drawing.util.positioning.angle = function(/*Object*/start, /*Object*/end){
-		// summary:
-		//		Returns the optimal position for annotations.Angle.
-		//
-		// angle at first third of vector
-	        var x = 0.7*start.x+0.3*end.x;
-	        var y = 0.7*start.y+0.3*end.y;
-		// move label a set distance from the line
-		var slope = dojox.drawing.util.common.slope(start, end);
-		var deltay = textOffset/Math.sqrt(1.0+slope*slope);
-		
-		if(end.x<start.x){deltay = -deltay;}
-		x += -deltay * slope;
-		y += deltay;
-		
-		// want text to be clockwise from vector
-		// to match angle measurement from x-axis
-		var align = end.y>start.y ? "end" : "start";
-	        // box vertical aligned from middle
-	        y += end.x > start.x ? 0.5*textYOffset :  -0.5*textYOffset;
-		
-		return { x:x, y:y, align:align}; // Object
-	}
-	
-})();
-
-
-
-
-}
+dojo._hasResource["dojox.drawing.util.positioning"]||(dojo._hasResource["dojox.drawing.util.positioning"]=!0,dojo.provide("dojox.drawing.util.positioning"),function(){dojox.drawing.util.positioning.label=function(a,b){var f=0.5*(a.x+b.x),e=0.5*(a.y+b.y),c=dojox.drawing.util.common.slope(a,b),d=4/Math.sqrt(1+c*c);if(b.y>a.y&&b.x>a.x||b.y<a.y&&b.x<a.x)d=-d,e-=20;f+=-d*c;e+=d;return{x:f,y:e,foo:"bar",align:b.x<a.x?"end":"start"}};dojox.drawing.util.positioning.angle=function(a,b){var f=0.7*a.x+0.3*b.x,
+e=0.7*a.y+0.3*b.y,c=dojox.drawing.util.common.slope(a,b),d=4/Math.sqrt(1+c*c);b.x<a.x&&(d=-d);f+=-d*c;e+=d;c=b.y>a.y?"end":"start";e+=b.x>a.x?10:-10;return{x:f,y:e,align:c}}}());

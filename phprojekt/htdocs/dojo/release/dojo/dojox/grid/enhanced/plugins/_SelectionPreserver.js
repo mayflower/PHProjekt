@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.grid.enhanced.plugins._SelectionPreserver"]||(dojo._hasResource["dojox.grid.enhanced.plugins._SelectionPreserver"]=!0,dojo.provide("dojox.grid.enhanced.plugins._SelectionPreserver"),dojo.declare("dojox.grid.enhanced.plugins._SelectionPreserver",null,{_connects:[],constructor:function(b){this.selection=b;var a=this.grid=b.grid;a.onSelectedById=this.onSelectedById;this.reset();var c=a._clearData,e=this;a._clearData=function(){e._updateMapping(!a._noInternalMapping);e._trustSelection=
+[];c.apply(a,arguments)};this.connect(a,"_setStore","reset");this.connect(a,"_addItem","_reSelectById");this.connect(b,"addToSelection",dojo.hitch(this,"_selectById",!0));this.connect(b,"deselect",dojo.hitch(this,"_selectById",!1));this.connect(b,"selectRange",dojo.hitch(this,"_updateMapping",!0,!0,!1));this.connect(b,"deselectRange",dojo.hitch(this,"_updateMapping",!0,!1,!1));this.connect(b,"deselectAll",dojo.hitch(this,"_updateMapping",!0,!1,!0))},destroy:function(){this.reset();dojo.forEach(this._connects,
+dojo.disconnect);delete this._connects},connect:function(b,a,c){b=dojo.connect(b,a,this,c);this._connects.push(b);return b},reset:function(){this._idMap=[];this._selectedById={};this._trustSelection=[];this._defaultSelected=!1},_reSelectById:function(b,a){var c=this.selection,e=this.grid;if(b&&e._hasIdentity){var f=e.store.getIdentity(b);if(this._selectedById[f]===void 0){if(!this._trustSelection[a])c.selected[a]=this._defaultSelected}else c.selected[a]=this._selectedById[f];this._idMap.push(f);e.onSelectedById(f,
+a,c.selected[a])}},_selectById:function(b,a){if(this.selection.mode!="none"&&this.grid._hasIdentity){var c=a;if(typeof a=="number"||typeof a=="string")c=(c=this.grid._by_idx[a])&&c.item;c?this._selectedById[this.grid.store.getIdentity(c)]=!!b:this._trustSelection[a]=!0}},onSelectedById:function(){},_updateMapping:function(b,a,c,e,f){var i=this.selection,g=this.grid,j=0,k=0,d,h;for(d=g.rowCount-1;d>=0;--d)if(g._by_idx[d]){if((h=g._by_idx[d].idty)&&(b||this._selectedById[h]===void 0))this._selectedById[h]=
+!!i.selected[d]}else++k,j+=i.selected[d]?1:-1;if(k)this._defaultSelected=j>0;!c&&e!==void 0&&f!==void 0&&(c=!g.usingPagination&&Math.abs(f-e+1)===g.rowCount);if(c&&!g.usingPagination)for(d=this._idMap.length;d>=0;--d)this._selectedById[this._idMap[d]]=a}}));

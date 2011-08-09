@@ -1,70 +1,9 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
 
 
-if(!dojo._hasResource["dojox.encoding.ascii85"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.encoding.ascii85"] = true;
-dojo.provide("dojox.encoding.ascii85");
-
-(function(){
-	var c = function(input, length, result){
-		var i, j, n, b = [0, 0, 0, 0, 0];
-		for(i = 0; i < length; i += 4){
-			n = ((input[i] * 256 + input[i+1]) * 256 + input[i+2]) * 256 + input[i+3];
-			if(!n){
-				result.push("z");
-			}else{
-				for(j = 0; j < 5; b[j++] = n % 85 + 33, n = Math.floor(n / 85));
-			}
-			result.push(String.fromCharCode(b[4], b[3], b[2], b[1], b[0]));
-		}
-	};
-	
-	dojox.encoding.ascii85.encode = function(input){
-		// summary: encodes input data in ascii85 string
-		// input: Array: an array of numbers (0-255) to encode
-		var result = [], reminder = input.length % 4, length = input.length - reminder;
-		c(input, length, result);
-		if(reminder){
-			var t = input.slice(length);
-			while(t.length < 4){ t.push(0); }
-			c(t, 4, result);
-			var x = result.pop();
-			if(x == "z"){ x = "!!!!!"; }
-			result.push(x.substr(0, reminder + 1));
-		}
-		return result.join("");	// String
-	};
-
-	dojox.encoding.ascii85.decode = function(input){
-		// summary: decodes the input string back to array of numbers
-		// input: String: the input string to decode
-		var n = input.length, r = [], b = [0, 0, 0, 0, 0], i, j, t, x, y, d;
-		for(i = 0; i < n; ++i){
-			if(input.charAt(i) == "z"){
-				r.push(0, 0, 0, 0);
-				continue;
-			}
-			for(j = 0; j < 5; ++j){ b[j] = input.charCodeAt(i + j) - 33; }
-			d = n - i;
-			if(d < 5){
-				for(j = d; j < 4; b[++j] = 0);
-				b[d] = 85;
-			}
-			t = (((b[0] * 85 + b[1]) * 85 + b[2]) * 85 + b[3]) * 85 + b[4];
-			x = t & 255;
-			t >>>= 8;
-			y = t & 255;
-			t >>>= 8;
-			r.push(t >>> 8, t & 255, y, x);
-			for(j = d; j < 5; ++j, r.pop());
-			i += 4;
-		}
-		return r;
-	};
-})();
-
-}
+dojo._hasResource["dojox.encoding.ascii85"]||(dojo._hasResource["dojox.encoding.ascii85"]=!0,dojo.provide("dojox.encoding.ascii85"),dojo.getObject("encoding.ascii85",!0,dojox),function(){var h=function(b,f,d){var c,e,a,g=[0,0,0,0,0];for(c=0;c<f;c+=4){if(a=((b[c]*256+b[c+1])*256+b[c+2])*256+b[c+3])for(e=0;e<5;g[e++]=a%85+33,a=Math.floor(a/85));else d.push("z");d.push(String.fromCharCode(g[4],g[3],g[2],g[1],g[0]))}};dojox.encoding.ascii85.encode=function(b){var f=[],d=b.length%4,c=b.length-d;h(b,c,
+f);if(d){for(b=b.slice(c);b.length<4;)b.push(0);h(b,4,f);b=f.pop();b=="z"&&(b="!!!!!");f.push(b.substr(0,d+1))}return f.join("")};dojox.encoding.ascii85.decode=function(b){var f=b.length,d=[],c=[0,0,0,0,0],e,a,g,h,i;for(e=0;e<f;++e)if(b.charAt(e)=="z")d.push(0,0,0,0);else{for(a=0;a<5;++a)c[a]=b.charCodeAt(e+a)-33;i=f-e;if(i<5){for(a=i;a<4;c[++a]=0);c[i]=85}a=(((c[0]*85+c[1])*85+c[2])*85+c[3])*85+c[4];g=a&255;a>>>=8;h=a&255;a>>>=8;d.push(a>>>8,a&255,h,g);for(a=i;a<5;++a,d.pop());e+=4}return d}}());

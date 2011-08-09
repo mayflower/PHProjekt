@@ -1,52 +1,9 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
 
 
-if(!dojo._hasResource["dojox.lang.async.timeout"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.lang.async.timeout"] = true;
-dojo.provide("dojox.lang.async.timeout");
-
-// Source of Deferred for timeouts
-
-(function(){
-	var d = dojo, timeout = dojox.lang.async.timeout;
-
-	timeout.from = function(ms){
-		return function(){
-			var h, cancel = function(){
-					if(h){
-						clearTimeout(h);
-						h = null;
-					}
-				},
-				x = new d.Deferred(cancel);
-			h = setTimeout(function(){
-				cancel();
-				x.callback(ms);
-			}, ms);
-			return x;
-		};
-	};
-
-	timeout.failOn = function(ms){
-		return function(){
-			var h, cancel = function(){
-					if(h){
-						clearTimeout(h);
-						h = null;
-					}
-				},
-				x = new d.Deferred(cancel);
-			h = setTimeout(function(){
-				cancel();
-				x.errback(ms);
-			}, ms);
-			return x;
-		};
-	};
-})();
-
-}
+dojo._hasResource["dojox.lang.async.timeout"]||(dojo._hasResource["dojox.lang.async.timeout"]=!0,dojo.provide("dojox.lang.async.timeout"),function(){var e=dojo,f=dojox.lang.async.timeout;f.from=function(b){return function(){var a,c=function(){a&&(clearTimeout(a),a=null)},d=new e.Deferred(c);a=setTimeout(function(){c();d.callback(b)},b);return d}};f.failOn=function(b){return function(){var a,c=function(){a&&(clearTimeout(a),a=null)},d=new e.Deferred(c);a=setTimeout(function(){c();d.errback(b)},b);
+return d}}}());

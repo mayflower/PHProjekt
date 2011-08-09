@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.mobile.FlippableView"]||(dojo._hasResource["dojox.mobile.FlippableView"]=!0,dojo.provide("dojox.mobile.FlippableView"),dojo.require("dijit._WidgetBase"),dojo.require("dojox.mobile"),dojo.require("dojox.mobile._ScrollableMixin"),dojo.declare("dojox.mobile.FlippableView",[dojox.mobile.View,dojox.mobile._ScrollableMixin],{scrollDir:"f",weight:1.2,buildRendering:function(){this.inherited(arguments);dojo.addClass(this.domNode,"mblFlippableView");this.containerNode=this.domNode;
+this.containerNode.style.position="absolute"},onTouchStart:function(a){var b=this._nextView(this.domNode);b&&b.stopAnimation();(b=this._previousView(this.domNode))&&b.stopAnimation();this.inherited(arguments)},_nextView:function(a){for(a=a.nextSibling;a;a=a.nextSibling)if(a.nodeType==1)return dijit.byNode(a);return null},_previousView:function(a){for(a=a.previousSibling;a;a=a.previousSibling)if(a.nodeType==1)return dijit.byNode(a);return null},scrollTo:function(a){if(!this._beingFlipped){var b,e;
+a.x<0?(b=this._nextView(this.domNode),e=a.x+this.domNode.offsetWidth):(b=this._previousView(this.domNode),e=a.x-this.domNode.offsetWidth);if(b)b.domNode.style.display="",b._beingFlipped=!0,b.scrollTo({x:e}),b._beingFlipped=!1}this.inherited(arguments)},slideTo:function(a,b,e){if(!this._beingFlipped){var d=this.domNode.offsetWidth,g=this.getPos(),c,f;if(g.x<0)if(c=this._nextView(this.domNode),g.x<-d/4){if(c)a.x=-d,f=0}else c&&(f=d);else if(c=this._previousView(this.domNode),g.x>d/4){if(c)a.x=d,f=0}else c&&
+(f=-d);if(c&&(c._beingFlipped=!0,c.slideTo({x:f},b,e),c._beingFlipped=!1,f===0))dojox.mobile.currentView=c}this.inherited(arguments)},onFlickAnimationEnd:function(a){for(var b=this.domNode.parentNode.childNodes,e=0;e<b.length;e++){var d=b[e];if(d.nodeType==1&&d!=dojox.mobile.currentView.domNode)d.style.display="none"}this.inherited(arguments)}}));

@@ -7,8 +7,7 @@ dojo.require("dijit._Templated");
 dojo.require("dojox.embed.flashVars");
 dojo.require("dijit._Contained");
 
-dojo.experimental("dojox.form.FileUploader");
-
+console.warn("DEPRECATED: dojox.form.FileUploader is no longer supported and will be removed in 2.0. Suggested that you use dojox.form.Uploader instead.");
 
 	//	Usage Notes:
 	//		To center text vertically, use vertical-align:middle;
@@ -18,7 +17,7 @@ dojo.experimental("dojox.form.FileUploader");
 
 dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit._Contained], {
 	// version:
-	//		1.5
+	//		1.5 (deprecated)
 	// summary:
 	// 		Handles File Uploading to a server (PHP script included for testing)
 	//
@@ -93,7 +92,7 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 	//		works like a charm:
 	//		BrowserMatch Safari nokeepalive
 	//
-	swfPath: dojo.config.uploaderPath || dojo.moduleUrl("dojox.form", "resources/uploader.swf"),
+	swfPath: dojo.config.uploaderPath || dojo.moduleUrl("dojox.form", "resources/fileuploader.swf"),
 
 
 	templateString:'<div><div dojoAttachPoint="progNode"><div dojoAttachPoint="progTextNode"></div></div><div dojoAttachPoint="insideNode" class="uploaderInsideNode"></div></div>',
@@ -102,10 +101,6 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 	//		The url targeted for upload. An absolute URL is preferred. Relative URLs are
 	//		changed to absolute.
 	uploadUrl: "",
-	//
-	//	button: dijit.form.Button or a domNode
-	// 		DEPRECATED: The "fake" button that when clicked, launches the upload dialog
-	// button:"",
 	//
 	//	isDebug: Boolean
 	//		If true, outputs traces from the SWF to console. What exactly gets passed
@@ -162,11 +157,6 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 	//	flashMovie: [readonly] Function
 	//		The SWF. Mostly Internal.
 	flashMovie: null,
-	//
-	//	flashDiv: [readonly] HTMLNode
-	//		DEPRECATED for insideNode
-	//		The div that holds the SWF and form/fileInput
-	flashDiv: null,
 	//
 	//	insideNode: [readonly] HTMLNode
 	//		The div that holds the SWF and form/fileInput
@@ -324,7 +314,6 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 
 		this[createMethod]();
 
-
 		if(this.fileListId){
 			this.connect(dojo.byId(this.fileListId), "click", function(evt){
 				var p = evt.target.parentNode.parentNode.parentNode; // in a table
@@ -336,6 +325,26 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 
 		// cleaning up solves memory leak issues in the HTML version
 		dojo.addOnUnload(this, this.destroy);
+	},
+
+	getHiddenWidget: function(){
+		// summary:
+		//		Internal.
+		//		If a parent widget has an onShow event, it is assumed
+		//		that it is hidden and the parsing of the uploader is
+		//		delayed until onShow fires. Note that the widget must
+		//		fire onShow even if it is defaulted to showing/selected.
+		//		this seems to work for Tabs (the primary fix).
+		//
+		var node = this.domNode.parentNode;
+		while(node){
+			var id = node.getAttribute && node.getAttribute("widgetId");
+			if(id && dijit.byId(id).onShow){
+				return dijit.byId(id);
+			}
+			node = node.parentNode;
+		}
+		return null;
 	},
 
 	getHiddenNode: function(/*DomNode*/ node){
@@ -356,7 +365,7 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 				hidden = p;
 				break;
 			}
-			p = p.parentNode
+			p = p.parentNode;
 		}
 		return hidden;
 	},
@@ -516,7 +525,6 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 				this.insideNode.appendChild(document.createTextNode(this.fhtml.cn));
 			}
 		}
-		this.flashDiv = this.insideNode; //backwards compat - rem in 1.5
 		if(this._hiddenNode){
 			dojo.style(this._hiddenNode, "display", "none");
 		}
@@ -692,10 +700,8 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 		}
 		if(this.uploaderType == "flash"){
 			this.flashObject.destroy();
-			dojo.destroy(this.flashDiv);
+			delete this.flashObject;
 		}else{
-			// destroying iframe prevents multiple uses in Dialog
-			// dojo.destroy("dojoIoIframe");
 			dojo.destroy(this._fileInput);
 			dojo.destroy(this._formNode);
 		}
@@ -884,13 +890,13 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 	},
 	_getDisabledAttr: function(){
 		// summary:
-		//		Internal. To get disabled use: widget.attr("disabled");
+		//		Internal. To get disabled use: widget.get("disabled");
 		return this._disabled;
 	},
 
 	_setDisabledAttr: function(disabled){
 		// summary:
-		//		Internal. To set disabled use: widget.attr("disabled", true | false);
+		//		Internal. To set disabled use: widget.set("disabled", true | false);
 		if(this._disabled == disabled){ return; }
 
 		if(this.uploaderType == "flash"){
@@ -956,7 +962,7 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 			this._animateProgress();
 		}
 		var dfd = dojo.io.iframe.send({
-			url: this.uploadUrl,
+			url: this.uploadUrl.toString(),
 			form: this._formNode,
 			handleAs: "json",
 			error: dojo.hitch(this, function(err){
@@ -990,10 +996,12 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 			this.onMouseOver(evt);
 		}));
 		this._cons.push(dojo.connect(this._fileInput, "mouseout", this, function(evt){
-			dojo.removeClass(this.domNode, this.activeClass);
-			dojo.removeClass(this.domNode, this.hoverClass);
-			this.onMouseOut(evt);
-			this._checkHtmlCancel("off");
+			setTimeout(dojo.hitch(this, function(){
+				dojo.removeClass(this.domNode, this.activeClass);
+				dojo.removeClass(this.domNode, this.hoverClass);
+				this.onMouseOut(evt);
+				this._checkHtmlCancel("off");
+			}), 0);
 		}));
 		this._cons.push(dojo.connect(this._fileInput, "mousedown", this, function(evt){
 			dojo.addClass(this.domNode, this.activeClass);
@@ -1078,17 +1086,21 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 		// summary:
 		//		Build the form that holds the fileInput
 		//
+
 		if(this._formNode){ return; }
 
-		if(dojo.isIE){
+		if(dojo.isIE < 9 || (dojo.isIE && dojo.isQuirks)){
 			this._formNode = document.createElement('<form enctype="multipart/form-data" method="post">');
 			this._formNode.encoding = "multipart/form-data";
+			this._formNode.id = dijit.getUniqueId("FileUploaderForm"); // needed for dynamic style
+			this.domNode.appendChild(this._formNode);
 		}else{
-			this._formNode = document.createElement('form');
-			this._formNode.setAttribute("enctype", "multipart/form-data");
+			this._formNode = dojo.create('form', {
+				enctype:"multipart/form-data",
+				method:"post",
+				id:dijit.getUniqueId("FileUploaderForm")
+			}, this.domNode);
 		}
-		this._formNode.id = dijit.getUniqueId("FileUploaderForm"); // needed for dynamic style
-		this.domNode.appendChild(this._formNode);
 	},
 
 	_buildFileInput: function(){
@@ -1243,7 +1255,9 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 			},
 			params: {
 				scale:"noscale",
-				wmode:"opaque"
+				wmode:"opaque",
+				allowScriptAccess:"always",
+				allowNetworking:"all"
 			}
 
 		};

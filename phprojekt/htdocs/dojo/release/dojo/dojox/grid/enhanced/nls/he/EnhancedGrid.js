@@ -1,1 +1,1 @@
-({"descending":"יורד","ascending":"עולה","nestedSort":"מיון מקונן","unsorted":"לא למיין עמודה זו","singleSort":"מיון יחיד","sortingState":"${0} - ${1}"})
+({"singleSort":"מיון יחיד","indirectSelectionRadio":"שורה ${0}, בחירה יחידה, תיבת בחירה","ascending":"עולה","indirectSelectionCheckBox":"שורה ${0}, בחירה מרובה, תיבת סימון","selectAll":"בחירת הכל","descending":"יורד","nestedSort":"מיון מקונן","unsorted":"אין למיין עמודה זו","sortingState":"${0} - ${1}"})

@@ -1,1 +1,1 @@
-({"descending":"Synkende","ascending":"Stigende","nestedSort":"Nestet sortering","unsorted":"Ikke sorter denne kolonnen","singleSort":"Enkel sortering","sortingState":"${0} - ${1}"})
+({"singleSort":"Enkeltsortering","indirectSelectionRadio":"Rad ${0}, enkeltvalg, valgknapp","ascending":"Stigende","indirectSelectionCheckBox":"Rad ${0}, flervalg, avmerkingsboks","selectAll":"Velg alle","descending":"Synkende","nestedSort":"Nestet sortering","unsorted":"Ikke sorter denne kolonnen","sortingState":"${0} - ${1}"})

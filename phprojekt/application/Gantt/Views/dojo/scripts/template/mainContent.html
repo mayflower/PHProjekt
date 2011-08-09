@@ -1,50 +1,53 @@
-<div id="ganttChart"
- style="background-color: white; width: 98%; height: 95%; margin: 10px;">
-    <div dojoAttachPoint='ganttContainer'
-    style="background-color: #ffffff; border: solid #ffffff; display: block; position: relative;
-    width: 100%;">
-        <div id="gantSelectDates"
-        style="display: none; margin-left: 10px;">
-            <table class="formContainer">
-            <tr>
-                <td
-                style="width: 10px;">
-                    &nbsp;
-                </td>
-                <td>
-                    <fieldset
-                    style="border: 1px solid; padding: 5px; width: 500px;">
-                    <legend>{{selectedProjectTimelineText}}:</legend>
-                    <div id='TgtMin'></div><div id='TgtMax'></div>
-                    <button dojoType="dijit.form.Button" baseClass="positive smallIcon" type="button" iconClass="tick"
-                    onclick="dojo.style('gantSelectDates', 'display', 'none');">
-                    </button>
-                    &nbsp;&nbsp;
-                    <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon"
-                    iconClass="help">
-                        <div dojoType="dijit.TooltipDialog">
-                            <div
-                            style="white-space: nowrap;">
-                            {{projectPeriodHelp}}
+<div>
+    <div data-dojo-attach-point="ganttChart"
+            style="background-color: white; margin: 10px;"
+            class="ganttChart">
+        <div dojoAttachPoint='ganttContainer'
+        style="background-color: #ffffff; border: solid #ffffff; display: block; position: relative;
+        width: 100%;">
+            <div id="gantSelectDates"
+            style="display: none; margin-left: 10px;">
+                <table class="formContainer">
+                <tr>
+                    <td
+                    style="width: 10px;">
+                        &nbsp;
+                    </td>
+                    <td>
+                        <fieldset
+                        style="border: 1px solid; padding: 5px; width: 500px;">
+                        <legend>{{selectedProjectTimelineText}}:</legend>
+                        <div id='TgtMin'></div><div id='TgtMax'></div>
+                        <button dojoType="dijit.form.Button" baseClass="positive smallIcon" type="button" iconClass="tick"
+                        onclick="dojo.style('gantSelectDates', 'display', 'none');">
+                        </button>
+                        &nbsp;&nbsp;
+                        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon"
+                        iconClass="help">
+                            <div dojoType="dijit.TooltipDialog">
+                                <div
+                                style="white-space: nowrap;">
+                                {{projectPeriodHelp}}
+                                </div>
                             </div>
-                        </div>
-                    </button>
-                    </fieldset>
-                </td>
-            </tr>
-            </table>
-        </div>
-
-        <div class="ganttcontent"
-        style="width: 100%;">
-            <div id="timeLine"
-            style="position: relative; top: -55px; margin-top: 0px; left: 0px; height: 100px;">
+                        </button>
+                        </fieldset>
+                    </td>
+                </tr>
+                </table>
             </div>
-            <div id="gantt_timeline" class="timeline"
+    
+            <div class="ganttcontent"
             style="width: 100%;">
-            </div>
-            <div id="projectList" class="project_list"
-            style="width: 100%;">
+                <div id="timeLine"
+                style="position: relative; top: -55px; margin-top: 0px; left: 0px; height: 100px;">
+                </div>
+                <div id="gantt_timeline" class="timeline"
+                style="width: 100%;">
+                </div>
+                <div id="projectList" class="project_list"
+                style="width: 100%;">
+                </div>
             </div>
         </div>
     </div>

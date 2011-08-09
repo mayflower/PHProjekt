@@ -120,4 +120,4 @@ li {
 	#vertical-align: auto;	/* makes TextBox,Button line up w/native counterparts on IE6 */
 }
 
-.note { color:#a7a7a7; text-align:center; font-size:9pt; }
+#version { position:absolute; right:18px; top:10px; color:#a7a7a7; font-size:9pt; }

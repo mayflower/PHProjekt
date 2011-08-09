@@ -38,10 +38,17 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         phpr.parentmodule     = null;
         phpr.currentProjectId = id;
         phpr.tree.fadeIn();
-        this.setUrlHash(module, null, ["basicData"]);
+        phpr.pageManager.changeState({
+            moduleName: this.module,
+            action: 'basicData',
+            projectId: projectId,
+            id: id
+        })
     },
 
     basicData:function() {
+        var view = phpr.viewManager.useDefaultView({blank: true}).clear();
+
         phpr.module = this.module;
         this.destroy();
 
@@ -51,14 +58,12 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.destroyGrid();
 
         this.setSubmoduleNavigation('BasicData');
-        phpr.destroySubWidgets('centerMainContent');
-        this.render(["phpr.Project.template", "BasicData.html"], dojo.byId('centerMainContent'));
         this.hideSuggest();
         this.setSearchForm();
         phpr.tree.fadeIn();
         phpr.tree.loadTree();
 
-        this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, phpr.module);
+        this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, phpr.module, {}, view.centerMainContent);
     },
 
     openForm:function(id, module) {
@@ -71,7 +76,14 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
             params['startDate'] = phpr.date.getIsoDate(new Date());
         }
 
-        this.form = new this.formWidget(this, id, module, params);
+        var view = phpr.viewManager.useDefaultView();
+
+        if (!this.grid) {
+            this.reload();
+        }
+
+        this.form = new this.formWidget(this, id, module, params,
+                view.detailsBox);
     },
 
     updateCacheData:function() {
