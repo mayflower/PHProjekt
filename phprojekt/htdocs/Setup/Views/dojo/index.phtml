@@ -11,6 +11,15 @@
         .dj_ie .phprojekt #serverFeedback {
             padding-left: 5px;
         }
+        #installForm {
+            height: auto !important;
+        }
+        #formContent {
+            height: auto !important;
+        }
+        #centerMainContent {
+            height: auto !important;
+        }
     </style>
     <script type="text/javascript">
         var djConfig = {isDebug: false, parseOnLoad: false, bindEncoding: "utf-8",
@@ -318,15 +327,15 @@
 </head>
 <body class="phprojekt">
 
-<div id="completeContent" dojoType="dijit.layout.BorderContainer" persist="true"
+<div id="completeContent" class="completeContent" dojoType="dijit.layout.BorderContainer" persist="true"
  style="width: 100%; height: 1000px;">
     <!-- Left Content -->
-    <div id="navigation-container" dojoType="dijit.layout.ContentPane" region="left" splitter="false" minSize="180"
+    <div id="navigation-container" class="navigationContainer" dojoType="dijit.layout.ContentPane" region="left" splitter="false" minSize="180"
     maxSize="300"
     style="width: 15%; overflow: hidden;">
         <div region="center" dojoType="dijit.layout.ContentPane">
-            <div id="tree-navigation">
-                <div dojoType="dijit.layout.ContentPane" id="treeBox"
+            <div id="tree-navigation" class="treeNavigation">
+                <div dojoType="dijit.layout.ContentPane" id="treeBox" class="treeBox"
                  style="height: 100%;">
                 </div>
             </div>
@@ -334,19 +343,19 @@
     </div>
 
     <!-- Top Bar menu -->
-    <div dojoType="dijit.layout.ContentPane" region="top" id="header"
+    <div dojoType="dijit.layout.ContentPane" region="top" id="header" class="header"
     style="height: 55px; overflow: hidden;">
         <img class="left" src="<?php echo $this->webPath; ?>img/logo.png" alt="PHProjekt 6" />
-        <div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
+        <div id="mainNavigation" class="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
         </div>
-        <div id="loadingIcon" class="right align-right"
+        <div id="loadingIcon" class="loadingIcon" class="right align-right"
         style="margin-top: 5px; margin-bottom: 5px; display: none;">
             <img class="left" src="<?php echo $this->webPath; ?>img/ajax-loader.gif" alt="Loadding" />
         </div>
     </div>
 
     <!-- Center Content -->
-    <div id="completeCenterContent" dojoType="dijit.layout.ContentPane" region="center"
+    <div id="completeCenterContent" class="completeCenterContent" dojoType="dijit.layout.ContentPane" region="center"
     style="height: 1000px;">
         <div dojoType="dijit.layout.BorderContainer" design="sidebar"
         style="height: 100%;">
@@ -421,9 +430,9 @@
                 </div>
                 <br />
                 <!-- Main Content -->
-                <div dojoType="dijit.layout.ContentPane" region="center" id="centerMainContent">
-                <form dojoType="dijit.form.Form" id="installForm" name="frm" method="post" onsubmit="return false;">
-                    <div dojoType="dijit.layout.ContentPane" id="formContent">
+                <div dojoType="dijit.layout.ContentPane" region="center" id="centerMainContent" class="centerMainContent">
+                <form dojoType="dijit.form.Form" id="installForm" class="installForm" name="frm" method="post" onsubmit="return false;">
+                    <div dojoType="dijit.layout.ContentPane" id="formContent" class="formContent">
                     <?php
                     echo $this->template;
                     ?>
