@@ -388,7 +388,7 @@ class Calendar2_IndexController extends IndexController
 
         $id = (int) $id;
 
-        if ('undefined' === $occurrence) {
+        if (in_array($occurrence, array('null', '0', 'undefined'))) {
             $occurrence = null;
         } else {
             try {

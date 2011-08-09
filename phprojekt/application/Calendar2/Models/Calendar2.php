@@ -460,8 +460,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @return array of Calendar2_Models_Calendar
      */
-    public function fetchAllForPeriod(Datetime $start, Datetime $end,
-                                      $user = null)
+    public function fetchAllForPeriod(Datetime $start, Datetime $end, $user = null)
     {
         if (is_null($user)) {
             // Default to the current user.
@@ -470,21 +469,21 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
         $db     = $this->getAdapter();
         $where  = $db->quoteInto(
-            'calendar2_user_relation.user_id = ? ',
+            'calendar2_user_relation.user_id = ?',
             (int) $user
         );
 
         if (Phprojekt_Auth::getUserId() != $user) {
             $where .= $db->quoteInto(
-                'AND calendar2.visibility != ?',
+                ' AND calendar2.visibility != ?',
                 (int) self::VISIBILITY_PRIVATE
             );
         }
         //TODO: This might query a lot of objects. Consider saving the last
         //      date of occurrence too so this is faster.
-        $where .= $db->quoteInto('AND calendar2.start <= ?', $end->format('Y-m-d H:i:s'));
+        $where .= $db->quoteInto(' AND calendar2.start <= ?', $end->format('Y-m-d H:i:s'));
         $where .= $db->quoteInto(
-            'AND (calendar2.last_end IS NULL OR calendar2.last_end >= ?)',
+            ' AND (calendar2.last_end IS NULL OR calendar2.last_end >= ?)',
             $start->format('Y-m-d H:i:s')
         );
         $join   = 'JOIN calendar2_user_relation '
