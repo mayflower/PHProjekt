@@ -1,1 +1,1 @@
-({"descending":"Sestupně","ascending":"Vzestupně","nestedSort":"Vnořené řazení","unsorted":"Tento sloupec neřadit","singleSort":"Jednoduché řazení","sortingState":"${0} - ${1}"})
+({"singleSort":"Jednotlivé řazení","indirectSelectionRadio":"Řádek ${0}, jednotlivý výběr, přepínač","ascending":"Vzestupně","indirectSelectionCheckBox":"Řádek ${0}, vícenásobný výběr, zaškrtávací políčko","selectAll":"Vybrat vše","descending":"Sestupně","nestedSort":"Vnořené řazení","unsorted":"Neřadit tento sloupec","sortingState":"${0} - ${1}"})

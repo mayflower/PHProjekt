@@ -1,25 +1,27 @@
-<div dojoType="dijit.layout.ContentPane" region="bottom" class="gridActions"
-style="vertical-align: baseline;">
-    <table>
-    <tr>
-        <td style="width: 45px; align: center; vertical-align: middle;">
-            <div id="arrow"></div>
-        </td>
-        <td style="align: center;">
-            <div>
-                <a href="javascript: dojo.publish('{{module}}.gridProxy', ['itemsCheck', true]);">{{checkAllTxt}}</a>
-                &nbsp;/&nbsp;
-                <a href="javascript: dojo.publish('{{module}}.gridProxy', ['itemsCheck', false]);">{{uncheckAllTxt}}</a>
-            </div>
-        </td>
-        <td>
-            &nbsp;
-            <select id="gridComboAction" name="gridComboAction" size="1" style="width: 160px;">
-                {% for action in actions %}
-                    <option value="{{action.key}}" class="{{action.class}}">{{action.label}}</option>
-                {% endfor %}
-           </select>
-        </td>
-    </tr>
-    </table>
+<div>
+    <div dojoType="dijit.layout.ContentPane" region="bottom" class="gridActions"
+        style="vertical-align: baseline;">
+        <table>
+            <tr>
+                <td style="width: 45px; align: center; vertical-align: middle;">
+                    <div dojoAttachPoint="arrow" class="arrow"></div>
+                </td>
+                <td style="align: center;">
+                    <div>
+                        <a href="javascript: dojo.publish('{{module}}.gridProxy', ['itemsCheck', true]);">{{checkAllTxt}}</a>
+                        &nbsp;/&nbsp;
+                        <a href="javascript: dojo.publish('{{module}}.gridProxy', ['itemsCheck', false]);">{{uncheckAllTxt}}</a>
+                    </div>
+                </td>
+                <td>
+                    &nbsp;
+                    <select dojoAttachPoint="gridComboAction" name="gridComboAction" size="1" style="width: 160px;", class="gridComboAction">
+                        {% for action in actions %}
+                        <option value="{{action.key}}" class="{{action.class}}">{{action.label}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>

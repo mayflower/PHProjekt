@@ -1,77 +1,10 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
 
 
-if(!dojo._hasResource["dojox.sketch.Anchor"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.sketch.Anchor"] = true;
-dojo.provide("dojox.sketch.Anchor");
-dojo.require("dojox.gfx");
-
-(function(){
-	var ta=dojox.sketch;
-	ta.Anchor=function(an, id, isControl){
-		var self=this;
-		var size=4;	//	.5 * size of anchor.
-		var rect=null;
-
-		this.type=function(){ return "Anchor"; };
-		this.annotation=an;
-
-		this.id=id;
-		this._key="anchor-" + ta.Anchor.count++;
-		this.shape=null;
-		this.isControl=(isControl!=null)?isControl:true;
-
-		this.beginEdit=function(){
-			this.annotation.beginEdit(ta.CommandTypes.Modify);
-		};
-		this.endEdit=function(){
-			this.annotation.endEdit();
-		};
-		this.zoom=function(pct){
-			if(this.shape){
-				var rs=Math.floor(size/pct);
-				var width=dojox.gfx.renderer=='vml'?1:1/pct
-				this.shape.setShape({ x:an[id].x-rs, y:an[id].y-rs, width:rs*2, height:rs*2 }).setStroke({ color:"black", width:width }); //For IE, maybe we need Math.ceil(1/pct)||1
-			}
-		}
-		/*this.doChange=function(pt){
-			if(this.isControl){
-				this.shape.applyTransform(pt);
-			} else{
-				an.transform.dx+=pt.dx;
-				an.transform.dy+=pt.dy;
-			}
-		};*/
-		this.setBinding=function(pt){
-			an[id]={ x: an[id].x+pt.dx, y:an[id].y+pt.dy };
-			an.draw();
-			an.drawBBox();
-		};
-		this.setUndo=function(){ an.setUndo(); };
-
-		this.enable=function(){
-			if(!an.shape){ return; }
-			an.figure._add(this);
-			rect={ x:an[id].x-size, y:an[id].y-size, width:size*2, height:size*2 };
-			this.shape=an.shape.createRect(rect)
-				//.setStroke({ color:"black", width:1 })
-				.setFill([255,255,255,0.35]);
-			this.shape.getEventSource().setAttribute("id", self._key);
-			this.shape.getEventSource().setAttribute("shape-rendering", "crispEdges");
-			this.zoom(an.figure.zoomFactor);
-		};
-		this.disable=function(){
-			an.figure._remove(this);
-			if(an.shape){ an.shape.remove(this.shape); }
-			this.shape=null;
-			rect=null;
-		};
-	};
-	ta.Anchor.count=0;
-})();
-
-}
+dojo._hasResource["dojox.sketch.Anchor"]||(dojo._hasResource["dojox.sketch.Anchor"]=!0,dojo.provide("dojox.sketch.Anchor"),dojo.require("dojox.gfx"),function(){var b=dojox.sketch;b.Anchor=function(a,c,f){var g=this,e=null;this.type=function(){return"Anchor"};this.annotation=a;this.id=c;this._key="anchor-"+b.Anchor.count++;this.shape=null;this.isControl=f!=null?f:!0;this.beginEdit=function(){this.annotation.beginEdit(b.CommandTypes.Modify)};this.endEdit=function(){this.annotation.endEdit()};this.zoom=
+function(d){if(this.shape){var b=Math.floor(4/d),d=dojox.gfx.renderer=="vml"?1:1/d;this.shape.setShape({x:a[c].x-b,y:a[c].y-b,width:b*2,height:b*2}).setStroke({color:"black",width:d})}};this.setBinding=function(b){a[c]={x:a[c].x+b.dx,y:a[c].y+b.dy};a.draw();a.drawBBox()};this.setUndo=function(){a.setUndo()};this.enable=function(){if(a.shape)a.figure._add(this),e={x:a[c].x-4,y:a[c].y-4,width:8,height:8},this.shape=a.shape.createRect(e).setFill([255,255,255,0.35]),this.shape.getEventSource().setAttribute("id",
+g._key),this.shape.getEventSource().setAttribute("shape-rendering","crispEdges"),this.zoom(a.figure.zoomFactor)};this.disable=function(){a.figure._remove(this);a.shape&&a.shape.remove(this.shape);e=this.shape=null}};b.Anchor.count=0}());

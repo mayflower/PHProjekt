@@ -90,7 +90,7 @@ dojo.declare("phpr.Default.System.Form._RangeSliderMixin", dojox.form._RangeSlid
         // Description:
         //    Focus the main content for prevent the focus on IE
         //    Mark as select the current selected bar
-        dojo.byId('centerMainContent').focus();
+        phpr.viewManager.getView().centerMainContent.domNode.focus();
         if (name) {
             dijit.byId('ganttObject').container.setActiveSlider(name);
         }

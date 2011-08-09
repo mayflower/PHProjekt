@@ -47,7 +47,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     _meta:              null,
     _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
 
-    constructor: function(main, id, module, params) {
+    constructor:function(main, id, module, params, formContainer) {
         // Summary:
         //    render the form on construction
         // Description:
@@ -55,22 +55,18 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    If the module is a param, is setted
         this.main = main;
         this.id   = id;
+        this.node = formContainer;
 
-        if (undefined !== module) {
-            phpr.module = module;
-        }
-        if (undefined !== params) {
+        if (undefined != params) {
             this._presetValues = params;
         }
 
-        this.setUrl(arguments);
-        this.setNode();
+        this.setUrl(params);
 
         // Put loading
-        phpr.destroySubWidgets(this._formNode);
-        this.render(["phpr.Default.template.form", "loading.html"], this._formNode.domNode, {
-            webpath: phpr.webpath
-        });
+        this.node.set('content', phpr.fillTemplate("phpr.Default.template.form.loading.html", {
+                webpath: phpr.webpath
+            }));
 
         this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
         this.tabStore = new phpr.Default.System.Store.Tab();
@@ -85,7 +81,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Destroys the form and collects all events and widgets
         this.inherited(arguments);
-        this._formNode = null;
+        this.node = null;
         this.form = null;
     },
 
@@ -98,18 +94,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             '/index/jsonDetail/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
     },
 
-    setNode: function() {
-        // Summary:
-        //    Set the node where put the form
-        // Description:
-        //    Set the node where put the form
-        this._formNode = new dijit.layout.ContentPane({style: "height: 100%;"});
-        phpr.destroySubWidgets('detailsBox');
-        dijit.byId('detailsBox').set('content', this._formNode);
-        this.garbageCollector.addNode(this._formNode);
-    },
-
-    getInitData: function() {
+    getInitData:function() {
         // Summary:
         //    Process all the POST in cascade for get all the data from the server
         // Description:
@@ -359,8 +344,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         this._meta = phpr.DataStore.getMetaData({url: this._url});
         var data   = phpr.DataStore.getData({url: this._url});
-        if (data.length === 0) {
-            this._formNode.set('content', phpr.drawEmptyMessage('The Item was not found'));
+        if (data.length == 0) {
+            this.node.set('content', phpr.drawEmptyMessage('The Item was not found'));
         } else {
             var tabs               = this.getTabs();
             var firstRequiredField = null;
@@ -475,7 +460,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this.form        = this.setFormContent();
             this.formsWidget = [];
 
-            this._formNode.set('content', this.form.domNode);
+            this.node.set('content', this.form.domNode);
 
             var firstTab = true;
             for (var t in tabs) {
@@ -506,7 +491,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
             // Set cursor to the first required field
             if (dojo.byId(firstRequiredField)) {
-                dojo.byId('completeContent').focus();
+                phpr.viewManager.getView().completeContent.domNode.focus();
                 dojo.byId(firstRequiredField).focus();
             }
 
@@ -582,8 +567,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return true;
     },
 
-    _formCallback: function() {
-        dojo.byId('completeContent').focus();
+    _formCallback:function() {
+        phpr.viewManager.getView().completeContent.domNode.focus();
     },
 
     setFormContent: function() {
@@ -850,7 +835,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             }
                             if (data.type == 'success') {
                                 this.publish("updateCacheData");
-                                this.publish("setUrlHash", [phpr.module]);
+                                // reload the page and trigger the form load
+                                phpr.pageManager.changeState({
+                                    moduleName: phpr.module
+                                });
+                                phpr.pageManager.changeState({
+                                    moduleName: phpr.module,
+                                    id: this.id
+                                });
                             }
                         })
                     });
@@ -876,7 +868,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             new phpr.handleResponse('serverFeedback', data);
                             if (data.type == 'success') {
                                 this.publish("updateCacheData");
-                                this.publish("setUrlHash", [phpr.module]);
+                                // reload the page and trigger the form load
+                                phpr.pageManager.changeState({
+                                    moduleName: phpr.module
+                                });
+                                phpr.pageManager.changeState({
+                                    moduleName: phpr.module,
+                                    id: this.id
+                                });
                             }
                         })
                     });
@@ -998,11 +997,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         phpr.DataStore.deleteData({url: this._url});
         phpr.DataStore.deleteData({url: this._tagUrl});
         phpr.DataStore.deleteData({url: this._accessUrl});
-        this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
-        this.tabStore = new phpr.Default.System.Store.Tab();
-        this._initData.push({'store': this.tabStore});
-        this.initData();
-        this.getInitData();
     },
 
     addNotificationTab: function(data) {

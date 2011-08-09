@@ -28,7 +28,7 @@ dojo.require("dijit.layout.BorderContainer");
 
 dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
     // Internal vars
-    gridBox:      null,
+    overviewBox:  null,
     detailsBox:   null,
     subForm:      null,
     subGrid:      null,
@@ -103,7 +103,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
             design: 'sidebar'
         }, document.createElement('div'));
 
-        this.gridBox = new dijit.layout.ContentPane({
+        this.overviewBox = new dijit.layout.ContentPane({
             region: 'center'
         }, document.createElement('div'));
 
@@ -112,7 +112,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
             style:  'width: 50%; height: 100%;'
         }, document.createElement('div'));
 
-        borderContainer.addChild(this.gridBox);
+        borderContainer.addChild(this.overviewBox);
         borderContainer.addChild(this.detailsBox);
         content.set("content", borderContainer.domNode);
 
@@ -128,8 +128,8 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
         //    Render the grid and the form widgets
         // Description:
         //    Render the grid and the form widgets
-        this.subGrid = new this.gridWidget('', this, phpr.currentProjectId);
-        this.subForm = new this.formWidget(this, 0, phpr.module);
+        this.subGrid = new this.gridWidget('', this, phpr.currentProjectId, this.overviewBox);
+        this.subForm = new this.formWidget(this, 0, phpr.module, {}, this.detailsBox);
     },
 
     updateCacheData: function() {
@@ -190,11 +190,7 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
     },
 
     getLinkForEdit: function(id) {
-        this.main.subForm = new this.main.formWidget(this.main, id, phpr.module);
-    },
-
-    setNode: function() {
-        this._node = this.main.gridBox;
+        this.main.subForm = new this.main.formWidget(this.main, id, phpr.module, {}, this.main.detailsBox);
     },
 
     // Set empty functions for avoid them

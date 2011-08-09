@@ -33,7 +33,9 @@ dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
     openForm:function(id, module) {
         // Summary:
         //    This function opens a new Detail View
-        if (!dojo.byId('detailsBox')) {
+        var view = phpr.viewManager.useDefaultView();
+
+        if (!this.grid) {
             this.reload();
         }
 
@@ -42,6 +44,6 @@ dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
             params['startDate'] = phpr.date.getIsoDate(new Date());
         }
 
-        this.form = new this.formWidget(this, id, module, params);
+        this.form = new this.formWidget(this, id, module, params, view.detailsBox);
     }
 });

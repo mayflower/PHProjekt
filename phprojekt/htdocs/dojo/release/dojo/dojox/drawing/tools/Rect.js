@@ -1,90 +1,10 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
 
 
-if(!dojo._hasResource["dojox.drawing.tools.Rect"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.tools.Rect"] = true;
-dojo.provide("dojox.drawing.tools.Rect");
-
-dojox.drawing.tools.Rect = dojox.drawing.util.oo.declare(
-	// summary:
-	// 		Class for a drawable rectangle
-	//
-	dojox.drawing.stencil.Rect,
-	function(){
-		// summary: constructor
-	},
-	{
-		draws:true,
-		
-		onDrag: function(/*EventObject*/obj){
-			// summary: See stencil._Base.onDrag
-			//
-			var s = obj.start, e = obj;
-			var	x = s.x < e.x ? s.x : e.x,
-				y = s.y < e.y ? s.y : e.y,
-				w = s.x < e.x ? e.x-s.x : s.x-e.x,
-				h = s.y < e.y ? e.y-s.y : s.y-e.y;
-			
-			if(this.keys.shift){ w = h = Math.max(w,h); }
-			
-			if(this.keys.alt){
-				x-=w; y-=h; w*=2; h*=2;
-				x = Math.max(x, 0);
-				y = Math.max(y, 0);
-			}
-			this.setPoints ([
-				{x:x, y:y}, 	// TL
-				{x:x+w, y:y},	// TR
-				{x:x+w, y:y+h},	// BR
-				{x:x, y:y+h}	// BL
-			]);
-			this.render();
-		},
-		
-		onUp: function(/*EventObject*/obj){
-			// summary: See stencil._Base.onUp
-			//
-			if(this.created || !this._downOnCanvas){ return; }
-			this._downOnCanvas = false;
-			
-			//Default shape on single click
-			if(!this.shape){
-				var s = obj.start;
-				var e = this.minimumSize*4;
-				this.setPoints([
-					{x:s.x, y:s.y},
-					{x:s.x+e, y:s.y},
-					{x:s.x+e, y:s.y+e},
-					{x:s.x, y:s.y+e}
-				]);
-				this.render();
-			}else{
-			
-				// if too small, need to reset
-				var o = this.data;
-				if(o.width<this.minimumSize && o.height < this.minimumSize){
-					this.remove(this.shape, this.hit);
-					return;
-				}
-			}
-			this.onRender(this);
-			
-		}
-	}
-);
-
-dojox.drawing.tools.Rect.setup = {
-	// summary: See stencil._Base ToolsSetup
-	//
-	name:"dojox.drawing.tools.Rect",
-	tooltip:'<span class="drawingTipTitle">Rectangle Tool</span><br/>'
-		+ '<span class="drawingTipDesc">SHIFT - constrain to square</span>',
-	iconClass:"iconRect"
-};
-dojox.drawing.register(dojox.drawing.tools.Rect.setup, "tool");
-
-}
+if(!dojo._hasResource["dojox.drawing.tools.Rect"])dojo._hasResource["dojox.drawing.tools.Rect"]=!0,dojo.provide("dojox.drawing.tools.Rect"),dojox.drawing.tools.Rect=dojox.drawing.util.oo.declare(dojox.drawing.stencil.Rect,function(){},{draws:!0,onDrag:function(a){var b=a.start,c=b.x<a.x?b.x:a.x,d=b.y<a.y?b.y:a.y,e=b.x<a.x?a.x-b.x:b.x-a.x,a=b.y<a.y?a.y-b.y:b.y-a.y;this.keys.shift&&(e=a=Math.max(e,a));this.keys.alt&&(c-=e,d-=a,e*=2,a*=2,c=Math.max(c,0),d=Math.max(d,0));this.setPoints([{x:c,y:d},{x:c+
+e,y:d},{x:c+e,y:d+a},{x:c,y:d+a}]);this.render()},onUp:function(a){if(!this.created&&this._downOnCanvas){this._downOnCanvas=!1;if(this.shape){if(a=this.data,a.width<this.minimumSize&&a.height<this.minimumSize){this.remove(this.shape,this.hit);return}}else{var a=a.start,b=this.minimumSize*4;this.setPoints([{x:a.x,y:a.y},{x:a.x+b,y:a.y},{x:a.x+b,y:a.y+b},{x:a.x,y:a.y+b}]);this.render()}this.onRender(this)}}}),dojox.drawing.tools.Rect.setup={name:"dojox.drawing.tools.Rect",tooltip:'<span class="drawingTipTitle">Rectangle Tool</span><br/><span class="drawingTipDesc">SHIFT - constrain to square</span>',
+iconClass:"iconRect"},dojox.drawing.register(dojox.drawing.tools.Rect.setup,"tool");

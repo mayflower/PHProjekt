@@ -38,7 +38,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
 
     initData:function() {
         // Get all the active users
-        this.userStore = new phpr.Store.User();
+        this.userStore = new phpr.Default.System.Store.User();
         this._initData.push({'store': this.userStore});
 
         // Get the tags
@@ -575,9 +575,9 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         }
     },
 
-    setUrl:function(args) {
+    setUrl:function(params) {
         this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/'
-                  + phpr.currentProjectId + '/id/' + this.id + '/occurrence/' + args[4];
+                  + phpr.currentProjectId + '/id/' + this.id + '/occurrence/' + params.recurrenceId;
     },
 
     // We have to overwrite this function here because we need to use the id

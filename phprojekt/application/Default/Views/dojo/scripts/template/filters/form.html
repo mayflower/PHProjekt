@@ -1,63 +1,69 @@
-<form dojoType="dijit.form.Form" id="filterForm" name="filterForm" onsubmit="return false;">
-<table style="padding: 5px 5px 3px 5px;">
-<tr>
-    <th>
-        <label>
-        <div dojoType="dijit.layout.ContentPane" id="filterLabelDiv">
-        </div>
-        </label>
-    </th>
-    <th>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </th>
-    <th>
-        <div dojoType="dijit.layout.ContentPane" id="filterOperatorDiv"
-        style="display: none;">
-            <select name="filterOperator" dojoType="phpr.FilteringSelect"
-            style="width: 70px;">
-                <option value="AND">{{andTxt}}</option>
-                <option value="OR">{{orTxt}}</option>
-            </select>
-        </div>
-    </th>
-    <th>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </th>
-    <th>
-        <div dojoType="dijit.layout.ContentPane" id="filterFieldDiv"
-        style="display: none;">
-        </div>
-    </th>
-    <th>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </th>
-    <th>
-        <div dojoType="dijit.layout.ContentPane" id="filterRuleDiv">
-        </div>
-    </th>
-    <th>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </th>
-    <th>
-        <div dojoType="dijit.layout.ContentPane" id="filterInputDiv">
-        </div>
-    </th>
-    <th>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </th>
-    <th>
-        <div dojoType="dijit.layout.ContentPane" id="filterButtonDiv"
-        style="display: none;">
-            <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="tick"
-            onClick="dojo.publish('{{module}}.gridProxy', ['submitFilterForm'])";>
-                {{okTxt}}
-            </button>
-        </div>
-    </th>
-</tr>
-</table>
-</form>
-<div dojoType="dijit.layout.ContentPane" id="filterDisplayDiv">
-</div>
-<div dojoType="dijit.layout.ContentPane" id="filterDisplayDelete">
+<div>
+    <form dojoType="dijit.form.Form" dojoAttachPoint="filterForm" name="filterForm" onsubmit="return false;" class="filterForm">
+    <table style="padding: 5px 5px 3px 5px;">
+    <tr>
+        <th>
+            <label>
+            <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="filterLabelDiv" class="filterLabelDiv">
+            </div>
+            </label>
+        </th>
+        <th>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </th>
+        <th>
+            <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="filterOperatorDiv"
+            style="display: none;" class="filterOperatorDiv">
+                <select name="filterOperator" dojoType="phpr.FilteringSelect"
+                style="width: 70px;">
+                    <option value="AND">{{andTxt}}</option>
+                    <option value="OR">{{orTxt}}</option>
+                </select>
+            </div>
+        </th>
+        <th>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </th>
+        <th>
+            <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="filterFieldDiv"
+            style="display: none;" class="filterFieldDiv">
+            </div>
+        </th>
+        <th>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </th>
+        <th>
+            <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="filterRuleDiv"
+                class="filterRuleDiv">
+            </div>
+        </th>
+        <th>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </th>
+        <th>
+            <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="filterInputDiv"
+                class="filterInputDiv">
+            </div>
+        </th>
+        <th>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </th>
+        <th>
+            <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="filterButtonDiv"
+            style="display: none;" class="filterButtonDiv">
+                <button dojoType="dijit.form.Button" baseClass="positive" type="submit" iconClass="tick"
+                onClick="dojo.publish('{{module}}.gridProxy', ['submitFilterForm'])";>
+                    {{okTxt}}
+                </button>
+            </div>
+        </th>
+    </tr>
+    </table>
+    </form>
+    <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="filterDisplayDiv"
+        class="filterDisplayDiv">
+    </div>
+    <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="filterDisplayDelete"
+        class="filterDisplayDelete">
+    </div>
 </div>

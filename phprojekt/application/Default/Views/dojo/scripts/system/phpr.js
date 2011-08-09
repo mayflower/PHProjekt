@@ -41,6 +41,7 @@ dojo.require("dijit.layout._LayoutWidget");
 dojo.require("dijit._Templated");
 dojo.require("dijit.form.FilteringSelect");
 dojo.require("dijit.layout.ContentPane");
+dojo.require("dojox.dtl.Inline");
 
 // Global vars
 var module           = null;
@@ -86,6 +87,24 @@ phpr.destroyWidget = function(el) {
         dijit.byId(el).destroyRecursive();
     }
 };
+
+phpr.fillTemplate = function(templateName, data) {
+    // Summary:
+    //  fills a template with the data
+    // Description:
+    //  The template is fetched from the templateCache and filled with the data.
+    //  The resulting string is then returned
+    data = data || {};
+    var context = new dojox.dtl.Context(data);
+    // Use the cached template
+    var tplContent = __phpr_templateCache[templateName];
+    var tpl        = new dojox.dtl.Template(tplContent);
+    var content    = tpl.render(context);
+    tpl = null;
+    tplContent = null;
+    context = null;
+    return content;
+}
 
 phpr.send = function(/*Object*/paramsIn) {
     // Send the given content to the server using the Default values,
@@ -538,14 +557,16 @@ dojo.declare("phpr.loading", null, {
     // Description:
     //     Simple class for show or hide the loading icon
     hide: function() {
-        if (dojo.byId('loadingIcon')) {
-            dojo.byId('loadingIcon').style.display = 'none';
+        var view = phpr.viewManager.getView();
+        if (view.loadingIcon) {
+            view.loadingIcon.style.display = 'none';
         }
     },
 
     show: function() {
-        if (dojo.byId('loadingIcon')) {
-            dojo.byId('loadingIcon').style.display = 'inline';
+        var view = phpr.viewManager.getView();
+        if (view.loadingIcon) {
+            view.loadingIcon.style.display = 'inline';
         }
     }
 });
@@ -660,13 +681,14 @@ dojo.declare("phpr.InitialScreen", null, {
     //     Manage the visibility of the page on init
     // Description:
     //     Manage the visibility of the page on init
-    start: function() {
-        dojo.style("completeContent", "opacity", 0);
+    start:function() {
+        dojo.style(phpr.viewManager.getView().completeContent.domNode, "opacity", 0);
     },
 
-    end: function() {
-        dojo.style("completeContent", "opacity", 1);
-        dojo.style("initLoading", "display", "none");
+    end:function() {
+        var view = phpr.viewManager.getView();
+        dojo.style(view.completeContent.domNode, "opacity", 1);
+        dojo.style(view.initLoading, "display", "none");
     }
 });
 
@@ -814,7 +836,7 @@ dojo.declare("phpr.BreadCrumb", null, {
             breadCrumbTitle += this._separatorOne + this._item;
         }
         document.title                    = breadCrumbTitle;
-        dojo.byId("breadCrumb").innerHTML = breadCrumb;
+        phpr.viewManager.getView().breadCrumb.innerHTML = breadCrumb;
     }
 
 });

@@ -14,11 +14,11 @@
 # php generate.php --outfile=custom-api custom
 # -- Runs the custom module, serializes to custom-api.xml
 
-if ($_SERVER['HTTP_HOST']) {
+if (isset($_SERVER['HTTP_HOST'])) {
   die('Run from command line');
 }
 
-ini_set('memory_limit', '128M');
+ini_set('memory_limit', '256M');
 ini_set('display_errors', 1);
 error_reporting(E_ALL ^ E_NOTICE);
 $debug = true;

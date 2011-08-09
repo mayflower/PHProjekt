@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "Proprietăţi legătură",
 	insertImageTitle: "Proprietăţi imagine",
@@ -11,3 +13,5 @@
 	newWindow: "Fereastra nouă"
 })
 
+//end v1.x content
+);

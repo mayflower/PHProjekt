@@ -21,23 +21,14 @@
 
 dojo.provide("phpr.Default.System.Component");
 
-dojo.require("dojox.dtl.Inline");
 dojo.require("dojo.NodeList-traverse");
 dojo.require("phpr.Default.System.GarbageCollector");
 
 dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollected, {
     main:   null,
     module: "",
-    render: function(template, node, data) {
-
-        var context = new dojox.dtl.Context(data);
-        // Use the cached template
-        var tplContent = __phpr_templateCache[template[0] + "." + template[1]];
-        var tpl        = new dojox.dtl.Template(tplContent);
-        var content    = tpl.render(context);
-        tpl = null;
-        tplContent = null;
-        context = null;
+    render:function(template, node, data) {
+        content = phpr.fillTemplate(template[0] + "." + template[1], data);
 
         // [a-zA-Z1-9[]:|]
         var eregId = /id=\\?["'][\w\x5b\x5d\x3a\x7c]*\\?["']/gi;

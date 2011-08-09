@@ -1,3 +1,5 @@
+define(
+//begin v1.x content
 ({
 	'bold': '太字',
 	'copy': 'コピー',
@@ -46,3 +48,5 @@
 	'systemShortcut': '"${0}" アクションを使用できるのは、ブラウザーでキーボード・ショートカットを使用する場合のみです。${1} を使用してください。',
 	'ctrlKey':'Ctrl+${0}'
 })
+//end v1.x content
+);

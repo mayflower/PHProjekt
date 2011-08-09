@@ -1,1 +1,1 @@
-({"descending":"Azalan","ascending":"Artan","nestedSort":"İç İçe Sıralama","unsorted":"Bu sütunu sıralama","singleSort":"Tek Sıralama","sortingState":"${0} - ${1}"})
+({"singleSort":"Tekli Sıralama","indirectSelectionRadio":"Satır ${0}, tek seçimli, radyo düğmesi","ascending":"Artan Düzende","indirectSelectionCheckBox":"Satır ${0}, çok seçimli, radyo düğmesi","selectAll":"Tümünü seç","descending":"Azalan Düzende","nestedSort":"İç İçe Sıralama","unsorted":"Bu sütunu sıralama","sortingState":"${0} - ${1}"})

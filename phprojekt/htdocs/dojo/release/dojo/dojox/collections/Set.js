@@ -1,96 +1,10 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
 
 
-if(!dojo._hasResource["dojox.collections.Set"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.collections.Set"] = true;
-dojo.provide("dojox.collections.Set");
-dojo.require("dojox.collections.ArrayList");
-
-(function(){
-	var dxc=dojox.collections;
-	dxc.Set=new (function(){
-		function conv(arr){
-			if(arr.constructor==Array){
-				return new dojox.collections.ArrayList(arr);	//	dojox.collections.ArrayList
-			}
-			return arr;		//	dojox.collections.ArrayList
-		}
-		this.union = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Return the union of the two passed sets.
-			setA=conv(setA);
-			setB=conv(setB);
-			var result = new dojox.collections.ArrayList(setA.toArray());
-			var e = setB.getIterator();
-			while(!e.atEnd()){
-				var item=e.get();
-				if(!result.contains(item)){
-					result.add(item);
-				}
-			}
-			return result;	//	dojox.collections.ArrayList
-		};
-		this.intersection = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Return the intersection of the two passed sets.
-			setA=conv(setA);
-			setB=conv(setB);
-			var result = new dojox.collections.ArrayList();
-			var e = setB.getIterator();
-			while(!e.atEnd()){
-				var item=e.get();
-				if(setA.contains(item)){
-					result.add(item);
-				}
-			}
-			return result;	//	dojox.collections.ArrayList
-		};
-		this.difference = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Returns everything in setA that is not in setB.
-			setA=conv(setA);
-			setB=conv(setB);
-			var result = new dojox.collections.ArrayList();
-			var e=setA.getIterator();
-			while(!e.atEnd()){
-				var item=e.get();
-				if(!setB.contains(item)){
-					result.add(item);
-				}
-			}
-			return result;	//	dojox.collections.ArrayList
-		};
-		this.isSubSet = function(/* array */setA, /* array */setB) {
-			//	summary
-			//	Returns if set B is a subset of set A.
-			setA=conv(setA);
-			setB=conv(setB);
-			var e = setA.getIterator();
-			while(!e.atEnd()){
-				if(!setB.contains(e.get())){
-					return false;	//	boolean
-				}
-			}
-			return true;	//	boolean
-		};
-		this.isSuperSet = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Returns if set B is a superset of set A.
-			setA=conv(setA);
-			setB=conv(setB);
-			var e = setB.getIterator();
-			while(!e.atEnd()){
-				if(!setA.contains(e.get())){
-					return false;	//	boolean
-				}
-			}
-			return true;	//	boolean
-		};
-	})();
-})();
-
-}
+dojo._hasResource["dojox.collections.Set"]||(dojo._hasResource["dojox.collections.Set"]=!0,dojo.provide("dojox.collections.Set"),dojo.require("dojox.collections.ArrayList"),function(){dojox.collections.Set=new function(){function d(a){return a.constructor==Array?new dojox.collections.ArrayList(a):a}this.union=function(a,b){for(var a=d(a),b=d(b),c=new dojox.collections.ArrayList(a.toArray()),e=b.getIterator();!e.atEnd();){var f=e.get();c.contains(f)||c.add(f)}return c};this.intersection=function(a,
+b){for(var a=d(a),b=d(b),c=new dojox.collections.ArrayList,e=b.getIterator();!e.atEnd();){var f=e.get();a.contains(f)&&c.add(f)}return c};this.difference=function(a,b){for(var a=d(a),b=d(b),c=new dojox.collections.ArrayList,e=a.getIterator();!e.atEnd();){var f=e.get();b.contains(f)||c.add(f)}return c};this.isSubSet=function(a,b){for(var a=d(a),b=d(b),c=a.getIterator();!c.atEnd();)if(!b.contains(c.get()))return!1;return!0};this.isSuperSet=function(a,b){for(var a=d(a),b=d(b),c=b.getIterator();!c.atEnd();)if(!a.contains(c.get()))return!1;
+return!0}}}());

@@ -1,104 +1,11 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
 
 
-if(!dojo._hasResource["dojox.data.util.JsonQuery"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.util.JsonQuery"] = true;
-dojo.provide("dojox.data.util.JsonQuery");
-// this is a mixin to convert object attribute queries to 
-// JSONQuery/JSONPath syntax to be sent to the server.
-dojo.declare("dojox.data.util.JsonQuery", null, {
-	useFullIdInQueries: false,
-	_toJsonQuery: function(args, jsonQueryPagination){
-		var first = true;
-		var self = this;
-		function buildQuery(path, query){
-			var isDataItem = query.__id; 
-			if(isDataItem){
-				// it is a reference to a persisted object, need to make it a query by id
-				var newQuery = {};
-				newQuery[self.idAttribute] = self.useFullIdInQueries ? query.__id : query[self.idAttribute];
-				query = newQuery;
-			}
-			for(var i in query){
-				// iterate through each property, adding them to the overall query
-				var value = query[i];
-				var newPath = path + (/^[a-zA-Z_][\w_]*$/.test(i) ? '.' + i : '[' + dojo._escapeString(i) + ']');
-				if(value && typeof value == "object"){
-					buildQuery(newPath, value);
-				}else if(value!="*"){ // full wildcards can be ommitted
-					jsonQuery += (first ? "" : "&") + newPath +
-						((!isDataItem && typeof value == "string" && args.queryOptions && args.queryOptions.ignoreCase) ? "~" : "=") +
-						 (self.simplifiedQuery ? encodeURIComponent(value) : dojo.toJson(value));
-					first = false;
-				}
-			}			
-		}
-		// performs conversion of Dojo Data query objects and sort arrays to JSONQuery strings
-		if(args.query && typeof args.query == "object"){
-			// convert Dojo Data query objects to JSONQuery
-			var jsonQuery = "[?(";
-			buildQuery("@", args.query);
-			if(!first){
-				// use ' instead of " for quoting in JSONQuery, and end with ]
-				jsonQuery += ")]"; 
-			}else{
-				jsonQuery = "";
-			}
-			args.queryStr = jsonQuery.replace(/\\"|"/g,function(t){return t == '"' ? "'" : t;});
-		}else if(!args.query || args.query == '*'){
-			args.query = "";
-		}
-		
-		var sort = args.sort;
-		if(sort){
-			// if we have a sort order, add that to the JSONQuery expression
-			args.queryStr = args.queryStr || (typeof args.query == 'string' ? args.query : ""); 
-			first = true;
-			for(i = 0; i < sort.length; i++){
-				args.queryStr += (first ? '[' : ',') + (sort[i].descending ? '\\' : '/') + "@[" + dojo._escapeString(sort[i].attribute) + "]";
-				first = false; 
-			}
-		}
-		// this is optional because with client side paging JSONQuery doesn't yield the total count
-		if(jsonQueryPagination && (args.start || args.count)){
-			// pagination
-			args.queryStr = (args.queryStr || (typeof args.query == 'string' ? args.query : "")) +
-				'[' + (args.start || '') + ':' + (args.count ? (args.start || 0) + args.count : '') + ']'; 
-		}
-		if(typeof args.queryStr == 'string'){
-			args.queryStr = args.queryStr.replace(/\\"|"/g,function(t){return t == '"' ? "'" : t;});
-			return args.queryStr;
-		}
-		return args.query;
-	},
-	jsonQueryPagination: true,
-	fetch: function(args){
-		this._toJsonQuery(args, this.jsonQueryPagination);
-		return this.inherited(arguments);
-	},
-	isUpdateable: function(){
-		return true;
-	},
-	matchesQuery: function(item,request){
-		request._jsonQuery = request._jsonQuery || dojox.json.query(this._toJsonQuery(request)); 
-		return request._jsonQuery([item]).length;
-	},
-	clientSideFetch: function(/*Object*/ request,/*Array*/ baseResults){
-		request._jsonQuery = request._jsonQuery || dojox.json.query(this._toJsonQuery(request));
-		// we use client side paging function here instead of JSON Query because we must also determine the total count
-		return this.clientSidePaging(request, request._jsonQuery(baseResults));
-	},
-	querySuperSet: function(argsSuper,argsSub){
-		if(!argsSuper.query){
-			return argsSub.query;
-		}
-		return this.inherited(arguments);
-	}
-	
-});
-
-}
+dojo._hasResource["dojox.data.util.JsonQuery"]||(dojo._hasResource["dojox.data.util.JsonQuery"]=!0,dojo.provide("dojox.data.util.JsonQuery"),dojo.declare("dojox.data.util.JsonQuery",null,{useFullIdInQueries:!1,_toJsonQuery:function(a,b){function k(b,e){var d=e.__id;if(d){var c={};c[g.idAttribute]=g.useFullIdInQueries?e.__id:e[g.idAttribute];e=c}for(var h in e){var c=e[h],l=b+(/^[a-zA-Z_][\w_]*$/.test(h)?"."+h:"["+dojo._escapeString(h)+"]");c&&typeof c=="object"?k(l,c):c!="*"&&(j+=(f?"":"&")+l+(!d&&
+typeof c=="string"&&a.queryOptions&&a.queryOptions.ignoreCase?"~":"=")+(g.simplifiedQuery?encodeURIComponent(c):dojo.toJson(c)),f=!1)}}var f=!0,g=this;if(a.query&&typeof a.query=="object"){var j="[?(";k("@",a.query);f?j="":j+=")]";a.queryStr=j.replace(/\\"|"/g,function(a){return a=='"'?"'":a})}else if(!a.query||a.query=="*")a.query="";var d=a.sort;if(d){a.queryStr=a.queryStr||(typeof a.query=="string"?a.query:"");f=!0;for(i=0;i<d.length;i++)a.queryStr+=(f?"[":",")+(d[i].descending?"\\":"/")+"@["+
+dojo._escapeString(d[i].attribute)+"]",f=!1;a.queryStr+="]"}if(b&&(a.start||a.count))a.queryStr=(a.queryStr||(typeof a.query=="string"?a.query:""))+"["+(a.start||"")+":"+(a.count?(a.start||0)+a.count:"")+"]";return typeof a.queryStr=="string"?(a.queryStr=a.queryStr.replace(/\\"|"/g,function(a){return a=='"'?"'":a}),a.queryStr):a.query},jsonQueryPagination:!0,fetch:function(a){this._toJsonQuery(a,this.jsonQueryPagination);return this.inherited(arguments)},isUpdateable:function(){return!0},matchesQuery:function(a,
+b){b._jsonQuery=b._jsonQuery||dojox.json.query(this._toJsonQuery(b));return b._jsonQuery([a]).length},clientSideFetch:function(a,b){a._jsonQuery=a._jsonQuery||dojox.json.query(this._toJsonQuery(a));return this.clientSidePaging(a,a._jsonQuery(b))},querySuperSet:function(a,b){return!a.query?b.query:this.inherited(arguments)}}));

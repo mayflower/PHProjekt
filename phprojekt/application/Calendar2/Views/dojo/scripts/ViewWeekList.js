@@ -76,16 +76,19 @@ dojo.declare("phpr.Calendar2.ViewWeekList", phpr.Calendar2.DefaultView, {
         eventsAttr.divIdPre    = this.EVENTS_MAIN_DIV_ID;
 
         // All done, let's render the template
-        this.render(["phpr.Calendar2.template", "weekList.html"], dojo.byId('gridBox'), {
-            widthTable:           this._widthTable,
-            widthHourColumn:      this._widthHourColumn,
-            header:               this._header,
-            schedule:             this._schedule,
-            events:               this.events,
-            furtherEvents:        this._furtherEvents,
-            furtherEventsMessage: phpr.nls.get('Further events'),
-            eventsAttr:           eventsAttr
-        });
+
+        phpr.viewManager.getView().gridBox.set('content',
+                phpr.fillTemplate("phpr.Calendar2.template.weekList.html", {
+                    widthTable:           this._widthTable,
+                    widthHourColumn:      this._widthHourColumn,
+                    header:               this._header,
+                    schedule:             this._schedule,
+                    events:               this.events,
+                    furtherEvents:        this._furtherEvents,
+                    furtherEventsMessage: phpr.nls.get('Further events'),
+                    eventsAttr:           eventsAttr
+                }));
+
         dojo.publish('Calendar2.connectMouseScroll');
         dojo.publish('Calendar2.connectViewResize');
 

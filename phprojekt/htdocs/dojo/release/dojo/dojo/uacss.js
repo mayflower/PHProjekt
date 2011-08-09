@@ -1,74 +1,9 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
 	Available via Academic Free License >= 2.1 OR the modified BSD license.
 	see: http://dojotoolkit.org/license for details
 */
 
 
-if(!dojo._hasResource["dojo.uacss"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.uacss"] = true;
-dojo.provide("dojo.uacss");
-
-(function(){
-	// summary:
-	//		Applies pre-set CSS classes to the top-level HTML node, based on:
-	// 			- browser (ex: dj_ie)
-	//			- browser version (ex: dj_ie6)
-	//			- box model (ex: dj_contentBox)
-	//			- text direction (ex: dijitRtl)
-	//
-	//		In addition, browser, browser version, and box model are
-	//		combined with an RTL flag when browser text is RTL.  ex: dj_ie-rtl.
-
-	var d = dojo,
-		html = d.doc.documentElement,
-		ie = d.isIE,
-		opera = d.isOpera,
-		maj = Math.floor,
-		ff = d.isFF,
-		boxModel = d.boxModel.replace(/-/,''),
-
-		classes = {
-			dj_ie: ie,
-			dj_ie6: maj(ie) == 6,
-			dj_ie7: maj(ie) == 7,
-			dj_ie8: maj(ie) == 8,
-			dj_quirks: d.isQuirks,
-			dj_iequirks: ie && d.isQuirks,
-
-			// NOTE: Opera not supported by dijit
-			dj_opera: opera,
-
-			dj_khtml: d.isKhtml,
-
-			dj_webkit: d.isWebKit,
-			dj_safari: d.isSafari,
-			dj_chrome: d.isChrome,
-
-			dj_gecko: d.isMozilla,
-			dj_ff3: maj(ff) == 3
-		}; // no dojo unsupported browsers
-
-	classes["dj_" + boxModel] = true;
-
-	// apply browser, browser version, and box model class names
-	var classStr = "";
-	for(var clz in classes){
-		if(classes[clz]){
-			classStr += clz + " ";
-		}
-	}
-	html.className = d.trim(html.className + " " + classStr);
-
-	// If RTL mode, then add dj_rtl flag plus repeat existing classes with -rtl extension.
-	// We can't run the code below until the <body> tag has loaded (so we can check for dir=rtl).  
-	// Unshift() is to run sniff code before the parser.
-	dojo._loaders.unshift(function(){
-		if(!dojo._isBodyLtr()){
-			var rtlClassStr = "dj_rtl dijitRtl " + classStr.replace(/ /g, "-rtl ")
-			html.className = d.trim(html.className + " " + rtlClassStr);
-		}
-	});
-})();
-
-}
+dojo._hasResource["dojo.uacss"]||(dojo._hasResource["dojo.uacss"]=!0,dojo.provide("dojo.uacss"),function(){var a=dojo,d=a.doc.documentElement,b=a.isIE,g=a.isOpera,c=Math.floor,h=a.isFF,i=a.boxModel.replace(/-/,""),b={dj_ie:b,dj_ie6:c(b)==6,dj_ie7:c(b)==7,dj_ie8:c(b)==8,dj_ie9:c(b)==9,dj_quirks:a.isQuirks,dj_iequirks:b&&a.isQuirks,dj_opera:g,dj_khtml:a.isKhtml,dj_webkit:a.isWebKit,dj_safari:a.isSafari,dj_chrome:a.isChrome,dj_gecko:a.isMozilla,dj_ff3:c(h)==3};b["dj_"+i]=!0;var e="",f;for(f in b)b[f]&&
+(e+=f+" ");d.className=a.trim(d.className+" "+e);dojo._loaders.unshift(function(){if(!dojo._isBodyLtr()){var b="dj_rtl dijitRtl "+e.replace(/ /g,"-rtl ");d.className=a.trim(d.className+" "+b)}})}());

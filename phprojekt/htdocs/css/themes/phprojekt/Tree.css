@@ -64,11 +64,11 @@
     outline: 1px invert dotted;
 }
 
-.phprojekt #treeBox .selected {
+.phprojekt .treeBox .selected {
     background: #294064;
 }
 
-.phprojekt #treeBox .selected .dijitTreeLabel {
+.phprojekt .treeBox .selected .dijitTreeLabel {
     font-weight: 600;
     color: #fff;
 }

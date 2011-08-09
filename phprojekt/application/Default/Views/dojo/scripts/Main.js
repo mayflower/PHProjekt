@@ -20,11 +20,107 @@
  */
 
 dojo.provide("phpr.Default.Main");
+dojo.provide("phpr.Default.SearchContentMixin");
 
 dojo.require("dijit.form.Button");
 dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.TitlePane");
 dojo.require("dijit.Tooltip");
+
+/**
+ * this mixin is used to render the content of a search onto the page.
+ *
+ * exported view properties:
+ *
+ * clear(): clears the mixin's content
+ * update(config): takes the search content as a parameter
+ *
+ * exported after the first update:
+ * defaultMainContent: the content box in which the search results get rendered
+ * resultsTitleBox: the title of the search result
+ * detailsBox: the container in which the search results are rendered
+ */
+dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewContentMixin, {
+    mixin: function() {
+        this.inherited(arguments);
+        this.view.clear = dojo.hitch(this, "clear");
+    },
+    destroyMixin: function() {
+        this.clear();
+        this._clearCenterMainContent();
+        delete this.view.clear;
+        delete this.view.defaultMainContent;
+        delete this.view.resultsTitleBox;
+        delete this.view.detailsBox;
+    },
+    update: function(config) {
+        this.clear();
+        this._renderSearchResults(config || {});
+    },
+    clear: function() {
+        this._clearCenterMainContent();
+        return this.view;
+    },
+    _renderSearchResults: function(config) {
+        // Create our container layout
+        var mainContent = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.results.mainContentResults.html"
+        });
+
+        this.view.defaultMainContent = mainContent.mainContent;
+        this.view.resultsTitleBox = mainContent.resultsTitleBox;
+        // set the title
+        this.view.resultsTitleBox.set('content', config.resultsTitle || "");
+
+        this.view.detailsBox = mainContent.detailsBox;
+
+        var results = {};
+        var data = config.results;
+
+        // iterate over all search results
+        for (var i = 0; i < data.length; i++) {
+            var modulesData = data[i];
+            // create result lists for each module
+            if (!results[modulesData.moduleLabel]) {
+                results[modulesData.moduleLabel] = [];
+            }
+
+            // append each result to the results list of the module
+            results[modulesData.moduleLabel].push(
+                    new phpr.Default.System.TemplateWrapper({
+                        templateName: "phpr.Default.template.results.results.html",
+                        templateData: {
+                            id:            modulesData.id,
+                            moduleId:      modulesData.modulesId,
+                            moduleName:    modulesData.moduleName,
+                            projectId:     modulesData.projectId,
+                            firstDisplay:  modulesData.firstDisplay,
+                            secondDisplay: modulesData.secondDisplay,
+                            resultType:    "tag"
+                        }
+                    }));
+        }
+
+        for (var i in results) {
+            // create the module block of the results list
+            var block = new dijit.layout.ContentPane({
+                title: i + " (" + results[i].length + ")"
+            });
+
+            // and append all items of of that module to the block
+            for (var entry in results[i]) {
+                block.domNode.appendChild(results[i][entry].domNode);
+            }
+
+            this.view.detailsBox.addChild(block);
+        }
+
+        this.view.centerMainContent.set('content', mainContent);
+        this.view.defaultMainContent.startup();
+        this.view.detailsBox.startup();
+    }
+});
 
 dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     // Summary: class for initialilzing a default module
@@ -35,11 +131,15 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     _langUrl:   null,
     userStore:  null,
     subModules: [],
+    globalModuleNavigationButtons: {},
+    subModuleNavigationButtons: {},
 
     // Event handler
     _searchEvent: null,
 
     constructor: function(subModules) {
+        this.subModules = [];
+        this.globalModuleNavigationButtons = {};
         this.subModules = subModules;
     },
 
@@ -65,6 +165,13 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 this.grid.destroy();
             }
             this.grid = null;
+        }
+    },
+
+    destroySearchEvent: function() {
+        if (this._searchEvent !== null) {
+            dojo.disconnect(this._searchEvent);
+            this._searchEvent = null;
         }
     },
 
@@ -106,18 +213,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     },
 
     preOpenForm: function() {
-        // Summary: 
+        // Summary:
         //      Destroy existing form before a new one is opened
         // Description:
         //      This function should be the first function called in
         //      openForm() to tear down old forms
         this.destroyForm();
-
-        if (!dojo.byId('detailsBox')) {
-            this.reload();
-        } else {
-            phpr.destroySubWidgets('detailsBox');
-        }
 
         this.inherited(arguments);
     },
@@ -126,7 +227,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //Summary: this function opens a new Detail View
         this.preOpenForm();
 
-        this.form = new this.formWidget(this, id, module);
+        if (!this.grid) {
+            this.reload();
+        }
+
+        this.form = new this.formWidget(this, id, module, {}, phpr.viewManager.getView().detailsBox);
         this.inherited(arguments);
     },
 
@@ -237,10 +342,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // important set the global phpr.module to the module which is currently loaded!!!
         phpr.module = this.module;
 
-        this.render(["phpr.Default.template", "main.html"], dojo.body(), {
-            webpath:       phpr.webpath,
-            currentModule: phpr.module
-        });
+        var view = phpr.viewManager.useDefaultView({blank: true});
 
         phpr.InitialScreen.start();
         this.hideSuggest();
@@ -261,10 +363,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     phpr.nls = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
 
                     translatedText = phpr.nls.get("Disable Frontend Messages");
-                    dijit.byId('disableFrontendMessage').set('label', translatedText);
+                    view.disableFrontendMessage.set('label', translatedText);
 
                     translatedText = phpr.nls.get("Tags");
-                    dijit.byId('tagsbox').titleNode.innerHTML = translatedText;
+                    view.tagsbox.titleNode.innerHTML = translatedText;
 
                     // Get global modules
                     phpr.DataStore.addStore({url: phpr.globalModuleUrl});
@@ -305,8 +407,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Description:
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
-        this.destroy();
-        this.cleanPage();
         this.setGlobalVars();
         this.renderTemplate();
         this.setNavigations();
@@ -328,7 +428,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Render the module
         // Description:
         //    Call the template that the module use and render it
-        this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
+        phpr.viewManager.useDefaultView({withOverview: true});
     },
 
     setNavigations: function() {
@@ -361,42 +461,48 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             '/index/jsonSaveMultiple/nodeId/' +
             phpr.currentProjectId;
         this.destroyGrid();
-        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
+        var gridBoxContainer = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.GridBox.html"
+        });
+
+        phpr.viewManager.getView().overviewBox.set('content', gridBoxContainer);
+        gridBoxContainer.startup();
+        this.grid = new this.gridWidget(
+                updateUrl,
+                this,
+                phpr.currentProjectId,
+                gridBoxContainer);
     },
 
     setGlobalModulesNavigation: function() {
-        var toolbar       = dijit.byId('mainNavigation');
-        var systemToolbar = dijit.byId('systemNavigation');
+        var view = phpr.viewManager.getView();
+        var toolbar       = view.mainNavigation;
+        var systemToolbar = view.systemNavigation;
         var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
         var isAdmin       = phpr.DataStore.getMetaData({url: phpr.globalModuleUrl});
         var button = null;
 
-        phpr.destroySubWidgets("mainNavigation");
-        dojo.byId("mainNavigation").innerHTML = '';
+        toolbar.destroyDescendants();
+        systemToolbar.destroyDescendants();
 
-        dojo.hitch(this, function() {
-            var cb = dojo.hitch(this, function(e) {
-                phpr.currentProjectId = phpr.rootProjectId;
-                var module            = e.target.id.replace('globalModule_', '').replace('_label', '');
-                phpr.pageManager.changeState({moduleName: module});
-            });
-            for (var i in globalModules) {
-                phpr.destroyWidget("globalModule_" + globalModules[i].name);
-                button = new dijit.form.Button({
-                    id:        "globalModule_" + globalModules[i].name,
-                    label:     globalModules[i].label,
-                    showLabel: true,
-                    onClick:   cb
+        for (i in globalModules) {
+            button = new dijit.form.Button({
+                label:     globalModules[i].label,
+                showLabel: true,
+                onClick: (function(module) {
+                    return function(e) {
+                            phpr.currentProjectId = phpr.rootProjectId;
+                            phpr.pageManager.changeState({moduleName: module});
+                        };
+                    }(globalModules[i].name))
                 });
-                toolbar.addChild(button);
-                button = null;
-            }
-        })();
+            toolbar.addChild(button);
+            this.globalModuleNavigationButtons[globalModules[i].name] = button;
+            button = null;
+        }
 
         // Setting
-        phpr.destroyWidget("globalModule_Setting");
         button = new dijit.form.Button({
-            id:        "globalModule_Setting",
             label:     phpr.nls.get('Setting'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
@@ -407,14 +513,13 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 });
             })
         });
+        this.globalModuleNavigationButtons[globalModules[i].name] = button;
         toolbar.addChild(button);
         button = null;
 
         if (isAdmin > 0) {
             // Administration
-            phpr.destroyWidget("globalModule_Administration");
             button = new dijit.form.Button({
-                id:        "globalModule_Administration",
                 label:     phpr.nls.get('Administration'),
                 showLabel: true,
                 onClick:   dojo.hitch(this, function() {
@@ -425,34 +530,30 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 })
             });
             toolbar.addChild(button);
+            this.globalModuleNavigationButtons['Administration'] = button;
             button = null;
         }
 
         // Help
-        if (!dojo.byId('globalModule_Help')) {
-            button = new dijit.form.Button({
-                id:        "globalModule_Help",
-                label:     phpr.nls.get('Help'),
-                showLabel: true,
-                onClick:   dojo.hitch(this, "showHelp")
-            });
-            systemToolbar.addChild(button);
-            button = null;
-        }
+        button = new dijit.form.Button({
+            label:     phpr.nls.get('Help'),
+               showLabel: true,
+               onClick:   dojo.hitch(this, "showHelp")
+        });
+        systemToolbar.addChild(button);
+        button = null;
 
         // Logout
-        if (!dojo.byId('globalModule_Logout')) {
-            button = new dijit.form.Button({
-                id:        "globalModule_Logout",
-                label:     phpr.nls.get('Logout'),
-                showLabel: true,
-                onClick:   dojo.hitch(this, function() {
-                    location = phpr.webpath + 'index.php/Login/logout';
-                })
-            });
-            systemToolbar.addChild(button);
-            button = null;
-        }
+        button = new dijit.form.Button({
+            label:     phpr.nls.get('Logout'),
+               showLabel: true,
+               onClick:   dojo.hitch(this, function() {
+                   location = phpr.webpath + 'index.php/Login/logout';
+               })
+        });
+        systemToolbar.addChild(button);
+        button = null;
+
         // destroy cyclic refs
         toolbar = null;
         systemToolbar = null;
@@ -496,8 +597,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     phpr.module = 'Project';
                 }
 
-                var navigation = '<table id="nav_main"><tr>';
+                var subModuleNavigation = phpr.viewManager.getView().subModuleNavigation;
+
+                var navigation = '<table class="nav_main"><tr>';
                 var activeTab  = false;
+
                 modules    = this.sortModuleTabs(modules);
                 for (var i = 0; i < modules.length; i++) {
                     var liclass        = '';
@@ -518,7 +622,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                             liclass   = 'class = active';
                             activeTab = true;
                         }
-                        navigation += this.render(["phpr.Default.template", "navigation.html"], null, {
+                        navigation += phpr.fillTemplate("phpr.Default.template.navigation.html", {
                             moduleName :    moduleName,
                             moduleLabel:    moduleLabel,
                             liclass:        liclass,
@@ -532,8 +636,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 }
                 navigation += "</tr></table>";
 
-                phpr.destroySubWidgets('subModuleNavigation');
-                dijit.byId("subModuleNavigation").set('content', navigation);
+                subModuleNavigation.set('content', navigation);
 
                 // avoid cyclic refs
                 tmp = null;
@@ -553,7 +656,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             iconClass: 'add'
         };
         var newEntry = new dijit.form.Button(params);
-        dojo.byId("buttonRow").appendChild(newEntry.domNode);
+        phpr.viewManager.getView().buttonRow.domNode.appendChild(newEntry.domNode);
         dojo.connect(newEntry, "onClick", dojo.hitch(this, "newEntry"));
     },
 
@@ -574,24 +677,22 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     cleanPage: function() {
         // Summary:
         //     Clean the submodule div and destroy all the buttons
+        this.destroySearchEvent();
+        var view = phpr.viewManager.getView();
+        view.buttonRow.destroyDescendants();;
+        view.subModuleNavigation.destroyDescendants();;
         this.garbageCollector.collect();
-
-        phpr.destroySubWidgets('buttonRow');
-        dojo.byId("buttonRow").innerHTML = '';
-
-        // Remove all children from element
-        phpr.destroySubWidgets("subModuleNavigation");
-        dojo.byId("subModuleNavigation").innerHTML = '';
 
         var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
         globalModules[1000] = {id: "Setting", "name": "Setting"};
         globalModules[1001] = {id: "Admin", "name": "Administration"};
-        for (var i in globalModules) {
-            if (dojo.byId("globalModule_" + globalModules[i].name)) {
+        var buttons = this.globalModuleNavigationButtons;
+        for (i in globalModules) {
+            if (buttons[globalModules[i].name]) {
                 if (phpr.module == globalModules[i].name || phpr.parentmodule == globalModules[i].name) {
-                    dojo.addClass(dojo.byId("globalModule_" + globalModules[i].name), "selected");
+                    dojo.addClass(buttons[globalModules[i].name].domNode, "selected");
                 } else {
-                    dojo.removeClass(dojo.byId("globalModule_" + globalModules[i].name), "selected");
+                    dojo.removeClass(buttons[globalModules[i].name].domNode, "selected");
                 }
             }
         }
@@ -665,14 +766,16 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
 
         if (params && params[0]) {
-            config.action = params[0];
+            config.action = params.shift();
+            config.actionData = params;
         }
 
         phpr.pageManager.changeState(config);
     },
 
     processUrlHash: function(hash) {
-        /*
+        // WARNING:
+        //    Replaced by pagemanager
         // Summary:
         //    Process the hash and run the correct function
         // Description:
@@ -685,70 +788,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //      "Search" => open the search page with the next value as word
         //      "Tag" => open the tag page with the next value as tag
         //      other, call the processActionFromUrlHash function for parse it
-        var data   = hash.split(",");
-        var module = "Project";
-
-        // Module name
-        if (data[0]) {
-            var module = data.shift().replace(/.*#(.*)/, "$1");
-        }
-
-        var newProject = false;
-        // Normal modules use the project as second parameter
-        if (data[0] && !phpr.isGlobalModule(module)) {
-            var projectId = data.shift();
-            if (projectId < 1) {
-                projectId = 1;
-            }
-            if (phpr.currentProjectId != projectId) {
-                newProject = true;
-            }
-            phpr.currentProjectId = projectId;
-        } else if (phpr.isGlobalModule(module)) {
-            if (phpr.currentProjectId != phpr.rootProjectId) {
-                newProject = true;
-            }
-            phpr.currentProjectId = phpr.rootProjectId;
-        }
-
-        // The second paremater (for global)
-        // The third paremater (for all)
-        if (data[0] && data[1] && data[0] == 'id') {
-            // If is an id, open a form
-            var id = parseInt(data[1]);
-            if (module && (id > 0 || id == 0)) {
-                if (module !== phpr.module || newProject) {
-                    dojo.publish(module + ".reload");
-                }
-                dojo.publish(module + ".openForm", [id, module]);
-            }
-        } else if (data[0]) {
-            // Check general words like "Search or Tag"
-            // If is other, call the module function for process it
-            switch (data[0]) {
-                case 'Search':
-                    var words = '';
-                    if (data[1]) {
-                        words = data[1];
-                    }
-                    this.showSearchResults(words);
-                    break;
-                case 'Tag':
-                    var tag = '';
-                    if (data[1]) {
-                        tag = data[1];
-                    }
-                    this.showTagsResults(tag);
-                    break;
-                default:
-                    dojo.publish(module + ".processActionFromUrlHash", [data]);
-                    break;
-            }
-        } else {
-            // Dafault value, only one parameter, and must be the module
-            dojo.publish(module + ".reload");
-        }
-        */
     },
 
     processActionFromUrlHash: function(data) {
@@ -772,9 +811,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Summary:
         //    Add the onkeyup to the search field
         if (this._searchEvent === null) {
-            dijit.byId("searchfield").regExp         = phpr.regExpForFilter.getExp();
-            dijit.byId("searchfield").invalidMessage = phpr.regExpForFilter.getMsg();
-            this._searchEvent = dojo.connect(dojo.byId("searchfield"), "onkeyup",
+            var searchfield = phpr.viewManager.getView().searchfield;
+            searchfield.regExp         = phpr.regExpForFilter.getExp();
+            searchfield.invalidMessage = phpr.regExpForFilter.getMsg();
+            this._searchEvent = dojo.connect(searchfield.domNode, "onkeyup",
                     dojo.hitch(this, "waitForSubmitSearchForm"));
             this.garbageCollector.addEvent(this._searchEvent);
         }
@@ -800,7 +840,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             if (window.mytimeout) {
                 window.clearTimeout(window.mytimeout);
             }
-            if (dijit.byId("searchfield").isValid()) {
+            if (phpr.viewManager.getView().searchfield.isValid()) {
                 window.mytimeout = window.setTimeout(dojo.hitch(this, "showSearchSuggest"), 500);
             }
         }
@@ -811,8 +851,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    This function show a box with suggest or quick result of the search
         // Description:
         //    The server return the found records and the function display it
-        var words = dojo.byId("searchfield").value;
-
+        var words = phpr.viewManager.getView().searchfield.get('value');
         if (words.length >= 3) {
             // hide the suggestBox
             var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch';
@@ -857,10 +896,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         search += "</div>";
                     } else {
                         search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
-                        search += "<a class=\"searchsuggesttitle\" href='javascript: dojo.publish(\"" +
-                            this.module + ".clickResult\", [\"search\"]); dojo.publish(\"" +
-                            this.module + ".setUrlHash\", [\"" + this.module +
-                            "\",  null, [\"Search\", \"" + words + "\"]])'>" + phpr.nls.get('View all') + "</a>";
+                        search += "<a class=\"searchsuggesttitle\" href='javascript:" +
+                            "phpr.pageManager.getActiveModule().clickResult(\"search\");" +
+                            "phpr.pageManager.changeState({search: \"" + words + "\"});" +
+                            "'>" + phpr.nls.get('View all') + "</a>";
                         search += "</div>";
                     }
 
@@ -880,7 +919,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Description:
         //    The server return the found records and the function display it
         if (undefined === words) {
-            words = dojo.byId("searchfield").value;
+            words = phpr.viewManager.getView().searchfield.get('value');
         }
         if (words.length >= 3) {
             var getDataUrl   = phpr.webpath + 'index.php/Default/Search/jsonSearch';
@@ -897,17 +936,17 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     },
 
     showSuggest: function() {
-        if (dojo.byId("searchsuggest").innerHTML !== '') {
-            dojo.byId("searchsuggest").style.display = 'inline';
+        if (phpr.viewManager.getView().searchsuggest.innerHTML !== '') {
+            phpr.viewManager.getView().searchsuggest.style.display = 'inline';
         }
     },
 
     hideSuggest: function() {
-        dojo.byId("searchsuggest").style.display = 'none';
+        phpr.viewManager.getView().searchsuggest.style.display = 'none';
     },
 
     setSuggest: function(html) {
-        dojo.byId("searchsuggest").innerHTML = html;
+        phpr.viewManager.getView().searchsuggest.innerHTML = html;
     },
 
     drawTagsBox: function(/*Array*/data) {
@@ -969,7 +1008,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         if (value === '') {
             value += phpr.drawEmptyMessage('There are no Tags');
         }
-        dijit.byId("tagsbox").set('content', value);
+        phpr.viewManager.getView().tagsbox.set('content', value);
     },
 
     showTagsResults: function(/*String*/tag) {
@@ -990,7 +1029,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    The server return the found records and the function display it
 
         // Clean the navigation and forms buttons
-        this.cleanPage();
         phpr.tree.fadeIn();
         this.hideSuggest();
         this.setSearchForm();
@@ -1000,45 +1038,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             url:       getDataUrl,
             content:   content,
             onSuccess: dojo.hitch(this, function(data) {
-                this.render(["phpr.Default.template.results", "mainContentResults.html"],
-                    dojo.byId('centerMainContent'), {
-                        resultsTitle: resultsTitle
+                phpr.viewManager.setView(phpr.Default.System.DefaultView,
+                    phpr.Default.SearchContentMixin, {
+                        resultsTitle: resultsTitle,
+                        results: data
                     });
-                var search  = '';
-                var results = {};
-                var index   = 0;
-
-                for (var i = 0; i < data.length; i++) {
-                    modulesData = data[i];
-                    if (!results[modulesData.moduleLabel]) {
-                        results[modulesData.moduleLabel] = '';
-                    }
-                    results[modulesData.moduleLabel] += this.render(["phpr.Default.template.results", "results.html"],
-                        null, {
-                        id:            modulesData.id,
-                        moduleId:      modulesData.modulesId,
-                        moduleName:    modulesData.moduleName,
-                        projectId:     modulesData.projectId,
-                        firstDisplay:  modulesData.firstDisplay,
-                        secondDisplay: modulesData.secondDisplay,
-                        resultType:    "tag"
-                    });
-                }
-                var moduleLabel = '';
-                var html       = '';
-                for (var i in results) {
-                    moduleLabel = i;
-                    html       = results[i];
-                    search += this.render(["phpr.Default.template.results", "resultsBlock.html"], null, {
-                        moduleLabel:   moduleLabel,
-                        results:       html
-                    });
-                }
-                if (search === '') {
-                    search += phpr.drawEmptyMessage('There are no Results');
-                }
-                phpr.destroySubWidgets('gridBox');
-                dijit.byId("gridBox").set('content', search);
             })
         });
     },
@@ -1201,9 +1205,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     label += support + '<br />';
                 }
                 label += userList[i].display + ' (ID: ' + userList[i].id + ')</div>';
+                var node = phpr.viewManager.getView().PHProjektLogo;
                 new dijit.Tooltip({
                     label:     label,
-                    connectId: ["PHProjektLogo"],
+                    connectId: [node],
                     showDelay: 50
                 });
             }

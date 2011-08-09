@@ -1,7 +1,9 @@
+define(
+//begin v1.x content
 ({
 	createLinkTitle: "خصائص الوصلة",
 	insertImageTitle: "خصائص الصورة",
-	url: "عنوان URL:",
+	url: "‏عنوان URL:‏",
 	text: "الوصف:",
 	target: "الهدف:",
 	set: "تحديد",
@@ -11,3 +13,5 @@
 	newWindow: "‏نافذة جديدة‏"
 })
 
+//end v1.x content
+);
