@@ -215,12 +215,11 @@ class Calendar2_Helper_Rrule
             $until = "UNTIL={$last->format('Ymd\THis\Z')};";
             $old   = $until . $this->_rruleString;
         } else {
-            $dates = $this->getDatesInPeriod($this->_first, $splitDate);
-            $lastBeforeSplit = $dates[count($dates) - 2];
+            $last = $this->lastOccurrenceBefore($splitDate);
 
             $old = preg_replace(
                 '/UNTIL=[^;]*/',
-                "UNTIL={$lastBeforeSplit->format('Ymd\THis\Z')}",
+                "UNTIL={$last->format('Ymd\THis\Z')}",
                 $this->_rruleString
             );
         }

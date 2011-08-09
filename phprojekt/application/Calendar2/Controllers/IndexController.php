@@ -335,7 +335,7 @@ class Calendar2_IndexController extends IndexController
                 foreach ($fields as $key => $value) {
                     $model->$key = $value;
                 }
-                $model->save();
+                $model->saveSingleEvent();
                 $showId[] = $id;
             }
         }
