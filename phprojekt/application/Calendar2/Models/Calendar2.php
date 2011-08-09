@@ -299,7 +299,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $series = clone $this;
         $series->find($this->id);
         $series->_excludeDate($this->_originalStart);
-        $series->save();
 
         $this->_data['rrule'] = null;
         $this->_data['recurrenceId'] = $this->_originalStart->format('Y-m-d h:i:s');
@@ -979,6 +978,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
     /**
      * Excludes the given date from this series.
+     * Do not call save() after this, or you might reset the rrule to the old value.
      *
      * @param Datetime $date The date to remove
      *
