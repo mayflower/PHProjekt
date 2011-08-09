@@ -151,7 +151,7 @@ dojo.declare("phpr.Calendar2.ViewDayListSelect", phpr.Calendar2.DefaultView, {
         //    column is not retrieved from the particpantId as in the old
         //    calendar. Instead, we iterate over the participants of each event.
         this.events                 = new Array();
-        furtherEventsTemp           = new Array();
+        var furtherEventsTemp       = new Array();
         furtherEventsTemp['show']   = false;
         furtherEventsTemp['events'] = new Array();
 
