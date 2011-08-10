@@ -867,6 +867,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 window.clearTimeout(window.mytimeout);
             }
             this.hideSuggest();
+            var words = phpr.viewManager.getView().searchfield.get('value');
+            phpr.pageManager.getActiveModule().clickResult("search");
+            phpr.pageManager.changeState({search: words});
         } else if (phpr.isValidInputKey(key)) {
             if (window.mytimeout) {
                 window.clearTimeout(window.mytimeout);
