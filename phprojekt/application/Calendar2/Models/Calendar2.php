@@ -299,7 +299,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $series = clone $this;
         $series->find($this->id);
         $series->_excludeDate($this->_originalStart);
-        $series->save();
 
         $this->_data['rrule'] = null;
         $this->_data['recurrenceId'] = $this->_originalStart->format('Y-m-d h:i:s');
@@ -706,6 +705,18 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Returns the occurrence that identifies this event in it's series.
+     * It's just the start time, except that it's always in UTC.
+     *
+     * @return string
+     */
+    public function getOccurrence()
+    {
+        $occurrence = new Datetime('@' . Phprojekt_Converter_Time::userToUtc($this->start));
+        return $occurrence->format('Y-m-d H:i:s');
+    }
+
+    /**
      * Get a participant's confirmation status.
      *
      * If no id is given, the currently logged in user's status
@@ -967,6 +978,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
     /**
      * Excludes the given date from this series.
+     * Do not call save() after this, or you might reset the rrule to the old value.
      *
      * @param Datetime $date The date to remove
      *
