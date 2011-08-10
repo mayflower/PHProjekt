@@ -663,12 +663,15 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 tmp = null;
 
                 this.customSetSubmoduleNavigation();
-                var isListRecursiveBox = new dijit.form.CheckBox();
-                phpr.viewManager.getView().rightButtonRow.set('content', isListRecursiveBox);
-                var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects?"));
-                dojo.place(label, phpr.viewManager.getView().rightButtonRow.domNode, 0);
-                isListRecursiveBox.startup();
-                dojo.connect(isListRecursiveBox, 'onChange', dojo.hitch(this, "rebuildGrid"));
+
+                if (!phpr.isGlobalModule(this.module)) {
+                    var isListRecursiveBox = new dijit.form.CheckBox();
+                    phpr.viewManager.getView().rightButtonRow.set('content', isListRecursiveBox);
+                    var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects?"));
+                    dojo.place(label, phpr.viewManager.getView().rightButtonRow.domNode, 0);
+                    isListRecursiveBox.startup();
+                    dojo.connect(isListRecursiveBox, 'onChange', dojo.hitch(this, "rebuildGrid"));
+                }
             })
         });
     },
