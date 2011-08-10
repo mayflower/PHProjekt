@@ -358,7 +358,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
     vertical-align: baseline;
 }
 
-.phprojekt .calendarSchedule .addButton .dijitButtonNode {
+.phprojekt #calendarSchedule .addButton .dijitButtonNode {
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
     width: 15px;

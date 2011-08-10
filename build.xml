@@ -30,6 +30,16 @@
   </exec>
  </target>
 
+ <!-- Run unit tests and generate junit.xml and clover.xml -->
+ <target name="phpunit-local">
+  <exec executable="phpunit" dir="phprojekt/tests/UnitTests/">
+   <env key="P6_TEST_CONFIG" value="configuration.php" />
+   <arg line="--strict
+       --log-junit='${basedir}/build/logs/junit.xml'
+       AllTests.php" />
+  </exec>
+ </target>
+
  <!-- Run pdepend, phpmd, phpcpd, and phpcs in parallel -->
  <target name="parallelTasks">
   <parallel>
