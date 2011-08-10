@@ -709,8 +709,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //     Clean the submodule div and destroy all the buttons
         this.destroySearchEvent();
         var view = phpr.viewManager.getView();
-        view.buttonRow.destroyDescendants();;
-        view.subModuleNavigation.destroyDescendants();;
+        view.clearButtonRow();
+        view.clearRightButtonRow();
+        view.clearSubModuleNavigation();
         this.garbageCollector.collect();
 
         var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
