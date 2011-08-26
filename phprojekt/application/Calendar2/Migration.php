@@ -218,7 +218,9 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             $this->_oldCalId,
             $ownerEntry['id']
         );
-        $this->_tagsObj->saveTags($this->_newCalId, $model->id, $tags);
+        foreach ($tags as $t) {
+            $this->_tagsObj->saveTags($this->_newCalId, $model->id, $t['string']);
+        }
 
         return $model;
     }
