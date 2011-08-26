@@ -111,7 +111,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             $grouped = array();
             $parents = array();
             foreach ($entries as $entry) {
-                $parentId    = (int) $entry['parent_id'];
+                $parentId     = (int) $entry['parent_id'];
                 $id           = (int) $entry['id'];
                 $parents[$id] = $parentId;
                 if (0 === $parentId) {
@@ -132,7 +132,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                 }
             }
 
-            $db->update('calendar2',  array('uri' => 'id'));
+            $db->update('calendar2', array('uri' => 'id'));
             $db->commit();
         } catch (Exception $e) {
             $db->rollback();
@@ -277,6 +277,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         // 1. Convert the base recurrence
         $firstOccurrence = $byStart[$firstOccurrence[0]['start_datetime']];
 
+        // We can't pass the complete first occurrence here
         $rootEvent        = $this->_migrateSingleEvent($firstOccurrence);
         $rootEvent->rrule = $firstOccurrence[0]['rrule'];
         $rootEvent->save();
@@ -298,8 +299,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         }
 
         // 3 + 4. Update changed events and add new ones.
-        //        We only look at the owner's versions.
-        //TODO: What if the owner deleted his or her version?
+        //        We only look at the owner's versions. If that was deleted, we just look at another one.
 
         // First, let's format some data to compare the single events with.
         $reference       = $firstOccurrence[0];
@@ -348,12 +348,10 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                         $event['id']
                     );
                 }
-                // We don't care for the owner because if he is the only one
-                // deleted, we would have to recreate his version. If this is
-                // the only change, it's the same as just leavin this event as
-                // it is.
                 $this->_tagsObj->deleteTagsByItem($this->_oldCalId, $entry['id']);
 
+                // We don't care for the owner because if he is the only one deleted, we would have to recreate his
+                // version. If this is the only change, it's the same as just leaving this event as it is.
                 if ($pId != $ownerId) {
                     if (!array_key_exists($pId, $myRefParticipants) || $myRefParticipants[$pId] != $row['status']) {
                         $participantsChanged = true;
@@ -377,9 +375,8 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
 
             $end = new Datetime($event['end_datetime'] . ' UTC');
 
-            //The recurrence could also have been changed. We ignore that
-            //for now as I don't have a clue what to do in that case.
-            //TODO: What if the duration was changed by a multiple of one day?
+            // XXX: The recurrence of a single event could also have been changed. We ignore that as I don't
+            //      have a clue what to do in that case.
             if ($this->_debug) {
                 if ($participantsChanged) {
                     $log->debug(
