@@ -299,6 +299,10 @@ class Setup_Models_Config
         $content .= '; added here, see the complete list in phprojekt/library/Phprojekt/Log.php' . $this->_eol;
         $content .= 'log.err.filename = "' . $this->_privateDir . 'logs/err.log"' . $this->_eol;
 
+        $content .= $this->_eol;
+        $content .= '; If this is enabled, a stack trace will be logged for every logged message' . $this->_eol;
+        $content .= 'log.printStackTraces = false' . $this->_eol;
+
         return $content;
     }
 
