@@ -300,7 +300,6 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         // 3 + 4. Update changed events and add new ones.
         //        We only look at the owner's versions.
         //TODO: What if the owner deleted his or her version?
-        //TODO: Different participants/confirmation statuses are ignored atm
 
         // First, let's format some data to compare the single events with.
         $reference       = $firstOccurrence[0];
@@ -356,7 +355,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                 $this->_tagsObj->deleteTagsByItem($this->_oldCalId, $entry['id']);
 
                 if ($pId != $ownerId) {
-                    if (!array_key_exists($pId, $myRefParticipants)) {
+                    if (!array_key_exists($pId, $myRefParticipants) || $myRefParticipants[$pId] != $row['status']) {
                         $participantsChanged = true;
                     } else {
                         unset($myRefParticipants[$pId]);
