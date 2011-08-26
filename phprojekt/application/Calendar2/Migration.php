@@ -223,6 +223,8 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             $this->_tagsObj->saveTags($this->_newCalId, $model->id, $t['string']);
         }
 
+        $this->_migrateHistory($model, $ownerEntry, $entries);
+
         return $model;
     }
 
@@ -419,6 +421,65 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
     }
 
     /**
+     * Migrate the history for the given ids.
+     *
+     * Please note that this destroys some of the old entries (by updating them to the new calendar)
+     *
+     * @param          object $new        The cal2 model object for this event
+     * @param          array  $ownerEntry The cal1 entry of the owner
+     * @param array of array  $entries    All cal1 entries of that event (may include $ownerEntry)
+     */
+    private function _migrateHistory($new, $ownerEntry, $entries)
+    {
+        $db = Phprojekt::getInstance()->getDb();
+
+        // First remove the history caused by creating the new cal2 entry
+        $db->delete('history', 'module_id = ' . (int) $this->_newCalId . ' AND item_id = ' . (int) $new->id);
+
+        foreach ($entries as $entry) {
+            // We don't need the owner entry here as we'll just UPDATE it later
+            if ($entry != $ownerEntry) {
+                // Copy all status changes from the old event to the new one
+                $query =
+                    'INSERT INTO history (module_id, item_id, user_id, field, old_value, new_value, action, datetime)
+                        SELECT
+                            ' . (int) $this->_newCalId . ' AS module_id,
+                            ' . $new->id . ' AS item_id,
+                            user_id,
+                            field,
+                            old_value,
+                            new_value,
+                            action,
+                            datetime
+                        FROM history
+                        WHERE
+                            module_id = ' . (int) $this->_oldCalId . ' AND
+                            item_id = ' . (int) $entry['id'] . ' AND
+                            field = "status"'
+                ;
+                if ($this->_debug) {
+                    Phprojekt::getInstance()->getLog()->debug("Executing query\n{$query}");
+                }
+                $db->query($query);
+                if ($this->_debug) {
+                    Phprojekt::getInstance()->getLog()->debug("Deleting history for item_id {$entry['id']}");
+                }
+                $db->delete(
+                    'history',
+                    'module_id = ' . (int) $this->_oldCalId . ' AND item_id = ' . (int) $entry['id']
+                );
+            }
+        }
+
+        // UPDATE the main history from the owner entry
+        $db->update(
+            'history',
+            array('module_id' => $this->_newCalId, 'item_id' => $new->id),
+            'module_id = ' . (int) $this->_oldCalId . ' AND item_id = ' . (int) $ownerEntry['id']
+        );
+    }
+
+    /**
      * Removes the old calendar.
      */
     private function _removeOldCalendar()
@@ -429,5 +490,6 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         $db->delete('module', 'name = "Calendar"');
         $db->delete('item_rights', $db->quoteInto('module_id = ?', $this->_oldCalId));
         $db->delete('database_manager', 'table_name = "Calendar"');
+        $db->delete('history', $db->quoteInto('module_id = ?', $this->_oldCalId));
     }
 }
