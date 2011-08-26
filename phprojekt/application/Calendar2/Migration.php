@@ -167,12 +167,17 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         foreach ($entries as $entry) {
             if ((int) $entry['participant_id'] === $ownerId) {
                 $ownerEntry = $entry;
+                $tags = $this->_tagsObj->getTagsByModule(
+                    $this->_oldCalId,
+                    $ownerEntry['id']
+                );
             } else {
                 $pId                       = (int) $entry['participant_id'];
                 $status                    = (int) $entry['status'] + 1;
                 $participantStatuses[$pId] = $status;
             }
             $this->_search->deleteObjectItemByIds($this->_oldCalId, $entry['id']);
+            $this->_tagsObj->deleteTagsByItem($this->_oldCalId, $ownerEntry['id']);
         }
 
         if (is_null($ownerEntry)) {
@@ -214,10 +219,6 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         $model->save();
 
         // Migrate the tags
-        $tags = $this->_tagsObj->getTagsByModule(
-            $this->_oldCalId,
-            $ownerEntry['id']
-        );
         foreach ($tags as $t) {
             $this->_tagsObj->saveTags($this->_newCalId, $model->id, $t['string']);
         }
@@ -341,11 +342,17 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                 $pId = $row['participant_id'];
                 if ($pId == $ownerId) {
                     $event = $row;
+                    $tags = $this->_tagsObj->getTagsByModule(
+                        $this->_oldCalId,
+                        $event['id']
+                    );
                 }
                 // We don't care for the owner because if he is the only one
                 // deleted, we would have to recreate his version. If this is
                 // the only change, it's the same as just leavin this event as
                 // it is.
+                $this->_tagsObj->deleteTagsByItem($this->_oldCalId, $entry['id']);
+
                 if ($pId != $ownerId) {
                     if (!array_key_exists($pId, $myRefParticipants)) {
                         $participantsChanged = true;
@@ -368,11 +375,6 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             }
 
             $end = new Datetime($event['end_datetime'] . ' UTC');
-
-            $tags = $this->_tagsObj->getTagsByModule(
-                $this->_oldCalId,
-                $event['id']
-            );
 
             //The recurrence could also have been changed. We ignore that
             //for now as I don't have a clue what to do in that case.
