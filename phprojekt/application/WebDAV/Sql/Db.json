@@ -1,0 +1,47 @@
+{
+
+"6.1.0-dev":
+{
+    "initialData":
+    {
+        "module":
+        {
+            "insert":
+            [
+                {
+                    "name":       "WebDAV",
+                    "label":      "WebDAV",
+                    "save_type":  "1",
+                    "active":     "1",
+                    "_relations":
+                    {
+                        "project_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id":  "##id##",
+                                    "project_id": "1"
+                                }
+                            ]
+                        },
+
+                        "role_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id": "##id##",
+                                    "role_id":   "1",
+                                    "access":    "139"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
+
+}
