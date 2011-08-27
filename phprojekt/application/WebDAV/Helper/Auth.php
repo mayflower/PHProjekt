@@ -1,6 +1,6 @@
 <?php
 /**
- * Calendar2 Caldav Auth
+ * WebDAV Auth
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,13 +23,13 @@
  */
 
 /**
- * Calendar2 Caldav Auth
+ * WebDAV Auth
  *
  * This class implements an authentication backend for sabredav
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Calendar2
+ * @subpackage WebDAV
  * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
@@ -37,7 +37,7 @@
  * @version    Release: @package_version@
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-class Calendar2_CalDAV_Auth extends Sabre_DAV_Auth_Backend_AbstractBasic
+class WebDAV_Helper_Auth extends Sabre_DAV_Auth_Backend_AbstractBasic
 {
     public function validateUserPass($username, $password)
     {
