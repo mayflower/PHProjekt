@@ -64,6 +64,11 @@ class WebDAV_IndexController extends IndexController
         $lockPlugin  = new Sabre_DAV_Locks_Plugin($lockBackend);
         $server->addPlugin($lockPlugin);
 
+        // Authentication
+        $authBackend = new WebDAV_Helper_Auth();
+        $authPlugin  = new Sabre_DAV_Auth_Plugin($authBackend,'WebDAV');
+        $server->addPlugin($authPlugin);
+
         // All we need to do now, is to fire up the server
         $server->exec();
     }
