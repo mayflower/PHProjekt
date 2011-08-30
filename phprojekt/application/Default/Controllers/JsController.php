@@ -98,14 +98,8 @@ class JsController extends IndexController
                     phpr.DefaultModule    = "Project";
                     phpr.viewManager      = new phpr.Default.System.ViewManager();
                     phpr.pageManager      = new phpr.Default.System.PageManager();
-                    var availableModules = [';
-        $module = new Phprojekt_Module_Module();
-        foreach ($module->fetchAll() as $m) {
-            $scripttext .= "'{$m->name}', ";
-        }
-        $scripttext .= '];
                     phpr.module           = phpr.pageManager.getConfigFromWindow().moduleName;
-                    if (dojo.indexOf(availableModules, phpr.module) == -1) {
+                    if (phpr.pageManager.getModule(phpr.module) === null) {
                         phpr.module       = "Project";
                     }
                     phpr.submodule        = null;
