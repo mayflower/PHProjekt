@@ -99,6 +99,9 @@ class JsController extends IndexController
                     phpr.viewManager      = new phpr.Default.System.ViewManager();
                     phpr.pageManager      = new phpr.Default.System.PageManager();
                     phpr.module           = phpr.pageManager.getConfigFromWindow().moduleName;
+                    if (phpr.pageManager.getModule(phpr.module) === null) {
+                        phpr.module       = "Project";
+                    }
                     phpr.submodule        = null;
                     phpr.rootProjectId    = rootProjectId;
                     phpr.currentProjectId = rootProjectId ;
