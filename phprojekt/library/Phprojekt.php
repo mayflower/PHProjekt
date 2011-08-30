@@ -440,8 +440,10 @@ class Phprojekt
             $response               = new Zend_Controller_Request_Http();
             $this->_config->webpath = $response->getScheme() . '://' . $response->getHttpHost()
                 . $response->getBasePath() . '/';
+            $this->_config->basepath = $response->getBasePath() . '/';
         }
         define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
+        define('PHPR_ROOT_WEB_BASE_PATH', $this->_config->basepath . 'index.php/');
         define('PHPR_TEMP_PATH', $this->_config->tmpPath);
         define('PHPR_USER_CORE_PATH', $this->_config->applicationPath);
 
