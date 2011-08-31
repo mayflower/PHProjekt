@@ -89,14 +89,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     protected $_langLoaded = array();
 
     /**
-     * A fallback language adapter to use as a fallback when we are not
-     * translating to english.
-     *
-     * @var Phprojekt_LanguageAdapter
-     */
-    protected $_fallbackAdapter = null;
-
-    /**
      * Generates the adapter.
      *
      * Convert some PHProject lang shortname to the Zend locale names.
@@ -111,11 +103,6 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
         $options['locale']         = self::_convertToZendLocale($options['locale']);
         $options['disableNotices'] = true;
         parent::__construct($options);
-
-        if ('en' != $options['locale']) {
-            $options['locale'] = 'en';
-            $this->_fallbackAdapter = new Phprojekt_LanguageAdapter($options);
-        }
     }
 
     /**
@@ -396,7 +383,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
     }
 
     /**
-     * Return all the translated strings for the $locale.
+     * Return all the trasnlated strings for the $locale.
      *
      * @param string|Zend_Locale $locale Locale/Language to set, identical with Locale identifiers
      *                                   see Zend_Locale for more information.
@@ -438,16 +425,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
             isset($this->_translate[$locale]['Default'][$message])) {
             $toReturn = $this->_translate[$locale]['Default'][$message];
         } else {
-            // The translation for $message could not be found.
-            // Try to fall back to the english translation
-            if ('en' != $locale) {
-                $toReturn = $this->_fallbackAdapter->get($message, $moduleName, 'en');
-            } else {
-                // Either we're already in the fallback or english was
-                // requested. We can't don't have a translation for this, so we
-                // just return the message.
-                $toReturn = $message;
-            }
+            $toReturn = $message;
         }
 
         return $toReturn;
