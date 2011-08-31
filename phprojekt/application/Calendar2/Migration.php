@@ -421,9 +421,9 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
      *
      * Please note that this destroys some of the old entries (by updating them to the new calendar)
      *
-     * @param          object $new        The cal2 model object for this event
-     * @param          array  $ownerEntry The cal1 entry of the owner
-     * @param array of array  $entries    All cal1 entries of that event (may include $ownerEntry)
+     * @param          Calendar2_Models_Calendar2 $new        The cal2 model object for this event
+     * @param          array                      $ownerEntry The cal1 entry of the owner
+     * @param array of array                      $entries    All cal1 entries of that event (may include $ownerEntry)
      */
     private function _migrateHistory($new, $ownerEntry, $entries)
     {
@@ -470,8 +470,11 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         // UPDATE the main history from the owner entry
         $db->update(
             'history',
-            array('module_id' => $this->_newCalId, 'item_id' => $new->id),
-            'module_id = ' . (int) $this->_oldCalId . ' AND item_id = ' . (int) $ownerEntry['id']
+            array(
+                'module_id' => $this->_newCalId,
+                'item_id' => $new->id
+            ),
+            sprintf('module_id = %d AND item_id = %d', $this->_oldCalId, $ownerEntry['id'])
         );
     }
 
