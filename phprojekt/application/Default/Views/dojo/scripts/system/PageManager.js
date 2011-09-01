@@ -44,7 +44,8 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         this._modules[module.module] = module;
     },
 
-    changeState: function(config) {
+    changeState: function(config, options) {
+        options = options || {};
         // Summary:
         //      This function changes the page hash, and loads the new module
         // Description:
@@ -53,13 +54,15 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         //      The config is a javascrip object describing the state of the
         //      page we are going to change to, there could be custom parameters
         //      but the most important ones are:
-        //      projectId, moduleName, action, id
-        if(!config.moduleName) {
+        //          projectId, moduleName, action, id
+        //      The options object can contain the following keys:
+        //          forceModuleReload
+        if (!config.moduleName) {
             config.moduleName = (this.getActiveModule() ? this.getActiveModule().module : this._defaultModule);
         }
 
         if (this.getModule(config.moduleName)) {
-            this._changeModule(config);
+            this._changeModule(config, options);
         } else {
             throw new Error("Invalid name provided: " + config.moduleName);
         }
@@ -86,7 +89,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         }
     },
 
-    _changeModule: function(config) {
+    _changeModule: function(config, options) {
         // Submodule handling is not functional yet
         // TODO: refactor submodules to be real child of their parents
         if (this._activeModule &&
@@ -104,7 +107,9 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             phpr.garbageCollector.collect();
         }
 
-        this._setHash(config);
+        if (options.omitHistoryItem !== true) {
+            this._setHash(config);
+        }
 
         var module = config.moduleName;
 
@@ -136,9 +141,13 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             phpr.currentProjectId = phpr.rootProjectId;
         }
 
+        if (options.forceModuleReload === true) {
+            this._reloadModule(module);
+        }
+
         if ("undefined" != typeof config.id) {
             // If is an id, open a form
-            if (module && (config.id > 0 || config.id === 0)) {
+            if (module && (config.id > 0 || config.id === "0" || config.id === 0)) {
                 if (module !== oldmodule || newProject) {
                     this._reloadModule(module);
                 }
