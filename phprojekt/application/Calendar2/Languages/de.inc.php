@@ -1,6 +1,6 @@
 <?php
 // System
-$lang["Calendar2"] = "Kalender 2";
+$lang["Calendar"] = "Kalender";
 
 // Fields
  // Basic Data
