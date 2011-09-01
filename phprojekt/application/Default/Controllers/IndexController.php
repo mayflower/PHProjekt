@@ -183,6 +183,7 @@ class IndexController extends Zend_Controller_Action
        // Setting the domain selection
        $authMode = Phprojekt_Auth::getLoginMode();
        if ($authMode == 'ldap') {
+           $conf = Phprojekt::getInstance()->getConfig();
            $ldapOptions = isset($conf->authentication->ldap) ? $conf->authentication->ldap->toArray() : array();
            $domains = array();
            foreach ($ldapOptions as $server => $opts) {
