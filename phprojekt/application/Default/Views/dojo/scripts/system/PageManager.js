@@ -64,7 +64,9 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         if (this.getModule(config.moduleName)) {
             this._changeModule(config, options);
         } else {
-            throw new Error("Invalid name provided: " + config.moduleName);
+            console.error("Invalid name provided: " + config.moduleName);
+            console.log("Defaulting to module " + this._defaultModule);
+            this._changeModule({moduleName: this._defaultModule});
         }
     },
 
@@ -252,6 +254,22 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             });
         } else {
             this._hashChange();
+        }
+    },
+
+    initialPageLoad: function(module) {
+        // Summary:
+        //      Calls load on the module with the specified module name or on the default module
+        // Description:
+        //      Calls the load function on the named module.
+        //      TODO: this control flow is bogus, there is no reason why the initial page loading should be done by the
+        //      load function of the Main class (it will not work to call it twice and it has nothing to do with the
+        //      Main class in general)
+
+        if (this.getModule(module) !== null) {
+            module.load();
+        } else {
+            this.getModule(this._defaultModule).load();
         }
     }
 });
