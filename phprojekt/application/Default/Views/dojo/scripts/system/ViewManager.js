@@ -324,6 +324,15 @@ dojo.declare("phpr.Default.System.DefaultView", phpr.Default.System.View, {
                 webpath: phpr.webpath,
                 currentModule: phpr.module
             });
+    },
+    clearButtonRow: function() {
+        this.buttonRow.destroyDescendants();
+    },
+    clearRightButtonRow: function() {
+        this.rightButtonRow.destroyDescendants();
+    },
+    clearSubModuleNavigation: function() {
+        this.subModuleNavigation.destroyDescendants();
     }
 });
 

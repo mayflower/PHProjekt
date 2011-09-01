@@ -814,14 +814,16 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             return false;
         }
 
+        var pid = phpr.currentProjectId;
+
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module +
-                '/index/jsonSave/nodeId/' + phpr.currentProjectId +
+                '/index/jsonSave/nodeId/' + pid +
                 '/id/' + this.id,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
-                if (!this.id) {
+                if (data.id) {
                     this.id = data.id;
                 }
                 if (data.type == 'success') {
@@ -837,12 +839,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                                 this.publish("updateCacheData");
                                 // reload the page and trigger the form load
                                 phpr.pageManager.changeState({
-                                    moduleName: phpr.module
-                                });
-                                phpr.pageManager.changeState({
-                                    moduleName: phpr.module,
-                                    id: this.id
-                                });
+                                        moduleName: phpr.module,
+                                        id: this.id,
+                                        projectId: pid
+                                    }, {
+                                        forceModuleReload: true
+                                    }
+                                );
                             }
                         })
                     });
@@ -856,6 +859,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    This function is responsible for deleting a dojo element
         // Description:
         //    This function calls jsonDeleteAction
+
+        var pid = phpr.currentProjectId;
+
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
             onSuccess: dojo.hitch(this, function(data) {
@@ -868,13 +874,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             new phpr.handleResponse('serverFeedback', data);
                             if (data.type == 'success') {
                                 this.publish("updateCacheData");
-                                // reload the page and trigger the form load
-                                phpr.pageManager.changeState({
-                                    moduleName: phpr.module
-                                });
+                                // reload the page
                                 phpr.pageManager.changeState({
                                     moduleName: phpr.module,
-                                    id: this.id
+                                    projectId: pid
                                 });
                             }
                         })
