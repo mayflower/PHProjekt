@@ -706,8 +706,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //     Clean the submodule div and destroy all the buttons
         this.destroySearchEvent();
         var view = phpr.viewManager.getView();
-        view.buttonRow.destroyDescendants();;
-        view.subModuleNavigation.destroyDescendants();;
+        view.clearButtonRow();
+        view.clearRightButtonRow();
+        view.clearSubModuleNavigation();
         this.garbageCollector.collect();
 
         var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
@@ -863,6 +864,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 window.clearTimeout(window.mytimeout);
             }
             this.hideSuggest();
+            var words = phpr.viewManager.getView().searchfield.get('value');
+            phpr.pageManager.getActiveModule().clickResult("search");
+            phpr.pageManager.changeState({search: words});
         } else if (phpr.isValidInputKey(key)) {
             if (window.mytimeout) {
                 window.clearTimeout(window.mytimeout);
