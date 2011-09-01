@@ -704,6 +704,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     cleanPage: function() {
         // Summary:
         //     Clean the submodule div and destroy all the buttons
+        this.destroyForm();
+        this.destroyGrid();
         this.destroySearchEvent();
         var view = phpr.viewManager.getView();
         view.clearButtonRow();
@@ -831,6 +833,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //     current Module
         phpr.pageManager.changeState({
             moduleName: phpr.module,
+            projectId: phpr.currentProjectId,
             id: 0
         });
     },
