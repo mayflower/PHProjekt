@@ -334,4 +334,14 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             );
         }
     }
+
+    /**
+     * Fetches all subprojects of this project.
+     *
+     * @return array of Project_Models_Project The subprojects
+     */
+    public function fetchSubprojects()
+    {
+        return $this->fetchAll(Phprojekt::getInstance()->getDb()->quoteInto('project_id = ?', $this->id));
+    }
 }
