@@ -132,7 +132,7 @@ class JsController extends IndexController
 
         // The load method of the currentModule is called
         $scripttext .= '
-                    dojo.publish(phpr.module + ".load");
+                    phpr.pageManager.initialPageLoad();
                 }
             });
         ';
