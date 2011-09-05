@@ -508,7 +508,9 @@ dojo.declare("phpr.DateTextBox", [dijit.form.DateTextBox], {
         // Summary:
         //    Parses as string as a Date, according to constraints
         // Date
-        return this.dateLocaleModule.parse(value, constraints) || (this._isEmpty(value) ? '' : undefined);
+
+        var date = this.dateLocaleModule.parse(value, constraints);
+        return date || undefined;
     },
 
     serialize: function(d, options) {
