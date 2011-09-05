@@ -50,9 +50,21 @@ class WebDAV_IndexController extends IndexController
 
     public function indexAction()
     {
+        // Log the user in so that phprojekt recognizes us.
+        // If the client doesn't send http headers, he probably has a cookie and assumes to be already logged in
+        if (array_key_exists('PHP_AUTH_USER', $_SERVER)) {
+            Phprojekt_Auth::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+        }
         // Set the root directory
-        $webdavPath = Phprojekt::getInstance()->getConfig()->webdavPath;
-        $rootDirectory = new Sabre_DAV_FS_Directory($webdavPath . 'public');
+        $webdavPath    = Phprojekt::getInstance()->getConfig()->webdavPath;
+        if (Phprojekt_Auth::isLoggedIn()) {
+            $project       = new Project_Models_Project();
+            $project       = $project->find(1);
+            $rootDirectory = new WebDAV_Models_ProjectDirectory($project);
+        } else {
+            // Some clients seem to send some queries without http auth. We need the dummy to serve those.
+            $rootDirectory = new WebDAV_Models_EmptyDir();
+        }
 
         // The server object is responsible for making sense out of the WebDAV protocol
         $server = new Sabre_DAV_Server($rootDirectory);
