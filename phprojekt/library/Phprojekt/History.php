@@ -219,8 +219,16 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                 $newValue = $row->newValue;
                 $label    = $row->field;
             }
-            $oldValue = $this->_convertDateTimes($oldValue, $fields[$row->field]['type'], 'utcToUser');
-            $newValue = $this->_convertDateTimes($newValue, $fields[$row->field]['type'], 'utcToUser');
+
+            if (DateTime::createFromFormat('Y-m-d H:i:s', $oldValue)
+                    && DateTime::createFromFormat('Y-m-d H:i:s', $newValue)) {
+                $oldValue = $this->_convertDateTimes($oldValue, 'datetime', 'utcToUser');
+                $newValue = $this->_convertDateTimes($newValue, 'datetime', 'utcToUser');
+            } else if ((DateTime::createFromFormat('H:i:s', $oldValue)
+                    && DateTime::createFromFormat('H:i:s', $newValue))) {
+                $oldValue = $this->_convertDateTimes($oldValue, 'time', 'utcToUser');
+                $newValue = $this->_convertDateTimes($newValue, 'time', 'utcToUser');
+            }
 
             if ($oldValue != $newValue) {
                 $result[] = array('userId'   => (int) $row->userId,

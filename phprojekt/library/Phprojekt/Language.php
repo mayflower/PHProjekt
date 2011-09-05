@@ -58,7 +58,7 @@ class Phprojekt_Language extends Zend_Translate
     public function __construct($options)
     {
         $options['content'] = '-';
-        $this->_locale      = $options['locale'];
+        $this->_loacale     = $options['locale'];
         $this->_adapter     = new Phprojekt_LanguageAdapter($options);
     }
 
@@ -82,10 +82,10 @@ class Phprojekt_Language extends Zend_Translate
     {
         if (null !== $locale) {
             $this->_loadLangFile($locale);
-            $this->_locale = $locale;
+            $this->_loacale = $locale;
         }
 
-        return $this->_adapter->get($message, $moduleName, $this->_locale);
+        return $this->_adapter->get($message, $moduleName, $this->_loacale);
     }
 
     /**

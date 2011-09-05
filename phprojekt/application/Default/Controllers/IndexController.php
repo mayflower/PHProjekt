@@ -183,6 +183,7 @@ class IndexController extends Zend_Controller_Action
        // Setting the domain selection
        $authMode = Phprojekt_Auth::getLoginMode();
        if ($authMode == 'ldap') {
+           $conf = Phprojekt::getInstance()->getConfig();
            $ldapOptions = isset($conf->authentication->ldap) ? $conf->authentication->ldap->toArray() : array();
            $domains = array();
            foreach ($ldapOptions as $server => $opts) {
@@ -797,12 +798,8 @@ class IndexController extends Zend_Controller_Action
     {
         $language  = Cleaner::sanitize('alpha', $this->getRequest()->getParam('language', 'en'));
         $translate = Phprojekt::getInstance()->getTranslate();
-        $data = $translate->getTranslatedStrings($language);
-        if ('en' != $language) {
-            $data['_fallback'] = $translate->getTranslatedStrings('en');
-        }
 
-        Phprojekt_Converter_Json::echoConvert($data);
+        Phprojekt_Converter_Json::echoConvert($translate->getTranslatedStrings($language));
     }
 
     /**

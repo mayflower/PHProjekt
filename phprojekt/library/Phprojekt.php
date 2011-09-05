@@ -440,8 +440,10 @@ class Phprojekt
             $response               = new Zend_Controller_Request_Http();
             $this->_config->webpath = $response->getScheme() . '://' . $response->getHttpHost()
                 . $response->getBasePath() . '/';
+            $this->_config->basepath = $response->getBasePath() . '/';
         }
         define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
+        define('PHPR_ROOT_WEB_BASE_PATH', $this->_config->basepath . 'index.php/');
         define('PHPR_TEMP_PATH', $this->_config->tmpPath);
         define('PHPR_USER_CORE_PATH', $this->_config->applicationPath);
 
@@ -768,6 +770,39 @@ class Phprojekt
         if ($useLog) {
             $messageLog = sprintf("%s\n File: %s - Line: %d\n Description: %s\n", $errDesc, $errFile, $errLine,
                 $errStr);
+
+            if (self::getInstance()->getConfig()->log->printStackTraces) {
+                // The frames always contain the file and line where the function was called To get a format like
+                // "2: File:line class->function" we print the file and line of the first frame (which is this function,
+                // so we don't need the function part anyways) and then print class->function\nFile:line for each other
+                // frame. The last frame will be the php script that has been called, so it's fine that we don't have
+                // a function there.
+                $messageLog .= "Stack trace:\n";
+                $frames      = debug_backtrace();
+                $frame       = array_shift($frames);
+                $messageLog .= " 0: ";
+                if (array_key_exists('file', $frame)) {
+                    $messageLog .= "{$frame['file']}:{$frame['line']} ";
+                }
+                $depth = 1;
+                foreach ($frames as $frame) {
+                    if (array_key_exists('function', $frame)) {
+                        // If this is a included php file, don't print class->function.
+                        if (array_key_exists('class', $frame)) {
+                            // It's a class method, print the class and type ('->' or '::')
+                            $messageLog .= $frame['class'] . $frame['type'];
+                        }
+                        $messageLog .= $frame['function'] . "()";
+                    }
+                    $messageLog .= "\n";
+                    // Begin of the next line is here.
+                    $messageLog .= ' ' . $depth++ . ': ';
+                    if (array_key_exists('file', $frame)) {
+                        $messageLog .= "{$frame['file']}:{$frame['line']} ";
+                    }
+                }
+                $messageLog .= "\n";
+            }
             Phprojekt::getInstance()->getLog()->err($messageLog);
         }
 

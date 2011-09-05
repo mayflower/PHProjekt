@@ -88,6 +88,9 @@ log.err.filename = "/var/www/phprojekt/logs/err.log"
 ; WINDOWS
 ;log.err.filename = "C:\phprojekt\logs\err.log"
 
+; If this is enabled, a stack trace will be logged for every logged message
+log.printStackTraces = false
+
 ;;;;;;;;;;;
 ; MODULES ;
 ;;;;;;;;;;;
