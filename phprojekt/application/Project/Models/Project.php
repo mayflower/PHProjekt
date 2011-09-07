@@ -334,4 +334,16 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             );
         }
     }
+
+    /**
+     * Returns the tree node for this project.
+     *
+     * The node allows navigating to subprojects and other operations on the project tree.
+     *
+     * @return Phprojekt_Tree_Node_Database A Tree node belonging to this project.
+     */
+    public function getTree()
+    {
+        return new Phprojekt_Tree_Node_Database($this);
+    }
 }
