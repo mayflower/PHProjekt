@@ -344,6 +344,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
      */
     public function getTree()
     {
-        return new Phprojekt_Tree_Node_Database($this);
+        $tree = new Phprojekt_Tree_Node_Database($this);
+        $tree->setup();
+        return $tree;
     }
 }
