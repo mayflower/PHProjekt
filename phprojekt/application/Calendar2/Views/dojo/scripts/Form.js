@@ -584,12 +584,13 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
     // returned from the server to store the tags, not the original id.
     // This is because the save could result in the event being represented by
     // another line in the db than before.
-    submitForm:function() {
+    submitForm: function(evt) {
         // Summary:
         //    This function is responsible for submitting the formdata
         // Description:
         //    This function sends the form data as json data to the server
         //    and call the reload routine
+
         if (!this.prepareSubmission()) {
             return false;
         }
@@ -623,6 +624,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
                 }
             })
         });
+
+        return false;
     },
 
     getFormData:function() {

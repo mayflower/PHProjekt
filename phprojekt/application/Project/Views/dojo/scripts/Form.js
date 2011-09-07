@@ -204,8 +204,9 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         parent.removeChild(e);
     },
 
-    submitForm:function() {
-        phpr.Project.Form.superclass.submitForm.apply(this);
+    submitForm:function(evt) {
+        this.inherited(arguments);
+
         phpr.DataStore.deleteDataPartialString({
             url: phpr.webpath + 'index.php/Project/index/jsonDetail'
         });

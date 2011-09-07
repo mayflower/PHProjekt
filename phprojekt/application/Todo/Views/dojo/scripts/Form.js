@@ -52,8 +52,9 @@ dojo.declare("phpr.Todo.Form", phpr.Default.DialogForm, {
         }
     },
 
-    submitForm:function() {
-        phpr.Todo.Form.superclass.submitForm.apply(this);
+    submitForm: function(evt) {
+        this.inherited(arguments);
+
         phpr.DataStore.deleteDataPartialString({
             url: phpr.webpath + 'index.php/Project/index/jsonDetail'
         });

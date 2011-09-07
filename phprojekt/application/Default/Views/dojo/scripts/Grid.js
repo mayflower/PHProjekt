@@ -1257,7 +1257,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    Return the link for open the form
         // Description:
         //    Return the link for open the form
-        this.main.setUrlHash(phpr.module, id);
+        var state = phpr.pageManager.getState();
+        state.id = id;
+        phpr.pageManager.changeState(state);
     },
 
     checkCanEdit: function(inCell, inRowIndex) {

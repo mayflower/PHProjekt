@@ -36,7 +36,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     sendData:           [],
     formdata:           [],
     _url:               null,
-    _formNode:          null,
     _writePermissions:  true,
     _deletePermissions: false,
     _accessPermissions: true,
@@ -313,10 +312,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         phpr.destroyWidget(id);
         phpr.destroySubWidgets(formId);
         phpr.destroyWidget(formId);
-        var html = this.render(["phpr.Default.template.form", "tabs.html"], null, {
-            innerTabs: innerTabs,
-            formId:    formId || ''
-        });
+
+        var content = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.form.tabs.html",
+            templateData: {
+                innerTabs: innerTabs,
+                formId:    formId || ''
+            }});
+
         var tab = new dijit.layout.ContentPane({
             id:    id,
             title: phpr.nls.get(title)
@@ -325,7 +328,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         dojo.style(tab.containerNode, 'height', '100%');
         dojo.style(tab.containerNode, 'width', '100%');
 
-        tab.set('content', html);
+        tab.set('content', content);
+
+        content.startup();
 
         this.garbageCollector.addNode(tab);
 
@@ -334,6 +339,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this.formsWidget.push(dijit.byId(formId));
             this.garbageCollector.addNode(dijit.byId(formId));
         }
+
+        content.tabform.onSubmit = dojo.hitch(this, "_submitForm");
     },
 
     getTabs: function() {
@@ -561,9 +568,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Summary:
         //    Connect the buttons to the actions
 
-        this.garbageCollector.addEvent(
-            dojo.connect(dijit.byId("submitButton"),
-                "onClick", dojo.hitch(this, "submitForm")));
+        dijit.byId("submitButton").onClick = dojo.hitch(this, "_submitForm");
 
         this.garbageCollector.addEvent(
             dojo.connect(dijit.byId("deleteButton"),
@@ -822,14 +827,25 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return true;
     },
 
-    submitForm: function() {
+    _submitForm: function(evt) {
+        // Summary:
+        //    Event handler for submit events
+        // Description:
+        //    Triggers submitForm and prevents the event from bubbeling upwards
+        var ret = this.submitForm(evt);
+        dojo.stopEvent(evt);
+        return ret || false;
+    },
+
+    submitForm: function(evt) {
         // Summary:
         //    This function is responsible for submitting the formdata
         // Description:
         //    This function sends the form data as json data to the server
         //    and call the reload routine
+
         if (!this.prepareSubmission()) {
-            return false;
+            return;
         }
 
         var pid = phpr.currentProjectId;
@@ -841,10 +857,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
-                if (data.id) {
-                    this.id = data.id;
-                }
                 if (data.type == 'success') {
+                    if (data.id) {
+                        this.id = data.id;
+                    }
                     phpr.send({
                         url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' +
                             phpr.module + '/id/' + this.id,
