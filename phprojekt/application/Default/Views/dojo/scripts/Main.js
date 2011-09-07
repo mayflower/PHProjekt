@@ -428,7 +428,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Render the module
         // Description:
         //    Call the template that the module use and render it
-        phpr.viewManager.useDefaultView({withOverview: true});
+        phpr.viewManager.useDefaultView({blank: true});
     },
 
     setNavigations: function() {
@@ -455,7 +455,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             templateName: "phpr.Default.template.GridBox.html"
         });
 
-        phpr.viewManager.getView().overviewBox.set('content', gridBoxContainer);
+        phpr.viewManager.getView().centerMainContent.set('content', gridBoxContainer);
         gridBoxContainer.startup();
         var updateUrl = phpr.webpath +
             'index.php/' +
@@ -486,7 +486,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             templateName: "phpr.Default.template.GridBox.html"
         });
 
-        phpr.viewManager.getView().overviewBox.set('content', gridBoxContainer);
+        phpr.viewManager.getView().centerMainContent.set('content', gridBoxContainer);
         gridBoxContainer.startup();
         this.grid = new this.gridWidget(
                 updateUrl,
