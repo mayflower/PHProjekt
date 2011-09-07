@@ -408,6 +408,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
         this.setGlobalVars();
+        this.cleanPage();
         this.renderTemplate();
         this.setNavigations();
         this.setWidgets();
@@ -437,7 +438,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Description:
         //    Clean buttons, set the navigation bar,
         //    prepare the search box and fade out/in the tree
-        this.cleanPage();
         if (phpr.isGlobalModule(this.module)) {
             phpr.tree.fadeOut();
             this.setSubGlobalModulesNavigation();
