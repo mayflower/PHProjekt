@@ -124,6 +124,7 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
 
 dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     // Summary: class for initialilzing a default module
+    config:     null,
     grid:       null,
     module:     null,
     gridWidget: null,
@@ -141,6 +142,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.subModules = [];
         this.globalModuleNavigationButtons = {};
         this.subModules = subModules;
+        this.config = {};
     },
 
     destroy: function() {
@@ -401,12 +403,14 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }));
     },
 
-    reload: function() {
+    reload: function(config) {
         // Summary:
         //    This function reloads the current module
         // Description:
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
+
+        this.config = config || {};
         this.setGlobalVars();
         this.renderTemplate();
         this.setNavigations();
@@ -492,7 +496,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 updateUrl,
                 this,
                 phpr.currentProjectId,
-                gridBoxContainer);
+                gridBoxContainer,
+                this.config.includeSubentries == "true" || false);
     },
 
     setGlobalModulesNavigation: function() {
@@ -665,12 +670,22 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 this.customSetSubmoduleNavigation();
 
                 if (!phpr.isGlobalModule(this.module)) {
-                    var isListRecursiveBox = new dijit.form.CheckBox();
+                    var isListRecursiveBox = new dijit.form.CheckBox({
+                        checked: this.config.includeSubentries == "true" || false
+                    });
                     phpr.viewManager.getView().rightButtonRow.set('content', isListRecursiveBox);
                     var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects?"));
                     dojo.place(label, phpr.viewManager.getView().rightButtonRow.domNode, 0);
                     isListRecursiveBox.startup();
-                    dojo.connect(isListRecursiveBox, 'onChange', dojo.hitch(this, "rebuildGrid"));
+                    dojo.connect(isListRecursiveBox, 'onChange', dojo.hitch(this,
+                        function(arg) {
+                            var oldstate = phpr.pageManager.getState();
+                            oldstate.includeSubentries = arg;
+                            phpr.pageManager.changeState(oldstate, {
+                                noAction: true
+                            });
+                            this.rebuildGrid(arg);
+                        }));
                 }
             })
         });
