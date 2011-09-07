@@ -56,7 +56,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         //      but the most important ones are:
         //          projectId, moduleName, action, id
         //      The options object can contain the following keys:
-        //          forceModuleReload
+        //          forceModuleReload, noAction
         if (!config.moduleName) {
             config.moduleName = (this.getActiveModule() ? this.getActiveModule().module : this._defaultModule);
         }
@@ -111,69 +111,76 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             this._setHash(config);
         }
 
-        var module = config.moduleName;
+        // only change the hash and clean up. don't change the page state
+        if (options.noAction !== true) {
 
-        var oldmodule = phpr.module;
+            var module = config.moduleName;
 
-        var mod = this.getModule(module);
+            var oldmodule = phpr.module;
 
-        var newProject = false;
+            var mod = this.getModule(module);
 
-        // replacement for processUrlHash in every module
+            var newProject = false;
 
-        phpr.module = module;
+            var reloaded = false;
 
-        if (config.projectId
-                && config.moduleName
-                && !config.globalModuleName) {
-            var projectId = config.projectId;
-            if (projectId < 1) {
-                projectId = 1;
-            }
-            if (phpr.currentProjectId != projectId) {
-                newProject = true;
-            }
-            phpr.currentProjectId = projectId;
-        } else if (phpr.isGlobalModule(config.globalModuleName)) {
-            if (phpr.currentProjectId != phpr.rootProjectId) {
-                newProject = true;
-            }
-            phpr.currentProjectId = phpr.rootProjectId;
-        }
+            // replacement for processUrlHash in every module
 
-        if (options.forceModuleReload === true) {
-            this._reloadModule(module);
-        }
+            phpr.module = module;
 
-        if ("undefined" != typeof config.id) {
-            // If is an id, open a form
-            if (module && (config.id > 0 || config.id === "0" || config.id === 0)) {
-                if (module !== oldmodule || newProject) {
-                    this._reloadModule(module);
+            if (config.projectId
+                    && config.moduleName
+                    && !config.globalModuleName) {
+                var projectId = config.projectId;
+                if (projectId < 1) {
+                    projectId = 1;
                 }
-                if (dojo.isFunction(mod.openForm)) {
-                    mod.openForm(config.id, module);
+                if (phpr.currentProjectId != projectId) {
+                    newProject = true;
+                }
+                phpr.currentProjectId = projectId;
+            } else if (phpr.isGlobalModule(config.globalModuleName)) {
+                if (phpr.currentProjectId != phpr.rootProjectId) {
+                    newProject = true;
+                }
+                phpr.currentProjectId = phpr.rootProjectId;
+            }
+
+            if (options.forceModuleReload === true) {
+                this._reloadModule(module, [ config ]);
+                reloaded = true;
+            }
+
+            if ("undefined" != typeof config.id) {
+                // If is an id, open a form
+                if (module && (config.id > 0 || config.id === "0" || config.id === 0)) {
+                    if (module !== oldmodule || newProject) {
+                        this._reloadModule(module, [ config ]);
+                    }
+                    if (dojo.isFunction(mod.openForm)) {
+                        mod.openForm(config.id, module);
+                    } else {
+                        dojo.publish(module + ".openForm", [config.id, module]);
+                    }
+                }
+            } else if ("undefined" != typeof config.search) {
+                mod.showSearchResults(config.search || "");
+            } else if ("undefined" != typeof config.tag) {
+                mod.showTagsResults(config.tag || "");
+            } else if ("undefined" != typeof config.action) {
+                // TODO: create better semantics for custom function calls
+                if (dojo.isFunction(mod.processActionFromUrlHash)) {
+                    mod.processActionFromUrlHash(config);
                 } else {
-                    dojo.publish(module + ".openForm", [config.id, module]);
+                    dojo.publish(module + ".processActionFromUrlHash", [config]);
                 }
-            }
-        } else if ("undefined" != typeof config.search) {
-            mod.showSearchResults(config.search || "");
-        } else if ("undefined" != typeof config.tag) {
-            mod.showTagsResults(config.tag || "");
-        } else if ("undefined" != typeof config.action) {
-            // TODO: create better semantics for custom function calls
-            if (dojo.isFunction(mod.processActionFromUrlHash)) {
-                mod.processActionFromUrlHash(config);
             } else {
-                dojo.publish(module + ".processActionFromUrlHash", [config]);
+                // Default value, only one parameter, and must be the module
+                if (!reloaded) { this._reloadModule(module, [ config ]); };
             }
-        } else {
-            // Default value, only one parameter, and must be the module
-            this._reloadModule(module);
-        }
 
-        this._activeModule = mod;
+            this._activeModule = mod;
+        }
     },
 
     _reloadModule: function(name, params) {
@@ -204,6 +211,10 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         // Summary:
         //      returns the active module
         return this._activeModule;
+    },
+
+    getState: function() {
+        return dojo.queryToObject(dojo.hash());
     },
 
     _hashChange: function() {
