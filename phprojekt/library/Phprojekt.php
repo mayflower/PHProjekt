@@ -65,7 +65,7 @@ class Phprojekt
     /**
      * Copyright.
      */
-    const COPYRIGHT = 'PHProjekt 6.1.0 - Copyright (c) 2010 Mayflower GmbH';
+    const COPYRIGHT = 'PHProjekt 6.1.0 - Copyright (c) 2011 Mayflower GmbH';
 
     /**
      * Default Max size in bytes that is allowed to be uploaded per file.
