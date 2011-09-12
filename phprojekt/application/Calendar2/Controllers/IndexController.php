@@ -494,9 +494,9 @@ class Calendar2_IndexController extends IndexController
         }
 
         if ($multiple) {
-            $model->delete($sendNotification);
+            $model->delete($sendNotifications);
         } else {
-            $model->deleteSingleEvent($sendNotification);
+            $model->deleteSingleEvent($sendNotifications);
         }
 
         Phprojekt_Converter_Json::echoConvert(

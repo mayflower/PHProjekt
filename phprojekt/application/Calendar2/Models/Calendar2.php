@@ -237,6 +237,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                     );
                 }
             }
+            $this->_notify($isNew ? 'create' : 'edit');
         } else {
             // Split the series into two parts. $this will be the second part.
             $new = $this;
@@ -253,6 +254,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $new->rrule = $rrules['new'];
 
             $old->save();
+            $this->_notify('edit');
             $new->_saveToNewRow();
 
             // Update the excluded occurences
@@ -264,6 +266,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 array('id' => $new->id),
                 $where
             );
+            $this->_notify('edit');
         }
 
         $this->_originalStart = new Datetime(
@@ -331,7 +334,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $db->quoteInto('calendar2_id = ?', $this->id)
             );
 
-            if ($sendNotification) {
+            if ($sendNotifications) {
                 $this->_notify('delete');
             }
 
@@ -341,6 +344,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             );
 
             parent::delete();
+
+            if ($sendNotifications) {
+                $this->_notify('delete');
+            }
         } else {
             $first = clone $this;
             $first->find($this->id);
@@ -365,7 +372,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $where
             );
 
-            if ($sendNotification) {
+            if ($sendNotifications) {
                 $this->_notify('edit');
             }
         }
@@ -907,8 +914,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @return void
      **/
-    public function notify(
-            $method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
+    public function notify($method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
     {
         $this->_notify(null, $method);
     }
@@ -965,9 +971,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      * Helper function to allow delete() et al to send notifications with for
      * their respective processes.
      */
-    private function _notify(
-            $process = null,
-            $method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
+    private function _notify($process = null, $method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
     {
         $notification = new Phprojekt_Notification();
         $notification->setModel($this);
