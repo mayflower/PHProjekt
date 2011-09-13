@@ -638,6 +638,23 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Returns the names of all Participants.
+     *
+     * @return array of string
+     */
+    public function getParticipantsNames()
+    {
+        $participants = $this->getParticipants();
+        $names = array();
+        foreach ($participants as $p) {
+            $user    = new Phprojekt_User_User();
+            $user    = $user->findUserById($p);
+            $names[] = $user->firstname . ' ' . $user->lastname;
+        }
+        return $names;
+    }
+
+    /**
      * Returns whether the given user participates in this event.
      *
      * @param int $id The id of the user to check for.
@@ -973,7 +990,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     private function _notify($process = null, $method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
     {
-        $notification = new Phprojekt_Notification();
+        $notification = new Calendar2_Models_Notification();
         $notification->setModel($this);
 
         if (!is_null($process)) {
