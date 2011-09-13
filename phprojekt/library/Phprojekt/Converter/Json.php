@@ -163,24 +163,33 @@ class Phprojekt_Converter_Json
      *
      * @return mixed The converted value to give to self::_makeJsonString.
      */
-    final private static function _convertModelValue($value, $field)
+    final private static function _convertModelValue($value, $field = null)
     {
-        if (is_numeric($value) && $field['integer']) {
-            return (int) $value;
+        if (!is_null($field)) {
+            if (is_numeric($value) && $field['integer']) {
+                return (int)$value;
+            }
+
+            if (is_scalar($value)) {
+                return $value;
+            }
+
+            if ($field['integer']) {
+                if (is_null($value) && !is_null($field['default'])) {
+                    return (int) $field['default'];
+                } else {
+                    return (int) $value;
+                }
+            }
+            if (is_null($value) && !is_null($field['default'])) {
+                return (string) $field['default'];
+            }
         }
+
         if (is_scalar($value)) {
             return $value;
         }
-        if ($field['integer']) {
-            if (is_null($value) && !is_null($field['default'])) {
-                return (int) $field['default'];
-            } else {
-                return (int) $value;
-            }
-        }
-        if (is_null($value) && !is_null($field['default'])) {
-            return (string) $field['default'];
-        }
+
         if (is_array($value)) {
             return array_map(array(get_class(), __FUNCTION__), $value);
         }
