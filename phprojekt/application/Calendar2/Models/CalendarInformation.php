@@ -94,7 +94,7 @@ class Calendar2_Models_CalendarInformation extends Phprojekt_ModelInformation_De
     public function getInfo($order, $column)
     {
         $column = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($column);
-        $fields = $this->_getFields($this->_mapping[$order]);
+        $fields = $this->_getFields();
         $result = array();
 
         foreach ($fields as $field) {
