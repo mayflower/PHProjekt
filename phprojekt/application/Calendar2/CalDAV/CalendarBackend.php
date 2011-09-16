@@ -140,6 +140,13 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
 
     public function deleteCalendarObject($calendarId, $objectUri)
     {
-        throw new Exception('Calendar2_CalDAV_CalendarBackend->deleteCalendarObject is not implemented yet');
+        $db    = Phprojekt::getInstance()->getDb();
+        $event = new Calendar2_Models_Calendar2();
+        $event = $event->fetchAll($db->quoteInto('uri = ?', $objectUri));
+        if (!array_key_exists(0, $event)) {
+            Phprojekt::getInstance()->getLog()->debug("Didn't find object with uri $objectUri.");
+            return true;
+        }
+        $event[0]->delete();
     }
 }
