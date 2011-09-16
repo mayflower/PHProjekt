@@ -40,11 +40,15 @@ class Calendar2_CaldavController extends IndexController
 {
     public function preDispatch()
     {
+        parent::preDispatch();
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
     public function checkAuthentication()
     {
+        if (array_key_exists('PHP_AUTH_USER', $_SERVER)) {
+            Phprojekt_Auth::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+        }
     }
 
     public function indexAction() {
