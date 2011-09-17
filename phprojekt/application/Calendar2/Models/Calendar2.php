@@ -936,6 +936,59 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Creates a new Calendar2_Models_Calendar2 from a VEVENT.
+     *
+     * The returned object must be save()d before it is persistent.
+     * This also means that additional changes can be made before any database calls are made.
+     *
+     * @param Sabre_VObject_Component The vevent component
+     * @throws Exception If the provided component is not a vevent
+     */
+    public static function fromVObject(Sabre_VObject_Component $vevent)
+    {
+        if (strtolower($vevent->name) !== 'vevent') {
+            throw new Exception(
+                "Invalid type of vobject_component passed to Calendar2_Models_Calendar2::fromVobject ({$vevent->name})"
+            );
+        }
+        $event = new Calendar2_Models_Calendar2();
+        $utc   = new DateTimezone('UTC');
+        foreach ($vevent->children() as $prop) {
+            switch (strtolower($prop->name)) {
+            case 'created':
+            case 'dtstamp':
+                // Ignored
+                break;
+            case 'last_modified':
+                $event->lastModified = $prop->value;
+                break;
+            case 'dtstart':
+                $start = new Datetime($prop->value, new DateTimezone($prop['tzid']->value));
+                $start->setTimezone($utc);
+                $event->start = $start->format('Y-m-d H:i:s');
+                break;
+            case 'dtend':
+                $end = new Datetime($prop->value, new DateTimezone($prop['tzid']->value));
+                $end->setTimezone($utc);
+                $event->end   = $end->format('Y-m-d H:i:s');
+                break;
+            case 'uid':
+                $event->uid = $prop->value;
+                break;
+            case 'summary':
+                $event->summary = $prop->value;
+                break;
+            default:
+                Phprojekt::getInstance()->getLog()->debug(
+                    "Encountered unknown vevent property \"{$prop->name}\":{$prop->value}"
+                );
+            }
+        }
+
+        return $event;
+    }
+
+    /**
      * Returns a Sabre_Vobject_Component representing this object.
      *
      * @return Sabre_VObject_Component representing $this.
