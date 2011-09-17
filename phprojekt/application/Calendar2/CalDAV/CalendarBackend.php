@@ -122,7 +122,7 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         return array(
             'id' => $events[0]->uid,
             'uri' => $objectUri,
-            'lastmodified' => $lastModified->format('Ymd\This\Z'),
+            'lastmodified' => $lastModified->format('Ymd\THis\Z'),
             'calendarid' => $calendarId,
             'calendardata' => $calendarData->serialize()
         );

@@ -305,7 +305,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $series->_excludeDate($this->_originalStart);
 
         $this->_data['rrule'] = null;
-        $this->_data['recurrenceId'] = $this->_originalStart->format('Y-m-d h:i:s');
+        $this->_data['recurrenceId'] = $this->_originalStart->format('Y-m-d H:i:s');
         $this->_isFirst       = true;
         $this->_saveToNewRow();
 
@@ -927,12 +927,12 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $vobject->add('location', $this->location);
         if ($this->recurrenceId) {
             $recurrenceId = new Datetime($this->recurrenceId);
-            $vobject->add('recurrence-id', $recurrenceId->format('Ymd\This\Z'));
+            $vobject->add('recurrence-id', $recurrenceId->format('Ymd\THis\Z'));
         } else if ($this->rrule) {
             $vobject->add('rrule', $this->rrule);
             $exdates = array();
             foreach ($this->getExcludedDates() as $d) {
-                $exdates[] = $d->format('Ymd\This\Z');
+                $exdates[] = $d->format('Ymd\THis\Z');
             }
             if (!empty($exdates)) {
                 // The problem here ist that if we change a single occurrence of an recurring event in P6, we mark the
@@ -944,7 +944,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 foreach ($subEvents as $e) {
                     if ($e->recurrenceId) {
                         $dt = new Datetime($e->recurrenceId);
-                        $subEventDates[] = $dt->format('Ymd\This\Z');
+                        $subEventDates[] = $dt->format('Ymd\THis\Z');
                     }
                 }
                 $exdates = array_diff($exdates, $subEventDates);
@@ -952,11 +952,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             }
         }
         $start = new DateTime($this->start);
-        $vobject->add('dtstart', $start->format('Ymd\This\Z'));
+        $vobject->add('dtstart', $start->format('Ymd\THis\Z'));
         $end = new DateTime($this->end);
-        $vobject->add('dtend', $end->format('Ymd\This\Z'));
+        $vobject->add('dtend', $end->format('Ymd\THis\Z'));
         $lastMod = new DateTime($this->lastModified);
-        $vobject->add('dtstamp', $lastMod->format('Ymd\This\Z'));
+        $vobject->add('dtstamp', $lastMod->format('Ymd\THis\Z'));
         $vobject->add('uid', $this->uid);
         return $vobject;
     }
