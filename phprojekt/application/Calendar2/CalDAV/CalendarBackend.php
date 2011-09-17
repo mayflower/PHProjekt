@@ -101,7 +101,7 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
     {
         $db = Phprojekt::getInstance()->getDb();
         $events = new Calendar2_Models_Calendar2();
-        $events = $events->fetchByUid($objectUri);
+        $events = $events->fetchAll($db->quoteInto('uri = ?', $objectUri));
         if (!is_array($events) || empty($events)) {
             return array();
         }
