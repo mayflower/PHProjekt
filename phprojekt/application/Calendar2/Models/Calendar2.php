@@ -943,10 +943,14 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     public function asVObject()
     {
         $vobject = new Sabre_VObject_Component('vevent');
-        $vobject->add('summary', $this->summary);
-        $vobject->add('description', $this->description);
-        $vobject->add('comment', $this->comments);
-        $vobject->add('location', $this->location);
+        if ($this->summary)
+            $vobject->add('summary', $this->summary);
+        if ($this->description)
+            $vobject->add('description', $this->description);
+        if ($this->comments)
+            $vobject->add('comment', $this->comments);
+        if ($this->location)
+            $vobject->add('location', $this->location);
         if ($this->recurrenceId) {
             $recurrenceId = new Datetime($this->recurrenceId);
             $vobject->add('recurrence-id', $recurrenceId->format('Ymd\THis\Z'));
