@@ -139,14 +139,17 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         parent::__construct($db);
 
         // This is needed to make fields read-only if we're not the owner.
-        $this->_information
-            = new Calendar2_Models_CalendarInformation();
+        $this->_information = new Calendar2_Models_CalendarInformation();
 
         // UID generation method taken from rfc 5545
         $this->uid = rand()
                    . '-' . time()
                    . '-' . getMyPid()
                    . '@' . php_uname('n');
+
+        // Default values
+        $this->visibility = self::VISIBILITY_PUBLIC;
+        $this->ownerId    = Phprojekt_Auth::getUserId();
     }
 
     /**
