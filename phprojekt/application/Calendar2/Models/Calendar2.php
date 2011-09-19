@@ -948,42 +948,74 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function fromVObject(Sabre_VObject_Component $vevent)
     {
+        $debug = false;
+
         if (strtolower($vevent->name) !== 'vevent') {
             throw new Exception(
                 "Invalid type of vobject_component passed to Calendar2_Models_Calendar2::fromVobject ({$vevent->name})"
             );
         }
+        // 0-1
+        // handled:
+        //  last-mod, description, dtstart, location, summary, uid
+        // not handled
+        //  class, created, geo, organizer, priority, dtstamp, seq, status, transp, url, recurid
+        //
+        // none or one of these two
+        //  dtend, duration (only assumes dtend case for now)
+        //
+        // 0 - n
+        // TODO: Check how we can handle these. Maybe just concat them?
+        // handling: (only one is handled atm, though)
+        //  comment, rrule
+        // not handling:
+        //  attach, attendee, categories, contact, exdate, exrule, rstatus, related, resources, rdate, x-prop
+        $utc               = new DateTimezone('UTC');
+        $mappable = array(
+            array('veventkey' => 'SUMMARY', 'ourkey' => 'summary', 'default' => '_'),
+            array('veventkey' => 'LOCATION', 'ourkey' => 'location', 'default' => ''),
+            array('veventkey' => 'DESCRIPTION', 'ourkey' => 'description', 'default' => ''),
+            array('veventkey' => 'COMMENT', 'ourkey' => 'comments'),
+            array('veventkey' => 'UID', 'ourkey' => 'uid'),
+            array('veventkey' => 'LAST-MODIFIED', 'ourkey' => 'lastModified'),
+            array('veventkey' => 'RRULE', 'ourkey' => 'rrule')
+        );
+        foreach ($mappable as $m) {
+            if (isset($vevent->$m['veventkey'])) {
+                $this->$m['ourkey'] = $vevent->$m['veventkey'];
+            } else if (array_key_exists('default', $m)) {
+                $this->$m['ourkey'] = $m['default'];
+            }
 
-        $utc   = new DateTimezone('UTC');
-        foreach ($vevent->children() as $prop) {
-            switch (strtolower($prop->name)) {
-            case 'created':
-            case 'dtstamp':
-                // Ignored
-                break;
-            case 'last_modified':
-                $this->lastModified = $prop->value;
-                break;
-            case 'dtstart':
-                $start = new Datetime($prop->value, new DateTimezone($prop['tzid']->value));
-                $start->setTimezone($utc);
-                $this->start = $start->format('Y-m-d H:i:s');
-                break;
-            case 'dtend':
-                $end = new Datetime($prop->value, new DateTimezone($prop['tzid']->value));
-                $end->setTimezone($utc);
-                $this->end   = $end->format('Y-m-d H:i:s');
-                break;
-            case 'uid':
-                $this->uid = $prop->value;
-                break;
-            case 'summary':
-                $this->summary = $prop->value;
-                break;
-            default:
-                Phprojekt::getInstance()->getLog()->debug(
-                    "Encountered unknown vevent property \"{$prop->name}\":{$prop->value}"
-                );
+        }
+
+        if (substr($vevent->dtstart->value, -1) === 'Z') {
+            $start = new Datetime($vevent->dtstart->value);
+        } else {
+            $start = new Datetime($vevent->dtstart->value, new DateTimezone($vevent->dtstart['tzid']->value));
+        }
+        $start->setTimezone($utc);
+        $this->start = $start->format('Y-m-d H:i:s');
+
+        if (substr($vevent->dtend->value, -1) === 'Z') {
+            $end = new Datetime($vevent->dtend->value);
+        } else {
+            $end = new Datetime($vevent->dtend->value, new DateTimezone($vevent->dtend['tzid']->value));
+        }
+        $end->setTimezone($utc);
+        $this->end   = $end->format('Y-m-d H:i:s');
+
+        if ($debug) {
+            $handledProps = array('DTSTART', 'DTEND');
+            foreach ($mappable as $m) {
+                $handledProps[] = $m['veventkey'];
+            }
+            foreach ($vevent->children() as $prop) {
+                if (!in_array($prop->name, $handledProps)) {
+                    Phprojekt::getInstance()->getLog()->debug(
+                        "Encountered unknown vevent property \"{$prop->name}\":{$prop->value}"
+                    );
+                }
             }
         }
     }
