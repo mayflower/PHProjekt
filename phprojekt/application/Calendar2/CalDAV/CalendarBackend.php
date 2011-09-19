@@ -131,8 +131,8 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
     public function createCalendarObject($calendarId, $objectUri, $calendarData)
     {
         $vcalendar = Sabre_VObject_Reader::read($calendarData);
-        Phprojekt::getInstance()->getLog()->debug(print_r($vcalendar->vevent, true));
-        $event = Calendar2_Models_Calendar2::fromVObject($vcalendar->vevent);
+        $event = new Calendar2_Models_Calendar2();
+        $event->fromVObject($vcalendar->vevent);
         $event->uri = $objectUri;
         $event->save();
     }

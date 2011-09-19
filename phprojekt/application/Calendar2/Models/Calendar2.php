@@ -936,22 +936,24 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Creates a new Calendar2_Models_Calendar2 from a VEVENT.
+     * Updates this Calendar2 object with data from the given VEVENT
      *
      * The returned object must be save()d before it is persistent.
      * This also means that additional changes can be made before any database calls are made.
      *
      * @param Sabre_VObject_Component The vevent component
      * @throws Exception If the provided component is not a vevent
+     *
+     * @return void
      */
-    public static function fromVObject(Sabre_VObject_Component $vevent)
+    public function fromVObject(Sabre_VObject_Component $vevent)
     {
         if (strtolower($vevent->name) !== 'vevent') {
             throw new Exception(
                 "Invalid type of vobject_component passed to Calendar2_Models_Calendar2::fromVobject ({$vevent->name})"
             );
         }
-        $event = new Calendar2_Models_Calendar2();
+
         $utc   = new DateTimezone('UTC');
         foreach ($vevent->children() as $prop) {
             switch (strtolower($prop->name)) {
@@ -960,23 +962,23 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 // Ignored
                 break;
             case 'last_modified':
-                $event->lastModified = $prop->value;
+                $this->lastModified = $prop->value;
                 break;
             case 'dtstart':
                 $start = new Datetime($prop->value, new DateTimezone($prop['tzid']->value));
                 $start->setTimezone($utc);
-                $event->start = $start->format('Y-m-d H:i:s');
+                $this->start = $start->format('Y-m-d H:i:s');
                 break;
             case 'dtend':
                 $end = new Datetime($prop->value, new DateTimezone($prop['tzid']->value));
                 $end->setTimezone($utc);
-                $event->end   = $end->format('Y-m-d H:i:s');
+                $this->end   = $end->format('Y-m-d H:i:s');
                 break;
             case 'uid':
-                $event->uid = $prop->value;
+                $this->uid = $prop->value;
                 break;
             case 'summary':
-                $event->summary = $prop->value;
+                $this->summary = $prop->value;
                 break;
             default:
                 Phprojekt::getInstance()->getLog()->debug(
@@ -984,8 +986,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 );
             }
         }
-
-        return $event;
     }
 
     /**
