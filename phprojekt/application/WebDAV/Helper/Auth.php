@@ -13,8 +13,8 @@
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @subpackage WebDAV
+ * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1

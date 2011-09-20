@@ -13,8 +13,8 @@
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @subpackage WebDAV
+ * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
@@ -41,20 +41,21 @@ class WebDAV_IndexController extends IndexController
 {
     public function preDispatch()
     {
+        parent::preDispatch();
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
     public function checkAuthentication()
-    {
-    }
-
-    public function indexAction()
     {
         // Log the user in so that phprojekt recognizes us.
         // If the client doesn't send http headers, he probably has a cookie and assumes to be already logged in
         if (array_key_exists('PHP_AUTH_USER', $_SERVER)) {
             Phprojekt_Auth::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
         }
+    }
+
+    public function indexAction()
+    {
         // Set the root directory
         $webdavPath    = Phprojekt::getInstance()->getConfig()->webdavPath;
         if (Phprojekt_Auth::isLoggedIn()) {
@@ -78,7 +79,7 @@ class WebDAV_IndexController extends IndexController
 
         // Authentication
         $authBackend = new WebDAV_Helper_Auth();
-        $authPlugin  = new Sabre_DAV_Auth_Plugin($authBackend,'WebDAV');
+        $authPlugin  = new Sabre_DAV_Auth_Plugin($authBackend, 'WebDAV');
         $server->addPlugin($authPlugin);
 
         // All we need to do now, is to fire up the server
