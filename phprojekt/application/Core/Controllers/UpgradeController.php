@@ -120,6 +120,11 @@ class Core_UpgradeController extends Core_IndexController
             );
             $failed = false;
         } catch (Phprojekt_Migration_IKilledTheDatabaseException $e) {
+            Phprojekt::getInstance()->getLog()->debug(
+                 "IKilledTheDatabaseException occurred while migrating: " . $e->getFile() . ':' . $e->getLine() . "\n"
+                 . $e->getMessage() . "\n"
+                 . $e->getTraceAsString() . "\n"
+            );
             Phprojekt_Converter_Json::echoConvert(
                 array(
                     'type' => 'fatalFailure',
@@ -127,6 +132,11 @@ class Core_UpgradeController extends Core_IndexController
                 )
             );
         } catch (Exception $e) {
+            Phprojekt::getInstance()->getLog()->debug(
+                 "Exception occurred while migrating: " . $e->getFile() . ':' . $e->getLine() . "\n"
+                 . $e->getMessage() . "\n"
+                 . $e->getTraceAsString() . "\n"
+            );
             Phprojekt_Converter_Json::echoConvert(
                 array(
                     'type' => 'failure',
