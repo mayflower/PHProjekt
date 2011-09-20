@@ -139,14 +139,17 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         parent::__construct($db);
 
         // This is needed to make fields read-only if we're not the owner.
-        $this->_information
-            = new Calendar2_Models_CalendarInformation();
+        $this->_information = new Calendar2_Models_CalendarInformation();
 
         // UID generation method taken from rfc 5545
         $this->uid = rand()
                    . '-' . time()
                    . '-' . getMyPid()
                    . '@' . php_uname('n');
+
+        // Default values
+        $this->visibility = self::VISIBILITY_PUBLIC;
+        $this->ownerId    = Phprojekt_Auth::getUserId();
     }
 
     /**
@@ -280,6 +283,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function saveSingleEvent()
     {
+        if (!$this->rrule) {
+            return $this->save();
+        }
+
         if (!$this->recordValidate()) {
             $errors = $this->getError();
             $error  = array_pop($errors);
@@ -301,7 +308,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $series->_excludeDate($this->_originalStart);
 
         $this->_data['rrule'] = null;
-        $this->_data['recurrenceId'] = $this->_originalStart->format('Y-m-d h:i:s');
+        $this->_data['recurrenceId'] = $this->_originalStart->format('Y-m-d H:i:s');
         $this->_isFirst       = true;
         $this->_saveToNewRow();
 
@@ -923,35 +930,36 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $vobject->add('location', $this->location);
         if ($this->recurrenceId) {
             $recurrenceId = new Datetime($this->recurrenceId);
-            $vobject->add('recurrence-id', $recurrenceId->format('Ymd\This\Z'));
+            $vobject->add('recurrence-id', $recurrenceId->format('Ymd\THis\Z'));
         } else if ($this->rrule) {
             $vobject->add('rrule', $this->rrule);
-            // The problem here ist that if we change a single occurrence of an recurring event in P6, we mark the
-            // occurrence as excluded in the original event. In caldav, the exclusion takes precedence over the
-            // extracted event, which means that events that have been changed will not show up in caldav clients.
-            // To go around this, we filter these dates out of the excluded dates.
-            $subEvents = $this->fetchByUid($this->uid);
-            $subEventDates = array();
-            foreach ($subEvents as $e) {
-                if ($e->recurrenceId) {
-                    $dt = new Datetime($e->recurrenceId);
-                    $subEventDates[] = $dt->format('Ymd\This\Z');
-                }
-            }
+            $exdates = array();
             foreach ($this->getExcludedDates() as $d) {
-                $exdates[] = $d->format('Ymd\This\Z');
+                $exdates[] = $d->format('Ymd\THis\Z');
             }
-            $exdates = array_diff($exdates, $subEventDates);
             if (!empty($exdates)) {
+                // The problem here ist that if we change a single occurrence of an recurring event in P6, we mark the
+                // occurrence as excluded in the original event. In caldav, the exclusion takes precedence over the
+                // extracted event, which means that events that have been changed will not show up in caldav clients.
+                // To go around this, we filter these dates out of the excluded dates.
+                $subEvents = $this->fetchByUid($this->uid);
+                $subEventDates = array();
+                foreach ($subEvents as $e) {
+                    if ($e->recurrenceId) {
+                        $dt = new Datetime($e->recurrenceId);
+                        $subEventDates[] = $dt->format('Ymd\THis\Z');
+                    }
+                }
+                $exdates = array_diff($exdates, $subEventDates);
                 $vobject->add('exdate', implode(',', $exdates));
             }
         }
         $start = new DateTime($this->start);
-        $vobject->add('dtstart', $start->format('Ymd\This\Z'));
+        $vobject->add('dtstart', $start->format('Ymd\THis\Z'));
         $end = new DateTime($this->end);
-        $vobject->add('dtend', $end->format('Ymd\This\Z'));
+        $vobject->add('dtend', $end->format('Ymd\THis\Z'));
         $lastMod = new DateTime($this->lastModified);
-        $vobject->add('dtstamp', $lastMod->format('Ymd\This\Z'));
+        $vobject->add('dtstamp', $lastMod->format('Ymd\THis\Z'));
         $vobject->add('uid', $this->uid);
         return $vobject;
     }
