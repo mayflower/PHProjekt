@@ -378,6 +378,19 @@ class Setup_Models_Setup
             }
         }
 
+        // Check webdav folders
+        $dirs = array(
+            'webdav',
+            'webdav' . DIRECTORY_SEPARATOR . 'public',
+            'webdav' . DIRECTORY_SEPARATOR . 'data',
+            'webdav' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'locks'
+        );
+        foreach ($dirs as $d) {
+            if (!$this->_checkWriteAccess($privateDir, $d)) {
+                $valid = false;
+            }
+        }
+
         // Check old installations
 
         // Upload dir

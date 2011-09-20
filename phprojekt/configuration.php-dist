@@ -49,6 +49,12 @@ applicationPath = "/var/www/phprojekt_private/application/"
 ; WINDOWS
 ;applicationPath = "C:\phprojekt_private\application\"
 
+; Path where webdav resides
+; UNIX
+webdavPath = "/var/www/phprojekt_private/webdav/"
+; WINDOWS
+;webdavPath = "C:\phprojekt_private\webdav\"
+
 ;;;;;;;;;;;;
 ; DATABASE ;
 ;;;;;;;;;;;;

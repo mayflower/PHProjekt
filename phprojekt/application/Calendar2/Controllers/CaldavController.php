@@ -50,7 +50,7 @@ class Calendar2_CaldavController extends IndexController
     public function indexAction() {
         // This is mostly copied from the sabredav wiki
         // Backends
-        $authBackend = new Calendar2_CalDAV_Auth();
+        $authBackend = new WebDAV_Helper_Auth();
         $principalBackend = new Calendar2_CalDAV_PrincipalBackend();
         $calendarBackend = new Calendar2_CalDAV_CalendarBackend();
 
@@ -64,7 +64,7 @@ class Calendar2_CaldavController extends IndexController
         $server->setBaseUri('/index.php/Calendar2/caldav/index');
 
         // Authentication plugin
-        $authPlugin = new Sabre_DAV_Auth_Plugin($authBackend,'Calendar2/CalDAV');
+        $authPlugin = new Sabre_DAV_Auth_Plugin($authBackend,'CalDAV');
         $server->addPlugin($authPlugin);
 
         // CalDAV plugin
