@@ -174,7 +174,9 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     {
         if ($id > 0) {
             $clone = clone($this);
-            $clone->find($id);
+            if (!$clone->find($id)) {
+                throw new Phprojekt_PublishedException("Could not find user with id $id");
+            }
             return $clone;
         } else {
             return $this;
