@@ -1,6 +1,6 @@
 <?php
 /**
- * Calendar2 Caldav Auth
+ * WebDAV collection model.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -9,38 +9,49 @@
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
+ * Lesser General Public License for more details
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @subpackage WebDAV
+ * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
  * @version    Release: @package_version@
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
+require_once 'SabreDAV/Sabre/VObject/includes.php';
 
 /**
- * Calendar2 Caldav Auth
+ * WebDAV collection model.
  *
- * This class implements an authentication backend for sabredav
+ * A dummy that serves as an empty, read-only directory.
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Calendar2
+ * @subpackage WebDAV
  * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.0
+ * @since      File available since Release 6.1
  * @version    Release: @package_version@
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-class Calendar2_CalDAV_Auth extends Sabre_DAV_Auth_Backend_AbstractBasic
+class WebDAV_Models_EmptyDir extends Sabre_DAV_Directory
 {
-    public function validateUserPass($username, $password)
+    public function construct()
     {
-        return Phprojekt_Auth::checkCredentials($username, $password);
     }
+
+    public function getName()
+    {
+        return "Empty";
+    }
+
+    public function getChildren()
+    {
+        return array();
+    }
+
 }

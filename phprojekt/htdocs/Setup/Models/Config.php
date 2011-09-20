@@ -234,6 +234,10 @@ class Setup_Models_Config
         $content .= '; Path where will be placed modules created by the admin.' . $this->_eol;
         $content .= 'applicationPath = "' . $this->_privateDir . 'application/"' . $this->_eol;
 
+        $content .= $this->_eol;
+        $content .= '; Path where webdav resides' . $this->_eol;
+        $content .= 'webdavPath = "' . $this->_privateDir . 'webdav/"' . $this->_eol;
+
         return $content;
     }
 
