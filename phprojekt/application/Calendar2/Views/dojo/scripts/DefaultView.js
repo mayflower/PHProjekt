@@ -694,15 +694,15 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         for (var i in this.events) {
             if (this.events[i] != null && this.events[i]['hasChanged']) {
                 doSaving = true;
-                var id           = this.events[i]['id'];
-                var recurrenceId = this.events[i]['recurrenceId'];
+                var id         = this.events[i]['id'];
+                var occurrence = this.events[i]['occurrence'];
 
                 // Is it a multiple days event?
                 if (!this.events[i]['multDay']) {
                     // No
-                    content['data[' + id + '][' + recurrenceId + '][start]'] = this.events[i]['date'] + ' '
+                    content['data[' + id + '][' + occurrence + '][start]'] = this.events[i]['date'] + ' '
                         + this.events[i]['startTime'];
-                    content['data[' + id + '][' + recurrenceId + '][end]']   = this.events[i]['date'] + ' '
+                    content['data[' + id + '][' + occurrence + '][end]']   = this.events[i]['date'] + ' '
                         + this.events[i]['endTime'];
                 } else {
                     // Yes
@@ -1316,7 +1316,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         for (var event in content) {
             var eventsInfo     = new Array();
             var id             = content[event]['id'];
-            var recurrenceId   = content[event]['occurrence'];
+            var occurrence     = content[event]['start'];
             var singleDayEvent = false;
 
             // Split datetime in date and time
@@ -1388,7 +1388,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
                 // Events inside the grid
                 if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
                     eventInfo['hasChanged'] = false;
-                    parent                  = this.addGridEventToArray(eventInfo, id, recurrenceId, summary, comments, parent,
+                    parent                  = this.addGridEventToArray(eventInfo, id, occurrence, summary, comments, parent,
                         content[event]['startDate'], content[event]['startTime'], content[event]['endDate'],
                         content[event]['endTime'], column);
                 } else if (eventInfo['range'] == this.SHOWN_OUTSIDE_CHART) {
@@ -1430,7 +1430,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         }
     },
 
-    addGridEventToArray: function(eventInfo, id, recurrenceId, summary, comments, parent, wholeStartDate,
+    addGridEventToArray: function(eventInfo, id, occurrence, summary, comments, parent, wholeStartDate,
              wholeStartTime, wholeEndDate, wholeEndTime, column) {
         // Summary:
         //    Adds an event to 'events' class array. Returns parent index which is useful just for multiple day events.
@@ -1446,7 +1446,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         newEventDiv['editable']    = true;
         newEventDiv['order']       = nextEvent; // For Django template
         newEventDiv['id']          = id;
-        newEventDiv['recurrenceId'] = recurrenceId;
+        newEventDiv['occurrence']  = occurrence;
         newEventDiv['summary']     = summary;
         newEventDiv['timeDescrip'] = eventInfo['timeDescrip'];
         newEventDiv['comments']    = comments;
@@ -1657,7 +1657,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
                 }
                 eventInfo['hasChanged'] = true;
             }
-            parent = this.addGridEventToArray(eventInfo, movedEvent['id'], movedEvent['recurrenceId'],
+            parent = this.addGridEventToArray(eventInfo, movedEvent['id'], movedEvent['occurrence'],
                     movedEvent['summary'], movedEvent['comments'], parent, wholeStartDate, wholeStartTime, wholeEndDate,
                     wholeEndTime, column);
         }
@@ -1773,10 +1773,10 @@ dojo.declare("phpr.Calendar2.Moveable", dojo.dnd.Moveable, {
         } else {
             if (!this.parentClass.eventClickDisabled) {
                 // It was just a click - Open event in the form
-                var movedEvent   = this.parentClass.nodeIdToEventOrder(this.node.id);
-                var eventId      = this.parentClass.events[movedEvent]['id'];
-                var recurrenceId = this.parentClass.events[movedEvent]['recurrenceId'];
-                dojo.publish('Calendar2.openForm', [eventId, null, null, null, recurrenceId]);
+                var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);
+                var eventId    = this.parentClass.events[movedEvent]['id'];
+                var occurrence = this.parentClass.events[movedEvent]['occurrence'];
+                dojo.publish('Calendar2.openForm', [eventId, null, null, null, occurrence]);
             }
         }
         this.parentClass.eventClickDisabled = false;

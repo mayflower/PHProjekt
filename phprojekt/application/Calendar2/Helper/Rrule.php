@@ -141,8 +141,11 @@ class Calendar2_Helper_Rrule
                 $until
             );
         } else {
-            if ($firstTs > $startTs && $firstTs < $endTs) {
-                $dates[] = clone $this->_first;
+            if ($firstTs >= $startTs && $firstTs <= $endTs) {
+                $firstDay = strtoupper(substr($this->_first->format('D'), 0, 2));
+                if (!in_array($firstDay, $this->_rrule['BYDAY'])) {
+                    $dates[] = clone $this->_first;
+                }
             }
             $first  = clone $this->_first;
             $oneDay = new DateInterval('P1D');
@@ -297,13 +300,10 @@ class Calendar2_Helper_Rrule
         $datetime = clone $datetime;
 
         if ($this->_rrule['ORIGINAL_FREQ'] == 'WEEKLY' && !empty($this->_rrule['BYDAY'])) {
+            // Add $interval weeks first.
+            $datetime->add(new DateInterval('P' . $this->_rrule['INTERVAL'] . 'W'));
             $oneDay = new DateInterval('P1D');
             for ($i = 0; $i <= 7; $i++) {
-                $datetime->add($oneDay);
-                if ($datetime->getTimestamp > $this->_rrule['UNTIL']->getTimestamp()) {
-                    // The event doesn't occur any more.
-                    return null;
-                }
                 $day = strtoupper(substr($datetime->format('D'), 0, 2));
                 if (in_array($day, $this->_rrule['BYDAY'])) {
                     if (in_array($datetime, $this->_exceptions)) {
@@ -311,6 +311,12 @@ class Calendar2_Helper_Rrule
                     } else {
                         return $datetime;
                     }
+                }
+                $datetime->add($oneDay);
+                if (!is_null($this->_rrule['UNTIL'])
+                        && $datetime->getTimestamp() > $this->_rrule['UNTIL']->getTimestamp()) {
+                    // The event doesn't occur any more.
+                    return null;
                 }
             }
             throw new Exception('Unable to find next occurrence. Invalid BYDAY?');

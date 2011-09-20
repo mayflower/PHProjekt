@@ -49,7 +49,7 @@ class Calendar2_Models_CalendarInformation extends Phprojekt_ModelInformation_De
         $this->fillField('comments', 'Comments', 'textarea', 0, 4);
         $this->fillField('start', 'Start', 'datetime', 6, 5, array('required' => true));
         $this->fillField('end', 'End', 'datetime', 7, 6, array('required' => true));
-        $this->fillfield('occurrence', 'Occurrence', 'text', 0, 7); // The start time in UTC
+        $this->fillfield('occurrence', 'Occurrence', 'hidden', 0, 7); // The start time in UTC
         $this->fillField(
             'confirmationStatus',
             'Confirmation Status',
@@ -94,7 +94,7 @@ class Calendar2_Models_CalendarInformation extends Phprojekt_ModelInformation_De
     public function getInfo($order, $column)
     {
         $column = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($column);
-        $fields = $this->_getFields($this->_mapping[$order]);
+        $fields = $this->_getFields();
         $result = array();
 
         foreach ($fields as $field) {
