@@ -145,10 +145,6 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
                 $this->_createSqlFile();
             }
 
-            // Reset cache for modules
-            $moduleNamespace = new Zend_Session_Namespace('Phprojekt_Module_Module-_getCachedIds');
-            $moduleNamespace->unsetAll();
-
             return $this->id;
         } else {
             $errors = $this->getError();

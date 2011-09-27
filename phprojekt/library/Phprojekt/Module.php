@@ -73,12 +73,7 @@ class Phprojekt_Module
      */
     protected static function _getCachedIds()
     {
-        if (isset(self::$_cache) && null !== self::$_cache) {
-            return self::$_cache;
-        }
-
-        $cache = Phprojekt::getInstance()->getCache();
-        if ((self::$_cache = $cache->load(self::CACHE_ID)) === false) {
+        if (is_null(self::$_cache)) {
             // cache miss
             $db     = Phprojekt::getInstance()->getDb();
             $select = $db->select()
@@ -92,7 +87,6 @@ class Phprojekt_Module
                                                     'label'    => $row['label'],
                                                     'saveType' => $row['save_type']);
             }
-            $cache->save(self::$_cache);
         }
         return self::$_cache;
     }
