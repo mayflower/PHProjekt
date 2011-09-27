@@ -248,3 +248,6 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         dijit.byId('cumulativeCompletePercent').set('disabled', true);
     }
 });
+
+dojo.declare("phpr.Project.DialogForm", [phpr.Project.Form, phpr.Default.DialogForm], {
+});

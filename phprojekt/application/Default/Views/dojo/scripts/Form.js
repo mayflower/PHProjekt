@@ -20,6 +20,7 @@
  */
 
 dojo.provide("phpr.Default.Form");
+dojo.provide("phpr.Default.DialogForm");
 
 dojo.require("dijit.form.Button");
 dojo.require("dijit.layout.ContentPane");
@@ -55,7 +56,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    If the module is a param, is setted
         this.main = main;
         this.id   = id;
-        this.node = formContainer;
+
+        this.setNode(formContainer);
 
         if (undefined != params) {
             this._presetValues = params;
@@ -65,7 +67,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         // Put loading
         this.node.set('content', phpr.fillTemplate("phpr.Default.template.form.loading.html", {
-                webpath: phpr.webpath
+                webpath: phpr.webpath,
+                style: "height: 100%; width:100%;"
             }));
 
         this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
@@ -83,6 +86,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.inherited(arguments);
         this.node = null;
         this.form = null;
+    },
+
+    setNode: function(container) {
+        // Summary:
+        //    Set the node to render in
+        // Description:
+        //    Set the node to render in
+        this.node = container;
     },
 
     setUrl: function() {
@@ -311,6 +322,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             title: phpr.nls.get(title)
         });
 
+        dojo.style(tab.containerNode, 'height', '100%');
+        dojo.style(tab.containerNode, 'width', '100%');
+
         tab.set('content', html);
 
         this.garbageCollector.addNode(tab);
@@ -460,7 +474,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this.form        = this.setFormContent();
             this.formsWidget = [];
 
-            this.node.set('content', this.form.domNode);
+            this.node.set('content', this.form);
+
+            this.form.startup();
 
             var firstTab = true;
             for (var t in tabs) {
@@ -579,7 +595,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var tabContainer = new dijit.layout.TabContainer(
             {
                 style:   'height: 100%;',
-                useMenu: false
+                useMenu: false,
+                useSlider: false
             },
             dojo.create('div'));
 
@@ -648,6 +665,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 subModules[index]['class'].fillTab('tab' + subModuleName);
             }
         }
+        this.form.resize();
     },
 
     useHistoryTab: function() {
@@ -840,7 +858,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                                 // reload the page and trigger the form load
                                 phpr.pageManager.changeState({
                                         moduleName: phpr.module,
-                                        id: this.id,
                                         projectId: pid
                                     }, {
                                         forceModuleReload: true
@@ -1165,5 +1182,67 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return phpr.webpath + 'index.php/' + phpr.module + '/index/fileForm' +
             '/nodeId/' + phpr.currentProjectId + '/id/' + this.id + '/field/' +
             itemid + '/csrfToken/' + phpr.csrfToken;
+    }
+});
+
+dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
+    constructor: function() {
+    },
+
+    destroy: function() {
+        this.inherited(arguments);
+        this.dialog.destroyRecursive();
+        this.dialog = null;
+    },
+
+    setFormButtons: function() {
+        this.buttons.set('content', phpr.fillTemplate("phpr.Default.template.form.buttons.html", {
+                writePermissions:  this._writePermissions,
+                deletePermissions: this._deletePermissions,
+                saveText:          phpr.nls.get('Save'),
+                deleteText:        phpr.nls.get('Delete')
+            }));
+    },
+
+    setNode: function(container) {
+        this.node = new dijit.layout.ContentPane({style: "width: 100%; height: 100%;"});
+        this.buttons = new dijit.layout.ContentPane({style: "width: 100%; height: 40px;"});
+        this.dialog = new dijit.Dialog({style: "width: 80%; height: 80%;"});
+
+        this.dialog.show();
+
+        this.dialog.containerNode.appendChild(this.node.domNode);
+        this.dialog.containerNode.appendChild(this.buttons.domNode);
+
+        dojo.style(this.dialog.containerNode, {
+            height: '100%',
+            width: '100%'
+        });
+
+        this.node.startup();
+
+        // remove the form opening part from the url
+        this.garbageCollector.addEvent(
+            dojo.connect(this.dialog, "onHide",
+                dojo.hitch(this, function() {
+                    var oldstate = phpr.pageManager.getState();
+                    if (oldstate.id) {
+                        delete oldstate.id;
+                        phpr.pageManager.changeState(oldstate, {
+                            noAction: true
+                        });
+                    }
+                })));
+    },
+
+    postRenderForm: function() {
+        this.inherited(arguments);
+        var dialogBox = dojo.contentBox(this.dialog.domNode);
+        dojo.style(this.buttons.domNode, {
+            position: 'absolute',
+            top: dialogBox.h - 40 + 'px',
+            left: '10px',
+            zIndex: 10
+        });
     }
 });

@@ -21,5 +21,5 @@
 
 dojo.provide("phpr.Helpdesk.Form");
 
-dojo.declare("phpr.Helpdesk.Form", phpr.Default.Form, {
+dojo.declare("phpr.Helpdesk.Form", phpr.Default.DialogForm, {
 });

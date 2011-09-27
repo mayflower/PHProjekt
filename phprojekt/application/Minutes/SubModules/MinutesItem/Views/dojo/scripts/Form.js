@@ -39,6 +39,7 @@ dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
     },
 
     postRenderForm:function() {
+        this.inherited(arguments);
         // Have the appropriate input fields appear for each type
         var data = phpr.DataStore.getData({url: this._url});
         this._switchItemFormFields(data[0]['topicType']); // defaults

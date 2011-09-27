@@ -23,7 +23,7 @@ dojo.provide("phpr.Minutes.Form");
 
 dojo.require("dijit.Dialog");
 
-dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
+dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
     // Request url for get the data
     _peopleUrl: null,
 
@@ -101,6 +101,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
     postRenderForm:function() {
         // Summary:
         //    Keep the itemStatus value for future use
+        this.inherited(arguments);
         var data         = phpr.DataStore.getData({url: this._url});
         this._itemStatus = data[0].itemStatus;
     },

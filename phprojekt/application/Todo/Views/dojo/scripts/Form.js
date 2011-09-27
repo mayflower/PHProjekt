@@ -21,9 +21,10 @@
 
 dojo.provide("phpr.Todo.Form");
 
-dojo.declare("phpr.Todo.Form", phpr.Default.Form, {
+dojo.declare("phpr.Todo.Form", phpr.Default.DialogForm, {
 
     postRenderForm:function() {
+        this.inherited(arguments);
         var data = phpr.DataStore.getData({url: this._url});
         if (data.length > 0 && data[0]['id'] == 0) {
             dojo.connect(dijit.byId('projectId'), 'onChange', null, function() {

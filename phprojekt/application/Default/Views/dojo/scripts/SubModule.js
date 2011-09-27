@@ -257,10 +257,6 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
         this._url = this.main.setUrl('form', this.id);
     },
 
-    setNode: function() {
-        this._formNode = this.main.detailsBox;
-    },
-
     setPermissions: function(data) {
         this._writePermissions  = true;
         this._deletePermissions = true;
