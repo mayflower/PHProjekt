@@ -118,11 +118,6 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function saveRights($rights)
     {
-        // Delete the cache
-        $sessionName  = 'Phprojekt_Acl';
-        $aclNamespace = new Zend_Session_Namespace($sessionName);
-        $aclNamespace->unsetAll();
-
         foreach ($this->modulePermissions->fetchAll() as $relation) {
             $relation->delete();
         }
