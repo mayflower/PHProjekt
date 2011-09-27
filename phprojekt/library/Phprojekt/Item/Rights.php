@@ -74,16 +74,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
 
         foreach ($rights as $userId => $access) {
             $this->_saveRight($moduleId, $itemId, $userId, $access);
-            // Reset cache
-            $sessionName = 'Phprojekt_Item_Rights-getItemRight' . '-' . $moduleId . '-' . $itemId . '-' . $userId;
-            $rightPerUserNamespace = new Zend_Session_Namespace($sessionName);
-            $rightPerUserNamespace->unsetAll();
         }
-
-        // Reset access by module-item
-        $sessionName    = 'Phprojekt_Item_Rights-getUsersRights' . '-' . $moduleId . '-' . $itemId;
-        $rightNamespace = new Zend_Session_Namespace($sessionName);
-        $rightNamespace->unsetAll();
     }
 
     /**
@@ -180,27 +171,18 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      */
     public function getUsersRights($moduleId, $itemId)
     {
-        // Cache the query
-        $sessionName    = 'Phprojekt_Item_Rights-getUsersRights' . '-' . $moduleId . '-' . $itemId;
-        $rightNamespace = new Zend_Session_Namespace($sessionName);
-
-        if (!isset($rightNamespace->right)) {
-            $values = array();
-            $where  = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
-            $rows   = $this->fetchAll($where)->toArray();
-            foreach ($rows as $row) {
-                $access = Phprojekt_Acl::convertBitmaskToArray($row['access']);
-                $values[$row['user_id']] = array_merge($access, array(
-                    'moduleId' => (int) $moduleId,
-                    'itemId'   => (int) $itemId,
-                    'userId'   => (int) $row['user_id']
-                ));
-            }
-            $rightNamespace->right = $values;
-
+        $values = array();
+        $where  = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
+        $rows   = $this->fetchAll($where)->toArray();
+        foreach ($rows as $row) {
+            $access = Phprojekt_Acl::convertBitmaskToArray($row['access']);
+            $values[$row['user_id']] = array_merge($access, array(
+                'moduleId' => (int) $moduleId,
+                'itemId'   => (int) $itemId,
+                'userId'   => (int) $row['user_id']
+            ));
         }
-
-        return $rightNamespace->right;
+        return $values;
     }
 
     /**
