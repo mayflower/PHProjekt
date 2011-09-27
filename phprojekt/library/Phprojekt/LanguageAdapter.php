@@ -518,41 +518,34 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      */
     public static function getLanguageList()
     {
-        // Keep the list in the session
-        $sessionName           = 'Phprojekt_LanguageAdapter-getLanguageList';
-        $languageListNamespace = new Zend_Session_Namespace($sessionName);
-        if (!isset($languageListNamespace->list)) {
-            $reflect   = new ReflectionClass('Phprojekt_LanguageAdapter');
-            $constants = $reflect->getConstants();
-            $languages = array();
-            $locale    = new Zend_Locale();
-            $available = array();
+        $reflect   = new ReflectionClass('Phprojekt_LanguageAdapter');
+        $constants = $reflect->getConstants();
+        $languages = array();
+        $locale    = new Zend_Locale();
+        $available = array();
 
-            // Get all the languages files in Defualt module
-            $files = scandir(PHPR_CORE_PATH . '/Default/Languages');
-            foreach ($files as $file) {
-                if ($file != '.' && $file != '..') {
-                    $available[str_replace('.inc.php', '', $file)] = 1;
-                }
+        // Get all the languages files in Defualt module
+        $files = scandir(PHPR_CORE_PATH . '/Default/Languages');
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..') {
+                $available[str_replace('.inc.php', '', $file)] = 1;
             }
-
-            foreach ($constants as $value) {
-                if (strstr($value, 'inc.php')) {
-                    $value = str_replace('.inc.php', '', $value);
-
-                    // Show only the availables languages
-                    if (isset($available[$value])) {
-                        $zendValue = substr(self::_convertToZendLocale($value), 0, 2);
-                        $langName  = $locale->getTranslation($zendValue, 'language', 'en');
-
-                        $languages[$value] = $langName . " (" . $value . ")";
-                    }
-                }
-            }
-            asort($languages);
-            $languageListNamespace->list = $languages;
         }
 
-        return $languageListNamespace->list;
+        foreach ($constants as $value) {
+            if (strstr($value, 'inc.php')) {
+                $value = str_replace('.inc.php', '', $value);
+
+                // Show only the availables languages
+                if (isset($available[$value])) {
+                    $zendValue = substr(self::_convertToZendLocale($value), 0, 2);
+                    $langName  = $locale->getTranslation($zendValue, 'language', 'en');
+
+                    $languages[$value] = $langName . " (" . $value . ")";
+                }
+            }
+        }
+        asort($languages);
+        return $languages;
     }
 }
