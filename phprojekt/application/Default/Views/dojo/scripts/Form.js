@@ -104,7 +104,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             '/index/jsonDetail/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
     },
 
-    getInitData:function() {
+    getInitData: function() {
         // Summary:
         //    Process all the POST in cascade for get all the data from the server
         // Description:

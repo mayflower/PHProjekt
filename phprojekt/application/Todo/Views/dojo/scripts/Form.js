@@ -23,7 +23,7 @@ dojo.provide("phpr.Todo.Form");
 
 dojo.declare("phpr.Todo.Form", phpr.Default.DialogForm, {
 
-    postRenderForm:function() {
+    postRenderForm: function() {
         this.inherited(arguments);
         var data = phpr.DataStore.getData({url: this._url});
         if (data.length > 0 && data[0]['id'] == 0) {
@@ -60,7 +60,7 @@ dojo.declare("phpr.Todo.Form", phpr.Default.DialogForm, {
         });
     },
 
-    deleteFrom:function() {
+    deleteFrom: function() {
         phpr.Todo.Form.superclass.deleteForm.apply(this);
         phpr.DataStore.deleteDataPartialString({
             url: phpr.webpath + 'index.php/Project/index/jsonDetail'
