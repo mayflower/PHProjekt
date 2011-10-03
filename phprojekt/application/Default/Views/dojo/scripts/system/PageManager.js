@@ -116,8 +116,6 @@ dojo.declare("phpr.Default.System.PageManager", null, {
 
             var module = config.moduleName;
 
-            var oldmodule = phpr.module;
-
             var mod = this.getModule(module);
 
             var newProject = false;
@@ -154,7 +152,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             if ("undefined" != typeof config.id) {
                 // If is an id, open a form
                 if (module && (config.id > 0 || config.id === "0" || config.id === 0)) {
-                    if (module !== oldmodule || newProject) {
+                    if (module !== this.oldmodule || newProject) {
                         this._reloadModule(module, [ config ]);
                     }
                     if (dojo.isFunction(mod.openForm)) {
@@ -179,6 +177,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
                 if (!reloaded) { this._reloadModule(module, [ config ]); };
             }
 
+            this.oldmodule = module;
             this._activeModule = mod;
         }
     },
