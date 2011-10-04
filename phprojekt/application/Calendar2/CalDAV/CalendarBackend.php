@@ -148,7 +148,11 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         if (count($event) > 1) {
             throw new Sabre_DAV_Exception_NotImplemented('Cannot alter events with modified occurrences');
         }
-        $event[0]->fromVObject(Sabre_VObject_Reader::read($calendarData)->vevent);
+        $vevent = Sabre_VObject_Reader::read($calendarData)->vevent;
+        if (count($vevent) > 1) {
+            throw new Sabre_DAV_Exception_NotImplemented('Cannot update specific occurrences');
+        }
+        $event[0]->fromVObject($vevent);
         $event[0]->save();
     }
 
