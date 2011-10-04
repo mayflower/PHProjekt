@@ -31,7 +31,6 @@ dojo.declare("phpr.Calendar2.CalendarViewMixin", phpr.Default.System.ViewContent
     mixin: function() {
         this.inherited(arguments);
         this.view.clear = dojo.hitch(this, "clear");
-        this.view.clearDetails = dojo.hitch(this, "clearDetails");
         this.view.clearGridBox = dojo.hitch(this, "clearGridBox");
     },
     update: function() {
@@ -51,15 +50,9 @@ dojo.declare("phpr.Calendar2.CalendarViewMixin", phpr.Default.System.ViewContent
         }
 
         delete this.view.clear;
-        delete this.view.clearDetails;
         delete this.view.clearGridBox;
         this.mainContent.destroyRecursive();
         this.mainContent = null;
-    },
-    clearDetails: function() {
-        this.view.detailsBox.destroyDescendants();
-
-        return this.view;
     },
     clearGridBox: function() {
         this.view.gridBox.destroyDescendants();
@@ -67,7 +60,6 @@ dojo.declare("phpr.Calendar2.CalendarViewMixin", phpr.Default.System.ViewContent
         return this.view;
     },
     clear: function() {
-        this.clearDetails();
         this.clearGridBox();
 
         return this.view;
@@ -358,9 +350,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         //    This function opens a new Detail View
         this.preOpenForm();
         var view = phpr.viewManager.getView();
-        if (!view.detailsBox) {
-            this.reload();
-        }
 
         var params = {};
 
@@ -429,7 +418,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
 
         params.recurrenceId = recurrenceId || 0;
 
-        this.form = new this.formWidget(this, id, module, params, view.detailsBox);
+        this.form = new this.formWidget(this, id, module, params, null);
     },
 
     userSelfClick:function() {

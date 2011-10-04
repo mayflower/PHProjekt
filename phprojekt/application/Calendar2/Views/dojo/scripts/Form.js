@@ -21,7 +21,7 @@
 
 dojo.provide("phpr.Calendar2.Form");
 
-dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
+dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
     _multipleEvents:       null,
     _multipleParticipants: null,
     _owner:                null,
@@ -138,6 +138,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         //    User functions after render the form
         // Description:
         //    Apply for special events on the fields
+        this.inherited(arguments);
         startDate = dijit.byId('start_forDate');
         startTime = dijit.byId('start_forTime');
 
@@ -512,10 +513,11 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
     },
 
     showEventSelector: function(action, nextFunction) {
-        dojo.byId("eventSelectorContainer").innerHTML = '';
+        var view = phpr.viewManager.getView();
+        view.eventSelectorContainer.destroyDescendants();;
 
-        dojo.byId('eventSelectorTitle').innerHTML = phpr.nls.get(action + ' repeating events');
-        dijit.byId('eventSelectorDialog').set('title', phpr.nls.get('Calendar2'));
+        view.eventSelectorTitle.innerHTML = phpr.nls.get(action + ' repeating events');
+        view.eventSelectorDialog.set('title', phpr.nls.get('Calendar2'));
 
         // Add button for one event
         var params = {
@@ -523,10 +525,10 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
             alt:   phpr.nls.get(action + ' just this occurrence')
         };
         var singleEvent = new dijit.form.Button(params);
-        dojo.byId("eventSelectorContainer").appendChild(singleEvent.domNode);
+        view.eventSelectorContainer.domNode.appendChild(singleEvent.domNode);
         dojo.connect(singleEvent, "onClick", dojo.hitch(this, function() {
             this._multipleEvents = false;
-            dijit.byId('eventSelectorDialog').hide();
+            view.eventSelectorDialog.hide();
             eval('this.' + nextFunction + '()');
         }));
 
@@ -536,14 +538,14 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
             alt:   phpr.nls.get(action + ' all occurrences after this one')
         };
         var multipleEvent = new dijit.form.Button(params);
-        dojo.byId("eventSelectorContainer").appendChild(multipleEvent.domNode);
+        view.eventSelectorContainer.domNode.appendChild(multipleEvent.domNode);
         dojo.connect(multipleEvent, "onClick", dojo.hitch(this, function() {
             this._multipleEvents = true;
-            dijit.byId('eventSelectorDialog').hide();
+            view.eventSelectorDialog.hide();
             eval('this.' + nextFunction + '()');
         }));
 
-        dijit.byId('eventSelectorDialog').show();
+        view.eventSelectorDialog.show();
     },
 
     updateData: function() {
