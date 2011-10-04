@@ -286,10 +286,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function saveSingleEvent()
     {
-        if (!$this->rrule) {
-            return $this->save();
-        }
-
         if (!$this->recordValidate()) {
             $errors = $this->getError();
             $error  = array_pop($errors);
