@@ -18,7 +18,7 @@
                 <br />
                 {% for event in day.events %}
                 {{event.time|safe}}
-                <a href="javascript: dojo.publish('Calendar2.openForm', [{{event.id}}, 0, 0, 0, '{{event.start}}']);">
+                <a href="javascript: dojo.publish('Calendar2.openForm', [{{event.id}}, 0, 0, 0, '{{event.occurrence}}']);">
                     {{event.summary|safe}}
                 </a> {{event.warning|safe}}
                 <br />
