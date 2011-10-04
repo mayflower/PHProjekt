@@ -56,7 +56,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.main = main;
         this.id   = id;
 
-        this.setNode(formContainer);
+        this.setContainer(formContainer);
 
         if (undefined != params) {
             this._presetValues = params;
@@ -87,7 +87,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.form = null;
     },
 
-    setNode: function(container) {
+    setContainer: function(container) {
         // Summary:
         //    Set the node to render in
         // Description:
@@ -1220,7 +1220,7 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
             }));
     },
 
-    setNode: function(container) {
+    setContainer: function(container) {
         this.node = new dijit.layout.ContentPane({style: "width: 100%; height: 100%;"});
         this.buttons = new dijit.layout.ContentPane({style: "width: 100%; height: 40px;"});
         this.dialog = new dijit.Dialog({style: "width: 80%; height: 80%;"});

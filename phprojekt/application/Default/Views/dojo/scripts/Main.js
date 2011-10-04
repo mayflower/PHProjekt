@@ -497,7 +497,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 this,
                 phpr.currentProjectId,
                 gridBoxContainer,
-                this.config.includeSubentries == "true" || false);
+                this.config.includeSubentries == "true");
     },
 
     setGlobalModulesNavigation: function() {
@@ -671,7 +671,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
                 if (!phpr.isGlobalModule(this.module)) {
                     var isListRecursiveBox = new dijit.form.CheckBox({
-                        checked: this.config.includeSubentries == "true" || false
+                        checked: this.config.includeSubentries == "true"
                     });
                     phpr.viewManager.getView().rightButtonRow.set('content', isListRecursiveBox);
                     var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects?"));
