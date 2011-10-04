@@ -506,7 +506,12 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                new phpr.handleResponse('serverFeedback', data);
                if (data.type == 'success') {
                    this.publish("updateCacheData");
-                   this.publish("setUrlHash", [phpr.module]);
+                   // reload the page and trigger the form load
+                   phpr.pageManager.changeState({
+                       moduleName: this.main.module,
+                   }, {
+                       forceModuleReload: true
+                   });
                }
             })
         });
@@ -619,7 +624,12 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                             }
                             if (data.type == 'success') {
                                 this.publish("updateCacheData");
-                                this.publish("setUrlHash", [phpr.module]);
+                                // reload the page and trigger the form load
+                                phpr.pageManager.changeState({
+                                    moduleName: this.main.module,
+                                }, {
+                                    forceModuleReload: true
+                                });
                             }
                         })
                     });
