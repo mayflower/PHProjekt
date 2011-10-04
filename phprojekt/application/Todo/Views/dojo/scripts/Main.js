@@ -33,7 +33,8 @@ dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
     openForm:function(id, module) {
         // Summary:
         //    This function opens a new Detail View
-        var view = phpr.viewManager.useDefaultView();
+        this.preOpenForm();
+        var view = phpr.viewManager.useDefaultView({blank: true});
 
         if (!this.grid) {
             this.reload();

@@ -29,7 +29,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         dojo.subscribe("Project.basicData", this, "basicData");
 
         this.gridWidget          = phpr.Project.Grid;
-        this.formWidget          = phpr.Project.Form;
+        this.formWidget          = phpr.Project.DialogForm;
         this.formBasicDataWidget = phpr.Project.FormBasicData;
     },
 
@@ -76,14 +76,13 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
             params['startDate'] = phpr.date.getIsoDate(new Date());
         }
 
-        var view = phpr.viewManager.useDefaultView();
+        var view = phpr.viewManager.useDefaultView({blank: true});
 
         if (!this.grid) {
             this.reload();
         }
 
-        this.form = new this.formWidget(this, id, module, params,
-                view.detailsBox);
+        this.form = new this.formWidget(this, id, module, params, null);
     },
 
     updateCacheData:function() {

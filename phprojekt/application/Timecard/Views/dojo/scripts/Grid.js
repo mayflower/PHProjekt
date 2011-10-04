@@ -42,7 +42,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
         this._year  = date.getFullYear();
 
         this.setUrl();
-        this.setNode();
+        this.setContainer();
 
         // Render export Button
         this.setExportButton();
@@ -60,7 +60,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
             + (this._month + 1);
     },
 
-    setNode:function() {
+    setContainer:function() {
         // Summary:
         //    Set the node to put the grid
         // Description:

@@ -20,6 +20,7 @@
  */
 
 dojo.provide("phpr.Default.Form");
+dojo.provide("phpr.Default.DialogForm");
 
 dojo.require("dijit.form.Button");
 dojo.require("dijit.layout.ContentPane");
@@ -35,7 +36,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     sendData:           [],
     formdata:           [],
     _url:               null,
-    _formNode:          null,
     _writePermissions:  true,
     _deletePermissions: false,
     _accessPermissions: true,
@@ -55,7 +55,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    If the module is a param, is setted
         this.main = main;
         this.id   = id;
-        this.node = formContainer;
+
+        this.setContainer(formContainer);
 
         if (undefined != params) {
             this._presetValues = params;
@@ -65,7 +66,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         // Put loading
         this.node.set('content', phpr.fillTemplate("phpr.Default.template.form.loading.html", {
-                webpath: phpr.webpath
+                webpath: phpr.webpath,
+                style: "height: 100%; width:100%;"
             }));
 
         this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
@@ -85,6 +87,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.form = null;
     },
 
+    setContainer: function(container) {
+        // Summary:
+        //    Set the node to render in
+        // Description:
+        //    Set the node to render in
+        this.node = container;
+    },
+
     setUrl: function() {
         // Summary:
         //    Set the url for get the data
@@ -94,7 +104,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             '/index/jsonDetail/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
     },
 
-    getInitData:function() {
+    getInitData: function() {
         // Summary:
         //    Process all the POST in cascade for get all the data from the server
         // Description:
@@ -302,16 +312,25 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         phpr.destroyWidget(id);
         phpr.destroySubWidgets(formId);
         phpr.destroyWidget(formId);
-        var html = this.render(["phpr.Default.template.form", "tabs.html"], null, {
-            innerTabs: innerTabs,
-            formId:    formId || ''
-        });
+
+        var content = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.form.tabs.html",
+            templateData: {
+                innerTabs: innerTabs,
+                formId:    formId || ''
+            }});
+
         var tab = new dijit.layout.ContentPane({
             id:    id,
             title: phpr.nls.get(title)
         });
 
-        tab.set('content', html);
+        dojo.style(tab.containerNode, 'height', '100%');
+        dojo.style(tab.containerNode, 'width', '100%');
+
+        tab.set('content', content);
+
+        content.startup();
 
         this.garbageCollector.addNode(tab);
 
@@ -320,6 +339,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this.formsWidget.push(dijit.byId(formId));
             this.garbageCollector.addNode(dijit.byId(formId));
         }
+
+        content.tabform.onSubmit = dojo.hitch(this, "_submitForm");
     },
 
     getTabs: function() {
@@ -460,7 +481,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this.form        = this.setFormContent();
             this.formsWidget = [];
 
-            this.node.set('content', this.form.domNode);
+            this.node.set('content', this.form);
+
+            this.form.startup();
 
             var firstTab = true;
             for (var t in tabs) {
@@ -545,9 +568,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Summary:
         //    Connect the buttons to the actions
 
-        this.garbageCollector.addEvent(
-            dojo.connect(dijit.byId("submitButton"),
-                "onClick", dojo.hitch(this, "submitForm")));
+        dijit.byId("submitButton").onClick = dojo.hitch(this, "_submitForm");
 
         this.garbageCollector.addEvent(
             dojo.connect(dijit.byId("deleteButton"),
@@ -579,7 +600,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var tabContainer = new dijit.layout.TabContainer(
             {
                 style:   'height: 100%;',
-                useMenu: false
+                useMenu: false,
+                useSlider: false
             },
             dojo.create('div'));
 
@@ -648,6 +670,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 subModules[index]['class'].fillTab('tab' + subModuleName);
             }
         }
+        this.form.resize();
     },
 
     useHistoryTab: function() {
@@ -804,14 +827,25 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return true;
     },
 
-    submitForm: function() {
+    _submitForm: function(evt) {
+        // Summary:
+        //    Event handler for submit events
+        // Description:
+        //    Triggers submitForm and prevents the event from bubbeling upwards
+        var ret = this.submitForm(evt);
+        dojo.stopEvent(evt);
+        return ret || false;
+    },
+
+    submitForm: function(evt) {
         // Summary:
         //    This function is responsible for submitting the formdata
         // Description:
         //    This function sends the form data as json data to the server
         //    and call the reload routine
+
         if (!this.prepareSubmission()) {
-            return false;
+            return;
         }
 
         var pid = phpr.currentProjectId;
@@ -823,10 +857,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                 new phpr.handleResponse('serverFeedback', data);
-                if (data.id) {
-                    this.id = data.id;
-                }
                 if (data.type == 'success') {
+                    if (data.id) {
+                        this.id = data.id;
+                    }
                     phpr.send({
                         url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' +
                             phpr.module + '/id/' + this.id,
@@ -840,7 +874,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                                 // reload the page and trigger the form load
                                 phpr.pageManager.changeState({
                                         moduleName: phpr.module,
-                                        id: this.id,
                                         projectId: pid
                                     }, {
                                         forceModuleReload: true
@@ -1165,5 +1198,67 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return phpr.webpath + 'index.php/' + phpr.module + '/index/fileForm' +
             '/nodeId/' + phpr.currentProjectId + '/id/' + this.id + '/field/' +
             itemid + '/csrfToken/' + phpr.csrfToken;
+    }
+});
+
+dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
+    constructor: function() {
+    },
+
+    destroy: function() {
+        this.inherited(arguments);
+        this.dialog.destroyRecursive();
+        this.dialog = null;
+    },
+
+    setFormButtons: function() {
+        this.buttons.set('content', phpr.fillTemplate("phpr.Default.template.form.buttons.html", {
+                writePermissions:  this._writePermissions,
+                deletePermissions: this._deletePermissions,
+                saveText:          phpr.nls.get('Save'),
+                deleteText:        phpr.nls.get('Delete')
+            }));
+    },
+
+    setContainer: function(container) {
+        this.node = new dijit.layout.ContentPane({style: "width: 100%; height: 100%;"});
+        this.buttons = new dijit.layout.ContentPane({style: "width: 100%; height: 40px;"});
+        this.dialog = new dijit.Dialog({style: "width: 80%; height: 80%;"});
+
+        this.dialog.show();
+
+        this.dialog.containerNode.appendChild(this.node.domNode);
+        this.dialog.containerNode.appendChild(this.buttons.domNode);
+
+        dojo.style(this.dialog.containerNode, {
+            height: '100%',
+            width: '100%'
+        });
+
+        this.node.startup();
+
+        // remove the form opening part from the url
+        this.garbageCollector.addEvent(
+            dojo.connect(this.dialog, "onHide",
+                dojo.hitch(this, function() {
+                    var oldstate = phpr.pageManager.getState();
+                    if (oldstate.id) {
+                        delete oldstate.id;
+                        phpr.pageManager.changeState(oldstate, {
+                            noAction: true
+                        });
+                    }
+                })));
+    },
+
+    postRenderForm: function() {
+        this.inherited(arguments);
+        var dialogBox = dojo.contentBox(this.dialog.domNode);
+        dojo.style(this.buttons.domNode, {
+            position: 'absolute',
+            top: dialogBox.h - 40 + 'px',
+            left: '10px',
+            zIndex: 10
+        });
     }
 });

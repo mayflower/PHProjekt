@@ -36,7 +36,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
     _FRMWIDG_PARTICIP:   1,
     _FRMWIDG_RECURRENCE: 2,
 
-    initData:function() {
+    initData: function() {
         // Get all the active users
         this.userStore = new phpr.Default.System.Store.User();
         this._initData.push({'store': this.userStore});
@@ -47,7 +47,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         this._initData.push({'url': this._tagUrl});
     },
 
-    setPermissions:function(data) {
+    setPermissions: function(data) {
         if (this.id > 0) {
             this._accessPermissions = true;
             this._writePermissions  = true;
@@ -55,7 +55,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         }
     },
 
-    prepareSubmission:function() {
+    prepareSubmission: function() {
         if (!this.inherited(arguments)) {
             return false;
         }
@@ -118,7 +118,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         return true;
     },
 
-    addModuleTabs:function(data) {
+    addModuleTabs: function(data) {
         this._owner = true;
         if (this.id > 0) {
             this._owner = data[0]["rights"]["currentUser"]["admin"];
@@ -133,7 +133,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         this.addHistoryTab();
     },
 
-    postRenderForm:function() {
+    postRenderForm: function() {
         // Summary:
         //    User functions after render the form
         // Description:
@@ -163,7 +163,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         }
     },
 
-    startDateBlur:function() {
+    startDateBlur: function() {
         // Summary:
         //    Checks whether to change the End date according to the modification of Start date
         // Description:
@@ -187,7 +187,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         }
     },
 
-    startTimeBlur:function() {
+    startTimeBlur: function() {
         // Summary:
         //    Checks whether to change the End time according to the modification of Start time
         // Description:
@@ -215,7 +215,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         }
     },
 
-    addParticipantsTab:function(data) {
+    addParticipantsTab: function(data) {
         // Summary:
         //    Participants tab
         // Description:
@@ -308,7 +308,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         }
     },
 
-    newParticipant:function() {
+    newParticipant: function() {
         // Summary:
         //    Add a new row of one participant
         // Description:
@@ -350,7 +350,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         }
     },
 
-    updateAvailabilityStatus:function(userId) {
+    updateAvailabilityStatus: function(userId) {
         cell = dojo.byId('participantAvailabilityIndicator' + userId);
         if (!cell) {
             return
@@ -377,7 +377,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         })
      },
 
-    updateAllAvailabilityStatuses:function(userId) {
+    updateAllAvailabilityStatuses: function(userId) {
         dojo.query('[id^=participantAvailabilityIndicator]').forEach(
             function(node) {
                 this.updateAvailabilityStatus(
@@ -388,7 +388,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         );
     },
 
-    deleteParticipant:function(userId) {
+    deleteParticipant: function(userId) {
         // Summary:
         //    Remove the row of one participant
         // Description:
@@ -403,7 +403,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         this._participantsInTab -= 1;
     },
 
-    addRecurrenceTab:function(data) {
+    addRecurrenceTab: function(data) {
         // Summary:
         //    Adds a tab for recurrence
         // Description:
@@ -479,7 +479,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         this.addTab(recurrenceTab, 'tabRecurrence', 'Recurrence', 'recurrenceTab');
     },
 
-    deleteForm:function() {
+    deleteForm: function() {
         // Summary:
         //    This function is responsible for deleting a dojo element
         // Description:
@@ -511,7 +511,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         });
     },
 
-    showEventSelector:function(action, nextFunction) {
+    showEventSelector: function(action, nextFunction) {
         dojo.byId("eventSelectorContainer").innerHTML = '';
 
         dojo.byId('eventSelectorTitle').innerHTML = phpr.nls.get(action + ' repeating events');
@@ -546,7 +546,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         dijit.byId('eventSelectorDialog').show();
     },
 
-    updateData:function() {
+    updateData: function() {
         this.inherited(arguments);
 
         // Delete the cache of the 3 urls for every related event?
@@ -560,7 +560,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         phpr.DataStore.deleteData({url: this._relatedDataUrl});
     },
 
-    updateCacheIds:function() {
+    updateCacheIds: function() {
         // Summary:
         //    This function deletes the cache of the 3 urls for the ids stored in _updateCacheIds
         for (idPos in this._updateCacheIds) {
@@ -575,7 +575,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
         }
     },
 
-    setUrl:function(params) {
+    setUrl: function(params) {
         this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/'
                   + phpr.currentProjectId + '/id/' + this.id + '/occurrence/' + params.recurrenceId;
     },
@@ -584,12 +584,13 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
     // returned from the server to store the tags, not the original id.
     // This is because the save could result in the event being represented by
     // another line in the db than before.
-    submitForm:function() {
+    submitForm: function(evt) {
         // Summary:
         //    This function is responsible for submitting the formdata
         // Description:
         //    This function sends the form data as json data to the server
         //    and call the reload routine
+
         if (!this.prepareSubmission()) {
             return false;
         }
@@ -623,9 +624,11 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.Form, {
                 }
             })
         });
+
+        return false;
     },
 
-    getFormData:function() {
+    getFormData: function() {
         // Summary:
         //    Override this method to save whether we have a recurrence set on
         //    the server.

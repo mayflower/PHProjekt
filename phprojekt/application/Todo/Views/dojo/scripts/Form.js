@@ -21,9 +21,10 @@
 
 dojo.provide("phpr.Todo.Form");
 
-dojo.declare("phpr.Todo.Form", phpr.Default.Form, {
+dojo.declare("phpr.Todo.Form", phpr.Default.DialogForm, {
 
-    postRenderForm:function() {
+    postRenderForm: function() {
+        this.inherited(arguments);
         var data = phpr.DataStore.getData({url: this._url});
         if (data.length > 0 && data[0]['id'] == 0) {
             dojo.connect(dijit.byId('projectId'), 'onChange', null, function() {
@@ -51,14 +52,15 @@ dojo.declare("phpr.Todo.Form", phpr.Default.Form, {
         }
     },
 
-    submitForm:function() {
-        phpr.Todo.Form.superclass.submitForm.apply(this);
+    submitForm: function(evt) {
+        this.inherited(arguments);
+
         phpr.DataStore.deleteDataPartialString({
             url: phpr.webpath + 'index.php/Project/index/jsonDetail'
         });
     },
 
-    deleteFrom:function() {
+    deleteFrom: function() {
         phpr.Todo.Form.superclass.deleteForm.apply(this);
         phpr.DataStore.deleteDataPartialString({
             url: phpr.webpath + 'index.php/Project/index/jsonDetail'

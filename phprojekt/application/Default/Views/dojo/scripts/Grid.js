@@ -52,10 +52,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     gridFilters:   null,
     includeSubentries: false,
 
-    // rowId of the currently open form
-    // Used to prevent double-opening of a form
-    _openForm:     null,
-
     // Grid cookies
     _sortColumnCookie: null,
     _sortAscCookie:    null,
@@ -1251,10 +1247,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             if (openForm && !this.grid.edit.isEditing()) {
                 var item  = this.grid.getItem(e.rowIndex);
                 var rowId = this.grid.store.getValue(item, 'id');
-                if (rowId != this._openForm) {
-                    this._openForm = rowId;
-                    this.getLinkForEdit(rowId);
-                }
+                this.getLinkForEdit(rowId);
             }
         }
     },
@@ -1264,7 +1257,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    Return the link for open the form
         // Description:
         //    Return the link for open the form
-        this.main.setUrlHash(phpr.module, id);
+        var state = phpr.pageManager.getState();
+        state.id = id;
+        phpr.pageManager.changeState(state);
     },
 
     checkCanEdit: function(inCell, inRowIndex) {

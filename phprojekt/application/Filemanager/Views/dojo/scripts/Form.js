@@ -21,5 +21,5 @@
 
 dojo.provide("phpr.Filemanager.Form");
 
-dojo.declare("phpr.Filemanager.Form", phpr.Default.Form, {
+dojo.declare("phpr.Filemanager.Form", phpr.Default.DialogForm, {
 });

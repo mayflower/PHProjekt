@@ -356,6 +356,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
                       /*String*/ startTime, /*String*/ recurrenceId) {
         // Summary:
         //    This function opens a new Detail View
+        this.preOpenForm();
         var view = phpr.viewManager.getView();
         if (!view.detailsBox) {
             this.reload();
