@@ -23,7 +23,7 @@ dojo.provide("phpr.Module.Form");
 
 dojo.require("dijit.Dialog");
 
-dojo.declare("phpr.Module.Form", phpr.Core.Form, {
+dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
     _dialog: null,
 
     initData:function() {
@@ -91,6 +91,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     },
 
     postRenderForm:function() {
+        this.inherited(arguments);
         // Add onBlur to the label field for update the tableName
         dojo.connect(dojo.byId('label'), "onchange",  dojo.hitch(this, "updateDesignerData"));
     },

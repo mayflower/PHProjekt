@@ -21,7 +21,7 @@
 
 dojo.provide("phpr.Administration.Form");
 
-dojo.declare("phpr.Administration.Form", phpr.Core.Form, {
+dojo.declare("phpr.Administration.Form", phpr.Core.DialogForm, {
     setBreadCrumbItem:function() {
         phpr.BreadCrumb.setItem(phpr.nls.get(phpr.submodule));
     }

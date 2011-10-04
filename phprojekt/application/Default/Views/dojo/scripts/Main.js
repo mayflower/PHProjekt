@@ -230,7 +230,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.preOpenForm();
 
         if (!this.grid) {
-            this.reload();
+            this.reload(this.config);
         }
 
         this.form = new this.formWidget(this, id, module, {}, phpr.viewManager.getView().detailsBox);
@@ -770,8 +770,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 phpr.currentProjectId = phpr.rootProjectId;
                 if (params && params.length > 0) {
                     // GlobalModule,Module,id,xx (Open form for edit in Adminisration)
-                    config.moduleName = params.shift();
-                    config.globalModuleName = module;
+                    config.action = params.shift();
+                    config.moduleName = module;
                     config.id = id;
                 } else {
                     // GlobalModule,id,xx (Open form for edit in global modules)
@@ -789,12 +789,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 phpr.currentProjectId = phpr.rootProjectId;
                 if (params && params.length > 0) {
                     // GlobalModule,Module,id,xx (Open form for add in Adminisration)
-                    config.globalModuleName = module;
-                    config.moduleName = params.shift();
+                    config.moduleName = module;
+                    config.action = params.shift();
                     config.id = 0;
                 } else {
                     // GlobalModule,id,xx (Open a form for add in global modules)
-                    config.moduleName = params.shift();
+                    config.moduleName = module;
                     config.id = 0;
                 }
             }
@@ -842,7 +842,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Summary:
         //     Check the action params and run the correct function
         //     reload is the default, but each function can redefine it
-        this.reload();
+        this.reload(this.config);
     },
 
     newEntry: function() {
@@ -1123,7 +1123,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             url: this._langUrl,
             processData: dojo.hitch(this, function() {
                 phpr.nls = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
-                this.reload();
+                this.reload(this.config);
             })
         });
     },

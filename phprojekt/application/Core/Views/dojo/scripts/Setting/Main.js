@@ -47,11 +47,5 @@ dojo.declare("phpr.Setting.Main", phpr.Core.Main, {
         phpr.module       = this.module;
         phpr.submodule    = module;
         phpr.parentmodule = 'Setting';
-    },
-
-    processActionFromUrlHash:function(data) {
-        if (data.action) {
-            dojo.publish(this.module + ".reload", [data.action]);
-        }
     }
 });

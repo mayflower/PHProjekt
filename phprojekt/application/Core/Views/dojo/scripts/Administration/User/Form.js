@@ -19,7 +19,7 @@
 
 dojo.provide("phpr.User.Form");
 
-dojo.declare("phpr.User.Form", phpr.Core.Form, {
+dojo.declare("phpr.User.Form", phpr.Core.DialogForm, {
     setPermissions:function(data) {
         this._writePermissions = true;
         // users can't be deleted
