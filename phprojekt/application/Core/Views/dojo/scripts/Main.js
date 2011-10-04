@@ -321,5 +321,8 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         //    Function for be rewritten
         // Description:
         //    Function for be rewritten
+        if (this.isSystemModule(this.action)) {
+            this.setNewEntry();
+        }
     }
 });

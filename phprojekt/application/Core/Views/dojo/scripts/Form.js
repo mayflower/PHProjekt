@@ -110,7 +110,17 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
-                    this.publish("setUrlHash", [this.main.module, null, [this.main.action]]);
+
+                    // remove the item id, because we just deleted it
+                    if (this.main.config.id) {
+                        delete this.main.config.id;
+                    }
+
+                    phpr.pageManager.changeState(
+                        this.main.config, {
+                            forceModuleReload: true
+                        }
+                    );
                 }
             })
         });

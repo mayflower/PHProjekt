@@ -794,7 +794,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     config.id = 0;
                 } else {
                     // GlobalModule,id,xx (Open a form for add in global modules)
-                    config.moduleName = params.shift();
+                    config.moduleName = module;
                     config.id = 0;
                 }
             }
