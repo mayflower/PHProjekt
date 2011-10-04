@@ -973,9 +973,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $vobject->add('exdate', implode(',', $exdates));
             }
         }
-        $start = new DateTime($this->start);
+        $start = new Datetime('@' . Phprojekt_Converter_Time::userToUtc($this->start));
         $vobject->add('dtstart', $start->format('Ymd\THis\Z'));
-        $end = new DateTime($this->end);
+        $end = new Datetime('@' . Phprojekt_Converter_Time::userToUtc($this->end));
         $vobject->add('dtend', $end->format('Ymd\THis\Z'));
         $lastMod = new DateTime($this->lastModified);
         $vobject->add('dtstamp', $lastMod->format('Ymd\THis\Z'));
