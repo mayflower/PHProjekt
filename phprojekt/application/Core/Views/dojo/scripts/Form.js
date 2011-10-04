@@ -28,7 +28,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         // Description:
         //    Rewritten the function for work like a system module and like a form
         if (this.main.isSystemModule(this.main.action)) {
-            this._url = phpr.webpath + 'index.php/Core/' + this.main.action.toLowerCase() + '/jsonDetail/nodeId/1/id/'
+            this._url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonDetail/nodeId/1/id/'
                 + this.id;
         } else {
             this._url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonDetail/nodeId/1/'

@@ -161,34 +161,37 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
 
         this.config = config || {};
 
-        var module     = this.config.action;
-            summaryTxt = '';
+        var module = this.config.moduleName;
 
-        this.action = module;
+        this.action = config.action;
 
         this.destroy();
         this.defineModules(module);
         this.cleanPage();
-
-        if (!this.isSystemModule(this.module) && !module) {
-                summaryTxt = this.getSummary();
-        }
-
-        var view = phpr.viewManager.setView(phpr.Default.System.DefaultView, phpr.Core.ViewMixin, {
-                summaryTxt: summaryTxt
-            });
 
         phpr.tree.fadeOut();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
         phpr.tree.loadTree();
-        if (this.isSystemModule(module)) {
+
+        if (this.isSystemModule(config.action)) {
+            config.moduleName = config.action;
+            delete config.action;
+            phpr.pageManager.changeState(config);
+        } else if (this.isSystemModule(module)) {
             var updateUrl = phpr.webpath + 'index.php/Core/' + module.toLowerCase() + '/jsonSaveMultiple/nodeId/1';
-            view = phpr.viewManager.useDefaultView({blank: true}).clear();
+            var view = phpr.viewManager.useDefaultView({blank: true}).clear();
             this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId, view.centerMainContent);
-        } else if (module) {
-            this.form = new this.formWidget(this, 0, this.module, null, view.detailsBox);
+        } else {
+            var summaryTxt = this.getSummary();
+            var view = phpr.viewManager.setView(phpr.Default.System.DefaultView, phpr.Core.ViewMixin, {
+                summaryTxt: summaryTxt
+            });
+
+            if (this.config.action) {
+                this.form = new this.formWidget(this, 0, this.module, null, view.detailsBox);
+            }
         }
     },
 
@@ -277,29 +280,32 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
 
         // Module name
         if (data.action) {
+            var module = null;
             if (this.isSystemModule(data.moduleName)) {
-                var module    = data.moduleName;
-                this.delegateToSystemModule();
+                module    = data.moduleName;
             } else {
-                var module    = this.module;
+                module    = this.module;
+            }
+
+            var config = {
+                moduleName: module,
+                action: data.action
+            };
+
+            if (this.isSystemModule(data.moduleName)) {
+                config.parentModule = this.module;
             }
 
             if (data.id) {
                 // If is an id, open a form
                 if (subModule && (data.id > 0 || data.id == 0)) {
-                    phpr.pageManager.changeState({
-                        moduleName: module,
-                        action: data.action,
-                        id: data.id
-                    })
+                    config.id = data.id;
+                    phpr.pageManager.changeState(config);
                 }
             } else if (this.action != data.action) {
                 this.action = data.action;
-                phpr.pageManager.changeState({
-                        moduleName: module,
-                        action: data.action
-                    }, {
-                        forceModuleReload: true
+                phpr.pageManager.changeState(config, {
+                    forceModuleReload: true
                 });
             }
         }
@@ -321,8 +327,5 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         //    Function for be rewritten
         // Description:
         //    Function for be rewritten
-        if (this.isSystemModule(this.action)) {
-            this.setNewEntry();
-        }
     }
 });

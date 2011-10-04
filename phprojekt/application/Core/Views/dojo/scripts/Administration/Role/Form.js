@@ -21,7 +21,7 @@
 
 dojo.provide("phpr.Role.Form");
 
-dojo.declare("phpr.Role.Form", phpr.Core.Form, {
+dojo.declare("phpr.Role.Form", phpr.Core.DialogForm, {
     roleModuleAccessStore: null,
 
     initData:function() {
