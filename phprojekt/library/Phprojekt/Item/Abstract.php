@@ -465,4 +465,22 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $this->_rights->saveRights(Phprojekt_Module::getId($this->getModelName()), $this->id, $rights);
     }
+
+    /**
+     * Returns all users with the given right.
+     *
+     * @param int  $rights The bitmask with rights. (ORed constants from Phprojekt_Acl.) Any rights if omitted or null.
+     * @param bool $exact  Only return users with these exact rights. Defaults to false if omitted.
+     *
+     * @return array of User The users with the given right.
+     */
+    public function getUsersWithRights($rights = null, $exact = false) {
+        return $this->_rights->getUsersWithRight(
+            Phprojekt_Module::getId($this->getModelName()),
+            $this->id,
+            $rights,
+            $exact
+        );
+    }
+
 }
