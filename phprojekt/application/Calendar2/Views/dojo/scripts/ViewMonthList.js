@@ -73,10 +73,11 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
 
         // All done, let's render the template
 
-        phpr.viewManager.getView().gridBox.set('content', phpr.fillTemplate("phpr.Calendar2.template.monthList.html", {
-                widthTable: this._widthTable,
-                header:     this._header,
-                schedule:   this._schedule
+        phpr.viewManager.getView().gridContainer.set('content',
+                phpr.fillTemplate("phpr.Calendar2.template.monthList.html", {
+                    widthTable: this._widthTable,
+                    header: this._header,
+                    schedule: this._schedule
             }));
 
         dojo.publish('Calendar2.connectMouseScroll');

@@ -31,7 +31,6 @@ dojo.declare("phpr.Calendar2.CalendarViewMixin", phpr.Default.System.ViewContent
     mixin: function() {
         this.inherited(arguments);
         this.view.clear = dojo.hitch(this, "clear");
-        this.view.clearGridBox = dojo.hitch(this, "clearGridBox");
     },
     update: function() {
         this.inherited(arguments);
@@ -50,18 +49,10 @@ dojo.declare("phpr.Calendar2.CalendarViewMixin", phpr.Default.System.ViewContent
         }
 
         delete this.view.clear;
-        delete this.view.clearGridBox;
         this.mainContent.destroyRecursive();
         this.mainContent = null;
     },
-    clearGridBox: function() {
-        this.view.gridBox.destroyDescendants();
-
-        return this.view;
-    },
     clear: function() {
-        this.clearGridBox();
-
         return this.view;
     },
     _clearCenterMainContent: function() {
@@ -77,7 +68,7 @@ dojo.declare("phpr.Calendar2.CalendarViewMixin", phpr.Default.System.ViewContent
         this.mainContent = mainContent;
 
         this.view.centerMainContent.set('content', mainContent);
-        mainContent.startup();
+        this.mainContent.startup();
 
         // mix in all template attach points, we don't need to be picky here
         for (var id in mainContent._attachPoints) {
@@ -177,7 +168,13 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.setNewEntry();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
             + phpr.currentProjectId;
-        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId, phpr.viewManager.getView().gridBox);
+        this.destroyGrid();
+        var gridBoxContainer = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.GridBox.html"
+        });
+        phpr.viewManager.getView().gridContainer.set('content', gridBoxContainer);
+        gridBoxContainer.startup();
+        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId, gridBoxContainer);
         this.setSubmoduleNavigation();
         this.setScheduleBar(false, false);
         this._actionPending = false;
@@ -620,7 +617,8 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         if (mainBar) {
             if (!dijit.byId('scheduleBar')) {
                 var scheduleBar = new dijit.layout.ContentPane({id: 'scheduleBar', region:'top',
-                                                                style:'height: 6%; overflow: hidden;'});
+                                                                style:'height: 6%; overflow: hidden;'},
+                                                                dojo.create('div'));
                 // This should be here, and not in the scheduleBar definition, to avoid a bug on IE
                 scheduleBar.set('class', 'prepend-0 append-0');
             } else {
@@ -710,7 +708,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     connectMouseScroll:function() {
         // Summary
         //    Makes the connection between the Grid event for Mouse Wheel Scroll, and the 'scrollDone' function
-        var grid = phpr.viewManager.getView().gridBox.domNode;
+        var grid = phpr.viewManager.getView().gridContainer.domNode;
 
         this._scrollConnection = dojo.connect(grid, (!dojo.isMozilla ? "onmousewheel" : "DOMMouseScroll"), function(e){
            // except the direction is REVERSED, and the event isn't normalized! one more line to normalize that:
@@ -728,7 +726,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     connectViewResize:function() {
         // Summary:
         //    Connects the resize event of the Grid box to its appropriate function. Used in Day, Week and Month views
-        var gridBox = phpr.viewManager.getView().gridBox;
+        var gridBox = phpr.viewManager.getView().gridContainer;
         this._resizeConnection = dojo.connect(gridBox, 'resize',  dojo.hitch(this, "gridResized"));
     },
 
@@ -748,7 +746,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         // Summary
         //    Called whenever the user scrolls the mouse wheel over the grid. Detects whether to interpret it as a
         // request for changing to previous or next day/week/month grid.
-        var grid   = phpr.viewManager.getView().gridBox.domNode;
+        var grid   = phpr.viewManager.getView().gridContainer.domNode;
 
         // Scrolled UP or DOWN?
         if (scrollValue > 0) {

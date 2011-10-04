@@ -956,7 +956,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         //    The first time this function is called (on class load) sets / updates class variables of div sizes,
         //    steps, limits, etc. and updates sizes of the eventsArea and events on screen.
         //    The following times does the same things only if the gridBox width has changed.
-        var gridBox          = phpr.viewManager.getView().gridBox;
+        var gridBox          = phpr.viewManager.getView().gridContainer;
         var gridBoxWidth     = dojo.style(gridBox.domNode, "width");
         var calendarSchedule = dojo.byId('calendarSchedule');
         var calenSchedWidth  = dojo.style(calendarSchedule, "width");

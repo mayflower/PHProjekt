@@ -70,7 +70,7 @@ dojo.declare("phpr.Calendar2.ViewDayListSelf", phpr.Calendar2.DefaultView, {
         // All done, let's render the template
         ;
 
-        phpr.viewManager.getView().gridBox.set('content',
+        phpr.viewManager.getView().gridContainer.set('content',
             phpr.fillTemplate("phpr.Calendar2.template.dayListSelf.html", {
                 widthTable:           this._widthTable,
                 widthHourColumn:      this._widthHourColumn,
