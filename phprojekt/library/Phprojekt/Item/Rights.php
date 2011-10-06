@@ -86,11 +86,6 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $sessionName    = 'Phprojekt_Item_Rights-getUsersRights' . '-' . $moduleId . '-' . $itemId;
         $rightNamespace = new Zend_Session_Namespace($sessionName);
         $rightNamespace->unsetAll();
-
-        // Reset users by module-item
-        $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-' . $moduleId . '-' . $itemId;
-        $rightNamespace = new Zend_Session_Namespace($sessionName);
-        $rightNamespace->unsetAll();
     }
 
     /**
@@ -293,20 +288,12 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      */
     public function getUsersWithRight($moduleId, $itemId)
     {
-        // Cache the query
-        $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-' . $moduleId . '-' . $itemId;
-        $rightNamespace = new Zend_Session_Namespace($sessionName);
-
-        if (!isset($rightNamespace->right)) {
-            $values = array();
-            $where  = sprintf('module_id = %d AND item_id = %d AND access > 0', (int) $moduleId, (int) $itemId);
-            $rows   = $this->fetchAll($where)->toArray();
-            foreach ($rows as $row) {
-                $values[] = $row['user_id'];
-            }
-            $rightNamespace->right = $values;
+        $values = array();
+        $where  = sprintf('module_id = %d AND item_id = %d AND access > 0', (int) $moduleId, (int) $itemId);
+        $rows   = $this->fetchAll($where)->toArray();
+        foreach ($rows as $row) {
+            $values[] = $row['user_id'];
         }
-
-        return $rightNamespace->right;
+        return $values;
     }
 }
