@@ -93,9 +93,9 @@ class Calendar2_Models_Notification extends Phprojekt_Notification
      *
      * @return array Array with 'field', 'label' and 'value'.
      */
-    public function getBodyFields()
+    public function getBodyFields($lang)
     {
-        $fields = parent::getBodyFields();
+        $fields = parent::getBodyFields($lang);
 
         foreach ($fields as $k => $f) {
             if ($f['field'] == 'occurrence' || $f['field'] == 'rrule' || $f['field'] == 'confirmationStatuses') {
