@@ -68,9 +68,8 @@ class Project_IndexController extends IndexController
         $this->setCurrentProjectId();
 
         if (empty($id)) {
-            $model     = $this->getModelObject();
-            $model->id = 0;
-            $message   = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+            $model   = $this->getModelObject();
+            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
         } else {
             $model   = $this->getModelObject()->find($id);
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
