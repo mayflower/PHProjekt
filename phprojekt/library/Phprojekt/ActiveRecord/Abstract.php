@@ -362,6 +362,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function __set($varname, $value)
     {
+        if ($varname === 'id') {
+            throw new Phprojekt_ActiveRecord_Exception('Changing ids is not permitted');
+        }
         $setter = 'set' . ucfirst($varname);
 
         if (method_exists($this, $setter)) {
