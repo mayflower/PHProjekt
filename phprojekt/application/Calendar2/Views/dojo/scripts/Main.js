@@ -94,7 +94,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     SCROLL_DOWN: -1,
     SCROLL_DELAY: 12,
 
-    constructor:function() {
+    constructor: function() {
         this.module = "Calendar2";
         this.loadFunctions(this.module);
         dojo.subscribe(this.module + ".showFormFromList", this, "showFormFromList");
@@ -127,21 +127,21 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         var view = phpr.viewManager.getView().clear();
     },
 
-    renderTemplate:function() {
+    renderTemplate: function() {
         // Summary:
         //   Custom renderTemplate for calendar
         var view = phpr.viewManager.setView(phpr.Default.System.DefaultView,
                 phpr.Calendar2.CalendarViewMixin, {}).clear();
     },
 
-    setWidgets:function() {
+    setWidgets: function() {
         // Summary:
         //   Custom setWidgets for calendar
         phpr.tree.loadTree();
         this.loadAppropriateList();
     },
 
-    loadAppropriateList:function() {
+    loadAppropriateList: function() {
         // Summary:
         //    Loads the appropriate list of events
         if (this.dayListSelf) {
@@ -158,7 +158,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    loadGrid:function() {
+    loadGrid: function() {
         // Summary:
         //   This function loads the Dojo Grid
         this.scrollDisconnect();
@@ -181,7 +181,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         phpr.loading.hide();
     },
 
-    loadDayListSelf:function() {
+    loadDayListSelf: function() {
         // Summary:
         //    This function loads the Day List in Self mode
         this.scrollDisconnect();
@@ -197,7 +197,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.setScheduleBar(true, true);
     },
 
-    loadDayListSelect:function() {
+    loadDayListSelect: function() {
         // Summary:
         //    This function loads the Day List in a Selection mode
         this.scrollDisconnect();
@@ -214,7 +214,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.setScheduleBar(true, true);
     },
 
-    loadWeekList:function() {
+    loadWeekList: function() {
         // Summary:
         //    This function loads the Week List
         this.scrollDisconnect();
@@ -230,7 +230,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.setScheduleBar(true, false);
     },
 
-    loadMonthList:function() {
+    loadMonthList: function() {
         // Summary:
         //    This function loads the Month List
         this.scrollDisconnect();
@@ -244,13 +244,13 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.setScheduleBar(true, false);
     },
 
-    showFormFromList:function(rowID) {
+    showFormFromList: function(rowID) {
         // Summary:
         //    This function opens an specific item clicked from the views
         this.publish("openForm", [rowID]);
     },
 
-    listViewClick:function() {
+    listViewClick: function() {
         // Summary:
         //    List button clicked, loads the regular grid
         if (this.actionRequested()) {
@@ -259,7 +259,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.loadGrid();
     },
 
-    dayViewClick:function() {
+    dayViewClick: function() {
         // Summary:
         //    This function loads the Day List with the entered date, if any.
         if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
@@ -275,7 +275,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    weekViewClick:function() {
+    weekViewClick: function() {
         // Summary:
         //    This function loads the Week List with the entered date, if any.
         if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
@@ -287,7 +287,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.loadWeekList();
     },
 
-    monthViewClick:function() {
+    monthViewClick: function() {
         // Summary:
         //    This function loads the Month List with the entered date, if any.
         if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
@@ -299,7 +299,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.loadMonthList();
     },
 
-    setDate:function(day) {
+    setDate: function(day) {
         // Summary
         //    This function is called by the buttons '<< Today >>' to load a specific date into the Day or Week List
         var PREVIOUS = 0;
@@ -341,7 +341,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    openForm:function(/*int*/ id, /*String*/ module, /*String*/ startDate,
+    openForm: function(/*int*/ id, /*String*/ module, /*String*/ startDate,
                       /*String*/ startTime, /*String*/ recurrenceId) {
         // Summary:
         //    This function opens a new Detail View
@@ -418,7 +418,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.form = new this.formWidget(this, id, module, params, null);
     },
 
-    userSelfClick:function() {
+    userSelfClick: function() {
         // Summary:
         //    This function loads the corresponding view in 'self' mode
         if (this._usersSelectionMode) {
@@ -427,7 +427,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    userSelectionClick:function() {
+    userSelectionClick: function() {
         // Summary:
         //    First function of the user selection window process, for the group view.
         // Description:
@@ -437,7 +437,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.userStore.fetch(dojo.hitch(this, "selectorRender"));
     },
 
-    selectorRender:function() {
+    selectorRender: function() {
         // Summary:
         //    Called after receiving the users list from the DB. Shows the user selection window for the group view.
         var userList = this.userStore.getList();
@@ -485,7 +485,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.loadDayListSelect();
     },
 
-    anotherViewDayClick:function(date) {
+    anotherViewDayClick: function(date) {
         // Summary:
         //    The header of every day in the week view and every cell of the month view have a link to this function to
         // load the day list of a specific day.
@@ -502,7 +502,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.loadDayListSelf();
     },
 
-    destroyOtherLists:function(mode) {
+    destroyOtherLists: function(mode) {
         // Summary:
         //    Destroys the objects of the lists not being used
         if (mode != 'grid') {
@@ -522,7 +522,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    setSubmoduleNavigation:function() {
+    setSubmoduleNavigation: function() {
         // Description:
         //    This function is responsible for displaying the Navigation top bar of the Calendar2
         //    Current submodules are: List, Day and Week.
@@ -584,7 +584,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         phpr.viewManager.getView().subModuleNavigation.set('content', navigation);
     },
 
-    addModuleView:function(moduleViews, label, functionName, activeTab) {
+    addModuleView: function(moduleViews, label, functionName, activeTab) {
         // Summary:
         //    Adds a specific view to the moduleViews array
         moduleViews.push({
@@ -594,7 +594,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         });
     },
 
-    isListActive:function(list) {
+    isListActive: function(list) {
         // Summary
         //    Returns whether a specific list type is active or not
         var answer = false;
@@ -609,7 +609,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         return answer;
     },
 
-    setScheduleBar:function(mainBar, selectionTab) {
+    setScheduleBar: function(mainBar, selectionTab) {
         // Summary
         //    Shows / hide and configures the Buttons bar
 
@@ -649,7 +649,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    dateDescripDay:function() {
+    dateDescripDay: function() {
         // Summary:
         //    Returns the day of the week we are working with, in a descriptive string of the current language
         days       = dojo.date.locale.getNames('days', 'wide');
@@ -658,7 +658,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         return dayDescrip;
     },
 
-    dateDescripMonth:function() {
+    dateDescripMonth: function() {
         // Summary
         //    Returns the month we are working with, in a descriptive string of the current language
         months       = dojo.date.locale.getNames('months', 'wide');
@@ -667,7 +667,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         return monthDescrip;
     },
 
-    getWeek:function() {
+    getWeek: function() {
         // Summary
         //    Returns the position in the year for the week we are working with
         var firstDayYear = new Date(this._date.getFullYear(),0,1);
@@ -676,7 +676,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         return week;
     },
 
-    capitalizeFirstLetter:function(str) {
+    capitalizeFirstLetter: function(str) {
         // Summary
         //    Capitalizes the first letter of a string
         result = str.slice(0,1).toUpperCase() + str.slice(1);
@@ -684,7 +684,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         return result;
     },
 
-    updateCacheData:function() {
+    updateCacheData: function() {
         // Summary:
         //    Forces every widget of the page to update its data, by deleting its cache.
 
@@ -705,7 +705,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    connectMouseScroll:function() {
+    connectMouseScroll: function() {
         // Summary
         //    Makes the connection between the Grid event for Mouse Wheel Scroll, and the 'scrollDone' function
         var grid = phpr.viewManager.getView().gridContainer.domNode;
@@ -723,14 +723,14 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this._actionPending = false;
     },
 
-    connectViewResize:function() {
+    connectViewResize: function() {
         // Summary:
         //    Connects the resize event of the Grid box to its appropriate function. Used in Day, Week and Month views
         var gridBox = phpr.viewManager.getView().gridContainer;
         this._resizeConnection = dojo.connect(gridBox, 'resize',  dojo.hitch(this, "gridResized"));
     },
 
-    gridResized:function() {
+    gridResized: function() {
         // Summary:
         //    Receives the call of event of view resize and calls the appropriate function to update vars and divs.
         if (this.dayListSelf) {
@@ -742,7 +742,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    scrollDone:function(scrollValue) {
+    scrollDone: function(scrollValue) {
         // Summary
         //    Called whenever the user scrolls the mouse wheel over the grid. Detects whether to interpret it as a
         // request for changing to previous or next day/week/month grid.
@@ -793,7 +793,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this._gridLastScrollTop = grid.scrollTop;
     },
 
-    scrollDisconnect:function() {
+    scrollDisconnect: function() {
         // Summary
         //    Disconnects the event of mouse wheel scroll, of the gridBox
         if (this._scrollConnection != null) {
@@ -802,7 +802,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    resizeDisconnect:function() {
+    resizeDisconnect: function() {
         // Summary
         //    Disconnects the event of the gridBox resize
         if (this._resizeConnection != null) {
@@ -811,7 +811,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    actionRequested:function() {
+    actionRequested: function() {
         // Summary
         //    The following lines are to avoid repetition of the Mouse Wheel scroll event connection, that could be
         // produced by clicking many times anxiously the same link or tab.
@@ -825,7 +825,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    highlightScheduleBarDate:function() {
+    highlightScheduleBarDate: function() {
         // Summary:
         //    Highlights the date after it has been changed using the mouse wheel
         text             = dojo.byId('scheduleBarDate');
@@ -838,7 +838,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         setTimeout('text.style.color="black";', 1200);
     },
 
-    saveChanges:function() {
+    saveChanges: function() {
         // Summary:
         //    Calls the appropriate function saveChanges depending on the class that triggered the event.
         if (this.weekList) {
@@ -846,7 +846,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    enableEventDivClick:function() {
+    enableEventDivClick: function() {
         // Summary:
         //    Called using setTimeout to allow the events to be just clicked to open them in the form, but waiting a
         // while first, because an event has just been dragged...
