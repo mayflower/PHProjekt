@@ -6,15 +6,16 @@
     </tr>
     <tr>
         <td
-        style="text-align: center;">
-            <select id="userList" name="userList" dojoType="dojox.form.CheckedMultiSelect" required="true"
-            invalidMessage="" multiple="true"
-            style="text-align: left;">
-                {% for user in userList %}
-                <option value ="{{user.id}}" {{user.selected}}>{{user.display}}</option>
-                {% endfor %}
-                </select>
-            </td>
+            style="text-align: center;"
+            id="userList"
+            dojoType="dijit.layout.ContentPane">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="usersSelectorSelections" dojoType="dijit.layout.ContentPane" style="margin-top: 20px;">
+            </div>
+        </td>
     </tr>
     <tr
     style="height: 27px;">

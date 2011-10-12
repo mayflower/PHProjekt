@@ -440,48 +440,105 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     selectorRender: function() {
         // Summary:
         //    Called after receiving the users list from the DB. Shows the user selection window for the group view.
-        var userList = this.userStore.getList();
+        this._userList = this.userStore.getList();
 
         var view = phpr.viewManager.getView();
         view.selectorTitle.innerHTML = phpr.nls.get('User selection');
         view.selectorDialog.set('title', phpr.nls.get('Calendar2'));
 
-        // Mark as select the selected users
-        for (var i = 0; i < userList.length; i++) {
-            userList[i].selected = '';
-            if (this._usersSelected.length > 0) {
-                for (var j = 0; j < this._usersSelected.length; j++) {
-                    if (this._usersSelected[j] == userList[i].id) {
-                        userList[i].selected = 'selected="selected"';
-                    }
-                }
-            }
-        }
-
         view.selectorContainer.set('content',
             phpr.fillTemplate("phpr.Calendar2.template.usersSelector.html", {
                 label:           phpr.nls.get('Select users for the group view'),
-                userList:        userList,
                 done:            phpr.nls.get('Done'),
                 noUsersSelected: phpr.nls.get('You have to select at least one user!')
             }));
 
+        var data = { items: dojo.clone(this._userList) };
+        var store = new dojo.data.ItemFileReadStore({ data: data });
+
+        this.userSelectWidget = new dijit.form.FilteringSelect({
+                name: "userSelect",
+                store: store,
+                value: null,
+                searchAttr: "display",
+                onKeyPress: dojo.hitch(this, this.usersSelectionKeyPress),
+                onChange: dojo.hitch(this, this.usersAddUserToSelection)
+            },
+            dojo.create("input")
+        );
+
+        dijit.byId("userList").set('content', this.userSelectWidget);
+
+        this.usersRenderSelection();
+
         view.selectorDialog.show();
     },
 
-    usersSelectionDoneClick:function() {
+    usersRenderSelection: function() {
+        dijit.byId("usersSelectorSelections").set('content', '');
+
+        for (var i = 0; i < this._userList.length; i++) {
+            for (var j = 0; j < this._usersSelected.length; j++) {
+                if (this._usersSelected[j] == this._userList[i].id) {
+                    var buttonContainer = phpr.Default.System.TemplateWrapper({
+                        templateName: "phpr.Calendar2.template.usersSelectorUserButton.html",
+                        templateData: {
+                            label: this._userList[i].display
+                        }
+                    });
+                    buttonContainer.button.attr("iconClass", "dijitEditorIcon dijitEditorIconDelete");
+                    buttonContainer.button.onClick = dojo.hitch(this, this.usersDeleteUserFromSelection, j);
+                    dijit.byId("usersSelectorSelections").containerNode.appendChild(buttonContainer.domNode);
+                }
+            }
+        }
+
+        this.userSelectWidget.reset();
+        this.userSelectWidget.focus();
+    },
+
+    usersDeleteUserFromSelection: function(index) {
+        if (this._usersSelected[index]) {
+            this._usersSelected.splice(index, 1);
+            this.usersRenderSelection();
+        }
+    },
+
+    usersSelectionKeyPress: function(evt) {
+        if (evt && evt.charOrCode && evt.charOrCode === dojo.keys.ENTER) {
+            var index = this.userSelectWidget.get('value');
+            if (index === "") {
+                this.usersSelectionDoneClick();
+            } else {
+                this.usersAddUserToSelection(index);
+            }
+        }
+    },
+
+    usersAddUserToSelection: function(userListId) {
+        if (userListId !== "" && this._usersSelected.indexOf(this._userList[userListId].id) === -1) {
+            this._usersSelected.push(this._userList[userListId].id);
+            this.usersRenderSelection();
+        }
+    },
+
+    usersSelectionDoneClick: function() {
         // Summary:
         //    Called once the users of the selection window have been selected.
-        var userList = dijit.byId('userList').get('value');
-        if (userList.length == 0) {
+        if (this._usersSelected.length === 0) {
             dojo.byId("usersSelectorError").style.visibility = 'visible';
             return;
         }
+
         this._usersSelectionMode = true;
         dojo.byId("usersSelectorError").style.visibility = 'hidden';
         phpr.viewManager.getView().selectorDialog.hide();
 
-        this._usersSelected = userList;
+        if (this.userSelectWidget) {
+            this.userSelectWidget.destroyRecursive();
+            delete this.userSelectWidget;
+        }
+
         this.loadDayListSelect();
     },
 
