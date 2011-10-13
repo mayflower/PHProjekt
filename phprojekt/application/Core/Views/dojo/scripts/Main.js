@@ -237,9 +237,11 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                     var moduleLabel    = modules[i].label;
                     var moduleFunction = modules[i].moduleFunction;
                     var functionParams = modules[i].functionParams;
-                    if (moduleName == phpr.submodule) {
+
+                    if (moduleName == this.action) {
                         liclass = 'class = active';
                     }
+
                     navigation += phpr.fillTemplate("phpr.Core.template.navigation.html", {
                         moduleName:     parentModule,
                         moduleLabel:    moduleLabel,
