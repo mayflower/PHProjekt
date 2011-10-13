@@ -533,10 +533,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
                 phpr.currentProjectId = phpr.rootProjectId;
-                phpr.pageManager.changeState({
-                    moduleName: "Setting",
-                    action: "User"
-                });
+                phpr.pageManager.changeState(
+                    { moduleName: "Setting" },
+                    { forceModuleReload: true }
+                );
             })
         });
         this.globalModuleNavigationButtons[globalModules[i].name] = button;
@@ -550,9 +550,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 showLabel: true,
                 onClick:   dojo.hitch(this, function() {
                     phpr.currentProjectId = phpr.rootProjectId;
-                    phpr.pageManager.changeState({
-                        moduleName: "Administration"
-                    });
+                    phpr.pageManager.changeState(
+                        { moduleName: "Administration" },
+                        { forceModuleReload: true }
+                    );
                 })
             });
             toolbar.addChild(button);
