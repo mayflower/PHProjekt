@@ -238,7 +238,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                     var moduleFunction = modules[i].moduleFunction;
                     var functionParams = modules[i].functionParams;
 
-                    if (moduleName == this.action) {
+                    if (moduleName == this.action || moduleName == this.module) {
                         liclass = 'class = active';
                     }
 
