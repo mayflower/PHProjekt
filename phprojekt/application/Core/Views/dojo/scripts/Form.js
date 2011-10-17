@@ -92,6 +92,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                 if (data.type == 'success') {
                     this.customActionOnSuccess();
                     this.publish("updateCacheData");
+                    delete this.main.config.id;
                     phpr.pageManager.changeState(
                         this.main.config, {
                             forceModuleReload: true
