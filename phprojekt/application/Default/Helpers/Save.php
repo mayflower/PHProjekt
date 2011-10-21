@@ -126,7 +126,7 @@ final class Default_Helpers_Save
 
                 // Save the role-user-project relation
                 if (isset($params['userRelation'])) {
-                    $model = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
+                    $model = new Project_Models_ProjectRoleUserPermissions();
                     $model->saveRelation($params['roleRelation'], array_keys($params['userRelation']),
                         $node->getActiveRecord()->id);
                 }
@@ -302,7 +302,7 @@ final class Default_Helpers_Save
                 if (!Phprojekt_Module::saveTypeIsNormal($moduleId)) {
                     $boolean = true;
                 } else {
-                    $relation = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+                    $relation = new Project_Models_ProjectModulePermissions();
                     $modules  = $relation->getProjectModulePermissionsById($projectId);
                     if ($modules['data'][$moduleId]['inProject']) {
                         $boolean = true;

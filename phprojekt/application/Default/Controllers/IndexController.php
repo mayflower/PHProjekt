@@ -294,7 +294,7 @@ class IndexController extends Zend_Controller_Action
         $object     = Phprojekt_Loader::getModel($modelName, $moduleName);
         if (null === $object) {
             /* @todo throw error */
-            $object = Phprojekt_Loader::getModel('Default', 'Default');
+            $object = new Default_Models_Default();
         }
 
         return $object;
@@ -414,7 +414,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonTreeAction()
     {
-        $model = Phprojekt_Loader::getModel('Project', 'Project');
+        $model = new Project_Models_Project();
         $tree  = new Phprojekt_Tree_Node_Database($model, 1);
 
         Phprojekt_Converter_Json::echoConvert($tree->setup());
@@ -464,7 +464,7 @@ class IndexController extends Zend_Controller_Action
         if (!empty($projectId) && isset($this->getModelObject()->projectId)
             && 'true' === $recursive) {
             $tree = new Phprojekt_Tree_Node_Database(
-                Phprojekt_Loader::getModel('Project', 'Project'),
+                new Project_Models_Project(),
                 $projectId);
             $tree->setup();
             Phprojekt_Converter_Json::echoConvert(
@@ -745,7 +745,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonGetModulesPermissionAction()
     {
         $projectId = (int) $this->getRequest()->getParam('nodeId');
-        $relation  = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+        $relation  = new Project_Models_ProjectModulePermissions();
         $modules   = $relation->getProjectModulePermissionsById($projectId);
 
         if ($projectId == 0) {
@@ -933,7 +933,7 @@ class IndexController extends Zend_Controller_Action
             if (empty($projectId)) {
                 $record = $this->getModelObject();
             } else {
-                $model  = Phprojekt_Loader::getModel('Project', 'Project');
+                $model  = new Project_Models_Project();
                 $record = $model->find($projectId);
             }
         } else {

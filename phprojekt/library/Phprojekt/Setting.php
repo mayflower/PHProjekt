@@ -80,13 +80,13 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
     {
         $results = array();
         // System settings
-        $model = Phprojekt_Loader::getModel('Core', 'User_Setting');
+        $model = new Core_Models_User_Setting();
         if ($model) {
             $results[] = array('name'  => 'User',
                                'label' => Phprojekt::getInstance()->translate('User'));
         }
 
-        $modelNotification = Phprojekt_Loader::getModel('Core', 'Notification_Setting');
+        $modelNotification = new Core_Models_Notification_Setting();
         if ($modelNotification) {
             $results[] = array('name'  => 'Notification',
                                'label' => Phprojekt::getInstance()->translate('Notification'));

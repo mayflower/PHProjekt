@@ -57,7 +57,7 @@ class Phprojekt_Converter_TextTest extends DatabaseTest
      */
     public function testConvertPart1()
     {
-        $model           = Phprojekt_Loader::getModel('Project', 'Project');
+        $model           = new Project_Models_Project();
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $model->getInformation()->getFieldDefinition($order);
         $object          = $model->find(1);
@@ -97,7 +97,7 @@ class Phprojekt_Converter_TextTest extends DatabaseTest
     public function testConvertPart2()
     {
         $this->markTestIncomplete('do not use minutes');
-        $model           = Phprojekt_Loader::getModel('Minutes', 'Minutes');
+        $model           = new Minutes_Models_Minutes();
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $model->getInformation()->getFieldDefinition($order);
 
@@ -121,7 +121,7 @@ class Phprojekt_Converter_TextTest extends DatabaseTest
     public function testConvertPart3()
     {
         $this->markTestIncomplete('do not use helpdesk');
-        $model           = Phprojekt_Loader::getModel('Helpdesk', 'Helpdesk');
+        $model           = new Helpdesk_Models_Helpdesk();
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $model->getInformation()->getFieldDefinition($order);
 

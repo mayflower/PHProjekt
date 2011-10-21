@@ -81,8 +81,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
         parent::__construct($db);
 
         $this->_validate           = new Phprojekt_Model_Validate();
-        $this->_informationManager = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
-            'MinutesItemInformation');
+        $this->_informationManager = new Minutes_SubModules_MinutesItem_MinutesItemInformation();
     }
 
     /**
@@ -94,8 +93,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     {
         parent::__clone();
         $this->_validate           = new Phprojekt_Model_Validate();
-        $this->_informationManager = Phprojekt_Loader::getModel('Minutes_SubModules_MinutesItem',
-            'MinutesItemInformation');
+        $this->_informationManager = new Minutes_SubModules_MinutesItem_MinutesItemInformation();
     }
 
     /**
@@ -229,7 +227,8 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
      */
     public function setParent($minutesId)
     {
-        $this->_minutes = Phprojekt_Loader::getModel('Minutes', 'Minutes')->find($minutesId);
+        $this->_minutes = new Minutes_Models_Minutes();
+        $this->_minutes = $this->_minutes->find($minutesId);
     }
 
     /**

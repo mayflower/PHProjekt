@@ -137,7 +137,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
                 } else {
                     // Fix Root Project
                     if ($projectId > 1) {
-                        $project = Phprojekt_Loader::getModel('Project', 'Project');
+                        $project = new Project_Models_Project();
                         $parent  = $project->find($projectId);
                         if (!is_null($parent) && !empty($parent) && $parent->projectId > 0) {
                             $sessionName = 'Project_Models_ProjectRoleUserPermissions-fetchUserRole-'

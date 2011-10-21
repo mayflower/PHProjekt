@@ -79,7 +79,7 @@ class Gantt_IndexController extends IndexController
     {
         $projectId    = (int) $this->getRequest()->getParam('nodeId', null);
         $data['data'] = array('projects' => array());
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $activeRecord = new Project_Models_Project();
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, $projectId);
         $tree         = $tree->setup();
         $min          = gmmktime(0, 0, 0, 12, 31, 2030);
@@ -199,7 +199,7 @@ class Gantt_IndexController extends IndexController
     public function jsonSaveAction()
     {
         $projects     = (array) $this->getRequest()->getParam('projects', array());
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $activeRecord = new Project_Models_Project();
         $rights       = new Phprojekt_Item_Rights();
         $userId       = Phprojekt_Auth::getUserId();
         $this->setCurrentProjectId();

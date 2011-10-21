@@ -123,7 +123,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
         $data['time'] = date("H:i", Phprojekt_Converter_Time::utcToUser($messageData[0]->validFrom) + $addTime);
 
         // Convert project name
-        $project         = Phprojekt_Loader::getModel('Project', 'Project');
+        $project         = new Project_Models_Project();
         $data['project'] = $project->find($data['projectId'])->title;
 
         return $data;

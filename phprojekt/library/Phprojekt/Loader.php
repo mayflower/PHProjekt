@@ -42,22 +42,6 @@
 class Phprojekt_Loader extends Zend_Loader
 {
     /**
-     * Identifier for views.
-     * It's normaly only needed by the internals.
-     *
-     * @see _getClass
-     */
-    const VIEW = 'Views';
-
-    /**
-     * Identifier for models.
-     * It's normaly only needed by the internals.
-     *
-     * @see _getClass
-     */
-    const MODEL = 'Models';
-
-    /**
      * Directories.
      *
      * @var array
@@ -147,31 +131,6 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * Finds a class.
-     * If a customized class is available in the Customized/directory,
-     * it's loaded and the name is returned, instead of the normal class.
-     *
-     * @param string $module Name of the module.
-     * @param string $item   Name of the class to be loaded.
-     * @param string $ident  Ident, might be 'Models', 'Controllers' or 'Views'.
-     *
-     * @throws Zend_Exception If class not found.
-     *
-     * @return string Identifier class name.
-     */
-    protected static function _getClass($module, $item, $ident)
-    {
-        $nIdentifier = sprintf("%s_%s_%s", $module, $ident, $item);
-        $cIdentifier = sprintf("%s_%s_Customized_%s", $module, $ident, $item);
-
-        if (class_exists($cIdentifier, false)) {
-            return $cIdentifier;
-        } else {
-            return $nIdentifier;
-        }
-    }
-
-    /**
      * Load the class of a model and return the name of the class.
      *
      * Always use the returned name to instantiate a class, a customized
@@ -180,15 +139,13 @@ class Phprojekt_Loader extends Zend_Loader
      * @param string $module Name of the module.
      * @param string $model  Name of the class to be loaded.
      *
-     * @see _getClass
-     *
      * @throws Zend_Exception If class not found.
      *
      * @return string Identifier class name.
      */
     public static function getModelClassname($module, $model)
     {
-        return self::_getClass($module, $model, self::MODEL);
+        return "{$module}_Models_{$model}";
     }
 
     /**
@@ -200,15 +157,13 @@ class Phprojekt_Loader extends Zend_Loader
      * @param string $module Name of the module.
      * @param string $view   Name of the class to be loaded.
      *
-     * @see _getClass
-     *
      * @throws Zend_Exception If class not found.
      *
      * @return string Identifier class name.
      */
     public static function getViewClassname($module, $view)
     {
-        return self::_getClass($module, $view, self::VIEW);
+        return "{$module}_Views_{$view}";
     }
 
     /**

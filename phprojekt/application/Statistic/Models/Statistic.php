@@ -57,7 +57,7 @@ class Statistic_Models_Statistic
         $data['data']['rows']     = array();
 
         // Get Sub-Projects
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $activeRecord = new Project_Models_Project();
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, $projectId);
         $tree         = $tree->setup();
         $projectsId   = array(0);
@@ -69,7 +69,7 @@ class Statistic_Models_Statistic
         }
 
         // Get Timecard
-        $model = Phprojekt_Loader::getModel('Timecard', 'Timecard');
+        $model = new Timecard_Models_Timecard();
         $where = sprintf('(DATE(start_datetime) >= %s AND DATE(start_datetime) <= %s AND project_id IN (%s))',
             $model->_db->quote($startDate), $model->_db->quote($endDate), implode(", ", $projectsId));
         $records = $model->fetchAll($where);

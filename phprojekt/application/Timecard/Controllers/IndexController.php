@@ -132,7 +132,7 @@ class Timecard_IndexController extends IndexController
             $favorites = array();
         }
 
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $activeRecord = new Project_Models_Project();
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree         = $tree->setup();
 

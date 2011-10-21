@@ -250,7 +250,7 @@ class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_I
     public function getProjectRange()
     {
         $range        = array();
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $activeRecord = new Project_Models_Project();
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree         = $tree->setup();
         foreach ($tree as $node) {

@@ -49,7 +49,7 @@ class Helpdesk_Models_Helpdesk extends Phprojekt_Item_Abstract
      */
     public function getNotification()
     {
-        $notification = Phprojekt_Loader::getModel('Helpdesk', 'Notification');
+        $notification = new Helpdesk_Models_Notification();
         $notification->setModel($this);
 
         return $notification;

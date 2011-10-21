@@ -182,7 +182,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     public function save()
     {
         // Reset users by project cache
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $activeRecord = new Project_Models_Project();
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree         = $tree->setup();
         foreach ($tree as $node) {

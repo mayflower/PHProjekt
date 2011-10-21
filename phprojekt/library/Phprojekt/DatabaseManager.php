@@ -456,7 +456,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
 
         switch ($module) {
             case 'Project':
-                $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+                $activeRecord = new Project_Models_Project();
                 $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
                 $tree         = $tree->setup();
                 foreach ($tree as $node) {
