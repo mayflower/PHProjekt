@@ -237,17 +237,7 @@ class Phprojekt_Loader extends Zend_Loader
         $name = self::getModelClassname($module, $model);
         $args = array_slice(func_get_args(), 2);
 
-        if (empty($args) && Phprojekt::getInstance()->getConfig()->useCacheForClasses) {
-            $registryName = 'getModel_'.$module.'_'.$model;
-            if (!Zend_Registry::isRegistered($registryName)) {
-                $object = self::_newInstance($name, $args);
-                Zend_Registry::set($registryName, $object);
-            } else {
-                $object = clone(Zend_Registry::get($registryName));
-            }
-        } else {
-            $object = self::_newInstance($name, $args);
-        }
+        $object = self::_newInstance($name, $args);
 
         return $object;
     }
@@ -273,17 +263,7 @@ class Phprojekt_Loader extends Zend_Loader
     {
         $args = array_slice(func_get_args(), 2);
 
-        if (empty($args) && Phprojekt::getInstance()->getConfig()->useCacheForClasses) {
-            $registryName = 'getLibraryClass_'.$name;
-            if (!Zend_Registry::isRegistered($registryName)) {
-                $object = self::_newInstance($name, $args);
-                Zend_Registry::set($registryName, $object);
-            } else {
-                $object = clone(Zend_Registry::get($registryName));
-            }
-        } else {
-            $object = self::_newInstance($name, $args);
-        }
+        $object = self::_newInstance($name, $args);
 
         return $object;
     }
