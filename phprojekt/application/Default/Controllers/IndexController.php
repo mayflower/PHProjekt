@@ -874,7 +874,7 @@ class IndexController extends Zend_Controller_Action
             Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->getMessage());
         }
 
-        $notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification_FrontendMessage');
+        $notification = new Phprojekt_Notification_FrontendMessage();
         $userId       = (int) Phprojekt_Auth::getUserId();
         $data         = $notification->getFrontendMessage($userId);
 
@@ -890,7 +890,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonDisableFrontendMessagesAction()
     {
-        $notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification');
+        $notification = new Phprojekt_Notification();
 
         try {
             $notification->disableFrontendMessages();

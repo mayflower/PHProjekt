@@ -243,32 +243,6 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * Load a class from the library and return an new instance of the class.
-     *
-     * This method can take more than the two arguments.
-     * Every other argument is passed to the constructor.
-     *
-     * The class is temporally cached in the Registry for the next calls.
-     * Only is cached if don't have any arguments.
-     *
-     * Be sure that the class have the correct "__clone" function defined
-     * if it have some internal variables with other classes for prevent
-     * the same point to the object.
-     *
-     * @param string $name Name of the class.
-     *
-     * @return Object
-     */
-    public static function getLibraryClass($name)
-    {
-        $args = array_slice(func_get_args(), 2);
-
-        $object = self::_newInstance($name, $args);
-
-        return $object;
-    }
-
-    /**
      * Returns the name of the model for a given object.
      *
      * @param Phprojekt_Model_Interface $object An active record.

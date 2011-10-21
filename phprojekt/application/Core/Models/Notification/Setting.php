@@ -98,7 +98,7 @@ class Core_Models_Notification_Setting extends Phprojekt_ModelInformation_Defaul
      */
     public function getList($moduleId, $metadata, $userId = null)
     {
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('Notification');
 
         $settings = array();

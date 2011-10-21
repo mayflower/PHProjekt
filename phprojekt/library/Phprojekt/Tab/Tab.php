@@ -65,8 +65,8 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
         }
         parent::__construct($db);
 
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Tab_Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Phprojekt_Tab_Information();
     }
 
     /**
@@ -77,8 +77,8 @@ class Phprojekt_Tab_Tab extends Phprojekt_ActiveRecord_Abstract implements Phpro
     public function __clone()
     {
         parent::__clone();
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Tab_Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Phprojekt_Tab_Information();
     }
 
     /**

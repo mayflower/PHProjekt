@@ -74,7 +74,7 @@ class Statistic_Models_Statistic
             $model->_db->quote($startDate), $model->_db->quote($endDate), implode(", ", $projectsId));
         $records = $model->fetchAll($where);
 
-        $users = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $users = new Phprojekt_User_User();
 
         foreach ($records as $record) {
             if (!isset($data['data']['users'][$record->ownerId])) {

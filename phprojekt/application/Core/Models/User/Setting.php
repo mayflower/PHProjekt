@@ -106,7 +106,7 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
             'default'  => '000'));
         // Proxies
         Phprojekt::setCurrentProjectId(IndexController::INVISIBLE_ROOT);
-        $user  = Phprojekt_Loader::getLibraryClass("Phprojekt_User_User");
+        $user  = new Phprojekt_User_User();
         $range = $user->getAllowedUsers();
         // remove ourselves from the proxy list
         $i = 0;
@@ -170,7 +170,7 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
     public function validateSettings($params)
     {
         $message = null;
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('User');
 
         // Passwords
@@ -225,7 +225,7 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
         if (!$userId) {
             $userId = Phprojekt_Auth::getUserId();
         }
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('User');
         if (empty($params['password'])) {
             $password = $setting->getSetting('password', $userId);
@@ -242,7 +242,7 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
                         $proxyTable = new Phprojekt_Auth_ProxyTable();
                         $proxyTable->setProxyIdsForUserId($value);
                     } else {
-                        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+                        $setting = new Phprojekt_Setting();
                         $setting->setModule('User');
 
                         if (($key == 'password')) {

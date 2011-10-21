@@ -182,7 +182,7 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         parent::saveRights($rights);
 
         // Update access and delete the cache also for the children
-        $itemRights   = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $itemRights   = new Phprojekt_Item_Rights();
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, $this->id);
         $tree         = $tree->setup();

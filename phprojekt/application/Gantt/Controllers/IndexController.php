@@ -128,7 +128,7 @@ class Gantt_IndexController extends IndexController
         // (only if at least one project different than the parent have write or hight access)
         $data['data']['rights']["currentUser"]["write"] = false;
         if (count($ids) > 0) {
-            $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+            $rights = new Phprojekt_Item_Rights();
             $where  = sprintf('user_id = %d AND item_id IN (%s) AND module_id = 1', Phprojekt_Auth::getUserId(),
                 implode(", ", $ids));
             $access = $rights->fetchAll($where)->toArray();
@@ -200,7 +200,7 @@ class Gantt_IndexController extends IndexController
     {
         $projects     = (array) $this->getRequest()->getParam('projects', array());
         $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
-        $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $rights       = new Phprojekt_Item_Rights();
         $userId       = Phprojekt_Auth::getUserId();
         $this->setCurrentProjectId();
 

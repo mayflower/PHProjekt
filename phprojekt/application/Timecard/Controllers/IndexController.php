@@ -122,7 +122,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonGetFavoritesProjectsAction()
     {
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('Timecard');
 
         $favorites = $setting->getSetting('favorites');
@@ -257,7 +257,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonFavoritesSaveAction()
     {
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('Timecard');
 
         $setting->setSettings($this->getRequest()->getParams());

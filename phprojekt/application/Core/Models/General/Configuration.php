@@ -81,7 +81,7 @@ class Core_Models_General_Configuration extends Phprojekt_ModelInformation_Defau
     {
         $fields = $this->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
-        $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
+        $configuration = new Phprojekt_Configuration();
         $configuration->setModule('General');
 
         foreach ($fields as $data) {

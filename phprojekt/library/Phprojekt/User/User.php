@@ -77,8 +77,8 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         }
         parent::__construct($db);
 
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_User_Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Phprojekt_User_Information();
     }
 
     /**
@@ -89,8 +89,8 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     public function __clone()
     {
         parent::__clone();
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_User_Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Phprojekt_User_Information();
     }
 
     /**
@@ -196,7 +196,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         if ($this->id == 0) {
             if (parent::save()) {
                 // adding default values
-                $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+                $rights = new Phprojekt_Item_Rights();
                 $rights->saveDefaultRights($this->id);
                 return true;
             }
@@ -286,7 +286,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     static public function getSetting($settingName, $defaultValue = null)
     {
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('User');
 
         $value = $setting->getSetting($settingName);
@@ -360,7 +360,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
 
         if (!isset($usersNamespace->users)) {
             $displayName = $this->getDisplay();
-            $rights      = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+            $rights      = new Phprojekt_Item_Rights();
             $ids         = $rights->getUsersWithRight(1, (int) Phprojekt::getCurrentProjectId());
             $where       = sprintf('status = %s', $this->getAdapter()->quote('A'));
             if (!empty($ids)) {

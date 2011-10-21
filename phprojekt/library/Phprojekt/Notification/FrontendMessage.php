@@ -101,7 +101,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
             return false;
         }
 
-        $userObject     = PHProjekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $userObject     = new Phprojekt_User_User();
         $user           = $userObject->find($messageData[0]->actorId);
         $displaySetting = $userObject->getDisplay();
 

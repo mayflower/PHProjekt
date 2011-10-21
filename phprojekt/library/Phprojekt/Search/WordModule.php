@@ -115,7 +115,7 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
     {
         $ids    = array();
         $result = array();
-        $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $rights = new Phprojekt_Item_Rights();
         $userId = Phprojekt_Auth::getUserId();
         $db     = Phprojekt::getInstance()->getDb();
 
