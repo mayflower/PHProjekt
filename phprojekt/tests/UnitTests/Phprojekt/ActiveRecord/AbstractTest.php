@@ -214,7 +214,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $this->assertEquals('Developer Tasks', $project->instances->find(1)->name);
         $this->assertEquals('Project Tasks', $project->instances->find(2)->name);
 
-        $this->assertEquals(2, $project->instances->count());
+        $this->assertEquals(3, $project->instances->count());
         $this->assertEquals(5, $project->count());
 
         // same but with fetch all
@@ -232,10 +232,14 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
      */
     public function testBelongsTo()
     {
-        $instance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
+        $project  = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $expected = $project->find(2);
 
-        $instance->find(1);
-        $this->assertEquals(2, $instance->count());
+        $instance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
+        $instance->find(2);
+        $actual   = $instance->project;
+
+        $this->assertEquals($expected->id, $actual->id);
     }
 
     /**
@@ -243,18 +247,17 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
      */
     public function testUpdateHasMany()
     {
-        $instance = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $instance->find(5);
-        $instance->id = 8;
-        $instance->notes = '';
-        $this->assertTrue($instance->save());
+        $this->markTestIncomplete('See issue  #260');
+        //$project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        //$project->find(2);
+        //$this->assertEquals(1, count($project->instances));
 
-        $instance->find(2);
-        $this->assertEquals('Developer Tasks', $instance->instances->find(1)->name);
-        $this->assertEquals(2, $instance->instances->find(1)->projectId);
+        //$moduleInstance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
+        //$project->instances = $moduleInstance->fetchAll('id = 1 OR id = 2');
+        //$project->save();
 
-        $instance->id = 5;
-        $this->assertTrue($instance->save());
+        //$project->find(2);
+        //$this->assertEquals(2, count($project->instances));
     }
 
     /**
@@ -264,7 +267,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
     {
         $group = new Phprojekt_Groups_Groups(array('db' => $this->sharedFixture));
         $group->find(2);
-        $group->id = 10;
         $group->save();
 
         $users = $group->users->fetchAll();
@@ -272,7 +274,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $this->assertEquals('Test', $users[0]->username);
 
         $group->find(10);
-        $group->id = 2;
         $group->save();
     }
 
@@ -313,7 +314,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
     {
         try {
             $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-            $project->id        = 9;
             $project->title     = 'Hello World Project to delete';
             $project->startDate = '1981-05-12';
             $project->endDate   = '1981-05-12';
