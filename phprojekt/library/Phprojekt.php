@@ -238,7 +238,7 @@ class Phprojekt
             try {
                 $this->_db = Zend_Db::factory($this->_config->database);
             } catch (Zend_Db_Adapter_Exception $error) {
-                echo $error->getMessage();
+                error_log($error->getMessage());
                 die();
             }
         }
@@ -259,7 +259,8 @@ class Phprojekt
             try {
                 $this->_log = new Phprojekt_Log($this->_config);
             } catch (Zend_Log_Exception $error) {
-                die($error->getMessage());
+                error_log($error->getMessage());
+                die();
             }
         }
 
@@ -431,8 +432,11 @@ class Phprojekt
             $response = new Zend_Controller_Request_Http();
             $webPath  = $response->getScheme() . '://' . $response->getHttpHost() . $response->getBasePath() . '/';
             header("Location: " . $webPath . "setup.php");
-            die('You need the file configuration.php to continue. Have you tried the <a href="' . $webPath
-                . 'setup.php">setup</a> routine?'."\n".'<br />Original error: ' . $error->getMessage());
+            error_log(
+                'You need the file configuration.php to continue. Have you tried the <a href="' . $webPath
+                . 'setup.php">setup</a> routine?'."\n".'<br />Original error: ' . $error->getMessage()
+            );
+            die();
         }
 
         // Set webpath, tmpPath and applicationPath
@@ -472,7 +476,9 @@ class Phprojekt
         try {
             $this->_cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
         } catch (Exception $error) {
-            die("The directory " . PHPR_TEMP_PATH . "zendCache do not exists or not have write access.");
+            error_log("The directory " . PHPR_TEMP_PATH . "zendCache do not exists or not have write access.");
+            die();
+
         }
         Zend_Db_Table_Abstract::setDefaultMetadataCache($this->_cache);
 
@@ -510,7 +516,8 @@ class Phprojekt
         if (!empty($missingRequirements)) {
             $message = "Your PHP does not meet the requirements needed for P6.<br />"
                 . implode("<br />", $missingRequirements);
-            die($message);
+            error_log($message);
+            die();
         }
 
         $helperPaths = $this->_getHelperPaths();
