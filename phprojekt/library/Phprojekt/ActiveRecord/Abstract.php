@@ -523,17 +523,20 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $instance = new $className(array('db' => $this->getAdapter()));
 
             $foreignKeyName = $this->_translateKeyFormat($className);
+            $foreignKeyName =  Phprojekt_ModuleInstance::convertVarFromSql($foreignKeyName);
 
             if (array_key_exists($foreignKeyName, $this->_data)) {
-                $row = $instance->find($this->_data[$foreignKeyName]);
-                foreach ($row as $k => $v) {
-                    $instance->_data[$k] = $v;
+                $other = $instance->find($this->_data[$foreignKeyName]);
+                if (!empty($other)) {
+                    $this->_data[$key] = $instance->find($this->_data[$foreignKeyName]);
+                } else {
+                    throw new Phprojekt_ActiveRecord_Exception(
+                        "$key with id {$this->_data[$foreignKeyname]} not found"
+                    );
                 }
+            } else {
+                $this->_data[$key] = null;
             }
-
-            $instance->_storedId = $instance->_data['id'];
-
-            $this->_data[$key] = $instance;
         }
 
         return $this->_data[$key];
