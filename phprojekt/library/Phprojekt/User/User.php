@@ -47,15 +47,6 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
                                                 'model'     => 'Setting'));
 
     /**
-     * Has many and belongs to many declrations.
-     *
-     * @var array
-     */
-    public $hasManyAndBelongsToMany = array('groups' => array('classname' => 'Phprojekt_Groups_Groups',
-                                                              'module'    => 'Groups',
-                                                              'model'     => 'Groups'));
-
-    /**
      * The standard information manager with hardcoded field definitions.
      *
      * @var Phprojekt_ModelInformation_Interface

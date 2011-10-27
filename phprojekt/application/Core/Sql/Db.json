@@ -61,25 +61,6 @@
             }
         },
 
-        "groups":
-        {
-            "create":
-            {
-                "id":   "default",
-                "name": {"type": "varchar"}
-            }
-        },
-
-        "groups_user_relation":
-        {
-            "create":
-            {
-                "id":        "default",
-                "groups_id": {"type": "int", "notNull": "true"},
-                "user_id":   {"type": "int", "notNull": "true"}
-            }
-        },
-
         "history":
         {
             "create":
@@ -552,17 +533,6 @@
             ]
         },
 
-        "groups":
-        {
-            "insert":
-            [
-                {
-                    "id":   "1",
-                    "name": "Default"
-                }
-            ]
-        },
-
         "role":
         {
             "insert":
@@ -698,17 +668,6 @@
                     "admin":      "1",
                     "_relations":
                     {
-                        "groups_user_relation":
-                        {
-                            "insert":
-                            [
-                                {
-                                    "groups_id": "all",
-                                    "user_id":   "##id##"
-                                }
-                            ]
-                        },
-
                         "setting":
                         {
                             "insert":
@@ -757,17 +716,6 @@
                     "admin":      "0",
                     "_relations":
                     {
-                        "groups_user_relation":
-                        {
-                            "insert":
-                            [
-                                {
-                                    "groups_id": "1",
-                                    "user_id":   "##id##"
-                                }
-                            ]
-                        },
-
                         "setting":
                         {
                             "insert":
