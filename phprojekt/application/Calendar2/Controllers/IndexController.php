@@ -283,7 +283,7 @@ class Calendar2_IndexController extends IndexController
         }
 
         if ($sendNotifications) {
-            $model->notify();
+            $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
         }
 
         Phprojekt_Converter_Json::echoConvert(
@@ -497,10 +497,16 @@ class Calendar2_IndexController extends IndexController
             $model      = $model->findOccurrence($id, $occurrence);
         }
 
-        if ($multiple) {
-            $model->delete($sendNotifications);
+        if ($multiple || empty($model->rrule)) {
+            if ($sendNotifications) {
+                $notification = $model->getNotification();
+                $notification->setControllProcess(Phprojekt_Notification::LAST_ACTION_DELETE);
+                $notification->send();
+            }
+            $model->delete();
         } else {
-            $model->deleteSingleEvent($sendNotifications);
+            $model->deleteSingleEvent();
+            $model->getNotification()->send();
         }
 
         Phprojekt_Converter_Json::echoConvert(

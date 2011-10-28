@@ -240,7 +240,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                     );
                 }
             }
-            $this->_notify($isNew ? 'create' : 'edit');
         } else {
             // Split the series into two parts. $this will be the second part.
             $new = $this;
@@ -257,7 +256,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $new->rrule = $rrules['new'];
 
             $old->save();
-            $this->_notify('edit');
             $new->_saveToNewRow();
 
             // Update the excluded occurences
@@ -269,7 +267,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 array('id' => $new->id),
                 $where
             );
-            $this->_notify('edit');
         }
 
         $this->_originalStart = new Datetime(
@@ -323,7 +320,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @return void.
      */
-    public function delete($sendNotifications = false)
+    public function delete()
     {
         $db = $this->getAdapter();
 
@@ -337,20 +334,12 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $db->quoteInto('calendar2_id = ?', $this->id)
             );
 
-            if ($sendNotifications) {
-                $this->_notify('delete');
-            }
-
             Phprojekt_Tags::getInstance()->deleteTagsByItem(
                 Phprojekt_Module::getId('Calendar2'),
                 $this->id
             );
 
             parent::delete();
-
-            if ($sendNotifications) {
-                $this->_notify('delete');
-            }
         } else {
             $first = clone $this;
             $first->find($this->id);
@@ -374,10 +363,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 'calendar2_excluded_dates',
                 $where
             );
-
-            if ($sendNotifications) {
-                $this->_notify('edit');
-            }
         }
     }
 
@@ -386,7 +371,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      *
      * @return void
      */
-    public function deleteSingleEvent($sendNotifications = false)
+    public function deleteSingleEvent()
     {
         if (empty($this->rrule)) {
             // If this is a non-recurring event, call delete()
@@ -407,10 +392,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             array('last_modified' => $now->format('Y-m-d H:i:s')),
             $this->getAdapter()->quoteInto('id = ?', $this->id)
         );
-
-        if ($sendNotifications) {
-            $this->_notify('edit');
-        }
     }
 
     /**
@@ -929,14 +910,15 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Send notification mails and (if configured) frontend messages for the
-     * latest change.
+     * Returns the notification object for this calendar item.
      *
-     * @return void
+     * @return Calendar2_Models_Notification
      **/
-    public function notify($method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
+    public function getNotification()
     {
-        $this->_notify(null, $method);
+        $notification = new Calendar2_Models_Notification();
+        $notification->setModel($this);
+        return $notification;
     }
 
     /**
@@ -985,24 +967,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $vobject->add('dtstamp', $lastMod->format('Ymd\THis\Z'));
         $vobject->add('uid', $this->uid);
         return $vobject;
-    }
-
-    /**
-     * Helper function to allow delete() et al to send notifications with for
-     * their respective processes.
-     */
-    private function _notify($process = null, $method = Phprojekt_Notification::TRANSPORT_MAIL_TEXT)
-    {
-        $notification = new Calendar2_Models_Notification();
-        $notification->setModel($this);
-
-        if (!is_null($process)) {
-            $notification->setControllProcess($process);
-        }
-        $notification->send($method);
-        if (Phprojekt::getInstance()->getConfig()->frontendMessages) {
-            $notification->saveFrontendMessage();
-        }
     }
 
     /**
