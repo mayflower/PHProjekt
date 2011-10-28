@@ -110,27 +110,6 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * Instantiate a given class name.
-     * We asume that it's allready loaded.
-     *
-     * @param string $name Name of the class.
-     * @param array  $args Argument list.
-     *
-     * @return object
-     */
-    protected static function _newInstance($name, $args)
-    {
-        // We have to use the reflection here, as expanding arguments
-        // to an array is not possible without reflection.
-        $class = new ReflectionClass($name);
-        if (null !== $class->getConstructor()) {
-            return $class->newInstanceArgs($args);
-        } else {
-            return $class->newInstance();
-        }
-    }
-
-    /**
      * Load the class of a model and return the name of the class.
      *
      * Always use the returned name to instantiate a class, a customized
@@ -189,12 +168,12 @@ class Phprojekt_Loader extends Zend_Loader
      */
     public static function getModel($module, $model)
     {
+        if (func_num_args() > 2) {
+            throw new Exception('Arguments are not supported anymore');
+        }
+
         $name = self::getModelClassname($module, $model);
-        $args = array_slice(func_get_args(), 2);
-
-        $object = self::_newInstance($name, $args);
-
-        return $object;
+        return new $name();
     }
 
     /**
