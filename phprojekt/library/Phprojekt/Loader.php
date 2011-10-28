@@ -238,25 +238,6 @@ class Phprojekt_Loader extends Zend_Loader
     }
 
     /**
-     * Load the class of a view and return an new instance of the class.
-     *
-     * Always use the returned name to instantiate a class, a customized
-     * class name might be loaded and returned by this method
-     *
-     * @param string $module Name of the module
-     * @param string $view   Name of the view
-     *
-     * @return Object
-     */
-    public static function getView($module, $view)
-    {
-        $name = self::getViewClassname($module, $view);
-        $args = array_slice(func_get_args(), 2);
-
-        return self::_newInstance($name, $args);
-    }
-
-    /**
      * Try to include a file by the class name.
      *
      * @param string  $class          The name of the class.
