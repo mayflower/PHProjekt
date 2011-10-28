@@ -202,4 +202,3 @@ $lang["Content Help"]["Role"] = "<br />
 
 $lang["Content Help"]["Notification"] = "DEFAULT";
 $lang["Content Help"]["History"] = "DEFAULT";
-$lang["Cumulative complete percent"] = "Kumulative Fertigstellung";

@@ -139,7 +139,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     {
         $result = parent::parentSave();
         Phprojekt_Tree_Node_Database::deleteCache();
-        $this->deleteCumulativeCompletePercentCache();
 
         return $result;
     }
@@ -154,7 +153,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         $result = parent::save();
         Phprojekt_Tree_Node_Database::deleteCache();
 
-        $this->deleteCumulativeCompletePercentCache();
         return $result;
     }
 
@@ -167,7 +165,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     {
         parent::delete();
         Phprojekt_Tree_Node_Database::deleteCache();
-        $this->deleteCumulativeCompletePercentCache();
     }
 
     /**
@@ -245,93 +242,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             return false;
         } else {
             return parent::recordValidate();
-        }
-    }
-
-    /**
-     * Retrieves the calculated completion of this project, i.e. The average
-     * completion of all subprojects and todos.
-     *
-     * @return int Completion percentage.
-     */
-    public function getCumulativeCompletePercent()
-    {
-        if (empty($this->id)) {
-            return 0;
-        }
-
-        $cache = Phprojekt::getInstance()->getCache();
-        $id    = $this->getCumulativeCompletePercentCacheId();
-        if ($cache->test($id)) {
-            return $cache->load($id);
-        }
-
-        $db    = Phprojekt::getInstance()->getDb();
-        $count = 0;
-        $sum   = 0;
-
-        $project     = new Project_Models_Project();
-        $subprojects = $project->fetchAll(
-            $db->quoteInto('project_id = ?', $this->id)
-        );
-
-        foreach ($subprojects as $s) {
-            $count += 1;
-            $sum   += $s->completePercent;
-        }
-
-        $todo  = new Todo_Models_Todo();
-        $todos = $todo->fetchAll($db->quoteInto('project_id = ?', $this->id));
-
-        foreach ($todos as $t) {
-            switch ($t->currentStatus) {
-            case Todo_Models_Todo::STATUS_WAITING:  // Don't count these
-                break;
-            case Todo_Models_Todo::STATUS_ENDED:    // Assume 100%
-                $count +=   1;
-                $sum   += 100;
-                break;
-            default: // Assume 0% (accepted, working, stopped)
-                $count += 1;
-                break;
-            }
-        }
-
-        $completion = ($count > 0) ? ($sum / $count) : 0;
-        $cache->save($completion, $id);
-        return $completion;
-    }
-
-    /**
-     * Calculates the cache id for getCumulativeCompletePercent of the project
-     * with the given id.
-     *
-     * @param int id The id of the project. If null, use the current project.
-     *
-     * @return string The cache id.
-     */
-    protected function getCumulativeCompletePercentCacheId($projectId = null)
-    {
-        if (is_null($projectId)) {
-            $projectId = $this->id;
-        }
-
-        return 'Project_Models_Project__getCumulativeCompletePercent__'
-                . $projectId;
-    }
-
-    /**
-     * Delete the CumulativeCompletePercent caches for this project and its
-     * parent project.
-     */
-    public function deleteCumulativeCompletePercentCache()
-    {
-        $cache = Phprojekt::getInstance()->getCache();
-        $cache->remove($this->getCumulativeCompletePercentCacheId());
-        if (!is_null($this->projectId)) {
-            $cache->remove(
-                $this->getCumulativeCompletePercentCacheId($this->projectId)
-            );
         }
     }
 

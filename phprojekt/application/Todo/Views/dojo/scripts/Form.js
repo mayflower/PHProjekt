@@ -50,20 +50,5 @@ dojo.declare("phpr.Todo.Form", phpr.Default.DialogForm, {
                 });
             });
         }
-    },
-
-    submitForm: function(evt) {
-        this.inherited(arguments);
-
-        phpr.DataStore.deleteDataPartialString({
-            url: phpr.webpath + 'index.php/Project/index/jsonDetail'
-        });
-    },
-
-    deleteFrom: function() {
-        phpr.Todo.Form.superclass.deleteForm.apply(this);
-        phpr.DataStore.deleteDataPartialString({
-            url: phpr.webpath + 'index.php/Project/index/jsonDetail'
-        });
     }
 });
