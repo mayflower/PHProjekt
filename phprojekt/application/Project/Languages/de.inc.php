@@ -18,7 +18,7 @@ $lang["Ended"] = "Beendet";
 $lang["Stopped"] = "Angehalten";
 $lang["Re-Opened"] = "Neu eröffnete";
 $lang["Waiting"] = "Waiting";
-$lang["Complete percent"] = "Fertigstellung";
+$lang["Complete percent"] = "Complete Prozent";
 $lang["Budget"] = "Budget";
 $lang["Hourly wage rate"] = "Stundensatz";
 $lang["Contact"] = "Kontakt";
@@ -202,4 +202,3 @@ $lang["Content Help"]["Role"] = "<br />
 
 $lang["Content Help"]["Notification"] = "DEFAULT";
 $lang["Content Help"]["History"] = "DEFAULT";
-$lang["Cumulative complete percent"] = "Kumulative Fertigstellung";
