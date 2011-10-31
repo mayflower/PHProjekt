@@ -282,25 +282,29 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
         //    Display buttons for the sub module instead of the default
         // Description:
         //    Display buttons for the sub module instead of the default
-        this.formdata[tabId] += this.render(["phpr.Default.template.form", "subModuleButtons.html"], null, {
-            saveText:   phpr.nls.get('Save'),
-            deleteText: phpr.nls.get('Delete'),
-            newText:    phpr.nls.get('New'),
-            id:         this.id
-        });
+        this.formdata[tabId].push(new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.form.subModuleButtons.html",
+            templateData: {
+                saveText:   phpr.nls.get('Save'),
+                deleteText: phpr.nls.get('Delete'),
+                newText:    phpr.nls.get('New'),
+                id:         this.id
+            }
+        }));
     },
 
     setActionFormButtons: function() {
         // Summary:
         //    Connect the buttons to the actions
-        dojo.connect(dijit.byId("subModuleSubmitButton"), "onClick", dojo.hitch(this, "submitForm"));
+        //dojo.connect(dijit.byId("subModuleSubmitButton"), "onClick", dojo.hitch(this, "_submitForm"));
         if (this.id > 0) {
             dojo.connect(dijit.byId("subModuleDeleteButton"), "onClick", dojo.hitch(this, function() {
                 phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'));
             }));
         }
         dojo.connect(dijit.byId("subModuleNewButton"), 'onClick', dojo.hitch(this, function() {
-            this.main.subForm = new this.main.formWidget(this.main, 0, phpr.module);
+            this.main.destroySubForm();
+            this.main.subForm = new this.main.formWidget(this.main, 0, phpr.module, {}, this.main.detailsBox);
         }));
     },
 

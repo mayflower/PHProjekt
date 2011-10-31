@@ -85,6 +85,11 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.inherited(arguments);
         this.node = null;
         this.form = null;
+
+        if (this.fieldTemplate && dojo.isFunction(this.fieldTemplate.destroy)) {
+            this.fieldTemplate.destroy();
+        }
+        this.fieldTemplate = null;
     },
 
     setContainer: function(container) {
@@ -217,23 +222,26 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
 
         // Template for the access tab
-        var accessData = this.render(["phpr.Default.template.access", "tab.html"], null, {
-            accessUserText:     phpr.nls.get('User'),
-            accessReadText:     phpr.nls.get('Read'),
-            accessWriteText:    phpr.nls.get('Write'),
-            accessAccessText:   phpr.nls.get('Access'),
-            accessCreateText:   phpr.nls.get('Create'),
-            accessCopyText:     phpr.nls.get('Copy'),
-            accessDeleteText:   phpr.nls.get('Delete'),
-            accessDownloadText: phpr.nls.get('Download'),
-            accessAdminText:    phpr.nls.get('Admin'),
-            accessActionText:   phpr.nls.get('Action'),
-            accessPermissions:  (users.length > 0) ? this._accessPermissions : false,
-            users:              users,
-            rows:               rows
+        var accessData = new phpr.Default.System.TemplateWrapper({
+            templateName:"phpr.Default.template.access.tab.html",
+            templateData: {
+                accessUserText:     phpr.nls.get('User'),
+                accessReadText:     phpr.nls.get('Read'),
+                accessWriteText:    phpr.nls.get('Write'),
+                accessAccessText:   phpr.nls.get('Access'),
+                accessCreateText:   phpr.nls.get('Create'),
+                accessCopyText:     phpr.nls.get('Copy'),
+                accessDeleteText:   phpr.nls.get('Delete'),
+                accessDownloadText: phpr.nls.get('Download'),
+                accessAdminText:    phpr.nls.get('Admin'),
+                accessActionText:   phpr.nls.get('Action'),
+                accessPermissions:  (users.length > 0) ? this._accessPermissions : false,
+                users:              users,
+                rows:               rows
+            }
         });
 
-        this.addTab(accessData, 'tabAccess', 'Access', 'accessFormTab');
+        this.addTab([accessData], 'tabAccess', 'Access', 'accessFormTab');
 
         // Add "add" button for access
         if (this._accessPermissions && users.length > 0) {
@@ -302,7 +310,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
     },
 
-    addTab: function(innerTabs, id, title, formId) {
+    addTab: function(innerWidgets, id, title, formId) {
         // Summary:
         //    Add a tab
         // Description:
@@ -316,9 +324,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var content = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Default.template.form.tabs.html",
             templateData: {
-                innerTabs: innerTabs,
                 formId:    formId || ''
             }});
+
+        for (var i in innerWidgets) {
+            var widget = innerWidgets[i];
+            content.formtable.appendChild(widget.domNode);
+            this.garbageCollector.addNode(widget);
+        }
 
         var tab = new dijit.layout.ContentPane({
             id:    id,
@@ -335,9 +348,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.garbageCollector.addNode(tab);
 
         this.form.addChild(tab);
-        if (typeof formId != "undefined") {
-            this.formsWidget.push(dijit.byId(formId));
-            this.garbageCollector.addNode(dijit.byId(formId));
+        if (typeof content.tabform != "undefined") {
+            this.formsWidget.push(content.tabform);
+            this.garbageCollector.addNode(content.tabform);
         }
 
         content.tabform.onSubmit = dojo.hitch(this, "_submitForm");
@@ -406,71 +419,71 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
                 // Init formdata
                 if (!this.formdata[itemtab]) {
-                    this.formdata[itemtab] = '';
+                    this.formdata[itemtab] = [];
                 }
 
                 // Render the fields according to their type
                 switch (itemtype) {
                     case 'checkbox':
-                        this.formdata[itemtab] += this.fieldTemplate.checkRender(itemlabel, itemid, itemvalue,
-                                                    itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.checkRender(itemlabel, itemid, itemvalue,
+                                                    itemdisabled, itemhint));
                         break;
                     case 'selectbox':
-                        this.formdata[itemtab] += this.fieldTemplate.selectRender(itemrange, itemlabel, itemid,
-                                                    itemvalue, itemrequired, itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.selectRender(itemrange, itemlabel, itemid,
+                                                    itemvalue, itemrequired, itemdisabled, itemhint));
                         break;
                     case 'multipleselectbox':
-                        this.formdata[itemtab] += this.fieldTemplate.multipleSelectRender(itemrange, itemlabel, itemid,
-                                                    itemvalue, itemrequired, itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.multipleSelectRender(itemrange, itemlabel, itemid,
+                                                    itemvalue, itemrequired, itemdisabled, itemhint));
                         break;
                     case 'date':
-                        this.formdata[itemtab] += this.fieldTemplate.dateRender(itemlabel, itemid, itemvalue,
-                                                    itemrequired, itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.dateRender(itemlabel, itemid, itemvalue,
+                                                    itemrequired, itemdisabled, itemhint));
                         break;
                     case 'time':
-                        this.formdata[itemtab] += this.fieldTemplate.timeRender(itemlabel, itemid, itemvalue,
-                                                    itemrequired, itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.timeRender(itemlabel, itemid, itemvalue,
+                                                    itemrequired, itemdisabled, itemhint));
                         break;
                     case 'datetime':
-                        this.formdata[itemtab] += this.fieldTemplate.datetimeRender(itemlabel, itemid, itemvalue,
-                                                    itemrequired, itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.datetimeRender(itemlabel, itemid, itemvalue,
+                                                    itemrequired, itemdisabled, itemhint));
                         break;
                     case 'textarea':
-                        this.formdata[itemtab] += this.fieldTemplate.htmlAreaRender(itemlabel, itemid, itemvalue,
-                                                    itemrequired, itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.htmlAreaRender(itemlabel, itemid, itemvalue,
+                                                    itemrequired, itemdisabled, itemhint));
                         break;
                     case 'simpletextarea':
-                        this.formdata[itemtab] += this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue,
-                                                    itemrequired, itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.textAreaRender(itemlabel, itemid, itemvalue,
+                                                    itemrequired, itemdisabled, itemhint));
                         break;
                     case 'password':
-                        this.formdata[itemtab] += this.fieldTemplate.passwordFieldRender(itemlabel, itemid, itemvalue,
-                                                    itemlength, itemrequired, itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.passwordFieldRender(itemlabel, itemid, itemvalue,
+                                                    itemlength, itemrequired, itemdisabled, itemhint));
                         break;
                     case 'percentage':
-                        this.formdata[itemtab] += this.fieldTemplate.percentageFieldRender(itemlabel, itemid, itemvalue,
-                                                    itemrequired, itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.percentageFieldRender(itemlabel, itemid, itemvalue,
+                                                    itemrequired, itemdisabled, itemhint));
                         break;
                     case 'upload':
                         iFramePath              = this.getUploadIframePath(itemid);
-                        this.formdata[itemtab] += this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue,
-                                                    itemrequired, itemdisabled, iFramePath, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.uploadFieldRender(itemlabel, itemid, itemvalue,
+                                                    itemrequired, itemdisabled, iFramePath, itemhint));
                         break;
                     case 'hidden':
-                        this.formdata[itemtab] += this.fieldTemplate.hiddenFieldRender('', itemid, itemvalue,
-                                                    itemrequired, itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.hiddenFieldRender('', itemid, itemvalue,
+                                                    itemrequired, itemdisabled, itemhint));
                         break;
                     case 'display':
-                        this.formdata[itemtab] += this.fieldTemplate.displayFieldRender(itemlabel, itemid, itemvalue,
-                                                    itemhint, itemrange);
+                        this.formdata[itemtab].push(this.fieldTemplate.displayFieldRender(itemlabel, itemid, itemvalue,
+                                                    itemhint, itemrange));
                         break;
                     case 'rating':
-                        this.formdata[itemtab] += this.fieldTemplate.ratingFieldRender(itemlabel, itemid, itemvalue,
-                            itemdisabled, itemhint, itemrange);
+                        this.formdata[itemtab].push(this.fieldTemplate.ratingFieldRender(itemlabel, itemid, itemvalue,
+                            itemdisabled, itemhint, itemrange));
                         break;
                     default:
-                        this.formdata[itemtab] += this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue,
-                                                    itemlength, itemrequired, itemdisabled, itemhint);
+                        this.formdata[itemtab].push(this.fieldTemplate.textFieldRender(itemlabel, itemid, itemvalue,
+                                                    itemlength, itemrequired, itemdisabled, itemhint));
                         break;
                 }
             }
@@ -556,12 +569,15 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Render the save and delete buttons
         // Description:
         //    Render the save and delete buttons
-        this.formdata[tabId] += this.render(["phpr.Default.template.form", "buttons.html"], null, {
-            writePermissions:  this._writePermissions,
-            deletePermissions: this._deletePermissions,
-            saveText:          phpr.nls.get('Save'),
-            deleteText:        phpr.nls.get('Delete')
-        });
+        this.formdata[tabId].push(new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.form.buttons.html",
+            templateData: {
+                writePermissions:  this._writePermissions,
+                deletePermissions: this._deletePermissions,
+                saveText:          phpr.nls.get('Save'),
+                deleteText:        phpr.nls.get('Delete')
+            }
+        }));
     },
 
     setActionFormButtons: function() {
@@ -630,8 +646,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Display all the history of the item
         if (this.id > 0 && this.useHistoryTab()) {
-            var html = this.render(["phpr.Default.template.history", "content.html"]);
-            this.addTab(html, 'tabHistory', 'History', 'accesshistoryTab');
+            var widget = new phpr.Default.System.TemplateWrapper({
+                templateName: "phpr.Default.template.history.content.html"});
+            this.addTab([widget], 'tabHistory', 'History', 'accesshistoryTab');
         }
     },
 
@@ -664,7 +681,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             // Add the tabs
             for (var index in subModules) {
                 var subModuleName = subModules[index].name;
-                this.addTab('', 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
+                this.addTab([], 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
                     subModuleName + 'FormTab');
                 dojo.addClass('tab' + subModuleName, 'subModuleDiv');
                 subModules[index]['class'].fillTab('tab' + subModuleName);
@@ -685,7 +702,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Add some special fields
         // Description:
         //    Add some special fields
-        this.formdata[1] += this.displayTagInput();
+        this.formdata[1].push(this.displayTagInput());
     },
 
     postRenderForm: function() {
@@ -1047,7 +1064,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification',
             defaultValue, false, phpr.nls.get('Check this box to send an email notification to the participants'));
         // Add the tab to the form
-        this.addTab(notificationTab, 'tabNotify', 'Notification', 'accessnotificationTab');
+        this.addTab([ notificationTab ], 'tabNotify', 'Notification', 'accessnotificationTab');
     },
 
     presetValues: function(data) {

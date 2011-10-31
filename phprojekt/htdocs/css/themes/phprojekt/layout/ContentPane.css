@@ -4,6 +4,10 @@
     padding: 0px;
 }
 
+.phprojekt tr.dijitContentPane {
+    display: table-row;
+}
+
 /* nested layouts */
 .phprojekt .dijitTabContainerTop-dijitContentPane,
 .phprojekt .dijitTabContainerLeft-dijitContentPane,

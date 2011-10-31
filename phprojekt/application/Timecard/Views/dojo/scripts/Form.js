@@ -209,11 +209,11 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                     // Init formdata
                     var formData = '';
                     // startDatetime
-                    formData += this.fieldTemplate.datetimeRender(meta[0]["label"], meta[0]["key"], '',
-                        meta[0]["required"], false, meta[0]["hint"]);
+                    formData.push(this.fieldTemplate.datetimeRender(meta[0]["label"], meta[0]["key"], '',
+                        meta[0]["required"], false, meta[0]["hint"]));
                     // endTime
-                    formData += this.fieldTemplate.timeRender(meta[1]["label"], meta[1]["key"], '',
-                        meta[1]["required"], false, meta[1]["hint"]);
+                    formData.push(this.fieldTemplate.timeRender(meta[1]["label"], meta[1]["key"], '',
+                        meta[1]["required"], false, meta[1]["hint"]));
                     // projectId
                     var range = dojo.clone(meta[3]['range']);
                     range.unshift({'id': -1, 'name': '----'});
@@ -229,20 +229,27 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                             range.unshift({'id': parseInt(favorites[i].id), 'name': favorites[i].name});
                         }
                     }
-                    formData += this.fieldTemplate.selectRender(range, meta[3]["label"], meta[3]["key"], -1,
-                        meta[3]["required"], false, meta[3]["hint"]);
+                    formData.push(this.fieldTemplate.selectRender(range, meta[3]["label"], meta[3]["key"], -1,
+                        meta[3]["required"], false, meta[3]["hint"]));
                     // notes
-                    formData += this.fieldTemplate.textAreaRender(meta[4]["label"], meta[4]["key"], '',
-                        meta[4]["required"], false, meta[4]["hint"]);
+                    formData.push(this.fieldTemplate.textAreaRender(meta[4]["label"], meta[4]["key"], '',
+                        meta[4]["required"], false, meta[4]["hint"]));
 
                     // timecardId
-                    formData += this.fieldTemplate.hiddenFieldRender('', 'timecardId', this.id, true, false);
+                    formData.push(this.fieldTemplate.hiddenFieldRender('', 'timecardId', this.id, true, false));
 
-                    var content = this.render(["phpr.Timecard.template", "formView.html"], null, {
-                        formData:   formData,
-                        saveText:   phpr.nls.get('Save'),
-                        deleteText: phpr.nls.get('Delete')
+                    var content = new phpr.Default.System.TemplateWrapper({
+                        templateName: "phpr.Timecard.template.formView.html",
+                        templateData: {
+                            saveText:   phpr.nls.get('Save'),
+                            deleteText: phpr.nls.get('Delete')
+                        }
                     });
+
+                    for (var i in formData) {
+                        dojo.place(formData[i].domNode, content.formBottom, 'before');
+                        this.garbageCollector.addNode(formData[i]);
+                    }
 
                     var tooltipDialog = new dijit.TooltipDialog({
                         id:      'timecardTooltipDialog',
