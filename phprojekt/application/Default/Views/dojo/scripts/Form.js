@@ -436,6 +436,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                         this.formdata[itemtab].push(this.fieldTemplate.multipleSelectRender(itemrange, itemlabel, itemid,
                                                     itemvalue, itemrequired, itemdisabled, itemhint));
                         break;
+                    case 'multiplefilteringselectbox':
+                        this.formdata[itemtab].push(this.fieldTemplate.multipleFilteringSelectRender(itemrange, itemlabel, itemid,
+                                                    itemvalue, itemrequired, itemdisabled, itemhint));
+                        break;
                     case 'date':
                         this.formdata[itemtab].push(this.fieldTemplate.dateRender(itemlabel, itemid, itemvalue,
                                                     itemrequired, itemdisabled, itemhint));

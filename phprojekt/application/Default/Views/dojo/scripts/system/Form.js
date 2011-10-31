@@ -78,3 +78,186 @@ dojo.declare("phpr.Default.System.Form.Rating", [dojox.form.Rating], {
         }
     }
 });
+
+dojo.provide("phpr.Default.System.Form.MultiFilteringSelect");
+dojo.require("dijit.form.FilteringSelect");
+dojo.require("dijit.form.Button");
+dojo.declare("phpr.Default.System.Form.MultiFilteringSelect", dijit.form.FilteringSelect, {
+    selection: {},
+    selectionContainer: null,
+    _createdOwnSelectionContainer: false,
+    value: null,
+    _buttons: [],
+    destroy: function() {
+        this._destroyButtons();
+
+        if (this._createdOwnSelectionContainer) {
+            dojo.destroy(this.selectionContainer);
+        }
+
+        this.inherited(arguments);
+    },
+    postMixInProperties: function() {
+        if (!this.store) {
+            var srcNodeRef = this.srcNodeRef;
+
+            // if user didn't specify store, then assume there are option tags
+            this.store = new phpr.Default.System._ComboBoxDataStore(srcNodeRef);
+            this.selection = this.store.getSelectedItems();
+
+            // if there is no value set and there is an option list, set
+            // the value to the first value to be consistent with native
+            // Select
+
+            // Firefox and Safari set value
+            // IE6 and Opera set selectedIndex, which is automatically set
+            // by the selected attribute of an option tag
+            // IE6 does not set value, Opera sets value = selectedIndex
+            if (!("value" in this.params)) {
+                var item = (this.item = this.store.fetchSelectedItem());
+                if (item) {
+                    var valueField = this._getValueField();
+                    this.value = this.store.getValue(item, valueField);
+                }
+            }
+        }
+
+        this.inherited(arguments);
+    },
+    postCreate: function() {
+        this.inherited(arguments);
+
+        this.selectionContainer = dojo.byId(this.selectionContainer);
+
+        if (!this.selectionContainer) {
+            this.selectionContainer = dojo.create('div', null, this.domNode, 'after');
+            this._createdOwnSelectionContainer = true;
+        }
+
+        this.selectionContainer = this.selectionContainer.domNode || this.selectionContainer;
+
+        this._renderSelection();
+    },
+    isValid: function() {
+        return true;
+    },
+    onChange: function(value) {
+        this.inherited(arguments);
+        this._addToSelection(this.item);
+    },
+    _onKey: function(evt) {
+        this.inherited(arguments);
+        if (evt.charOrCode == dojo.keys.ENTER) {
+            if (this.item) {
+                this._addToSelection(this.item);
+            }
+        }
+    },
+    _addToSelection: function(item) {
+        if (!item) {
+            return;
+        }
+
+        var value = this.store.getValue(item, this._getValueField());
+        var displayedValue = this.displayedValue;
+
+        if (value !== "" && value !== null && !this.selection.hasOwnProperty(value)) {
+            this.selection[value] = displayedValue;
+            this._renderSelection();
+            this.value = null;
+            this.reset();
+        }
+    },
+    _removeFromSelection: function(value) {
+        if (this.selection.hasOwnProperty(value)) {
+            delete this.selection[value];
+            this._renderSelection();
+        }
+    },
+    _openResultList: function(results, dataObject) {
+        var newResults = [];
+        dojo.forEach(results, function(item, i) {
+            if (!this.selection.hasOwnProperty(dataObject.store.getValue(item, this._getValueField()))) {
+                newResults.push(item);
+            }
+        }, this);
+
+        arguments[0] = newResults;
+        this.inherited(arguments);
+    },
+    _renderSelection: function() {
+        if (this.selectionContainer) {
+            this._destroyButtons();
+            dojo.empty(this.selectionContainer);
+            var self = this;
+            for (var i in this.selection) {
+                var button = new dijit.form.Button({
+                    label: this.selection[i],
+                    onClick: dojo.hitch(null, function(value) {
+                            self._removeFromSelection(value);
+                        }, i)
+                });
+                this.selectionContainer.appendChild(button.domNode);
+                this._buttons.push(button);
+            }
+        }
+    },
+    _destroyButtons: function() {
+        for (var i = 0; i < this._buttons.lengh; i++) {
+            this._buttons[i].destroyRecursive();
+        }
+        this._buttons = [];
+    },
+    _getValueAttr: function() {
+        var ret = [];
+        for (var i in this.selection) {
+            if (this.selection.hasOwnProperty(i)) {
+                ret.push(i);
+            }
+        }
+        return ret;
+    },
+    _setValueAttr: function(values) {
+        if (!values || !dojo.isArray(values) || values.length === 0) {
+            return
+        }
+        this.selection = {};
+        for (var i in values) {
+            this.selection[values[i]] = null;
+        }
+        this.store.fetch({ onComplete: dojo.hitch(this, this._integrateDisplayValues) });
+    },
+    _integrateDisplayValues: function(storeitems) {
+        var valueField = this._getValueField();
+        for (var i in this.selection) {
+            if (this.selection.hasOwnProperty(i) && this.selection[i] === null) {
+                for (var e in storeitems) {
+                    if (this.store.getValue(storeitems[e], valueField) == i) {
+                        this.selection[i] = this.store.getLabel(storeitems[e]);
+                    }
+                }
+            }
+        }
+        this._renderSelection();
+    },
+    _setMaxOptions: function() {}
+})
+
+dojo.declare("phpr.Default.System._ComboBoxDataStore", dijit.form._ComboBoxDataStore, {
+    _selectedItems: {},
+    constructor: function( /*DomNode*/ root) {
+        var self = this;
+        dojo.query("> option", this.root).forEach(function(option) {
+            if (option.selected && option.value) {
+                var text = (option.innerText || option.textContent || '');
+                self._selectedItems[option.value] = text;
+            }
+        } );
+    },
+    getSelectedItems: function() {
+        return this._selectedItems;
+    },
+    fetchSelectedItem: function() {
+        return null;
+    }
+})
