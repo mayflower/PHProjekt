@@ -58,7 +58,7 @@ class Phprojekt_Auth_Proxy
      */
     public static function switchToUserById($userId = null)
     {
-        if ($userId === null) {
+        if (is_null($userId)) {
             $userId = Phprojekt_Auth::getUserId();
         }
 
@@ -90,7 +90,7 @@ class Phprojekt_Auth_Proxy
      */
     public static function getEffectiveUser()
     {
-        if (self::$_effectiveUser != null) {
+        if (!is_null(self::$_effectiveUser)) {
             return self::$_effectiveUser;
         } else {
             $user = new Phprojekt_User_User();
@@ -116,7 +116,7 @@ class Phprojekt_Auth_Proxy
 
     protected static function _getProxyTable()
     {
-        if (self::$_proxyTable === null) {
+        if (is_null(self::$_proxyTable)) {
             self::$_proxyTable = new Phprojekt_Auth_ProxyTable();
         }
         return self::$_proxyTable;

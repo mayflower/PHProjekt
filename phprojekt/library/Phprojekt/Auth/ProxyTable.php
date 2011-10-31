@@ -46,7 +46,7 @@ class Phprojekt_Auth_ProxyTable
      */
     public function __construct($db = null)
     {
-        if ($db === null) {
+        if (is_null($db)) {
             $db = Phprojekt::getInstance()->getDb();
         }
 
@@ -160,12 +160,12 @@ class Phprojekt_Auth_ProxyTable
 
         $row = $this->_proxyTable->fetchRow($select);
 
-        return $row != null;
+        return !is_null($row);
     }
 
     protected function _currentUserIdIfNull($userId)
     {
-        if ($userId === null) {
+        if (is_null($userId)) {
             $userId = Phprojekt_Auth::getUserId();
         }
 
