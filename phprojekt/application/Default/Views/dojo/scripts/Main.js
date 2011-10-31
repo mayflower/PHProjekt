@@ -55,6 +55,7 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
         delete this.view.detailsBox;
     },
     update: function(config) {
+        this.inherited(arguments);
         this.clear();
         this._renderSearchResults(config || {});
     },
@@ -238,18 +239,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     },
 
     loadResult: function(/*int*/id, /*String*/module, /*int*/projectId) {
-        this.cleanPage();
-        phpr.currentProjectId = projectId;
-        if (phpr.isGlobalModule(module)) {
-            phpr.tree.fadeOut();
-        } else {
-            phpr.tree.fadeIn();
-        }
-
         phpr.pageManager.changeState({
             moduleName: module,
             id: id,
             projectId: projectId
+        }, {
+            forceModuleReload: true
         });
     },
 
