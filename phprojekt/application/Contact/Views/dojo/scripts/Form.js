@@ -21,7 +21,7 @@
 
 dojo.provide("phpr.Contact.Form");
 
-dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
+dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
 
     initData:function() {
         // Get all the active users
