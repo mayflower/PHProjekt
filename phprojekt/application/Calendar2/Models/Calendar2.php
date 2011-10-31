@@ -149,7 +149,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
         // Default values
         $this->visibility = self::VISIBILITY_PUBLIC;
-        $this->ownerId    = Phprojekt_Auth::getUserId();
+        $this->ownerId    = Phprojekt_Auth_Proxy::getEffectiveUserId();
     }
 
     /**
@@ -159,7 +159,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function getInformation()
     {
-        if ($this->ownerId && (Phprojekt_Auth::getUserId() != $this->ownerId)) {
+        if ($this->ownerId && (Phprojekt_Auth_Proxy::getEffectiveUserId() != $this->ownerId)) {
             return new Calendar2_Models_InformationDecoratorReadonly($this->_information);
         } else {
             return $this->_information;
@@ -477,7 +477,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     {
         if (is_null($user)) {
             // Default to the current user.
-            $user = Phprojekt_Auth::getUserId();
+            $user = Phprojekt_Auth_Proxy::getEffectiveUserId();
         }
 
         $db     = $this->getAdapter();
@@ -486,7 +486,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             (int) $user
         );
 
-        if (Phprojekt_Auth::getUserId() != $user) {
+        if (Phprojekt_Auth_Proxy::getEffectiveUserId() != $user) {
             $where .= $db->quoteInto(
                 ' AND calendar2.visibility != ?',
                 (int) self::VISIBILITY_PRIVATE
@@ -760,7 +760,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     public function getConfirmationStatus($id = null)
     {
         if (is_null($id)) {
-            $id = Phprojekt_Auth::getUserId();
+            $id = Phprojekt_Auth_Proxy::getEffectiveUserId();
         }
         $this->_fetchParticipantData();
 
