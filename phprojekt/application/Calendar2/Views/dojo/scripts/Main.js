@@ -78,7 +78,7 @@ dojo.declare("phpr.Calendar2.CalendarViewMixin", phpr.Default.System.ViewContent
             this.view[name] = mainContent[name];
         }
     }
-})
+});
 
 dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     _date:                new Date(),
@@ -236,14 +236,20 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.resizeDisconnect();
         this.destroyOtherLists('dayListSelect');
         phpr.viewManager.getView().buttonRow.set('content', '');
-        this.setNewEntry();
-        var dateString = phpr.date.getIsoDate(this._date);
-        var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
-            + phpr.currentProjectId;
-        this.dayListSelect = new this.dayListSelectWidget(updateUrl, phpr.currentProjectId, dateString,
-            this._usersSelected, this);
-        this.setSubmoduleNavigation();
-        this.setScheduleBar(true, true);
+        if (this._usersSelected.length > 0) {
+            this.setNewEntry();
+            var dateString = phpr.date.getIsoDate(this._date);
+            var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
+                + phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
+            this.dayListSelect = new this.dayListSelectWidget(updateUrl, phpr.currentProjectId, dateString,
+                    this._usersSelected, this);
+            this.setSubmoduleNavigation();
+            this.setScheduleBar(true, true);
+        } else {
+            var newconfig = dojo.clone(this.config);
+            newconfig.action = "dayListSelf";
+            phpr.pageManager.changeState(newconfig);
+        }
     },
 
     loadWeekList: function() {
@@ -582,13 +588,10 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         navigation += '   </tr></table>'
                    + '</div>'
                    + '<div class="nav_sub">'
-                       + '<table><tr>';
+                   + '<table><tr>';
 
         moduleViews = new Array();
-        if (!this.isListActive('dayList')) {
-            this.addModuleView(moduleViews, phpr.nls.get('Self'), 'userSelfClick', true);
-        } else {
-            this.addModuleView(moduleViews, phpr.nls.get('Self'), 'userSelfClick', !this._usersSelectionMode);
+        if (this.isListActive('dayList')) {
             this.addModuleView(moduleViews, phpr.nls.get('Selection'), 'userSelectionClick', this._usersSelectionMode);
         }
 

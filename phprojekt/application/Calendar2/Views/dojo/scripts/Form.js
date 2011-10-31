@@ -612,12 +612,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
-    // Only change: these two lines have been commented out.
-    //  We need this because the id on the server might have changed when the event has been split.
-    //           if (!this.id) {
-                   this.id = data['id'];
-    //           }
                if (data.type == 'success') {
+                   this.id = data['id'];
                    phpr.send({
                         url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module
                             + '/id/' + this.id,
