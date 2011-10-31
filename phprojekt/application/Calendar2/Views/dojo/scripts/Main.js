@@ -22,6 +22,8 @@
 dojo.provide("phpr.Calendar2.Main");
 dojo.provide("phpr.Calendar2.CalendarViewMixin");
 dojo.require("dijit.Dialog");
+dojo.require("phpr.Calendar2.Selector");
+dojo.require("phpr.Calendar2.ProxyableStore");
 
 // This ist our view mixin, it provides us with a border container without the overview box
 // this is only needed because the pagestyle is relative to the bordercontainer
@@ -113,6 +115,8 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         dojo.subscribe(this.module + ".connectViewResize", this, "connectViewResize");
         dojo.subscribe(this.module + ".saveChanges", this, "saveChanges");
         dojo.subscribe(this.module + ".enableEventDivClick", this, "enableEventDivClick");
+        dojo.subscribe(this.module + ".proxyChanged", this, "_changeProxyUser");
+        dojo.subscribe(this.module + ".proxyLoad", this, "_loadProxyableUsers");
 
         this.gridWidget          = phpr.Calendar2.Grid;
         this.dayListSelfWidget   = phpr.Calendar2.ViewDayListSelf;
@@ -659,6 +663,11 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
                 });
         }
 
+        navigation += phpr.fillTemplate("phpr.Calendar2.template.proxyDropDown.html",
+                {
+                    label: phpr.nls.get("User:")
+                });
+
         navigation += '   </tr></table>'
                    + '</div>';
 
@@ -933,6 +942,56 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         // while first, because an event has just been dragged...
         if (this.weekList) {
             this.weekList.eventClickDisabled = false;
+        }
+    },
+
+    _loadProxyableUsers: function(widget) {
+        this._proxySelectWidget = widget;
+        this._proxyStore = new phpr.Calendar2.ProxyableStore();
+        this._proxyStore.fetch(dojo.hitch(this, this._proxyableUsersLoaded));
+    },
+
+    _proxyableUsersLoaded: function() {
+        this._proxyableUserList = this._proxyStore.getList();
+        this._populateProxySelect();
+    },
+
+    _populateProxySelect: function(users) {
+        if (this._proxySelectWidget.getOptions().length == 0) {
+            var options = [];
+            options.push({
+                label: this._getCurrentUser().display,
+                value: String(this._getCurrentUser().id)
+            });
+
+            for (var index in this._proxyableUserList) {
+                options.push({
+                    label: this._proxyableUserList[index].display,
+                    value: String(this._proxyableUserList[index].id)
+                });
+            }
+
+            this._proxySelectWidget.addOption(options);
+            this._ignoreFirstProxyChange = true;
+        }
+        this._proxySelectWidget.set('value', String(this.getActiveUser().id));
+    },
+
+    _changeProxyUser: function(widget) {
+        if (this._ignoreFirstProxyChange) {
+            this._ignoreFirstProxyChange = false;
+        } else if (this.getActiveUser().id !== widget.get('value')) {
+            this.setActiveUser(this._getUserById(widget.get('value')));
+            this.reload(this.config);
+        }
+    },
+
+    _getUserById: function(id) {
+        var userList = this.userStore.getList();
+        for (var i in userList) {
+            if (userList[i].id == id) {
+                return userList[i];
+            }
         }
     }
 });
