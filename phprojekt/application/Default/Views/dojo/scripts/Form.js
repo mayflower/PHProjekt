@@ -1233,7 +1233,7 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
     },
 
     setFormButtons: function() {
-        this.buttons.set('content', phpr.fillTemplate("phpr.Default.template.form.buttons.html", {
+        this.buttons.set('content', phpr.fillTemplate("phpr.Default.template.form.dialogButtons.html", {
                 writePermissions:  this._writePermissions,
                 deletePermissions: this._deletePermissions,
                 saveText:          phpr.nls.get('Save'),
