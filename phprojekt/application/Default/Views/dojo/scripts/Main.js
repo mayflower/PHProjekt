@@ -471,7 +471,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             this,
             phpr.currentProjectId,
             gridBoxContainer,
-            includeSubentries);
+            {recursive: includeSubentries});
     },
 
     setWidgets: function() {
@@ -497,7 +497,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 this,
                 phpr.currentProjectId,
                 gridBoxContainer,
-                this.config.includeSubentries == "true");
+                {recursive: this.config.includeSubentries == "true"});
     },
 
     setGlobalModulesNavigation: function() {

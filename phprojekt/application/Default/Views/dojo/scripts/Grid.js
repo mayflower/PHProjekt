@@ -50,7 +50,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     _active:       false,
     // gridFilters Widget
     gridFilters:   null,
-    includeSubentries: false,
 
     // Grid cookies
     _sortColumnCookie: null,
@@ -72,12 +71,12 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     TARGET_SINGLE:   0,
     TARGET_MULTIPLE: 1,
 
-    constructor: function(/*String*/updateUrl, /*Object*/main, /*Int*/ id, /*Widget*/gridBoxContainer, /*Boolean*/includeSubentries) {
+    constructor: function(/*String*/updateUrl, /*Object*/main, /*Int*/ id, /*Widget*/gridBoxContainer, /*Object*/extraParams) {
         // Summary:
         //    render the grid on construction
         // Description:
         //    this function receives the list data from the server and renders the corresponding grid
-        this.includeSubentries = includeSubentries || false;
+        this.extraParams = extraParams || {};
         this.main             = main;
         this.id               = id;
         this.gridBoxContainer = gridBoxContainer;
@@ -150,8 +149,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Description:
         //    Set the url for getting the data
         this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonList/nodeId/' + this.id;
-        if (this.includeSubentries) {
-            this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonList/nodeId/' + this.id + '/recursive/true/';
+        for (var key in this.extraParams) {
+            this.url += '/' + key + '/' + this.extraParams[key];
         }
     },
 
