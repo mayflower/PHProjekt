@@ -128,7 +128,11 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
         //    Render the grid and the form widgets
         // Description:
         //    Render the grid and the form widgets
+        if (this.subGrid && dojo.isFunction(this.subGrid.destroy)) {
+            this.subGrid.destroy();
+        }
         this.subGrid = new this.gridWidget('', this, phpr.currentProjectId, this.overviewBox);
+        this.destroySubForm();
         this.subForm = new this.formWidget(this, 0, phpr.module, {}, this.detailsBox);
     },
 
@@ -145,6 +149,12 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
             this.subForm.updateData();
         }
         this._renderSubModule();
+    },
+    destroySubForm: function() {
+        if (this.subForm && dojo.isFunction(this.subForm.destroy)) {
+            this.subForm.destroy();
+        }
+        this.subForm = null;
     }
 });
 
@@ -190,6 +200,7 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
     },
 
     getLinkForEdit: function(id) {
+        this.main.destroySubForm();
         this.main.subForm = new this.main.formWidget(this.main, id, phpr.module, {}, this.main.detailsBox);
     },
 
