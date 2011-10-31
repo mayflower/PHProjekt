@@ -509,11 +509,11 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                if (data.type == 'success') {
                    this.publish("updateCacheData");
                    // reload the page and trigger the form load
-                   phpr.pageManager.changeState({
-                       moduleName: this.main.module,
-                   }, {
-                       forceModuleReload: true
-                   });
+                   var newstate = this.main.config;
+                   if (newstate.id) {
+                       delete newstate.id;
+                   }
+                   phpr.pageManager.changeState(newstate, { forceModuleReload: true });
                }
             })
         });
@@ -629,11 +629,11 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                             if (data.type == 'success') {
                                 this.publish("updateCacheData");
                                 // reload the page and trigger the form load
-                                phpr.pageManager.changeState({
-                                    moduleName: this.main.module,
-                                }, {
-                                    forceModuleReload: true
-                                });
+                                var newstate = this.main.config;
+                                if (newstate.id) {
+                                    delete newstate.id;
+                                }
+                                phpr.pageManager.changeState(newstate, { forceModuleReload: true });
                             }
                         })
                     });
