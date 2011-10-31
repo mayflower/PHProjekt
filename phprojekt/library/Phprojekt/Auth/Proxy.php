@@ -1,6 +1,6 @@
 <?php
 /**
- * Calendar2 ProxyUsers model class.
+ * Authentication Methods to manage the effective user id.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
  */
 
 /**
- * Authentication methods to do proxying.
+ * Authentication Methods to manage the effective user id.
  *
  * This class provides the necessary functions to switch the effective user.
  *
