@@ -120,6 +120,9 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.weekListWidget      = phpr.Calendar2.ViewWeekList;
         this.monthListWidget     = phpr.Calendar2.ViewMonthList;
         this.formWidget          = phpr.Calendar2.Form;
+        this.userStore = new phpr.Default.System.Store.User();
+
+        this.setActiveUser(null);
     },
 
     destroy: function() {
@@ -138,7 +141,30 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         // Summary:
         //   Custom setWidgets for calendar
         phpr.tree.loadTree();
-        this.loadAppropriateList();
+        this.userStore.fetch(
+            dojo.hitch(this, function() {
+                if (this.getActiveUser() === null) {
+                    this.setActiveUser(this._getCurrentUser());
+                }
+                this.loadAppropriateList();
+            }));
+    },
+
+    setActiveUser: function(user) {
+        this._activeUser = user;
+    },
+
+    getActiveUser: function(user) {
+        return this._activeUser;
+    },
+
+    _getCurrentUser: function() {
+        var userList = this.userStore.getList();
+        for (var i in userList) {
+            if (userList[i].current) {
+                return userList[i];
+            }
+        }
     },
 
     loadAppropriateList: function() {
