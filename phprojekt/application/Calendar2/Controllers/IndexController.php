@@ -71,6 +71,50 @@ class Calendar2_IndexController extends IndexController
             Phprojekt_ModelInformation_Default::ORDERING_LIST
         );
     }
+
+    /**
+     * Returns the list of items for one model.
+     *
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of all the rows.
+     *  - The number of rows.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b>     List only this id.
+     *  - integer <b>nodeId</b> List all the items with projectId == nodeId.
+     *  - integer <b>count</b>  Use for SQL LIMIT count.
+     *  - integer <b>offset</b> Use for SQL LIMIT offset.
+     *  - integer <b>userId</b> UserId of the user requesting the list (for proxy mode).
+     *  - boolean <b>recursive</b> Include items of subprojects.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonListAction()
+    {
+        $userId = (int) $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
+
+        if (!Cleaner::validate('int', $userId)) {
+           throw new Phprojekt_PublishedException(
+               "Invalid userId '$userId'"
+            );
+        }
+
+        if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById((int) $userId)) {
+            throw new Phprojekt_PublishedException("Current user has no proxy rights for this user $userId");
+        } else {
+            Phprojekt_Auth_Proxy::switchToUserById((int) $userId);
+        }
+
+        parent::jsonListAction();
+    }
+
     /**
      * Returns all events in the given period of time that the user is
      * involved in. Only days are recognized.
