@@ -129,14 +129,28 @@ class Calendar2_IndexController extends IndexController
     {
         $dateStart = $this->getRequest()->getParam('dateStart');
         $dateEnd   = $this->getRequest()->getParam('dateEnd');
+        $userId    = $this->getRequest()->getParam('userId', (int) Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('isoDate', $dateStart)) {
             throw new Phprojekt_PublishedException(
                 "Invalid dateStart '$dateStart'"
             );
         }
+
         if (!Cleaner::validate('isoDate', $dateEnd)) {
             throw new Phprojekt_PublishedException("Invalid dateEnd $dateEnd");
+        }
+
+        if (!Cleaner::validate('int', $userId)) {
+           throw new Phprojekt_PublishedException(
+               "Invalid userId '$userId'"
+            );
+        }
+
+        if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById((int) $userId)) {
+            throw new Phprojekt_PublishedException("Current user has no proxy rights for this user $userId");
+        } else {
+            Phprojekt_Auth_Proxy::switchToUserById((int) $userId);
         }
 
         $timezone = $this->_getUserTimezone();
