@@ -193,18 +193,16 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         phpr.viewManager.getView().buttonRow.set('content', '');
         this.setNewEntry();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
-            + phpr.currentProjectId;
+            + phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
         this.destroyGrid();
         var gridBoxContainer = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Default.template.GridBox.html"
         });
         phpr.viewManager.getView().gridContainer.set('content', gridBoxContainer);
         gridBoxContainer.startup();
-        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId, gridBoxContainer);
+        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId, gridBoxContainer, {userId: this.getActiveUser().id});
         this.setSubmoduleNavigation();
         this.setScheduleBar(false, false);
-        this._actionPending = false;
-        phpr.loading.hide();
     },
 
     loadDayListSelf: function() {
@@ -217,7 +215,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.setNewEntry();
         var dateString = phpr.date.getIsoDate(this._date);
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
-            + phpr.currentProjectId;
+            + phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
         this.dayListSelf = new this.dayListSelfWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, true);
@@ -250,7 +248,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.setNewEntry();
         var dateString = phpr.date.getIsoDate(this._date);
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
-            + phpr.currentProjectId;
+            + phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
         this.weekList = new this.weekListWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
@@ -265,7 +263,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         phpr.viewManager.getView().buttonRow.set('content', '');
         this.setNewEntry();
         var dateString = phpr.date.getIsoDate(this._date);
-        this.monthList = new this.monthListWidget(this, phpr.currentProjectId, dateString);
+        this.monthList = new this.monthListWidget(this, phpr.currentProjectId, dateString, null, this);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
     },

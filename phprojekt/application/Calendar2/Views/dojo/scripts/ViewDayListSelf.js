@@ -42,7 +42,8 @@ dojo.declare("phpr.Calendar2.ViewDayListSelf", phpr.Calendar2.DefaultView, {
     setUrl:function() {
         // Summary:
         //    Sets the url to get the data from
-        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDayListSelf/date/' + this._date;
+        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDayListSelf/date/' + this._date +
+            '/userId/' + this.main.getActiveUser().id;
     },
 
     onLoaded:function(dataContent) {
