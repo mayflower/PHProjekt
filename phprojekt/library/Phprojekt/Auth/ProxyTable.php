@@ -114,6 +114,28 @@ class Phprojekt_Auth_ProxyTable
     }
 
     /**
+     * Returns a list of users the given user is capable of impersonating.
+     *
+     * @param integer $userId   The user to get the proxyables user ids from.
+     *                          If not set, the current userId is used.
+     *
+     * @return array            Array of users the user can impersonate.
+     */
+    public function getProxyableUsersForUserId($userId = null)
+    {
+        $userIds   = $this->getProxyableUserIdsForUserId($userId);
+        $userClass = new Phprojekt_User_User();
+
+        $userList = array();
+
+        foreach ($userIds as $userId) {
+            $userList[] = $userClass->find($userId);
+        }
+
+        return $userList;
+    }
+
+    /**
      * Returns a list of user ids that can impersonate the current user.
      *
      * @param integer $userId   Id of the impersonated user
