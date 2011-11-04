@@ -35,7 +35,7 @@ dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
         var id    = this.main.module + 'parentOrder';
         var value = (data[0]['sortOrder'] - 1 >= 0) ? data[0]['sortOrder'] - 1 : 0;
 
-        this.formdata[this._tabNumber] += this.fieldTemplate.selectRender(range, label, id, value, false, false);
+        this.formdata[this._tabNumber].push(this.fieldTemplate.selectRender(range, label, id, value, false, false));
     },
 
     postRenderForm:function() {

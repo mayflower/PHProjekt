@@ -50,7 +50,7 @@ dojo.declare("phpr.Calendar2.ViewWeekList", phpr.Calendar2.DefaultView, {
         // Summary:
         //    Sets the url to get the data from
         this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonPeriodList/dateStart/' + this._weekDays[0]
-            + '/dateEnd/' + this._weekDays[6];
+            + '/dateEnd/' + this._weekDays[6] + '/userId/' + this.main.getActiveUser().id;
     },
 
     onLoaded:function(dataContent) {

@@ -289,6 +289,15 @@
                 "status":    {"type": "varchar", "length": "1", "default": "A"},
                 "admin":     {"type": "int", "length": "1", "notNull": "true", "default": "0"}
             }
+        },
+        "user_proxy":
+        {
+            "create":
+            {
+                "id":           "default",
+                "proxyed_id":   {"type": "int", "notNull": "true"},
+                "proxying_id":   {"type": "int", "notNull": "true"}
+            }
         }
     },
 

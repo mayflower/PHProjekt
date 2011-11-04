@@ -71,6 +71,50 @@ class Calendar2_IndexController extends IndexController
             Phprojekt_ModelInformation_Default::ORDERING_LIST
         );
     }
+
+    /**
+     * Returns the list of items for one model.
+     *
+     * The return have:
+     *  - The metadata of each field.
+     *  - The data of all the rows.
+     *  - The number of rows.
+     *
+     * The function use Phprojekt_ModelInformation_Default::ORDERING_LIST for get and sort the fields.
+     *
+     * OPTIONAL request parameters:
+     * <pre>
+     *  - integer <b>id</b>     List only this id.
+     *  - integer <b>nodeId</b> List all the items with projectId == nodeId.
+     *  - integer <b>count</b>  Use for SQL LIMIT count.
+     *  - integer <b>offset</b> Use for SQL LIMIT offset.
+     *  - integer <b>userId</b> UserId of the user requesting the list (for proxy mode).
+     *  - boolean <b>recursive</b> Include items of subprojects.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonListAction()
+    {
+        $userId = (int) $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
+
+        if (!Cleaner::validate('int', $userId)) {
+           throw new Phprojekt_PublishedException(
+               "Invalid userId '$userId'"
+            );
+        }
+
+        if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById((int) $userId)) {
+            throw new Phprojekt_PublishedException("Current user has no proxy rights for this user $userId");
+        } else {
+            Phprojekt_Auth_Proxy::switchToUserById((int) $userId);
+        }
+
+        parent::jsonListAction();
+    }
+
     /**
      * Returns all events in the given period of time that the user is
      * involved in. Only days are recognized.
@@ -85,14 +129,28 @@ class Calendar2_IndexController extends IndexController
     {
         $dateStart = $this->getRequest()->getParam('dateStart');
         $dateEnd   = $this->getRequest()->getParam('dateEnd');
+        $userId    = $this->getRequest()->getParam('userId', (int) Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('isoDate', $dateStart)) {
             throw new Phprojekt_PublishedException(
                 "Invalid dateStart '$dateStart'"
             );
         }
+
         if (!Cleaner::validate('isoDate', $dateEnd)) {
             throw new Phprojekt_PublishedException("Invalid dateEnd $dateEnd");
+        }
+
+        if (!Cleaner::validate('int', $userId)) {
+           throw new Phprojekt_PublishedException(
+               "Invalid userId '$userId'"
+            );
+        }
+
+        if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById((int) $userId)) {
+            throw new Phprojekt_PublishedException("Current user has no proxy rights for this user $userId");
+        } else {
+            Phprojekt_Auth_Proxy::switchToUserById((int) $userId);
         }
 
         $timezone = $this->_getUserTimezone();
@@ -237,10 +295,8 @@ class Calendar2_IndexController extends IndexController
     {
         $id                = $this->getRequest()->getParam('id');
         $occurrence        = $this->getRequest()->getParam('occurrence');
-        $sendNotifications = $this->getRequest()->getParam(
-            'sendNotification',
-            'false'
-        );
+        $sendNotifications = $this->getRequest()->getParam('sendNotification', 'false');
+        $userId            = (int) $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('int', $id, true)
                 && 'null'      !== $id
@@ -254,6 +310,15 @@ class Calendar2_IndexController extends IndexController
                 "Invalid occurrence '$occurrence'"
             );
         }
+
+        if (!Cleaner::validate('int', $userId)) {
+           throw new Phprojekt_PublishedException(
+               "Invalid userId '$userId'"
+            );
+        }
+
+        $this->getRequest()->setParam('userId', $userId);
+
         if ('1' === $sendNotifications) {
             $sendNotifications = 'true';
         } else if (!Cleaner::validate('boolean', $sendNotifications)) {
@@ -261,7 +326,16 @@ class Calendar2_IndexController extends IndexController
                 "Invalid value for sendNotification '$sendNotifications'"
             );
         }
+
         $sendNotifications = ($sendNotifications == 'true') ? true : false;
+
+        if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById($userId)) {
+            throw new Phprojekt_PublishedException(
+                "You are not allowed to do this"
+            );
+        } else {
+            Phprojekt_Auth_Proxy::switchToUserById($userId);
+        }
 
         // Note that all function this gets passed to must validate the
         // parameters they use.
@@ -276,10 +350,14 @@ class Calendar2_IndexController extends IndexController
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         }
 
-        if (!empty($id) && $model->ownerId != Phprojekt_Auth::getUserId()) {
+        if (!empty($id) && $model->ownerId != Phprojekt_Auth_Proxy::getEffectiveUserId()) {
             $newId = $this->_updateConfirmationStatusAction($model, $params);
-        } else {
+        } else if ($model->ownerId == Phprojekt_Auth_Proxy::getEffectiveUserId()) {
             $newId = $this->_saveAction($model, $params);
+        } else {
+            throw new Phprojekt_PublishedException(
+                "User did not have the right to modify this item."
+            );
         }
 
         if ($sendNotifications) {
@@ -381,6 +459,7 @@ class Calendar2_IndexController extends IndexController
     {
         $id         = $this->getRequest()->getParam('id');
         $occurrence = $this->getRequest()->getParam('occurrence');
+        $userId     = (int) $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('int', $id)
                 && 'null'      !== $id
@@ -389,6 +468,12 @@ class Calendar2_IndexController extends IndexController
         }
 
         $id = (int) $id;
+
+        if (!Cleaner::validate('int', $userId)) {
+           throw new Phprojekt_PublishedException(
+               "Invalid userId '$userId'"
+            );
+        }
 
         if (in_array($occurrence, array('null', '0', 'undefined'))) {
             $occurrence = null;
@@ -402,6 +487,10 @@ class Calendar2_IndexController extends IndexController
             }
         }
         $this->setCurrentProjectId();
+
+        if (Phprojekt_Auth_Proxy::hasProxyRightForUserById($userId)) {
+            Phprojekt_Auth_Proxy::switchToUserById($userId);
+        }
 
         $record = new Calendar2_Models_Calendar2();
 
@@ -529,7 +618,7 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonCheckAvailabilityAction()
     {
-        $user  = $this->getRequest()->getParam('user', Phprojekt_Auth::getUserId());
+        $user  = $this->getRequest()->getParam('user', Phprojekt_Auth_Proxy::getEffectiveUserId());
         $start = $this->getRequest()->getParam('start');
         $end   = $this->getRequest()->getParam('end');
 
@@ -588,7 +677,7 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonBusyTimesAction()
     {
-        $user  = $this->getRequest()->getParam('user', Phprojekt_Auth::getUserId());
+        $user  = $this->getRequest()->getParam('user', Phprojekt_Auth_Proxy::getEffectiveUserId());
         $start = $this->getRequest()->getParam('start');
         $end   = $this->getRequest()->getParam('end');
 
@@ -626,6 +715,39 @@ class Calendar2_IndexController extends IndexController
     }
 
     /**
+     * Returns a list of all the users the current user has proxy rights on
+     *
+     * Returns a list of all the users with:
+     * <pre>
+     *  - id      => id of user.
+     *  - display => Display for the user.
+     *  - current => True or false if is the current user.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonGetProxyableUsersAction()
+    {
+        $current      = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $proxyTable   = new Phprojekt_Auth_ProxyTable();
+        $proxyUserIds = $proxyTable->getProxyableUsersForUserId();
+
+        $data = array();
+
+        foreach ($proxyUserIds as $user) {
+            $data['data'][] = array(
+                'id'      => (int) $user->id,
+                'display' => $user->applyDisplay($user->getDisplay(), $user),
+                'current' => $current == $user->id
+            );
+        }
+
+        Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
+
+    /**
      * Updates the current user's confirmation status on the given event.
      *
      * @param Calendar2_Models_Calendar2 $model  The model to update.
@@ -659,7 +781,7 @@ class Calendar2_IndexController extends IndexController
         $status   = (int) $status;
         $multiple = ('true' == strtolower($multiple));
 
-        $model->setConfirmationStatus(Phprojekt_Auth::getUserId(), $status);
+        $model->setConfirmationStatus(Phprojekt_Auth_Proxy::getEffectiveUserId(), $status);
 
         if ($multiple) {
             $model->save();
@@ -727,15 +849,24 @@ class Calendar2_IndexController extends IndexController
                "Invalid visibility '$visibility'"
             );
         }
+
+        if (!Cleaner::validate('int', $params['userId'])) {
+           throw new Phprojekt_PublishedException(
+               "Invalid userId " . $params['userId']
+            );
+        }
+
         $visibility = (int) $visibility;
+
         if (!Cleaner::validate('boolean', $multiple)) {
             throw new Phprojekt_PublishedException(
                 "Invalid multiple '$multiple'"
             );
         }
+
         $multiple = ('true' == strtolower($multiple));
 
-        $model->ownerId = Phprojekt_Auth::getUserId();
+        $model->ownerId = $params['userId'];
         $model->setParticipants($participants);
 
         if ($model->id

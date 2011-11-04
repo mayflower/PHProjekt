@@ -40,15 +40,19 @@ dojo.declare("phpr.Role.Form", phpr.Core.DialogForm, {
     },
 
     addBasicFields:function() {
-        this.formdata[1] += this.render(["phpr.Core.Role.template", "formAccess.html"], null, {
-            accessModuleText: phpr.nls.get('Module'),
-            accessReadText:   phpr.nls.get('Read'),
-            accessWriteText:  phpr.nls.get('Write'),
-            accessCreateText: phpr.nls.get('Create'),
-            accessAdminText:  phpr.nls.get('Admin'),
-            labelfor:         phpr.nls.get('Access'),
-            label:            phpr.nls.get('Access'),
-            modules:          this.roleModuleAccessStore.getList()
-        });
+        this.formdata[1].push(
+            new phpr.Default.System.TemplateWrapper({
+                templateName: "phpr.Core.Role.template.formAccess.html",
+                templateData: {
+                    accessModuleText: phpr.nls.get('Module'),
+                    accessReadText:   phpr.nls.get('Read'),
+                    accessWriteText:  phpr.nls.get('Write'),
+                    accessCreateText: phpr.nls.get('Create'),
+                    accessAdminText:  phpr.nls.get('Admin'),
+                    labelfor:         phpr.nls.get('Access'),
+                    label:            phpr.nls.get('Access'),
+                    modules:          this.roleModuleAccessStore.getList()
+                }
+        }));
     }
 });

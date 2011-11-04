@@ -27,7 +27,10 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         //    Rewritten the function for work like a system module and like a form
         // Description:
         //    Rewritten the function for work like a system module and like a form
-        if (this.main.isSystemModule(this.main.action)) {
+        if (
+            (this.main.action && this.main.isSystemModule(this.main.action)) ||
+            (!this.main.action && this.main.isSystemModule(this.main.module))
+           ) {
             this._url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonDetail/nodeId/1/id/'
                 + this.id;
         } else {
@@ -71,8 +74,11 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
             return false;
         }
 
-        if (this.main.isSystemModule(this.main.action)) {
-            var url = phpr.webpath + 'index.php/Core/' + this.main.action.toLowerCase() + '/jsonSave/nodeId/1/id/' + this.id;
+        if (
+            (this.main.action && this.main.isSystemModule(this.main.action)) ||
+            (!this.main.action && this.main.isSystemModule(this.main.module))
+           ) {
+            var url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonSave/nodeId/1/id/' + this.id;
         } else {
             var url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonSave/nodeId/1/moduleName/'
                 + this.main.action;
@@ -86,6 +92,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                 if (data.type == 'success') {
                     this.customActionOnSuccess();
                     this.publish("updateCacheData");
+                    delete this.main.config.id;
                     phpr.pageManager.changeState(
                         this.main.config, {
                             forceModuleReload: true

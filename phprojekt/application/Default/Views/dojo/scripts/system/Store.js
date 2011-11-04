@@ -49,7 +49,7 @@ dojo.declare("phpr.Default.System.Store", phpr.Default.System.Component, {
         phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
             self.makeSelect();
             if (processData) {
-                processData.call();
+                processData();
             }
         })});
     },

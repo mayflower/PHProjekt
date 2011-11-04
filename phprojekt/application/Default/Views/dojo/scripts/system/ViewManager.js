@@ -213,6 +213,7 @@ dojo.declare("phpr.Default.System.ViewManager", null, {
     _currentView: null,
     _currentViewType: null,
     _container: null,
+    _loadingInProgress: false,
     constructor: function() {
         this._container = new dijit.layout.ContentPane({}, dojo.create('div', null, dojo.body()));
         window.onresize = dojo.hitch(this, 'onResize');
@@ -231,20 +232,22 @@ dojo.declare("phpr.Default.System.ViewManager", null, {
         return availHeight;
     },
     onResize: function() {
-        availHeight = this.getMaxHeight();
-        var cont = this._container;
-        if (cont) {
-            dojo.style(cont.domNode, "height", availHeight + "px");
-            cont.resize();
-        }
+        if (!this._loadingInProgress) {
+            availHeight = this.getMaxHeight();
+            var cont = this._container;
+            if (cont) {
+                dojo.style(cont.domNode, "height", availHeight + "px");
+                cont.resize();
+            }
 
-        if (!phpr.viewManager.getView()) {
-            phpr.viewManager.useDefaultView();
-        }
-        cont = phpr.viewManager.getView().completeCenterContent;
-        if (cont) {
-            dojo.style(cont.domNode, "height", (availHeight - 60) + "px");
-            cont.resize();
+            if (!phpr.viewManager.getView()) {
+                phpr.viewManager.useDefaultView();
+            }
+            cont = phpr.viewManager.getView().completeCenterContent;
+            if (cont) {
+                dojo.style(cont.domNode, "height", (availHeight - 60) + "px");
+                cont.resize();
+            }
         }
     },
     useDefaultView: function(options) {
@@ -252,7 +255,9 @@ dojo.declare("phpr.Default.System.ViewManager", null, {
                 [phpr.Default.System.DefaultViewContentMixin, options || {}]);
     },
     _updateView: function(viewType, params) {
-        if (this._currentViewType === viewType) {
+        this._loadingInProgress = true;
+
+        if (this._currentViewType === viewType && this._currentView !== null) {
             this._currentView.update.apply(this._currentView, params);
         } else {
 
@@ -267,6 +272,7 @@ dojo.declare("phpr.Default.System.ViewManager", null, {
             this._currentView.startup();
         }
 
+        this._loadingInProgress = false;
         return this.getView();
     },
     setView: function(viewType, mixinType, config) {

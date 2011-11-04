@@ -128,7 +128,11 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
         //    Render the grid and the form widgets
         // Description:
         //    Render the grid and the form widgets
+        if (this.subGrid && dojo.isFunction(this.subGrid.destroy)) {
+            this.subGrid.destroy();
+        }
         this.subGrid = new this.gridWidget('', this, phpr.currentProjectId, this.overviewBox);
+        this.destroySubForm();
         this.subForm = new this.formWidget(this, 0, phpr.module, {}, this.detailsBox);
     },
 
@@ -145,6 +149,12 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
             this.subForm.updateData();
         }
         this._renderSubModule();
+    },
+    destroySubForm: function() {
+        if (this.subForm && dojo.isFunction(this.subForm.destroy)) {
+            this.subForm.destroy();
+        }
+        this.subForm = null;
     }
 });
 
@@ -190,6 +200,7 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
     },
 
     getLinkForEdit: function(id) {
+        this.main.destroySubForm();
         this.main.subForm = new this.main.formWidget(this.main, id, phpr.module, {}, this.main.detailsBox);
     },
 
@@ -282,25 +293,29 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
         //    Display buttons for the sub module instead of the default
         // Description:
         //    Display buttons for the sub module instead of the default
-        this.formdata[tabId] += this.render(["phpr.Default.template.form", "subModuleButtons.html"], null, {
-            saveText:   phpr.nls.get('Save'),
-            deleteText: phpr.nls.get('Delete'),
-            newText:    phpr.nls.get('New'),
-            id:         this.id
-        });
+        this.formdata[tabId].push(new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.form.subModuleButtons.html",
+            templateData: {
+                saveText:   phpr.nls.get('Save'),
+                deleteText: phpr.nls.get('Delete'),
+                newText:    phpr.nls.get('New'),
+                id:         this.id
+            }
+        }));
     },
 
     setActionFormButtons: function() {
         // Summary:
         //    Connect the buttons to the actions
-        dojo.connect(dijit.byId("subModuleSubmitButton"), "onClick", dojo.hitch(this, "submitForm"));
+        //dojo.connect(dijit.byId("subModuleSubmitButton"), "onClick", dojo.hitch(this, "_submitForm"));
         if (this.id > 0) {
             dojo.connect(dijit.byId("subModuleDeleteButton"), "onClick", dojo.hitch(this, function() {
                 phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'));
             }));
         }
         dojo.connect(dijit.byId("subModuleNewButton"), 'onClick', dojo.hitch(this, function() {
-            this.main.subForm = new this.main.formWidget(this.main, 0, phpr.module);
+            this.main.destroySubForm();
+            this.main.subForm = new this.main.formWidget(this.main, 0, phpr.module, {}, this.main.detailsBox);
         }));
     },
 

@@ -270,16 +270,18 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         this._participantsInTab = participants.length;
 
         // Template for the participants tab
-        var participantData = this.render(["phpr.Calendar2.template", "participanttab.html"], null, {
-            participantUserText:            phpr.nls.get('User'),
-            participantActionText:          phpr.nls.get('Action'),
-            participantAvailabilityText:    phpr.nls.get('Availability'),
-            users:                          users,
-            currentUser:                    currentUser,
-            participants:                   participants
-        });
+        var participantData = phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Calendar2.template.participanttab.html",
+            templateData: {
+                participantUserText:            phpr.nls.get('User'),
+                participantActionText:          phpr.nls.get('Action'),
+                participantAvailabilityText:    phpr.nls.get('Availability'),
+                users:                          users,
+                currentUser:                    currentUser,
+                participants:                   participants
+        }});
 
-        this.addTab(participantData, 'tabParticipant', 'Participants', 'participantFormTab');
+        this.addTab([participantData], 'tabParticipant', 'Participants', 'participantFormTab');
 
         // Add button for participant
         var params = {
@@ -409,7 +411,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         //    Adds a tab for recurrence
         // Description:
         //    Adds a tab to configure the rules if/when the event will reoccure
-        var recurrenceTab = '';
+        var recurrenceTab = [];
 
         // Preset values
         var values = {
@@ -467,14 +469,14 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
             + '<br />' + phpr.nls.get('E.g.: Repeats Weekly - Interval 2, that will create one event every 2 weeks.');
         var untilHelp = phpr.nls.get('The day the recurrence will stop happening.')
             + '<br />' + phpr.nls.get('The last event\'s day could not match this day.');
-        recurrenceTab += this.fieldTemplate.selectRender(rangeFreq, phpr.nls.get('Repeats'), 'rruleFreq', values.FREQ,
-            false, disabled);
-        recurrenceTab += this.fieldTemplate.textFieldRender(phpr.nls.get('Interval'), 'rruleInterval',
-            values.INTERVAL, 10, false, disabled, intervalHelp);
-        recurrenceTab += this.fieldTemplate.dateRender(phpr.nls.get('Until'), 'rruleUntil', values.UNTIL, false,
-            disabled, untilHelp);
-        recurrenceTab += this.fieldTemplate.multipleSelectRender(rangeByday, phpr.nls.get('Weekdays'), 'rruleByDay',
-            values.BYDAY, false, disabled);
+        recurrenceTab.push(this.fieldTemplate.selectRender(rangeFreq, phpr.nls.get('Repeats'), 'rruleFreq', values.FREQ,
+            false, disabled));
+        recurrenceTab.push(this.fieldTemplate.textFieldRender(phpr.nls.get('Interval'), 'rruleInterval',
+            values.INTERVAL, 10, false, disabled, intervalHelp));
+        recurrenceTab.push(this.fieldTemplate.dateRender(phpr.nls.get('Until'), 'rruleUntil', values.UNTIL, false,
+            disabled, untilHelp));
+        recurrenceTab.push(this.fieldTemplate.multipleSelectRender(rangeByday, phpr.nls.get('Weekdays'), 'rruleByDay',
+            values.BYDAY, false, disabled));
 
         // Add the tab to the form
         this.addTab(recurrenceTab, 'tabRecurrence', 'Recurrence', 'recurrenceTab');
@@ -507,11 +509,11 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                if (data.type == 'success') {
                    this.publish("updateCacheData");
                    // reload the page and trigger the form load
-                   phpr.pageManager.changeState({
-                       moduleName: this.main.module,
-                   }, {
-                       forceModuleReload: true
-                   });
+                   var newstate = this.main.config;
+                   if (newstate.id) {
+                       delete newstate.id;
+                   }
+                   phpr.pageManager.changeState(newstate, { forceModuleReload: true });
                }
             })
         });
@@ -583,8 +585,9 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
     },
 
     setUrl: function(params) {
-        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/'
-                  + phpr.currentProjectId + '/id/' + this.id + '/occurrence/' + params.recurrenceId;
+        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/' +
+            phpr.currentProjectId + '/id/' + this.id + '/occurrence/' + params.recurrenceId +
+            '/userId/' + this.main.getActiveUser().id;
     },
 
     // We have to overwrite this function here because we need to use the id
@@ -603,17 +606,14 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         }
 
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId
-                + '/id/' + this.id + '/occurrence/' + this._originalData.start,
+            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId +
+                '/id/' + this.id + '/occurrence/' + this._originalData.start +
+                '/userId/' + this.main.getActiveUser().id,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
-    // Only change: these two lines have been commented out.
-    //  We need this because the id on the server might have changed when the event has been split.
-    //           if (!this.id) {
-                   this.id = data['id'];
-    //           }
                if (data.type == 'success') {
+                   this.id = data['id'];
                    phpr.send({
                         url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module
                             + '/id/' + this.id,
@@ -625,11 +625,11 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                             if (data.type == 'success') {
                                 this.publish("updateCacheData");
                                 // reload the page and trigger the form load
-                                phpr.pageManager.changeState({
-                                    moduleName: this.main.module,
-                                }, {
-                                    forceModuleReload: true
-                                });
+                                var newstate = this.main.config;
+                                if (newstate.id) {
+                                    delete newstate.id;
+                                }
+                                phpr.pageManager.changeState(newstate, { forceModuleReload: true });
                             }
                         })
                     });

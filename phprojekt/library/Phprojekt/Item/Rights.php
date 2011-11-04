@@ -170,7 +170,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     public function getRights($moduleId, $itemId)
     {
         $values        = array();
-        $currentUserId = (int) Phprojekt_Auth::getUserId();
+        $currentUserId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         $access = $this->getItemRight($moduleId, $itemId, $currentUserId);
         if ($access == 0) {
@@ -197,7 +197,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     public function getMultipleRights($moduleId, $ids)
     {
         $values        = array();
-        $currentUserId = (int) Phprojekt_Auth::getUserId();
+        $currentUserId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         $where = sprintf('module_id = %d AND user_id = %d AND item_id IN (%s)', (int) $moduleId,
             $currentUserId, implode(",", $ids));
@@ -237,7 +237,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
 
         if (!isset($rightNamespace->right)) {
             $values        = array();
-            $currentUserId = (int) Phprojekt_Auth::getUserId();
+            $currentUserId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
             // Set the current User
             // Use for an empty rights, if not, will be re-write

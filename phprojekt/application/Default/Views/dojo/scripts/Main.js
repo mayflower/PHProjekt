@@ -55,6 +55,7 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
         delete this.view.detailsBox;
     },
     update: function(config) {
+        this.inherited(arguments);
         this.clear();
         this._renderSearchResults(config || {});
     },
@@ -238,18 +239,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     },
 
     loadResult: function(/*int*/id, /*String*/module, /*int*/projectId) {
-        this.cleanPage();
-        phpr.currentProjectId = projectId;
-        if (phpr.isGlobalModule(module)) {
-            phpr.tree.fadeOut();
-        } else {
-            phpr.tree.fadeIn();
-        }
-
         phpr.pageManager.changeState({
             moduleName: module,
             id: id,
             projectId: projectId
+        }, {
+            forceModuleReload: true
         });
     },
 
@@ -471,7 +466,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             this,
             phpr.currentProjectId,
             gridBoxContainer,
-            includeSubentries);
+            {recursive: includeSubentries});
     },
 
     setWidgets: function() {
@@ -497,7 +492,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 this,
                 phpr.currentProjectId,
                 gridBoxContainer,
-                this.config.includeSubentries == "true");
+                {recursive: this.config.includeSubentries == "true"});
     },
 
     setGlobalModulesNavigation: function() {
@@ -533,10 +528,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
                 phpr.currentProjectId = phpr.rootProjectId;
-                phpr.pageManager.changeState({
-                    moduleName: "Setting",
-                    action: "User"
-                });
+                phpr.pageManager.changeState(
+                    { moduleName: "Setting" },
+                    { forceModuleReload: true }
+                );
             })
         });
         this.globalModuleNavigationButtons[globalModules[i].name] = button;
@@ -550,9 +545,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 showLabel: true,
                 onClick:   dojo.hitch(this, function() {
                     phpr.currentProjectId = phpr.rootProjectId;
-                    phpr.pageManager.changeState({
-                        moduleName: "Administration"
-                    });
+                    phpr.pageManager.changeState(
+                        { moduleName: "Administration" },
+                        { forceModuleReload: true }
+                    );
                 })
             });
             toolbar.addChild(button);
