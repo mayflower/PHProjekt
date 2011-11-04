@@ -104,6 +104,22 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
             'range'    => $range,
             'required' => true,
             'default'  => '000'));
+        // Proxies
+        Phprojekt::setCurrentProjectId(IndexController::INVISIBLE_ROOT);
+        $user  = Phprojekt_Loader::getLibraryClass("Phprojekt_User_User");
+        $range = $user->getAllowedUsers();
+        // remove ourselves from the proxy list
+        $i = 0;
+        foreach ($range as $entry) {
+            if ((int) $entry['id'] == Phprojekt_Auth::getUserId()) {
+                array_splice($range, $i, 1);
+                break;
+            }
+            $i++;
+        }
+        $this->fillField('proxies', 'Proxies', 'multiplefilteringselectbox', 0, 7, array(
+            'range'    => $range,
+            'required' => true));
     }
 
     /**
@@ -114,6 +130,34 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
     public function getPassword()
     {
         return '';
+    }
+
+    /**
+     * Getter for proxies field.
+     *
+     * @return string proxy string.
+     */
+    public function getProxies($value)
+    {
+        $proxyTable = new Phprojekt_Auth_ProxyTable();
+        return implode(',', $proxyTable->getProxyIdsForUserId(Phprojekt_Auth::getUserId()));
+    }
+
+    /* Return the value of one setting.
+     *
+     * @param string  $settingName The name of the setting.
+     * @param integer $userId      The user ID, if is not setted, the current user is used.
+     *
+     * @return mix Value of the setting.
+     */
+    public function getSetting($settingName, $userId = 0)
+    {
+        if ($settingName != 'proxies') {
+            return parent::getSetting($settingName, $userId);
+        } else {
+            $proxyTable = new Phprojekt_Auth_ProxyTable();
+            return $proxyTable->getProxyableUserIdsForUserId(Phprojekt_Auth::getUserId());
+        }
     }
 
     /**
@@ -189,35 +233,40 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
             $password = Phprojekt_Auth::cryptString($params['password']);
         }
 
-        $namespace = new Zend_Session_Namespace(Phprojekt_Setting::IDENTIFIER, $userId);
+        $namespace = new Zend_Session_Namespace(Phprojekt_Setting::IDENTIFIER . $userId);
         $fields    = $this->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         foreach ($fields as $data) {
             foreach ($params as $key => $value) {
                 if ($key == $data['key'] && $key != 'oldValue' && $key != 'confirmValue') {
-                    $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
-                    $setting->setModule('User');
-
-                    if (($key == 'password')) {
-                        $value = $password;
-                    }
-
-                    $where = sprintf('user_id = %d AND key_value = %s AND module_id = %d', (int) $userId,
-                        $setting->_db->quote($key), 0);
-                    $record = $setting->fetchAll($where);
-
-                    if (isset($record[0])) {
-                        $record[0]->keyValue = $key;
-                        $record[0]->value    = $value;
-                        $record[0]->save();
+                    if ($key == 'proxies') {
+                        $proxyTable = new Phprojekt_Auth_ProxyTable();
+                        $proxyTable->setProxyIdsForUserId($value);
                     } else {
-                        $setting->userId     = $userId;
-                        $setting->moduleId   = 0;
-                        $setting->keyValue   = $key;
-                        $setting->value      = $value;
-                        $setting->identifier = 'Core';
-                        $setting->save();
+                        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+                        $setting->setModule('User');
+
+                        if (($key == 'password')) {
+                            $value = $password;
+                        }
+
+                        $where = sprintf('user_id = %d AND key_value = %s AND module_id = %d', (int) $userId,
+                            $setting->_db->quote($key), 0);
+                        $record = $setting->fetchAll($where);
+
+                        if (isset($record[0])) {
+                            $record[0]->keyValue = $key;
+                            $record[0]->value    = $value;
+                            $record[0]->save();
+                        } else {
+                            $setting->userId     = $userId;
+                            $setting->moduleId   = 0;
+                            $setting->keyValue   = $key;
+                            $setting->value      = $value;
+                            $setting->identifier = 'Core';
+                            $setting->save();
+                        }
+                        $namespace->$key = $value;
                     }
-                    $namespace->$key = $value;
                     break;
                 }
             }

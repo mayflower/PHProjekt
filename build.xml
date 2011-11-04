@@ -1,4 +1,4 @@
-<project name="PHP_CodeBrowser" default="build">
+<project name="PHProjekt" default="build">
   <property name='sources'
             value='phprojekt/application,phprojekt/library/Phprojekt'/>
  <path id="closurecompiler">

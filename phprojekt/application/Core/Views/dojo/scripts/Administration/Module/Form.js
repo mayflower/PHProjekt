@@ -38,9 +38,9 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
         // Button for open the dialog
         if (designerData && (typeof designerData['definition'] === 'object')) {
-            this.formdata[1] += this.fieldTemplate.buttonActionRender(phpr.nls.get('Form'), 'designerButton',
+            this.formdata[1].push(this.fieldTemplate.buttonActionRender(phpr.nls.get('Form'), 'designerButton',
                 phpr.nls.get('Open Editor'), '', 'dojo.publish(\'Module.openDialog\');',
-                phpr.nls.get('Open a dialog where you can drag and drop many fields for create the form as you want.'));
+                phpr.nls.get('Open a dialog where you can drag and drop many fields for create the form as you want.')));
         }
 
         // Hidden field for the MD data
@@ -74,8 +74,9 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
         }
         var jsonDesignerData = dojo.toJson(designerData['definition']);
 
-        this.formdata[1] += this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData,
-            true, false);
+        this.formdata[1].push(
+            this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false)
+        );
     },
 
     setPermissions:function(data) {

@@ -65,19 +65,22 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
         //    Mail tab
         // Description:
         //    Display options for sending Minutes per mail
-        var mailForm = this.render(["phpr.Minutes.template", "minutesMailForm.html"], null, {
-            'id':            this.id,
-            'people':        phpr.DataStore.getData({url: this._peopleUrl}),
-            'lblRecipients': phpr.nls.get('Recipients'),
-            'lblAdditional': phpr.nls.get('Additional Recipients'),
-            'lblTooltip':    phpr.nls.get('Email addresses of unlisted recipients, comma-separated.'),
-            'lblOptions':    phpr.nls.get('Options'),
-            'lblAttachPdf':  phpr.nls.get('Include PDF attachment'),
-            'lblSendMail':   phpr.nls.get('Send mail'),
-            'lblPreview':    phpr.nls.get('Preview')
+        var mailForm = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Minutes.template.minutesMailForm.html",
+            templateData: {
+                'id':            this.id,
+                'people':        phpr.DataStore.getData({url: this._peopleUrl}),
+                'lblRecipients': phpr.nls.get('Recipients'),
+                'lblAdditional': phpr.nls.get('Additional Recipients'),
+                'lblTooltip':    phpr.nls.get('Email addresses of unlisted recipients, comma-separated.'),
+                'lblOptions':    phpr.nls.get('Options'),
+                'lblAttachPdf':  phpr.nls.get('Include PDF attachment'),
+                'lblSendMail':   phpr.nls.get('Send mail'),
+                'lblPreview':    phpr.nls.get('Preview')
+            }
         });
 
-        this.addTab(mailForm, 'tabMail', 'Mail', 'mailFormTab');
+        this.addTab([mailForm], 'tabMail', 'Mail', 'mailFormTab');
 
         this.garbageCollector.addEvent(
                 dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick', dojo.hitch(this, function() {
@@ -183,7 +186,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
                 this._allowSubmit = true;
                 confirmDialog.hide();
                 confirmDialog.destroyRecursive();
-                this.submitForm();
+                this._submitForm();
             }),
             callbackCancel: dojo.hitch(this, function(e) {
                 this._allowSubmit = false;

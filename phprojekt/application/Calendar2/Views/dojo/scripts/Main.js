@@ -22,6 +22,8 @@
 dojo.provide("phpr.Calendar2.Main");
 dojo.provide("phpr.Calendar2.CalendarViewMixin");
 dojo.require("dijit.Dialog");
+dojo.require("phpr.Calendar2.Selector");
+dojo.require("phpr.Calendar2.ProxyableStore");
 
 // This ist our view mixin, it provides us with a border container without the overview box
 // this is only needed because the pagestyle is relative to the bordercontainer
@@ -76,7 +78,7 @@ dojo.declare("phpr.Calendar2.CalendarViewMixin", phpr.Default.System.ViewContent
             this.view[name] = mainContent[name];
         }
     }
-})
+});
 
 dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     _date:                new Date(),
@@ -94,7 +96,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     SCROLL_DOWN: -1,
     SCROLL_DELAY: 12,
 
-    constructor:function() {
+    constructor: function() {
         this.module = "Calendar2";
         this.loadFunctions(this.module);
         dojo.subscribe(this.module + ".showFormFromList", this, "showFormFromList");
@@ -103,9 +105,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         dojo.subscribe(this.module + ".weekViewClick", this, "weekViewClick");
         dojo.subscribe(this.module + ".monthViewClick", this, "monthViewClick");
         dojo.subscribe(this.module + ".setDate", this, "setDate");
-        dojo.subscribe(this.module + ".userSelfClick", this, "userSelfClick");
         dojo.subscribe(this.module + ".userSelectionClick", this, "userSelectionClick");
-        dojo.subscribe(this.module + ".usersSelectionDoneClick", this, "usersSelectionDoneClick");
         dojo.subscribe(this.module + ".anotherViewDayClick", this, "anotherViewDayClick");
         dojo.subscribe(this.module + ".loadAppropriateList", this, "loadAppropriateList");
         dojo.subscribe(this.module + ".connectMouseScroll", this, "connectMouseScroll");
@@ -113,13 +113,18 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         dojo.subscribe(this.module + ".connectViewResize", this, "connectViewResize");
         dojo.subscribe(this.module + ".saveChanges", this, "saveChanges");
         dojo.subscribe(this.module + ".enableEventDivClick", this, "enableEventDivClick");
+        dojo.subscribe(this.module + ".proxyChanged", this, "_changeProxyUser");
+        dojo.subscribe(this.module + ".proxyLoad", this, "_loadProxyableUsers");
 
-        this.gridWidget          = phpr.Calendar2.Grid;
-        this.dayListSelfWidget   = phpr.Calendar2.ViewDayListSelf;
+        this.gridWidget = phpr.Calendar2.Grid;
+        this.dayListSelfWidget = phpr.Calendar2.ViewDayListSelf;
         this.dayListSelectWidget = phpr.Calendar2.ViewDayListSelect;
-        this.weekListWidget      = phpr.Calendar2.ViewWeekList;
-        this.monthListWidget     = phpr.Calendar2.ViewMonthList;
-        this.formWidget          = phpr.Calendar2.Form;
+        this.weekListWidget = phpr.Calendar2.ViewWeekList;
+        this.monthListWidget = phpr.Calendar2.ViewMonthList;
+        this.formWidget = phpr.Calendar2.Form;
+        this.userStore = new phpr.Default.System.Store.User();
+
+        this.setActiveUser(null);
     },
 
     destroy: function() {
@@ -127,38 +132,67 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         var view = phpr.viewManager.getView().clear();
     },
 
-    renderTemplate:function() {
+    renderTemplate: function() {
         // Summary:
         //   Custom renderTemplate for calendar
         var view = phpr.viewManager.setView(phpr.Default.System.DefaultView,
                 phpr.Calendar2.CalendarViewMixin, {}).clear();
     },
 
-    setWidgets:function() {
+    setWidgets: function() {
         // Summary:
         //   Custom setWidgets for calendar
         phpr.tree.loadTree();
-        this.loadAppropriateList();
+        this.userStore.fetch(
+            dojo.hitch(this, function() {
+                if (this.getActiveUser() === null) {
+                    this.setActiveUser(this._getCurrentUser());
+                }
+                this.loadAppropriateList();
+            }));
     },
 
-    loadAppropriateList:function() {
-        // Summary:
-        //    Loads the appropriate list of events
-        if (this.dayListSelf) {
-            this.loadDayListSelf();
-        } else if (this.dayListSelect) {
-            this.loadDayListSelect();
-        } else if (this.weekList) {
-            this.loadWeekList();
-        } else if (this.grid) {
-            this.loadGrid();
-        } else {
-            // Nothing else loaded? Then loads the default one (Month)
-            this.loadMonthList();
+    setActiveUser: function(user) {
+        this._activeUser = user;
+    },
+
+    getActiveUser: function(user) {
+        return this._activeUser;
+    },
+
+    _getCurrentUser: function() {
+        var userList = this.userStore.getList();
+        for (var i in userList) {
+            if (userList[i].current) {
+                return userList[i];
+            }
         }
     },
 
-    loadGrid:function() {
+    loadAppropriateList: function() {
+        // Summary:
+        //    Loads the appropriate list of events
+        switch (this.config.action) {
+            case "dayListSelf":
+                this.loadDayListSelf();
+                break;
+            case "dayListSelect":
+                this.loadDayListSelect();
+                break;
+            case "weekList":
+                this.loadWeekList();
+                break;
+            case "grid":
+                this.loadGrid();
+                break;
+            case "monthList":
+                this.loadMonthList();
+                break;
+            default:
+        }
+    },
+
+    loadGrid: function() {
         // Summary:
         //   This function loads the Dojo Grid
         this.scrollDisconnect();
@@ -167,21 +201,19 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         phpr.viewManager.getView().buttonRow.set('content', '');
         this.setNewEntry();
         var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
-            + phpr.currentProjectId;
+            + phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
         this.destroyGrid();
         var gridBoxContainer = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Default.template.GridBox.html"
         });
         phpr.viewManager.getView().gridContainer.set('content', gridBoxContainer);
         gridBoxContainer.startup();
-        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId, gridBoxContainer);
+        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId, gridBoxContainer, {userId: this.getActiveUser().id});
         this.setSubmoduleNavigation();
         this.setScheduleBar(false, false);
-        this._actionPending = false;
-        phpr.loading.hide();
     },
 
-    loadDayListSelf:function() {
+    loadDayListSelf: function() {
         // Summary:
         //    This function loads the Day List in Self mode
         this.scrollDisconnect();
@@ -191,30 +223,36 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.setNewEntry();
         var dateString = phpr.date.getIsoDate(this._date);
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
-            + phpr.currentProjectId;
+            + phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
         this.dayListSelf = new this.dayListSelfWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, true);
     },
 
-    loadDayListSelect:function() {
+    loadDayListSelect: function() {
         // Summary:
         //    This function loads the Day List in a Selection mode
         this.scrollDisconnect();
         this.resizeDisconnect();
         this.destroyOtherLists('dayListSelect');
         phpr.viewManager.getView().buttonRow.set('content', '');
-        this.setNewEntry();
-        var dateString = phpr.date.getIsoDate(this._date);
-        var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
-            + phpr.currentProjectId;
-        this.dayListSelect = new this.dayListSelectWidget(updateUrl, phpr.currentProjectId, dateString,
-            this._usersSelected, this);
-        this.setSubmoduleNavigation();
-        this.setScheduleBar(true, true);
+        if (this._usersSelected.length > 0) {
+            this.setNewEntry();
+            var dateString = phpr.date.getIsoDate(this._date);
+            var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
+                + phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
+            this.dayListSelect = new this.dayListSelectWidget(updateUrl, phpr.currentProjectId, dateString,
+                    this._usersSelected, this);
+            this.setSubmoduleNavigation();
+            this.setScheduleBar(true, true);
+        } else {
+            var newconfig = dojo.clone(this.config);
+            newconfig.action = "dayListSelf";
+            phpr.pageManager.changeState(newconfig);
+        }
     },
 
-    loadWeekList:function() {
+    loadWeekList: function() {
         // Summary:
         //    This function loads the Week List
         this.scrollDisconnect();
@@ -224,13 +262,13 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.setNewEntry();
         var dateString = phpr.date.getIsoDate(this._date);
         var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/'
-            + phpr.currentProjectId;
+            + phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
         this.weekList = new this.weekListWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
     },
 
-    loadMonthList:function() {
+    loadMonthList: function() {
         // Summary:
         //    This function loads the Month List
         this.scrollDisconnect();
@@ -239,76 +277,74 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         phpr.viewManager.getView().buttonRow.set('content', '');
         this.setNewEntry();
         var dateString = phpr.date.getIsoDate(this._date);
-        this.monthList = new this.monthListWidget(this, phpr.currentProjectId, dateString);
+        this.monthList = new this.monthListWidget(this, phpr.currentProjectId, dateString, null, this);
         this.setSubmoduleNavigation();
         this.setScheduleBar(true, false);
     },
 
-    showFormFromList:function(rowID) {
+    showFormFromList: function(rowID) {
         // Summary:
         //    This function opens an specific item clicked from the views
         this.publish("openForm", [rowID]);
     },
 
-    listViewClick:function() {
+    listViewClick: function() {
         // Summary:
         //    List button clicked, loads the regular grid
-        if (this.actionRequested()) {
-            return;
-        }
-        this.loadGrid();
+        this._changeStateWithNewAction("grid");
     },
 
-    dayViewClick:function() {
+    dayViewClick: function() {
         // Summary:
         //    This function loads the Day List with the entered date, if any.
         if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
             dijit.byId('gridFiltersBox').toggle();
         }
-        if (this.actionRequested()) {
-            return;
-        }
-        if (!this._usersSelectionMode) {
-            this.loadDayListSelf();
-        } else {
-            this.loadDayListSelect();
-        }
+
+        this._usersSelectionMode = false;
+
+        this._changeStateWithNewAction("dayListSelf", true);
     },
 
-    weekViewClick:function() {
+    weekViewClick: function() {
         // Summary:
         //    This function loads the Week List with the entered date, if any.
         if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
             dijit.byId('gridFiltersBox').toggle();
         }
-        if (this.actionRequested()) {
-            return;
-        }
-        this.loadWeekList();
+
+        this._changeStateWithNewAction("weekList");
     },
 
-    monthViewClick:function() {
+    monthViewClick: function() {
         // Summary:
         //    This function loads the Month List with the entered date, if any.
         if (dijit.byId('gridFiltersBox') && dojo.byId('gridFiltersBox').style.height != '0px') {
             dijit.byId('gridFiltersBox').toggle();
         }
-        if (this.actionRequested()) {
-            return;
-        }
-        this.loadMonthList();
+
+        this._changeStateWithNewAction("monthList");
     },
 
-    setDate:function(day) {
+    _changeStateWithNewAction: function(actionName, force) {
+        var newconfig = dojo.clone(this.config);
+        var options = {};
+
+        newconfig.action = actionName;
+
+        if (force === true) {
+            options.forceModuleReload = true;
+        }
+
+        phpr.pageManager.changeState(newconfig, options);
+    },
+
+    setDate: function(day) {
         // Summary
         //    This function is called by the buttons '<< Today >>' to load a specific date into the Day or Week List
         var PREVIOUS = 0;
         var TODAY    = 1;
         var NEXT     = 2;
-
-        if (this.actionRequested()) {
-            return;
-        }
 
         if (this.dayListSelf || this.dayListSelect) {
             var interval = 'day';
@@ -341,7 +377,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    openForm:function(/*int*/ id, /*String*/ module, /*String*/ startDate,
+    openForm: function(/*int*/ id, /*String*/ module, /*String*/ startDate,
                       /*String*/ startTime, /*String*/ recurrenceId) {
         // Summary:
         //    This function opens a new Detail View
@@ -418,74 +454,73 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.form = new this.formWidget(this, id, module, params, null);
     },
 
-    userSelfClick:function() {
-        // Summary:
-        //    This function loads the corresponding view in 'self' mode
-        if (this._usersSelectionMode) {
-            this._usersSelectionMode = false;
-            this.loadDayListSelf();
-        }
-    },
-
-    userSelectionClick:function() {
+    userSelectionClick: function() {
         // Summary:
         //    First function of the user selection window process, for the group view.
         // Description:
         //    Request the user list to the DB and then calls the next function of the process to show the selection
         // window.
+        this._usersSelectionMode = true;
+        var newconfig = dojo.clone(this.config);
+        newconfig.action = "dayListSelect";
+        phpr.pageManager.changeState(newconfig, {noAction: true});
         this.userStore = new phpr.Default.System.Store.User();
         this.userStore.fetch(dojo.hitch(this, "selectorRender"));
     },
 
-    selectorRender:function() {
+    selectorRender: function() {
         // Summary:
         //    Called after receiving the users list from the DB. Shows the user selection window for the group view.
-        var userList = this.userStore.getList();
+        this._userList = this.userStore.getList();
 
         var view = phpr.viewManager.getView();
-        view.selectorTitle.innerHTML = phpr.nls.get('User selection');
+
         view.selectorDialog.set('title', phpr.nls.get('Calendar2'));
 
-        // Mark as select the selected users
-        for (var i = 0; i < userList.length; i++) {
-            userList[i].selected = '';
-            if (this._usersSelected.length > 0) {
-                for (var j = 0; j < this._usersSelected.length; j++) {
-                    if (this._usersSelected[j] == userList[i].id) {
-                        userList[i].selected = 'selected="selected"';
-                    }
-                }
-            }
-        }
+        this._selectorContainerWidget = new phpr.Default.System.TemplateWrapper(
+            { templateName: "phpr.Calendar2.template.selector.html" }
+        );
 
-        view.selectorContainer.set('content',
-            phpr.fillTemplate("phpr.Calendar2.template.usersSelector.html", {
-                label:           phpr.nls.get('Select users for the group view'),
-                userList:        userList,
-                done:            phpr.nls.get('Done'),
-                noUsersSelected: phpr.nls.get('You have to select at least one user!')
-            }));
+        this.garbageCollector.addNode(this._selectorContainerWidget);
+
+        view.selectorContainer.set('content', this._selectorContainerWidget);
+
+        this._userSelector = new phpr.Calendar2.Selector({
+            titleContainer: view.selectorTitle,
+            labelContainer: this._selectorContainerWidget.label,
+            errorContainer: this._selectorContainerWidget.error,
+            doneButtonWidget: this._selectorContainerWidget.doneButton,
+            selectionContainer: this._selectorContainerWidget.selection,
+            selectorContainer: this._selectorContainerWidget.selector,
+            itemList: this._userList,
+            onComplete: dojo.hitch(this, this.usersSelectionDone),
+            preSelection: this._usersSelected,
+            labels: {
+                title: phpr.nls.get('User selection'),
+                label: phpr.nls.get('Select users for the group view'),
+                done: phpr.nls.get('Done'),
+                noSelection: phpr.nls.get('You have to select at least one user!')
+            }
+        });
 
         view.selectorDialog.show();
     },
 
-    usersSelectionDoneClick:function() {
+    usersSelectionDone: function() {
         // Summary:
         //    Called once the users of the selection window have been selected.
-        var userList = dijit.byId('userList').get('value');
-        if (userList.length == 0) {
-            dojo.byId("usersSelectorError").style.visibility = 'visible';
-            return;
-        }
         this._usersSelectionMode = true;
-        dojo.byId("usersSelectorError").style.visibility = 'hidden';
         phpr.viewManager.getView().selectorDialog.hide();
 
-        this._usersSelected = userList;
+        this._usersSelected = this._userSelector.getSelection();
+
+        this._userSelector.destroy();
+        delete this._userSelector;
+
         this.loadDayListSelect();
     },
 
-    anotherViewDayClick:function(date) {
+    anotherViewDayClick: function(date) {
         // Summary:
         //    The header of every day in the week view and every cell of the month view have a link to this function to
         // load the day list of a specific day.
@@ -502,11 +537,11 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.loadDayListSelf();
     },
 
-    destroyOtherLists:function(mode) {
+    destroyOtherLists: function(mode) {
         // Summary:
         //    Destroys the objects of the lists not being used
         if (mode != 'grid') {
-            this.grid = null;
+            this.destroyGrid();
         }
         if (mode != 'dayListSelf') {
             this.dayListSelf = null;
@@ -522,7 +557,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    setSubmoduleNavigation:function() {
+    setSubmoduleNavigation: function() {
         // Description:
         //    This function is responsible for displaying the Navigation top bar of the Calendar2
         //    Current submodules are: List, Day and Week.
@@ -553,13 +588,10 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         navigation += '   </tr></table>'
                    + '</div>'
                    + '<div class="nav_sub">'
-                       + '<table><tr>';
+                   + '<table><tr>';
 
         moduleViews = new Array();
-        if (!this.isListActive('dayList')) {
-            this.addModuleView(moduleViews, phpr.nls.get('Self'), 'userSelfClick', true);
-        } else {
-            this.addModuleView(moduleViews, phpr.nls.get('Self'), 'userSelfClick', !this._usersSelectionMode);
+        if (this.isListActive('dayList')) {
             this.addModuleView(moduleViews, phpr.nls.get('Selection'), 'userSelectionClick', this._usersSelectionMode);
         }
 
@@ -578,13 +610,18 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
                 });
         }
 
+        navigation += phpr.fillTemplate("phpr.Calendar2.template.proxyDropDown.html",
+                {
+                    label: phpr.nls.get("User:")
+                });
+
         navigation += '   </tr></table>'
                    + '</div>';
 
         phpr.viewManager.getView().subModuleNavigation.set('content', navigation);
     },
 
-    addModuleView:function(moduleViews, label, functionName, activeTab) {
+    addModuleView: function(moduleViews, label, functionName, activeTab) {
         // Summary:
         //    Adds a specific view to the moduleViews array
         moduleViews.push({
@@ -594,7 +631,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         });
     },
 
-    isListActive:function(list) {
+    isListActive: function(list) {
         // Summary
         //    Returns whether a specific list type is active or not
         var answer = false;
@@ -609,7 +646,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         return answer;
     },
 
-    setScheduleBar:function(mainBar, selectionTab) {
+    setScheduleBar: function(mainBar, selectionTab) {
         // Summary
         //    Shows / hide and configures the Buttons bar
 
@@ -649,7 +686,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    dateDescripDay:function() {
+    dateDescripDay: function() {
         // Summary:
         //    Returns the day of the week we are working with, in a descriptive string of the current language
         days       = dojo.date.locale.getNames('days', 'wide');
@@ -658,7 +695,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         return dayDescrip;
     },
 
-    dateDescripMonth:function() {
+    dateDescripMonth: function() {
         // Summary
         //    Returns the month we are working with, in a descriptive string of the current language
         months       = dojo.date.locale.getNames('months', 'wide');
@@ -667,7 +704,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         return monthDescrip;
     },
 
-    getWeek:function() {
+    getWeek: function() {
         // Summary
         //    Returns the position in the year for the week we are working with
         var firstDayYear = new Date(this._date.getFullYear(),0,1);
@@ -676,7 +713,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         return week;
     },
 
-    capitalizeFirstLetter:function(str) {
+    capitalizeFirstLetter: function(str) {
         // Summary
         //    Capitalizes the first letter of a string
         result = str.slice(0,1).toUpperCase() + str.slice(1);
@@ -684,7 +721,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         return result;
     },
 
-    updateCacheData:function() {
+    updateCacheData: function() {
         // Summary:
         //    Forces every widget of the page to update its data, by deleting its cache.
 
@@ -705,7 +742,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    connectMouseScroll:function() {
+    connectMouseScroll: function() {
         // Summary
         //    Makes the connection between the Grid event for Mouse Wheel Scroll, and the 'scrollDone' function
         var grid = phpr.viewManager.getView().gridContainer.domNode;
@@ -720,17 +757,16 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
             this._dateWheelChanged         = false;
             grid.scrollTop = 0;
         }
-        this._actionPending = false;
     },
 
-    connectViewResize:function() {
+    connectViewResize: function() {
         // Summary:
         //    Connects the resize event of the Grid box to its appropriate function. Used in Day, Week and Month views
         var gridBox = phpr.viewManager.getView().gridContainer;
         this._resizeConnection = dojo.connect(gridBox, 'resize',  dojo.hitch(this, "gridResized"));
     },
 
-    gridResized:function() {
+    gridResized: function() {
         // Summary:
         //    Receives the call of event of view resize and calls the appropriate function to update vars and divs.
         if (this.dayListSelf) {
@@ -742,7 +778,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    scrollDone:function(scrollValue) {
+    scrollDone: function(scrollValue) {
         // Summary
         //    Called whenever the user scrolls the mouse wheel over the grid. Detects whether to interpret it as a
         // request for changing to previous or next day/week/month grid.
@@ -793,7 +829,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this._gridLastScrollTop = grid.scrollTop;
     },
 
-    scrollDisconnect:function() {
+    scrollDisconnect: function() {
         // Summary
         //    Disconnects the event of mouse wheel scroll, of the gridBox
         if (this._scrollConnection != null) {
@@ -802,7 +838,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    resizeDisconnect:function() {
+    resizeDisconnect: function() {
         // Summary
         //    Disconnects the event of the gridBox resize
         if (this._resizeConnection != null) {
@@ -811,21 +847,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    actionRequested:function() {
-        // Summary
-        //    The following lines are to avoid repetition of the Mouse Wheel scroll event connection, that could be
-        // produced by clicking many times anxiously the same link or tab.
-        //   If there is an action pending, it returns 'true' so that the caller function gets stopped.
-        if (this._actionPending) {
-            return true;
-        } else {
-            this._actionPending = true;
-            phpr.loading.show();
-            return false;
-        }
-    },
-
-    highlightScheduleBarDate:function() {
+    highlightScheduleBarDate: function() {
         // Summary:
         //    Highlights the date after it has been changed using the mouse wheel
         text             = dojo.byId('scheduleBarDate');
@@ -838,7 +860,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         setTimeout('text.style.color="black";', 1200);
     },
 
-    saveChanges:function() {
+    saveChanges: function() {
         // Summary:
         //    Calls the appropriate function saveChanges depending on the class that triggered the event.
         if (this.weekList) {
@@ -846,12 +868,80 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    enableEventDivClick:function() {
+    enableEventDivClick: function() {
         // Summary:
         //    Called using setTimeout to allow the events to be just clicked to open them in the form, but waiting a
         // while first, because an event has just been dragged...
         if (this.weekList) {
             this.weekList.eventClickDisabled = false;
+        }
+    },
+
+    _loadProxyableUsers: function(widget) {
+        this._proxySelectWidget = widget;
+        this._proxyStore = new phpr.Calendar2.ProxyableStore();
+        this._proxyStore.fetch(dojo.hitch(this, this._proxyableUsersLoaded));
+    },
+
+    _proxyableUsersLoaded: function() {
+        this._proxyableUserList = this._proxyStore.getList();
+        this._populateProxySelect();
+    },
+
+    _populateProxySelect: function(users) {
+        if (this._proxySelectWidget.getOptions().length == 0) {
+            var options = [];
+            options.push({
+                label: this._getCurrentUser().display,
+                value: String(this._getCurrentUser().id)
+            });
+
+            for (var index in this._proxyableUserList) {
+                options.push({
+                    label: this._proxyableUserList[index].display,
+                    value: String(this._proxyableUserList[index].id)
+                });
+            }
+
+            this._proxySelectWidget.addOption(options);
+            this._ignoreFirstProxyChange = true;
+        }
+        this._proxySelectWidget.set('value', String(this.getActiveUser().id));
+    },
+
+    _changeProxyUser: function(widget) {
+        if (this._ignoreFirstProxyChange) {
+            this._ignoreFirstProxyChange = false;
+        } else if (this.getActiveUser().id !== widget.get('value')) {
+            this.setActiveUser(this._getUserById(widget.get('value')));
+            this.reload(this.config);
+        }
+    },
+
+    _getUserById: function(id) {
+        var userList = this.userStore.getList();
+        for (var i in userList) {
+            if (userList[i].id == id) {
+                return userList[i];
+            }
+        }
+    },
+
+    reload: function(config) {
+        config = config || {};
+        if (!config.action) {
+            config.action = "monthList";
+        }
+        arguments[0] = config;
+        this.inherited(arguments);
+    },
+
+    processActionFromUrlHash: function(data) {
+        if (!data.action) {
+            data.action = "monthList";
+        }
+        if (this.config.action != data.action) {
+            this.reload(data);
         }
     }
 });
