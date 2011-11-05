@@ -302,13 +302,6 @@ final class Default_Helpers_Right
                     $resultRights[$node['id']] = $rights[$node['id']];
                 }
             }
-
-            if (isset($params['dataAccess'])) {
-                if (!Phprojekt_Module::saveTypeIsGlobal($moduleId)) {
-                    // Items under a project => add admin with full access
-                    $resultRights[1] = Phprojekt_Acl::ALL;
-                }
-            }
         } else {
             $resultRights = $rights;
         }
