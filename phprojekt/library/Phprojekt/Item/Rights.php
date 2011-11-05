@@ -173,9 +173,9 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $currentUserId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         $access = $this->getItemRight($moduleId, $itemId, $currentUserId);
-        if ($access == 0) {
+        if (null === $access) {
             // Use for an empty rights
-            $access = (int) Phprojekt_Acl::ALL;
+            $access = (int) Phprojekt_Acl::NONE;
         }
         $values['currentUser']['moduleId'] = (int) $moduleId;
         $values['currentUser']['itemId']   = (int) $itemId;
