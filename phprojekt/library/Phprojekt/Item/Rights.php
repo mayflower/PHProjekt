@@ -239,26 +239,14 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
             $values        = array();
             $currentUserId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
-            // Set the current User
-            // Use for an empty rights, if not, will be re-write
-            $values['currentUser']['moduleId'] = (int) $moduleId;
-            $values['currentUser']['itemId']   = (int) $itemId;
-            $values['currentUser']['userId']   = $currentUserId;
-            $access                            = Phprojekt_Acl::convertBitmaskToArray((int) Phprojekt_Acl::ALL);
-            $values['currentUser']             = array_merge($values['currentUser'], $access);
-
             $where = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
             $rows  = $this->fetchAll($where)->toArray();
             foreach ($rows as $row) {
                 $access  = Phprojekt_Acl::convertBitmaskToArray($row['access']);
-                if ($currentUserId == $row['user_id']) {
-                    $values['currentUser'] = array_merge($values['currentUser'], $access);
-                } else {
-                    $values[$row['user_id']]['moduleId'] = (int) $moduleId;
-                    $values[$row['user_id']]['itemId']   = (int) $itemId;
-                    $values[$row['user_id']]['userId']   = (int) $row['user_id'];
-                    $values[$row['user_id']]             = array_merge($values[$row['user_id']], $access);
-                }
+                $values[$row['user_id']]['moduleId'] = (int) $moduleId;
+                $values[$row['user_id']]['itemId']   = (int) $itemId;
+                $values[$row['user_id']]['userId']   = (int) $row['user_id'];
+                $values[$row['user_id']]             = array_merge($values[$row['user_id']], $access);
             }
             $rightNamespace->right = $values;
         }
