@@ -201,7 +201,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         // Summary:
         //      returns a module by its name or null if it is not registered
         var mod = this._modules[name];
-        if (mod) {
+        if (mod !== undefined && mod) {
             return mod;
         } else {
             return null;
@@ -275,7 +275,6 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         //      TODO: this control flow is bogus, there is no reason why the initial page loading should be done by the
         //      load function of the Main class (it will not work to call it twice and it has nothing to do with the
         //      Main class in general)
-
         if (this.getModule(module) !== null) {
             module.load();
         } else {
