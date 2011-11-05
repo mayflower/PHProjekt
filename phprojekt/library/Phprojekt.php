@@ -425,17 +425,16 @@ class Phprojekt
         $autoloader = Zend_Loader_Autoloader::getInstance();
         $autoloader->pushAutoloader(array('Phprojekt_Loader', 'autoload'));
 
+        // If the configuration file does not exist we redirect to the setup page.
+        if (!file_exists(PHPR_CONFIG_FILE)) {
+            $this->_redirectToSetupAndDie();
+        }
+
         // Read the config file, but only the production setting
         try {
             $this->_config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
         } catch (Zend_Config_Exception $error) {
-            $response = new Zend_Controller_Request_Http();
-            $webPath  = $response->getScheme() . '://' . $response->getHttpHost() . $response->getBasePath() . '/';
-            header("Location: " . $webPath . "setup.php");
-            error_log(
-                'You need the file configuration.php to continue. Have you tried the <a href="' . $webPath
-                . 'setup.php">setup</a> routine?'."\n".'<br />Original error: ' . $error->getMessage()
-            );
+            error_log('There is an error in your configuration.php: ' . $error->getMessage());
             die();
         }
 
@@ -967,5 +966,16 @@ class Phprojekt
 
         return array('requirements'    => $requirements,
                      'recommendations' => $recommendations);
+    }
+
+    private function _redirectToSetupAndDie()
+    {
+        $request  = new Zend_Controller_Request_Http();
+        $webPath  = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/';
+        $response = new Zend_Controller_Response_Http();
+        $response->setRedirect($webPath . 'setup.php');
+        $response->setBody('No configuration file found, redirecting to setup.');
+        $response->sendResponse();
+        die();
     }
 }
