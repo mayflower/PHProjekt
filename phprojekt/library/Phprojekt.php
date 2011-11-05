@@ -239,7 +239,7 @@ class Phprojekt
                 $this->_db = Zend_Db::factory($this->_config->database);
             } catch (Zend_Db_Adapter_Exception $error) {
                 error_log($error->getMessage());
-                die();
+                $this->_dieWithInternalServerError();
             }
         }
 
@@ -260,7 +260,7 @@ class Phprojekt
                 $this->_log = new Phprojekt_Log($this->_config);
             } catch (Zend_Log_Exception $error) {
                 error_log($error->getMessage());
-                die();
+                $this->_dieWithInternalServerError();
             }
         }
 
@@ -435,7 +435,7 @@ class Phprojekt
             $this->_config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
         } catch (Zend_Config_Exception $error) {
             error_log('There is an error in your configuration.php: ' . $error->getMessage());
-            die();
+            $this->_dieWithInternalServerError();
         }
 
         // Set webpath, tmpPath and applicationPath
@@ -476,7 +476,7 @@ class Phprojekt
             $this->_cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
         } catch (Exception $error) {
             error_log("The directory " . PHPR_TEMP_PATH . "zendCache do not exists or not have write access.");
-            die();
+            $this->_dieWithInternalServerError();
 
         }
         Zend_Db_Table_Abstract::setDefaultMetadataCache($this->_cache);
@@ -516,7 +516,7 @@ class Phprojekt
             $message = "Your PHP does not meet the requirements needed for P6.<br />"
                 . implode("<br />", $missingRequirements);
             error_log($message);
-            die();
+            $this->_dieWithInternalServerError();
         }
 
         $helperPaths = $this->_getHelperPaths();
@@ -966,6 +966,15 @@ class Phprojekt
 
         return array('requirements'    => $requirements,
                      'recommendations' => $recommendations);
+    }
+
+    private function _dieWithInternalServerError()
+    {
+        $response = new Zend_Controller_Response_Http();
+        $response->setHttpResponseCode(500);
+        $response->setBody('Internal Server Error. Please contact an administrator.');
+        $response->sendResponse();
+        die();
     }
 
     private function _redirectToSetupAndDie()
