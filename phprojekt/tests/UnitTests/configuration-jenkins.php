@@ -17,11 +17,11 @@ database.params.password    = "phprojekt"
 
 [general]
 
-applicationDir       = "/var/lib/hudson/jobs/PHProjekt (next)/workspace/phprojekt/"
+applicationDir       = "/var/lib/jenkins/jobs/PHProjekt (next)/workspace/phprojekt/"
 
-tmpPath            = "/var/lib/hudson/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/tmp/"
-applicationPath    = "/var/lib/hudson/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/application/"
-log.debug.filename = "/var/lib/hudson/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/logs/debug.log"
+tmpPath            = "/var/lib/jenkins/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/tmp/"
+applicationPath    = "/var/lib/jenkins/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/application/"
+log.debug.filename = "/var/lib/jenkins/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/logs/debug.log"
 
 itemsPerPage         = 3;
 userDisplayFormat    = 0

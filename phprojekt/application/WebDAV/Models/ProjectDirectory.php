@@ -21,7 +21,6 @@
  * @version    Release: @package_version@
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-require_once 'SabreDAV/Sabre/VObject/includes.php';
 
 /**
  * WebDAV collection model.
