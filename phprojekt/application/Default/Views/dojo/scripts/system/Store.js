@@ -22,6 +22,7 @@
 dojo.provide("phpr.Default.System.Store");
 dojo.provide("phpr.Default.System.Store.User");
 dojo.provide("phpr.Default.System.Store.Module");
+dojo.provide("phpr.Default.System.ProxyableStore");
 dojo.provide("phpr.Default.System.Store.Role");
 dojo.provide("phpr.Default.System.Store.RoleModuleAccess");
 dojo.provide("phpr.Default.System.Store.Tab");
@@ -119,6 +120,29 @@ dojo.declare("phpr.Default.System.Store.Module", phpr.Default.System.Store, {
                     "inProject": modules[i].inProject
                 }
             );
+        }
+    }
+});
+
+dojo.declare("phpr.Default.System.ProxyableStore", phpr.Default.System.Store, {
+    constructor: function(projectId) {
+        if (!projectId) {
+            projectId = phpr.currentProjectId;
+        }
+        this._url = phpr.webpath + 'index.php/Core/user/jsonGetProxyableUsers/nodeId/' + projectId;
+    },
+
+    makeSelect: function() {
+        // Summary:
+        //    This function get all the users the current user has proxy rights on
+        // Description:
+        //    This function get all the users the current user has proxy rights on
+        var users  = phpr.DataStore.getData({url: this._url});
+        this._list = [];
+        for (var i in users) {
+            this._list.push({"id":      users[i].id,
+                             "display": users[i].display,
+                             "current": users[i].current});
         }
     }
 });

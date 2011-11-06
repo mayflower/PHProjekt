@@ -270,7 +270,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         this._participantsInTab = participants.length;
 
         // Template for the participants tab
-        var participantData = phpr.Default.System.TemplateWrapper({
+        var participantData = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Calendar2.template.participanttab.html",
             templateData: {
                 participantUserText:            phpr.nls.get('User'),
@@ -509,11 +509,11 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                if (data.type == 'success') {
                    this.publish("updateCacheData");
                    // reload the page and trigger the form load
-                   var newstate = this.main.config;
-                   if (newstate.id) {
-                       delete newstate.id;
+                   var newState = dojo.clone(this.main.state);
+                   if (newState.id) {
+                       delete newState.id;
                    }
-                   phpr.pageManager.changeState(newstate, { forceModuleReload: true });
+                   phpr.pageManager.changeState(newState, { forceModuleReload: true });
                }
             })
         });

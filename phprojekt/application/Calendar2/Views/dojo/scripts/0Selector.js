@@ -20,7 +20,7 @@
  */
 
 /**
- * Selector abstration to be indipendant from specific dom elements etc.
+ * Selector abstraction to be independent from specific dom elements etc.
  * the filename was chosen because we need to be loaded before Main.js
  */
 dojo.provide("phpr.Calendar2.Selector");
