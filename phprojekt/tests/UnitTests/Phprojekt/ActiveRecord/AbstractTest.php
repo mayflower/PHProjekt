@@ -33,6 +33,11 @@ class Phprojekt_ModuleInstance extends Phprojekt_ActiveRecord_Abstract
     public $belongsTo = array('project' => array('classname' => 'Phprojekt_Project'));
 }
 
+class Phprojekt_HmabtmTest extends Phprojekt_ActiveRecord_Abstract
+{
+    public $hasManyAndBelongsToMany = array('project' => array('classname' => 'Phprojekt_Project'));
+}
+
 /**
  * Tests for active records
  *
@@ -86,19 +91,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
      */
     public function testCreateHasManyAndBelongsToMany()
     {
-        $user = new Phprojekt_User_User(array('db' => $this->sharedFixture));
-        $users = $user->fetchAll($this->sharedFixture->quoteInto('username = ?', 'Test'));
-
-        if ($users === null) {
-            $this->fail('No user found');
-        } else {
-            $test         = $users[0];
-            $group        = $test->groups->create();
-            $group->name  = 'TEST GROUP';
-            $this->assertTrue($group->save());
-
-            $this->assertNotNull($group->id);
-        }
+        $this->markTestIncomplete("functionality has to be reimplemented");
     }
 
     public function testGetTableName()
@@ -183,20 +176,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
      */
     public function testHasManyAndBelongsToMany()
     {
-        $user = new Phprojekt_User_User(array('db' => $this->sharedFixture));
-        $user->find(1);
-        $group = $user->groups->fetchAll();
-
-        $this->assertEquals('Group 1', $user->groups->find(1)->name);
-        $this->assertEquals('Group 2', $group[1]->name);
-        $this->assertEquals(2, $user->groups->count());
-
-        $group = new Phprojekt_Groups_Groups(array('db' => $this->sharedFixture));
-        $group->find(1);
-        $users = $group->users->fetchAll();
-        $this->assertEquals('Test', $users[0]->username);
-        $this->assertEquals('Marie', $users[1]->username);
-        $this->assertEquals(2, $group->users->count());
+        $this->markTestIncomplete("functionality has to be reimplemented");
     }
 
     /**
@@ -262,18 +242,9 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
      */
     public function testUpdateHasManyAndBelongsToMany()
     {
-        $group = new Phprojekt_Groups_Groups(array('db' => $this->sharedFixture));
-        $group->find(2);
-        $group->id = 10;
-        $group->save();
-
-        $users = $group->users->fetchAll();
-        $this->assertEquals(1, $users[0]->userId);
-        $this->assertEquals('Test', $users[0]->username);
-
-        $group->find(10);
-        $group->id = 2;
-        $group->save();
+        $hmabtm = new Phprojekt_HmabtmTest(array('db' => $this->sharedFixture));
+        $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
+        $this->markTestIncomplete("functionality not implemented");
     }
 
     /**
