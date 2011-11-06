@@ -25,7 +25,7 @@
 /**
  * Table mappings for the proxy table.
  *
- * This class provides the necessary functions to switch the effective user.
+ * Class to abstract the access to the proxy table.
  *
  * @category   PHProjekt
  * @package    Phprojekt
