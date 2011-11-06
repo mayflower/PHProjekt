@@ -307,7 +307,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
     setActionFormButtons: function() {
         // Summary:
         //    Connect the buttons to the actions
-        //dojo.connect(dijit.byId("subModuleSubmitButton"), "onClick", dojo.hitch(this, "_submitForm"));
+
         if (this.id > 0) {
             dojo.connect(dijit.byId("subModuleDeleteButton"), "onClick", dojo.hitch(this, function() {
                 phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'));
