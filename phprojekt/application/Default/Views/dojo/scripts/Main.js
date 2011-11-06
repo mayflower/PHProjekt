@@ -125,7 +125,7 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
 
 dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     // Summary: class for initialilzing a default module
-    config:     null,
+    state:      null,
     grid:       null,
     module:     null,
     gridWidget: null,
@@ -143,7 +143,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.subModules = [];
         this.globalModuleNavigationButtons = {};
         this.subModules = subModules;
-        this.config = {};
+        this.state = {};
     },
 
     destroy: function() {
@@ -231,7 +231,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.preOpenForm();
 
         if (!this.grid) {
-            this.reload(this.config);
+            this.reload(this.state);
         }
 
         this.form = new this.formWidget(this, id, module, {}, phpr.viewManager.getView().detailsBox);
@@ -398,14 +398,14 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }));
     },
 
-    reload: function(config) {
+    reload: function(state) {
         // Summary:
         //    This function reloads the current module
         // Description:
         //    This function initializes a module that might have been called before.
         //    It only reloads those parts of the page which might change during a PHProjekt session
 
-        this.config = config || {};
+        this.state = state || {};
         this.setGlobalVars();
         this.cleanPage();
         this.renderTemplate();
@@ -492,7 +492,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 this,
                 phpr.currentProjectId,
                 gridBoxContainer,
-                {recursive: this.config.includeSubentries == "true"});
+                {recursive: this.state.includeSubentries == "true"});
     },
 
     setGlobalModulesNavigation: function() {
@@ -667,7 +667,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
                 if (!phpr.isGlobalModule(this.module)) {
                     var isListRecursiveBox = new dijit.form.CheckBox({
-                        checked: this.config.includeSubentries == "true"
+                        checked: this.state.includeSubentries == "true"
                     });
                     phpr.viewManager.getView().rightButtonRow.set('content', isListRecursiveBox);
                     var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects?"));
@@ -755,43 +755,43 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //      "id", and the next value a number
         //    After that, add all the params
 
-        var config = {};
+        var state = {};
         if (id && module) {
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,xx (Open form for edit in normal modules)
-                config.moduleName = module;
-                config.projectId = phpr.currentProjectId;
-                config.id = id;
+                state.moduleName = module;
+                state.projectId = phpr.currentProjectId;
+                state.id = id;
             } else {
                 phpr.currentProjectId = phpr.rootProjectId;
                 if (params && params.length > 0) {
                     // GlobalModule,Module,id,xx (Open form for edit in Adminisration)
-                    config.action = params.shift();
-                    config.moduleName = module;
-                    config.id = id;
+                    state.action = params.shift();
+                    state.moduleName = module;
+                    state.id = id;
                 } else {
                     // GlobalModule,id,xx (Open form for edit in global modules)
-                    config.moduleName = module;
-                    config.id = id;
+                    state.moduleName = module;
+                    state.id = id;
                 }
             }
         } else if (module && id === 0) {
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId,id,0 (Open form for add in normal modules)
-                config.moduleName = module;
-                config.projectId = phpr.currentProjectId;
-                config.id = 0;
+                state.moduleName = module;
+                state.projectId = phpr.currentProjectId;
+                state.id = 0;
             } else {
                 phpr.currentProjectId = phpr.rootProjectId;
                 if (params && params.length > 0) {
                     // GlobalModule,Module,id,xx (Open form for add in Adminisration)
-                    config.moduleName = module;
-                    config.action = params.shift();
-                    config.id = 0;
+                    state.moduleName = module;
+                    state.action = params.shift();
+                    state.id = 0;
                 } else {
                     // GlobalModule,id,xx (Open a form for add in global modules)
-                    config.moduleName = module;
-                    config.id = 0;
+                    state.moduleName = module;
+                    state.id = 0;
                 }
             }
         } else {
@@ -800,21 +800,21 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             }
             if (!phpr.isGlobalModule(module)) {
                 // Module,projectId (Reload a module -> List view)
-                config.moduleName = module;
-                config.projectId = phpr.currentProjectId;
+                state.moduleName = module;
+                state.projectId = phpr.currentProjectId;
             } else {
                 // GlobalModule (Reload a global module -> List view)
                 phpr.currentProjectId = phpr.rootProjectId;
-                config.moduleName = module;
+                state.moduleName = module;
             }
         }
 
         if (params && params[0]) {
-            config.action = params.shift();
-            config.actionData = params;
+            state.action = params.shift();
+            state.actionData = params;
         }
 
-        phpr.pageManager.changeState(config);
+        phpr.pageManager.changeState(state);
     },
 
     processUrlHash: function(hash) {
@@ -838,7 +838,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Summary:
         //     Check the action params and run the correct function
         //     reload is the default, but each function can redefine it
-        this.reload(this.config);
+        this.reload(this.state);
     },
 
     newEntry: function() {
@@ -1119,7 +1119,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             url: this._langUrl,
             processData: dojo.hitch(this, function() {
                 phpr.nls = new phpr.translator(phpr.DataStore.getData({url: this._langUrl}));
-                this.reload(this.config);
+                this.reload(this.state);
             })
         });
     },
