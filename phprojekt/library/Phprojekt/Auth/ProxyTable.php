@@ -65,25 +65,23 @@ class Phprojekt_Auth_ProxyTable
      *
      * @return void
      */
-    public function setProxyIdsForUserId($proxyIds = array(), $userId = null)
+    public function setProxyIdsForUserId(Array $proxyIds, $userId = null)
     {
         $userId = $this->_currentUserIdIfNull($userId);
 
         $this->_throwOnInvalidUserId($userId);
 
-        if (is_array($proxyIds)) {
-            $this->_clearProxiesForUserId($userId);
-            $values  = array();
+        $this->_clearProxiesForUserId($userId);
+        $values  = array();
 
-            foreach ($proxyIds as $proxyUserId) {
-                if ($this->_isValidUserId($proxyUserId)) {
-                    $values[] = array(  'proxying_id' => (int) $proxyUserId,
-                        'proxyed_id' => (int) $userId);
-                }
+        foreach ($proxyIds as $proxyUserId) {
+            if ($this->_isValidUserId($proxyUserId)) {
+                $values[] = array(  'proxying_id' => (int) $proxyUserId,
+                    'proxyed_id' => (int) $userId);
             }
-
-            $this->_insertRowsIntoProxyTable($values);
         }
+
+        $this->_insertRowsIntoProxyTable($values);
     }
 
     /**
