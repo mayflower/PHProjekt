@@ -23,7 +23,7 @@ dojo.provide("phpr.Calendar2.Main");
 dojo.provide("phpr.Calendar2.CalendarViewMixin");
 dojo.require("dijit.Dialog");
 dojo.require("phpr.Calendar2.Selector");
-dojo.require("phpr.Calendar2.ProxyableStore");
+dojo.require("phpr.Default.System.ProxyableStore");
 
 // This ist our view mixin, it provides us with a border container without the overview box
 // this is only needed because the pagestyle is relative to the bordercontainer
@@ -879,7 +879,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
 
     _loadProxyableUsers: function(widget) {
         this._proxySelectWidget = widget;
-        this._proxyStore = new phpr.Calendar2.ProxyableStore();
+        this._proxyStore = new phpr.Default.System.ProxyableStore();
         this._proxyStore.fetch(dojo.hitch(this, this._proxyableUsersLoaded));
     },
 

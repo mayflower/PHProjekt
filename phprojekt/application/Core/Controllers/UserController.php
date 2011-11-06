@@ -144,6 +144,39 @@ class Core_UserController extends Core_IndexController
     }
 
     /**
+     * Returns a list of all the users the current user has proxy rights on
+     *
+     * Returns a list of all the users with:
+     * <pre>
+     *  - id      => id of user.
+     *  - display => Display for the user.
+     *  - current => True or false if is the current user.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonGetProxyableUsersAction()
+    {
+        $current      = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $proxyTable   = new Phprojekt_Auth_ProxyTable();
+        $proxyUserIds = $proxyTable->getProxyableUsersForUserId();
+
+        $data = array();
+
+        foreach ($proxyUserIds as $user) {
+            $data['data'][] = array(
+                'id'      => (int) $user->id,
+                'display' => $user->applyDisplay($user->getDisplay(), $user),
+                'current' => $current == $user->id
+            );
+        }
+
+        Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+    }
+
+    /**
      * Saves an user.
      *
      * If the request parameter "id" is null or 0, the function will add a new user,
