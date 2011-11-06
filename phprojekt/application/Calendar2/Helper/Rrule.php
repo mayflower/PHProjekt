@@ -344,7 +344,7 @@ class Calendar2_Helper_Rrule
     public function lastOccurrenceBefore(Datetime $datetime)
     {
         if (!$this->containsDate($datetime)) {
-            throw new Exception('Invalid Datetime given.');
+            throw new Exception("Invalid Datetime {$datetime->format('Y-m-d H:i:s')} given.");
         }
 
         if ($datetime == $this->_first) {

@@ -487,7 +487,7 @@ class Calendar2_IndexController extends IndexController
             $occurrence = null;
         } else {
             try {
-                $occurrence = new Datetime($occurrence, $this->_getUserTimezone());
+                $occurrence = new Datetime($occurrence, new DateTimeZone('UTC'));
             } catch (Exception $e) {
                 throw new Phprojekt_PublishedException(
                     "Invalid occurrence timestamp '$occurrence'"

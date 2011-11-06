@@ -502,7 +502,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
 
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
-                                    + '/occurrence/' + this._originalData.start,
+                                    + '/occurrence/' + this._originalData.occurrence,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
                new phpr.handleResponse('serverFeedback', data);
@@ -607,7 +607,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
 
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId +
-                '/id/' + this.id + '/occurrence/' + this._originalData.start +
+                '/id/' + this.id + '/occurrence/' + this._originalData.occurrence +
                 '/userId/' + this.main.getActiveUser().id,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
