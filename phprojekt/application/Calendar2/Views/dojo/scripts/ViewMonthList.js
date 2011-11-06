@@ -220,6 +220,7 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
                         this._schedule[row][weekDay]['events'][nextEvent]['summary'] = this.htmlEntities(contentTitle);
                         this._schedule[row][weekDay]['events'][nextEvent]['time']    = eventInfo['time'];
                         this._schedule[row][weekDay]['events'][nextEvent]['start']   = content[event]['start'];
+                        this._schedule[row][weekDay]['events'][nextEvent]['occurrence'] = content[event]['occurrence'];
                         this._schedule[row][weekDay]['events'][nextEvent]['warning'] = warning;
                     }
                 }
