@@ -172,7 +172,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     loadAppropriateList: function() {
         // Summary:
         //    Loads the appropriate list of events
-        switch (this.config.action) {
+        switch (this.state.action) {
             case "dayListSelf":
                 this.loadDayListSelf();
                 break;
@@ -246,9 +246,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
             this.setSubmoduleNavigation();
             this.setScheduleBar(true, true);
         } else {
-            var newconfig = dojo.clone(this.config);
-            newconfig.action = "dayListSelf";
-            phpr.pageManager.changeState(newconfig);
+            this._changeStateWithNewAction("dayListSelf");
         }
     },
 
@@ -327,16 +325,16 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     },
 
     _changeStateWithNewAction: function(actionName, force) {
-        var newconfig = dojo.clone(this.config);
+        var newstate = dojo.clone(this.state);
         var options = {};
 
-        newconfig.action = actionName;
+        newstate.action = actionName;
 
         if (force === true) {
             options.forceModuleReload = true;
         }
 
-        phpr.pageManager.changeState(newconfig, options);
+        phpr.pageManager.changeState(newstate, options);
     },
 
     setDate: function(day) {
@@ -461,9 +459,9 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         //    Request the user list to the DB and then calls the next function of the process to show the selection
         // window.
         this._usersSelectionMode = true;
-        var newconfig = dojo.clone(this.config);
-        newconfig.action = "dayListSelect";
-        phpr.pageManager.changeState(newconfig, {noAction: true});
+        var newstate = dojo.clone(this.state);
+        newstate.action = "dayListSelect";
+        phpr.pageManager.changeState(newstate, {noAction: true});
         this.userStore = new phpr.Default.System.Store.User();
         this.userStore.fetch(dojo.hitch(this, "selectorRender"));
     },
@@ -914,7 +912,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
             this._ignoreFirstProxyChange = false;
         } else if (this.getActiveUser().id !== widget.get('value')) {
             this.setActiveUser(this._getUserById(widget.get('value')));
-            this.reload(this.config);
+            this.reload(this.state);
         }
     },
 
@@ -927,12 +925,12 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    reload: function(config) {
-        config = config || {};
-        if (!config.action) {
-            config.action = "monthList";
+    reload: function(state) {
+        state = state || {};
+        if (!state.action) {
+            state.action = "monthList";
         }
-        arguments[0] = config;
+        arguments[0] = state;
         this.inherited(arguments);
     },
 
@@ -940,7 +938,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         if (!data.action) {
             data.action = "monthList";
         }
-        if (this.config.action != data.action) {
+        if (this.state.action != data.action) {
             this.reload(data);
         }
     }

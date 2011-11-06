@@ -97,13 +97,12 @@ dojo.declare("phpr.Core.ViewMixin", phpr.Default.System.ViewContentMixin, {
 
 dojo.declare("phpr.Core.Main", phpr.Default.Main, {
     action: null,
-    config: null,
 
     constructor:function() {
         this.module     = "Core";
         this.gridWidget = phpr.Core.Grid;
         this.formWidget = phpr.Core.Form;
-        this.config     = {};
+        this.state     = {};
 
         this.loadFunctions(this.module);
     },
@@ -153,17 +152,17 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         }
     },
 
-    reload:function(config) {
+    reload:function(state) {
         // Summary:
         //    Rewritten the function for work like a system module and like a form
         // Description:
         //    Rewritten the function for work like a system module and like a form
 
-        this.config = config || {};
+        this.state = state || {};
 
-        var module = this.config.moduleName;
+        var module = this.state.moduleName;
 
-        this.action = config.action;
+        this.action = state.action;
 
         this.destroy();
         this.defineModules(module);
@@ -175,10 +174,10 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         this.setSearchForm();
         phpr.tree.loadTree();
 
-        if (this.isSystemModule(config.action)) {
-            config.moduleName = config.action;
-            delete config.action;
-            phpr.pageManager.changeState(config);
+        if (this.isSystemModule(state.action)) {
+            state.moduleName = state.action;
+            delete state.action;
+            phpr.pageManager.changeState(state);
         } else if (this.isSystemModule(module)) {
             var updateUrl = phpr.webpath + 'index.php/Core/' + module.toLowerCase() + '/jsonSaveMultiple/nodeId/1';
             var view = phpr.viewManager.useDefaultView({blank: true}).clear();
@@ -189,7 +188,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 summaryTxt: summaryTxt
             });
 
-            if (this.config.action) {
+            if (this.state.action) {
                 this.form = new this.formWidget(this, 0, this.module, null, view.detailsBox);
             }
         }
@@ -289,24 +288,24 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 module    = this.module;
             }
 
-            var config = {
+            var state = {
                 moduleName: module,
                 action: data.action
             };
 
             if (this.isSystemModule(data.moduleName)) {
-                config.parentModule = this.module;
+                state.parentModule = this.module;
             }
 
             if (data.id) {
                 // If is an id, open a form
                 if (subModule && (data.id > 0 || data.id == 0)) {
-                    config.id = data.id;
-                    phpr.pageManager.changeState(config);
+                    state.id = data.id;
+                    phpr.pageManager.changeState(state);
                 }
             } else if (this.action != data.action) {
                 this.action = data.action;
-                phpr.pageManager.changeState(config, {
+                phpr.pageManager.changeState(state, {
                     forceModuleReload: true
                 });
             }
