@@ -98,7 +98,7 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonListAction()
     {
-        $userId = (int) $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
+        $userId = $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('int', $userId)) {
            throw new Phprojekt_PublishedException(
@@ -106,10 +106,12 @@ class Calendar2_IndexController extends IndexController
             );
         }
 
-        if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById((int) $userId)) {
+        $userId = (int) $userId;
+
+        if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById($userId)) {
             throw new Phprojekt_PublishedException("Current user has no proxy rights for this user $userId");
         } else {
-            Phprojekt_Auth_Proxy::switchToUserById((int) $userId);
+            Phprojekt_Auth_Proxy::switchToUserById($userId);
         }
 
         parent::jsonListAction();
@@ -147,10 +149,12 @@ class Calendar2_IndexController extends IndexController
             );
         }
 
-        if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById((int) $userId)) {
+        $userId = (int) $userId;
+
+        if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById($userId)) {
             throw new Phprojekt_PublishedException("Current user has no proxy rights for this user $userId");
         } else {
-            Phprojekt_Auth_Proxy::switchToUserById((int) $userId);
+            Phprojekt_Auth_Proxy::switchToUserById($userId);
         }
 
         $timezone = $this->_getUserTimezone();
@@ -296,7 +300,7 @@ class Calendar2_IndexController extends IndexController
         $id                = $this->getRequest()->getParam('id');
         $occurrence        = $this->getRequest()->getParam('occurrence');
         $sendNotifications = $this->getRequest()->getParam('sendNotification', 'false');
-        $userId            = (int) $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
+        $userId            = $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('int', $id, true)
                 && 'null'      !== $id
@@ -316,6 +320,8 @@ class Calendar2_IndexController extends IndexController
                "Invalid userId '$userId'"
             );
         }
+
+        $userId = (int) $userId;
 
         $this->getRequest()->setParam('userId', $userId);
 
@@ -459,7 +465,7 @@ class Calendar2_IndexController extends IndexController
     {
         $id         = $this->getRequest()->getParam('id');
         $occurrence = $this->getRequest()->getParam('occurrence');
-        $userId     = (int) $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
+        $userId     = $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('int', $id)
                 && 'null'      !== $id
@@ -474,6 +480,8 @@ class Calendar2_IndexController extends IndexController
                "Invalid userId '$userId'"
             );
         }
+
+        $userId = (int) $userId;
 
         if (in_array($occurrence, array('null', '0', 'undefined'))) {
             $occurrence = null;
@@ -817,13 +825,15 @@ class Calendar2_IndexController extends IndexController
             );
         }
 
+        $visibility = (int) $visibility;
+
         if (!Cleaner::validate('int', $params['userId'])) {
            throw new Phprojekt_PublishedException(
                "Invalid userId " . $params['userId']
             );
         }
 
-        $visibility = (int) $visibility;
+        $params['userId'] = (int) $params['userId'];
 
         if (!Cleaner::validate('boolean', $multiple)) {
             throw new Phprojekt_PublishedException(
