@@ -970,7 +970,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         //  comment, rrule
         // not handling:
         //  attach, attendee, categories, contact, exdate, exrule, rstatus, related, resources, rdate, x-prop
-        $utc               = new DateTimezone('UTC');
+        $utc = new DateTimezone('UTC');
         $mappable = array(
             array('veventkey' => 'SUMMARY', 'ourkey' => 'summary', 'default' => '_'),
             array('veventkey' => 'LOCATION', 'ourkey' => 'location', 'default' => ''),
@@ -1003,7 +1003,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $end = new Datetime($vevent->dtend->value, new DateTimezone($vevent->dtend['tzid']->value));
         }
         $end->setTimezone($utc);
-        $this->end   = $end->format('Y-m-d H:i:s');
+        $this->end = $end->format('Y-m-d H:i:s');
 
         if ($debug) {
             $handledProps = array('DTSTART', 'DTEND');
