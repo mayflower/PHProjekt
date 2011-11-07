@@ -99,6 +99,8 @@
         name="Developer Tasks" />
     <module_instance id="2" project_id="2" module="Fnord"
         name="Project Tasks" />
+    <module_instance id="3" project_id="1" module="plom"
+        name="Project Tasks plom" />
 
     <hmabtm_test id="1"/>
     <hmabtm_test id="2"/>
