@@ -948,8 +948,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function fromVObject(Sabre_VObject_Component $vevent)
     {
-        $debug = false;
-
         if (strtolower($vevent->name) !== 'vevent') {
             throw new Exception(
                 "Invalid type of vobject_component passed to Calendar2_Models_Calendar2::fromVobject ({$vevent->name})"
@@ -1004,20 +1002,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         }
         $end->setTimezone($utc);
         $this->end = $end->format('Y-m-d H:i:s');
-
-        if ($debug) {
-            $handledProps = array('DTSTART', 'DTEND');
-            foreach ($mappable as $m) {
-                $handledProps[] = $m['veventkey'];
-            }
-            foreach ($vevent->children() as $prop) {
-                if (!in_array($prop->name, $handledProps)) {
-                    Phprojekt::getInstance()->getLog()->debug(
-                        "Encountered unknown vevent property \"{$prop->name}\":{$prop->value}"
-                    );
-                }
-            }
-        }
     }
 
     /**

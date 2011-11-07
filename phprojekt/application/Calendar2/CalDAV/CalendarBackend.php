@@ -162,8 +162,7 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $event = new Calendar2_Models_Calendar2();
         $event = $event->fetchAll($db->quoteInto('uri = ?', $objectUri));
         if (!array_key_exists(0, $event)) {
-            Phprojekt::getInstance()->getLog()->debug("Didn't find object with uri $objectUri.");
-            return true;
+            Phprojekt::getInstance()->getLog()->debug("Could not delete object with uri $objectUri.");
         }
         $event[0]->delete();
     }
