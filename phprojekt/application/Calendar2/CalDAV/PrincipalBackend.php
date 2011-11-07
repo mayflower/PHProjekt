@@ -48,12 +48,12 @@ class Calendar2_CalDAV_PrincipalBackend implements Sabre_DAVACL_IPrincipalBacken
 
     public function getPrincipalByPath($path)
     {
-        $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $user = new Phprojekt_User_User();
         $user = $user->findByUsername(preg_filter('|.*principals/([^/]+)$|', '$1', $path));
         if (is_null($user)) {
             throw new Exception("Principal not found for path $path");
         }
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('User');
 
         return array(

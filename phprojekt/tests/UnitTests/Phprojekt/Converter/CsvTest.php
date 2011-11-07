@@ -53,7 +53,7 @@ class Phprojekt_Converter_CsvTest extends DatabaseTest
     {
         $convertedFields = '"Title","Start date","End date","Priority","Current status","Complete percent"';
         $convertedValues = '"PHProjekt","2007-12-01","","1","Working","0.00"';
-        $object          = Phprojekt_Loader::getModel('Project', 'Project');
+        $object          = new Project_Models_Project();
         $records         = $object->fetchAll();
         $result          = Phprojekt_Converter_Csv::convert($records);
         $this->assertContains($convertedFields, $result);

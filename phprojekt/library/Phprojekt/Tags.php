@@ -98,9 +98,9 @@ class Phprojekt_Tags
      */
     private function __construct()
     {
-        $this->_tags        = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Tags');
-        $this->_tagsModules = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Modules');
-        $this->_tagsUsers   = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Users');
+        $this->_tags        = new Phprojekt_Tags_Tags();
+        $this->_tagsModules = new Phprojekt_Tags_Modules();
+        $this->_tagsUsers   = new Phprojekt_Tags_Users();
     }
 
     /**
@@ -110,9 +110,9 @@ class Phprojekt_Tags
      */
     public function __clone()
     {
-        $this->_tags        = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Tags');
-        $this->_tagsModules = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Modules');
-        $this->_tagsUsers   = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Users');
+        $this->_tags        = new Phprojekt_Tags_Tags();
+        $this->_tagsModules = new Phprojekt_Tags_Modules();
+        $this->_tagsUsers   = new Phprojekt_Tags_Users();
     }
 
     /**
@@ -193,7 +193,7 @@ class Phprojekt_Tags
     {
         $foundResults = array();
         $results      = array();
-        $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $rights       = new Phprojekt_Item_Rights();
         $userId       = Phprojekt_Auth::getUserId();
 
         if (!empty($tag)) {
@@ -216,7 +216,7 @@ class Phprojekt_Tags
 
                 // Convert result to array and add the display data
                 // only fetch records with read access
-                $display        = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Display');
+                $display        = new Phprojekt_Search_Display();
                 $dataForDisplay = array();
                 foreach ($foundResults as $result) {
                     if ($rights->getItemRight($result['moduleId'], $result['itemId'], $userId) > 0) {

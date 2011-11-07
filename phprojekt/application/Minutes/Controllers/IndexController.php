@@ -242,7 +242,7 @@ class Minutes_IndexController extends IndexController
             }
 
             // Set sender address
-            $ownerModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $ownerModel = new Phprojekt_User_User();
             $ownerModel->find($minutes->ownerId);
             $ownerEmail = $ownerModel->getSetting('email');
             $display    = $ownerModel->getDisplay();
@@ -354,9 +354,9 @@ class Minutes_IndexController extends IndexController
         $userMailList = array();
         if (count($idList)) {
             /* @var $userModel Phprojekt_User_User */
-            $userModel = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $userModel = new Phprojekt_User_User();
             $userList  = $userModel->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
-            $setting   = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+            $setting   = new Phprojekt_Setting();
             $display   = $userModel->getDisplay();
             /* @var $record Phprojekt_User_User */
             foreach ($userList as $record) {

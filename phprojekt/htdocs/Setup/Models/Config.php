@@ -398,7 +398,7 @@ class Setup_Models_Config
      *
      * @return string Output for save in the file.
      */
-    private function _getMisc($compressedDojo = 'true', $useCacheForClasses = 'true')
+    private function _getMisc($compressedDojo = 'true')
     {
         $content  = $this->_eol;
         $content .= ';;;;;;;;' . $this->_eol;
@@ -409,9 +409,6 @@ class Setup_Models_Config
         $content .= '; Use compressed dojo to improve the speed of loading.' . $this->_eol;
         $content .= 'compressedDojo = ' . $compressedDojo . $this->_eol;
         $content .= $this->_eol;
-
-        $content .= '; Use Zend_Registry for cache classes in the same request' . $this->_eol;
-        $content .= 'useCacheForClasses = ' . $useCacheForClasses . $this->_eol;
 
         return $content;
     }

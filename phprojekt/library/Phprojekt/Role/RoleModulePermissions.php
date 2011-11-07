@@ -50,7 +50,7 @@ class Phprojekt_Role_RoleModulePermissions extends Phprojekt_ActiveRecord_Abstra
     {
         $modules = array();
 
-        $model = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
+        $model = new Phprojekt_Module_Module();
         foreach ($model->fetchAll('(save_type = 0 OR save_type = 2)', 'name ASC') as $module) {
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']    = $module->id;

@@ -113,7 +113,7 @@ class Statistic_IndexController extends IndexController
         $rows[$index][] = 'Total';
         $index++;
 
-        $converter = Phprojekt_Loader::getLibraryClass('Phprojekt_Converter_Time');
+        $converter = new Phprojekt_Converter_Time();
         foreach ($data['projects'] as $projectId => $title) {
             $sumPerProject  = 0;
             $rows[$index][] = $title;

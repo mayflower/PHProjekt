@@ -102,7 +102,7 @@ class Core_IndexController extends IndexController
             $db = Phprojekt::getInstance()->getDb();
             return new $moduleName($db);
         } else {
-            return Phprojekt_Loader::getModel('Default', 'Default');
+            return new Default_Models_Default();;
         }
     }
 

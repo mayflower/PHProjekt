@@ -141,7 +141,7 @@ class Phprojekt_Notification
     {
         // Sometimes, the user may try to modify an existing item and presses Save without having modified even one
         // field. In that case, no mail should be sent.
-        $history            = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+        $history            = new Phprojekt_History();
         $this->_lastHistory = $history->getLastHistoryData($this->_model);
         if (empty($this->_lastHistory)) {
             return;
@@ -170,7 +170,7 @@ class Phprojekt_Notification
 
         if (!empty($recipients)) {
             $recipientsPerLang = array();
-            $setting           = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+            $setting           = new Phprojekt_Setting();
             foreach ($recipients as $recipient) {
                 $lang = $setting->getSetting('language', (int) $recipient);
                 if (null === $lang) {
@@ -428,7 +428,7 @@ class Phprojekt_Notification
 
         if (null !== $this->_model) {
             // This is only possible if $this->model is not null
-            $history            = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+            $history            = new Phprojekt_History();
             $this->_lastHistory = $history->getLastHistoryData($this->_model);
 
             $bodyChanges = (false === empty($this->_controllProcess)) ? array() : $this->getBodyChanges(null, false);
@@ -668,7 +668,7 @@ class Phprojekt_Notification
                 }
             }
         } else {
-            $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $user    = new Phprojekt_User_User();
             $userIds = $user->fetchAll();
 
             foreach ($userIds as $user) {
@@ -723,7 +723,7 @@ class Phprojekt_Notification
      */
     public function getSetting($settingName, $userId)
     {
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('Notification');
 
         $value = $setting->getSetting($settingName, $userId);
@@ -744,7 +744,7 @@ class Phprojekt_Notification
                                  Core_Models_Notification_Setting::FIELD_USERGENERATED => 0,
                                  Core_Models_Notification_Setting::FIELD_ALERTS        => 0);
 
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('Notification');
         $setting->setSettings($defaultSettings);
     }

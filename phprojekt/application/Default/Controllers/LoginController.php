@@ -93,7 +93,7 @@ class LoginController extends Zend_Controller_Action
             );
             if ($success === true) {
                 $config = Phprojekt::getInstance()->getConfig();
-                $frontendMessage = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification');
+                $frontendMessage = new Phprojekt_Notification();
                 $frontendMessage->setControllProcess(Phprojekt_Notification::LAST_ACTION_LOGIN);
                 $frontendMessage->saveFrontendMessage();
                 $this->_redirect($config->webpath . 'index.php' . $hash);
@@ -156,7 +156,7 @@ class LoginController extends Zend_Controller_Action
      */
     public function logoutAction()
     {
-        $frontendMessage = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification');
+        $frontendMessage = new Phprojekt_Notification();
         $frontendMessage->setControllProcess(Phprojekt_Notification::LAST_ACTION_LOGOUT);
         $frontendMessage->saveFrontendMessage();
 

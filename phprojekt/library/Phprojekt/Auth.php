@@ -75,7 +75,7 @@ class Phprojekt_Auth extends Zend_Auth
                 $tokenCookieHash   = Cleaner::sanitize('alnum', $_COOKIE[$cookieHashName]);
                 $tokenCookieUserId = (int) $_COOKIE[$cookieUserId];
                 $goToLoginPage     = false;
-                $setting           = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+                $setting           = new Phprojekt_Setting();
                 $setting->setModule('User');
                 $tokenDbHash    = $setting->getSetting(self::LOGGED_TOKEN . '_hash', $tokenCookieUserId);
                 $tokenDbExpires = (int) $setting->getSetting(self::LOGGED_TOKEN . '_expires', (int) $tokenCookieUserId);
@@ -85,7 +85,7 @@ class Phprojekt_Auth extends Zend_Auth
                     // Yes - The expiration time exists and is valid. The hashes match?
                     if ($tokenCookieHash == $tokenDbHash) {
                         // Yes - Log in the user
-                        $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+                        $user = new Phprojekt_User_User();
                         $user->find($tokenCookieUserId);
                         // If the user was found we will save the user information in the session
                         $authNamespace->userId = $user->id;
@@ -168,7 +168,7 @@ class Phprojekt_Auth extends Zend_Auth
 
     private static function _defaultLogin($username, $password, $keepLogged = false)
     {
-        $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $user   = new Phprojekt_User_User();
         $userId = $user->findIdByUsername($username);
 
         if ($userId > 0) {
@@ -182,7 +182,7 @@ class Phprojekt_Auth extends Zend_Auth
         }
 
         try {
-            $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+            $setting = new Phprojekt_Setting();
             $setting->setModule('User');
 
             // The password does not match with password provided
@@ -217,7 +217,7 @@ class Phprojekt_Auth extends Zend_Auth
         }
 
         // Get PHProjekt user for integration purposes
-        $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $user   = new Phprojekt_User_User();
         $userId = $user->findIdByUsername($username);
 
         // We don't want LDAP authentication for PHProjekt system admin
@@ -428,7 +428,7 @@ class Phprojekt_Auth extends Zend_Auth
                 }
                 Default_Helpers_Save::save($model, $params);
 
-                $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+                $setting = new Phprojekt_Setting();
                 $setting->setModule('User');
                 $setting->setSettings($params, $model->id);
             } catch (Exception $e) {
@@ -450,7 +450,7 @@ class Phprojekt_Auth extends Zend_Auth
 
     static private function _getUser($id)
     {
-         $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+         $user = new Phprojekt_User_User();
          $user->find($id);
 
         return $user;
@@ -526,12 +526,12 @@ class Phprojekt_Auth extends Zend_Auth
      */
     public static function checkCredentials($username, $password)
     {
-        $user   = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $user   = new Phprojekt_User_User();
         $userId = $user->findIdByUsername($username);
         if (0 == $userId) {
             return false;
         }
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('User');
         return self::_compareStringWithPassword($password, $setting->getSetting("password", $userId));
     }
@@ -597,7 +597,7 @@ class Phprojekt_Auth extends Zend_Auth
         if ($userId) {
             // Delete all DB settings table token rows
             $db      = Phprojekt::getInstance()->getDb();
-            $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+            $setting = new Phprojekt_Setting();
             $setting->setModule('User');
             $where = sprintf("user_id = %d AND key_value LIKE %s", (int) $userId, $db->quote(self::LOGGED_TOKEN . '%'));
             $rows  = $setting->fetchAll($where);
@@ -631,7 +631,7 @@ class Phprojekt_Auth extends Zend_Auth
                       self::LOGGED_TOKEN . '_expires' => strtotime('+1 week'));
 
         // Store matching keepLogged data in DB and browser
-        $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $user = new Phprojekt_User_User();
         $user->find($userId);
         $settings = $user->settings->fetchAll();
 

@@ -82,7 +82,7 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
      */
     public function setCustomFrom($from)
     {
-        $phpUser = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $phpUser = new Phprojekt_User_User();
         $phpUser->find($from);
 
         $email = $phpUser->getSetting('email');
@@ -106,8 +106,8 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
      */
     public function setTo($recipients)
     {
-        $phpUser = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $phpUser = new Phprojekt_User_User();
+        $setting = new Phprojekt_Setting();
 
         foreach ($recipients as $recipient) {
             $email = $setting->getSetting('email', (int) $recipient);

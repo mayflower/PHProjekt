@@ -44,7 +44,7 @@ class Todo_Models_Todo extends Phprojekt_Item_Abstract
      */
     public function getNotification()
     {
-        $notification = Phprojekt_Loader::getModel('Todo', 'Notification');
+        $notification = new Todo_Models_Notification();
         $notification->setModel($this);
 
         return $notification;
