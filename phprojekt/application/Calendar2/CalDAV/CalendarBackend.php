@@ -140,20 +140,20 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
     public function updateCalendarObject($calendarId, $objectUri, $calendarData)
     {
         $db    = Phprojekt::getInstance()->getDb();
-        $event = new Calendar2_Models_Calendar2();
-        $event = $event->fetchAll($db->quoteInto('uri = ?', $objectUri));
-        if (!$event) {
+        $events = new Calendar2_Models_Calendar2();
+        $events = $events->fetchAll($db->quoteInto('uri = ?', $objectUri));
+        if (!$events) {
             throw new Sabre_DAV_Exception_FileNotFound("Nothing found under uri $objectUri");
         }
-        if (count($event) > 1) {
+        if (count($events) > 1) {
             throw new Sabre_DAV_Exception_NotImplemented('Cannot alter events with modified occurrences');
         }
         $vevent = Sabre_VObject_Reader::read($calendarData)->vevent;
         if (count($vevent) > 1) {
             throw new Sabre_DAV_Exception_NotImplemented('Cannot update specific occurrences');
         }
-        $event[0]->fromVObject($vevent);
-        $event[0]->save();
+        $events[0]->fromVObject($vevent);
+        $events[0]->save();
     }
 
     public function deleteCalendarObject($calendarId, $objectUri)
