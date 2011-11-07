@@ -38,12 +38,20 @@ require_once 'Sabre.autoload.php';
  */
 class Calendar2_CaldavController extends IndexController
 {
+    /**
+     * Overwrite preDispatch from the indexController.
+     * We need to stop the view from rendering.
+     */
     public function preDispatch()
     {
         parent::preDispatch();
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
+    /**
+     * Overwrite checkAuthentication.
+     * We don't use the normal authentication. Instead, we have to authenticate the user based on httpauth data.
+     */
     public function checkAuthentication()
     {
         if (array_key_exists('PHP_AUTH_USER', $_SERVER)) {
@@ -51,8 +59,12 @@ class Calendar2_CaldavController extends IndexController
         }
     }
 
+    /**
+     * Fire up the SabreDAV server with our custom backends.
+     *
+     * This is mostly copied from the sabredav wiki
+     */
     public function indexAction() {
-        // This is mostly copied from the sabredav wiki
         // Backends
         $authBackend = new WebDAV_Helper_Auth();
         $principalBackend = new Calendar2_CalDAV_PrincipalBackend();

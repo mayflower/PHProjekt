@@ -39,6 +39,16 @@
  */
 class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
 {
+    /**
+     * Implements getCalendarsForUser from Sabre_CalDAV_Backend_Abstract
+     *
+     * This is simplified for PHProjekt. We only have one calendar per user, so we return hard-coded data based on the
+     * user name. The id of the calendar is the id of the user it belongs to.
+     *
+     * @param string $principalUri The uri of the user whose calendar to get
+     *
+     * @return array calendar description
+     */
     public function getCalendarsForUser($principalUri)
     {
         // We have exactly one calendar per principal.
@@ -59,21 +69,44 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         );
     }
 
+    /**
+     * As defined in Sabre_CalDAV_Backend_Abstract
+     */
     public function createCalendar($principalUri, $calendarUri, array $properties)
     {
-        throw new Exception('Calendar2_CalDAV_CalendarBackend->createCalendar is not implemented yet');
+        throw new Sabre_DAV_Exception_NotImplemented('Creation of new calendars is not supported by PHProjekt.');
     }
 
+    /**
+     * As defined in Sabre_CalDAV_Backend_Abstract
+     *
+     * We don't support operations on calendars.
+     */
     public function updateCalendar($calendarId, array $properties)
     {
-        throw new Exception('Calendar2_CalDAV_CalendarBackend->updateCalendar is not implemented yet');
+        throw new Sabre_DAV_Exception_NotImplemented('Altering calendars is not supported by PHProjekt.');
     }
 
+    /**
+     * As defined in Sabre_CalDAV_Backend_Abstract
+     *
+     * We don't support operations on calendars.
+     */
     public function deleteCalendar($calendarId)
     {
-        throw new Exception('Calendar2_CalDAV_CalendarBackend->deleteCalendar is not implemented yet');
+        throw new Sabre_DAV_Exception_NotImplemented('Deleting calendars is not supported by PHProjekt.');
     }
 
+    /**
+     * As defined in Sabre_CalDAV_Backend_Abstract
+     * 
+     * Returns all calendar objects for the given calendar id.
+     * We don't return all calendar data here.
+     *
+     * @param string $calendarId The id of the calendar to retrieve. Corresponds to the id of the user it belongs to.
+     *
+     * @return array CalendarObject data as specified by SabreDAV.
+     */
     public function getCalendarObjects($calendarId)
     {
         $db = Phprojekt::getInstance()->getDb();
@@ -97,6 +130,16 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         return array_values($ret);
     }
 
+    /**
+     * As defined in Sabre_CalDAV_Backend_Abstract
+     *
+     * Retrieves a single Calendar object.
+     *
+     * @param string $calendarId The id of the calendar. Corresponds to the id of the user it belongs to.
+     * @param string $objectUri  The uri of the calendarobject to retrieve.
+     *
+     * @return array As specified by SabreDAV.
+     */
     public function getCalendarObject($calendarId, $objectUri)
     {
         $db = Phprojekt::getInstance()->getDb();
@@ -128,6 +171,17 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         );
     }
 
+    /**
+     * As defined in Sabre_CalDAV_Backend_Abstract
+     *
+     * Creates a new calendar object from the given data.
+     *
+     * @param string $calendarId   The id of the calendar. Equals to the id of the user it belongs to.
+     * @param string $objectUri    The uri that the new object should have.
+     * @param string $calendarData The vobject data for the new calendar object.
+     *
+     * @return void
+     */
     public function createCalendarObject($calendarId, $objectUri, $calendarData)
     {
         $vcalendar = Sabre_VObject_Reader::read($calendarData);
@@ -137,6 +191,18 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $event->save();
     }
 
+    /**
+     * As defined in Sabre_CalDAV_Backend_Abstract
+     *
+     * Alters a calendar object. This is currently not supported if the event is recurring and any occurrences have been
+     * modified in PHProjekt or if this operation would modify any speficic occurrences.
+     *
+     * @param string $calendarId   The id of the calendar. Equals to the id of the user it belongs to.
+     * @param string $objectUri    The uri of the object.
+     * @param string $calendarData The vobject data that the object should be modified to.
+     *
+     * @return void
+     */
     public function updateCalendarObject($calendarId, $objectUri, $calendarData)
     {
         $db    = Phprojekt::getInstance()->getDb();
@@ -156,6 +222,16 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $events[0]->save();
     }
 
+    /**
+     * As defined in Sabre_CalDAV_Backend_Abstract
+     *
+     * Deletes the object.
+     *
+     * @param string $calendarId   The id of the calendar. Equals to the id of the user it belongs to.
+     * @param string $objectUri    The uri of the object.
+     *
+     * @return void
+     */
     public function deleteCalendarObject($calendarId, $objectUri)
     {
         $db    = Phprojekt::getInstance()->getDb();
