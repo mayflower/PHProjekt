@@ -941,7 +941,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      * The returned object must be save()d before it is persistent.
      * This also means that additional changes can be made before any database calls are made.
      *
-     * @param Sabre_VObject_Component The vevent component
+     * @param Sabre_VObject_Component $vevent The vevent component
+     *
      * @throws Exception If the provided component is not a vevent
      *
      * @return void
