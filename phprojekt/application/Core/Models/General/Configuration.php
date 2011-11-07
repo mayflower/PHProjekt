@@ -81,7 +81,7 @@ class Core_Models_General_Configuration extends Phprojekt_ModelInformation_Defau
     {
         $fields = $this->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
-        $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
+        $configuration = new Phprojekt_Configuration();
         $configuration->setModule('General');
 
         foreach ($fields as $data) {
@@ -89,7 +89,7 @@ class Core_Models_General_Configuration extends Phprojekt_ModelInformation_Defau
                 if ($key == $data['key']) {
                     if ($key == 'companyName') {
                         // Update Root node
-                        $project = Phprojekt_Loader::getModel('Project', 'Project');
+                        $project = new Project_Models_Project();
                         $project->find(1);
                         $project->title = $value;
                         $project->parentSave();

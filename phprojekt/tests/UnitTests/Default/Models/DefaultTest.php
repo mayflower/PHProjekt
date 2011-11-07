@@ -51,7 +51,7 @@ class Phprojekt_DefaultModelDefault_Test extends DatabaseTest
      */
     public function testDefaultModelsDefault()
     {
-        $defaultModel = Phprojekt_Loader::getModel('Default', 'Default');
+        $defaultModel = new Default_Models_Default();
         $this->assertEquals($defaultModel->valid(), false);
         $this->assertEquals($defaultModel->save(), false);
         $this->assertEquals($defaultModel->getRights(), array());

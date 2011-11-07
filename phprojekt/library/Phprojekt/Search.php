@@ -76,10 +76,10 @@ class Phprojekt_Search
      */
     public function __construct()
     {
-        $this->_words      = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Words');
-        $this->_wordModule = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_WordModule');
-        $this->_files      = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Files');
-        $this->_display    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Display');
+        $this->_words      = new Phprojekt_Search_Words();
+        $this->_wordModule = new Phprojekt_Search_WordModule();
+        $this->_files      = new Phprojekt_Search_Files();
+        $this->_display    = new Phprojekt_Search_Display();
     }
 
     /**
@@ -89,10 +89,10 @@ class Phprojekt_Search
      */
     public function __clone()
     {
-        $this->_words      = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Words');
-        $this->_wordModule = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_WordModule');
-        $this->_files      = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Files');
-        $this->_display    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Display');
+        $this->_words      = new Phprojekt_Search_Words();
+        $this->_wordModule = new Phprojekt_Search_WordModule();
+        $this->_files      = new Phprojekt_Search_Files();
+        $this->_display    = new Phprojekt_Search_Display();
     }
 
     /**
@@ -169,7 +169,7 @@ class Phprojekt_Search
      * @param integer $count Limit query.
      *
      * @uses
-     *      $search = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
+     *      $search = new Phprojekt_Search();
      *      $search->search('text1 text2 text3', 10);
      *
      * @return array Array with results.

@@ -83,8 +83,8 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
     {
         parent::__construct($db);
 
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Phprojekt_Role_Information();
     }
 
     /**
@@ -95,8 +95,8 @@ class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Php
     public function __clone()
     {
         parent::__clone();
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Phprojekt_Role_Information();
     }
 
     /**

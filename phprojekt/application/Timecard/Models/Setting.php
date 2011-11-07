@@ -76,7 +76,7 @@ class Timecard_Models_Setting extends Phprojekt_ModelInformation_Default
         foreach ($fields as $data) {
             foreach ($params as $key => $value) {
                 if ($key == $data['key']) {
-                    $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+                    $setting = new Phprojekt_Setting();
                     $setting->setModule('Timecard');
 
                     if (($key == 'favorites')) {

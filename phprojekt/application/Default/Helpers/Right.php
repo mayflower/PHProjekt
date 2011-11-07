@@ -294,7 +294,7 @@ final class Default_Helpers_Right
             }
 
             // Return access only for allowed users
-            $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $activeRecord = new Phprojekt_User_User();
             $result       = $activeRecord->getAllowedUsers();
             $resultRights = array();
             foreach ($result as $node) {

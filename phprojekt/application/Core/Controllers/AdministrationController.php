@@ -73,7 +73,7 @@ class Core_AdministrationController extends Core_IndexController
      */
     public function jsonGetModulesAction()
     {
-        $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
+        $configuration = new Phprojekt_Configuration();
         $data          = $configuration->getModules();
 
         Phprojekt_Converter_Json::echoConvert($data);
@@ -101,7 +101,7 @@ class Core_AdministrationController extends Core_IndexController
         $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
         $moduleId = (int) Phprojekt_Module::getId($module);
 
-        $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
+        $configuration = new Phprojekt_Configuration();
         $configuration->setModule($module);
         $metadata = $configuration->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $records  = $configuration->getList($moduleId, $metadata);
@@ -139,7 +139,7 @@ class Core_AdministrationController extends Core_IndexController
         $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
         $this->setCurrentProjectId();
 
-        $configuration = Phprojekt_Loader::getLibraryClass('Phprojekt_Configuration');
+        $configuration = new Phprojekt_Configuration();
         $configuration->setModule($module);
 
         $message = $configuration->validateConfigurations($this->getRequest()->getParams());

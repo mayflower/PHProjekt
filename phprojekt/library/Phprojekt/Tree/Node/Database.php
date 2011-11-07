@@ -306,7 +306,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function getActiveRecord()
     {
         if (!$this->_activeRecord instanceof Phprojekt_ActiveRecord_Abstract) {
-            $model = Phprojekt_Loader::getModel('Project', 'Project');
+            $model = new Project_Models_Project();
             $this->_activeRecord = $model->find($this->_requestedId);
             if (!$this->_activeRecord instanceof Phprojekt_ActiveRecord_Abstract) {
                 throw new Exception("Requested TreeID not found or no permissions");

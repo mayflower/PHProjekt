@@ -52,7 +52,7 @@ class Phprojekt_Model_Validate
      */
     public function __construct()
     {
-        $this->error = Phprojekt_Loader::getLibraryClass('Phprojekt_Error');
+        $this->error = new Phprojekt_Error();
     }
 
     /**
@@ -62,7 +62,7 @@ class Phprojekt_Model_Validate
      */
     public function __clone()
     {
-        $this->error = Phprojekt_Loader::getLibraryClass('Phprojekt_Error');
+        $this->error = new Phprojekt_Error();
     }
 
     /**

@@ -97,7 +97,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             $this->_tagsObj  = Phprojekt_Tags::getInstance();
             $this->_oldCalId = Phprojekt_Module::getId('Calendar');
             $this->_newCalId = Phprojekt_Module::getId('Calendar2');
-            $this->_search   = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
+            $this->_search   = new Phprojekt_Search();
 
             // Clear the calendar2 tables.
             $db->delete('calendar2');

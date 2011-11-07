@@ -54,7 +54,7 @@ class Calendar2_IndexController extends IndexController
             $db->quote('A'),
             implode(", ", $ids)
         );
-        $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $user    = new Phprojekt_User_User();
         $display = $user->getDisplay();
         $records = $user->fetchAll($where, $display);
 

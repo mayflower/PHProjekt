@@ -456,7 +456,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
 
         switch ($module) {
             case 'Project':
-                $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+                $activeRecord = new Project_Models_Project();
                 $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
                 $tree         = $tree->setup();
                 foreach ($tree as $node) {
@@ -465,7 +465,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 }
                 break;
             case 'User':
-                $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+                $activeRecord = new Phprojekt_User_User();
                 $result       = $activeRecord->getAllowedUsers();
                 if (!$field->isRequired && $field->formType == 'selectValues') {
                     $options[] = array('id'   => 0,

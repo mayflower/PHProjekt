@@ -187,7 +187,7 @@ class Project_IndexController extends IndexController
             $projectId = $parentId;
         }
 
-        $project = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+        $project = new Project_Models_ProjectModulePermissions();
         $modules = $project->getProjectModulePermissionsById($projectId);
 
         Phprojekt_Converter_Json::echoConvert($modules);
@@ -223,7 +223,7 @@ class Project_IndexController extends IndexController
             $projectId = $parentId;
         }
 
-        $project = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
+        $project = new Project_Models_ProjectRoleUserPermissions();
         $roles   = $project->getProjectRoleUserPermissions($projectId);
 
         Phprojekt_Converter_Json::echoConvert($roles);

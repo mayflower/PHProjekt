@@ -221,14 +221,13 @@ mailEndOfLine = 0;
 smtpServer    = "localhost"
 
 compressedDojo     = true;
-useCacheForClasses = true;
 
 ;;;;;;;;;;;;;;;;;;
 ; AUTHENTICATION ;
 ;;;;;;;;;;;;;;;;;;
 
 ; Options: default/ldap
-authentication.mode = 'porn'
+authentication.mode = 'default'
 
 ; Please make sure that your ldap users have 'givenname', 'sn' and 'mail' properties when using ldap.
 

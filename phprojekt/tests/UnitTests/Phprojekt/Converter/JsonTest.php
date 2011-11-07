@@ -57,7 +57,7 @@ class Phprojekt_Converter_JsonTest extends DatabaseTest
     public function testConvert()
     {
         $converted = substr('{}&&({"metadata":[{"key":"title","label":"Title","type":', 0, 23);
-        $object    = Phprojekt_Loader::getModel('Project', 'Project');
+        $object    = new Project_Models_Project();
         $records   = $object->fetchAll();
         $result    = Phprojekt_Converter_Json::convert($records);
         $this->assertEquals($converted, substr($result, 0, strlen($converted)));
@@ -72,7 +72,7 @@ class Phprojekt_Converter_JsonTest extends DatabaseTest
     public function testConvertTree()
     {
         $converted = '{}&&({"identifier":"id","label":"name","items":[{"name"';
-        $object    = Phprojekt_Loader::getModel('Project', 'Project');
+        $object    = new Project_Models_Project();
         $tree      = new Phprojekt_Tree_Node_Database($object, 1);
         $tree      = $tree->setup();
         $result = Phprojekt_Converter_Json::convert($tree);

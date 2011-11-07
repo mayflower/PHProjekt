@@ -294,7 +294,7 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $data4['formPosition']  = 4;
         $data4['fieldset']      = '';
         $data4['range']         = array();
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $activeRecord = new Project_Models_Project();
         $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree = $tree->setup();
         foreach ($tree as $node) {

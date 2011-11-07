@@ -79,7 +79,7 @@ class Gantt_IndexController extends IndexController
     {
         $projectId    = (int) $this->getRequest()->getParam('nodeId', null);
         $data['data'] = array('projects' => array());
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $activeRecord = new Project_Models_Project();
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, $projectId);
         $tree         = $tree->setup();
         $min          = gmmktime(0, 0, 0, 12, 31, 2030);
@@ -128,7 +128,7 @@ class Gantt_IndexController extends IndexController
         // (only if at least one project different than the parent have write or hight access)
         $data['data']['rights']["currentUser"]["write"] = false;
         if (count($ids) > 0) {
-            $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+            $rights = new Phprojekt_Item_Rights();
             $where  = sprintf('user_id = %d AND item_id IN (%s) AND module_id = 1', Phprojekt_Auth::getUserId(),
                 implode(", ", $ids));
             $access = $rights->fetchAll($where)->toArray();
@@ -199,8 +199,8 @@ class Gantt_IndexController extends IndexController
     public function jsonSaveAction()
     {
         $projects     = (array) $this->getRequest()->getParam('projects', array());
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
-        $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $activeRecord = new Project_Models_Project();
+        $rights       = new Phprojekt_Item_Rights();
         $userId       = Phprojekt_Auth::getUserId();
         $this->setCurrentProjectId();
 
