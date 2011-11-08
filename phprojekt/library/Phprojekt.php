@@ -238,8 +238,8 @@ class Phprojekt
             try {
                 $this->_db = Zend_Db::factory($this->_config->database);
             } catch (Zend_Db_Adapter_Exception $error) {
-                echo $error->getMessage();
-                die();
+                error_log($error->getMessage());
+                $this->_dieWithInternalServerError();
             }
         }
 
@@ -259,7 +259,8 @@ class Phprojekt
             try {
                 $this->_log = new Phprojekt_Log($this->_config);
             } catch (Zend_Log_Exception $error) {
-                die($error->getMessage());
+                error_log($error->getMessage());
+                $this->_dieWithInternalServerError();
             }
         }
 
@@ -424,15 +425,17 @@ class Phprojekt
         $autoloader = Zend_Loader_Autoloader::getInstance();
         $autoloader->pushAutoloader(array('Phprojekt_Loader', 'autoload'));
 
+        // If the configuration file does not exist we redirect to the setup page.
+        if (!file_exists(PHPR_CONFIG_FILE)) {
+            $this->_redirectToSetupAndDie();
+        }
+
         // Read the config file, but only the production setting
         try {
             $this->_config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
         } catch (Zend_Config_Exception $error) {
-            $response = new Zend_Controller_Request_Http();
-            $webPath  = $response->getScheme() . '://' . $response->getHttpHost() . $response->getBasePath() . '/';
-            header("Location: " . $webPath . "setup.php");
-            die('You need the file configuration.php to continue. Have you tried the <a href="' . $webPath
-                . 'setup.php">setup</a> routine?'."\n".'<br />Original error: ' . $error->getMessage());
+            error_log('There is an error in your configuration.php: ' . $error->getMessage());
+            $this->_dieWithInternalServerError();
         }
 
         // Set webpath, tmpPath and applicationPath
@@ -472,7 +475,9 @@ class Phprojekt
         try {
             $this->_cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
         } catch (Exception $error) {
-            die("The directory " . PHPR_TEMP_PATH . "zendCache do not exists or not have write access.");
+            error_log("The directory " . PHPR_TEMP_PATH . "zendCache do not exists or not have write access.");
+            $this->_dieWithInternalServerError();
+
         }
         Zend_Db_Table_Abstract::setDefaultMetadataCache($this->_cache);
 
@@ -510,7 +515,8 @@ class Phprojekt
         if (!empty($missingRequirements)) {
             $message = "Your PHP does not meet the requirements needed for P6.<br />"
                 . implode("<br />", $missingRequirements);
-            die($message);
+            error_log($message);
+            $this->_dieWithInternalServerError();
         }
 
         $helperPaths = $this->_getHelperPaths();
@@ -960,5 +966,25 @@ class Phprojekt
 
         return array('requirements'    => $requirements,
                      'recommendations' => $recommendations);
+    }
+
+    private function _dieWithInternalServerError()
+    {
+        $response = new Zend_Controller_Response_Http();
+        $response->setHttpResponseCode(500);
+        $response->setBody('Internal Server Error. Please contact an administrator.');
+        $response->sendResponse();
+        die();
+    }
+
+    private function _redirectToSetupAndDie()
+    {
+        $request  = new Zend_Controller_Request_Http();
+        $webPath  = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/';
+        $response = new Zend_Controller_Response_Http();
+        $response->setRedirect($webPath . 'setup.php');
+        $response->setBody('No configuration file found, redirecting to setup.');
+        $response->sendResponse();
+        die();
     }
 }
