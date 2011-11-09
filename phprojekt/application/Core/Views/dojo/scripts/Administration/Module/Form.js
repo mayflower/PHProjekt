@@ -287,8 +287,10 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
                                 phpr.DataStore.requestData({
                                     url:         phpr.globalModuleUrl,
                                     processData: dojo.hitch(this, function() {
-                                        this.main.setGlobalModulesNavigation();
-                                        this.publish("setUrlHash", [phpr.parentmodule, null, [phpr.module]]);
+                                        phpr.pageManager.changeState(
+                                            { moduleName: "Module" },
+                                            { forceModuleReload: true }
+                                        );
                                     })
                                 });
                             }
