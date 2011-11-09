@@ -1246,6 +1246,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             if (openForm && !this.grid.edit.isEditing()) {
                 var item  = this.grid.getItem(e.rowIndex);
                 var rowId = this.grid.store.getValue(item, 'id');
+                this.hideTooltip();
                 this.getLinkForEdit(rowId);
             }
         }

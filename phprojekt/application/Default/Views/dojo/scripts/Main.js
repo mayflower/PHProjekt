@@ -726,20 +726,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         view.clearRightButtonRow();
         view.clearSubModuleNavigation();
         this.garbageCollector.collect();
-
-        var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
-        globalModules[1000] = {id: "Setting", "name": "Setting"};
-        globalModules[1001] = {id: "Admin", "name": "Administration"};
-        var buttons = this.globalModuleNavigationButtons;
-        for (i in globalModules) {
-            if (buttons[globalModules[i].name]) {
-                if (phpr.module == globalModules[i].name || phpr.parentmodule == globalModules[i].name) {
-                    dojo.addClass(buttons[globalModules[i].name].domNode, "selected");
-                } else {
-                    dojo.removeClass(buttons[globalModules[i].name].domNode, "selected");
-                }
-            }
-        }
     },
 
     setUrlHash: function(module, id, params) {
