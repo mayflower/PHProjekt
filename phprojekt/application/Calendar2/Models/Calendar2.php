@@ -936,6 +936,75 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Updates this Calendar2 object with data from the given VEVENT
+     *
+     * The returned object must be save()d before it is persistent.
+     * This also means that additional changes can be made before any database calls are made.
+     *
+     * @param Sabre_VObject_Component $vevent The vevent component
+     *
+     * @throws Exception If the provided component is not a vevent
+     *
+     * @return void
+     */
+    public function fromVObject(Sabre_VObject_Component $vevent)
+    {
+        if (strtolower($vevent->name) !== 'vevent') {
+            throw new Exception(
+                "Invalid type of vobject_component passed to Calendar2_Models_Calendar2::fromVobject ({$vevent->name})"
+            );
+        }
+        // 0-1
+        // handled:
+        //  last-mod, description, dtstart, location, summary, uid
+        // not handled
+        //  class, created, geo, organizer, priority, dtstamp, seq, status, transp, url, recurid
+        //
+        // none or one of these two
+        //  dtend, duration (only assumes dtend case for now)
+        //
+        // 0 - n
+        // TODO: Check how we can handle these. Maybe just concat them?
+        // handling: (only one is handled atm, though)
+        //  comment, rrule
+        // not handling:
+        //  attach, attendee, categories, contact, exdate, exrule, rstatus, related, resources, rdate, x-prop
+        $utc = new DateTimezone('UTC');
+        $mappable = array(
+            array('veventkey' => 'SUMMARY', 'ourkey' => 'summary', 'default' => '_'),
+            array('veventkey' => 'LOCATION', 'ourkey' => 'location', 'default' => ''),
+            array('veventkey' => 'DESCRIPTION', 'ourkey' => 'description', 'default' => ''),
+            array('veventkey' => 'COMMENT', 'ourkey' => 'comments'),
+            array('veventkey' => 'UID', 'ourkey' => 'uid'),
+            array('veventkey' => 'LAST-MODIFIED', 'ourkey' => 'lastModified'),
+            array('veventkey' => 'RRULE', 'ourkey' => 'rrule')
+        );
+        foreach ($mappable as $m) {
+            if (isset($vevent->$m['veventkey'])) {
+                $this->$m['ourkey'] = $vevent->$m['veventkey'];
+            } else if (array_key_exists('default', $m)) {
+                $this->$m['ourkey'] = $m['default'];
+            }
+        }
+
+        if (substr($vevent->dtstart->value, -1) === 'Z') {
+            $start = new Datetime($vevent->dtstart->value);
+        } else {
+            $start = new Datetime($vevent->dtstart->value, new DateTimezone($vevent->dtstart['tzid']->value));
+        }
+        $start->setTimezone($utc);
+        $this->start = $start->format('Y-m-d H:i:s');
+
+        if (substr($vevent->dtend->value, -1) === 'Z') {
+            $end = new Datetime($vevent->dtend->value);
+        } else {
+            $end = new Datetime($vevent->dtend->value, new DateTimezone($vevent->dtend['tzid']->value));
+        }
+        $end->setTimezone($utc);
+        $this->end = $end->format('Y-m-d H:i:s');
+    }
+
+    /**
      * Returns a Sabre_Vobject_Component representing this object.
      *
      * @return Sabre_VObject_Component representing $this.
@@ -943,10 +1012,18 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     public function asVObject()
     {
         $vobject = new Sabre_VObject_Component('vevent');
-        $vobject->add('summary', $this->summary);
-        $vobject->add('description', $this->description);
-        $vobject->add('comment', $this->comments);
-        $vobject->add('location', $this->location);
+        if ($this->summary) {
+            $vobject->add('summary', $this->summary);
+        }
+        if ($this->description) {
+            $vobject->add('description', $this->description);
+        }
+        if ($this->comments) {
+            $vobject->add('comment', $this->comments);
+        }
+        if ($this->location) {
+            $vobject->add('location', $this->location);
+        }
         if ($this->recurrenceId) {
             $recurrenceId = new Datetime($this->recurrenceId);
             $vobject->add('recurrence-id', $recurrenceId->format('Ymd\THis\Z'));
