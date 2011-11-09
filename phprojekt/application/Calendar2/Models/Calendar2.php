@@ -985,7 +985,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             } else if (array_key_exists('default', $m)) {
                 $this->$m['ourkey'] = $m['default'];
             }
-
         }
 
         if (substr($vevent->dtstart->value, -1) === 'Z') {
@@ -1013,14 +1012,18 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     public function asVObject()
     {
         $vobject = new Sabre_VObject_Component('vevent');
-        if ($this->summary)
+        if ($this->summary) {
             $vobject->add('summary', $this->summary);
-        if ($this->description)
+        }
+        if ($this->description) {
             $vobject->add('description', $this->description);
-        if ($this->comments)
+        }
+        if ($this->comments) {
             $vobject->add('comment', $this->comments);
-        if ($this->location)
+        }
+        if ($this->location) {
             $vobject->add('location', $this->location);
+        }
         if ($this->recurrenceId) {
             $recurrenceId = new Datetime($this->recurrenceId);
             $vobject->add('recurrence-id', $recurrenceId->format('Ymd\THis\Z'));
