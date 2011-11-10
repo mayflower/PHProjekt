@@ -624,6 +624,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 useSlider: false
             },
             dojo.create('div'));
+        dojo.addClass(tabContainer.domNode, 'claro');
 
         this.garbageCollector.addNode(tabContainer);
 
@@ -1224,10 +1225,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
 dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
     constructor: function() {
+        this._resizeSubscribe = dojo.subscribe("phpr.resize", this, '_onResize');
     },
 
     destroy: function() {
         this.inherited(arguments);
+        dojo.unsubscribe(this._resizeSubscribe);
+        this._resizeSubscribe = null;
         this.dialog.destroyRecursive();
         this.dialog = null;
     },
@@ -1242,8 +1246,8 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
     },
 
     setContainer: function(container) {
-        this.node = new dijit.layout.ContentPane({style: "width: 100%; height: 100%;"});
-        this.buttons = new dijit.layout.ContentPane({style: "width: 100%; height: 40px;"});
+        this.node = new dijit.layout.ContentPane({style: "width: 100%; height: 100%; overflow: hidden;"});
+        this.buttons = new dijit.layout.ContentPane({style: "width: 100%; height: 30px; padding-top: 10px;"});
         this.dialog = new dijit.Dialog({style: "width: 80%; height: 80%;"});
 
         this.dialog.show();
@@ -1251,10 +1255,7 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
         this.dialog.containerNode.appendChild(this.node.domNode);
         this.dialog.containerNode.appendChild(this.buttons.domNode);
 
-        dojo.style(this.dialog.containerNode, {
-            height: '100%',
-            width: '100%'
-        });
+        this._setNodeSizes();
 
         this.node.startup();
 
@@ -1272,14 +1273,21 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
                 })));
     },
 
-    postRenderForm: function() {
-        this.inherited(arguments);
+    _setNodeSizes: function() {
         var dialogBox = dojo.contentBox(this.dialog.domNode);
-        dojo.style(this.buttons.domNode, {
-            position: 'absolute',
-            top: dialogBox.h - 40 + 'px',
-            left: '10px',
-            zIndex: 10
+        var dialogTitleBox = dojo.contentBox(this.dialog.titleBar);
+        var dialogContainerBox = dojo.contentBox(this.dialog.containerNode);
+
+        dojo.style(this.dialog.containerNode, {
+            height: (dialogBox.h - dialogTitleBox.h - dialogContainerBox.t - 50) + 'px',
+            width: dialogTitleBox.w - dialogContainerBox.l + 'px'
         });
+    },
+
+    _onResize: function() {
+        this.dialog.resize();
+        this._setNodeSizes();
+        this.form.resize();
+        window.bla = this;
     }
 });
