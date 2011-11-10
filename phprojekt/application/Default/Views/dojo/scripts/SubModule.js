@@ -368,10 +368,12 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
             return false;
         }
 
+        this.setSubmitInProgress(true);
         phpr.send({
             url:       this.main.setUrl('save', this.id),
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
+                this.setSubmitInProgress(false);
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.main.updateCacheData();

@@ -605,6 +605,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
             return false;
         }
 
+        this.setSubmitInProgress(true);
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId +
                 '/id/' + this.id + '/occurrence/' + this._originalData.occurrence +
@@ -619,6 +620,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                             + '/id/' + this.id,
                         content:   this.sendData,
                         onSuccess: dojo.hitch(this, function(data) {
+                            this.setSubmitInProgress(false);
                             if (this.sendData['string']) {
                                 new phpr.handleResponse('serverFeedback', data);
                             }
@@ -633,6 +635,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                             }
                         })
                     });
+                } else {
+                    this.setSubmitInProgress(false);
                 }
             })
         });

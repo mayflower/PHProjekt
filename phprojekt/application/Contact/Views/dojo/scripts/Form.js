@@ -41,11 +41,13 @@ dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
             return false;
         }
 
+        this.setSubmitInProgress(true);
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId
                 + '/id/' + this.id,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
+                this.setSubmitInProgress(false);
                 new phpr.handleResponse('serverFeedback', data);
                 if (!this.id) {
                     this.id = data['id'];
