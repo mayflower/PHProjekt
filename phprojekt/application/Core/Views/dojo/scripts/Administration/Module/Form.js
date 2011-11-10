@@ -265,6 +265,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
             return false;
         }
 
+        this.setSubmitInProgress(true);
         phpr.send({
             url:       phpr.webpath + 'index.php/Core/moduleDesigner/jsonSave/nodeId/1/id/' + this.id,
             content:   this.sendData,
@@ -287,15 +288,20 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
                                 phpr.DataStore.requestData({
                                     url:         phpr.globalModuleUrl,
                                     processData: dojo.hitch(this, function() {
+                                        this.setSubmitInProgress(false);
                                         phpr.pageManager.changeState(
                                             { moduleName: "Module" },
                                             { forceModuleReload: true }
                                         );
                                     })
                                 });
+                            } else {
+                                this.setSubmitInProgress(false);
                             }
                         })
                     });
+               } else {
+                    this.setSubmitInProgress(false);
                }
             })
         });
