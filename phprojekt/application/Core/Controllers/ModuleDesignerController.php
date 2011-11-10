@@ -130,6 +130,11 @@ class Core_ModuleDesignerController extends Core_IndexController
                     $type    = 'error';
                     $message = Phprojekt::getInstance()->translate('There was an error writing the table');
                 } else {
+                    // remove possible id's as we are not allowed to change id's
+                    foreach ($data as $key => $value) {
+                        unset($data[$key]['id']);
+                    }
+
                     // Update DatabaseManager Table
                     $databaseManager->saveData($module, $data, $tableData);
 
