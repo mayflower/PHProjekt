@@ -1225,6 +1225,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
 dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
     constructor: function() {
+        dojo.subscribe("phpr.resize", this, '_onResize');
     },
 
     destroy: function() {
@@ -1279,5 +1280,12 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
             height: (dialogBox.h - dialogTitleBox.h - dialogContainerBox.t - 50) + 'px',
             width: dialogTitleBox.w - dialogContainerBox.l + 'px'
         });
+    },
+
+    _onResize: function() {
+        this.dialog.resize();
+        this._setNodeSizes();
+        this.form.resize();
+        window.bla = this;
     }
 });
