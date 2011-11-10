@@ -249,6 +249,7 @@ dojo.declare("phpr.Default.System.ViewManager", null, {
                 cont.resize();
             }
         }
+        dojo.publish("phpr.resize", []);
     },
     useDefaultView: function(options) {
         return this._updateView(phpr.Default.System.DefaultView,
