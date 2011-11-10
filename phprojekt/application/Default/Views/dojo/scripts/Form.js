@@ -1225,11 +1225,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
 dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
     constructor: function() {
-        dojo.subscribe("phpr.resize", this, '_onResize');
+        this._resizeSubscribe = dojo.subscribe("phpr.resize", this, '_onResize');
     },
 
     destroy: function() {
         this.inherited(arguments);
+        dojo.unsubscribe(this._resizeSubscribe);
+        this._resizeSubscribe = null;
         this.dialog.destroyRecursive();
         this.dialog = null;
     },
