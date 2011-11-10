@@ -624,6 +624,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 useSlider: false
             },
             dojo.create('div'));
+        dojo.addClass(tabContainer.domNode, 'claro');
 
         this.garbageCollector.addNode(tabContainer);
 
