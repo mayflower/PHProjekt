@@ -46,6 +46,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     _presetValues:      null,
     _meta:              null,
     _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
+    _submitInProgress:  false,
 
     constructor:function(main, id, module, params, formContainer) {
         // Summary:
@@ -853,7 +854,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Event handler for submit events
         // Description:
         //    Triggers submitForm and prevents the event from bubbeling upwards
-        var ret = this.submitForm(evt);
+        if (!this.isSubmitInProgress()) {
+            var ret = this.submitForm(evt);
+        }
         dojo.stopEvent(evt);
         return ret || false;
     },
@@ -869,6 +872,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             return;
         }
 
+        this.setSubmitInProgress(true);
         var pid = phpr.currentProjectId;
 
         phpr.send({
@@ -887,6 +891,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             phpr.module + '/id/' + this.id,
                         content:   this.sendData,
                         onSuccess: dojo.hitch(this, function(data) {
+                            this.setSubmitInProgress(false);
                             if (this.sendData.string) {
                                 new phpr.handleResponse('serverFeedback', data);
                             }
@@ -903,9 +908,19 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             }
                         })
                     });
+                } else {
+                    this.setSubmitInProgress(false);
                 }
             })
         });
+    },
+
+    setSubmitInProgress: function(inProgress) {
+        this._submitInProgress = inProgress;
+    },
+
+    isSubmitInProgress: function() {
+        return this._submitInProgress;
     },
 
     deleteForm: function() {

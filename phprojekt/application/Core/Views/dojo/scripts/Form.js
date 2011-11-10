@@ -84,10 +84,12 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                 + this.main.action;
         }
 
+        this.setSubmitInProgress(true);
         phpr.send({
             url:       url,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
+                this.setSubmitInProgress(false);
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.customActionOnSuccess();
