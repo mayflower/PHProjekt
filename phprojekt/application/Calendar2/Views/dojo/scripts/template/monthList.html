@@ -1,8 +1,7 @@
-<div>
-    <!-- Events inside the schedule chart -->
-    <div id="calendarSchedule">
-        <table width="{{widthTable}}%">
-        <tr>
+<!-- Events inside the schedule chart -->
+<div style="height: 100%" id="calendarSchedule">
+    <table style="height: 100%" width="{{widthTable}}%">
+        <tr height="15px">
             {% for day in header.days %}
             <td width="{{header.columnsWidth}}%" class="weekDayHeaders">{{day}}</td>
             {% endfor %}
@@ -27,6 +26,5 @@
             {% endfor %}
         </tr>
         {% endfor %}
-        </table>
-    </div>
+    </table>
 </div>
