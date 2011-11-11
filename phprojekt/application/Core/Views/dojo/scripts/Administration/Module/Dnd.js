@@ -340,13 +340,8 @@ phpr.editModuleDesignerField = function(nodeId) {
             break;
     }
 
-    fieldsTable.push(dojo.create('input', {
-            type: "hidden",
-            name: "id",
-            class: "hiddenValue",
-            dojoType: "dijit.form.TextBox",
-            value: "id"
-        })
+    fieldsTable.push(
+        template.hiddenFieldRender('', 'id', id)
     );
 
     fieldsTable.push(
