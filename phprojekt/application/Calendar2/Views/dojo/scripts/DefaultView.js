@@ -635,6 +635,9 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
                 // Yes - Update the position and sizes of the rest of divs of this event
                 this.updateMultDaysEvent(movedEventIndex);
             }
+
+            // update events array
+            this.events[movedEventIndex].occurrence = movedEvent['date'] + ' ' + movedEvent['startTime'];
         }
 
         // 7 - Update event textual contents
