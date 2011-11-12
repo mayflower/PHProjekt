@@ -200,12 +200,8 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     getModule: function(name) {
         // Summary:
         //      returns a module by its name or null if it is not registered
-        var mod = this._modules[name];
-        if (mod !== undefined && mod) {
-            return mod;
-        } else {
-            return null;
-        }
+
+        return this._modules[name] || null;
     },
 
     getActiveModule: function() {
