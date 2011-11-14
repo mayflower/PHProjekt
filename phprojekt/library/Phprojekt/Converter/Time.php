@@ -191,7 +191,7 @@ class Phprojekt_Converter_Time
             "08" => "(GMT +8:00) Irkutsk, Ulaan Bataar",
             "008" => "(GMT +8:00) Kuala Lumpur, Singapore",
             "0008" => "(GMT +8:00) Perth",
-            "00008" => "(GMT +8:00) Taiperi",
+            "00008" => "(GMT +8:00) Taipei",
             "9" => "(GMT +9:00) Osaka, Sapporo, Tokyo",
             "09" => "(GMT +9:00) Seoul",
             "009" => "(GMT +9:00) Yakutsk",
