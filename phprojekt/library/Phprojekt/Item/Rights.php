@@ -300,7 +300,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         } else if ($exact) {
             $where .= $db->quoteInto(' AND access = ?', (int) $rights);
         } else {
-            $where .= $db->quoteInto(' AND access & ?', (int) $rights);
+            $where .= $db->quoteInto(' AND (access & ?) = ?', (int) $rights, (int) $rights);
         }
 
         $user  = new Phprojekt_User_User();
