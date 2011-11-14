@@ -729,7 +729,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         if (this.grid) {
             this.grid.updateData();
         } else {
-            var gridUrl = preUrl + 'jsonList/nodeId/' + phpr.currentProjectId + '/filters/';
+            var gridUrl = preUrl + 'jsonList/nodeId/' + phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
             var tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
             phpr.DataStore.deleteDataPartialString({url: gridUrl});
             phpr.DataStore.deleteData({url: tagUrl});
