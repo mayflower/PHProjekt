@@ -246,6 +246,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $sessionName     = 'Phprojekt_Tree_Node_Database-applyRights';
         $rightsNamespace = new Zend_Session_Namespace($sessionName);
 
+        if (Phprojekt_Auth::isAdminUser()) {
+            return $object;
+        }
+
         // Get the itemRights relation
         if (isset($rightsNamespace->rights)) {
             $rights = $rightsNamespace->rights;
