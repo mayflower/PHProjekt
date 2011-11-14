@@ -1075,8 +1075,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
-
-    /**
      * Helper function to allow delete() et al to send notifications with for
      * their respective processes.
      */
