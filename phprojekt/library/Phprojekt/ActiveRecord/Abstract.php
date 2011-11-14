@@ -135,6 +135,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected $_data = array();
 
     /**
+     * A copy of $_data as it is in the database.
+     * This is meant to be used by subclasses so they can detect changes to their data and act accordingly.
+     *
+     * @var array
+     */
+    protected $_originalData = array();
+
+    /**
      * Relationship where clause.
      * Filled with a simple where clause for belongsTo and hasMany relations
      * $this->_relations['simple'] and complex descriptions for
@@ -874,6 +882,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             }
         }
 
+        $this->_originalData = $this->_data;
+
         return $result;
     }
 
@@ -976,7 +986,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 $instance->_data[self::convertVarFromSql($k)] = $v;
             }
 
-            $instance->_storedId = $instance->_data['id'];
+            $instance->_storedId     = $instance->_data['id'];
+            $instance->_originalData = $instance->_data;
 
             $result[] = $instance;
         }
@@ -1025,7 +1036,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             throw new Phprojekt_ActiveRecord_Exception('Table must have an id');
         }
 
-        $this->_storedId = $this->_data['id'];
+        $this->_storedId     = $this->_data['id'];
+        $this->_originalData = $this->_data;
 
         return $this;
     }

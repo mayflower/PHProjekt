@@ -283,6 +283,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function saveSingleEvent()
     {
+        if (!$this->hasMultipleOccurrences()) {
+            return $this->save();
+        }
+
         if (!$this->recordValidate()) {
             $errors = $this->getError();
             $error  = array_pop($errors);
@@ -1040,6 +1044,16 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $vobject->add('dtstamp', $lastMod->format('Ymd\THis\Z'));
         $vobject->add('uid', $this->uid);
         return $vobject;
+    }
+
+    /**
+     * Returns whether this calendar object has multiple occurrences.
+     *
+     * @return bool True if this object represents multiple occurrences.
+     */
+    public function hasMultipleOccurrences()
+    {
+        return !empty($this->_originalData['rrule']);
     }
 
     /**
