@@ -220,11 +220,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             $rightNamespace = new Zend_Session_Namespace($sessionName);
             $rightNamespace->unsetAll();
 
-            // Reset users by module-item
-            $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-1-' . $projectId;
-            $rightNamespace = new Zend_Session_Namespace($sessionName);
-            $rightNamespace->unsetAll();
-
             // Reset users by project
             $sessionName = 'Phprojekt_User_User-getAllowedUsers' . '-' . $projectId;
             $rightNamespace   = new Zend_Session_Namespace($sessionName);
