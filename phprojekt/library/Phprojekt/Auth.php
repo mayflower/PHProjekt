@@ -226,16 +226,18 @@ class Phprojekt_Auth extends Zend_Auth
             $conf = Phprojekt::getInstance()->getConfig();
             $ldapOptions = $conf->authentication->ldap->toArray();
 
-            try {
-                $adapter = new Zend_Auth_Adapter_Ldap($ldapOptions, $username, $password);
-                $result = $auth->authenticate($adapter);
-            } catch (Exception $e) {
-                throw new Phprojekt_Auth_Exception('Failed to authenticate with the ldap server', 6);
-            }
+            $adapter = new Zend_Auth_Adapter_Ldap($ldapOptions, $username, $password);
+            $result = $auth->authenticate($adapter);
 
             if ($result->isValid()) {
                 // Authentication ok with LDAP
                 self::_ldapIntegration($userId, $username, $password, $loginServer);
+            } else if ($result->getCode() !== Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND
+                    && $result->getCode() !== Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID) {
+                Phprojekt::getInstance()->getLog()->debug(
+                    "An error occured while trying to authenticate {$result->getIdentity()}\n\n"
+                    . implode("\n", $result->getMessages())
+                );
             }
         }
 
