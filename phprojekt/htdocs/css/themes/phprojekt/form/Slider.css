@@ -47,9 +47,11 @@
     border: 0px;
     width: 15px;
     height: 18px;
+    background-position: 0 0 !important;
     background: url("../images/preciseSliderThumb.png") no-repeat center top;
     cursor: pointer;
 }
+
 .phprojekt .dijitSliderFocused .dijitSliderImageHandleH {
     background-image: url("../images/preciseSliderThumbFocus.png");
 }
