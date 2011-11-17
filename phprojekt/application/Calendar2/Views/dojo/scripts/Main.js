@@ -652,7 +652,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         if (mainBar) {
             if (!dijit.byId('scheduleBar')) {
                 var scheduleBar = new dijit.layout.ContentPane({id: 'scheduleBar', region:'top',
-                                                                style:'height: 6%; overflow: hidden;'},
+                                                                style:'height: 25px; overflow: hidden;'},
                                                                 dojo.create('div'));
                 // This should be here, and not in the scheduleBar definition, to avoid a bug on IE
                 scheduleBar.set('class', 'prepend-0 append-0');
