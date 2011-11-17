@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojox.drawing.stencil.Text"])dojo._hasResource["dojox.drawing.stencil.Text"]=!0,dojo.provide("dojox.drawing.stencil.Text"),dojox.drawing.stencil.Text=dojox.drawing.util.oo.declare(dojox.drawing.stencil._Base,function(){},{type:"dojox.drawing.stencil.Text",anchorType:"none",baseRender:!0,align:"start",valign:"top",_lineHeight:1,typesetter:function(a){return dojox.drawing.util.typeset?(this._rawText=a,dojox.drawing.util.typeset.convertLaTeX(a)):a},setText:function(a){this.enabled&&
+(a=this.typesetter(a));this._text=a;this._textArray=[];this.created&&this.render(a)},getText:function(){return this._rawText||this._text},dataToPoints:function(a){var a=a||this.data,b=a.width=="auto"?1:a.width,c=a.height||this._lineHeight;return this.points=[{x:a.x,y:a.y},{x:a.x+b,y:a.y},{x:a.x+b,y:a.y+c},{x:a.x,y:a.y+c}]},pointsToData:function(a){var a=a||this.points,b=a[0],a=a[2];return this.data={x:b.x,y:b.y,width:a.x-b.x,height:a.y-b.y}},render:function(a){this.remove(this.shape,this.hit);!this.annotation&&
+this.renderHit&&this._renderOutline();if(a!=void 0)this._text=a,this._textArray=this._text.split("\n");var a=this.pointsToData(),b=this._lineHeight,c=a.x+this.style.text.pad*2,d=a.y+this._lineHeight-this.textSize*0.4;this.valign=="middle"&&(d-=b/2);this.shape=this.container.createGroup();dojo.forEach(this._textArray,function(a,f){this._setNodeAtts(this.shape.createText({x:c,y:d+b*f,text:unescape(a),align:this.align}).setFont(this.style.currentText).setFill(this.style.currentText.color))},this);this._setNodeAtts(this.shape)},
+_renderOutline:function(){if(!this.annotation){var a=this.pointsToData();this.align=="middle"?a.x-=a.width/2-this.style.text.pad*2:this.align=="start"?a.x+=this.style.text.pad:this.align=="end"&&(a.x-=a.width-this.style.text.pad*3);this.valign=="middle"&&(a.y-=this._lineHeight/2-this.style.text.pad);this.hit=this.container.createRect(a).setStroke(this.style.currentHit).setFill(this.style.currentHit.fill);this._setNodeAtts(this.hit);this.hit.moveToBack()}},makeFit:function(a,b){var c=dojo.create("span",
+{innerHTML:a,id:"foo"},document.body),d=1;dojo.style(c,"fontSize",d+"px");for(var e=30;dojo.marginBox(c).w<b;)if(d++,dojo.style(c,"fontSize",d+"px"),e--<=0)break;d--;e=dojo.marginBox(c);dojo.destroy(c);return{size:d,box:e}}}),dojox.drawing.register({name:"dojox.drawing.stencil.Text"},"stencil");

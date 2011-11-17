@@ -26,7 +26,7 @@
     <td style="text-align: right;">{{day.week}}</td>
     <td>
         <a href="javascript:
-        var date = phpr.Date.isoDateTojsDate('{{day.date}}');
+        var date = phpr.date.isoDateTojsDate('{{day.date}}');
         dijit.byId('selectDate').set('value', new Date(date.getFullYear(), date.getMonth(), date.getDate()));
         dojo.publish('Timecard.changeDate', [date]);">{{day.date}}</a>
     </td>

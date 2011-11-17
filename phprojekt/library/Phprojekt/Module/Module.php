@@ -65,8 +65,8 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
         }
         parent::__construct($db);
 
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Phprojekt_Module_Information();
     }
 
     /**
@@ -77,8 +77,8 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     public function __clone()
     {
         parent::__clone();
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Phprojekt_Module_Information();
     }
 
     /**
@@ -121,11 +121,12 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
 
             // Add the new module to the root project
             if ($saveNewModule) {
-                $project = Phprojekt_Loader::getModel('Project', 'Project')->find(1);
+                $project = new Project_Models_Project();
+                $project = $project->find(1);
                 $project->addModule($this->id);
 
                 // Save Module into the role 1 with 255 access
-                $role  = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_RoleModulePermissions');
+                $role  = new Phprojekt_Role_RoleModulePermissions();
                 $role->addModuleToAdminRole($this->id);
 
                 // Get the first and second fields
@@ -192,11 +193,11 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
     public function delete()
     {
         // Delete all the project-module relations
-        $project = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+        $project = new Project_Models_ProjectModulePermissions();
         $project->deleteModuleRelation($this->id);
 
         // Delete all the role-module relations
-        $role = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_RoleModulePermissions');
+        $role = new Phprojekt_Role_RoleModulePermissions();
         $role->deleteModuleRelation($this->id);
 
         // Delete the items and tags

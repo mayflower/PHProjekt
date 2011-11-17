@@ -1,1 +1,23 @@
-({"backwards":"Visszafelé","findReplace":"Keresés/Csere váltása","replaceAll":"Minden előfordulás","replaceDialogText":"${0} előfordulás cseréje megtörtént. ","replaceButton":"Csere","findButton":"Keresés","findLabel":"Keresés: ","matchCase":"Kis- és nagybetűk egyeztetése","replaceLabel":"Csere: ","eofDialogTextFind":"found","eofDialogText":"Last occurrence ${0}","findTooltip":"Enter text to find","replaceTooltip":"Enter text to replace with","replaceAllButton":"Replace All","eofDialogTextReplace":"replaced","backwardsTooltip":"Search backwards for text","replaceAllButtonTooltip":"Replace all the text","replaceButtonTooltip":"Replace the text","matchCaseTooltip":"Match case","findButtonTooltip":"Find the text"})
+({
+	"findLabel": "Keresés:",
+	"findTooltip": "Adja meg a keresett szöveget",
+	"replaceLabel": "Csere:",
+	"replaceTooltip": "Adja meg a cseréhez az új szöveget",
+	"findReplace": "Keresés és csere",
+	"matchCase": "Kis-nagybetűk egyeznek",
+	"matchCaseTooltip": "Kis-nagybetűk egyeznek",
+	"backwards": "Visszafelé",
+	"backwardsTooltip": "Szöveg keresése visszafelé",
+	"replaceAll": "Minden előfordulás",
+	"replaceAllButton": "Mindent lecserél",
+	"replaceAllButtonTooltip": "Minden szöveg cseréje",
+	"findButton": "Keresés",
+	"findButtonTooltip": "Szöveg keresése",
+	"replaceButton": "Csere",
+	"replaceButtonTooltip": "Szöveg cseréje",
+	"replaceDialogText": "${0} előfordulás cseréje megtörtént.",
+	"eofDialogText": "Legutóbbi előfordulás: ${0}",
+	"eofDialogTextFind": "találat",
+	"eofDialogTextReplace": "cserélve"
+})
+

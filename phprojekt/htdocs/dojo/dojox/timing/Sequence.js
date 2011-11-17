@@ -1,26 +1,17 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.timing.Sequence"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.timing.Sequence"] = true;
 dojo.provide("dojox.timing.Sequence");
-dojo.experimental("dojox.timing.Sequence"); 
+dojo.experimental("dojox.timing.Sequence");
 
 dojo.declare("dojox.timing.Sequence", null, {
-	// summary: 
-	//	This class provides functionality to really sequentialize 
-	//	function calls. You need to provide a list of functions and 
+	// summary:
+	//	This class provides functionality to really sequentialize
+	//	function calls. You need to provide a list of functions and
 	//	some parameters for each (like: pauseBefore) and they will
 	//	be run one after another. This can be very useful for slideshows
 	//	or alike things.
 	//
-	// description: 
+	// description:
 	//	This array will contain the sequence defines resolved, so that
-	// 	ie. repeat:10 will result in 10 elements in the sequence, so 
+	// 	ie. repeat:10 will result in 10 elements in the sequence, so
 	// 	the repeat handling is easier and we don't need to handle that
 	// 	many extra cases. Also the doneFunction, if given is added at the
 	// 	end of the resolved-sequences.
@@ -31,7 +22,7 @@ dojo.declare("dojox.timing.Sequence", null, {
 	_defsResolved: [],
 =====*/
 
-	// This is the time to wait before goOn() calls _go(), which 
+	// This is the time to wait before goOn() calls _go(), which
 	// mostly results from a pauseAfter for a function that returned
 	// false and is later continued by the external goOn() call.
 	// The time to wait needs to be waited in goOn() where the
@@ -142,17 +133,15 @@ dojo.declare("dojox.timing.Sequence", null, {
 	stop: function(){
 		// summary:  Stop the currently running sequence.
 		//
-		// description: 
+		// description:
 		//		This can only interrupt the sequence not the last function that
 		//		had been started. If the last function was i.e. a slideshow
 		//		that is handled inside a function that you have given as
 		//		one sequence item it cant be stopped, since it is not controlled
-		//		by this object here. In this case it would be smarter to 
-		//		run the slideshow using a sequence object so you can also stop 
+		//		by this object here. In this case it would be smarter to
+		//		run the slideshow using a sequence object so you can also stop
 		//		it using this method.
 		this._running = false;
 	}
 
-}); 
-
-}
+});

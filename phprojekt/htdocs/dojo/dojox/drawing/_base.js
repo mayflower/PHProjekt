@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing._base"] = true;
 dojo.provide("dojox.drawing._base");
 dojo.experimental("dojox.drawing");
 
@@ -15,6 +6,7 @@ dojo.require("dojox.gfx");
 dojo.require("dojox.drawing.Drawing");
 dojo.require("dojox.drawing.util.oo");
 dojo.require("dojox.drawing.util.common");
+dojo.require("dojox.drawing.util.typeset");
 dojo.require("dojox.drawing.defaults");
 dojo.require("dojox.drawing.manager.Canvas");
 
@@ -42,5 +34,3 @@ dojo.require("dojox.drawing.annotations.Label");
 dojo.require("dojox.drawing.annotations.Angle");
 dojo.require("dojox.drawing.annotations.Arrow");
 dojo.require("dojox.drawing.annotations.BoxShadow");
-
-}

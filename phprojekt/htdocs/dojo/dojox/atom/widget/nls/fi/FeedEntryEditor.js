@@ -1,1 +1,6 @@
-({"edit":"[muokkaa]","save":"[tallenna]","cancel":"[peruuta]","doNew":"[uusi]"})
+({
+	doNew: "[uusi]",
+	edit: "[muokkaa]",
+	save: "[tallenna]",
+	cancel: "[peruuta]"
+})

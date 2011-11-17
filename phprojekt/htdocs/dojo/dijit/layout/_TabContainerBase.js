@@ -1,16 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.layout._TabContainerBase"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.layout._TabContainerBase"] = true;
-dojo.provide("dijit.layout._TabContainerBase");
-
-dojo.require("dijit.layout.StackContainer");
-dojo.require("dijit._Templated");
+define("dijit/layout/_TabContainerBase", ["dojo", "dijit", "text!dijit/layout/templates/TabContainer.html", "dijit/layout/StackContainer", "dijit/_Templated"], function(dojo, dijit) {
 
 dojo.declare("dijit.layout._TabContainerBase",
 	[dijit.layout.StackContainer, dijit._Templated],
@@ -30,18 +18,18 @@ dojo.declare("dijit.layout._TabContainerBase",
 
 	baseClass: "dijitTabContainer",
 
-	// tabStrip: Boolean
+	// tabStrip: [const] Boolean
 	//		Defines whether the tablist gets an extra class for layouting, putting a border/shading
-	//		around the set of tabs.
+	//		around the set of tabs.   Not supported by claro theme.
 	tabStrip: false,
 
-	// nested: Boolean
+	// nested: [const] Boolean
 	//		If true, use styling for a TabContainer nested inside another TabContainer.
 	//		For tundra etc., makes tabs look like links, and hides the outer
 	//		border since the outer TabContainer already has a border.
 	nested: false,
 
-	templateString: dojo.cache("dijit.layout", "templates/TabContainer.html", "<div class=\"dijitTabContainer\">\r\n\t<div class=\"dijitTabListWrapper\" dojoAttachPoint=\"tablistNode\"></div>\r\n\t<div dojoAttachPoint=\"tablistSpacer\" class=\"dijitTabSpacer ${baseClass}-spacer\"></div>\r\n\t<div class=\"dijitTabPaneWrapper ${baseClass}-container\" dojoAttachPoint=\"containerNode\"></div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dijit.layout", "templates/TabContainer.html"),
 
 	postMixInProperties: function(){
 		// set class name according to tab position, ex: dijitTabContainerTop
@@ -52,7 +40,7 @@ dojo.declare("dijit.layout._TabContainerBase",
 		this.inherited(arguments);
 	},
 
-	postCreate: function(){
+	buildRendering: function(){
 		this.inherited(arguments);
 
 		// Create the tab list that will have a tab (a.k.a. tab button) for each tab panel
@@ -119,7 +107,12 @@ dojo.declare("dijit.layout._TabContainerBase",
 		}else{
 			// just layout the tab controller, so it can position left/right buttons etc.
 			if(this.tablist.resize){
-				this.tablist.resize({w: dojo.contentBox(this.domNode).w});
+				//make the tabs zero width so that they don't interfere with width calc, then reset
+				var s = this.tablist.domNode.style;
+				s.width="0";
+				var width = dojo.contentBox(this.domNode).w;
+				s.width="";
+				this.tablist.resize({w: width});
 			}
 
 			// and call resize() on the selected pane just to tell it that it's been made visible
@@ -138,4 +131,5 @@ dojo.declare("dijit.layout._TabContainerBase",
 });
 
 
-}
+return dijit.layout._TabContainerBase;
+});

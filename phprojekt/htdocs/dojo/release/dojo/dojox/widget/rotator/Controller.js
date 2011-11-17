@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.widget.rotator.Controller"]||(dojo._hasResource["dojox.widget.rotator.Controller"]=!0,dojo.provide("dojox.widget.rotator.Controller"),function(c){c.declare("dojox.widget.rotator.Controller",null,{rotator:null,commands:"prev,play/pause,info,next",constructor:function(a,b){c.mixin(this,a);var d=this.rotator;if(d){for(;b.firstChild;)b.removeChild(b.firstChild);var f=this._domNode=c.create("ul",null,b),e=function(a,g,b){c.create("li",{className:g,innerHTML:'<a href="#"><span>'+
+a+"</span></a>",onclick:function(a){c.stopEvent(a);d&&d.control.apply(d,b)}},f)};c.forEach(this.commands.split(","),function(a){switch(a){case "prev":e("Prev","dojoxRotatorPrev dojoxRotatorIcon",["prev"]);break;case "play/pause":e("Play","dojoxRotatorPlay dojoxRotatorIcon",["play"]);e("Pause","dojoxRotatorPause dojoxRotatorIcon",["pause"]);break;case "info":this._info=c.create("li",{className:"dojoxRotatorInfo",innerHTML:this._buildInfo(d)},f);break;case "next":e("Next","dojoxRotatorNext dojoxRotatorIcon",
+["next"]);break;case "#":case "titles":for(var b=0;b<d.panes.length;b++)e(a=="#"?b+1:d.panes[b].title||"Tab "+(b+1),(a=="#"?"dojoxRotatorNumber":"dojoxRotatorTab")+" "+(b==d.idx?"dojoxRotatorSelected":"")+" dojoxRotatorPane"+b,["go",b])}},this);c.query("li:first-child",f).addClass("dojoxRotatorFirst");c.query("li:last-child",f).addClass("dojoxRotatorLast");this._togglePlay();this._con=c.connect(d,"onUpdate",this,"_onUpdate")}},destroy:function(){c.disconnect(this._con);c.destroy(this._domNode)},_togglePlay:function(){var a=
+this.rotator.playing;c.query(".dojoxRotatorPlay",this._domNode).style("display",a?"none":"");c.query(".dojoxRotatorPause",this._domNode).style("display",a?"":"none")},_buildInfo:function(a){return"<span>"+(a.idx+1)+" / "+a.panes.length+"</span>"},_onUpdate:function(a){var b=this.rotator;switch(a){case "play":case "pause":this._togglePlay();break;case "onAfterTransition":if(this._info)this._info.innerHTML=this._buildInfo(b);a=function(a){b.idx<a.length&&c.addClass(a[b.idx],"dojoxRotatorSelected")};
+a(c.query(".dojoxRotatorNumber",this._domNode).removeClass("dojoxRotatorSelected"));a(c.query(".dojoxRotatorTab",this._domNode).removeClass("dojoxRotatorSelected"))}}})}(dojo));

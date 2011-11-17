@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojo.robotx"]||(dojo._hasResource["dojo.robotx"]=!0,dojo.provide("dojo.robotx"),dojo.require("dojo.robot"),dojo.experimental("dojo.robotx"),function(){var a=null,i=dojo.connect(doh,"_groupStarted",function(){dojo.disconnect(i);a.style.visibility="visible"}),e=function(){dojo.addOnLoad(function(){var b={overflow:dojo.isWebKit?"hidden":"visible",margin:"0px",borderWidth:"0px",height:"100%",width:"100%"};dojo.style(document.documentElement,b);dojo.style(document.body,b);document.body.appendChild(a);
+b=document.createElement("base");b.href=a.src;document.getElementsByTagName("head")[0].appendChild(b)})},f=!1,d=null,j=doh.robot._run;doh.robot._run=function(b){f=!0;d=b;doh.robot._run=j;a.src&&e()};var c=function(){doh.robot._updateDocument();c=null;var b=document.compatMode=="BackCompat"?document.body:document.documentElement,g=document.getElementById("robotconsole").offsetHeight;if(g)a.style.height=b.clientHeight-g+"px";a.contentWindow.dojo?a.contentWindow.dojo.addOnLoad(function(){doh.robot._run(d)}):
+doh.robot._run(d)},h=function(){c&&c();var b=dojo.connect(dojo.body(),"onunload",function(){dojo.global=window;dojo.doc=document;dojo.disconnect(b)})};dojo.config.debugContainerId="robotconsole";dojo.config.debugHeight=dojo.config.debugHeight||200;document.write('<div id="robotconsole" style="position:absolute;left:0px;bottom:0px;width:100%;"></div>');a=document.createElement("iframe");a.setAttribute("ALLOWTRANSPARENCY","true");a.scrolling=dojo.isIE?"yes":"auto";dojo.style(a,{visibility:"hidden",
+border:"0px none",padding:"0px",margin:"0px",position:"absolute",left:"0px",top:"0px",width:"100%",height:"100%"});a.attachEvent!==void 0?a.attachEvent("onload",h):dojo.connect(a,"onload",h);dojo.mixin(doh.robot,{_updateDocument:function(){dojo.setContext(a.contentWindow,a.contentWindow.document);var b=dojo.global;if(b.dojo)dojo._topics=b.dojo._topics},initRobot:function(b){a.src=b;f&&e()},waitForPageToLoad:function(b){var a=new doh.Deferred;c=function(){c=null;doh.robot._updateDocument();a.callback(!0)};
+b();return a}})}());

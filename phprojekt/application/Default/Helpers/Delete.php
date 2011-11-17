@@ -55,7 +55,7 @@ final class Default_Helpers_Delete
         } else if (!self::_checkItemRights($model, 'Project')) {
             throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
-            $relations = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+            $relations = new Project_Models_ProjectModulePermissions();
             $where     = sprintf('project_id = %d', (int) $id);
 
             // Delete related items
@@ -85,7 +85,7 @@ final class Default_Helpers_Delete
             }
 
             // Delete user-role-projetc relation
-            $relations = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
+            $relations = new Project_Models_ProjectRoleUserPermissions();
             $records   = $relations->fetchAll($where);
             if (is_array($records)) {
                 foreach ($records as $record) {

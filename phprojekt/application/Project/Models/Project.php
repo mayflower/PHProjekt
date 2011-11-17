@@ -52,7 +52,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     public function validateProjectId($value)
     {
         if (null !== $this->id && $this->id > 0) {
-            $node = Phprojekt_Loader::getModel('Project', 'Project')->find($this->id);
+            $node = new Project_Models_Project();
+            $node = $node->find($this->id);
             $tree = new Phprojekt_Tree_Node_Database($node, $this->id);
             if ($tree->setup()->getActiveRecord()->id == $value) {
                 return Phprojekt::getInstance()->translate('The project can not be saved under itself');
@@ -182,8 +183,8 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         parent::saveRights($rights);
 
         // Update access and delete the cache also for the children
-        $itemRights   = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $itemRights   = new Phprojekt_Item_Rights();
+        $activeRecord = new Project_Models_Project();
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, $this->id);
         $tree         = $tree->setup();
 
@@ -219,11 +220,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             $rightNamespace = new Zend_Session_Namespace($sessionName);
             $rightNamespace->unsetAll();
 
-            // Reset users by module-item
-            $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-1-' . $projectId;
-            $rightNamespace = new Zend_Session_Namespace($sessionName);
-            $rightNamespace->unsetAll();
-
             // Reset users by project
             $sessionName = 'Phprojekt_User_User-getAllowedUsers' . '-' . $projectId;
             $rightNamespace   = new Zend_Session_Namespace($sessionName);
@@ -243,5 +239,19 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         } else {
             return parent::recordValidate();
         }
+    }
+
+    /**
+     * Returns the tree node for this project.
+     *
+     * The node allows navigating to subprojects and other operations on the project tree.
+     *
+     * @return Phprojekt_Tree_Node_Database A Tree node belonging to this project.
+     */
+    public function getTree()
+    {
+        $tree = new Phprojekt_Tree_Node_Database($this);
+        $tree->setup();
+        return $tree;
     }
 }

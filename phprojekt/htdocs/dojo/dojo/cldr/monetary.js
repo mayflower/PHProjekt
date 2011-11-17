@@ -1,13 +1,5 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.cldr.monetary"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.cldr.monetary"] = true;
-dojo.provide("dojo.cldr.monetary");
+define("dojo/cldr/monetary", ["dojo"], function(dojo) {
+dojo.getObject("cldr.monetary", true, dojo);
 
 dojo.cldr.monetary.getData = function(/*String*/code){
 // summary: A mapping of currency code to currency-specific formatting information. Returns a unique object with properties: places, round.
@@ -34,4 +26,5 @@ dojo.cldr.monetary.getData = function(/*String*/code){
 	return {places: places, round: round}; // Object
 };
 
-}
+return dojo.cldr.monetary;
+});

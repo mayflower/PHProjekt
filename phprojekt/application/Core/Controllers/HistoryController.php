@@ -77,7 +77,7 @@ class Core_HistoryController extends Core_IndexController
         if (empty($itemId) || empty($moduleId)) {
             throw new Phprojekt_PublishedException("Invalid module or item");
         } else {
-            $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+            $history = new Phprojekt_History();
             $data    = $history->getHistoryData(null, $itemId, $moduleId, $startDate, $endDate, $userId);
             $data    = array('data' => $data);
 

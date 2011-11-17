@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.charting.themes.Tom"]||(dojo._hasResource["dojox.charting.themes.Tom"]=!0,dojo.provide("dojox.charting.themes.Tom"),dojo.require("dojox.gfx.gradutils"),dojo.require("dojox.charting.Theme"),function(){var g=dojox.charting,h=g.themes,e=g.Theme,a=e.generateGradient,c={type:"linear",space:"shape",x1:0,y1:0,x2:0,y2:100};h.Tom=new g.Theme({chart:{fill:"#181818",stroke:{color:"#181818"},pageStyle:{backgroundColor:"#181818",backgroundImage:"none",color:"#eaf2cb"}},plotarea:{fill:"#181818"},
+axis:{stroke:{color:"#a0a68b",width:1},tick:{color:"#888c76",position:"center",font:"normal normal normal 7pt Helvetica, Arial, sans-serif",fontColor:"#888c76"}},series:{stroke:{width:2.5,color:"#eaf2cb"},outline:null,font:"normal normal normal 8pt Helvetica, Arial, sans-serif",fontColor:"#eaf2cb"},marker:{stroke:{width:1.25,color:"#eaf2cb"},outline:{width:1.25,color:"#eaf2cb"},font:"normal normal normal 8pt Helvetica, Arial, sans-serif",fontColor:"#eaf2cb"},seriesThemes:[{fill:a(c,"#bf9e0a","#ecc20c")},
+{fill:a(c,"#73b086","#95e5af")},{fill:a(c,"#c7212d","#ed2835")},{fill:a(c,"#87ab41","#b6e557")},{fill:a(c,"#b86c25","#d37d2a")}],markerThemes:[{fill:"#bf9e0a",stroke:{color:"#ecc20c"}},{fill:"#73b086",stroke:{color:"#95e5af"}},{fill:"#c7212d",stroke:{color:"#ed2835"}},{fill:"#87ab41",stroke:{color:"#b6e557"}},{fill:"#b86c25",stroke:{color:"#d37d2a"}}]});h.Tom.next=function(b,a,c){var f=b=="line";if(f||b=="area"){var d=this.seriesThemes[this._current%this.seriesThemes.length];d.fill.space="plot";if(f)d.stroke=
+{width:4,color:d.fill.colors[0].color};f=e.prototype.next.apply(this,arguments);delete d.outline;delete d.stroke;d.fill.space="shape";return f}return e.prototype.next.apply(this,arguments)};h.Tom.post=function(b,a){b=e.prototype.post.apply(this,arguments);if((a=="slice"||a=="circle")&&b.series.fill&&b.series.fill.type=="radial")b.series.fill=dojox.gfx.gradutils.reverse(b.series.fill);return b}}());

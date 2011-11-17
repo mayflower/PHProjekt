@@ -1,1 +1,4 @@
-({"insertEntity":"插入符号"})
+({
+	insertEntity: "插入符号"
+})
+

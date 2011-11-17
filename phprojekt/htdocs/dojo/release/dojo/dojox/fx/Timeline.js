@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojox.fx.Timeline"])dojo._hasResource["dojox.fx.Timeline"]=!0,dojo.provide("dojox.fx.Timeline"),dojo.require("dojo.fx.easing"),dojox.fx.animateTimeline=function(e,f){var c=new dojox.fx._Timeline(e.keys),d=dojo.animateProperty({node:dojo.byId(f||e.node),duration:e.duration||1E3,properties:c._properties,easing:dojo.fx.easing.linear,onAnimate:function(){}});dojo.connect(d,"onEnd",function(c){var b=d.curve.getValue(d.reversed?0:1);dojo.style(c,b)});dojo.connect(d,"beforeBegin",
+function(){d.curve&&delete d.curve;d.curve=c;c.ani=d});return d},dojox.fx._Timeline=function(e){this.keys=dojo.isArray(e)?this.flatten(e):e},dojox.fx._Timeline.prototype.flatten=function(e){var f={},c={};dojo.forEach(e,function(d,h){var b;b=d.step;b=b=="from"?0:b=="to"?1:b===void 0?h==0?0:h/(e.length-1):parseInt(b,10)*0.01;var g=dojo.fx.easing[d.ease]||dojo.fx.easing.linear,a;for(a in d)if(!(a=="step"||a=="ease"||a=="from"||a=="to")){if(!c[a])c[a]={steps:[],values:[],eases:[],ease:g},f[a]={},f[a].units=
+/#/.test(d[a])?c[a].units="isColor":c[a].units=/\D{1,}/.exec(d[a]).join("");c[a].eases.push(dojo.fx.easing[d.ease||"linear"]);c[a].steps.push(b);f[a].units=="isColor"?c[a].values.push(new dojo.Color(d[a])):c[a].values.push(parseInt(/\d{1,}/.exec(d[a]).join("")));f[a].start===void 0?f[a].start=c[a].values[c[a].values.length-1]:f[a].end=c[a].values[c[a].values.length-1]}});this._properties=f;return c},dojox.fx._Timeline.prototype.getValue=function(e){var e=this.ani._reversed?1-e:e,f={},c=this,d=function(a,
+b){return c._properties[a].units!="isColor"?c.keys[a].values[b]+c._properties[a].units:c.keys[a].values[b].toCss()},h;for(h in this.keys)for(var b=this.keys[h],g=0;g<b.steps.length;g++){var a=b.steps[g],j=b.steps[g+1],i=g<b.steps.length?!0:!1,k=b.eases[g]||function(a){return a};if(e==a){if(f[h]=d(h,g),!i||i&&this.ani._reversed)break}else if(e>a)if(i&&e<b.steps[g+1]){i=b.values[g+1];b=b.values[g];a=1/(j-a)*(e-a);a=k(a);f[h]=b instanceof dojo.Color?dojo.blendColors(b,i,a).toCss(!1):b+a*(i-b)+this._properties[h].units;
+break}else f[h]=d(h,g);else if(i&&!this.ani._reversed||!i&&this.ani._reversed)f[h]=d(h,g)}return f};

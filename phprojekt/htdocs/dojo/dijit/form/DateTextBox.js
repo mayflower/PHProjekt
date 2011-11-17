@@ -1,16 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.form.DateTextBox"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.DateTextBox"] = true;
-dojo.provide("dijit.form.DateTextBox");
-
-dojo.require("dijit.Calendar");
-dojo.require("dijit.form._DateTimeTextBox");
+define("dijit/form/DateTextBox", ["dojo", "dijit", "dijit/Calendar", "dijit/form/_DateTimeTextBox"], function(dojo, dijit) {
 
 dojo.declare(
 	"dijit.form.DateTextBox",
@@ -25,15 +13,18 @@ dojo.declare(
 		//		Example:
 		// |	<input dojotype='dijit.form.DateTextBox' value='2009-01-20'>
 
-		baseClass: "dijitTextBox dijitDateTextBox",
+		baseClass: "dijitTextBox dijitComboBox dijitDateTextBox",
 		popupClass: "dijit.Calendar",
 		_selector: "date",
 
 		// value: Date
 		//		The value of this widget as a JavaScript Date object, with only year/month/day specified.
-		//		If specified in markup, use the format specified in `dojo.date.stamp.fromISOString`
+		//		If specified in markup, use the format specified in `dojo.date.stamp.fromISOString`.
+		//		set("value", ...) accepts either a Date object or a string.
 		value: new Date("")	// value.toString()="NaN"
 	}
 );
 
-}
+
+return dijit.form.DateTextBox;
+});

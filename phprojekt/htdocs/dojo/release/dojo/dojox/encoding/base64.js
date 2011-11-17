@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.encoding.base64"]||(dojo._hasResource["dojox.encoding.base64"]=!0,dojo.provide("dojox.encoding.base64"),dojo.getObject("encoding.base64",!0,dojox),function(){var g=dojox.encoding;g.base64.encode=function(b){var a=[],f=b.length,d=f%3;f-=d;for(var c=0;c<f;){var e=b[c++]<<16|b[c++]<<8|b[c++];a.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(e>>>18&63));a.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(e>>>12&63));
+a.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(e>>>6&63));a.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(e&63))}switch(d){case 2:e=b[c++]<<16|b[c++]<<8;a.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(e>>>18&63));a.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(e>>>12&63));a.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(e>>>6&63));a.push("=");
+break;case 1:e=b[c++]<<16,a.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(e>>>18&63)),a.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(e>>>12&63)),a.push("="),a.push("=")}return a.join("")};g.base64.decode=function(b){for(var b=b.split(""),a=[],f=b.length;b[--f]=="=";);for(var d=0;d<f;){var c="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf(b[d++])<<18;d<=f&&(c|="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf(b[d++])<<
+12);d<=f&&(c|="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf(b[d++])<<6);d<=f&&(c|="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf(b[d++]));a.push(c>>>16&255);a.push(c>>>8&255);a.push(c&255)}for(;a[a.length-1]==0;)a.pop();return a}}());

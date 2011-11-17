@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dijit.tree._dndContainer"])dojo._hasResource["dijit.tree._dndContainer"]=!0,dojo.provide("dijit.tree._dndContainer"),dojo.require("dojo.dnd.common"),dojo.require("dojo.dnd.Container"),dojo.getObject("tree",!0,dojo),dijit.tree._compareNodes=function(a,b){if(a===b)return 0;if("sourceIndex"in document.documentElement)return a.sourceIndex-b.sourceIndex;else if("compareDocumentPosition"in document.documentElement)return a.compareDocumentPosition(b)&2?1:-1;else if(document.createRange){var c=
+doc.createRange();c.setStartBefore(a);var d=doc.createRange();d.setStartBefore(b);return c.compareBoundaryPoints(c.END_TO_END,d)}else throw Error("dijit.tree._compareNodes don't know how to compare two different nodes in this browser");},dojo.declare("dijit.tree._dndContainer",null,{constructor:function(a,b){this.tree=a;this.node=a.domNode;dojo.mixin(this,b);this.map={};this.current=null;this.containerState="";dojo.addClass(this.node,"dojoDndContainer");this.events=[dojo.connect(this.node,"onmouseenter",
+this,"onOverEvent"),dojo.connect(this.node,"onmouseleave",this,"onOutEvent"),dojo.connect(this.tree,"_onNodeMouseEnter",this,"onMouseOver"),dojo.connect(this.tree,"_onNodeMouseLeave",this,"onMouseOut"),dojo.connect(this.node,"ondragstart",dojo,"stopEvent"),dojo.connect(this.node,"onselectstart",dojo,"stopEvent")]},getItem:function(a){return{data:this.selection[a],type:["treeNode"]}},destroy:function(){dojo.forEach(this.events,dojo.disconnect);this.node=this.parent=null},onMouseOver:function(a){this.current=
+a},onMouseOut:function(){this.current=null},_changeState:function(a,b){var c="dojoDnd"+a,d=a.toLowerCase()+"State";dojo.replaceClass(this.node,c+b,c+this[d]);this[d]=b},_addItemClass:function(a,b){dojo.addClass(a,"dojoDndItem"+b)},_removeItemClass:function(a,b){dojo.removeClass(a,"dojoDndItem"+b)},onOverEvent:function(){this._changeState("Container","Over")},onOutEvent:function(){this._changeState("Container","")}});

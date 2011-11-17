@@ -1,19 +1,10 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.highlight.languages.django"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.highlight.languages.django"] = true;
-dojo.provide("dojox.highlight.languages.django"); 
+dojo.provide("dojox.highlight.languages.django");
 
 dojo.require("dojox.highlight._base");
 dojo.require("dojox.highlight.languages.xml");
 dojo.require("dojox.highlight.languages.html");
 
-(function(){ 
+(function(){
 	var dh = dojox.highlight, dhc = dh.constants, dhl = dh.languages, x = dhl.xml, h = dhl.html;
 	dhl.django = {
 		defaultMode: {
@@ -40,7 +31,7 @@ dojo.require("dojox.highlight.languages.html");
 			h.HTML_VALUE,
 			{
 				className: 'template_comment',
-				begin: '\\{\\%\\s*comment\\s*\\%\\}', 
+				begin: '\\{\\%\\s*comment\\s*\\%\\}',
 				end: '\\{\\%\\s*endcomment\\s*\\%\\}'
 			},
 			{
@@ -54,8 +45,8 @@ dojo.require("dojox.highlight.languages.html");
 				keywords: {
 					'comment': 1, 'endcomment': 1, 'load': 1,
 					'templatetag': 1, 'ifchanged': 1, 'endifchanged': 1,
-					'if': 1, 'endif': 1, 'firstof': 1, 'for': 1, 
-					'endfor': 1, 'in': 1, 'ifnotequal': 1, 
+					'if': 1, 'endif': 1, 'firstof': 1, 'for': 1,
+					'endfor': 1, 'in': 1, 'ifnotequal': 1,
 					'endifnotequal': 1, 'widthratio': 1, 'extends': 1,
 					'include': 1, 'spaceless': 1, 'endspaceless': 1,
 					'regroup': 1, 'by': 1, 'as': 1, 'ifequal': 1,
@@ -85,7 +76,7 @@ dojo.require("dojox.highlight.languages.html");
 					'unordered_list': 1, 'urlencode': 1, 'timeuntil': 1,
 					'urlizetrunc': 1, 'wordcount': 1, 'stringformat': 1,
 					'linenumbers': 1, 'slice': 1, 'date': 1, 'dictsort': 1,
-					'dictsortreversed': 1, 'default_if_none': 1, 
+					'dictsortreversed': 1, 'default_if_none': 1,
 					'pluralize': 1, 'lower': 1, 'join': 1, 'center': 1,
 					'default': 1, 'truncatewords_html': 1, 'upper': 1,
 					'length': 1, 'phone2numeric': 1, 'wordwrap': 1, 'time': 1,
@@ -100,5 +91,3 @@ dojo.require("dojox.highlight.languages.html");
 		]
 	};
 })();
-
-}

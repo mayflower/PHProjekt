@@ -1,1 +1,23 @@
-({"backwards":"Назад","findReplace":"Переключатель Поиск/Замена","replaceAll":"Все вхождения","replaceDialogText":"Заменено ${0} вхождений.","replaceButton":"Заменить","findButton":"Найти","findLabel":"Найти:","matchCase":"С учетом регистра","replaceLabel":"Заменить на:","eofDialogTextFind":"found","eofDialogText":"Last occurrence ${0}","findTooltip":"Enter text to find","replaceTooltip":"Enter text to replace with","replaceAllButton":"Replace All","eofDialogTextReplace":"replaced","backwardsTooltip":"Search backwards for text","replaceAllButtonTooltip":"Replace all the text","replaceButtonTooltip":"Replace the text","matchCaseTooltip":"Match case","findButtonTooltip":"Find the text"})
+({
+	"findLabel": "Найти:",
+	"findTooltip": "Введите текст для поиска",
+	"replaceLabel": "Заменить на:",
+	"replaceTooltip": "Введите текст для замены",
+	"findReplace": "Найти и заменить",
+	"matchCase": "С учетом регистра",
+	"matchCaseTooltip": "С учетом регистра",
+	"backwards": "Назад",
+	"backwardsTooltip": "Поиск текста в обратном направлении",
+	"replaceAll": "Все вхождения",
+	"replaceAllButton": "Заменить все",
+	"replaceAllButtonTooltip": "Заменить весь текст",
+	"findButton": "Найти",
+	"findButtonTooltip": "Найти текст",
+	"replaceButton": "Заменить",
+	"replaceButtonTooltip": "Заменить текст",
+	"replaceDialogText": "Заменено ${0} вхождений.",
+	"eofDialogText": "Последнее вхождение ${0}",
+	"eofDialogTextFind": "найдено",
+	"eofDialogTextReplace": "заменено"
+})
+

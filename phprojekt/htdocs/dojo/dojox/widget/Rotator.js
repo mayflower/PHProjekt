@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.Rotator"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.Rotator"] = true;
 dojo.provide("dojox.widget.Rotator");
 dojo.require("dojo.parser");
 
@@ -371,5 +362,3 @@ dojo.require("dojo.parser");
 	});
 
 })(dojo);
-
-}

@@ -65,7 +65,7 @@ class Helpdesk_Models_Notification extends Phprojekt_Notification
         }
 
         // If the item has been reassigned, add the previous assigned user to the recipients
-        $history = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+        $history = new Phprojekt_History();
         $olUser  = $history->getLastAssignedUser($this->_model, 'assigned');
         if ($olUser > 0) {
             $recipients[] = $olUser;

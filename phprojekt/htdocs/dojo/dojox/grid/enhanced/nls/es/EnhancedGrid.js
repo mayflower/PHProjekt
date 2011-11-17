@@ -1,1 +1,12 @@
-({"descending":"Descendente","ascending":"Ascendente","nestedSort":"Orden anidado","unsorted":"No ordenar esta columna","singleSort":"Orden único","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Orden único",
+	nestedSort: "Orden anidado",
+	ascending: "Ascendente",
+	descending: "Descendente",
+	sortingState: "${0} - ${1}",
+	unsorted: "No ordenar esta columna",
+	indirectSelectionRadio: "Fila ${0}, selección única, botón de selección",
+	indirectSelectionCheckBox: "Fila ${0}, selección múltiple, recuadro de selección",
+	selectAll: "Seleccionar todo"
+})
+

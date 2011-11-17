@@ -66,8 +66,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
         parent::__construct($db);
 
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getModel('Timecard', 'Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Timecard_Models_Information();
     }
 
     /**
@@ -78,8 +78,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     public function __clone()
     {
         parent::__clone();
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getModel('Timecard', 'Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Timecard_Models_Information();
     }
 
     /**
@@ -358,7 +358,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $records = $this->fetchAll($where, 'start_datetime ASC');
         $datas   = array();
 
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $activeRecord = new Project_Models_Project();
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree         = $tree->setup();
 

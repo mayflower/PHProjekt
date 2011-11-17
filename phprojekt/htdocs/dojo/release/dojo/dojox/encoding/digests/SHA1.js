@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.encoding.digests.SHA1"]||(dojo._hasResource["dojox.encoding.digests.SHA1"]=!0,dojo.provide("dojox.encoding.digests.SHA1"),dojo.require("dojox.encoding.digests._base"),function(){function k(b,d){b[d>>5]|=128<<24-d%32;b[(d+64>>9<<4)+15]=d;for(var a=Array(80),c=1732584193,i=-271733879,e=-1732584194,j=271733878,h=-1009589776,k=0;k<b.length;k+=16){for(var l=c,m=i,n=e,o=j,p=h,g=0;g<80;g++){a[g]=g<16?b[k+g]:(a[g-3]^a[g-8]^a[g-14]^a[g-16])<<1|(a[g-3]^a[g-8]^a[g-14]^a[g-16])>>>31;
+var q=f.addWords(f.addWords(c<<5|c>>>27,g<20?i&e|~i&j:g<40?i^e^j:g<60?i&e|i&j|e&j:i^e^j),f.addWords(f.addWords(h,a[g]),g<20?1518500249:g<40?1859775393:g<60?-1894007588:-899497514)),h=j,j=e,e=i<<30|i>>>2,i=c,c=q}c=f.addWords(c,l);i=f.addWords(i,m);e=f.addWords(e,n);j=f.addWords(j,o);h=f.addWords(h,p)}return[c,i,e,j,h]}function l(b){for(var d=[],a=0,c=b.length*h;a<c;a+=h)d[a>>5]|=(b.charCodeAt(a/h)&m)<<32-h-a%32;return d}function n(b){for(var d=[],a=0,c=b.length*4;a<c;a++)d.push("0123456789abcdef".charAt(b[a>>
+2]>>(3-a%4)*8+4&15),"0123456789abcdef".charAt(b[a>>2]>>(3-a%4)*8&15));return d.join("")}function o(b){for(var d=[],a=0,c=b.length*32;a<c;a+=h)d.push(String.fromCharCode(b[a>>5]>>>32-h-a%32&m));return d.join("")}function p(b){for(var d=[],a=0,c=b.length*4;a<c;a+=3)for(var f=(b[a>>2]>>8*(3-a%4)&255)<<16|(b[a+1>>2]>>8*(3-(a+1)%4)&255)<<8|b[a+2>>2]>>8*(3-(a+2)%4)&255,e=0;e<4;e++)a*8+e*6>b.length*32?d.push("="):d.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(f>>6*(3-e)&
+63));return d.join("")}var f=dojox.encoding.digests,h=8,m=(1<<h)-1;f.SHA1=function(b,d){var a=d||f.outputTypes.Base64,c=k(l(b),b.length*h);switch(a){case f.outputTypes.Raw:return c;case f.outputTypes.Hex:return n(c);case f.outputTypes.String:return o(c);default:return p(c)}};f.SHA1._hmac=function(b,d,a){var a=a||f.outputTypes.Base64,c=l(d);c.length>16&&(c=k(c,d.length*h));for(var i=Array(16),d=Array(16),e=0;e<16;e++)i[e]=c[e]^909522486,d[e]=c[e]^1549556828;b=k(i.concat(l(b)),512+b.length*h);b=k(d.concat(b),
+672);switch(a){case f.outputTypes.Raw:return b;case f.outputTypes.Hex:return n(b);case f.outputTypes.String:return o(b);default:return p(b)}}}());

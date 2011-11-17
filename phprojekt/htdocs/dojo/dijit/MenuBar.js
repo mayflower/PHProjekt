@@ -1,21 +1,10 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.MenuBar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.MenuBar"] = true;
-dojo.provide("dijit.MenuBar");
-
-dojo.require("dijit.Menu");
+define("dijit/MenuBar", ["dojo", "dijit", "text!dijit/templates/MenuBar.html", "dijit/Menu"], function(dojo, dijit) {
 
 dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 	// summary:
 	//		A menu bar, listing menu choices horizontally, like the "File" menu in most desktop applications
 
-	templateString: dojo.cache("dijit", "templates/MenuBar.html", "<div class=\"dijitMenuBar dijitMenuPassive\" dojoAttachPoint=\"containerNode\"  waiRole=\"menubar\" tabIndex=\"${tabIndex}\" dojoAttachEvent=\"onkeypress: _onKeyPress\"></div>\r\n"),
+	templateString: dojo.cache("dijit", "templates/MenuBar.html"),
 
 	baseClass: "dijitMenuBar",
 
@@ -74,4 +63,6 @@ dojo.declare("dijit.MenuBar", dijit._MenuBase, {
 	}
 });
 
-}
+
+return dijit.MenuBar;
+});

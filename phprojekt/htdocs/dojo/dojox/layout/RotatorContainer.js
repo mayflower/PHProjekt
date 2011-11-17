@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.layout.RotatorContainer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.layout.RotatorContainer"] = true;
 dojo.provide("dojox.layout.RotatorContainer");
 
 dojo.require("dojo.fx");
@@ -16,7 +7,7 @@ dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 dojo.require("dijit._Contained");
 
-dojo.declare("dojox.layout.RotatorContainer", 
+dojo.declare("dojox.layout.RotatorContainer",
 	[dijit.layout.StackContainer, dijit._Templated], {
 	// summary:
 	//		Extends a StackContainer to automatically transition between children
@@ -49,7 +40,7 @@ dojo.declare("dojox.layout.RotatorContainer",
 
 	// showTabs: Boolean
 	//		Sets the display of the tabs.  The tabs are actually a StackController.
-	//		The child's title is used for the tab's label. 
+	//		The child's title is used for the tab's label.
 	showTabs: true,
 
 	// transitionDelay: int
@@ -441,8 +432,8 @@ dojo.declare("dojox.layout.RotatorPager", [dijit._Widget, dijit._Templated, diji
 	_state: function(/*boolean*/playing){
 		// summary: Updates the display of the play/pause button
 		if(this.playPause && this.playPause.checked != playing){
-			this.playPause.attr("label", playing ? "Pause" : "Play");
-			this.playPause.attr("checked", playing);
+			this.playPause.set("label", playing ? "Pause" : "Play");
+			this.playPause.set("checked", playing);
 		}
 	},
 
@@ -457,5 +448,3 @@ dojo.declare("dojox.layout.RotatorPager", [dijit._Widget, dijit._Templated, diji
 		}
 	}
 });
-
-}

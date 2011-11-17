@@ -135,6 +135,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     protected $_data = array();
 
     /**
+     * A copy of $_data as it is in the database.
+     * This is meant to be used by subclasses so they can detect changes to their data and act accordingly.
+     *
+     * @var array
+     */
+    protected $_originalData = array();
+
+    /**
      * Relationship where clause.
      * Filled with a simple where clause for belongsTo and hasMany relations
      * $this->_relations['simple'] and complex descriptions for
@@ -326,7 +334,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
         $varname = trim($varname);
         $getter  = 'get' . ucfirst($varname);
         if (method_exists(get_class($this), $getter)) {
-            return call_user_func(array($this, $getter), $this->_data);
+            return call_user_func(array($this, $getter));
         } elseif (array_key_exists($varname, $this->hasMany)
         && array_key_exists('id', $this->_data)) {
             return $this->_hasMany($varname);
@@ -362,6 +370,9 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function __set($varname, $value)
     {
+        if ($varname === 'id') {
+            throw new Phprojekt_ActiveRecord_Exception('Changing ids is not permitted');
+        }
         $setter = 'set' . ucfirst($varname);
 
         if (method_exists($this, $setter)) {
@@ -520,17 +531,20 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $instance = new $className(array('db' => $this->getAdapter()));
 
             $foreignKeyName = $this->_translateKeyFormat($className);
+            $foreignKeyName = Phprojekt_ModuleInstance::convertVarFromSql($foreignKeyName);
 
             if (array_key_exists($foreignKeyName, $this->_data)) {
-                $row = $instance->find($this->_data[$foreignKeyName]);
-                foreach ($row as $k => $v) {
-                    $instance->_data[$k] = $v;
+                $other = $instance->find($this->_data[$foreignKeyName]);
+                if (!empty($other)) {
+                    $this->_data[$key] = $instance->find($this->_data[$foreignKeyName]);
+                } else {
+                    throw new Phprojekt_ActiveRecord_Exception(
+                        "$key with id {$this->_data[$foreignKeyname]} not found"
+                    );
                 }
+            } else {
+                $this->_data[$key] = null;
             }
-
-            $instance->_storedId = $instance->_data['id'];
-
-            $this->_data[$key] = $instance;
         }
 
         return $this->_data[$key];
@@ -868,6 +882,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             }
         }
 
+        $this->_originalData = $this->_data;
+
         return $result;
     }
 
@@ -946,6 +962,10 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             $this->_log->debug($where);
         }
 
+        if (null === $order) {
+            $order = 'id';
+        }
+
         // In case of join strings please note that the resultset is read only.
         if (null !== $join) {
             $rows = $this->_fetchWithJoin($where, $order, $count, $offset, $select, $join);
@@ -966,7 +986,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                 $instance->_data[self::convertVarFromSql($k)] = $v;
             }
 
-            $instance->_storedId = $instance->_data['id'];
+            $instance->_storedId     = $instance->_data['id'];
+            $instance->_originalData = $instance->_data;
 
             $result[] = $instance;
         }
@@ -1015,7 +1036,8 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
             throw new Phprojekt_ActiveRecord_Exception('Table must have an id');
         }
 
-        $this->_storedId = $this->_data['id'];
+        $this->_storedId     = $this->_data['id'];
+        $this->_originalData = $this->_data;
 
         return $this;
     }

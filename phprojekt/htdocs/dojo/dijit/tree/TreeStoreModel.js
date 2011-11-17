@@ -1,13 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.tree.TreeStoreModel"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.tree.TreeStoreModel"] = true;
-dojo.provide("dijit.tree.TreeStoreModel");
+define("dijit/tree/TreeStoreModel", ["dojo", "dijit"], function(dojo, dijit) {
 
 dojo.declare(
 		"dijit.tree.TreeStoreModel",
@@ -220,7 +211,7 @@ dojo.declare(
 			//		to parents with multiple children attributes, in order to define which
 			//		children attribute points to the new item.
 
-			var pInfo = {parent: parent, attribute: this.childrenAttrs[0], insertIndex: insertIndex};
+			var pInfo = {parent: parent, attribute: this.childrenAttrs[0]}, LnewItem;
 
 			if(this.newItemIdAttr && args[this.newItemIdAttr]){
 				// Maybe there's already a corresponding item in the store; if so, reuse it.
@@ -230,12 +221,20 @@ dojo.declare(
 						this.pasteItem(item, null, parent, true, insertIndex);
 					}else{
 						// Create new item in the tree, based on the drag source.
-						this.store.newItem(args, pInfo);
+						LnewItem=this.store.newItem(args, pInfo);
+						if (LnewItem && (insertIndex!=undefined)){
+							// Move new item to desired position
+							this.pasteItem(LnewItem, parent, parent, false, insertIndex);
+						}
 					}
 				}});
 			}else{
 				// [as far as we know] there is no id so we must assume this is a new item
-				this.store.newItem(args, pInfo);
+				LnewItem=this.store.newItem(args, pInfo);
+				if (LnewItem && (insertIndex!=undefined)){
+					// Move new item to desired position
+					this.pasteItem(LnewItem, parent, parent, false, insertIndex);
+				}
 			}
 		},
 
@@ -370,5 +369,5 @@ dojo.declare(
 	});
 
 
-
-}
+return dijit.tree.TreeStoreModel;
+});

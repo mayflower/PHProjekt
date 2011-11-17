@@ -1,13 +1,4 @@
 /*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.html._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.html._base"] = true;
-/*
 	Status: dont know where this will all live exactly
 	Need to pull in the implementation of the various helper methods
 	Some can be static method, others maybe methods of the ContentSetter (?)
@@ -19,7 +10,7 @@ dojo._hasResource["dojox.html._base"] = true;
 
 dojo.provide("dojox.html._base");
 
-dojo.require("dojo.html"); 
+dojo.require("dojo.html");
 
 (function() {
 
@@ -59,7 +50,7 @@ dojo.require("dojo.html");
 		//			@import 'level1/css/page.css' tv, screen;
 		//			...
 		//			background-image: url(level1/images/alphaimage.png);
-		//		
+		//
 		//		In IE it will also adjust relative paths in AlphaImageLoader()
 		//			filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/alphaimage.png');
 		//		will be adjusted to:
@@ -119,7 +110,7 @@ dojo.require("dojo.html");
 		return cont.replace(/(?:<style([^>]*)>([\s\S]*?)<\/style>|<link\s+(?=[^>]*rel=['"]?stylesheet)([^>]*?href=(['"])([^>]*?)\4[^>\/]*)\/?>)/gi,
 			function(ignore, styleAttr, cssText, linkAttr, delim, href){
 				// trim attribute
-				var i, attr = (styleAttr||linkAttr||"").replace(/^\s*([\s\S]*?)\s*$/i, "$1"); 
+				var i, attr = (styleAttr||linkAttr||"").replace(/^\s*([\s\S]*?)\s*$/i, "$1");
 				if(cssText){
 					i = styles.push(cssUrl ? adjustCssPaths(cssUrl, cssText) : cssText);
 				}else{
@@ -135,7 +126,7 @@ dojo.require("dojo.html");
 					}
 					styles.attributes[i - 1] = atObj;
 				}
-				return ""; // squelsh the <style> or <link>
+				return "";
 			}
 		);
 	};
@@ -143,14 +134,14 @@ dojo.require("dojo.html");
 	var snarfScripts = dojox.html._snarfScripts = function(cont, byRef){
 		// summary
 		//		strips out script tags from cont
-		// invoke with 
+		// invoke with
 		//	byRef = {errBack:function(){/*add your download error code here*/, downloadRemote: true(default false)}}
 		//	byRef will have {code: 'jscode'} when this scope leaves
 		byRef.code = "";
 
 		//Update script tags nested in comments so that the script tag collector doesn't pick
 		//them up.
-		cont = cont.replace(/<[!][-][-](.|\s){5,}?[-][-]>/g,
+		cont = cont.replace(/<[!][-][-](.|\s)*?[-][-]>/g,
 			function(comment){
 				return comment.replace(/<(\/?)script\b/ig,"&lt;$1Script");
 			}
@@ -192,7 +183,7 @@ dojo.require("dojo.html");
 				return "";
 			}
 		);
-	}; 
+	};
 	
 	var evalInGlobal = dojox.html.evalInGlobal = function(code, appendNode){
 		// we do our own eval here as dojo.eval doesn't eval in global crossbrowser
@@ -211,7 +202,7 @@ dojo.require("dojo.html");
 		//		Only useful if you grab content from a another folder than the current one
 		adjustPaths: false,
 		referencePath: ".",
-		renderStyles: false, 
+		renderStyles: false,
 
 		executeScripts: false,
 		scriptHasHooks: false,
@@ -241,26 +232,26 @@ dojo.require("dojo.html");
 					st.appendChild(doc.createTextNode(cssText));
 				}
 			}
-		}, 
+		},
 
 		empty: function() {
 			this.inherited("empty", arguments);
 			
 			// empty out the styles array from any previous use
 			this._styles = [];
-		}, 
+		},
 		
 		onBegin: function() {
 			// summary
-			//		Called after instantiation, but before set(); 
-			//		It allows modification of any of the object properties - including the node and content 
+			//		Called after instantiation, but before set();
+			//		It allows modification of any of the object properties - including the node and content
 			//		provided - before the set operation actually takes place
-			//		This implementation extends that of dojo.html._ContentSetter 
+			//		This implementation extends that of dojo.html._ContentSetter
 			//		to add handling for adjustPaths, renderStyles on the html string content before it is set
 			this.inherited("onBegin", arguments);
 			
-			var cont = this.content, 
-				node = this.node; 
+			var cont = this.content,
+				node = this.node;
 				
 			var styles = this._styles;// init vars
 
@@ -273,10 +264,10 @@ dojo.require("dojo.html");
 					cont = snarfStyles(this.referencePath, cont, styles);
 				}
 
-				// because of a bug in IE, script tags that is first in html hierarchy doesnt make it into the DOM 
+				// because of a bug in IE, script tags that is first in html hierarchy doesnt make it into the DOM
 				//	when content is innerHTML'ed, so we can't use dojo.query to retrieve scripts from DOM
 				if(this.executeScripts){
-					var _t = this; 
+					var _t = this;
 					var byRef = {
 						downloadRemote: true,
 						errBack:function(e){
@@ -296,7 +287,7 @@ dojo.require("dojo.html");
 			//		It provides an opportunity for post-processing before handing back the node to the caller
 			//		This implementation extends that of dojo.html._ContentSetter
 			
-			var code = this._code, 
+			var code = this._code,
 				styles = this._styles;
 				
 			// clear old stylenodes from the DOM
@@ -321,7 +312,7 @@ dojo.require("dojo.html");
 				}
 				if(this.scriptHasHooks){
 					// replace _container_ with this.scriptHookReplace()
-					// the scriptHookReplacement can be a string 
+					// the scriptHookReplacement can be a string
 					// or a function, which when invoked returns the string you want to substitute in
 					code = code.replace(/_container_(?!\s*=[^=])/g, this.scriptHookReplacement);
 				}
@@ -343,7 +334,7 @@ dojo.require("dojo.html");
 					dojo.destroy(this._styleNodes.pop());
 				}
 			}
-			delete this._styleNodes; 
+			delete this._styleNodes;
 			// reset the defaults from the prototype
 			dojo.mixin(this, dojo.getObject(this.declaredClass).prototype);
 		}
@@ -357,30 +348,28 @@ dojo.require("dojo.html");
 			//	node:
 			//		the parent element that will receive the content
 			//	cont:
-			//		the content to be set on the parent element. 
+			//		the content to be set on the parent element.
 			//		This can be an html string, a node reference or a NodeList, dojo.NodeList, Array or other enumerable list of nodes
-			//	params: 
+			//	params:
 			//		Optional flags/properties to configure the content-setting. See dojo.html._ContentSetter
 			//	example:
 			//		A safe string/node/nodelist content replacement/injection with hooks for extension
-			//		Example Usage: 
-			//		dojo.html.set(node, "some string"); 
-			//		dojo.html.set(node, contentNode, {options}); 
-			//		dojo.html.set(node, myNode.childNodes, {options}); 
+			//		Example Usage:
+			//		dojo.html.set(node, "some string");
+			//		dojo.html.set(node, contentNode, {options});
+			//		dojo.html.set(node, myNode.childNodes, {options});
 	 
 		if(!params){
 			// simple and fast
 			return dojo.html._setNodeContent(node, cont, true);
-		}else{ 
+		}else{
 			// more options but slower
-			var op = new dojox.html._ContentSetter(dojo.mixin( 
-					params, 
-					{ content: cont, node: node } 
+			var op = new dojox.html._ContentSetter(dojo.mixin(
+					params,
+					{ content: cont, node: node }
 			));
 			return op.set();
 		}
 	};
 	
 })();
-
-}

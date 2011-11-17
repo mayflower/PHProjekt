@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojo.dnd.Mover"]||(dojo._hasResource["dojo.dnd.Mover"]=!0,dojo.provide("dojo.dnd.Mover"),dojo.require("dojo.dnd.common"),dojo.require("dojo.dnd.autoscroll"),dojo.declare("dojo.dnd.Mover",null,{constructor:function(a,b,c){this.node=dojo.byId(a);var d=b.touches?b.touches[0]:b;this.marginBox={l:d.pageX,t:d.pageY};this.mouseButton=b.button;b=this.host=c;a=a.ownerDocument;this.events=[dojo.connect(a,"onmousemove",this,"onFirstMove"),dojo.connect(a,"ontouchmove",this,"onFirstMove"),dojo.connect(a,
+"onmousemove",this,"onMouseMove"),dojo.connect(a,"ontouchmove",this,"onMouseMove"),dojo.connect(a,"onmouseup",this,"onMouseUp"),dojo.connect(a,"ontouchend",this,"onMouseUp"),dojo.connect(a,"ondragstart",dojo.stopEvent),dojo.connect(a.body,"onselectstart",dojo.stopEvent)];if(b&&b.onMoveStart)b.onMoveStart(this)},onMouseMove:function(a){dojo.dnd.autoScroll(a);var b=this.marginBox,c=a.touches?a.touches[0]:a;this.host.onMove(this,{l:b.l+c.pageX,t:b.t+c.pageY},a);dojo.stopEvent(a)},onMouseUp:function(a){(dojo.isWebKit&&
+dojo.isMac&&this.mouseButton==2?a.button==0:this.mouseButton==a.button)&&this.destroy();dojo.stopEvent(a)},onFirstMove:function(a){var b=this.node.style,c,d=this.host;switch(b.position){case "relative":case "absolute":c=Math.round(parseFloat(b.left))||0;b=Math.round(parseFloat(b.top))||0;break;default:b.position="absolute";b=dojo.marginBox(this.node);c=dojo.doc.body;var e=dojo.getComputedStyle(c),f=dojo._getMarginBox(c,e),e=dojo._getContentBox(c,e);c=b.l-(e.l-f.l);b=b.t-(e.t-f.t)}this.marginBox.l=
+c-this.marginBox.l;this.marginBox.t=b-this.marginBox.t;if(d&&d.onFirstMove)d.onFirstMove(this,a);dojo.disconnect(this.events.shift());dojo.disconnect(this.events.shift())},destroy:function(){dojo.forEach(this.events,dojo.disconnect);var a=this.host;if(a&&a.onMoveStop)a.onMoveStop(this);this.events=this.node=this.host=null}}));

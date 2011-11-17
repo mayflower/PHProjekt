@@ -1,1 +1,32 @@
-({"buttonSet":"Setare","insertTableTitle":"Inserare tabelă","insertTableRowAfterLabel":"Adăugare rând după","center":"centru","deleteTableColumnLabel":"Ştergere coloană","right":"dreapta","insertTableColumnBeforeLabel":"Adăugare coloană înainte","tableWidth":"Lăţime tabelă:","buttonInsert":"Inserare","default":"implicit","align":"Aliniere:","insertTableRowBeforeLabel":"Adăugare rând înainte","cellSpacing":"Spaţiere celulă:","pixels":"pixeli","selectTableLabel":"Selectare tabelă ","rows":"Rânduri:","modifyTableTitle":"Modificare tabelă","cellPadding":"Completare celulă:","deleteTableRowLabel":"Ştergere rând ","backgroundColor":"Culoare fundal:","insertTableColumnAfterLabel":"Adăugare coloană după","left":"stânga","borderThickness":"Grosime bordură","columns":"Coloane:","percent":"procent","borderColor":"Culoare bordură:"})
+({
+	insertTableTitle: "Inserare tabel",
+	modifyTableTitle: "Modificare tabel",
+	rows: "Rânduri:",
+	columns: "Coloane:",
+	align: "Aliniere:",
+	cellPadding: "Padding celulă:",
+	cellSpacing: "Spaţiere celulă:",
+	tableWidth: "Lăţime tabelă:",
+	backgroundColor: "Culoare de fundal:",
+	borderColor: "Coloare de bordură:",
+	borderThickness: "Grosime de bordură:",
+	percent: "procent",
+	pixels: "pixeli",
+	"default": "implicit",
+	left: "stânga",
+	center: "centru",
+	right: "dreapta",
+	buttonSet: "Setare", // translated elsewhere?
+	buttonInsert: "Inserare",
+	buttonCancel: "Anulare",
+
+	selectTableLabel: "Selectare tabelă",
+	insertTableRowBeforeLabel: "Adăugare rând înainte",
+	insertTableRowAfterLabel: "Adăugare rând după",
+	insertTableColumnBeforeLabel: "Adăugare coloană înainte",
+	insertTableColumnAfterLabel: "Adăugare coloană după",
+	deleteTableRowLabel: "Ştergere rând",
+	deleteTableColumnLabel: "Ştergere coloană"
+})
+	
+

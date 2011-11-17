@@ -1,1 +1,22 @@
-({"emoticonLaughing":"râs","emoticonCool":"calm","emoticonTongue":"limbă","emoticonCrying":"plâns","emoticonOops":"vai","emoticonFrown":"posac","emoticonAngry":"furios","emoticonShy":"timid","emoticonNo":"nu","emoticonAngel":"înger","smiley":"Inserare emoticoane","emoticonIdea":"idee","emoticonEyebrow":"sprânceană","emoticonSmile":"zâmbet","emoticonWink":"face cu ochiul","emoticonYes":"da","emoticonGrin":"rânjet","emoticonGoofy":"tont","emoticonHalf":"jumătate"})
+({
+	smiley: "Inserare emoticoane",
+	emoticonSmile: "zâmbet",
+	emoticonLaughing: "râs",
+	emoticonWink: "face cu ochiul",
+	emoticonGrin: "rânjet",
+	emoticonCool: "calm",
+	emoticonAngry: "furios",
+	emoticonHalf: "jumătate",
+	emoticonEyebrow: "sprânceană",
+	emoticonFrown: "posac",
+	emoticonShy: "timid",
+	emoticonGoofy: "tont",
+	emoticonOops: "vai",
+	emoticonTongue: "limbă",
+	emoticonIdea: "idee",
+	emoticonYes: "da",
+	emoticonNo: "nu",
+	emoticonAngel: "înger",
+	emoticonCrying: "plâns"
+})
+

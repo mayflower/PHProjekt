@@ -1,20 +1,11 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.io.windowName"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.io.windowName"] = true;
 dojo.provide("dojox.io.windowName");
-// Implements the window.name transport  
+// Implements the window.name transport
 
 dojox.io.windowName = {
 	send: function(/*String*/ method, /*dojo.__IoArgs*/ args){
 		// summary:
 		//		Provides secure cross-domain request capability.
-		// 		Sends a request using an iframe (POST or GET) and reads the response through the 
+		// 		Sends a request using an iframe (POST or GET) and reads the response through the
 		// 		frame's window.name.
 		//
 		//	method:
@@ -24,7 +15,7 @@ dojox.io.windowName = {
 		//		See dojo.xhr
 		//
 		//	args.authElement: DOMNode?
-		//		By providing an authElement, this indicates that windowName should use the 
+		//		By providing an authElement, this indicates that windowName should use the
 		// 		authorized window.name protocol, relying on
 		//		the loaded XD resource to return to the provided return URL on completion
 		//		of authorization/authentication. The provided authElement will be used to place
@@ -37,13 +28,13 @@ dojox.io.windowName = {
 		// 		the deferred callback function is called with the result). The primary use for this
 		// 		is to make the authElement visible to the user once the resource has loaded
 		// 		(this can be preferable to showing the iframe while the resource is loading
-		// 		since it may not require authorization, it may simply return the resource). 
-		//  
+		// 		since it may not require authorization, it may simply return the resource).
+		//
 		//	description:
 		//		In order to provide a windowname transport accessible resources/web services, a server
 		// 		should check for the presence of a parameter window.name=true and if a request includes
-		// 		such a parameter, it should respond to the request with an HTML 
-		// 		document that sets it's window.name to the string that is to be 
+		// 		such a parameter, it should respond to the request with an HTML
+		// 		document that sets it's window.name to the string that is to be
 		// 		delivered to the client. For example, if a client makes a window.name request like:
 		// 	|	http://othersite.com/greeting?windowname=true
 		// 		And server wants to respond to the client with "Hello", it should return an html page:
@@ -58,18 +49,18 @@ dojox.io.windowName = {
 		// 		And the server can respond like this:
 		// |	<html><script type="text/javascript">
 		// |	var loc = window.name;
-		// |	authorizationButton.onclick = function(){	
+		// |	authorizationButton.onclick = function(){
 		// |		window.name="Hello";
 		// |		location = loc;
 		// |	};
 		// |	</script></html>
-		//		When using windowName from a XD Dojo build, make sure to set the 
+		//		When using windowName from a XD Dojo build, make sure to set the
 		// 		dojo.dojoBlankHtmlUrl property to a local URL.
 		args.url += (args.url.match(/\?/) ? '&' : '?') + "windowname=" + (args.authElement ? "auth" : true); // indicate our desire for window.name communication
 		var authElement = args.authElement;
 		var cleanup = function(result){
 			try{
-				// we have to do this to stop the wait cursor in FF 
+				// we have to do this to stop the wait cursor in FF
 				var innerDoc = dfd.ioArgs.frame.contentWindow.document;
 				innerDoc.write(" ");
 				innerDoc.close();
@@ -126,7 +117,7 @@ dojox.io.windowName = {
 			doc = firstWindow.document;
 			doc.write("<html><body margin='0px'><iframe style='width:100%;height:100%;border:0px' name='protectedFrame'></iframe></body></html>");
 			doc.close();
-			var secondWindow = firstWindow[0]; 
+			var secondWindow = firstWindow[0];
 			firstWindow.__defineGetter__(0,function(){});
 			firstWindow.__defineGetter__("protectedFrame",function(){});
 			doc = secondWindow.document;
@@ -134,8 +125,15 @@ dojox.io.windowName = {
 			doc.close();
 			frameContainer = doc.body;
 		}
-
-		var frame = ioArgs.frame = frame = doc.createElement(dojo.isIE ? '<iframe name="' + frameName + '" onload="dojox.io.windowName['+frameNum+']()">' : 'iframe');
+		var frame;
+		if(dojo.isIE){
+			var div = doc.createElement("div");
+			div.innerHTML = '<iframe name="' + frameName + '" onload="dojox.io.windowName['+frameNum+']()">';
+			frame = div.firstChild;
+		}else{
+			frame = doc.createElement('iframe');
+		}
+		ioArgs.frame = frame;
 		styleFrame(frame);
 		ioArgs.outerFrame = outerFrame = outerFrame || frame;
 		if(!authTarget){
@@ -159,7 +157,7 @@ dojox.io.windowName = {
 					return;
 				}
 			}catch(e){
-				// if we are in the target domain, frame.contentWindow.location will throw an ignorable error 
+				// if we are in the target domain, frame.contentWindow.location will throw an ignorable error
 			}
 			if(!state){
 				// we have loaded the target resource, now time to navigate back to our domain so we can read the frame name
@@ -224,8 +222,6 @@ dojox.io.windowName = {
 			frame.contentWindow.name = frameName; // IE likes it afterwards
 		}
 	},
-	_frameNum: 0 
+	_frameNum: 0
 	
-}
-
 }

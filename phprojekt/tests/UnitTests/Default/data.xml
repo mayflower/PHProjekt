@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+    <project id="1" path="/" title="Invisible Root" notes="" owner_id="1"
+        start_date="2007-12-01" priority="1" current_status="3" />
+    <project id="2" path="/1/" title="Project 1" notes="" owner_id="1"
+        start_date="2007-12-01" priority="1" current_status="3" project_id="1" />
+    <project id="3" path="/1/" title="test" notes="" owner_id="1"
+        start_date="2007-12-01" priority="1" current_status="3" project_id="1" />
+    <user username="David"
+        firstname="Max" lastname="Mustermann" status="A" admin="0" />
+    <module id="1" name="Project" label="Project"
+        save_type="0" version="6.0.0" active="1" />
+    <module id="2" name="Note" label="Note"
+        save_type="0" version="6.0.0" active="1" />
+    <module id="3" name="Calendar2" label="Calendar" save_type="1"
+        version="6.1.0-dev" active="1"/>
+    <project_module_permissions
+        module_id="1" project_id="1" />
+    <project_module_permissions
+        module_id="2" project_id="1" />
+    <project_module_permissions
+        module_id="3" project_id="1"/>
+    <project_role_user_permissions
+        project_id="2" user_id="1" role_id="1" />
+    <project_role_user_permissions
+        project_id="1" user_id="1" role_id="1" />
+    <item_rights
+        module_id="1" item_id="1" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="2" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="3" user_id="1" access="255" />
+    <!-- <item_rights
+        module_id="2" item_id="2" user_id="1" access="255" />
+    <item_rights
+        module_id="2" item_id="2" user_id="3" access="255" />-->
+    <role id="1" name="Admin" />
+    <role_module_permissions role_id="1" module_id="1" access="139" />
+    <role_module_permissions role_id="1" module_id="2" access="139" />
+    <role_module_permissions role_id="1" module_id="3" access="139" />
+    <database_manager table_name='Project' table_field="title" form_tab="1" form_label="Title"
+        form_type="text" form_position="1" form_columns="1" form_regexp="NULL"
+        form_range="NULL" default_value="NULL" list_position="1" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="0"
+        is_required="1" is_unique="0" />
+
+    <!-- Tag Controller -->
+    <tags_users id="1" user_id="1" tag_id="1" />
+    <tags_users id="2" user_id="1" tag_id="2" />
+    <tags_users id="3" user_id="1" tag_id="3" />
+    <tags word="this" crc32="3632233996" />
+    <tags word="this" crc32="3632233996" />
+    <tags word="this" crc32="3632233996" />
+    <tags_modules tag_user_id="1" module_id="1" item_id="1" />
+    <tags_modules tag_user_id="2" module_id="1" item_id="1" />
+    <tags_modules tag_user_id="3" module_id="1" item_id="1" />
+    <search_display module_id="1" item_id="1" first_display="test" project_id="1" />
+
+    <!-- Search Display -->
+    <search_words id="1" word="note" count="1" />
+    <search_word_module item_id="1" module_id="1" word_id="1" />
+
+    <!-- 156c3239dbfa5c5222b51514e9d12948 = md5(phprojektmd5test), .d.h
+         pass: test  -->
+    <setting user_id="1" module_id="0" key_value="password"
+        value="156c3239dbfa5c5222b51514e9d12948" identifier="core" />
+</dataset>

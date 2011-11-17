@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.dtl.utils.date"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.dtl.utils.date"] = true;
 dojo.provide("dojox.dtl.utils.date");
 
 dojo.require("dojox.date.php");
@@ -18,7 +9,7 @@ dojo.extend(dojox.dtl.utils.date.DateFormat, dojox.date.php.DateFormat.prototype
 	f: function(){
 		// summary:
 		//		Time, in 12-hour hours and minutes, with minutes left off if they're zero.
-		// description: 
+		// description:
 		//		Examples: '1', '1:30', '2:05', '2'
 		//		Proprietary extension.
 		return (!this.date.getMinutes()) ? this.g() : this.g() + ":" + this.i();
@@ -79,5 +70,3 @@ dojo.mixin(dojox.dtl.utils.date, {
 	],
 	_months_ap: ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
 });
-
-}

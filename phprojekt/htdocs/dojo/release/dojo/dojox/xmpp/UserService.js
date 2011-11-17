@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.xmpp.UserService"]||(dojo._hasResource["dojox.xmpp.UserService"]=!0,dojo.provide("dojox.xmpp.UserService"),dojo.declare("dojox.xmpp.UserService",null,{constructor:function(a){this.session=a},getPersonalProfile:function(){var a={id:this.session.getNextIqId(),type:"get"},c=new dojox.string.Builder(dojox.xmpp.util.createElement("iq",a,!1));c.append(dojox.xmpp.util.createElement("query",{xmlns:"jabber:iq:private"},!1));c.append(dojox.xmpp.util.createElement("sunmsgr",{xmlsns:"sun:xmpp:properties"},
+!0));c.append("</query></iq>");this.session.dispatchPacket(c.toString(),"iq",a.id).addCallback(this,"_onGetPersonalProfile")},setPersonalProfile:function(a){var c={id:this.session.getNextIqId(),type:"set"},b=new dojox.string.Builder(dojox.xmpp.util.createElement("iq",c,!1));b.append(dojox.xmpp.util.createElement("query",{xmlns:"jabber:iq:private"},!1));b.append(dojox.xmpp.util.createElement("sunmsgr",{xmlsns:"sun:xmpp:properties"},!1));for(var d in a)b.append(dojox.xmpp.util.createElement("property",
+{name:d},!1)),b.append(dojox.xmpp.util.createElement("value",{},!1)),b.append(a[d]),b.append("</value></props>");b.append("</sunmsgr></query></iq>");this.session.dispatchPacket(b.toString(),"iq",c.id).addCallback(this,"_onSetPersonalProfile")},_onSetPersonalProfile:function(a){if(a.getAttribute("type")=="result")this.onSetPersonalProfile(a.getAttribute("id"));else if(a.getAttribute("type")=="error")this.onSetPersonalProfileFailure(this.session.processXmppError(a))},onSetPersonalProfile:function(){},
+onSetPersonalProfileFailure:function(){},_onGetPersonalProfile:function(a){if(a.getAttribute("type")=="result"){var c={};if(a.hasChildNodes()){var b=a.firstChild;if(b.nodeName=="query"&&b.getAttribute("xmlns")=="jabber:iq:private"&&(b=b.firstChild,b.nodeName=="query"&&b.getAttributes("xmlns")=="sun:xmpp:properties"))for(var d=0;d<b.childNodes.length;d++){var e=b.childNodes[d];if(e.nodeName=="property"){var f=e.getAttribute("name");c[f]=e.firstChild||""}}this.onGetPersonalProfile(c)}}else if(a.getAttribute("type")==
+"error")this.onGetPersonalProfileFailure(this.session.processXmppError(a));return a},onGetPersonalProfile:function(){},onGetPersonalProfileFailure:function(){}}));

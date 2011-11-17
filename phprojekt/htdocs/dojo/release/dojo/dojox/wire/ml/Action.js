@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.wire.ml.Action"]||(dojo._hasResource["dojox.wire.ml.Action"]=!0,dojo.provide("dojox.wire.ml.Action"),dojo.provide("dojox.wire.ml.ActionFilter"),dojo.require("dijit._Widget"),dojo.require("dijit._Container"),dojo.require("dojox.wire.Wire"),dojo.require("dojox.wire.ml.util"),dojo.declare("dojox.wire.ml.Action",[dijit._Widget,dijit._Container],{trigger:"",triggerEvent:"",triggerTopic:"",postCreate:function(){this._connect()},_connect:function(){if(this.triggerEvent)if(this.trigger){var b=
+dojox.wire.ml._getValue(this.trigger);if(b)b[this.triggerEvent]||(b[this.triggerEvent]=function(){}),this._triggerHandle=dojo.connect(b,this.triggerEvent,this,"run")}else{if(this.triggerEvent.toLowerCase()=="onload"){var a=this;dojo.addOnLoad(function(){a._run.apply(a,arguments)})}}else if(this.triggerTopic)this._triggerHandle=dojo.subscribe(this.triggerTopic,this,"run")},_disconnect:function(){this._triggerHandle&&(this.triggerTopic?dojo.unsubscribe(this.triggerTopic,this._triggerHandle):dojo.disconnect(this._triggerHandle))},
+run:function(){var b=this.getChildren(),a;for(a in b){var c=b[a];if(c instanceof dojox.wire.ml.ActionFilter&&!c.filter.apply(c,arguments))return}this._run.apply(this,arguments)},_run:function(){var b=this.getChildren(),a;for(a in b){var c=b[a];c instanceof dojox.wire.ml.Action&&c.run.apply(c,arguments)}},uninitialize:function(){this._disconnect();return!0}}),dojo.declare("dojox.wire.ml.ActionFilter",dijit._Widget,{required:"",requiredValue:"",type:"",message:"",error:"",filter:function(){if(this.required===
+"")return!0;else{var b=dojox.wire.ml._getValue(this.required,arguments);if(this.requiredValue===""){if(b)return!0}else{var a=this.requiredValue;if(this.type!==""){var c=this.type.toLowerCase();c==="boolean"?a=a.toLowerCase()==="false"?!1:!0:c==="number"&&(a=parseInt(a,10))}if(b===a)return!0}}this.message&&(this.error?dojox.wire.ml._setValue(this.error,this.message):alert(this.message));return!1}}));

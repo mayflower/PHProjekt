@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.tools.Arrow"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.tools.Arrow"] = true;
 dojo.provide("dojox.drawing.tools.Arrow");
 
 dojox.drawing.tools.Arrow = dojox.drawing.util.oo.declare(
@@ -24,7 +15,11 @@ dojox.drawing.tools.Arrow = dojox.drawing.util.oo.declare(
 			this.endArrow = new dojox.drawing.annotations.Arrow({stencil:this, idx1:1, idx2:0});
 		}
 		if(this.points.length){
+			// This is protecting against cases when there are no points
+			// not sure how that would ever happen
+			// Render & label here instead of in base because of Arrow annotation
 			this.render();
+			options.label && this.setLabel(options.label);
 		}
 	},
 	{
@@ -40,6 +35,17 @@ dojox.drawing.tools.Arrow = dojox.drawing.util.oo.declare(
 		//		Whether or not to place an arrow on end.
 		arrowEnd:true,
 		
+		labelPosition: function(){
+			// summary:
+			//		The custom position used for the label
+			//
+			var d = this.data;
+			var pt = dojox.drawing.util.positioning.label({x:d.x1,y:d.y1},{x:d.x2,y:d.y2});
+			return {
+				x:pt.x,
+				y:pt.y
+			}
+		},
 		
 		onUp: function(/*EventObject*/obj){
 			// summary: See stencil._Base.onUp
@@ -75,5 +81,3 @@ dojox.drawing.tools.Arrow.setup = {
 };
 
 dojox.drawing.register(dojox.drawing.tools.Arrow.setup, "tool");
-
-}

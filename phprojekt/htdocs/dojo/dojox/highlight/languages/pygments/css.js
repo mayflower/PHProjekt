@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.highlight.languages.pygments.css"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.highlight.languages.pygments.css"] = true;
 dojo.provide("dojox.highlight.languages.pygments.css");
 
 dojo.require("dojox.highlight._base");
@@ -78,7 +69,7 @@ dojo.require("dojox.highlight.languages.pygments._html");
 			},
 			{
 				className: "string double",
-				begin: '"', 
+				begin: '"',
 				end: '"',
 				illegal: "\\n",
 				relevance: 0
@@ -204,7 +195,7 @@ dojo.require("dojox.highlight.languages.pygments._html");
 					}
 				},
 				contains: [
-					"comment", "comment preproc", 
+					"comment", "comment preproc",
 					"number",
 					"string single", "string double",
 					"punctuation",
@@ -214,5 +205,3 @@ dojo.require("dojox.highlight.languages.pygments._html");
 		]
 	};
 })();
-
-}

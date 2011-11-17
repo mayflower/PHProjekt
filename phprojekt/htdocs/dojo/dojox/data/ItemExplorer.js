@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.ItemExplorer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.ItemExplorer"] = true;
 dojo.provide("dojox.data.ItemExplorer");
 dojo.require("dijit.Tree");
 dojo.require("dijit.Dialog");
@@ -633,5 +624,3 @@ dojo.declare("dojox.data.ItemExplorer", dijit.Tree, {
 });
 })();
 
-
-}

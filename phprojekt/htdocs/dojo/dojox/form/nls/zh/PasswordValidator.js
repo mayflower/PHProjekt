@@ -1,1 +1,5 @@
-({"badPasswordMessage":"密码无效。","nomatchMessage":"密码不匹配。"})
+({
+        nomatchMessage: "密码不匹配。",
+		badPasswordMessage: "密码无效。"
+})
+

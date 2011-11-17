@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.html.metrics"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.html.metrics"] = true;
 dojo.provide("dojox.html.metrics");
 
 (function(){
@@ -70,7 +61,7 @@ dojo.provide("dojox.html.metrics");
 			m = measuringNode = dojo.doc.createElement("div");
 			// Container that we can set contraints on so that it doesn't
 			// trigger a scrollbar.
-			var c = dojo.doc.createElement("div"); 
+			var c = dojo.doc.createElement("div");
 			c.appendChild(m);
 			s = c.style;
 			s.overflow='scroll';
@@ -183,5 +174,3 @@ dojo.provide("dojox.html.metrics");
 		}
 	});
 })();
-
-}

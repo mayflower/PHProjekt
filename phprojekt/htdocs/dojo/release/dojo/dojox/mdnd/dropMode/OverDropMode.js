@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.mdnd.dropMode.OverDropMode"]||(dojo._hasResource["dojox.mdnd.dropMode.OverDropMode"]=!0,dojo.provide("dojox.mdnd.dropMode.OverDropMode"),dojo.require("dojox.mdnd.AreaManager"),dojo.declare("dojox.mdnd.dropMode.OverDropMode",null,{_oldXPoint:null,_oldYPoint:null,_oldBehaviour:"up",constructor:function(){this._dragHandler=[dojo.connect(dojox.mdnd.areaManager(),"onDragEnter",function(){var a=dojox.mdnd.areaManager();if(a._oldIndexArea==-1)a._oldIndexArea=a._lastValidIndexArea})]},
+addArea:function(a,c){var b=a.length,e=dojo.position(c.node,!0);c.coords={x:e.x,y:e.y};if(b==0)a.push(c);else{for(var d=c.coords.x,e=0;e<b;e++)if(d<a[e].coords.x){for(d=b-1;d>=e;d--)a[d+1]=a[d];a[e]=c;break}e==b&&a.push(c)}return a},updateAreas:function(a){for(var c=a.length,b=0;b<c;b++)this._updateArea(a[b])},_updateArea:function(a){var c=dojo.position(a.node,!0);a.coords.x=c.x;a.coords.x2=c.x+c.w;a.coords.y=c.y},initItems:function(a){dojo.forEach(a.items,function(a){var b=dojo.position(a.item.node,
+!0);a.y=b.y+b.h/2});a.initItems=!0},refreshItems:function(a,c,b,e){if(c!=-1&&a&&b&&b.h){b=b.h;a.margin&&(b+=a.margin.t);for(var d=a.items.length;c<d;c++){var g=a.items[c];e?g.y+=b:g.y-=b}}},getDragPoint:function(a,c,b){return{x:b.x,y:b.y}},getTargetArea:function(a,c,b){var e=0,d=c.x,g=c.y,h=a.length,f=0,j="right",i=!1;b==-1||arguments.length<3?i=!0:this._checkInterval(a,b,d,g)?e=b:(this._oldXPoint<d?f=b+1:(f=b-1,h=0,j="left"),i=!0);if(i)if(j==="right"){for(;f<h;f++)if(this._checkInterval(a,f,d,g)){e=
+f;break}f==h&&(e=-1)}else{for(;f>=h;f--)if(this._checkInterval(a,f,d,g)){e=f;break}f==h-1&&(e=-1)}this._oldXPoint=d;return e},_checkInterval:function(a,c,b,e){var d=a[c],a=d.coords,c=a.x2,g=a.y,d=g+d.node.offsetHeight;return a.x<=b&&b<=c&&g<=e&&e<=d?!0:!1},getDropIndex:function(a,c){var b=a.items.length,e=c.y;if(b>0)for(var d=0;d<b;d++)if(e<a.items[d].y)return d;else if(d==b-1)break;return-1},destroy:function(){dojo.forEach(this._dragHandler,dojo.disconnect)}}),function(){dojox.mdnd.areaManager()._dropMode=
+new dojox.mdnd.dropMode.OverDropMode}());

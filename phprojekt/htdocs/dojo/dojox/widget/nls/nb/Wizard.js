@@ -1,1 +1,5 @@
-({"next":"Neste","done":"Ferdig","previous":"Forrige"})
+({
+next: "Neste",
+previous: "Forrige",
+done: "Ferdig"
+})

@@ -1,0 +1,94 @@
+{
+
+"6.1.0-dev":
+{
+    "structure":
+    {
+        "calendar2":
+        {
+            "create":
+            {
+                "id":                   "default",
+                "project_id":           {"type": "int", "notNull": "true", "default": "1"},
+                "summary":              {"type": "varchar"},
+                "description":          {"type": "varchar"},
+                "location":             {"type": "varchar"},
+                "comments":             {"type": "varchar"},
+                "start":                {"type": "datetime"},
+                "last_end":             {"type": "datetime"},
+                "end":                  {"type": "datetime"},
+                "owner_id":             {"type": "int", "notNull": "true"},
+                "rrule":                {"type": "varchar"},
+                "recurrence_id":        {"type": "datetime"},
+                "visibility":           {"type": "int", "length": "1", "default": "1"},
+                "uid":                  {"type": "varchar", "notNull": "true"},
+                "last_modified":        {"type": "datetime", "notNull": "true"},
+                "uri":                  {"type": "varchar", "notNull": "true"}
+            }
+        },
+
+        "calendar2_user_relation":
+        {
+            "create":
+            {
+                "id":                   "default",
+                "calendar2_id":         {"type": "int", "notNull": "true"},
+                "user_id":              {"type": "int", "notNull": "true"},
+                "confirmation_status":  {"type": "int", "notNull": "true", "default": "1"}
+            }
+        },
+
+        "calendar2_excluded_dates":
+        {
+            "create":
+            {
+                "id":           "default",
+                "calendar2_id": {"type": "int", "notNull": "true"},
+                "date":         {"type": "datetime", "notNull": "true"}
+            }
+        }
+    },
+
+    "initialData":
+    {
+        "module":
+        {
+            "insert":
+            [
+                {
+                    "name":       "Calendar2",
+                    "label":      "Calendar",
+                    "save_type":  "1",
+                    "active":     "1",
+                    "_relations":
+                    {
+                        "project_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id":  "##id##",
+                                    "project_id": "1"
+                                }
+                            ]
+                        },
+
+                        "role_module_permissions":
+                        {
+                            "insert":
+                            [
+                                {
+                                    "module_id": "##id##",
+                                    "role_id":   "1",
+                                    "access":    "139"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
+
+}

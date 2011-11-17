@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.math.random.prng4"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.math.random.prng4"] = true;
-dojo.provide("dojox.math.random.prng4");
+// AMD-ID "dojox/math/random/prng4"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("math.random.prng4", true, dojox);
 
 // Copyright (c) 2005  Tom Wu
 // All Rights Reserved.
@@ -63,4 +56,5 @@ dojo.provide("dojox.math.random.prng4");
 	dojox.math.random.prng4.size = 256;
 })();
 
-}
+return dojox.math.random.prng4;
+});

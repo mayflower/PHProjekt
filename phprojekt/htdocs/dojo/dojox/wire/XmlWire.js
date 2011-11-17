@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.wire.XmlWire"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.wire.XmlWire"] = true;
 dojo.provide("dojox.wire.XmlWire");
 
 dojo.require("dojox.xml.parser");
@@ -211,7 +202,7 @@ dojo.declare("dojox.wire.XmlWire", dojox.wire.Wire, {
 		//	node:
 		//		A parent node
 		//	name:
-		//		A tag name	
+		//		A tag name
 		//	returns:
 		//		A child node
 		var index = 1;
@@ -249,5 +240,3 @@ dojo.declare("dojox.wire.XmlWire", dojox.wire.Wire, {
 		}
 	}
 });
-
-}

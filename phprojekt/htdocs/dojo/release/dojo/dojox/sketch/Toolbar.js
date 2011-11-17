@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojox.sketch.Toolbar"])dojo._hasResource["dojox.sketch.Toolbar"]=!0,dojo.provide("dojox.sketch.Toolbar"),dojo.require("dojox.sketch.Annotation"),dojo.require("dijit.Toolbar"),dojo.require("dijit.form.Button"),dojo.declare("dojox.sketch.ButtonGroup",null,{constructor:function(){this._childMaps={};this._children=[]},add:function(a){this._childMaps[a]=a.connect(a,"onActivate",dojo.hitch(this,"_resetGroup",a));this._children.push(a)},_resetGroup:function(a){dojo.forEach(this._children,
+function(b){a!=b&&b.attr&&b.attr("checked",!1)})}}),dojo.declare("dojox.sketch.Toolbar",dijit.Toolbar,{figure:null,plugins:null,postCreate:function(){this.inherited(arguments);this.shapeGroup=new dojox.sketch.ButtonGroup;if(!this.plugins)this.plugins=["Lead","SingleArrow","DoubleArrow","Underline","Preexisting","Slider"];this._plugins=[];dojo.forEach(this.plugins,function(a){var b=dojo.isString(a)?a:a.name,a=new dojox.sketch.tools[b](a.args||{});this._plugins.push(a);a.setToolbar(this);if(!this._defaultTool&&
+a.button)this._defaultTool=a},this)},setFigure:function(a){this.figure=a;this.connect(a,"onLoad","reset");dojo.forEach(this._plugins,function(b){b.setFigure(a)})},destroy:function(){dojo.forEach(this._plugins,function(a){a.destroy()});this.inherited(arguments);delete this._defaultTool;delete this._plugins},addGroupItem:function(a,b){b!="toolsGroup"?console.error("not supported group "+b):this.shapeGroup.add(a)},reset:function(){this._defaultTool.activate()},_setShape:function(a){if(this.figure.surface&&
+this.figure.hasSelections())for(var b=0;b<this.figure.selected.length;b++){var c=this.figure.selected[b].serialize();this.figure.convert(this.figure.selected[b],a);this.figure.history.add(dojox.sketch.CommandTypes.Convert,this.figure.selected[b],c)}}}),dojox.sketch.makeToolbar=function(a,b){var c=new dojox.sketch.Toolbar;c.setFigure(b);a.appendChild(c.domNode);return c};

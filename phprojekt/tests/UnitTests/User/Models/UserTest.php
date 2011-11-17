@@ -21,7 +21,6 @@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests User Model class
@@ -38,21 +37,24 @@ require_once 'PHPUnit/Framework.php';
  * @group      model
  * @group      user-model
  */
-class User_User_Test extends PHPUnit_Framework_TestCase
+class User_User_Test extends DatabaseTest
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
+    }
+
     /**
      * Test valid method
      */
     public function testSave()
     {
         $user = new Phprojekt_User_User();
-        $user->find(3);
+        $user->find(2);
         $this->assertEquals($user->saveRights(), null);
         $this->assertEquals($user->recordValidate(), false);
         $error = $user->getError();
-        $this->assertEquals('firstname', $error[0]['field']);
+        $this->assertEquals('lastname', $error[0]['field']);
         $this->assertEquals('Is a required field', $error[0]['message']);
-        $this->assertEquals('lastname', $error[1]['field']);
     }
 
     /**
@@ -61,7 +63,7 @@ class User_User_Test extends PHPUnit_Framework_TestCase
     public function testUserNamecheck()
     {
         $user            = new Phprojekt_User_User();
-        $user->username  = 'david';
+        $user->username  = 'Test';
         $user->firstname = 'testuser';
         $user->lastname  = 'testuser';
         $user->status    = 'A';
@@ -116,10 +118,10 @@ class User_User_Test extends PHPUnit_Framework_TestCase
         $user = new Phprojekt_User_User();
         $this->assertEquals(array('lastname', 'firstname'), $user->getDisplay());
 
-        $user->find(2);
-        $this->assertEquals('Solt, Gustavo', $user->applyDisplay(array('lastname', 'firstname'), $user));
-        $this->assertEquals('gus, Solt, Gustavo', $user->applyDisplay(array('username', 'lastname', 'firstname'),
+        $user->find(1);
+        $this->assertEquals('Mustermann, Max', $user->applyDisplay(array('lastname', 'firstname'), $user));
+        $this->assertEquals('Test, Mustermann, Max', $user->applyDisplay(array('username', 'lastname', 'firstname'),
             $user));
-        $this->assertEquals('gus', $user->applyDisplay(array('username'), $user));
+        $this->assertEquals('Test', $user->applyDisplay(array('username'), $user));
     }
 }

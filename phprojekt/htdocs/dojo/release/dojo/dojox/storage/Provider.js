@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.storage.Provider"]||(dojo._hasResource["dojox.storage.Provider"]=!0,dojo.provide("dojox.storage.Provider"),dojo.declare("dojox.storage.Provider",null,{constructor:function(){},SUCCESS:"success",FAILED:"failed",PENDING:"pending",SIZE_NOT_AVAILABLE:"Size not available",SIZE_NO_LIMIT:"No size limit",DEFAULT_NAMESPACE:"default",onHideSettingsUI:null,initialize:function(){console.warn("dojox.storage.initialize not implemented")},isAvailable:function(){console.warn("dojox.storage.isAvailable not implemented")},
+put:function(){console.warn("dojox.storage.put not implemented")},get:function(){console.warn("dojox.storage.get not implemented")},hasKey:function(a,c){return!!this.get(a,c)},getKeys:function(){console.warn("dojox.storage.getKeys not implemented")},clear:function(){console.warn("dojox.storage.clear not implemented")},remove:function(){console.warn("dojox.storage.remove not implemented")},getNamespaces:function(){console.warn("dojox.storage.getNamespaces not implemented")},isPermanent:function(){console.warn("dojox.storage.isPermanent not implemented")},
+getMaximumSize:function(){console.warn("dojox.storage.getMaximumSize not implemented")},putMultiple:function(a,c,b,d){for(var e=0;e<a.length;e++)dojox.storage.put(a[e],c[e],b,d)},getMultiple:function(a,c){for(var b=[],d=0;d<a.length;d++)b.push(dojox.storage.get(a[d],c));return b},removeMultiple:function(a,c){for(var b=0;b<a.length;b++)dojox.storage.remove(a[b],c)},isValidKeyArray:function(a){return a===null||a===void 0||!dojo.isArray(a)?!1:!dojo.some(a,function(a){return!this.isValidKey(a)},this)},
+hasSettingsUI:function(){return!1},showSettingsUI:function(){console.warn("dojox.storage.showSettingsUI not implemented")},hideSettingsUI:function(){console.warn("dojox.storage.hideSettingsUI not implemented")},isValidKey:function(a){return a===null||a===void 0?!1:/^[0-9A-Za-z_]*$/.test(a)},getResourceList:function(){return[]}}));

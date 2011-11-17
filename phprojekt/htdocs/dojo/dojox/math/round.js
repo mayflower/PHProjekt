@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.math.round"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.math.round"] = true;
-dojo.provide("dojox.math.round");
+// AMD-ID "dojox/math/round"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("math.round", true, dojox);
 dojo.experimental("dojox.math.round");
 
 dojox.math.round = function(/*Number*/value, /*Number?*/places, /*Number?*/increment){
@@ -69,4 +62,5 @@ if((0.9).toFixed() == 0){
 	})();
 }
 
-}
+return dojox.math.round;
+});

@@ -1,1 +1,5 @@
-({"badPasswordMessage":"Neplatné heslo.","nomatchMessage":"Heslá sa nezhodujú."})
+({
+        nomatchMessage: "Heslá sa nezhodujú.",
+		badPasswordMessage: "Neplatné heslo."
+})
+

@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.math.stats"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.math.stats"] = true;
-dojo.provide("dojox.math.stats");
+// AMD-ID "dojox/math/stats"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("math.stats", true, dojox);
 
 (function(){
 	var st = dojox.math.stats;
@@ -198,4 +191,5 @@ dojo.provide("dojox.math.stats");
 	});
 })();
 
-}
+return dojox.math.stats;
+});

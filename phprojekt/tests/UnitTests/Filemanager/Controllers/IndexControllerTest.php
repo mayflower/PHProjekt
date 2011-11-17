@@ -22,7 +22,6 @@
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Index Controller
@@ -45,11 +44,16 @@ class Filemanager_IndexController_Test extends FrontInit
     private $_listingExpectedString = null;
     private $_model                 = null;
 
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
+    }
+
     /**
      * setUp method for PHPUnit
      */
     public function setUp()
     {
+        parent::setUp();
         $this->_listingExpectedString = '{"key":"title","label":"Title","originalLabel":"Title","type":"text",'
             . '"hint":"","listPosition":1,"formPosition":1';
         $this->_model = new Filemanager_Models_Filemanager();
@@ -62,33 +66,13 @@ class Filemanager_IndexController_Test extends FrontInit
     {
         // INSERT
         $this->setRequestUrl('Filemanager/index/jsonSave/');
-        $this->request->setParam('projectId', 2);
+        $this->request->setParam('projectId', 1);
         $this->request->setParam('title', 'test title');
         $this->request->setParam('comments', 'comment test');
         $this->request->setParam('files', '966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(Filemanager_IndexController::ADD_TRUE_TEXT, $response);
-    }
-
-    /**
-     * Test of json save Filemanager -in fact, default json save
-     */
-    public function testJsonSaveAddPart2()
-    {
-        // INSERT
-        $this->setRequestUrl('Filemanager/index/jsonSave/');
-        $this->request->setParam('projectId', 1);
-        $this->request->setParam('title', 'test title 2');
-        $this->request->setParam('comments', 'comment test 2');
-        $this->request->setParam('files', 'tdyrgdbfa01ec4a2a3fa6282bb8fa8d5|stuff.txt');
-        $this->request->setParam('nodeId', 1);
-        $response = $this->getResponse();
-        $this->assertContains(Filemanager_IndexController::ADD_TRUE_TEXT, $response);
-
-        // Check that there are two rows in total
-        $rowsAfter = count($this->_model->fetchAll());
-        $this->assertEquals(2, $rowsAfter);
     }
 
     /**
@@ -192,8 +176,8 @@ class Filemanager_IndexController_Test extends FrontInit
         $this->request->setParam('id', 1);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '"data":[{"id":1,"title":"test title MODIFIED AGAIN","comments":"comment test MODIFIED AGAIN",'
-            . '"projectId":1,"files":"a66f9bfa01ec4a2a3fa6282bb8fa8d56|articles2.txt","rights":{"currentUser":{'
+        $expected = '"data":[{"id":1,"title":"Test","comments":"Foobar",'
+            . '"projectId":1,"files":"966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt","rights":{"currentUser":{'
             . '"moduleId":7,"itemId":1,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,'
             . '"copy":true,"delete":true,"download":true,"admin":true}}}],"numRows":1})';
         $this->assertContains($expected, $response);

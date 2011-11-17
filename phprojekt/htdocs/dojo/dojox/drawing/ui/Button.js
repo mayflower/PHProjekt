@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.ui.Button"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.ui.Button"] = true;
 dojo.provide("dojox.drawing.ui.Button");
 
 dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
@@ -198,7 +189,7 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 		
 		_change: function(/*Object*/sty){
 			this.shape.attr(sty);
-			this.shape.shadow && this.shape.shadow.container.moveToBack();	
+			this.shape.shadow && this.shape.shadow.container.moveToBack();
 			if(this.icon){this.icon.shape.moveToFront();};
 		},
 		onOver: function(){
@@ -226,12 +217,10 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 		attr: function(options){
 			if(this.icon){this.icon.attr(options);}
 		}
-	}	
+	}
 	
 );
 
 dojox.drawing.register({
-	name:"dojox.drawing.ui.Button"	
+	name:"dojox.drawing.ui.Button"
 }, "stencil");
-
-}

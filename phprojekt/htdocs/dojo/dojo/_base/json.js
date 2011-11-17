@@ -1,13 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.json"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.json"] = true;
-dojo.provide("dojo._base.json");
+define("dojo/_base/json", ["dojo/lib/kernel"], function(dojo){
 
 dojo.fromJson = function(/*String*/ json){
 	// summary:
@@ -16,12 +7,12 @@ dojo.fromJson = function(/*String*/ json){
 	// 		Throws for invalid JSON strings, but it does not use a strict JSON parser. It
 	// 		delegates to eval().  The content passed to this method must therefore come
 	//		from a trusted source.
-	// json: 
+	// json:
 	//		a string literal of a JSON item, for instance:
 	//			`'{ "foo": [ "bar", 1, { "baz": "thud" } ] }'`
 
 	return eval("(" + json + ")"); // Object
-}
+};
 
 dojo._escapeString = function(/*String*/str){
 	//summary:
@@ -31,7 +22,7 @@ dojo._escapeString = function(/*String*/str){
 	return ('"' + str.replace(/(["\\])/g, '\\$1') + '"').
 		replace(/[\f]/g, "\\f").replace(/[\b]/g, "\\b").replace(/[\n]/g, "\\n").
 		replace(/[\t]/g, "\\t").replace(/[\r]/g, "\\r"); // string
-}
+};
 
 dojo.toJsonIndentStr = "\t";
 dojo.toJson = function(/*Object*/ it, /*Boolean?*/ prettyPrint, /*String?*/ _indentStr){
@@ -75,8 +66,8 @@ dojo.toJson = function(/*Object*/ it, /*Boolean?*/ prettyPrint, /*String?*/ _ind
 	if(it === null){
 		return "null";
 	}
-	if(dojo.isString(it)){ 
-		return dojo._escapeString(it); 
+	if(dojo.isString(it)){
+		return dojo._escapeString(it);
 	}
 	// recurse
 	var recurse = arguments.callee;
@@ -149,6 +140,7 @@ dojo.toJson = function(/*Object*/ it, /*Boolean?*/ prettyPrint, /*String?*/ _ind
 		output.push(newLine + nextIndent + keyStr + ":" + sep + val);
 	}
 	return "{" + output.join("," + sep) + newLine + _indentStr + "}"; // String
-}
+};
 
-}
+return dojo;
+});

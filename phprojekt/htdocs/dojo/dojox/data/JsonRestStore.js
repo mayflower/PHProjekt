@@ -1,16 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.JsonRestStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.JsonRestStore"] = true;
-dojo.provide("dojox.data.JsonRestStore");
-
-dojo.require("dojox.data.ServiceStore");
-dojo.require("dojox.rpc.JsonRest");
+define("dojox/data/JsonRestStore", ["dojo", "dojox", "dojox/rpc/JsonRest", "dojox/data/ServiceStore"], function(dojo, dojox) {
 
 dojo.declare("dojox.data.JsonRestStore",
 	dojox.data.ServiceStore,
@@ -490,4 +478,5 @@ dojox.data._getStoreForItem = function(item){
 };
 dojox.json.ref._useRefs = true; // Use referencing when identifiable objects are referenced
 
-}
+return dojox.data.JsonRestStore;
+});

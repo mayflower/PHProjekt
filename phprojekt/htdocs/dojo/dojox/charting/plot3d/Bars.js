@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.charting.plot3d.Bars"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.plot3d.Bars"] = true;
 dojo.provide("dojox.charting.plot3d.Bars");
 
 dojo.require("dojox.charting.plot3d.Base");
@@ -15,7 +6,7 @@ dojo.require("dojox.charting.plot3d.Base");
 
 	// reduce function borrowed from dojox.fun
 	var reduce = function(/*Array*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-		// summary: repeatedly applies a binary function to an array from left 
+		// summary: repeatedly applies a binary function to an array from left
 		//	to right; returns the final value.
 		a = typeof a == "string" ? a.split("") : a; o = o || dojo.global;
 		var z = a[0];
@@ -61,7 +52,7 @@ dojo.require("dojox.charting.plot3d.Base");
 			for(var i = 0; i < this.data.length; ++i, org += step){
 				creator
 					.createCube({
-						bottom: {x: org + this.gap, y: 0, z: 0}, 
+						bottom: {x: org + this.gap, y: 0, z: 0},
 						top:    {x: org + step - this.gap, y: this.data[i] * scale, z: depth}
 					})
 					.setFill(this.material);
@@ -69,5 +60,3 @@ dojo.require("dojox.charting.plot3d.Base");
 		}
 	});
 })();
-
-}

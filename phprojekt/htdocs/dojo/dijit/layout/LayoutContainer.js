@@ -1,15 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.layout.LayoutContainer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.layout.LayoutContainer"] = true;
-dojo.provide("dijit.layout.LayoutContainer");
-
-dojo.require("dijit.layout._LayoutWidget");
+define("dijit/layout/LayoutContainer", ["dojo", "dijit", "dijit/layout/_LayoutWidget"], function(dojo, dijit) {
 
 dojo.declare("dijit.layout.LayoutContainer",
 	dijit.layout._LayoutWidget,
@@ -83,4 +72,6 @@ dojo.extend(dijit._Widget, {
 	layoutAlign: 'none'
 });
 
-}
+
+return dijit.layout.LayoutContainer;
+});

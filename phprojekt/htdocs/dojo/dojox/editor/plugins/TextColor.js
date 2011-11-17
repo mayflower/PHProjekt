@@ -1,24 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.TextColor"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.TextColor"] = true;
-dojo.provide("dojox.editor.plugins.TextColor");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.TooltipDialog");
-dojo.require("dijit.form.Button");
-dojo.require("dojox.widget.ColorPicker");
-
-dojo.require("dojo.i18n");
-dojo.requireLocalization("dojox.editor.plugins", "TextColor", null, "ROOT,ro");
+define("dojox/editor/plugins/TextColor", ["dojo", "dijit", "dojox", "dijit/TooltipDialog", "dijit/form/Button", "dijit/_editor/_Plugin", "dojox/widget/ColorPicker", "dojo/i18n", "i18n!dojox/editor/plugins/nls/TextColor"], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.editor.plugins.TextColor");
-
 dojo.declare("dojox.editor.plugins._TextColorDropDown", [dijit._Widget, dijit._Templated], {
 	// summary:
 	//		A smple widget that uses/creates a dropdown with a dojox.widget.ColorPicker.  Also provides
@@ -31,8 +13,8 @@ dojo.declare("dojox.editor.plugins._TextColorDropDown", [dijit._Widget, dijit._T
 	templateString: "<div style='display: none; position: absolute; top: -10000; z-index: -10000'>" +
 		"<div dojoType='dijit.TooltipDialog' dojoAttachPoint='dialog' class='dojoxEditorColorPicker'>" +
 			"<div dojoType='dojox.widget.ColorPicker' dojoAttachPoint='_colorPicker'></div>" +
-			"<br>" + 
-			"<center>" + 
+			"<br>" +
+			"<center>" +
 				"<button dojoType='dijit.form.Button' type='button' dojoAttachPoint='_setButton'>${setButtonText}</button>" +
 				"&nbsp;" +
 				"<button dojoType='dijit.form.Button' type='button' dojoAttachPoint='_cancelButton'>${cancelButtonText}</button>" +
@@ -141,8 +123,14 @@ dojo.declare("dojox.editor.plugins.TextColor", dijit._editor._Plugin, {
 			return;
 		}
 		
+		var disabled = this.get("disabled");
+		
 		var value;
 		if(this.button){
+			this.button.set("disabled", disabled);
+			if(disabled){
+				return;
+			}
 			try{
 				value = _e.queryCommandValue(_c)|| "";
 			}catch(e){
@@ -159,7 +147,7 @@ dojo.declare("dojox.editor.plugins.TextColor", dijit._editor._Plugin, {
 		}
 
 		if(typeof value == "string"){
-			//if RGB value, convert to hex value	
+			//if RGB value, convert to hex value
 			if(value.indexOf("rgb")> -1){
 				value = dojo.colorFromRgb(value).toHex();
 			}
@@ -184,7 +172,7 @@ dojo.declare("dojox.editor.plugins.TextColor", dijit._editor._Plugin, {
 	}
 });
 
-// Register this plugin.  Uses the same name as the dijit one, so you 
+// Register this plugin.  Uses the same name as the dijit one, so you
 // use one or the other, not both.
 dojo.subscribe(dijit._scopeName + ".Editor.getPlugin", null, function(o){
 	if(o.plugin){
@@ -199,4 +187,6 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin", null, function(o){
 	}
 });
 
-}
+return dojox.editor.plugins.TextColor;
+
+});

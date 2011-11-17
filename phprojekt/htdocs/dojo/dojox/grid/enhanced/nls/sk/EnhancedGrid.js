@@ -1,1 +1,8 @@
-({"descending":"Zostupne ","ascending":"Vzostupne ","nestedSort":"Vnorené triedenie ","unsorted":"Netriediť tento stĺpec ","singleSort":"Jednoduché triedenie ","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Jednoduché triedenie ",
+	nestedSort: "Vnorené triedenie ",
+	ascending: "Vzostupne ",
+	descending: "Zostupne ",
+	unsorted: "Netriediť tento stĺpec "
+})
+

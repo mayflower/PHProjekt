@@ -145,12 +145,21 @@ class IndexController extends Zend_Controller_Action
      */
     public function preDispatch()
     {
-        $isLoggedIn = true;
-        try {
-            Phprojekt_Auth::isLoggedIn();
+        $this->checkAuthentication();
+    }
+
+    /**
+     * Check if the user is logged in and everything is fine.
+     *
+     * @return void
+     */
+    public function checkAuthentication()
+    {
+        $isLoggedIn = Phprojekt_Auth::isLoggedIn();
+        if ($isLoggedIn) {
             // Check the CSRF token
             $this->checkCsrfToken();
-        } catch (Phprojekt_Auth_UserNotLoggedInException $error) {
+        } else {
             // User not logged in, display login page
             // If is a GET, show the index page with isLogged false
             // If is a POST, send message in json format
@@ -170,6 +179,22 @@ class IndexController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender();
         $this->view->clearVars();
         $this->view->isLoggedIn = $isLoggedIn;
+
+       // Setting the domain selection
+       $authMode = Phprojekt_Auth::getLoginMode();
+       if ($authMode == 'ldap') {
+           $conf = Phprojekt::getInstance()->getConfig();
+           $ldapOptions = isset($conf->authentication->ldap) ? $conf->authentication->ldap->toArray() : array();
+           $domains = array();
+           foreach ($ldapOptions as $server => $opts) {
+               $serverName = isset($opts['accountDomainNameShort']) ? trim($opts['accountDomainNameShort']) :
+                               (isset($opts['accountDomainName']) ? trim($opts['accountDomainName']) : $server);
+               $domains[$server] = $serverName;
+           }
+           if (sizeof($domains) > 0) {
+               $this->view->domains = $domains;
+           }
+       }
     }
 
     /**
@@ -269,7 +294,7 @@ class IndexController extends Zend_Controller_Action
         $object     = Phprojekt_Loader::getModel($modelName, $moduleName);
         if (null === $object) {
             /* @todo throw error */
-            $object = Phprojekt_Loader::getModel('Default', 'Default');
+            $object = new Default_Models_Default();
         }
 
         return $object;
@@ -378,7 +403,7 @@ class IndexController extends Zend_Controller_Action
      * Returns the project tree.
      *
      * The return is a tree compatible format, with identifier, label,
-     * and the list of items, each one with the name, id, parent, path and children´s id.
+     * and the list of items, each one with the name, id, parent, path and childrenï¿½s id.
      *
      * The tree is stored as a file until a user add, edit or delete a project
      * (tmp/ZendCache/zend_cache---Phprojekt_Tree_Node_Database_setup).
@@ -389,7 +414,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonTreeAction()
     {
-        $model = Phprojekt_Loader::getModel('Project', 'Project');
+        $model = new Project_Models_Project();
         $tree  = new Phprojekt_Tree_Node_Database($model, 1);
 
         Phprojekt_Converter_Json::echoConvert($tree->setup());
@@ -411,6 +436,7 @@ class IndexController extends Zend_Controller_Action
      *  - integer <b>nodeId</b> List all the items with projectId == nodeId.
      *  - integer <b>count</b>  Use for SQL LIMIT count.
      *  - integer <b>offset</b> Use for SQL LIMIT offset.
+     *  - boolean <b>recursive</b> Include items of subprojects.
      * </pre>
      *
      * The return is in JSON format.
@@ -423,20 +449,33 @@ class IndexController extends Zend_Controller_Action
         $projectId = (int) $this->getRequest()->getParam('nodeId', null);
         $count     = (int) $this->getRequest()->getParam('count', null);
         $offset    = (int) $this->getRequest()->getParam('start', null);
+        $recursive = $this->getRequest()->getParam('recursive', 'false');
         $this->setCurrentProjectId();
 
         if (!empty($itemId)) {
             $where = sprintf('id = %d', (int) $itemId);
         } else if (!empty($projectId) && isset($this->getModelObject()->projectId)) {
-            $where = sprintf('project_id = %d', (int) $projectId);
+            $where  = sprintf('project_id = %d', (int) $projectId);
         } else {
             $where = null;
         }
 
-        $where   = $this->getFilterWhere($where);
-        $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
+        /* recursive is only supported if nodeId is specified */
+        if (!empty($projectId) && isset($this->getModelObject()->projectId)
+            && 'true' === $recursive) {
+            $tree = new Phprojekt_Tree_Node_Database(
+                new Project_Models_Project(),
+                $projectId);
+            $tree->setup();
+            Phprojekt_Converter_Json::echoConvert(
+                $tree->getRecordsFor($this->getModelObject()),
+                Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        } else  {
+            $where   = $this->getFilterWhere($where);
+            $records = $this->getModelObject()->fetchAll($where, null, $count, $offset);
 
-        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+            Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
+        }
     }
 
     /**
@@ -706,7 +745,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonGetModulesPermissionAction()
     {
         $projectId = (int) $this->getRequest()->getParam('nodeId');
-        $relation  = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+        $relation  = new Project_Models_ProjectModulePermissions();
         $modules   = $relation->getProjectModulePermissionsById($projectId);
 
         if ($projectId == 0) {
@@ -832,10 +871,10 @@ class IndexController extends Zend_Controller_Action
         try {
             Zend_Session::writeClose(false);
         } catch (Exception $error) {
-            Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->message);
+            Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->getMessage());
         }
 
-        $notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification_FrontendMessage');
+        $notification = new Phprojekt_Notification_FrontendMessage();
         $userId       = (int) Phprojekt_Auth::getUserId();
         $data         = $notification->getFrontendMessage($userId);
 
@@ -851,14 +890,14 @@ class IndexController extends Zend_Controller_Action
      */
     public function jsonDisableFrontendMessagesAction()
     {
-        $notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification');
+        $notification = new Phprojekt_Notification();
 
         try {
             $notification->disableFrontendMessages();
             $message    = Phprojekt::getInstance()->translate(self::DISABLE_FRONTEND_MESSAGES_TRUE_TEXT);
             $resultType = 'success';
         } catch (Exception $error) {
-            Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->message);
+            Phprojekt::getInstance()->getLog()->debug('Error: ' . $error->getMessage());
             $message    = Phprojekt::getInstance()->translate(self::DISABLE_FRONTEND_MESSAGES_FALSE_TEXT);
             $resultType = 'error';
         }
@@ -894,7 +933,7 @@ class IndexController extends Zend_Controller_Action
             if (empty($projectId)) {
                 $record = $this->getModelObject();
             } else {
-                $model  = Phprojekt_Loader::getModel('Project', 'Project');
+                $model  = new Project_Models_Project();
                 $record = $model->find($projectId);
             }
         } else {

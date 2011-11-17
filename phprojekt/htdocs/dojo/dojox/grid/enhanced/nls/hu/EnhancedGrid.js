@@ -1,1 +1,12 @@
-({"descending":"Csökkenő","ascending":"Növekvő","nestedSort":"Beágyazott rendezés","unsorted":"Az oszlop nincs rendezve","singleSort":"Egyszerű rendezés","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Egyszerű rendezés",
+	nestedSort: "Beágyazott rendezés",
+	ascending: "Növekvő",
+	descending: "Csökkenő",
+	sortingState: "${0} - ${1}",
+	unsorted: "Ne rendezze ezt az oszlopot",
+	indirectSelectionRadio: "${0} sor, egyetlen kijelölés, választógomb",
+	indirectSelectionCheckBox: "${0} sor, több kijelölés, jelölőnégyzet",
+	selectAll: "Összes kijelölése"
+})
+

@@ -1,1 +1,30 @@
-({"1":"xx-small","2":"x-small","formatBlock":"Format","3":"small","4":"medium","5":"large","6":"x-large","7":"xx-large","fantasy":"fantasy","serif":"serif","p":"Afsnit","pre":"Forudformateret","sans-serif":"sans-serif","fontName":"Skrifttype","h1":"Overskrift","h2":"Underoverskrift","h3":"Underunderoverskrift","monospace":"monospace","fontSize":"Størrelse","cursive":"kursiv","noFormat":"None"})
+define(
+//begin v1.x content
+({
+	fontSize: "Størrelse",
+	fontName: "Skrifttype",
+	formatBlock: "Format",
+
+	serif: "serif",
+	"sans-serif": "sans-serif",
+	monospace: "monospace",
+	cursive: "kursiv",
+	fantasy: "fantasy",
+
+	noFormat: "Ingen",
+	p: "Afsnit",
+	h1: "Overskrift",
+	h2: "Underoverskrift",
+	h3: "Underunderoverskrift",
+	pre: "Forudformateret",
+
+	1: "xx-small",
+	2: "x-small",
+	3: "small",
+	4: "medium",
+	5: "large",
+	6: "x-large",
+	7: "xx-large"
+})
+//end v1.x content
+);

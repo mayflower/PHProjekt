@@ -1,18 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.TooltipDialog"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.TooltipDialog"] = true;
-dojo.provide("dijit.TooltipDialog");
-
-dojo.require("dijit.layout.ContentPane");
-dojo.require("dijit._Templated");
-dojo.require("dijit.form._FormMixin");
-dojo.require("dijit._DialogMixin");
+define("dijit/TooltipDialog", ["dojo", "dijit", "text!dijit/templates/TooltipDialog.html", "dijit/layout/ContentPane", "dijit/_Templated", "dijit/form/_FormMixin", "dijit/_DialogMixin"], function(dojo, dijit) {
 
 dojo.declare(
 		"dijit.TooltipDialog",
@@ -52,12 +38,16 @@ dojo.declare(
 			//		Set by `dijit._DialogMixin._getFocusItems`.
 			_lastFocusItem: null,
 
-			templateString: dojo.cache("dijit", "templates/TooltipDialog.html", "<div waiRole=\"presentation\">\r\n\t<div class=\"dijitTooltipContainer\" waiRole=\"presentation\">\r\n\t\t<div class =\"dijitTooltipContents dijitTooltipFocusNode\" dojoAttachPoint=\"containerNode\" tabindex=\"-1\" waiRole=\"dialog\"></div>\r\n\t</div>\r\n\t<div class=\"dijitTooltipConnector\" waiRole=\"presentation\"></div>\r\n</div>\r\n"),
+			templateString: dojo.cache("dijit", "templates/TooltipDialog.html"),
+
+			_setTitleAttr: function(/*String*/ title){
+				this.containerNode.title = title;
+				this._set("title", title)
+			},
 
 			postCreate: function(){
 				this.inherited(arguments);
 				this.connect(this.containerNode, "onkeypress", "_onKey");
-				this.containerNode.title = this.title;
 			},
 
 			orient: function(/*DomNode*/ node, /*String*/ aroundCorner, /*String*/ corner){
@@ -67,13 +57,19 @@ dojo.declare(
 				//		directly.
 				// tags:
 				//		protected
-				var c = this._currentOrientClass;
-				if(c){
-					dojo.removeClass(this.domNode, c);
-				}
-				c = "dijitTooltipAB"+(corner.charAt(1) == 'L'?"Left":"Right")+" dijitTooltip"+(corner.charAt(0) == 'T' ? "Below" : "Above");
-				dojo.addClass(this.domNode, c);
-				this._currentOrientClass = c;
+				var newC = "dijitTooltipAB" + (corner.charAt(1) == 'L' ? "Left" : "Right")
+						+ " dijitTooltip"
+						+ (corner.charAt(0) == 'T' ? "Below" : "Above");
+				
+				dojo.replaceClass(this.domNode, newC, this._currentOrientClass || "");
+				this._currentOrientClass = newC;
+			},
+
+			focus: function(){
+				// summary:
+				//		Focus on first field
+				this._getFocusItems(this.containerNode);
+				dijit.focus(this._firstFocusItem);
 			},
 
 			onOpen: function(/*Object*/ pos){
@@ -85,11 +81,6 @@ dojo.declare(
 
 				this.orient(this.domNode,pos.aroundCorner, pos.corner);
 				this._onShow(); // lazy load trigger
-
-				if(this.autofocus){
-					this._getFocusItems(this.containerNode);
-					dijit.focus(this._firstFocusItem);
-				}
 			},
 
 			onClose: function(){
@@ -138,4 +129,6 @@ dojo.declare(
 		}
 	);
 
-}
+
+return dijit.TooltipDialog;
+});

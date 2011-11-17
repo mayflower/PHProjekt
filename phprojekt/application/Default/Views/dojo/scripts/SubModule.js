@@ -23,9 +23,12 @@ dojo.provide("phpr.Default.SubModule");
 dojo.provide("phpr.Default.SubModule.Grid");
 dojo.provide("phpr.Default.SubModule.Form");
 
-dojo.declare("phpr.Default.SubModule", phpr.Component, {
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.layout.BorderContainer");
+
+dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
     // Internal vars
-    gridBox:      null,
+    overviewBox:  null,
     detailsBox:   null,
     subForm:      null,
     subGrid:      null,
@@ -35,7 +38,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
     formWidget:   null,
     sortPosition: 1,
 
-    constructor:function(parentId) {
+    constructor: function(parentId) {
         // Summary:
         //    Set some vars to run the sub module
         // Description:
@@ -46,7 +49,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
         this.parentId   = parentId;
     },
 
-    getController:function() {
+    getController: function() {
         // Summary:
         //    Return the controller to use
         // Description:
@@ -54,7 +57,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
         return 'index';
     },
 
-    setUrl:function(type, id) {
+    setUrl: function(type, id) {
         // Summary:
         //    Set all the urls
         // Description:
@@ -73,6 +76,8 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
             case 'delete':
                 url += '/jsonDelete/';
                 break;
+            default:
+                break;
         }
         if (type != 'delete') {
             url += 'nodeId/' + phpr.currentProjectId + '/';
@@ -85,7 +90,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
         return url;
     },
 
-    fillTab:function(nodeId) {
+    fillTab: function(nodeId) {
         // Summary:
         //    Create the sub module tab
         // Description:
@@ -98,7 +103,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
             design: 'sidebar'
         }, document.createElement('div'));
 
-        this.gridBox = new dijit.layout.ContentPane({
+        this.overviewBox = new dijit.layout.ContentPane({
             region: 'center'
         }, document.createElement('div'));
 
@@ -107,7 +112,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
             style:  'width: 50%; height: 100%;'
         }, document.createElement('div'));
 
-        borderContainer.addChild(this.gridBox);
+        borderContainer.addChild(this.overviewBox);
         borderContainer.addChild(this.detailsBox);
         content.set("content", borderContainer.domNode);
 
@@ -118,16 +123,20 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
         }));
     },
 
-    _renderSubModule:function() {
+    _renderSubModule: function() {
         // Summary:
         //    Render the grid and the form widgets
         // Description:
         //    Render the grid and the form widgets
-        this.subGrid = new this.gridWidget('', this, phpr.currentProjectId);
-        this.subForm = new this.formWidget(this, 0, phpr.module);
+        if (this.subGrid && dojo.isFunction(this.subGrid.destroy)) {
+            this.subGrid.destroy();
+        }
+        this.subGrid = new this.gridWidget('', this, phpr.currentProjectId, this.overviewBox);
+        this.destroySubForm();
+        this.subForm = new this.formWidget(this, 0, phpr.module, {}, this.detailsBox);
     },
 
-    updateCacheData:function() {
+    updateCacheData: function() {
         // Summary:
         //    Update the grid and the form widgets
         // Description:
@@ -140,94 +149,97 @@ dojo.declare("phpr.Default.SubModule", phpr.Component, {
             this.subForm.updateData();
         }
         this._renderSubModule();
+    },
+    destroySubForm: function() {
+        if (this.subForm && dojo.isFunction(this.subForm.destroy)) {
+            this.subForm.destroy();
+        }
+        this.subForm = null;
     }
 });
 
 dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
     // Overwrite functions for use with internal vars
     // This functions can be Rewritten
-    updateData:function() {
+    updateData: function() {
         phpr.DataStore.deleteData({url: this.url});
     },
 
-    usePencilForEdit:function() {
+    usePencilForEdit: function() {
         return false;
     },
 
-    useIdInGrid:function() {
+    useIdInGrid: function() {
         return true;
     },
 
     // Overwrite functions for use with internal vars
     // This functions should not be Rewritten
 
-    setGridLayout:function(meta) {
+    setGridLayout: function(meta) {
         // Summary:
         //    Set all the field as not editables
         // Description:
         //    Set all the field as not editables
         this.inherited(arguments);
-        for (cell in this.gridLayout) {
-            if (typeof(this.gridLayout[cell]['editable']) == 'boolean') {
-                this.gridLayout[cell]['editable'] = false;
+        for (var cell in this.gridLayout) {
+            if (typeof(this.gridLayout[cell].editable) == 'boolean') {
+                this.gridLayout[cell].editable = false;
             } else {
-                for (index in this.gridLayout[cell]) {
-                    if (typeof(this.gridLayout[cell][index]['editable']) == 'boolean') {
-                        this.gridLayout[cell][index]['editable'] = false;
+                for (var index in this.gridLayout[cell]) {
+                    if (typeof(this.gridLayout[cell][index].editable) == 'boolean') {
+                        this.gridLayout[cell][index].editable = false;
                     }
                 }
             }
         }
     },
 
-    setUrl:function() {
+    setUrl: function() {
         this.url = this.main.setUrl('grid');
     },
 
-    getLinkForEdit:function(id) {
-        this.main.subForm = new this.main.formWidget(this.main, id, phpr.module);
-    },
-
-    setNode:function() {
-        this._node = this.main.gridBox;
+    getLinkForEdit: function(id) {
+        this.main.destroySubForm();
+        this.main.subForm = new this.main.formWidget(this.main, id, phpr.module, {}, this.main.detailsBox);
     },
 
     // Set empty functions for avoid them
     // This functions should not be Rewritten
 
-    useCheckbox:function() {
+    useCheckbox: function() {
         return false;
     },
 
-    setFilterQuery:function(filters) {
+    setFilterQuery: function(filters) {
         this.setUrl();
     },
 
-    processActions:function() {
+    processActions: function() {
     },
 
-    setExportButton:function(meta) {
+    setExportButton: function(meta) {
     },
 
-    loadGridSorting:function() {
+    loadGridSorting: function() {
     },
 
-    saveGridSorting:function(e) {
+    saveGridSorting: function(e) {
     },
 
-    loadGridScroll:function() {
+    loadGridScroll: function() {
     },
 
-    saveGridScroll:function() {
+    saveGridScroll: function() {
     },
 
-    setFilterButton:function(meta) {
+    setFilterButton: function(meta) {
     },
 
-    manageFilters:function() {
+    manageFilters: function() {
     },
 
-    showTags:function() {
+    showTags: function() {
     }
 });
 
@@ -237,13 +249,13 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
     // Overwrite functions for use with internal vars
     // This functions can be Rewritten
 
-    initData:function() {
+    initData: function() {
     },
 
-    addBasicFields:function() {
+    addBasicFields: function() {
     },
 
-    updateData:function() {
+    updateData: function() {
         if (this.id > 0) {
             phpr.DataStore.deleteData({url: this._url});
         }
@@ -252,21 +264,17 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
     // Set empty functions for avoid them
     // This functions should not be Rewritten
 
-    setUrl:function() {
+    setUrl: function() {
         this._url = this.main.setUrl('form', this.id);
     },
 
-    setNode:function() {
-        this._formNode = this.main.detailsBox;
-    },
-
-    setPermissions:function(data) {
+    setPermissions: function(data) {
         this._writePermissions  = true;
         this._deletePermissions = true;
         this._accessPermissions = false;
     },
 
-    getTabs:function() {
+    getTabs: function() {
         // Summary:
         //    Change the tab number for don't overwrite the module tab
         // Description:
@@ -277,56 +285,60 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
 
         return new Array({"id":     this._tabNumber,
                           "name":   phpr.nls.get('Basic Data'),
-                          "nameId": 'subModuleTab' + this._tabNumber})
+                          "nameId": 'subModuleTab' + this._tabNumber});
     },
 
-    setFormButtons:function(tabId) {
+    setFormButtons: function(tabId) {
         // Summary:
         //    Display buttons for the sub module instead of the default
         // Description:
         //    Display buttons for the sub module instead of the default
-        this.formdata[tabId] += this.render(["phpr.Default.template.form", "subModuleButtons.html"], null, {
-            saveText:   phpr.nls.get('Save'),
-            deleteText: phpr.nls.get('Delete'),
-            newText:    phpr.nls.get('New'),
-            id:         this.id
-        });
-    },
-
-    setActionFormButtons:function() {
-        // Summary:
-        //    Connect the buttons to the actions
-        dojo.connect(dijit.byId("subModuleSubmitButton"), "onClick", dojo.hitch(this, "submitForm"));
-        if (this.id > 0) {
-            dojo.connect(dijit.byId("subModuleDeleteButton"), "onClick", dojo.hitch(this, function() {
-                phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'))
-            }));
-        }
-        dojo.connect(dijit.byId("subModuleNewButton"), 'onClick', dojo.hitch(this, function() {
-            this.main.subForm = new this.main.formWidget(this.main, 0, phpr.module);
+        this.formdata[tabId].push(new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.form.subModuleButtons.html",
+            templateData: {
+                saveText:   phpr.nls.get('Save'),
+                deleteText: phpr.nls.get('Delete'),
+                newText:    phpr.nls.get('New'),
+                id:         this.id
+            }
         }));
     },
 
-    setCustomFieldValues:function(fieldValues) {
+    setActionFormButtons: function() {
+        // Summary:
+        //    Connect the buttons to the actions
+
+        if (this.id > 0) {
+            dojo.connect(dijit.byId("subModuleDeleteButton"), "onClick", dojo.hitch(this, function() {
+                phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'));
+            }));
+        }
+        dojo.connect(dijit.byId("subModuleNewButton"), 'onClick', dojo.hitch(this, function() {
+            this.main.destroySubForm();
+            this.main.subForm = new this.main.formWidget(this.main, 0, phpr.module, {}, this.main.detailsBox);
+        }));
+    },
+
+    setCustomFieldValues: function(fieldValues) {
         // Summary:
         //    Change the name of the fields for don't overwrite the module fields
         // Description:
         //    Change the name of the fields for don't overwrite the module fields
         //    Also change the tab for the same reason
-        if (fieldValues['type'] != 'upload') {
-            fieldValues['id'] = this.main.module + fieldValues['id'];
+        if (fieldValues.type != 'upload') {
+            fieldValues.id = this.main.module + fieldValues.id;
         }
-        fieldValues['tab'] = fieldValues['tab'] * this._tabNumber;
+        fieldValues.tab = fieldValues.tab * this._tabNumber;
 
         return fieldValues;
     },
 
-    prepareSubmission:function() {
+    prepareSubmission: function() {
         // Summary:
         //    Return the field names with the original name
         // Description:
         //    Return the field names with the original name
-        this.sendData = new Array();
+        this.sendData = [];
         for (var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
                 var parent = this.formsWidget[i].containerNode.parentNode.id;
@@ -336,7 +348,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
             }
             var data = this.formsWidget[i].get('value');
             for (var index in data) {
-                if (index.indexOf(this.main.module) == 0) {
+                if (index.indexOf(this.main.module) === 0) {
                     var newIndex   = index.substr(this.main.module.length);
                     data[newIndex] = data[index];
                     delete data[index];
@@ -351,24 +363,28 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
         return true;
     },
 
-    submitForm:function() {
+    submitForm: function() {
         if (!this.prepareSubmission()) {
             return false;
         }
 
+        this.setSubmitInProgress(true);
         phpr.send({
             url:       this.main.setUrl('save', this.id),
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
+                this.setSubmitInProgress(false);
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.main.updateCacheData();
                 }
             })
         });
+
+        return false;
     },
 
-    deleteForm:function() {
+    deleteForm: function() {
         phpr.send({
             url:       this.main.setUrl('delete', this.id),
             onSuccess: dojo.hitch(this, function(data) {
@@ -382,16 +398,19 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
 
     // Set empty functions for avoid them
     // This functions should not be Rewritten
-    addModuleTabs:function(data) {
+    addModuleTabs: function(data) {
     },
 
-    useHistoryTab:function() {
+    useHistoryTab: function() {
         return false;
     },
 
-    getUploadIframePath:function(itemid) {
-        return phpr.webpath + 'index.php/' + this.main.module + '/index/fileForm'
-            + '/nodeId/' + phpr.currentProjectId + '/id/' + this.id + '/field/' + itemid
-            + '/parentId/'  + this.main.parentId + '/csrfToken/' + phpr.csrfToken;
+    getUploadIframePath: function(itemid) {
+        return phpr.webpath + 'index.php/' +
+            this.main.module + '/index/fileForm' +
+            '/nodeId/' + phpr.currentProjectId +
+            '/id/' + this.id + '/field/' + itemid +
+            '/parentId/'  + this.main.parentId +
+            '/csrfToken/' + phpr.csrfToken;
     }
 });

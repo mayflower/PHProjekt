@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.testing.DocTest"]||(dojo._hasResource["dojox.testing.DocTest"]=!0,dojo.provide("dojox.testing.DocTest"),dojo.require("dojo.string"),dojo.declare("dojox.testing.DocTest",null,{errors:[],getTests:function(b){b=dojo.moduleUrl(b).path;b=b.substring(0,b.length-1)+".js";dojo.xhrGet({url:b,handleAs:"text"});return this._getTestsFromString(dojo._getText(b),!0)},getTestsFromString:function(b){return this._getTestsFromString(b,!1)},_getTestsFromString:function(b,c){for(var e=dojo.hitch(dojo.string,
+"trim"),g=b.split("\n"),h=g.length,i=[],a={commands:[],expectedResult:[],line:null},f=0;f<h+1;f++){var d=e(g[f]||"");if(c&&d.match(/^\/\/\s+>>>\s.*/)||d.match(/^\s*>>>\s.*/)){if(!a.line)a.line=f+1;a.expectedResult.length>0&&(i.push({commands:a.commands,expectedResult:a.expectedResult.join("\n"),line:a.line}),a={commands:[],expectedResult:[],line:f+1});d=c?e(d).substring(2,d.length):d;d=e(d).substring(3,d.length);a.commands.push(e(d))}else(!c||d.match(/^\/\/\s+.*/))&&a.commands.length&&a.expectedResult.length==
+0?(d=c?e(d).substring(3,d.length):d,a.expectedResult.push(e(d))):a.commands.length>0&&a.expectedResult.length&&((!c||d.match(/^\/\/\s*$/))&&i.push({commands:a.commands,expectedResult:a.expectedResult.join("\n"),line:a.line}),c&&!d.match(/^\/\//)&&i.push({commands:a.commands,expectedResult:a.expectedResult.join("\n"),line:a.line}),a={commands:[],expectedResult:[],line:0})}return i},run:function(b){this.errors=[];(b=this.getTests(b))&&this._run(b)},_run:function(b){var c=b.length;this.tests=c;for(var e=
+0,g=0;g<c;g++){var h=b[g],i=this.runTest(h.commands,h.expectedResult),a="Test "+(g+1)+": ",f=h.commands.join(" "),f=f.length>50?f.substr(0,50)+"...":f;i.success?(console.info(a+"OK: "+f),e+=1):(this.errors.push({commands:h.commands,actual:i.actualResult,expected:h.expectedResult}),console.error(a+"Failed: "+f,{commands:h.commands,actualResult:i.actualResult,expectedResult:h.expectedResult}))}console.info(c+" tests ran.",e+" Success,",this.errors.length+" Errors")},runTest:function(b,c){var e={success:!1,
+actualResult:null},g=b.join("\n");e.actualResult=eval(g);if(String(e.actualResult)==c||dojo.toJson(e.actualResult)==c||c.charAt(0)=='"'&&c.charAt(c.length-1)=='"'&&String(e.actualResult)==c.substring(1,c.length-1))e.success=!0;return e}}));

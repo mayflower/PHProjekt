@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.math._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.math._base"] = true;
-dojo.provide("dojox.math._base");
+// AMD-ID "dojox/math/_base"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("math", true, dojox);
 
 (function(){
 	var m = dojox.math;
@@ -89,7 +82,7 @@ dojo.provide("dojox.math._base");
 		permutations: function(/* Number */n, /* Number */k){
 			//	summary:
 			//	TODO
-			if(n==0 || k==0){ 
+			if(n==0 || k==0){
 				return 1; 	// Number
 			}
 			return this.factorial(n) / this.factorial(n-k);
@@ -98,7 +91,7 @@ dojo.provide("dojox.math._base");
 		combinations: function(/* Number */n, /* Number */r){
 			//	summary:
 			//	TODO
-			if(n==0 || r==0){ 
+			if(n==0 || r==0){
 				return 1; 	//	Number
 			}
 			return this.factorial(n) / (this.factorial(n-r) * this.factorial(r));	// Number
@@ -167,4 +160,5 @@ dojo.provide("dojox.math._base");
 	});
 })();
 
-}
+return dojox.math;
+});

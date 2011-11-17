@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.date.buddhist.locale"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.date.buddhist.locale"] = true;
 dojo.provide("dojox.date.buddhist.locale");
 dojo.experimental("dojox.date.buddhist.locale");
 
@@ -15,7 +6,7 @@ dojo.require("dojo.regexp");
 dojo.require("dojo.string");
 dojo.require("dojo.i18n");
 
-dojo.requireLocalization("dojo.cldr", "buddhist", null, "ROOT,th");
+dojo.requireLocalization("dojo.cldr", "buddhist");
 
 (function(){
 	// Format a pattern without literals
@@ -89,13 +80,32 @@ dojo.requireLocalization("dojo.cldr", "buddhist", null, "ROOT,th");
 				case 'S':
 					s = Math.round(dateObject.getMilliseconds() * Math.pow(10, l-3)); pad = true;
 					break;
+				case 'z':
+					// We only have one timezone to offer; the one from the browser
+					s = dojo.date.getTimezoneName(dateObject.toGregorian());
+					if(s){ break; }
+					l = 4;
+					// fallthrough... use GMT if tz not available
+				case 'Z':
+					var offset = dateObject.toGregorian().getTimezoneOffset();
+					var tz = [
+						(offset <= 0 ? "+" : "-"),
+						dojo.string.pad(Math.floor(Math.abs(offset) / 60), 2),
+						dojo.string.pad(Math.abs(offset) % 60, 2)
+					];
+					if(l == 4){
+						tz.splice(0, 0, "GMT");
+						tz.splice(3, 0, ":");
+					}
+					s = tz.join("");
+					break;
 				default:
 					throw new Error("dojox.date.buddhist.locale.formatPattern: invalid pattern char: "+pattern);
 			}
 			if(pad){ s = dojo.string.pad(s, l); }
 			return s;
 		});
-	}	
+	}
 	
 dojox.date.buddhist.locale.format = function(/*buddhist.Date*/dateObject, /*object?*/options){
 	// based on and similar to dojo.date.locale.format
@@ -124,10 +134,10 @@ dojox.date.buddhist.locale.format = function(/*buddhist.Date*/dateObject, /*obje
 	var result = str.join(" "); //TODO: use locale-specific pattern to assemble date + time
 
 	return result; // String
-};	
+};
 
 dojox.date.buddhist.locale.regexp = function(/*object?*/options){
-	//	based on and similar to dojo.date.locale.regexp	
+	//	based on and similar to dojo.date.locale.regexp
 	// summary:
 	//		Builds the regular needed to parse a buddhist.Date
 	return dojox.date.buddhist.locale._parseInfo(options).regexp; // String
@@ -163,7 +173,7 @@ dojox.date.buddhist.locale._parseInfo = function(/*oblect?*/options){
 
 dojox.date.buddhist.locale.parse= function(/*String*/value, /*object?*/options){
 	// based on and similar to dojo.date.locale.parse
-	// summary: This function parse string date value according to options	
+	// summary: This function parse string date value according to options
 	value =  value.replace(/[\u200E\u200F\u202A-\u202E]/g, ""); //remove special chars
 	
 	if(!options){options={};}
@@ -174,9 +184,9 @@ dojox.date.buddhist.locale.parse= function(/*String*/value, /*object?*/options){
 	
 	var match = re.exec(value);
 
-	var locale = dojo.i18n.normalizeLocale(options.locale); 
+	var locale = dojo.i18n.normalizeLocale(options.locale);
 
-	if(!match){ 
+	if(!match){
 		console.debug("dojox.date.buddhist.locale.parse: value  "+value+" doesn't match pattern   " + re);
 		return null;
 	} // null
@@ -210,7 +220,7 @@ dojox.date.buddhist.locale.parse= function(/*String*/value, /*object?*/options){
 					}
 					mLength = l;
 				}else{
-					v--;				
+					v--;
 				}
 				result[1] = Number(v);
 				break;
@@ -251,7 +261,7 @@ dojox.date.buddhist.locale.parse= function(/*String*/value, /*object?*/options){
 				break;
 			case 's': //seconds
 				result[5] = Number(v);
-				break; 
+				break;
 			case 'S': //milliseconds
 				result[6] = Number(v);
 		}
@@ -278,9 +288,9 @@ function _processPattern(pattern, applyPattern, applyLiteral, applyAll){
 	applyLiteral = applyLiteral || identity;
 	applyAll = applyAll || identity;
 
-	//split on single quotes (which escape literals in date format strings) 
+	//split on single quotes (which escape literals in date format strings)
 	//but preserve escaped single quotes (e.g., o''clock)
-	var chunks = pattern.match(/(''|[^'])+/g); 
+	var chunks = pattern.match(/(''|[^'])+/g);
 	var literal = pattern.charAt(0) == "'";
 
 	dojo.forEach(chunks, function(chunk, i){
@@ -295,10 +305,10 @@ function _processPattern(pattern, applyPattern, applyLiteral, applyAll){
 }
 
 function _buildDateTimeRE  (tokens, bundle, options, pattern){
-		// based on and similar to dojo.date.locale._buildDateTimeRE 
+		// based on and similar to dojo.date.locale._buildDateTimeRE
 		//
 	
-	pattern = dojo.regexp.escapeString(pattern); 
+	pattern = dojo.regexp.escapeString(pattern);
 	var locale = dojo.i18n.normalizeLocale(options.locale);
 	
 	return pattern.replace(/([a-z])\1*/ig, function(match){
@@ -359,7 +369,7 @@ function _buildDateTimeRE  (tokens, bundle, options, pattern){
 					break;
 				default:
 					s = ".*";
-			}	 
+			}
 			if(tokens){ tokens.push(match); }
 			return "(" + s + ")"; // add capture
 		}).replace(/[\xa0 ]/g, "[\\s\\xa0]"); // normalize whitespace.  Need explicit handling of \xa0 for IE. */
@@ -393,18 +403,16 @@ dojox.date.buddhist.locale.getNames = function(/*String*/item, /*String*/type, /
 	// summary:
 	//		Used to get localized strings from dojo.cldr for day or month names.
 	var label;
-	var lookup = dojox.date.buddhist.locale._getBuddhistBundle;
+	var lookup = dojox.date.buddhist.locale._getBuddhistBundle(locale);
 	var props = [item, context, type];
 	if(context == 'standAlone'){
 		var key = props.join('-');
-		label = lookup(locale)[key];
+		label = lookup[key];
 		// Fall back to 'format' flavor of name
-		if(label === lookup("ROOT")[key]){ label = undefined; } // a bit of a kludge, in the absense of real aliasing support in dojo.cldr
+		if(label[0] == 1){ label = undefined; } // kludge, in the absence of real aliasing support in dojo.cldr
 	}
 	props[1] = 'format';
 	
 	// return by copy so changes won't be made accidentally to the in-memory model
-	return (label || lookup(locale)[props.join('-')]).concat(); /*Array*/
+	return (label || lookup[props.join('-')]).concat(); /*Array*/
 };
-
-}

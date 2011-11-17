@@ -1,1 +1,30 @@
-({"buttonSet":"Instellen","insertTableTitle":"Tabel invoegen","insertTableRowAfterLabel":"Rij onder toevoegen","center":"gecentreerd","deleteTableColumnLabel":"Kolom wissen","right":"rechts","insertTableColumnBeforeLabel":"Kolom voor toevoegen","tableWidth":"Tabelbreedte:","buttonInsert":"invoegen","default":"standaard","align":"Uitlijnen","insertTableRowBeforeLabel":"Rij boven toevoegen","cellSpacing":"Celspatiëring:","pixels":"pixels","selectTableLabel":"Tabel selecteren","rows":"Rijen","modifyTableTitle":"Tabel wijzigen","cellPadding":"Celopvulling:","deleteTableRowLabel":"Rij wissen","backgroundColor":"Achtergrondkleur:","insertTableColumnAfterLabel":"Kolom achter toevoegen","left":"links","borderThickness":"Randdikte","columns":"Kolommen","percent":"percent","borderColor":"Randkleur"})
+({
+	insertTableTitle: "Tabel invoegen",
+	modifyTableTitle: "Tabel wijzigen",
+	rows: "Rijen",
+	columns: "Kolommen",
+	align: "Uitlijnen",
+	cellPadding: "Celopvulling:",
+	cellSpacing: "Celspatiëring:",
+	tableWidth: "Tabelbreedte:",
+	backgroundColor: "Achtergrondkleur:",
+	borderColor: "Randkleur",
+	borderThickness: "Randdikte",
+	percent: "percent",
+	pixels: "pixels",
+	"default": "standaard",
+	left: "links",
+	center: "gecentreerd",
+	right: "rechts",
+	buttonSet: "Instellen", // translated elsewhere?
+	buttonInsert: "invoegen",
+	buttonCancel: "Annuleren",
+
+	selectTableLabel: "Tabel selecteren",
+	insertTableRowBeforeLabel: "Rij boven toevoegen",
+	insertTableRowAfterLabel: "Rij onder toevoegen",
+	insertTableColumnBeforeLabel: "Kolom voor toevoegen",
+	insertTableColumnAfterLabel: "Kolom achter toevoegen",
+	deleteTableRowLabel: "Rij wissen",
+	deleteTableColumnLabel: "Kolom wissen"
+})

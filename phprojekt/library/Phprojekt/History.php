@@ -219,8 +219,16 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                 $newValue = $row->newValue;
                 $label    = $row->field;
             }
-            $oldValue = $this->_convertDateTimes($oldValue, $fields[$row->field]['type'], 'utcToUser');
-            $newValue = $this->_convertDateTimes($newValue, $fields[$row->field]['type'], 'utcToUser');
+
+            if (DateTime::createFromFormat('Y-m-d H:i:s', $oldValue)
+                    && DateTime::createFromFormat('Y-m-d H:i:s', $newValue)) {
+                $oldValue = $this->_convertDateTimes($oldValue, 'datetime', 'utcToUser');
+                $newValue = $this->_convertDateTimes($newValue, 'datetime', 'utcToUser');
+            } else if ((DateTime::createFromFormat('H:i:s', $oldValue)
+                    && DateTime::createFromFormat('H:i:s', $newValue))) {
+                $oldValue = $this->_convertDateTimes($oldValue, 'time', 'utcToUser');
+                $newValue = $this->_convertDateTimes($newValue, 'time', 'utcToUser');
+            }
 
             if ($oldValue != $newValue) {
                 $result[] = array('userId'   => (int) $row->userId,
@@ -256,6 +264,12 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
         $itemId   = $object->id;
         $where    = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
 
+        $fields = array();
+        $fieldDefinition = $object->getInformation()->getFieldDefinition();
+        foreach($fieldDefinition as $field) {
+            $fields[$field['key']] = $field;
+        }
+
         $datetime = null;
         $action   = null;
         $history  = $this->fetchAll($where, 'id DESC');
@@ -273,6 +287,8 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
                                           'moduleId' => $row->moduleId,
                                           'itemId'   => $row->itemId,
                                           'field'    => $row->field,
+                                          'label'    => isset($fields[$row->field]) ?
+                                                            $fields[$row->field]['label'] : $row->field,
                                           'oldValue' => $row->oldValue,
                                           'newValue' => $row->newValue,
                                           'action'   => $row->action,

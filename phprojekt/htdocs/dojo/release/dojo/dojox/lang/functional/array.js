@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.lang.functional.array"]||(dojo._hasResource["dojox.lang.functional.array"]=!0,dojo.provide("dojox.lang.functional.array"),dojo.require("dojox.lang.functional.lambda"),function(){var g=dojo,h=dojox.lang.functional,i={};g.mixin(h,{filter:function(a,d,c){typeof a=="string"&&(a=a.split(""));var c=c||g.global,d=h.lambda(d),b=[],f,e,j;if(g.isArray(a)){e=0;for(j=a.length;e<j;++e)f=a[e],d.call(c,f,e,a)&&b.push(f)}else if(typeof a.hasNext=="function"&&typeof a.next=="function")for(e=
+0;a.hasNext();)f=a.next(),d.call(c,f,e++,a)&&b.push(f);else for(e in a)e in i||(f=a[e],d.call(c,f,e,a)&&b.push(f));return b},forEach:function(a,d,c){typeof a=="string"&&(a=a.split(""));var c=c||g.global,d=h.lambda(d),b,f;if(g.isArray(a)){b=0;for(f=a.length;b<f;d.call(c,a[b],b,a),++b);}else if(typeof a.hasNext=="function"&&typeof a.next=="function")for(b=0;a.hasNext();d.call(c,a.next(),b++,a));else for(b in a)b in i||d.call(c,a[b],b,a);return c},map:function(a,d,c){typeof a=="string"&&(a=a.split(""));
+var c=c||g.global,d=h.lambda(d),b,f,e;if(g.isArray(a)){b=Array(f=a.length);for(e=0;e<f;b[e]=d.call(c,a[e],e,a),++e);}else if(typeof a.hasNext=="function"&&typeof a.next=="function"){b=[];for(e=0;a.hasNext();b.push(d.call(c,a.next(),e++,a)));}else for(e in b=[],a)e in i||b.push(d.call(c,a[e],e,a));return b},every:function(a,d,c){typeof a=="string"&&(a=a.split(""));var c=c||g.global,d=h.lambda(d),b,f;if(g.isArray(a)){b=0;for(f=a.length;b<f;++b)if(!d.call(c,a[b],b,a))return!1}else if(typeof a.hasNext==
+"function"&&typeof a.next=="function")for(b=0;a.hasNext();){if(!d.call(c,a.next(),b++,a))return!1}else for(b in a)if(!(b in i)&&!d.call(c,a[b],b,a))return!1;return!0},some:function(a,d,c){typeof a=="string"&&(a=a.split(""));var c=c||g.global,d=h.lambda(d),b,f;if(g.isArray(a)){b=0;for(f=a.length;b<f;++b)if(d.call(c,a[b],b,a))return!0}else if(typeof a.hasNext=="function"&&typeof a.next=="function")for(b=0;a.hasNext();){if(d.call(c,a.next(),b++,a))return!0}else for(b in a)if(!(b in i)&&d.call(c,a[b],
+b,a))return!0;return!1}})}());

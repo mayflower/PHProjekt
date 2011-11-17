@@ -45,17 +45,17 @@ class Phprojekt
     /**
      * The second part of the version number.
      */
-    const VERSION_MINOR = 0;
+    const VERSION_MINOR = 1;
 
     /**
      * The third part of the version number.
      */
-    const VERSION_RELEASE = 6;
+    const VERSION_RELEASE = 0;
 
     /**
      * The extra part of the version number.
      */
-    const VERSION_EXTRA = null;
+    const VERSION_EXTRA = 'dev';
 
     /**
      * Name of the Registry for current project.
@@ -65,12 +65,17 @@ class Phprojekt
     /**
      * Copyright.
      */
-    const COPYRIGHT = 'PHProjekt 6.1.0 - Copyright (c) 2010 Mayflower GmbH';
+    const COPYRIGHT = 'PHProjekt 6.1.0 - Copyright (c) 2011 Mayflower GmbH';
 
     /**
      * Default Max size in bytes that is allowed to be uploaded per file.
      */
     const DEFAULT_MAX_UPLOAD_SIZE = 512000;
+
+    /**
+     * Integer that define the current API version.
+     */
+    const API_VERSION = 0;
 
     /**
      * Singleton instance.
@@ -127,6 +132,18 @@ class Phprojekt
         } else {
             return sprintf("%d.%d.%d", self::VERSION_MAJOR, self::VERSION_MINOR, self::VERSION_RELEASE);
         }
+    }
+
+    /**
+     * Returns the current api verison of PHProjekt.
+     *
+     * The Api version is an integer that is incremented everytime a
+     * method is added or modified.
+     *
+     * @return integer
+     */
+    public static function getApiVersion() {
+        return self::API_VERSION;
     }
 
     /**
@@ -221,8 +238,8 @@ class Phprojekt
             try {
                 $this->_db = Zend_Db::factory($this->_config->database);
             } catch (Zend_Db_Adapter_Exception $error) {
-                echo $error->getMessage();
-                die();
+                error_log($error->getMessage());
+                $this->_dieWithInternalServerError();
             }
         }
 
@@ -242,7 +259,8 @@ class Phprojekt
             try {
                 $this->_log = new Phprojekt_Log($this->_config);
             } catch (Zend_Log_Exception $error) {
-                die($error->getMessage());
+                error_log($error->getMessage());
+                $this->_dieWithInternalServerError();
             }
         }
 
@@ -307,7 +325,11 @@ class Phprojekt
     {
         $translate = Phprojekt::getInstance()->getTranslate($locale);
         if (null === $moduleName) {
-            $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+            if (Zend_Controller_Front::getInstance()->getRequest()) {
+                $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+            } else {
+                return $message;
+            }
         }
 
         // Fix for request to the core
@@ -339,10 +361,12 @@ class Phprojekt
      *
      * @return string Tooltip message.
      */
-    public function getTooltip($field)
+    public function getTooltip($field, $moduleName = null)
     {
         $translate  = Phprojekt::getInstance()->getTranslate();
-        $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+        if (null == $moduleName) {
+            $moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+        }
 
         $hints = $translate->translate('Tooltip', $moduleName);
         if (!is_array($hints)) {
@@ -401,15 +425,17 @@ class Phprojekt
         $autoloader = Zend_Loader_Autoloader::getInstance();
         $autoloader->pushAutoloader(array('Phprojekt_Loader', 'autoload'));
 
+        // If the configuration file does not exist we redirect to the setup page.
+        if (!file_exists(PHPR_CONFIG_FILE)) {
+            $this->_redirectToSetupAndDie();
+        }
+
         // Read the config file, but only the production setting
         try {
             $this->_config = new Zend_Config_Ini(PHPR_CONFIG_FILE, PHPR_CONFIG_SECTION, true);
         } catch (Zend_Config_Exception $error) {
-            $response = new Zend_Controller_Request_Http();
-            $webPath  = $response->getScheme() . '://' . $response->getHttpHost() . $response->getBasePath() . '/';
-            header("Location: " . $webPath . "setup.php");
-            die('You need the file configuration.php to continue. Have you tried the <a href="' . $webPath
-                . 'setup.php">setup</a> routine?'."\n".'<br />Original error: ' . $error->getMessage());
+            error_log('There is an error in your configuration.php: ' . $error->getMessage());
+            $this->_dieWithInternalServerError();
         }
 
         // Set webpath, tmpPath and applicationPath
@@ -417,8 +443,10 @@ class Phprojekt
             $response               = new Zend_Controller_Request_Http();
             $this->_config->webpath = $response->getScheme() . '://' . $response->getHttpHost()
                 . $response->getBasePath() . '/';
+            $this->_config->basepath = $response->getBasePath() . '/';
         }
         define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
+        define('PHPR_ROOT_WEB_BASE_PATH', $this->_config->basepath . 'index.php/');
         define('PHPR_TEMP_PATH', $this->_config->tmpPath);
         define('PHPR_USER_CORE_PATH', $this->_config->applicationPath);
 
@@ -447,12 +475,14 @@ class Phprojekt
         try {
             $this->_cache = Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
         } catch (Exception $error) {
-            die("The directory " . PHPR_TEMP_PATH . "zendCache do not exists or not have write access.");
+            error_log("The directory " . PHPR_TEMP_PATH . "zendCache do not exists or not have write access.");
+            $this->_dieWithInternalServerError();
+
         }
         Zend_Db_Table_Abstract::setDefaultMetadataCache($this->_cache);
 
         // Use for Debug only
-        //Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
+        Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
 
         // Check Logs
         $this->getLog();
@@ -485,7 +515,8 @@ class Phprojekt
         if (!empty($missingRequirements)) {
             $message = "Your PHP does not meet the requirements needed for P6.<br />"
                 . implode("<br />", $missingRequirements);
-            die($message);
+            error_log($message);
+            $this->_dieWithInternalServerError();
         }
 
         $helperPaths = $this->_getHelperPaths();
@@ -522,6 +553,8 @@ class Phprojekt
 
         // Define general error handler
         set_error_handler(Array("Phprojekt", "errorHandler"));
+
+        $front->registerPlugin(new Phprojekt_ExtensionsPlugin());
     }
 
     /**
@@ -743,6 +776,39 @@ class Phprojekt
         if ($useLog) {
             $messageLog = sprintf("%s\n File: %s - Line: %d\n Description: %s\n", $errDesc, $errFile, $errLine,
                 $errStr);
+
+            if (self::getInstance()->getConfig()->log->printStackTraces) {
+                // The frames always contain the file and line where the function was called To get a format like
+                // "2: File:line class->function" we print the file and line of the first frame (which is this function,
+                // so we don't need the function part anyways) and then print class->function\nFile:line for each other
+                // frame. The last frame will be the php script that has been called, so it's fine that we don't have
+                // a function there.
+                $messageLog .= "Stack trace:\n";
+                $frames      = debug_backtrace();
+                $frame       = array_shift($frames);
+                $messageLog .= " 0: ";
+                if (array_key_exists('file', $frame)) {
+                    $messageLog .= "{$frame['file']}:{$frame['line']} ";
+                }
+                $depth = 1;
+                foreach ($frames as $frame) {
+                    if (array_key_exists('function', $frame)) {
+                        // If this is a included php file, don't print class->function.
+                        if (array_key_exists('class', $frame)) {
+                            // It's a class method, print the class and type ('->' or '::')
+                            $messageLog .= $frame['class'] . $frame['type'];
+                        }
+                        $messageLog .= $frame['function'] . "()";
+                    }
+                    $messageLog .= "\n";
+                    // Begin of the next line is here.
+                    $messageLog .= ' ' . $depth++ . ': ';
+                    if (array_key_exists('file', $frame)) {
+                        $messageLog .= "{$frame['file']}:{$frame['line']} ";
+                    }
+                }
+                $messageLog .= "\n";
+            }
             Phprojekt::getInstance()->getLog()->err($messageLog);
         }
 
@@ -808,7 +874,6 @@ class Phprojekt
             'mbstring'   => 'http://us.php.net/manual/en/mbstring.installation.php',
             'iconv'      => 'http://us.php.net/manual/en/iconv.installation.php',
             'ctype'      => 'http://us.php.net/manual/en/ctype.installation.php',
-            'gd'         => 'http://us.php.net/manual/en/image.installation.php',
             'pcre'       => 'http://us.php.net/manual/en/pcre.installation.php',
             'pdo'        => 'http://us.php.net/manual/en/pdo.installation.php',
             'Reflection' => 'http://us.php.net/manual/en/reflection.installation.php',
@@ -901,5 +966,25 @@ class Phprojekt
 
         return array('requirements'    => $requirements,
                      'recommendations' => $recommendations);
+    }
+
+    private function _dieWithInternalServerError()
+    {
+        $response = new Zend_Controller_Response_Http();
+        $response->setHttpResponseCode(500);
+        $response->setBody('Internal Server Error. Please contact an administrator.');
+        $response->sendResponse();
+        die();
+    }
+
+    private function _redirectToSetupAndDie()
+    {
+        $request  = new Zend_Controller_Request_Http();
+        $webPath  = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/';
+        $response = new Zend_Controller_Response_Http();
+        $response->setRedirect($webPath . 'setup.php');
+        $response->setBody('No configuration file found, redirecting to setup.');
+        $response->sendResponse();
+        die();
     }
 }

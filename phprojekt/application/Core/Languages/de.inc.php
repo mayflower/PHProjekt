@@ -564,3 +564,25 @@ $lang["Content Help Setting"]["Timecard"] = "<br />
     When you have finished doing the changes in this Multiple Select Box, press Save.<br />
     <br />
     <br />";
+
+// Upgrade Controller
+$lang["Migration neccessary"] = "Migration benötigt";
+$lang["Thank you for upgrading to PHProjekt version"] = "Danke, dass sie das Upgrade auf Version ";
+$lang[".<br/>We're sorry to disrupt your Work, but we need to do some things to the database.<br/><br/>You can use Phprojekt again after an administrator initiated the upgrade."] = " installiert haben.<br/>Wir müssen ihre Arbeit aufgrund von Änderungen in der Datenbankstruktur leider unterbrechen.<br/><br/>Sie können PHProjekt wieder benutzen nachdem ein Administrator die Änderungen autorisiert hat.";
+$lang["Logout"] = "Abmelden";
+$lang["Migration"] = "Migration";
+$lang["Thank you for upgrading to PHProjekt version "] = "Danke, dass sie das Upgrade auf Version ";
+$lang[".<br/>We're sorry to bother you, but we need to upgrade the database to the current version.<br/><br/>\nWhen you're ready, just click the button. Please note that the upgrade might take a few moments."] = " installiert haben.<br/>Wir müssen ihre Arbeit aufgrund von Änderungen in der Datenbankstruktur leider unterbrechen.<br/><br/>\nDie Migration kann einige Minuten dauern.";
+$lang["<h4>Warning!</h4><p>This feature is still new, and we really don't want you to lose your data.<br/>\nSo please, back up your data before clicking the button.<br/><br/>Thank you.</p>"] = "<h4>Achtung!</h4><p>Die Migration ist ein neues Feature, und wir sind sehr besorgt um ihre Daten. Deshalb bitten wir sie, bevor sie das Upgrade starten eine Sicherung ihrer Datenbank anzufertigen.<br/><br/>Vielen Dank.</p>";
+$lang["Not installed"] = "Nicht installiert";
+$lang["Upgrade now"] = "Upgrade starten";
+$lang["Continue"] = "Fortfahren";
+$lang["This is the place where migration happens after installing a new Version.\nCurrently, there's nothing to upgrade, so this page is quite boring.<br/>\nVisit the "] = "Auf dieser Seite findet die Migration statt, nachdem eine neue Version installiert wurde.";
+$lang["main page"] = "Hier";
+$lang[" for more interesting things."] = "können sie auf PHProjekt zugreifen.";
+$lang["Upgrading"] = "Installiere Upgrade";
+$lang["Done"] = "Fertig";
+$lang["There was an unknown problem on the server. We're really sorry.\nYou can try again, but there might be problems in the future."] = "Auf dem Server ist ein Problem aufgetreten. Sie können die Migration erneut probieren, aber wir können momentan nicht garantieren dass die Datenbank intakt geblieben ist.";
+$lang["There was a problem upgrading, but we managed to keep the database in a consistent state.\nPlease consult the logfiles to find out more."] = "Es gab ein Problem während des Upgrade-Vorgangs. Wir konnten die Datenbank jedoch in einen konsistenten Zustand zurückversetzen. Bitte überprüfen sie die Logfiles für mehr Informationen zum Problem.";
+$lang["We're sorry, but our upgrade attempt broke the database.\nPlease recover your backups and consult the logfiles to get more information."] = "Es tut uns sehr leid, aber die Migrationsroutine hat ihre Datenbank in einen inkonsistenten Zustand versetzt. Bitte spielen sie ihre Backups ein und überprüfen sie die Logfiles für mehr Informationen über das aufgetretene Problem.";
+$lang["An error occured while upgrading this module."] = "Bei der Migration dieses Moduls trat ein Fehler auf.";

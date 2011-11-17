@@ -1,13 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.NodeList-manipulate"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.NodeList-manipulate"] = true;
-dojo.provide("dojo.NodeList-manipulate");
+define("dojo/NodeList-manipulate", ["dojo"], function(dojo) {
 
 /*=====
 dojo["NodeList-manipulate"] = {
@@ -51,7 +42,7 @@ dojo["NodeList-manipulate"] = {
 	}
 
 	function makeWrapNode(/*DOMNode||String*/html, /*DOMNode*/refNode){
-		// summary: 
+		// summary:
 		// 		convert HTML into nodes if it is not already a node.
 		if(typeof html == "string"){
 			html = dojo._toDom(html, (refNode && refNode.ownerDocument));
@@ -655,25 +646,25 @@ dojo["NodeList-manipulate"] = {
 			//	example:
 			//		assume a DOM created by this markup:
 			//	|	<div class="container">
-			// 	|		<div class="spacer">___</div>			
+			// 	|		<div class="spacer">___</div>
 			// 	|		<div class="red">Red One</div>
-			// 	|		<div class="spacer">___</div>			
+			// 	|		<div class="spacer">___</div>
 			// 	|		<div class="blue">Blue One</div>
-			// 	|		<div class="spacer">___</div>			
+			// 	|		<div class="spacer">___</div>
 			// 	|		<div class="red">Red Two</div>
-			// 	|		<div class="spacer">___</div>			
+			// 	|		<div class="spacer">___</div>
 			// 	|		<div class="blue">Blue Two</div>
 			//	|	</div>
 			//		Running this code:
 			//	|	dojo.query(".red").replaceAll(".blue");
 			//		Results in this DOM structure:
 			//	|	<div class="container">
-			// 	|		<div class="spacer">___</div>			
-			// 	|		<div class="spacer">___</div>			
+			// 	|		<div class="spacer">___</div>
+			// 	|		<div class="spacer">___</div>
 			// 	|		<div class="red">Red One</div>
 			// 	|		<div class="red">Red Two</div>
-			// 	|		<div class="spacer">___</div>			
-			// 	|		<div class="spacer">___</div>			
+			// 	|		<div class="spacer">___</div>
+			// 	|		<div class="spacer">___</div>
 			// 	|		<div class="red">Red One</div>
 			// 	|		<div class="red">Red Two</div>
 			//	|	</div>
@@ -728,4 +719,5 @@ dojo["NodeList-manipulate"] = {
 	}
 })();
 
-}
+return dojo.NodeList;
+});

@@ -1,1 +1,8 @@
-({"valueLabel":"l","hueLabel":"n","saturationLabel":"m","saturationPickerTitle":"Saturation Selector","blueLabel":"b","greenLabel":"g","redLabel":"r","hexLabel":"hex","huePickerTitle":"Hue Selector","degLabel":"°"})
+({
+hueLabel: "n",
+saturationLabel: "m",
+valueLabel: "l", /* aka intensity or brightness */
+huePickerTitle: "Välj färgton",
+saturationPickerTitle: "Välj mättnad"
+})
+

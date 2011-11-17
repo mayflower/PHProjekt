@@ -1,1 +1,22 @@
-({"backwards":"Vers l'arrière","findReplace":"Rechercher/Remplacer","replaceAll":"Toutes les occurrences","replaceDialogText":"${0} occurrence(s) remplacée(s).","replaceButton":"Remplacer","findButton":"Rechercher","findLabel":"Que rechercher :","matchCase":"Respecter la casse","replaceLabel":"Remplacer par :","eofDialogTextFind":"found","eofDialogText":"Last occurrence ${0}","findTooltip":"Enter text to find","replaceTooltip":"Enter text to replace with","replaceAllButton":"Replace All","eofDialogTextReplace":"replaced","backwardsTooltip":"Search backwards for text","replaceAllButtonTooltip":"Replace all the text","replaceButtonTooltip":"Replace the text","matchCaseTooltip":"Match case","findButtonTooltip":"Find the text"})
+({
+	"findLabel": "Rechercher :",
+	"findTooltip": "Entrez le texte à rechercher",
+	"replaceLabel": "Remplacer par :",
+	"replaceTooltip": "Entrez le texte de remplacement",
+	"findReplace": "Rechercher et remplacer",
+	"matchCase": "Respecter la casse",
+	"matchCaseTooltip": "Respecter la casse",
+	"backwards": "Vers l'arrière",
+	"backwardsTooltip": "Recherchez le texte vers l'arrière",
+	"replaceAll": "Toutes les occurrences",
+	"replaceAllButton": "Remplacer tout",
+	"replaceAllButtonTooltip": "Remplacez tout le texte",
+	"findButton": "Rechercher",
+	"findButtonTooltip": "Recherchez le texte",
+	"replaceButton": "Remplacer",
+	"replaceButtonTooltip": "Remplacez le texte",
+	"replaceDialogText": "${0} occurrence(s) remplacée(s)",
+	"eofDialogText": "Dernière occurrence ${0}",
+	"eofDialogTextFind": "trouvé",
+	"eofDialogTextReplace": "remplacé"
+})

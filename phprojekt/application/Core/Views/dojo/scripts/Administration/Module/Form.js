@@ -21,7 +21,9 @@
 
 dojo.provide("phpr.Module.Form");
 
-dojo.declare("phpr.Module.Form", phpr.Core.Form, {
+dojo.require("dijit.Dialog");
+
+dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
     _dialog: null,
 
     initData:function() {
@@ -36,9 +38,9 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
 
         // Button for open the dialog
         if (designerData && (typeof designerData['definition'] === 'object')) {
-            this.formdata[1] += this.fieldTemplate.buttonActionRender(phpr.nls.get('Form'), 'designerButton',
+            this.formdata[1].push(this.fieldTemplate.buttonActionRender(phpr.nls.get('Form'), 'designerButton',
                 phpr.nls.get('Open Editor'), '', 'dojo.publish(\'Module.openDialog\');',
-                phpr.nls.get('Open a dialog where you can drag and drop many fields for create the form as you want.'));
+                phpr.nls.get('Open a dialog where you can drag and drop many fields for create the form as you want.')));
         }
 
         // Hidden field for the MD data
@@ -72,8 +74,9 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         }
         var jsonDesignerData = dojo.toJson(designerData['definition']);
 
-        this.formdata[1] += this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData,
-            true, false);
+        this.formdata[1].push(
+            this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false)
+        );
     },
 
     setPermissions:function(data) {
@@ -89,6 +92,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
     },
 
     postRenderForm:function() {
+        this.inherited(arguments);
         // Add onBlur to the label field for update the tableName
         dojo.connect(dojo.byId('label'), "onchange",  dojo.hitch(this, "updateDesignerData"));
     },
@@ -99,7 +103,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
         this._dialog = new dijit.Dialog({
             title:     phpr.nls.get('Module Designer') + ' [' + dijit.byId('label').value + ']',
             id:        "moduleManagerDialog",
-            style:     "width:95%; height:" + (getMaxHeight() - 28) + "px;",
+            style:     "width:95%; height:" + (phpr.viewManager.getMaxHeight() - 28) + "px;",
             baseClass: 'moduleManagerDialog'
         });
         dojo.body().appendChild(this._dialog.domNode);
@@ -261,6 +265,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
             return false;
         }
 
+        this.setSubmitInProgress(true);
         phpr.send({
             url:       phpr.webpath + 'index.php/Core/moduleDesigner/jsonSave/nodeId/1/id/' + this.id,
             content:   this.sendData,
@@ -283,13 +288,20 @@ dojo.declare("phpr.Module.Form", phpr.Core.Form, {
                                 phpr.DataStore.requestData({
                                     url:         phpr.globalModuleUrl,
                                     processData: dojo.hitch(this, function() {
-                                        this.main.setGlobalModulesNavigation();
-                                        this.publish("setUrlHash", [phpr.parentmodule, null, [phpr.module]]);
+                                        this.setSubmitInProgress(false);
+                                        phpr.pageManager.changeState(
+                                            { moduleName: "Module" },
+                                            { forceModuleReload: true }
+                                        );
                                     })
                                 });
+                            } else {
+                                this.setSubmitInProgress(false);
                             }
                         })
                     });
+               } else {
+                    this.setSubmitInProgress(false);
                }
             })
         });

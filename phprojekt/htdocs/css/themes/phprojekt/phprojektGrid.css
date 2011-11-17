@@ -170,19 +170,19 @@
 }
 
 /* Actions */
-.phprojekt .gridActions #arrow {
+.phprojekt .gridActions .arrow {
     background-image: url("images/arrowLeft.png");
     background-color: transparent;
     width: 38px;
     height: 22px;
 }
 
-.phprojekt .gridActions #gridComboAction .exportOption {
+.phprojekt .gridActions .gridComboAction .exportOption {
     color: green;
     background-color: white;
 }
 
-.phprojekt .gridActions #gridComboAction .deleteOption {
+.phprojekt .gridActions .gridComboAction .deleteOption {
     color: red;
     background-color: white;
 }

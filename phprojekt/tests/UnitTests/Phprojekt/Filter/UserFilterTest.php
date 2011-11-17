@@ -21,7 +21,6 @@
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Filter
@@ -40,18 +39,29 @@ require_once 'PHPUnit/Framework.php';
  * @group      phprojekt-filter
  * @group      phprojekt-filter-user
  */
-class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
+class Phprojekt_Filter_UserFilterTest extends DatabaseTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * Test the filtering
      */
     public function testFilter()
     {
         $record = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'Invisible Root');
+        $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'PHProjekt');
         $tree   = new Phprojekt_Tree_Node_Database($record, 1);
         $tree   = $tree->setup($filter);
-        $this->assertEquals(1, count($tree->getRootNode()->getChildren()));
+        $this->assertEquals(1, $tree->getRootNode()->id);
 
         $this->setExpectedException('InvalidArgumentException');
         $filter = new Phprojekt_Filter_UserFilter($record, 'NONE', 'Invisible Root');
@@ -65,10 +75,10 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
         $record = new Phprojekt_Project(array('db' => $this->sharedFixture));
         $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'NONE');
 
-        $filter->setValue('Invisible Root');
+        $filter->setValue('PHProjekt');
         $tree = new Phprojekt_Tree_Node_Database($record, 1);
         $tree = $tree->setup($filter);
-        $this->assertEquals(1, count($tree->getRootNode()->getChildren()));
+        $this->assertEquals(1, $tree->getRootNode()->id);
     }
 
     /**
@@ -80,7 +90,7 @@ class Phprojekt_Filter_UserFilterTest extends PHPUnit_Framework_TestCase
         $user->find(1);
 
         $record = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'Invisble Root');
+        $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'PHProjekt');
         $tree   = new Phprojekt_Tree_Node_Database($record, 1);
         $tree   = $tree->setup($filter);
 

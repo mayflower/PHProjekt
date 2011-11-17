@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dijit.form.CheckBox"]||(dojo._hasResource["dijit.form.CheckBox"]=!0,dojo.provide("dijit.form.CheckBox"),dojo.require("dijit.form.ToggleButton"),dojo.declare("dijit.form.CheckBox",dijit.form.ToggleButton,{templateString:dojo.cache("dijit.form","templates/CheckBox.html",'<div class="dijit dijitReset dijitInline" role="presentation"\n\t><input\n\t \t${!nameAttrSetting} type="${type}" ${checkedAttrSetting}\n\t\tclass="dijitReset dijitCheckBoxInput"\n\t\tdojoAttachPoint="focusNode"\n\t \tdojoAttachEvent="onclick:_onClick"\n/></div>\n'),
+baseClass:"dijitCheckBox",type:"checkbox",value:"on",readOnly:!1,attributeMap:dojo.delegate(dijit.form._FormWidget.prototype.attributeMap,{readOnly:"focusNode"}),_setReadOnlyAttr:function(a){this._set("readOnly",a);dojo.attr(this.focusNode,"readOnly",a);dijit.setWaiState(this.focusNode,"readonly",a)},_setValueAttr:function(a,b){typeof a=="string"&&(this._set("value",a),dojo.attr(this.focusNode,"value",a),a=!0);this._created&&this.set("checked",a,b)},_getValueAttr:function(){return this.checked?this.value:
+!1},_setLabelAttr:void 0,postMixInProperties:function(){if(this.value=="")this.value="on";this.checkedAttrSetting=this.checked?"checked":"";this.inherited(arguments)},_fillContent:function(){},reset:function(){this._hasBeenBlurred=!1;this.set("checked",this.params.checked||!1);this._set("value",this.params.value||"on");dojo.attr(this.focusNode,"value",this.value)},_onFocus:function(){this.id&&dojo.query("label[for='"+this.id+"']").addClass("dijitFocusedLabel");this.inherited(arguments)},_onBlur:function(){this.id&&
+dojo.query("label[for='"+this.id+"']").removeClass("dijitFocusedLabel");this.inherited(arguments)},_onClick:function(a){return this.readOnly?(dojo.stopEvent(a),!1):this.inherited(arguments)}}),dojo.declare("dijit.form.RadioButton",dijit.form.CheckBox,{type:"radio",baseClass:"dijitRadio",_setCheckedAttr:function(a){this.inherited(arguments);if(this._created&&a){var b=this;dojo.query("INPUT[type=radio]",this.focusNode.form||dojo.doc).forEach(function(a){a.name==b.name&&a!=b.focusNode&&a.form==b.focusNode.form&&
+(a=dijit.getEnclosingWidget(a))&&a.checked&&a.set("checked",!1)})}},_clicked:function(){this.checked||this.set("checked",!0)}}));

@@ -1,15 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.form.SimpleTextarea"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.SimpleTextarea"] = true;
-dojo.provide("dijit.form.SimpleTextarea");
-
-dojo.require("dijit.form.TextBox");
+define("dijit/form/SimpleTextarea", ["dojo", "dijit", "dijit/form/TextBox"], function(dojo, dijit) {
 
 dojo.declare("dijit.form.SimpleTextarea",
 	dijit.form.TextBox,
@@ -43,10 +32,18 @@ dojo.declare("dijit.form.SimpleTextarea",
 
 	postMixInProperties: function(){
 		// Copy value from srcNodeRef, unless user specified a value explicitly (or there is no srcNodeRef)
+		// TODO: parser will handle this in 2.0
 		if(!this.value && this.srcNodeRef){
 			this.value = this.srcNodeRef.value;
 		}
 		this.inherited(arguments);
+	},
+
+	buildRendering: function(){
+		this.inherited(arguments);
+		if(dojo.isIE && this.cols){ // attribute selectors is not supported in IE6
+			dojo.addClass(this.textbox, "dijitTextAreaCols");
+		}
 	},
 
 	filter: function(/*String*/ value){
@@ -56,13 +53,6 @@ dojo.declare("dijit.form.SimpleTextarea",
 			value = value.replace(/\r/g,"");
 		}
 		return this.inherited(arguments);
-	},
-
-	postCreate: function(){
-		this.inherited(arguments);
-		if(dojo.isIE && this.cols){ // attribute selectors is not supported in IE6
-			dojo.addClass(this.textbox, "dijitTextAreaCols");
-		}
 	},
 
 	_previousValue: "",
@@ -99,4 +89,6 @@ dojo.declare("dijit.form.SimpleTextarea",
 	}
 });
 
-}
+
+return dijit.form.SimpleTextarea;
+});

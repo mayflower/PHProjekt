@@ -1,22 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+define("dijit/_base", ["dojo", "dijit", "dijit/_base/focus", "dijit/_base/manager", "dijit/_base/place", "dijit/_base/popup", "dijit/_base/scroll", "dijit/_base/sniff", "dijit/_base/typematic", "dijit/_base/wai", "dijit/_base/window"], function(dojo, dijit) {
 
 
-if(!dojo._hasResource["dijit._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit._base"] = true;
-dojo.provide("dijit._base");
 
-dojo.require("dijit._base.focus");
-dojo.require("dijit._base.manager");
-dojo.require("dijit._base.place");
-dojo.require("dijit._base.popup");
-dojo.require("dijit._base.scroll");
-dojo.require("dijit._base.sniff");
-dojo.require("dijit._base.typematic");
-dojo.require("dijit._base.wai");
-dojo.require("dijit._base.window");
-
-}
+return dijit._base;
+});

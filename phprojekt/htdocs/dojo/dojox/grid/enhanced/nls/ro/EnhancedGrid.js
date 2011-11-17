@@ -1,1 +1,8 @@
-({"descending":"Descrescător","sortingState":"${0} - ${1}","ascending":"Crescător","nestedSort":"Sortare imbricată","unsorted":"Nu sortaţi această coloană ","singleSort":"Sortare singulară "})
+({
+	singleSort: "Sortare singură",
+	nestedSort: "Sortare imbricată",
+	ascending: "Crescător",
+	descending: "Descrescător",
+	unsorted: "Nu sortaţi această coloană"
+})
+

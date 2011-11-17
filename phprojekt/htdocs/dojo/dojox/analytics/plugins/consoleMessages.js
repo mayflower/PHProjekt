@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.analytics.plugins.consoleMessages"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.analytics.plugins.consoleMessages"] = true;
 dojo.require("dojox.analytics._base");
 dojo.provide("dojox.analytics.plugins.consoleMessages");
 
@@ -24,9 +15,7 @@ dojox.analytics.plugins.consoleMessages = new (function(){
 		if(console[lvls[i]]){
 			dojo.connect(console, lvls[i], dojo.hitch(this, "addData", lvls[i]));
 		}else{
-			console[lvls[i]] = dojo.hitch(this, "addData", lvls[i]);	
+			console[lvls[i]] = dojo.hitch(this, "addData", lvls[i]);
 		}
 	}
 })();
-
-}

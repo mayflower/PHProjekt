@@ -33,15 +33,18 @@ dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
     openForm:function(id, module) {
         // Summary:
         //    This function opens a new Detail View
-        if (!dojo.byId('detailsBox')) {
+        this.preOpenForm();
+        var view = phpr.viewManager.useDefaultView({blank: true});
+
+        if (!this.grid) {
             this.reload();
         }
 
         if (id == undefined || id == 0) {
             var params          = new Array();
-            params['startDate'] = phpr.Date.getIsoDate(new Date());
+            params['startDate'] = phpr.date.getIsoDate(new Date());
         }
 
-        this.form = new this.formWidget(this, id, module, params);
+        this.form = new this.formWidget(this, id, module, params, view.detailsBox);
     }
 });

@@ -21,7 +21,6 @@
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for database manager
@@ -47,7 +46,7 @@ class Phprojekt_PhprojektTest extends PHPUnit_Framework_TestCase
 
     public function testCompareVersion()
     {
-        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.6", Phprojekt::getVersion()));
+        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.1.0", Phprojekt::getVersion()));
         $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.1", "6.0.0"));
         $this->assertLessThan(0, Phprojekt::compareVersion("6.0.1", "6.1.0"));
         $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.1-RC2", "6.0.1-RC1"));
@@ -67,8 +66,6 @@ class Phprojekt_PhprojektTest extends PHPUnit_Framework_TestCase
                         'help' => 'http://us.php.net/manual/en/iconv.installation.php'),
                     'ctype' => array('required' => true, 'checked' => true,
                         'help' => 'http://us.php.net/manual/en/ctype.installation.php'),
-                    'gd' => array('required' => true, 'checked' => true,
-                        'help' => 'http://us.php.net/manual/en/image.installation.php'),
                     'pcre' => array('required' => true, 'checked' => true,
                         'help' => 'http://us.php.net/manual/en/pcre.installation.php'),
                     'pdo' => array('required' => true, 'checked' => true,

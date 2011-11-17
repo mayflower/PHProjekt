@@ -1,1 +1,12 @@
-({"close":"[luk]","title":"Titel","authors":"Forfattere","summary":"Summary","content":"Indhold","contributors":"Bidragydere","updated":"Opdateret","displayOptions":"[fremvisningsvalg]","id":"Id"})
+({
+	displayOptions: "[fremvisningsvalg]",
+	title: "Titel",
+	authors: "Forfattere",
+	contributors: "Bidragydere",
+	id: "Id",
+	close: "[luk]",
+	updated: "Opdateret",
+	summary: "Resumé",
+	content: "Indhold"
+})
+

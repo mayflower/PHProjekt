@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.tools.Ellipse"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.tools.Ellipse"] = true;
 dojo.provide("dojox.drawing.tools.Ellipse");
 
 dojox.drawing.tools.Ellipse = dojox.drawing.util.oo.declare(
@@ -79,12 +70,10 @@ dojox.drawing.tools.Ellipse = dojox.drawing.util.oo.declare(
 
 dojox.drawing.tools.Ellipse.setup = {
 	// summary: See stencil._Base ToolsSetup
-	//	
+	//
 	name:"dojox.drawing.tools.Ellipse",
 	tooltip:"Ellipse Tool",
 	iconClass:"iconEllipse"
 };
 
 dojox.drawing.register(dojox.drawing.tools.Ellipse.setup, "tool");
-
-}

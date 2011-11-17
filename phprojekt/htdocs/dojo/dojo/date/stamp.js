@@ -1,13 +1,5 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.date.stamp"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.date.stamp"] = true;
-dojo.provide("dojo.date.stamp");
+define("dojo/date/stamp", ["dojo"], function(dojo) {
+dojo.getObject("date.stamp", true, dojo);
 
 // Methods to convert dates to or from a wire (string) format using well-known conventions
 
@@ -87,7 +79,7 @@ dojo.date.stamp.fromISOString = function(/*String*/formattedString, /*Number?*/d
 	}
 
 	return result; // Date or null
-}
+};
 
 /*=====
 	dojo.date.stamp.__Options = function(){
@@ -137,12 +129,13 @@ dojo.date.stamp.toISOString = function(/*Date*/dateObject, /*dojo.date.stamp.__O
 		}else if(options.selector != "time"){
 			var timezoneOffset = dateObject.getTimezoneOffset();
 			var absOffset = Math.abs(timezoneOffset);
-			time += (timezoneOffset > 0 ? "-" : "+") + 
+			time += (timezoneOffset > 0 ? "-" : "+") +
 				_(Math.floor(absOffset/60)) + ":" + _(absOffset%60);
 		}
 		formattedDate.push(time);
 	}
 	return formattedDate.join('T'); // String
-}
+};
 
-}
+return dojo.date.stamp;
+});

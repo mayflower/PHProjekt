@@ -1,1 +1,5 @@
-({"badPasswordMessage":"Ongeldig wachtwoord. ","nomatchMessage":"Wachtwoorden komen niet overeen."})
+({
+        nomatchMessage: "Wachtwoorden komen niet overeen.",
+		badPasswordMessage: "Ongeldig wachtwoord."
+})
+

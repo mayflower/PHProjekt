@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojo._base.Color"]||(dojo._hasResource["dojo._base.Color"]=!0,dojo.provide("dojo._base.Color"),dojo.require("dojo._base.array"),dojo.require("dojo._base.lang"),function(){var b=dojo;dojo.Color=function(a){a&&this.setColor(a)};dojo.Color.named={black:[0,0,0],silver:[192,192,192],gray:[128,128,128],white:[255,255,255],maroon:[128,0,0],red:[255,0,0],purple:[128,0,128],fuchsia:[255,0,255],green:[0,128,0],lime:[0,255,0],olive:[128,128,0],yellow:[255,255,0],navy:[0,0,128],blue:[0,0,255],
+teal:[0,128,128],aqua:[0,255,255],transparent:b.config.transparentColor||[255,255,255]};dojo.extend(dojo.Color,{r:255,g:255,b:255,a:1,_set:function(a,b,c,e){this.r=a;this.g=b;this.b=c;this.a=e},setColor:function(a){b.isString(a)?b.colorFromString(a,this):b.isArray(a)?b.colorFromArray(a,this):(this._set(a.r,a.g,a.b,a.a),a instanceof b.Color||this.sanitize());return this},sanitize:function(){return this},toRgb:function(){return[this.r,this.g,this.b]},toRgba:function(){return[this.r,this.g,this.b,this.a]},
+toHex:function(){return"#"+b.map(["r","g","b"],function(a){a=this[a].toString(16);return a.length<2?"0"+a:a},this).join("")},toCss:function(a){var b=this.r+", "+this.g+", "+this.b;return(a?"rgba("+b+", "+this.a:"rgb("+b)+")"},toString:function(){return this.toCss(!0)}});dojo.blendColors=function(a,d,c,e){var f=e||new b.Color;b.forEach(["r","g","b","a"],function(b){f[b]=a[b]+(d[b]-a[b])*c;b!="a"&&(f[b]=Math.round(f[b]))});return f.sanitize()};dojo.colorFromRgb=function(a,b){var c=a.toLowerCase().match(/^rgba?\(([\s\.,0-9]+)\)/);
+return c&&dojo.colorFromArray(c[1].split(/\s*,\s*/),b)};dojo.colorFromHex=function(a,d){var c=d||new b.Color,e=a.length==4?4:8,f=(1<<e)-1,a=Number("0x"+a.substr(1));if(isNaN(a))return null;b.forEach(["b","g","r"],function(b){var d=a&f;a>>=e;c[b]=e==4?17*d:d});c.a=1;return c};dojo.colorFromArray=function(a,d){var c=d||new b.Color;c._set(Number(a[0]),Number(a[1]),Number(a[2]),Number(a[3]));if(isNaN(c.a))c.a=1;return c.sanitize()};dojo.colorFromString=function(a,d){var c=b.Color.named[a];return c&&b.colorFromArray(c,
+d)||b.colorFromRgb(a,d)||b.colorFromHex(a,d)}}());

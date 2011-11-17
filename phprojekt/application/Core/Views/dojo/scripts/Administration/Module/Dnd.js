@@ -19,7 +19,11 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
+dojo.provide("phpr.Module.Designer");
+
 contentModuleDesignerSource = new Array();
+
+dojo.require("dojo.dnd.Source");
 
 dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
     // Summary:
@@ -30,19 +34,18 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
         if (this != source) {
             this.onDropExternal(source, nodes, copy);
             var m = dojo.dnd.manager();
+            phpr.makeModuleDesignerSource();
             if (this.node.id == m.target.node.id) {
                 if (source.node.id == 'moduleDesignerSource') {
                     // Rewrite the sources for add the moved item
-                    phpr.makeModuleDesignerSource();
 
                     // Open the edit form
                     var t = this._normalizedCreator(nodes[0]);
-                    if (dojo.isIE || (dojo.isChrome && dojo.isChrome == 7)) {
-                        dojo.style(t.node.childNodes[0].childNodes[1].childNodes[0].childNodes[2], 'display', 'inline');
-                    } else {
-                        dojo.style(t.node.childNodes[0].childNodes[3].childNodes[0].childNodes[2], 'display', 'inline');
-                    }
+                    var node = dojo.query('.editFields', t.node)[0];
+                    dojo.style(node, 'display', 'inline');
                     phpr.editModuleDesignerField(t.node.id);
+                } else {
+                    phpr.moduleDesignerHideForm();
                 }
             }
         } else {
@@ -133,7 +136,7 @@ phpr.makeModuleDesignerTarget = function(jsonData, tabs) {
             tab.sync();
         }
     }
-}
+};
 
 phpr.deleteModuleDesignerField = function(nodeId) {
     // Summary:
@@ -159,8 +162,11 @@ phpr.deleteModuleDesignerField = function(nodeId) {
         }
     }
 
-    phpr.switchOkButton('save');
+    phpr.moduleDesignerHideForm();
 };
+
+var moduleDesignerTemplates = null;
+var moduleDesignerFormGarbageCollector = null;
 
 phpr.editModuleDesignerField = function(nodeId) {
     // Summary:
@@ -180,6 +186,36 @@ phpr.editModuleDesignerField = function(nodeId) {
     var status       = '';
     var isRequired   = '';
     var id           = '';
+
+    var insertNodesAndWidgetsIntoNode = function(target, nodeList) {
+        for (var i in nodeList) {
+            var node = nodeList[i];
+            if (!node.domNode) {
+                dojo.parser.parse(node);
+            }
+            node = node.domNode || node;
+            target.appendChild(node);
+        }
+    };
+
+    var getTemplates = function() {
+        if (moduleDesignerTemplates !== null && dojo.isFunction(moduleDesignerTemplates.destroy)) {
+            moduleDesignerTemplates.destroy();
+        }
+
+        moduleDesignerTemplates = new phpr.Default.Field();
+
+        return moduleDesignerTemplates;
+    };
+
+    var getCollector = function() {
+        if (moduleDesignerFormGarbageCollector === null) {
+            moduleDesignerFormGarbageCollector = new phpr.Default.System.GarbageCollector();
+        }
+
+        return moduleDesignerFormGarbageCollector;
+    };
+
     dojo.query('.hiddenValue', dojo.byId(nodeId)).forEach(function(ele) {
         switch (ele.name) {
             case 'selectType':
@@ -226,68 +262,69 @@ phpr.editModuleDesignerField = function(nodeId) {
     phpr.destroyWidget('moduleDesignerSubmitButtonList');
     phpr.destroyWidget('moduleDesignerSubmitButtonGeneral');
 
-    var fieldsTable   = '';
-    var fieldsForm    = '';
-    var fieldsList    = '';
-    var fieldsGeneral = '';
-    var template      = new phpr.Default.Field();
-    var render        = new phpr.Component();
+    var fieldsTable = new Array();
+    var fieldsForm = new Array();
+    var fieldsList = new Array();
+    var fieldsGeneral = new Array();
+    var template = getTemplates();
+    var collector = getCollector();
+    collector.collect();
 
     // Table
-    fieldsTable += template.textFieldRender(phpr.nls.get('Field name'), 'tableField', tableField, 50, true,
-        false);
+    fieldsTable.push(template.textFieldRender(phpr.nls.get('Field name'), 'tableField', tableField, 50, true, false));
+
     var tableTypeRange = new Array();
     switch (formType) {
         case 'text':
         case 'selectValues':
             tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
             tableTypeRange.push({'id': 'int', 'name': 'INT'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
-                tableType, true, false);
-            fieldsTable += template.textFieldRender(phpr.nls.get('Field lenght'), 'tableLength',
-                tableLength, 3, true, false);
+            fieldsTable.push(template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                tableType, true, false));
+            fieldsTable.push(template.textFieldRender(phpr.nls.get('Field length'), 'tableLength',
+                tableLength, 3, true, false));
             break;
         case 'checkbox':
             tableTypeRange.push({'id': 'int', 'name': 'INT'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
-                tableType, true, false);
-            fieldsTable += template.textFieldRender(phpr.nls.get('Field lenght'), 'tableLength', 1, 1,
-                true, false);
+            fieldsTable.push(template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                tableType, true, false));
+            fieldsTable.push(template.textFieldRender(phpr.nls.get('Field length'), 'tableLength', 1, 1,
+                true, false));
             break;
         case 'date':
             tableTypeRange.push({'id': 'date', 'name': 'DATE'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
-                'date', true, false);
+            fieldsTable.push(template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'date', true, false));
             break;
         case 'time':
             tableTypeRange.push({'id': 'time', 'name': 'TIME'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
-                'time', true, false);
+            fieldsTable.push(template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'time', true, false));
             break;
         case 'datetime':
             tableTypeRange.push({'id': 'datetime', 'name': 'DATETIME'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
-                'datetime', true, false);
+            fieldsTable.push(template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'datetime', true, false));
             break;
         case 'percentage':
             tableTypeRange.push({'id': 'varchar', 'name': 'VARCHAR'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
-                'varchar', true, false);
+            fieldsTable.push(template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'varchar', true, false));
             break;
         case 'rating':
             tableTypeRange.push({'id': 'int', 'name': 'INT'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
-                'int', true, false);
+            fieldsTable.push(template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'int', true, false));
             break;
         case 'textarea':
             tableTypeRange.push({'id': 'text', 'name': 'TEXT'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
-                'text', true, false);
+            fieldsTable.push(template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'text', true, false));
             break;
         case 'upload':
             tableTypeRange.push({'id': 'text', 'name': 'TEXT'});
-            fieldsTable += template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
-                'text', true, false);
+            fieldsTable.push(template.selectRender(tableTypeRange, phpr.nls.get('Field type'), 'tableType',
+                'text', true, false));
             break;
     }
 
@@ -298,123 +335,161 @@ phpr.editModuleDesignerField = function(nodeId) {
             selectTypeRange.push({'id': 'user', 'name': phpr.nls.get('Users')});
             selectTypeRange.push({'id': 'contact', 'name': phpr.nls.get('Contacts')});
             selectTypeRange.push({'id': 'custom', 'name': phpr.nls.get('Custom Values')});
-            fieldsTable += template.selectRender(selectTypeRange, phpr.nls.get('Select Type'), 'selectType',
-                selectType, true, false);
+            fieldsTable.push(template.selectRender(selectTypeRange, phpr.nls.get('Select Type'), 'selectType',
+                selectType, true, false));
             break;
     }
 
-    fieldsTable += '<input type="hidden" name="id" class="hiddenValue" dojoType="dijit.form.TextBox" value="'
-        + id + '" />';
-    fieldsTable += '<tr><td class="label">';
-    fieldsTable += '<label for="moduleDesignerSubmitButtonTable">&nbsp;</label>';
-    fieldsTable += '</td><td>';
-    fieldsTable += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonTable" baseClass="positive"';
-    fieldsTable += ' type="button" iconClass="tick"></button>';
-    fieldsTable += '&nbsp;';
-    fieldsTable += '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonTable" baseClass="positive"';
-    fieldsTable += ' type="button" iconClass="cancel"></button>';
-    fieldsTable += '</td></tr>';
+    fieldsTable.push(
+        template.hiddenFieldRender('', 'id', id)
+    );
+
+    fieldsTable.push(
+        dojo.create('tr', {
+            innerHTML: '<td class="label">' +
+                        '<label for="moduleDesignerSubmitButtonTable">&nbsp;</label>' +
+                        '</td><td>' +
+                        '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonTable" baseClass="positive"' +
+                        ' type="button" iconClass="tick"></button>' +
+                        '&nbsp;' +
+                        '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonTable" baseClass="positive"' +
+                        ' type="button" iconClass="cancel"></button>' +
+                        '</td>'
+        })
+    );
 
     // Form
-    fieldsForm += template.textFieldRender(phpr.nls.get('Label'), 'formLabel', formLabel, 255, true, false);
+    fieldsForm.push(template.textFieldRender(phpr.nls.get('Label'), 'formLabel', formLabel, 255, true, false));
 
     switch (formType) {
         case 'selectValues':
             if (!formRange) {
                 formRange = 'id1 # value1 | id2 # value2';
             }
-            fieldsForm += template.textAreaRender(phpr.nls.get('Values'), 'formRange', formRange, true, false,
+            fieldsForm.push(template.textAreaRender(phpr.nls.get('Values'), 'formRange', formRange, true, false,
                 phpr.nls.get('Each option have the key, and the value to display, separated by #.') + '<br />'
                 + phpr.nls.get('Separate the diferent options with \'|\'.') + '<br />'
                 + phpr.nls.get('For Modules queries, use Module#keyField#displayField.') + '<br />'
                 + phpr.nls.get('The API will get all the keyField of the module and will use the displayField for '
-                + 'show it.'));
+                + 'show it.')));
             break;
         case 'rating':
             if (!formRange) {
                 formRange = '10';
             }
-            fieldsForm += template.textAreaRender(phpr.nls.get('Values'), 'formRange', formRange, true, false,
-                phpr.nls.get('Number of stars'));
+            fieldsForm.push(template.textAreaRender(phpr.nls.get('Values'), 'formRange', formRange, true, false,
+                phpr.nls.get('Number of stars')));
             break;
     }
-    fieldsForm += template.textFieldRender(phpr.nls.get('Default Value'), 'defaultValue', defaultValue, 0, false,
-        false);
+    fieldsForm.push(template.textFieldRender(phpr.nls.get('Default Value'), 'defaultValue', defaultValue, 0, false,
+        false));
 
-    fieldsForm += '<tr><td class="label">';
-    fieldsForm += '<label for="moduleDesignerSubmitButtonForm">&nbsp;</label>';
-    fieldsForm += '</td><td>';
-    fieldsForm += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonForm" baseClass="positive"';
-    fieldsForm += ' type="button" iconClass="tick"></button>';
-    fieldsForm += '&nbsp;';
-    fieldsForm += '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonForm" baseClass="positive"';
-    fieldsForm += ' type="button" iconClass="cancel"></button>';
-    fieldsForm += '</td></tr>';
+    fieldsForm.push(
+        dojo.create('tr', {
+            innerHTML: '<td class="label">' +
+                        '<label for="moduleDesignerSubmitButtonForm">&nbsp;</label>' +
+                        '</td><td>' +
+                        '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonForm" baseClass="positive"' +
+                        ' type="button" iconClass="tick"></button>' +
+                        '&nbsp;' +
+                        '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonForm" baseClass="positive"' +
+                        ' type="button" iconClass="cancel"></button>' +
+                        '</td>'
+        })
+    );
 
     // List
-    fieldsList += template.textFieldRender(phpr.nls.get('List Position'), 'listPosition', listPosition, 4, true, false,
+    fieldsList.push(template.textFieldRender(phpr.nls.get('List Position'), 'listPosition', listPosition, 4, true, false,
         phpr.nls.get('Defines the position of the field in the grid. Starts with 1 in the left. '
-        + '0 for do not show it.'));
+        + '0 for do not show it.')));
 
-    fieldsList += '<tr><td class="label">';
-    fieldsList += '<label for="moduleDesignerSubmitButtonList">&nbsp;</label>';
-    fieldsList += '</td><td>';
-    fieldsList += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonList" baseClass="positive"';
-    fieldsList += ' type="button" iconClass="tick"></button>';
-    fieldsList += '&nbsp;';
-    fieldsList += '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonList" baseClass="positive"';
-    fieldsList += ' type="button" iconClass="cancel"></button>';
-    fieldsList += '</td></tr>';
+    fieldsList.push(
+        dojo.create('tr', {
+            innerHTML: '<td class="label">' +
+                        '<label for="moduleDesignerSubmitButtonList">&nbsp;</label>' +
+                        '</td><td>' +
+                        '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonList" baseClass="positive"' +
+                        ' type="button" iconClass="tick"></button>' +
+                        '&nbsp;' +
+                        '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonList" baseClass="positive"' +
+                        ' type="button" iconClass="cancel"></button>' +
+                        '</td>'
+        })
+    );
 
     // General
     var statusRange = new Array();
     statusRange.push({'id': '0', 'name': phpr.nls.get('Inactive')});
     statusRange.push({'id': '1', 'name': phpr.nls.get('Active')});
-    fieldsGeneral += template.selectRender(statusRange, phpr.nls.get('Status'), 'status', status, true, false);
+    fieldsGeneral.push(template.selectRender(statusRange, phpr.nls.get('Status'), 'status', status, true, false));
 
     var isRequiredRange = new Array();
     isRequiredRange.push({'id': '0', 'name': phpr.nls.get('No')});
     isRequiredRange.push({'id': '1', 'name': phpr.nls.get('Yes')});
-    fieldsGeneral += template.selectRender(isRequiredRange, phpr.nls.get('Required Field'), 'isRequired', isRequired,
-        true, false);
+    fieldsGeneral.push(template.selectRender(isRequiredRange, phpr.nls.get('Required Field'), 'isRequired', isRequired,
+        true, false));
 
-    fieldsGeneral += '<tr><td class="label">';
-    fieldsGeneral += '<label for="moduleDesignerSubmitButtonGeneral">&nbsp;</label>';
-    fieldsGeneral += '</td><td>';
-    fieldsGeneral += '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonGeneral"';
-    fieldsGeneral += ' baseClass="positive" type="button" iconClass="tick"></button>';
-    fieldsGeneral += '&nbsp;';
-    fieldsGeneral += '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonGeneral" baseClass="positive"';
-    fieldsGeneral += ' type="button" iconClass="cancel"></button>';
-    fieldsGeneral += '</td></tr>';
+    fieldsGeneral.push(
+        dojo.create('tr', {
+            innerHTML: '<td class="label">' +
+                        '<label for="moduleDesignerSubmitButtonGeneral">&nbsp;</label>' +
+                        '</td><td>' +
+                        '<button dojoType="dijit.form.Button" id="moduleDesignerSubmitButtonGeneral"' +
+                        ' baseClass="positive" type="button" iconClass="tick"></button>' +
+                        '&nbsp;' +
+                        '<button dojoType="dijit.form.Button" id="moduleDesignerCancelButtonGeneral" baseClass="positive"' +
+                        ' type="button" iconClass="cancel"></button>' +
+                        '</td>'
+        })
+    );
 
     var formId = 'formTable' + '_' + nodeId;
-    var html   = render.render(["phpr.Default.template.form", "tabs.html"], null, {
-        innerTabs: fieldsTable,
-        formId:    formId
+    var widget = new phpr.Default.System.TemplateWrapper({
+        templateName: "phpr.Default.template.form.tabs.html",
+        templateData: {
+            formId: formId
+        }
     });
-    dijit.byId('moduleDesignerEditorTable').set('content', html);
+
+    insertNodesAndWidgetsIntoNode(widget.formtable, fieldsTable);
+    dijit.byId('moduleDesignerEditorTable').set('content', widget);
+    collector.addNode(widget);
 
     var formId = 'formForm' + '_' + nodeId;
-    var html   = render.render(["phpr.Default.template.form", "tabs.html"], null, {
-        innerTabs: fieldsForm,
-        formId:    formId
+    var widget = new phpr.Default.System.TemplateWrapper({
+        templateName: "phpr.Default.template.form.tabs.html",
+        templateData: {
+            formId: formId
+        }
     });
-    dijit.byId('moduleDesignerEditorForm').set('content', html);
+
+    insertNodesAndWidgetsIntoNode(widget.formtable, fieldsForm);
+    dijit.byId('moduleDesignerEditorForm').set('content', widget);
+    collector.addNode(widget);
 
     var formId = 'formList' + '_' + nodeId;
-    var html   = render.render(["phpr.Default.template.form", "tabs.html"], null, {
-        innerTabs: fieldsList,
-        formId:    formId
+    var widget = new phpr.Default.System.TemplateWrapper({
+        templateName: "phpr.Default.template.form.tabs.html",
+        templateData: {
+            formId: formId
+        }
     });
-    dijit.byId('moduleDesignerEditorList').set('content', html);
+
+    insertNodesAndWidgetsIntoNode(widget.formtable, fieldsList);
+    dijit.byId('moduleDesignerEditorList').set('content', widget);
+    collector.addNode(widget);
 
     var formId = 'formGeneral' + '_' + nodeId;
-    var html   = render.render(["phpr.Default.template.form", "tabs.html"], null, {
-        innerTabs: fieldsGeneral,
-        formId:    formId
+    var widget = new phpr.Default.System.TemplateWrapper({
+        templateName: "phpr.Default.template.form.tabs.html",
+        templateData: {
+            formId: formId
+        }
     });
-    dijit.byId('moduleDesignerEditorGeneral').set('content', html);
+
+    insertNodesAndWidgetsIntoNode(widget.formtable, fieldsGeneral);
+    dijit.byId('moduleDesignerEditorGeneral').set('content', widget);
+    collector.addNode(widget);
 
     // Change the Range
     dojo.connect(dijit.byId("selectType"), "onChange", function(){
@@ -444,34 +519,42 @@ phpr.editModuleDesignerField = function(nodeId) {
     });
 
     // Save
-    dojo.connect(dijit.byId('moduleDesignerSubmitButtonTable'), "onClick", function() {
-        phpr.saveModuleDesignerField(nodeId, formType);
-    });
-    dojo.connect(dijit.byId('moduleDesignerSubmitButtonForm'), "onClick", function() {
-        phpr.saveModuleDesignerField(nodeId, formType);
-    });
-    dojo.connect(dijit.byId('moduleDesignerSubmitButtonList'), "onClick", function() {
-        phpr.saveModuleDesignerField(nodeId, formType);
-    });
-    dojo.connect(dijit.byId('moduleDesignerSubmitButtonGeneral'), "onClick", function() {
-        phpr.saveModuleDesignerField(nodeId, formType);
-    });
+    collector.addEvent(
+        dojo.connect(dijit.byId('moduleDesignerSubmitButtonTable'), "onClick", function() {
+            phpr.saveModuleDesignerField(nodeId, formType);
+        }));
+    collector.addEvent(
+        dojo.connect(dijit.byId('moduleDesignerSubmitButtonForm'), "onClick", function() {
+            phpr.saveModuleDesignerField(nodeId, formType);
+        }));
+    collector.addEvent(
+        dojo.connect(dijit.byId('moduleDesignerSubmitButtonList'), "onClick", function() {
+            phpr.saveModuleDesignerField(nodeId, formType);
+        }));
+    collector.addEvent(
+        dojo.connect(dijit.byId('moduleDesignerSubmitButtonGeneral'), "onClick", function() {
+            phpr.saveModuleDesignerField(nodeId, formType);
+        }));
 
     // Cancel
-    dojo.connect(dijit.byId('moduleDesignerCancelButtonTable'), "onClick", function() {
-        phpr.switchOkButton('save');
-    });
-    dojo.connect(dijit.byId('moduleDesignerCancelButtonForm'), "onClick", function() {
-        phpr.switchOkButton('save');
-    });
-    dojo.connect(dijit.byId('moduleDesignerCancelButtonList'), "onClick", function() {
-        phpr.switchOkButton('save');
-    });
-    dojo.connect(dijit.byId('moduleDesignerCancelButtonGeneral'), "onClick", function() {
-        phpr.switchOkButton('save');
-    });
+    collector.addEvent(
+        dojo.connect(dijit.byId('moduleDesignerCancelButtonTable'), "onClick", function() {
+            phpr.moduleDesignerHideForm();
+        }));
+    collector.addEvent(
+        dojo.connect(dijit.byId('moduleDesignerCancelButtonForm'), "onClick", function() {
+            phpr.moduleDesignerHideForm();
+        }));
+    collector.addEvent(
+        dojo.connect(dijit.byId('moduleDesignerCancelButtonList'), "onClick", function() {
+            phpr.moduleDesignerHideForm();
+        }));
+    collector.addEvent(
+        dojo.connect(dijit.byId('moduleDesignerCancelButtonGeneral'), "onClick", function() {
+            phpr.moduleDesignerHideForm();
+        }));
 
-    phpr.switchOkButton('editor');
+    phpr.moduleDesignerShowForm();
 };
 
 phpr.saveModuleDesignerField = function(nodeId, formType) {
@@ -486,35 +569,24 @@ phpr.saveModuleDesignerField = function(nodeId, formType) {
     params = dojo.mixin(params, dijit.byId('formList' + '_' + nodeId).get('value'));
     params = dojo.mixin(params, dijit.byId('formGeneral' + '_' + nodeId).get('value'));
 
-    phpr.switchOkButton('save');
+    phpr.moduleDesignerHideForm();
 
     dojo.byId(nodeId).innerHTML = phpr.makeModuleDesignerField(formType, 'target', params);
     dojo.parser.parse(nodeId);
 };
 
-phpr.switchOkButton = function(type) {
-    // Summary:
-    //    Switch between the Save and the Edit Form
-    // Description:
-    //    Switch between the Save and the Edit Form
-    dijit.byId('moduleDesignerEditor').selectChild(dijit.byId("moduleDesignerEditorTable"));
-    if (type == 'editor') {
-        var node = dijit.byId('moduleDesignerEditor');
-        dojo.fadeIn({
-            node:        node.domNode,
-            duration:    300,
-            beforeBegin: function() {
-                node.selectChild(dijit.byId("moduleDesignerEditorTable"));
-                dojo.style(node.domNode, "opacity", 0);
-                dojo.style(node.domNode, "display", "block");
-                dojo.style(dojo.byId('moduleDesignerSaveButton'), "display", "none");
-            }
-        }).play();
-    } else {
-        dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
-        dojo.style(dojo.byId('moduleDesignerSaveButton'), "display", "block");
-    }
-};
+phpr.moduleDesignerShowForm = function() {
+    dojo.style(dojo.byId('moduleDesignerEditor'), "display", "block");
+    dojo.style(dojo.byId('moduleDesignerSaveButton'), "display", "none");
+    var node = dijit.byId('moduleDesignerEditor');
+    node.selectChild(dijit.byId("moduleDesignerEditorTable"));
+    dijit.byId("moduleDesignerEditorTable").resize();
+}
+
+phpr.moduleDesignerHideForm = function() {
+    dojo.style(dojo.byId('moduleDesignerEditor'), "display", "none");
+    dojo.style(dojo.byId('moduleDesignerSaveButton'), "display", "block");
+}
 
 phpr.makeModuleDesignerField = function(formType, target, params) {
     // Summary:
@@ -581,7 +653,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
         case 'checkbox':
             formLabel = params['formLabel'] || 'Checkbox';
             labelFor = 'checkbox';
-            inputTxt = '<input type="checkbox" dojotype="phpr.form.CheckBox" value="1" />'
+            inputTxt = '<input type="checkbox" dojotype="phpr.Default.System.Form.CheckBox" value="1" />'
             break;
         case 'date':
             formLabel = params['formLabel'] || 'Date';
@@ -656,7 +728,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
         case 'percentage':
             formLabel = params['formLabel'] || 'Percentage';
             labelFor = 'percentage';
-            inputTxt = '<div dojoType="phpr.form.HorizontalSlider" maximum="100" minimum="0"';
+            inputTxt = '<div dojoType="phpr.Default.System.Form.HorizontalSlider" maximum="100" minimum="0"';
             inputTxt += ' pageIncrement="100" showButtons="false" intermediateChanges="true" style="height: 20px;">';
             inputTxt += '<ol dojoType="dijit.form.HorizontalRuleLabels" container="topDecoration"';
             inputTxt += ' style="height:1.2em;font-size:75%;color:gray;" count="5" numericMargin="1"></ol>';
@@ -670,7 +742,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
             var numStars = params['formRange'] || 10;
             formLabel = params['formLabel'] || 'Rating';
             labelFor = 'rating';
-            inputTxt = '<div name="rating" dojoType="phpr.form.Rating" numStars="' + numStars + '"></div>';
+            inputTxt = '<div name="rating" dojoType="phpr.Default.System.Form.Rating" numStars="' + numStars + '"></div>';
             break;
         case 'textarea':
             formLabel = params['formLabel'] || 'Textarea';
@@ -725,7 +797,7 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
     } else {
         var display = 'inline';
     }
-    html += '</td><td style="display: ' + display + '">';
+    html += '</td><td class="editFields" style="display: ' + display + '">';
     html += '<button dojoType="dijit.form.Button" baseClass="positive smallIcon" iconClass="edit"';
     html += ' onClick="'
         + 'phpr.editModuleDesignerField(this.domNode.parentNode.parentNode.parentNode.parentNode.parentNode.id);"';

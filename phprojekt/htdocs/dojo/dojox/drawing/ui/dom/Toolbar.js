@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.ui.dom.Toolbar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.ui.dom.Toolbar"] = true;
 dojo.provide("dojox.drawing.ui.dom.Toolbar");
 dojo.deprecated("dojox.drawing.ui.dom.Toolbar", "It may not even make it to the 1.4 release.", 1.4);
 
@@ -118,7 +109,7 @@ dojo.deprecated("dojox.drawing.ui.dom.Toolbar", "It may not even make it to the 
 			dojo.attr(node, "tabIndex", 1);
 			var constr = dojo.getObject(type);
 			
-			this.createIcon(node, constr);	
+			this.createIcon(node, constr);
 			
 			this.drawing.registerTool(type, constr);
 			dojo.connect(node, "mouseup", this, function(evt){
@@ -185,7 +176,7 @@ dojo.deprecated("dojox.drawing.ui.dom.Toolbar", "It may not even make it to the 
 				
 			}, this);
 			this.drawing.initPlugins();
-			dojo.connect(this.drawing, "setTool", this, "onSetTool");	
+			dojo.connect(this.drawing, "setTool", this, "onSetTool");
 			this.drawing.setTool(_sel);
 		},
 		onClick: function(/*String*/type){
@@ -214,5 +205,3 @@ dojo.deprecated("dojox.drawing.ui.dom.Toolbar", "It may not even make it to the 
 	});
 	
 })();
-
-}

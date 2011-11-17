@@ -21,7 +21,6 @@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests Converter class
@@ -40,15 +39,25 @@ require_once 'PHPUnit/Framework.php';
  * @group      phprojekt-converter
  * @group      phprojekt-converter-json
  */
-class Phprojekt_Converter_JsonTest extends PHPUnit_Framework_TestCase
+class Phprojekt_Converter_JsonTest extends DatabaseTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
     /**
      * Test json converter
      */
     public function testConvert()
     {
         $converted = substr('{}&&({"metadata":[{"key":"title","label":"Title","type":', 0, 23);
-        $object    = Phprojekt_Loader::getModel('Project', 'Project');
+        $object    = new Project_Models_Project();
         $records   = $object->fetchAll();
         $result    = Phprojekt_Converter_Json::convert($records);
         $this->assertEquals($converted, substr($result, 0, strlen($converted)));
@@ -63,7 +72,7 @@ class Phprojekt_Converter_JsonTest extends PHPUnit_Framework_TestCase
     public function testConvertTree()
     {
         $converted = '{}&&({"identifier":"id","label":"name","items":[{"name"';
-        $object    = Phprojekt_Loader::getModel('Project', 'Project');
+        $object    = new Project_Models_Project();
         $tree      = new Phprojekt_Tree_Node_Database($object, 1);
         $tree      = $tree->setup();
         $result = Phprojekt_Converter_Json::convert($tree);

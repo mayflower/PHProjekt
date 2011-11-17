@@ -21,7 +21,6 @@
  * @author     Nina Schmitt <nina.schmitt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for RoleRights

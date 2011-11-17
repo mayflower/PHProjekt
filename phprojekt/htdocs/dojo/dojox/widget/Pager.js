@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.Pager"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.Pager"] = true;
 dojo.provide("dojox.widget.Pager");
 dojo.experimental("dojox.widget.Pager");
 
@@ -14,15 +5,15 @@ dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 dojo.require("dojo.fx");
 
-dojo.declare("dojox.widget.Pager", 
-	[dijit._Widget, dijit._Templated], 
+dojo.declare("dojox.widget.Pager",
+	[dijit._Widget, dijit._Templated],
 	{
 	// summary: A Pager, displaying a list of sized nodes
 	
 	
-	templateString: dojo.cache("dojox.widget", "Pager/Pager.html", "<div dojoAttachPoint=\"pagerContainer\" tabIndex=\"0\" dojoAttachEvent=\"onkeypress: _handleKey, onfocus: _a11yStyle, onblur:_a11yStyle\" class=\"${orientation}PagerContainer\">\r\n    <div class=\"pagerContainer\">\r\n\t\t<div dojoAttachPoint=\"pagerContainerStatus\" class=\"${orientation}PagerStatus\"></div>\r\n\t\t<div dojoAttachPoint=\"pagerContainerView\" class=\"${orientation}PagerView\">\r\n\t\t    <div dojoAttachPoint=\"pagerItemContainer\"><ul dojoAttachPoint=\"pagerItems\" class=\"pagerItems\"></ul></div>\r\n\t\t</div>\r\n\t\t<div dojoAttachPoint=\"pagerContainerPager\" class=\"${orientation}PagerPager\">\r\n\t\t\t<div tabIndex=\"0\" dojoAttachPoint=\"pagerNext\" class=\"pagerIconContainer\" dojoAttachEvent=\"onclick: _pagerNext\"><img dojoAttachPoint=\"pagerIconNext\" src=\"${iconNext}\" alt=\"Next\" /></div>\r\n\t\t\t<div tabIndex=\"0\" dojoAttachPoint=\"pagerPrevious\" class=\"pagerIconContainer\" dojoAttachEvent=\"onclick: _pagerPrevious\"><img dojoAttachPoint=\"pagerIconPrevious\" src=\"${iconPrevious}\" alt=\"Previous\" /></div>\r\n\t\t</div>\r\n    </div>\r\n\t<div dojoAttachPoint=\"containerNode\" style=\"display:none\"></div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget", "Pager/Pager.html"),
 
-/*=====	
+/*=====
 	// iconPrevious: String?
 	//		The url of the previous page icon
 	iconPrevious: "",
@@ -47,11 +38,11 @@ dojo.declare("dojox.widget.Pager",
 	//		A string describing where to put the Pager "current page" indicator. Options are
 	//		"leading" or "trailing". In the case of horiztonal orientation, "leading" indicates
 	//		positioned above the PageItems. In the case of vertical, "leading" indicates "before".
-	statusPos: "leading", 
+	statusPos: "leading",
 	
 	// pagerPos: String
 	//		TODOC
-	pagerPos: "center", 
+	pagerPos: "center",
 
 	// duration: Integer
 	// 		Time in milliseconds to transition the pages
@@ -71,7 +62,7 @@ dojo.declare("dojox.widget.Pager",
 	
 	// itemsPage: Integer
 	//		The numbers of items to display in each "Page"
-	itemsPage: 3, 
+	itemsPage: 3,
 	
 	postMixInProperties: function(){
 		var h = (this.orientation == "horizontal");
@@ -116,7 +107,7 @@ dojo.declare("dojox.widget.Pager",
 
 			case dk.DOWN_ARROW:
 			case dk.LEFT_ARROW:
-			case 112: 
+			case 112:
 			case 80: // key "p"
 				e.preventDefault();
 				this._pagerPrevious();
@@ -346,7 +337,7 @@ dojo.declare("dojox.widget.Pager",
 						var position = (dojo.style(this.pagerContainer, 'height')/2)-(this.iconHeight/2);
 						dojo.style(this.pagerContainerStatus, 'paddingTop', position+'px');
 					}
-				}	
+				}
 				dojo.disconnect(this._iconConnects[pointer]);
 			}, pointer));
 			
@@ -386,8 +377,8 @@ dojo.declare("dojox.widget.Pager",
 			var cmd = (b ? "_pagerPrevious" : "_pagerNext");
 			var connect = this.connect(this, "onScrollEnd", function(){
 				this._toScroll--;
-				if(this._toScroll < 1){ 
-					this.disconnect(connect); 
+				if(this._toScroll < 1){
+					this.disconnect(connect);
 				}else{
 					this[cmd]();
 				}
@@ -451,8 +442,8 @@ dojo.declare("dojox.widget.Pager",
 		}
 		
 		this._anim = dojo.fx.combine(_anims);
-		var animConnect = this.connect(this._anim, "onEnd", function(){ 
-			delete this._anim; 
+		var animConnect = this.connect(this._anim, "onEnd", function(){
+			delete this._anim;
 			this.onScrollEnd();
 			this.disconnect(animConnect);
 		});
@@ -540,7 +531,7 @@ dojo.declare("dojox.widget.Pager",
 });
 
 dojo.declare("dojox.widget._PagerItem",
-	[dijit._Widget, dijit._Templated], 
+	[dijit._Widget, dijit._Templated],
 	{
 	
 	templateString: '<li class="pagerItem" dojoAttachPoint="containerNode"></li>',
@@ -557,5 +548,3 @@ dojo.declare("dojox.widget._PagerItem",
 		dojo.parser.parse(this.containerNode);
 	}
 });
-
-}

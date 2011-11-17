@@ -68,9 +68,8 @@ class Project_IndexController extends IndexController
         $this->setCurrentProjectId();
 
         if (empty($id)) {
-            $model     = $this->getModelObject();
-            $model->id = 0;
-            $message   = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
+            $model   = $this->getModelObject();
+            $message = Phprojekt::getInstance()->translate(self::ADD_TRUE_TEXT);
         } else {
             $model   = $this->getModelObject()->find($id);
             $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
@@ -188,7 +187,7 @@ class Project_IndexController extends IndexController
             $projectId = $parentId;
         }
 
-        $project = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+        $project = new Project_Models_ProjectModulePermissions();
         $modules = $project->getProjectModulePermissionsById($projectId);
 
         Phprojekt_Converter_Json::echoConvert($modules);
@@ -224,7 +223,7 @@ class Project_IndexController extends IndexController
             $projectId = $parentId;
         }
 
-        $project = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
+        $project = new Project_Models_ProjectRoleUserPermissions();
         $roles   = $project->getProjectRoleUserPermissions($projectId);
 
         Phprojekt_Converter_Json::echoConvert($roles);

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.date.php"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.date.php"] = true;
 dojo.provide("dojox.date.php");
 dojo.require("dojo.date");
 dojo.require("dojox.string.tokenize");
@@ -14,7 +5,7 @@ dojo.require("dojox.string.tokenize");
 dojox.date.php.format = function(/*Date*/ date, /*String*/ format){
 	// summary: Get a formatted string for a given date object
 	var df = new dojox.date.php.DateFormat(format);
-	return df.format(date);	
+	return df.format(date);
 }
 
 dojox.date.php.DateFormat = function(/*String*/ format){
@@ -315,5 +306,3 @@ dojo.extend(dojox.date.php.DateFormat, {
 	}
 
 });
-
-}

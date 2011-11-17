@@ -1,1 +1,5 @@
-({"add":"Ekle","addAuthor":"Yazar Ekle","addContributor":"Katkıda Bulunan Ekle"})
+({
+	add: "Ekle",
+	addAuthor: "Yazar Ekle",
+	addContributor: "Katkıda Bulunan Ekle"
+})

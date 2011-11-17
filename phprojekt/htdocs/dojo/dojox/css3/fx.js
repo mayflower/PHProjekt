@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.css3.fx"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.css3.fx"] = true;
 dojo.provide("dojox.css3.fx");
 
 dojo.require("dojo.fx");
@@ -85,7 +76,7 @@ dojo.mixin(dojox.css3.fx, {
 		//	|	// half flip
 		//	|	dojox.css3.fx.flip({
 		//	|		node: domNode,
-		//	|		whichAnim: [0, 1] 
+		//	|		whichAnim: [0, 1]
 		//	|	}).play();
 		//
 		var anims = [],
@@ -190,5 +181,3 @@ dojo.mixin(dojox.css3.fx, {
 		return dojo.fx.chain(anims);
 	}
 });
-
-}

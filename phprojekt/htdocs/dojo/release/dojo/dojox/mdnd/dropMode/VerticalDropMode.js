@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.mdnd.dropMode.VerticalDropMode"]||(dojo._hasResource["dojox.mdnd.dropMode.VerticalDropMode"]=!0,dojo.provide("dojox.mdnd.dropMode.VerticalDropMode"),dojo.require("dojox.mdnd.AreaManager"),dojo.declare("dojox.mdnd.dropMode.VerticalDropMode",null,{_oldXPoint:null,_oldYPoint:null,_oldBehaviour:"up",addArea:function(a,e){var b=a.length,d=dojo.position(e.node,!0);e.coords={x:d.x,y:d.y};if(b==0)a.push(e);else{for(var c=e.coords.x,d=0;d<b;d++)if(c<a[d].coords.x){for(c=b-1;c>=d;c--)a[c+
+1]=a[c];a[d]=e;break}d==b&&a.push(e)}return a},updateAreas:function(a){var e=a.length;if(e>1)for(var b,d,c=0;c<e;c++){var f=a[c];f.coords.x1=-1;f.coords.x2=-1;c==0?(d=a[c+1],this._updateArea(f),this._updateArea(d),b=f.coords.x+f.node.offsetWidth,d=d.coords.x,f.coords.x2=b+(d-b)/2):c==e-1?f.coords.x1=a[c-1].coords.x2:(d=a[c+1],this._updateArea(d),b=f.coords.x+f.node.offsetWidth,d=d.coords.x,f.coords.x1=a[c-1].coords.x2,f.coords.x2=b+(d-b)/2)}},_updateArea:function(a){var e=dojo.position(a.node,!0);
+a.coords.x=e.x;a.coords.y=e.y},initItems:function(a){dojo.forEach(a.items,function(a){var b=dojo.position(a.item.node,!0);a.y=b.y+b.h/2});a.initItems=!0},refreshItems:function(a,e,b,d){if(e!=-1&&a&&b&&b.h){b=b.h;a.margin&&(b+=a.margin.t);for(var c=a.items.length;e<c;e++){var f=a.items[e];d?f.y+=b:f.y-=b}}},getDragPoint:function(a,e){var b=a.y;if(this._oldYPoint)if(b>this._oldYPoint)this._oldBehaviour="down",b+=e.h;else if(b<=this._oldYPoint)this._oldBehaviour="up";this._oldYPoint=b;return{x:a.x+e.w/
+2,y:b}},getTargetArea:function(a,e,b){var d=0,c=e.x,f=a.length;if(f>1){var g=0,i="right",h=!1;b==-1||arguments.length<3?h=!0:this._checkInterval(a,b,c)?d=b:(this._oldXPoint<c?g=b+1:(g=b-1,f=0,i="left"),h=!0);if(h)if(i==="right")for(;g<f;g++){if(this._checkInterval(a,g,c)){d=g;break}}else for(;g>=f;g--)if(this._checkInterval(a,g,c)){d=g;break}}this._oldXPoint=c;return d},_checkInterval:function(a,e,b){a=a[e].coords;if(a.x1==-1){if(b<=a.x2)return!0}else if(a.x2==-1){if(b>a.x1)return!0}else if(a.x1<
+b&&b<=a.x2)return!0;return!1},getDropIndex:function(a,e){var b=a.items.length,d=e.y;if(b>0)for(var c=0;c<b;c++)if(d<a.items[c].y)return c;else if(c==b-1)break;return-1},destroy:function(){}}),function(){dojox.mdnd.areaManager()._dropMode=new dojox.mdnd.dropMode.VerticalDropMode}());

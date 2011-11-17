@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojox.data.PersevereStore"])dojo._hasResource["dojox.data.PersevereStore"]=!0,dojo.provide("dojox.data.PersevereStore"),dojo.require("dojox.data.JsonQueryRestStore"),dojo.require("dojox.rpc.Client"),dojox.json.ref.serializeFunctions=!0,dojo.declare("dojox.data.PersevereStore",dojox.data.JsonQueryRestStore,{useFullIdInQueries:!0,jsonQueryPagination:!1}),dojox.data.PersevereStore.getStores=function(b,h){b=b&&(b.match(/\/$/)?b:b+"/")||"/";b.match(/^\w*:\/\//)&&(dojo.require("dojox.io.xhrScriptPlugin"),
+dojox.io.xhrScriptPlugin(b,"callback",dojox.io.xhrPlugins.fullHttpAdapter));var i=dojo.xhr;dojo.xhr=function(b,f){(f.headers=f.headers||{})["Server-Methods"]="false";return i.apply(dojo,arguments)};var d=dojox.rpc.Rest(b,!0);dojox.rpc._sync=h;var d=d("Class/"),j,k={},l=0;d.addCallback(function(e){function f(a){if(a["extends"]&&a["extends"].prototype&&(!a.prototype||!a.prototype.isPrototypeOf(a["extends"].prototype)))f(a["extends"]),dojox.rpc.Rest._index[a.prototype.__id]=a.prototype=dojo.mixin(dojo.delegate(a["extends"].prototype),
+a.prototype)}function d(a,b){if(a&&b)for(var c in a)a[c].runAt!="client"&&!b[c]&&(b[c]=function(b){return function(){var a=dojo.rawXhrPost({url:this.__id,postData:dojox.json.ref.toJson({method:b,id:l++,params:dojo._toArray(arguments)}),handleAs:"json"});a.addCallback(function(a){return a.error?Error(a.error):a.result});return a}}(c))}dojox.json.ref.resolveJson(e,{index:dojox.rpc.Rest._index,idPrefix:"/Class/",assignAbsoluteIds:!0});for(var g in e)if(typeof e[g]=="object"){var c=e[g];f(c);d(c.methods,
+c.prototype=c.prototype||{});d(c.staticMethods,c);k[e[g].id]=new dojox.data.PersevereStore({target:new dojo._Url(b,e[g].id)+"/",schema:c})}return j=k});dojo.xhr=i;return h?j:d},dojox.data.PersevereStore.addProxy=function(){dojo.require("dojox.io.xhrPlugins");dojox.io.xhrPlugins.addProxy("/proxy/")};

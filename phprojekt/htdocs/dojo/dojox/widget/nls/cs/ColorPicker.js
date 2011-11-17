@@ -1,1 +1,11 @@
-({"redLabel":"č","valueLabel":"j","hexLabel":"hex","hueLabel":"o","saturationLabel":"n","greenLabel":"z","blueLabel":"m","saturationPickerTitle":"Saturation Selector","huePickerTitle":"Hue Selector","degLabel":"°"})
+({
+redLabel: "č",
+greenLabel: "z",
+blueLabel: "m",
+hueLabel: "o",
+saturationLabel: "n",
+valueLabel: "j", /* aka intensity or brightness */
+huePickerTitle: "Selektor odstínu",
+saturationPickerTitle: "Selektor sytosti"
+})
+

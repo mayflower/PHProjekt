@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.wire.ml.Action"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.wire.ml.Action"] = true;
 dojo.provide("dojox.wire.ml.Action");
 dojo.provide("dojox.wire.ml.ActionFilter");
 
@@ -170,7 +161,7 @@ dojo.declare("dojox.wire.ml.ActionFilter", dijit._Widget, {
 
 	filter: function(){
 		//	summary:
-		//		Check if a required property is specified.  Also, if provided, check to see 
+		//		Check if a required property is specified.  Also, if provided, check to see
 		//		if the required property contains a specific value.
 		//	description:
 		//		If a value is undefined for a property, specified with
@@ -186,7 +177,7 @@ dojo.declare("dojox.wire.ml.ActionFilter", dijit._Widget, {
 		//		If 'required' starts with "arguments", a property of
 		//		the method arguments are checked.
 		//	returns:
-		//		True if a required property is specified (and if requiredValue is specified, 
+		//		True if a required property is specified (and if requiredValue is specified,
 		//		that they match), otherwise false
 		if(this.required === ""){
 			return true; //Boolean
@@ -228,5 +219,3 @@ dojo.declare("dojox.wire.ml.ActionFilter", dijit._Widget, {
 		return false; //Boolean
 	}
 });
-
-}

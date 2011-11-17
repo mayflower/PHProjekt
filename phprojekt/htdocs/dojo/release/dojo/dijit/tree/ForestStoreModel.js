@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dijit.tree.ForestStoreModel"]||(dojo._hasResource["dijit.tree.ForestStoreModel"]=!0,dojo.provide("dijit.tree.ForestStoreModel"),dojo.require("dijit.tree.TreeStoreModel"),dojo.declare("dijit.tree.ForestStoreModel",dijit.tree.TreeStoreModel,{rootId:"$root$",rootLabel:"ROOT",query:null,constructor:function(a){this.root={store:this,root:!0,id:a.rootId,label:a.rootLabel,children:a.rootChildren}},mayHaveChildren:function(a){return a===this.root||this.inherited(arguments)},getChildren:function(a,
+b,c){a===this.root?this.root.children?b(this.root.children):this.store.fetch({query:this.query,onComplete:dojo.hitch(this,function(a){this.root.children=a;b(a)}),onError:c}):this.inherited(arguments)},isItem:function(a){return a===this.root?!0:this.inherited(arguments)},fetchItemByIdentity:function(a){if(a.identity==this.root.id){var b=a.scope?a.scope:dojo.global;a.onItem&&a.onItem.call(b,this.root)}else this.inherited(arguments)},getIdentity:function(a){return a===this.root?this.root.id:this.inherited(arguments)},
+getLabel:function(a){return a===this.root?this.root.label:this.inherited(arguments)},newItem:function(a,b,c){return b===this.root?(this.onNewRootItem(a),this.store.newItem(a)):this.inherited(arguments)},onNewRootItem:function(){},pasteItem:function(a,b,c,d,e){if(b===this.root&&!d)this.onLeaveRoot(a);dijit.tree.TreeStoreModel.prototype.pasteItem.call(this,a,b===this.root?null:b,c===this.root?null:c,d,e);if(c===this.root)this.onAddToRoot(a)},onAddToRoot:function(a){console.log(this,": item ",a," added to root")},
+onLeaveRoot:function(a){console.log(this,": item ",a," removed from root")},_requeryTop:function(){var a=this.root.children||[];this.store.fetch({query:this.query,onComplete:dojo.hitch(this,function(b){this.root.children=b;if(a.length!=b.length||dojo.some(a,function(a,d){return b[d]!=a}))this.onChildrenChange(this.root,b)})})},onNewItem:function(a,b){this._requeryTop();this.inherited(arguments)},onDeleteItem:function(a){dojo.indexOf(this.root.children,a)!=-1&&this._requeryTop();this.inherited(arguments)},
+onSetItem:function(a,b,c,d){this._requeryTop();this.inherited(arguments)}}));

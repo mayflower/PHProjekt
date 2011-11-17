@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+    <project id="1" path="/" title="PHProjekt" notes="" owner_id="1"
+        start_date="2007-12-01" priority="1" current_status="3" />
+    <project id="2" path="/1/" title="Test Project" notes="" owner_id="1"
+        project_id="1" start_date="2007-12-01" priority="1" current_status="3" />
+    <project id="5" path="/1/2/" title="Sub Project" notes="" owner_id="1"
+        project_id="2" start_date="1987-03-22" priority="1" current_status="3" />
+    <project id="6" path="/1/2/5/" title="Sub Sub Project 1" notes="" owner_id="1"
+        project_id="5" start_date="2007-12-01" priority="1" current_status="3" />
+    <project id="7" path="/1/2/5/" title="Sub Sub Project 2" notes="" owner_id="1"
+        project_id="5" start_date="2007-12-01" priority="1" current_status="3" />
+    <user id="1" username="Test"
+        firstname="Max" lastname="Mustermann" status="A" admin="0" />
+    <user id="2" username="Marie"
+        firstname="Luise Marie" lastname="" status="A" admin="0" />
+    <module id="1" name="Project" label="Project"
+        save_type="0" version="6.0.0" active="1" />
+
+    <project_module_permissions
+        module_id="1" project_id="1" />
+    <project_module_permissions
+        module_id="1" project_id="2" />
+    <project_role_user_permissions
+        project_id="2" user_id="1" role_id="1" />
+    <project_role_user_permissions
+        project_id="1" user_id="1" role_id="1" />
+    <item_rights
+        module_id="1" item_id="1" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="2" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="5" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="6" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="7" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="2" user_id="3" access="255" />
+    <role id="1" name="Admin" />
+    <role_module_permissions role_id="1" module_id="1" access="139" />
+
+    <groups id="1" name="Group 1" />
+    <groups id="2" name="Group 2" />
+    <groups_user_relation user_id="1" groups_id="1" />
+    <groups_user_relation user_id="2" groups_id="1" />
+    <groups_user_relation user_id="1" groups_id="2" />
+    <database_manager table_name='Project' table_field="title" form_tab="1" form_label="Title"
+        form_type="text" form_position="1" form_columns="1" form_regexp="NULL"
+        form_range="NULL" default_value="NULL" list_position="1" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="0"
+        is_required="1" is_unique="0" />
+    <database_manager table_name='Project' table_field="notes" form_tab="1" form_label="Notes"
+        form_type="textarea" form_position="2" form_columns="1" form_regexp="NULL"
+        form_range="NULL" default_value="NULL" list_position="0" list_align="left"
+        list_use_filter="1" alt_position="0" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name='Project' table_field="project_id" form_tab="1" form_label="Parent"
+        form_type="selectValues" form_position="3" form_columns="1" form_regexp="NULL"
+        form_range="Project#id#title" default_value="NULL" list_position="0" list_align="null"
+        list_use_filter="1" alt_position="0" status="1" is_integer="1"
+        is_required="1" is_unique="0" />
+    <database_manager table_name='Project' table_field="start_date" form_tab="1" form_label="Start date"
+        form_type="date" form_position="4" form_columns="1" form_regexp="NULL"
+        form_range="NULL" default_value="NULL" list_position="2" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name='Project' table_field="end_date" form_tab="1" form_label="End date"
+        form_type="date" form_position="5" form_columns="1" form_regexp="NULL"
+        form_range="NULL" default_value="NULL" list_position="3" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name='Project' table_field="priority" form_tab="1" form_label="Priority"
+        form_type="rating" form_position="6" form_columns="1" form_regexp="NULL"
+        form_range="10" default_value="5" list_position="5" list_align="center"
+        list_use_filter="1" alt_position="5" status="1" is_integer="1"
+        is_required="0" is_unique="0" />
+    <database_manager table_name='Project' table_field="current_status" form_tab="1" form_label="Current status"
+        form_type="selectValues" form_position="7" form_columns="1" form_regexp="NULL"
+        form_range="1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting" default_value="NULL"
+        list_position="5" list_align="left" list_use_filter="1" alt_position="2" status="1" is_integer="1"
+        is_required="0" is_unique="0" />
+    <database_manager table_name='Project' table_field="complete_percent" form_tab="1" form_label="Complete percent"
+        form_type="percentage" form_position="8" form_columns="1" form_regexp="NULL"
+        form_range="NULL" default_value="NULL" list_position="6" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name='Project' table_field="budget" form_tab="1" form_label="Budget"
+        form_type="percentage" form_position="9" form_columns="1" form_regexp="NULL"
+        form_range="NULL" default_value="NULL" list_position="0" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name='Project' table_field="contact_id" form_tab="1" form_label="Contact"
+        form_type="percentage" form_position="10" form_columns="1" form_regexp="NULL"
+        form_range="NULL" default_value="NULL" list_position="0" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="1"
+        is_required="0" is_unique="0" />
+    <module_instance id="1" project_id="2" module="Fnord"
+        name="Developer Tasks" />
+    <module_instance id="2" project_id="2" module="Fnord"
+        name="Project Tasks" />
+    <module_instance id="3" project_id="1" module="plom"
+        name="Project Tasks plom" />
+
+    <hmabtm_test id="1"/>
+    <hmabtm_test id="2"/>
+
+    <hmabtm_test_project_relation project_id="2" hmabtm_test_id="1" />
+    <hmabtm_test_project_relation project_id="6" hmabtm_test_id="1" />
+
+    <tags id="1" word="this" crc32="4277043751" />
+    <tags id="2" word="tag" crc32="59357059" />
+    <tags_modules tag_user_id="1" item_id="1" module_id="1" />
+    <tags_modules tag_user_id="2" item_id="6" module_id="1" />
+    <tags_modules tag_user_id="3" item_id="1" module_id="1" />
+    <tags_users id="1" user_id="1" tag_id="1" />
+    <tags_users id="2" user_id="1" tag_id="1" />
+    <tags_users id="3" user_id="1" tag_id="2" />
+    <search_display module_id="1" item_id="1" project_id="1"
+        first_display="Hallo Welt" />
+    <search_display module_id="1" item_id="6" project_id="5"
+        first_display="BWV 810 - II. Allemande" />
+    <search_words id='1' word='Karlsruhe' count='1' />
+    <search_word_module word_id='1' item_id='1' module_id='1' />
+    <history id="1" module_id="1" user_id="1" item_id="1" field="title"
+        old_value="TEST" new_value="EDITED TEST" action="edit"
+        datetime="2001-02-23 23:23:42" />
+
+    <tab id='1' label='Basic Data' />
+    <module_tab_relation tab_id='1' module_id='1' />
+    <configuration />
+    <setting user_id='1' module_id='4' key_value='favorites'
+        value='a:2:{i:0;i:1;i:1;i:2;}' identifier='Timecard' />
+    <setting user_id='1' module_id='0' key_value='language'
+        value='en' identifier='core' />
+    <setting user_id='1' module_id='0' key_value='loginlogout'
+        value='0' identifier='notification' />
+    <setting user_id='1' module_id='0' key_value='datarecords'
+        value='1' identifier='notification' />
+    <setting user_id='1' module_id='0' key_value='alerts'
+        value='1' identifier='notification' />
+    <setting user_id='1' module_id='0' key_value='password'
+        value='156c3239dbfa5c5222b51514e9d12948' identifier='Core' />
+</dataset>

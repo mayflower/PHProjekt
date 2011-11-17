@@ -24,11 +24,11 @@ dojo.provide("phpr.Project.Form");
 dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     initData:function() {
         // Get roles
-        this.roleStore = new phpr.Store.Role(phpr.currentProjectId, this.id);
+        this.roleStore = new phpr.Default.System.Store.Role(phpr.currentProjectId, this.id);
         this._initData.push({'store': this.roleStore});
 
         // Get modules
-        this.moduleStore = new phpr.Store.Module(phpr.currentProjectId, this.id);
+        this.moduleStore = new phpr.Default.System.Store.Module(phpr.currentProjectId, this.id);
         this._initData.push({'store': this.moduleStore});
 
         this.inherited(arguments);
@@ -39,14 +39,17 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Add Tab for allow/disallow modules on the project
         // Description:
         //    Add Tab for allow/disallow modules on the project
-        var modulesData = this.render(["phpr.Project.template", "moduleTab.html"], null, {
-            moduleNameText:   phpr.nls.get('Module'),
-            moduleActiveText: phpr.nls.get('Active'),
-            modules:          this.moduleStore.getList(),
-            disabled:        (!this._accessPermissions) ? 'disabled="disabled"' : ''
+        var modulesData = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Project.template.moduleTab.html",
+            templateData:{
+                moduleNameText:   phpr.nls.get('Module'),
+                moduleActiveText: phpr.nls.get('Active'),
+                modules:          this.moduleStore.getList(),
+                disabled:        (!this._accessPermissions) ? 'disabled="disabled"' : ''
+            }
         });
 
-        this.addTab(modulesData, 'tabModules', 'Module', 'moduleFormTab');
+        this.addTab([modulesData], 'tabModules', 'Module', 'moduleFormTab');
     },
 
     addRoleTab:function(data) {
@@ -96,17 +99,20 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 button:    button
             });
         }
-        var rolesData = this.render(["phpr.Project.template", "roleTab.html"], null, {
-            accessUserText:   phpr.nls.get('User'),
-            accessRoleText:   phpr.nls.get('Role'),
-            accessActionText: phpr.nls.get('Action'),
-            disabled:         (users.length == 0 || !this._accessPermissions) ? 'disabled="disabled"' : '',
-            users:            users,
-            roles:            this.roleStore.getList(),
-            rows:             rows
+        var rolesData = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Project.template.roleTab.html",
+            templateData: {
+                accessUserText:   phpr.nls.get('User'),
+                accessRoleText:   phpr.nls.get('Role'),
+                accessActionText: phpr.nls.get('Action'),
+                disabled:         (users.length == 0 || !this._accessPermissions) ? 'disabled="disabled"' : '',
+                users:            users,
+                roles:            this.roleStore.getList(),
+                rows:             rows
+            }
         });
 
-        this.addTab(rolesData, 'tabRoles', 'Role', 'roleFormTab');
+        this.addTab([rolesData], 'tabRoles', 'Role', 'roleFormTab');
 
         // Add "add" button for role-user relation
         if (this._accessPermissions && users.length > 0) {
@@ -157,6 +163,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             });
             var cell = row.insertCell(cellIndex);
             cell.innerHTML = userField;
+            this.garbageCollector.addNode(cell);
             cellIndex++;
 
             // Role field
@@ -169,6 +176,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             });
             var cell = row.insertCell(cellIndex);
             cell.innerHTML = roleField;
+            this.garbageCollector.addNode(cell);
             cellIndex++;
 
             // Delete button
@@ -178,6 +186,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             });
             var cell = row.insertCell(cellIndex);
             cell.innerHTML = button;
+            this.garbageCollector.addNode(cell);
             cellIndex++;
 
             dojo.parser.parse(row);
@@ -228,4 +237,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         phpr.DataStore.deleteData({url: phpr.webpath + 'index.php/Timecard/index/jsonGetFavoritesProjects'});
         phpr.DataStore.deleteDataPartialString({url: phpr.webpath + 'index.php/Timecard/index/jsonDetail/'});
     }
+});
+
+dojo.declare("phpr.Project.DialogForm", [phpr.Project.Form, phpr.Default.DialogForm], {
 });

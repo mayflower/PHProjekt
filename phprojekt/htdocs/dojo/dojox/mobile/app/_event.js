@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.mobile.app._event"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.mobile.app._event"] = true;
 dojo.provide("dojox.mobile.app._event");
 dojo.experimental("dojox.mobile.app._event.js");
 
@@ -98,8 +89,9 @@ dojox.mobile.app.isIPhone = (dojo.isSafari
 		navigator.userAgent.indexOf("iPod") > -1
 	));
 dojox.mobile.app.isWebOS = (navigator.userAgent.indexOf("webOS") > -1);
+dojox.mobile.app.isAndroid = (navigator.userAgent.toLowerCase().indexOf("android") > -1);
 
-if(dojox.mobile.app.isIPhone){
+if(dojox.mobile.app.isIPhone || dojox.mobile.app.isAndroid){
 	// We are touchable.
 	// Override the dojo._connect function to replace mouse events with touch events
 
@@ -117,7 +109,7 @@ dojo._oldConnect = dojo._connect;
 dojo._connect = function(obj, event, context, method, dontFix){
 	event = dojox.mobile.app.eventMap[event] || event;
 	if(event == "flick" || event == "onflick"){
-		if(window["Mojo"]){
+		if(dojo.global["Mojo"]){
 			event = Mojo.Event.flick;
 		}else{
 			return dojox.mobile.app.connectFlick(obj, context, method);
@@ -125,6 +117,4 @@ dojo._connect = function(obj, event, context, method, dontFix){
 	}
 
 	return dojo._oldConnect(obj, event, context, method, dontFix);
-}
-
 }

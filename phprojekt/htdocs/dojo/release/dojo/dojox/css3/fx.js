@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.css3.fx"]||(dojo._hasResource["dojox.css3.fx"]=!0,dojo.provide("dojox.css3.fx"),dojo.require("dojo.fx"),dojo.require("dojox.html.ext-dojo.style"),dojo.require("dojox.fx.ext-dojo.complex"),dojo.mixin(dojox.css3.fx,{puff:function(a){return dojo.fx.combine([dojo.fadeOut(a),this.expand({node:a.node,endScale:a.endScale||2})])},expand:function(a){return dojo.animateProperty({node:a.node,properties:{transform:{start:"scale(1)",end:"scale("+[a.endScale||3]+")"}}})},shrink:function(a){return this.expand({node:a.node,
+endScale:0.01})},rotate:function(a){return dojo.animateProperty({node:a.node,duration:a.duration||1E3,properties:{transform:{start:"rotate("+(a.startAngle||"0deg")+")",end:"rotate("+(a.endAngle||"360deg")+")"}}})},flip:function(a){for(var d=[],c=a.whichAnims||[0,1,2,3],b=a.direction||1,b=[{start:"scale(1, 1) skew(0deg,0deg)",end:"scale(0, 1) skew(0,"+b*30+"deg)"},{start:"scale(0, 1) skew(0deg,"+b*30+"deg)",end:"scale(-1, 1) skew(0deg,0deg)"},{start:"scale(-1, 1) skew(0deg,0deg)",end:"scale(0, 1) skew(0deg,"+
+-b*30+"deg)"},{start:"scale(0, 1) skew(0deg,"+-b*30+"deg)",end:"scale(1, 1) skew(0deg,0deg)"}],e=0;e<c.length;e++)d.push(dojo.animateProperty(dojo.mixin({node:a.node,duration:a.duration||600,properties:{transform:b[c[e]]}},a)));return dojo.fx.chain(d)},bounce:function(a){var d=[],c=a.node,b=a.duration||1E3,e=a.scaleX||1.2,j=a.scaleY||0.6,f=dojo.style,k=f(c,"position"),l="absolute",m=f(c,"top"),g=[],h=0,n=Math.round,o=a.jumpHeight||70;k!=="absolute"&&(l="relative");var i=dojo.animateProperty({node:c,
+duration:b/6,properties:{transform:{start:"scale(1, 1)",end:"scale("+e+", "+j+")"}}});dojo.connect(i,"onBegin",function(){f(c,{transformOrigin:"50% 100%",position:l})});d.push(i);e=dojo.animateProperty({node:c,duration:b/6,properties:{transform:{end:"scale(1, 1)",start:"scale("+e+", "+j+")"}}});g.push(e);g.push(new dojo.Animation(dojo.mixin({curve:[],duration:b/3,delay:b/12,onBegin:function(){h=(new Date).getTime()},onAnimate:function(){var a=(new Date).getTime();f(c,{top:parseInt(f(c,"top"))-n(o*
+((a-h)/this.duration))+"px"});h=a}},a)));d.push(dojo.fx.combine(g));d.push(dojo.animateProperty(dojo.mixin({duration:b/3,onEnd:function(){f(c,{position:k})},properties:{top:m}},a)));d.push(i);d.push(e);return dojo.fx.chain(d)}}));

@@ -1,19 +1,10 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.mdnd.PureSource"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.mdnd.PureSource"] = true;
 dojo.provide("dojox.mdnd.PureSource");
 
 dojo.require("dojo.dnd.Selector");
 dojo.require("dojo.dnd.Manager");
 
 dojo.declare(
-	"dojox.mdnd.PureSource", 
+	"dojox.mdnd.PureSource",
 	dojo.dnd.Selector,
 {
 	// summary:
@@ -25,7 +16,7 @@ dojo.declare(
 	copyOnly: true,
 	skipForm: false,
 	withHandles: false,
-	isSource: true,	
+	isSource: true,
 	targetState: "Disabled",
 	generateText: true,
 	
@@ -114,17 +105,17 @@ dojo.declare(
 		// summary:
 		//		Event processor for onmousemove.
 		// e:
-		//		Mouse event.	
+		//		Mouse event.
 
 		//console.log('dojox.mdnd.PureSource ::: onMouseMove');
 		if(this.isDragging){
 			return;
 		}
 		dojox.mdnd.PureSource.superclass.onMouseMove.call(this, e);
-		var m = dojo.dnd.manager();		
+		var m = dojo.dnd.manager();
 		if(this.mouseDown && !this.isDragging && this.isSource){
-			var nodes = this.getSelectedNodes();			
-			if(nodes.length){				
+			var nodes = this.getSelectedNodes();
+			if(nodes.length){
 				m.startDrag(this, nodes, this.copyState(dojo.isCopyKey(e)));
 				this.isDragging = true;
 			}
@@ -215,5 +206,3 @@ dojo.declare(
 		return false;	// Boolean
 	}
 });
-
-}

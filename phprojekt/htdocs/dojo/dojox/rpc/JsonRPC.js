@@ -1,16 +1,5 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+define("dojox/rpc/JsonRPC", ["dojo", "dojox", "dojox/rpc/Service"], function(dojo, dojox) {
 
-
-if(!dojo._hasResource["dojox.rpc.JsonRPC"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.rpc.JsonRPC"] = true;
-dojo.provide("dojox.rpc.JsonRPC");
-dojo.require("dojox.rpc.Service");
-
-(function(){
 	function jsonRpcEnvelope(version){
 		return {
 			serialize: function(smd, method, data, options){
@@ -61,6 +50,5 @@ dojo.require("dojox.rpc.Service");
 		},
 		jsonRpcEnvelope("2.0")
 	);
-})();
 
-}
+});

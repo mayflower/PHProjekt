@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.charting.plot2d.ClusteredBars"]||(dojo._hasResource["dojox.charting.plot2d.ClusteredBars"]=!0,dojo.provide("dojox.charting.plot2d.ClusteredBars"),dojo.require("dojox.charting.plot2d.common"),dojo.require("dojox.charting.plot2d.Bars"),dojo.require("dojox.lang.functional"),dojo.require("dojox.lang.functional.reversed"),function(){var n=dojox.lang.functional,v=dojox.charting.plot2d.common,w=n.lambda("item.purgeGroup()");dojo.declare("dojox.charting.plot2d.ClusteredBars",dojox.charting.plot2d.Bars,
+{render:function(k,g){var A;if(this.zoom&&!this.isDataDirty())return this.performZoom(k,g);this.resetEvents();if(this.dirty=this.isDirty()){dojo.forEach(this.series,w);this._eventSeries={};this.cleanGroup();var l=this.group;n.forEachRev(this.series,function(a){a.cleanGroup(l)})}var i=this.chart.theme,d,o,p,q=this._hScaler.scaler.getTransformerFromModel(this._hScaler),x=this._vScaler.scaler.getTransformerFromModel(this._vScaler),r=Math.max(0,this._hScaler.bounds.lower),m=q(r),y=this.events();d=v.calculateBarSize(this._vScaler.bounds.scale,
+this.opt,this.series.length);o=d.gap;A=p=d.size,d=A;for(var j=this.series.length-1;j>=0;--j){var b=this.series[j],z=p*(this.series.length-j-1);if(!this.dirty&&!b.dirty)i.skip(),this._reconnectEvents(b.name);else{b.cleanGroup();for(var s=i.next("bar",[this.opt,b]),l=b.group,t=Array(b.data.length),c=0;c<b.data.length;++c){var a=b.data[c];if(a!==null){var e=typeof a=="number"?a:a.y,h=q(e),u=h-m,f=Math.abs(u),a=typeof a!="number"?i.addMixin(s,"bar",a,!0):i.post(s,"bar");if(f>=1&&d>=1)h={x:g.l+(e<r?h:
+m),y:k.height-g.b-x(c+1.5)+o+z,width:f,height:d},f=this._plotFill(a.series.fill,k,g),f=this._shapeFill(f,h),a=l.createRect(h).setFill(f).setStroke(a.series.stroke),b.dyn.fill=a.getFill(),b.dyn.stroke=a.getStroke(),y&&(e={element:"bar",index:c,run:b,shape:a,x:e,y:c+1.5},this._connectEvents(e),t[c]=e),this.animate&&this._animateBar(a,g.l+m,-u)}}this._eventSeries[b.name]=t;b.dirty=!1}}this.dirty=!1;return this}})}());

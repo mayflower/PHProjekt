@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.av.widget.PlayButton"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.av.widget.PlayButton"] = true;
 dojo.provide("dojox.av.widget.PlayButton");
 dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
@@ -16,7 +7,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 	// summary:
 	//		A Play/Pause button widget to use with dojox.av.widget.Player
 	//
-	templateString: dojo.cache("dojox.av.widget", "resources/PlayButton.html", "<div class=\"PlayPauseToggle Pause\" dojoAttachEvent=\"click:onClick\">\r\n    <div class=\"icon\"></div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.av.widget","resources/PlayButton.html"),
 	//
 	postCreate: function(){
 		// summary:
@@ -39,7 +30,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 		//		Fired on play or pause click.
 		//
 		if(this._mode=="play"){
-			this.onPlay();	
+			this.onPlay();
 		}else{
 			this.onPause();
 		}
@@ -65,7 +56,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 	},
 	showPlay: function(){
 		// summary:
-		//		Toggles the pause button invisible and the play 
+		//		Toggles the pause button invisible and the play
 		//		button visible..
 		//
 		this._mode = "play";
@@ -74,7 +65,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 	},
 	showPause: function(){
 		// summary:
-		//		Toggles the play button invisible and the pause 
+		//		Toggles the play button invisible and the pause
 		//		button visible.
 		//
 		this._mode = "pause";
@@ -82,5 +73,3 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._Templated], {
 		dojo.removeClass(this.domNode, "Play");
 	}
 });
-
-}

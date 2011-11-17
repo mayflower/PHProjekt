@@ -1,1 +1,5 @@
-({"add":"Toevoegen","addAuthor":"Auteur toevoegen","addContributor":"Deelnemer toevoegen"})
+({
+	add: "Toevoegen",
+	addAuthor: "Auteur toevoegen",
+	addContributor: "Deelnemer toevoegen"
+})

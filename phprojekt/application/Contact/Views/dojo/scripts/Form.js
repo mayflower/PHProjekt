@@ -21,11 +21,11 @@
 
 dojo.provide("phpr.Contact.Form");
 
-dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
+dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
 
     initData:function() {
         // Get all the active users
-        this.userStore = new phpr.Store.User();
+        this.userStore = new phpr.Default.System.Store.User();
         this._initData.push({'store': this.userStore});
     },
 
@@ -41,11 +41,13 @@ dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
             return false;
         }
 
+        this.setSubmitInProgress(true);
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId
                 + '/id/' + this.id,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
+                this.setSubmitInProgress(false);
                 new phpr.handleResponse('serverFeedback', data);
                 if (!this.id) {
                     this.id = data['id'];

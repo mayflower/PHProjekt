@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.plugins.tools.Pan"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.plugins.tools.Pan"] = true;
 dojo.provide("dojox.drawing.plugins.tools.Pan");
 dojo.require("dojox.drawing.plugins._Plugin");
 
@@ -159,7 +150,7 @@ dojox.drawing.plugins.tools.Pan = dojox.drawing.util.oo.declare(
 				mx = this.stencils.group ? this.stencils.group.getTransform() : {dx:0, dy:0},
 				sc = this.mouse.scrollOffset(),
 				// scY, scX: the scrollbar creates the need for extra dimension
-				scY = sc.left ? 10 : 0, 
+				scY = sc.left ? 10 : 0,
 				scX = sc.top ? 10 : 0,
 				// ch, cw: the current size of the canvas
 				ch = this.canvas.height,
@@ -193,7 +184,7 @@ dojox.drawing.plugins.tools.Pan = dojox.drawing.util.oo.declare(
 			b *= z;
 			var xscroll = 0, yscroll = 0;
 			log("Bottom test", "b:", b, "z:", z, "ch:", ch, "pch:", pch, "top:", sc.top, "sy:", sy, "mx.dy:", mx.dy);
-			if(b > pch || sc.top ){ 
+			if(b > pch || sc.top ){
 				log("*bottom scroll*");
 				// item off bottom
 				ch = Math.max(b, pch + sc.top);
@@ -249,5 +240,3 @@ dojox.drawing.plugins.tools.Pan.setup = {
 };
 
 dojox.drawing.register(dojox.drawing.plugins.tools.Pan.setup, "plugin");
-
-}

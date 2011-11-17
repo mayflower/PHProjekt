@@ -364,7 +364,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted['label']         = Phprojekt::getInstance()->translate($field->formLabel, null, $module);
         $converted['originalLabel'] = $field->formLabel;
         $converted['type']          = $field->formType;
-        $converted['hint']          = Phprojekt::getInstance()->getTooltip($key);
+        $converted['hint']          = Phprojekt::getInstance()->getTooltip($key, $module);
         $converted['listPosition']  = (int) $field->listPosition;
         $converted['formPosition']  = (int) $field->formPosition;
         $converted['fieldset']      = '';
@@ -456,7 +456,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
 
         switch ($module) {
             case 'Project':
-                $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+                $activeRecord = new Project_Models_Project();
                 $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
                 $tree         = $tree->setup();
                 foreach ($tree as $node) {
@@ -465,7 +465,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 }
                 break;
             case 'User':
-                $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+                $activeRecord = new Phprojekt_User_User();
                 $result       = $activeRecord->getAllowedUsers();
                 if (!$field->isRequired && $field->formType == 'selectValues') {
                     $options[] = array('id'   => 0,

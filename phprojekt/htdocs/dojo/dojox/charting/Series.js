@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.charting.Series"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.Series"] = true;
 dojo.provide("dojox.charting.Series");
 
 dojo.require("dojox.charting.Element");
@@ -17,7 +8,7 @@ dojox.charting.__SeriesCtorArgs = function(plot){
 	//	plot: String?
 	//		The plot (by name) that this series belongs to.
 	this.plot = plot;
-} 
+}
 =====*/
 dojo.declare("dojox.charting.Series", dojox.charting.Element, {
 	//	summary:
@@ -66,5 +57,3 @@ dojo.declare("dojox.charting.Series", dojox.charting.Element, {
 		this.clear();
 	}
 });
-
-}

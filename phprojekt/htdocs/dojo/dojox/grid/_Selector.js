@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.grid._Selector"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.grid._Selector"] = true;
 dojo.provide("dojox.grid._Selector");
 
 dojo.require("dojox.grid.Selection");
@@ -46,8 +37,8 @@ dojo.require("dojox.grid._Builder");
 	},dojox.grid._ContentBuilder.prototype,{
 		generateHtml: function(inDataIndex, inRowIndex){
 			var w = this.view.contentWidth || 0;
-			return '<table class="dojoxGridRowbarTable" style="width:' + w + 'px;" border="0" ' + 
-				'cellspacing="0" cellpadding="0" role="presentation"><tr>' + 
+			return '<table class="dojoxGridRowbarTable" style="width:' + w + 'px;" border="0" ' +
+				'cellspacing="0" cellpadding="0" role="presentation"><tr>' +
 				'<td  style="text-align: center;" class="dojoxGridRowbarInner">' + this.getCellContent(inRowIndex) + '</td></tr></table>';
 		},
 		getCellContent: function(inRowIndex){
@@ -119,7 +110,7 @@ dojo.require("dojox.grid._Builder");
 		buildRendering: function(){
 			this.inherited(arguments);
 			this.scrollboxNode.style.overflow = "hidden";
-		},	
+		},
 		getWidth: function(){
 			return this.viewWidth || this.defaultWidth;
 		},
@@ -210,7 +201,7 @@ dojo.require("dojox.grid._Builder");
 			this._updateVisibility(this.grid.rowCount);
 		},
 		_updateVisibility: function(rowCount){
-			this.headerNode.style.visibility = rowCount ? "" : "hidden";		
+			this.headerNode.style.visibility = rowCount ? "" : "hidden";
 		},
 		onSelectionChanged: function(){
 			if(this._selectionChanging){ return; }
@@ -223,5 +214,3 @@ dojo.require("dojox.grid._Builder");
 		}
 	});
 })();
-
-}

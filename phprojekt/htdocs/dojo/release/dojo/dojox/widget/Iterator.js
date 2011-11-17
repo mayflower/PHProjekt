@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojox.widget.Iterator"])dojo._hasResource["dojox.widget.Iterator"]=!0,dojo.provide("dojox.widget.Iterator"),dojo.require("dijit.Declaration"),dojo.experimental("dojox.widget.Iterator"),dojo.declare("dojox.widget.Iterator",[dijit.Declaration],{constructor:function(){var a=0;return function(){this.attrs=[];this.children=[];this.widgetClass="dojox.widget.Iterator._classes._"+a++}}(),start:0,fetchMax:1E3,query:{name:"*"},attrs:[],defaultValue:"",widgetCtor:null,dataValues:[],data:null,
+store:null,_srcIndex:0,_srcParent:null,_setSrcIndex:function(a){this._srcIndex=0;for(this._srcParent=a.parentNode;a.previousSibling;)this._srcIndex++,a=a.previousSibling},postscript:function(a,c){this._setSrcIndex(c);this.inherited("postscript",arguments);var b=this.widgetCtor=dojo.getObject(this.widgetClass);this.attrs=dojo.map(b.prototype.templateString.match(/\$\{([^\s\:\}]+)(?:\:([^\s\:\}]+))?\}/g),function(a){return a.slice(2,-1)});dojo.forEach(this.attrs,function(a){b.prototype[a]=""});this.update()},
+clear:function(){this.children.length&&this._setSrcIndex(this.children[0].domNode);dojo.forEach(this.children,"item.destroy();");this.children=[]},update:function(){if(this.store)this.fetch();else this.onDataAvailable(this.data||this.dataValues)},_addItem:function(a,c){dojo.isString(a)&&(a={value:a});var b=new this.widgetCtor(a);this.children.push(b);dojo.place(b.domNode,this._srcParent,this._srcIndex+c)},getAttrValuesObj:function(a){var c={};dojo.isString(a)?dojo.forEach(this.attrs,function(b){c[b]=
+b=="value"?a:this.defaultValue},this):dojo.forEach(this.attrs,function(b){c[b]=this.store?this.store.getValue(a,b)||this.defaultValue:a[b]||this.defaultValue},this);return c},onDataAvailable:function(a){this.clear();dojo.forEach(a,function(a,b){this._addItem(this.getAttrValuesObj(a),b)},this)},fetch:function(a,c,b){this.store.fetch({query:a||this.query,start:c||this.start,count:b||this.fetchMax,onComplete:dojo.hitch(this,"onDataAvailable")})}}),dojox.widget.Iterator._classes={};

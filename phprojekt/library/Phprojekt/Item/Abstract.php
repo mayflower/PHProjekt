@@ -98,10 +98,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         parent::__construct($db);
 
         $this->_dbManager = new Phprojekt_DatabaseManager($this, $db);
-        $this->_validate  = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_history   = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $this->_search    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
-        $this->_rights    = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $this->_validate  = new Phprojekt_Model_Validate();
+        $this->_history   = new Phprojekt_History();
+        $this->_search    = new Phprojekt_Search();
+        $this->_rights    = new Phprojekt_Item_Rights();
     }
 
     /**
@@ -112,10 +112,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function __clone()
     {
         parent::__clone();
-        $this->_validate = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_history  = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $this->_search   = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
-        $this->_rights   = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $this->_validate = new Phprojekt_Model_Validate();
+        $this->_history  = new Phprojekt_History();
+        $this->_search   = new Phprojekt_Search();
+        $this->_rights   = new Phprojekt_Item_Rights();
     }
 
     /**
@@ -135,7 +135,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getNotification()
     {
-        $notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification');
+        $notification = new Phprojekt_Notification();
         $notification->setModel($this);
 
         return $notification;
@@ -184,7 +184,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function recordValidate()
     {
         $data   = $this->_data;
-        $fields = $this->_dbManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        $fields = $this->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         return $this->_validate->recordValidate($this, $data, $fields);
     }
@@ -326,14 +326,14 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         $join .= sprintf(' INNER JOIN item_rights ON (item_rights.item_id = %s
             AND item_rights.module_id = %d AND item_rights.user_id = %d) ',
             $this->getAdapter()->quoteIdentifier($this->getTableName() . '.id'),
-            Phprojekt_Module::getId($this->getModelName()), Phprojekt_Auth::getUserId());
+            Phprojekt_Module::getId($this->getModelName()), Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         // Set where
         if (null !== $where) {
             $where .= ' AND ';
         }
         $where .= ' (' . sprintf('(%s.owner_id = %d OR %s.owner_id IS NULL)', $this->getTableName(),
-            Phprojekt_Auth::getUserId(), $this->getTableName());
+            Phprojekt_Auth_Proxy::getEffectiveUserId(), $this->getTableName());
         $where .= ' OR (item_rights.access > 0)) ';
 
         return parent::fetchAll($where, $order, $count, $offset, $select, $join);
@@ -465,4 +465,22 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $this->_rights->saveRights(Phprojekt_Module::getId($this->getModelName()), $this->id, $rights);
     }
+
+    /**
+     * Returns all users with the given right.
+     *
+     * @param int  $rights The bitmask with rights. (ORed constants from Phprojekt_Acl.) Any rights if omitted or null.
+     * @param bool $exact  Only return users with these exact rights. Defaults to false if omitted.
+     *
+     * @return array of User The users with the given right.
+     */
+    public function getUsersWithRights($rights = null, $exact = false) {
+        return $this->_rights->getUsersWithRight(
+            Phprojekt_Module::getId($this->getModelName()),
+            $this->id,
+            $rights,
+            $exact
+        );
+    }
+
 }

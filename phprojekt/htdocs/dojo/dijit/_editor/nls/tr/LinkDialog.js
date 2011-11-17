@@ -1,1 +1,17 @@
-({"text":"Açıklama:","insertImageTitle":"Resim Özellikleri","set":"Ayarla","newWindow":"Yeni Pencere","topWindow":"En Üst Pencere","target":"Hedef:","createLinkTitle":"Bağlantı Özellikleri","parentWindow":"Üst Pencere","currentWindow":"Geçerli Pencere","url":"URL:"})
+define(
+//begin v1.x content
+({
+	createLinkTitle: "Bağlantı Özellikleri",
+	insertImageTitle: "Resim Özellikleri",
+	url: "URL:",
+	text: "Açıklama:",
+	target: "Hedef:",
+	set: "Ayarla",
+	currentWindow: "Geçerli Pencere",
+	parentWindow: "Üst Pencere",
+	topWindow: "En Üst Pencere",
+	newWindow: "Yeni Pencere"
+})
+
+//end v1.x content
+);

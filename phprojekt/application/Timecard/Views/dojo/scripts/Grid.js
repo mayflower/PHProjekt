@@ -21,7 +21,9 @@
 
 dojo.provide("phpr.Timecard.Grid");
 
-dojo.declare("phpr.Timecard.Grid", phpr.Component, {
+dojo.require("dijit.form.Button");
+
+dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
     main:          null,
     _date:         null,
     _node:         null,
@@ -40,7 +42,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         this._year  = date.getFullYear();
 
         this.setUrl();
-        this.setNode();
+        this.setContainer();
 
         // Render export Button
         this.setExportButton();
@@ -58,7 +60,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
             + (this._month + 1);
     },
 
-    setNode:function() {
+    setContainer:function() {
         // Summary:
         //    Set the node to put the grid
         // Description:
@@ -79,7 +81,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         for (var i in content) {
             var weekClass = (content[i]['week'] == 0 || content[i]['week'] == 6) ? 'weekend' : 'weekday';
             dates.push({
-                week:      phpr.Date.getShortTranslateWeekDay(content[i]['week']),
+                week:      phpr.date.getShortTranslateWeekDay(content[i]['week']),
                 weekClass: weekClass,
                 date:      content[i]['date'],
                 sum:       (content[i]['sumInHours'] != '0') ? content[i]['sumInHours'] : "-",
@@ -94,9 +96,9 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
         }
 
         this.render(["phpr.Timecard.template", "monthView.html"], this._node.domNode, {
-            monthTxt:   phpr.Date.getLongTranslateMonth(this._month) + ' ' + this._year,
+            monthTxt:   phpr.date.getLongTranslateMonth(this._month) + ' ' + this._year,
             totalTxt:   phpr.nls.get('Total hours'),
-            total:      phpr.Date.convertMinutesToTime(total),
+            total:      phpr.date.convertMinutesToTime(total),
             totalClass: totalClass,
             dates:      dates
         });
@@ -135,7 +137,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Component, {
                 disabled:  false
             };
             this._exportButton = new dijit.form.Button(params);
-            dojo.byId("buttonRow").appendChild(this._exportButton.domNode);
+            phpr.viewManager.getView().buttonRow.domNode.appendChild(this._exportButton.domNode);
             dojo.connect(this._exportButton, "onClick", dojo.hitch(this, "exportData"));
         }
     },

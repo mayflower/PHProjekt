@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojo._base.Deferred"])dojo._hasResource["dojo._base.Deferred"]=!0,dojo.provide("dojo._base.Deferred"),dojo.require("dojo._base.lang"),function(){var e=function(){},k=Object.freeze||function(){};dojo.Deferred=function(c){function l(a){if(g)throw Error("This deferred has already been resolved");i=a;g=!0;o()}function o(){for(var a;!a&&f;){var b=f;f=f.next;if(a=b.progress==e)g=!1;var d=j?b.error:b.resolved;if(d)try{var h=d(i);h&&typeof h.then==="function"?h.then(dojo.hitch(b.deferred,
+"resolve"),dojo.hitch(b.deferred,"reject")):(d=a&&h===void 0,a&&!d&&(j=h instanceof Error),b.deferred[d&&j?"reject":"resolve"](d?i:h))}catch(c){b.deferred.reject(c)}else j?b.deferred.reject(i):b.deferred.resolve(i)}}var i,g,j,n,f,m=this.promise={};this.resolve=this.callback=function(a){this.fired=0;this.results=[a,null];l(a)};this.reject=this.errback=function(a){j=!0;this.fired=1;l(a);this.results=[null,a];if(!a||a.log!==!1)(dojo.config.deferredOnError||function(a){console.error(a)})(a)};this.progress=
+function(a){for(var b=f;b;){var d=b.progress;d&&d(a);b=b.next}};this.addCallbacks=function(a,b){this.then(a,b,e);return this};this.then=m.then=function(a,b,d){var c=d==e?this:new dojo.Deferred(m.cancel),a={resolved:a,error:b,progress:d,deferred:c};f?n=n.next=a:f=n=a;g&&o();return c.promise};var p=this;this.cancel=m.cancel=function(){if(!g){var a=c&&c(p);if(!g)a instanceof Error||(a=Error(a)),a.log=!1,p.reject(a)}};k(m)};dojo.extend(dojo.Deferred,{addCallback:function(c){return this.addCallbacks(dojo.hitch.apply(dojo,
+arguments))},addErrback:function(c){return this.addCallbacks(null,dojo.hitch.apply(dojo,arguments))},addBoth:function(c){var e=dojo.hitch.apply(dojo,arguments);return this.addCallbacks(e,e)},fired:-1})}(),dojo.when=function(e,k,c,l){return e&&typeof e.then==="function"?e.then(k,c,l):k(e)};

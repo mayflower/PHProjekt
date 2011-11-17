@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojox.drawing.stencil.Path"])dojo._hasResource["dojox.drawing.stencil.Path"]=!0,dojo.provide("dojox.drawing.stencil.Path"),dojox.drawing.stencil.Path=dojox.drawing.util.oo.declare(dojox.drawing.stencil._Base,function(){dojo.disconnect(this._postRenderCon)},{type:"dojox.drawing.stencil.Path",closePath:!0,baseRender:!0,closeRadius:10,closeColor:{r:255,g:255,b:0,a:0.5},_create:function(a,b){this.remove(this[a]);if(this.points.length){if(dojox.gfx.renderer=="svg"){var c=[];dojo.forEach(this.points,
+function(a,b){if(!a.skip)if(b==0)c.push("M "+a.x+" "+a.y);else{var f=(a.t||"")+" ";a.x===void 0?c.push(f):c.push(f+a.x+" "+a.y)}},this);this.closePath&&c.push("Z");this.stringPath=c.join(" ");this[a]=this.container.createPath(c.join(" ")).setStroke(b);this.closePath&&this[a].setFill(b.fill)}else this[a]=this.container.createPath({}).setStroke(b),this.closePath&&this[a].setFill(b.fill),dojo.forEach(this.points,function(b,c){b.skip||(c==0||b.t=="M"?this[a].moveTo(b.x,b.y):b.t=="Z"?this.closePath&&this[a].closePath():
+this[a].lineTo(b.x,b.y))},this),this.closePath&&this[a].closePath();this._setNodeAtts(this[a])}},render:function(){this.onBeforeRender(this);this.renderHit&&this._create("hit",this.style.currentHit);this._create("shape",this.style.current)},getBounds:function(){var a=1E4,b=1E4,c=0,e=0;dojo.forEach(this.points,function(d){d.x!==void 0&&!isNaN(d.x)&&(a=Math.min(a,d.x),b=Math.min(b,d.y),c=Math.max(c,d.x),e=Math.max(e,d.y))});return{x1:a,y1:b,x2:c,y2:e,x:a,y:b,w:c-a,h:e-b}},checkClosePoint:function(a,
+b,c){b=this.util.distance(a.x,a.y,b.x,b.y);if(this.points.length>1)if(b<this.closeRadius&&!this.closeGuide&&!c)this.closeGuide=this.container.createEllipse({cx:a.x,cy:a.y,rx:this.closeRadius,ry:this.closeRadius}).setFill(this.closeColor);else if(c||b>this.closeRadius&&this.closeGuide)this.remove(this.closeGuide),this.closeGuide=null;return b<this.closeRadius}}),dojox.drawing.register({name:"dojox.drawing.stencil.Path"},"stencil");

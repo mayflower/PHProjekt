@@ -37,16 +37,25 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     renderTemplate:function() {
         // Summary:
         //   Custom renderTemplate for timecard
-        this.render(["phpr.Timecard.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            manageFavoritesText: phpr.nls.get('Manage project list'),
-            monthTxt:            phpr.Date.getLongTranslateMonth(this._date.getMonth())
+        var view = phpr.viewManager.useDefaultView({blank: true}).clear();
+        var content = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Timecard.template.mainContent.html",
+            templateData: {
+                manageFavoritesText: phpr.nls.get('Manage project list'),
+                monthTxt:            phpr.date.getLongTranslateMonth(this._date.getMonth())
+            }
         });
+        view.centerMainContent.set('content', content);
+
+        // manageFavorites opens a dialog which places itself outside of the regular dom, so we need to clean it up
+        // manually
+        this.garbageCollector.addNode('manageFavorites');
     },
 
     setWidgets:function() {
         // Summary:
         //   Custom setWidgets for timecard
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
         this.grid = new this.gridWidget(this, this._date);
         this.form = new this.formWidget(this, this._date);
     },

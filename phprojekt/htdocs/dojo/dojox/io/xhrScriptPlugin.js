@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.io.xhrScriptPlugin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.io.xhrScriptPlugin"] = true;
 dojo.provide("dojox.io.xhrScriptPlugin");
 dojo.require("dojox.io.xhrPlugins");
 dojo.require("dojo.io.script");
@@ -20,13 +11,13 @@ dojox.io.xhrScriptPlugin = function(/*String*/url, /*String*/callbackParamName, 
 	//		the site has full access to your JavaScript environment.
 	//	url:
 	//		Url prefix of the site which can handle JSONP requests.
-	// 	httpAdapter: This allows for adapting HTTP requests that could not otherwise be 
+	// 	httpAdapter: This allows for adapting HTTP requests that could not otherwise be
 	// 		sent with JSONP, so you can use a convention for headers and PUT/DELETE methods.
 	dojox.io.xhrPlugins.register(
 		"script",
 		function(method,args){
-			 return args.sync !== true && 
-				(method == "GET" || httpAdapter) && 
+			 return args.sync !== true &&
+				(method == "GET" || httpAdapter) &&
 				(args.url.substring(0,url.length) == url);
 		},
 		function(method,args,hasBody){
@@ -41,5 +32,3 @@ dojox.io.xhrScriptPlugin = function(/*String*/url, /*String*/callbackParamName, 
 		}
 	);
 };
-
-}

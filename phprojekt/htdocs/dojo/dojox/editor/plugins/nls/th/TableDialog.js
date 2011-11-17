@@ -1,1 +1,30 @@
-({"buttonSet":"ตั้งค่า","insertTableTitle":"แทรกตาราง","insertTableRowAfterLabel":"เพิ่มแถวหลัง","center":"กึ่งกลาง","deleteTableColumnLabel":"ลบคอลัมน์","right":"ขวา","insertTableColumnBeforeLabel":"เพิ่มคอลัมน์ก่อน","tableWidth":"ความกว้างของตาราง:","buttonInsert":"แทรก","default":"ดีฟอลต์","align":"จัดตำแหน่ง:","insertTableRowBeforeLabel":"เพิ่มแถวก่อน","cellSpacing":"ระยะห่างเซลล์:","pixels":"พิกเซล","selectTableLabel":"เลือกตาราง","rows":"แถว:","modifyTableTitle":"ปรับเปลี่ยนตาราง","cellPadding":"ส่วนเสริมเซลล์:","deleteTableRowLabel":"ลบแถว","backgroundColor":"สีพื้นหลัง:","insertTableColumnAfterLabel":"เพิ่มคอลัมน์หลัง","left":"ซ้าย","borderThickness":"ความหนาเส้นขอบ","columns":"คอลัมน์:","percent":"เปอร์เซ็นต์","borderColor":"สีเส้นขอบ:"})
+({
+	insertTableTitle: "แทรกตาราง",
+	modifyTableTitle: "ปรับเปลี่ยนไขตาราง",
+	rows: "แถว:",
+	columns: "คอลัมน์:",
+	align: "จัดตำแหน่ง:",
+	cellPadding: "ส่วนเสริมเซลล์:",
+	cellSpacing: "ระยะห่างเซลล์:",
+	tableWidth: "ความกว้างของตาราง:",
+	backgroundColor: "สีพื้นหลัง:",
+	borderColor: "สีเส้นขอบ:",
+	borderThickness: "ความหนาเส้นขอบ",
+	percent: "เปอร์เซ็นต์",
+	pixels: "พิกเซล",
+	"default": "ดีฟอลต์",
+	left: "ซ้าย",
+	center: "กึ่งกลาง",
+	right: "ขวา",
+	buttonSet: "ตั้งค่า", // translated elsewhere?
+	buttonInsert: "แทรก",
+	buttonCancel: "ยกเลิก",
+
+	selectTableLabel: "เลือกตาราง",
+	insertTableRowBeforeLabel: "เพิ่มแถวก่อน",
+	insertTableRowAfterLabel: "เพิ่มแถวหลัง",
+	insertTableColumnBeforeLabel: "เพิ่มคอลัมน์ก่อน",
+	insertTableColumnAfterLabel: "เพิ่มคอลัมน์หลัง",
+	deleteTableRowLabel: "ลบแถว",
+	deleteTableColumnLabel: "ลบคอลัมน์"
+})

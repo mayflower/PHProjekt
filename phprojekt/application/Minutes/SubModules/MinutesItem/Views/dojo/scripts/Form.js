@@ -35,10 +35,11 @@ dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
         var id    = this.main.module + 'parentOrder';
         var value = (data[0]['sortOrder'] - 1 >= 0) ? data[0]['sortOrder'] - 1 : 0;
 
-        this.formdata[this._tabNumber] += this.fieldTemplate.selectRender(range, label, id, value, false, false);
+        this.formdata[this._tabNumber].push(this.fieldTemplate.selectRender(range, label, id, value, false, false));
     },
 
     postRenderForm:function() {
+        this.inherited(arguments);
         // Have the appropriate input fields appear for each type
         var data = phpr.DataStore.getData({url: this._url});
         this._switchItemFormFields(data[0]['topicType']); // defaults

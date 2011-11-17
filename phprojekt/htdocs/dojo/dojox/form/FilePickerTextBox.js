@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.FilePickerTextBox"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.FilePickerTextBox"] = true;
 dojo.provide("dojox.form.FilePickerTextBox");
 
 dojo.require("dojo.window");
@@ -23,7 +14,7 @@ dojo.declare(
 		
 		baseClass: "dojoxFilePickerTextBox",
 		
-		templateString: dojo.cache("dojox.form", "resources/FilePickerTextBox.html", "<div class=\"dijit dijitReset dijitInlineTable dijitLeft\"\r\n\tid=\"widget_${id}\"\r\n\twaiRole=\"combobox\" tabIndex=\"-1\"\r\n\t><div style=\"overflow:hidden;\"\r\n\t\t><div class='dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton'\r\n\t\t\tdojoAttachPoint=\"downArrowNode,_buttonNode,_popupStateNode\" waiRole=\"presentation\"\r\n\t\t\t><div class=\"dijitArrowButtonInner\">&thinsp;</div\r\n\t\t\t><div class=\"dijitArrowButtonChar\">&#9660;</div\r\n\t\t></div\r\n\t\t><div class=\"dijitReset dijitValidationIcon\"><br></div\r\n\t\t><div class=\"dijitReset dijitValidationIconText\">&Chi;</div\r\n\t\t><div class=\"dijitReset dijitInputField\"\r\n\t\t\t><input type=\"text\" autocomplete=\"off\" ${!nameAttrSetting} class='dijitReset'\r\n\t\t\t\tdojoAttachEvent='onkeypress:_onKey' \r\n\t\t\t\tdojoAttachPoint='textbox,focusNode' waiRole=\"textbox\" waiState=\"haspopup-true,autocomplete-list\"\r\n\t\t/></div\r\n\t></div\r\n></div>\r\n"),
+		templateString: dojo.cache("dojox.form", "resources/FilePickerTextBox.html"),
 		
 		// searchDelay: Integer
 		//		Delay in milliseconds between when user types something and we start
@@ -59,12 +50,12 @@ dojo.declare(
 			// summary: sets the value of this widget
 			if(!this._searchInProgress){
 				this.inherited(arguments);
-				value = value||"";
-				var tVal = this.dropDown.attr("pathValue")||"";
+				value = value || "";
+				var tVal = this.dropDown.get("pathValue") || "";
 				if(value !== tVal){
 					this._skip = true;
 					var fx = dojo.hitch(this, "_setBlurValue");
-					this.dropDown._setPathValueAttr(value, !fromWidget, 
+					this.dropDown._setPathValueAttr(value, !fromWidget,
 											this._settingBlurValue ? fx : null);
 				}
 			}
@@ -100,7 +91,7 @@ dojo.declare(
 			// set width to 0 so that it will resize automatically
 			this.dropDown.domNode.style.width="0px";
 			if(!("minPaneWidth" in (this.constraints||{}))){
-				this.dropDown.attr("minPaneWidth", (this.domNode.offsetWidth / this.numPanes));
+				this.dropDown.set("minPaneWidth", (this.domNode.offsetWidth / this.numPanes));
 			}
 			this.inherited(arguments);
 		},
@@ -108,8 +99,8 @@ dojo.declare(
 		toggleDropDown: function(){
 			this.inherited(arguments);
 			// Make sure our display is up-to-date with our value
-			if(this._opened){ 
-				this.dropDown.attr("pathValue", this.get("value"));
+			if(this._opened){
+				this.dropDown.set("pathValue", this.get("value"));
 			}
 		},
 		
@@ -172,7 +163,7 @@ dojo.declare(
 				return value;
 			}
 			var dd = this.dropDown, topDir = dd.topDir, sep = dd.pathSeparator;
-			var ddVal = dd.attr("pathValue");
+			var ddVal = dd.get("pathValue");
 			var norm = function(v){
 				if(topDir.length && v.indexOf(topDir) === 0){
 					v = v.substring(topDir.length);
@@ -226,8 +217,8 @@ dojo.declare(
 						var first = dojo.filter(children, function(i){
 							return (i.label.indexOf(dir) === 0);
 						})[0];
-						if(exact && 
-							((dirs.length > idx + 1 && exact.children) || 
+						if(exact &&
+							((dirs.length > idx + 1 && exact.children) ||
 							(!exact.children))){
 							idx++;
 							child._menu.onItemClick(exact, {type: "internal",
@@ -260,7 +251,7 @@ dojo.declare(
 								if(this._menuFocus){
 									this.dropDown._updateClass(this._menuFocus, "Item", {"Hover": false, "Focus": false});
 								}
-								delete this._menuFocus;							
+								delete this._menuFocus;
 							}
 							_cleanup();
 						}
@@ -324,5 +315,3 @@ dojo.declare(
 		}
 	}
 );
-
-}

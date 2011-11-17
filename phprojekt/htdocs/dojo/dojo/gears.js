@@ -1,16 +1,8 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.gears"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.gears"] = true;
-dojo.provide("dojo.gears");
+define("dojo/gears", ["dojo"], function(dojo) {
+dojo.getObject("gears", true, dojo);
 
 dojo.gears._gearsObject = function(){
-	// summary: 
+	// summary:
 	//		factory method to get a Google Gears plugin instance to
 	//		expose in the browser runtime environment, if present
 	var factory;
@@ -60,4 +52,5 @@ dojo.gears.available = {
 // and in the Google standard 'google.gears' global object
 dojo.gears.available = (!!dojo.gears._gearsObject())||0;
 
-}
+return dojo.gears;
+});

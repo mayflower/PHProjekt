@@ -1,15 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.dnd.Avatar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.dnd.Avatar"] = true;
-dojo.provide("dojo.dnd.Avatar");
-
-dojo.require("dojo.dnd.common");
+define("dojo/dnd/Avatar", ["dojo", "dojo/dnd/common"], function(dojo) {
 
 dojo.declare("dojo.dnd.Avatar", null, {
 	// summary:
@@ -93,7 +82,7 @@ dojo.declare("dojo.dnd.Avatar", null, {
 			var icon = dojo.byId("a11yIcon");
 			var text = '+';   // assume canDrop && copy
 			if (this.manager.canDropFlag && !this.manager.copy) {
-				text = '< '; // canDrop && move 
+				text = '< '; // canDrop && move
 			}else if (!this.manager.canDropFlag && !this.manager.copy) {
 				text = "o"; //!canDrop && move
 			}else if(!this.manager.canDropFlag){
@@ -113,4 +102,5 @@ dojo.declare("dojo.dnd.Avatar", null, {
 	}
 });
 
-}
+return dojo.dnd.Avatar;
+});

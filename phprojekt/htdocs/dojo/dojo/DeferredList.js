@@ -1,13 +1,5 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+define("dojo/DeferredList", ["dojo"], function(dojo) {
 
-
-if(!dojo._hasResource["dojo.DeferredList"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.DeferredList"] = true;
-dojo.provide("dojo.DeferredList");
 dojo.DeferredList = function(/*Array*/ list, /*Boolean?*/ fireOnOneCallback, /*Boolean?*/ fireOnOneErrback, /*Boolean?*/ consumeErrors, /*Function?*/ canceller){
 	// summary:
 	//		Provides event handling for a group of Deferred objects.
@@ -65,7 +57,7 @@ dojo.DeferredList = function(/*Array*/ list, /*Boolean?*/ fireOnOneCallback, /*B
 dojo.DeferredList.prototype = new dojo.Deferred();
 
 dojo.DeferredList.prototype.gatherResults= function(deferredList){
-	// summary:	
+	// summary:
 	//	Gathers the results of the deferreds for packaging
 	//	as the parameters to the Deferred Lists' callback
 
@@ -80,4 +72,5 @@ dojo.DeferredList.prototype.gatherResults= function(deferredList){
 	return d;
 };
 
-}
+return dojo.DeferredList;
+});

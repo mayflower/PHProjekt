@@ -1,15 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.dnd.TimedMoveable"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.dnd.TimedMoveable"] = true;
-dojo.provide("dojo.dnd.TimedMoveable");
-
-dojo.require("dojo.dnd.Moveable");
+define("dojo/dnd/TimedMoveable", ["dojo", "dojo/dnd/Moveable"], function(dojo) {
 
 /*=====
 dojo.declare("dojo.dnd.__TimedMoveableArgs", [dojo.dnd.__MoveableArgs], {
@@ -27,7 +16,7 @@ dojo.declare("dojo.dnd.__TimedMoveableArgs", [dojo.dnd.__MoveableArgs], {
 	dojo.declare("dojo.dnd.TimedMoveable", dojo.dnd.Moveable, {
 		// summary:
 		//		A specialized version of Moveable to support an FPS throttling.
-		//		This class puts an upper restriction on FPS, which may reduce 
+		//		This class puts an upper restriction on FPS, which may reduce
 		//		the CPU load. The additional parameter "timeout" regulates
 		//		the delay before actually moving the moveable object.
 		
@@ -78,4 +67,5 @@ dojo.declare("dojo.dnd.__TimedMoveableArgs", [dojo.dnd.__MoveableArgs], {
 	});
 })();
 
-}
+return dojo.dnd.TimedMoveable;
+});

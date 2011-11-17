@@ -1,20 +1,10 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+define("dojox/data/GoogleFeedStore", ["dojo", "dojox", "dojox/data/GoogleSearchStore"], function(dojo, dojox) {
 
-
-if(!dojo._hasResource["dojox.data.GoogleFeedStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.GoogleFeedStore"] = true;
-dojo.provide("dojox.data.GoogleFeedStore");
 dojo.experimental("dojox.data.GoogleFeedStore");
-
-dojo.require("dojox.data.GoogleSearchStore");
 
 dojo.declare("dojox.data.GoogleFeedStore", dojox.data.GoogleSearchStore,{
 	// summary:
-	//	A data store for retrieving RSS and Atom feeds from Google. The 
+	//	A data store for retrieving RSS and Atom feeds from Google. The
 	//  feeds can come from any source, which is specified in the "url"
 	//  parameter of the query passed to the "fetch" function.
 	//	The following attributes are supported on each item:
@@ -83,4 +73,5 @@ dojo.declare("dojox.data.GoogleFeedStore", dojox.data.GoogleSearchStore,{
 	}
 });
 
-}
+return dojox.data.GoogleFeedStore;
+});

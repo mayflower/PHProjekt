@@ -1,16 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit._base.focus"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit._base.focus"] = true;
-dojo.provide("dijit._base.focus");
-
-dojo.require("dojo.window");
-dojo.require("dijit._base.manager");	// for dijit.isTabNavigable()
+define("dijit/_base/focus", ["dojo", "dijit", "dojo/window", "dijit/_base/manager"], function(dojo, dijit) {
 
 // summary:
 //		These functions are used to query or set the focus and selection.
@@ -66,6 +54,9 @@ dojo.mixin(dijit, {
 						}
 					}
 					bm = {isCollapsed:true};
+					if(sel.rangeCount){
+						bm.mark = sel.getRangeAt(0).cloneRange();
+					}
 				}else{
 					rg = sel.getRangeAt(0);
 					bm = {isCollapsed: false, mark: rg.cloneRange()};
@@ -313,7 +304,7 @@ dojo.mixin(dijit, {
 		var doc = dojo.isIE ? targetWindow.document.documentElement : targetWindow.document;
 		if(doc){
 			if(dojo.isIE){
-				doc.attachEvent('onmousedown', mousedownListener);
+				targetWindow.document.body.attachEvent('onmousedown', mousedownListener);
 				var activateListener = function(evt){
 					// IE reports that nodes like <body> have gotten focus, even though they have tabIndex=-1,
 					// Should consider those more like a mouse-click than a focus....
@@ -331,13 +322,13 @@ dojo.mixin(dijit, {
 				doc.attachEvent('ondeactivate', deactivateListener);
 
 				return function(){
-					doc.detachEvent('onmousedown', mousedownListener);
+					targetWindow.document.detachEvent('onmousedown', mousedownListener);
 					doc.detachEvent('onactivate', activateListener);
 					doc.detachEvent('ondeactivate', deactivateListener);
 					doc = null;	// prevent memory leak (apparent circular reference via closure)
 				};
 			}else{
-				doc.addEventListener('mousedown', mousedownListener, true);
+				doc.body.addEventListener('mousedown', mousedownListener, true);
 				var focusListener = function(evt){
 					dijit._onFocusNode(effectiveNode || evt.target);
 				};
@@ -348,7 +339,7 @@ dojo.mixin(dijit, {
 				doc.addEventListener('blur', blurListener, true);
 
 				return function(){
-					doc.removeEventListener('mousedown', mousedownListener, true);
+					doc.body.removeEventListener('mousedown', mousedownListener, true);
 					doc.removeEventListener('focus', focusListener, true);
 					doc.removeEventListener('blur', blurListener, true);
 					doc = null;	// prevent memory leak (apparent circular reference via closure)
@@ -489,6 +480,7 @@ dojo.mixin(dijit, {
 			widget = dijit.byId(oldStack[i]);
 			if(widget){
 				widget._focused = false;
+				widget.set("focused", false);
 				widget._hasBeenBlurred = true;
 				if(widget._onBlur){
 					widget._onBlur(by);
@@ -502,6 +494,7 @@ dojo.mixin(dijit, {
 			widget = dijit.byId(newStack[i]);
 			if(widget){
 				widget._focused = true;
+				widget.set("focused", true);
 				if(widget._onFocus){
 					widget._onFocus(by);
 				}
@@ -522,4 +515,6 @@ dojo.addOnLoad(function(){
 	}
 });
 
-}
+
+return dijit;
+});

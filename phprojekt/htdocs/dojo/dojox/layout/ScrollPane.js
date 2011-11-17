@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.layout.ScrollPane"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.layout.ScrollPane"] = true;
 dojo.provide("dojox.layout.ScrollPane");
 dojo.experimental("dojox.layout.ScrollPane");
 
@@ -27,7 +18,7 @@ dojo.declare("dojox.layout.ScrollPane",
 	// 		Horizontal scrolling is supported. Combination scrolling is not.
 	//
 	//		FIXME: need to adust the _line somehow, it stops scrolling
-	//		
+	//
 	// example:
 	// |	<div dojoType="dojox.layout.ScrollPane" style="width:150px height:300px;">
 	// |		<!-- any height content -->
@@ -43,13 +34,13 @@ dojo.declare("dojox.layout.ScrollPane",
 	_offset: 15,
 	
 	// orientation: String
-	//		either "horizontal" or "vertical" for scroll orientation. 
+	//		either "horizontal" or "vertical" for scroll orientation.
 	orientation: "vertical",
 	
 	// alwaysShow: Boolean
 	//		whether the scroll helper should hide when mouseleave
 	autoHide: true,
-	templateString: dojo.cache("dojox.layout", "resources/ScrollPane.html", "<div class=\"dojoxScrollWindow\" dojoAttachEvent=\"onmouseenter: _enter, onmouseleave: _leave\">\r\n    <div class=\"dojoxScrollWrapper\" style=\"${style}\" dojoAttachPoint=\"wrapper\" dojoAttachEvent=\"onmousemove: _calc\">\r\n\t<div class=\"dojoxScrollPane\" dojoAttachPoint=\"containerNode\"></div>\r\n    </div>\r\n    <div dojoAttachPoint=\"helper\" class=\"dojoxScrollHelper\"><span class=\"helperInner\">|</span></div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.layout","resources/ScrollPane.html"),
 	
 	resize: function(size){
 		// summary: calculates required sizes. Call this if you add/remove content manually, or reload the content.
@@ -120,19 +111,19 @@ dojo.declare("dojox.layout.ScrollPane",
 		}
 		dojo.style(this.wrapper,"overflow","hidden");
 	
-	},	
+	},
 	
 	_set: function(/* Float */n){
 		if(!this._size){ return; }
-		// summary: set the pane's scroll offset, and position the virtual scroll helper 
+		// summary: set the pane's scroll offset, and position the virtual scroll helper
 		this.wrapper[this._scroll] = Math.floor(this._line.getValue(n));
-		dojo.style(this.helper, this._edge, Math.floor(this._helpLine.getValue(n)) + "px");    
+		dojo.style(this.helper, this._edge, Math.floor(this._helpLine.getValue(n)) + "px");
 	},
 	
 	_calc: function(/* Event */e){
 		// summary: calculate the relative offset of the cursor over the node, and call _set
 		if(!this._lo){ this.resize(); }
-		this._set(this._vertical ? 
+		this._set(this._vertical ?
 			((e.pageY - this._lo.y) / this._lo.h) :
 			((e.pageX - this._lo.x) / this._lo.w)
 		);
@@ -140,8 +131,8 @@ dojo.declare("dojox.layout.ScrollPane",
 	
 	_enter: function(e){
 		if(this._hideAnim){
-			if(this._hideAnim.status() == "playing"){ 
-				this._hideAnim.stop(); 
+			if(this._hideAnim.status() == "playing"){
+				this._hideAnim.stop();
 			}
 			this._showAnim.play();
 		}
@@ -154,5 +145,3 @@ dojo.declare("dojox.layout.ScrollPane",
 	}
     
 });
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.geo.charting.Map"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.geo.charting.Map"] = true;
 dojo.provide("dojox.geo.charting.Map");
 
 dojo.require("dojox.gfx");
@@ -18,7 +9,7 @@ dojo.declare("dojox.geo.charting.Map", null, {
 	//	summary:
 	//		Map widget interacted with charting.
 	//	description:
-	//		Support rendering Americas, AsiaPacific, ContinentalEurope, EuropeMiddleEastAfrica, 
+	//		Support rendering Americas, AsiaPacific, ContinentalEurope, EuropeMiddleEastAfrica,
 	//		USStates, WorldCountries, and WorldCountriesMercator by default.
 	//	example:
 	//	|	var usaMap = new dojox.geo.charting.Map(srcNode, "dojotoolkit/dojox/geo/charting/resources/data/USStates.json");
@@ -38,7 +29,7 @@ dojo.declare("dojox.geo.charting.Map", null, {
 		//		map container html node/id
 		//	shapeFile:
 		//		map shape data url, handled as json style
-		//		data format: 
+		//		data format:
 		
 		// get map container coords
 		dojo.style(container, "display", "block");
@@ -65,7 +56,7 @@ dojo.declare("dojox.geo.charting.Map", null, {
 	},
 	setMarkerData: function(/*String*/ markerFile){
 		//	summary:
-		//		import markers from outside file, associate with map feature by feature id 
+		//		import markers from outside file, associate with map feature by feature id
 		//		which identified in map shape file, e.g: "NY":"New York"
 		//	markerFile:
 		//		outside marker data url, handled as json style.
@@ -109,7 +100,7 @@ dojo.declare("dojox.geo.charting.Map", null, {
 			y:shapeData.layerExtent[1]
 		};
 		this.mapObj.setTransform([
-			dojox.gfx.matrix.scale(this.mapObj.scale), 
+			dojox.gfx.matrix.scale(this.mapObj.scale),
 			dojox.gfx.matrix.translate(-shapeData.layerExtent[0], -shapeData.layerExtent[1])
 		]);
 
@@ -147,5 +138,3 @@ dojo.declare("dojox.geo.charting.Map", null, {
 	onZoomEnd:function(feature){
 	}
 });
-
-}

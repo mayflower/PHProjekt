@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.lang.functional.reversed"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.lang.functional.reversed"] = true;
 dojo.provide("dojox.lang.functional.reversed");
 
 dojo.require("dojox.lang.functional.lambda");
@@ -15,7 +6,7 @@ dojo.require("dojox.lang.functional.lambda");
 //	- reversed versions of array-processing functions similar to standard JS functions
 
 // Notes:
-//	- this module provides reversed versions of standard array-processing functions: 
+//	- this module provides reversed versions of standard array-processing functions:
 //		forEachRev, mapRev, filterRev
 
 // Defined methods:
@@ -30,7 +21,7 @@ dojo.require("dojox.lang.functional.lambda");
 		// JS 1.6 standard array functions, which can take a lambda as a parameter.
 		// Consider using dojo._base.array functions, if you don't need the lambda support.
 		filterRev: function(/*Array|String*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: creates a new array with all elements that pass the test 
+			// summary: creates a new array with all elements that pass the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || d.global; f = df.lambda(f);
@@ -48,7 +39,7 @@ dojo.require("dojox.lang.functional.lambda");
 			for(var i = a.length - 1; i >= 0; f.call(o, a[i], i, a), --i);
 		},
 		mapRev: function(/*Array|String*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: creates a new array with the results of calling 
+			// summary: creates a new array with the results of calling
 			//	a provided function on every element in this array.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || d.global; f = df.lambda(f);
@@ -57,7 +48,7 @@ dojo.require("dojox.lang.functional.lambda");
 			return t;	// Array
 		},
 		everyRev: function(/*Array|String*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: tests whether all elements in the array pass the test 
+			// summary: tests whether all elements in the array pass the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || d.global; f = df.lambda(f);
@@ -69,7 +60,7 @@ dojo.require("dojox.lang.functional.lambda");
 			return true;	// Boolean
 		},
 		someRev: function(/*Array|String*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: tests whether some element in the array passes the test 
+			// summary: tests whether some element in the array passes the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || d.global; f = df.lambda(f);
@@ -82,5 +73,3 @@ dojo.require("dojox.lang.functional.lambda");
 		}
 	});
 })();
-
-}

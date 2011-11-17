@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.dtl.contrib.data"]||(dojo._hasResource["dojox.dtl.contrib.data"]=!0,dojo.provide("dojox.dtl.contrib.data"),dojo.require("dojox.dtl._base"),function(){var e=dojox.dtl,d=e.contrib.data,f=!0;d._BoundItem=dojo.extend(function(a,c){this.item=a;this.store=c},{get:function(a){var c=this.store,b=this.item;if(a=="getLabel")return c.getLabel(b);else if(a=="getAttributes")return c.getAttributes(b);else if(a=="getIdentity")return c.getIdentity?c.getIdentity(b):"Store has no identity API";
+else{if(!c.hasAttribute(b,a)&&(a.slice(-1)=="s"&&(f&&(f=!1,dojo.deprecated("You no longer need an extra s to call getValues, it can be figured out automatically")),a=a.slice(0,-1)),!c.hasAttribute(b,a)))return;if(a=c.getValues(b,a)){if(!dojo.isArray(a))return new d._BoundItem(a,c);a=dojo.map(a,function(a){return dojo.isObject(a)&&c.isItem(a)?new d._BoundItem(a,c):a});a.get=d._get;return a}}}});d._BoundItem.prototype.get.safe=!0;d.BindDataNode=dojo.extend(function(a,c,b,d){this.items=a&&new e._Filter(a);
+this.query=c&&new e._Filter(c);this.store=new e._Filter(b);this.alias=d},{render:function(a,c){var b=this.items&&this.items.resolve(a),e=this.query&&this.query.resolve(a),g=this.store.resolve(a);if(!g||!g.getFeatures)throw Error("data_bind didn't receive a store");if(e){var f=!1;g.fetch({query:e,sync:!0,scope:this,onComplete:function(a){f=!0;b=a}});if(!f)throw Error("The bind_data tag only works with a query if the store executed synchronously");}e=[];if(b)for(var h=0,i;i=b[h];h++)e.push(new d._BoundItem(i,
+g));a[this.alias]=e;return c},unrender:function(a,c){return c},clone:function(){return this}});dojo.mixin(d,{_get:function(a){if(this.length)return this[0]instanceof d._BoundItem?this[0].get(a):this[0][a]},bind_data:function(a,c){var b=c.contents.split();if(b[2]!="to"||b[4]!="as"||!b[5])throw Error("data_bind expects the format: 'data_bind items to store as varName'");return new d.BindDataNode(b[1],null,b[3],b[5])},bind_query:function(a,c){var b=c.contents.split();if(b[2]!="to"||b[4]!="as"||!b[5])throw Error("data_bind expects the format: 'bind_query query to store as varName'");
+return new d.BindDataNode(null,b[1],b[3],b[5])}});d._get.safe=!0;e.register.tags("dojox.dtl.contrib",{data:["bind_data","bind_query"]})}());

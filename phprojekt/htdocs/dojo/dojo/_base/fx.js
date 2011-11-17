@@ -1,24 +1,13 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.fx"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.fx"] = true;
-dojo.provide("dojo._base.fx");
-dojo.require("dojo._base.Color");
-dojo.require("dojo._base.connect");
-dojo.require("dojo._base.lang");
-dojo.require("dojo._base.html");
+define("dojo/_base/fx", ["dojo/lib/kernel", "dojo/_base/Color", "dojo/_base/connect", "dojo/_base/lang", "dojo/_base/html"], function(dojo){
 
 /*
 	Animation loosely package based on Dan Pupius' work, contributed under CLA:
 		http://pupius.co.uk/js/Toolkit.Drawing.js
 */
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 (function(){
 	var d = dojo;
+//>>excludeEnd("webkitMobile");
 	var _mixin = d._mixin;
 
 	dojo._Line = function(/*int*/ start, /*int*/ end){
@@ -363,7 +352,8 @@ dojo.require("dojo._base.html");
 	});
 
 	var _makeFadeable =
-				d.isIE ? function(node){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		d.isIE ? function(node){
 			// only set the zoom if the "tickle" value would be the same as the
 			// default
 			var ns = node.style;
@@ -373,7 +363,8 @@ dojo.require("dojo._base.html");
 				ns.width = "auto";
 			}
 		} :
-				function(){};
+		//>>excludeEnd("webkitMobile");
+		function(){};
 
 	dojo._fade = function(/*Object*/ args){
 		//	summary:
@@ -664,6 +655,9 @@ dojo.require("dojo._base.html");
 			onEnd: onEnd
 		}).play(delay || 0);
 	};
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 })();
+//>>excludeEnd("webkitMobile");
 
-}
+return dojo.animateProperty;
+});

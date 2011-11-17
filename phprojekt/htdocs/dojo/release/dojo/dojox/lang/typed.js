@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.lang.typed"]||(dojo._hasResource["dojox.lang.typed"]=!0,function(){function l(b,c){var a=function(){var a=c();if(a&&a.parameters){for(var e=a.parameters,d=0;d<e.length;d++)arguments[d]=i(arguments[d],e[d],d.toString());if(a.additionalParameters)for(;d<arguments.length;d++)arguments[d]=i(arguments[d],a.additionalParameters,d.toString())}e=b.apply(this,arguments);a.returns&&i(e,a.returns);return e};a.__typedFunction__=!0;for(var e in b)a[e]=b[e];return a}function n(b){return function(){return b}}
+function i(b,c,a){typeof b=="function"&&c&&!b.__typedFunction__&&(b=l(b,n(c)));c=f._validate(b,c,a);if(!c.valid){b="";c=c.errors;for(a=0;a<c.length;a++)b+=c[a].property+" "+c[a].message+"\n";throw new TypeError(b);}return b}var f,g=typeof dojo!="undefined";if(g)dojo.provide("dojox.lang.typed"),dojo.require("dojox.json.schema"),f=dojox.json.schema;else{if(typeof JSONSchema=="undefined")throw Error("Dojo or JSON Schema library must be present");f=JSONSchema}var o=f.__defineGetter__,k=function(b){if(b.__typedClass__)return b;
+var c=function(){var a,h,f=c.properties,d=c.methods;b.apply(this,arguments);this.__props__={};for(a in d)if(h=this[a]){if(!h.__typedFunction__){for(var j=this;!j.hasOwnProperty(a)&&j.__proto__;)j=j.__proto__;(function(a){j[a]=l(h,function(){return d[a]})})(a)}}else(function(a){this[a]=function(){throw new TypeError("The method "+a+" is defined but not implemented");}})(a);if(o){var g=this;for(a in f)h=this[a],this.hasOwnProperty(a)&&(this.__props__[a]=h),function(a){delete g[a];g.__defineGetter__(a,
+function(){return a in this.__props__?this.__props__[a]:this.__proto__[a]});g.__defineSetter__(a,function(b){i(b,f[a],a);return this.__props__[a]=b})}(a)}i(this,c)};c.prototype=b.prototype;for(var a in b)c[a]=b[a];b.prototype.declaredClass&&g&&dojo.setObject(b.prototype.declaredClass,c);c.__typedClass__=!0;return c};if(g){if(dojox.lang.typed=k,dojo.config.typeCheckAllClasses){var m=dojo.declare;dojo.declare=function(b){var c=m.apply(this,arguments);return c=k(c)};dojo.mixin(dojo.declare,m)}}else typed=
+k}());

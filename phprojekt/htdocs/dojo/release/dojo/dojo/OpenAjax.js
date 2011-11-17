@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+window.OpenAjax||(OpenAjax=new function(){var e,c={};this.hub=c;c.implementer="http://openajax.org";c.implVersion="0.6";c.specVersion="0.6";c.implExtraData={};e={};c.libraries=e;c.registerLibrary=function(a,d,b,c){e[a]={prefix:a,namespaceURI:d,version:b,extraData:c};this.publish("org.openajax.hub.registerLibrary",e[a])};c.unregisterLibrary=function(a){this.publish("org.openajax.hub.unregisterLibrary",e[a]);delete e[a]};c._subscriptions={c:{},s:[]};c._cleanup=[];c._subIndex=0;c._pubDepth=0;c.subscribe=
+function(a,d,b,c,f){b||(b=window);var g=a+"."+this._subIndex,d={scope:b,cb:d,fcb:f,data:c,sid:this._subIndex++,hdl:g};this._subscribe(this._subscriptions,a.split("."),0,d);return g};c.publish=function(a,d){var b=a.split(".");this._pubDepth++;this._publish(this._subscriptions,b,0,a,d);this._pubDepth--;if(this._cleanup.length>0&&this._pubDepth==0){for(b=0;b<this._cleanup.length;b++)this.unsubscribe(this._cleanup[b].hdl);delete this._cleanup;this._cleanup=[]}};c.unsubscribe=function(a){var a=a.split("."),
+d=a.pop();this._unsubscribe(this._subscriptions,a,0,d)};c._subscribe=function(a,d,b,c){var f=d[b];if(b==d.length)a.s.push(c);else{if(typeof a.c=="undefined")a.c={};typeof a.c[f]=="undefined"&&(a.c[f]={c:{},s:[]});this._subscribe(a.c[f],d,b+1,c)}};c._publish=function(a,d,b,c,f){if(typeof a!="undefined"&&(b!=d.length&&(this._publish(a.c[d[b]],d,b+1,c,f),this._publish(a.c["*"],d,b+1,c,f),a=a.c["**"]),typeof a!="undefined")){a=a.s;d=a.length;for(b=0;b<d;b++)if(a[b].cb){var g=a[b].scope,e=a[b].cb,h=a[b].fcb,
+i=a[b].data;typeof e=="string"&&(e=g[e]);typeof h=="string"&&(h=g[h]);(!h||h.call(g,c,f,i))&&e.call(g,c,f,i)}}};c._unsubscribe=function(a,c,b,e){if(typeof a!="undefined")if(b<c.length){var f=a.c[c[b]];this._unsubscribe(f,c,b+1,e);if(f.s.length==0){for(var g in f.c)return;delete a.c[c[b]]}}else{a=a.s;c=a.length;for(b=0;b<c;b++)if(e==a[b].sid){this._pubDepth>0?(a[b].cb=null,this._cleanup.push(a[b])):a.splice(b,1);break}}};c.reinit=function(){for(var a in OpenAjax.hub.libraries)delete OpenAjax.hub.libraries[a];
+OpenAjax.hub.registerLibrary("OpenAjax","http://openajax.org/hub","0.6",{});delete OpenAjax._subscriptions;OpenAjax._subscriptions={c:{},s:[]};delete OpenAjax._cleanup;OpenAjax._cleanup=[];OpenAjax._subIndex=0;OpenAjax._pubDepth=0}},OpenAjax.hub.registerLibrary("OpenAjax","http://openajax.org/hub","0.6",{}));

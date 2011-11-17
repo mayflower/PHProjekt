@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.cometd.ack"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.cometd.ack"] = true;
 dojo.provide("dojox.cometd.ack");
 dojo.require("dojox.cometd._base");
 
@@ -18,7 +9,7 @@ dojo.require("dojox.cometd._base");
  * messages.
  *
  * To use, add dojo.require("dojox.cometd.ack"); and if the handshake will be sent
- * with ext:{ack:true}.  If the server supports the same extension, then the 
+ * with ext:{ack:true}.  If the server supports the same extension, then the
  * mechanism will be initialized.  The dojox.cometd.ackEnabled field may also be
  * used to optionally enable/disable the extension before init of cometd.
  *
@@ -40,13 +31,13 @@ dojox.cometd._ack = new function(){
 	this._out = function(msg){
 	
 		if (msg.channel == "/meta/handshake") {
-			if (!msg.ext) 
+			if (!msg.ext)
 				msg.ext = {};
 			msg.ext.ack = dojox.cometd.ackEnabled;
 			lastAck = -1;
 		}
 		if (supportAcks && msg.channel == "/meta/connect") {
-			if (!msg.ext) 
+			if (!msg.ext)
 				msg.ext = {};
 			msg.ext.ack = lastAck;
 		}
@@ -57,5 +48,3 @@ dojox.cometd._ack = new function(){
 dojox.cometd._extendInList.push(dojo.hitch(dojox.cometd._ack, "_in"));
 dojox.cometd._extendOutList.push(dojo.hitch(dojox.cometd._ack, "_out"));
 dojox.cometd.ackEnabled = true;
-
-}

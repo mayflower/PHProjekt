@@ -22,7 +22,6 @@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests Default Model class
@@ -40,15 +39,19 @@ require_once 'PHPUnit/Framework.php';
  * @group      model
  * @group      default-model
  */
-class Phprojekt_DefaultModelDefault_Test extends PHPUnit_Framework_TestCase
+class Phprojekt_DefaultModelDefault_Test extends DatabaseTest
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * Test valid method
      *
      */
     public function testDefaultModelsDefault()
     {
-        $defaultModel = Phprojekt_Loader::getModel('Default', 'Default');
+        $defaultModel = new Default_Models_Default();
         $this->assertEquals($defaultModel->valid(), false);
         $this->assertEquals($defaultModel->save(), false);
         $this->assertEquals($defaultModel->getRights(), array());

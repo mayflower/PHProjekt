@@ -1,14 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.testing.DocTest"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.testing.DocTest"] = true;
-dojo.provide("dojox.testing.DocTest");
-dojo.require("dojo.string");
+define("dojox/testing/DocTest", ["dojo/string"], function() {
 
 dojo.declare(
 	"dojox.testing.DocTest",
@@ -148,8 +138,8 @@ dojo.declare(
 							line:test.line
 						});
 					}
-					test = { 
-						commands: [], 
+					test = {
+						commands: [],
 						expectedResult: [],
 						line:0
 					};
@@ -197,7 +187,7 @@ dojo.declare(
 		
 		_run: function(/*Array*/tests){
 			//	summary:
-			//		Each element in the array contains the test in the first element, 
+			//		Each element in the array contains the test in the first element,
 			//		and the expected result in the second element.
 			//	tests:
 			//		Make sure that the types are compared properly. There used to be
@@ -231,8 +221,8 @@ dojo.declare(
 				var msg = "Test "+(i+1)+": ";
 				var viewCommands = t.commands.join(" ");
 				// Show the first part of the test command.
-				viewCommands = (viewCommands.length > 50 ? 
-								viewCommands.substr(0,50) + "..." : 
+				viewCommands = (viewCommands.length > 50 ?
+								viewCommands.substr(0,50) + "..." :
 								viewCommands
 				);
 				if(res.success){
@@ -258,7 +248,7 @@ dojo.declare(
 		},
 		
 		runTest: function(commands, expected){
-			var ret = { 
+			var ret = {
 				success: false,
 				actualResult: null
 			};
@@ -268,7 +258,7 @@ dojo.declare(
 			var cmds = commands.join("\n");
 			ret.actualResult = eval(cmds);
 			if( (String(ret.actualResult)==expected) ||
-				(dojo.toJson(ret.actualResult)==expected) || 
+				(dojo.toJson(ret.actualResult)==expected) ||
 				(
 					(expected.charAt(0)=='"')&&
 					(expected.charAt(expected.length-1)=='"')&&
@@ -285,4 +275,5 @@ dojo.declare(
 	}
 );
 
-}
+return dojox.testing.DocTest;
+});

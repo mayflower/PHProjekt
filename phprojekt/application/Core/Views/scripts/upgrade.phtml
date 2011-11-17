@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>PHProjekt</title>
+    <link rel="shortcut icon" href="<?php echo $this->webPath; ?>img/favicon.ico" type="image/x-icon" />
+    <style type="text/css">
+        @import "<?php echo $this->webPath; ?>css/themes/phprojekt/phprojektCssCompiler.php";
+    </style>
+    <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/dojo/dojo.js"></script>
+    <script type="text/javascript">
+        dojo.require('dojo.parser');
+        dojo.require('dijit.layout.BorderContainer');
+        dojo.require('dijit.layout.ContentPane');
+        dojo.require('dijit.Toolbar');
+        dojo.require('dijit.form.Button');
+        function getMaxHeight() {
+            var availHeight = 0;
+
+            if (document.layers) {
+                availHeight = window.innerHeight + window.pageYOffset;
+            } else if (document.all) {
+                availHeight = document.documentElement.clientHeight + document.documentElement.scrollTop;
+            } else if (document.getElementById) {
+                availHeight = window.innerHeight + window.pageYOffset;
+            }
+
+            return availHeight;
+        }
+
+        function init() {
+            availHeight = getMaxHeight();
+
+            dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
+            if (dijit.byId('completeContent')) {
+                dijit.byId('completeContent').resize();
+            }
+
+            if (dojo.byId('completeCenterContent')) {
+                dojo.style(dojo.byId('completeCenterContent'), "height", (availHeight - 55) + "px");
+                if (dijit.byId('completeCenterContent')) {
+                    dijit.byId('completeCenterContent').resize();
+                }
+            }
+        }
+
+        dojo.addOnLoad(function() {
+            dojo.parser.parse();
+            init();
+        });
+
+        window.onresize = function() {
+            init();
+        };
+    </script>
+</head>
+<body class="phprojekt">
+
+<div id="completeContent" class="completeContent"/g dojoType="dijit.layout.BorderContainer" persist="true"
+ style="width: 100%; height: 1000px;">
+    <!-- Left Content -->
+    <div id="navigation-container" class="navigationContainer"/g dojoType="dijit.layout.ContentPane" region="left" splitter="false" minSize="180"
+    maxSize="300"
+    style="width: 15%; overflow: hidden;">
+        <div region="center" dojoType="dijit.layout.ContentPane">
+            <div id="tree-navigation" class="treeNavigation"/g>
+                <div dojoType="dijit.layout.ContentPane" id="treeBox" class="treeBox"/g
+                 style="height: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Bar menu -->
+    <div dojoType="dijit.layout.ContentPane" region="top" id="header" class="header"/g
+    style="height: 55px; overflow: hidden;">
+        <img class="left" src="<?php echo $this->webPath; ?>img/logo.png" title="PHProjekt 6" />
+        <div id="mainNavigation" class="mainNavigation"/g  class="right align-right" dojoType="dijit.Toolbar">
+        </div>
+        <div id="loadingIcon" class="loadingIcon"/g class="right align-right"
+        style="margin-top: 5px; margin-bottom: 5px; display: none;">
+            <img class="left" src="<?php echo $this->webPath; ?>img/ajax-loader.gif" title="Loading" />
+        </div>
+    </div>
+
+    <!-- Center Content -->
+    <div    id="completeCenterContent" class="completeCenterContent"/g
+            dojoType="dijit.layout.ContentPane"
+            region="center"
+            style="height: 1000px;">
+        <br/>
+        <?php $p = Phprojekt::getInstance(); ?>
+        <div class="prepend-0" id="content" class="content"/g>
+            <h2><?php echo $p->translate('Migration'); ?></h2>
+            <p>
+                <?php
+                    echo $p->translate('Thank you for upgrading to PHProjekt version ');
+                    echo $this->newVersion;
+                    echo $p->translate(<<<HERE
+.<br/>We're sorry to bother you, but we need to upgrade the database to the current version.<br/><br/>
+When you're ready, just click the button. Please note that the upgrade might take a few moments.
+HERE
+);
+                ?>
+           </p>
+            <style type='text/css'>
+                .warning {
+                    display: inline-block;
+                    border:  2px solid red;
+                    padding: 1px;
+                    margin:  5px;
+                }
+            </style>
+
+            <div class='warning'>
+                <?php echo $p->translate(<<<HERE
+<h4>Warning!</h4><p>This feature is still new, and we really don't want you to lose your data.<br/>
+So please, back up your data before clicking the button.<br/><br/>Thank you.</p>
+HERE
+); ?>
+            </div>
+            <br/>
+            <div id='errorMessageServer' class='warning' style="display: none;">
+                <?php echo $p->translate(<<<HERE
+There was an unknown problem on the server. We're really sorry.
+You can try again, but there might be problems in the future.
+HERE
+); ?>
+            </div>
+            <div id='errorMessage' class='warning' style="display: none;">
+                <?php echo $p->translate(<<<HERE
+There was a problem upgrading, but we managed to keep the database in a consistent state.
+Please consult the logfiles to find out more.
+HERE
+); ?>
+            </div>
+            <div id='errorMessageFatal' class='warning' style="display: none;">
+                <?php echo $p->translate(<<<HERE
+We're sorry, but our upgrade attempt broke the database.
+Please recover your backups and consult the logfiles to get more information.
+HERE
+); ?>
+            </div>
+            <style type="text/css">
+                .modulesTable, .modulesTable td, .modulesTable th {
+                    border: medium solid rgb(239, 239, 239);
+                }
+
+                .modulesTable td, .modulesTable th{
+                    height:       21px;
+                    padding:       2px;
+                    padding-left:  4px;
+                    padding-right: 4px;
+                }
+            </style>
+            <table class="modulesTable">
+                <tr>
+                    <th><?php echo $p->translate('Module'); ?></th>
+                    <th><?php echo $p->translate('Old version'); ?></th>
+                    <th><?php echo $p->translate('New version'); ?></th>
+                    <th><?php echo $p->translate('Status'); ?></th>
+                </tr>
+                <?php foreach ($this->modules as $module => $mdata): ?>
+                <tr>
+                    <td><?php echo ucfirst($module); ?></td>
+                    <td><?php echo $mdata['from'] ?: $p->translate('Not installed'); ?></td>
+                    <td><?php echo $mdata['to']; ?></td>
+                    <td><img id="<?php echo $module; ?>_status"/></td>
+                </tr>
+                <?php endforeach; ?>
+            </table><br/>
+            <button id='button' dojoType="dijit.form.Button" type="button" onclick="upgrade">
+                <?php echo $p->translate('Upgrade now'); ?>
+            </button>
+            <script type="text/javascript">
+                var modules = <?php echo Zend_Json::encode(array_keys($this->modules)); ?>;
+
+                upgrade = function() {
+                    if (modules.length < 1) {
+                        button = dijit.byId('button');
+                        button.attr('label', "<?php echo $p->translate('Continue'); ?>");
+                        button.attr('onClick', function() {
+                            window.location = "<?php echo $this->webPath; ?>";
+                        })
+                        return;
+                    }
+
+                    var module = modules.shift();
+                    field = dojo.byId(module + "_status");
+                    dojo.attr(field, 'src', "<?php echo $this->webPath; ?>img/ajax-loader-small.gif");
+                    dojo.attr(field, 'title', "<?php echo $p->translate('Upgrading'); ?>");
+                    dojo.xhrPost({
+                        url:      "<?php echo $this->webPath; ?>index.php/Core/Upgrade/jsonUpgrade",
+                        handleAs: "json",
+                        content:  {
+                            upgradeModule: module,
+                            csrfToken:     "<?php echo Phprojekt::createCsrfToken(); ?>"
+                        },
+                        error: function() {
+                            dojo.style('errorMessageServer', 'display', '');
+                            field = dojo.byId(module + "_status");
+                            dojo.attr(field, 'src', "<?php echo $this->webPath; ?>css/themes/phprojekt/images/cross.gif");
+                            dojo.attr(field, 'title', "<?php echo $p->translate('An error occured while upgrading this module.'); ?>");
+                        },
+                        load: function(data) {
+                            field = dojo.byId(module + "_status");
+                            switch(data['type']) {
+                            case 'failure':
+                                dojo.style('errorMessage', 'display', '');
+                                dojo.attr(field, 'src', "<?php echo $this->webPath; ?>css/themes/phprojekt/images/cross.gif");
+                                dojo.attr(field, 'title', "<?php echo $p->translate('An error occured while upgrading this module.'); ?>");
+                                break;
+                            case 'fatalFailure':
+                                dojo.style('errorMessageFatal', 'display', '');
+                                dojo.attr(field, 'src', "<?php echo $this->webPath; ?>css/themes/phprojekt/images/cross.gif");
+                                dojo.attr(field, 'title', "<?php echo $p->translate('An error occured while upgrading this module.'); ?>");
+                                break;
+                            case 'success':
+                                dojo.attr(field, 'src', "<?php echo $this->webPath; ?>css/themes/phprojekt/images/tick.gif");
+                                dojo.attr(field, 'title', "<?php echo $p->translate('Done'); ?>");
+                                upgrade();
+                                break;
+                            default:
+                                dojo.style('errorMessageServer', 'display', '');
+                                break;
+                            }
+                        }
+                    });
+                }
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

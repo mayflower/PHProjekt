@@ -17,7 +17,7 @@
     </li>
     <li class="separator">&nbsp;</li>
     <li class="slider">
-        <div id="{{data.name}}" secondary="33" name="{{data.name}}" dojotype="phpr.form.HorizontalRangeSlider"
+        <div id="{{data.name}}" secondary="33" name="{{data.name}}" dojotype="phpr.Gantt.Form.HorizontalRangeSlider"
         clickSelect="false" minimum="1" maximum="{{STEPPING}}" value="{{data.value}}"
         discreteValues="{{STEPPING}}" showbuttons="false"
         onchange="dijit.byId('ganttObject').container.processUpdate(arguments[0], '{{data.name}}');"

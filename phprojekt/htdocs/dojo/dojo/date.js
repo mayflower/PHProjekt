@@ -1,13 +1,5 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.date"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.date"] = true;
-dojo.provide("dojo.date");
+define("dojo/date", ["dojo"], function(dojo) {
+dojo.getObject("date", true, dojo);
 
 /*=====
 dojo.date = {
@@ -22,7 +14,7 @@ dojo.date.getDaysInMonth = function(/*Date*/dateObject){
 	var days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 	if(month == 1 && dojo.date.isLeapYear(dateObject)){ return 29; } // Number
 	return days[month]; // Number
-}
+};
 
 dojo.date.isLeapYear = function(/*Date*/dateObject){
 	//	summary:
@@ -36,7 +28,7 @@ dojo.date.isLeapYear = function(/*Date*/dateObject){
 
 	var year = dateObject.getFullYear();
 	return !(year%400) || (!(year%4) && !!(year%100)); // Boolean
-}
+};
 
 // FIXME: This is not localized
 dojo.date.getTimezoneName = function(/*Date*/dateObject){
@@ -61,7 +53,7 @@ dojo.date.getTimezoneName = function(/*Date*/dateObject){
 	}else{
 		// If at first you don't succeed ...
 		// If IE knows about the TZ, it appears before the year
-		// Capital letters or slash before a 4-digit year 
+		// Capital letters or slash before a 4-digit year
 		// at the end of string
 		var pat = /([A-Z\/]+) \d{4}$/;
 		if((match = str.match(pat))){
@@ -70,7 +62,7 @@ dojo.date.getTimezoneName = function(/*Date*/dateObject){
 		// Some browsers (e.g. Safari) glue the TZ on the end
 		// of toLocaleString instead of putting it in toString
 			str = dateObject.toLocaleString();
-			// Capital letters or slash -- end of string, 
+			// Capital letters or slash -- end of string,
 			// after space
 			pat = / ([A-Z\/]+)$/;
 			if((match = str.match(pat))){
@@ -81,7 +73,7 @@ dojo.date.getTimezoneName = function(/*Date*/dateObject){
 
 	// Make sure it doesn't somehow end up return AM or PM
 	return (tz == 'AM' || tz == 'PM') ? '' : tz; // String
-}
+};
 
 // Utility methods to do arithmetic calculations with Dates
 
@@ -346,4 +338,5 @@ dojo.date.difference = function(/*Date*/date1, /*Date?*/date2, /*String?*/interv
 	return Math.round(delta); // Number (integer)
 };
 
-}
+return dojo.date;
+});

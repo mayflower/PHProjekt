@@ -1,1 +1,12 @@
-({"descending":"Sestupně","ascending":"Vzestupně","nestedSort":"Vnořené řazení","unsorted":"Tento sloupec neřadit","singleSort":"Jednoduché řazení","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Jednotlivé řazení",
+	nestedSort: "Vnořené řazení",
+	ascending: "Vzestupně",
+	descending: "Sestupně",
+	sortingState: "${0} - ${1}",
+	unsorted: "Neřadit tento sloupec",
+	indirectSelectionRadio: "Řádek ${0}, jednotlivý výběr, přepínač",
+	indirectSelectionCheckBox: "Řádek ${0}, vícenásobný výběr, zaškrtávací políčko",
+	selectAll: "Vybrat vše"
+})
+

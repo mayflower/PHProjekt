@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.encoding.ascii85"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.encoding.ascii85"] = true;
-dojo.provide("dojox.encoding.ascii85");
+// AMD-ID "dojox/encoding/ascii85"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("encoding.ascii85", true, dojox);
 
 (function(){
 	var c = function(input, length, result){
@@ -22,7 +15,7 @@ dojo.provide("dojox.encoding.ascii85");
 			result.push(String.fromCharCode(b[4], b[3], b[2], b[1], b[0]));
 		}
 	};
-	
+
 	dojox.encoding.ascii85.encode = function(input){
 		// summary: encodes input data in ascii85 string
 		// input: Array: an array of numbers (0-255) to encode
@@ -67,4 +60,6 @@ dojo.provide("dojox.encoding.ascii85");
 	};
 })();
 
-}
+
+return dojox.encoding.ascii85;
+});

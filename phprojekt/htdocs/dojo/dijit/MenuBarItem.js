@@ -1,18 +1,7 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.MenuBarItem"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.MenuBarItem"] = true;
-dojo.provide("dijit.MenuBarItem");
-
-dojo.require("dijit.MenuItem");
+define("dijit/MenuBarItem", ["dojo", "dijit", "text!dijit/templates/MenuBarItem.html", "dijit/MenuItem"], function(dojo, dijit) {
 
 dojo.declare("dijit._MenuBarItemMixin", null, {
-	templateString: dojo.cache("dijit", "templates/MenuBarItem.html", "<div class=\"dijitReset dijitInline dijitMenuItem dijitMenuItemLabel\" dojoAttachPoint=\"focusNode\" waiRole=\"menuitem\" tabIndex=\"-1\"\r\n\t\tdojoAttachEvent=\"onmouseenter:_onHover,onmouseleave:_onUnhover,ondijitclick:_onClick\">\r\n\t<span dojoAttachPoint=\"containerNode\"></span>\r\n</div>\r\n"),
+	templateString: dojo.cache("dijit", "templates/MenuBarItem.html"),
 
 	// overriding attributeMap because we don't have icon
 	attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
@@ -26,4 +15,6 @@ dojo.declare("dijit.MenuBarItem", [dijit.MenuItem, dijit._MenuBarItemMixin], {
 
 });
 
-}
+
+return dijit.MenuBarItem;
+});

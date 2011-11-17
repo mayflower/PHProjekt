@@ -96,7 +96,7 @@ class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
     public function getModulesByRelationId($tagUserId)
     {
         $foundResults = array();
-        $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $rights       = new Phprojekt_Item_Rights();
         $userId       = Phprojekt_Auth::getUserId();
 
         $where   = sprintf('tag_user_id = %d', (int) $tagUserId);

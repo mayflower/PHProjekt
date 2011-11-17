@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.data.RailsStore"]||(dojo._hasResource["dojox.data.RailsStore"]=!0,dojo.provide("dojox.data.RailsStore"),dojo.require("dojox.data.JsonRestStore"),dojo.declare("dojox.data.RailsStore",dojox.data.JsonRestStore,{constructor:function(){},preamble:function(a){if(typeof a.target=="string"&&!a.service){var e=a.target.replace(/\/$/g,"");a.service=dojox.rpc.Rest(this.target,!0,null,function(a,b){var b=b||{},g=e,f,d;dojo.isObject(a)?(d="",f="?"+dojo.objectToQuery(a)):b.queryStr&&b.queryStr.indexOf("?")!=
+-1?(d=b.queryStr.replace(/\?.*/,""),f=b.queryStr.replace(/[^?]*\?/g,"?")):dojo.isString(b.query)&&b.query.indexOf("?")!=-1?(d=b.query.replace(/\?.*/,""),f=b.query.replace(/[^?]*\?/g,"?")):(d=a?a.toString():"",f="");d.indexOf("=")!=-1&&(f=d,d="");var h=dojox.rpc._sync;dojox.rpc._sync=!1;return{url:d?g+"/"+d+".json"+f:g+".json"+f,handleAs:"json",contentType:"application/json",sync:h,headers:{Accept:"application/json,application/javascript",Range:b&&(b.start>=0||b.count>=0)?"items="+(b.start||"0")+"-"+
+(b.count&&b.count+(b.start||0)-1||""):void 0}}})}},fetch:function(a){function e(b){if(a.queryStr==null){if(a.queryStr==null)a.queryStr="";if(dojo.isObject(a.query))a.queryStr="?"+dojo.objectToQuery(a.query);else if(dojo.isString(a.query))a.queryStr=a.query}a.queryStr=a.queryStr+(a.queryStr.indexOf("?")==-1?"?":"&")+dojo.objectToQuery(b)}a=a||{};if(a.start||a.count){if((a.start||0)%a.count)throw Error("The start parameter must be a multiple of the count parameter");e({page:(a.start||0)/a.count+1,per_page:a.count})}if(a.sort){var c=
+{sortBy:[],sortDir:[]};dojo.forEach(a.sort,function(a){c.sortBy.push(a.attribute);c.sortDir.push(a.descending?"DESC":"ASC")});e(c);delete a.sort}return this.inherited(arguments)},_processResults:function(a,e){var c;if(typeof this.rootAttribute=="undefined"&&a[0])if(a[0][this.idAttribute])this.rootAttribute=!1,console.debug("RailsStore: without root_in_json");else for(c in a[0])if(a[0][c][this.idAttribute])this.rootAttribute=c,console.debug("RailsStore: with root_in_json, attribute: "+c);c=this.rootAttribute?
+dojo.map(a,function(a){return a[this.rootAttribute]},this):a;var b=a.length;return{totalCount:e.fullLength||(e.request.count==b?(e.request.start||0)+b*2:b),items:c}}}));

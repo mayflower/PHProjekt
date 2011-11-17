@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.editor.plugins.UploadImage"]||(dojo._hasResource["dojox.editor.plugins.UploadImage"]=!0,dojo.provide("dojox.editor.plugins.UploadImage"),dojo.require("dojox.form.FileUploader"),dojo.require("dijit._editor._Plugin"),dojo.experimental("dojox.editor.plugins.UploadImage"),dojo.declare("dojox.editor.plugins.UploadImage",dijit._editor._Plugin,{tempImageUrl:"",iconClassPrefix:"editorIcon",useDefaultCommand:!1,uploadUrl:"",button:null,label:"Upload",setToolbar:function(a){this.button.destroy();
+this.createFileInput();a.addChild(this.button)},_initButton:function(){this.command="uploadImage";this.editor.commands[this.command]="Upload Image";this.inherited("_initButton",arguments);delete this.command},updateState:function(){this.button.set("disabled",this.get("disabled"))},createFileInput:function(){var a=dojo.create("span",{innerHTML:"."},document.body);dojo.style(a,{width:"40px",height:"20px",paddingLeft:"8px",paddingRight:"8px"});this.button=new dojox.form.FileUploader({isDebug:!0,uploadUrl:this.uploadUrl,
+uploadOnChange:!0,selectMultipleFiles:!1,baseClass:"dojoxEditorUploadNorm",hoverClass:"dojoxEditorUploadHover",activeClass:"dojoxEditorUploadActive",disabledClass:"dojoxEditorUploadDisabled"},a);this.connect(this.button,"onChange","insertTempImage");this.connect(this.button,"onComplete","onComplete")},onComplete:function(a){var a=a[0],b=dojo.withGlobal(this.editor.window,"byId",dojo,[this.currentImageId]),c;c=this.downloadPath?this.downloadPath+a.name:a.file;b.src=c;dojo.attr(b,"_djrealurl",c);if(a.width)b.width=
+a.width,b.height=a.height},insertTempImage:function(){this.currentImageId="img_"+(new Date).getTime();this.editor.execCommand("inserthtml",'<img id="'+this.currentImageId+'" src="'+this.tempImageUrl+'" width="32" height="32"/>')}}),dojo.subscribe(dijit._scopeName+".Editor.getPlugin",null,function(a){if(!a.plugin)switch(a.args.name){case "uploadImage":a.plugin=new dojox.editor.plugins.UploadImage({url:a.args.url})}}));

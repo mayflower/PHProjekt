@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.geo.charting.widget.Legend"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.geo.charting.widget.Legend"] = true;
 dojo.provide("dojox.geo.charting.widget.Legend");
 
 dojo.require("dijit._Widget");
@@ -69,5 +60,3 @@ dojo.declare("dojox.geo.charting.widget.Legend",[dijit._Widget, dijit._Templated
 		text.innerHTML = String(label);
 	}
 });
-
-}

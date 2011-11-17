@@ -80,6 +80,8 @@ class Phprojekt_Error
      */
     public function getError()
     {
+        // TODO: Fix, what if I want to have retrieve it twice.
+        // this is totally dangerous.
         $error         = $this->_errors;
         $this->_errors = array();
 

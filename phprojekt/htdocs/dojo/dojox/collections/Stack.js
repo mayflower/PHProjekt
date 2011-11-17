@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.collections.Stack"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.collections.Stack"] = true;
 dojo.provide("dojox.collections.Stack");
 dojo.require("dojox.collections._base");
 
@@ -74,6 +65,4 @@ dojox.collections.Stack=function(/* array? */arr){
 		//	create and return an array based on the internal collection
 		return [].concat(q);	//	array
 	};
-}
-
 }

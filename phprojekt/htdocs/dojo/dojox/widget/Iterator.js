@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.Iterator"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.Iterator"] = true;
 dojo.provide("dojox.widget.Iterator");
 dojo.require("dijit.Declaration");
 
@@ -15,9 +6,9 @@ dojo.experimental("dojox.widget.Iterator"); // level: prototype, designed for di
 /*
 	example:
 		from markup:
-	|	<span dojoType="dojo.data.ItemFileReadStore" 
+	|	<span dojoType="dojo.data.ItemFileReadStore"
 	|		jsId="cstore" url="countries.json"></span>
-	|	
+	|
 	|	<div>
 	|		<div dojoType="dojox.widget.Iterator" store="cstore"
 	|			query="{ name: 'A*'}">
@@ -28,12 +19,12 @@ dojo.experimental("dojox.widget.Iterator"); // level: prototype, designed for di
 	example:
 		programmatic:
 	|	var store = new dojo.data.ItemFileReadStore({ url: "countries.json" });
-	|	
-	|	var iter = new dojox.widget.Iterator({ 
+	|
+	|	var iter = new dojox.widget.Iterator({
 	|		store: store,
 	|		template: ""
 	|	});
-	|		
+	|
 
 	example:
 		programmatic from an array of objects:
@@ -41,8 +32,8 @@ dojo.experimental("dojox.widget.Iterator"); // level: prototype, designed for di
 	|		{ name: "foo", valueAttr: "bar" },
 	|		{ name: "thinger", valueAttr: "blah" }
 	|	];
-	|	
-	|	var iter = new dojox.widget.Iterator({ 
+	|
+	|	var iter = new dojox.widget.Iterator({
 	|		data: dataArr,
 	|		template: ""
 	|	});
@@ -53,8 +44,8 @@ dojo.experimental("dojox.widget.Iterator"); // level: prototype, designed for di
 	|		{ name: "foo", valueAttr: "bar" },
 	|		{ name: "thinger", valueAttr: "blah" }
 	|	];
-	|	
-	|	var iter = new dojox.widget.Iterator({ 
+	|
+	|	var iter = new dojox.widget.Iterator({
 	|		data: dataArr,
 	|		template: ""
 	|	});
@@ -85,7 +76,7 @@ dojo.declare("dojox.widget.Iterator",
 	data: null, // should be a reference to an Array
 	store: null,
 	_srcIndex: 0,
-	_srcParent: null, 
+	_srcParent: null,
 
 	_setSrcIndex: function(s){
 		this._srcIndex = 0;
@@ -180,5 +171,3 @@ dojo.declare("dojox.widget.Iterator",
 });
 
 dojox.widget.Iterator._classes = {};
-
-}

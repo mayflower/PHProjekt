@@ -1,16 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+define("dojo/robot", ["dojo", "doh/robot", "dojo/window"], function(dojo) {
 
-
-if(!dojo._hasResource["dojo.robot"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.robot"] = true;
-dojo.provide("dojo.robot");
 dojo.experimental("dojo.robot");
-dojo.require("doh.robot");
-dojo.require("dojo.window");
 
 (function(){
 // users who use doh+dojo get the added convenience of dojo.mouseMoveAt,
@@ -182,4 +172,5 @@ dojo.mixin(doh.robot,{
 
 })();
 
-}
+return doh.robot;
+});

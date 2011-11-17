@@ -60,65 +60,62 @@ class JsController extends IndexController
      */
     public function indexAction()
     {
+
+        $scripttext = "";
         // System files, must be parsed in this order
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/phpr.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Component.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/form.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/grid.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Store.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Date.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Url.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Tree.js');
-        echo file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/FrontendMessage.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/phpr.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/GarbageCollector.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Component.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Form.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Grid.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Store.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Date.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Tree.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/FrontendMessage.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/PageManager.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/ViewManager.js');
 
         // Default Folder
         $scripts = scandir(PHPR_CORE_PATH . '/Default/Views/dojo/scripts');
-        echo $this->_getModuleScripts(PHPR_CORE_PATH . DIRECTORY_SEPARATOR, $scripts, 'Default');
+        $scripttext .= $this->_getModuleScripts(PHPR_CORE_PATH . DIRECTORY_SEPARATOR, $scripts, 'Default');
 
         // Core Folder
         $scripts = scandir(PHPR_CORE_PATH . '/Core/Views/dojo/scripts');
-        echo $this->_getModuleScripts(PHPR_CORE_PATH . DIRECTORY_SEPARATOR, $scripts, 'Core');
+        $scripttext .= $this->_getModuleScripts(PHPR_CORE_PATH . DIRECTORY_SEPARATOR, $scripts, 'Core');
 
         // Load all the system modules and make and array of it
-        $this->_processModuleDirectory(PHPR_CORE_PATH . DIRECTORY_SEPARATOR);
+        $scripttext .= $this->_processModuleDirectory(PHPR_CORE_PATH . DIRECTORY_SEPARATOR);
 
         // Load all the user modules and make and array of it
-        $this->_processModuleDirectory(PHPR_USER_CORE_PATH);
+        $scripttext .= $this->_processModuleDirectory(PHPR_USER_CORE_PATH);
 
-        // Preload all the templates and save them into __phpr_templateCache
-        echo 'var __phpr_templateCache = {};';
+        $scripttext .= 'dojo.provide("phpr.Main");';
 
-        foreach ($this->_templates as $templateData) {
-            $content = str_replace("'", "\'", $templateData['contents']);
-            $content = str_replace("<", "<' + '", $content);
-            echo '
-                __phpr_templateCache["phpr.' . $templateData['module'] . '.template.' . $templateData['name']
-                . '"] = \'' . $content . '\';';
-        }
-
-        echo 'dojo.provide("phpr.Main");';
-
-        echo '
-        dojo.declare("phpr.Main", null, {
-            constructor:function(/*String*/webpath, /*String*/currentModule, /*Int*/rootProjectId,/*String*/language) {
-                phpr.module           = currentModule;
-                phpr.submodule        = null;
-                phpr.webpath          = webpath;
-                phpr.rootProjectId    = rootProjectId;
-                phpr.currentProjectId = rootProjectId ;
-                phpr.currentUserId    = 0;
-                phpr.language         = language;
-                phpr.config           = new Array();
-                phpr.serverFeedback   = new phpr.ServerFeedback();
-                phpr.Date             = new phpr.Date();
-                phpr.loading          = new phpr.loading();
-                phpr.DataStore        = new phpr.DataStore();
-                phpr.InitialScreen    = new phpr.InitialScreen();
-                phpr.BreadCrumb       = new phpr.BreadCrumb();
-                phpr.frontendMessage  = new phpr.FrontendMessage();
-                phpr.Tree             = new phpr.Tree();
-                phpr.regExpForFilter  = new phpr.regExpForFilter();
-                phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";
+        $scripttext .= '
+            dojo.declare("phpr.Main", null, {
+                constructor:function(/*String*/webpath, /*Int*/rootProjectId, /*String*/language) {
+                    phpr.webpath          = webpath;
+                    phpr.DefaultModule    = "Project";
+                    phpr.viewManager      = new phpr.Default.System.ViewManager();
+                    phpr.pageManager      = new phpr.Default.System.PageManager();
+                    phpr.module           = phpr.pageManager.getStateFromWindow().moduleName;
+                    phpr.submodule        = null;
+                    phpr.rootProjectId    = rootProjectId;
+                    phpr.currentProjectId = rootProjectId ;
+                    phpr.currentUserId    = 0;
+                    phpr.language         = language;
+                    phpr.config           = new Array();
+                    phpr.serverFeedback   = new phpr.ServerFeedback();
+                    phpr.date             = new phpr.Default.System.Date();
+                    phpr.loading          = new phpr.loading();
+                    phpr.DataStore        = new phpr.DataStore();
+                    phpr.InitialScreen    = new phpr.InitialScreen();
+                    phpr.BreadCrumb       = new phpr.BreadCrumb();
+                    phpr.frontendMessage  = new phpr.Default.System.FrontendMessage();
+                    phpr.tree             = new phpr.Default.System.Tree();
+                    phpr.regExpForFilter  = new phpr.regExpForFilter();
+                    phpr.garbageCollector = new phpr.Default.System.GarbageCollector();
+                    phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";
         ';
 
         foreach ($this->_modules as $module) {
@@ -127,17 +124,24 @@ class JsController extends IndexController
             } else {
                 $subModules = '';
             }
-            echo '
-                this.' . $module . ' = new phpr.' . $module . '.Main([' . $subModules . ']);
+            $scripttext .= '
+                phpr.pageManager.register(
+                    new phpr.' . $module . '.Main([' . $subModules . ']));
             ';
         }
 
         // The load method of the currentModule is called
-        echo '
-                dojo.publish(phpr.module + ".load");
-            }
-        });
+        $scripttext .= '
+                    phpr.pageManager.initialPageLoad();
+                }
+            });
         ';
+
+        $templatetext = 'var __phpr_templateCache = {};';
+        $templatetext .= $this->_collectTemplates();
+
+        echo $templatetext;
+        echo $scripttext;
     }
 
     /**
@@ -152,6 +156,8 @@ class JsController extends IndexController
      */
     public function moduleAction()
     {
+        $scripttext = '';
+
         $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
         $module = ucfirst(str_replace(" ", "", $module));
 
@@ -162,20 +168,34 @@ class JsController extends IndexController
             $scripts = array();
         }
 
-        echo $this->_getModuleScripts(PHPR_USER_CORE_PATH, $scripts, $module);
+        $scripttext .= $this->_getModuleScripts(PHPR_USER_CORE_PATH, $scripts, $module);
 
-        // Preload the templates and save them into __phpr_templateCache
-        foreach ($this->_templates as $templateData) {
-            $content = str_replace("'", "\\" . "'", $templateData['contents']);
-            $content = str_replace("<", "<' + '", $content);
-            echo '
-                __phpr_templateCache["phpr.' . $templateData['module'] . '.template.' . $templateData['name']
-                . '"] = \'' . $content . '\';';
-        }
-
-        echo '
+        $scripttext .= '
             this.' . $module . ' = new phpr.' . $module . '.Main();
         ';
+
+        echo $this->_collectTemplates();
+        echo $scripttext;
+    }
+
+    /**
+     * Collect all the template files that has been found so far and returns the 
+     * coresponding javascript string.
+     *
+     * @return string
+     */
+    private function _collectTemplates()
+    {
+        $templatetext = '';
+        // Preload the templates and save them into __phpr_templateCache
+        foreach ($this->_templates as $templateData) {
+            $content = json_encode($templateData['contents']);
+            $templatetext .= '
+                __phpr_templateCache["phpr.' . $templateData['module'] . '.template.' . $templateData['name']
+                . '"] = ' . $content . ';';
+        }
+
+        return $templatetext;
     }
 
     /**
@@ -316,9 +336,11 @@ class JsController extends IndexController
      */
     private function _processModuleDirectory($path)
     {
+        $output = "";
         $files = scandir($path);
         foreach ($files as $file) {
-            if ($file != '.'  && $file != '..' && $file != 'Default') {
+            if ($file != '.'  && $file != '..' && $file != 'Default'
+                    && is_dir($path . '/' . $file . '/Views')) {
                 if (is_dir($path . $file . '/Views/dojo/scripts/')) {
                     $scripts = scandir($path . $file . '/Views/dojo/scripts/');
                 } else {
@@ -327,7 +349,7 @@ class JsController extends IndexController
                 $this->_modules[]         = $file;
                 $this->_subModules[$file] = array();
                 if ($file != 'Core') {
-                    echo $this->_getModuleScripts($path, $scripts, $file);
+                    $output .= $this->_getModuleScripts($path, $scripts, $file);
                     if (is_dir($path . $file . '/SubModules/')) {
                         $subFiles = scandir($path . $file . '/SubModules/');
                         foreach ($subFiles as $subFile) {
@@ -339,12 +361,12 @@ class JsController extends IndexController
                                     $subScripts = array();
                                 }
                                 $this->_subModules[$file][] = "'" . $subFile . "'";
-                                echo $this->_getModuleScripts($path, $subScripts, $file . '/SubModules/' . $subFile);
+                                $output .= $this->_getModuleScripts($path, $subScripts, $file . '/SubModules/' . $subFile);
                             }
                         }
                     }
                 } else {
-                    echo $this->_getCoreModuleScripts($scripts);
+                    $output .= $this->_getCoreModuleScripts($scripts);
                     if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/')) {
                         $subModulesFiles = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/');
                         foreach ($subModulesFiles as $subModule) {
@@ -360,7 +382,7 @@ class JsController extends IndexController
                                             $subScripts = array();
                                         }
                                         $this->_subModules[$subModule][] = "'" . $subFile . "'";
-                                        echo $this->_getModuleScripts($path, $subScripts, $file . '/SubModules/'
+                                        $output .= $this->_getModuleScripts($path, $subScripts, $file . '/SubModules/'
                                             . $subModule . '/' . $subFile);
                                     }
                                 }
@@ -370,5 +392,6 @@ class JsController extends IndexController
                 }
             }
         }
+        return $output;
     }
 }

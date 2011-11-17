@@ -1,1 +1,9 @@
-({"selectContents":"Select contents","deleteElement":"Delete element","moveEnd":"Move cursor to end","deleteContents":"Delete contents","nodeActions":"${nodeName} Actions","selectElement":"Select element","moveStart":"Move cursor to start"})
+({
+	"nodeActions": "${nodeName} Actions",
+	"selectContents": "Select contents",
+	"selectElement": "Select element",
+	"deleteElement": "Delete element",
+	"deleteContents": "Delete contents",
+	"moveStart": "Move cursor to start",
+	"moveEnd": "Move cursor to end"
+})

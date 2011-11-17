@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.geo.charting.Map"]||(dojo._hasResource["dojox.geo.charting.Map"]=!0,dojo.provide("dojox.geo.charting.Map"),dojo.require("dojox.gfx"),dojo.require("dojox.geo.charting._base"),dojo.require("dojox.geo.charting._Feature"),dojo.require("dojox.geo.charting._Marker"),dojo.declare("dojox.geo.charting.Map",null,{defaultColor:"#B7B7B7",highlightColor:"#D5D5D5",series:[],constructor:function(a,c){dojo.style(a,"display","block");this.containerSize={x:dojo.coords(a).x,y:dojo.coords(a).y,
+w:dojo.coords(a).w||100,h:dojo.coords(a).h||100};this.surface=dojox.gfx.createSurface(a,this.containerSize.w,this.containerSize.h);this.container=a;this._createZoomingCursor();this.mapObj=this.surface.createGroup();this.mapObj.features={};dojo.xhrGet({url:c,handleAs:"json",sync:!0,load:dojo.hitch(this,"_init")})},setMarkerData:function(a){dojo.xhrGet({url:a,handleAs:"json",handle:dojo.hitch(this,"_appendMarker")})},setDataStore:function(a,c){this.dataStore=a;var b=this;this.dataStore.fetch({query:c,
+onComplete:function(a){var c=a[0],a=b.dataStore.getAttributes(c);dojo.forEach(a,function(a){b.mapObj.features[a]&&b.mapObj.features[a].setValue(b.dataStore.getValue(c,a))})}})},addSeries:function(a){this.series=a},_init:function(a){this.mapObj.scale=Math.min(this.containerSize.w/(a.layerExtent[2]-a.layerExtent[0]),this.containerSize.h/(a.layerExtent[3]-a.layerExtent[1]));this.mapObj.currentScale=this.mapObj.scale;this.mapObj.boundBox=a.layerExtent;this.mapObj.currentBBox={x:a.layerExtent[0],y:a.layerExtent[1]};
+this.mapObj.setTransform([dojox.gfx.matrix.scale(this.mapObj.scale),dojox.gfx.matrix.translate(-a.layerExtent[0],-a.layerExtent[1])]);dojo.forEach(a.featureNames,function(c){var b=a.features[c];b.bbox.x=b.bbox[0];b.bbox.y=b.bbox[1];b.bbox.w=b.bbox[2];b.bbox.h=b.bbox[3];b=new dojox.geo.charting._Feature(this,c,b);b.init();this.mapObj.features[c]=b},this);this.mapObj.marker=new dojox.geo.charting._Marker({},this)},_appendMarker:function(a){this.mapObj.marker=new dojox.geo.charting._Marker(a,this)},
+_createZoomingCursor:function(){if(!dojo.byId("mapZoomCursor")){var a=dojo.doc.createElement("div");dojo.attr(a,"id","mapZoomCursor");dojo.addClass(a,"mapZoomIn");dojo.style(a,"display","none");dojo.body().appendChild(a)}},onFeatureClick:function(){},onFeatureOver:function(){},onZoomEnd:function(){}}));

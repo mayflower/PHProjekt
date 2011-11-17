@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.manager.Mouse"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.manager.Mouse"] = true;
 dojo.provide("dojox.drawing.manager.Mouse");
 
 dojox.drawing.manager.Mouse = dojox.drawing.util.oo.declare(
@@ -39,6 +30,13 @@ dojox.drawing.manager.Mouse = dojox.drawing.util.oo.declare(
 		//		Milliseconds between clicks to
 		//		register as for onDoubleClick
 		doublClickSpeed:400,
+		
+		
+		// rightClickMenu: boolean
+		//		If true, right clicks bubble up so that context menus
+		//		can be attached to them or the default can be shown.
+		//		Otherwise right click is interpreted the same as a left click.
+		rightClickMenu: false,
 		
 		// private properties
 		
@@ -142,12 +140,17 @@ EventObject: function(){
 			
 			dojo.connect(this.container, "mousedown", this, function(evt){
 				this.down(evt);
-				_isDown = true;
-				c = dojo.connect(document, "mousemove", this, "drag");
+				// Right click shouldn't trigger drag
+				if(evt.button != dojo.mouseButtons.RIGHT){
+					_isDown = true;
+					c = dojo.connect(document, "mousemove", this, "drag");
+				}
 			});
 			dojo.connect(document, "mouseup", this, function(evt){
-				dojo.disconnect(c);
-				_isDown = false;
+				if(evt.button != dojo.mouseButtons.RIGHT){
+					dojo.disconnect(c);
+					_isDown = false;
+				}
 				this.up(evt);
 			});
 			dojo.connect(document, "mousemove", this, function(evt){
@@ -156,7 +159,7 @@ EventObject: function(){
 				}
 			});
 			dojo.connect(this.keys, "onEsc", this, function(evt){
-				this._dragged = false;	
+				this._dragged = false;
 			});
 		},
 		
@@ -172,7 +175,7 @@ EventObject: function(){
 			// 	Gets scroll offset of canvas
 			return {
 				top:this.container.parentNode.scrollTop,
-				left:this.container.parentNode.scrollLeft		
+				left:this.container.parentNode.scrollLeft
 			}; // Object
 		},
 
@@ -221,7 +224,7 @@ EventObject: function(){
 			// 		Create on[xx]Down event and send to broadcaster.
 			//		Could be connected to.
 			//console.info("onDown:", this.eventName("down"))
-			this._broadcastEvent(this.eventName("down"), obj);			
+			this._broadcastEvent(this.eventName("down"), obj);
 		},
 		
 		onDrag: function(obj){
@@ -250,9 +253,9 @@ EventObject: function(){
 			var nm = obj.id.split(".");
 			evt = evt.charAt(0).toUpperCase() + evt.substring(1);
 			if(nm[0] == "dojox" && (dojox.drawing.defaults.clickable || !dojox.drawing.defaults.clickMode)){
-				return "onStencil"+evt;	
+				return "onStencil"+evt;
 			}else{
-				return "on"+evt;	
+				return "on"+evt;
 			}
 			
 		},
@@ -360,9 +363,6 @@ EventObject: function(){
 			// summary:
 			//		Internal. Create onDown event
 			//
-			evt.preventDefault();
-			dojo.stopEvent(evt);
-			
 			this._downOnCanvas = true;
 			var sc = this.scrollOffset();
 			var dim = this._getXY(evt);
@@ -385,6 +385,13 @@ EventObject: function(){
 			var id = this._getId(evt);
 			//console.log("DOWN:", this.id, id, withinCanvas);
 			//console.log("this.drawingType:", this.drawingType);
+			
+			if(this.rightClickMenu && (evt.button == dojo.mouseButtons.RIGHT) && this.id == "mse"){
+				// Allow event to bubble for right click, for menus
+			}else{
+				evt.preventDefault();
+				dojo.stopEvent(evt);
+			}
 			this.onDown({
 				mid:this.id,
 				x:x,
@@ -506,13 +513,11 @@ EventObject: function(){
 			// summary:
 			//		Sets the cursor for  a given node.  If no
 			//		node is specified the containing node is used.
-			if(!node){ 
-				dojo.style(this.container, "cursor", cursor); 
+			if(!node){
+				dojo.style(this.container, "cursor", cursor);
 			}else{
 				dojo.style(node, "cursor", cursor);
 			}
 		}
 	}
 );
-
-}

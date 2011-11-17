@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.Toaster"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.Toaster"] = true;
 dojo.provide("dojox.widget.Toaster");
 
 dojo.require("dojo.fx");
@@ -57,7 +48,7 @@ dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 		duration: 2000,
 
 		// slideDuration: Integer
-		//		Number of milliseconds for the slide animation, increasing will cause the Toaster 
+		//		Number of milliseconds for the slide animation, increasing will cause the Toaster
 		//    to slide in more slowly.
 		slideDuration: 500,
 
@@ -130,7 +121,7 @@ dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 			this._cancelHideTimer();
 			if(this.isVisible){
 				this._placeClip();
-				//update hide timer if no sticky message in stack 
+				//update hide timer if no sticky message in stack
 				if(!this._stickyMessage) {
 					this._setHideTimer(duration);
 				}
@@ -283,5 +274,3 @@ dojo.declare("dojox.widget.Toaster", [dijit._Widget, dijit._Templated], {
 		}
 	}
 );
-
-}

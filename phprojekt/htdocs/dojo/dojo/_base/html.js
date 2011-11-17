@@ -1,22 +1,14 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.html"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.html"] = true;
-dojo.require("dojo._base.lang");
-dojo.provide("dojo._base.html");
+define("dojo/_base/html", ["dojo/lib/kernel", "dojo/_base/lang"], function(dojo){
 
 // FIXME: need to add unit tests for all the semi-public methods
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 try{
 	document.execCommand("BackgroundImageCache", false, true);
 }catch(e){
 	// sane browsers don't have cache "issues"
 }
+//>>excludeEnd("webkitMobile");
 
 // =============================
 // DOM Functions
@@ -53,13 +45,14 @@ dojo.byId = function(id, doc){
 	//	|	}
 =====*/
 
-if(dojo.isIE || dojo.isOpera){
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+if(dojo.isIE){
 	dojo.byId = function(id, doc){
 		if(typeof id != "string"){
 			return id;
 		}
 		var _d = doc || dojo.doc, te = _d.getElementById(id);
-		// attributes.id.value is better than just id in case the 
+		// attributes.id.value is better than just id in case the
 		// user has a name=id inside a form
 		if(te && (te.attributes.id.value == id || te.id == id)){
 			return te;
@@ -79,25 +72,33 @@ if(dojo.isIE || dojo.isOpera){
 		}
 	};
 }else{
+//>>excludeEnd("webkitMobile");
 	dojo.byId = function(id, doc){
-		// inline'd type check
-		return (typeof id == "string") ? (doc || dojo.doc).getElementById(id) : id; // DomNode
+		// inline'd type check.
+		// be sure to return null per documentation, to match IE branch.
+		return ((typeof id == "string") ? (doc || dojo.doc).getElementById(id) : id) || null; // DomNode
 	};
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 }
+//>>excludeEnd("webkitMobile");
 /*=====
 };
 =====*/
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 (function(){
 	var d = dojo;
+//>>excludeEnd("webkitMobile");
 	var byId = d.byId;
 
 	var _destroyContainer = null,
 		_destroyDoc;
-		d.addOnWindowUnload(function(){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	d.addOnWindowUnload(function(){
 		_destroyContainer = null; //prevent IE leak
 	});
-	
+	//>>excludeEnd("webkitMobile");
+
 /*=====
 	dojo._destroyElement = function(node){
 		// summary:
@@ -164,29 +165,33 @@ if(dojo.isIE || dojo.isOpera){
 	};
 
 	dojo.setSelectable = function(/*DomNode|String*/node, /*Boolean*/selectable){
-		//	summary: 
+		//	summary:
 		//		Enable or disable selection on a node
 		//	node:
 		//		id or reference to node
 		//	selectable:
-		//		state to put the node in. false indicates unselectable, true 
+		//		state to put the node in. false indicates unselectable, true
 		//		allows selection.
 		//	example:
 		//	Make the node id="bar" unselectable
-		//	|	dojo.setSelectable("bar"); 
+		//	|	dojo.setSelectable("bar");
 		//	example:
 		//	Make the node id="bar" selectable
 		//	|	dojo.setSelectable("bar", true);
 		node = byId(node);
-				if(d.isMozilla){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		if(d.isMozilla){
 			node.style.MozUserSelect = selectable ? "" : "none";
 		}else if(d.isKhtml || d.isWebKit){
-					node.style.KhtmlUserSelect = selectable ? "auto" : "none";
-				}else if(d.isIE){
+		//>>excludeEnd("webkitMobile");
+			node.style.KhtmlUserSelect = selectable ? "auto" : "none";
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		}else if(d.isIE){
 			var v = (node.unselectable = selectable ? "" : "on");
 			d.query("*", node).forEach("item.unselectable = '"+v+"'");
 		}
-				//FIXME: else?  Opera?
+		//>>excludeEnd("webkitMobile");
+		//FIXME: else?  Opera?
 	};
 
 	var _insertBefore = function(/*DomNode*/node, /*DomNode*/ref){
@@ -256,7 +261,7 @@ if(dojo.isIE || dojo.isOpera){
 
 		refNode = byId(refNode);
 		if(typeof node == "string"){ // inline'd type check
-			node = node.charAt(0) == "<" ? d._toDom(node, refNode.ownerDocument) : byId(node);
+			node = /^\s*</.test(node) ? d._toDom(node, refNode.ownerDocument) : byId(node);
 		}
 		if(typeof position == "number"){ // inline'd type check
 			var cn = refNode.childNodes;
@@ -291,7 +296,7 @@ if(dojo.isIE || dojo.isOpera){
 			}
 		}
 		return node; // DomNode
-	}
+	};
 
 	// Box functions will assume this model.
 	// On IE/Opera, BORDER_BOX will be set if the primary document is in quirks mode.
@@ -303,7 +308,7 @@ if(dojo.isIE || dojo.isOpera){
 	dojo.boxModel = "content-box";
 
 	// We punt per-node box mode testing completely.
-	// If anybody cares, we can provide an additional (optional) unit 
+	// If anybody cares, we can provide an additional (optional) unit
 	// that overrides existing code to include per-node box sensitivity.
 
 	// Opera documentation claims that Opera 9 uses border-box in BackCompat mode.
@@ -311,11 +316,13 @@ if(dojo.isIE || dojo.isOpera){
 	// IIRC, earlier versions of Opera did in fact use border-box.
 	// Opera guys, this is really confusing. Opera being broken in quirks mode is not our fault.
 
-		if(d.isIE /*|| dojo.isOpera*/){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	if(d.isIE /*|| dojo.isOpera*/){
 		// client code may have to adjust if compatMode varies across iframes
 		d.boxModel = document.compatMode == "BackCompat" ? "border-box" : "content-box";
 	}
-	
+	//>>excludeEnd("webkitMobile");
+
 	// =============================
 	// Style Functions
 	// =============================
@@ -323,10 +330,10 @@ if(dojo.isIE || dojo.isOpera){
 	// getComputedStyle drives most of the style code.
 	// Wherever possible, reuse the returned object.
 	//
-	// API functions below that need to access computed styles accept an 
+	// API functions below that need to access computed styles accept an
 	// optional computedStyle parameter.
 	// If this parameter is omitted, the functions will call getComputedStyle themselves.
-	// This way, calling code can access computedStyle once, and then pass the reference to 
+	// This way, calling code can access computedStyle once, and then pass the reference to
 	// multiple API functions.
 
 /*=====
@@ -365,11 +372,13 @@ if(dojo.isIE || dojo.isOpera){
 	// Although we normally eschew argument validation at this
 	// level, here we test argument 'node' for (duck)type,
 	// by testing nodeType, ecause 'document' is the 'parentNode' of 'body'
-	// it is frequently sent to this function even 
+	// it is frequently sent to this function even
 	// though it is not Element.
 	var gcs;
-		if(d.isWebKit){
-			gcs = function(/*DomNode*/node){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	if(d.isWebKit){
+	//>>excludeEnd("webkitMobile");
+		gcs = function(/*DomNode*/node){
 			var s;
 			if(node.nodeType == 1){
 				var dv = node.ownerDocument.defaultView;
@@ -381,7 +390,8 @@ if(dojo.isIE || dojo.isOpera){
 			}
 			return s || {};
 		};
-		}else if(d.isIE){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	}else if(d.isIE){
 		gcs = function(node){
 			// IE (as of 7) doesn't expose Element like sane browsers
 			return node.nodeType == 1 /* ELEMENT_NODE*/ ? node.currentStyle : {};
@@ -392,15 +402,19 @@ if(dojo.isIE || dojo.isOpera){
 				node.ownerDocument.defaultView.getComputedStyle(node, null) : {};
 		};
 	}
-		dojo.getComputedStyle = gcs;
+	//>>excludeEnd("webkitMobile");
+	dojo.getComputedStyle = gcs;
 
-		if(!d.isIE){
-			d._toPixelValue = function(element, value){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	if(!d.isIE){
+	//>>excludeEnd("webkitMobile");
+		d._toPixelValue = function(element, value){
 			// style values can be floats, client code may want
 			// to round for integer pixels.
 			return parseFloat(value) || 0;
 		};
-		}else{
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	}else{
 		d._toPixelValue = function(element, avalue){
 			if(!avalue){ return 0; }
 			// on IE7, medium is usually 4 pixels
@@ -426,9 +440,10 @@ if(dojo.isIE || dojo.isOpera){
 				runtimeStyle.left = rsLeft;
 			}
 			return avalue;
-		}
+		};
 	}
-		var px = d._toPixelValue;
+	//>>excludeEnd("webkitMobile");
+	var px = d._toPixelValue;
 
 	// FIXME: there opacity quirks on FF that we haven't ported over. Hrm.
 	/*=====
@@ -444,7 +459,8 @@ if(dojo.isIE || dojo.isOpera){
 	}
 	=====*/
 
-		var astr = "DXImageTransform.Microsoft.Alpha";
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	var astr = "DXImageTransform.Microsoft.Alpha";
 	var af = function(n, f){
 		try{
 			return n.filters.item(astr);
@@ -453,15 +469,18 @@ if(dojo.isIE || dojo.isOpera){
 		}
 	};
 
-		dojo._getOpacity =
-			d.isIE ? function(node){
+	//>>excludeEnd("webkitMobile");
+	dojo._getOpacity =
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		d.isIE < 9 ? function(node){
 			try{
 				return af(node).Opacity / 100; // Number
 			}catch(e){
 				return 1; // Number
 			}
 		} :
-			function(node){
+	//>>excludeEnd("webkitMobile");
+		function(node){
 			return gcs(node).opacity;
 		};
 
@@ -481,7 +500,8 @@ if(dojo.isIE || dojo.isOpera){
 	=====*/
 
 	dojo._setOpacity =
-				d.isIE ? function(/*DomNode*/node, /*Number*/opacity){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		d.isIE < 9 ? function(/*DomNode*/node, /*Number*/opacity){
 			var ov = opacity * 100, opaque = opacity == 1;
 			node.style.zoom = opaque ? "" : 1;
 
@@ -505,7 +525,8 @@ if(dojo.isIE || dojo.isOpera){
 			}
 			return opacity;
 		} :
-				function(node, opacity){
+		//>>excludeEnd("webkitMobile");
+		function(node, opacity){
 			return node.style.opacity = opacity;
 		};
 
@@ -515,7 +536,8 @@ if(dojo.isIE || dojo.isOpera){
 	var _pixelRegExp = /margin|padding|width|height|max|min|offset/;  // |border
 	var _toStyleValue = function(node, type, value){
 		type = type.toLowerCase(); // FIXME: should we really be doing string case conversion here? Should we cache it? Need to profile!
-				if(d.isIE){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		if(d.isIE){
 			if(value == "auto"){
 				if(type == "height"){ return node.offsetHeight; }
 				if(type == "width"){ return node.offsetWidth; }
@@ -528,7 +550,8 @@ if(dojo.isIE || dojo.isOpera){
 				}
 			}
 		}
-				if(!(type in _pixelNamesCache)){
+		//>>excludeEnd("webkitMobile");
+		if(!(type in _pixelNamesCache)){
 			_pixelNamesCache[type] = _pixelRegExp.test(type);
 		}
 		return _pixelNamesCache[type] ? px(node, value) : value;
@@ -553,7 +576,7 @@ if(dojo.isIE || dojo.isOpera){
 		//		Also when getting values, use specific style names,
 		//		like "borderBottomWidth" instead of "border" since compound values like
 		//		"border" are not necessarily reflected as expected.
-		//		If you want to get node dimensions, use `dojo.marginBox()`, 
+		//		If you want to get node dimensions, use `dojo.marginBox()`,
 		//		`dojo.contentBox()` or `dojo.position()`.
 		//	node:
 		//		id or reference to node to get/set style for
@@ -622,7 +645,7 @@ if(dojo.isIE || dojo.isOpera){
 			return s;
 		}
 		return (args == 1) ? s : _toStyleValue(n, style, s[style] || n.style[style]); /* CSS2Properties||String||Number */
-	}
+	};
 
 	// =============================
 	// Box Functions
@@ -635,13 +658,13 @@ if(dojo.isIE || dojo.isOpera){
 		//	description:
 		//		Returns an object with `w`, `h`, `l`, `t` properties:
 		//	|		l/t = left/top padding (respectively)
-		//	|		w = the total of the left and right padding 
+		//	|		w = the total of the left and right padding
 		//	|		h = the total of the top and bottom padding
 		//		If 'node' has position, l/t forms the origin for child nodes.
 		//		The w/h are used for calculating boxes.
 		//		Normally application code will not need to invoke this
 		//		directly, and will use the ...box... functions instead.
-		var 
+		var
 			s = computedStyle||gcs(n),
 			l = px(n, s.paddingLeft),
 			t = px(n, s.paddingTop);
@@ -651,7 +674,7 @@ if(dojo.isIE || dojo.isOpera){
 			w: l+px(n, s.paddingRight),
 			h: t+px(n, s.paddingBottom)
 		};
-	}
+	};
 
 	dojo._getBorderExtents = function(/*DomNode*/n, /*Object*/computedStyle){
 		//	summary:
@@ -665,7 +688,7 @@ if(dojo.isIE || dojo.isOpera){
 		//		The w/h are used for calculating boxes.
 		//		Normally application code will not need to invoke this
 		//		directly, and will use the ...box... functions instead.
-		var 
+		var
 			ne = "none",
 			s = computedStyle||gcs(n),
 			bl = (s.borderLeftStyle != ne ? px(n, s.borderLeftWidth) : 0),
@@ -676,7 +699,7 @@ if(dojo.isIE || dojo.isOpera){
 			w: bl + (s.borderRightStyle!=ne ? px(n, s.borderRightWidth) : 0),
 			h: bt + (s.borderBottomStyle!=ne ? px(n, s.borderBottomWidth) : 0)
 		};
-	}
+	};
 
 	dojo._getPadBorderExtents = function(/*DomNode*/n, /*Object*/computedStyle){
 		//	summary:
@@ -690,7 +713,7 @@ if(dojo.isIE || dojo.isOpera){
 		//		The w/h are used for calculating boxes.
 		//		Normally application code will not need to invoke this
 		//		directly, and will use the ...box... functions instead.
-		var 
+		var
 			s = computedStyle||gcs(n),
 			p = d._getPadExtents(n, s),
 			b = d._getBorderExtents(n, s);
@@ -700,7 +723,7 @@ if(dojo.isIE || dojo.isOpera){
 			w: p.w + b.w,
 			h: p.h + b.h
 		};
-	}
+	};
 
 	dojo._getMarginExtents = function(n, computedStyle){
 		//	summary:
@@ -714,7 +737,7 @@ if(dojo.isIE || dojo.isOpera){
 		//		The w/h are used for calculating boxes.
 		//		Normally application code will not need to invoke this
 		//		directly, and will use the ...box... functions instead.
-		var 
+		var
 			s = computedStyle||gcs(n),
 			l = px(n, s.marginLeft),
 			t = px(n, s.marginTop),
@@ -722,9 +745,9 @@ if(dojo.isIE || dojo.isOpera){
 			b = px(n, s.marginBottom);
 		if(d.isWebKit && (s.position != "absolute")){
 			// FIXME: Safari's version of the computed right margin
-			// is the space between our right edge and the right edge 
+			// is the space between our right edge and the right edge
 			// of our offsetParent.
-			// What we are looking for is the actual margin value as 
+			// What we are looking for is the actual margin value as
 			// determined by CSS.
 			// Hack solution is to assume left/right margins are the same.
 			r = l;
@@ -735,7 +758,7 @@ if(dojo.isIE || dojo.isOpera){
 			w: l+r,
 			h: t+b
 		};
-	}
+	};
 
 	// Box getters work in any box context because offsetWidth/clientWidth
 	// are invariant wrt box context
@@ -743,10 +766,10 @@ if(dojo.isIE || dojo.isOpera){
 	// They do *not* work for display: inline objects that have padding styles
 	// because the user agent ignores padding (it's bogus styling in any case)
 	//
-	// Be careful with IMGs because they are inline or block depending on 
+	// Be careful with IMGs because they are inline or block depending on
 	// browser and browser mode.
 
-	// Although it would be easier to read, there are not separate versions of 
+	// Although it would be easier to read, there are not separate versions of
 	// _getMarginBox for each browser because:
 	// 1. the branching is not expensive
 	// 2. factoring the shared code wastes cycles (function call overhead)
@@ -758,7 +781,8 @@ if(dojo.isIE || dojo.isOpera){
 		//		positions of the node's margin box.
 		var s = computedStyle || gcs(node), me = d._getMarginExtents(node, s);
 		var l = node.offsetLeft - me.l, t = node.offsetTop - me.t, p = node.parentNode;
-				if(d.isMoz){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		if(d.isMoz){
 			// Mozilla:
 			// If offsetParent has a computed overflow != visible, the offsetLeft is decreased
 			// by the parent's border.
@@ -786,12 +810,27 @@ if(dojo.isIE || dojo.isOpera){
 				t -= be.t;
 			}
 		}
-				return {
+		//>>excludeEnd("webkitMobile");
+		return {
 			l: l,
 			t: t,
 			w: node.offsetWidth + me.w,
-			h: node.offsetHeight + me.h 
+			h: node.offsetHeight + me.h
 		};
+	}
+	
+	dojo._getMarginSize = function(/*DomNode*/node, /*Object*/computedStyle){
+		// summary:
+		//	returns an object that encodes the width and height of
+		//	the node's margin box
+		node = byId(node);
+		var me = d._getMarginExtents(node, computedStyle || gcs(node));
+
+		var size = node.getBoundingClientRect();
+		return {
+			w: (size.right - size.left) + me.w,
+			h: (size.bottom - size.top) + me.h
+		}
 	}
 
 	dojo._getContentBox = function(node, computedStyle){
@@ -814,14 +853,16 @@ if(dojo.isIE || dojo.isOpera){
 			h = node.clientHeight, be.w = be.h = 0;
 		}
 		// On Opera, offsetLeft includes the parent's border
-				if(d.isOpera){ pe.l += be.l; pe.t += be.t; };
-				return {
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		if(d.isOpera){ pe.l += be.l; pe.t += be.t; };
+		//>>excludeEnd("webkitMobile");
+		return {
 			l: pe.l,
 			t: pe.t,
 			w: w - pe.w - be.w,
 			h: h - pe.h - be.h
 		};
-	}
+	};
 
 	dojo._getBorderBox = function(node, computedStyle){
 		var s = computedStyle || gcs(node),
@@ -834,7 +875,7 @@ if(dojo.isIE || dojo.isOpera){
 			w: cb.w + pe.w,
 			h: cb.h + pe.h
 		};
-	}
+	};
 
 	// Box setters depend on box context because interpretation of width/height styles
 	// vary wrt box context.
@@ -845,12 +886,12 @@ if(dojo.isIE || dojo.isOpera){
 	// Beware of display: inline objects that have padding styles
 	// because the user agent ignores padding (it's a bogus setup anyway)
 	//
-	// Be careful with IMGs because they are inline or block depending on 
+	// Be careful with IMGs because they are inline or block depending on
 	// browser and browser mode.
 	//
 	// Elements other than DIV may have special quirks, like built-in
 	// margins or padding, or values not detectable via computedStyle.
-	// In particular, margins on TABLE do not seems to appear 
+	// In particular, margins on TABLE do not seems to appear
 	// at all in computedStyle on Mozilla.
 
 	dojo._setBox = function(/*DomNode*/node, /*Number?*/l, /*Number?*/t, /*Number?*/w, /*Number?*/h, /*String?*/u){
@@ -876,14 +917,14 @@ if(dojo.isIE || dojo.isOpera){
 		if(!isNaN(t)){ s.top = t + u; }
 		if(w >= 0){ s.width = w + u; }
 		if(h >= 0){ s.height = h + u; }
-	}
+	};
 
 	dojo._isButtonTag = function(/*DomNode*/node) {
 		// summary:
 		//		True if the node is BUTTON or INPUT.type="button".
 		return node.tagName == "BUTTON"
 			|| node.tagName=="INPUT" && (node.getAttribute("type")||'').toUpperCase() == "BUTTON"; // boolean
-	}
+	};
 
 	dojo._usesBorderBox = function(/*DomNode*/node){
 		//	summary:
@@ -898,7 +939,7 @@ if(dojo.isIE || dojo.isOpera){
 
 		var n = node.tagName;
 		return d.boxModel=="border-box" || n=="TABLE" || d._isButtonTag(node); // boolean
-	}
+	};
 
 	dojo._setContentSize = function(/*DomNode*/node, /*Number*/widthPx, /*Number*/heightPx, /*Object*/computedStyle){
 		//	summary:
@@ -910,7 +951,7 @@ if(dojo.isIE || dojo.isOpera){
 			if(heightPx >= 0){ heightPx += pb.h; }
 		}
 		d._setBox(node, NaN, NaN, widthPx, heightPx);
-	}
+	};
 
 	dojo._setMarginBox = function(/*DomNode*/node, 	/*Number?*/leftPx, /*Number?*/topPx,
 													/*Number?*/widthPx, /*Number?*/heightPx,
@@ -942,7 +983,7 @@ if(dojo.isIE || dojo.isOpera){
 		if(widthPx >= 0){ widthPx = Math.max(widthPx - pb.w - mb.w, 0); }
 		if(heightPx >= 0){ heightPx = Math.max(heightPx - pb.h - mb.h, 0); }
 		d._setBox(node, leftPx, topPx, widthPx, heightPx);
-	}
+	};
 
 	var _nilExtents = { l:0, t:0, w:0, h:0 };
 
@@ -977,7 +1018,7 @@ if(dojo.isIE || dojo.isOpera){
 		
 		var n = byId(node), s = gcs(n), b = box;
 		return !b ? d._getMarginBox(n, s) : d._setMarginBox(n, b.l, b.t, b.w, b.h, s); // Object
-	}
+	};
 
 	dojo.contentBox = function(/*DomNode|String*/node, /*Object?*/box){
 		//	summary:
@@ -1002,14 +1043,14 @@ if(dojo.isIE || dojo.isOpera){
 		//		All properties are optional if passed.
 		var n = byId(node), s = gcs(n), b = box;
 		return !b ? d._getContentBox(n, s) : d._setContentSize(n, b.w, b.h, s); // Object
-	}
+	};
 
 	// =============================
-	// Positioning 
+	// Positioning
 	// =============================
 
 	var _sumAncestorProperties = function(node, prop){
-		if(!(node = (node||0).parentNode)){return 0}
+		if(!(node = (node||0).parentNode)){return 0;}
 		var val, retVal = 0, _b = d.body();
 		while(node && node.style){
 			if(gcs(node).position == "fixed"){
@@ -1025,21 +1066,22 @@ if(dojo.isIE || dojo.isOpera){
 			node = node.parentNode;
 		}
 		return retVal;	//	integer
-	}
+	};
 
 	dojo._docScroll = function(){
 		var n = d.global;
-		return "pageXOffset" in n? { x:n.pageXOffset, y:n.pageYOffset } :
-			(n=d.doc.documentElement, n.clientHeight? { x:d._fixIeBiDiScrollLeft(n.scrollLeft), y:n.scrollTop } :
-			(n=d.body(), { x:n.scrollLeft||0, y:n.scrollTop||0 }));
+		return "pageXOffset" in n
+			? { x:n.pageXOffset, y:n.pageYOffset }
+			: (n = d.isQuirks? d.doc.body : d.doc.documentElement, { x:d._fixIeBiDiScrollLeft(n.scrollLeft || 0), y:n.scrollTop || 0 });
 	};
 
 	dojo._isBodyLtr = function(){
 		return "_bodyLtr" in d? d._bodyLtr :
-			d._bodyLtr = (d.body().dir || d.doc.documentElement.dir || "ltr").toLowerCase() == "ltr"; // Boolean 
-	}
+			d._bodyLtr = (d.body().dir || d.doc.documentElement.dir || "ltr").toLowerCase() == "ltr"; // Boolean
+	};
 
-		dojo._getIeDocumentElementOffset = function(){
+	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+	dojo._getIeDocumentElementOffset = function(){
 		//	summary:
 		//		returns the offset in x and y from the document body to the
 		//		visual edge of the page
@@ -1058,7 +1100,7 @@ if(dojo.isIE || dojo.isOpera){
 
 		//NOTE: assumes we're being called in an IE browser
 
-		var de = d.doc.documentElement; // only deal with HTML element here, _abs handles body/quirks 
+		var de = d.doc.documentElement; // only deal with HTML element here, _abs handles body/quirks
 
 		if(d.isIE < 8){
 			var r = de.getBoundingClientRect(); // works well for IE6+
@@ -1081,20 +1123,27 @@ if(dojo.isIE || dojo.isOpera){
 		}
 
 	};
-	
+	//>>excludeEnd("webkitMobile");
+
 	dojo._fixIeBiDiScrollLeft = function(/*Integer*/ scrollLeft){
-		// In RTL direction, scrollLeft should be a negative value, but IE < 8
+		// In RTL direction, scrollLeft should be a negative value, but IE
 		// returns a positive one. All codes using documentElement.scrollLeft
 		// must call this function to fix this error, otherwise the position
 		// will offset to right when there is a horizontal scrollbar.
 
-				var dd = d.doc;
-		if(d.isIE < 8 && !d._isBodyLtr()){
-			var de = d.isQuirks ? dd.body : dd.documentElement;
-			return scrollLeft + de.clientWidth - de.scrollWidth; // Integer
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		var ie = d.isIE;
+		if(ie && !d._isBodyLtr()){
+			var qk = d.isQuirks,
+				de = qk ? d.doc.body : d.doc.documentElement;
+			if(ie == 6 && !qk && d.global.frameElement && de.scrollHeight > de.clientHeight){
+				scrollLeft += de.clientLeft; // workaround ie6+strict+rtl+iframe+vertical-scrollbar bug where clientWidth is too small by clientLeft pixels
+			}
+			return (ie < 8 || qk) ? (scrollLeft + de.clientWidth - de.scrollWidth) : -scrollLeft; // Integer
 		}
-				return scrollLeft; // Integer
-	}
+		//>>excludeEnd("webkitMobile");
+		return scrollLeft; // Integer
+	};
 
 	// FIXME: need a setter for coords or a moveTo!!
 	dojo._abs = dojo.position = function(/*DomNode*/node, /*Boolean?*/includeScroll){
@@ -1112,13 +1161,13 @@ if(dojo.isIE || dojo.isOpera){
 		//		Uses the border-box model (inclusive of border and padding but
 		//		not margin).  Does not act as a setter.
 
-		var db = d.body(), dh = db.parentNode, ret;
 		node = byId(node);
-		if(node["getBoundingClientRect"]){
-			// IE6+, FF3+, super-modern WebKit, and Opera 9.6+ all take this branch
+		var	db = d.body(),
+			dh = db.parentNode,
 			ret = node.getBoundingClientRect();
 			ret = { x: ret.left, y: ret.top, w: ret.right - ret.left, h: ret.bottom - ret.top };
-					if(d.isIE){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+			if(d.isIE){
 				// On IE there's a 2px offset that we need to adjust for, see _getIeDocumentElementOffset()
 				var offset = d._getIeDocumentElementOffset();
 
@@ -1132,60 +1181,8 @@ if(dojo.isIE || dojo.isOpera){
 				ret.x -= px(dh, cs.marginLeft) + px(dh, cs.borderLeftWidth);
 				ret.y -= px(dh, cs.marginTop) + px(dh, cs.borderTopWidth);
 			}
-				}else{
-			// FF2 and older WebKit
-			ret = {
-				x: 0,
-				y: 0,
-				w: node.offsetWidth,
-				h: node.offsetHeight
-			};
-			if(node["offsetParent"]){
-				ret.x -= _sumAncestorProperties(node, "scrollLeft");
-				ret.y -= _sumAncestorProperties(node, "scrollTop");
-
-				var curnode = node;
-				do{
-					var n = curnode.offsetLeft,
-						t = curnode.offsetTop;
-					ret.x += isNaN(n) ? 0 : n;
-					ret.y += isNaN(t) ? 0 : t;
-
-					cs = gcs(curnode);
-					if(curnode != node){
-								if(d.isMoz){
-							// tried left+right with differently sized left/right borders
-							// it really is 2xleft border in FF, not left+right, even in RTL!
-							ret.x += 2 * px(curnode,cs.borderLeftWidth);
-							ret.y += 2 * px(curnode,cs.borderTopWidth);
-						}else{
-									ret.x += px(curnode, cs.borderLeftWidth);
-							ret.y += px(curnode, cs.borderTopWidth);
-								}
-							}
-					// static children in a static div in FF2 are affected by the div's border as well
-					// but offsetParent will skip this div!
-							if(d.isMoz && cs.position=="static"){
-						var parent=curnode.parentNode;
-						while(parent!=curnode.offsetParent){
-							var pcs=gcs(parent);
-							if(pcs.position=="static"){
-								ret.x += px(curnode,pcs.borderLeftWidth);
-								ret.y += px(curnode,pcs.borderTopWidth);
-							}
-							parent=parent.parentNode;
-						}
-					}
-							curnode = curnode.offsetParent;
-				}while((curnode != dh) && curnode);
-			}else if(node.x && node.y){
-				ret.x += isNaN(node.x) ? 0 : node.x;
-				ret.y += isNaN(node.y) ? 0 : node.y;
-			}
-		}
+		//>>excludeEnd("webkitMobile");
 		// account for document scrolling
-		// if offsetParent is used, ret value already includes scroll position
-		// so we may have to actually remove that value if !includeScroll
 		if(includeScroll){
 			var scroll = d._docScroll();
 			ret.x += scroll.x;
@@ -1193,7 +1190,7 @@ if(dojo.isIE || dojo.isOpera){
 		}
 
 		return ret; // Object
-	}
+	};
 
 	dojo.coords = function(/*DomNode|String*/node, /*Boolean?*/includeScroll){
 		//	summary:
@@ -1215,7 +1212,7 @@ if(dojo.isIE || dojo.isOpera){
 		mb.x = abs.x;
 		mb.y = abs.y;
 		return mb;
-	}
+	};
 
 	// =============================
 	// Element attribute Functions
@@ -1277,7 +1274,7 @@ if(dojo.isIE || dojo.isOpera){
 		//		given element, and false otherwise
 		var lc = name.toLowerCase();
 		return _forcePropNames[_propNames[lc] || name] || _hasAttr(byId(node), _attrNames[lc] || name);	// Boolean
-	}
+	};
 
 	var _evtHdlrMap = {}, _ctr = 0,
 		_attrId = dojo._scopeName + "attrid",
@@ -1390,13 +1387,17 @@ if(dojo.isIE || dojo.isOpera){
 				}
 				if(propName == "innerHTML"){
 					// special case: assigning HTML
-										if(d.isIE && node.tagName.toLowerCase() in _roInnerHtml){
+					//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+					if(d.isIE && node.tagName.toLowerCase() in _roInnerHtml){
 						d.empty(node);
 						node.appendChild(d._toDom(value, node.ownerDocument));
 					}else{
-											node[propName] = value;
-										}
-										break;
+					//>>excludeEnd("webkitMobile");
+						node[propName] = value;
+					//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+					}
+					//>>excludeEnd("webkitMobile");
+					break;
 				}
 				if(d.isFunction(value)){
 					// special case: assigning an event handler
@@ -1447,7 +1448,7 @@ if(dojo.isIE || dojo.isOpera){
 		// node's attribute
 		// we need _hasAttr() here to guard against IE returning a default value
 		return _hasAttr(node, attrName) ? node.getAttribute(attrName) : null; // Anything
-	}
+	};
 
 	dojo.removeAttr = function(/*DomNode|String*/ node, /*String*/ name){
 		//	summary:
@@ -1457,7 +1458,7 @@ if(dojo.isIE || dojo.isOpera){
 		//	name:
 		//		the name of the attribute to remove
 		byId(node).removeAttribute(_fixAttrName(name));
-	}
+	};
 
 	dojo.getNodeProp = function(/*DomNode|String*/ node, /*String*/ name){
 		//	summary:
@@ -1476,7 +1477,7 @@ if(dojo.isIE || dojo.isOpera){
 		// node's attribute
 		var attrName = _attrNames[lc] || name;
 		return _hasAttr(node, attrName) ? node.getAttribute(attrName) : null; // Anything
-	}
+	};
 
 	dojo.create = function(tag, attrs, refNode, pos){
 		//	summary:
@@ -1491,7 +1492,7 @@ if(dojo.isIE || dojo.isOpera){
 		//		Attributes are set by passing the optional object through `dojo.attr`.
 		//		See `dojo.attr` for noted caveats and nuances, and API if applicable.
 		//|
-		//		Placement is done via `dojo.place`, assuming the new node to be the action 
+		//		Placement is done via `dojo.place`, assuming the new node to be the action
 		//		node, passing along the optional reference node and position.
 		//
 		// tag: String|DomNode
@@ -1529,7 +1530,7 @@ if(dojo.isIE || dojo.isOpera){
 		//	|	var n = dojo.create("div", null, dojo.body());
 		//
 		// example:
-		//	Create an UL, and populate it with LI's. Place the list as the first-child of a 
+		//	Create an UL, and populate it with LI's. Place the list as the first-child of a
 		//	node with id="someId":
 		//	|	var ul = dojo.create("ul", null, "someId", "first");
 		//	|	var items = ["one", "two", "three", "four"];
@@ -1559,7 +1560,7 @@ if(dojo.isIE || dojo.isOpera){
 		if(attrs){ d.attr(tag, attrs); }
 		if(refNode){ d.place(tag, refNode, pos); }
 		return tag; // DomNode
-	}
+	};
 
 	/*=====
 	dojo.empty = function(node){
@@ -1578,13 +1579,15 @@ if(dojo.isIE || dojo.isOpera){
 	=====*/
 
 	d.empty =
-				d.isIE ?  function(node){
+		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
+		d.isIE ?  function(node){
 			node = byId(node);
 			for(var c; c = node.lastChild;){ // intentional assignment
 				d.destroy(c);
 			}
 		} :
-				function(node){
+		//>>excludeEnd("webkitMobile");
+		function(node){
 			byId(node).innerHTML = "";
 		};
 
@@ -1627,11 +1630,13 @@ if(dojo.isIE || dojo.isOpera){
 	// generate start/end tag strings to use
 	// for the injection for each special tag wrap case.
 	for(var param in tagWrap){
-		var tw = tagWrap[param];
-		tw.pre  = param == "option" ? '<select multiple="multiple">' : "<" + tw.join("><") + ">";
-		tw.post = "</" + tw.reverse().join("></") + ">";
-		// the last line is destructive: it reverses the array,
-		// but we don't care at this point
+		if(tagWrap.hasOwnProperty(param)){
+			var tw = tagWrap[param];
+			tw.pre  = param == "option" ? '<select multiple="multiple">' : "<" + tw.join("><") + ">";
+			tw.post = "</" + tw.reverse().join("></") + ">";
+			// the last line is destructive: it reverses the array,
+			// but we don't care at this point
+		}
 	}
 
 	d._toDom = function(frag, doc){
@@ -1674,7 +1679,7 @@ if(dojo.isIE || dojo.isOpera){
 			df.appendChild(fc);
 		}
 		return df; // DOMNode
-	}
+	};
 
 	// =============================
 	// (CSS) Class Functions
@@ -1700,6 +1705,7 @@ if(dojo.isIE || dojo.isOpera){
 	};
 
 	var spaces = /\s+/, a1 = [""],
+		fakeNode = {},
 		str2array = function(s){
 			if(typeof s == "string" || s instanceof String){
 				if(s.indexOf(" ") < 0){
@@ -1805,6 +1811,39 @@ if(dojo.isIE || dojo.isOpera){
 		if(node[_className] != cls){ node[_className] = cls; }
 	};
 
+	dojo.replaceClass = function(/*DomNode|String*/node, /*String|Array*/addClassStr, /*String|Array?*/removeClassStr){
+		// summary:
+		//		Replaces one or more classes on a node if not present.
+		//		Operates more quickly than calling dojo.removeClass and dojo.addClass
+		// node:
+		// 		String ID or DomNode reference to remove the class from.
+		// addClassStr:
+		//		A String class name to add, or several space-separated class names,
+		//		or an array of class names.
+		// removeClassStr:
+		//		A String class name to remove, or several space-separated class names,
+		//		or an array of class names.
+		//
+		// example:
+		//	|	dojo.replaceClass("someNode", "add1 add2", "remove1 remove2");
+		//
+		// example:
+		//	Replace all classes with addMe
+		//	|	dojo.replaceClass("someNode", "addMe");
+		//
+		// example:
+		//	Available in `dojo.NodeList()` for multiple toggles
+		//	|	dojo.query(".findMe").replaceClass("addMe", "removeMe");
+
+        node = byId(node);
+		fakeNode.className = node.className;
+		dojo.removeClass(fakeNode, removeClassStr);
+		dojo.addClass(fakeNode, addClassStr);
+		if(node.className !== fakeNode.className){
+			node.className = fakeNode.className;
+		}
+	};
+
 	dojo.toggleClass = function(/*DomNode|String*/node, /*String|Array*/classStr, /*Boolean?*/condition){
 		//	summary:
 		//		Adds a class to node if not present, or removes if present.
@@ -1829,6 +1868,9 @@ if(dojo.isIE || dojo.isOpera){
 		d[condition ? "addClass" : "removeClass"](node, classStr);
 	};
 
+//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
 })();
+//>>excludeEnd("webkitMobile");
 
-}
+return dojo;
+});

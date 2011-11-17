@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.validate.ca"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.validate.ca"] = true;
 dojo.provide("dojox.validate.ca");
 /*=====
 
@@ -28,15 +19,15 @@ dojo.mixin(dojox.validate.ca,{
 		// summary: Validates Canadian province abbreviations (2 characters)
 		var re = new RegExp("^" + dojox.validate.regexp.ca.province() + "$", "i");
 		return re.test(value); // Boolean
-	}, 
+	},
  
 	isSocialInsuranceNumber: function(/* String */value) {
-		// summary: Validates Canadian 9 digit social insurance number for several 
+		// summary: Validates Canadian 9 digit social insurance number for several
 		//		common formats
 		//
 		// description:
-		//		Validates Canadian 9 digit social insurance number for several 
-		//		common formats. This routine only pattern matches and does not 
+		//		Validates Canadian 9 digit social insurance number for several
+		//		common formats. This routine only pattern matches and does not
 		//		use the Luhn Algorithm to validate number.
 		//
 		var flags = { format: [ "###-###-###", "### ### ###", "#########" ]};
@@ -45,7 +36,7 @@ dojo.mixin(dojox.validate.ca,{
 
 	isPostalCode: function(value) {
 		// summary: Validates Canadian 6 digit postal code
-		// 
+		//
 		// description:
 		//		Validates Canadian 6 digit postal code.
 		//		Canadian postal codes are in the format ANA NAN,
@@ -57,5 +48,3 @@ dojo.mixin(dojox.validate.ca,{
 	}
 
 });
-
-}

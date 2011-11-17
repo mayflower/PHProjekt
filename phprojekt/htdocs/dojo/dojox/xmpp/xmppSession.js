@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.xmpp.xmppSession"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.xmpp.xmppSession"] = true;
 dojo.provide("dojox.xmpp.xmppSession");
 
 dojo.require("dojox.xmpp.TransportSession");
@@ -65,7 +56,7 @@ dojox.xmpp.xmppSession = function(props){
 		dojo.mixin(this, props);
 	}
 
-	this.session = new dojox.xmpp.TransportSession(props); 
+	this.session = new dojox.xmpp.TransportSession(props);
 	dojo.connect(this.session, "onReady", this, "onTransportReady");
 	dojo.connect(this.session, "onTerminate", this, "onTransportTerminate");
 	dojo.connect(this.session, "onProcessProtocolResponse", this, "processProtocolResponse");
@@ -105,7 +96,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 
 		close: function(){
 			this.state = dojox.xmpp.xmpp.TERMINATE;
-			this.session.close(dojox.xmpp.util.createElement("presence",{type:"unavailable",xmlns:dojox.xmpp.xmpp.CLIENT_NS},true));	
+			this.session.close(dojox.xmpp.util.createElement("presence",{type:"unavailable",xmlns:dojox.xmpp.xmpp.CLIENT_NS},true));
 		},
 
 		processProtocolResponse: function(msg){
@@ -126,11 +117,11 @@ dojo.extend(dojox.xmpp.xmppSession, {
 					//console.log("default action?", msg.getAttribute('xmlns'));
 					if(msg.getAttribute('xmlns')==dojox.xmpp.xmpp.SASL_NS){
 						this.saslHandler(msg);
-					}	
+					}
 			}
 		},
 
-		//HANDLERS 
+		//HANDLERS
 
 		messageHandler: function(msg){
 			//console.log("xmppSession::messageHandler() ",msg);
@@ -140,7 +131,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 					break;
 				case "normal":
 				default:
-					this.simpleMessageHandler(msg);	
+					this.simpleMessageHandler(msg);
 			}
 			
 		},
@@ -166,7 +157,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 				case 'subscribed':
 				case 'unsubscribed':
 					break;
-				case 'error':		
+				case 'error':
 					this.processXmppError(msg);
 					//console.log("xmppService::presenceHandler() Error");
 					break;
@@ -200,7 +191,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 							break;
 						case 'session':
 							hasSessionFeature = true;
-					}	
+					}
 				}
 			}
 			//console.log("Has connected/bind?", this.state, hasBindFeature, authMechanisms);
@@ -294,7 +285,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 					////console.log("ci.chatid: ", ci.chatid, message.chatid);
 					if (ci && ci.chatid == message.chatid) {
 						found = i;
-						break;	
+						break;
 					}
 				}
 			} else {
@@ -306,7 +297,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 						}
 					}
 				}
-			}	
+			}
 
 			if (found>-1 && chatState){
 				var chat = this.chatRegister[found];
@@ -315,10 +306,10 @@ dojo.extend(dojox.xmpp.xmppSession, {
 				if (chat.firstMessage){
 					if (chatState == dojox.xmpp.chat.ACTIVE_STATE) {
 						chat.useChatState = (chatState != null) ? true : false;
-						chat.firstMessage = false;	
+						chat.firstMessage = false;
 					}
 				}
-			} 
+			}
 
 			if ((!message.body || message.body=="") && !message.xhtml) {return;}
 
@@ -355,7 +346,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 					case 'query':
 						if(fn.getAttribute('xmlns') == "jabber:iq:roster"){
 							this.rosterSetHandler(fn);
-							this.sendIqResult(msg.getAttribute('id'), msg.getAttribute('from'));	
+							this.sendIqResult(msg.getAttribute('id'), msg.getAttribute('from'));
 						}
 						break;
 					default:
@@ -409,7 +400,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 								var itemName = n.getAttribute('name');
 								if (itemName){
 									this.roster[x].name = itemName;
-								}	
+								}
 
 								r.groups = [];
 
@@ -451,8 +442,8 @@ dojo.extend(dojox.xmpp.xmppSession, {
 						case dojox.xmpp.roster.CHANGED:
 							this.onRosterChanged(rosterItem, previousCopy);
 							break;
-					}	
-				}	
+					}
+				}
 			}
 		},
 
@@ -473,7 +464,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 				show: dojox.xmpp.presence.STATUS_ONLINE,
 				priority: 5,
 				hasAvatar: false
-			}	
+			}
 
 			if(msg.getAttribute('type')=='unavailable'){
 				p.show=dojox.xmpp.presence.STATUS_OFFLINE
@@ -491,14 +482,14 @@ dojo.extend(dojox.xmpp.xmppSession, {
 							p.priority=parseInt(n.firstChild.nodeValue);
 							break;
 						case 'x':
-							if(n.firstChild && n.firstChild.firstChild &&  n.firstChild.firstChild.nodeValue != "") { 
+							if(n.firstChild && n.firstChild.firstChild &&  n.firstChild.firstChild.nodeValue != "") {
 								p.avatarHash= n.firstChild.firstChild.nodeValue;
 								p.hasAvatar = true;
 							}
 							break;
 					}
 				}
-			}	
+			}
 
 			this.onPresenceUpdate(p);
 		},
@@ -538,7 +529,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 				status: dojox.xmpp.presence.SUBSCRIPTION_NONE,
 				substatus: dojox.xmpp.presence.SUBSCRIPTION_SUBSTATUS_NONE
 			//	displayToUser: false
-			}	
+			}
 
 			if (!re.name){
 				re.name = re.id;
@@ -551,18 +542,18 @@ dojo.extend(dojox.xmpp.xmppSession, {
 				if (n.nodeName=='group' && n.hasChildNodes()){
 					re.groups.push(n.firstChild.nodeValue);
 				}
-			} 
+			}
 
 			if (elem.getAttribute('subscription')){
 				re.status = elem.getAttribute('subscription');
-			}	
+			}
 
 			if (elem.getAttribute('ask')=='subscribe'){
 				re.substatus = dojox.xmpp.presence.SUBSCRIPTION_REQUEST_PENDING;
-			}	
+			}
 			//Display contact rules from http://www.xmpp.org/extensions/xep-0162.html#contacts
-		/*	if(re.status == dojox.xmpp.presence.SUBSCRIPTION_REQUEST_PENDING || 
-				re.status == dojox.xmpp.presence.SUBSCRIPTION_TO || 
+		/*	if(re.status == dojox.xmpp.presence.SUBSCRIPTION_REQUEST_PENDING ||
+				re.status == dojox.xmpp.presence.SUBSCRIPTION_TO ||
 				re.status == dojox.xmpp.presence.SUBSCRIPTION_BOTH ||
 				re.groups.length > 0 ||
 				re.name
@@ -625,7 +616,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 			if (this.state != state){
 				if (this["on"+state]){
 					this["on"+state](state, this.state, message);
-				}	
+				}
 				this.state=state;
 			}
 		},
@@ -660,8 +651,8 @@ dojo.extend(dojox.xmpp.xmppSession, {
 
 		// EVENTS
 
-		onLogin: function(){ 
-			////console.log("xmppSession::onLogin()"); 
+		onLogin: function(){
+			////console.log("xmppSession::onLogin()");
 			this.retrieveRoster();
 		},
 
@@ -734,16 +725,16 @@ dojo.extend(dojox.xmpp.xmppSession, {
 							this.roster[i] = this.createRosterEntry(query.childNodes[i]);
 						}
 					}
-				}	
+				}
 			}else if(msg.getAttribute('type')=="error"){
-				//console.log("xmppService::storeRoster()  Error recieved on roster get");	
+				//console.log("xmppService::storeRoster()  Error recieved on roster get");
 			}
 
 			////console.log("Roster: ", this.roster);
 			this.setState(dojox.xmpp.xmpp.ACTIVE);
 			this.onRosterUpdated();
 
-			return msg;	
+			return msg;
 		},
 		
 		onRosterUpdated: function() {},
@@ -802,7 +793,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 						err.errorType = n.getAttribute('type');
 						for (var x=0; x< n.childNodes.length; x++){
 							var cn = n.childNodes[x];
-							if ((cn.nodeName=="text") && (cn.getAttribute('xmlns') == dojox.xmpp.xmpp.STANZA_NS) && cn.hasChildNodes()) {	
+							if ((cn.nodeName=="text") && (cn.getAttribute('xmlns') == dojox.xmpp.xmpp.STANZA_NS) && cn.hasChildNodes()) {
 								err.message = cn.firstChild.nodeValue;
 							} else if ((cn.getAttribute('xmlns') == dojox.xmpp.xmpp.STANZA_NS) &&(!cn.hasChildNodes())){
 								err.condition = cn.nodeName;
@@ -812,15 +803,15 @@ dojo.extend(dojox.xmpp.xmppSession, {
 					default:
 						break;
 				}
-			}	
+			}
 			return err;
 		},
 
 		sendStanzaError: function(stanzaType,to,id,errorType,condition,text){
 			////console.log("xmppSession: sendStanzaError() ", arguments);
 			var req = {type:'error'};
-			if (to) { req.to=to; }	
-			if (id) { req.id=id; }	
+			if (to) { req.to=to; }
+			if (id) { req.id=id; }
 		
 			var request = new dojox.string.Builder(dojox.xmpp.util.createElement(stanzaType,req,false));
 			request.append(dojox.xmpp.util.createElement('error',{type:errorType},false));
@@ -856,5 +847,3 @@ dojo.extend(dojox.xmpp.xmppSession, {
 		}
 
 });
-
-}

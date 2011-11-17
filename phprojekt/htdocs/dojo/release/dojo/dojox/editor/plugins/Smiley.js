@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.editor.plugins.Smiley"]||(dojo._hasResource["dojox.editor.plugins.Smiley"]=!0,dojo.provide("dojox.editor.plugins.Smiley"),dojo.require("dijit._editor._Plugin"),dojo.require("dijit.form.ToggleButton"),dojo.require("dijit.form.DropDownButton"),dojo.require("dojox.editor.plugins._SmileyPalette"),dojo.require("dojo.i18n"),dojo.require("dojox.html.format"),dojo.requireLocalization("dojox.editor.plugins","Smiley",null,"ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw"),
+dojo.experimental("dojox.editor.plugins.Smiley"),dojo.declare("dojox.editor.plugins.Smiley",dijit._editor._Plugin,{iconClassPrefix:"dijitAdditionalEditorIcon",emoticonMarker:"[]",emoticonImageClass:"dojoEditorEmoticon",_initButton:function(){this.dropDown=new dojox.editor.plugins._SmileyPalette;this.connect(this.dropDown,"onChange",function(a){this.button.closeDropDown();this.editor.focus();a=this.emoticonMarker.charAt(0)+a+this.emoticonMarker.charAt(1);this.editor.execCommand("inserthtml",a)});this.i18n=
+dojo.i18n.getLocalization("dojox.editor.plugins","Smiley");this.button=new dijit.form.DropDownButton({label:this.i18n.smiley,showLabel:!1,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"Smiley",tabIndex:"-1",dropDown:this.dropDown});this.emoticonImageRegexp=RegExp("class=(\"|')"+this.emoticonImageClass+"(\"|')")},updateState:function(){this.button.set("disabled",this.get("disabled"))},setEditor:function(a){this.editor=a;this._initButton();this.editor.contentPreFilters.push(dojo.hitch(this,
+this._preFilterEntities));this.editor.contentPostFilters.push(dojo.hitch(this,this._postFilterEntities))},_preFilterEntities:function(a){return a.replace(/\[([^\]]*)\]/g,dojo.hitch(this,this._decode))},_postFilterEntities:function(a){return a.replace(/<img [^>]*>/gi,dojo.hitch(this,this._encode))},_decode:function(a,c){var b=dojox.editor.plugins.Emoticon.fromAscii(c);return b?b.imgHtml(this.emoticonImageClass):a},_encode:function(a){return a.search(this.emoticonImageRegexp)>-1?this.emoticonMarker.charAt(0)+
+a.replace(/(<img [^>]*)alt="([^"]*)"([^>]*>)/,"$2")+this.emoticonMarker.charAt(1):a}}),dojo.subscribe(dijit._scopeName+".Editor.getPlugin",null,function(a){if(!a.plugin&&a.args.name==="smiley")a.plugin=new dojox.editor.plugins.Smiley}));

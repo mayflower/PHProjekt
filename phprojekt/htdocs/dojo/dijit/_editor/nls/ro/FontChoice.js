@@ -1,1 +1,31 @@
-({"noFormat":"Fără","1":"xxs (xx-small)","2":"xs (x-small)","formatBlock":"Format","3":"s (small)","4":"m (medium)","5":"l (large)","6":"xl (x-large)","7":"xxl (xx-large)","fantasy":"fantasy","serif":"serif","p":"Paragraf","pre":"Preformatat","sans-serif":"sans-serif","fontName":"Font","h1":"Titlu","h2":"Subtitlu","h3":"Sub-subtitlu","monospace":"monospace","fontSize":"Dimensiune","cursive":"cursive"})
+define(
+//begin v1.x content
+({
+	fontSize: "Dimensiune",
+	fontName: "Font",
+	formatBlock: "Format",
+
+	serif: "serif",
+	"sans-serif": "sans-serif",
+	monospace: "monospace",
+	cursive: "cursive",
+	fantasy: "fantasy",
+
+	noFormat: "Fără",
+	p: "Paragraf",
+	h1: "Titlu",
+	h2: "Subtitlu",
+	h3: "Sub-subtitlu",
+	pre: "Preformatat",
+
+	1: "xxs (xx-small)",
+	2: "xs (x-small)",
+	3: "s (small)",
+	4: "m (medium)",
+	5: "l (large)",
+	6: "xl (x-large)",
+	7: "xxl (xx-large)"
+})
+
+//end v1.x content
+);

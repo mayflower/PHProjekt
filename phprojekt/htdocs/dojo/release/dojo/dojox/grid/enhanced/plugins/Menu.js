@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.grid.enhanced.plugins.Menu"]||(dojo._hasResource["dojox.grid.enhanced.plugins.Menu"]=!0,dojo.provide("dojox.grid.enhanced.plugins.Menu"),dojo.require("dojox.grid.enhanced._Plugin"),dojo.declare("dojox.grid.enhanced.plugins.Menu",dojox.grid.enhanced._Plugin,{name:"menus",types:["headerMenu","rowMenu","cellMenu","selectedRegionMenu"],constructor:function(){var a=this.grid;a.showMenu=dojo.hitch(a,this.showMenu);a._setRowMenuAttr=dojo.hitch(this,"_setRowMenuAttr");a._setCellMenuAttr=
+dojo.hitch(this,"_setCellMenuAttr");a._setSelectedRegionMenuAttr=dojo.hitch(this,"_setSelectedRegionMenuAttr")},onStartUp:function(){var a,b=this.option;for(a in b)dojo.indexOf(this.types,a)>=0&&b[a]&&this._initMenu(a,b[a])},_initMenu:function(a,b){var c=this.grid;if(!c[a]){var d=this._getMenuWidget(b);if(d&&(c.set(a,d),a!="headerMenu"))d._scheduleOpen=function(){}}},_getMenuWidget:function(a){return a instanceof dijit.Menu?a:dijit.byId(a)},_setRowMenuAttr:function(a){this._setMenuAttr(a,"rowMenu")},
+_setCellMenuAttr:function(a){this._setMenuAttr(a,"cellMenu")},_setSelectedRegionMenuAttr:function(a){this._setMenuAttr(a,"selectedRegionMenu")},_setMenuAttr:function(a,b){var c=this.grid,d=c.domNode;!a||!(a instanceof dijit.Menu)?console.warn(b," of Grid ",c.id," is not existed!"):(c[b]&&c[b].unBindDomNode(d),c[b]=a,c[b].bindDomNode(d))},showMenu:function(a){if((a.cellNode&&dojo.hasClass(a.cellNode,"dojoxGridRowSelected")||a.rowNode&&(dojo.hasClass(a.rowNode,"dojoxGridRowSelected")||dojo.hasClass(a.rowNode,
+"dojoxGridRowbarSelected")))&&this.selectedRegionMenu)this.onSelectedRegionContextMenu(a);else{var b={target:a.target,coords:a.keyCode!==dojo.keys.F10&&"pageX"in a?{x:a.pageX,y:a.pageY}:null};this.rowMenu&&(!this.cellMenu||this.selection.isSelected(a.rowIndex)||a.rowNode&&dojo.hasClass(a.rowNode,"dojoxGridRowbar"))?this.rowMenu._openMyself(b):this.cellMenu&&this.cellMenu._openMyself(b);dojo.stopEvent(a)}},destroy:function(){var a=this.grid;a.headerMenu&&a.headerMenu.unBindDomNode(a.viewsHeaderNode);
+a.rowMenu&&a.rowMenu.unBindDomNode(a.domNode);a.cellMenu&&a.cellMenu.unBindDomNode(a.domNode);a.selectedRegionMenu&&a.selectedRegionMenu.destroy();this.inherited(arguments)}}),dojox.grid.EnhancedGrid.registerPlugin(dojox.grid.enhanced.plugins.Menu));

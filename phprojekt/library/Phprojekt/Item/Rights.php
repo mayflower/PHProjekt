@@ -86,11 +86,6 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $sessionName    = 'Phprojekt_Item_Rights-getUsersRights' . '-' . $moduleId . '-' . $itemId;
         $rightNamespace = new Zend_Session_Namespace($sessionName);
         $rightNamespace->unsetAll();
-
-        // Reset users by module-item
-        $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-' . $moduleId . '-' . $itemId;
-        $rightNamespace = new Zend_Session_Namespace($sessionName);
-        $rightNamespace->unsetAll();
     }
 
     /**
@@ -170,7 +165,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     public function getRights($moduleId, $itemId)
     {
         $values        = array();
-        $currentUserId = (int) Phprojekt_Auth::getUserId();
+        $currentUserId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         $access = $this->getItemRight($moduleId, $itemId, $currentUserId);
         if ($access == 0) {
@@ -197,7 +192,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     public function getMultipleRights($moduleId, $ids)
     {
         $values        = array();
-        $currentUserId = (int) Phprojekt_Auth::getUserId();
+        $currentUserId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         $where = sprintf('module_id = %d AND user_id = %d AND item_id IN (%s)', (int) $moduleId,
             $currentUserId, implode(",", $ids));
@@ -237,7 +232,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
 
         if (!isset($rightNamespace->right)) {
             $values        = array();
-            $currentUserId = (int) Phprojekt_Auth::getUserId();
+            $currentUserId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
             // Set the current User
             // Use for an empty rights, if not, will be re-write
@@ -284,29 +279,33 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Return all the users with at least one right for a moduleId-ItemId pair.
+     * Returns all users that have a given right (or any right if none is given) on an item.
      *
      * @param string  $moduleId The module ID.
      * @param integer $itemId   The item ID.
+     * @param int     $rights   A bitmask of rights (Constants in Phprojekt_Acl). All users with any rights will be
+     *                              returned if null or omitted.
+     * @param bool    $exact    Only get users with exact $rights instead of all users that have at least $rights.
+     *                              Default is false.
      *
      * @return array Array of user IDs.
      */
-    public function getUsersWithRight($moduleId, $itemId)
+    public function getUsersWithRight($moduleId, $itemId, $rights = null, $exact = false)
     {
-        // Cache the query
-        $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-' . $moduleId . '-' . $itemId;
-        $rightNamespace = new Zend_Session_Namespace($sessionName);
+        $db    = Phprojekt::getInstance()->getDb();
+        $where = $db->quoteInto('module_id = ? AND item_id = ?', (int) $moduleId, (int) $itemId);
 
-        if (!isset($rightNamespace->right)) {
-            $values = array();
-            $where  = sprintf('module_id = %d AND item_id = %d AND access > 0', (int) $moduleId, (int) $itemId);
-            $rows   = $this->fetchAll($where)->toArray();
-            foreach ($rows as $row) {
-                $values[] = $row['user_id'];
-            }
-            $rightNamespace->right = $values;
+        if (is_null($rights)) {
+            $where .= ' AND access > 0';
+        } else if ($exact) {
+            $where .= $db->quoteInto(' AND access = ?', (int) $rights);
+        } else {
+            $where .= $db->quoteInto(' AND (access & ?) = ?', (int) $rights, (int) $rights);
         }
 
-        return $rightNamespace->right;
+        $user  = new Phprojekt_User_User();
+        $users = $user->fetchAll($where, null, null, null, null, "JOIN item_rights ON item_rights.user_id = user.id");
+
+        return $users;
     }
 }

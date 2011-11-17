@@ -38,6 +38,30 @@
 class Todo_IndexController extends IndexController
 {
     /**
+     * When requesting the default values, adjust the start date to the start
+     * date of the project.
+     */
+    public function jsonDetailAction()
+    {
+        $id = (int) $this->getRequest()->getParam('id');
+        if (!empty($id)) {
+            parent::jsonDetailAction();
+        } else {
+            $this->setCurrentProjectId();
+            $project = new Project_Models_Project();
+            $project->find(Phprojekt::getCurrentProjectId());
+
+            $record            = new Todo_Models_Todo();
+            $record->startDate = $project->startDate;
+            $record->endDate   = $project->endDate;
+
+            Phprojekt_Converter_Json::echoConvert(
+                $record,
+                Phprojekt_ModelInformation_Default::ORDERING_FORM
+            );
+        }
+    }
+    /**
      * Sets some values depending on the parameters.
      *
      * Set the rights for each user (owner, userId and the normal access tab).

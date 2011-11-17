@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+    <project id="1" path="/" title="PHProjekt" notes="" owner_id="1"
+        start_date="2007-12-01" priority="1" current_status="3" />
+    <project id="2" path="/1/" title="Test Project" notes="" owner_id="1"
+        project_id="1" start_date="2009-06-01" end_date="2009-10-31"
+        priority="1" current_status="3" />
+    <project id="5" path="/1/2/" title="Sub Project" notes="" owner_id="1"
+        project_id="2" start_date="2009-06-02" end_date="2009-07-31"
+        priority="1" current_status="3" />
+    <project id="6" path="/1/2/5/" title="Sub Sub Project 1" notes="" owner_id="1"
+        project_id="5" start_date="2007-12-01" priority="1" current_status="3" />
+    <project id="7" path="/1/2/5/" title="Sub Sub Project 2" notes="" owner_id="1"
+        project_id="5" start_date="2007-12-01" priority="1" current_status="3" />
+
+    <user id="1" username="Test"
+        firstname="Max" lastname="Mustermann" status="A" admin="0" />
+    <user id="2" username="Marie"
+        firstname="Luise Marie" lastname="" status="A" admin="0" />
+
+    <module id="1" name="Project" label="Project" save_type="0" version="6.0.0" active="1"/>
+    <module id="2" name="Todo" label="Todo" save_type="0" version="6.0.0" active="1"/>
+    <module id="3" name="Note" label="Note" save_type="0" version="6.0.0" active="1"/>
+    <module id="4" name="Timecard" label="Timecard" save_type="1" version="6.0.0" active="1"/>
+    <module id="5" name="Calendar" label="Calendar" save_type="1" version="6.0.0" active="0"/>
+    <module id="6" name="Gantt" label="Gantt" save_type="0" version="6.0.0" active="1"/>
+    <module id="7" name="Filemanager" label="Filemanager" save_type="0" version="6.0.0" active="1"/>
+    <module id="8" name="Statistic" label="Statistic" save_type="0" version="6.0.0" active="1"/>
+    <module id="9" name="Contact" label="Contact" save_type="1" version="6.0.0" active="1"/>
+    <module id="10" name="Helpdesk" label="Helpdesk" save_type="0" version="6.0.0" active="1"/>
+    <module id="11" name="Minutes" label="Minute" save_type="0" version="6.0.0" active="1"/>
+    <module id="12" name="Calendar2" label="Calendar2" save_type="1" version="6.1.0-dev" active="1"/>
+
+    <project_module_permissions
+        module_id="1" project_id="1" />
+    <project_module_permissions
+        module_id="1" project_id="2" />
+    <project_module_permissions
+        module_id="2" project_id="1" />
+    <project_module_permissions
+        module_id="2" project_id="2" />
+    <project_module_permissions
+        module_id="12" project_id="1"/>
+
+    <project_role_user_permissions
+        project_id="2" user_id="1" role_id="1" />
+    <project_role_user_permissions
+        project_id="1" user_id="1" role_id="1" />
+
+    <item_rights
+        module_id="1" item_id="1" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="2" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="5" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="6" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="7" user_id="1" access="255" />
+    <item_rights
+        module_id="1" item_id="2" user_id="3" access="255" />
+    <item_rights
+        module_id="2" item_id="1" user_id="1" access="255" />
+    <item_rights
+        module_id="9" item_id="1" user_id="1" access="255" />
+    <!--<item_rights-->
+        <!--module_id="2" item_id="1" user_id="3" access="255" />-->
+    <role id="1" name="Admin" />
+    <role_module_permissions role_id="1" module_id="1" access="139" />
+    <role_module_permissions role_id="1" module_id="2" access="139" />
+    <role_module_permissions role_id="1" module_id="12" access="139"/>
+
+    <groups id="1" name="Group 1" />
+    <groups id="2" name="Group 2" />
+    <groups_user_relation user_id="1" groups_id="1" />
+    <groups_user_relation user_id="2" groups_id="1" />
+    <groups_user_relation user_id="1" groups_id="2" />
+    <database_manager table_name='Project' table_field="title" form_tab="1" form_label="Title"
+        form_type="text" form_position="1" form_columns="1"  
+        list_position="1" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="0"
+        is_required="1" is_unique="0" />
+    <database_manager table_name='Project' table_field="notes"
+        form_tab="1" form_label="Notes"
+        form_type="textarea" form_position="2" form_columns="1"
+        list_position="0" list_align="left" list_use_filter="1"
+        alt_position="0" status="1" is_integer="0" is_required="0"
+        is_unique="0" />
+    <database_manager table_name='Project' table_field="project_id"
+        form_tab="1" form_label="Parent"
+        form_type="selectValues" form_position="3" form_columns="1"
+        form_range="Project#id#title"
+        list_position="0" list_align="null"
+        list_use_filter="1" alt_position="0" status="1" is_integer="1"
+        is_required="1" is_unique="0" />
+    <database_manager table_name='Project' table_field="start_date"
+        form_tab="1" form_label="Start date"
+        form_type="date" form_position="4" form_columns="1"
+        list_position="2" list_align="left" list_use_filter="1"
+        alt_position="2" status="1" is_integer="0" is_required="0"
+        is_unique="0" />
+    <database_manager table_name='Project' table_field="end_date"
+        form_tab="1" form_label="End date"
+        form_type="date" form_position="5" form_columns="1"
+        list_position="3" list_align="left" list_use_filter="1"
+        alt_position="2" status="1" is_integer="0" is_required="0"
+        is_unique="0" />
+    <database_manager table_name='Project' table_field="priority"
+        form_tab="1" form_label="Priority"
+        form_type="rating" form_position="6" form_columns="1"
+        form_range="10" default_value="5"
+        list_position="4" list_align="center" list_use_filter="1"
+        alt_position="5" status="1" is_integer="1" is_required="0"
+        is_unique="0" />
+    <database_manager table_name='Project' table_field="current_status"
+        form_tab="1" form_label="Current status"
+        form_type="selectValues" form_position="7"
+        form_columns="1"
+        form_range="1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting"
+        list_position="5" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="1"
+        is_required="0" is_unique="0" />
+    <database_manager table_name='Project' table_field="complete_percent"
+        form_tab="1" form_label="Complete percent"
+        form_type="percentage" form_position="8" form_columns="1"
+        list_position="6" list_align="left" list_use_filter="1"
+        alt_position="2" status="1" is_integer="0" is_required="0"
+        is_unique="0" />
+    <database_manager table_name='Project' table_field="budget"
+        form_tab="1" form_label="Budget"
+        form_type="percentage" form_position="9" form_columns="1"  
+        list_position="0" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name='Project' table_field="contact_id" form_tab="1" form_label="Contact"
+        form_type="percentage" form_position="10" form_columns="1"  
+        list_position="0" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="1"
+        is_required="0" is_unique="0" />
+    <database_manager table_name="Todo" table_field="title" form_tab="1" form_label="Title"
+        form_type="text" form_position="1" form_columns="1" form_regexp=""
+        form_range="" default_value="" list_position="1" list_align="left"
+        list_use_filter="1" alt_position="2" status="1" is_integer="0"
+        is_required="1" is_unique="0"/>
+    <database_manager table_name="Todo" table_field="notes" form_tab="1" form_label="Notes"
+        form_type="textarea" form_position="2" form_columns="1" form_regexp=""
+        form_range="" default_value="" list_position="0" list_align=""
+        list_use_filter="1" alt_position="0" status="1" is_integer="0"
+        is_required="0" is_unique="0"/>
+    <database_manager table_name="Todo" table_field="start_date" form_tab="1" form_label="Start date"
+        form_type="date" form_position="4" form_columns="1" form_regexp=""
+        form_range="" default_value="" list_position="3" list_align="center"
+        list_use_filter="1" alt_position="3" status="1" is_integer="0"
+        is_required="0" is_unique="0"/>
+    <database_manager table_name="Todo" table_field="end_date" form_tab="1" form_label="End date"
+        form_type="date" form_position="5" form_columns="1" form_regexp=""
+        form_range="" default_value="" list_position="4" list_align="center"
+        list_use_filter="1" alt_position="4" status="1" is_integer="0"
+        is_required="0" is_unique="0"/>
+    <database_manager table_name="Todo" table_field="priority" form_tab="1" form_label="Priority"
+        form_type="rating" form_position="6" form_columns="1" form_regexp=""
+        form_range="10" default_value="5" list_position="5" list_align="center"
+        list_use_filter="1" alt_position="5" status="1" is_integer="1"
+        is_required="0" is_unique="0"/>
+    <database_manager table_name="Todo" table_field="current_status" form_tab="1" form_label="Current status"
+        form_type="selectValues" form_position="7" form_columns="1" form_regexp=""
+        form_range="1#Waiting|2#Accepted|3#Working|4#Stopped|5#Ended" default_value="1" list_position="7" list_align="center"
+        list_use_filter="1" alt_position="6" status="1" is_integer="1"
+        is_required="0" is_unique="0"/>
+    <database_manager table_name="Todo" table_field="project_id" form_tab="1" form_label="Project" form_type="selectValues" form_position="3" form_columns="1" form_regexp="" form_range="Project#id#title" default_value="" list_position="0" list_align="" list_use_filter="1" alt_position="0" status="1" is_integer="1" is_required="1" is_unique="0"/>
+    <database_manager table_name="Todo" table_field="user_id" form_tab="1" form_label="User" form_type="selectValues" form_position="8" form_columns="1" form_regexp="" form_range="User#id#lastname" default_value="" list_position="6" list_align="left" list_use_filter="1" alt_position="7" status="1" is_integer="1" is_required="0" is_unique="0"/>
+    <setting />
+    <!-- CONTACT DBMANAGER -->
+    <database_manager table_name='Contact'
+        table_field="name" form_tab="1" form_label="name"
+        form_type="text" form_position="1" form_columns="1"
+        list_position="1" list_align="left" list_use_filter="1"
+        alt_position="0" status="1" is_integer="0"
+        is_required="1" is_unique="0" />
+    <database_manager table_name='Contact'
+        table_field="email" form_tab="2" form_label="name"
+        form_type="text" form_position="2" form_columns="2"
+        list_position="2" list_align="left" list_use_filter="2"
+        alt_position="0" status="1" is_integer="0"
+        is_required="1" is_unique="0" />
+    <database_manager table_name="Contact"
+        table_field="company" form_tab="1" form_label="Company"
+        form_type="text" form_position="3" form_columns="1"
+        list_position="0"   list_use_filter="1"
+        alt_position="0" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name="Contact"
+        table_field="firstphone" form_tab="1" form_label="First phone"
+        form_type="text" form_position="4" form_columns="1"
+        list_position="3" list_align="left" list_use_filter="1"
+        alt_position="0" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name="Contact"
+        table_field="secondphone" form_tab="1" form_label="Second phone"
+        form_type="text" form_position="5" form_columns="1"
+        list_position="0"   list_use_filter="1"
+        alt_position="0" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name="Contact"
+        table_field="mobilephone" form_tab="1" form_label="Mobile phone"
+        form_type="text" form_position="6" form_columns="1"
+        list_position="0"   list_use_filter="1"
+        alt_position="0" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name="Contact"
+        table_field="street" form_tab="1" form_label="Street"
+        form_type="text" form_position="7" form_columns="1"
+        list_position="4"   list_use_filter="1"
+        alt_position="0" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name="Contact"
+        table_field="city" form_tab="1" form_label="City"
+        form_type="text" form_position="8" form_columns="1"
+        list_position="0"   list_use_filter="1"
+        alt_position="0" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name="Contact"
+        table_field="zipcode" form_tab="1" form_label="Zip Code"
+        form_type="text" form_position="9" form_columns="1"
+        list_position="0"   list_use_filter="1"
+        alt_position="0" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name="Contact"
+        table_field="country" form_tab="1" form_label="Country"
+        form_type="text" form_position="10" form_columns="1"
+        list_position="0"   list_use_filter="1"
+        alt_position="0" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name="Contact"
+        table_field="comment" form_tab="1" form_label="Comment"
+        form_type="textarea" form_position="11" form_columns="1"
+        list_position="0"   list_use_filter="1"
+        alt_position="0" status="1" is_integer="0"
+        is_required="0" is_unique="0" />
+    <database_manager table_name="Contact"
+        table_field="private" form_tab="1" form_label="Private"
+        form_type="selectValues" form_position="12" form_columns="1"
+        form_range="0#No|1#Yes"  
+        list_position="5"   list_use_filter="1"
+        alt_position="0" status="1" is_integer="1"
+        is_required="0" is_unique="0" />
+    <database_manager table_name="Contact" table_field="name"
+        form_tab="1" form_label="Name" form_type="text"
+        form_position="1" form_columns="1"  
+        list_position="1"
+        list_align="left" list_use_filter="1" alt_position="0"
+        status="1" is_integer="0" is_required="1"
+        is_unique="0" />
+    <!-- /CONTACT DBMANAGER -->
+    <contact id="1" owner_id="1" project_id="1" name="Mariano"
+        email="mariano.lapenna@mayflower.de" company="Mayflower"
+        firstphone="004912341234" secondphone="004923452345"
+        mobilephone="004934563456" city="Buenos Aires" zipcode="1234AAA"
+        country="Argentina" street="Edison 1234"
+        comment="This is a comment" private="0" />
+
+    <!-- FILEMANAGER TESTS -->
+    <project_module_permissions
+        module_id="7" project_id="1" />
+    <role_module_permissions role_id="1" module_id="7" access="139" />
+    <database_manager table_name="Filemanager" table_field="title"
+        form_tab="1" form_label="Title" form_type="text"
+        form_position="1" form_columns="1"  
+        list_position="1"
+        list_align="center" list_use_filter="1" alt_position="0"
+        status="1" is_integer="0" is_required="1" />
+    <database_manager table_name="Filemanager" table_field="comments"
+        form_tab="1" form_label="Comments" form_type="textarea"
+        form_position="2" form_columns="1" list_position="0"
+        list_use_filter="1" alt_position="0"
+        status="1" is_integer="0" is_required="0"
+        is_unique="0" />
+    <database_manager table_name="Filemanager" table_field="project_id"
+        form_tab="1" form_label="Project" form_type="selectValues"
+        form_position="3" form_columns="1"
+        form_range="Project#id#title" list_position="0"
+        list_use_filter="1" alt_position="0"
+        status="1" is_integer="1" is_required="1"
+        is_unique="0" />
+    <database_manager table_name="Filemanager" table_field="files"
+        form_tab="1" form_label="Upload" form_type="upload"
+        form_position="5" form_columns="1" list_position="3"
+        list_align="center" list_use_filter="1" alt_position="0"
+        status="1" is_integer="0" is_required="1"
+        is_unique="0" />
+    <filemanager id="1" owner_id="1" title="Test" project_id="1"
+        comments="Foobar" files="966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt" />
+    <filemanager id="2" owner_id="1" title="Test" project_id="1"
+        comments="einself" files="deadbeef01ec4a2a3fa6282bb8fa8d56|articles.txt" />
+    <item_rights
+        module_id="7" item_id="1" user_id="1" access="255" />
+    <item_rights
+        module_id="7" item_id="2" user_id="1" access="255" />
+    <!-- /FILEMANAGER TESTS -->
+    <frontend_message />
+</dataset>

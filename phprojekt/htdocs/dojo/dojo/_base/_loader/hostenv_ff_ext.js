@@ -1,10 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
 // a host environment specifically built for Mozilla extensions, but derived
 // from the browser host environment
 if(typeof window != 'undefined'){
@@ -241,7 +234,7 @@ if(typeof window != 'undefined'){
 			return oc;
 		};
 
-		// FIXME: 
+		// FIXME:
 		//		don't really like the current arguments and order to
 		//		_inContext, so don't make it public until it's right!
 		dojo._inContext = function(g, d, f){
@@ -302,7 +295,7 @@ if(typeof window != 'undefined'){
 	// 		Dojo's to fire once..but we might care if pages navigate. We'll
 	// 		probably need an extension-specific API
 	if(!dojo.config.afterOnLoad){
-		window.addEventListener("DOMContentLoaded",function(e){ 
+		window.addEventListener("DOMContentLoaded",function(e){
 			dojo._loadInit(e);
 			// console.log("DOM content loaded", e);
 		}, false);

@@ -21,7 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests Converter text class
@@ -40,14 +39,25 @@ require_once 'PHPUnit/Framework.php';
  * @group      phprojekt-converter
  * @group      phprojekt-converter-text
  */
-class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
+class Phprojekt_Converter_TextTest extends DatabaseTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * Test text converter
      */
     public function testConvertPart1()
     {
-        $model           = Phprojekt_Loader::getModel('Project', 'Project');
+        $model           = new Project_Models_Project();
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $model->getInformation()->getFieldDefinition($order);
         $object          = $model->find(1);
@@ -56,7 +66,7 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
             // Selectbox
             if ($info['key'] == 'currentStatus') {
                 $value = Phprojekt_Converter_Text::convert($object, $info);
-                $this->assertEquals('Offered', $value);
+                $this->assertEquals('Working', $value);
             }
             // Percentage
             if ($info['key'] == 'completePercent') {
@@ -86,7 +96,8 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertPart2()
     {
-        $model           = Phprojekt_Loader::getModel('Minutes', 'Minutes');
+        $this->markTestIncomplete('do not use minutes');
+        $model           = new Minutes_Models_Minutes();
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $model->getInformation()->getFieldDefinition($order);
 
@@ -109,7 +120,8 @@ class Phprojekt_Converter_TextTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertPart3()
     {
-        $model           = Phprojekt_Loader::getModel('Helpdesk', 'Helpdesk');
+        $this->markTestIncomplete('do not use helpdesk');
+        $model           = new Helpdesk_Models_Helpdesk();
         $order           = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $fieldDefinition = $model->getInformation()->getFieldDefinition($order);
 

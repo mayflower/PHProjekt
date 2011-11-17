@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dijit._CssStateMixin"]||(dojo._hasResource["dijit._CssStateMixin"]=!0,dojo.provide("dijit._CssStateMixin"),dojo.declare("dijit._CssStateMixin",[],{cssStateNodes:{},hovering:!1,active:!1,_applyAttributes:function(){this.inherited(arguments);dojo.forEach(["onmouseenter","onmouseleave","onmousedown"],function(a){this.connect(this.domNode,a,"_cssMouseEvent")},this);dojo.forEach(["disabled","readOnly","checked","selected","focused","state","hovering","active"],function(a){this.watch(a,
+dojo.hitch(this,"_setStateClass"))},this);for(var a in this.cssStateNodes)this._trackMouseState(this[a],this.cssStateNodes[a]);this._setStateClass()},_cssMouseEvent:function(a){if(!this.disabled)switch(a.type){case "mouseenter":case "mouseover":this._set("hovering",!0);this._set("active",this._mouseDown);break;case "mouseleave":case "mouseout":this._set("hovering",!1);this._set("active",!1);break;case "mousedown":this._set("active",!0);this._mouseDown=!0;var c=this.connect(dojo.body(),"onmouseup",
+function(){this._mouseDown=!1;this._set("active",!1);this.disconnect(c)})}},_setStateClass:function(){function a(a){c=c.concat(dojo.map(c,function(c){return c+a}),"dijit"+a)}var c=this.baseClass.split(" ");this.isLeftToRight()||a("Rtl");this.checked&&a("Checked");this.state&&a(this.state);this.selected&&a("Selected");this.disabled?a("Disabled"):this.readOnly?a("ReadOnly"):this.active?a("Active"):this.hovering&&a("Hover");this._focused&&a("Focused");var b=this.stateNode||this.domNode,d={};dojo.forEach(b.className.split(" "),
+function(a){d[a]=!0});"_stateClasses"in this&&dojo.forEach(this._stateClasses,function(a){delete d[a]});dojo.forEach(c,function(a){d[a]=!0});var e=[],g;for(g in d)e.push(g);b.className=e.join(" ");this._stateClasses=c},_trackMouseState:function(a,c){function b(){var b="disabled"in h&&h.disabled||"readonly"in h&&h.readonly;dojo.toggleClass(a,c+"Hover",d&&!e&&!b);dojo.toggleClass(a,c+"Active",e&&!b);dojo.toggleClass(a,c+"Focused",g&&!b)}var d=!1,e=!1,g=!1,h=this,f=dojo.hitch(this,"connect",a);f("onmouseenter",
+function(){d=!0;b()});f("onmouseleave",function(){e=d=!1;b()});f("onmousedown",function(){e=!0;b()});f("onmouseup",function(){e=!1;b()});f("onfocus",function(){g=!0;b()});f("onblur",function(){g=!1;b()});this.watch("disabled",b);this.watch("readOnly",b)}}));

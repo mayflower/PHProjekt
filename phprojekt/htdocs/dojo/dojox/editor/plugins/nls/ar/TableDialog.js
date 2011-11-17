@@ -1,1 +1,30 @@
-({"buttonSet":"تحديد","insertTableTitle":"‏ادراج جدول‏","insertTableRowAfterLabel":"اضافة صف بعد","center":"توسيط","deleteTableColumnLabel":"حذف عمود","right":"لليمين","insertTableColumnBeforeLabel":"اضافة عمود قبل","tableWidth":"عرض الجدول:","buttonInsert":"‏ادراج‏","default":"المفترض","align":"محاذاة:","insertTableRowBeforeLabel":"اضافة صف قبل","cellSpacing":"تباعد الخانة:","pixels":"عنصر صورة","selectTableLabel":"تحديد جدول","rows":"الصفوف:","modifyTableTitle":"تعديل جدول","cellPadding":"ملء الخانة:","deleteTableRowLabel":"حذف صف","backgroundColor":"لون الخلفية:","insertTableColumnAfterLabel":"اضافة عمود بعد","left":"لليسار","borderThickness":"سمك الحدود","columns":"الأعمدة:","percent":"نسبة مئوية","borderColor":"لون الحدود:"})
+({
+	insertTableTitle: "‏ادراج جدول‏",
+	modifyTableTitle: "تعديل جدول",
+	rows: "الصفوف:",
+	columns: "الأعمدة:",
+	align: "محاذاة:",
+	cellPadding: "ملء الخانة:",
+	cellSpacing: "تباعد الخانة:",
+	tableWidth: "عرض الجدول:",
+	backgroundColor: "لون الخلفية:",
+	borderColor: "لون الحدود:",
+	borderThickness: "سمك الحدود",
+	percent: "نسبة مئوية",
+	pixels: "عنصر صورة",
+	"default": "المفترض",
+	left: "لليسار",
+	center: "توسيط",
+	right: "لليمين",
+	buttonSet: "تحديد", // translated elsewhere?
+	buttonInsert: "‏ادراج‏",
+	buttonCancel: "الغاء",
+
+	selectTableLabel: "تحديد جدول",
+	insertTableRowBeforeLabel: "اضافة صف قبل",
+	insertTableRowAfterLabel: "اضافة صف بعد",
+	insertTableColumnBeforeLabel: "اضافة عمود قبل",
+	insertTableColumnAfterLabel: "اضافة عمود بعد",
+	deleteTableRowLabel: "حذف صف",
+	deleteTableColumnLabel: "حذف عمود"
+})

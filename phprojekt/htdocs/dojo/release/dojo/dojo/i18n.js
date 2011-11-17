@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojo.i18n"])dojo._hasResource["dojo.i18n"]=!0,dojo.provide("dojo.i18n"),dojo.getObject("i18n",!0,dojo),dojo.i18n.getLocalization=dojo.i18n.getLocalization||function(a,f,b){var b=dojo.i18n.normalizeLocale(b),e=b.split("-"),c=[a,"nls",f].join(".");if(c=dojo._loadedModules[c]){for(var d,h=e.length;h>0;h--){var g=e.slice(0,h).join("_");if(c[g]){d=c[g];break}}if(!d)d=c.ROOT;if(d)return a=function(){},a.prototype=d,new a}throw Error("Bundle not found: "+f+" in "+a+" , locale="+b);
+},dojo.i18n.normalizeLocale=function(a){a=a?a.toLowerCase():dojo.locale;a=="root"&&(a="ROOT");return a},dojo.i18n._requireLocalization=function(a,f,b,e){var b=dojo.i18n.normalizeLocale(b),c=[a,"nls",f].join("."),d="";if(e){for(var h=e.split(","),g=0;g<h.length;g++)b.indexOf(h[g])==0&&h[g].length>d.length&&(d=h[g]);d||(d="ROOT")}var h=e?d:b,i=dojo._loadedModules[c],g=null;if(i){if(dojo.config.localizationComplete&&i._built)return;g=h.replace(/-/g,"_");g=dojo._loadedModules[c+"."+g]}if(!g){var i=dojo.provide(c),
+k=dojo._getModuleSymbols(a).concat("nls").join("/"),j;dojo.i18n._searchLocalePath(h,e,function(a){var d=a.replace(/-/g,"_"),b=c+"."+d,g=!1;dojo._loadedModules[b]?g=!0:(dojo.provide(b),b=[k],a!="ROOT"&&b.push(a),b.push(f),a=b.join("/")+".js",g=dojo._loadPath(a,null,function(a){var a=a.root||a,b=function(){};b.prototype=j;i[d]=new b;for(var c in a)i[d][c]=a[c]}));g&&i[d]?j=i[d]:i[d]=j;if(e)return!0})}e&&b!=d&&(i[b.replace(/-/g,"_")]=i[d.replace(/-/g,"_")])},function(){var a=dojo.config.extraLocale;
+if(a){!a instanceof Array&&(a=[a]);var f=dojo.i18n._requireLocalization;dojo.i18n._requireLocalization=function(b,e,c,d){f(b,e,c,d);if(!c)for(c=0;c<a.length;c++)f(b,e,a[c],d)}}}(),dojo.i18n._searchLocalePath=function(a,f,b){for(var a=dojo.i18n.normalizeLocale(a),e=a.split("-"),a=[],c=e.length;c>0;c--)a.push(e.slice(0,c).join("-"));a.push(!1);f&&a.reverse();for(f=a.length-1;f>=0;f--)if(b(a[f]||"ROOT"))break},dojo.i18n._preloadLocalizations=function(a,f){function b(b){b=dojo.i18n.normalizeLocale(b);
+dojo.i18n._searchLocalePath(b,!0,function(b){for(var c=0;c<f.length;c++)if(f[c]==b)return dojo.require(a+"_"+b),!0;return!1})}b();for(var e=dojo.config.extraLocale||[],c=0;c<e.length;c++)b(e[c])};

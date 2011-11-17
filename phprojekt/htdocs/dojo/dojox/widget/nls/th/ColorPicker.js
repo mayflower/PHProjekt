@@ -1,1 +1,11 @@
-({"redLabel":"อาร์","valueLabel":"วี","hexLabel":"เลขฐานสิบหก","hueLabel":"เอช","saturationLabel":"เอส","greenLabel":"จี","blueLabel":"บี","saturationPickerTitle":"Saturation Selector","huePickerTitle":"Hue Selector","degLabel":"°"})
+({
+redLabel: "อาร์",
+greenLabel: "จี",
+blueLabel: "บี",
+hueLabel: "เอช",
+saturationLabel: "เอส",
+valueLabel: "วี", /* aka intensity or brightness */
+huePickerTitle: "ตัวเลือกสี",
+saturationPickerTitle: "ตัวเลือกความอิ่มของสี"
+})
+

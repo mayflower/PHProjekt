@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.lang.functional.object"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.lang.functional.object"] = true;
 dojo.provide("dojox.lang.functional.object");
 
 dojo.require("dojox.lang.functional.lambda");
@@ -16,7 +7,7 @@ dojo.require("dojox.lang.functional.lambda");
 
 // Defined methods:
 //	- take any valid lambda argument as the functional argument
-//	- skip all attributes that are present in the empty object 
+//	- skip all attributes that are present in the empty object
 //		(IE and/or 3rd-party libraries).
 
 (function(){
@@ -45,7 +36,7 @@ dojo.require("dojox.lang.functional.lambda");
 			return	t; // Array
 		},
 		filterIn: function(/*Object*/ obj, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: creates new object with all attributes that pass the test 
+			// summary: creates new object with all attributes that pass the test
 			//	implemented by the provided function.
 			o = o || d.global; f = df.lambda(f);
 			var t = {}, v, i;
@@ -68,7 +59,7 @@ dojo.require("dojox.lang.functional.lambda");
 			return o;	// Object
 		},
 		mapIn: function(/*Object*/ obj, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: creates new object with the results of calling 
+			// summary: creates new object with the results of calling
 			//	a provided function on every attribute in this object.
 			o = o || d.global; f = df.lambda(f);
 			var t = {}, i;
@@ -81,5 +72,3 @@ dojo.require("dojox.lang.functional.lambda");
 		}
 	});
 })();
-
-}

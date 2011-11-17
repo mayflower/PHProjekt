@@ -1,1 +1,4 @@
-({"pageBreak":"Zalomení stránky"})
+({
+	"pageBreak": "Zalomení stránky"
+})
+

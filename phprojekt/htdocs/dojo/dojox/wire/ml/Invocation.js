@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.wire.ml.Invocation"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.wire.ml.Invocation"] = true;
 dojo.provide("dojox.wire.ml.Invocation");
 
 dojo.require("dojox.wire.ml.Action");
@@ -174,5 +165,3 @@ dojo.declare("dojox.wire.ml.Invocation", dojox.wire.ml.Action, {
 		return parameters; //Array
 	}
 });
-
-}

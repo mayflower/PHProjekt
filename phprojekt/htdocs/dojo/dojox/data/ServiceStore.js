@@ -1,13 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.ServiceStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.ServiceStore"] = true;
-dojo.provide("dojox.data.ServiceStore");
+define("dojox/data/ServiceStore", ["dojo", "dojox"], function(dojo, dojox) {
 
 // note that dojox.rpc.Service is not required, you can create your own services
 
@@ -407,4 +398,5 @@ dojo.declare("dojox.data.ServiceStore",
 	}
 );
 
-}
+return dojox.data.ServiceStore;
+});

@@ -1,20 +1,11 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.FilePicker"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.FilePicker"] = true;
 dojo.provide("dojox.widget.FilePicker");
 
 dojo.require("dojox.widget.RollingList");
 
-dojo.require("dojo.i18n"); 
-dojo.requireLocalization("dojox.widget", "FilePicker", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw"); 
+dojo.require("dojo.i18n");
+dojo.requireLocalization("dojox.widget", "FilePicker");
 
-dojo.declare("dojox.widget._FileInfoPane", 
+dojo.declare("dojox.widget._FileInfoPane",
 	[dojox.widget._RollingListPane], {
 	// summary: a pane to display the information for the currently-selected
 	//	file
@@ -25,7 +16,7 @@ dojo.declare("dojox.widget._FileInfoPane",
 	
 	// templateString: String
 	//		The template to be used to construct the widget.
-	templateString: dojo.cache("dojox.widget", "FilePicker/_FileInfoPane.html", "<div class=\"dojoxFileInfoPane\">\r\n\t<table>\r\n\t\t<tbody>\r\n\t\t\t<tr>\r\n\t\t\t\t<td class=\"dojoxFileInfoLabel dojoxFileInfoNameLabel\">${_messages.name}</td>\r\n\t\t\t\t<td class=\"dojoxFileInfoName\" dojoAttachPoint=\"nameNode\"></td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td class=\"dojoxFileInfoLabel dojoxFileInfoPathLabel\">${_messages.path}</td>\r\n\t\t\t\t<td class=\"dojoxFileInfoPath\" dojoAttachPoint=\"pathNode\"></td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td class=\"dojoxFileInfoLabel dojoxFileInfoSizeLabel\">${_messages.size}</td>\r\n\t\t\t\t<td class=\"dojoxFileInfoSize\" dojoAttachPoint=\"sizeNode\"></td>\r\n\t\t\t</tr>\r\n\t\t</tbody>\r\n\t</table>\r\n\t<div dojoAttachPoint=\"containerNode\" style=\"display:none;\"></div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget", "FilePicker/_FileInfoPane.html"),
 	
 	postMixInProperties: function(){
 		this._messages = dojo.i18n.getLocalization("dojox.widget", "FilePicker", this.lang);
@@ -72,7 +63,7 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 	pathAttr: "path",
 	
 	// preloadItems: boolean or int
-	//  Set this to a sane number - since we expect to mostly be using the 
+	//  Set this to a sane number - since we expect to mostly be using the
 	//	dojox.data.FileStore - which doesn't like loading lots of items
 	//	all at once.
 	preloadItems: 50,
@@ -90,7 +81,7 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 	_itemsMatch: function(/*item*/ item1, /*item*/ item2){
 		// Summary: returns whether or not the two items match - checks ID if
 		//  they aren't the exact same object - ignoring trailing slashes
-		if(!item1 && !item2){ 
+		if(!item1 && !item2){
 			return true;
 		}else if(!item1 || !item2){
 			return false;
@@ -100,7 +91,7 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 			var iArr = [ this.store.getIdentity(item1), this.store.getIdentity(item2) ];
 			dojo.forEach(iArr, function(i, idx){
 				if(i.lastIndexOf(this.pathSeparator) == (i.length - 1)){
-					iArr[idx] = i.substring(0, i.length - 1); 
+					iArr[idx] = i.substring(0, i.length - 1);
 				}else{
 				}
 			}, this);
@@ -191,7 +182,7 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 		}
 		this.store.fetchItemByIdentity({identity: path,
 										onItem: function(v){
-											if(resetLastExec){ 
+											if(resetLastExec){
 												this._lastExecutedValue = v;
 											}
 											this.set("value", v);
@@ -228,7 +219,5 @@ dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
 			this.value = value;
 			this._onChange(value);
 		}
-	}	
+	}
 });
-
-}

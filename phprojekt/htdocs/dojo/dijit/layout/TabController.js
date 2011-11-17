@@ -1,21 +1,7 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.layout.TabController"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.layout.TabController"] = true;
-dojo.provide("dijit.layout.TabController");
-
-dojo.require("dijit.layout.StackController");
+define("dijit/layout/TabController", ["dojo", "dijit", "text!dijit/layout/templates/_TabButton.html", "dijit/layout/StackController", "dijit/Menu", "dijit/MenuItem", "i18n!dijit/nls/common"], function(dojo, dijit) {
 
 // Menu is used for an accessible close button, would be nice to have a lighter-weight solution
-dojo.require("dijit.Menu");
-dojo.require("dijit.MenuItem");
 
-dojo.requireLocalization("dijit", "common", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
 
 dojo.declare("dijit.layout.TabController",
 	dijit.layout.StackController,
@@ -30,7 +16,7 @@ dojo.declare("dijit.layout.TabController",
 	// tags:
 	//		private
 
-	templateString: "<div wairole='tablist' dojoAttachEvent='onkeypress:onkeypress'></div>",
+	templateString: "<div role='tablist' dojoAttachEvent='onkeypress:onkeypress'></div>",
 
 	// tabPosition: String
 	//		Defines where tabs go relative to the content.
@@ -80,32 +66,16 @@ dojo.declare("dijit.layout._TabButton",
 		closeNode: "dijitTabCloseButton"
 	},
 
-	templateString: dojo.cache("dijit.layout", "templates/_TabButton.html", "<div waiRole=\"presentation\" dojoAttachPoint=\"titleNode\" dojoAttachEvent='onclick:onClick'>\r\n    <div waiRole=\"presentation\" class='dijitTabInnerDiv' dojoAttachPoint='innerDiv'>\r\n        <div waiRole=\"presentation\" class='dijitTabContent' dojoAttachPoint='tabContent'>\r\n        \t<div waiRole=\"presentation\" dojoAttachPoint='focusNode'>\r\n\t\t        <img src=\"${_blankGif}\" alt=\"\" class=\"dijitIcon\" dojoAttachPoint='iconNode' />\r\n\t\t        <span dojoAttachPoint='containerNode' class='tabLabel'></span>\r\n\t\t        <span class=\"dijitInline dijitTabCloseButton dijitTabCloseIcon\" dojoAttachPoint='closeNode'\r\n\t\t        \t\tdojoAttachEvent='onclick: onClickCloseButton' waiRole=\"presentation\">\r\n\t\t            <span dojoAttachPoint='closeText' class='dijitTabCloseText'>x</span\r\n\t\t        ></span>\r\n\t\t\t</div>\r\n        </div>\r\n    </div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dijit.layout","templates/_TabButton.html"),
 
 	// Override _FormWidget.scrollOnFocus.
 	// Don't scroll the whole tab container into view when the button is focused.
 	scrollOnFocus: false,
 
-	postMixInProperties: function(){
-		// Override blank iconClass from Button to do tab height adjustment on IE6,
-		// to make sure that tabs with and w/out close icons are same height
-		if(!this.iconClass){
-			this.iconClass = "dijitTabButtonIcon";
-		}
-	},
-
-	postCreate: function(){
+	buildRendering: function(){
 		this.inherited(arguments);
-		dojo.setSelectable(this.containerNode, false);
 
-		// If a custom icon class has not been set for the
-		// tab icon, set its width to one pixel. This ensures
-		// that the height styling of the tab is maintained,
-		// as it is based on the height of the icon.
-		// TODO: I still think we can just set dijitTabButtonIcon to 1px in CSS <Bill>
-		if(this.iconNode.className == "dijitTabButtonIcon"){
-			dojo.style(this.iconNode, "width", "1px");
-		}
+		dojo.setSelectable(this.containerNode, false);
 	},
 
 	startup: function(){
@@ -119,8 +89,10 @@ dojo.declare("dijit.layout._TabButton",
 		}, 1);
 	},
 
-	_setCloseButtonAttr: function(disp){
-		this.closeButton = disp;
+	_setCloseButtonAttr: function(/*Boolean*/ disp){
+		// summary:
+		//		Hide/show close button
+		this._set("closeButton", disp);
 		dojo.toggleClass(this.innerDiv, "dijitClosable", disp);
 		this.closeNode.style.display = disp ? "" : "none";
 		if(disp){
@@ -152,16 +124,16 @@ dojo.declare("dijit.layout._TabButton",
 	},
 	_setLabelAttr: function(/*String*/ content){
 		// summary:
-		//		Hook for attr('label', ...) to work.
+		//		Hook for set('label', ...) to work.
 		// description:
 		//		takes an HTML string.
-		//		Inherited ToggleButton implementation will Set the label (text) of the button; 
+		//		Inherited ToggleButton implementation will Set the label (text) of the button;
 		//		Need to set the alt attribute of icon on tab buttons if no label displayed
-			this.inherited(arguments);
-			if(this.showLabel == false && !this.params.title){
-				this.iconNode.alt = dojo.trim(this.containerNode.innerText || this.containerNode.textContent || '');
-			}
-		},
+		this.inherited(arguments);
+		if(this.showLabel == false && !this.params.title){
+			this.iconNode.alt = dojo.trim(this.containerNode.innerText || this.containerNode.textContent || '');
+		}
+	},
 
 	destroy: function(){
 		if(this._closeMenu){
@@ -172,4 +144,6 @@ dojo.declare("dijit.layout._TabButton",
 	}
 });
 
-}
+
+return dijit.layout.TabController;
+});

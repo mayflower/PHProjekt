@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.gfx.decompose"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx.decompose"] = true;
 dojo.provide("dojox.gfx.decompose");
 
 dojo.require("dojox.gfx.matrix");
@@ -14,12 +5,12 @@ dojo.require("dojox.gfx.matrix");
 (function(){
 	var m = dojox.gfx.matrix;
 
-	var eq = function(/* Number */ a, /* Number */ b){
+	function eq(/* Number */ a, /* Number */ b){
 		// summary: compare two FP numbers for equality
 		return Math.abs(a - b) <= 1e-6 * (Math.abs(a) + Math.abs(b));	// Boolean
-	};
+	}
 
-	var calcFromValues = function(/* Number */ r1, /* Number */ m1, /* Number */ r2, /* Number */ m2){
+	function calcFromValues(/* Number */ r1, /* Number */ m1, /* Number */ r2, /* Number */ m2){
 		// summary: uses two close FP ration and their original magnitudes to approximate the result
 		if(!isFinite(r1)){
 			return r2;	// Number
@@ -28,19 +19,19 @@ dojo.require("dojox.gfx.matrix");
 		}
 		m1 = Math.abs(m1), m2 = Math.abs(m2);
 		return (m1 * r1 + m2 * r2) / (m1 + m2);	// Number
-	};
+	}
 
-	var transpose = function(/* dojox.gfx.matrix.Matrix2D */ matrix){
+	function transpose(/* dojox.gfx.matrix.Matrix2D */ matrix){
 		// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix-like object
 		var M = new m.Matrix2D(matrix);
 		return dojo.mixin(M, {dx: 0, dy: 0, xy: M.yx, yx: M.xy});	// dojox.gfx.matrix.Matrix2D
-	};
+	}
 
-	var scaleSign = function(/* dojox.gfx.matrix.Matrix2D */ matrix){
+	function scaleSign(/* dojox.gfx.matrix.Matrix2D */ matrix){
 		return (matrix.xx * matrix.yy < 0 || matrix.xy * matrix.yx > 0) ? -1 : 1;	// Number
-	};
+	}
 
-	var eigenvalueDecomposition = function(/* dojox.gfx.matrix.Matrix2D */ matrix){
+	function eigenvalueDecomposition(/* dojox.gfx.matrix.Matrix2D */ matrix){
 		// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix-like object
 		var M = m.normalize(matrix),
 			b = -M.xx - M.yy,
@@ -83,9 +74,9 @@ dojo.require("dojox.gfx.matrix");
 			vector1: {x: vx1, y: vy1},
 			vector2: {x: vx2, y: vy2}
 		};
-	};
+	}
 
-	var decomposeSR = function(/* dojox.gfx.matrix.Matrix2D */ M, /* Object */ result){
+	function decomposeSR(/* dojox.gfx.matrix.Matrix2D */ M, /* Object */ result){
 		// summary: decomposes a matrix into [scale, rotate]; no checks are done.
 		var sign = scaleSign(M),
 			a = result.angle1 = (Math.atan2(M.yx, M.yy) + Math.atan2(-sign * M.xy, sign * M.xx)) / 2,
@@ -93,9 +84,9 @@ dojo.require("dojox.gfx.matrix");
 		result.sx = calcFromValues(M.xx / cos, cos, -M.xy / sin, sin);
 		result.sy = calcFromValues(M.yy / cos, cos,  M.yx / sin, sin);
 		return result;	// Object
-	};
+	}
 
-	var decomposeRS = function(/* dojox.gfx.matrix.Matrix2D */ M, /* Object */ result){
+	function decomposeRS(/* dojox.gfx.matrix.Matrix2D */ M, /* Object */ result){
 		// summary: decomposes a matrix into [rotate, scale]; no checks are done
 		var sign = scaleSign(M),
 			a = result.angle2 = (Math.atan2(sign * M.yx, sign * M.xx) + Math.atan2(-M.xy, M.yy)) / 2,
@@ -103,7 +94,7 @@ dojo.require("dojox.gfx.matrix");
 		result.sx = calcFromValues(M.xx / cos, cos,  M.yx / sin, sin);
 		result.sy = calcFromValues(M.yy / cos, cos, -M.xy / sin, sin);
 		return result;	// Object
-	};
+	}
 
 	dojox.gfx.decompose = function(matrix){
 		// summary: decompose a 2D matrix into translation, scaling, and rotation components
@@ -142,5 +133,3 @@ dojo.require("dojox.gfx.matrix");
 		return dojo.mixin(result, {sx: S.xx, sy: S.yy});	// Object
 	};
 })();
-
-}

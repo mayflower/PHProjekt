@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.annotations.Arrow"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.annotations.Arrow"] = true;
 dojo.provide("dojox.drawing.annotations.Arrow");
 dojo.require("dojox.drawing.stencil.Path");
 
@@ -60,7 +51,7 @@ dojox.drawing.annotations.Arrow = dojox.drawing.util.oo.declare(
 			}
 			var angle = this.util.angle(obj);
 			
-			var lineLength = this.util.length(obj); 
+			var lineLength = this.util.length(obj);
 			var al = style.arrows.length;
 			var aw = style.arrows.width/2;
 			if(lineLength<al){
@@ -78,5 +69,3 @@ dojox.drawing.annotations.Arrow = dojox.drawing.util.oo.declare(
 		
 	}
 );
-
-}
