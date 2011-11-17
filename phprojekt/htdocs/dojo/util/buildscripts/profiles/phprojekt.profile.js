@@ -68,7 +68,6 @@ dependencies = {
                             "dijit.tree.ForestStoreModel",
                             "dojo.DeferredList",
                             "dojo.NodeList-traverse",
-                            "dojo._firebug.firebug",
                             "dojo.cookie",
                             "dojo.data.ItemFileWriteStore",
                             "dojo.date.ItemFileWriteStore",
