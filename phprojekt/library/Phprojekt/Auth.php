@@ -222,12 +222,11 @@ class Phprojekt_Auth extends Zend_Auth
 
         // We don't want LDAP authentication for PHProjekt system admin
         if ($userId !== 1) {
-            $auth = Zend_Auth::getInstance();
-            $conf = Phprojekt::getInstance()->getConfig();
+            $auth        = Zend_Auth::getInstance();
+            $conf        = Phprojekt::getInstance()->getConfig();
             $ldapOptions = $conf->authentication->ldap->toArray();
-
-            $adapter = new Zend_Auth_Adapter_Ldap($ldapOptions, $username, $password);
-            $result = $auth->authenticate($adapter);
+            $adapter     = new Zend_Auth_Adapter_Ldap($ldapOptions, $username, $password);
+            $result      = $auth->authenticate($adapter);
 
             if ($result->isValid()) {
                 // Authentication ok with LDAP
