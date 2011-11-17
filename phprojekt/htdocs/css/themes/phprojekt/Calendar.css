@@ -171,7 +171,6 @@
     vertical-align: middle;
     text-align: center;
     background-color: #d4dfea;
-    font-size: 10px;
 }
 
 .phprojekt #eventsArea .eventsDivSecond {
@@ -182,7 +181,6 @@
 
 .phprojekt #calendarSchedule .monthEvents {
     border: 1px solid;
-    height:80px;
     vertical-align:top;
     padding: 4;
     border-color: black;
