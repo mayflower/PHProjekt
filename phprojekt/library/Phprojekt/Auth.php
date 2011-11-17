@@ -238,6 +238,10 @@ class Phprojekt_Auth extends Zend_Auth
                     "An error occured while trying to authenticate {$result->getIdentity()}\n\n"
                     . implode("\n", $result->getMessages())
                 );
+                throw new Phprojekt_Auth_Exception(
+                    'An error occured while trying to authenticate with the Ldap-Server.'
+                    . ' Please contact the administrator.'
+                );
             }
         }
 
