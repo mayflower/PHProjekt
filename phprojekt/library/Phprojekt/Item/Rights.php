@@ -292,8 +292,9 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      */
     public function getUsersWithRight($moduleId, $itemId, $rights = null, $exact = false)
     {
-        $db    = Phprojekt::getInstance()->getDb();
-        $where = $db->quoteInto('module_id = ? AND item_id = ?', (int) $moduleId, (int) $itemId);
+        $db     = Phprojekt::getInstance()->getDb();
+        $where  = $db->quoteInto('module_id = ? AND ', (int) $moduleId);
+        $where .= $db->quoteInto('item_id = ?', (int) $itemId);
 
         if (is_null($rights)) {
             $where .= ' AND access > 0';
