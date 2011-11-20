@@ -70,6 +70,19 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         }
     },
 
+    modifyCurrentState: function(newState, options) {
+        var state = this.getState();
+        dojo.mixin(state, newState || {});
+
+        for (var i in state) {
+            if (state[i] === undefined) {
+                delete state[i];
+            }
+        }
+
+        this.changeState(state, options)
+    },
+
     _setHash: function(state, replaceItem) {
         // Summary:
         //      Sets the page hash
