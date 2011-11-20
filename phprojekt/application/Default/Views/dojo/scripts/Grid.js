@@ -49,6 +49,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     _lastTime:     null,
     _active:       false,
     _doubleClickMaxTime: 750,
+    _gridActionContainer: null,
 
     // gridFilters Widget
     gridFilters:   null,
@@ -1143,11 +1144,15 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         checkAllTxt:   phpr.nls.get('Check All'),
                         uncheckAllTxt: phpr.nls.get('Uncheck All')
                     }});
+
+                this._gridActionContainer = content;
                 this.grid.views.views[0].gridActions.set('content', content);
+
                 content.startup();
 
                 this.garbageCollector.addNode(this.grid.views.views[0]);
                 this.garbageCollector.addNode(this.grid.views.views[0].gridActions);
+                this.garbageCollector.addNode(content);
 
                 this.garbageCollector.addEvent(
                     dojo.connect(content.gridComboAction,
@@ -1513,7 +1518,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             }
             if (ids.length > 0) {
                 var idsSend = ids.join(',');
-                var select  = dojo.byId("gridComboAction");
+                var select = this._gridActionContainer.gridComboAction;
                 var key     = select.value;
                 if (key !== null) {
                     var temp   = key.split('|');
