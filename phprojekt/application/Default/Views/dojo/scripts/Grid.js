@@ -48,6 +48,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     splitFields:   [],
     _lastTime:     null,
     _active:       false,
+    _doubleClickMaxTime: 750,
+
     // gridFilters Widget
     gridFilters:   null,
 
@@ -70,6 +72,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     MODE_CLIENT:     2,
     TARGET_SINGLE:   0,
     TARGET_MULTIPLE: 1,
+
+    // Timer
+    _doubleClickTimer: null,
 
     constructor: function(/*String*/updateUrl, /*Object*/main, /*Int*/ id, /*Widget*/gridBoxContainer, /*Object*/extraParams) {
         // Summary:
@@ -1202,6 +1207,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     doDblClick: function(e) {
         // Summary:
         //      Process a double click
+        if (this._doubleClickTimer !== null) {
+            window.clearTimeout(this._doubleClickTimer);
+            this._doubleClickTimer = null;
+        }
         if (e.cellNode) {
             this.grid.edit.setEditCell(e.cell, e.rowIndex);
             this.grid.onRowDblClick(e);
@@ -1243,11 +1252,20 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             }
 
             // Open the form
-            if (openForm && !this.grid.edit.isEditing()) {
-                var item  = this.grid.getItem(e.rowIndex);
-                var rowId = this.grid.store.getValue(item, 'id');
-                this.hideTooltip(e);
-                this.getLinkForEdit(rowId);
+            if (openForm && !this.grid.edit.isEditing() && this._doubleClickTimer === null) {
+                this._doubleClickTimer = window.setTimeout(
+                    dojo.hitch(this,
+                        function(e) {
+                            var item  = this.grid.getItem(e.rowIndex);
+                            var rowId = this.grid.store.getValue(item, 'id');
+                            this.hideTooltip(e);
+                            this._doubleClickTimer = null;
+                            this.getLinkForEdit(rowId);
+                        },
+                        e
+                    ),
+                    this._doubleClickMaxTime
+                );
             }
         }
     },
