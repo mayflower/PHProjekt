@@ -899,9 +899,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             if (data.type == 'success') {
                                 this.publish("updateCacheData");
                                 // reload the page and trigger the form load
-                                phpr.pageManager.changeState({
+                                phpr.pageManager.modifyCurrentState({
                                         moduleName: phpr.module,
-                                        projectId: pid
+                                        projectId: pid,
+                                        id: undefined
                                     }, {
                                         forceModuleReload: true
                                     }
@@ -945,9 +946,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             if (data.type == 'success') {
                                 this.publish("updateCacheData");
                                 // reload the page
-                                phpr.pageManager.changeState({
+                                phpr.pageManager.modifyCurrentState({
                                     moduleName: phpr.module,
-                                    projectId: pid
+                                    projectId: pid,
+                                    id: undefined
                                 });
                             }
                         })
@@ -1278,13 +1280,12 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
         this.garbageCollector.addEvent(
             dojo.connect(this.dialog, "onHide",
                 dojo.hitch(this, function() {
-                    var oldstate = phpr.pageManager.getState();
-                    if (oldstate.id) {
-                        delete oldstate.id;
-                        phpr.pageManager.changeState(oldstate, {
+                    phpr.pageManager.modifyCurrentState(
+                        {
+                            id: undefined
+                        }, {
                             noAction: true
-                        });
-                    }
+                    });
                 })));
     },
 
