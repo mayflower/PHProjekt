@@ -35,16 +35,11 @@ dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
     },
 
     getLinkForEdit:function(id) {
-        var state = {
+        phpr.pageManager.modifyCurrentState({
             moduleName: this.main.module,
-            id: id
-        };
-
-        if (this.main.action) {
-            state.action = this.main.action;
-        }
-
-        phpr.pageManager.changeState(state);
+            id: id,
+            action: this.main.action ? this.main.action : undefined
+        });
     },
 
     canEdit:function(inRowIndex) {
