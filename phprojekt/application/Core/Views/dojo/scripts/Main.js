@@ -175,9 +175,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         phpr.tree.loadTree();
 
         if (this.isSystemModule(state.action)) {
-            state.moduleName = state.action;
-            delete state.action;
-            phpr.pageManager.changeState(state);
+            phpr.pageManager.modifyCurrentState({ action: undefined, moduleName: state.action });
         } else if (this.isSystemModule(module)) {
             var updateUrl = phpr.webpath + 'index.php/Core/' + module.toLowerCase() + '/jsonSaveMultiple/nodeId/1';
             var view = phpr.viewManager.useDefaultView({blank: true}).clear();
@@ -301,11 +299,11 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 // If is an id, open a form
                 if (subModule && (data.id > 0 || data.id == 0)) {
                     state.id = data.id;
-                    phpr.pageManager.changeState(state);
+                    phpr.pageManager.modifyCurrentState(state);
                 }
             } else if (this.action != data.action) {
                 this.action = data.action;
-                phpr.pageManager.changeState(state, {
+                phpr.pageManager.modifyCurrentState(state, {
                     forceModuleReload: true
                 });
             }
