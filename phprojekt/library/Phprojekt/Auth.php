@@ -478,6 +478,16 @@ class Phprojekt_Auth extends Zend_Auth
         return (int) $returnValue;
     }
 
+    static public function getRealUser()
+    {
+        static $user = null;
+        if (null === $user) {
+            $u    = new Phprojekt_User_User();
+            $user = $u->findUserById(Phprojekt_Auth::getUserId());
+        }
+        return $user;
+    }
+
     /**
      * Gets from auth namespace if the user is admin or not.
      *
