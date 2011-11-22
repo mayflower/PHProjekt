@@ -1292,33 +1292,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Gets the rights of the item for the current user.
-     *
-     * @return array Empty array.
-     */
-    public function getRights()
-    {
-        return array();
-    }
-
-    /**
-     * Gets the rights of various items for the current user.
-     *
-     * @param array $ids Array with various item IDs.
-     *
-     * @return array Array with empty arrays per ID.
-     */
-    public function getMultipleRights($ids)
-    {
-        $return = array();
-        foreach ($ids as $id) {
-            $return[$id] = array();
-        }
-
-        return $return;
-    }
-
-    /**
+     * XXX: Remove
      * Gets the rights of the item for other users.
      *
      * @return array Empty array.
@@ -1326,5 +1300,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     public function getUsersRights()
     {
         return array();
+    }
+    /**
+     * Gets the rights of the item for other users.
+     *
+     * @return array Empty array.
+     */
+    public function getRights()
+    {
+        return Phprojekt_Acl::ALL;
     }
 }
