@@ -369,79 +369,11 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getUsersRights()
     {
-        $rights = $this->_rights->getUsersRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
-
-        return $this->_mergeRightsAndRole($rights);
-    }
-
-    /**
-     * Returns the right merged with the role for each user has on a Phprojekt item.
-     *
-     * @param array $rights Array of rights per user.
-     *
-     * @return array Array of rights per user.
-     */
-    public function _mergeRightsAndRole($rights)
-    {
         $moduleId = Phprojekt_Module::getId($this->getModelName());
-        $saveType = Phprojekt_Module::getSaveType($moduleId);
-        switch ($saveType) {
-            case Phprojekt_Module::TYPE_NORMAL:
-                $roleRights      = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
-                $roleRightRead   = $roleRights->hasRight('read');
-                $roleRightWrite  = $roleRights->hasRight('write');
-                $roleRightCreate = $roleRights->hasRight('create');
-                $roleRightAdmin  = $roleRights->hasRight('admin');
+        $rights = $this->_rights->getUsersRights($moduleId, $this->id);
 
-                // Map roles with item rights and make one array
-                foreach ($rights as $userId => $access) {
-                    foreach ($access as $name => $value) {
-                        switch ($name) {
-                            case 'admin':
-                                $rights[$userId]['admin'] = $roleRightAdmin && $value;
-                                break;
-                            case 'download':
-                                $rights[$userId]['download'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin)
-                                    && $value;
-                                break;
-                            case 'delete':
-                                $rights[$userId]['delete'] = ($roleRightWrite || $roleRightAdmin) && $value;
-                                break;
-                            case 'copy':
-                                $rights[$userId]['copy'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin)
-                                    && $value;
-                                break;
-                            case 'create':
-                                $rights[$userId]['create'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin)
-                                    && $value;
-                                break;
-                            case 'access':
-                                $rights[$userId]['access'] = ($roleRightRead || $roleRightWrite || $roleRightCreate
-                                || $roleRightAdmin) && $value;
-                                break;
-                            case 'write':
-                                $rights[$userId]['write'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin)
-                                    && $value;
-                                break;
-                            case 'read':
-                                $rights[$userId]['read'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin)
-                                    && $value;
-                                break;
-                            case 'none':
-                                $rights[$userId]['none'] = $value;
-                                break;
-                        }
-                    }
-                }
-                break;
-            case Phprojekt_Module::TYPE_GLOBAL:
-                break;
-            case Phprojekt_Module::TYPE_MIX:
-                // Implement saveType 2
-                break;
-        }
-
-        return $rights;
+        return Phprojekt_Right::mergeWithRole($moduleId, $this->projectId,
+            Phprojekt_Auth_Proxy::getEffectiveUserId(), $rights);
     }
 
     /**
