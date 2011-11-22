@@ -56,7 +56,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
         // Render additional tabs only if there is an ID
         // (these tabs don't make sense for unsaved records)
         if (this.id > 0) {
-            this.addMailTab(data);
+            return this.addMailTab(data);
         }
     },
 
@@ -80,9 +80,10 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
             }
         });
 
-        this.addTab([mailForm], 'tabMail', 'Mail', 'mailFormTab');
+        var def = this.addTab([mailForm], 'tabMail', 'Mail', 'mailFormTab');
 
-        this.garbageCollector.addEvent(
+        return def.then(dojo.hitch(this, function() {
+            this.garbageCollector.addEvent(
                 dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick', dojo.hitch(this, function() {
                     phpr.send({
                         url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId
@@ -94,11 +95,12 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
                     })
                 })));
 
-        this.garbageCollector.addEvent(
+            this.garbageCollector.addEvent(
                 dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', dojo.hitch(this, function() {
                     window.open(phpr.webpath + 'index.php/Minutes/index/pdf/nodeId/' + phpr.currentProjectId
                         + '/id/' + this.id + '/csrfToken/' + phpr.csrfToken, 'pdf');
                 })));
+        }));
     },
 
     postRenderForm:function() {
