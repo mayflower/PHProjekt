@@ -344,30 +344,22 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      *
      * @return array Array of rights per user.
      */
-    public function getRights()
+    public function getRights($userId = null)
     {
-        $rights = $this->_rights->getRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
-
-        return $this->_mergeRightsAndRole($rights);
-    }
-
-    /**
-     * Returns the rights merged with the role for the current user for each item.
-     *
-     * @param array $ids An array with all the IDs for check.
-     *
-     * @return array Array of rights per user.
-     */
-    public function getMultipleRights($ids)
-    {
-        $allRights = $this->_rights->getMultipleRights(Phprojekt_Module::getId($this->getModelName()), $ids);
-
-        $return = array();
-        foreach ($allRights as $user => $rights) {
-            $return[$user] = $this->_mergeRightsAndRole($rights);
+        // backward compatbility
+        if (null === $userId) {
+            $userId = Phprojekt_Auth_Proxy::getEffectiveUserId();
         }
 
-        return $return;
+        $moduleId = Phprojekt_Module::getId($this->getModelName());
+        return Phprojekt_Right::getItemRight($moduleId, $this->projectId, $userId, $this->id);
+    }
+
+    public function hasRight($userId, $right)
+    {
+        $moduleId = Phprojekt_Module::getId($this->getModelName());
+        $rights   = Phprojekt_Right::getItemRight($moduleId, $this->projectId, $userId, $this->id);
+        return ($rights & $right) == $right;
     }
 
     /**

@@ -88,15 +88,6 @@ interface Phprojekt_Model_Interface extends Iterator
     public function getRights();
 
     /**
-     * Gets the rights of various items for the current user
-     *
-     * @param array $ids Array with various item IDs.
-     *
-     * @return array Array of rights per user.
-     */
-    public function getMultipleRights($ids);
-
-    /**
      * Gets the rights of the item for other users.
      *
      * @return array Array of rights per user.
