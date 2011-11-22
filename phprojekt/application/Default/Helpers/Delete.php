@@ -178,20 +178,12 @@ final class Default_Helpers_Delete
         if ($moduleName == 'Core') {
             return Phprojekt_Auth::isAdminUser();
         } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))) {
-            $itemRights = $model->getRights();
 
-            if (isset($itemRights['currentUser'])) {
-                if (!$itemRights['currentUser']['delete'] &&
-                    !$itemRights['currentUser']['admin']) {
-                    $canDelete = false;
-                } else {
-                    $canDelete = true;
-                }
-            }
+            return $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DELETE)
+                         | Phprojekt_Auth::isAdminUser();
+
         } else {
-            $canDelete = true;
+            return true;
         }
-
-        return $canDelete;
     }
 }

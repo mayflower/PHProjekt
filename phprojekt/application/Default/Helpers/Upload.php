@@ -159,8 +159,8 @@ final class Default_Helpers_Upload
         if ($itemId > 0) {
             $model->find($itemId);
             // The user has download permission?
-            $rights = $model->getRights();
-            if (!$rights['currentUser']['download']) {
+
+            if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DOWNLOAD)) {
                 $error = Phprojekt::getInstance()->translate('You don\'t have permission for downloading on this '
                     . 'item.');
                 die($error);
@@ -314,8 +314,7 @@ final class Default_Helpers_Upload
         if ($itemId != 0) {
             $model->find($itemId);
         }
-        $rights = $model->getRights();
-        if (!$rights['currentUser']['write']) {
+        if (!$model->hasRight('write', Phprojekt_Auth_Proxy::getEffectiveUserId())) {
             $error = Phprojekt::getInstance()->translate('You don\'t have permission for modifying this item.');
 
             self::_logError("Error: trying to Delete or Upload a file without write access.",

@@ -1187,10 +1187,10 @@ class IndexController extends Zend_Controller_Action
                     . (string) ($i + 1) . '/csrfToken/' . $csrfNamespace->token;
 
                 $filesForView[$i] = array('fileName' => substr($fileName, 1));
-                if ($rights['currentUser']['download']) {
+                if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DOWNLOAD)) {
                     $filesForView[$i]['downloadLink'] = $linkBegin . 'fileDownload/' . $linkData . $fileData;
                 }
-                if ($rights['currentUser']['write']) {
+                if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::WRITE)) {
                     $filesForView[$i]['deleteLink'] = $linkBegin . 'fileDelete/' . $linkData . $fileData;
                 }
                 $i++;

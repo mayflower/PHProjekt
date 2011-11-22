@@ -120,19 +120,26 @@ class Phprojekt_Converter_Json
         if (empty($models)) {
             throw new Exception('Called with empty value');
         }
+        // TODO: Are we sure every model is of the same type and have the same
+        // parent?
         if (!is_array($models)) {
             $models = array($models);
         }
         $information     = $models[0]->getInformation($order);
         $fieldDefinition = $information->getFieldDefinition($order);
 
-        $datas = array();
-        $ids   = array();
+        $datas   = array();
+        $itemIds = array();
         foreach ($models as $model) {
+            if (!($model instanceof Phprojekt_Model_Interface)) {
+                throw new Exception("A given model does not implement the
+                    model interface.");
+            }
+
             $data = array();
 
             $data['id'] = (int) $model->id;
-            $ids[]      = $data['id'];
+            $itemIds[]  = $data['id'];
             foreach ($fieldDefinition as $field) {
                 $key   = $field['key'];
                 $value = $model->$key;
@@ -142,7 +149,10 @@ class Phprojekt_Converter_Json
             $datas[]        = $data;
         }
 
-        $rights = $models[0]->getMultipleRights($ids);
+        // TODO: we still asume that the getModelName call works
+        $moduleId = Phprojekt_Module::getId($models[0]->getModelName());
+        $rights   = Phprojekt_Right::getRightsForItems($moduleId, 
+            $projectId, Phprojekt_Auth_Proxy::getEffectiveUserId(), $itemIds);
         // We need the $idx to modify the $datas elements instead of just copies.
         foreach ($datas as $index => $data) {
             $datas[$index]['rights'] = $rights[$datas[$index]['id']];

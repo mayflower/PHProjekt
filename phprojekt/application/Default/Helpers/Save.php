@@ -101,13 +101,14 @@ final class Default_Helpers_Save
             }
 
             // Save access, modules and roles only if the user have "admin" right
-            $itemRights = new Phprojekt_Item_Rights();
-            $check      = $itemRights->getRights(1, $node->getActiveRecord()->id);
-            if ($check['currentUser']['admin']) {
+            // TODO: This is a dirty hack as we just assume that the project
+            // module has always id = 1.
+            $model = $node->getActiveRecord();
+            if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN)) {
                 $rights = Default_Helpers_Right::getItemRights($params, 1, $newItem);
 
                 if (count($rights) > 0) {
-                    $node->getActiveRecord()->saveRights($rights);
+                    $model->saveRights($rights);
                 }
 
                 // Save the module-project relation
@@ -121,18 +122,18 @@ final class Default_Helpers_Save
                             $saveModules[] = $checkModule;
                         }
                     }
-                    $node->getActiveRecord()->saveModules($saveModules);
+                    $model->saveModules($saveModules);
                 }
 
                 // Save the role-user-project relation
                 if (isset($params['userRelation'])) {
-                    $model = new Project_Models_ProjectRoleUserPermissions();
-                    $model->saveRelation($params['roleRelation'], array_keys($params['userRelation']),
+                    $pru = new Project_Models_ProjectRoleUserPermissions();
+                    $pru->saveRelation($params['roleRelation'], array_keys($params['userRelation']),
                         $node->getActiveRecord()->id);
                 }
             }
 
-            return $node->getActiveRecord();
+            return $model;
         }
     }
 
@@ -198,9 +199,7 @@ final class Default_Helpers_Save
             $model->save();
 
             // Save access only if the user have "admin" right
-            $itemRights = new Phprojekt_Item_Rights();
-            $check      = $itemRights->getRights($moduleId, $model->id);
-            if ($check['currentUser']['admin']) {
+            if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN)) {
                 if ($moduleName == 'Core') {
                     $rights = Default_Helpers_Right::getModuleRights($params);
                 } else {
@@ -332,18 +331,10 @@ final class Default_Helpers_Save
         if ($moduleName == 'Core') {
             return Phprojekt_Auth::isAdminUser();
         } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))) {
-            $itemRights = $model->getRights();
-
-            if (isset($itemRights['currentUser'])) {
-                if (!$itemRights['currentUser']['write']  &&
-                    !$itemRights['currentUser']['create'] &&
-                    !$itemRights['currentUser']['copy']   &&
-                    !$itemRights['currentUser']['admin']) {
-                    $canWrite = false;
-                } else {
-                    $canWrite = true;
-                }
-            }
+            $canWrite = ($model->hasRight('write', Phprojekt_Auth_Proxy::getEffectiveUserId()) ||
+                $model->hasRight('create', Phprojekt_Auth_Proxy::getEffectiveUserId()) ||
+                $model->hasRight('copy', Phprojekt_Auth_Proxy::getEffectiveUserId()) ||
+                $model->hasRight('admin', Phprojekt_Auth_Proxy::getEffectiveUserId()));
         } else {
             $canWrite = true;
         }
