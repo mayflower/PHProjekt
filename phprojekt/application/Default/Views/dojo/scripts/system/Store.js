@@ -43,16 +43,22 @@ dojo.declare("phpr.Default.System.Store", phpr.Default.System.Component, {
         // Description:
         //    Get all the active users
         var self = this;
-        if (typeof processData == "undefined") {
-            processData = null;
+        var deferred = new dojo.Deferred();
+
+        if (dojo.isFunction(processData)) {
+            deferred.then(processData);
         }
-        phpr.DataStore.addStore({url: this._url});
-        phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function() {
-            self.makeSelect();
-            if (processData) {
-                processData();
+
+        phpr.DataStore.addStore({ url: this._url });
+        phpr.DataStore.requestData({
+            url: this._url,
+            processData: function() {
+                self.makeSelect();
+                deferred.callback();
             }
-        })});
+        });
+
+        return deferred;
     },
 
     makeSelect: function() {
