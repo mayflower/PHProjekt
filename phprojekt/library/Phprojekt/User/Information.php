@@ -55,18 +55,22 @@ class Phprojekt_User_Information extends Phprojekt_ModelInformation_Default
         $this->fillField('password', 'Password', 'password', 0, 2, array(
             'length' => 50));
 
+        // confirmValue
+        $this->fillField('confirmValue', 'Confirm Password', 'password', 0, 3, array(
+            'length' => 50));
+
         // firstname
-        $this->fillField('firstname', 'First name', 'text', 2, 3, array(
+        $this->fillField('firstname', 'First name', 'text', 2, 4, array(
             'required' => true,
             'length'   => 255));
 
         // lastname
-        $this->fillField('lastname', 'Last name', 'text', 3, 4, array(
+        $this->fillField('lastname', 'Last name', 'text', 3, 5, array(
             'required' => true,
             'length'   => 255));
 
         // email
-        $this->fillField('email', 'Email', 'text', 0, 5, array(
+        $this->fillField('email', 'Email', 'text', 0, 6, array(
             'length'   => 255));
 
         // language
@@ -75,7 +79,7 @@ class Phprojekt_User_Information extends Phprojekt_ModelInformation_Default
         foreach ($languageRange as $key => $value) {
             $range[] = $this->getRangeValues($key, $value);
         }
-        $this->fillField('language', 'Language', 'selectbox', 0, 6, array(
+        $this->fillField('language', 'Language', 'selectbox', 0, 7, array(
             'range'    => $range,
             'required' => true,
             'default'  => 'en'));
@@ -86,19 +90,19 @@ class Phprojekt_User_Information extends Phprojekt_ModelInformation_Default
         foreach ($timeZoneRange as $key => $value) {
             $range[] = $this->getRangeValues($key, $value);
         }
-        $this->fillField('timeZone', 'Time zone', 'selectbox', 0, 7, array(
+        $this->fillField('timeZone', 'Time zone', 'selectbox', 0, 8, array(
             'range'    => $range,
             'required' => true,
             'default'  => '000'));
 
         // status
-        $this->fillField('status', 'Status', 'selectbox', 4, 8, array(
+        $this->fillField('status', 'Status', 'selectbox', 4, 9, array(
             'range'    => array($this->getFullRangeValues('A', 'Active'),
                                 $this->getFullRangeValues('I', 'Inactive')),
             'default'  => 'A'));
 
         // admin
-        $this->fillField('admin', 'Admin', 'selectbox', 5, 9, array(
+        $this->fillField('admin', 'Admin', 'selectbox', 5, 10, array(
             'range'    => array($this->getFullRangeValues(0, 'No'),
                                 $this->getFullRangeValues(1, 'Yes')),
             'integer'  => true,

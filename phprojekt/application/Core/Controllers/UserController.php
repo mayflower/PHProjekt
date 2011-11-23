@@ -108,25 +108,22 @@ class Core_UserController extends Core_IndexController
         $setting->setModule('User');
 
         $fields = $setting->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        $tmp    = $setting->getList(0, $fields, $user->id);
+        $values    = $setting->getList(0, $fields, $user->id);
+        $values    = $values[0];
+        unset($values['id']);
 
-        foreach ($tmp as $values) {
-            foreach ($values as $key => $value) {
-                if ($key != 'id') {
-                    if (!empty($data["id"])) {
-                        $data[$key] = $value;
-                    } else {
-                        foreach ($fields as $field) {
-                            if ($field['key'] == $key) {
-                                if (!is_null($field['default'])) {
-                                    $data[$key] = $field['default'];
-                                } else {
-                                    $data[$key] = "";
-                                }
-                                break;
-                            }
-                        }
-                    }
+        if (!empty($data['id'])) {
+            $data = array_merge($data, $values);
+        } else {
+            foreach ($fields as $field) {
+                if (!array_key_exists($field['key'], $values)) {
+                    continue;
+                }
+
+                if (!is_null($field['default'])) {
+                    $data[$field['key']] = $field['default'];
+                } else {
+                    $data[$field['key']] = "";
                 }
             }
         }
