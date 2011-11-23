@@ -286,7 +286,7 @@ dojo.declare("phpr.DataStore", null, {
     //    and then is cached for the future used.
     _internalCache: [],
 
-    _active: false,
+    _activeDownloads: {},
 
     addStore: function(params) {
         // Summary:
@@ -296,14 +296,18 @@ dojo.declare("phpr.DataStore", null, {
         if (typeof this._internalCache[params.url] == 'undefined') {
             store = new phpr.ReadStore({url: params.url});
             this._internalCache[params.url] = {
-                data:  [],
-                store: store
+                data: [],
+                store: store,
+                deferred: null,
+                active: false
             };
         } else if (params.noCache) {
             store = new phpr.ReadStore({url: params.url});
             this._internalCache[params.url] = {
-                data:  [],
-                store: store
+                data: [],
+                store: store,
+                deferred: null,
+                active: false
             };
         }
     },
@@ -314,30 +318,51 @@ dojo.declare("phpr.DataStore", null, {
         // Description:
         //    If the data is not cached, request to the server.
         //    Then return to the processData function
-        if (typeof params.processData == "undefined") {
-            params.processData = null;
+
+        var deferred;
+        var alreadyActive = this._internalCache[params.url].active;
+
+        if (alreadyActive) {
+            deferred = this._internalCache[params.url].deferred;
+        } else {
+            deferred = new dojo.Deferred();
+            deferred.then(dojo.hitch(this, function() {
+                this._internalCache[params.url].active = false;
+                delete this._internalCache[params.url].deferred;
+            }));
         }
-        if (this._internalCache[params.url].data.length === 0) {
-            phpr.loading.show();
-            if (this._active === true) {
-                setTimeout(dojo.hitch(this, "requestData", params), 500);
-            } else {
-                this._active = true;
+
+        if (dojo.isFunction(params.processData)) {
+            deferred.then(params.processData);
+        }
+
+
+        if (!alreadyActive) {
+            if (this._internalCache[params.url].data.length === 0) {
+                phpr.loading.show();
+                this._internalCache[params.url].active = true;
+                this._internalCache[params.url].deferred = deferred;
                 this._internalCache[params.url].store.fetch({
                     serverQuery: params.serverQuery || {},
                     onComplete:  dojo.hitch(this, "saveData", {
-                        url:         params.url,
-                        processData: params.processData
+                        url: params.url,
+                        processData: function() {
+                            deferred.callback();
+                        }
                     }),
                     onError: dojo.hitch(this, "errorHandler", {
-                        url:         params.url,
-                        processData: params.processData
+                        url: params.url,
+                        processData: function() {
+                            deferred.callback();
+                        }
                     })
                 });
+            } else {
+                deferred.callback();
             }
-        } else if (params.processData) {
-            params.processData.call();
         }
+
+        return deferred;
     },
 
     errorHandler: function(scope, error) {
@@ -373,7 +398,6 @@ dojo.declare("phpr.DataStore", null, {
         // Description:
         //    Store the data in the cache
         //    Then return to the processData function
-        this._active = false;
         this._internalCache[params.url].data = data;
         phpr.loading.hide();
         if (params.processData) {
