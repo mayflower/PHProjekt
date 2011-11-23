@@ -49,7 +49,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             }
         });
 
-        this.addTab([modulesData], 'tabModules', 'Module', 'moduleFormTab');
+        return this.addTab([modulesData], 'tabModules', 'Module', 'moduleFormTab');
     },
 
     addRoleTab:function(data) {
@@ -112,28 +112,33 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             }
         });
 
-        this.addTab([rolesData], 'tabRoles', 'Role', 'roleFormTab');
+        var def = this.addTab([rolesData], 'tabRoles', 'Role', 'roleFormTab');
 
-        // Add "add" button for role-user relation
-        if (this._accessPermissions && users.length > 0) {
-            this.addTinyButton('add', 'relationAddButton', 'newRoleUser');
-        }
-
-        // Add "delete" buttons for role-user relation
-        for (i in relationList) {
-            if (relationList[i].userId != currentUser && this._accessPermissions) {
-                var userId = relationList[i].userId;
-                this.addTinyButton('delete', 'relationDeleteButton' + userId, 'deleteUserRoleRelation', [userId]);
+        def = def.then(dojo.hitch(this, function() {
+            // Add "add" button for role-user relation
+            if (this._accessPermissions && users.length > 0) {
+                this.addTinyButton('add', 'relationAddButton', 'newRoleUser');
             }
-        }
+
+            // Add "delete" buttons for role-user relation
+            for (i in relationList) {
+                if (relationList[i].userId != currentUser && this._accessPermissions) {
+                    var userId = relationList[i].userId;
+                    this.addTinyButton('delete', 'relationDeleteButton' + userId, 'deleteUserRoleRelation', [userId]);
+                }
+            }
+        }));
+
+        return def;
     },
 
     addModuleTabs:function(data) {
-        this.addAccessTab(data);
-        this.addModuleTab(data);
-        this.addRoleTab(data);
-        this.addNotificationTab(data);
-        this.addHistoryTab();
+        var def = this.addAccessTab(data);
+        def = dojo.when(def, dojo.hitch(this, function() {return this.addModuleTab(data)}))
+        def = dojo.when(def, dojo.hitch(this, function() {return this.addRoleTab(data)}))
+        def = dojo.when(def, dojo.hitch(this, function() {return this.addNotificationTab(data)}))
+        def = dojo.when(def, dojo.hitch(this, function() {return this.addHistoryTab()}))
+        return def;
     },
 
     newRoleUser:function() {

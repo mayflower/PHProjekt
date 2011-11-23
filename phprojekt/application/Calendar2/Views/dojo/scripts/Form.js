@@ -124,13 +124,16 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
             this._owner = data[0]["rights"]["currentUser"]["admin"];
         }
 
+        var def;
+
         if (this._owner) {
-            this.addParticipantsTab(data);
+            def = this.addParticipantsTab(data);
         }
 
-        this.addRecurrenceTab(data);
-        this.addNotificationTab(data);
-        this.addHistoryTab();
+        def = dojo.when(def, dojo.hitch(this, function() {return this.addRecurrenceTab(data)}));
+        def = dojo.when(def, dojo.hitch(this, function() {return this.addNotificationTab(data)}));
+        def = dojo.when(def, dojo.hitch(this, function() {return this.addHistoryTab()}));
+        return def;
     },
 
     postRenderForm: function() {
@@ -281,34 +284,35 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                 participants:                   participants
         }});
 
-        this.addTab([participantData], 'tabParticipant', 'Participants', 'participantFormTab');
-
-        // Add button for participant
-        var params = {
-            label:     '',
-            iconClass: 'add',
-            alt:       'Add',
-            baseClass: 'smallIcon'
-        };
-        newParticipant = new dijit.form.Button(params);
-        dojo.byId("participantAddButton").appendChild(newParticipant.domNode);
-        dojo.connect(newParticipant, "onClick", dojo.hitch(this, "newParticipant"));
-
-        // Delete buttons for participant
-        for (i in participants) {
-            var userId     = participants[i]["userId"];
-            var buttonName = "participantDeleteButton" + userId;
+        var def = this.addTab([participantData], 'tabParticipant', 'Participants', 'participantFormTab');
+        def.then(dojo.hitch(this, function() {
+            // Add button for participant
             var params = {
                 label:     '',
-                iconClass: 'cross',
-                alt:       'Delete',
+                iconClass: 'add',
+                alt:       'Add',
                 baseClass: 'smallIcon'
             };
+            newParticipant = new dijit.form.Button(params);
+            dojo.byId("participantAddButton").appendChild(newParticipant.domNode);
+            dojo.connect(newParticipant, "onClick", dojo.hitch(this, "newParticipant"));
 
-            var tmp = new dijit.form.Button(params);
-            dojo.byId(buttonName).appendChild(tmp.domNode);
-            dojo.connect(tmp, "onClick", dojo.hitch(this, "deleteParticipant", userId));
-        }
+            // Delete buttons for participant
+            for (i in participants) {
+                var userId     = participants[i]["userId"];
+                var buttonName = "participantDeleteButton" + userId;
+                var params = {
+                    label: '',
+                    iconClass: 'cross',
+                    alt: 'Delete',
+                    baseClass: 'smallIcon'
+                };
+
+                var tmp = new dijit.form.Button(params);
+                dojo.byId(buttonName).appendChild(tmp.domNode);
+                dojo.connect(tmp, "onClick", dojo.hitch(this, "deleteParticipant", userId));
+            }
+        }));
     },
 
     newParticipant: function() {
@@ -479,7 +483,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
             values.BYDAY, false, disabled));
 
         // Add the tab to the form
-        this.addTab(recurrenceTab, 'tabRecurrence', 'Recurrence', 'recurrenceTab');
+        return this.addTab(recurrenceTab, 'tabRecurrence', 'Recurrence', 'recurrenceTab');
     },
 
     deleteForm: function() {
