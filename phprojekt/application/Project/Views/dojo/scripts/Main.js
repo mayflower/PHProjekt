@@ -35,10 +35,10 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
 
     loadResult:function(id, module, projectId) {
         this.cleanPage();
-        phpr.parentmodule     = null;
+        phpr.parentmodule = null;
         phpr.currentProjectId = id;
         phpr.tree.fadeIn();
-        phpr.pageManager.changeState({
+        phpr.pageManager.modifyCurrentState({
             moduleName: this.module,
             action: 'basicData',
             projectId: projectId,

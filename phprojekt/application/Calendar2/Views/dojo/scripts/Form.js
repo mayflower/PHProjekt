@@ -505,16 +505,18 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                                     + '/occurrence/' + this._originalData.occurrence,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (data.type == 'success') {
-                   this.publish("updateCacheData");
-                   // reload the page and trigger the form load
-                   var newState = dojo.clone(this.main.state);
-                   if (newState.id) {
-                       delete newState.id;
-                   }
-                   phpr.pageManager.changeState(newState, { forceModuleReload: true });
-               }
+                new phpr.handleResponse('serverFeedback', data);
+                if (data.type == 'success') {
+                    this.publish("updateCacheData");
+                    // reload the page and trigger the form load
+                    phpr.pageManager.modifyCurrentState(
+                        {
+                            id: undefined
+                        }, {
+                            forceModuleReload: true
+                        }
+                    );
+                }
             })
         });
     },
@@ -627,11 +629,13 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                             if (data.type == 'success') {
                                 this.publish("updateCacheData");
                                 // reload the page and trigger the form load
-                                var newstate = this.main.state;
-                                if (newstate.id) {
-                                    delete newstate.id;
-                                }
-                                phpr.pageManager.changeState(newstate, { forceModuleReload: true });
+                                phpr.pageManager.modifyCurrentState(
+                                    {
+                                        id: undefined
+                                    }, {
+                                        forceModuleReload: true
+                                    }
+                                );
                             }
                         })
                     });

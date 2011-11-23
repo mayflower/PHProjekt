@@ -66,8 +66,21 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         } else {
             console.error("Invalid name provided: " + state.moduleName);
             console.log("Defaulting to module " + this._defaultModule);
-            this._changeModule({moduleName: this._defaultModule});
+            this._changeModule({ moduleName: this._defaultModule }, {});
         }
+    },
+
+    modifyCurrentState: function(newState, options) {
+        var state = this.getState();
+        dojo.mixin(state, newState || {});
+
+        for (var i in state) {
+            if (state[i] === undefined) {
+                delete state[i];
+            }
+        }
+
+        this.changeState(state, options)
     },
 
     _setHash: function(state, replaceItem) {
@@ -253,11 +266,9 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             // Try loading hash from cookie, or use default state
             var hash = dojo.cookie('location.hash') || null;
             if (hash) {
-                this._setHash(hash, true);
+                this._setHash(dojo.queryToObject(hash), true);
             }
-            this.changeState({
-                moduleName: "Project"
-            });
+            this.modifyCurrentState();
         } else {
             this._hashChange();
         }
