@@ -243,34 +243,35 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             }
         });
 
-        this.addTab([accessData], 'tabAccess', 'Access', 'accessFormTab');
+        var def = this.addTab([accessData], 'tabAccess', 'Access', 'accessFormTab');
+        return def.then(dojo.hitch(this, function() {
+            // Add "add" button for access
+            if (this._accessPermissions && users.length > 0) {
+                this.addTinyButton('add', 'accessAddButton', 'newAccess');
+                this.garbageCollector.addEvent(
+                    dojo.connect(dijit.byId("checkAdminAccessAdd"),
+                        "onClick", dojo.hitch(this, "checkAllAccess", "Add")));
+            }
 
-        // Add "add" button for access
-        if (this._accessPermissions && users.length > 0) {
-            this.addTinyButton('add', 'accessAddButton', 'newAccess');
-            this.garbageCollector.addEvent(
-                dojo.connect(dijit.byId("checkAdminAccessAdd"),
-                    "onClick", dojo.hitch(this, "checkAllAccess", "Add")));
-        }
+            if (this._accessPermissions) {
+                // Add "delete" buttons for access
+                // Add "check all" functions
+                for (var i in accessContent) {
+                    if (accessContent[i].userDisplay) {
+                        var userId = accessContent[i].userId;
+                        if (userId != currentUser && userId != 1) {
+                            this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
 
-        if (this._accessPermissions) {
-            // Add "delete" buttons for access
-            // Add "check all" functions
-            for (var i in accessContent) {
-                if (accessContent[i].userDisplay) {
-                    var userId = accessContent[i].userId;
-                    if (userId != currentUser && userId != 1) {
-                        this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
-
-                        this.garbageCollector.addEvent(
-                            dojo.connect(
-                                dijit.byId("checkAdminAccess[" + userId + "]"),
-                                "onClick",
-                                dojo.hitch(this, "checkAllAccess", "[" + userId + "]")));
+                            this.garbageCollector.addEvent(
+                                dojo.connect(
+                                    dijit.byId("checkAdminAccess[" + userId + "]"),
+                                    "onClick",
+                                    dojo.hitch(this, "checkAllAccess", "[" + userId + "]")));
+                        }
                     }
                 }
             }
-        }
+        }));
     },
 
     addTinyButton: function(type, nodeId, functionName, extraParams) {
@@ -318,46 +319,54 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Add a tab and if have form, add the values
         //    to the array of values for save it later
-        phpr.destroySubWidgets(id);
-        phpr.destroyWidget(id);
-        phpr.destroySubWidgets(formId);
-        phpr.destroyWidget(formId);
 
-        var content = new phpr.Default.System.TemplateWrapper({
-            templateName: "phpr.Default.template.form.tabs.html",
-            templateData: {
-                formId:    formId || ''
-            }});
+        var deferred = new dojo.Deferred();
+        var ret = deferred.then(dojo.hitch(this, function() {
+            phpr.destroySubWidgets(id);
+            phpr.destroyWidget(id);
+            phpr.destroySubWidgets(formId);
+            phpr.destroyWidget(formId);
 
-        for (var i in innerWidgets) {
-            var widget = innerWidgets[i];
-            content.formtable.appendChild(widget.domNode);
-            this.garbageCollector.addNode(widget);
-        }
+            var content = new phpr.Default.System.TemplateWrapper({
+                templateName: "phpr.Default.template.form.tabs.html",
+                templateData: {
+                    formId:    formId || ''
+                }});
 
-        var tab = new dijit.layout.ContentPane({
-            id:    id,
-            title: phpr.nls.get(title)
-        });
+            for (var i in innerWidgets) {
+                var widget = innerWidgets[i];
+                content.formtable.appendChild(widget.domNode);
+                this.garbageCollector.addNode(widget);
+            }
 
-        dojo.style(tab.containerNode, 'height', '100%');
-        dojo.style(tab.containerNode, 'width', '100%');
+            var tab = new dijit.layout.ContentPane({
+                id:    id,
+                title: phpr.nls.get(title)
+            });
 
-        tab.set('content', content);
+            dojo.style(tab.containerNode, 'height', '100%');
+            dojo.style(tab.containerNode, 'width', '100%');
 
-        content.startup();
+            tab.set('content', content);
 
-        this.garbageCollector.addNode(tab);
+            content.startup();
 
-        this.form.addChild(tab);
-        if (typeof content.tabform != "undefined") {
-            this.tabs.push(tab);
-            this.formsWidget.push(content.tabform);
-        }
+            this.garbageCollector.addNode(tab);
 
-        this.garbageCollector.addNode(content);
+            this.form.addChild(tab);
+            if (typeof content.tabform != "undefined") {
+                this.tabs.push(tab);
+                this.formsWidget.push(content.tabform);
+            }
 
-        content.tabform.onSubmit = dojo.hitch(this, "_submitForm");
+            this.garbageCollector.addNode(content);
+
+            content.tabform.onSubmit = dojo.hitch(this, "_submitForm");
+        }));
+
+        window.setTimeout(function() {deferred.callback()}, 0);
+
+        return ret;
     },
 
     getTabs: function() {
@@ -506,6 +515,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
             this.form.startup();
 
+            var deferred = new dojo.Deferred();
+
+            deferred.callback();
+
             var firstTab = true;
             for (var t in tabs) {
                 if (this.formdata[tabs[t].id]) {
@@ -513,33 +526,42 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                         this.setFormButtons(tabs[t].id);
                         firstTab = false;
                     }
-                    this.addTab(this.formdata[tabs[t].id], 'tabBasicData' + tabs[t].id, tabs[t].name,
-                        'dataFormTab' + tabs[t].id);
+                    deferred = deferred.then(
+                        dojo.hitch(this, function(t) {
+                            return this.addTab(this.formdata[tabs[t].id], 'tabBasicData' + tabs[t].id, tabs[t].name,
+                                'dataFormTab' + tabs[t].id);
+                        }, t)
+                    );
                 }
             }
 
-            this.setActionFormButtons();
-            this.addModuleTabs(data);
-            this.addSubModulesTab();
+            deferred = dojo.when(deferred, dojo.hitch(this, function() {
+                this.setActionFormButtons();
+                return this.addModuleTabs(data);
+            }));
+            deferred = dojo.when(deferred, dojo.hitch(this, function() {
+                return this.addSubModulesTab();
+            }));
+            deferred = dojo.when(deferred, dojo.hitch(this, function() {
+                // Delete the data if is not used the cache
+                if (!this.useCache()) {
+                    phpr.DataStore.deleteData({url: this._url});
+                }
 
-            // Delete the data if is not used the cache
-            if (!this.useCache()) {
-                phpr.DataStore.deleteData({url: this._url});
-            }
+                if (this.id > 0 && this.useHistoryTab()) {
+                    this.garbageCollector.addEvent(
+                        dojo.connect(dijit.byId("tabHistory"),
+                            "onShow", dojo.hitch(this, "showHistory")));
+                }
 
-            if (this.id > 0 && this.useHistoryTab()) {
-                this.garbageCollector.addEvent(
-                    dojo.connect(dijit.byId("tabHistory"),
-                        "onShow", dojo.hitch(this, "showHistory")));
-            }
+                // Set cursor to the first required field
+                if (dojo.byId(firstRequiredField)) {
+                    phpr.viewManager.getView().completeContent.domNode.focus();
+                    dojo.byId(firstRequiredField).focus();
+                }
 
-            // Set cursor to the first required field
-            if (dojo.byId(firstRequiredField)) {
-                phpr.viewManager.getView().completeContent.domNode.focus();
-                dojo.byId(firstRequiredField).focus();
-            }
-
-            this.postRenderForm();
+                this.postRenderForm();
+            }));
         }
     },
 
@@ -644,9 +666,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Add all the tabs
         // Description:
         //    Add all the tabs that are not the basic data
-        this.addAccessTab(data);
-        this.addNotificationTab(data);
-        this.addHistoryTab();
+        var def = this.addAccessTab(data);
+        def = dojo.when(def, dojo.hitch(this, function() {return this.addNotificationTab(data)}))
+        def = dojo.when(def, dojo.hitch(this, function() {return this.addHistoryTab()}))
+        return def;
     },
 
     addHistoryTab: function() {
@@ -657,7 +680,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         if (this.id > 0 && this.useHistoryTab()) {
             var widget = new phpr.Default.System.TemplateWrapper({
                 templateName: "phpr.Default.template.history.content.html"});
-            this.addTab([widget], 'tabHistory', 'History', 'accesshistoryTab');
+            return this.addTab([widget], 'tabHistory', 'History', 'accesshistoryTab');
         }
     },
 
@@ -1088,7 +1111,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var notificationTab = this.fieldTemplate.checkRender(phpr.nls.get('Send Notification'), 'sendNotification',
             defaultValue, false, phpr.nls.get('Check this box to send an email notification to the participants'));
         // Add the tab to the form
-        this.addTab([ notificationTab ], 'tabNotify', 'Notification', 'accessnotificationTab');
+        return this.addTab([ notificationTab ], 'tabNotify', 'Notification', 'accessnotificationTab');
     },
 
     presetValues: function(data) {
