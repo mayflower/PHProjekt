@@ -47,6 +47,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     _meta:              null,
     _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
     _submitInProgress:  false,
+    tabs:               [],
 
     constructor:function(main, id, module, params, formContainer) {
         // Summary:
@@ -350,9 +351,11 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         this.form.addChild(tab);
         if (typeof content.tabform != "undefined") {
+            this.tabs.push(tab);
             this.formsWidget.push(content.tabform);
-            this.garbageCollector.addNode(content.tabform);
         }
+
+        this.garbageCollector.addNode(content);
 
         content.tabform.onSubmit = dojo.hitch(this, "_submitForm");
     },
@@ -828,8 +831,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.sendData = [];
         for (var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
-                var parent = this.formsWidget[i].containerNode.parentNode.id;
-                this.form.selectChild(parent);
+                this.form.selectChild(this.tabs[i]);
                 this.formsWidget[i].validate();
                 return false;
             }

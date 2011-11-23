@@ -48,6 +48,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     splitFields:   [],
     _lastTime:     null,
     _active:       false,
+    _doubleClickMaxTime: 750,
+    _gridActionContainer: null,
+
     // gridFilters Widget
     gridFilters:   null,
 
@@ -70,6 +73,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     MODE_CLIENT:     2,
     TARGET_SINGLE:   0,
     TARGET_MULTIPLE: 1,
+
+    // Timer
+    _doubleClickTimer: null,
 
     constructor: function(/*String*/updateUrl, /*Object*/main, /*Int*/ id, /*Widget*/gridBoxContainer, /*Object*/extraParams) {
         // Summary:
@@ -1138,11 +1144,15 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         checkAllTxt:   phpr.nls.get('Check All'),
                         uncheckAllTxt: phpr.nls.get('Uncheck All')
                     }});
+
+                this._gridActionContainer = content;
                 this.grid.views.views[0].gridActions.set('content', content);
+
                 content.startup();
 
                 this.garbageCollector.addNode(this.grid.views.views[0]);
                 this.garbageCollector.addNode(this.grid.views.views[0].gridActions);
+                this.garbageCollector.addNode(content);
 
                 this.garbageCollector.addEvent(
                     dojo.connect(content.gridComboAction,
@@ -1202,6 +1212,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     doDblClick: function(e) {
         // Summary:
         //      Process a double click
+        if (this._doubleClickTimer !== null) {
+            window.clearTimeout(this._doubleClickTimer);
+            this._doubleClickTimer = null;
+        }
         if (e.cellNode) {
             this.grid.edit.setEditCell(e.cell, e.rowIndex);
             this.grid.onRowDblClick(e);
@@ -1243,11 +1257,20 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             }
 
             // Open the form
-            if (openForm && !this.grid.edit.isEditing()) {
-                var item  = this.grid.getItem(e.rowIndex);
-                var rowId = this.grid.store.getValue(item, 'id');
-                this.hideTooltip();
-                this.getLinkForEdit(rowId);
+            if (openForm && !this.grid.edit.isEditing() && this._doubleClickTimer === null) {
+                this._doubleClickTimer = window.setTimeout(
+                    dojo.hitch(this,
+                        function(e) {
+                            var item  = this.grid.getItem(e.rowIndex);
+                            var rowId = this.grid.store.getValue(item, 'id');
+                            this.hideTooltip(e);
+                            this._doubleClickTimer = null;
+                            this.getLinkForEdit(rowId);
+                        },
+                        e
+                    ),
+                    this._doubleClickMaxTime
+                );
             }
         }
     },
@@ -1495,7 +1518,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             }
             if (ids.length > 0) {
                 var idsSend = ids.join(',');
-                var select  = dojo.byId("gridComboAction");
+                var select = this._gridActionContainer.gridComboAction;
                 var key     = select.value;
                 if (key !== null) {
                     var temp   = key.split('|');
