@@ -179,15 +179,19 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
         $newPassValue     = $params['password'];
         $currentPassValue = $setting->getSetting('password');
 
-        if (isset($params['id']) && $params['id'] == 0 && empty($newPassValue)) {
+        $isInSettings       = !array_key_exists('id', $params);
+        $isNew              = !$isInSettings && $params['id'] == 0;
+        $passwordGiven      = !empty($newPassValue);
+        $passwordsMatch     = $newPassValue === $confirmPassValue;
+        $currentPassCorrect = $currentPassValue == Phprojekt_Auth::cryptString($oldPassValue);
+
+        if ($isNew && !$passwordGiven) {
             $message = Phprojekt::getInstance()->translate('Password') . ': '
                 . Phprojekt::getInstance()->translate('Is a required field');
-        } else if (!isset($params['id']) && ((!empty($newPassValue) && $newPassValue != $confirmPassValue)
-            || (empty($newPassValue) && !empty($confirmPassValue)))) {
+        } else if ($passwordGiven && !$passwordsMatch) {
             $message = Phprojekt::getInstance()->translate('The password and confirmation are different or one of them '
                 . 'is empty');
-        } else if (!isset($params['id']) &&
-            (!empty($newPassValue) && $currentPassValue != Phprojekt_Auth::cryptString($oldPassValue))) {
+        } else if ($isInSettings && $passwordGiven && !$currentPassCorrect) {
             $message = Phprojekt::getInstance()->translate('The old password provided is invalid');
         }
 
