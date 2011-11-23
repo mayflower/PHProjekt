@@ -325,16 +325,18 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     },
 
     _changeStateWithNewAction: function(actionName, force) {
-        var newstate = dojo.clone(this.state);
         var options = {};
-
-        newstate.action = actionName;
 
         if (force === true) {
             options.forceModuleReload = true;
         }
 
-        phpr.pageManager.changeState(newstate, options);
+        phpr.pageManager.modifyCurrentState(
+            {
+                action: actionName
+            },
+            options
+        );
     },
 
     setDate: function(day) {

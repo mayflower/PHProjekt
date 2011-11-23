@@ -94,9 +94,10 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                 if (data.type == 'success') {
                     this.customActionOnSuccess();
                     this.publish("updateCacheData");
-                    delete this.main.state.id;
-                    phpr.pageManager.changeState(
-                        this.main.state, {
+                    phpr.pageManager.modifyCurrentState(
+                        {
+                            id: undefined
+                        }, {
                             forceModuleReload: true
                         }
                     );
@@ -120,14 +121,11 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
 
-                    // remove the item id, because we just deleted it
-                    var newState = dojo.clone(this.main.state);
-                    if (newState.id) {
-                        delete newState.id;
-                    }
-
-                    phpr.pageManager.changeState(
-                        newState, {
+                    phpr.pageManager.modifyCurrentState(
+                        {
+                            id: undefined
+                        }
+                        , {
                             forceModuleReload: true
                         }
                     );
