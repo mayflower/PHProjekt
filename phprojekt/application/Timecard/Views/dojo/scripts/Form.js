@@ -367,13 +367,11 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
             return false;
         }
 
-        this.setSubmitInProgress(true);
         phpr.send({
             url: phpr.webpath + 'index.php/Timecard/index/jsonSave/nodeId/' + phpr.currentProjectId
                 + '/id/' + this.id,
             content:   this.sendData,
             onSuccess: dojo.hitch(this, function(data) {
-                this.setSubmitInProgress(false);
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     dijit.popup.close(dijit.byId('timecardTooltipDialog'));
