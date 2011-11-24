@@ -173,7 +173,7 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
             content[event]['endDate'] = phpr.date.getIsoDate(dateTime);
             content[event]['endTime'] = phpr.date.getIsoTime(dateTime);
             var warning = '';
-            var currentUserId = content[event]["rights"]["currentUser"]["userId"];
+            var currentUserId = content[event].rights[phpr.currentUserId].userId;
             if (currentUserId == content[event]['ownerId']) {
                 // This is our event, let's add a warning if somebody has not
                 // accepted (or beware, somebody rejected!) our invitation.

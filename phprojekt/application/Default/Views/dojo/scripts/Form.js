@@ -178,7 +178,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    The user can assign to each user different access on the item
         var userList      = this.userStore.getList();
         var accessContent = phpr.DataStore.getData({url: this._accessUrl});
-        var currentUser   = data[0].rights.currentUser.userId || 0;
+        var currentUser   = data[0].rights[phpr.currentUserId].userId || 0;
         var users         = [];
 
         if (userList) {
@@ -200,7 +200,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var rows = '';
         for (var id in accessContent) {
             if (accessContent[id].userDisplay) {
-                var isCurrentUser = (id == 'currentUser');
+                var isCurrentUser = (id == phpr.currentUserId);
                 var checkBoxs     = [];
                 var userId        = isCurrentUser ? currentUser : accessContent[id].userId;
                 if (userId == 1 && currentUser != 1) {
@@ -318,9 +318,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 this._deletePermissions = true;
                 this._accessPermissions = false;
             } else {
-                this._writePermissions  = data[0].rights.currentUser.write;
-                this._deletePermissions = data[0].rights.currentUser['delete'];
-                this._accessPermissions = data[0].rights.currentUser.admin;
+                this._writePermissions  = data[0].rights[phpr.currentUserId].write;
+                this._deletePermissions = data[0].rights[phpr.currentUserId]['delete'];
+                this._accessPermissions = data[0].rights[phpr.currentUserId].admin;
             }
         }
     },

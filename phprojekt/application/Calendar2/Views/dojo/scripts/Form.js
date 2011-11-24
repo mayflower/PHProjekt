@@ -121,7 +121,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
     addModuleTabs: function(data) {
         this._owner = true;
         if (this.id > 0) {
-            this._owner = data[0]["rights"]["currentUser"]["admin"];
+            this._owner = data[0].rights[phpr.currentUserId].admin;
         }
 
         var def;
@@ -225,8 +225,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         // Description:
         //    Display all the users for add into the event
         var userList       = this.userStore.getList();
-        var currentUser    = data[0]["rights"]["currentUser"]["userId"] || 0;
-        var participantIds = data[0]["participants"];
+        var currentUser    = data[0].rights[phpr.currentUserId].userId || 0;
+        var participantIds = data[0].participants;
         var participants   = new Array();
         var users          = new Array();
         var statuses       = data[0]["confirmationStatuses"];

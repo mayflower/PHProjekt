@@ -1306,8 +1306,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    Check the access of the item for the user
         // Description:
         //    Return true if has write or admin accees
-        var writePermissions = this.gridData.items[inRowIndex].rights[0].currentUser[0].write;
-        var adminPermissions = this.gridData.items[inRowIndex].rights[0].currentUser[0].admin;
+        var writePermissions = this.gridData.items[inRowIndex].rights[0][phpr.currentUserId][0].write;
+        var adminPermissions = this.gridData.items[inRowIndex].rights[0][phpr.currentUserId][0].admin;
         if (writePermissions == 'false' && adminPermissions == 'false') {
             return false;
         } else {

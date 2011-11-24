@@ -57,7 +57,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Add Tab for user-role relation into the project
         // Description:
         //    Add Tab for user-role relation into the project
-        var currentUser  = data[0]["rights"]["currentUser"]["userId"] || 0;
+        var currentUser  = data[0].rights[phpr.currentUserId].userId || 0;
         var users        = new Array();
         var userList     = this.userStore.getList();
         var relationList = this.roleStore.getRelationList();
