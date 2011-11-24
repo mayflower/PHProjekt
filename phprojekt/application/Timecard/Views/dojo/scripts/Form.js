@@ -36,6 +36,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
     _contentBar:        null,
     _manFavBoxesHeight: 18,
     _favoriteButton:    null,
+    _templateRenderer: null,
 
     constructor:function(main, date) {
         // Summary:
@@ -86,6 +87,18 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
 
         this.setDate(date);
         this.loadView();
+    },
+
+    destroy: function() {
+        this._destroyTemplateRenderer();
+        this.inherited(arguments);
+    },
+
+    _destroyTemplateRenderer: function() {
+        if (this._templateRenderer && dojo.isFunction(this._templateRenderer.destroy)) {
+            this._templateRenderer.destroy();
+        }
+        this._templateRenderer = null;
     },
 
     setDate:function(date) {
@@ -167,7 +180,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                     dojo.style(tmp, "lineHeight", lineHeight);
                 }
                 dijit.byId("projectBookingContainer").domNode.appendChild(tmp);
-                dojo.connect(tmp, "onclick",  dojo.hitch(this, "fillForm", data[i].id));
+                this.garbageCollector.addEvent(
+                    dojo.connect(tmp, "onclick",  dojo.hitch(this, "fillForm", data[i].id)));
             }
         })});
     },
@@ -186,7 +200,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
             };
             this._favoriteButton = new dijit.form.Button(params);
             phpr.viewManager.getView().buttonRow.domNode.appendChild(this._favoriteButton.domNode);
-            dojo.connect(this._favoriteButton, "onClick",  dojo.hitch(this, "openManageFavorites"));
+            this.garbageCollector.addEvent(
+                dojo.connect(this._favoriteButton, "onClick",  dojo.hitch(this, "openManageFavorites")));
         }
     },
 
@@ -204,15 +219,15 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                     var favorites = phpr.DataStore.getData({url: this._favoritesUrl});
                     var meta      = phpr.DataStore.getMetaData({url: this._url});
 
-                    this.fieldTemplate = new phpr.Default.Field();
+                    this._templateRenderer = new phpr.Default.Field();
 
                     // Init formdata
-                    var formData = '';
+                    var formData = [];
                     // startDatetime
-                    formData.push(this.fieldTemplate.datetimeRender(meta[0]["label"], meta[0]["key"], '',
+                    formData.push(this._templateRenderer.datetimeRender(meta[0]["label"], meta[0]["key"], '',
                         meta[0]["required"], false, meta[0]["hint"]));
                     // endTime
-                    formData.push(this.fieldTemplate.timeRender(meta[1]["label"], meta[1]["key"], '',
+                    formData.push(this._templateRenderer.timeRender(meta[1]["label"], meta[1]["key"], '',
                         meta[1]["required"], false, meta[1]["hint"]));
                     // projectId
                     var range = dojo.clone(meta[3]['range']);
@@ -229,14 +244,14 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                             range.unshift({'id': parseInt(favorites[i].id), 'name': favorites[i].name});
                         }
                     }
-                    formData.push(this.fieldTemplate.selectRender(range, meta[3]["label"], meta[3]["key"], -1,
+                    formData.push(this._templateRenderer.selectRender(range, meta[3]["label"], meta[3]["key"], -1,
                         meta[3]["required"], false, meta[3]["hint"]));
                     // notes
-                    formData.push(this.fieldTemplate.textAreaRender(meta[4]["label"], meta[4]["key"], '',
+                    formData.push(this._templateRenderer.textAreaRender(meta[4]["label"], meta[4]["key"], '',
                         meta[4]["required"], false, meta[4]["hint"]));
 
                     // timecardId
-                    formData.push(this.fieldTemplate.hiddenFieldRender('', 'timecardId', this.id, true, false));
+                    formData.push(this._templateRenderer.hiddenFieldRender('', 'timecardId', this.id, true, false));
 
                     var content = new phpr.Default.System.TemplateWrapper({
                         templateName: "phpr.Timecard.template.formView.html",
@@ -248,7 +263,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
 
                     for (var i in formData) {
                         dojo.place(formData[i].domNode, content.formBottom, 'before');
-                        this.garbageCollector.addNode(formData[i]);
                     }
 
                     var tooltipDialog = new dijit.TooltipDialog({
@@ -265,11 +279,15 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                         }
                     });
 
-                    dojo.connect(dijit.byId("saveBookingButton"), "onClick", dojo.hitch(this, "submitForm"));
-                    dojo.connect(dijit.byId("deleteBookingButton"), "onClick", dojo.hitch(this, function() {
-                        phpr.confirmDialog(dojo.hitch(this, "deleteForm"),
-                        phpr.nls.get('Are you sure you want to delete?'))
-                    }));
+                    this.garbageCollector.addNode(tooltipDialog);
+
+                    this.garbageCollector.addEvent(
+                        dojo.connect(dijit.byId("saveBookingButton"), "onClick", dojo.hitch(this, "submitForm")));
+                    this.garbageCollector.addEvent(
+                        dojo.connect(dijit.byId("deleteBookingButton"), "onClick", dojo.hitch(this, function() {
+                            phpr.confirmDialog(dojo.hitch(this, "deleteForm"),
+                            phpr.nls.get('Are you sure you want to delete?'))
+                        })));
                 } else {
                     tooltipDialog = dijit.byId('timecardTooltipDialog');
                     dijit.byId('timecardId').set('value', this.id);
@@ -307,7 +325,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         });
 
         // Event buttons
-        dojo.connect(dijit.byId('manageFavorites'), "hide",  dojo.hitch(this, "submitFavoritesForm"));
+        this.garbageCollector.addEvent(
+            dojo.connect(dijit.byId('manageFavorites'), "hide",  dojo.hitch(this, "submitFavoritesForm")));
     },
 
     prepareSubmission:function() {
