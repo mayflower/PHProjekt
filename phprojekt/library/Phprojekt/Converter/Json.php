@@ -150,12 +150,13 @@ class Phprojekt_Converter_Json
         }
 
         // TODO: we still asume that the getModelName call works
+        $userId   = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
         $moduleId = Phprojekt_Module::getId($models[0]->getModelName());
         $rights   = Phprojekt_Right::getRightsForItems($moduleId, 
-            $projectId, Phprojekt_Auth_Proxy::getEffectiveUserId(), $itemIds);
+            $projectId, $userId, $itemIds);
         // We need the $idx to modify the $datas elements instead of just copies.
         foreach ($datas as $index => $data) {
-            $datas[$index]['rights'] = Phprojekt_Acl::convertBitmaskToArray($rights[$datas[$index]['id']]);
+            $datas[$index]['rights'][$userId] = Phprojekt_Acl::convertBitmaskToArray($rights[$datas[$index]['id']]);
         }
 
         $data = array('metadata' => $fieldDefinition,
