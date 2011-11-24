@@ -352,14 +352,24 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         }
 
         $moduleId = Phprojekt_Module::getId($this->getModelName());
-        return Phprojekt_Right::getItemRight($moduleId, $this->projectId, $userId, $this->id);
+        $rights   = Phprojekt_Right::getRightsForItems($moduleId, $this->projectId, $userId, array($this->id));
+
+        if (!isset($rights[$this->id])) {
+            return Phprojekt_Acl::NONE;
+        }
+
+        return ($rights[$this->id] & $right) == $right;
     }
 
     public function hasRight($userId, $right)
     {
         $moduleId = Phprojekt_Module::getId($this->getModelName());
-        $rights   = Phprojekt_Right::getItemRight($moduleId, $this->projectId, $userId, $this->id);
-        return ($rights & $right) == $right;
+        $rights   = Phprojekt_Right::getRightsForItems($moduleId, $this->projectId, $userId, array($this->id));
+        if (!isset($rights[$this->id])) {
+            return Phprojekt_Acl::NONE;
+        }
+
+        return ($rights[$this->id] & $right) == $right;
     }
 
     /**
