@@ -56,7 +56,7 @@ final class Phprojekt_Right
             $roleRightAdmin  = $roleRights->hasRight('admin');
 
             // Map roles with item rights and make one array
-            foreach ($itemRights as $userId => $accessMask) {
+            foreach ($itemRights as $itemId => $accessMask) {
                 $access = Phprojekt_Acl::NONE;
 
                 if ($roleRightAdmin) {
@@ -90,9 +90,11 @@ final class Phprojekt_Right
                 if ($roleRightRead || $roleRightWrite || $roleRightAdmin) {
                     $access |= $accessMask & Phprojekt_Acl::READ;
                 }
+
+                $itemRights[$itemId] = $access;
             }
         }
 
-        return $access;
+        return $itemRights;
     }
 }

@@ -139,8 +139,8 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
     public static function getItemRight($moduleId, $itemId, $userId)
     {
         $rights = self::getItemRights($moduleId, array($itemId), $userId);
-        if (isset($rights[$userId])) {
-            return $rights[$userId];
+        if (isset($rights[$itemId])) {
+            return $rights[$itemId];
         }
 
         return Phprojekt_Acl::NONE;
@@ -156,7 +156,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      */
     public static function getItemRights($moduleId, $itemIds, $userId)
     {
-        $values = array();
+        $values = array_fill_keys($itemIds, array());
         $where  = sprintf('module_id = %d AND user_id = %d AND item_id IN (%s)',
             (int) $moduleId, (int) $userId, implode(",", $itemIds));
         $obj  = new self();
@@ -165,7 +165,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         foreach ($rows as $right) {
             // Set the current User
             // Use for an empty rights, if not, will be re-write
-            $values[$row->userId] = $row->access;
+            $values[$row->id] = $row->access;
         }
 
         unset($obj);
