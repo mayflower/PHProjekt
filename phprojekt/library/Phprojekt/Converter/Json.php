@@ -155,7 +155,7 @@ class Phprojekt_Converter_Json
             $projectId, Phprojekt_Auth_Proxy::getEffectiveUserId(), $itemIds);
         // We need the $idx to modify the $datas elements instead of just copies.
         foreach ($datas as $index => $data) {
-            $datas[$index]['rights'] = $rights[$datas[$index]['id']];
+            $datas[$index]['rights'] = Phprojekt_Acl::convertBitmaskToArray($rights[$datas[$index]['id']]);
         }
 
         $data = array('metadata' => $fieldDefinition,
