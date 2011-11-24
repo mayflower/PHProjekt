@@ -24,7 +24,7 @@ dojo.provide("phpr.Timecard.Main");
 dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     _date: new Date(),
 
-    constructor:function() {
+    constructor: function() {
         this.module = 'Timecard';
         this.loadFunctions(this.module);
 
@@ -34,7 +34,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         dojo.subscribe("Timecard.changeDate", this, "changeDate");
     },
 
-    renderTemplate:function() {
+    renderTemplate: function() {
         // Summary:
         //   Custom renderTemplate for timecard
         var view = phpr.viewManager.useDefaultView({blank: true}).clear();
@@ -52,7 +52,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.garbageCollector.addNode('manageFavorites');
     },
 
-    setWidgets:function() {
+    setWidgets: function() {
         // Summary:
         //   Custom setWidgets for timecard
         phpr.tree.loadTree();
@@ -60,10 +60,10 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.form = new this.formWidget(this, this._date);
     },
 
-    setSubGlobalModulesNavigation:function(currentModule) {
+    setSubGlobalModulesNavigation: function(currentModule) {
     },
 
-    changeDate:function(date) {
+    changeDate: function(date) {
         // summary:
         //    Update the date and reload the views
         // description:
