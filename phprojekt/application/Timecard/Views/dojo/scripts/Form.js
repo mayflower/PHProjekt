@@ -264,7 +264,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                             dijit.popup.close(this);
                         }
                     });
-                    tooltipDialog.startup();
 
                     dojo.connect(dijit.byId("saveBookingButton"), "onClick", dojo.hitch(this, "submitForm"));
                     dojo.connect(dijit.byId("deleteBookingButton"), "onClick", dojo.hitch(this, function() {
@@ -284,6 +283,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 });
                 dojo.byId('projectId').focus();
                 this.updateForm(date, start, end, project, notes);
+                tooltipDialog.startup();
             })});
         })});
     },
