@@ -46,6 +46,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
             }
         });
         view.centerMainContent.set('content', content);
+        this.garbageCollector.addNode(content);
 
         // manageFavorites opens a dialog which places itself outside of the regular dom, so we need to clean it up
         // manually
