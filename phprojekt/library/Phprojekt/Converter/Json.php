@@ -149,14 +149,19 @@ class Phprojekt_Converter_Json
             $datas[]        = $data;
         }
 
-        // TODO: we still asume that the getModelName call works
-        $userId   = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
-        $moduleId = Phprojekt_Module::getId($models[0]->getModelName());
-        $rights   = Phprojekt_Right::getRightsForItems($moduleId, 
-            $projectId, $userId, $itemIds);
-        // We need the $idx to modify the $datas elements instead of just copies.
-        foreach ($datas as $index => $data) {
-            $datas[$index]['rights'][$userId] = Phprojekt_Acl::convertBitmaskToArray($rights[$datas[$index]['id']]);
+        $userId    = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $moduleId  = Phprojekt_Module::getId($models[0]->getModelName());
+        // Okay we got real models and stuff that pretends to be a model
+        // so we try to guess if we the model has rights that we can access
+        if ($models[0] instanceof Phprojekt_Item_Abstract) {
+            $projectId = $models[0]->projectId;
+            // TODO: we still asume that the getModelName call works
+            $rights    = Phprojekt_Right::getRightsForItems($moduleId,
+                $projectId, $userId, $itemIds);
+            // We need the $idx to modify the $datas elements instead of just copies.
+            foreach ($datas as $index => $data) {
+                $datas[$index]['rights'][$userId] = Phprojekt_Acl::convertBitmaskToArray($rights[$datas[$index]['id']]);
+            }
         }
 
         $data = array('metadata' => $fieldDefinition,
