@@ -647,3 +647,25 @@ h1,h2,h3,h4,h5,h6 {
 .phprojekt .formTabSubForm {
     margin-top: 10px;
 }
+
+.phprojekt .loadingOuter {
+    height: 100%;
+    width: 100%;
+    background-color: #FFFFFF;
+}
+
+.phprojekt .loadingMiddle {
+    bottom: 50%;
+    right: 50%;
+    position: absolute;
+}
+
+.phprojekt .loadingMiddleInner {
+    left: 50%;
+    top: 50%;
+    position: relative;
+}
+
+.phprojekt .loadingText {
+    text-align: center;
+}

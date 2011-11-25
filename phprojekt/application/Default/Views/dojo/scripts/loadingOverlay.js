@@ -61,8 +61,7 @@ dojo.declare("phpr.Default.loadingOverlay", phpr.Default.System.Component, {
                     "position": "absolute",
                     "top": domBox.t + "px",
                     "left": domBox.l + "px",
-                    "zIndex": 99999,
-                    "opacity": 0.4
+                    "zIndex": 99999
                 }
             );
 
