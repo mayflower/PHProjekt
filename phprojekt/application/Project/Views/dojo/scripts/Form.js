@@ -1,5 +1,5 @@
 /**
- * This software is free software; you can redistribute it and/or
+ This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
  *
@@ -57,7 +57,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Add Tab for user-role relation into the project
         // Description:
         //    Add Tab for user-role relation into the project
-        var currentUser  = data[0].rights[phpr.currentUserId].userId || 0;
+        var currentUser  = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
         var users        = new Array();
         var userList     = this.userStore.getList();
         var relationList = this.roleStore.getRelationList();

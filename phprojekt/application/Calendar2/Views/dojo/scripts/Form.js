@@ -225,7 +225,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         // Description:
         //    Display all the users for add into the event
         var userList       = this.userStore.getList();
-        var currentUser    = data[0].rights[phpr.currentUserId].userId || 0;
+        var currentUser    = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
         var participantIds = data[0].participants;
         var participants   = new Array();
         var users          = new Array();

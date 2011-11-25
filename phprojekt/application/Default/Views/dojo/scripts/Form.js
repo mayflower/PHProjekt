@@ -178,7 +178,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    The user can assign to each user different access on the item
         var userList      = this.userStore.getList();
         var accessContent = phpr.DataStore.getData({url: this._accessUrl});
-        var currentUser   = data[0].rights[phpr.currentUserId].userId || 0;
+        var currentUser   = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
         var users         = [];
 
         if (userList) {
@@ -188,11 +188,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     users.push({'id': userList[i].id, 'display': userList[i].display});
                 }
                 // Found the name of each user
-                for (var j in accessContent) {
-                    if (userList[i].id == accessContent[j].userId) {
-                        accessContent[j].userDisplay = userList[i].display;
-                        break;
-                    }
+                if (accessContent[userList[i].id]) {
+                    accessContent[userList[i].id].userDisplay = userList[i].display;
                 }
             }
         }
@@ -202,7 +199,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             if (accessContent[id].userDisplay) {
                 var isCurrentUser = (id == phpr.currentUserId);
                 var checkBoxs     = [];
-                var userId        = isCurrentUser ? currentUser : accessContent[id].userId;
+                var userId        = isCurrentUser ? currentUser : id;
                 if (userId == 1 && currentUser != 1) {
                     continue;
                 }
@@ -268,9 +265,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             if (this._accessPermissions) {
                 // Add "delete" buttons for access
                 // Add "check all" functions
-                for (var i in accessContent) {
-                    if (accessContent[i].userDisplay) {
-                        var userId = accessContent[i].userId;
+                for (var userId in accessContent) {
+                    if (accessContent[userId].userDisplay) {
                         if (userId != currentUser && userId != 1) {
                             this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
 
