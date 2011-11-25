@@ -136,7 +136,14 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     subModules: [],
     globalModuleNavigationButtons: {},
     subModuleNavigationButtons: {},
-    _emptyState: { action: undefined, moduleName: undefined, id: undefined, search: undefined, tag: undefined },
+    _emptyState: {
+        action: undefined,
+        moduleName: undefined,
+        id: undefined,
+        search: undefined,
+        tag: undefined,
+        projectId: undefined
+    },
 
     // Event handler
     _searchEvent: null,
@@ -276,7 +283,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 phpr.submodule    = null;
                 phpr.parentmodule = null;
                 if (functionFrom && functionFrom == 'loadResult') {
-                    phpr.pageManager.modifyCurrentState(dojo.mixin(this._emptyState, {moduleName: this.module}));
+                    phpr.pageManager.modifyCurrentState(dojo.mixin(dojo.clone(this._emptyState), {moduleName: this.module}));
                 } else {
                     phpr.pageManager.getModule("Project").changeProject(phpr.currentProjectId);
                 }
@@ -310,17 +317,17 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         }
 
                         if (currentModule) {
-                            phpr.pageManager.modifyCurrentState(dojo.mixin(this._emptyState, {
+                            phpr.pageManager.modifyCurrentState(dojo.mixin(dojo.clone(this._emptyState), {
                                 moduleName: currentModule,
                                 projectId: phpr.currentProjectId
                             }));
                         } else if (firstModule && usefirstModule) {
-                            phpr.pageManager.modifyCurrentState(dojo.mixin(this._emptyState, {
+                            phpr.pageManager.modifyCurrentState(dojo.mixin(dojo.clone(this._emptyState), {
                                 moduleName: firstModule,
                                 projectId: phpr.currentProjectId
                             }));
                         } else {
-                            phpr.pageManager.modifyCurrentState(dojo.mixin(this._emptyState, {
+                            phpr.pageManager.modifyCurrentState(dojo.mixin(dojo.clone(this._emptyState), {
                                 moduleName: firstModule,
                                 action: "basicData",
                                 projectId: phpr.currentProjectId
@@ -508,7 +515,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 onClick: (function(module) {
                     return function(e) {
                             phpr.currentProjectId = phpr.rootProjectId;
-                            phpr.pageManager.modifyCurrentState(dojo.mixin(that._emptyState, { moduleName: module }));
+                            phpr.pageManager.modifyCurrentState(
+                                dojo.mixin(dojo.clone(that._emptyState), { moduleName: module }));
                         };
                     }(globalModules[i].name))
                 });
@@ -524,7 +532,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             onClick:   dojo.hitch(this, function() {
                 phpr.currentProjectId = phpr.rootProjectId;
                 phpr.pageManager.modifyCurrentState(
-                    dojo.mixin(this._emptyState, { moduleName: "Setting" }),
+                    dojo.mixin(dojo.clone(this._emptyState), { moduleName: "Setting" }),
                     { forceModuleReload: true }
                 );
             })
@@ -541,7 +549,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 onClick:   dojo.hitch(this, function() {
                     phpr.currentProjectId = phpr.rootProjectId;
                     phpr.pageManager.modifyCurrentState(
-                        dojo.mixin(this._emptyState, { moduleName: "Administration" }),
+                        dojo.mixin(dojo.clone(this._emptyState), { moduleName: "Administration" }),
                         { forceModuleReload: true }
                     );
                 })
