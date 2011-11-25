@@ -86,24 +86,22 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
 
         this.setSubmitInProgress(true);
         phpr.send({
-            url:       url,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
+            url: url,
+            content: this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 this.setSubmitInProgress(false);
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.customActionOnSuccess();
                     this.publish("updateCacheData");
                     phpr.pageManager.modifyCurrentState(
-                        {
-                            id: undefined
-                        }, {
-                            forceModuleReload: true
-                        }
+                        { id: undefined },
+                        { forceModuleReload: true }
                     );
                 }
-            })
-        });
+            }
+        }));
     },
 
     customActionOnSuccess:function() {
@@ -115,23 +113,20 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
 
     deleteForm:function() {
         phpr.send({
-            url:       phpr.webpath + 'index.php/Core/' + this.main.action.toLowerCase() + '/jsonDelete/id/' + this.id,
-            onSuccess: dojo.hitch(this, function(data) {
+            url: phpr.webpath + 'index.php/Core/' + this.main.action.toLowerCase() + '/jsonDelete/id/' + this.id
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
 
                     phpr.pageManager.modifyCurrentState(
-                        {
-                            id: undefined
-                        }
-                        , {
-                            forceModuleReload: true
-                        }
+                        { id: undefined },
+                        { forceModuleReload: true }
                     );
                 }
-            })
-        });
+            }
+        }));
     },
 
     updateData:function() {

@@ -731,8 +731,9 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
             // Post the content of all changed events
             phpr.send({
                 url:       this.updateUrl,
-                content:   content,
-                onSuccess: dojo.hitch(this, function(response) {
+                content:   content
+            }).then(dojo.hitch(this, function(response) {
+                if (response) {
                     if (response.type != 'success') {
                         new phpr.handleResponse('serverFeedback', response);
                     } else {
@@ -740,8 +741,8 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
                         this._oldRowValues = {};
                         this.publish("updateCacheData");
                     }
-                })
-            });
+                }
+            }));
         }
     },
 

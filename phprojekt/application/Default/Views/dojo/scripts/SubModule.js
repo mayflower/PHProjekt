@@ -371,29 +371,31 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
         this.setSubmitInProgress(true);
         phpr.send({
             url:       this.main.setUrl('save', this.id),
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
+            content:   this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 this.setSubmitInProgress(false);
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.main.updateCacheData();
                 }
-            })
-        });
+            }
+        }));
 
         return false;
     },
 
     deleteForm: function() {
         phpr.send({
-            url:       this.main.setUrl('delete', this.id),
-            onSuccess: dojo.hitch(this, function(data) {
+            url:       this.main.setUrl('delete', this.id)
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.main.updateCacheData();
                 }
-            })
-        });
+            }
+        }));
     },
 
     // Set empty functions for avoid them

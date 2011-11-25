@@ -45,9 +45,10 @@ dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId
                 + '/id/' + this.id,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
-                this.setSubmitInProgress(false);
+            content:   this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            this.setSubmitInProgress(false);
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (!this.id) {
                     this.id = data['id'];
@@ -56,21 +57,22 @@ dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
                     this.publish("updateCacheData");
                     this.publish("setUrlHash", [phpr.module]);
                 }
-            })
-        });
+            }
+        }));
     },
 
     deleteForm:function() {
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
-            onSuccess: dojo.hitch(this, function(data) {
+            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
                     this.publish("setUrlHash", [phpr.module]);
                 }
-            })
-        });
+            }
+        }));
     },
 
     updateData:function() {

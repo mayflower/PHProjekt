@@ -903,43 +903,49 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module +
-                '/index/jsonSave/nodeId/' + pid +
-                '/id/' + this.id,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
+            '/index/jsonSave/nodeId/' + pid +
+            '/id/' + this.id,
+            content:   this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     if (data.id) {
                         this.id = data.id;
                     }
-                    phpr.send({
+                    return phpr.send({
                         url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' +
-                            phpr.module + '/id/' + this.id,
-                        content:   this.sendData,
-                        onSuccess: dojo.hitch(this, function(data) {
-                            this.setSubmitInProgress(false);
-                            if (this.sendData.string) {
-                                new phpr.handleResponse('serverFeedback', data);
-                            }
-                            if (data.type == 'success') {
-                                this.publish("updateCacheData");
-                                // reload the page and trigger the form load
-                                phpr.pageManager.modifyCurrentState({
-                                        moduleName: phpr.module,
-                                        projectId: pid,
-                                        id: undefined
-                                    }, {
-                                        forceModuleReload: true
-                                    }
-                                );
-                            }
-                        })
+                        phpr.module + '/id/' + this.id,
+                        content: this.sendData
                     });
                 } else {
                     this.setSubmitInProgress(false);
                 }
-            })
-        });
+            } else {
+                this.setSubmitInProgress(false);
+            }
+        })).then(dojo.hitch(this, function(data) {
+            this.setSubmitInProgress(false);
+            if (data) {
+                if (this.sendData.string) {
+                    new phpr.handleResponse('serverFeedback', data);
+                }
+                if (data.type == 'success') {
+                    this.publish("updateCacheData");
+                    // reload the page and trigger the form load
+                    phpr.pageManager.modifyCurrentState(
+                        {
+                            moduleName: phpr.module,
+                            projectId: pid,
+                            id: undefined
+                        }, {
+                            forceModuleReload: true
+                        }
+                    );
+                }
+            }
+        }));
+
     },
 
     setSubmitInProgress: function(inProgress) {
@@ -959,29 +965,31 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var pid = phpr.currentProjectId;
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
-            onSuccess: dojo.hitch(this, function(data) {
+            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
-                    phpr.send({
+                    return phpr.send({
                         url: phpr.webpath + 'index.php/Default/Tag/jsonDeleteTags/moduleName/' +
-                            phpr.module + '/id/' + this.id,
-                        onSuccess: dojo.hitch(this, function(data) {
-                            new phpr.handleResponse('serverFeedback', data);
-                            if (data.type == 'success') {
-                                this.publish("updateCacheData");
-                                // reload the page
-                                phpr.pageManager.modifyCurrentState({
-                                    moduleName: phpr.module,
-                                    projectId: pid,
-                                    id: undefined
-                                });
-                            }
-                        })
+                        phpr.module + '/id/' + this.id
                     });
                 }
-            })
-        });
+            }
+        })).then(dojo.hitch(this, function(data) {
+            if (data) {
+                new phpr.handleResponse('serverFeedback', data);
+                if (data.type == 'success') {
+                    this.publish("updateCacheData");
+                    // reload the page
+                    phpr.pageManager.modifyCurrentState({
+                        moduleName: phpr.module,
+                        projectId: pid,
+                        id: undefined
+                    });
+                }
+            }
+        }));
     },
 
     displayTagInput: function() {

@@ -887,8 +887,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch';
             phpr.send({
                 url:       getDataUrl,
-                content:   {words: words, count: 10},
-                onSuccess: dojo.hitch(this, function(data) {
+                content:   {words: words, count: 10}
+            }).then(dojo.hitch(this, function(data) {
+                if (data) {
                     var search        = '';
                     var results       = {};
                     var index         = 0;
@@ -900,14 +901,14 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         }
                         results[modulesData.moduleLabel] += this.render(["phpr.Default.template.results",
                             "results.html"], null, {
-                            id :           modulesData.id,
-                            moduleId :     modulesData.modulesId,
-                            moduleName:    modulesData.moduleName,
-                            projectId:     modulesData.projectId,
-                            firstDisplay:  modulesData.firstDisplay,
-                            secondDisplay: modulesData.secondDisplay,
-                            resultType:    "search"
-                        });
+                                id :           modulesData.id,
+                                moduleId :     modulesData.modulesId,
+                                moduleName:    modulesData.moduleName,
+                                projectId:     modulesData.projectId,
+                                firstDisplay:  modulesData.firstDisplay,
+                                secondDisplay: modulesData.secondDisplay,
+                                resultType:    "search"
+                            });
                     }
                     var moduleLabel = '';
                     var html        = '';
@@ -916,7 +917,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         html       = results[i];
                         search += this.render(["phpr.Default.template.results", "suggestBlock.html"], null, {
                             moduleLabel:   moduleLabel,
-                            results:       html
+                               results:       html
                         });
                     }
 
@@ -935,8 +936,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
                     this.setSuggest(search);
                     this.showSuggest();
-                })
-            });
+                }
+            }));
         } else {
             this.hideSuggest();
         }
@@ -1066,15 +1067,17 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         phpr.send({
             url:       getDataUrl,
-            content:   content,
-            onSuccess: dojo.hitch(this, function(data) {
-                phpr.viewManager.setView(phpr.Default.System.DefaultView,
-                    phpr.Default.SearchContentMixin, {
-                        resultsTitle: resultsTitle,
-                        results: data
-                    });
-            })
-        });
+            content:   content
+        }).then(dojo.hitch(this, function(data) {
+            phpr.viewManager.setView(
+                phpr.Default.System.DefaultView,
+                phpr.Default.SearchContentMixin,
+                {
+                    resultsTitle: resultsTitle,
+                    results: data
+                }
+            );
+        }));
     },
 
     updateCacheData: function() {
