@@ -118,9 +118,16 @@
         </div>
     </div>
     <!-- Initial Loadding Page -->
-    <div dojoAttachPoint="initLoading"
-    style="position: absolute; top: 45%; left: 45%;" class="initLoading">
-        <img class="left" src="{{webpath}}img/ajax-init-loader.gif" alt="Loadding" />
-        <br /><br /><center>Creating workspace</center>
+    <div dojoAttachPoint="initLoading" class="loadingOuter">
+        <div class="loadingMiddle">
+            <div class="loadingMiddleInner">
+                <div>
+                    <img src="{{webpath}}img/loading-bar.gif" alt="Loading" />
+                </div>
+                <div class="loadingText">
+                    Creating workspace
+                </div>
+            </div>
+        </div>
     </div>
 </div>
