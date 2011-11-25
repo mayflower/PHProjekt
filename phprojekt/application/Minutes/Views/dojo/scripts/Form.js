@@ -88,11 +88,12 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
                     phpr.send({
                         url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId
                         + '/id/' + this.id,
-                        content:   dijit.byId('mailFormTab').get('value'),
-                        onSuccess: dojo.hitch(this, function(data) {
+                        content: dijit.byId('mailFormTab').get('value')
+                    }).then(dojo.hitch(this, function(data) {
+                        if (data) {
                             new phpr.handleResponse('serverFeedback', data);
-                        })
-                    })
+                        }
+                    }));
                 })));
 
             this.garbageCollector.addEvent(

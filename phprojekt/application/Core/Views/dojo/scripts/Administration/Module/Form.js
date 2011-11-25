@@ -268,63 +268,62 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
         this.setSubmitInProgress(true);
         phpr.send({
             url:       phpr.webpath + 'index.php/Core/moduleDesigner/jsonSave/nodeId/1/id/' + this.id,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (data.type == 'success') {
-                   phpr.send({
-                        url: phpr.webpath + 'index.php/Core/module/jsonSave/nodeId/1/id/' + this.id,
-                        content:   this.sendData,
-                        onSuccess: dojo.hitch(this, function(data) {
-                            new phpr.handleResponse('serverFeedback', data);
-                            if (data.type == 'success') {
-                                if (!this.id) {
-                                    phpr.loadJsFile(phpr.webpath + 'index.php/js/module/name/' + this.sendData['name']
-                                     + '/csrfToken/' + phpr.csrfToken);
-                                }
-                                this.publish("updateCacheData");
-                                phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
-                                phpr.DataStore.addStore({url: phpr.globalModuleUrl});
-                                phpr.DataStore.requestData({
-                                    url:         phpr.globalModuleUrl,
-                                    processData: dojo.hitch(this, function() {
-                                        this.setSubmitInProgress(false);
-                                        phpr.pageManager.modifyCurrentState(
-                                            { moduleName: "Module" },
-                                            { forceModuleReload: true }
-                                        );
-                                    })
-                                });
-                            } else {
-                                this.setSubmitInProgress(false);
-                            }
-                        })
-                    });
-               } else {
-                    this.setSubmitInProgress(false);
-               }
-            })
-        });
-    },
-
-    deleteForm:function() {
-        phpr.send({
-            url:       phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDelete/id/' + this.id,
-            onSuccess: dojo.hitch(this, function(data) {
+            content:   this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
+                    return phpr.send({
+                        url: phpr.webpath + 'index.php/Core/module/jsonSave/nodeId/1/id/' + this.id,
+                        content:   this.sendData
+                    });
+                } else {
+                    this.setSubmitInProgress(false);
+                }
+            }
+        })).then(dojo.hitch(this, function(data) {
+            if (data) {
+                new phpr.handleResponse('serverFeedback', data);
+                if (data.type == 'success') {
+                    if (!this.id) {
+                        phpr.loadJsFile(phpr.webpath + 'index.php/js/module/name/' + this.sendData['name']
+                            + '/csrfToken/' + phpr.csrfToken);
+                    }
                     this.publish("updateCacheData");
                     phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
                     phpr.DataStore.addStore({url: phpr.globalModuleUrl});
                     phpr.DataStore.requestData({
-                        url:         phpr.globalModuleUrl,
-                        processData: dojo.hitch(this, function() {
-                            this.main.setGlobalModulesNavigation();
-                            this.publish("setUrlHash", [phpr.parentmodule, null, [phpr.module]]);
-                        })
-                    });
+                        url:         phpr.globalModuleUrl
+                    }).then(dojo.hitch(this, function() {
+                        this.setSubmitInProgress(false);
+                        phpr.pageManager.modifyCurrentState(
+                            { moduleName: "Module" },
+                            { forceModuleReload: true }
+                        );
+                    }));
+                } else {
+                    this.setSubmitInProgress(false);
                 }
-            })
-        });
+            }
+        }));
+    },
+
+    deleteForm:function() {
+        phpr.send({
+            url:       phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDelete/id/' + this.id
+        }).then(dojo.hitch(this, function(data) {
+            new phpr.handleResponse('serverFeedback', data);
+            if (data.type == 'success') {
+                this.publish("updateCacheData");
+                phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
+                phpr.DataStore.addStore({url: phpr.globalModuleUrl});
+                phpr.DataStore.requestData({
+                    url:         phpr.globalModuleUrl
+                }).then(dojo.hitch(this, function() {
+                    this.main.setGlobalModulesNavigation();
+                    this.publish("setUrlHash", [phpr.parentmodule, null, [phpr.module]]);
+                }));
+            }
+        }));
     }
 });
