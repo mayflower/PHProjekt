@@ -91,6 +91,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this.fieldTemplate.destroy();
         }
         this.fieldTemplate = null;
+        this._loadIndicator = null;
+        this._destroySubModules();
     },
 
     setContainer: function(container) {
