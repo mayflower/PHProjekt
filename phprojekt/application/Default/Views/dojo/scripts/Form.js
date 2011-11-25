@@ -47,6 +47,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     _meta:              null,
     _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
     _submitInProgress:  false,
+    _loadIndicator: null,
     tabs:               [],
 
     constructor:function(main, id, module, params, formContainer) {
@@ -67,10 +68,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.setUrl(params);
 
         // Put loading
-        this.node.set('content', phpr.fillTemplate("phpr.Default.template.form.loading.html", {
-                webpath: phpr.webpath,
-                style: "height: 100%; width:100%;"
-            }));
+        this._loadIndicator = new phpr.Default.loadingOverlay(this.node.domNode);
+        this._loadIndicator.show();
 
         this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
         this.tabStore = new phpr.Default.System.Store.Tab();
@@ -561,6 +560,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 }
 
                 this.postRenderForm();
+                this._loadIndicator.hide();
             }));
         }
     },
