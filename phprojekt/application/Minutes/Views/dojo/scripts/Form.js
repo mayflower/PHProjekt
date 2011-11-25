@@ -51,13 +51,15 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
         //    Add default module tabs plus Items and mail tabs
         // Description:
         //    Extends inherited method to add the Items and mail tabs,
-        this.inherited(arguments);
+        var def = this.inherited(arguments);
 
         // Render additional tabs only if there is an ID
         // (these tabs don't make sense for unsaved records)
         if (this.id > 0) {
-            return this.addMailTab(data);
+            def = dojo.when(def, dojo.hitch(this, this.addMailTab, data));
         }
+
+        return def;
     },
 
     addMailTab:function(data) {
