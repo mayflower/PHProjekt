@@ -201,6 +201,7 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
             }}
         );
         this.garbageCollector.addNode('dialogFor_' + labelAndId);
+        this.garbageCollector.addNode('editorFor_' + labelAndId);
 
         return widget;
     },
