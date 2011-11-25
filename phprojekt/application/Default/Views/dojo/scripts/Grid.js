@@ -147,6 +147,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this.node              = null;
         this._exportButton     = null;
         this._deleteAllFilters = null;
+        if (this._fieldTemplate && dojo.isFunction(this._fieldTemplate.destroy)) {
+            this._fieldTemplate.destroy();
+        }
     },
 
     setUrl: function() {
@@ -664,7 +667,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    Manage filters
         // Description:
         //    Change the rule and value fields depend on the selected field type
-        var fieldTemplate = new phpr.Default.Field();
+        this._fieldTemplate = new phpr.Default.Field();
         var rulesOptions  = [];
 
         for (var i in this.filterField) {
