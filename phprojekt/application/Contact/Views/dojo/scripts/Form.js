@@ -30,7 +30,7 @@ dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
     },
 
     addModuleTabs:function(data) {
-        this.addHistoryTab();
+        return this.addHistoryTab();
     },
 
     addBasicFields:function() {
