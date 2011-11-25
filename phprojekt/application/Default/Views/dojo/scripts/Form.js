@@ -48,6 +48,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
     _submitInProgress:  false,
     _loadIndicator: null,
+    _subModules: null,
+
     tabs:               [],
 
     constructor:function(main, id, module, params, formContainer) {
@@ -90,9 +92,18 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         if (this.fieldTemplate && dojo.isFunction(this.fieldTemplate.destroy)) {
             this.fieldTemplate.destroy();
         }
+
         this.fieldTemplate = null;
         this._loadIndicator = null;
         this._destroySubModules();
+    },
+
+    _destroySubModules: function() {
+        var subModules = this._subModules;
+        for (var index in subModules) {
+            var subModuleName = subModules[index].name;
+            subModules[index].class.destroy();
+        }
     },
 
     setContainer: function(container) {
@@ -389,6 +400,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    renders the actual form according to the received data
         this.formdata    = [];
         this.formdata[0] = [];
+
+        this._subModules = this._getSubModules();
 
         this._meta = phpr.DataStore.getMetaData({url: this._url});
         var data   = phpr.DataStore.getData({url: this._url});
@@ -691,9 +704,34 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Add SubModules tabs
         // Description:
         //    Add all the SubModules that have the current module
+
+        var def = new dojo.Deferred();
+        def.callback();
+
+
+        var subModules = this._subModules;
+        // Add the tabs
+        for (var index in subModules) {
+            var subModuleName = subModules[index].name;
+            def = def.then(dojo.hitch(this, function(name) {
+                return this.addTab([], 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
+                    subModuleName + 'FormTab');
+            }, subModuleName));
+
+            def = def.then(dojo.hitch(this, function(name) {
+                dojo.addClass('tab' + subModuleName, 'subModuleDiv');
+                subModules[index].class.fillTab('tab' + subModuleName);
+            }, subModuleName));
+        }
+        this.form.resize();
+
+        return def;
+    },
+
+    _getSubModules: function() {
+        var subModules = [];
         if (this.id > 0) {
             // Set the sub modules data
-            var subModules   = [];
             var nextPosition = 0;
             for (var index in this.main.subModules) {
                 var subModuleName  = this.main.subModules[index];
@@ -711,17 +749,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             subModules.sort(function(a, b) {
                 return a.sort - b.sort;
             });
-
-            // Add the tabs
-            for (var index in subModules) {
-                var subModuleName = subModules[index].name;
-                this.addTab([], 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
-                    subModuleName + 'FormTab');
-                dojo.addClass('tab' + subModuleName, 'subModuleDiv');
-                subModules[index]['class'].fillTab('tab' + subModuleName);
-            }
         }
-        this.form.resize();
+
+        return subModules;
     },
 
     useHistoryTab: function() {

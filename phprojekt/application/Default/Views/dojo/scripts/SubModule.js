@@ -49,6 +49,11 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
         this.parentId   = parentId;
     },
 
+    destroy: function() {
+        this.destroySubForm();
+        this.inherited(arguments);
+    },
+
     getController: function() {
         // Summary:
         //    Return the controller to use
