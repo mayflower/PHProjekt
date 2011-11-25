@@ -331,10 +331,12 @@ final class Default_Helpers_Save
         if ($moduleName == 'Core') {
             return Phprojekt_Auth::isAdminUser();
         } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))) {
-            $canWrite = ($model->hasRight('write', Phprojekt_Auth_Proxy::getEffectiveUserId()) ||
-                $model->hasRight('create', Phprojekt_Auth_Proxy::getEffectiveUserId()) ||
-                $model->hasRight('copy', Phprojekt_Auth_Proxy::getEffectiveUserId()) ||
-                $model->hasRight('admin', Phprojekt_Auth_Proxy::getEffectiveUserId()));
+            $canWrite = (
+                $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::WRITE) ||
+                $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::CREATE) ||
+                $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::COPY) ||
+                $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN) ||
+                Phprojekt_Auth::isAdminUser());
         } else {
             $canWrite = true;
         }

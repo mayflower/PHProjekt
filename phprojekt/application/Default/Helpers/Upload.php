@@ -314,7 +314,7 @@ final class Default_Helpers_Upload
         if ($itemId != 0) {
             $model->find($itemId);
         }
-        if (!$model->hasRight('write', Phprojekt_Auth_Proxy::getEffectiveUserId())) {
+        if (!$model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::WRITE)) {
             $error = Phprojekt::getInstance()->translate('You don\'t have permission for modifying this item.');
 
             self::_logError("Error: trying to Delete or Upload a file without write access.",
