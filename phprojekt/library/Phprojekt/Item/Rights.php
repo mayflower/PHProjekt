@@ -162,10 +162,10 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $obj  = new self();
         $rows = $obj->fetchAll($where);
 
-        foreach ($rows as $right) {
+        foreach ($rows as $row) {
             // Set the current User
             // Use for an empty rights, if not, will be re-write
-            $values[$row->id] = $row->access;
+            $values[$row->item_id] = $row->access;
         }
 
         unset($obj);
