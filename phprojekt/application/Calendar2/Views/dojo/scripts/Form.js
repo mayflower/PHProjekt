@@ -371,17 +371,16 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                 user:  userId,
                 start: dojo.byId('start').value,
                 end:   dojo.byId('end').value
-            },
-            onSuccess: function(data) {
-                if (data['available']) {
-                    dojo.attr(cell, 'src', '/css/themes/phprojekt/images/tick.gif');
-                    dojo.attr(cell, 'title', phpr.nls.get('The participant is available'));
-                } else {
-                    dojo.attr(cell, 'src', '/css/themes/phprojekt/images/warning.png');
-                    dojo.attr(cell, 'title', phpr.nls.get('The participant is not available'));
-                }
             }
-        })
+        }).then(function(data) {
+            if (data && data['available']) {
+                dojo.attr(cell, 'src', '/css/themes/phprojekt/images/tick.gif');
+                dojo.attr(cell, 'title', phpr.nls.get('The participant is available'));
+            } else {
+                dojo.attr(cell, 'src', '/css/themes/phprojekt/images/warning.png');
+                dojo.attr(cell, 'title', phpr.nls.get('The participant is not available'));
+            }
+        });
      },
 
     updateAllAvailabilityStatuses: function(userId) {
@@ -507,8 +506,9 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
                                     + '/occurrence/' + this._originalData.occurrence,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
+            content:   this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
@@ -521,8 +521,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                         }
                     );
                 }
-            })
-        });
+            }
+        }));
     },
 
     showEventSelector: function(action, nextFunction) {
@@ -616,38 +616,38 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
             url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId +
                 '/id/' + this.id + '/occurrence/' + this._originalData.occurrence +
                 '/userId/' + this.main.getActiveUser().id,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (data.type == 'success') {
-                   this.id = data['id'];
-                   phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module
-                            + '/id/' + this.id,
-                        content:   this.sendData,
-                        onSuccess: dojo.hitch(this, function(data) {
-                            this.setSubmitInProgress(false);
-                            if (this.sendData['string']) {
-                                new phpr.handleResponse('serverFeedback', data);
-                            }
-                            if (data.type == 'success') {
-                                this.publish("updateCacheData");
-                                // reload the page and trigger the form load
-                                phpr.pageManager.modifyCurrentState(
-                                    {
-                                        id: undefined
-                                    }, {
-                                        forceModuleReload: true
-                                    }
-                                );
-                            }
-                        })
-                    });
-                } else {
-                    this.setSubmitInProgress(false);
+            content:   this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            new phpr.handleResponse('serverFeedback', data);
+            if (data.type == 'success') {
+                this.id = data['id'];
+                return phpr.send({
+                    url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module
+                    + '/id/' + this.id,
+                       content:   this.sendData
+                });
+            } else {
+                this.setSubmitInProgress(false);
+            }
+        })).then(dojo.hitch(this, function(data) {
+            this.setSubmitInProgress(false);
+            if (data) {
+                if (this.sendData['string']) {
+                    new phpr.handleResponse('serverFeedback', data);
                 }
-            })
-        });
+                if (data.type == 'success') {
+                    this.publish("updateCacheData");
+                    // reload the page and trigger the form load
+                    phpr.pageManager.modifyCurrentState(
+                        {
+                            id: undefined
+                        }, {
+                            forceModuleReload: true
+                        }
+                    );
+                }
+            }
+        }));
 
         return false;
     },

@@ -59,7 +59,8 @@
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="edit" class="editButton"
             title="{{editHtmlTxt}}" onclick="
                 dijit.byId('editorFor_{{id}}').set('value', dijit.byId('{{id}}').get('value'));
-                dijit.byId('dialogFor_{{id}}').show();">
+                dijit.byId('editorFor_{{id}}').show();
+                dijit.byId('dialogFor_{{id}}').show(); ">
             </button>
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="toTextButton" class="toTextButton"
             title="{{textModeTxt}}" onclick="

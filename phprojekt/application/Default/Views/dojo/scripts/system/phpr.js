@@ -111,60 +111,22 @@ phpr.send = function(/*Object*/paramsIn) {
     // if you need something special dont use this function.
     //
     //  Example call:
-    //      phpr.send({url:"/live-save/", content:{data:1}, chunkMap:{tags:"tagsEl"}, onSuccess: function() {...}});
-
-    // onEnd: Is always called after the onSuccess and onError have finished.
-    //     This might be used for resetting things that are common for both cases.
+    //      phpr.send({url:"/live-save/", content:{data:1}, chunkMap:{tags:"tagsEl"}});
 
     phpr.loading.show();
+
+    var deferred = new dojo.Deferred();
     var params = {
         url:       "",
         content:   "",
         handleAs:  "json",
-        onSuccess: null,
-        onError:   null,
-        onEnd:     null,
         sync:      false,
-        chunkMap:  {}
+        chunkMap:  {},
     };
+
     if (dojo.isObject(paramsIn)) {
         dojo.mixin(params, paramsIn);
     }
-    var _onError, _onSuccess = function() {};
-    var _onEnd = params.onEnd || function() {};
-
-    if (params.onError) {
-        _onError = function(response, ioArgs) {
-            params.onError(response, ioArgs);
-            _onEnd();
-        };
-    } else {
-        _onError = function(response, ioArgs) {
-            phpr.handleError(params.url, 'php');
-            _onEnd();
-        };
-    }
-
-    _onSuccess = function(data, ioArgs) {
-        try {
-            // 500 is the error code for logut
-            if (data.code && data.code == 500) {
-                location = phpr.webpath + 'index.php/Login/logout';
-                return;
-            } else {
-                if (params.onSuccess) {
-                    params.onSuccess(data, ioArgs);
-                } else {
-                    new phpr.handleResponse('serverFeedback', data);
-                }
-                _onEnd();
-                phpr.loading.hide();
-            }
-        } catch (e) {
-            phpr.handleError(params.url, 'exception');
-            return;
-        }
-    };
 
     // Add a token
     if (params.content) {
@@ -173,14 +135,35 @@ phpr.send = function(/*Object*/paramsIn) {
         params.content = {'csrfToken': phpr.csrfToken};
     }
 
-    dojo.xhrPost({
+    var deferred = dojo.xhrPost({
         url:      params.url,
         content:  params.content,
         handleAs: params.handleAs,
-        sync:     params.sync,
-        error:    _onError,
-        load:     _onSuccess
+        sync:     params.sync
     });
+
+
+    deferred.then(
+        function(data, ioArgs) {
+            try {
+                // 500 is the error code for logut
+                if (data.code && data.code == 500) {
+                    location = phpr.webpath + 'index.php/Login/logout';
+                    throw new Error("Invalid Data");
+                } else {
+                    phpr.loading.hide();
+                    return data;
+                }
+            } catch (e) {
+                phpr.handleError(params.url, 'exception');
+            }
+        },
+        function(err) {
+            phpr.handleError(params.url, 'php');
+        }
+    );
+
+    return deferred;
 };
 
 phpr.handleResponse = function(resultArea, result) {

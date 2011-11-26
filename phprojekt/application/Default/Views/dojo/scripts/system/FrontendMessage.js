@@ -58,11 +58,12 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
         //    from the indexController
         var url = phpr.webpath + 'index.php/Default/index/jsonDisableFrontendMessages';
         phpr.send({
-            url:       url,
-            onSuccess: dojo.hitch(this, function(data) {
+            url:       url
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
-            })
-        });
+            }
+        }));
     },
 
     showToaster: function(data) {
