@@ -51,13 +51,15 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
         //    Add default module tabs plus Items and mail tabs
         // Description:
         //    Extends inherited method to add the Items and mail tabs,
-        this.inherited(arguments);
+        var def = this.inherited(arguments);
 
         // Render additional tabs only if there is an ID
         // (these tabs don't make sense for unsaved records)
         if (this.id > 0) {
-            return this.addMailTab(data);
+            def = dojo.when(def, dojo.hitch(this, this.addMailTab, data));
         }
+
+        return def;
     },
 
     addMailTab:function(data) {
@@ -88,11 +90,12 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
                     phpr.send({
                         url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId
                         + '/id/' + this.id,
-                        content:   dijit.byId('mailFormTab').get('value'),
-                        onSuccess: dojo.hitch(this, function(data) {
+                        content: dijit.byId('mailFormTab').get('value')
+                    }).then(dojo.hitch(this, function(data) {
+                        if (data) {
                             new phpr.handleResponse('serverFeedback', data);
-                        })
-                    })
+                        }
+                    }));
                 })));
 
             this.garbageCollector.addEvent(

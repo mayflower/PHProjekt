@@ -67,29 +67,31 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.tree.getParentId(this.id)
                 + '/id/' + this.id,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
-               new phpr.handleResponse('serverFeedback', data);
-               if (!this.id) {
-                   this.id = data['id'];
-               }
-               if (data.type == 'success') {
-                   phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module
-                            + '/id/' + this.id,
-                        content:   this.sendData,
-                        onSuccess: dojo.hitch(this, function(data) {
-                            if (this.sendData['string']) {
-                                new phpr.handleResponse('serverFeedback', data);
-                            }
-                            if (data.type == 'success') {
-                                this.publish("updateCacheData");
-                                this.publish("changeProject", [this.id]);
-                            }
-                        })
+            content:   this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
+                new phpr.handleResponse('serverFeedback', data);
+                if (!this.id) {
+                    this.id = data['id'];
+                }
+                if (data.type == 'success') {
+                    return phpr.send({
+                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module +
+                            '/id/' + this.id,
+                        content: this.sendData
                     });
                 }
-            })
-        });
+            }
+        })).then(dojo.hitch(this, function(data) {
+            if (data) {
+                if (this.sendData['string']) {
+                    new phpr.handleResponse('serverFeedback', data);
+                }
+                if (data.type == 'success') {
+                    this.publish("updateCacheData");
+                    this.publish("changeProject", [this.id]);
+                }
+            }
+        }));
     }
 });

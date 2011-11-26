@@ -147,6 +147,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this.node              = null;
         this._exportButton     = null;
         this._deleteAllFilters = null;
+        if (this._fieldTemplate && dojo.isFunction(this._fieldTemplate.destroy)) {
+            this._fieldTemplate.destroy();
+        }
     },
 
     setUrl: function() {
@@ -664,7 +667,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    Manage filters
         // Description:
         //    Change the rule and value fields depend on the selected field type
-        var fieldTemplate = new phpr.Default.Field();
+        this._fieldTemplate = new phpr.Default.Field();
         var rulesOptions  = [];
 
         for (var i in this.filterField) {
@@ -1408,9 +1411,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         if (changed) {
             phpr.send({
                 url:       this.updateUrl,
-                content:   content,
-                onSuccess: dojo.hitch(this, function(response) {
-                    this._active = false;
+                content:   content
+            }).then(dojo.hitch(this, function(response) {
+                this._active = false;
+                if (response) {
                     if (response.type == 'error') {
                         new phpr.handleResponse('serverFeedback', response);
                     }
@@ -1421,8 +1425,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     for (var i in ids) {
                         delete this._newRowValues[i][ids[i]];
                     }
-                })
-            });
+                }
+            }));
         } else {
             this._active = false;
         }
@@ -1557,8 +1561,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         if (mode == this.MODE_XHR) {
             // Call the requested action with the selected ids and wait for a response
             phpr.send({
-                url:       actionUrl,
-                onSuccess: dojo.hitch(this, function(data) {
+                url:       actionUrl
+            }).then(dojo.hitch(this, function(data) {
+                if (data) {
                     new phpr.handleResponse('serverFeedback', data);
                     if (data.type == 'success') {
                         if (target == this.TARGET_MULTIPLE) {
@@ -1566,8 +1571,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                             this.publish("reload");
                         }
                     }
-                })
-            });
+                }
+            }));
         } else if (mode == this.MODE_WINDOW) {
             // Call the requested action with the selected ids in a new windows
             window.open(actionUrl + '/csrfToken/' + phpr.csrfToken);

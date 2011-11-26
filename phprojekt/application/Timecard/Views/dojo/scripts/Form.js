@@ -372,15 +372,16 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         phpr.send({
             url: phpr.webpath + 'index.php/Timecard/index/jsonSave/nodeId/' + phpr.currentProjectId +
                 '/id/' + this.id,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
+            content: this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     dijit.popup.close(dijit.byId('timecardTooltipDialog'));
                     this.updateData();
                 }
-            })
-        });
+            }
+        }));
     },
 
     deleteForm: function(id, event) {
@@ -390,15 +391,16 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         //    Delete a bookinh and reload the views
         this.id = dijit.byId('timecardId').get('value');
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
-            onSuccess: dojo.hitch(this, function(data) {
+            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     dijit.popup.close(dijit.byId('timecardTooltipDialog'));
                     this.updateData();
                 }
-            })
-        });
+            }
+        }));
     },
 
     submitFavoritesForm: function() {
@@ -420,17 +422,18 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         }
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/Timecard/index/jsonFavoritesSave',
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
+            url:     phpr.webpath + 'index.php/Timecard/index/jsonFavoritesSave',
+            content: this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     phpr.destroyWidget('timecardTooltipDialog');
                     phpr.DataStore.deleteData({url: this._favoritesUrl});
                     phpr.DataStore.requestData({url: this._favoritesUrl});
                 }
-            })
-        });
+            }
+        }));
     },
 
     updateData: function() {

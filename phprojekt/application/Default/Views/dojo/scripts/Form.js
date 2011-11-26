@@ -47,6 +47,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     _meta:              null,
     _rights:            new Array('Read', 'Write', 'Access', 'Create', 'Copy', 'Delete', 'Download', 'Admin'),
     _submitInProgress:  false,
+    _loadIndicator: null,
+    _subModules: null,
+
     tabs:               [],
 
     constructor:function(main, id, module, params, formContainer) {
@@ -67,10 +70,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.setUrl(params);
 
         // Put loading
-        this.node.set('content', phpr.fillTemplate("phpr.Default.template.form.loading.html", {
-                webpath: phpr.webpath,
-                style: "height: 100%; width:100%;"
-            }));
+        this._loadIndicator = new phpr.Default.loadingOverlay(this.node.domNode);
+        this._loadIndicator.show();
 
         this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
         this.tabStore = new phpr.Default.System.Store.Tab();
@@ -91,7 +92,18 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         if (this.fieldTemplate && dojo.isFunction(this.fieldTemplate.destroy)) {
             this.fieldTemplate.destroy();
         }
+
         this.fieldTemplate = null;
+        this._loadIndicator = null;
+        this._destroySubModules();
+    },
+
+    _destroySubModules: function() {
+        var subModules = this._subModules;
+        for (var index in subModules) {
+            var subModuleName = subModules[index].name;
+            subModules[index].class.destroy();
+        }
     },
 
     setContainer: function(container) {
@@ -389,6 +401,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.formdata    = [];
         this.formdata[0] = [];
 
+        this._subModules = this._getSubModules();
+
         this._meta = phpr.DataStore.getMetaData({url: this._url});
         var data   = phpr.DataStore.getData({url: this._url});
         if (data.length == 0) {
@@ -561,6 +575,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 }
 
                 this.postRenderForm();
+                this._loadIndicator.hide();
             }));
         }
     },
@@ -689,9 +704,34 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Add SubModules tabs
         // Description:
         //    Add all the SubModules that have the current module
+
+        var def = new dojo.Deferred();
+        def.callback();
+
+
+        var subModules = this._subModules;
+        // Add the tabs
+        for (var index in subModules) {
+            var subModuleName = subModules[index].name;
+            def = def.then(dojo.hitch(this, function(name) {
+                return this.addTab([], 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
+                    subModuleName + 'FormTab');
+            }, subModuleName));
+
+            def = def.then(dojo.hitch(this, function(name) {
+                dojo.addClass('tab' + subModuleName, 'subModuleDiv');
+                subModules[index].class.fillTab('tab' + subModuleName);
+            }, subModuleName));
+        }
+        this.form.resize();
+
+        return def;
+    },
+
+    _getSubModules: function() {
+        var subModules = [];
         if (this.id > 0) {
             // Set the sub modules data
-            var subModules   = [];
             var nextPosition = 0;
             for (var index in this.main.subModules) {
                 var subModuleName  = this.main.subModules[index];
@@ -709,17 +749,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             subModules.sort(function(a, b) {
                 return a.sort - b.sort;
             });
-
-            // Add the tabs
-            for (var index in subModules) {
-                var subModuleName = subModules[index].name;
-                this.addTab([], 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
-                    subModuleName + 'FormTab');
-                dojo.addClass('tab' + subModuleName, 'subModuleDiv');
-                subModules[index]['class'].fillTab('tab' + subModuleName);
-            }
         }
-        this.form.resize();
+
+        return subModules;
     },
 
     useHistoryTab: function() {
@@ -903,43 +935,49 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module +
-                '/index/jsonSave/nodeId/' + pid +
-                '/id/' + this.id,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
+            '/index/jsonSave/nodeId/' + pid +
+            '/id/' + this.id,
+            content:   this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     if (data.id) {
                         this.id = data.id;
                     }
-                    phpr.send({
+                    return phpr.send({
                         url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' +
-                            phpr.module + '/id/' + this.id,
-                        content:   this.sendData,
-                        onSuccess: dojo.hitch(this, function(data) {
-                            this.setSubmitInProgress(false);
-                            if (this.sendData.string) {
-                                new phpr.handleResponse('serverFeedback', data);
-                            }
-                            if (data.type == 'success') {
-                                this.publish("updateCacheData");
-                                // reload the page and trigger the form load
-                                phpr.pageManager.modifyCurrentState({
-                                        moduleName: phpr.module,
-                                        projectId: pid,
-                                        id: undefined
-                                    }, {
-                                        forceModuleReload: true
-                                    }
-                                );
-                            }
-                        })
+                        phpr.module + '/id/' + this.id,
+                        content: this.sendData
                     });
                 } else {
                     this.setSubmitInProgress(false);
                 }
-            })
-        });
+            } else {
+                this.setSubmitInProgress(false);
+            }
+        })).then(dojo.hitch(this, function(data) {
+            this.setSubmitInProgress(false);
+            if (data) {
+                if (this.sendData.string) {
+                    new phpr.handleResponse('serverFeedback', data);
+                }
+                if (data.type == 'success') {
+                    this.publish("updateCacheData");
+                    // reload the page and trigger the form load
+                    phpr.pageManager.modifyCurrentState(
+                        {
+                            moduleName: phpr.module,
+                            projectId: pid,
+                            id: undefined
+                        }, {
+                            forceModuleReload: true
+                        }
+                    );
+                }
+            }
+        }));
+
     },
 
     setSubmitInProgress: function(inProgress) {
@@ -959,29 +997,31 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var pid = phpr.currentProjectId;
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
-            onSuccess: dojo.hitch(this, function(data) {
+            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
-                    phpr.send({
+                    return phpr.send({
                         url: phpr.webpath + 'index.php/Default/Tag/jsonDeleteTags/moduleName/' +
-                            phpr.module + '/id/' + this.id,
-                        onSuccess: dojo.hitch(this, function(data) {
-                            new phpr.handleResponse('serverFeedback', data);
-                            if (data.type == 'success') {
-                                this.publish("updateCacheData");
-                                // reload the page
-                                phpr.pageManager.modifyCurrentState({
-                                    moduleName: phpr.module,
-                                    projectId: pid,
-                                    id: undefined
-                                });
-                            }
-                        })
+                        phpr.module + '/id/' + this.id
                     });
                 }
-            })
-        });
+            }
+        })).then(dojo.hitch(this, function(data) {
+            if (data) {
+                new phpr.handleResponse('serverFeedback', data);
+                if (data.type == 'success') {
+                    this.publish("updateCacheData");
+                    // reload the page
+                    phpr.pageManager.modifyCurrentState({
+                        moduleName: phpr.module,
+                        projectId: pid,
+                        id: undefined
+                    });
+                }
+            }
+        }));
     },
 
     displayTagInput: function() {

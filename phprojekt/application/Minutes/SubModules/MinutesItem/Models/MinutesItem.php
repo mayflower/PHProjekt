@@ -81,7 +81,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
         parent::__construct($db);
 
         $this->_validate           = new Phprojekt_Model_Validate();
-        $this->_informationManager = new Minutes_SubModules_MinutesItem_MinutesItemInformation();
+        $this->_informationManager = new Minutes_SubModules_MinutesItem_Models_MinutesItemInformation();
     }
 
     /**
@@ -93,7 +93,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_Active
     {
         parent::__clone();
         $this->_validate           = new Phprojekt_Model_Validate();
-        $this->_informationManager = new Minutes_SubModules_MinutesItem_MinutesItemInformation();
+        $this->_informationManager = new Minutes_SubModules_MinutesItem_Models_MinutesItemInformation();
     }
 
     /**
