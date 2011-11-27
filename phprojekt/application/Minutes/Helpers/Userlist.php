@@ -45,16 +45,18 @@ final class Minutes_Helpers_Userlist
      *
      * @return array Array with 'id' and 'display'
      */
-    public static function expandIdList($idList = '')
+    public static function expandIdList()
     {
-        if (1 < ($num = func_num_args())) {
-            for ($i = 1; $i < $num; $i++) {
-                $addList = (string) func_get_arg($i);
-                if ("" != $addList) {
-                    $idList .= ',' . $addList;
-                }
+        $addArray = array();
+        $num = func_num_args();
+        for ($i = 0; $i < $num; $i++) {
+            $addList = (string) func_get_arg($i);
+            if ("" != $addList) {
+                $addArray[] = $addList;
             }
         }
+
+        $idList = implode(",", $addArray);
 
         $data = array();
         if (!empty($idList)) {
