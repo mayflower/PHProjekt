@@ -284,7 +284,7 @@ final class Default_Helpers_Right
             }
         }
 
-        return $resultRights;
+        return $rights;
     }
 
     /**
