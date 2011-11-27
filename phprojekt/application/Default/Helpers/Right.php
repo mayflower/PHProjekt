@@ -284,35 +284,6 @@ final class Default_Helpers_Right
             }
         }
 
-        if ($type == self::ITEM_TYPE) {
-            // Only set the full access if is a new item
-            if ($newItem) {
-                if ($ownerId == 0) {
-                    $ownerId = Phprojekt_Auth::getUserId();
-                }
-                $rights[$ownerId] = Phprojekt_Acl::ALL;
-            }
-
-            // Return access only for allowed users
-            $activeRecord = new Phprojekt_User_User();
-            $result       = $activeRecord->getAllowedUsers();
-            $resultRights = array();
-            foreach ($result as $node) {
-                if (isset($rights[$node['id']])) {
-                    $resultRights[$node['id']] = $rights[$node['id']];
-                }
-            }
-
-            if (isset($params['dataAccess'])) {
-                if (!Phprojekt_Module::saveTypeIsGlobal($moduleId)) {
-                    // Items under a project => add admin with full access
-                    $resultRights[1] = Phprojekt_Acl::ALL;
-                }
-            }
-        } else {
-            $resultRights = $rights;
-        }
-
         return $resultRights;
     }
 
