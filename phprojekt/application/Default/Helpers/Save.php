@@ -105,11 +105,9 @@ final class Default_Helpers_Save
             }
             $rights[$userId] = Phprojekt_Acl::ALL;
             $parentNode->appendNode($node);
-        } else {
-            if (false === $model->hasRight($userId, Phprojekt_Acl::WRITE)) {
-                throw new Phprojekt_PublishedException(
-                    'You do not have the necessary create right');
-            }
+        } else if (false === $model->hasRight($userId, Phprojekt_Acl::WRITE)) {
+            throw new Phprojekt_PublishedException(
+                'You do not have the necessary write right');
         }
 
         if (true === $newItem || true === $model->hasRight($userId, Phprojekt_Acl::ADMIN)) {
@@ -194,9 +192,23 @@ final class Default_Helpers_Save
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
         } else if (!self::_checkModule($moduleId, $projectId)) {
             throw new Phprojekt_PublishedException('The parent project do not have enabled this module');
-        } else if (!self::_checkItemRights($model, $moduleName)) {
-            throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
+            $userId  = Phprojekt_Auth_Proxy::getEffectiveUserId();
+            $newItem = empty($model->id);
+            $rights  = Default_Helpers_Right::getItemRights($params, 1, $newItem, $userId);
+            if (true === $newItem) {
+                $project = new Project_Models_Project();
+                $project->find($projectId);
+                if (false === $project->hasRight($userId, Phprojekt_Acl::CREATE)) {
+                    throw new Phprojekt_PublishedException(
+                        'You do not have the necessary create right');
+                }
+                $rights[$userId] = Phprojekt_Acl::ALL;
+            } else if (false === $model->hasRight($userId, Phprojekt_Acl::WRITE)) {
+                throw new Phprojekt_PublishedException(
+                    'You do not have the necessary wrte right');
+            }
+
             // Set the projectId to 1 for global modules
             // @TODO Remove the Timecard limitation
             if (isset($model->projectId) && Phprojekt_Module::saveTypeIsGlobal($moduleId)
@@ -207,16 +219,19 @@ final class Default_Helpers_Save
             $model->save();
 
             // Save access only if the user have "admin" right
-            if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN)) {
+            if (true === $newItem || $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN)) {
                 if ($moduleName == 'Core') {
                     $rights = Default_Helpers_Right::getModuleRights($params);
                 } else {
                     $rights = Default_Helpers_Right::getItemRights($params, $moduleId, $newItem);
                 }
+                Phprojekt::getInstance()->getLog()->debug(var_export($rights, true));
 
-                if (count($rights) > 0) {
-                    $model->saveRights($rights);
+                if (count($rights) <= 0) {
+                    throw new Phprojekt_PublishedException(
+                        'At least one person must have access to this item');
                 }
+                $model->saveRights($rights);
             }
 
             return $model;
@@ -322,33 +337,5 @@ final class Default_Helpers_Save
             $boolean = true;
         }
         return $boolean;
-    }
-
-    /**
-     * Check if the user has write access to the item if is not a global module.
-     *
-     * @param Phprojekt_Model_Interface $model      The model to save.
-     * @param string                    $moduleName The current module.
-     *
-     * @return boolean False if not.
-     */
-    private static function _checkItemRights($model, $moduleName)
-    {
-        $canWrite = false;
-
-        if ($moduleName == 'Core') {
-            return Phprojekt_Auth::isAdminUser();
-        } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))) {
-            $canWrite = (
-                $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::WRITE) ||
-                $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::CREATE) ||
-                $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::COPY) ||
-                $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN) ||
-                Phprojekt_Auth::isAdminUser());
-        } else {
-            $canWrite = true;
-        }
-
-        return $canWrite;
     }
 }
