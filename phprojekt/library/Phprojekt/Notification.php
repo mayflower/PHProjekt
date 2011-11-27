@@ -659,12 +659,12 @@ class Phprojekt_Notification
             $userIds = $this->_model->getUsersRights();
 
             if (is_array($userIds) && !empty($userIds)) {
-                foreach ($userIds as $right) {
-                    if (($right['userId'] == Phprojekt_Auth::getUserId()) || true === $right['none']) {
+                foreach ($userIds as $userId => $right) {
+                    if (($userId == Phprojekt_Auth::getUserId()) || true === $right['none']) {
                         continue;
                     }
 
-                    $recipients[] = $right['userId'];
+                    $recipients[] = $userId;
                 }
             }
         } else {

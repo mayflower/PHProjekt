@@ -194,8 +194,8 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
                 $access = Phprojekt_Acl::convertBitmaskToArray($row['access']);
                 $values[$row['user_id']] = array_merge($access, array(
                     'moduleId' => (int) $moduleId,
-                    'itemId'   => (int) $itemID,
-                    'userId'   => (int) $userID
+                    'itemId'   => (int) $itemId,
+                    'userId'   => (int) $row['user_id']
                 ));
             }
             $rightNamespace->right = $values;
