@@ -381,6 +381,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $moduleId = Phprojekt_Module::getId($this->getModelName());
         $rights   = $this->_rights->getUsersRights($moduleId, $this->id);
+        $result   = array();
         foreach ($rights as $userId => $right) {
             $access          = array($this->id => Phprojekt_Acl::convertArrayToBitmask($right));
             $access          = Phprojekt_Right::mergeWithRole($moduleId, $this->projectId, $userId, $access);
