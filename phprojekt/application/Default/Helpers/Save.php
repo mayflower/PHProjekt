@@ -83,58 +83,66 @@ final class Default_Helpers_Save
         }
         $projectId = $node->projectId;
 
-        // Checks
         if (!$node->getActiveRecord()->recordValidate()) {
             $errors = $node->getActiveRecord()->getError();
             $error  = array_pop($errors);
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
-        } else if (!self::_checkModule(1, $projectId)) {
-            throw new Phprojekt_PublishedException('You do not have access to add projects on the parent project');
-        } else if (!self::_checkItemRights($node->getActiveRecord(), 'Project')) {
-            throw new Phprojekt_PublishedException('You do not have access to do this action');
-        } else {
-            if (null === $node->id || $node->id == 0) {
-                $parentNode->appendNode($node);
-            } else {
-                $node->projectId = 0;
-                $node->setParentNode($parentNode);
-            }
-
-            // Save access, modules and roles only if the user have "admin" right
-            // TODO: This is a dirty hack as we just assume that the project
-            // module has always id = 1.
-            $model = $node->getActiveRecord();
-            if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN)) {
-                $rights = Default_Helpers_Right::getItemRights($params, 1, $newItem);
-
-                if (count($rights) > 0) {
-                    $model->saveRights($rights);
-                }
-
-                // Save the module-project relation
-                if (isset($params['moduleRelation'])) {
-                    if (!isset($params['checkModuleRelation'])) {
-                        $params['checkModuleRelation'] = array();
-                    }
-                    $saveModules = array();
-                    foreach ($params['checkModuleRelation'] as $checkModule => $checkValue) {
-                        if ($checkValue == 1) {
-                            $saveModules[] = $checkModule;
-                        }
-                    }
-                    $model->saveModules($saveModules);
-                }
-
-                // Save the role-user-project relation
-                if (isset($params['userRelation'])) {
-                    $pru = new Project_Models_ProjectRoleUserPermissions();
-                    $pru->saveRelation($params['roleRelation'], array_keys($params['userRelation']),
-                        $node->getActiveRecord()->id);
-                }
-            }
-
-            return $model;
         }
+
+        if (!self::_checkModule(1, $projectId)) {
+            throw new Phprojekt_PublishedException(
+                'You do not have access to add projects on the parent project');
+        }
+
+        $userId   = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $model    = $node->getActiveRecord();
+        $newItem  = empty($node->id);
+        $rights   = Default_Helpers_Right::getItemRights($params, 1, $newItem, $userId);
+        if (true === $newItem) {
+            if (false === $parentNode->getActiveRecord()->hasRight($userId, Phprojekt_Acl::CREATE)) {
+                throw new Phprojekt_PublishedException(
+                    'You do not have the necessary create right');
+            }
+            $rights[$userId] = Phprojekt_Acl::ALL;
+            $parentNode->appendNode($node);
+        } else {
+            if (false === $model->hasRight($userId, Phprojekt_Acl::WRITE)) {
+                throw new Phprojekt_PublishedException(
+                    'You do not have the necessary create right');
+            }
+        }
+
+        if (true === $newItem || true === $model->hasRight($userId, Phprojekt_Acl::ADMIN)) {
+            /* ensure we have at least one right */
+            if (count($rights) <= 0) {
+                throw new Phprojekt_PublishedException(
+                    'At least one person must have access to this item');
+            }
+
+            $model->saveRights($rights);
+            // Save the module-project relation
+            if (isset($params['moduleRelation'])) {
+                if (!isset($params['checkModuleRelation'])) {
+                    $params['checkModuleRelation'] = array();
+                }
+                $saveModules = array();
+                foreach ($params['checkModuleRelation'] as $checkModule => $checkValue) {
+                    if ($checkValue == 1) {
+                        $saveModules[] = $checkModule;
+                    }
+                }
+                $model->saveModules($saveModules);
+            }
+
+            // Save the role-user-project relation
+            if (isset($params['userRelation'])) {
+                $pru = new Project_Models_ProjectRoleUserPermissions();
+                $pru->saveRelation($params['roleRelation'], array_keys($params['userRelation']),
+                    $node->getActiveRecord()->id);
+            }
+        }
+
+        return $model;
     }
 
     /**
