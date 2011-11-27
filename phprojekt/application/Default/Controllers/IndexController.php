@@ -911,7 +911,7 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Returns the rights for all the users of one item.
+     * Returns the ACL rights for all the users of one item.
      *
      * OPTIONAL request parameters:
      * <pre>
