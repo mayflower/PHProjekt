@@ -227,7 +227,11 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                         "moduleFunction": "setUrlHash",
                         "functionParams": "'" + parentModule + "', null, ['" + tmp[i].name + "']"});
                 }
-                var navigation = '<table class="nav_main"><tr>';
+                this._navigation = new phpr.Default.System.TabController({ });
+
+                modules = this.sortModuleTabs(modules);
+                var selectedEntry;
+                var activeTab = false;
                 for (var i = 0; i < modules.length; i++) {
                     var liclass        = '';
                     var moduleName     = modules[i].name;
@@ -236,21 +240,28 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                     var functionParams = modules[i].functionParams;
 
                     if (moduleName == this.action || moduleName == this.module) {
-                        liclass = 'class = active';
+                        activeTab = true;
                     }
 
-                    navigation += phpr.fillTemplate("phpr.Core.template.navigation.html", {
-                        moduleName:     parentModule,
-                        moduleLabel:    moduleLabel,
-                        liclass:        liclass,
-                        moduleFunction: moduleFunction,
-                        functionParams: functionParams
+                    var entry = this._navigation.getEntryFromOptions({
+                        moduleLabel: moduleLabel,
+                        callback: dojo.hitch(
+                            this,
+                            "_subModuleNavigationClick",
+                            parentModule,
+                            moduleFunction,
+                            functionParams)
                     });
+                    this._navigation.onAddChild(entry);
+
+                    if (activeTab && !selectedEntry) {
+                        selectedEntry = entry;
+                    }
                 }
-                navigation += "</tr></table>";
 
                 var subModuleNavigation = phpr.viewManager.getView().subModuleNavigation;
-                subModuleNavigation.set('content', navigation);
+                subModuleNavigation.set('content', this._navigation);
+                this._navigation.onSelectChild(selectedEntry);
 
                 this.customSetSubmoduleNavigation();
             })

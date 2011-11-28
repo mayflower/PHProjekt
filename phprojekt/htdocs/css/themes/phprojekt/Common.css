@@ -161,111 +161,13 @@
 }
 
 .phprojekt .containSubModuleNavigation {
-    height: 25px;
     width: 100%;
-    border-bottom: 1px solid #294064;
-}
-
-.dj_ie .phprojekt .containSubModuleNavigation {
-    height: 27px;
-}
-
-.phprojekt .containSubModuleNavigation .left img {
-    height: 25px;
 }
 
 .phprojekt .subModuleNavigation {
     margin-top: 2px;
-    height: 30px;
-    width: 98%;
+    overflow: hidden;
 }
-
-.phprojekt .nav_main a,
-.phprojekt .nav_sub a {
-    text-decoration: none;
-    padding-left: 7px;
-    /* text-transform: uppercase; */
-    font-family: Verdana;
-    font-size: 12px;
-    font-weight: 600;
-    color: #A9A098;
-    padding-left: 7px;
-    background: #F0F0F0;
-    border: 1px solid #294064;
-}
-
-.phprojekt .nav_main a span,
-.phprojekt .nav_sub a span {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-right: 7px;
-    margin-top: 0px;
-}
-
-.phprojekt .nav_main a, .nav_main a span,
-.phprojekt .nav_sub a, .nav_sub a span {
-    display: block;
-    float: left
-}
-
-/* Commented backslash hack hides rule from IE5-Mac \*/
-
-.phprojekt .nav_main a, .nav_main a span,
-.phprojekt .nav_sub a, .nav_sub a span {
-    float: none
-}
-
-/* End IE5-Mac hack */
-
-.phprojekt .nav_main a:hover,
-.phprojekt .nav_sub a:hover {
-    background: #fff;
-    text-decoration: none;
-    padding-left: 7px;
-}
-
-.phprojekt .nav_main a:hover span,
-.phprojekt .nav_sub a:hover span {
-    background: #fff;
-    padding-right: 7px;
-    color: #999;
-}
-
-.phprojekt .nav_main li,
-.phprojekt .nav_sub li {
-    float: left;
-    display: block;
-    margin: 0;
-    padding: 0 4px 0 0;
-}
-
-.phprojekt .nav_main td,
-.phprojekt .nav_sub td {
-    margin: 0;
-    padding: 0 4px 0 0;
-}
-
-/* Tabs ACTIVE */
-.phprojekt .nav_main .active a span,
-.phprojekt .nav_sub .active a span {
-    margin-top: 0px;
-}
-
-.phprojekt .nav_main .active a,
-.phprojekt .nav_sub .active a {
-    color: #000;
-    background: #fff;
-    text-decoration: none;
-    padding-left: 7px;
-    border-bottom: 1px solid #FFF;
-}
-
-.phprojekt .nav_main .active a span,
-.phprojekt .nav_sub .active a span {
-    background: #fff;
-    padding-right: 7px;
-}
-
 
 /* Scroll for Tabs */
 .phprojekt .phprScrollWindow {

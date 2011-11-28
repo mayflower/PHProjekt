@@ -566,59 +566,44 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.addModuleView(moduleViews, phpr.nls.get('Day'), 'dayViewClick', this.isListActive('dayList'));
         this.addModuleView(moduleViews, phpr.nls.get('Week'), 'weekViewClick', this.isListActive(this.weekList));
         this.addModuleView(moduleViews, phpr.nls.get('Month'), 'monthViewClick', this.isListActive(this.monthList));
-
-        var navigation = '<div class="nav_main left" style="width: 300px;">'
-                       + '<table><tr>';
-
-        for (var i = 0; i < moduleViews.length; i++) {
-            var liclass = '';
-            if (moduleViews[i].activeTab) {
-                liclass = 'class = active';
-            }
-            navigation += phpr.fillTemplate("phpr.Default.template.navigation.html",
-                {
-                    moduleName :    'Calendar2',
-                    moduleLabel:    moduleViews[i].label,
-                    liclass:        liclass,
-                    moduleFunction: moduleViews[i].functionName,
-                    functionParams: ""
-                });
-        }
-
-        navigation += '   </tr></table>'
-                   + '</div>'
-                   + '<div class="nav_sub">'
-                   + '<table><tr>';
-
-        moduleViews = new Array();
         if (this.isListActive('dayList')) {
             this.addModuleView(moduleViews, phpr.nls.get('Selection'), 'userSelectionClick', this._usersSelectionMode);
         }
 
+        this._navigation = new phpr.Default.System.TabController({ });
+        var selectedEntry;
+
         for (var i = 0; i < moduleViews.length; i++) {
-            var liclass = '';
-            if (moduleViews[i].activeTab) {
-                liclass = 'class = active';
+            var entry = this._navigation.getEntryFromOptions({
+                moduleLabel: moduleViews[i].label,
+                callback: dojo.hitch(
+                    this,
+                    "_subModuleNavigationClick",
+                    "Calendar2",
+                    moduleViews[i].functionName,
+                    "")
+            });
+            this._navigation.onAddChild(entry);
+
+            if (moduleViews[i].activeTab && !selectedEntry) {
+                selectedEntry = entry;
             }
-            navigation += phpr.fillTemplate("phpr.Default.template.navigation.html",
-                {
-                    moduleName :    'Calendar2',
-                    moduleLabel:    moduleViews[i].label,
-                    liclass:        liclass,
-                    moduleFunction: moduleViews[i].functionName,
-                    functionParams: ""
-                });
         }
 
-        navigation += phpr.fillTemplate("phpr.Calendar2.template.proxyDropDown.html",
+        phpr.viewManager.getView().subModuleNavigation.set('content', this._navigation);
+        var dropDown = dojo.place(
+            phpr.fillTemplate("phpr.Calendar2.template.proxyDropDown.html",
                 {
                     label: phpr.nls.get("User:")
-                });
+                }
+            ),
+            this._navigation.containerNode,
+            "last"
+        );
 
-        navigation += '   </tr></table>'
-                   + '</div>';
+        dojo.parser.parse(dropDown);
 
-        phpr.viewManager.getView().subModuleNavigation.set('content', navigation);
+        this._navigation.onSelectChild(selectedEntry);
     },
 
     addModuleView: function(moduleViews, label, functionName, activeTab) {
