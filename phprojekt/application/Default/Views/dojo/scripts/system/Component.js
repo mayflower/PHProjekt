@@ -27,6 +27,11 @@ dojo.require("phpr.Default.System.GarbageCollector");
 dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollected, {
     main:   null,
     module: "",
+    _destroyed: false,
+    destroy: function() {
+        this._destroyed = true;
+        this.inherited(arguments);
+    },
     render:function(template, node, data) {
         content = phpr.fillTemplate(template[0] + "." + template[1], data);
 
