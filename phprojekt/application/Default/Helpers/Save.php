@@ -100,7 +100,6 @@ final class Default_Helpers_Save
         if (!isset($node->projectId) || null === $node->projectId) {
             $node->projectId = 1;
         }
-        $projectId = $node->projectId;
 
         if (!$node->getActiveRecord()->recordValidate()) {
             $errors = $node->getActiveRecord()->getError();
@@ -108,14 +107,14 @@ final class Default_Helpers_Save
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
         }
 
-        if (!self::_checkModule(1, $projectId)) {
+        if (!self::_checkModule(1, $node->projectId)) {
             throw new Phprojekt_PublishedException(
                 'You do not have access to add projects on the parent project');
         }
 
-        $userId   = Phprojekt_Auth_Proxy::getEffectiveUserId();
-        $model    = $node->getActiveRecord();
-        $rights   = Default_Helpers_Right::getRights($params);
+        $userId = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $model  = $node->getActiveRecord();
+        $rights = Default_Helpers_Right::getRights($params);
         if ($newItem) {
             if (!$parentNode->getActiveRecord()->hasRight($userId, Phprojekt_Acl::CREATE)) {
                 throw new Phprojekt_PublishedException(
@@ -123,12 +122,12 @@ final class Default_Helpers_Save
             }
             $rights[$userId] = Phprojekt_Acl::ALL;
             $parentNode->appendNode($node);
-        } else if (!$model->hasRight($userId, Phprojekt_Acl::WRITE)) {
+        } else if (!$model->hasRight($userId, Phprojekt_Acl::WRITE, $model->id)) {
             throw new Phprojekt_PublishedException(
                 'You do not have the necessary write right');
         }
 
-        if ($newItem || $model->hasRight($userId, Phprojekt_Acl::ADMIN)) {
+        if ($newItem || $model->hasRight($userId, Phprojekt_Acl::ADMIN, $model->id)) {
             /* ensure we have at least one right */
             if (count($rights) <= 0) {
                 throw new Phprojekt_PublishedException(

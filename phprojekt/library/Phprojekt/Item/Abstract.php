@@ -357,14 +357,15 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         return Phprojekt_Right::getRightsForItems($moduleId, $this->projectId, $userId, array($this->id));
     }
 
-    public function hasRight($userId, $right)
+    public function hasRight($userId, $right, $projectId = null)
     {
         if (Phprojekt_Auth::isAdminUser()) {
             return true;
         }
 
+        $projectId = (null == $projectId) ? $this->projectId : $projectId;
         $moduleId = Phprojekt_Module::getId($this->getModelName());
-        $rights   = Phprojekt_Right::getRightsForItems($moduleId, $this->projectId, $userId, array($this->id));
+        $rights   = Phprojekt_Right::getRightsForItems($moduleId, $projectId, $userId, array($this->id));
         if (!isset($rights[$this->id])) {
             return Phprojekt_Acl::NONE;
         }
