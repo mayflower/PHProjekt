@@ -184,7 +184,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         if (userList) {
             for (var i in userList) {
                 // Make an array with the users except the current one and the admin
-                if (userList[i].id != currentUser && userList[i].id != 1) {
+                if (userList[i].id != currentUser) {
                     users.push({'id': userList[i].id, 'display': userList[i].display});
                 }
                 // Found the name of each user
@@ -308,15 +308,27 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Get the permission
         // Description:
         //    Get the permission for the current user on the item
-        if (this.id > 0) {
+        if (phpr.isAdminUser) {
             if (phpr.isGlobalModule(phpr.module)) {
                 this._writePermissions  = true;
                 this._deletePermissions = true;
                 this._accessPermissions = false;
             } else {
-                this._writePermissions  = data[0].rights[phpr.currentUserId].write;
-                this._deletePermissions = data[0].rights[phpr.currentUserId]['delete'];
-                this._accessPermissions = data[0].rights[phpr.currentUserId].admin;
+                this._writePermissions  = true;
+                this._deletePermissions = true;
+                this._accessPermissions = true;
+            }
+        } else {
+            if (this.id > 0) {
+                if (phpr.isGlobalModule(phpr.module)) {
+                    this._writePermissions  = true;
+                    this._deletePermissions = true;
+                    this._accessPermissions = false;
+                } else {
+                    this._writePermissions  = data[0].rights[phpr.currentUserId].write;
+                    this._deletePermissions = data[0].rights[phpr.currentUserId]['delete'];
+                    this._accessPermissions = data[0].rights[phpr.currentUserId].admin;
+                }
             }
         }
     },

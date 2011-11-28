@@ -638,7 +638,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     var moduleFunction = modules[i].moduleFunction || "setUrlHash";
                     var functionParams = modules[i].functionParams || "\'" +
                                                         modules[i].name + "\'";
-                    if (modules[i].rights.read) {
+                    if (modules[i].rights.read || phpr.isAdminUser) {
                         if (functionParams == "'Project', null, ['basicData']" &&
                                currentModule == 'BasicData' &&
                                !activeTab) {
