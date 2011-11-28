@@ -44,7 +44,6 @@ class Core_UserController extends Core_IndexController
      * <pre>
      *  - id      => id of user.
      *  - display => Display for the user.
-     *  - current => True or false if is the current user.
      * </pre>
      *
      * The return is in JSON format.
@@ -63,8 +62,7 @@ class Core_UserController extends Core_IndexController
         $data = array();
         foreach ($records as $node) {
             $data['data'][] = array('id'      => $node->id,
-                                    'display' => $node->applyDisplay($displayName, $node),
-                                    'current' => $current == $node->id);
+                                    'display' => $node->applyDisplay($displayName, $node));
         }
 
         Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);
