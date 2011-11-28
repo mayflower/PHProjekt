@@ -210,12 +210,12 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                         checked:  accessContent[id][this._rights[i].toLowerCase()] ? 'checked' : '',
                         hidden:   (isCurrentUser && this._accessPermissions),
                         value:    (accessContent[id][this._rights[i].toLowerCase()]) ? 1 : 0,
-                        disabled: (isCurrentUser || !this._accessPermissions) ? 'disabled="disabled"' : ''
+                        disabled: (!this._writePermissions) ? 'disabled="disabled"' : ''
                     }));
                 }
                 var input = this.render(["phpr.Default.template.access", "input.html"], null, {
                     id:          userId,
-                    disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
+                    disabled:    (!this._writePermissions) ? 'disabled="disabled"' : '',
                     userDisplay: accessContent[id].userDisplay,
                     currentUser: isCurrentUser
                 });
