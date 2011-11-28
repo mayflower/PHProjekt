@@ -383,6 +383,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             defList.addCallback(dojo.hitch(this, function() {
                 phpr.nls = new phpr.translator(phpr.DataStore.getData({ url: this._langUrl }));
 
+                var isAdmin = phpr.DataStore.getMetaData({url: phpr.globalModuleUrl}) == "1" ? true : false;
+                phpr.isAdminUser = isAdmin;
+
                 translatedText = phpr.nls.get("Disable Frontend Messages");
                 view.disableFrontendMessage.set('label', translatedText);
 
