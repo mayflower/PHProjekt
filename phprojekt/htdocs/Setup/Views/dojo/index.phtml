@@ -64,8 +64,8 @@
     $cssFiles[] = "dojo/release/dojo/dijit/themes/dijit_rtl.css";
 
     $styleUrl = $this->webpath . 'min/min/?f=' . implode(',', $cssFiles);
-    echo $this->headLink()->prependStylesheet($styleUrl);
     ?>
+    <link href="<?php echo $styleUrl; ?>" rel="stylesheet" type="text/css" />
     <style type="text/css">
         .dj_ie .phprojekt #serverFeedback {
             padding-left: 5px;

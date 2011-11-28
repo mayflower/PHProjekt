@@ -52,7 +52,7 @@ class LoginController extends Zend_Controller_Action
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
-        $this->render('index');
+        $this->render('login');
     }
 
     /**
@@ -104,7 +104,7 @@ class LoginController extends Zend_Controller_Action
             $this->view->username = $username;
             $this->view->hash     = $hash;
 
-            $this->render('index');
+            $this->render('login');
         }
     }
 
