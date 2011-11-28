@@ -140,8 +140,7 @@ class JsController extends IndexController
         $templatetext = 'var __phpr_templateCache = {};';
         $templatetext .= $this->_collectTemplates();
 
-        echo $templatetext;
-        echo $scripttext;
+        $this->_send($templatetext . $scripttext);
     }
 
     /**
@@ -174,8 +173,7 @@ class JsController extends IndexController
             this.' . $module . ' = new phpr.' . $module . '.Main();
         ';
 
-        echo $this->_collectTemplates();
-        echo $scripttext;
+        $this->_send($this->_collectTemplates() . $scripttext);
     }
 
     /**
@@ -393,5 +391,10 @@ class JsController extends IndexController
             }
         }
         return $output;
+    }
+
+    private function _send($data) {
+        header('Content-Type: application/javascript');
+        Phprojekt_CompressedSender::send($data);
     }
 }
