@@ -187,9 +187,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         if (userList) {
             for (var i in userList) {
                 // Make an array with the users except the current one and the admin
-                if (userList[i].id != currentUser) {
-                    users.push({'id': userList[i].id, 'display': userList[i].display});
-                }
+                users.push({'id': userList[i].id, 'display': userList[i].display});
                 // Found the name of each user
                 if (accessContent[userList[i].id]) {
                     accessContent[userList[i].id].userDisplay = userList[i].display;
