@@ -770,7 +770,7 @@ class IndexController extends Zend_Controller_Action
                     }
 
                     // Return modules with at least one access
-                    if ($tmpPermission != Phprojekt_Acl::NONE) {
+                    if ($tmpPermission != Phprojekt_Acl::NONE || Phprojekt_Auth::isAdminUser()) {
                         $module['rights'] = Phprojekt_Acl::convertBitmaskToArray($tmpPermission);
                         $allowedModules[] = $module;
                     }
