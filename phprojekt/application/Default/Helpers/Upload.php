@@ -160,7 +160,7 @@ final class Default_Helpers_Upload
             $model->find($itemId);
             // The user has download permission?
 
-            if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DOWNLOAD)) {
+            if (!$model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DOWNLOAD)) {
                 $error = Phprojekt::getInstance()->translate('You don\'t have permission for downloading on this '
                     . 'item.');
                 die($error);
