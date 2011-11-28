@@ -136,6 +136,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     subModules: [],
     globalModuleNavigationButtons: {},
     subModuleNavigationButtons: {},
+    _navigation: null,
     _emptyState: {
         action: undefined,
         moduleName: undefined,
@@ -160,6 +161,15 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this._searchEvent = null;
         this.destroyForm();
         this.destroyGrid();
+        this._destroyNavigation()
+    },
+
+    _destroyNavigation: function() {
+        if (this._navigation && dojo.isFunction(this._navigation.destroy)) {
+            this._navigation.destroy();
+        }
+
+        this._navigation = null;
     },
 
     destroyForm: function() {
@@ -625,46 +635,52 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     phpr.module = 'Project';
                 }
 
+
                 var subModuleNavigation = phpr.viewManager.getView().subModuleNavigation;
+                this._navigation = new phpr.Default.System.TabController({ });
 
-                var navigation = '<table class="nav_main"><tr>';
-                var activeTab  = false;
-
-                modules    = this.sortModuleTabs(modules);
+                modules = this.sortModuleTabs(modules);
+                var selectedEntry;
+                var activeTab = false;
                 for (var i = 0; i < modules.length; i++) {
-                    var liclass        = '';
                     var moduleName     = modules[i].name;
                     var moduleLabel    = modules[i].label;
                     var moduleFunction = modules[i].moduleFunction || "setUrlHash";
                     var functionParams = modules[i].functionParams || "\'" +
-                                                        modules[i].name + "\'";
+                        modules[i].name + "\'";
                     if (modules[i].rights.read || phpr.isAdminUser) {
                         if (functionParams == "'Project', null, ['basicData']" &&
-                               currentModule == 'BasicData' &&
-                               !activeTab) {
-                            liclass   = 'class = active';
+                                currentModule == 'BasicData' &&
+                                !activeTab) {
                             activeTab = true;
                         } else if (moduleName == phpr.module &&
                                 functionParams != "'Project', null, ['basicData']" &&
                                 !activeTab) {
-                            liclass   = 'class = active';
                             activeTab = true;
                         }
-                        navigation += phpr.fillTemplate("phpr.Default.template.navigation.html", {
-                            moduleName :    moduleName,
-                            moduleLabel:    moduleLabel,
-                            liclass:        liclass,
-                            moduleFunction: moduleFunction,
-                            functionParams: functionParams
+
+                        var entry = this._navigation.getEntryFromOptions({
+                            moduleLabel: moduleLabel,
+                            callback: dojo.hitch(
+                                this,
+                                "_subModuleNavigationClick",
+                                moduleName,
+                                moduleFunction,
+                                functionParams)
                         });
+                        this._navigation.onAddChild(entry);
+
+                        if (activeTab && !selectedEntry) {
+                            selectedEntry = entry;
+                        }
                     }
                     if (modules[i].rights.create && moduleName == phpr.module && currentModule != 'BasicData') {
                         this.setNewEntry();
                     }
                 }
-                navigation += "</tr></table>";
 
-                subModuleNavigation.set('content', navigation);
+                subModuleNavigation.set('content', this._navigation);
+                this._navigation.onSelectChild(selectedEntry);
 
                 // avoid cyclic refs
                 tmp = null;
@@ -679,19 +695,29 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects?"));
                     dojo.place(label, phpr.viewManager.getView().rightButtonRow.domNode, 0);
                     isListRecursiveBox.startup();
-                    dojo.connect(isListRecursiveBox, 'onChange', dojo.hitch(this,
-                        function(arg) {
-                            phpr.pageManager.modifyCurrentState(
-                                {
-                                    includeSubentries: arg
-                                }, {
-                                    noAction: true
-                            });
-                            this.rebuildGrid(arg);
-                        }));
+                    dojo.connect(
+                        isListRecursiveBox,
+                        'onChange',
+                        dojo.hitch(this,
+                            function(arg) {
+                                phpr.pageManager.modifyCurrentState(
+                                    {
+                                        includeSubentries: arg
+                                    }, {
+                                        noAction: true
+                                    });
+                                this.rebuildGrid(arg);
+                            }
+                        )
+                    );
                 }
+
             })
         });
+    },
+
+    _subModuleNavigationClick: function(name, func, params) {
+        dojo.publish(name + "." + func, eval("[" + params + "]"));
     },
 
     setNewEntry: function() {
@@ -732,6 +758,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         view.clearButtonRow();
         view.clearRightButtonRow();
         view.clearSubModuleNavigation();
+        this._destroyNavigation();
         this.garbageCollector.collect();
     },
 
