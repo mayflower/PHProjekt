@@ -39,6 +39,10 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Add Tab for allow/disallow modules on the project
         // Description:
         //    Add Tab for allow/disallow modules on the project
+        if (this._destroyed) {
+            return;
+        }
+
         var modulesData = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Project.template.moduleTab.html",
             templateData:{
@@ -48,6 +52,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 disabled:        (!this._accessPermissions) ? 'disabled="disabled"' : ''
             }
         });
+        this.garbageCollector.addNode(modulesData);
 
         return this.addTab([modulesData], 'tabModules', 'Module', 'moduleFormTab');
     },
@@ -57,6 +62,10 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         //    Add Tab for user-role relation into the project
         // Description:
         //    Add Tab for user-role relation into the project
+        if (this._destroyed) {
+            return;
+        }
+
         var currentUser  = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
         var users        = new Array();
         var userList     = this.userStore.getList();
@@ -112,9 +121,15 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             }
         });
 
+        this.garbageCollector.addNode(rolesData);
+
         var def = this.addTab([rolesData], 'tabRoles', 'Role', 'roleFormTab');
 
         def = def.then(dojo.hitch(this, function() {
+            if (this._destroyed) {
+                return;
+            }
+
             // Add "add" button for role-user relation
             if (this._accessPermissions && users.length > 0) {
                 this.addTinyButton('add', 'relationAddButton', 'newRoleUser');
@@ -133,6 +148,10 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     },
 
     addModuleTabs:function(data) {
+        if (this._destroyed) {
+            return;
+        }
+
         var def = this.addAccessTab(data);
         def = dojo.when(def, dojo.hitch(this, function() {return this.addModuleTab(data)}))
         def = dojo.when(def, dojo.hitch(this, function() {return this.addRoleTab(data)}))

@@ -179,6 +179,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Display all the users and the acces
         //    The user can assign to each user different access on the item
+        if (this._destroyed) {
+            return;
+        }
+
         var userList      = this.userStore.getList();
         var accessContent = phpr.DataStore.getData({url: this._accessUrl});
         var currentUser   = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
@@ -252,9 +256,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 rows:               rows
             }
         });
+        this.garbageCollector.addNode(accessData);
 
         var def = this.addTab([accessData], 'tabAccess', 'Access', 'accessFormTab');
         return def.then(dojo.hitch(this, function() {
+            if (this._destroyed) {
+                return;
+            }
+
             // Add "add" button for access
             if (this._accessPermissions && users.length > 0) {
                 this.addTinyButton('add', 'accessAddButton', 'newAccess');
@@ -340,13 +349,15 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Add a tab and if have form, add the values
         //    to the array of values for save it later
+        if (this._destroyed) {
+            return;
+        }
 
         var deferred = new dojo.Deferred();
         var ret = deferred.then(dojo.hitch(this, function() {
-            phpr.destroySubWidgets(id);
-            phpr.destroyWidget(id);
-            phpr.destroySubWidgets(formId);
-            phpr.destroyWidget(formId);
+            if (this._destroyed) {
+                return;
+            }
 
             var content = new phpr.Default.System.TemplateWrapper({
                 templateName: "phpr.Default.template.form.tabs.html",
@@ -378,7 +389,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
             content.startup();
 
-            this.garbageCollector.addNode(tab);
 
             this.form.addChild(tab);
             if (typeof content.tabform != "undefined") {
@@ -386,6 +396,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 this.formsWidget.push(content.tabform);
             }
 
+            this.garbageCollector.addNode(tab);
             this.garbageCollector.addNode(content);
 
             content.tabform.onSubmit = dojo.hitch(this, "_submitForm");
@@ -413,6 +424,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    This function processes the form data which is stored in a phpr.DataStore and
         //    renders the actual form according to the received data
+        if (this._destroyed) {
+            return;
+        }
+
         this.formdata    = [];
         this.formdata[0] = [];
 
@@ -569,13 +584,25 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             }
 
             deferred = dojo.when(deferred, dojo.hitch(this, function() {
+                if (this._destroyed) {
+                    return;
+                }
+
                 this.setActionFormButtons();
                 return this.addModuleTabs(data);
             }));
             deferred = dojo.when(deferred, dojo.hitch(this, function() {
+                if (this._destroyed) {
+                    return;
+                }
+
                 return this.addSubModulesTab();
             }));
             deferred = dojo.when(deferred, dojo.hitch(this, function() {
+                if (this._destroyed) {
+                    return;
+                }
+
                 // Delete the data if is not used the cache
                 if (!this.useCache()) {
                     p.DataStore.deleteData({url: this._url});
@@ -633,7 +660,11 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Render the save and delete buttons
         // Description:
         //    Render the save and delete buttons
-        this.formdata[tabId].push(new phpr.Default.System.TemplateWrapper({
+        if (this._destroyed) {
+            return;
+        }
+
+        var buttons = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Default.template.form.buttons.html",
             templateData: {
                 writePermissions:  this._writePermissions,
@@ -641,7 +672,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 saveText:          phpr.nls.get('Save'),
                 deleteText:        phpr.nls.get('Delete')
             }
-        }));
+        });
+        this.garbageCollector.addNode(buttons);
+        this.formdata[tabId].push(buttons);
     },
 
     setActionFormButtons: function() {
@@ -704,6 +737,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Add all the tabs
         // Description:
         //    Add all the tabs that are not the basic data
+        if (this._destroyed) {
+            return;
+        }
+
         var def = this.addAccessTab(data);
         def = dojo.when(def, dojo.hitch(this, function() {return this.addNotificationTab(data)}))
         def = dojo.when(def, dojo.hitch(this, function() {return this.addHistoryTab()}))
@@ -715,9 +752,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    History tab
         // Description:
         //    Display all the history of the item
+        if (this._destroyed) {
+            return;
+        }
+
         if (this.id > 0 && this.useHistoryTab()) {
             var widget = new phpr.Default.System.TemplateWrapper({
                 templateName: "phpr.Default.template.history.content.html"});
+            this.garbageCollector.addNode(widget);
             return this.addTab([widget], 'tabHistory', 'History', 'accesshistoryTab');
         }
     },
@@ -727,6 +769,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Add SubModules tabs
         // Description:
         //    Add all the SubModules that have the current module
+        if (this._destroyed) {
+            return;
+        }
 
         var def = new dojo.Deferred();
         def.callback();
@@ -741,6 +786,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             }, subModuleName));
 
             def = def.then(dojo.hitch(this, function(name) {
+                if (this._destroyed) {
+                    return;
+                }
                 dojo.addClass('tab' + subModuleName, 'subModuleDiv');
                 subModules[index].class.fillTab('tab' + subModuleName);
             }, subModuleName));
@@ -1167,6 +1215,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Adds a tab for sending a notification to the users with read access, telling them about the item added
         //    or modified. It has a "Send Notification" checkbox.
+        if (this._destroyed) {
+            return;
+        }
+
         // Default value
         var defaultValue = (phpr.config.notificationEnabledByDefault) ? 1 : 0;
         // Add field
@@ -1341,6 +1393,10 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
     },
 
     setFormButtons: function() {
+        if (this._destroyed) {
+            return;
+        }
+
         this.buttons.set('content', phpr.fillTemplate("phpr.Default.template.form.dialogButtons.html", {
                 writePermissions:  this._writePermissions,
                 deletePermissions: this._deletePermissions,
@@ -1362,6 +1418,9 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
         this._setNodeSizes();
 
         this.node.startup();
+        this.garbageCollector.addNode(this.node);
+        this.garbageCollector.addNode(this.buttons);
+        this.garbageCollector.addNode(this.dialog);
 
         // remove the form opening part from the url
         this.garbageCollector.addEvent(

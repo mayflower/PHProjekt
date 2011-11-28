@@ -1004,6 +1004,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    It takes care of setting the grid headers to the right format, displays the contextmenu
         //    and renders the filter for the grid
         // Layout of the grid
+        if (this._destroyed) {
+            return;
+        }
+
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
         if (meta.length === 0) {
