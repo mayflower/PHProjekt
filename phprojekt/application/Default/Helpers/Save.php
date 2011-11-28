@@ -38,6 +38,35 @@
 final class Default_Helpers_Save
 {
     /**
+     * Maps the parameter array to the appropriate model properties.
+     *
+     * As we are pretty inconsistent in how we do stuff, the model can either
+     * be a Phprojekt_Tree_Node_Database or an Phprojekt_Model_Interface.
+     *
+     * @param mixed   $model   A model
+     * @param array   $params  The mysterious parameters array
+     * @param boolean $newItem At least something need a special handling,
+     *                         so new items get something special.
+     */
+    protected static function parameterToModel($model, $params, $newItem = false)
+    {
+        foreach ($params as $k => $v) {
+            if (isset($model->$k)) {
+                // Don't allow to set the id on save, since it is done by the ActiveRecord
+                if ($k !== 'id') {
+                    $model->$k = $v;
+                }
+            }
+        }
+
+        if ($newItem && isset($model->ownerId)) {
+            $model->ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        }
+
+        return $model;
+    }
+
+    /**
      * Save a tree.
      *
      * @param Phprojekt_Tree_Node_Database $node     The project to save.
