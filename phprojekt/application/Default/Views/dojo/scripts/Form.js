@@ -94,6 +94,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
 
         this.fieldTemplate = null;
+        if (this._loadIndicator && dojo.isFunction(this._loadIndicator.hide)) {
+            this._loadIndicator.hide();
+        }
         this._loadIndicator = null;
         this._destroySubModules();
     },
@@ -719,7 +722,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         var def = new dojo.Deferred();
         def.callback();
-
 
         var subModules = this._subModules;
         // Add the tabs
