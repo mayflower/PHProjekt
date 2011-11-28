@@ -1241,7 +1241,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         // Add a tooltip with the current user
         for (var i = 0; i < userList.length; i++) {
-            if (userList[i].current) {
+            if (userList[i].id == phpr.currentUserId) {
                 var version = (phpr.config.phprojektVersion) ? phpr.config.phprojektVersion : '';
                 var support = (phpr.config.supportAddress) ? phpr.config.supportAddress : '';
                 var label   = '<div style="text-align: center;">PHProjekt ' + version + ' - ';
