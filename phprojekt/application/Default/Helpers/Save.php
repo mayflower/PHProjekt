@@ -116,19 +116,19 @@ final class Default_Helpers_Save
         $userId   = Phprojekt_Auth_Proxy::getEffectiveUserId();
         $model    = $node->getActiveRecord();
         $rights   = Default_Helpers_Right::getRights($params);
-        if (true === $newItem) {
-            if (false === $parentNode->getActiveRecord()->hasRight($userId, Phprojekt_Acl::CREATE)) {
+        if ($newItem) {
+            if (!$parentNode->getActiveRecord()->hasRight($userId, Phprojekt_Acl::CREATE)) {
                 throw new Phprojekt_PublishedException(
                     'You do not have the necessary create right');
             }
             $rights[$userId] = Phprojekt_Acl::ALL;
             $parentNode->appendNode($node);
-        } else if (false === $model->hasRight($userId, Phprojekt_Acl::WRITE)) {
+        } else if (!$model->hasRight($userId, Phprojekt_Acl::WRITE)) {
             throw new Phprojekt_PublishedException(
                 'You do not have the necessary write right');
         }
 
-        if (true === $newItem || true === $model->hasRight($userId, Phprojekt_Acl::ADMIN)) {
+        if ($newItem || $model->hasRight($userId, Phprojekt_Acl::ADMIN)) {
             /* ensure we have at least one right */
             if (count($rights) <= 0) {
                 throw new Phprojekt_PublishedException(

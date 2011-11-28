@@ -265,12 +265,14 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         }
 
         // Delete the projects where the user don't have access
-        foreach ($object as $index => $tree) {
-            if (!in_array($tree->id, $rights)) {
-                if ($tree->isRootNodeForCurrentTree()) {
-                    throw new Phprojekt_Tree_Node_Exception('Requested node not found');
-                } else {
-                    $this->deleteNode($object, $tree->id);
+        if (!Phprojekt_Auth::isAdminUser()) {
+            foreach ($object as $index => $tree) {
+                if (!in_array($tree->id, $rights)) {
+                    if ($tree->isRootNodeForCurrentTree()) {
+                        throw new Phprojekt_Tree_Node_Exception('Requested node not found');
+                    } else {
+                        $this->deleteNode($object, $tree->id);
+                    }
                 }
             }
         }
@@ -623,7 +625,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function getDepthDisplay($value)
     {
-        return str_repeat('....', $this->getDepth()) . $this->$value;
+        return str_repeat('', $this->getDepth()) . $this->$value;
     }
 
     /**

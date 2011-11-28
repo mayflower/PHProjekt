@@ -501,8 +501,7 @@ class Phprojekt_Auth extends Zend_Auth
         if (isset($authNamespace->admin)) {
             $returnValue = $authNamespace->admin;
         }
-
-        return $returnValue;
+        return $returnValue > 0;
     }
 
     /**
