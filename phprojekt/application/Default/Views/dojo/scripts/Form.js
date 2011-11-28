@@ -723,7 +723,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var def = new dojo.Deferred();
         def.callback();
 
-
         var subModules = this._subModules;
         // Add the tabs
         for (var index in subModules) {
