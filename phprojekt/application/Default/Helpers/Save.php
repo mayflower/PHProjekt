@@ -59,22 +59,12 @@ final class Default_Helpers_Save
         $parentNode = new Phprojekt_Tree_Node_Database($node->getActiveRecord(), $parentId);
         $parentNode = $parentNode->setup();
 
-        // Assign the values
-        foreach ($params as $k => $v) {
-            if (isset($node->$k)) {
-                $node->$k = $v;
-            }
-        }
+        $node = self::parameterToModel($node, $params);
 
         if (empty($node->getActiveRecord()->id)) {
             $newItem = true;
         } else {
             $newItem = false;
-        }
-
-        // Set the owner
-        if ($newItem && isset($node->ownerId)) {
-            $node->ownerId = Phprojekt_Auth::getUserId();
         }
 
         // Parent Project
@@ -96,8 +86,7 @@ final class Default_Helpers_Save
 
         $userId   = Phprojekt_Auth_Proxy::getEffectiveUserId();
         $model    = $node->getActiveRecord();
-        $newItem  = empty($node->id);
-        $rights   = Default_Helpers_Right::getItemRights($params, 1, $newItem, $userId);
+        $rights   = Default_Helpers_Right::getRights($params);
         if (true === $newItem) {
             if (false === $parentNode->getActiveRecord()->hasRight($userId, Phprojekt_Acl::CREATE)) {
                 throw new Phprojekt_PublishedException(
@@ -156,55 +145,36 @@ final class Default_Helpers_Save
      */
     protected static function _saveModel(Phprojekt_Model_Interface $model, array $params)
     {
-        foreach ($params as $k => $v) {
-            if (isset($model->$k)) {
-                // Don't allow to set the id on save, since it is done by the ActiveRecord
-                if (!in_array($k, array('id'))) {
-                    $model->$k = $v;
-                }
-            }
-        }
-
-        if (empty($model->id)) {
-            $newItem = true;
-        } else {
-            $newItem = false;
-        }
-
-        // Set the owner
-        if ($newItem && isset($model->ownerId)) {
-            $model->ownerId = Phprojekt_Auth::getUserId();
-        }
-
-        // Parent Project
-        if (isset($model->projectId)) {
-            $projectId = $model->projectId;
-        } else {
-            $projectId = 0;
-        }
-
-        // Checks
+        $newItem    = empty($params['id']);
+        $model      = self::parameterToModel($model, $params, $newItem);
+        $projectId  = (isset($model->projectId)) ? $model->projectId : 0;
+        $userId     = Phprojekt_Auth_Proxy::getEffectiveUserId();
         $moduleName = Phprojekt_Loader::getModuleFromObject($model);
         $moduleId   = Phprojekt_Module::getId($moduleName);
+
         if (!$model->recordValidate()) {
             $errors = $model->getError();
             $error  = array_pop($errors);
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
-        } else if (!self::_checkModule($moduleId, $projectId)) {
-            throw new Phprojekt_PublishedException('The parent project do not have enabled this module');
-        } else {
-            $userId  = Phprojekt_Auth_Proxy::getEffectiveUserId();
-            $newItem = empty($model->id);
-            $rights  = Default_Helpers_Right::getItemRights($params, 1, $newItem, $userId);
-            if (true === $newItem) {
+        }
+
+        if (!self::_checkModule($moduleId, $projectId)) {
+            throw new Phprojekt_PublishedException(
+                'The parent project do not have enabled this module');
+        }
+
+        $rights = Default_Helpers_Right::getRights($params);
+
+        if ($model instanceof Phprojekt_Item_Abstract) {
+            if ($newItem) {
                 $project = new Project_Models_Project();
                 $project->find($projectId);
-                if (false === $project->hasRight($userId, Phprojekt_Acl::CREATE)) {
+                if (!$project->hasRight($userId, Phprojekt_Acl::CREATE)) {
                     throw new Phprojekt_PublishedException(
                         'You do not have the necessary create right');
                 }
                 $rights[$userId] = Phprojekt_Acl::ALL;
-            } else if (false === $model->hasRight($userId, Phprojekt_Acl::WRITE)) {
+            } else if (!$model->hasRight($userId, Phprojekt_Acl::WRITE)) {
                 throw new Phprojekt_PublishedException(
                     'You do not have the necessary wrte right');
             }
@@ -213,20 +183,13 @@ final class Default_Helpers_Save
             // @TODO Remove the Timecard limitation
             if (isset($model->projectId) && Phprojekt_Module::saveTypeIsGlobal($moduleId)
                 && Phprojekt_Module::getModuleName($moduleId) != 'Timecard') {
-                $model->projectId = 1;
-            }
+                    $model->projectId = 1;
+                }
 
             $model->save();
 
             // Save access only if the user have "admin" right
-            if (true === $newItem || $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN)) {
-                if ($moduleName == 'Core') {
-                    $rights = Default_Helpers_Right::getModuleRights($params);
-                } else {
-                    $rights = Default_Helpers_Right::getItemRights($params, $moduleId, $newItem);
-                }
-                Phprojekt::getInstance()->getLog()->debug(var_export($rights, true));
-
+            if ($newItem || $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN)) {
                 if (count($rights) <= 0) {
                     throw new Phprojekt_PublishedException(
                         'At least one person must have access to this item');
@@ -234,8 +197,12 @@ final class Default_Helpers_Save
                 $model->saveRights($rights);
             }
 
-            return $model;
+        } else {
+            $model->save();
+            $model->saveRights($rights);
         }
+
+        return $model;
     }
 
     /**
@@ -268,43 +235,24 @@ final class Default_Helpers_Save
                 throw new Phprojekt_PublishedException('No parent id found in parameters or passed');
             }
 
-            $return = self::_saveTree($model, $params, $parentId);
+            $returnModel = self::_saveTree($model, $params, $parentId);
+            $notifyModel = $model->getActiveRecord();
+        } else if ($model instanceof Phprojekt_Model_Interface) {
+            $returnModel = self::_saveModel($model, $params);
+            $notifyModel = $model;
+        }
 
-            // Send mail notification?
-            if (array_key_exists('sendNotification', $params)) {
-                if ($params['sendNotification'] == 1) {
-                    $model->getActiveRecord()->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
-                }
+        if ($notifyModel instanceof Phprojekt_Item_Abstract) {
+            if (isset($params['sendNotification']) && $params['sendNotification']) {
+                $notifyModel->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
             }
 
             if (Phprojekt::getInstance()->getConfig()->frontendMessages) {
-                $model->getActiveRecord()->getNotification()->saveFrontendMessage();
+                $notifyModel->getNotification()->saveFrontendMessage();
             }
-
-            return $return;
         }
 
-        if ($model instanceof Phprojekt_Model_Interface) {
-            $return = self::_saveModel($model, $params);
-
-            // Send mail notification?
-            if (array_key_exists('sendNotification', $params)) {
-                if ($params['sendNotification'] == 1) {
-                    $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
-                }
-            }
-
-            if (Phprojekt::getInstance()->getConfig()->frontendMessages) {
-                if (method_exists($model, 'getNotification')) {
-                    $model->getNotification()->saveFrontendMessage();
-                }
-            }
-
-            return $return;
-
-        }
-
-        return true;
+        return $model;
     }
 
     /**
