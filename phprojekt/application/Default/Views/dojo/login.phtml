@@ -11,8 +11,8 @@
     $cssFiles[] = "dojo/release/dojo/dijit/themes/claro/claro.css";
     $cssFiles[] = "css/themes/phprojekt/login.css";
     $styleUrl = $this->webpath . 'min/min/?f=' . implode(',', $cssFiles);
-    echo $this->headLink()->prependStylesheet($styleUrl);
     ?>
+    <link href="<?php echo $styleUrl; ?>" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
         var djConfig = {isDebug: false, parseOnLoad: true, bindEncoding: "utf-8",
                         locale: 'en', useCommentedJson: true};
