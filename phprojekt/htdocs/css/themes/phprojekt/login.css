@@ -1,0 +1,52 @@
+
+.phprojekt-login .loadingOuter {
+    height: 100%;
+    width: 100%;
+}
+
+.phprojekt-login .loadingMiddle {
+    bottom: 50%;
+    right: 50%;
+    position: absolute;
+}
+
+.phprojekt-login .loadingMiddleInner {
+    height: 100px;
+    left: 50%;
+    padding: 90px 50px 100px 80px;
+    top: 60%;
+    width: 400px;
+    background-image: url("images/login-mask.png");
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.label {
+    padding: 7px;
+}
+
+.phprojekt-login {
+  background-color: #004E6A;
+  background-image: url("images/login-background.png");
+  background-repeat: repeat-x;
+}
+
+.serverFeedback {
+  position:absolute;
+  top: 0px;
+  width: 100%;
+  text-align: center;
+}
+
+.phprojekt-login .error,
+.phprojekt-login .notice,
+.phprojekt-login .success {
+    padding: 1em;
+    margin-top: 0em;
+    margin-bottom: 1em;
+}
+.phprojekt-login .error {
+    background: #FBE3E4;
+    color: #D12F19;
+    border-bottom: 1px solid #FBC2C4;
+}
