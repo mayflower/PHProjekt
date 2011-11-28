@@ -94,6 +94,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
 
         this.fieldTemplate = null;
+        if (this._loadIndicator && dojo.isFunction(this._loadIndicator.hide)) {
+            this._loadIndicator.hide();
+        }
         this._loadIndicator = null;
         this._destroySubModules();
     },
