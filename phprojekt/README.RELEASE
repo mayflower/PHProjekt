@@ -8,10 +8,6 @@ This is a checklist for all the steps that the release require.
         1.1.3 tests/UnitTests/Phprojekt/PhprojektTest.php
         1.1.4 tests/UnitTests/Default/Controllers/IndexControllerTest.php
         1.1.5 run unitTest
-        1.1.6 commit
-        1.1.7 Make a new tag.
-            1.1.8 git tag -s 6.x.x
-            1.1.9 git push 6.x.x
 
     1.2 Copy the phprojekt folder
 
@@ -24,32 +20,20 @@ This is a checklist for all the steps that the release require.
     1.4 Make a search and replace for @package_version@ and replace
         it with the current version.
 
-    1.5 Make a zip of the phprojekt folder.
+    1.5 commit
 
-    1.6 Tar.gz file.
-        1.6.1 chmod -R 0750 phprojekt
-        1.6.2 find phprojekt -type f -exec chmod -x '{}' ';'
-        1.6.3 chgrp -R www phprojekt
-        1.6.4 chmod 0770 phprojekt
-        1.6.5 tar -cpzf phprojekt-6.x.x.tar.gz phprojekt
+    1.5 Make a new tag.
+        1.1.8 git tag -s 6.x.x
+        1.1.9 git push 6.x.x
 
-    1.7 Test installations in Windows and Linux with zip and tar.gz files.
+    New tags are automatically fetched from github and will be displayed
+    on the phprojekt.com website.
 
-    1.8 Upload the files into the web.
-
-    1.9 Copy the files to phprojekt.{tar.gz | zip }.
-
-    1.10 Upload the files in Source Forge.
-
-    1.11 Mark release as done in Jira
+    1.6 Mark release as done in Jira
 
 2 Web
 
-    2.1 Changes on http://www.phprojekt.com/download
-        2.1.1 Change the version of the file
-        2.1.2 Change the size of the file
-
-    2.2 Write a news entry about the release.
+    2.1 Write a news entry about the release.
 
 3 Blog
 
