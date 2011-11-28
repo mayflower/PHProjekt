@@ -102,7 +102,7 @@ class Phprojekt_User_Information extends Phprojekt_ModelInformation_Default
             'default'  => 'A'));
 
         // admin
-        $this->fillField('admin', 'Admin', 'selectbox', 5, 10, array(
+        $this->fillField('admin', 'Admin', 'checkbox', 5, 10, array(
             'range'    => array($this->getFullRangeValues(0, 'No'),
                                 $this->getFullRangeValues(1, 'Yes')),
             'integer'  => true,
