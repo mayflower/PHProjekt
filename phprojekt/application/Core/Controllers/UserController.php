@@ -54,16 +54,17 @@ class Core_UserController extends Core_IndexController
     public function jsonGetUsersAction()
     {
         IndexController::setCurrentProjectId();
-        $db      = Phprojekt::getInstance()->getDb();
-        $user    = new Phprojekt_User_User();
-        $records = $user->getAllowedUsers();
-        $current = Phprojekt_Auth::getUserId();
+        $db          = Phprojekt::getInstance()->getDb();
+        $where       = sprintf('status = %s', $db->quote('A'));
+        $user        = new Phprojekt_User_User();
+        $displayName = $user->getDisplay();
+        $records     = $user->fetchAll($where);
 
         $data = array();
-        foreach ($records as $record) {
-            $data['data'][] = array('id'      => (int) $record['id'],
-                                    'display' => $record['name'],
-                                    'current' => $current == $record['id']);
+        foreach ($records as $node) {
+            $data['data'][] = array('id'      => $node->id,
+                                    'display' => $node->applyDisplay($displayName, $node),
+                                    'current' => $current == $node->id);
         }
 
         Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);
