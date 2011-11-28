@@ -1179,7 +1179,6 @@ class IndexController extends Zend_Controller_Action
             $files = explode('||', $value);
             $model = $this->getModelObject();
             $model->find($itemId);
-            $rights = $model->getRights();
             $i      = 0;
             foreach ($files as $file) {
                 $fileName = strstr($file, '|');
