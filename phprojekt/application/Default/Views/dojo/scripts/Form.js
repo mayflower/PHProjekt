@@ -356,7 +356,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     formId:    formId || ''
                 }});
 
-            for (var i in innerWidgets) {
+            var l = innerWidgets.length;
+            for (var i = 0; i < l; i++) {
                 var widget = innerWidgets[i];
                 content.formtable.appendChild(widget.domNode);
                 this.garbageCollector.addNode(widget);
@@ -367,8 +368,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 title: phpr.nls.get(title)
             });
 
-            dojo.style(tab.containerNode, 'height', '100%');
-            dojo.style(tab.containerNode, 'width', '100%');
+            dojo.style(
+                tab.containerNode,
+                {
+                    'height': '100%',
+                    'width': '100%'
+                }
+            );
 
             tab.set('content', content);
 
@@ -414,17 +420,19 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         this._subModules = this._getSubModules();
 
-        this._meta = phpr.DataStore.getMetaData({url: this._url});
-        var data   = phpr.DataStore.getData({url: this._url});
+        var p = phpr;
+
+        this._meta = p.DataStore.getMetaData({url: this._url});
+        var data   = p.DataStore.getData({url: this._url});
         if (data.length == 0) {
-            this.node.set('content', phpr.drawEmptyMessage('The Item was not found'));
+            this.node.set('content', p.drawEmptyMessage('The Item was not found'));
         } else {
             var tabs               = this.getTabs();
             var firstRequiredField = null;
 
             this.setPermissions(data);
             this.presetValues(data);
-            this.fieldTemplate = new phpr.Default.Field();
+            this.fieldTemplate = new p.Default.Field();
 
             for (var i = 0; i < this._meta.length; i++) {
                 var fieldValues  = this.setFieldValues(this._meta[i], data[0]);
@@ -442,7 +450,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
                 if (i === 0) {
                     this.setBreadCrumbItem(itemvalue);
-                    phpr.BreadCrumb.draw();
+                    p.BreadCrumb.draw();
                 }
 
                 // Get the first required field
@@ -452,7 +460,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
                 // Special workaround for new projects - set parent to current ProjectId
                 if (itemid == 'projectId' && !itemvalue) {
-                    itemvalue = phpr.currentProjectId;
+                    itemvalue = p.currentProjectId;
                 }
 
                 // Init formdata
@@ -545,17 +553,19 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             deferred.callback();
 
             var firstTab = true;
-            for (var t in tabs) {
-                if (this.formdata[tabs[t].id]) {
+            var l = tabs.length;
+            for (var t = 0; t < l; t++) {
+                var tab = tabs[t];
+                if (this.formdata[tab.id]) {
                     if (firstTab) {
-                        this.setFormButtons(tabs[t].id);
+                        this.setFormButtons(tab.id);
                         firstTab = false;
                     }
                     deferred = deferred.then(
-                        dojo.hitch(this, function(t) {
-                            return this.addTab(this.formdata[tabs[t].id], 'tabBasicData' + tabs[t].id, tabs[t].name,
-                                'dataFormTab' + tabs[t].id);
-                        }, t)
+                        dojo.hitch(this, function(tab) {
+                            return this.addTab(this.formdata[tab.id], 'tabBasicData' + tab.id, tab.name,
+                                'dataFormTab' + tab.id);
+                        }, tab)
                     );
                 }
             }
@@ -570,7 +580,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             deferred = dojo.when(deferred, dojo.hitch(this, function() {
                 // Delete the data if is not used the cache
                 if (!this.useCache()) {
-                    phpr.DataStore.deleteData({url: this._url});
+                    p.DataStore.deleteData({url: this._url});
                 }
 
                 if (this.id > 0 && this.useHistoryTab()) {
@@ -581,7 +591,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
                 // Set cursor to the first required field
                 if (dojo.byId(firstRequiredField)) {
-                    phpr.viewManager.getView().completeContent.domNode.focus();
+                    p.viewManager.getView().completeContent.domNode.focus();
                     dojo.byId(firstRequiredField).focus();
                 }
 

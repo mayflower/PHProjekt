@@ -43,6 +43,9 @@ dojo.declare("phpr.Todo.Main", phpr.Default.Main, {
         if (id == undefined || id == 0) {
             var params          = new Array();
             params['startDate'] = phpr.date.getIsoDate(new Date());
+            var endDate = new Date();
+            endDate.setDate(new Date().getDate() + 1);
+            params['endDate'] = phpr.date.getIsoDate(endDate);
         }
 
         this.form = new this.formWidget(this, id, module, params, view.detailsBox);
