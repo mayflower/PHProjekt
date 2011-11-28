@@ -360,20 +360,9 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
 
         if (!isset($usersNamespace->users)) {
             $displayName = $this->getDisplay();
-            $rights      = new Phprojekt_Item_Rights();
-            $users       = $rights->getUsersWithRight(1, (int) Phprojekt::getCurrentProjectId());
-            $ids         = array();
-            foreach ($users as $u){
-                $ids[] = $u->id;
-            }
-
             $where       = sprintf('status = %s', $this->getAdapter()->quote('A'));
-            if (!empty($ids)) {
-                $where .= sprintf(' AND id IN (%s) ', implode(',', $ids));
-            }
-
-            $result = $this->fetchAll($where, $displayName);
-            $values = array();
+            $result      = $this->fetchAll($where, $displayName);
+            $values      = array();
             foreach ($result as $node) {
                 $values[] = array('id'   => (int) $node->id,
                                   'name' => $node->applyDisplay($displayName, $node));
