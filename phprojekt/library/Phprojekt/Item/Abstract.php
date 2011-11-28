@@ -323,18 +323,20 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
         // Only fetch records with read access
-        $join .= sprintf(' INNER JOIN item_rights ON (item_rights.item_id = %s
-            AND item_rights.module_id = %d AND item_rights.user_id = %d) ',
-            $this->getAdapter()->quoteIdentifier($this->getTableName() . '.id'),
-            Phprojekt_Module::getId($this->getModelName()), Phprojekt_Auth_Proxy::getEffectiveUserId());
+        if (!Phprojekt_Auth::isAdminUser()) {
+            $join .= sprintf(' INNER JOIN item_rights ON (item_rights.item_id = %s
+                AND item_rights.module_id = %d AND item_rights.user_id = %d) ',
+                $this->getAdapter()->quoteIdentifier($this->getTableName() . '.id'),
+                Phprojekt_Module::getId($this->getModelName()), Phprojekt_Auth_Proxy::getEffectiveUserId());
 
-        // Set where
-        if (null !== $where) {
-            $where .= ' AND ';
+            // Set where
+            if (null !== $where) {
+                $where .= ' AND ';
+            }
+            $where .= ' (' . sprintf('(%s.owner_id = %d OR %s.owner_id IS NULL)', $this->getTableName(),
+                Phprojekt_Auth_Proxy::getEffectiveUserId(), $this->getTableName());
+            $where .= sprintf(' OR ((item_rights.access & %d) = %d)) ', Phprojekt_Acl::READ, Phprojekt_Acl::READ);
         }
-        $where .= ' (' . sprintf('(%s.owner_id = %d OR %s.owner_id IS NULL)', $this->getTableName(),
-            Phprojekt_Auth_Proxy::getEffectiveUserId(), $this->getTableName());
-        $where .= ' OR (item_rights.access > 0)) ';
 
         return parent::fetchAll($where, $order, $count, $offset, $select, $join);
     }
@@ -352,17 +354,15 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         }
 
         $moduleId = Phprojekt_Module::getId($this->getModelName());
-        $rights   = Phprojekt_Right::getRightsForItems($moduleId, $this->projectId, $userId, array($this->id));
-
-        if (!isset($rights[$this->id])) {
-            return Phprojekt_Acl::NONE;
-        }
-
-        return ($rights[$this->id] & $right) == $right;
+        return Phprojekt_Right::getRightsForItems($moduleId, $this->projectId, $userId, array($this->id));
     }
 
     public function hasRight($userId, $right)
     {
+        if (Phprojekt_Auth::isAdminUser()) {
+            return true;
+        }
+
         $moduleId = Phprojekt_Module::getId($this->getModelName());
         $rights   = Phprojekt_Right::getRightsForItems($moduleId, $this->projectId, $userId, array($this->id));
         if (!isset($rights[$this->id])) {
