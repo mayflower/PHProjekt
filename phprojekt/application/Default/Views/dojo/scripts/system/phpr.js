@@ -1051,3 +1051,57 @@ phpr.confirmDialog = function(callbackOk, message) {
     buttonCancel = null;
     return confirmDialog;
 };
+
+dojo.provide("phpr.Default.System.TabController");
+dojo.declare("phpr.Default.System.TabController", [dijit.layout.TabController], {
+    "class": "dijitTabContainerTop-tabs",
+    tabStripClass: null,
+    doLayout: true,
+    garbageCollector: null,
+    templateString: "<div role='tablist' dojoAttachEvent='onkeypress:onkeypress'></div>",
+    constructor: function() {
+        this.garbageCollector = new phpr.Default.System.GarbageCollector();
+    },
+    destroy: function() {
+        this.inherited(arguments);
+        this.garbageCollector.collect();
+    },
+    onButtonClick: function(page) {
+        this.onSelectChild(page);
+
+        page.callback();
+    },
+    onSelectChild: function(page) {
+        if (!page) { return; }
+
+        if (this._currentChild) {
+            var oldButton=this.pane2button[this._currentChild.id];
+            oldButton.set('checked', false);
+            dijit.setWaiState(oldButton.focusNode, "selected", "false");
+            oldButton.focusNode.setAttribute("tabIndex", "-1");
+        }
+
+        var newButton=this.pane2button[page.id];
+        newButton.set('checked', true);
+        dijit.setWaiState(newButton.focusNode, "selected", "true");
+        this._currentChild = page;
+        newButton.focusNode.setAttribute("tabIndex", "0");
+    },
+    getEntryFromOptions: function(options) {
+        options = options || {};
+        // this is just a dummy, as the tabcontroller needs "pages" but we don't need or want them
+        var entry = new dijit._Widget({
+            title: options.moduleLabel,
+            showTitle: options.moduleLabel,
+            tooltip: options.moduleLabel,
+            watch: function() { return { unwatch: function() {} } },
+            dir: "",
+            lang: "",
+            callback: options.callback || function() {}
+        }, dojo.create('div'));
+
+        this.garbageCollector.addNode(entry);
+
+        return entry;
+    }
+});
