@@ -154,7 +154,11 @@ class Phprojekt_Converter_Json
         // Okay we got real models and stuff that pretends to be a model
         // so we try to guess if we the model has rights that we can access
         if ($models[0] instanceof Phprojekt_Item_Abstract) {
-            $projectId = $models[0]->projectId;
+            if ($models[0] instanceof Project_Models_Project) {
+                $projectId = $models[0]->id;
+            } else {
+                $projectId = $models[0]->projectId;
+            }
             // TODO: we still asume that the getModelName call works
             $rights    = Phprojekt_Right::getRightsForItems($moduleId,
                 $projectId, $userId, $itemIds);
