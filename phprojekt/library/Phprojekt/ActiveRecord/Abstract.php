@@ -1290,24 +1290,4 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         return (array) $this->_data;
     }
-
-    /**
-     * XXX: Remove
-     * Gets the rights of the item for other users.
-     *
-     * @return array Empty array.
-     */
-    public function getUsersRights()
-    {
-        return array();
-    }
-    /**
-     * Gets the rights of the item for other users.
-     *
-     * @return array Empty array.
-     */
-    public function getRights()
-    {
-        return Phprojekt_Acl::ALL;
-    }
 }
