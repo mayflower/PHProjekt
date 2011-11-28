@@ -228,32 +228,6 @@ final class Default_Helpers_Right
     /**
      * Parse the rights for all the users and return it into a bitmask per user.
      *
-     * @param array   $params  The post values.
-     * @param boolean $newItem If is a new item or not.
-     * @param integer $ownerId The owner ID or 0 for the current user.
-     *
-     * @return array Array with user IDs per access.
-     */
-    public static function getItemRights($params, $moduleId, $newItem, $ownerId = 0)
-    {
-        return self::getRights($params, self::ITEM_TYPE, $moduleId, $newItem, $ownerId);
-    }
-
-    /**
-     * Parse the rights for all the modules and return it into a bitmask per module.
-     *
-     * @param array $params The post values.
-     *
-     * @return array Array with user IDs per access.
-     */
-    public static function getModuleRights($params)
-    {
-        return self::getRights($params, self::MODULE_TYPE);
-    }
-
-    /**
-     * Parse the rights for all the users and return it into a bitmask per user.
-     *
      * @param array   $params   The post values.
      * @param string  $type     Type of right, for users or modules.
      * @param string  $moduleId The module ID.
@@ -262,7 +236,7 @@ final class Default_Helpers_Right
      *
      * @return array Array with user IDs per access.
      */
-    private static function getRights($params, $type, $moduleId = 0, $newItem = false, $ownerId = 0)
+    public static function getRights($params)
     {
         $right  = array();
         $rights = array();
