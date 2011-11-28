@@ -163,7 +163,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     _getCurrentUser: function() {
         var userList = this.userStore.getList();
         for (var i in userList) {
-            if (userList[i].current) {
+            if (userList[i].id == phpr.currentUserId) {
                 return userList[i];
             }
         }
