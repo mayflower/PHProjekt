@@ -61,7 +61,7 @@ class Phprojekt_Converter_Json
             $front = Zend_Controller_Front::getInstance();
             $front->getResponse()->setHeader('Content-Type', 'application/json; charset=utf-8');
         }
-        echo self::convert($param1, $param2);
+        Phprojekt_CompressedSender::send(self::convert($param1, $param2));
     }
 
     /**
