@@ -5,67 +5,8 @@
     <title>PHProjekt</title>
     <link rel="favicon" href="<?php echo $this->webpath ?>img/favicon.ico" type="image/x-icon" ></link>
     <link rel="shortcut icon" href="<?php echo $this->webpath ?>img/favicon.ico" type="image/x-icon" ></link>
+    <link href="<?php echo $this->webpath; ?>min/min/?g=phprojekt" rel="stylesheet" type="text/css" />
 
-    <?php
-    $cssFiles = array();
-    $cssFiles[] = "dojo/release/dojo/dijit/themes/claro/claro.css";
-    $cssFiles[] = "dojo/release/dojo/dojo/resources/dojo.css";
-    $cssFiles[] = "css/themes/phprojekt/Calendar.css";
-    $cssFiles[] = "css/themes/phprojekt/Calendar_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/ColorPalette.css";
-    $cssFiles[] = "css/themes/phprojekt/Common.css";
-    $cssFiles[] = "css/themes/phprojekt/Dialog.css";
-    $cssFiles[] = "css/themes/phprojekt/Dialog_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/Editor.css";
-    $cssFiles[] = "css/themes/phprojekt/Editor_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/Grid.css";
-    $cssFiles[] = "css/themes/phprojekt/Grid_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/Menu.css";
-    $cssFiles[] = "css/themes/phprojekt/Menu_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/Module_designer.css";
-    $cssFiles[] = "css/themes/phprojekt/Module_gantt.css";
-    $cssFiles[] = "css/themes/phprojekt/Module_timecard.css";
-    $cssFiles[] = "css/themes/phprojekt/ProgressBar.css";
-    $cssFiles[] = "css/themes/phprojekt/ResizeHandle.css";
-    $cssFiles[] = "css/themes/phprojekt/TimePicker.css";
-    $cssFiles[] = "css/themes/phprojekt/TitlePane.css";
-    $cssFiles[] = "css/themes/phprojekt/TitlePane_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/Toaster.css";
-    $cssFiles[] = "css/themes/phprojekt/Toolbar.css";
-    $cssFiles[] = "css/themes/phprojekt/Toolbar_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/Tree.css";
-    $cssFiles[] = "css/themes/phprojekt/Tree_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/form/Button.css";
-    $cssFiles[] = "css/themes/phprojekt/form/Button_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/form/Checkbox.css";
-    $cssFiles[] = "css/themes/phprojekt/form/CheckedMultiSelect.css";
-    $cssFiles[] = "css/themes/phprojekt/form/ComboBox.css";
-    $cssFiles[] = "css/themes/phprojekt/form/Common.css";
-    $cssFiles[] = "css/themes/phprojekt/form/Common_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/form/RadioButton.css";
-    $cssFiles[] = "css/themes/phprojekt/form/Rating.css";
-    $cssFiles[] = "css/themes/phprojekt/form/Slider.css";
-    $cssFiles[] = "css/themes/phprojekt/form/Slider_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/form/Textarea.css";
-    $cssFiles[] = "css/themes/phprojekt/layout/AccordionContainer.css";
-    $cssFiles[] = "css/themes/phprojekt/layout/AccordionContainer_rtl.css";
-    $cssFiles[] = "css/themes/phprojekt/layout/BorderContainer.css";
-    $cssFiles[] = "css/themes/phprojekt/layout/ContentPane.css";
-    $cssFiles[] = "css/themes/phprojekt/layout/ExpandoPane.css";
-    $cssFiles[] = "css/themes/phprojekt/layout/Filters.css";
-    $cssFiles[] = "css/themes/phprojekt/layout/SplitContainer.css";
-    $cssFiles[] = "css/themes/phprojekt/layout/Template.css";
-    $cssFiles[] = "css/themes/phprojekt/lib/css-classes.css";
-    $cssFiles[] = "css/themes/phprojekt/lib/liquid.css";
-    $cssFiles[] = "css/themes/phprojekt/lib/reset.css";
-    $cssFiles[] = "css/themes/phprojekt/lib/typography.css";
-    $cssFiles[] = "css/themes/phprojekt/phprojektGrid.css";
-    $cssFiles[] = "dojo/release/dojo/dijit/themes/dijit.css";
-    $cssFiles[] = "dojo/release/dojo/dijit/themes/dijit_rtl.css";
-
-    $styleUrl = $this->webpath . 'min/min/?f=' . implode(',', $cssFiles);
-    ?>
-    <link href="<?php echo $styleUrl; ?>" rel="stylesheet" type="text/css" />
     <style type="text/css">
         .dj_ie .phprojekt #serverFeedback {
             padding-left: 5px;
