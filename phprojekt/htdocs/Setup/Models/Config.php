@@ -262,18 +262,18 @@ class Setup_Models_Config
         $content .= $this->_eol;
 
         $content .= '; For this Developer Release, it just has been tested with pdo_mysql.' . $this->_eol;
-        $content .= 'database.adapter = "' . $adapter . '"' . $this->_eol;
+        $content .= 'database.adapter = "' . addcslashes($adapter, '"') . '"' . $this->_eol;
         $content .= $this->_eol;
         $content .= '; The assigned name or IP address for the database server.' . $this->_eol;
-        $content .= 'database.params.host = "' . $host . '"' . $this->_eol;
+        $content .= 'database.params.host = "' . addcslashes($host, '"') . '"' . $this->_eol;
         $content .= $this->_eol;
         $content .= '; Username and password with the appropriate rights for Phprojekt to access to' . $this->_eol;
         $content .= '; the database.' . $this->_eol;
-        $content .= 'database.params.username = "' . $username . '"' . $this->_eol;
-        $content .= 'database.params.password = "' . $password . '"' . $this->_eol;
+        $content .= 'database.params.username = "' . addcslashes($username, '"') . '"' . $this->_eol;
+        $content .= 'database.params.password = "' . addcslashes($password, '"') . '"' . $this->_eol;
         $content .= $this->_eol;
         $content .= '; Name of the database, inside the server' . $this->_eol;
-        $content .= 'database.params.dbname = "' . $dbname . '"' . $this->_eol;
+        $content .= 'database.params.dbname = "' . addcslashes($dbname, '"') . '"' . $this->_eol;
 
         return $content;
     }
@@ -368,18 +368,18 @@ class Setup_Models_Config
         $content .= $this->_eol;
         $content .= '; If mailTransport is set to 0, then fill all the needed \'smtp*\' values:' . $this->_eol;
         $content .= '; Name or IP address of the SMTP server to be used to send that notifications.' . $this->_eol;
-        $content .= 'smtpServer = "' . $server . '"' . $this->_eol;
+        $content .= 'smtpServer = "' . addcslashes($server, '"') . '"' . $this->_eol;
         $content .= '; If the SMTP server requires authentication, remove the semicolons \';\' in the' . $this->_eol;
         $content .= '; three following lines and write inside the inverted commas "" the appropriate' . $this->_eol;
         $content .= '; username and password. Auth mode: leave this as "login" if you don\'t know.' . $this->_eol;
         $content .= '; Other available options: plain, cram-md5' . $this->_eol;
         $content .= ';smtpAuth     = "login"' . $this->_eol;
         if (empty($user) && empty($password)) {
-            $content .= ';smtpUser     = "' . $user . '"' . $this->_eol;
-            $content .= ';smtpPassword = "' . $password . '"' . $this->_eol;
+            $content .= ';smtpUser     = "' . addcslashes($user, '"') . '"' . $this->_eol;
+            $content .= ';smtpPassword = "' . addcslashes($password, '"') . '"' . $this->_eol;
         } else {
-            $content .= 'smtpUser     = "' . $user . '"' . $this->_eol;
-            $content .= 'smtpPassword = "' . $password . '"' . $this->_eol;
+            $content .= 'smtpUser     = "' . addcslashes($user, '"') . '"' . $this->_eol;
+            $content .= 'smtpPassword = "' . addcslashes($password, '"') . '"' . $this->_eol;
         }
         $content .= '; You may specify SSL and Port, if the SMTP server of your choice requires them.' . $this->_eol;
         $content .= ';smtpSsl      = ""' . $this->_eol;
