@@ -57,7 +57,7 @@ class Phprojekt_HistoryTest extends DatabaseTest
     {
         $history = new Phprojekt_History(array('db' => $this->sharedFixture));
 
-        $this->setExpectedException('Exception');
+        $this->setExpectedException('Phprojekt_ActiveRecord_Exception');
         $history->saveFields('', 'add');
     }
 

@@ -304,7 +304,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
      */
     public function testWrongSet()
     {
-        $this->setExpectedException('Exception');
+        $this->setExpectedException('Phprojekt_ActiveRecord_Exception');
 
         $instance = new PHprojekt_Project(array('db' => $this->sharedFixture));
         $instance->wrongAttribute = 'Hello World';
@@ -318,7 +318,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
      */
     public function testWrongGet()
     {
-        $this->setExpectedException('Exception');
+        $this->setExpectedException('Phprojekt_ActiveRecord_Exception');
 
         $instance = new PHprojekt_Project(array('db' => $this->sharedFixture));
         $instance->wrongAttribute;
