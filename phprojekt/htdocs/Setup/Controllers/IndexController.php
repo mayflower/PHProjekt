@@ -69,7 +69,7 @@ class IndexController extends Zend_Controller_Action
 
         $this->view->webPath = $webPath;
         $this->view->message = array();
-        $this->view->success = array();
+        $this->view->success = "";
         $this->view->error   = array();
 
         $this->view->exportModules = Setup_Models_Migration::getModulesToMigrate();
@@ -117,7 +117,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonDatabaseFormAction()
     {
         $this->view->message = array();
-        $this->view->success = array();
+        $this->view->success = "";
         $this->view->dbHost  = self::DEFAULT_DBHOST;
         $this->view->dbUser  = self::DEFAULT_DBUSER;
         $this->view->dbPass  = '';
@@ -156,7 +156,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonDatabaseSetupAction()
     {
         $this->view->message = array();
-        $this->view->success = array();
+        $this->view->success = '';
 
         $params = array(
             'serverType' => Cleaner::sanitize('string', $this->getRequest()->getParam('serverType')),
@@ -202,7 +202,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonUsersFormAction()
     {
         $this->view->message          = array();
-        $this->view->success          = array();
+        $this->view->success          = '';
         $this->view->adminPass        = '';
         $this->view->adminPassConfirm = '';
         $this->view->testPass         = '';
@@ -240,7 +240,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonUsersSetupAction()
     {
         $this->view->message = array();
-        $this->view->success = array();
+        $this->view->success = '';
 
         $params = array(
             'adminPass'        => Cleaner::sanitize('string', $this->getRequest()->getParam('adminPass')),
@@ -285,7 +285,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonFoldersFormAction()
     {
         $this->view->message    = array();
-        $this->view->success    = array();
+        $this->view->success    = '';
         $this->view->privateDir = $this->_setup->getProposedPrivateFolderPath();
 
         $message  = null;
@@ -317,7 +317,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonFoldersSetupAction()
     {
         $this->view->message = array();
-        $this->view->success = array();
+        $this->view->success = '';
 
         $params = array(
             'privateDir'        => (string) $this->getRequest()->getParam('privateDir'),
@@ -381,7 +381,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonTablesFormAction()
     {
         $this->view->message      = array();
-        $this->view->success      = array();
+        $this->view->success      = '';
         $this->view->useExtraData = self::DEFAULT_USE_EXTRA_DATA;
 
         $message  = null;
@@ -413,7 +413,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonTablesSetupAction()
     {
         $this->view->message = array();
-        $this->view->success = array();
+        $this->view->success = '';
 
         $params = array('useExtraData' => (int) $this->getRequest()->getParam('useExtraData'));
 
@@ -449,7 +449,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonMigrationFormAction()
     {
         $this->view->message             = array();
-        $this->view->success             = array();
+        $this->view->success             = '';
         $this->view->migrationConfigFile = '';
         $this->view->diffToUtc           = self::DEFAULT_DIFF_TO_UTC;
 
@@ -484,7 +484,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonMigrateSetupAction()
     {
         $this->view->message = array();
-        $this->view->success = array();
+        $this->view->success = '';
 
         $params = array(
             'migrationConfigFile' => Cleaner::sanitize('string', $this->getRequest()->getParam('migrationConfigFile')),
@@ -541,7 +541,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonFinishAction()
     {
         $this->view->message = array();
-        $this->view->success = array();
+        $this->view->success = "";
 
         if (null !== $this->_setup) {
             ob_start();
