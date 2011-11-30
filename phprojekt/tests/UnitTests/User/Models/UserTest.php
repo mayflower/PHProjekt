@@ -102,15 +102,6 @@ class User_User_Test extends DatabaseTest
     }
 
     /**
-     * Test for mock function
-     */
-    public function testMocks()
-    {
-        $user = new Phprojekt_User_User();
-        $this->assertEquals(array(), $user->getRights());
-    }
-
-    /**
      * Test the display
      */
     public function testdisplay()

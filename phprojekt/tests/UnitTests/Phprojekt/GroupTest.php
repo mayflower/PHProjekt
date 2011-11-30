@@ -114,15 +114,4 @@ class Phprojekt_GroupTest extends DatabaseTest
 
         $this->assertEquals($converted, $group->getInformation()->getFieldDefinition());
     }
-
-    /**
-     * Test for mock function
-     */
-    public function testMocks()
-    {
-        $group = new Phprojekt_Groups_Groups($this->sharedFixture);
-        $this->assertEquals(array(), $group->getRights());
-
-        $this->assertTrue($group->recordValidate());
-    }
 }
