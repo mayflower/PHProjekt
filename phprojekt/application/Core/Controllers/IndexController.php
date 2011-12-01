@@ -61,13 +61,13 @@ class Core_IndexController extends IndexController
 
             if ($controller == 'history' && $action == 'jsonList') {
                 $valid = true;
-            } else if ($controller == 'module'
-                    && $action == 'jsonGetGlobalModules') {
+            } else if ($controller == 'module' && $action == 'jsonGetGlobalModules') {
                 $valid = true;
-            } else if ($controller == 'role'
-                && $action == 'jsonGetModulesAccess') {
+            } else if ($controller == 'role' && $action == 'jsonGetModulesAccess') {
                 $valid = true;
             } else if ($controller == 'user' && $action == 'jsonGetUsers') {
+                $valid = true;
+            } else if ($controller == 'user' && $action == 'jsonGetProxyableUsers') {
                 $valid = true;
             } else if ($controller == 'tab' && $action == 'jsonList') {
                 $valid = true;
