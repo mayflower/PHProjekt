@@ -307,9 +307,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $series->find($this->id);
         $series->_excludeDate($this->_originalStart);
 
-        $this->_data['rrule'] = null;
+        $this->_data['rrule']        = null;
         $this->_data['recurrenceId'] = $this->_originalStart->format('Y-m-d H:i:s');
-        $this->_isFirst       = true;
+        $this->_isFirst              = true;
         $this->_saveToNewRow();
 
         return $this->id;
