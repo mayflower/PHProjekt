@@ -148,7 +148,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 var endTime  = data[i].endTime;
                 if (null === data[i].endTime) {
                     endTime      = data[i].startTime;
-                    //var dndClass = 'dndTargetOpen';
                 } else if (data[i].endTime == '00:00' || data[i].endTime == '00:00:00') {
                     endTime = '24:00';
                 }
