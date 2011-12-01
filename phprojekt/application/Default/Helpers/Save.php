@@ -238,33 +238,21 @@ final class Default_Helpers_Save
     }
 
     /**
-     * Overwrite call to support multiple save routines.
+     * Save helper for tree nodes and models
      *
      * @throws Exception If validation of parameters fails.
      *
      * @return void
      */
-    public static function save()
+    public static function save($model, array $params, $parentId = null)
     {
-        $arguments = func_get_args();
-        $model     = $arguments[0];
-        $params    = $arguments[1];
-
-        if (func_num_args() < 2) {
-            throw new Phprojekt_PublishedException('Two arguments expected');
-        }
-
-        if (!is_array($params)) {
-            throw new Phprojekt_PublishedException('Second parameter needs to be an array');
-        }
-
         if ($model instanceof Phprojekt_Tree_Node_Database) {
-            if (func_num_args() == 3) {
-                $parentId = $arguments[2];
-            } else if (array_key_exists('projectId', $params)) {
-                $parentId = $params['projectId'];
-            } else {
-                throw new Phprojekt_PublishedException('No parent id found in parameters or passed');
+            if (is_null($parentId)) {
+                if (array_key_exists('projectId', $params)) {
+                    $parentId = $params['projectId'];
+                } else {
+                    throw new Phprojekt_PublishedException('No parent id found in parameters or passed');
+                }
             }
 
             $returnModel = self::_saveTree($model, $params, $parentId);
