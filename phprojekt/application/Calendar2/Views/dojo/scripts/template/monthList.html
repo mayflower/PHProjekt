@@ -8,11 +8,11 @@
                 {% endfor %}
             </tr>
         </thead>
-        <tbody>
+        <tbody style="height:100%">
             {% for row in schedule %}
-            <tr height="80px">
+            <tr>
                 {% for day in row %}
-                <td class="monthEvents" style="background-color:{{day.color}};">
+                <td class="monthEvents" style="height: 80px; background-color:{{day.color}};">
                     <a href="javascript: dojo.publish('Calendar2.anotherViewDayClick', ['{{day.date}}']);">{{day.day}}</a>
                     <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
                         onClick="dojo.publish('Calendar2.openForm', [0, 0, '{{day.date}}']);">
