@@ -4,9 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>PHProjekt</title>
     <link rel="shortcut icon" href="<?php echo $this->webPath; ?>img/favicon.ico" type="image/x-icon" />
-    <style type="text/css">
-        @import "<?php echo $this->webPath; ?>css/themes/phprojekt/phprojektCssCompiler.php";
-    </style>
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->webPath; ?>min/min/?g=phprojekt" />
     <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/dojo/dojo.js"></script>
     <script type="text/javascript">
         dojo.require('dojo.parser');
@@ -27,43 +25,23 @@
             return availHeight;
         }
 
-        function init() {
-            availHeight = getMaxHeight();
-
-            dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
-            if (dijit.byId('completeContent')) {
-                dijit.byId('completeContent').resize();
-            }
-
-            if (dojo.byId('completeCenterContent')) {
-                dojo.style(dojo.byId('completeCenterContent'), "height", (availHeight - 55) + "px");
-                if (dijit.byId('completeCenterContent')) {
-                    dijit.byId('completeCenterContent').resize();
-                }
-            }
-        }
-
         dojo.addOnLoad(function() {
             dojo.parser.parse();
-            init();
         });
 
-        window.onresize = function() {
-            init();
-        };
     </script>
 </head>
 <body class="phprojekt">
 
-<div id="completeContent" dojoType="dijit.layout.BorderContainer" persist="true"
+<div class="completeContent" dojoType="dijit.layout.BorderContainer" persist="true"
  style="width: 100%; height: 1000px;">
     <!-- Left Content -->
-    <div id="navigation-container" dojoType="dijit.layout.ContentPane" region="left" splitter="false" minSize="180"
+    <div class="navigationContainer" dojoType="dijit.layout.ContentPane" region="left" splitter="false" minSize="180"
     maxSize="300"
     style="width: 15%; overflow: hidden;">
         <div region="center" dojoType="dijit.layout.ContentPane">
-            <div id="tree-navigation">
-                <div dojoType="dijit.layout.ContentPane" id="treeBox"
+            <div class="treeNavigation">
+                <div dojoType="dijit.layout.ContentPane" class="treeBox"
                  style="height: 100%;">
                 </div>
             </div>
@@ -71,25 +49,25 @@
     </div>
 
     <!-- Top Bar menu -->
-    <div dojoType="dijit.layout.ContentPane" region="top" id="header"
+    <div dojoType="dijit.layout.ContentPane" region="top" class="header"
     style="height: 55px; overflow: hidden;">
         <img class="left" src="<?php echo $this->webPath; ?>img/logo.png" alt="PHProjekt 6" />
-        <div id="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
+        <div class="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
         </div>
-        <div id="loadingIcon" class="right align-right"
+        <div class="loadingIcon" class="right align-right"
         style="margin-top: 5px; margin-bottom: 5px; display: none;">
             <img class="left" src="<?php echo $this->webPath; ?>img/ajax-loader.gif" alt="Loadding" />
         </div>
     </div>
 
     <!-- Center Content -->
-    <div    id="completeCenterContent"
+    <div    class="completeCenterContent"
             dojoType="dijit.layout.ContentPane"
             region="center"
             style="height: 1000px;">
         <br/>
         <?php $p = Phprojekt::getInstance(); ?>
-        <div class="prepend-0" id="content">
+        <div class="prepend-0" class="content">
             <h2><?php echo $p->translate('Migration'); ?></h2>
             <p>
                 <?php echo $p->translate(<<<HERE
