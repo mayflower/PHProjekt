@@ -30,13 +30,13 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
     id: 0,
     sendData: [],
     _bookUrl: null,
-    _contentBar: null,
     _date: null,
     _favoriteButton: null,
     _favoritesUrl: null,
     _manFavBoxesHeight: 18,
     _templateRenderer: null,
     _url: null,
+    _hourHeight: 40,
 
     constructor: function(main, date) {
         // Summary:
@@ -132,10 +132,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         phpr.DataStore.addStore({url: this._bookUrl});
         phpr.DataStore.requestData({url: this._bookUrl, processData: dojo.hitch(this, function() {
             var data       = phpr.DataStore.getData({url: this._bookUrl});
-            var hourHeight = 40;
 
             // Clean "Day View"
-            dijit.byId("projectBookingContainer").destroyDescendants();
+            this._dayView.projectBookingContainer.destroyDescendants();
 
             // Draw hours block
             for (var i in data) {
@@ -149,17 +148,16 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                     endTime = '24:00';
                 }
 
-                var start = this._contentBar.convertHourToPixels(hourHeight, data[i].startTime);
-                var end   = this._contentBar.convertHourToPixels(hourHeight, endTime);
+                var start = this._convertHourToPixels(data[i].startTime);
+                var end   = this._convertHourToPixels(endTime);
                 var top   = start + 'px';
                 var height;
-                if ((end - start) - 6 < 0) {
-                    height = (end - start) + 'px';
-                } else {
-                    height = (end - start) - 6 + 'px';
-                }
+                height = (end - start);
+                var minPixel = this._convertHourToPixels("00:15");
+                height = Math.max(height, minPixel) - 6;
+                height += "px";
 
-                var tmp       = dojo.doc.createElement("div");
+                var tmp       = dojo.create("div");
                 tmp.id        = 'targetBooking' + data[i].id;
                 tmp.innerHTML = data[i].display;
                 dojo.addClass(tmp, dndClass);
@@ -597,7 +595,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         var hour = start + 1;
         var end  = phpr.date.getIsoTime(hour + ':' + end);
 
-        this.drawFormView(dojo.byId("buttonHours" + index), this.dateObject, index, end, '', "\n");
+        this.drawFormView(this._dayView["buttonHours" + index].domNode, this.dateObject, index, end, '', "\n");
     },
 
     _getNow: function() {
@@ -606,5 +604,19 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         // Description:
         //    Return the current HH:mm
         return phpr.date.getIsoTime(new Date());
+    },
+
+    _convertHourToPixels: function(time) {
+        var hours   = (time.substr(0, 2) * this._hourHeight);
+        var minutes = Math.floor((((time.substr(3, 2) / 60)) * this._hourHeight));
+
+        return hours + minutes;
+    },
+
+    _convertAmountToPixels: function(time) {
+        var hours   = (time.substr(0, 2) * this._hourHeight);
+        var minutes = Math.floor((time.substr(3, 2) / 60) * this._hourHeight);
+
+        return hours + minutes;
     }
 });

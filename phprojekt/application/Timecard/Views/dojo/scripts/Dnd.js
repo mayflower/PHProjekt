@@ -19,38 +19,7 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-dojo.provide("phpr.Timecard.ContentBar");
 dojo.provide("phpr.Timecard.Favorites");
-
-dojo.declare("phpr.Timecard.ContentBar", null, {
-    dojoNode: null,
-    node: null,
-    start: 0,
-    end: 24,
-
-    constructor: function(id) {
-        this.dojoNode = dojo.byId(id);
-        this.node = dijit.byId(id);
-    },
-
-    getHeight: function() {
-        return Math.abs(this.dojoNode.style.height.replace(/px/, ""));
-    },
-
-    convertHourToPixels: function(hourHeight, time) {
-        var hours   = ((time.substr(0, 2) - this.start) * hourHeight);
-        var minutes = Math.floor((((time.substr(3, 2) / 60)) * hourHeight));
-
-        return hours + minutes;
-    },
-
-    convertAmountToPixels: function(hourHeight, time) {
-        var hours   = (time.substr(0, 2) * hourHeight);
-        var minutes = Math.floor((time.substr(3, 2) / 60) * hourHeight);
-
-        return hours + minutes;
-    }
-});
 
 dojo.declare("phpr.Timecard.Favorites", dojo.dnd.Source, {
     MIN_HEIGHT: 18,
