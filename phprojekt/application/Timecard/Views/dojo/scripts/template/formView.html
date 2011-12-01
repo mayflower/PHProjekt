@@ -1,7 +1,8 @@
 <div>
     <!-- Form -->
-    <div dojoType="dijit.layout.ContentPane" id="projectBookingForm" style="overflow-y: auto">
-        <form dojoType="dijit.form.Form" id="bookingForm" name="bookingForm" onsubmit="return false;"
+    <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="projectBookingForm" style="overflow-y: auto;"
+            class="projectBookingForm">
+        <form dojoType="dijit.form.Form" dojoAttachPoint="bookingForm" name="bookingForm" onsubmit="return false;"
         style="display: inline;">
         <table class="form formContainer">
         <col class="col1" />
@@ -10,15 +11,15 @@
         <tr dojoAttachPoint="formBottom">
             <td>&nbsp;</td>
             <td>
-                <button dojoType="dijit.form.Button" baseClass="positive" id="saveBookingButton" type="button"
-                iconClass="tick">
+                <button dojoType="dijit.form.Button" baseClass="positive" dojoAttachPoint="saveBookingButton"
+                    type="button" iconClass="tick">
                     {{saveText}}
                 </button>
                 &nbsp;
                 <div id="deleteBookingButtonDiv"
                 style="display: none;">
-                    <button dojoType="dijit.form.Button" baseClass="positive" id="deleteBookingButton" type="button"
-                    iconClass="cross">
+                    <button dojoType="dijit.form.Button" baseClass="positive" dojoAttachPoint="deleteBookingButton"
+                        class="deleteBookingButton" type="button" iconClass="cross">
                         {{deleteText}}
                     </button>
                 </div>

@@ -1,4 +1,4 @@
-<table id="tableMonthView">
+<table dojoAttachPoint="tableMonthView" class="tableMonthView">
 <col class="col1" />
 <col class="col2" />
 <col class="col3" />
@@ -9,15 +9,11 @@
         <div class="timecardSeparator"></div>
     </td>
     <td>
-        <input id="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox"
+        <input dojoAttachPoint="selectDate" name="selectDate" type="text" dojoType="dijit.form.DateTextBox"
         constraints="{datePattern: 'yyyy-MM-dd', strict: true}"
         style="width: 90px;" />
-        <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick" class="smallIcon"
-        onClick="
-        if (dijit.byId('selectDate').get('value') != null) {
-            dojo.publish('Timecard.changeDate', [dijit.byId('selectDate').get('value')]);
-        }">
-        </button>
+        <button dojoType="dijit.form.Button" dojoAttachPoint="selectDateButton" baseClass="positive" type="button"
+            iconClass="tick" class="smallIcon"></button>
         <div class="timecardSeparator"></div>
     </td>
 </tr>
