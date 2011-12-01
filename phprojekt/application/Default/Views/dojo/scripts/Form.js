@@ -1450,6 +1450,5 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
         this.dialog.resize();
         this._setNodeSizes();
         this.form.resize();
-        window.bla = this;
     }
 });
