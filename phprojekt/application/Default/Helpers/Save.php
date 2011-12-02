@@ -157,6 +157,10 @@ final class Default_Helpers_Save
             }
         }
 
+        // This hurts. It is needed to make Node_Database save everything.
+        $node->projectId = 0;
+        $node->setParentNode($parentNode);
+
         return $model;
     }
 
