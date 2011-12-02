@@ -658,14 +658,12 @@ class Calendar2_IndexController extends IndexController
         $end   = new Datetime($end, $this->_getUserTimezone());
 
         $model  = new Calendar2_Models_Calendar2();
-        $events = $model->fetchAllForPeriod($start, $end);
+        $events = $model->fetchAllForPeriod($start, $end, $user);
 
         $available = true;
-        foreach ($events as $index => $event) {
-            // For availability purposes, we ignore events that the user has
-            // rejected.
-            if ($event->confirmationStatus
-                    != Calendar2_Models_Calendar2::STATUS_REJECTED) {
+        foreach ($events as $event) {
+            // For availability purposes, we ignore events that the user has rejected.
+            if ($event->getConfirmationStatus($user) != Calendar2_Models_Calendar2::STATUS_REJECTED) {
                 $available = false;
                 break;
             }
