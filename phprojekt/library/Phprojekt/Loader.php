@@ -280,11 +280,11 @@ class Phprojekt_Loader extends Zend_Loader
 
         // Try the system module
         $path = PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR
-            . self::VIEW . DIRECTORY_SEPARATOR . 'dojo' . DIRECTORY_SEPARATOR;
+            . 'Views' . DIRECTORY_SEPARATOR . 'dojo' . DIRECTORY_SEPARATOR;
         if (!is_dir($path)) {
             // Try the user module
             $path = PHPR_USER_CORE_PATH . $module . DIRECTORY_SEPARATOR
-            . self::VIEW . DIRECTORY_SEPARATOR . 'dojo' . DIRECTORY_SEPARATOR;
+            . 'Views' . DIRECTORY_SEPARATOR . 'dojo' . DIRECTORY_SEPARATOR;
         }
 
         $view->addScriptPath($path);

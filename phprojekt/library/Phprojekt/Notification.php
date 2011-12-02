@@ -478,7 +478,7 @@ class Phprojekt_Notification
                 $description = 'has deleted the entry';
                 break;
             case (self::LAST_ACTION_EDIT):
-                $description = 'has edit the existing entry';
+                $description = 'has modified the existing entry';
                 break;
             case (self::LAST_ACTION_LOGIN):
                 $description = 'has logged in';
