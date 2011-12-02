@@ -212,7 +212,7 @@ $lang["Filter_OR"] = "ODER";
 // Toaster
 $lang["has created the new entry"] = "hat den neuen Eintrag erstellt";
 $lang["has deleted the entry"] = "hat den Eintrag gelöscht";
-$lang["has edit the existing entry"] = "hat vorhandenen Eintrag bearbeitet";
+$lang["has modified the existing entry"] = "hat vorhandenen Eintrag bearbeitet";
 $lang["has logged in"] = "hat sich angemeldet";
 $lang["has logged out"] = "hat sich abgemeldet";
 $lang["Your event starts at"] = "Die Veranstaltung beginnt um";
