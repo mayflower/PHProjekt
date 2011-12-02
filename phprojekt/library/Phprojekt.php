@@ -479,7 +479,9 @@ class Phprojekt
             $this->_dieWithInternalServerError();
 
         }
-        Zend_Db_Table_Abstract::setDefaultMetadataCache($this->_cache);
+
+        $this->_setupZendDbTableCache();
+        $this->_setupZendLocaleCache();
 
         // Check Logs
         $this->getLog();
@@ -552,6 +554,44 @@ class Phprojekt
         set_error_handler(Array("Phprojekt", "errorHandler"));
 
         $front->registerPlugin(new Phprojekt_ExtensionsPlugin());
+    }
+
+    /**
+     * Set up a cache for Zend_Db_Table.
+     */
+    private function _setupZendDbTableCache()
+    {
+        $cacheDir = PHPR_TEMP_PATH . 'zendDbTable_cache' . DIRECTORY_SEPARATOR;
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0700);
+        }
+        Zend_Db_Table_Abstract::setDefaultMetadataCache(
+            Zend_Cache::factory(
+                'Core',
+                'File',
+                array('automatic_serialization' => true),
+                array('cache_dir' => $cacheDir)
+            )
+        );
+    }
+
+    /**
+     * Set up a cache for Zend_Locale. See http://jira.opensource.mayflower.de/jira/browse/PHPROJEKT-150
+     */
+    private function _setupZendLocaleCache()
+    {
+        $cacheDir = PHPR_TEMP_PATH . 'zendLocale_cache' . DIRECTORY_SEPARATOR;
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0700);
+        }
+        Zend_Locale::setCache(
+            Zend_Cache::factory(
+                'Core',
+                'File',
+                array(),
+                array('cache_dir' => $cacheDir)
+            )
+        );
     }
 
     /**
