@@ -481,9 +481,6 @@ class Phprojekt
         }
         Zend_Db_Table_Abstract::setDefaultMetadataCache($this->_cache);
 
-        // Use for Debug only
-        Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
-
         // Check Logs
         $this->getLog();
 
