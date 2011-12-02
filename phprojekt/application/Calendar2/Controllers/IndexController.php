@@ -367,8 +367,8 @@ class Calendar2_IndexController extends IndexController
         }
 
         if ($sendNotifications) {
-            $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
             $model->getNotification()->saveFrontendMessage();
+            $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
         }
 
         Phprojekt_Converter_Json::echoConvert(
