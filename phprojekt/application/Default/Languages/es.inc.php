@@ -208,7 +208,7 @@ $lang["Filter_OR"] = "O";
 // Toaster
 $lang["has created the new entry"] = "ha creado el nuevo ítem";
 $lang["has deleted the entry"] = "ha borrado el ítem";
-$lang["has edit the existing entry"] = "ha editado el ítem existente";
+$lang["has modified the existing entry"] = "ha editado el ítem existente";
 $lang["has logged in"] = "ha entrado";
 $lang["has logged out"] = "ha salído";
 $lang["Your event starts at"] = "Su evento empieza a las";
