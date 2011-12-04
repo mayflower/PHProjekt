@@ -164,6 +164,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 var tmp       = dojo.create("div");
                 tmp.id        = 'targetBooking' + data[i].id;
                 tmp.innerHTML = data[i].display;
+                if (data[i].projectId == 1) {
+                    tmp.innerHTML = "unassigned";
+                }
                 dojo.addClass(tmp, dndClass);
                 dojo.style(tmp, "top", top);
                 dojo.style(tmp, "height", height);
@@ -250,6 +253,14 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                                 }
                             }
                             range.unshift({'id': parseInt(favorites[i].id), 'name': favorites[i].name});
+                        }
+                    }
+
+                    var l = range.length;
+                    for (var i = 0; i < l; i++) {
+                        if (range[i].id == 1) {
+                            range[i].name = "unassigned";
+                            break;
                         }
                     }
                     formData.push(this._templateRenderer.selectRender(range, meta[3].label, meta[3].key, -1,
