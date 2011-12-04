@@ -161,7 +161,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 height = Math.max(height, minPixel) - 6;
                 height += "px";
 
-                var tmp       = dojo.doc.createElement("div");
+                var tmp       = dojo.create("div");
                 tmp.id        = 'targetBooking' + data[i].id;
                 tmp.innerHTML = data[i].display;
                 dojo.addClass(tmp, dndClass);
