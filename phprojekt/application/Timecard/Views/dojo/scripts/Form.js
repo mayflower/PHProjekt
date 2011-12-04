@@ -30,7 +30,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
     id: 0,
     sendData: [],
     _bookUrl: null,
-    _contentBar: null,
     _date: null,
     _favoriteButton: null,
     _favoritesUrl: null,
@@ -38,6 +37,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
     _templateRenderer: null,
     _timecardTooltipDialog: null,
     _url: null,
+    _hourHeight: 40,
 
     constructor: function(main, date) {
         // Summary:
@@ -87,7 +87,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         });
 
         this.main._contentWidget.dayView.set('content', this._dayView);
-        this._contentBar = new phpr.Timecard.ContentBar("projectBookingContainer");
 
         this.main._contentWidget.dayView.domNode.scrollTop = 320;
 
@@ -138,7 +137,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         phpr.DataStore.addStore({url: this._bookUrl});
         phpr.DataStore.requestData({url: this._bookUrl, processData: dojo.hitch(this, function() {
             var data       = phpr.DataStore.getData({url: this._bookUrl});
-            var hourHeight = 40;
 
             // Clean "Day View"
             this._dayView.projectBookingContainer.destroyDescendants();
@@ -155,8 +153,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                     endTime = '24:00';
                 }
 
-                var start = this._contentBar.convertHourToPixels(hourHeight, data[i].startTime);
-                var end   = this._contentBar.convertHourToPixels(hourHeight, endTime);
+                var start = this._convertHourToPixels(data[i].startTime);
+                var end   = this._convertHourToPixels(endTime);
                 var top   = start + 'px';
                 var height;
                 if ((end - start) - 6 < 0) {
@@ -625,5 +623,19 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         // Description:
         //    Return the current HH:mm
         return phpr.date.getIsoTime(new Date());
+    },
+
+    _convertHourToPixels: function(time) {
+        var hours   = (time.substr(0, 2) * this._hourHeight);
+        var minutes = Math.floor((((time.substr(3, 2) / 60)) * this._hourHeight));
+
+        return hours + minutes;
+    },
+
+    _convertAmountToPixels: function(time) {
+        var hours   = (time.substr(0, 2) * this._hourHeight);
+        var minutes = Math.floor((time.substr(3, 2) / 60) * this._hourHeight);
+
+        return hours + minutes;
     }
 });
