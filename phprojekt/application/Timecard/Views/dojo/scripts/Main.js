@@ -23,6 +23,7 @@ dojo.provide("phpr.Timecard.Main");
 
 dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     _date: new Date(),
+    _contentWidget: null,
 
     constructor: function() {
         this.module = 'Timecard';
@@ -38,15 +39,15 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         // Summary:
         //   Custom renderTemplate for timecard
         var view = phpr.viewManager.useDefaultView({blank: true}).clear();
-        var content = new phpr.Default.System.TemplateWrapper({
+        this._contentWidget = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Timecard.template.mainContent.html",
             templateData: {
                 manageFavoritesText: phpr.nls.get('Manage project list'),
                 monthTxt:            phpr.date.getLongTranslateMonth(this._date.getMonth())
             }
         });
-        view.centerMainContent.set('content', content);
-        this.garbageCollector.addNode(content);
+        view.centerMainContent.set('content', this._contentWidget);
+        this.garbageCollector.addNode(this._contentWidget);
 
         // manageFavorites opens a dialog which places itself outside of the regular dom, so we need to clean it up
         // manually
