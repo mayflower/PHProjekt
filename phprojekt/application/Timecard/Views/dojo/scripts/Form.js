@@ -470,7 +470,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         this.id = 0;
         phpr.DataStore.deleteData({url: this._url});
         phpr.DataStore.deleteData({url: this._bookUrl});
-        this.main.grid.reload(this.dateObject, true);
         this.drawDayView();
     },
 
