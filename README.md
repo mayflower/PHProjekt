@@ -30,6 +30,9 @@ For a new feature, please open a pull request.
  5. If you include third party libraries, make sure that they can be distributed und
     the terms of the Lesser GNU Public License 3 as described in the LICENSE file.
 
+ 6. If you change anything under htdocs/dojo, recompile the dojo packages to include new compressed javascript
+    ("ant compilejs" in the project root).
+
 Happy hacking.
 
 (c) 2011 Mayflower GmbH and Contributors
