@@ -156,11 +156,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 var end   = this._convertHourToPixels(endTime);
                 var top   = start + 'px';
                 var height;
-                if ((end - start) - 6 < 0) {
-                    height = (end - start) + 'px';
-                } else {
-                    height = (end - start) - 6 + 'px';
-                }
+                height = (end - start);
+                var minPixel = this._convertHourToPixels("00:15");
+                height = Math.max(height, minPixel) - 6;
+                height += "px";
 
                 var tmp       = dojo.doc.createElement("div");
                 tmp.id        = 'targetBooking' + data[i].id;
