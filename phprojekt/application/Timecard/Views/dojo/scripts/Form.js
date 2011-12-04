@@ -565,6 +565,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
             }
 
             var temp = startTime.split(':');
+
             var start = parseInt(temp[0]);
             if (start === 0) {
                 var start = parseInt(temp[0].substr(1, 1));
@@ -572,12 +573,10 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
             var end = parseInt(temp[1]);
 
             var index;
-            if (end > 0 && end < 30) {
+            if (end >= 0 && end < 30) {
                 index = start + ':00';
-            } else if (end > 30) {
+            } else if (end >= 30) {
                 index = start + ':30';
-            } else {
-                index = start + ':' + temp[1];
             }
 
             this.drawFormView(this._dayView["buttonHours" + index].domNode, this.dateObject, startTime, endTime,
