@@ -171,7 +171,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonHasRunningBookingsAction()
     {
-        $records = $this->getModelObject()->getRunningBookings(Phprojekt_Auth::getUserId());
+        $records = $this->getModelObject()->getRunningBookings(Phprojekt_Auth_Proxy::getEffectiveUserId());
         if (count($records) > 0) {
             $record = end($records);
             $date   = $record->startDatetime;
