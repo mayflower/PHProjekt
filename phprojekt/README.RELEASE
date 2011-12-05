@@ -20,16 +20,19 @@ This is a checklist for all the steps that the release require.
     1.4 Make a search and replace for @package_version@ and replace
         it with the current version.
 
-    1.5 commit
+    1.5 recompile javascript
+        1.5.1 ant compilejs
 
-    1.5 Make a new tag.
+    1.6 commit
+
+    1.7 Make a new tag.
         1.1.8 git tag -s 6.x.x
         1.1.9 git push 6.x.x
 
     New tags are automatically fetched from github and will be displayed
     on the phprojekt.com website.
 
-    1.6 Mark release as done in Jira
+    1.8 Mark release as done in Jira
 
 2 Web
 
