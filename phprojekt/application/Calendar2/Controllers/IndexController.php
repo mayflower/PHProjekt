@@ -421,8 +421,8 @@ class Calendar2_IndexController extends IndexController
                     $model->$key = $value;
                 }
                 $model->saveSingleEvent();
-                $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
                 $model->getNotification()->saveFrontendMessage();
+                $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
                 $showId[] = $id;
             }
         }
@@ -606,8 +606,8 @@ class Calendar2_IndexController extends IndexController
             $model->delete();
         } else {
             $model->deleteSingleEvent();
-            $model->getNotification()->send();
             $model->getNotification()->saveFrontendMessage();
+            $model->getNotification()->send();
         }
 
         Phprojekt_Converter_Json::echoConvert(
