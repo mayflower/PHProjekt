@@ -472,7 +472,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function __set($key, $value)
     {
         if (null !== $this->_activeRecord) {
-            // Don�t allow to set the tree dependent stuff
+            // Don't allow to set the tree dependent stuff
             if (!in_array($key, array('id', 'path'))) {
                 $this->getActiveRecord()->$key = $value;
             }
