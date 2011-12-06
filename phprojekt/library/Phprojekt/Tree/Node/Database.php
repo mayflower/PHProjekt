@@ -252,7 +252,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         } else {
             $database = $this->getActiveRecord()->getAdapter();
             $where    = sprintf("module_id = %d AND user_id = %d AND access > 0",
-                Phprojekt_Module::getId($this->getActiveRecord()->getModelName()), Phprojekt_Auth::getUserId());
+                Phprojekt_Module::getId($this->getActiveRecord()->getModelName()),
+                Phprojekt_Auth::getUserId());
             $select = $database->select();
             $select->from('item_rights', 'item_id')
                    ->where($where);
