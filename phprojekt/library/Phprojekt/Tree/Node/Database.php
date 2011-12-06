@@ -241,39 +241,23 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      *
      * @return Phprojekt_Tree_Node_Database The tree class with only the allowed nodes.
      */
-    public function applyRights($object)
+    public function applyRights(Phprojekt_Tree_Node_Database $object)
     {
-        $sessionName     = 'Phprojekt_Tree_Node_Database-applyRights';
-        $rightsNamespace = new Zend_Session_Namespace($sessionName);
-
-        // Get the itemRights relation
-        if (isset($rightsNamespace->rights)) {
-            $rights = $rightsNamespace->rights;
-        } else {
-            $database = $this->getActiveRecord()->getAdapter();
-            $where    = sprintf("module_id = %d AND user_id = %d AND access > 0",
-                Phprojekt_Module::getId($this->getActiveRecord()->getModelName()), Phprojekt_Auth::getUserId());
-            $select = $database->select();
-            $select->from('item_rights', 'item_id')
-                   ->where($where);
-            $results = $select->query()->fetchAll();
-            $rights  = array();
-            foreach ($results as $result) {
-                $rights[] = $result['item_id'];
-            }
-            $rightsNamespace->rights = $rights;
+        if (Phprojekt_Auth::isAdminUser()) {
+            return $object;
         }
 
-        // Delete the projects where the user don't have access
-        if (!Phprojekt_Auth::isAdminUser()) {
-            foreach ($object as $index => $tree) {
-                if (!in_array($tree->id, $rights)) {
-                    if ($tree->isRootNodeForCurrentTree()) {
-                        throw new Phprojekt_Tree_Node_Exception('Requested node not found');
-                    } else {
-                        $this->deleteNode($object, $tree->id);
-                    }
-                }
+        $projectIds   = array_keys($object->_index);
+        // We don't use the effective user id here to make access management more simple. This way, a user really needs
+        // read access to be able to look at a project.
+        $rights       = Phprojekt_Right::getRightsForItems(1, 1, Phprojekt_Auth::getUserId(), $projectIds);
+        $currentRight = Phprojekt_Acl::ALL;
+        foreach ($object as $index => $node) {
+            $currentRight = isset($rights[$node->id]) ? $rights[$node->id] : $currentRight;
+            /* delete node cannot update the iterator reference, so we check if it's still in the index or already
+             * removed */
+            if ((Phprojekt_Acl::READ & $currentRight) <= 0 && isset($object->_index[$node->id])) {
+                $object->deleteNode($object, $node->id);
             }
         }
 
@@ -293,6 +277,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         if (isset($object->_children[$id])) {
             unset($object->_children[$id]);
+            unset($object->_index[$id]);
         } else {
             foreach ($object->_children as $children) {
                 $this->deleteNode($children, $id);
@@ -489,7 +474,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function __set($key, $value)
     {
         if (null !== $this->_activeRecord) {
-            // Don´t allow to set the tree dependent stuff
+            // Don't allow to set the tree dependent stuff
             if (!in_array($key, array('id', 'path'))) {
                 $this->getActiveRecord()->$key = $value;
             }
