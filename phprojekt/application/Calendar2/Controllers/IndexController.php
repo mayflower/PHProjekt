@@ -601,13 +601,13 @@ class Calendar2_IndexController extends IndexController
             if ($sendNotifications) {
                 $notification = $model->getNotification();
                 $notification->setControllProcess(Phprojekt_Notification::LAST_ACTION_DELETE);
-                $notification->send();
+                $notification->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
             }
             $model->delete();
         } else {
             $model->deleteSingleEvent();
             $model->getNotification()->saveFrontendMessage();
-            $model->getNotification()->send();
+            $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
         }
 
         Phprojekt_Converter_Json::echoConvert(
