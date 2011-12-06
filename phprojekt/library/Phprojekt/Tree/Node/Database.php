@@ -248,6 +248,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         }
 
         $projectIds   = array_keys($object->_index);
+        // We don't use the effective user id here to make access management more simple. This way, a user really needs
+        // read access to be able to look at a project.
         $rights       = Phprojekt_Right::getRightsForItems(1, 1, Phprojekt_Auth::getUserId(), $projectIds);
         $currentRight = Phprojekt_Acl::ALL;
         foreach ($object as $index => $node) {
