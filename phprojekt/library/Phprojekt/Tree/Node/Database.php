@@ -294,6 +294,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     {
         if (isset($object->_children[$id])) {
             unset($object->_children[$id]);
+            unset($object->_index[$id]);
         } else {
             foreach ($object->_children as $children) {
                 $this->deleteNode($children, $id);
