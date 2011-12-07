@@ -46,24 +46,28 @@ class Phprojekt_CompressedSender {
      */
     public static function send($data = '')
     {
-        $HTTP_ACCEPT_ENCODING = $_SERVER["HTTP_ACCEPT_ENCODING"];
-        if ( headers_sent() ) {
-            $encoding = false;
-        } else if ( strpos($HTTP_ACCEPT_ENCODING, 'x-gzip') !== false ) {
-            $encoding = 'x-gzip';
-        } else if ( strpos($HTTP_ACCEPT_ENCODING, 'gzip') !== false ) {
-            $encoding = 'gzip';
-        } else {
-            $encoding = false;
+        if (!headers_sent()) {
+            if (array_key_exists('HTTP_ACCEPT_ENCODING', $_SERVER)) {
+                $HTTP_ACCEPT_ENCODING = $_SERVER['HTTP_ACCEPT_ENCODING'];
+                if ( headers_sent() ) {
+                    $encoding = false;
+                } else if ( strpos($HTTP_ACCEPT_ENCODING, 'x-gzip') !== false ) {
+                    $encoding = 'x-gzip';
+                } else if ( strpos($HTTP_ACCEPT_ENCODING, 'gzip') !== false ) {
+                    $encoding = 'gzip';
+                } else {
+                    $encoding = false;
+                }
+
+                // no need to waste resources in compressing very little data
+                if (strlen($data) > 2048 && $encoding && function_exists('gzencode')) {
+                    $data = gzencode($data, 5);
+                    header('Content-Encoding: ' . $encoding);
+                }
+            }
+            header('Content-Length: ' . strlen($data));
         }
 
-        // no need to waste resources in compressing very little data
-        if (strlen($data) > 2048 && $encoding && function_exists('gzencode')) {
-            $data = gzencode($data, 5);
-            header('Content-Encoding: ' . $encoding);
-        }
-
-        header('Content-Length: ' . strlen($data));
         echo $data;
     }
 }
