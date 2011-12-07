@@ -461,10 +461,17 @@ class Phprojekt_Item_AbstractTest extends DatabaseTest
         $module->find(2);
 
         $getRights = $module->getUsersRights();
+        $this->assertArrayHasKey('currentUser', $getRights);
+        $this->assertArrayHasKey('admin', $getRights['currentUser']);
         $this->assertTrue($getRights['currentUser']['admin']);
+        $this->assertArrayHasKey('userId', $getRight['currentUser']);
         $this->assertEquals($getRights['currentUser']['userId'], '1');
+        $this->assertArrayHasKey('write', $getRight['currentUser']);
         $this->assertEquals($getRights['currentUser']['write'], true);
+        $this->assertArrayHasKey(3, $getRights);
+        $this->assertArrayHasKey('itemid', $getRights[3]);
         $this->assertEquals($getRights[3]['itemId'], 2);
+        $this->assertArrayHasKey('write', $getRights[3]);
         $this->assertEquals($getRights[3]['write'], true);
 
         $module = new Timecard_Models_Timecard(array('db' => $this->sharedFixture));
