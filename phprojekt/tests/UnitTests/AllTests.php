@@ -44,6 +44,8 @@ define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../../'));
 
 require_once PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'Phprojekt.php';
 Phprojekt::getInstance();
+// Phprojekt::getInstance() indirectly sets the error handler which eats our errors.
+restore_error_handler();
 Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
 
 if (!defined('PHPUnit_MAIN_METHOD')) {
