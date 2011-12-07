@@ -312,7 +312,11 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public function __isset($key)
     {
-        return array_key_exists($key, $this->_data) || array_key_exists($key, get_object_vars($this));
+        if (isset($this->_data[$key])) {
+            return true;
+        }
+        $objectvars = get_object_vars($this);
+        return isset($objectvars[$key]);
     }
 
     /**
