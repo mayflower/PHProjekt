@@ -62,25 +62,21 @@ class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
      *
      * @return void
      */
-    public function saveFields($object, $action)
+    public function saveFields(Phprojekt_Item_Abstract $object, $action)
     {
-        if (is_object($object) === true) {
-            $differences = $this->_getDifferences($object, $action);
+        $differences = $this->_getDifferences($object, $action);
 
-            foreach ($differences as $fieldName => $difference) {
-                $history           = clone($this);
-                $history->userId   = Phprojekt_Auth::getUserId();
-                $history->moduleId = Phprojekt_Module::getId($object->getModelName());
-                $history->itemId   = $object->id;
-                $history->field    = $fieldName;
-                $history->oldValue = $difference['oldValue'];
-                $history->newValue = $difference['newValue'];
-                $history->action   = $action;
-                $history->datetime = gmdate("Y-m-d H:i:s");
-                $history->save();
-            }
-        } else {
-            throw new Zend_Exception('The object do not exist');
+        foreach ($differences as $fieldName => $difference) {
+            $history           = clone($this);
+            $history->userId   = Phprojekt_Auth::getUserId();
+            $history->moduleId = Phprojekt_Module::getId($object->getModelName());
+            $history->itemId   = $object->id;
+            $history->field    = $fieldName;
+            $history->oldValue = $difference['oldValue'];
+            $history->newValue = $difference['newValue'];
+            $history->action   = $action;
+            $history->datetime = gmdate("Y-m-d H:i:s");
+            $history->save();
         }
     }
 
