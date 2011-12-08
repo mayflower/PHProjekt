@@ -55,7 +55,7 @@ class Phprojekt
     /**
      * The extra part of the version number.
      */
-    const VERSION_EXTRA = 'beta1';
+    const VERSION_EXTRA = 'beta2';
 
     /**
      * Name of the Registry for current project.
