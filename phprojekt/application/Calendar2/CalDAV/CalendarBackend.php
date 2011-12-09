@@ -155,9 +155,7 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $lastModified = $events[0]->lastModified;
         foreach ($events as $e) {
             $calendarData->add($e->asVObject());
-                if ($e->lastModified > $lastModified) {
-                    $lastModified = $e->lastModified;
-                }
+            $lastModified = max($lastModified, $e->lastModified);
         }
         $lastModified = new Datetime($lastModified);
 
