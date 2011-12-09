@@ -62,6 +62,9 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
                 'id' => $user->id,
                 'uri' => 'default',
                 'principaluri' => $principalUri,
+                '{DAV:}displayname' => 'default',
+                '{http://apple.com/ns/ical/}calendar-color' => 'blue',
+                '{http://apple.com/ns/ical/}calendar-order' => 0,
                 '{' . Sabre_CalDAV_Plugin::NS_CALENDARSERVER . '}getctag' => time(),
                 '{' . Sabre_CalDAV_Plugin::NS_CALDAV . '}supported-calendar-component-set'
                     => new Sabre_CalDAV_Property_SupportedCalendarComponentSet(array('VEVENT'))
