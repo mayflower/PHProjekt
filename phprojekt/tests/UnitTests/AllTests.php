@@ -60,7 +60,6 @@ require_once 'Phprojekt/AllTests.php';
 require_once 'Timecard/AllTests.php';
 //require_once 'History/AllTests.php';
 require_once 'User/AllTests.php';
-//require_once 'Calendar/AllTests.php';
 require_once 'Note/AllTests.php';
 require_once 'Role/AllTests.php';
 require_once 'Tab/AllTests.php';
@@ -124,7 +123,6 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->addTest(Gantt_AllTests::suite());
         $suite->addTest(Default_AllTests::suite());
 
-        //$suite->addTest(Calendar_AllTests::suite());
         //$suite->addTest(Note_AllTests::suite());
         //$suite->addTest(Helpdesk_AllTests::suite());
         //$suite->addTest(History_AllTests::suite());
