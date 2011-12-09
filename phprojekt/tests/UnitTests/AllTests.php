@@ -70,6 +70,7 @@ require_once 'Contact/AllTests.php';
 require_once 'Filemanager/AllTests.php';
 require_once 'Gantt/AllTests.php';
 require_once 'Statistic/AllTests.php';
+require_once 'Calendar2/AllTests.php';
 
 /**
  * AllTests merges all test from the modules
@@ -122,6 +123,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->addTest(Filemanager_AllTests::suite());
         $suite->addTest(Gantt_AllTests::suite());
         $suite->addTest(Default_AllTests::suite());
+        $suite->addTest(Calendar2_AllTests::suite());
 
         //$suite->addTest(Note_AllTests::suite());
         //$suite->addTest(Helpdesk_AllTests::suite());
