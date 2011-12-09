@@ -46,4 +46,52 @@ class Calendar2_IndexController_Test extends FrontInit
     protected function getDataSet() {
         return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
     }
+
+    /**
+     * Test creation and subsequent deletion of the same event.
+     */
+    public function testCreateAndDelete()
+    {
+        $this->_setTimezone(1);
+
+        $this->setRequestUrl('Calendar2/index/jsonSave/nodeId/1/id/0');
+        $this->request->setParam('comments', '');
+        $this->request->setParam('confirmationStatus', '2');
+        $this->request->setParam('description', '');
+        $this->request->setParam('end', '2011-12-16 09:00');
+        $this->request->setParam('location', '');
+        $this->request->setParam('ownerId', '3');
+        $this->request->setParam('participants', '3');
+        $this->request->setParam('sendNotification', '0');
+        $this->request->setParam('start', '2011-12-16 08:00');
+        $this->request->setParam('summary', 'asd');
+        $this->request->setParam('visibility', '1');
+        $response = $this->getResponse();
+        $this->assertContains(IndexController::ADD_TRUE_TEXT, $response);
+
+        $response = Zend_Json::decode(substr($response, 5, -1));
+        $this->assertArrayHasKey('id', $response);
+        $id = $response['id'];
+
+        $this->_reset();
+        $this->setRequestUrl("Calendar2/index/jsonDelete/id/{$id}/occurrence/2011-12-16%2007:00:00");
+        $response = $this->getResponse();
+        $this->assertContains(IndexController::DELETE_TRUE_TEXT, $response);
+
+    }
+
+    private function _setTimezone($offset) {
+        $this->request = new Zend_Controller_Request_Http();
+        $this->setRequestUrl('Core/setting/jsonSave/nodeId/1/moduleName/User');
+        $this->request->setParam('confirmValue', '');
+        $this->request->setParam('email', '');
+        $this->request->setParam('language', 'en');
+        $this->request->setParam('oldValue', '');
+        $this->request->setParam('password', '');
+        $this->request->setParam('proxies[]', '');
+        $this->request->setParam('timeZone', "{$offset}");
+        $response = $this->getResponse();
+        $this->assertContains(IndexController::EDIT_TRUE_TEXT, $response);
+        $this->_reset();
+    }
 }
