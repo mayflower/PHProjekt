@@ -967,7 +967,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             array('veventkey' => 'COMMENT', 'ourkey' => 'comments'),
             array('veventkey' => 'UID', 'ourkey' => 'uid'),
             array('veventkey' => 'LAST-MODIFIED', 'ourkey' => 'lastModified'),
-            array('veventkey' => 'RRULE', 'ourkey' => 'rrule')
+            array('veventkey' => 'RRULE', 'ourkey' => 'rrule', 'default' => '')
         );
         foreach ($mappable as $m) {
             if (isset($vevent->$m['veventkey'])) {
