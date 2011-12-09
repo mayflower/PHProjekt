@@ -593,7 +593,7 @@ class Calendar2_IndexController extends IndexController
         if (empty($occurrence)) {
             $model = $model->find($id);
         } else {
-            $occurrence = new Datetime($occurrence, $this->_getUserTimezone());
+            $occurrence = new Datetime($occurrence, new DateTimeZone('UTC'));
             $model      = $model->findOccurrence($id, $occurrence);
         }
 
