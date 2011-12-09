@@ -118,16 +118,29 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $join     = 'JOIN calendar2_user_relation AS u ON calendar2.id = u.calendar2_id';
         $events   = $calendar->fetchAll($where, null, null, null, null, $join);
         $ret      = array();
+
+        $eventsByUri = array();
         foreach ($events as $event) {
-            $lastModified = $event->lastModified;
-            if (array_key_exists($event->uri, $ret)) {
-                $lastModified = max($event->lastModified, $ret[$event->uri]['lastmodified']);
+            $eventsByUri[$event->uid][] = $event;
+        }
+
+        foreach ($eventsByUri as $group) {
+            $calendarData = new Sabre_VObject_Component('vcalendar');
+            $calendarData->add('version', '2.0');
+            $calendarData->add('prodid', 'Phprojekt ' . Phprojekt::getVersion());
+            $lastModified = $group[0]->lastModified;
+            foreach ($group as $event) {
+                $calendarData->add($event->asVObject());
+                $lastModified = max($lastModified, $event->lastModified);
             }
-            $ret[$event->uri] = array(
-                'id' => $event->uid,
-                'uri' => $event->uri,
+
+            $ret[$group[0]->uri] = array(
+                'from' => 'objects',
+                'id' => $group[0]->uid,
+                'uri' => $group[0]->uri,
                 'lastmodified' => $lastModified,
-                'calendarid' => $calendarId
+                'calendarid' => $calendarId,
+                'calendardata' => $calendarData->serialize()
             );
         }
         return array_values($ret);
