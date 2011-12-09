@@ -23,7 +23,7 @@
  */
 
 /**
- * Tests for Calendar Index Controller
+ * Tests for Calendar2 Rrule helper
  *
  * @category   PHProjekt
  * @package    UnitTests
@@ -35,8 +35,10 @@
  * @version    Release: @package_version@
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  * @group      calendar2
+ * @group      calendar
  * @group      helper
  * @group      calendar2-helper
+ * @group      calendar-helper
  */
 class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
 {
