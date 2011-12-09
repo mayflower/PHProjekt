@@ -16,26 +16,60 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `calendar`
+-- Table structure for table `calendar2`
 --
 
-DROP TABLE IF EXISTS `calendar`;
+DROP TABLE IF EXISTS `calendar2`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `calendar` (
+CREATE TABLE `calendar2` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT '0',
-  `owner_id` int(11) DEFAULT NULL,
-  `project_id` int(11) NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `place` varchar(255) DEFAULT NULL,
-  `notes` varchar(255),
-  `start_datetime` datetime DEFAULT NULL,
-  `end_datetime` datetime DEFAULT NULL,
-  `status` int(1) DEFAULT '0',
-  `rrule` varchar(255),
-  `visibility` int(1) DEFAULT '0',
-  `participant_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL DEFAULT '1',
+  `summary` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `comments` varchar(255) DEFAULT NULL,
+  `start` datetime DEFAULT NULL,
+  `last_end` datetime DEFAULT NULL,
+  `end` datetime DEFAULT NULL,
+  `owner_id` int(11) NOT NULL,
+  `rrule` varchar(255) DEFAULT NULL,
+  `recurrence_id` datetime DEFAULT NULL,
+  `visibility` int(1) DEFAULT '1',
+  `uid` varchar(255) NOT NULL,
+  `last_modified` datetime NOT NULL,
+  `uri` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MEMORY DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `calendar2_excluded_dates`
+--
+
+DROP TABLE IF EXISTS `calendar2_excluded_dates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `calendar2_excluded_dates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `calendar2_id` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MEMORY DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `calendar2_user_relation`
+--
+
+DROP TABLE IF EXISTS `calendar2_user_relation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `calendar2_user_relation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `calendar2_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `confirmation_status` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=MEMORY DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
