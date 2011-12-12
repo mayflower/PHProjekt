@@ -190,7 +190,14 @@ class Calendar2_Helper_Rrule
     {
         $dates = $this->getDatesInPeriod($date, $date);
 
-        return (0 < count($dates));
+        // We have to re-check because getDatesInPeriod also gives us events that start before but end after $date
+        foreach ($dates as $d) {
+            if ($d == $date) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
