@@ -255,6 +255,14 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $new->rrule = $rrules['new'];
             }
 
+            // Regenerate the uid if the new event has multiple occurrences, see
+            // http://jira.opensource.mayflower.de/jira/browse/PHPROJEKT-298
+            // As they don't belong together anymore, we also need to set a new uri.
+            if ($new->rrule) {
+                $new->_generateUid();
+                $new->uri = $new->uid;
+            }
+
             $old->save();
             $new->_saveToNewRow();
 
