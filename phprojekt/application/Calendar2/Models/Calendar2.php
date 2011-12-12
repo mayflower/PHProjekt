@@ -141,11 +141,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         // This is needed to make fields read-only if we're not the owner.
         $this->_information = new Calendar2_Models_CalendarInformation();
 
-        // UID generation method taken from rfc 5545
-        $this->uid = rand()
-                   . '-' . time()
-                   . '-' . getMyPid()
-                   . '@' . php_uname('n');
+        $this->_generateUid();
 
         // Default values
         $this->visibility = self::VISIBILITY_PUBLIC;
@@ -1288,5 +1284,14 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $tagsObject->saveTags($moduleId, $this->id, implode(' ', $tags));
 
         return $this->id;
+    }
+
+    /**
+     * Generate a unique uid for this event as recommended in rfc
+     */
+    private function _generateUid()
+    {
+        // UID generation method taken from rfc 5545
+        $this->uid = rand() . '-' . time() . '-' . getMyPid() . '@' . php_uname('n');
     }
 }
