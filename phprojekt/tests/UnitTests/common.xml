@@ -28,7 +28,7 @@
     <module id="8" name="Contact" label="Contact" save_type="1" version="6.0.0" active="1"/>
     <module id="9" name="Helpdesk" label="Helpdesk" save_type="0" version="6.0.0" active="1"/>
     <module id="10" name="Minutes" label="Minute" save_type="0" version="6.0.0" active="1"/>
-    <module id="11" name="Calendar2" label="Calendar2" save_type="1" version="6.1.0-beta1" active="1"/>
+    <module id="11" name="Calendar2" label="Calendar" save_type="1" version="6.1.0-beta1" active="1"/>
 
     <project_module_permissions
         module_id="1" project_id="1" />
