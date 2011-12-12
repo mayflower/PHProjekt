@@ -79,15 +79,11 @@ class Calendar2_Helper_Rrule
      * Constructor.
      *
      * @param Datetime          $first      The first occurence of the event.
-     * @param String            $rrule      The recurrence rule.
      * @param DateInterval      $duration   The duration of the events.
+     * @param String            $rrule      The recurrence rule.
      * @param Array of Datetime $exceptions Exceptions from the recurrence.
      */
-    public function __construct(
-            Datetime $first,
-            $duration,
-            $rrule,
-            Array $exceptions = array())
+    public function __construct(Datetime $first, DateInterval $duration, $rrule, Array $exceptions = array())
     {
         $this->_first       = $first;
         $this->_rrule       = $this->_parseRrule($rrule);
