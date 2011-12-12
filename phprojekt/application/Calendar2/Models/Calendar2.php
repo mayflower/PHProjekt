@@ -253,7 +253,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $rrules = $helper->splitRrule($splitDate);
 
             $old->rrule = $rrules['old'];
-            $new->rrule = $rrules['new'];
+
+            // Only overwrite the new rrule if the user didn't change it
+            if ($new->rrule == $old->rrule) {
+                $new->rrule = $rrules['new'];
+            }
 
             $old->save();
             $new->_saveToNewRow();
