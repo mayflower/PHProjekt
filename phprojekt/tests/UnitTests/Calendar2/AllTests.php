@@ -28,6 +28,7 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
 
 require_once 'Helper/RruleTest.php';
 require_once 'Controller/IndexControllerTest.php';
+require_once 'Caldav/CalendarBackendTest.php';
 
 /**
  * Test suite for the default module
@@ -65,6 +66,7 @@ class Calendar2_AllTests
 
         $suite->addTestSuite('Calendar2_Helper_Rrule_Test');
         $suite->addTestSuite('Calendar2_IndexController_Test');
+        $suite->addTestSuite('Calendar2_Caldav_CalendarBackend_Test');
 
         return $suite;
     }
