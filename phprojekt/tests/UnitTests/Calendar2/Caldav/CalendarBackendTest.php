@@ -51,7 +51,7 @@ class Calendar2_Caldav_CalendarBackend_Test extends FrontInit
      * Test whether splitting an recurring event saves the new event under a new UID.
      * See http://jira.opensource.mayflower.de/jira/browse/PHPROJEKT-298 for the ratio behind this.
      */
-    public function testSplittingRecurrenceGivesNewUid()
+    public function testSplittingRecurrenceGivesNewUidAndUri()
     {
         $this->setRequestUrl('Calendar2/index/jsonSave/nodeId/1/id/0');
         $this->request->setParam('comments', '');
@@ -96,12 +96,12 @@ class Calendar2_Caldav_CalendarBackend_Test extends FrontInit
         $this->assertArrayHasKey('id', $response);
         $secondId = $response['id'];
 
-        $event      = new Calendar2_Models_Calendar2();
-        $event->find($firstId);
-        $firstUid   = $event->uid;
+        $first = new Calendar2_Models_Calendar2();
+        $first->find($firstId);
 
-        $event->find($secondId);
-        $secondUid  = $event->uid;
-        $this->assertNotEquals($firstUid, $secondUid);
+        $second = new Calendar2_Models_Calendar2();
+        $second->find($secondId);
+        $this->assertNotEquals($first->uid, $second->uid);
+        $this->assertNotEquals($first->uri, $second->uri);
     }
 }
