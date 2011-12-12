@@ -91,11 +91,17 @@ class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
         );
 
         foreach ($contained as $date) {
-            $this->assertTrue($this->helper->containsDate($date));
+            $this->assertTrue(
+                $this->helper->containsDate($date),
+                'Failed asserting that the helper contains ' . $date->format('Y-m-d H:i:s')
+            );
         }
 
         foreach ($notContained as $date){
-            $this->assertFalse($this->helper->containsDate($date));
+            $this->assertFalse(
+                $this->helper->containsDate($date),
+                'Failed asserting that the helper does not contain ' . $date->format('Y-m-d H:i:s')
+            );
         }
     }
 
