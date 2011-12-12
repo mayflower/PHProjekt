@@ -35,8 +35,10 @@
  * @version    Release: @package_version@
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  * @group      calendar2
+ * @group      calendar
  * @group      helper
  * @group      calendar2-helper
+ * @group      calendar-helper
  */
 class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
 {
@@ -60,7 +62,7 @@ class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
     {
         $start  = new Datetime('2010-10-11 08:00:00 UTC');
         $end    = new Datetime('2010-10-17 08:00:00 UTC');
-        $actual  = $this->helper->getDatesInPeriod($start, $end);
+        $actual = $this->helper->getDatesInPeriod($start, $end);
 
         $expected = array(
             new Datetime('2010-10-11 08:00:00 UTC'),
