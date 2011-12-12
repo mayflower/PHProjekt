@@ -59,12 +59,12 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         }
         return array(
             array(
-                'id' => $user->id,
-                'uri' => 'default',
-                'principaluri' => $principalUri,
+                'id'                => $user->id,
+                'uri'               => 'default',
+                'principaluri'      => $principalUri,
                 '{DAV:}displayname' => 'default',
-                '{http://apple.com/ns/ical/}calendar-color' => 'blue',
-                '{http://apple.com/ns/ical/}calendar-order' => 0,
+                '{http://apple.com/ns/ical/}calendar-color'               => 'blue',
+                '{http://apple.com/ns/ical/}calendar-order'               => 0,
                 '{' . Sabre_CalDAV_Plugin::NS_CALENDARSERVER . '}getctag' => time(),
                 '{' . Sabre_CalDAV_Plugin::NS_CALDAV . '}supported-calendar-component-set'
                     => new Sabre_CalDAV_Property_SupportedCalendarComponentSet(array('VEVENT'))
@@ -135,11 +135,12 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
             }
 
             $ret[$group[0]->uri] = array(
-                'from' => 'objects',
-                'id' => $group[0]->uid,
-                'uri' => $group[0]->uri,
+
+                'from'         => 'objects',
+                'id'           => $group[0]->uid,
+                'uri'          => $group[0]->uri,
                 'lastmodified' => $lastModified,
-                'calendarid' => $calendarId,
+                'calendarid'   => $calendarId,
                 'calendardata' => $calendarData->serialize()
             );
         }
@@ -177,10 +178,10 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
 
 
         return array(
-            'id' => $events[0]->uid,
-            'uri' => $objectUri,
+            'id'           => $events[0]->uid,
+            'uri'          => $objectUri,
             'lastmodified' => $lastModified->format('Ymd\THis\Z'),
-            'calendarid' => $calendarId,
+            'calendarid'   => $calendarId,
             'calendardata' => $calendarData->serialize()
         );
     }
