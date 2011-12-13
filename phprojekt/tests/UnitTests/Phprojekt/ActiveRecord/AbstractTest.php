@@ -61,7 +61,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
     }
 
     protected function getDataSet() {
-        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
     }
 
     /**
