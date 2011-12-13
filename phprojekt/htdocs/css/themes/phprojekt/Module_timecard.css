@@ -1,48 +1,48 @@
 /* MonthView */
-.phprojekt #tableMonthView {
+.phprojekt .tableMonthView {
     width: 100%;
     line-height: 1.09;
 }
 
-.dj_ie7 .phprojekt #tableMonthView {
+.dj_ie7 .phprojekt .tableMonthView {
     line-height: 1.04 !important;
 }
 
-.dj_ie .phprojekt #tableMonthView {
+.dj_ie .phprojekt .tableMonthView {
     line-height: 1.15;
 }
 
-.phprojekt #tableMonthView .col1 {
+.phprojekt .tableMonthView .col1 {
     width: 15%;
 }
 
-.phprojekt #tableMonthView .col2 {
+.phprojekt .tableMonthView .col2 {
     width: 30%;
 }
 
-.phprojekt #tableMonthView .col3 {
+.phprojekt .tableMonthView .col3 {
     width: 55%;
 }
 
-.phprojekt #tableMonthView td {
+.phprojekt .tableMonthView td {
     padding: 0 0.5em 0 0.5em;
 }
 
-.phprojekt #tableMonthView .weekday,
-.phprojekt #tableMonthView .weekday a,
-.phprojekt #tableMonthView .weekend,
-.phprojekt #tableMonthView .weekend a {
+.phprojekt .tableMonthView .weekday,
+.phprojekt .tableMonthView .weekday a,
+.phprojekt .tableMonthView .weekend,
+.phprojekt .tableMonthView .weekend a {
     color: #000;
     text-decoration: none;
 }
 
-.phprojekt #tableMonthView .weekend,
-.phprojekt #tableMonthView .weekend a {
+.phprojekt .tableMonthView .weekend,
+.phprojekt .tableMonthView .weekend a {
     color: #ccc;
 }
 
-.phprojekt #tableMonthView .open,
-.phprojekt #tableMonthView .open a {
+.phprojekt .tableMonthView .open,
+.phprojekt .tableMonthView .open a {
     color: red;
 }
 
@@ -51,18 +51,18 @@
     height: 5px;
 }
 
-.dj_ie .phprojekt #tableMonthView .dijitButtonNode {
+.dj_ie .phprojekt .tableMonthView .dijitButtonNode {
     padding: 0 0 0 5px;
 }
 
 /* DayView */
-.phprojekt #timecardDayView {
+.phprojekt .timecardDayView {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
 }
 
-.phprojekt #timecardDayView .dayViewWhite,
-.phprojekt #timecardDayView .dayViewCelestial {
+.phprojekt .timecardDayView .dayViewWhite,
+.phprojekt .timecardDayView .dayViewCelestial {
     background-color: white;
     float: left;
     width: 100%;
@@ -72,8 +72,8 @@
     overflow: hidden;
 }
 
-.phprojekt #timecardDayView .dayViewWhite .hourBox,
-.phprojekt #timecardDayView .dayViewCelestial .hourBox {
+.phprojekt .timecardDayView .dayViewWhite .hourBox,
+.phprojekt .timecardDayView .dayViewCelestial .hourBox {
     background-color: #D4DFEA;
     border-top: 1px solid black;
     border-left: 1px solid black;
@@ -85,31 +85,31 @@
 }
 
 
-.dj_ie .phprojekt #timecardDayView .dayViewWhite .hourBox,
-.dj_ie .phprojekt #timecardDayView .dayViewCelestial .hourBox {
+.dj_ie .phprojekt .timecardDayView .dayViewWhite .hourBox,
+.dj_ie .phprojekt .timecardDayView .dayViewCelestial .hourBox {
     padding: 0 0 0 7px;
 }
 
-.phprojekt #timecardDayView .dayViewCelestial {
+.phprojekt .timecardDayView .dayViewCelestial {
     background-color: #e9f3ff;
 }
 
-.phprojekt #timecardDayView .addButton .dijitButtonNode {
+.phprojekt .timecardDayView .addButton .dijitButtonNode {
     width: 15px;
     border: none;
     background: none;
     padding: 0 3px 0 0;
 }
 
-.dj_ie .phprojekt #timecardDayView .addButton .dijitButtonNode {
+.dj_ie .phprojekt .timecardDayView .addButton .dijitButtonNode {
     padding: 0 3px 0 5px;
 }
 
-.dj_ie .phprojekt #timecardDayView .addButton .dijitButtonContents {
+.dj_ie .phprojekt .timecardDayView .addButton .dijitButtonContents {
     height: 15px;
 }
 
-.phprojekt #timecardDayView .add {
+.phprojekt .timecardDayView .add {
     margin-left: 0;
 }
 
@@ -151,11 +151,11 @@
     opacity: .5;
 }
 
-.dj_safari .phprojekt #projectBookingForm {
+.dj_safari .phprojekt .projectBookingForm {
     overflow: hidden;
 }
 
-.phprojekt #projectBookingForm .formContainer {
+.phprojekt .projectBookingForm .formContainer {
     padding-left: 0px;
     background: #fff;
     margin: 0px;
@@ -163,38 +163,38 @@
     padding: 0px;
 }
 
-.phprojekt #projectBookingForm .col1 {
+.phprojekt .projectBookingForm .col1 {
     width: 20%;
 }
 
-.phprojekt #projectBookingForm .col2 {
+.phprojekt .projectBookingForm .col2 {
     width: 65%;
 }
 
-.phprojekt #projectBookingForm .col3 {
+.phprojekt .projectBookingForm .col3 {
     width: 5%;
 }
 
-.phprojekt #projectBookingForm span .dijitArrowButtonInner {
+.phprojekt .projectBookingForm span .dijitArrowButtonInner {
     display: none;
 }
 
 /* Tooltip */
-.phprojekt #timecardTooltipDialog {
+.phprojekt .timecardTooltipDialog {
     width: 460px;
     height: 165px;
 }
 
-.phprojekt #timecardTooltipDialog .dijitTooltipContainer {
+.phprojekt .timecardTooltipDialog .dijitTooltipContainer {
     background-color: #FFCC33;
     border: 1px solid #294064;
 }
 
-.phprojekt #timecardTooltipDialog .dijitTooltipConnector {
+.phprojekt .timecardTooltipDialog .dijitTooltipConnector {
     background: url("images/tooltipConnectorLeft_ffcc33.png") no-repeat top left;
 }
 
-.dj_ie .phprojekt #timecardTooltipDialog .dijitTooltipConnector {
+.dj_ie .phprojekt .timecardTooltipDialog .dijitTooltipConnector {
     background-image: url("images/tooltipConnectorLeft_ffcc33.gif");
 }
 

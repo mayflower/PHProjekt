@@ -51,6 +51,13 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
     },
 
+    destroy: function() {
+        this._monthView = null;
+        this._exportButton = null;
+        this._node = null;
+        this.inherited(arguments);
+    },
+
     setUrl: function() {
         // Summary:
         //    Set the url for getting the data
@@ -65,7 +72,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
         //    Set the node to put the grid
         // Description:
         //    Set the node to put the grid
-        this._node = dijit.byId("monthView");
+        this._node = this.main._contentWidget.monthView;
     },
 
     onLoaded: function() {
@@ -95,14 +102,31 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
             }
         }
 
-        this.render(["phpr.Timecard.template", "monthView.html"], this._node.domNode, {
-            monthTxt: phpr.date.getLongTranslateMonth(this._month) + ' ' + this._year,
-            totalTxt: phpr.nls.get('Total hours'),
-            total: phpr.date.convertMinutesToTime(total),
-            totalClass: totalClass,
-            dates: dates
+        this._monthView = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Timecard.template.monthView.html",
+            templateData: {
+                monthTxt: phpr.date.getLongTranslateMonth(this._month) + ' ' + this._year,
+                totalTxt: phpr.nls.get('Total hours'),
+                total: phpr.date.convertMinutesToTime(total),
+                totalClass: totalClass,
+                dates: dates
+            }
         });
-        dijit.byId("selectDate").set('value', new Date(this._year, this._month, this._date.getDate()));
+
+        this.garbageCollector.addNode(this._monthView);
+
+        this._node.set('content', this._monthView);
+        this._monthView.selectDate.set('value', new Date(this._year, this._month, this._date.getDate()));
+
+        this.garbageCollector.addEvent(
+            dojo.connect(
+                this._monthView.selectDateButton, "onClick", dojo.hitch(this,
+                    function() {
+                        var selectVal = this._monthView.selectDate.get('value');
+                        if (selectVal != null) {
+                            this.main.changeDate(selectVal);
+                        }
+                    })));
     },
 
     reload: function(date, forceReload) {
