@@ -102,6 +102,12 @@
     <module_instance id="3" project_id="1" module="plom"
         name="Project Tasks plom" />
 
+    <hmabtm_test id="1"/>
+    <hmabtm_test id="2"/>
+
+    <hmabtm_test_project_relation project_id="2" hmabtm_test_id="1" />
+    <hmabtm_test_project_relation project_id="6" hmabtm_test_id="1" />
+
     <tags id="1" word="this" crc32="4277043751" />
     <tags id="2" word="tag" crc32="59357059" />
     <tags_modules tag_user_id="1" item_id="1" module_id="1" />

@@ -60,13 +60,4 @@ class Phprojekt_Role_Test extends PHPUnit_Framework_TestCase
 
         $role->delete();
     }
-
-    /**
-     * Test for mock function
-     */
-    public function testMocks()
-    {
-        $role = new Phprojekt_Role_Role();
-        $this->assertEquals(array(), $role->getRights());
-    }
 }
