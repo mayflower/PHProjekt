@@ -26,14 +26,16 @@ dojo.declare("phpr.Default.loadingOverlay", phpr.Default.System.Component, {
     //    Class to overlay multiple given dom elements with a loading screen
     _domNodes: null,
     _overlays: null,
+    _message: "Loading",
 
-    constructor: function(domNodes) {
+    constructor: function(domNodes, message) {
         if (!dojo.isArray(domNodes)) {
             domNodes = [domNodes];
         }
 
         this._domNodes = [];
         this._overlays = [];
+        this._message = message !== undefined ? message : this._message;
 
         for (var i in domNodes) {
             var node = domNodes[i]
@@ -51,7 +53,13 @@ dojo.declare("phpr.Default.loadingOverlay", phpr.Default.System.Component, {
             var domBox = dojo.marginBox(node);
             var overlay = dojo.create(
                 'div',
-                { innerHTML: phpr.fillTemplate("phpr.Default.template.loadingOverlay.html", { webpath: phpr.webpath }) }
+                { innerHTML: phpr.fillTemplate(
+                    "phpr.Default.template.loadingOverlay.html",
+                    {
+                        webpath: phpr.webpath,
+                        message: this._message
+                    })
+                }
             );
             dojo.style(
                 overlay,
