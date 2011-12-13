@@ -43,7 +43,8 @@
  */
 class Calendar2_IndexController_Test extends FrontInit
 {
-    protected function getDataSet() {
+    protected function getDataSet()
+    {
         return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
     }
 
