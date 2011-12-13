@@ -135,8 +135,6 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
             }
 
             $ret[$group[0]->uri] = array(
-
-                'from'         => 'objects',
                 'id'           => $group[0]->uid,
                 'uri'          => $group[0]->uri,
                 'lastmodified' => $lastModified,
