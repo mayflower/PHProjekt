@@ -21,7 +21,7 @@
  * @version    Release: @package_version@
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-require_once 'SabreDAV/Sabre/VObject/includes.php';
+require_once 'Sabre.autoload.php';
 
 /**
  * Calendar2 model class.
@@ -141,11 +141,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         // This is needed to make fields read-only if we're not the owner.
         $this->_information = new Calendar2_Models_CalendarInformation();
 
-        // UID generation method taken from rfc 5545
-        $this->uid = rand()
-                   . '-' . time()
-                   . '-' . getMyPid()
-                   . '@' . php_uname('n');
+        $this->_generateUid();
 
         // Default values
         $this->visibility = self::VISIBILITY_PUBLIC;
@@ -253,7 +249,19 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $rrules = $helper->splitRrule($splitDate);
 
             $old->rrule = $rrules['old'];
-            $new->rrule = $rrules['new'];
+
+            // Only overwrite the new rrule if the user didn't change it
+            if ($new->rrule == $old->rrule) {
+                $new->rrule = $rrules['new'];
+            }
+
+            // Regenerate the uid if the new event has multiple occurrences, see
+            // http://jira.opensource.mayflower.de/jira/browse/PHPROJEKT-298
+            // As they don't belong together anymore, we also need to set a new uri.
+            if ($new->rrule) {
+                $new->_generateUid();
+                $new->uri = $new->uid;
+            }
 
             $old->save();
             $new->_saveToNewRow();
@@ -1284,5 +1292,14 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $tagsObject->saveTags($moduleId, $this->id, implode(' ', $tags));
 
         return $this->id;
+    }
+
+    /**
+     * Generate a unique uid for this event as recommended in rfc
+     */
+    private function _generateUid()
+    {
+        // UID generation method taken from rfc 5545
+        $this->uid = rand() . '-' . time() . '-' . getMyPid() . '@' . php_uname('n');
     }
 }
