@@ -352,7 +352,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
                   get_class($this) == $this->_relations['hasManyAndBelongsToMany']['refclass']) {
             return $this->_relations['hasManyAndBelongsToMany']['id'];
         } else {
-            throw new Exception("{$varname} does not exist");
+            throw new Phprojekt_ActiveRecord_Exception("{$varname} does not exist");
         }
     }
 

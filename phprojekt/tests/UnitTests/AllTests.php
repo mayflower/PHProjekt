@@ -44,6 +44,8 @@ define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../../'));
 
 require_once PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'Phprojekt.php';
 Phprojekt::getInstance();
+// Phprojekt::getInstance() indirectly sets the error handler which eats our errors.
+restore_error_handler();
 Zend_Db_Table_Abstract::getDefaultMetadataCache()->clean();
 
 if (!defined('PHPUnit_MAIN_METHOD')) {
@@ -58,7 +60,6 @@ require_once 'Phprojekt/AllTests.php';
 require_once 'Timecard/AllTests.php';
 //require_once 'History/AllTests.php';
 require_once 'User/AllTests.php';
-//require_once 'Calendar/AllTests.php';
 require_once 'Note/AllTests.php';
 require_once 'Role/AllTests.php';
 require_once 'Tab/AllTests.php';
@@ -69,6 +70,7 @@ require_once 'Contact/AllTests.php';
 require_once 'Filemanager/AllTests.php';
 require_once 'Gantt/AllTests.php';
 require_once 'Statistic/AllTests.php';
+require_once 'Calendar2/AllTests.php';
 
 /**
  * AllTests merges all test from the modules
@@ -121,8 +123,8 @@ class AllTests extends PHPUnit_Framework_TestSuite
         $suite->addTest(Filemanager_AllTests::suite());
         $suite->addTest(Gantt_AllTests::suite());
         $suite->addTest(Default_AllTests::suite());
+        $suite->addTest(Calendar2_AllTests::suite());
 
-        //$suite->addTest(Calendar_AllTests::suite());
         //$suite->addTest(Note_AllTests::suite());
         //$suite->addTest(Helpdesk_AllTests::suite());
         //$suite->addTest(History_AllTests::suite());

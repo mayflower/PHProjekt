@@ -22,8 +22,6 @@
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
-require_once 'phprojekt/application/Calendar2/Helper/Rrule.php';
-
 /**
  * Tests for Calendar Index Controller
  *
