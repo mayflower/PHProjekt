@@ -186,4 +186,16 @@ abstract class FrontInit extends DatabaseTest
 
         return $this->content;
     }
+
+    /**
+     * Reset the request and the response to allow another request to be done in this test
+     */
+    protected function _reset()
+    {
+        $this->request  = new Zend_Controller_Request_Http();
+        $this->response = new Zend_Controller_Response_Http();
+
+        $this->request->setModuleName('Default');
+        $this->request->setActionName('index');
+    }
 }
