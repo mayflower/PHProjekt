@@ -437,7 +437,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
-        return Phprojekt_ActiveRecord_Abstract::fetchAll($where, $order, $count, $offset, $select, $join);
+        $events = Phprojekt_ActiveRecord_Abstract::fetchAll($where, $order, $count, $offset, $select, $join);
+        foreach($events as $e) {
+            $e->_originalStart = new Datetime('@' . Phprojekt_Converter_Time::userToUtc($e->start));
+        }
+        return $events;
     }
 
     /**
@@ -963,7 +967,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             array('veventkey' => 'COMMENT', 'ourkey' => 'comments'),
             array('veventkey' => 'UID', 'ourkey' => 'uid'),
             array('veventkey' => 'LAST-MODIFIED', 'ourkey' => 'lastModified'),
-            array('veventkey' => 'RRULE', 'ourkey' => 'rrule')
+            array('veventkey' => 'RRULE', 'ourkey' => 'rrule', 'default' => '')
         );
         foreach ($mappable as $m) {
             if (isset($vevent->$m['veventkey'])) {

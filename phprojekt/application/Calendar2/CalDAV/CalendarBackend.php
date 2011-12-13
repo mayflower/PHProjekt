@@ -59,9 +59,12 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         }
         return array(
             array(
-                'id' => $user->id,
-                'uri' => 'default',
-                'principaluri' => $principalUri,
+                'id'                => $user->id,
+                'uri'               => 'default',
+                'principaluri'      => $principalUri,
+                '{DAV:}displayname' => 'default',
+                '{http://apple.com/ns/ical/}calendar-color'               => 'blue',
+                '{http://apple.com/ns/ical/}calendar-order'               => 0,
                 '{' . Sabre_CalDAV_Plugin::NS_CALENDARSERVER . '}getctag' => time(),
                 '{' . Sabre_CalDAV_Plugin::NS_CALDAV . '}supported-calendar-component-set'
                     => new Sabre_CalDAV_Property_SupportedCalendarComponentSet(array('VEVENT'))
@@ -115,16 +118,28 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $join     = 'JOIN calendar2_user_relation AS u ON calendar2.id = u.calendar2_id';
         $events   = $calendar->fetchAll($where, null, null, null, null, $join);
         $ret      = array();
+
+        $eventsByUri = array();
         foreach ($events as $event) {
-            $lastModified = $event->lastModified;
-            if (array_key_exists($event->uri, $ret)) {
-                $lastModified = max($event->lastModified, $ret[$event->uri]['lastmodified']);
+            $eventsByUri[$event->uid][] = $event;
+        }
+
+        foreach ($eventsByUri as $group) {
+            $calendarData = new Sabre_VObject_Component('vcalendar');
+            $calendarData->add('version', '2.0');
+            $calendarData->add('prodid', 'Phprojekt ' . Phprojekt::getVersion());
+            $lastModified = $group[0]->lastModified;
+            foreach ($group as $event) {
+                $calendarData->add($event->asVObject());
+                $lastModified = max($lastModified, $event->lastModified);
             }
-            $ret[$event->uri] = array(
-                'id' => $event->uid,
-                'uri' => $event->uri,
+
+            $ret[$group[0]->uri] = array(
+                'id'           => $group[0]->uid,
+                'uri'          => $group[0]->uri,
                 'lastmodified' => $lastModified,
-                'calendarid' => $calendarId
+                'calendarid'   => $calendarId,
+                'calendardata' => $calendarData->serialize()
             );
         }
         return array_values($ret);
@@ -155,18 +170,16 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $lastModified = $events[0]->lastModified;
         foreach ($events as $e) {
             $calendarData->add($e->asVObject());
-                if ($e->lastModified > $lastModified) {
-                    $lastModified = $e->lastModified;
-                }
+            $lastModified = max($lastModified, $e->lastModified);
         }
         $lastModified = new Datetime($lastModified);
 
 
         return array(
-            'id' => $events[0]->uid,
-            'uri' => $objectUri,
+            'id'           => $events[0]->uid,
+            'uri'          => $objectUri,
             'lastmodified' => $lastModified->format('Ymd\THis\Z'),
-            'calendarid' => $calendarId,
+            'calendarid'   => $calendarId,
             'calendardata' => $calendarData->serialize()
         );
     }
