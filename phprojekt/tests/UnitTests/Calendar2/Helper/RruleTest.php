@@ -47,22 +47,23 @@ class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $first  = new Datetime('2010-10-09 08:00:00 UTC');
-        $rrule  = 'FREQ=DAILY;UNTIL=20101114T080000Z;INTERVAL=1';
-        $except = array(
+        $first    = new Datetime('2010-10-09 08:00:00 UTC');
+        $duration = new DateInterval('PT1H');
+        $rrule    = 'FREQ=DAILY;UNTIL=20101114T080000Z;INTERVAL=1';
+        $except   = array(
             new Datetime('2010-10-14 08:00:00 UTC'),
             new Datetime('2010-10-12 08:00:00 UTC'),
             new Datetime('2010-10-15 08:00:00 UTC')
         );
 
-        $this->helper = new Calendar2_Helper_Rrule($first, $rrule, $except);
+        $this->helper = new Calendar2_Helper_Rrule($first, $duration, $rrule, $except);
     }
 
     public function testGetDatesInPeriod()
     {
         $start  = new Datetime('2010-10-11 08:00:00 UTC');
         $end    = new Datetime('2010-10-17 08:00:00 UTC');
-        $actual  = $this->helper->getDatesInPeriod($start, $end);
+        $actual = $this->helper->getDatesInPeriod($start, $end);
 
         $expected = array(
             new Datetime('2010-10-11 08:00:00 UTC'),
@@ -90,11 +91,17 @@ class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
         );
 
         foreach ($contained as $date) {
-            $this->assertTrue($this->helper->containsDate($date));
+            $this->assertTrue(
+                $this->helper->containsDate($date),
+                'Failed asserting that the helper contains ' . $date->format('Y-m-d H:i:s')
+            );
         }
 
         foreach ($notContained as $date){
-            $this->assertFalse($this->helper->containsDate($date));
+            $this->assertFalse(
+                $this->helper->containsDate($date),
+                'Failed asserting that the helper does not contain ' . $date->format('Y-m-d H:i:s')
+            );
         }
     }
 
