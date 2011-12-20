@@ -61,7 +61,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             state.moduleName = (this.getActiveModule() ? this.getActiveModule().module : this._defaultModule);
         }
 
-        if (this.getModule(state.moduleName)) {
+        if (this.moduleExists(state.moduleName)) {
             this._changeModule(state, options);
         } else {
             console.error("Invalid name provided: " + state.moduleName);
@@ -198,8 +198,8 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     },
 
     _reloadModule: function(name, params) {
-        var mod = this.getModule(name);
-        if (mod) {
+        if (this.moduleExists(name)) {
+            var mod = this.getModule(name);
             if (dojo.isFunction(mod.reload)) {
                 mod.reload.apply(mod, params || []);
             } else {
@@ -214,7 +214,11 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         // Summary:
         //      returns a module by its name or null if it is not registered
 
-        return this._modules[name] || null;
+        if (this.moduleExists(name)) {
+            return this._modules[name];
+        } else {
+            throw new Error("Invalid module name " + name);
+        }
     },
 
     moduleExists: function(name) {
