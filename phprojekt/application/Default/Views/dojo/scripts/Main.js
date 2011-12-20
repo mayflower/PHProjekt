@@ -403,8 +403,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
                 phpr.tree.loadTree();
                 this.addLogoTooltip();
-                // Load the module
                 this.setGlobalModulesNavigation();
+
                 phpr.pageManager.init();
                 phpr.InitialScreen.end();
             }));
