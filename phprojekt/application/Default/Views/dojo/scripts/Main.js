@@ -135,7 +135,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     userStore:  null,
     subModules: [],
     globalModuleNavigationButtons: {},
-    subModuleNavigationButtons: {},
     _navigation: null,
     _emptyState: {
         action: undefined,
