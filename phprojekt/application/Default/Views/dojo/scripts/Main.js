@@ -515,23 +515,32 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
         var isAdmin       = phpr.DataStore.getMetaData({url: phpr.globalModuleUrl});
         var button = null;
+        var module = null;
+        var moduleName = null;
         var that = this;
 
         toolbar.destroyDescendants();
         systemToolbar.destroyDescendants();
 
-        for (i in globalModules) {
-            button = new dijit.form.Button({
-                label:     globalModules[i].label,
-                showLabel: true,
-                onClick: (function(module) {
-                    return function(e) {
-                            phpr.currentProjectId = phpr.rootProjectId;
-                            phpr.pageManager.modifyCurrentState(
-                                dojo.mixin(dojo.clone(that._emptyState), { moduleName: module }));
-                        };
-                    }(globalModules[i].name))
-                });
+
+        for (var i in globalModules) {
+            moduleName = globalModules[i].name;
+            button = null;
+            try {
+                module = phpr.pageManager.getModule(moduleName);
+                button = module.getGlobalModuleNavigationButton(globalModules[i].label);
+            } catch (e) {
+                //error in button creation, ignore
+                console.error("error while creating button for module " + moduleName);
+                console.log(e);
+                continue;
+            }
+
+            if (!button) {
+                console.error("error while creating button for module " + moduleName);
+                continue;
+            }
+
             toolbar.addChild(button);
             this.globalModuleNavigationButtons[globalModules[i].name] = button;
             button = null;
@@ -745,6 +754,23 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Summary:
         //     This function is called after the submodules are created
         //     Is used for extend the navigation routine
+    },
+
+    getGlobalModuleNavigationButton: function(label) {
+        var moduleName = this.module;
+        var button = new dijit.form.Button({
+            label: label,
+            showLabel: true,
+            onClick: dojo.hitch(
+                this,
+                function() {
+                    phpr.currentProjectId = phpr.rootProjectId;
+                    phpr.pageManager.modifyCurrentState(
+                        dojo.mixin(dojo.clone(this._emptyState), { moduleName: moduleName }));
+                })
+        });
+
+        return button;
     },
 
     cleanPage: function() {
