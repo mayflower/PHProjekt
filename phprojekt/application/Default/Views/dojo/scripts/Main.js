@@ -1201,20 +1201,22 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Description:
         //    The function will show the help under the string "Content Help"
         //    The translation must be an array and each index is a different tab
-        phpr.destroyWidget('helpContent');
 
         // Get the current module or use the parent
+        this.garbageCollector.collect('help');
         var currentModule = phpr.module;
         var helpData = null;
+        var helpDialog = phpr.viewManager.getView().helpDialog;
+        var helpTitle = phpr.viewManager.getView().helpTitle;
 
         if (phpr.parentmodule && ('Administration' == phpr.parentmodule || 'Setting' == phpr.parentmodule)) {
             currentModule = 'Core';
-            dijit.byId('helpDialog').set('title', phpr.nls.get('Help', currentModule));
-            dojo.byId('helpTitle').innerHTML = phpr.nls.get(phpr.parentmodule);
+            helpDialog.set('title', phpr.nls.get('Help', currentModule));
+            helpTitle.innerHTML = phpr.nls.get(phpr.parentmodule);
             helpData = phpr.nls.get('Content Help ' + phpr.parentmodule, currentModule);
         } else {
-            dijit.byId('helpDialog').set('title', phpr.nls.get('Help', currentModule));
-            dojo.byId('helpTitle').innerHTML = phpr.nls.get(currentModule, currentModule);
+            helpDialog.set('title', phpr.nls.get('Help', currentModule));
+            helpTitle.innerHTML = phpr.nls.get(currentModule, currentModule);
             helpData = phpr.nls.get('Content Help', currentModule);
             if (this.subModules.length > 0) {
                 for (var index in this.subModules) {
@@ -1250,8 +1252,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     if (typeof(helpData) == 'object') {
                         this.showHelp_part2(helpData, nlsSource);
                     } else {
-                        dijit.byId('helpContainer').set("content", phpr.nls.get('No help available', currentModule));
-                        dijit.byId('helpDialog').show();
+                        helpContainer.set("content", phpr.nls.get('No help available', currentModule));
+                        helpDialog.show();
                     }
                 },
                 helpData)
@@ -1265,16 +1267,19 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         var container = new dijit.layout.TabContainer({
             style:     'height: 100%;',
-            id:        'helpContent',
             useMenu:   false,
-            useSlider: false
+            useSlider: false,
+            'class': "claro"
         }, document.createElement('div'));
 
-        this.garbageCollector.addNode(container);
+        this.garbageCollector.addNode(container, 'help');
 
-        phpr.destroySubWidgets('helpContainer');
-        dijit.byId('helpContainer').set("content", container);
-        dijit.byId('helpDialog').show();
+        var helpDialog = phpr.viewManager.getView().helpDialog;
+        var helpContainer = phpr.viewManager.getView().helpContainer;
+
+        helpContainer.set("content", container);
+
+        helpDialog.show();
 
         for (var tab in helpData) {
             var text = helpData[tab];
@@ -1301,7 +1306,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
             container.addChild(content);
 
-            this.garbageCollector.addNode(content);
+            this.garbageCollector.addNode(content, 'help');
 
             content = null;
         }
