@@ -217,6 +217,10 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         return this._modules[name] || null;
     },
 
+    moduleExists: function(name) {
+        return this._modules[name] !== undefined;
+    },
+
     getActiveModule: function() {
         // Summary:
         //      returns the active module
