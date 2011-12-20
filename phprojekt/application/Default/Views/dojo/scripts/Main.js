@@ -135,6 +135,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     userStore:  null,
     subModules: [],
     globalModuleNavigationButtons: {},
+    _activeModuleChangedListener: null,
     _navigation: null,
     _emptyState: {
         action: undefined,
@@ -558,7 +559,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 );
             })
         });
-        this.globalModuleNavigationButtons[globalModules[i].name] = button;
+        this.globalModuleNavigationButtons["Setting"] = button;
         toolbar.addChild(button);
         button = null;
 
@@ -603,6 +604,28 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // destroy cyclic refs
         toolbar = null;
         systemToolbar = null;
+        this._registerGlobalModuleNavigationListener();
+    },
+
+    _registerGlobalModuleNavigationListener: function() {
+        if (this._activeModuleChangedListener === null) {
+            this._activeModuleChangedListener =
+                dojo.subscribe("phpr.activeModuleChanged", this, "_refreshGlobalModuleNavigationState");
+        }
+    },
+
+    _refreshGlobalModuleNavigationState: function(activeModuleName) {
+        for (var i in this.globalModuleNavigationButtons) {
+            var button = this.globalModuleNavigationButtons[i];
+            if (dijit.byId(button) && button.containerNode) {
+                dojo.removeClass(button.containerNode, 'selected');
+            }
+        }
+
+        var activeModuleButton = this.globalModuleNavigationButtons[activeModuleName];
+        if (activeModuleButton) {
+            dojo.addClass(activeModuleButton.containerNode, 'selected');
+        }
     },
 
     setSubmoduleNavigation: function(currentModule) {
