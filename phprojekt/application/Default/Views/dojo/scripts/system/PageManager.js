@@ -282,16 +282,19 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         }
     },
 
-    initialPageLoad: function(module) {
+    initialPageLoad: function() {
         // Summary:
-        //      Calls load on the module with the specified module name or on the default module
+        //      Calls load on the current module, based on the window state, of the default module.
         // Description:
-        //      Calls the load function on the named module.
+        //      Calls the load function on the current module, take from the window state.
         //      TODO: this control flow is bogus, there is no reason why the initial page loading should be done by the
         //      load function of the Main class (it will not work to call it twice and it has nothing to do with the
         //      Main class in general)
-        if (this.getModule(module) !== null) {
-            module.load();
+
+        var state = this.getStateFromWindow() || {};
+        var moduleName = state.moduleName || this._defaultModule;
+        if (this.moduleExists(moduleName)) {
+            this.getModule(moduleName).load();
         } else {
             this.getModule(this._defaultModule).load();
         }
