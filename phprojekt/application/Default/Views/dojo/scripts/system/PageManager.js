@@ -231,6 +231,12 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         return this._activeModule;
     },
 
+    getActiveModuleName: function() {
+        // Summary:
+        //      returns the active module name
+        return this._activeModule ? this._activeModule.module : null;
+    },
+
     getState: function() {
         return dojo.queryToObject(dojo.hash());
     },
