@@ -194,7 +194,12 @@ dojo.declare("phpr.Default.System.PageManager", null, {
 
             this.oldmodule = module;
             this._activeModule = mod;
+            this._signalActiveModuleChange();
         }
+    },
+
+    _signalActiveModuleChange: function() {
+        dojo.publish("phpr.activeModuleChanged", [this.getActiveModuleName()]);
     },
 
     _reloadModule: function(name, params) {
