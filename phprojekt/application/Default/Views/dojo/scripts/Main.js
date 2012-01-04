@@ -90,18 +90,18 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
 
             // append each result to the results list of the module
             results[modulesData.moduleLabel].push(
-                    new phpr.Default.System.TemplateWrapper({
-                        templateName: "phpr.Default.template.results.results.html",
-                        templateData: {
-                            id:            modulesData.id,
-                            moduleId:      modulesData.modulesId,
-                            moduleName:    modulesData.moduleName,
-                            projectId:     modulesData.projectId,
-                            firstDisplay:  modulesData.firstDisplay,
-                            secondDisplay: modulesData.secondDisplay,
-                            resultType:    "tag"
-                        }
-                    }));
+                new phpr.Default.System.TemplateWrapper({
+                    templateName: "phpr.Default.template.results.results.html",
+                    templateData: {
+                        id:            modulesData.id,
+                        moduleId:      modulesData.modulesId,
+                        moduleName:    modulesData.moduleName,
+                        projectId:     modulesData.projectId,
+                        firstDisplay:  modulesData.firstDisplay,
+                        secondDisplay: modulesData.secondDisplay,
+                        resultType:    "tag"
+                    }
+                }));
         }
 
         for (var i in results) {
@@ -161,7 +161,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this._searchEvent = null;
         this.destroyForm();
         this.destroyGrid();
-        this._destroyNavigation()
+        this._destroyNavigation();
     },
 
     _destroyNavigation: function() {
@@ -559,7 +559,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 );
             })
         });
-        this.globalModuleNavigationButtons["Setting"] = button;
+
+        this.globalModuleNavigationButtons.Setting = button;
         toolbar.addChild(button);
         button = null;
 
@@ -576,16 +577,17 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     );
                 })
             });
+
             toolbar.addChild(button);
-            this.globalModuleNavigationButtons['Administration'] = button;
+            this.globalModuleNavigationButtons.Administration = button;
             button = null;
         }
 
         // Help
         button = new dijit.form.Button({
             label:     phpr.nls.get('Help'),
-               showLabel: true,
-               onClick:   dojo.hitch(this, "showHelp")
+            showLabel: true,
+            onClick:   dojo.hitch(this, "showHelp")
         });
         systemToolbar.addChild(button);
         button = null;
@@ -593,11 +595,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Logout
         button = new dijit.form.Button({
             label:     phpr.nls.get('Logout'),
-               showLabel: true,
-               onClick:   dojo.hitch(this, function() {
-                   location = phpr.webpath + 'index.php/Login/logout';
-               })
+            showLabel: true,
+            onClick:   dojo.hitch(this, function() {
+                location = phpr.webpath + 'index.php/Login/logout';
+            })
         });
+
         systemToolbar.addChild(button);
         button = null;
 
@@ -1003,7 +1006,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         html       = results[i];
                         search += this.render(["phpr.Default.template.results", "suggestBlock.html"], null, {
                             moduleLabel:   moduleLabel,
-                               results:       html
+                            results:       html
                         });
                     }
 
@@ -1252,7 +1255,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     if (typeof(helpData) == 'object') {
                         this.showHelp_part2(helpData, nlsSource);
                     } else {
-                        helpContainer.set("content", phpr.nls.get('No help available', currentModule));
+                        helpContainer.set('content', phpr.nls.get('No help available', currentModule));
                         helpDialog.show();
                     }
                 },
@@ -1269,7 +1272,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             style:     'height: 100%;',
             useMenu:   false,
             useSlider: false,
-            'class': "claro"
+            'class': 'claro'
         }, document.createElement('div'));
 
         this.garbageCollector.addNode(container, 'help');
@@ -1277,7 +1280,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var helpDialog = phpr.viewManager.getView().helpDialog;
         var helpContainer = phpr.viewManager.getView().helpContainer;
 
-        helpContainer.set("content", container);
+        helpContainer.set('content', container);
 
         helpDialog.show();
 

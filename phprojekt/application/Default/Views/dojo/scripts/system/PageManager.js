@@ -80,7 +80,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             }
         }
 
-        this.changeState(state, options)
+        this.changeState(state, options);
     },
 
     _setHash: function(state, replaceItem) {
@@ -141,9 +141,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
 
             phpr.module = module;
 
-            if (state.projectId
-                    && state.moduleName
-                    && !state.globalModuleName) {
+            if (state.projectId && state.moduleName && !state.globalModuleName) {
                 var projectId = state.projectId;
                 if (projectId < 1) {
                     projectId = 1;
@@ -189,7 +187,9 @@ dojo.declare("phpr.Default.System.PageManager", null, {
                 }
             } else {
                 // Default value, only one parameter, and must be the module
-                if (!reloaded) { this._reloadModule(module, [ state ]); };
+                if (!reloaded) {
+                    this._reloadModule(module, [ state ]);
+                }
             }
 
             this.oldmodule = module;

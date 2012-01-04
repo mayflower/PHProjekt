@@ -104,7 +104,7 @@ phpr.fillTemplate = function(templateName, data) {
     tplContent = null;
     context = null;
     return content;
-}
+};
 
 phpr.send = function(/*Object*/paramsIn) {
     // Send the given content to the server using the Default values,
@@ -121,7 +121,7 @@ phpr.send = function(/*Object*/paramsIn) {
         content:   "",
         handleAs:  "json",
         sync:      false,
-        chunkMap:  {},
+        chunkMap:  {}
     };
 
     if (dojo.isObject(paramsIn)) {
@@ -592,7 +592,7 @@ dojo.declare("phpr.translator", null, {
         this._strings = translatedStrings;
     },
 
-    get:function(string, module) {
+    get: function(string, module) {
         var returnValue;
 
         // Special module
@@ -602,11 +602,11 @@ dojo.declare("phpr.translator", null, {
         } else if (this._strings[phpr.module] && this._strings[phpr.module][string]) {
             returnValue = this._strings[phpr.module][string];
         // Core module
-        } else if (this._strings['Core'] && this._strings['Core'][string]) {
-            returnValue = this._strings['Core'][string];
+        } else if (this._strings.Core && this._strings.Core[string]) {
+            returnValue = this._strings.Core[string];
         // Default module
-        } else if (this._strings['Default'] && this._strings['Default'][string]) {
-            returnValue = this._strings['Default'][string];
+        } else if (this._strings.Default && this._strings.Default[string]) {
+            returnValue = this._strings.Default[string];
         } else {
             // Unstranslated string
             returnValue = string;
@@ -674,11 +674,11 @@ dojo.declare("phpr.InitialScreen", null, {
     //     Manage the visibility of the page on init
     // Description:
     //     Manage the visibility of the page on init
-    start:function() {
+    start: function() {
         dojo.style(phpr.viewManager.getView().completeContent.domNode, "opacity", 0);
     },
 
-    end:function() {
+    end: function() {
         var view = phpr.viewManager.getView();
         dojo.style(view.completeContent.domNode, "opacity", 1);
         dojo.style(view.initLoading, "display", "none");
@@ -1072,16 +1072,18 @@ dojo.declare("phpr.Default.System.TabController", [dijit.layout.TabController], 
         page.callback();
     },
     onSelectChild: function(page) {
-        if (!page) { return; }
+        if (!page) {
+            return;
+        }
 
         if (this._currentChild) {
-            var oldButton=this.pane2button[this._currentChild.id];
+            var oldButton = this.pane2button[this._currentChild.id];
             oldButton.set('checked', false);
             dijit.setWaiState(oldButton.focusNode, "selected", "false");
             oldButton.focusNode.setAttribute("tabIndex", "-1");
         }
 
-        var newButton=this.pane2button[page.id];
+        var newButton = this.pane2button[page.id];
         newButton.set('checked', true);
         dijit.setWaiState(newButton.focusNode, "selected", "true");
         this._currentChild = page;
@@ -1094,7 +1096,9 @@ dojo.declare("phpr.Default.System.TabController", [dijit.layout.TabController], 
             title: options.moduleLabel,
             showTitle: options.moduleLabel,
             tooltip: options.moduleLabel,
-            watch: function() { return { unwatch: function() {} } },
+            watch: function() {
+                return { unwatch: function() {} };
+            },
             dir: "",
             lang: "",
             callback: options.callback || function() {}
