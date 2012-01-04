@@ -1320,7 +1320,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         for (var event in content) {
             var eventsInfo     = new Array();
             var id             = content[event]['id'];
-            var occurrence     = content[event]['start'];
+            var occurrence     = content[event]['occurrence'];
             var singleDayEvent = false;
 
             // Split datetime in date and time
