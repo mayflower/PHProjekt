@@ -740,9 +740,20 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
                         this._newRowValues = {};
                         this._oldRowValues = {};
                         this.publish("updateCacheData");
+                        this.updateOccurrences(response.changedOccurrences);
                     }
                 }
             }));
+        }
+    },
+
+    updateOccurrences: function(changedOccurrences) {
+        for (var id in changedOccurrences) {
+            for (var i in this.events) {
+                if (this.events[i]['id'] == id) {
+                    this.events[i]['occurrence'] = changedOccurrences[id];
+                }
+            }
         }
     },
 

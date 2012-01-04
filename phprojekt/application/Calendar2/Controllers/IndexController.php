@@ -409,6 +409,8 @@ class Calendar2_IndexController extends IndexController
         $success = true;
         $this->setCurrentProjectId();
 
+        $changedOccurrences = array();
+
         foreach ($data as $id => $occurrences) {
             foreach ($occurrences as $recurrenceId => $fields) {
                 if ($recurrenceId == 'undefined') {
@@ -424,6 +426,7 @@ class Calendar2_IndexController extends IndexController
                 $model->getNotification()->saveFrontendMessage();
                 $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
                 $showId[] = $id;
+                $changedOccurrences[$id] = $model->occurrence;
             }
         }
 
@@ -434,10 +437,13 @@ class Calendar2_IndexController extends IndexController
             $resultType = 'error';
         }
 
-        $return = array('type'    => $resultType,
-                        'message' => $message,
-                        'code'    => 0,
-                        'id'      => implode(',', $showId));
+        $return = array(
+            'type'               => $resultType,
+            'message'            => $message,
+            'code'               => 0,
+            'id'                 => implode(',', $showId),
+            'changedOccurrences' => $changedOccurrences
+        );
 
         Phprojekt_Converter_Json::echoConvert($return);
     }
