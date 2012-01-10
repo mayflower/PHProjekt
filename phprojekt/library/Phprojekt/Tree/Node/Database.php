@@ -273,7 +273,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      *
      * @return void
      */
-    private function deleteNode($object, $id)
+    private function deleteNode(Phprojekt_Tree_Node_Database $object, $id)
     {
         if (isset($object->_children[$id])) {
             unset($object->_children[$id]);
