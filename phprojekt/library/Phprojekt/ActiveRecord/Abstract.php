@@ -320,6 +320,21 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
+     * Checks if the model has a specified field.
+     *
+     * @param string $field Name of the field.
+     *
+     * @return boolean Whether is exists.
+     */
+    public function hasField($field)
+    {
+        return method_exists(get_class($this), 'set' . ucfirst($field))
+            || property_exists($this, $field)
+            || array_key_exists($field, $this->_data)
+            || array_key_exists($field, get_object_vars($this));
+    }
+
+    /**
      * __get Method
      *
      * 1) look if we got a method getVarname, if it's there, use it.
