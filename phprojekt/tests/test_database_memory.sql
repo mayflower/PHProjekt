@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.13, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.1.59, for pc-linux-gnu (x86_64)
 --
--- Host: localhost    Database: phprojekt
+-- Host: localhost    Database: phprojekt_test
 -- ------------------------------------------------------
--- Server version	5.5.13
+-- Server version	5.1.59-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -40,7 +40,7 @@ CREATE TABLE `calendar2` (
   `last_modified` datetime NOT NULL,
   `uri` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `calendar2_user_relation` (
   `user_id` int(11) NOT NULL,
   `confirmation_status` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -85,7 +85,7 @@ CREATE TABLE `configuration` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `module_id` int(11) NOT NULL,
   `key_value` varchar(255) NOT NULL,
-  `value` varchar(255),
+  `value` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MEMORY DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -114,7 +114,7 @@ CREATE TABLE `contact` (
   `comment` varchar(255) NOT NULL,
   `private` int(1) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,7 +134,7 @@ CREATE TABLE `database_manager` (
   `form_position` int(11) DEFAULT NULL,
   `form_columns` int(11) DEFAULT NULL,
   `form_regexp` varchar(255) DEFAULT NULL,
-  `form_range` varchar(255),
+  `form_range` varchar(255) DEFAULT NULL,
   `default_value` varchar(255) DEFAULT NULL,
   `list_position` int(11) DEFAULT NULL,
   `list_align` varchar(20) DEFAULT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE `database_manager` (
   `is_required` int(4) DEFAULT NULL,
   `is_unique` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=73 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,11 +159,11 @@ CREATE TABLE `filemanager` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner_id` int(11) DEFAULT NULL,
   `title` varchar(100) NOT NULL,
-  `comments` varchar(255),
+  `comments` varchar(255) DEFAULT NULL,
   `project_id` int(11) NOT NULL,
   `files` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -188,7 +188,7 @@ CREATE TABLE `frontend_message` (
   `details` varchar(255) NOT NULL,
   `delivered` int(3) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -202,7 +202,7 @@ CREATE TABLE `groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -217,7 +217,7 @@ CREATE TABLE `groups_user_relation` (
   `groups_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -235,8 +235,8 @@ CREATE TABLE `helpdesk` (
   `date` date DEFAULT NULL,
   `project_id` int(11) NOT NULL,
   `priority` int(2) DEFAULT NULL,
-  `attachments` varchar(255),
-  `description` varchar(255),
+  `attachments` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   `status` int(2) DEFAULT NULL,
   `due_date` date DEFAULT NULL,
   `author` int(11) DEFAULT NULL,
@@ -260,12 +260,42 @@ CREATE TABLE `history` (
   `user_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
   `field` varchar(255) NOT NULL,
-  `old_value` varchar(255),
-  `new_value` varchar(255),
+  `old_value` varchar(255) DEFAULT NULL,
+  `new_value` varchar(255) DEFAULT NULL,
   `action` varchar(50) NOT NULL,
   `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=152 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `hmabtm_test`
+--
+
+DROP TABLE IF EXISTS `hmabtm_test`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hmabtm_test` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MEMORY DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `hmabtm_test_project_relation`
+--
+
+DROP TABLE IF EXISTS `hmabtm_test_project_relation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hmabtm_test_project_relation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL,
+  `hmabtm_test_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `project_id` (`project_id`,`hmabtm_test_id`),
+  KEY `hmabtm_test_id` (`hmabtm_test_id`)
+) ENGINE=MEMORY DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -296,14 +326,14 @@ CREATE TABLE `minutes` (
   `owner_id` int(11) DEFAULT NULL,
   `project_id` int(11) NOT NULL,
   `title` varchar(255) DEFAULT NULL,
-  `description` varchar(255),
+  `description` varchar(255) DEFAULT NULL,
   `meeting_datetime` datetime DEFAULT NULL,
   `end_time` time DEFAULT NULL,
   `place` varchar(255) DEFAULT NULL,
   `moderator` varchar(255) DEFAULT NULL,
-  `participants_invited` varchar(255),
-  `participants_attending` varchar(255),
-  `participants_excused` varchar(255),
+  `participants_invited` varchar(255) DEFAULT NULL,
+  `participants_attending` varchar(255) DEFAULT NULL,
+  `participants_excused` varchar(255) DEFAULT NULL,
   `item_status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MEMORY DEFAULT CHARSET=latin1;
@@ -324,7 +354,7 @@ CREATE TABLE `minutes_item` (
   `topic_type` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `comment` varchar(255),
+  `comment` varchar(255) DEFAULT NULL,
   `topic_date` date DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -347,7 +377,7 @@ CREATE TABLE `module` (
   `active` int(1) NOT NULL DEFAULT '1',
   `dependence` varchar(255) NOT NULL DEFAULT 'Application',
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -358,12 +388,12 @@ DROP TABLE IF EXISTS `module_instance`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `module_instance` (
-      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-      `project_id` int(10) unsigned NOT NULL,
-      `module` varchar(255) DEFAULT NULL,
-      `name` varchar(255) DEFAULT NULL,
-      PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `project_id` int(10) unsigned NOT NULL,
+  `module` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MEMORY AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -391,7 +421,7 @@ CREATE TABLE `note` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `comments` varchar(255),
+  `comments` varchar(255) DEFAULT NULL,
   `owner_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MEMORY DEFAULT CHARSET=latin1;
@@ -409,7 +439,7 @@ CREATE TABLE `project` (
   `project_id` int(11) DEFAULT NULL,
   `path` varchar(50) NOT NULL DEFAULT '/',
   `title` varchar(255) NOT NULL,
-  `notes` varchar(255),
+  `notes` varchar(255) DEFAULT NULL,
   `owner_id` int(11) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
@@ -420,7 +450,7 @@ CREATE TABLE `project` (
   `budget` varchar(10) DEFAULT NULL,
   `contact_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -435,7 +465,7 @@ CREATE TABLE `project_module_permissions` (
   `module_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -451,7 +481,7 @@ CREATE TABLE `project_role_user_permissions` (
   `user_id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -482,7 +512,7 @@ CREATE TABLE `role_module_permissions` (
   `module_id` int(11) NOT NULL,
   `access` int(3) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -496,8 +526,8 @@ CREATE TABLE `search_display` (
   `module_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
-  `first_display` varchar(255),
-  `second_display` varchar(255),
+  `first_display` varchar(255) DEFAULT NULL,
+  `second_display` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`module_id`,`item_id`)
 ) ENGINE=MEMORY DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -529,7 +559,7 @@ CREATE TABLE `search_words` (
   `word` varchar(255) NOT NULL,
   `count` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -544,10 +574,10 @@ CREATE TABLE `setting` (
   `user_id` int(11) NOT NULL,
   `module_id` int(11) NOT NULL,
   `key_value` varchar(255) NOT NULL,
-  `value` varchar(255),
+  `value` varchar(255) DEFAULT NULL,
   `identifier` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -561,7 +591,7 @@ CREATE TABLE `tab` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -576,7 +606,7 @@ CREATE TABLE `tags` (
   `word` varchar(255) NOT NULL,
   `crc32` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -606,7 +636,7 @@ CREATE TABLE `tags_users` (
   `user_id` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -623,11 +653,11 @@ CREATE TABLE `timecard` (
   `end_time` time DEFAULT NULL,
   `minutes` int(11) DEFAULT NULL,
   `project_id` int(11) DEFAULT NULL,
-  `notes` varchar(255),
+  `notes` varchar(255) DEFAULT NULL,
   `module_id` int(11) DEFAULT '1',
   `item_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -640,7 +670,7 @@ DROP TABLE IF EXISTS `todo`;
 CREATE TABLE `todo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `notes` varchar(255),
+  `notes` varchar(255) DEFAULT NULL,
   `owner_id` int(11) DEFAULT NULL,
   `project_id` int(11) NOT NULL,
   `start_date` date DEFAULT NULL,
@@ -649,7 +679,7 @@ CREATE TABLE `todo` (
   `current_status` int(2) NOT NULL DEFAULT '1',
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY DEFAULT CHARSET=latin1;
+) ENGINE=MEMORY AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -695,4 +725,4 @@ CREATE TABLE `user_proxy` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-07-04 17:37:00
+-- Dump completed on 2012-01-10  8:54:56
