@@ -97,7 +97,7 @@ final class Default_Helpers_Save
         }
 
         // Parent Project
-        if (!isset($node->projectId) || null === $node->projectId) {
+        if (!isset($node->projectId)) {
             $node->projectId = 1;
         }
 
