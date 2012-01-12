@@ -727,7 +727,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $databaseManager = clone($this);
             foreach ($values as $key => $value) {
 
-                if (isset($databaseManager->$key)) {
+                if ($databaseManager->hasField($key)) {
                     switch ($key) {
                         case 'formRegexp':
                         case 'formRange':
@@ -951,7 +951,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         foreach ($result as $item) {
             $showValue = array();
             foreach ($values as $value) {
-                if (isset($item->$value)) {
+                if ($item->hasField($value)) {
                     $showValue[] = $item->$value;
                 }
             }

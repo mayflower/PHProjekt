@@ -337,7 +337,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     {
         $showValue = array();
         foreach ($display as $value) {
-            if (isset($model->$value)) {
+            if ($model->hasField($value)) {
                 $showValue[] = $model->$value;
             }
         }
