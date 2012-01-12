@@ -651,6 +651,14 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
+     * Pass-through to hasField method of active record.
+     */
+    public function hasField($field)
+    {
+        return $this->getActiveRecord()->hasField($field);
+    }
+
+    /**
      * Delete the tree cache.
      *
      * @return void;
