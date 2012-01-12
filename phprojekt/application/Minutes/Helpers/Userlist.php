@@ -62,7 +62,7 @@ final class Minutes_Helpers_Userlist
         if (!empty($idList)) {
             $user     = new Phprojekt_User_User();
             $display  = $user->getDisplay();
-            $userList = $user->fetchAll(sprintf('id IN (%s)', $idList), $display);
+            $userList = $user->fetchAll(sprintf('id IN (%s)', $idList));
 
             foreach ($userList as $record) {
                 $data[] = array('id'      => (int) $record->id,

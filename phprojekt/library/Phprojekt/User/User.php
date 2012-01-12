@@ -94,6 +94,18 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
+     * Overwrite fetchAll to provide a default sorting by the configured display name.
+     */
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
+    {
+        if (is_null($order)) {
+            $order = self::getDisplay();
+        }
+
+        return parent::fetchAll($where, $order, $count, $offset, $select, $join);
+    }
+
+    /**
      * Checks if user is active.
      *
      * @return boolean ID user is active or not.
@@ -359,9 +371,8 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         $usersNamespace = new Zend_Session_Namespace($sessionName);
 
         if (!isset($usersNamespace->users)) {
-            $displayName = $this->getDisplay();
             $where       = sprintf('status = %s', $this->getAdapter()->quote('A'));
-            $result      = $this->fetchAll($where, $displayName);
+            $result      = $this->fetchAll($where);
             $values      = array();
             foreach ($result as $node) {
                 $values[] = array('id'   => (int) $node->id,

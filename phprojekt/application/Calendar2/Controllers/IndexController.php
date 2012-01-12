@@ -56,7 +56,7 @@ class Calendar2_IndexController extends IndexController
         );
         $user    = new Phprojekt_User_User();
         $display = $user->getDisplay();
-        $records = $user->fetchAll($where, $display);
+        $records = $user->fetchAll($where);
 
         $data = array();
         foreach ($records as $record) {
