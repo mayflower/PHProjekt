@@ -363,7 +363,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             return true;
         }
 
-        $projectId = (null == $projectId) ? $this->projectId : $projectId;
+        $projectId = is_null($projectId) ? $this->projectId : $projectId;
         $moduleId = Phprojekt_Module::getId($this->getModelName());
         $rights   = Phprojekt_Right::getRightsForItems($moduleId, $projectId, $userId, array($this->id));
         if (!isset($rights[$this->id])) {
