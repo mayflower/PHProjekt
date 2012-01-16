@@ -179,7 +179,7 @@ final class Default_Helpers_Save
     {
         $newItem    = empty($params['id']);
         $model      = self::parameterToModel($model, $params, $newItem);
-        $projectId  = (isset($model->projectId)) ? $model->projectId : 0;
+        $projectId  = (isset($model->projectId) && !empty($model->projectId)) ? $model->projectId : 0;
         $userId     = Phprojekt_Auth_Proxy::getEffectiveUserId();
         $moduleName = Phprojekt_Loader::getModuleFromObject($model);
         $moduleId   = Phprojekt_Module::getId($moduleName);
