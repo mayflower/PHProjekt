@@ -90,18 +90,18 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
 
             // append each result to the results list of the module
             results[modulesData.moduleLabel].push(
-                    new phpr.Default.System.TemplateWrapper({
-                        templateName: "phpr.Default.template.results.results.html",
-                        templateData: {
-                            id:            modulesData.id,
-                            moduleId:      modulesData.modulesId,
-                            moduleName:    modulesData.moduleName,
-                            projectId:     modulesData.projectId,
-                            firstDisplay:  modulesData.firstDisplay,
-                            secondDisplay: modulesData.secondDisplay,
-                            resultType:    "tag"
-                        }
-                    }));
+                new phpr.Default.System.TemplateWrapper({
+                    templateName: "phpr.Default.template.results.results.html",
+                    templateData: {
+                        id:            modulesData.id,
+                        moduleId:      modulesData.modulesId,
+                        moduleName:    modulesData.moduleName,
+                        projectId:     modulesData.projectId,
+                        firstDisplay:  modulesData.firstDisplay,
+                        secondDisplay: modulesData.secondDisplay,
+                        resultType:    "tag"
+                    }
+                }));
         }
 
         for (var i in results) {
@@ -135,7 +135,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     userStore:  null,
     subModules: [],
     globalModuleNavigationButtons: {},
-    subModuleNavigationButtons: {},
+    _activeModuleChangedListener: null,
     _navigation: null,
     _emptyState: {
         action: undefined,
@@ -161,7 +161,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this._searchEvent = null;
         this.destroyForm();
         this.destroyGrid();
-        this._destroyNavigation()
+        this._destroyNavigation();
     },
 
     _destroyNavigation: function() {
@@ -404,8 +404,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
                 phpr.tree.loadTree();
                 this.addLogoTooltip();
-                // Load the module
                 this.setGlobalModulesNavigation();
+
                 phpr.pageManager.init();
                 phpr.InitialScreen.end();
             }));
@@ -516,23 +516,32 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
         var isAdmin       = phpr.DataStore.getMetaData({url: phpr.globalModuleUrl});
         var button = null;
+        var module = null;
+        var moduleName = null;
         var that = this;
 
         toolbar.destroyDescendants();
         systemToolbar.destroyDescendants();
 
-        for (i in globalModules) {
-            button = new dijit.form.Button({
-                label:     globalModules[i].label,
-                showLabel: true,
-                onClick: (function(module) {
-                    return function(e) {
-                            phpr.currentProjectId = phpr.rootProjectId;
-                            phpr.pageManager.modifyCurrentState(
-                                dojo.mixin(dojo.clone(that._emptyState), { moduleName: module }));
-                        };
-                    }(globalModules[i].name))
-                });
+
+        for (var i in globalModules) {
+            moduleName = globalModules[i].name;
+            button = null;
+            try {
+                module = phpr.pageManager.getModule(moduleName);
+                button = module.getGlobalModuleNavigationButton(globalModules[i].label);
+            } catch (e) {
+                //error in button creation, ignore
+                console.error("error while creating button for module " + moduleName);
+                console.log(e);
+                continue;
+            }
+
+            if (!button) {
+                console.error("error while creating button for module " + moduleName);
+                continue;
+            }
+
             toolbar.addChild(button);
             this.globalModuleNavigationButtons[globalModules[i].name] = button;
             button = null;
@@ -550,7 +559,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 );
             })
         });
-        this.globalModuleNavigationButtons[globalModules[i].name] = button;
+
+        this.globalModuleNavigationButtons.Setting = button;
         toolbar.addChild(button);
         button = null;
 
@@ -567,16 +577,17 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     );
                 })
             });
+
             toolbar.addChild(button);
-            this.globalModuleNavigationButtons['Administration'] = button;
+            this.globalModuleNavigationButtons.Administration = button;
             button = null;
         }
 
         // Help
         button = new dijit.form.Button({
             label:     phpr.nls.get('Help'),
-               showLabel: true,
-               onClick:   dojo.hitch(this, "showHelp")
+            showLabel: true,
+            onClick:   dojo.hitch(this, "showHelp")
         });
         systemToolbar.addChild(button);
         button = null;
@@ -584,17 +595,40 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Logout
         button = new dijit.form.Button({
             label:     phpr.nls.get('Logout'),
-               showLabel: true,
-               onClick:   dojo.hitch(this, function() {
-                   location = phpr.webpath + 'index.php/Login/logout';
-               })
+            showLabel: true,
+            onClick:   dojo.hitch(this, function() {
+                location = phpr.webpath + 'index.php/Login/logout';
+            })
         });
+
         systemToolbar.addChild(button);
         button = null;
 
         // destroy cyclic refs
         toolbar = null;
         systemToolbar = null;
+        this._registerGlobalModuleNavigationListener();
+    },
+
+    _registerGlobalModuleNavigationListener: function() {
+        if (this._activeModuleChangedListener === null) {
+            this._activeModuleChangedListener =
+                dojo.subscribe("phpr.activeModuleChanged", this, "_refreshGlobalModuleNavigationState");
+        }
+    },
+
+    _refreshGlobalModuleNavigationState: function(activeModuleName) {
+        for (var i in this.globalModuleNavigationButtons) {
+            var button = this.globalModuleNavigationButtons[i];
+            if (dijit.byId(button) && button.containerNode) {
+                dojo.removeClass(button.containerNode, 'selected');
+            }
+        }
+
+        var activeModuleButton = this.globalModuleNavigationButtons[activeModuleName];
+        if (activeModuleButton) {
+            dojo.addClass(activeModuleButton.containerNode, 'selected');
+        }
     },
 
     setSubmoduleNavigation: function(currentModule) {
@@ -746,6 +780,23 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Summary:
         //     This function is called after the submodules are created
         //     Is used for extend the navigation routine
+    },
+
+    getGlobalModuleNavigationButton: function(label) {
+        var moduleName = this.module;
+        var button = new dijit.form.Button({
+            label: label,
+            showLabel: true,
+            onClick: dojo.hitch(
+                this,
+                function() {
+                    phpr.currentProjectId = phpr.rootProjectId;
+                    phpr.pageManager.modifyCurrentState(
+                        dojo.mixin(dojo.clone(this._emptyState), { moduleName: moduleName }));
+                })
+        });
+
+        return button;
     },
 
     cleanPage: function() {
@@ -955,7 +1006,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         html       = results[i];
                         search += this.render(["phpr.Default.template.results", "suggestBlock.html"], null, {
                             moduleLabel:   moduleLabel,
-                               results:       html
+                            results:       html
                         });
                     }
 
@@ -1153,20 +1204,22 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Description:
         //    The function will show the help under the string "Content Help"
         //    The translation must be an array and each index is a different tab
-        phpr.destroyWidget('helpContent');
 
         // Get the current module or use the parent
+        this.garbageCollector.collect('help');
         var currentModule = phpr.module;
         var helpData = null;
+        var helpDialog = phpr.viewManager.getView().helpDialog;
+        var helpTitle = phpr.viewManager.getView().helpTitle;
 
         if (phpr.parentmodule && ('Administration' == phpr.parentmodule || 'Setting' == phpr.parentmodule)) {
             currentModule = 'Core';
-            dijit.byId('helpDialog').set('title', phpr.nls.get('Help', currentModule));
-            dojo.byId('helpTitle').innerHTML = phpr.nls.get(phpr.parentmodule);
+            helpDialog.set('title', phpr.nls.get('Help', currentModule));
+            helpTitle.innerHTML = phpr.nls.get(phpr.parentmodule);
             helpData = phpr.nls.get('Content Help ' + phpr.parentmodule, currentModule);
         } else {
-            dijit.byId('helpDialog').set('title', phpr.nls.get('Help', currentModule));
-            dojo.byId('helpTitle').innerHTML = phpr.nls.get(currentModule, currentModule);
+            helpDialog.set('title', phpr.nls.get('Help', currentModule));
+            helpTitle.innerHTML = phpr.nls.get(currentModule, currentModule);
             helpData = phpr.nls.get('Content Help', currentModule);
             if (this.subModules.length > 0) {
                 for (var index in this.subModules) {
@@ -1202,8 +1255,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     if (typeof(helpData) == 'object') {
                         this.showHelp_part2(helpData, nlsSource);
                     } else {
-                        dijit.byId('helpContainer').set("content", phpr.nls.get('No help available', currentModule));
-                        dijit.byId('helpDialog').show();
+                        helpContainer.set('content', phpr.nls.get('No help available', currentModule));
+                        helpDialog.show();
                     }
                 },
                 helpData)
@@ -1217,16 +1270,19 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         var container = new dijit.layout.TabContainer({
             style:     'height: 100%;',
-            id:        'helpContent',
             useMenu:   false,
-            useSlider: false
+            useSlider: false,
+            'class': 'claro'
         }, document.createElement('div'));
 
-        this.garbageCollector.addNode(container);
+        this.garbageCollector.addNode(container, 'help');
 
-        phpr.destroySubWidgets('helpContainer');
-        dijit.byId('helpContainer').set("content", container);
-        dijit.byId('helpDialog').show();
+        var helpDialog = phpr.viewManager.getView().helpDialog;
+        var helpContainer = phpr.viewManager.getView().helpContainer;
+
+        helpContainer.set('content', container);
+
+        helpDialog.show();
 
         for (var tab in helpData) {
             var text = helpData[tab];
@@ -1253,7 +1309,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
             container.addChild(content);
 
-            this.garbageCollector.addNode(content);
+            this.garbageCollector.addNode(content, 'help');
 
             content = null;
         }
