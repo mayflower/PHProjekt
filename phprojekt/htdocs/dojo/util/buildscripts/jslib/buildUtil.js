@@ -94,7 +94,7 @@ buildUtil.DojoBuildOptions = {
 			+ "path to the path where you keep Closure's compiler.jar."
 	},
 	"cssOptimize": {
-		defaultValue: "",
+		defaultValue: "comments",
 		helpText: "Specifies how to optimize CSS files. If \"comments\" is specified, "
 			+ "then code comments and line returns are stripped, and files referenced via @import "
 			+ "are inlined. If \"comments.keepLines\" "
