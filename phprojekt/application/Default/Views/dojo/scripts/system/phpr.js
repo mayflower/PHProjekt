@@ -567,14 +567,14 @@ dojo.declare("phpr.loading", null, {
     //     Simple class for show or hide the loading icon
     hide: function() {
         var view = phpr.viewManager.getView();
-        if (view.loadingIcon) {
+        if (view && view.loadingIcon) {
             view.loadingIcon.style.display = 'none';
         }
     },
 
     show: function() {
         var view = phpr.viewManager.getView();
-        if (view.loadingIcon) {
+        if (view && view.loadingIcon) {
             view.loadingIcon.style.display = 'inline';
         }
     }
