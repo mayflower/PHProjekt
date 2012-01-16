@@ -65,7 +65,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
             onStartClick: dojo.hitch(this, "_onStartStopClick"),
             onStopClick: dojo.hitch(this, "_onStartStopClick")
         });
-        this.garbageCollector.addNode(this.startStopBar);
+        this.garbageCollector.addObject(this.startStopBar);
     },
 
     _onStartStopClick: function() {
