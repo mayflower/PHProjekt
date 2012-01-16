@@ -1098,7 +1098,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
             var type = this.useCheckbox() ? "phpr.Default.System.Grid._View" : "dojox.grid._View";
 
-            this.grid  = new dojox.grid.DataGrid({
+            this.grid = new dojox.grid.DataGrid({
                 store:     store,
                 structure: [{type: type,
                     defaultCell: {
@@ -1106,9 +1106,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         type:     phpr.Default.System.Grid.cells.Text,
                         styles:   'text-align: left;'
                     },
-                rows: this.gridLayout
+                    rows: this.gridLayout
                 }]
-            }, dojo.create('div'));
+                }, dojo.create('div'));
 
             this.setClickEdit();
 
@@ -1150,7 +1150,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         actions:       this.comboActions,
                         checkAllTxt:   phpr.nls.get('Check All'),
                         uncheckAllTxt: phpr.nls.get('Uncheck All')
-                    }});
+                    }
+                });
 
                 this._gridActionContainer = content;
                 this.grid.views.views[0].gridActions.set('content', content);

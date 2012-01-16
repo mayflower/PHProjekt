@@ -182,8 +182,9 @@ dojo.declare("phpr.Default.System.Form.MultiFilteringSelect", dijit.form.Filteri
             }
         }, this);
 
-        arguments[0] = newResults;
-        this.inherited(arguments);
+        var newargs = arguments;
+        newargs[0] = newResults;
+        this.inherited(newargs);
     },
     _renderSelection: function() {
         if (this.selectionContainer) {
@@ -219,7 +220,7 @@ dojo.declare("phpr.Default.System.Form.MultiFilteringSelect", dijit.form.Filteri
     },
     _setValueAttr: function(values) {
         if (!values || !dojo.isArray(values) || values.length === 0) {
-            return
+            return;
         }
         this.selection = {};
         for (var i in values) {
@@ -241,7 +242,7 @@ dojo.declare("phpr.Default.System.Form.MultiFilteringSelect", dijit.form.Filteri
         this._renderSelection();
     },
     _setMaxOptions: function() {}
-})
+});
 
 dojo.declare("phpr.Default.System._ComboBoxDataStore", dijit.form._ComboBoxDataStore, {
     _selectedItems: {},
@@ -252,7 +253,7 @@ dojo.declare("phpr.Default.System._ComboBoxDataStore", dijit.form._ComboBoxDataS
                 var text = (option.innerText || option.textContent || '');
                 self._selectedItems[option.value] = text;
             }
-        } );
+        });
     },
     getSelectedItems: function() {
         return this._selectedItems;
@@ -260,4 +261,4 @@ dojo.declare("phpr.Default.System._ComboBoxDataStore", dijit.form._ComboBoxDataS
     fetchSelectedItem: function() {
         return null;
     }
-})
+});
