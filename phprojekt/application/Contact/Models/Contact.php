@@ -106,7 +106,7 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
     {
         $result = true;
 
-        if (!$this->private || ($this->private && $this->ownerId == Phprojekt_Auth::getUserId())) {
+        if ($this->ownerId == Phprojekt_Auth_Proxy::getEffectiveUserId()) {
             if ($this->id > 0) {
                 $this->_history->saveFields($this, 'edit');
                 $result = Phprojekt_ActiveRecord_Abstract::save();
@@ -128,7 +128,7 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
      */
     public function delete()
     {
-        if (!$this->private || ($this->private && $this->ownerId == Phprojekt_Auth::getUserId())) {
+        if ($this->ownerId == Phprojekt_Auth_Proxy::getEffectiveUserId()) {
             $this->deleteUploadFiles();
             $this->_history->saveFields($this, 'delete');
             parent::delete();
@@ -155,5 +155,17 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
                                'name' => $item->name);
         }
         return $options;
+    }
+
+    /**
+     * Overwrite hasRight to fit contact's own rights system
+     */
+    public function hasRight($userId, $right, $projectId = null)
+    {
+        if (Phprojekt_Auth::isAdminUser() || $this->ownerId == Phprojekt_Auth_Proxy::getEffectiveUserId()) {
+            return true;
+        } else {
+            return ($right === Phprojekt_Acl::READ);
+        }
     }
 }
