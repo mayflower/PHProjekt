@@ -156,7 +156,7 @@ dojo.declare("phpr.Timecard.StartStopBar", phpr.Default.System.Component, {
 
     _showStartButton: function() {
         var button = this._widget.button;
-        button.set('label', 'Start working time');
+        button.set('label', phpr.nls.get("Start working time", "Timecard"));
         button.onClick = dojo.hitch(this, "_startWorking");
     },
 
@@ -184,7 +184,7 @@ dojo.declare("phpr.Timecard.StartStopBar", phpr.Default.System.Component, {
 
     _showStopButton: function() {
         var button = this._widget.button;
-        button.set('label', 'Stop working time');
+        button.set('label', phpr.nls.get("Stop working time", "Timecard"));
         button.onClick = dojo.hitch(this, "_stopWorking");
     },
 
