@@ -101,8 +101,8 @@ class Calendar2_IndexController extends IndexController
         $userId = $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('int', $userId)) {
-           throw new Phprojekt_PublishedException(
-               "Invalid userId '$userId'"
+            throw new Phprojekt_PublishedException(
+                "Invalid userId '$userId'"
             );
         }
 
@@ -144,8 +144,8 @@ class Calendar2_IndexController extends IndexController
         }
 
         if (!Cleaner::validate('int', $userId)) {
-           throw new Phprojekt_PublishedException(
-               "Invalid userId '$userId'"
+            throw new Phprojekt_PublishedException(
+                "Invalid userId '$userId'"
             );
         }
 
@@ -316,8 +316,8 @@ class Calendar2_IndexController extends IndexController
         }
 
         if (!Cleaner::validate('int', $userId)) {
-           throw new Phprojekt_PublishedException(
-               "Invalid userId '$userId'"
+            throw new Phprojekt_PublishedException(
+                "Invalid userId '$userId'"
             );
         }
 
@@ -409,6 +409,8 @@ class Calendar2_IndexController extends IndexController
         $success = true;
         $this->setCurrentProjectId();
 
+        $changedOccurrences = array();
+
         foreach ($data as $id => $occurrences) {
             foreach ($occurrences as $recurrenceId => $fields) {
                 if ($recurrenceId == 'undefined') {
@@ -424,6 +426,7 @@ class Calendar2_IndexController extends IndexController
                 $model->getNotification()->saveFrontendMessage();
                 $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
                 $showId[] = $id;
+                $changedOccurrences[$id] = $model->occurrence;
             }
         }
 
@@ -434,10 +437,13 @@ class Calendar2_IndexController extends IndexController
             $resultType = 'error';
         }
 
-        $return = array('type'    => $resultType,
-                        'message' => $message,
-                        'code'    => 0,
-                        'id'      => implode(',', $showId));
+        $return = array(
+            'type'               => $resultType,
+            'message'            => $message,
+            'code'               => 0,
+            'id'                 => implode(',', $showId),
+            'changedOccurrences' => $changedOccurrences
+        );
 
         Phprojekt_Converter_Json::echoConvert($return);
     }
@@ -479,8 +485,8 @@ class Calendar2_IndexController extends IndexController
         $id = (int) $id;
 
         if (!Cleaner::validate('int', $userId)) {
-           throw new Phprojekt_PublishedException(
-               "Invalid userId '$userId'"
+            throw new Phprojekt_PublishedException(
+                "Invalid userId '$userId'"
             );
         }
 
@@ -828,16 +834,16 @@ class Calendar2_IndexController extends IndexController
                 || !Calendar2_Models_Calendar2::isValidVisibility(
                     (int) $visibility
                 )) {
-           throw new Phprojekt_PublishedException(
-               "Invalid visibility '$visibility'"
+            throw new Phprojekt_PublishedException(
+                "Invalid visibility '$visibility'"
             );
         }
 
         $visibility = (int) $visibility;
 
         if (!Cleaner::validate('int', $params['userId'])) {
-           throw new Phprojekt_PublishedException(
-               "Invalid userId " . $params['userId']
+            throw new Phprojekt_PublishedException(
+                "Invalid userId " . $params['userId']
             );
         }
 
