@@ -340,17 +340,17 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     /**
      * Apply the display to the $model and return the result.
      *
-     * @param array               $display The display format.
-     * @param Phprojekt_User_User $model   The model to apply the display.
+     * @param array  $display  The display format.
+     * @param object $object   The model to apply the display.
      *
      * @return string User display.
      */
-    public static function applyDisplay(array $display, $model)
+    public static function applyDisplay(array $display, $object)
     {
         $showValue = array();
         foreach ($display as $value) {
-            if (isset($model->$value)) {
-                $showValue[] = $model->$value;
+            if (isset($object->$value)) {
+                $showValue[] = $object->$value;
             }
         }
 
