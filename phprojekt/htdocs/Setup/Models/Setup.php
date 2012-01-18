@@ -713,20 +713,22 @@ class Setup_Models_Setup
      */
     private function chmodRecursive($path, $dirMode, $fileMode)
     {
-        if (!is_dir($path)) {
-            return @chmod($path, (int) $fileMode);
-        }
+        $iter = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator($path));
 
-        $dir = opendir($path);
-        while (($file = readdir($dir)) !== false) {
-            if ($file != '.' && $file != '..') {
-                $fullPath = $path . '/' . $file;
-                $this->chmodRecursive($fullPath, $dirMode, $fileMode);
+        $result = true;
+        foreach ($iter as $entry) {
+            if ($entry->getFilename() == '.' || $entry->getFilename() == '..') {
+                continue;
+            }
 
+            if ($entry->isDir()) {
+                $result = $result && @chmod((string) $entry, $dirMode);
+            } else {
+                $result = $result && @chmod((string) $entry, $fileMode);
             }
         }
-        closedir($dir);
 
-        return @chmod($path, (int) $dirMode);
+        return $result;
     }
 }
