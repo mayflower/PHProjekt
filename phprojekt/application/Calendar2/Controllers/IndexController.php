@@ -55,14 +55,13 @@ class Calendar2_IndexController extends IndexController
             implode(", ", $ids)
         );
         $user    = new Phprojekt_User_User();
-        $display = $user->getDisplay();
-        $records = $user->fetchAll($where, $display);
+        $records = $user->fetchAll($where);
 
         $data = array();
         foreach ($records as $record) {
             $data['data'][] = array(
                 'id'      => (int) $record->id,
-                'display' => $record->applyDisplay($display, $record)
+                'display' => $record->displayName
             );
         }
 

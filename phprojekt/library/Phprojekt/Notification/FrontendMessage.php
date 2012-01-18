@@ -103,9 +103,8 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
 
         $userObject     = new Phprojekt_User_User();
         $user           = $userObject->find($messageData[0]->actorId);
-        $displaySetting = $userObject->getDisplay();
 
-        $data['user']        = $userObject->applyDisplay($displaySetting, $userObject);
+        $data['user']        = $userObject->displayName;
         $data['module']      = ucfirst(Phprojekt_Module::getModuleName($messageData[0]->moduleId));
         $data['process']     = $messageData[0]->process;
         $data['description'] = Phprojekt::getInstance()->translate($messageData[0]->description);
