@@ -358,6 +358,20 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
+     * Returns the name of the user formatted for display.
+     *
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        static $format = null;
+        if (is_null($format)) {
+            $format = self::getDisplay();
+        }
+        return self::applyDisplay($format, $this);
+    }
+
+    /**
      * Return all the users that have at least read access on the current project.
      *
      * This function needs that Phprojekt::setCurrentProjectId is called before.
@@ -376,7 +390,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
             $values      = array();
             foreach ($result as $node) {
                 $values[] = array('id'   => (int) $node->id,
-                                  'name' => $node->applyDisplay($displayName, $node));
+                                  'name' => $node->displayName);
             }
             $usersNamespace->users = $values;
         }
