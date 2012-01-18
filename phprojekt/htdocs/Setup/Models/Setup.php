@@ -166,6 +166,8 @@ class Setup_Models_Setup
             $this->_error[] = 'The database user can not be empty';
         } else if (!isset($params['dbName']) || empty($params['dbName'])) {
             $this->_error[] = 'The database name can not be empty';
+        } else if (!isset($params['dbPort']) || empty($params['dbPort'])) {
+            $this->_error[] = 'The database port can not be empty ';
         } else {
             ob_start();
             try {
@@ -173,7 +175,8 @@ class Setup_Models_Setup
                     'host'     => $params['dbHost'],
                     'username' => $params['dbUser'],
                     'password' => $params['dbPass'],
-                    'dbname'   => $params['dbName']
+                    'dbname'   => $params['dbName'],
+                    'port'     => (int) $params['dbPort']
                 );
                 $db = Zend_Db::factory($params['serverType'], $dbParams);
                 $db->getConnection();
@@ -582,7 +585,7 @@ class Setup_Models_Setup
         $config            = new Setup_Models_Config();
         $content           = $config->getDefaultProduction($databaseNamespace->data['dbUser'],
             $databaseNamespace->data['dbPass'], $databaseNamespace->data['dbName'], 'Pdo_Mysql',
-            $databaseNamespace->data['dbHost']);
+            $databaseNamespace->data['dbHost'], $databaseNamespace->data['dbPort']);
 
         $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
         $configFile = $baseDir . "configuration.php";
@@ -646,7 +649,8 @@ class Setup_Models_Setup
                     'host'     => $databaseNamespace->data['dbHost'],
                     'username' => $databaseNamespace->data['dbUser'],
                     'password' => $databaseNamespace->data['dbPass'],
-                    'dbname'   => $databaseNamespace->data['dbName']);
+                    'dbname'   => $databaseNamespace->data['dbName'],
+                    'port'     => $databaseNamespace->data['dbPort']);
 
         return Zend_Db::factory($databaseNamespace->data['serverType'], $dbParams);
     }
