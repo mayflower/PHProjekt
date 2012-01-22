@@ -176,6 +176,15 @@ class Calendar2_Helper_Rrule
                 }
             }
         }
+
+        if ($this->_rrule['ORIGINAL_FREQ'] == 'DAILY' && !empty($this->_rrule['BYDAY'])) {
+            foreach ($dates as $key => $date) {
+                $day = strtoupper(substr($date->format('D'), 0, 2));
+                if (!in_array($day, $this->_rrule['BYDAY'])) {
+                    unset($dates[$key]);
+                }
+            }
+        }
         return $dates;
     }
 

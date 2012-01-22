@@ -32,7 +32,7 @@ dojo.declare("phpr.Default.System.Component", phpr.Default.System.GarbageCollect
         this._destroyed = true;
         this.inherited(arguments);
     },
-    render:function(template, node, data) {
+    render: function(template, node, data) {
         content = phpr.fillTemplate(template[0] + "." + template[1], data);
 
         // [a-zA-Z1-9[]:|]

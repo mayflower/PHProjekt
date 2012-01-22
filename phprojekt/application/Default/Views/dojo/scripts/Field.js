@@ -54,8 +54,8 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 checked:  (itemchecked) ? "checked" : '',
                 disabled: (itemdisabled) ? "disabled" : '',
                 tooltip:  this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
 
         return widget;
     },
@@ -65,7 +65,7 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
         phpr.destroyWidget(itemid + "_disabled");
         var widget = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Default.template.form.text.html",
-                templateData: {
+            templateData: {
                 label:     itemlabel,
                 labelfor:  itemdisabled ? itemid + "_disabled" : itemid,
                 id:        itemdisabled ? itemid + "_disabled" : itemid,
@@ -75,8 +75,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 disabled:  itemdisabled ? "disabled" : '',
                 maxlength: (itemlength > 0) ? 'maxlength="' + itemlength + '"' : '',
                 tooltip:   this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -92,7 +93,8 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 required: itemrequired,
                 type:     'hidden',
                 disabled: (itemdisabled) ? "disabled" : ''
-            }});
+            }
+        });
     },
 
     passwordFieldRender: function(itemlabel, itemid, itemvalue, itemlength, itemrequired, itemdisabled, itemhint) {
@@ -110,8 +112,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 maxlength: (itemlength > 0) ? 'maxlength="' + itemlength + '"' : '',
                 disabled:  (itemdisabled) ? "disabled" : '',
                 tooltip:   this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -129,8 +132,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 disabled:   (itemdisabled) ? "disabled" : '',
                 iFramePath: iFramePath,
                 tooltip:    this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -150,8 +154,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 required: itemrequired,
                 disabled: (itemdisabled) ? "disabled" : '',
                 tooltip:  this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -169,8 +174,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 disabled:   (itemdisabled) ? "disabled" : '',
                 moduleName: phpr.module,
                 tooltip:    this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -198,8 +204,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 editHtmlTxt: phpr.nls.get('Edit'),
                 saveTxt:     phpr.nls.get('Save'),
                 tooltip:     this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         this.garbageCollector.addNode('dialogFor_' + labelAndId);
         this.garbageCollector.addNode('editorFor_' + labelAndId);
 
@@ -219,8 +226,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 required: itemrequired,
                 disabled: (itemdisabled) ? "disabled" : '',
                 tooltip:  this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -237,8 +245,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 required: itemrequired,
                 disabled: (itemdisabled) ? "disabled" : '',
                 tooltip:  this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -262,8 +271,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 required:     itemrequired,
                 disabled:     (itemdisabled) ? "disabled" : '',
                 tooltip:      this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -297,8 +307,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 disabled: (itemdisabled) ? "disabled" : '',
                 values:   options,
                 tooltip:  this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -328,8 +339,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 disabled: (itemdisabled) ? "disabled" : '',
                 options:  options,
                 tooltip:  this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -362,8 +374,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 disabled: (itemdisabled) ? "disabled" : '',
                 options:  options,
                 tooltip:  this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -379,8 +392,8 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 icon:     icon,
                 action:   action,
                 tooltip:  this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
         return widget;
     },
 
@@ -403,8 +416,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 label:   itemlabel,
                 value:   itemvalue,
                 tooltip: this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
@@ -421,8 +435,9 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 numStars:  itemrange.id,
                 disabled:  (itemdisabled) ? "disabled" : '',
                 tooltip:   this.getTooltip(itemhint)
-            }}
-        );
+            }
+        });
+
         return widget;
     },
 
