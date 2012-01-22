@@ -824,7 +824,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Overwrite the clone id, to reset _storeId and reinit the data array.
+     * Overwrite the clone id, to reset _storedId and reinit the data array.
      *
      * @return void
      */
