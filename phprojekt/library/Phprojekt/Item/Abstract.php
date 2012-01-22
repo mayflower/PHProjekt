@@ -359,7 +359,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
     public function hasRight($userId, $right, $projectId = null)
     {
-        if (Phprojekt_Auth::isAdminUser()) {
+        if (Phprojekt_Auth::isAdminUser() || $this->isNew()) {
             return true;
         }
 

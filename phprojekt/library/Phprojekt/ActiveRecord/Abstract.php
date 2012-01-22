@@ -1309,4 +1309,14 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     {
         return (array) $this->_data;
     }
+
+    /**
+     * Check if this model is new, i.e. has no database line it belongs to.
+     *
+     * @return bool
+     */
+    public function isNew()
+    {
+        return empty($this->_storedId);
+    }
 }
