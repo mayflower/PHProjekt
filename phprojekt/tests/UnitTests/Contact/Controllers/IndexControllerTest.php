@@ -70,6 +70,33 @@ class Contact_IndexController_Test extends FrontInit
     }
 
     /**
+     * Test adding a contact as non-admin
+     */
+    public function testJsonSaveAddNonAdmin()
+    {
+        $authNamespace         = new Zend_Session_Namespace('Phprojekt_Auth-login');
+        $authNamespace->userId = 1;
+        $authNamespace->admin  = 0;
+        // INSERT
+        $this->setRequestUrl('Contact/index/jsonSave/');
+        $this->request->setParam('name', 'Mariano');
+        $this->request->setParam('email', 'mariano.lapenna@mayflower.de');
+        $this->request->setParam('company', 'Mayflower');
+        $this->request->setParam('firstphone', '004912341234');
+        $this->request->setParam('secondphone', '004923452345');
+        $this->request->setParam('mobilephone', '004934563456');
+        $this->request->setParam('street', 'Edison 1234');
+        $this->request->setParam('city', 'Buenos Aires');
+        $this->request->setParam('zipcode', '1234AAA');
+        $this->request->setParam('country', 'Argentina');
+        $this->request->setParam('comment', 'Very intelligent');
+        $this->request->setParam('private', 0);
+        $this->request->setParam('nodeId', 1);
+        $response = $this->getResponse();
+        $this->assertContains(Contact_IndexController::ADD_TRUE_TEXT, $response);
+    }
+
+    /**
      * Test of json list
      */
     public function testJsonList()
