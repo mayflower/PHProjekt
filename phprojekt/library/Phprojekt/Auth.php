@@ -491,7 +491,7 @@ class Phprojekt_Auth extends Zend_Auth
     /**
      * Gets from auth namespace if the user is admin or not.
      *
-     * @return integer 1 or 0.
+     * @return boolean
      */
     public static function isAdminUser()
     {
