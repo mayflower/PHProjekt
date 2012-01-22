@@ -222,7 +222,7 @@ final class Default_Helpers_Save
 
             // Save access only if the user have "admin" right
             if ($newItem || $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN)) {
-                if (count($rights) <= 0) {
+                if (!Phprojekt_Auth_Proxy::isAdminUser() && count($rights) <= 0) {
                     throw new Phprojekt_PublishedException(
                         'At least one person must have access to this item');
                 }
