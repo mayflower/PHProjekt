@@ -39,6 +39,8 @@
     <project_module_permissions
         module_id="2" project_id="2" />
     <project_module_permissions
+        module_id="6" project_id="1" />
+    <project_module_permissions
         module_id="12" project_id="1"/>
 
     <project_role_user_permissions
