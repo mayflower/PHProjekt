@@ -136,11 +136,14 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
     },
 
     stopWorking: function(projectId, notes) {
+        if (!this.hasRunningBooking()) {
+            throw new Error("no running booking");
+        }
+
         var data = {
             startDatetime: phpr.date.getIsoDate(this._date) + " " + phpr.date.getIsoTime(this._runningBooking.startTime),
             endTime: phpr.date.getIsoTime(new Date()),
-            projectId: projectId || this._runningBooking.projectId || this._unassignedProjectId,
-            timecardId: this._runningBooking.id,
+            projectId: projectId || this.getLastProjectId(),
             notes: notes || ""
         };
 
@@ -156,6 +159,14 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
                 }
             }
         }));
+    },
+
+    getLastProjectId: function() {
+        if (this.hasRunningBooking()) {
+            return parseInt(this._runningBooking.projectId);
+        } else {
+            return this._unassignedProjectId;
+        }
     },
 
     dataChanged: function() {
@@ -253,16 +264,11 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
             var button;
 
             if (this._bookingStore.hasRunningBooking()) {
-                button = new dijit.MenuItem({
-                    label: "Stop",
-                    onClick: dojo.hitch(this._bookingStore, function() {
-                        this.stopWorking();
-                    })
-                });
-                this._menuCollector.addNode(button);
-                this._menuButton.dropDown.addChild(button);
                 var range = this._bookingStore.getProjectRange();
                 var l = range.length;
+                var lastProjectName = "";
+                var lastProjectId = this._bookingStore.getLastProjectId();
+
                 for (var i = 0; i < l; i++) {
                     button = new dijit.MenuItem({
                         label: range[i].name,
@@ -270,9 +276,24 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
                             this.stopWorking(id);
                         }, range[i].id)
                     });
+
+                    if (range[i].id === lastProjectId) {
+                        lastProjectName = range[i].name;
+                    }
+
                     this._menuCollector.addNode(button);
                     this._menuButton.dropDown.addChild(button);
                 }
+
+                button = new dijit.MenuItem({
+                    label: "Stop (" + lastProjectName + ")",
+                    onClick: dojo.hitch(this._bookingStore, function() {
+                        this.stopWorking();
+                    })
+                });
+
+                this._menuCollector.addNode(button);
+                this._menuButton.dropDown.addChild(button, 0);
 
                 dojo.addClass(this._menuButton.focusNode, "runningBooking");
             } else {
