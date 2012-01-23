@@ -284,26 +284,12 @@ final class Default_Helpers_Save
      */
     private static function _checkModule($moduleId, $projectId)
     {
-        $boolean = false;
-        if ($projectId > 0) {
-            if ($projectId == 1 && !Phprojekt_Module::saveTypeIsNormal($moduleId)) {
-                $boolean = true;
-            } else {
-                if (!Phprojekt_Module::saveTypeIsNormal($moduleId)) {
-                    $boolean = true;
-                } else {
-                    $relation = new Project_Models_ProjectModulePermissions();
-                    $modules  = $relation->getProjectModulePermissionsById($projectId);
-                    if ($modules['data'][$moduleId]['inProject']) {
-                        $boolean = true;
-                    } else {
-                        $boolean = false;
-                    }
-                }
-            }
-        } else {
-            $boolean = true;
+        if ($projectId <= 0 || !Phprojekt_Module::saveTypeIsNormal($moduleId)) {
+            return true;
         }
-        return $boolean;
+
+        $relation = new Project_Models_ProjectModulePermissions();
+        $modules  = $relation->getProjectModulePermissionsById($projectId);
+        return !empty($modules['data'][$moduleId]['inProject']);
     }
 }
