@@ -265,8 +265,15 @@
     border-color: #657c9c;
 }
 
-.phprojekt .dijitArrowButtonInner {
+.phprojekt .dijitArrowButtonInner,
+.phprojekt .dijitButtonNode .dijitArrowButtonInner {
     background: url("../images/spriteArrows.png") no-repeat left top;
+    width: 11px;
+}
+
+.phprojekt .runningBooking .dijitArrowButtonInner,
+.phprojekt .dijitButtonNode .runningBooking .dijitArrowButtonInner {
+    background: url("../images/spriteArrows.png") no-repeat -33px top;
     width: 11px;
 }
 
