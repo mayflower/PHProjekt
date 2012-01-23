@@ -242,7 +242,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                         meta[1].required, false, meta[1].hint));
                     // projectId
                     var range = dojo.clone(meta[3].range);
-                    range.unshift({ 'id': -1, 'name': '----' });
                     for (var i in favorites) {
                         var id = parseInt(favorites[i].id);
                         if (id > 0) {
