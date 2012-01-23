@@ -123,7 +123,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
                 this._monthView.selectDateButton, "onClick", dojo.hitch(this,
                     function() {
                         var selectVal = this._monthView.selectDate.get('value');
-                        if (selectVal != null) {
+                        if (selectVal !== null) {
                             this.main.changeDate(selectVal);
                         }
                     })));
