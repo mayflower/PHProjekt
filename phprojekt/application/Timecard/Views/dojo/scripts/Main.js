@@ -182,6 +182,7 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
 dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     _date: new Date(),
     _contentWidget: null,
+    _bookingStore: null,
     startStopBar: null,
 
     constructor: function() {
@@ -190,6 +191,9 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
         this.gridWidget = phpr.Timecard.Grid;
         this.formWidget = phpr.Timecard.Form;
+        this._bookingStore = new phpr.Timecard.BookingStore(this._date);
+
+        dojo.connect(this._bookingStore, "onChange", this, "_dataChanged");
     },
 
     renderTemplate: function() {
@@ -215,25 +219,28 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         // Summary:
         //   Custom setWidgets for timecard
         phpr.tree.loadTree();
+        this._bookingStore.dataChanged();
         this.grid = new this.gridWidget(this, this._date);
         this.form = new this.formWidget(this, this._date);
         this.startStopBar = new phpr.Timecard.StartStopBar({
             container: this._contentWidget.startStopButtonRow,
-            date: this._date,
-            onStartClick: dojo.hitch(this, "_onStartStopClick"),
-            onStopClick: dojo.hitch(this, "_onStartStopClick")
+            bookingStore: this._bookingStore
         });
         this.garbageCollector.addObject(this.startStopBar);
     },
 
-    _onStartStopClick: function() {
-        this.form.updateData();
-        this.grid.reload(this._date, true);
+    _dataChanged: function() {
+        if (this.form) {
+            this.form.updateData();
+        }
+
+        if (this.grid) {
+            this.grid.reload(this._date, true);
+        }
     },
 
     formDataChanged: function(newDate, forceReload) {
-        this.grid.reload(newDate, forceReload);
-        this.startStopBar.dateChanged(newDate);
+        this._bookingStore.dataChanged();
     },
 
     setSubGlobalModulesNavigation: function(currentModule) {
@@ -251,7 +258,5 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this.form.drawDayView();
 
         this.grid.reload(date);
-
-        this.startStopBar.dateChanged(date);
     }
 });
