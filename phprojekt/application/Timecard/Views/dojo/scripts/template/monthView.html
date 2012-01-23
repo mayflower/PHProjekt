@@ -23,7 +23,6 @@
     <td>
         <a href="javascript:
         var date = phpr.date.isoDateTojsDate('{{day.date}}');
-        dijit.byId('selectDate').set('value', new Date(date.getFullYear(), date.getMonth(), date.getDate()));
         dojo.publish('Timecard.changeDate', [date]);">{{day.date}}</a>
     </td>
     <td class="{{day.sumClass}}">{{day.sum}}</td>
