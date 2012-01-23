@@ -21,6 +21,164 @@
 
 dojo.provide("phpr.Timecard.Main");
 
+dojo.declare("phpr.Timecard.BookingStore", null, {
+    _date: null,
+    _url: null,
+    _detailsUrl: null,
+    _projectRange: null,
+    _loading: false,
+    _unassignedProjectId: 1,
+
+    constructor: function(date) {
+        this._date = date;
+        this._setUrls();
+    },
+
+    _setUrls: function() {
+        this._url = phpr.webpath + 'index.php/Timecard/index/jsonDayList/date/' + phpr.date.getIsoDate(this._date);
+        this._detailsUrl = phpr.webpath + 'index.php/Timecard/index/jsonDetail/nodeId/1/id/0';
+    },
+
+    _onDataLoaded: function() {
+        this._data = phpr.DataStore.getData({url: this._url});
+        this._metaData = phpr.DataStore.getMetaData({url: this._detailsUrl});
+        this._runningBooking = null;
+        var l = this._data.length;
+
+        this._projectRange = this._getProjectRange(this._metaData);
+
+        for (var i = 0; i < l; i++) {
+            if (this._data[i].endTime === null) {
+                this._runningBooking = this._data[i];
+                break;
+            }
+        }
+
+        this._stopLoading();
+        this.onChange();
+    },
+
+    _getProjectRange: function(metaData) {
+        var range = dojo.clone(metaData[3].range);
+
+        var l = range.length;
+        for (var i = 0; i < l; i++) {
+            if (range[i].id == this._unassignedProjectId) {
+                range[i].name = phpr.nls.get("Unassigned", "Timecard");
+                break;
+            }
+        }
+
+        return range;
+    },
+
+    _updateData: function() {
+        if (!this.isLoading()) {
+            this._startLoading();
+            this._setUrls();
+
+            phpr.DataStore.deleteData({url: this._url});
+            phpr.DataStore.deleteData({url: this._detailsUrl});
+
+            phpr.DataStore.addStore({url: this._url});
+            phpr.DataStore.addStore({url: this._detailsUrl});
+
+            var dlist = new dojo.DeferredList([
+                phpr.DataStore.requestData({url: this._url}),
+                phpr.DataStore.requestData({url: this._detailsUrl})
+            ]);
+
+            dlist.addCallback(dojo.hitch(this, "_onDataLoaded"));
+        }
+    },
+
+    _startLoading: function() {
+        this._loading = true;
+        this.onLoadingStart();
+    },
+
+    _stopLoading: function() {
+        this._loading = false;
+        this.onLoadingStop();
+    },
+
+    hasRunningBooking: function() {
+        return this._runningBooking !== null;
+    },
+
+    getRunningBooking: function() {
+        return this._runningBooking;
+    },
+
+    getProjectRange: function() {
+        return this._projectRange;
+    },
+
+    startWorking: function(projectId, notes) {
+        var data = {
+            startDatetime: phpr.date.getIsoDate(this._date) + " " + phpr.date.getIsoTime(new Date()),
+            projectId: projectId || this._unassignedProjectId,
+            notes: notes || ""
+        };
+
+        phpr.send({
+            url: phpr.webpath + 'index.php/Timecard/index/jsonSave/nodeId/1/id/0',
+            content: data
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
+                new phpr.handleResponse('serverFeedback', data);
+                if (data.type == 'success') {
+                    this.dataChanged();
+                    this.onWorkingStart();
+                }
+            }
+        }));
+    },
+
+    stopWorking: function(projectId, notes) {
+        var data = {
+            startDatetime: phpr.date.getIsoDate(this._date) + " " + phpr.date.getIsoTime(this._runningBooking.startTime),
+            endTime: phpr.date.getIsoTime(new Date()),
+            projectId: projectId || this._runningBooking.projectId || this._unassignedProjectId,
+            timecardId: this._runningBooking.id,
+            notes: notes || ""
+        };
+
+        phpr.send({
+            url: phpr.webpath + 'index.php/Timecard/index/jsonSave/nodeId/1/id/' + this._runningBooking.id,
+            content: data
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
+                new phpr.handleResponse('serverFeedback', data);
+                if (data.type == 'success') {
+                    this.dataChanged();
+                    this.onWorkingStop();
+                }
+            }
+        }));
+    },
+
+    dataChanged: function() {
+        this._updateData();
+    },
+
+    setDate: function(date) {
+        this._date = date;
+        this._setUrls();
+        this.dataChanged();
+    },
+
+    isLoading: function() {
+        return this._loading === true;
+    },
+
+    onWorkingStart: function() { },
+    onWorkingStop: function() { },
+    onLoadingStart: function() { },
+    onLoadingStop: function() { },
+    onChange: function() { }
+});
+
 dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     _date: new Date(),
     _contentWidget: null,
