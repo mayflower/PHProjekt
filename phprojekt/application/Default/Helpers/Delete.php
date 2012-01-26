@@ -171,7 +171,7 @@ final class Default_Helpers_Delete
      *
      * @return boolean True for a valid right.
      */
-    private static function _checkItemRights($model, $moduleName)
+    private static function _checkItemRights(Phprojekt_ActiveRecord_Abstract $model, $moduleName)
     {
         $canDelete = false;
 
