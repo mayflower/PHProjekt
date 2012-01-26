@@ -177,11 +177,9 @@ final class Default_Helpers_Delete
 
         if ($moduleName == 'Core') {
             return Phprojekt_Auth::isAdminUser();
-        } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))) {
-
-            return $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DELETE)
-                         | Phprojekt_Auth::isAdminUser();
-
+        } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))
+                && method_exists($model, 'hasRight')) {
+            return $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DELETE);
         } else {
             return true;
         }
