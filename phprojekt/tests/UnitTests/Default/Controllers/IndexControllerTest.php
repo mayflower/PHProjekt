@@ -282,8 +282,23 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/jsonGetUsersRights/');
         $this->request->setParam('id', 2);
-        $response = $this->getResponse();
-        $this->assertContains('{"currentUser":{"moduleId":1,"itemId":2,"userId":1,"none":false,"read":true,'
-            . '"write":true,"access":true,"create":true,"copy":true,"delete":true,"download":true,"admin":true}', $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $expected = array (
+            1 => array (
+                'none' => false,
+                'read' => true,
+                'write' => true,
+                'access' => true,
+                'create' => true,
+                'copy' => true,
+                'delete' => true,
+                'download' => true,
+                'admin' => true,
+                'moduleId' => 1,
+                'itemId' => 2,
+                'userId' => 1,
+            ),
+        );
+        $this->assertEquals($expected, $response);
     }
 }
