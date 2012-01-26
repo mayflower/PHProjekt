@@ -264,7 +264,7 @@ $lang["Parent"] = "Project";
   // Others
 $lang["Type"] = "Type";
 $lang["Status"] = "Status";
-$lang["Current status"] = "Status";
+$lang["Current status"] = "Current status";
 $lang["Percent"] = "Percentage";
 $lang["Complete percent"] = "Complete percent";
 $lang["Budget"] = "Budget";
