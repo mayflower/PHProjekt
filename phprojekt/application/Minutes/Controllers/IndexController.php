@@ -245,8 +245,7 @@ class Minutes_IndexController extends IndexController
             $ownerModel = new Phprojekt_User_User();
             $ownerModel->find($minutes->ownerId);
             $ownerEmail = $ownerModel->getSetting('email');
-            $display    = $ownerModel->getDisplay();
-            $mail->setFrom($ownerEmail, $ownerModel->applyDisplay($display, $ownerModel));
+            $mail->setFrom($ownerEmail, $ownerModel->displayName);
 
             // Set subject
             $subject = sprintf('%s "%s", %s', Phprojekt::getInstance()->translate('Meeting minutes for'),
@@ -357,14 +356,13 @@ class Minutes_IndexController extends IndexController
             $userModel = new Phprojekt_User_User();
             $userList  = $userModel->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
             $setting   = new Phprojekt_Setting();
-            $display   = $userModel->getDisplay();
             /* @var $record Phprojekt_User_User */
             foreach ($userList as $record) {
                 $address = $setting->getSetting('email', (int) $record->id);
 
                 if ($validator->isValid($address)) {
                     $userMailList[] = array('mail' => $address,
-                                            'name' => $record->applyDisplay($display, $record));
+                                            'name' => $record->displayName);
                 } else {
                     $userMailList[] = array('message' => 'Invalid email address detected:',
                                             'value'   => $address) ;

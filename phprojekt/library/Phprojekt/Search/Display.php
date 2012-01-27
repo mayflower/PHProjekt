@@ -132,13 +132,13 @@ class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
         $secondField   = $object->searchSecondDisplayField;
         $projectId     = $object->projectId;
 
-        if (isset($object->$firstField)) {
+        if ($object->hasField($firstField)) {
             $firstDisplay = $object->$firstField;
         } else {
             $firstDisplay = "ID: " . $object->id;
         }
 
-        if (isset($object->$secondField)) {
+        if ($object->hasField($secondField)) {
             $secondDisplay = $object->$secondField;
             if (strlen($secondDisplay) > 100) {
                 $secondDisplay = substr($secondDisplay, 0, 100) . "...";

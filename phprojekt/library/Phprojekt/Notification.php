@@ -246,7 +246,7 @@ class Phprojekt_Notification
     public function getSubject()
     {
         $mailTitle = "";
-        if (isset($this->_model->searchFirstDisplayField)) {
+        if ($this->_model->hasField('searchFirstDisplayField')) {
             $mailTitle = $this->_model->{$this->_model->searchFirstDisplayField};
         }
         $subject = trim('[' . $this->_model->getModelName() . ' #' . $this->_model->id . '] ' . $mailTitle);
@@ -574,7 +574,7 @@ class Phprojekt_Notification
         $itemName = "-";
 
         if (false === empty($this->_model)) {
-            if (isset($this->_model->{$this->_model->searchFirstDisplayField})) {
+            if ($this->_model->hasField($this->_model->searchFirstDisplayField)) {
                 $itemName = $this->_model->{$this->_model->searchFirstDisplayField};
             } else {
                 $itemName = "ID: " . $this->_model->id;
