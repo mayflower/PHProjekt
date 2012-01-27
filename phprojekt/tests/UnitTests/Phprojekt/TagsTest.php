@@ -85,24 +85,47 @@ class Phprojekt_TagsTest extends DatabaseTest
     public function testGetTags()
     {
         $tag    = Phprojekt_Tags::getInstance();
-        $result = array('0' => array('string' => 'this',
-                                     'count'  => 2),
-                        '1' => array('string' => 'tag',
-                                     'count'  => 1)
-                        );
-        $this->assertEquals($result, $tag->getTags(3));
+        $expected = array(
+            '0' => array(
+                'string' => 'this',
+                'count'  => 2
+            ),
+            '1' => array(
+                'string' => 'tag',
+                'count'  => 1
+            )
+        );
+        $this->assertEquals($expected, $tag->getTags(3));
 
         $tag->saveTags(1, 2, 'This is other test');
         $tag->saveTags(2, 1, 'This is other test for todo');
-        $result = array('0' => array('string' => 'this',
-                                     'count'  => 3),
-                        '1' => array('string' => 'tag',
-                                     'count'  => 1),
-                        '2' => array('string' => 'other',
-                                     'count'  => 1),
-                        '3' => array('string' => 'test',
-                                     'count'  => 1));
-        $this->assertEquals($result, $tag->getTags(6));
+        $expected = array(
+            array(
+                'string' => 'this',
+                'count'  => 4
+            ),
+            array(
+                'string' => 'other',
+                'count'  => 2
+            ),
+            array(
+                'string' => 'test',
+                'count'  => 2
+            ),
+            array(
+                'string' => 'for',
+                'count'  => 1
+            ),
+            array(
+                'string' => 'tag',
+                'count'  => 1
+            ),
+            array(
+                'string' => 'todo',
+                'count'  => 1
+            )
+        );
+        $this->assertEquals($expected, $tag->getTags(6));
     }
 
     /**
