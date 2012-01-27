@@ -198,7 +198,7 @@ final class Default_Helpers_Save
         $rights = Default_Helpers_Right::getRights($params);
 
         if ($model instanceof Phprojekt_Item_Abstract) {
-            if ($newItem) {
+            if ($newItem && !Phprojekt_Module::saveTypeIsGlobal($moduleId)) {
                 $project = new Project_Models_Project();
                 $project->find($projectId);
                 if (!$project->hasRight($userId, Phprojekt_Acl::CREATE)) {
