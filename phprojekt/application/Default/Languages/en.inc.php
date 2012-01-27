@@ -260,7 +260,7 @@ $lang["Zip code"] = "Zip code";
 $lang["Country"] = "Country";
   // Project
 $lang["Title"] = "Title";
-$lang["Parent"] = "Project";
+$lang["Parent"] = "Parent";
   // Others
 $lang["Type"] = "Type";
 $lang["Status"] = "Status";

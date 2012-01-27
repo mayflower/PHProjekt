@@ -259,7 +259,7 @@ $lang["Zip code"] = "Código postal";
 $lang["Country"] = "País";
   // Project
 $lang["Title"] = "Título";
-$lang["Parent"] = "Proyecto";
+$lang["Parent"] = "Parent";
   // Others
 $lang["Type"] = "Tipo";
 $lang["Status"] = "Estado";

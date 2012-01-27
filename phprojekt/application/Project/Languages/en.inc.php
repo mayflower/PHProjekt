@@ -6,7 +6,7 @@ $lang["Project"] = "Project";
  // Basic Data
 $lang["Title"] = "Title";
 $lang["Notes"] = "Notes";
-$lang["Parent"] = "Project";
+$lang["Parent"] = "Parent";
 $lang["Start date"] = "Start date";
 $lang["End date"] = "End date";
 $lang["Priority"] = "Priority";

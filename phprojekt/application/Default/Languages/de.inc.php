@@ -263,7 +263,7 @@ $lang["Zip code"] = "PLZ";
 $lang["Country"] = "Land";
   // Project
 $lang["Title"] = "Titel";
-$lang["Parent"] = "Project";
+$lang["Parent"] = "Parent";
   // Others
 $lang["Type"] = "Type";
 $lang["Status"] = "Status";
