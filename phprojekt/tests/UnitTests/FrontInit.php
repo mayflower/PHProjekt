@@ -188,6 +188,18 @@ abstract class FrontInit extends DatabaseTest
     }
 
     /**
+     * Helper function to parse returned json.
+     *
+     * @param  string $json The json returned by getResponse()
+     * @return array A php array containing the data as strings. (No type conversions)
+     */
+    public static function phprJsonToArray($json)
+    {
+        $json = substr($json, 5, -1);
+        return Zend_Json::decode($json);
+    }
+
+    /**
      * Reset the request and the response to allow another request to be done in this test
      */
     protected function _reset()

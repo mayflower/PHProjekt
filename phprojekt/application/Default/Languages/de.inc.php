@@ -263,11 +263,11 @@ $lang["Zip code"] = "PLZ";
 $lang["Country"] = "Land";
   // Project
 $lang["Title"] = "Titel";
-$lang["Parent"] = "Project";
+$lang["Parent"] = "Parent";
   // Others
 $lang["Type"] = "Type";
 $lang["Status"] = "Status";
-$lang["Current status"] = "Status";
+$lang["Current status"] = "Aktueller Status";
 $lang["Percent"] = "Prozent";
 $lang["Complete percent"] = "Abgeschlossen in Prozent";
 $lang["Budget"] = "Budget";

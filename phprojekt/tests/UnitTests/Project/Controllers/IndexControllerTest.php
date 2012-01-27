@@ -103,9 +103,13 @@ class Project_IndexController_Test extends FrontInit
         $items = array(2 => array('projectId' => '2'));
         $this->request->setParam('data', $items);
         $this->request->setParam('nodeId', 1);
-        $response = $this->getResponse();
-        $expected = '{"type":"error","message":"ID 2. Parent: The project can not be saved under itself","code":0,'
-            . '"id":"2"}';
-        $this->assertContains($expected, $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $expected = array(
+            'type' => 'error',
+            'message' => 'ID 2. Parent: The project can not be saved under itself',
+            'code' => 0,
+            'id' => 2
+        );
+        $this->assertEquals($expected, $response);
     }
 }

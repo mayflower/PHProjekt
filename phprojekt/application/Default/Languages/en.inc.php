@@ -260,11 +260,11 @@ $lang["Zip code"] = "Zip code";
 $lang["Country"] = "Country";
   // Project
 $lang["Title"] = "Title";
-$lang["Parent"] = "Project";
+$lang["Parent"] = "Parent";
   // Others
 $lang["Type"] = "Type";
 $lang["Status"] = "Status";
-$lang["Current status"] = "Status";
+$lang["Current status"] = "Current status";
 $lang["Percent"] = "Percentage";
 $lang["Complete percent"] = "Complete percent";
 $lang["Budget"] = "Budget";

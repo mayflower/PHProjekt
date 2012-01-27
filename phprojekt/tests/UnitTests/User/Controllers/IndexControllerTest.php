@@ -50,9 +50,14 @@ class User_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Core/user/jsonGetUsers');
         $this->request->setParam('nodeId', 1);
-        $response = $this->getResponse();
-        $expected = '{"id":1,"display":"Mustermann, Max","current":true}';
-        $this->assertContains($expected, $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $expected = array(
+            'data' => array(
+                array('id' => 2, 'display' => ', Luise Marie'),
+                array('id' => 1, 'display' => 'Mustermann, Max')
+            )
+        );
+        $this->assertEquals($expected, $response);
     }
 
     /**

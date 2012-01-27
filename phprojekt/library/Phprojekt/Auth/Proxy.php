@@ -108,6 +108,16 @@ class Phprojekt_Auth_Proxy
         return self::getEffectiveUser()->id;
     }
 
+    /**
+     * Returns whether the currently proxied user is an admin.
+     *
+     * @return boolean
+     */
+    public static function isAdminUser()
+    {
+        return self::getEffectiveUser()->admin;
+    }
+
     protected static function _setEffectiveUserById($userId)
     {
         $user = new Phprojekt_User_User();

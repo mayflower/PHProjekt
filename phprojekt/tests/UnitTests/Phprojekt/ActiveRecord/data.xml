@@ -11,7 +11,7 @@
     <project id="7" path="/1/2/5/" title="Sub Sub Project 2" notes="" owner_id="1"
         project_id="5" start_date="2007-12-01" priority="1" current_status="3" />
     <user id="1" username="Test"
-        firstname="Max" lastname="Mustermann" status="A" admin="0" />
+        firstname="Max" lastname="Mustermann" status="A" admin="1" />
     <user id="2" username="Marie"
         firstname="Luise Marie" lastname="" status="A" admin="0" />
     <module id="1" name="Project" label="Project"

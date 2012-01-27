@@ -159,11 +159,32 @@ class Filemanager_IndexController_Test extends FrontInit
         // New item data request
         $this->setRequestUrl('Filemanager/index/jsonDetail/');
         $this->request->setParam('nodeId', 1);
-        $response = $this->getResponse();
-        $expected = '"data":[{"id":0,"title":"","comments":"","projectId":0,"files":"","rights":{"currentUser":'
-            . '{"moduleId":7,"itemId":0,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,'
-            . '"copy":true,"delete":true,"download":true,"admin":true}}}],"numRows":1})';
-        $this->assertContains($expected, $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $expectedData = array(
+            array(
+                'id' => 0,
+                'title' => '',
+                'comments' => '',
+                'projectId' => 0,
+                'files' => '',
+                'rights' => array(
+                    1 => array(
+                        'none'     => true,
+                        'read'     => false,
+                        'write'    => false,
+                        'access'   => false,
+                        'create'   => false,
+                        'copy'     => false,
+                        'delete'   => false,
+                        'download' => false,
+                        'admin'    => false
+                    )
+                )
+            )
+        );
+        $expectedNumRows = 1;
+        $this->assertEquals($expectedData, $response['data']);
+        $this->assertEquals($expectedNumRows, $response['numRows']);
     }
 
     /**
@@ -175,12 +196,32 @@ class Filemanager_IndexController_Test extends FrontInit
         $this->setRequestUrl('Filemanager/index/jsonDetail/');
         $this->request->setParam('id', 1);
         $this->request->setParam('nodeId', 1);
-        $response = $this->getResponse();
-        $expected = '"data":[{"id":1,"title":"Test","comments":"Foobar",'
-            . '"projectId":1,"files":"966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt","rights":{"currentUser":{'
-            . '"moduleId":7,"itemId":1,"userId":1,"none":false,"read":true,"write":true,"access":true,"create":true,'
-            . '"copy":true,"delete":true,"download":true,"admin":true}}}],"numRows":1})';
-        $this->assertContains($expected, $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $expectedData = array(
+            array(
+                'id'        => 1,
+                'title'     => 'Test',
+                'comments'  => 'Foobar',
+                'projectId' => 1,
+                'files'     => '966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt',
+                'rights'    => array(
+                    1 => array(
+                        'none'     => true,
+                        'read'     => false,
+                        'write'    => false,
+                        'access'   => false,
+                        'create'   => false,
+                        'copy'     => false,
+                        'delete'   => false,
+                        'download' => false,
+                        'admin'    => false,
+                    )
+                )
+            )
+        );
+        $expectedNumRows = 1;
+        $this->assertEquals($expectedData, $response['data']);
+        $this->assertEquals($expectedNumRows, $response['numRows']);
     }
 
     /**
