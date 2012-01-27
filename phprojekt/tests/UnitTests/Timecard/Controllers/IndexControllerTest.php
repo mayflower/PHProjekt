@@ -318,10 +318,24 @@ class Timecard_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains(Timecard_IndexController::EDIT_TRUE_TEXT, $response);
 
+        $this->_reset();
         $this->setRequestUrl('Timecard/index/jsonGetFavoritesProjects/');
-        $response = $this->getResponse();
-        $this->assertContains('{"id":1,"display":"PHProjekt","name":"PHProjekt"},'
-            . '{"id":2,"display":"....Test Project","name":"Test Project"}', $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+
+        $expected = array(
+            array(
+                'id'      => 1,
+                'display' => 'PHProjekt',
+                'name'    => 'PHProjekt'
+            ),
+            array(
+                'id'      => 2,
+                'display' => 'Test Project',
+                'name'    => 'Test Project'
+            )
+        );
+
+        $this->assertEquals($expected, $response);
     }
 
     /**

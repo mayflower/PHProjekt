@@ -824,7 +824,7 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Overwrite the clone id, to reset _storeId and reinit the data array.
+     * Overwrite the clone id, to reset _storedId and reinit the data array.
      *
      * @return void
      */
@@ -1308,5 +1308,15 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     public function toArray()
     {
         return (array) $this->_data;
+    }
+
+    /**
+     * Check if this model is new, i.e. has no database line it belongs to.
+     *
+     * @return bool
+     */
+    public function isNew()
+    {
+        return empty($this->_storedId);
     }
 }

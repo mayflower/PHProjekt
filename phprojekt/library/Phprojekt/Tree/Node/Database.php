@@ -97,8 +97,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * Initialize a new node and sets the tree the node belongs to.
      *
-     * @param stdClass $activeRecord The Object that holds the tree.
-     * @param integer  $id           The requested node, that will be the root node.
+     * @param Phprojekt_ActiveRecord_Abstract|stdclass $activeRecord The Object that holds the tree.
+     * @param integer                                  $id           The requested node, that will be the root node.
      *
      * @return void
      */
@@ -273,7 +273,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      *
      * @return void
      */
-    private function deleteNode($object, $id)
+    private function deleteNode(Phprojekt_Tree_Node_Database $object, $id)
     {
         if (isset($object->_children[$id])) {
             unset($object->_children[$id]);

@@ -97,7 +97,7 @@ final class Default_Helpers_Save
         }
 
         // Parent Project
-        if (!isset($node->projectId) || null === $node->projectId) {
+        if (!isset($node->projectId)) {
             $node->projectId = 1;
         }
 
@@ -198,7 +198,7 @@ final class Default_Helpers_Save
         $rights = Default_Helpers_Right::getRights($params);
 
         if ($model instanceof Phprojekt_Item_Abstract) {
-            if ($newItem) {
+            if ($newItem && !Phprojekt_Module::saveTypeIsGlobal($moduleId)) {
                 $project = new Project_Models_Project();
                 $project->find($projectId);
                 if (!$project->hasRight($userId, Phprojekt_Acl::CREATE)) {
@@ -222,7 +222,7 @@ final class Default_Helpers_Save
 
             // Save access only if the user have "admin" right
             if ($newItem || $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN)) {
-                if (count($rights) <= 0) {
+                if (!Phprojekt_Auth_Proxy::isAdminUser() && count($rights) <= 0) {
                     throw new Phprojekt_PublishedException(
                         'At least one person must have access to this item');
                 }
@@ -284,26 +284,12 @@ final class Default_Helpers_Save
      */
     private static function _checkModule($moduleId, $projectId)
     {
-        $boolean = false;
-        if ($projectId > 0) {
-            if ($projectId == 1 && !Phprojekt_Module::saveTypeIsNormal($moduleId)) {
-                $boolean = true;
-            } else {
-                if (!Phprojekt_Module::saveTypeIsNormal($moduleId)) {
-                    $boolean = true;
-                } else {
-                    $relation = new Project_Models_ProjectModulePermissions();
-                    $modules  = $relation->getProjectModulePermissionsById($projectId);
-                    if ($modules['data'][$moduleId]['inProject']) {
-                        $boolean = true;
-                    } else {
-                        $boolean = false;
-                    }
-                }
-            }
-        } else {
-            $boolean = true;
+        if ($projectId <= 0 || !Phprojekt_Module::saveTypeIsNormal($moduleId)) {
+            return true;
         }
-        return $boolean;
+
+        $relation = new Project_Models_ProjectModulePermissions();
+        $modules  = $relation->getProjectModulePermissionsById($projectId);
+        return !empty($modules['data'][$moduleId]['inProject']);
     }
 }

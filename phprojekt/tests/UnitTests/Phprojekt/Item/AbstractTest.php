@@ -346,10 +346,13 @@ class Phprojekt_Item_AbstractTest extends DatabaseTest
         $this->assertTrue($item->recordValidate());
 
         $item     = new Project_Models_Project(array('db' => $this->sharedFixture));
-        $result   = array();
-        $result[] = array('field'    => 'currentStatus',
-                          'label'    => 'Current status',
-                          'message'  => 'Value out of range');
+        $result = array(
+            array(
+                'field'   => 'currentStatus',
+                'label'   => 'Current status',
+                'message' => 'Value out of range'
+            )
+        );
         $item->projectId     = 1;
         $item->title         = 'TEST';
         $item->notes         = 'TEST';

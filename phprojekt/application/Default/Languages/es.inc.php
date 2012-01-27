@@ -259,11 +259,11 @@ $lang["Zip code"] = "Código postal";
 $lang["Country"] = "País";
   // Project
 $lang["Title"] = "Título";
-$lang["Parent"] = "Proyecto";
+$lang["Parent"] = "Parent";
   // Others
 $lang["Type"] = "Tipo";
 $lang["Status"] = "Estado";
-$lang["Current status"] = "Estado";
+$lang["Current status"] = "Estado actual";
 $lang["Percent"] = "Porcentaje";
 $lang["Complete percent"] = "Porcentaje completado";
 $lang["Budget"] = "Presupuesto";

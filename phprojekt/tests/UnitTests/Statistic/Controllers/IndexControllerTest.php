@@ -67,9 +67,27 @@ class Statistic_IndexController_Test extends FrontInit
         $this->request->setParam('endDate', '2009-05-31');
         $this->request->setParam('nodeId', 1);
 
-        $response = $this->getResponse();
-        $this->assertContains('{"data":{"users":{"1":"Test"},"projects":{"1":"PHProjekt","2":"....Test Project",'
-            . '"5":"........Sub Project","6":"............Sub Sub Project 1","7":"............Sub Sub Project 2"},"rows":{"1":{"1":120}}}})', $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $expected = array (
+            'data' => array (
+                'users' => array (
+                    1 => 'Test'
+                ),
+                'projects' => array (
+                    1 => 'PHProjekt',
+                    2 => 'Test Project',
+                    5 => 'Sub Project',
+                    6 => 'Sub Sub Project 1',
+                    7 => 'Sub Sub Project 2'
+                ),
+                'rows' => array (
+                    1 => array (
+                        1 => 120
+                    )
+                )
+            )
+        );
+        $this->assertEquals($expected, $response);
     }
 
     /**
@@ -101,12 +119,13 @@ class Statistic_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
 
         $response = $this->getResponse();
-        $this->assertContains('"Project","Test","Total"'."\n"
+
+        $this->assertEquals('"Project","Test","Total"'."\n"
             . '"PHProjekt","02:00","02:00"'."\n"
-            . '"....Test Project","00:00","00:00"'."\n"
-            . '"........Sub Project","00:00","00:00"'."\n"
-            . '"............Sub Sub Project 1","00:00","00:00"'."\n"
-            . '"............Sub Sub Project 2","00:00","00:00"'."\n"
+            . '"Test Project","00:00","00:00"'."\n"
+            . '"Sub Project","00:00","00:00"'."\n"
+            . '"Sub Sub Project 1","00:00","00:00"'."\n"
+            . '"Sub Sub Project 2","00:00","00:00"'."\n"
             . '"Total","02:00","02:00"'."\n", $response);
     }
 }

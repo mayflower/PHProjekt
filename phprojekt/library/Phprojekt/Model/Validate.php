@@ -70,7 +70,7 @@ class Phprojekt_Model_Validate
      *
      * @return boolean True for valid.
      */
-    public function recordValidate($class, $data, $fields)
+    public function recordValidate(Phprojekt_ActiveRecord_Abstract $class, $data, $fields)
     {
         $valid = true;
 

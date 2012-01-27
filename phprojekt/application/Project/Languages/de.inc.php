@@ -6,11 +6,11 @@ $lang["Project"] = "Projekt";
  // Basic Data
 $lang["Title"] = "Titel";
 $lang["Notes"] = "Notizen";
-$lang["Parent"] = "Projekt";
+$lang["Parent"] = "Parent";
 $lang["Start date"] = "Startdatum";
 $lang["End date"] = "Enddatum";
 $lang["Priority"] = "Priorität";
-$lang["Current status"] = "Status";
+$lang["Current status"] = "Aktueller Status";
 $lang["Offered"] = "Angeboten";
 $lang["Ordered"] = "Bestellt";
 $lang["Working"] = "in Bearbeitung";

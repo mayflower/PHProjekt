@@ -115,12 +115,12 @@ final class Default_Helpers_Delete
             throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
             $return = $model->delete();
-            if ((isset($return->id) && null === $return->id) || null === $return) {
-                 // ActiveRecord delete the model.
-                return true;
-            } else if (is_bool($return)) {
+            if (is_bool($return)) {
                 // An extention returns true or false.
                 return $return;
+            } else if (is_null($return) || (is_a($return, 'Phprojekt_ActiveRecord_Abstract') && is_null($return->id))) {
+                 // ActiveRecord delete the model.
+                return true;
             } else {
                 // Any other value, is wrong.
                 return false;
@@ -171,17 +171,15 @@ final class Default_Helpers_Delete
      *
      * @return boolean True for a valid right.
      */
-    private static function _checkItemRights($model, $moduleName)
+    private static function _checkItemRights(Phprojekt_ActiveRecord_Abstract $model, $moduleName)
     {
         $canDelete = false;
 
         if ($moduleName == 'Core') {
             return Phprojekt_Auth::isAdminUser();
-        } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))) {
-
-            return $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DELETE)
-                         | Phprojekt_Auth::isAdminUser();
-
+        } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))
+                && method_exists($model, 'hasRight')) {
+            return $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DELETE);
         } else {
             return true;
         }
