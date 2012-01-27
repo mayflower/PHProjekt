@@ -270,9 +270,32 @@ class Phprojekt_IndexController_Test extends FrontInit
     public function testJsonGetConfigurationsAction()
     {
         $this->setRequestUrl('Project/index/jsonGetConfigurations');
-        $response = $this->getResponse();
-        $this->assertContains('"name":"supportAddress","value":"gustavo.solt@mayflower.de"},{"name":"phprojektVersion"'
-            . ',"value":"6.1.0-beta2"},{"name":"currentUserId","value":1},{"name":"csrfToken","value"', $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $expected = array(
+            array(
+                'name' => 'supportAddress',
+                'value' => 'gustavo.solt@mayflower.de'
+            ),
+            array(
+                'name' => 'currentUserId',
+                'value' => 1
+            )
+        );
+        foreach ($expected as $e){
+            $this->assertContains($e, $response);
+        }
+
+        $hasCSRFToken = false;
+        $hasVersion   = false;
+        foreach ($response as $r){
+            if ($r['name'] === 'csrfToken') {
+                $hasCSRFToken = true;
+            } else if ($r['name'] === 'phprojektVersion') {
+                $hasVersion = true;
+            }
+        }
+        $this->assertTrue($hasCSRFToken);
+        $this->assertTrue($hasVersion);
     }
 
     /**
