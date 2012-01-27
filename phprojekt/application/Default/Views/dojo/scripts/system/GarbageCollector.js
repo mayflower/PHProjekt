@@ -27,10 +27,13 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
     _domNodes: {},
     // Event handler
     _eventHandler: {},
+    // Objects
+    _objects: {},
 
     constructor: function() {
         this._domNodes = {};
         this._eventHandler = {};
+        this._objects = {};
     },
 
     destroy: function() {
@@ -47,6 +50,13 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
             }
             this._domNodes[i] = null;
         }
+
+        for (var i in this._objects) {
+            for (var e in this._objects[i]) {
+                this._objects[i][e] = null;
+            }
+            this._objects[i] = null;
+        }
     },
 
     addNode: function(node, context) {
@@ -61,6 +71,7 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
         }
         this._domNodes[context].push(node);
     },
+
     addEvent: function(handler, context) {
         // Summary:
         //      Adds a event to the garbage collection watch
@@ -73,6 +84,21 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
         }
         this._eventHandler[context].push(handler);
     },
+
+    addObject: function(node, context) {
+        // Summary:
+        //      Adds a javascript object to the garbage collection watch
+        // Description:
+        //      This adds a javascript object to the GC
+        //      The object's destroy method will be called upon collection.
+        //      To provide more flexibility, you can optionally provide a
+        //      context.
+        if (!this._objects[context]) {
+            this._objects[context] = [];
+        }
+        this._objects[context].push(node);
+    },
+
     collect: function(context) {
         // Summary:
         //      Collect all registered events and nodes from the given scope
@@ -119,6 +145,19 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
 
                 this._domNodes[context][0] = null;
                 this._domNodes[context].splice(0, 1);
+            }
+        }
+
+        if (this._objects[context] && dojo.isArray(this._objects[context])) {
+            while (this._objects[context].length > 0) {
+                var n = this._objects[context][0];
+
+                if (n && dojo.isFunction(n.destroy)) {
+                    n.destroy()
+                }
+
+                this._objects[context][0] = null;
+                this._objects[context].splice(0, 1);
             }
         }
     }

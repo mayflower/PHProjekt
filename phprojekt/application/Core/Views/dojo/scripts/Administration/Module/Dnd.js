@@ -30,6 +30,7 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
     //    Extend the dojo Source
     // Description:
     //    Extend the dojo Source
+    tabId: "",
     onDrop:function(source, nodes, copy) {
         if (this != source) {
             this.onDropExternal(source, nodes, copy);
@@ -55,7 +56,9 @@ dojo.declare("phpr.Module.Designer", dojo.dnd.AutoSource, {
 
     markupFactory:function(params, node) {
         params._skipStartup = true;
-        return new phpr.Module.Designer(node, params);
+        var el = new phpr.Module.Designer(node, params);
+        moduleDesignerElements[params.tabId] = el;
+        return el;
     }
 });
 
@@ -96,7 +99,7 @@ phpr.makeModuleDesignerSource = function() {
 
     element.innerHTML = html;
     dojo.parser.parse(element.id);
-    moduleDesignerSource.sync();
+    moduleDesignerElements['moduleDesignerSource'].sync();
 };
 
 phpr.makeModuleDesignerTarget = function(jsonData, tabs) {
@@ -107,7 +110,7 @@ phpr.makeModuleDesignerTarget = function(jsonData, tabs) {
     if (jsonData) {
         var data = dojo.fromJson(jsonData);
         for (var j in tabs) {
-            var tab     = eval("moduleDesignerTarget" + tabs[j]['nameId']);
+            var tab = moduleDesignerElements['moduleDesignerTarget' + tabs[j]['nameId']];
             var element = dojo.byId('moduleDesignerTarget' + tabs[j]['nameId']);
             var html    = '<div style="text-align: center; padding-bottom: 2px;">'
                 + phpr.nls.get('Active fields in the module')
@@ -150,9 +153,9 @@ phpr.deleteModuleDesignerField = function(nodeId) {
     // Delete only the target items
     if (tabId != 'moduleDesignerSource') {
         if (node) {
-            var tab = eval(tabId);
+            var tab = moduleDesignerElements[tabId];
             // make sure it is not the anchor
-            if (tab.anchor == node){
+            if (tab.anchor == node) {
                 tab.anchor = null;
             }
             // remove it from the master map
