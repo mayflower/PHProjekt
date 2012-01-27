@@ -26,6 +26,30 @@ dojo.require("dijit.Dialog");
 dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
     _dialog: null,
 
+    constructor: function() {
+        // FIXME: this solution for storing the moduleDesigner elements leaks memory and is very hard to garbage collect because
+        // it introduces global variables. It should be refactored to work more object oriented.
+        window.moduleDesignerElements = {};
+    },
+
+    destroy: function() {
+        if (moduleDesignerElements) {
+            var collector = new phpr.Default.System.GarbageCollector();
+            for (var i in moduleDesignerElements) {
+                if (moduleDesignerElements.hasOwnProperty(i)) {
+                    collector.addNode(moduleDesignerElements[i]);
+                }
+            }
+            collector.collect();
+
+            delete moduleDesignerElements;
+
+            collector.destroy();
+        }
+
+        this.inherited(arguments);
+    },
+
     initData:function() {
         // Get all the active users
         this._moduleDesignerUrl  = phpr.webpath + 'index.php/Core/moduleDesigner/jsonDetail/nodeId/1/id/' + this.id;
@@ -151,7 +175,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
         var formPosition = 0;
         var self         = this;
         for (var j in tabs) {
-            var tab = eval("moduleDesignerTarget" + tabs[j]['nameId']);
+            var tab = moduleDesignerElements["moduleDesignerTarget" + tabs[j]['nameId']];
             tab.getAllNodes().forEach(function(node) {
                 var t = tab._normalizedCreator(node);
                 i++;

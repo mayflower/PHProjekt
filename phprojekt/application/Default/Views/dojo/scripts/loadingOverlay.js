@@ -38,7 +38,7 @@ dojo.declare("phpr.Default.loadingOverlay", phpr.Default.System.Component, {
         this._message = message !== undefined ? message : this._message;
 
         for (var i in domNodes) {
-            var node = domNodes[i]
+            var node = domNodes[i];
 
             if (!dojo.byId(node)) {
                 throw new Error("invalid domNode provided");
@@ -51,16 +51,14 @@ dojo.declare("phpr.Default.loadingOverlay", phpr.Default.System.Component, {
         for (var i in this._domNodes) {
             var node = this._domNodes[i];
             var domBox = dojo.marginBox(node);
-            var overlay = dojo.create(
-                'div',
-                { innerHTML: phpr.fillTemplate(
-                    "phpr.Default.template.loadingOverlay.html",
-                    {
-                        webpath: phpr.webpath,
-                        message: this._message
-                    })
-                }
-            );
+            var template =  phpr.fillTemplate("phpr.Default.template.loadingOverlay.html",
+                {
+                    webpath: phpr.webpath,
+                    message: this._message
+                });
+
+            var overlay = dojo.create('div', { innerHTML: template });
+
             dojo.style(
                 overlay,
                 {
@@ -74,12 +72,12 @@ dojo.declare("phpr.Default.loadingOverlay", phpr.Default.System.Component, {
             );
 
             dojo.place(overlay, node, "before");
-            this._overlays.push(overlay)
+            this._overlays.push(overlay);
         }
     },
     hide: function() {
         var l = this._overlays.length;
-        for (var i = 0; i<l; i++) {
+        for (var i = 0; i < l; i++) {
             (dojo.hitch(this, function() {
                 var overlay = this._overlays[i];
                 if (dojo.byId(overlay)) {
@@ -89,7 +87,7 @@ dojo.declare("phpr.Default.loadingOverlay", phpr.Default.System.Component, {
                         onEnd: function() {
                             dojo.destroy(overlay);
                         }
-                    }).play();;
+                    }).play();
                 }
             }))();
         }

@@ -594,7 +594,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         var dropDown = dojo.place(
             phpr.fillTemplate("phpr.Calendar2.template.proxyDropDown.html",
                 {
-                    label: phpr.nls.get("User:")
+                    label: phpr.nls.get("User") + ":"
                 }
             ),
             this._navigation.containerNode,

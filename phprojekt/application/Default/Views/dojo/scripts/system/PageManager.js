@@ -61,7 +61,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             state.moduleName = (this.getActiveModule() ? this.getActiveModule().module : this._defaultModule);
         }
 
-        if (this.getModule(state.moduleName)) {
+        if (this.moduleExists(state.moduleName)) {
             this._changeModule(state, options);
         } else {
             console.error("Invalid name provided: " + state.moduleName);
@@ -80,7 +80,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             }
         }
 
-        this.changeState(state, options)
+        this.changeState(state, options);
     },
 
     _setHash: function(state, replaceItem) {
@@ -141,9 +141,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
 
             phpr.module = module;
 
-            if (state.projectId
-                    && state.moduleName
-                    && !state.globalModuleName) {
+            if (state.projectId && state.moduleName && !state.globalModuleName) {
                 var projectId = state.projectId;
                 if (projectId < 1) {
                     projectId = 1;
@@ -189,17 +187,24 @@ dojo.declare("phpr.Default.System.PageManager", null, {
                 }
             } else {
                 // Default value, only one parameter, and must be the module
-                if (!reloaded) { this._reloadModule(module, [ state ]); };
+                if (!reloaded) {
+                    this._reloadModule(module, [ state ]);
+                }
             }
 
             this.oldmodule = module;
             this._activeModule = mod;
+            this._signalActiveModuleChange();
         }
     },
 
+    _signalActiveModuleChange: function() {
+        dojo.publish("phpr.activeModuleChanged", [this.getActiveModuleName()]);
+    },
+
     _reloadModule: function(name, params) {
-        var mod = this.getModule(name);
-        if (mod) {
+        if (this.moduleExists(name)) {
+            var mod = this.getModule(name);
             if (dojo.isFunction(mod.reload)) {
                 mod.reload.apply(mod, params || []);
             } else {
@@ -214,13 +219,27 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         // Summary:
         //      returns a module by its name or null if it is not registered
 
-        return this._modules[name] || null;
+        if (this.moduleExists(name)) {
+            return this._modules[name];
+        } else {
+            throw new Error("Invalid module name " + name);
+        }
+    },
+
+    moduleExists: function(name) {
+        return this._modules[name] !== undefined;
     },
 
     getActiveModule: function() {
         // Summary:
         //      returns the active module
         return this._activeModule;
+    },
+
+    getActiveModuleName: function() {
+        // Summary:
+        //      returns the active module name
+        return this._activeModule ? this._activeModule.module : null;
     },
 
     getState: function() {
@@ -274,16 +293,19 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         }
     },
 
-    initialPageLoad: function(module) {
+    initialPageLoad: function() {
         // Summary:
-        //      Calls load on the module with the specified module name or on the default module
+        //      Calls load on the current module, based on the window state, of the default module.
         // Description:
-        //      Calls the load function on the named module.
+        //      Calls the load function on the current module, take from the window state.
         //      TODO: this control flow is bogus, there is no reason why the initial page loading should be done by the
         //      load function of the Main class (it will not work to call it twice and it has nothing to do with the
         //      Main class in general)
-        if (this.getModule(module) !== null) {
-            module.load();
+
+        var state = this.getStateFromWindow() || {};
+        var moduleName = state.moduleName || this._defaultModule;
+        if (this.moduleExists(moduleName)) {
+            this.getModule(moduleName).load();
         } else {
             this.getModule(this._defaultModule).load();
         }
