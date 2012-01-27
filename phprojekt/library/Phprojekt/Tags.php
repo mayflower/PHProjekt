@@ -133,7 +133,7 @@ class Phprojekt_Tags
 
     /**
      * Get all the tags for the current user
-     * and return and array sorted by the number of ocurrences.
+     * and return and array sorted by the number of ocurrences first and tag name second.
      *
      * If the $limit is set, the returned array is limited to the $limit tags.
      *
@@ -145,38 +145,21 @@ class Phprojekt_Tags
     {
         $foundResults = array();
 
-        // Get all the user-tags relations
-        $tmpResults = $this->_tagsUsers->getUserTagIds();
-
-        // Convert result to array per tags
-        // And count the number of occurrences
-        foreach ($tmpResults as $tagUserId => $tagId) {
-            $tagName = $this->_tags->getTagName($tagId);
-
-            $modules = $this->_tagsModules->getModulesByRelationId($tagUserId);
-            if (!isset($foundResults[$tagName])) {
-                $foundResults[$tagName] = 0;
+        $select = Phprojekt::getInstance()->getDb()->select();
+        $select->from(array('t' => 'tags'), array('string' => 'word', 'count' => 'COUNT(word)'))
+            ->join(array('tu' => 'tags_users'), 'tu.tag_id = t.id', array())
+            ->join(array('tm' => 'tags_modules'), 'tm.tag_user_id = tu.id', array())
+            ->where('tu.user_id = ?', Phprojekt_Auth::getUserId())
+            ->group('t.word')
+            ->order('count DESC')
+            ->order('string ASC');
+        if ($limit !== 0) {
+            if (!is_int($limit)) {
+                throw new Exception('$limit must be an integer!');
             }
-            $foundResults[$tagName] = $foundResults[$tagName] + count($modules);
-
+            $select->limit($limit);
         }
-
-        // Return the $limit tags
-        if ($limit > 0) {
-            $foundResults = array_slice($foundResults, 0, $limit);
-        }
-
-        // Return the formated array
-        $tmp = $foundResults;
-        $foundResults = array();
-        foreach ($tmp as $tagName => $count) {
-            if ($count > 0) {
-                $foundResults[] = array('string' => $tagName,
-                                        'count'  => $count);
-            }
-        }
-
-        return $foundResults;
+        return $select->query()->fetchAll(Zend_Db::FETCH_ASSOC);
     }
 
     /**
