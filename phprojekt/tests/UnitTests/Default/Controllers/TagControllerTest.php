@@ -53,10 +53,27 @@ class Phprojekt_TagController_Test extends FrontInit
         $this->setRequestUrl('Default/Tag/jsonGetTags/');
         $this->request->setParam('nodeId', 1);
         $this->request->setParam('limit', 2);
-        $response = $this->getResponse();
-        $expected = '"metadata":[{"key":"string","label":"Tag"},{"key":"count","label":"Count"}],'
-            . '"data":[{"string":"this","count":3}';
-        $this->assertContains($expected, $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $expected = array(
+            'metadata' => array(
+                array(
+                    'key'   => 'string',
+                    'label' => 'Tag',
+                ),
+                array(
+                    'key'   => 'count',
+                    'label' => 'Count',
+                ),
+            ),
+            'data' => array(
+                array(
+                    'string' => 'this',
+                    'count'  => '3',
+                ),
+            ),
+            'numRows' => 1,
+        );
+        $this->assertEquals($expected, $response);
     }
 
     /**
