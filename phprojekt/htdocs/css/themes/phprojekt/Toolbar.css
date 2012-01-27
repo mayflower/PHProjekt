@@ -48,7 +48,7 @@ a:focus.dijitToolbar {
 .phprojekt .dijitToolbar .dijitComboButton .dijitButtonContents,
 .phprojekt .dijitToolbar .dijitComboButton .dijitDownArrowButton {
     background: none;
-    margin: 0px;
+    margin: 2px 0 0 0;
     padding: 0px;
     border: none;
     font-size: 12px;

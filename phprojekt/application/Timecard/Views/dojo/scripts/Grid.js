@@ -28,6 +28,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
     _date: null,
     _node: null,
     _month: null,
+    _monthView: null,
     _year: null,
     _exportButton: null,
 
@@ -116,14 +117,14 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
         this.garbageCollector.addNode(this._monthView);
 
         this._node.set('content', this._monthView);
-        this._monthView.selectDate.set('value', new Date(this._year, this._month, this._date.getDate()));
+        this.setDate(new Date(this._year, this._month, this._date.getDate()));
 
         this.garbageCollector.addEvent(
             dojo.connect(
                 this._monthView.selectDateButton, "onClick", dojo.hitch(this,
                     function() {
                         var selectVal = this._monthView.selectDate.get('value');
-                        if (selectVal != null) {
+                        if (selectVal !== null) {
                             this.main.changeDate(selectVal);
                         }
                     })));
@@ -134,6 +135,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
         //    Reload the list if some value change
         // Description:
         //    Reload the list if some value change or forceReload is true
+        this.setDate(date);
         var newMonth = date.getMonth();
         var newYear = date.getFullYear();
         if (forceReload || newMonth != this._month || newYear != this._year) {
@@ -174,5 +176,11 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
         window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList/nodeId/1/year/' + this._year +
             '/month/' + (this._month + 1) + '/csrfToken/' + phpr.csrfToken);
         return false;
+    },
+
+    setDate: function(date) {
+        if (this._monthView && this._monthView.selectDate) {
+            this._monthView.selectDate.set('value', new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+        }
     }
 });
