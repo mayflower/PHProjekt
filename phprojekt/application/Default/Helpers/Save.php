@@ -51,7 +51,7 @@ final class Default_Helpers_Save
     protected static function parameterToModel($model, $params, $newItem = false)
     {
         foreach ($params as $k => $v) {
-            if (isset($model->$k)) {
+            if ($model->hasField($k)) {
                 // Don't allow to set the id on save, since it is done by the ActiveRecord
                 if ($k !== 'id') {
                     $model->$k = $v;
@@ -59,7 +59,7 @@ final class Default_Helpers_Save
             }
         }
 
-        if ($newItem && isset($model->ownerId)) {
+        if ($newItem && $model->hasField('ownerId')) {
             $model->ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
         }
 
@@ -179,7 +179,7 @@ final class Default_Helpers_Save
     {
         $newItem    = empty($params['id']);
         $model      = self::parameterToModel($model, $params, $newItem);
-        $projectId  = (isset($model->projectId)) ? $model->projectId : 0;
+        $projectId  = ($model->hasField('projectId')) ? $model->projectId : 0;
         $userId     = Phprojekt_Auth_Proxy::getEffectiveUserId();
         $moduleName = Phprojekt_Loader::getModuleFromObject($model);
         $moduleId   = Phprojekt_Module::getId($moduleName);
@@ -213,7 +213,7 @@ final class Default_Helpers_Save
 
             // Set the projectId to 1 for global modules
             // @TODO Remove the Timecard limitation
-            if (isset($model->projectId) && Phprojekt_Module::saveTypeIsGlobal($moduleId)
+            if ($model->hasField('projectId') && Phprojekt_Module::saveTypeIsGlobal($moduleId)
                 && Phprojekt_Module::getModuleName($moduleId) != 'Timecard') {
                     $model->projectId = 1;
                 }

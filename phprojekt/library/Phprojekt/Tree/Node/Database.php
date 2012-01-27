@@ -490,7 +490,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function __isset($key)
     {
-        return array_key_exists($key, get_object_vars($this)) || isset($this->getActiveRecord()->$key);
+        $objectvars = get_object_vars($this);
+        return isset($objectvars[$key]) || isset($this->getActiveRecord()->$key);
     }
 
     /**
@@ -647,6 +648,14 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         }
 
         return null;
+    }
+
+    /**
+     * Pass-through to hasField method of active record.
+     */
+    public function hasField($field)
+    {
+        return $this->getActiveRecord()->hasField($field);
     }
 
     /**
