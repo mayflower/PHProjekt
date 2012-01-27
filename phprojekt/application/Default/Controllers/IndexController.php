@@ -457,14 +457,14 @@ class IndexController extends Zend_Controller_Action
 
         if (!empty($itemId)) {
             $where = sprintf('id = %d', (int) $itemId);
-        } else if (!empty($projectId) && isset($this->getModelObject()->projectId)) {
+        } else if (!empty($projectId) && $this->getModelObject()->hasField('projectId')) {
             $where  = sprintf('project_id = %d', (int) $projectId);
         } else {
             $where = null;
         }
 
         /* recursive is only supported if nodeId is specified */
-        if (!empty($projectId) && isset($this->getModelObject()->projectId)
+        if (!empty($projectId) && $this->getModelObject()->hasField('projectId')
             && 'true' === $recursive) {
             $tree = new Phprojekt_Tree_Node_Database(
                 new Project_Models_Project(),

@@ -76,7 +76,7 @@ class Phprojekt_DatabaseManager_Field
     public function __get($name)
     {
         $name = Phprojekt_ActiveRecord_Abstract::convertVarToSql($name);
-        if (isset($this->_metadata->$name)) {
+        if (!is_null($this->_metadata) && isset($this->_metadata->$name)) {
             return $this->_metadata->$name;
         }
 

@@ -75,7 +75,7 @@ class Phprojekt_Model_Validate
         $valid = true;
 
         foreach ($data as $varname => $value) {
-            if (isset($class->$varname)) {
+            if ($class->hasField($varname)) {
                 // Validate with the database_manager stuff
                 foreach ($fields as $field) {
                     if ($field['key'] == $varname) {
