@@ -165,7 +165,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 tmp.id        = 'targetBooking' + data[i].id;
                 tmp.innerHTML = data[i].display;
                 if (data[i].projectId == 1) {
-                    tmp.innerHTML = "unassigned";
+                    tmp.innerHTML = phpr.nls.get("Unassigned", "Timecard");
                 }
                 dojo.addClass(tmp, dndClass);
                 dojo.style(tmp, "top", top);
@@ -242,7 +242,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                         meta[1].required, false, meta[1].hint));
                     // projectId
                     var range = dojo.clone(meta[3].range);
-                    range.unshift({ 'id': -1, 'name': '----' });
                     for (var i in favorites) {
                         var id = parseInt(favorites[i].id);
                         if (id > 0) {
@@ -259,7 +258,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                     var l = range.length;
                     for (var i = 0; i < l; i++) {
                         if (range[i].id == 1) {
-                            range[i].name = "unassigned";
+                            range[i].name = phpr.nls.get("Unassigned", "Timecard");
                             break;
                         }
                     }

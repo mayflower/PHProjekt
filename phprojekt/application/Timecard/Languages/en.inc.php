@@ -28,6 +28,9 @@ $lang["Can not save it because it overlaps existing one"] = "Can not save it bec
 $lang["Manage project list"] = "Manage project list";
 $lang["Drag the projects from left to right"] = "Drag the projects from left to right";
 $lang["Total hours"] = "Total hours";
+$lang["Unassigned"] = "Unassigned";
+$lang["Start working time"] = "Start working time";
+$lang["Stop working time"] = "Stop working time";
 
 // Tooltip Help
 $lang["Click for open the form"] = "Click for open the form";
