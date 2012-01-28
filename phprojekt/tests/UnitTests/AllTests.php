@@ -109,8 +109,6 @@ class AllTests extends PHPUnit_Framework_TestSuite
 
         $suite = new PHPUnit_Framework_TestSuite('PHPUnit');
 
-        $suite->sharedFixture = Phprojekt::getInstance()->getDb();
-
         $suite->addTest(User_AllTests::suite());
         $suite->addTest(Timecard_AllTests::suite());
         $suite->addTest(Statistic_AllTests::suite());
