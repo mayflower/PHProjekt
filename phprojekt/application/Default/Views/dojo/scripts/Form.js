@@ -73,11 +73,11 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this._loadIndicator = new phpr.Default.loadingOverlay(this.node.domNode);
         this._loadIndicator.show();
 
-        this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
+        this._initData.push({'url': this._url});
         this.tabStore = new phpr.Default.System.Store.Tab();
         this._initData.push({'store': this.tabStore});
         this.initData();
-        this.getInitData();
+        this.getInitData([dojo.hitch(this, "getFormData")]);
     },
 
     destroy: function() {
@@ -126,27 +126,35 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             '/index/jsonDetail/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
     },
 
-    getInitData: function() {
+    getInitData: function(callbacks) {
         // Summary:
         //    Process all the POST in cascade for get all the data from the server
         // Description:
         //    Process all the POST in cascade for get all the data from the server
-        var params = this._initData.pop();
+        var deferreds = [];
+        while (this._initData.length > 0) {
+            var params = this._initData.pop();
 
-        if (params.url || params.store) {
-            if (!params.noCache) {
-                params.noCache = false;
+            if (params.url || params.store) {
+                if (!params.noCache) {
+                    params.noCache = false;
+                }
+                if (!params.processData) {
+                    params.processData = function() {};
+                }
             }
-            if (!params.processData) {
-                params.processData = dojo.hitch(this, "getInitData");
+
+            if (params.url) {
+                phpr.DataStore.addStore({'url': params.url, 'noCache': params.noCache});
+                deferreds.push(phpr.DataStore.requestData({'url': params.url, 'processData': params.processData}));
+            } else if (params.store) {
+                deferreds.push(params.store.fetch(params.processData));
             }
         }
+        var dlist = new dojo.DeferredList(deferreds);
 
-        if (params.url) {
-            phpr.DataStore.addStore({'url': params.url, 'noCache': params.noCache});
-            phpr.DataStore.requestData({'url': params.url, 'processData': params.processData});
-        } else if (params.store) {
-            params.store.fetch(params.processData);
+        for (var i = 0; i < callbacks.length; i++) {
+            dlist.addCallback(callbacks[i]);
         }
     },
 
