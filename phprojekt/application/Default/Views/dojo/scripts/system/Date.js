@@ -22,6 +22,18 @@
 dojo.provide("phpr.Default.System.Date");
 
 dojo.declare("phpr.Default.System.Date", null, {
+    _lastDate: new Date(),
+    constructor: function() {
+        this._dateCheck();
+    },
+    _dateCheck: function() {
+        var date = new Date();
+        if (this._lastDate.getDate() !== date.getDate()) {
+            dojo.publish("phpr.dateChanged", []);
+            this._lastDate = date;
+        }
+        setTimeout(dojo.hitch(this, "_dateCheck"), 1000);
+    },
     getIsoDate: function(date) {
         // Summary:
         //    Convert a js date into ISO date
