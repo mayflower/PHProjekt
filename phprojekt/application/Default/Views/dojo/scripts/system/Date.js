@@ -49,11 +49,13 @@ dojo.declare("phpr.Default.System.Date", null, {
         if (typeof(time) == 'object') {
             hour    = time.getHours();
             minutes = time.getMinutes();
-        } else {
+        } else if (dojo.isString(time)) {
             var value   = time.toString().replace(/\D/g, "");
             value       = value.substr(0, 4);
             minutes = value.substr(value.length - 2);
             hour    = value.substr(0, value.length - 2);
+        } else {
+            return;
         }
 
         if (isNaN(hour) || hour > 24 || hour < 0) {
