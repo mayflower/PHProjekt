@@ -383,6 +383,10 @@ phpr.editModuleDesignerField = function(nodeId) {
             fieldsForm.push(template.textAreaRender(phpr.nls.get('Values'), 'formRange', formRange, true, false,
                 phpr.nls.get('Number of stars')));
             break;
+        default:
+            if (formRange) {
+                fieldsForm.push(template.hiddenFieldRender('', 'formRange', formRange, true, false));
+            }
     }
     fieldsForm.push(template.textFieldRender(phpr.nls.get('Default Value'), 'defaultValue', defaultValue, 0, false,
         false));
@@ -565,7 +569,7 @@ phpr.saveModuleDesignerField = function(nodeId, formType) {
     //    Mix the form data and make a new field with the data
     // Description:
     //    Mix the form data and make a new field with the data
-    var params = new Array();
+    var params = {};
 
     params = dojo.mixin(params, dijit.byId('formTable' + '_' + nodeId).get('value'));
     params = dojo.mixin(params, dijit.byId('formForm' + '_' + nodeId).get('value'));
