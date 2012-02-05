@@ -1538,7 +1538,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         phpr.confirmDialog(dojo.hitch(this, function() {
                                 this.doAction(action, idsSend, mode, this.TARGET_MULTIPLE);
                             }),
-                            phpr.nls.get('Please confirm implement') + ' "' +
+                            phpr.nls.get('Please confirm the following action:') + ' "' +
                             actionName + '"<br />(' + ids.length + ' ' +
                             phpr.nls.get('rows selected') + ')'));
                     select.selectedIndex = 0;
