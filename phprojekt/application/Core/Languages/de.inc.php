@@ -56,13 +56,13 @@ $lang["Open a dialog where you can drag and drop many fields for create the form
 $lang["Database"] = "Datenbank";
 $lang["Field name"] = "Feldname";
 $lang["Field type"] = "Feldtyp";
-$lang["Field lenght"] = "Länge des Feldes";
+$lang["Field length"] = "Länge des Feldes";
 $lang["Select Type"] = "Auswahltyp";
 $lang["Custom Values"] = "Benutzerdefinierte Werte";
 $lang["Values"] = "Werte";
-$lang["Default Value"] = "Standartwer";
+$lang["Default Value"] = "Standartwert";
 $lang["Grid"] = "Raster";
-$lang["List Position"] = "Listesposition";
+$lang["List Position"] = "Listenposition";
 $lang["General"] = "Allgemein";
 $lang["Required Field"] = "Pflichtfeld";
     // Messages

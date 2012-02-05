@@ -29,32 +29,30 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
     _eventHandler: {},
     // Objects
     _objects: {},
+    //contexts
+    _contexts: {},
 
     constructor: function() {
         this._domNodes = {};
         this._eventHandler = {};
         this._objects = {};
+        this._contexts = {};
     },
 
     destroy: function() {
+        for (var i in this._contexts) {
+            this.collect(i);
+        }
+
         for (var i in this._eventHandler) {
-            for (var e in this._eventHandler[i]) {
-                this._eventHandler[i][e] = null;
-            }
             this._eventHandler[i] = null;
         }
 
         for (var i in this._domNodes) {
-            for (var e in this._domNodes[i]) {
-                this._domNodes[i][e] = null;
-            }
             this._domNodes[i] = null;
         }
 
         for (var i in this._objects) {
-            for (var e in this._objects[i]) {
-                this._objects[i][e] = null;
-            }
             this._objects[i] = null;
         }
     },
@@ -68,6 +66,7 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
         //      context.
         if (!this._domNodes[context]) {
             this._domNodes[context] = [];
+            this._contexts[context] = true;
         }
         this._domNodes[context].push(node);
     },
@@ -81,6 +80,7 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
         //      context.
         if (!this._eventHandler[context]) {
             this._eventHandler[context] = [];
+            this._contexts[context] = true;
         }
         this._eventHandler[context].push(handler);
     },
@@ -95,6 +95,7 @@ dojo.declare("phpr.Default.System.GarbageCollector", null, {
         //      context.
         if (!this._objects[context]) {
             this._objects[context] = [];
+            this._contexts[context] = true;
         }
         this._objects[context].push(node);
     },
