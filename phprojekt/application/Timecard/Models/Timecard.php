@@ -368,7 +368,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 if (strlen($record->notes) > 50) {
                     $record->notes = substr($record->notes, 0, 50) . '...';
                 }
-                $display .= ' [' . $record->notes . ']';
             }
 
             $data['id']        = $record->id;
@@ -376,6 +375,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $data['startTime'] = substr($record->startDatetime, 11);
             $data['endTime']   = $record->endTime;
             $data['display']   = $display;
+            $data['note']      = $record->notes;
 
             $datas[] = $data;
         }
