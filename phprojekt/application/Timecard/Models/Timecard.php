@@ -429,19 +429,27 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     }
 
     /**
-     * Get running bookings and return an array
-     * of currently running for the given userid
+     * Fetch the currently running booking for the given date
+     * for the effective user.
      *
-     * @param integer $ownerId Owner of the bookings
+     * @param integer $year Year of the bookings
+     * @param integer $month Month of the bookings
+     * @param integer $date Date of the bookings
      *
      * @return array
      */
-    public function getRunningBookings($ownerId)
+    public function getRunningBooking($year, $month, $date)
     {
-        $where = sprintf('DATE(start_datetime) = %s AND (end_time = "" OR end_time IS NULL) AND owner_id = %d',
-            $this->getAdapter()->quote(date('Y-m-d')), $ownerId);
-        $records = $this->fetchAll($where, null, 1);
-        return $records;
+        $ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $db = Phprojekt::getInstance()->getDb();
+        $select = $db->select();
+        $select->from("timecard")
+            ->where("owner_id = ?", $ownerId)
+            ->where("YEAR(start_datetime) = ?", $year)
+            ->where("MONTH(start_datetime) = ?", $month)
+            ->where("DAY(start_datetime) = ?", $date)
+            ->order("start_datetime ASC");
+        return $db->fetchRow($select);
     }
 
     /**
