@@ -80,6 +80,7 @@ $lang["Please enter a name for this module"] = "Bitte geben Sie einen Namen für
 $lang["The module name must start with a letter"] = "Der Modulname muss mit einem Buchstaben beginnen";
 $lang["All the fields must have a table name"] = "Alle Felder einer Tabelle müssen benannt werden";
 $lang["There are two fields with the same Field Name"] = "Es sind zwei Felder mit identischem Namen";
+$lang["\"?\" is not allowed in the field name"]  = "\"?\" ist nicht erlaubt in Feldnamen";
 $lang["The length of the varchar fields must be between 1 and 255"] = "Die Länge der VARCHAR Felder muss zwischen 1 "
     . "und 255 Zeichen sein";
 $lang["The length of the int fields must be between 1 and 11"] = "Die Länge der INT Felder muss zwischen 1 und 11 "

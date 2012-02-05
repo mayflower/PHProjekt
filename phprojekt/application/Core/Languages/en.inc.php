@@ -79,6 +79,7 @@ $lang["Please enter a name for this module"] = "Please enter a name for this mod
 $lang["The module name must start with a letter"] = "The module name must start with a letter";
 $lang["All the fields must have a table name"] = "All the fields must have a table name";
 $lang["There are two fields with the same Field Name"] = "There are two fields with the same Field Name";
+$lang["\"?\" is not allowed in the field name"]  = "\"?\" is not allowed in the field name";
 $lang["The length of the varchar fields must be between 1 and 255"] = "The length of the varchar fields must be "
     . "between 1 and 255";
 $lang["The length of the int fields must be between 1 and 11"] = "The length of the int fields must be between 1 and "
