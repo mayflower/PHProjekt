@@ -557,6 +557,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                         'message' => Phprojekt::getInstance()->translate('There are two fields with the same '
                             . 'Field Name')));
                     break;
+                } else if ($valid && strpos($field['tableField'], '?') != false) {
+                    $valid = false;
+                    $this->_error->addError(array(
+                        'field'   => 'Module Designer',
+                        'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                        'message' => Phprojekt::getInstance()->translate('"?" is not allowed in the field name')));
+                    break;
                 } else if ($valid) {
                     $foundFields[] = $field['tableField'];
                 }
