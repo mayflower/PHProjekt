@@ -253,7 +253,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 . " OR (TIME(start_datetime) < %s AND end_time >= %s) "
                 . " OR (TIME(start_datetime) <= %s AND end_time >= %s) "
                 . " OR (TIME(start_datetime) >= %s AND end_time <= %s) ) ",
-                (int) Phprojekt_Auth::getUserId(), $date,
+                (int) Phprojekt_Auth_Proxy::getEffectiveUserId(), $date,
                 $startTime, $startTime,
                 $endTime, $endTime,
                 $startTime, $endTime,
@@ -262,7 +262,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $where = sprintf(" owner_id = %d AND DATE(start_datetime) = %s AND "
                 . " ((TIME(start_datetime) <= %s AND end_time > %s )"
                 . " OR (TIME(start_datetime) <= %s AND end_time IS NULL)) ",
-                (int) Phprojekt_Auth::getUserId(), $date,
+                (int) Phprojekt_Auth_Proxy::getEffectiveUserId(), $date,
                 $startTime, $startTime,
                 $startTime);
         }
@@ -290,7 +290,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function getMonthRecords($year, $month)
     {
-        $userId = (int) Phprojekt_Auth::getUserId();
+        $userId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         if (strlen($month) == 1) {
             $month = '0' . $month;
@@ -353,7 +353,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     public function getDayRecords($date)
     {
         $db    = Phprojekt::getInstance()->getDb();
-        $where = sprintf('(owner_id = %d AND DATE(start_datetime) = %s)', (int) Phprojekt_Auth::getUserId(),
+        $where = sprintf('(owner_id = %d AND DATE(start_datetime) = %s)', (int) Phprojekt_Auth_Proxy::getEffectiveUserId(),
             $db->quote($date));
         $records = $this->fetchAll($where, 'start_datetime ASC');
         $datas   = array();
@@ -452,7 +452,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function delete()
     {
-        if ($this->ownerId == Phprojekt_Auth::getUserId()) {
+        if ($this->ownerId == Phprojekt_Auth_Proxy::getEffectiveUserId()) {
             return parent::delete();
         } else {
             return false;
