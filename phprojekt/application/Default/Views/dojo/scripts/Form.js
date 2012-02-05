@@ -52,7 +52,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
     tabs:               [],
 
-    constructor:function(main, id, module, params, formContainer) {
+    constructor: function(main, id, module, params, formContainer) {
         // Summary:
         //    render the form on construction
         // Description:
@@ -63,7 +63,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         this.setContainer(formContainer);
 
-        if (undefined != params) {
+        if (undefined !== params) {
             this._presetValues = params;
         }
 
@@ -105,7 +105,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var subModules = this._subModules;
         for (var index in subModules) {
             var subModuleName = subModules[index].name;
-            subModules[index].class.destroy();
+            subModules[index]['class'].destroy();
         }
     },
 
@@ -247,7 +247,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         // Template for the access tab
         var accessData = new phpr.Default.System.TemplateWrapper({
-            templateName:"phpr.Default.template.access.tab.html",
+            templateName: "phpr.Default.template.access.tab.html",
             templateData: {
                 accessUserText:     phpr.nls.get('User'),
                 accessReadText:     phpr.nls.get('Read'),
@@ -410,7 +410,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             content.tabform.onSubmit = dojo.hitch(this, "_submitForm");
         }));
 
-        window.setTimeout(function() {deferred.callback()}, 0);
+        window.setTimeout(function() {
+            deferred.callback();
+        }, 0);
 
         return ret;
     },
@@ -426,7 +428,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return result;
     },
 
-    getFormData: function(items, request) {
+    getFormData: function() {
         // Summary:
         //    This function renders the form data according to the database manager settings
         // Description:
@@ -445,17 +447,18 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         this._meta = p.DataStore.getMetaData({url: this._url});
         var data   = p.DataStore.getData({url: this._url});
-        if (data.length == 0) {
+
+        if (data.length === 0) {
             this.node.set('content', p.drawEmptyMessage('The Item was not found'));
         } else {
-            var tabs               = this.getTabs();
             var firstRequiredField = null;
 
             this.setPermissions(data);
             this.presetValues(data);
             this.fieldTemplate = new p.Default.Field();
 
-            for (var i = 0; i < this._meta.length; i++) {
+            var l = this._meta.length;
+            for (var i = 0; i < l; i++) {
                 var fieldValues  = this.setFieldValues(this._meta[i], data[0]);
                 var itemtype     = fieldValues.type;
                 var itemid       = fieldValues.id;
@@ -574,6 +577,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             deferred.callback();
 
             var firstTab = true;
+            var tabs = this.getTabs();
             var l = tabs.length;
             for (var t = 0; t < l; t++) {
                 var tab = tabs[t];
@@ -713,7 +717,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return true;
     },
 
-    _formCallback:function() {
+    _formCallback: function() {
         phpr.viewManager.getView().completeContent.domNode.focus();
     },
 
@@ -750,8 +754,20 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
 
         var def = this.addAccessTab(data);
-        def = dojo.when(def, dojo.hitch(this, function() {return this.addNotificationTab(data)}))
-        def = dojo.when(def, dojo.hitch(this, function() {return this.addHistoryTab()}))
+        def = dojo.when(
+            def,
+            dojo.hitch(this, function() {
+                    return this.addNotificationTab(data);
+                }
+            )
+        );
+        def = dojo.when(
+            def,
+            dojo.hitch(this, function() {
+                    return this.addHistoryTab();
+                }
+            )
+        );
         return def;
     },
 
@@ -766,7 +782,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         if (this.id > 0 && this.useHistoryTab()) {
             var widget = new phpr.Default.System.TemplateWrapper({
-                templateName: "phpr.Default.template.history.content.html"});
+                templateName: "phpr.Default.template.history.content.html"
+            });
             this.garbageCollector.addNode(widget);
             return this.addTab([widget], 'tabHistory', 'History', 'accesshistoryTab');
         }
@@ -798,7 +815,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     return;
                 }
                 dojo.addClass('tab' + subModuleName, 'subModuleDiv');
-                subModules[index].class.fillTab('tab' + subModuleName);
+                subModules[index]['class'].fillTab('tab' + subModuleName);
             }, subModuleName));
         }
         this.form.resize();
@@ -990,8 +1007,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Event handler for submit events
         // Description:
         //    Triggers submitForm and prevents the event from bubbeling upwards
+        var ret;
         if (!this.isSubmitInProgress()) {
-            var ret = this.submitForm(evt);
+            ret = this.submitForm(evt);
         }
         dojo.stopEvent(evt);
         return ret || false;
@@ -1434,12 +1452,12 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
         this.garbageCollector.addEvent(
             dojo.connect(this.dialog, "onHide",
                 dojo.hitch(this, function() {
-                    phpr.pageManager.modifyCurrentState(
-                        {
+                    phpr.pageManager.modifyCurrentState({
                             id: undefined
                         }, {
                             noAction: true
-                    });
+                        }
+                    );
                 })));
     },
 
