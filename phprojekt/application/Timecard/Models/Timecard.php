@@ -292,27 +292,26 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     {
         $userId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
-        if (strlen($month) == 1) {
-            $month = '0' . $month;
-        }
-
-        $db    = Phprojekt::getInstance()->getDb();
-        $where = sprintf('(owner_id = %d AND DATE(start_datetime) LIKE %s)', $userId,
-            $db->quote($year . '-' . $month . '-%'));
-        $records = $this->fetchAll($where, 'start_datetime ASC');
+        $select = Phprojekt::getInstance()->getDb()->select();
+        $select->from("timecard")
+            ->where("owner_id = ?", $userId)
+            ->where("YEAR(start_datetime) = ?", $year)
+            ->where("MONTH(start_datetime) = ?", $month)
+            ->order("start_datetime ASC");
+        $records = $select->query()->fetchAll();
 
         // Get all the hours for this month
         $sortRecords = array();
         foreach ($records as $record) {
-            $date = date('Y-m-d', strtotime($record->startDatetime));
+            $date = date('Y-m-d', strtotime($record['start_datetime']));
             if (!isset($sortRecords[$date])) {
                 $sortRecords[$date]['sum']        = 0;
                 $sortRecords[$date]['openPeriod'] = 0;
             }
-            if ($record->minutes == 0 && null === $record->endTime) {
+            if ($record['minutes'] == 0 && null === $record['end_time']) {
                 $sortRecords[$date]['openPeriod'] = 1;
             }
-            $sortRecords[$date]['sum'] += (int) $record->minutes;
+            $sortRecords[$date]['sum'] += (int) $record['minutes'];
         }
 
         $endDayofTheMonth = date("t", mktime(0, 0, 0, $month, 1, $year));
