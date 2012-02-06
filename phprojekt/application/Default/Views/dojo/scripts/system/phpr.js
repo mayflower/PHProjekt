@@ -325,12 +325,13 @@ dojo.declare("phpr.DataStore", null, {
                 phpr.loading.show();
                 this._internalCache[params.url].active = true;
                 this._internalCache[params.url].deferred = deferred;
+                var that = this;
                 this._internalCache[params.url].store.fetch({
                     serverQuery: params.serverQuery || {},
                     onComplete:  dojo.hitch(this, "saveData", {
                         url: params.url,
                         processData: function() {
-                            deferred.callback();
+                            deferred.callback(that.getData(params));
                         }
                     }),
                     onError: dojo.hitch(this, "errorHandler", {
@@ -341,7 +342,7 @@ dojo.declare("phpr.DataStore", null, {
                     })
                 });
             } else {
-                deferred.callback();
+                deferred.callback(this.getData(params));
             }
         }
 
@@ -384,7 +385,7 @@ dojo.declare("phpr.DataStore", null, {
         this._internalCache[params.url].data = data;
         phpr.loading.hide();
         if (params.processData) {
-            params.processData.call();
+            params.processData(this.getData(params));
         }
     },
 
