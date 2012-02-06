@@ -318,9 +318,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $datas            = array();
         for ($i = 1; $i <= $endDayofTheMonth; $i++) {
             $day = $i;
-            if (strlen($day) == 1) {
-                $day = '0' . $i;
-            }
+
+            $day = str_pad($day, 2, "0", STR_PAD_LEFT);
+            $month = str_pad($month, 2, "0", STR_PAD_LEFT);
+
             $date = $year . '-' . $month . '-' . $day;
 
             $data         = array();
