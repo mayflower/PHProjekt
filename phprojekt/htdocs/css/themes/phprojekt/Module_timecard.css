@@ -46,6 +46,11 @@
     color: red;
 }
 
+.phprojekt .timecardTableRow:hover {
+    cursor: pointer;
+    background-color: #cedaff;
+}
+
 .phprojekt .timecardSeparator {
     background-color: #fff;
     height: 5px;

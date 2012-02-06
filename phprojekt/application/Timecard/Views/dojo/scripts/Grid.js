@@ -76,58 +76,84 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
         this._node = this.main._contentWidget.monthView;
     },
 
-    onLoaded: function() {
+    onLoaded: function(content) {
         // Summary:
         //    Render the list itself
         // Description:
         //    Render the list itself
-        var content = phpr.DataStore.getData({url: this.url});
-        var total = 0;
 
-        var dates = [];
-        var totalClass = 'weekday';
-        for (var i in content) {
-            var weekClass = (content[i].week === 0 || content[i].week === 6) ? 'weekend' : 'weekday';
-            dates.push({
-                week: phpr.date.getShortTranslateWeekDay(content[i].week),
-                weekClass: weekClass,
-                date: content[i].date,
-                sum: (content[i].sumInHours != '0') ? content[i].sumInHours : "-",
-                sumClass: (content[i].openPeriod == 1) ? 'open' : weekClass
+        if (this._destroyed === false) {
+            var total = 0;
+
+            var totalClass = 'weekday';
+            var entries = [];
+            for (var i in content) {
+                var weekClass = (content[i].week === 0 || content[i].week === 6) ? 'weekend' : 'weekday';
+                if (content[i].sumInMinutes != '0') {
+                    total += content[i].sumInMinutes;
+                }
+                if (content[i].openPeriod == 1) {
+                    totalClass = 'open';
+                }
+
+                var entry = new phpr.Default.System.TemplateWrapper({
+                    templateName: "phpr.Timecard.template.monthViewEntry.html",
+                    templateData: {
+                        week: phpr.date.getShortTranslateWeekDay(content[i].week),
+                        weekClass: weekClass,
+                        date: content[i].date,
+                        sum: (content[i].sumInHours != '0') ? content[i].sumInHours : "-",
+                        sumClass: (content[i].openPeriod == 1) ? 'open' : weekClass
+                    }
+                });
+
+                this.garbageCollector.addNode(entry);
+                this.garbageCollector.addEvent(
+                    dojo.connect(
+                        entry.domNode,
+                        "onclick",
+                        dojo.hitch(
+                            this.main,
+                            "changeDate",
+                            phpr.date.isoDateTojsDate(content[i].date)
+                        )
+                    )
+                );
+
+                entries.push(entry);
+            }
+
+            this._monthView = new phpr.Default.System.TemplateWrapper({
+                templateName: "phpr.Timecard.template.monthView.html",
+                templateData: {
+                    monthTxt: phpr.date.getLongTranslateMonth(this._month) + ' ' + this._year,
+                    totalTxt: phpr.nls.get('Total hours'),
+                    total: phpr.date.convertMinutesToTime(total),
+                    totalClass: totalClass
+                }
             });
-            if (content[i].sumInMinutes != '0') {
-                total += content[i].sumInMinutes;
+
+            this.garbageCollector.addNode(this._monthView);
+
+            this._node.set('content', this._monthView);
+
+            var l = entries.length;
+            for (var i = 0; i < l; i++) {
+                dojo.place(entries[i].domNode, this._monthView.monthViewFooter, "before");
             }
-            if (content[i].openPeriod == 1) {
-                totalClass = 'open';
-            }
+
+            this.setDate(new Date(this._year, this._month, this._date.getDate()));
+
+            this.garbageCollector.addEvent(
+                dojo.connect(
+                    this._monthView.selectDateButton, "onClick", dojo.hitch(this,
+                        function() {
+                            var selectVal = this._monthView.selectDate.get('value');
+                            if (selectVal !== null) {
+                                this.main.changeDate(selectVal);
+                            }
+                        })));
         }
-
-        this._monthView = new phpr.Default.System.TemplateWrapper({
-            templateName: "phpr.Timecard.template.monthView.html",
-            templateData: {
-                monthTxt: phpr.date.getLongTranslateMonth(this._month) + ' ' + this._year,
-                totalTxt: phpr.nls.get('Total hours'),
-                total: phpr.date.convertMinutesToTime(total),
-                totalClass: totalClass,
-                dates: dates
-            }
-        });
-
-        this.garbageCollector.addNode(this._monthView);
-
-        this._node.set('content', this._monthView);
-        this.setDate(new Date(this._year, this._month, this._date.getDate()));
-
-        this.garbageCollector.addEvent(
-            dojo.connect(
-                this._monthView.selectDateButton, "onClick", dojo.hitch(this,
-                    function() {
-                        var selectVal = this._monthView.selectDate.get('value');
-                        if (selectVal !== null) {
-                            this.main.changeDate(selectVal);
-                        }
-                    })));
     },
 
     reload: function(date, forceReload) {
