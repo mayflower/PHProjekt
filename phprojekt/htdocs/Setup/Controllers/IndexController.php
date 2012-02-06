@@ -50,6 +50,7 @@ class IndexController extends Zend_Controller_Action
     const DEFAULT_DBHOST         = 'localhost';
     const DEFAULT_DBUSER         = 'phprojekt';
     const DEFAULT_DBNAME         = 'phprojekt';
+    const DEFAULT_PORT           = 3306;
     const DEFAULT_USE_EXTRA_DATA = 1;
     const DEFAULT_DIFF_TO_UTC    = 0;
 
@@ -122,6 +123,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->dbUser  = self::DEFAULT_DBUSER;
         $this->view->dbPass  = '';
         $this->view->dbName  = self::DEFAULT_DBNAME;
+        $this->view->dbPort  = self::DEFAULT_PORT;
 
         $message  = null;
         $type     = 'success';
@@ -163,6 +165,7 @@ class IndexController extends Zend_Controller_Action
             'dbHost'     => Cleaner::sanitize('string', $this->getRequest()->getParam('dbHost')),
             'dbUser'     => Cleaner::sanitize('string', $this->getRequest()->getParam('dbUser')),
             'dbPass'     => Cleaner::sanitize('string', $this->getRequest()->getParam('dbPass')),
+            'dbPort'     => Cleaner::sanitize('integer', $this->getRequest()->getParam('dbPort')),
             'dbName'     => Cleaner::sanitize('string', $this->getRequest()->getParam('dbName')));
 
         if (null !== $this->_setup) {

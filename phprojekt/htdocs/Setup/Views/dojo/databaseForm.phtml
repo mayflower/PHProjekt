@@ -114,6 +114,26 @@ style="width: auto;">
     </td>
 </tr>
 <tr>
+    <td class="label"
+    style="padding: 0 0 4px 5px;">
+        <label for="dbPort">Port</label>
+    </td>
+    <td
+    style="padding: 0 0 4px 5px;">
+        <input type="text" id="dbPort" name="dbPort" dojoType="dijit.form.NumberTextBox"
+        constraints="{pattern: '####'}" required="true" value="<?php echo $this->dbPort; ?>" invalidMessage="" />
+        <button dojoType="dijit.form.DropDownButton" showLabel="false" baseClass="smallIcon" iconClass="help"
+        tabindex="-1">
+            <div dojoType="dijit.TooltipDialog">
+                <div
+                style="white-space: nowrap;">
+                Choose the port.
+                </div>
+            </div>
+        </button>
+    </td>
+</tr>
+<tr>
     <td class="label">
         &nbsp;
     </td>
