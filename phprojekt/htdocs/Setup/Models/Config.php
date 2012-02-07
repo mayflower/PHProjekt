@@ -98,13 +98,13 @@ class Setup_Models_Config
      *
      * @return string Output for save in the file.
      */
-    public function getDefaultProduction($username, $password, $dbname, $adapter, $host)
+    public function getDefaultProduction($username, $password, $dbname, $adapter, $host, $port)
     {
         $content = $this->_getIntroduction();
         $content .= $this->_eol . '[production]' . $this->_eol;
         $content .= $this->_getLanguage();
         $content .= $this->_getPaths();
-        $content .= $this->_getDatabase($username, $password, $dbname, $adapter, $host);
+        $content .= $this->_getDatabase($username, $password, $dbname, $adapter, $host, $port);
         $content .= $this->_getLogs();
         $content .= $this->_getModules();
         $content .= $this->_getMail();
@@ -253,7 +253,7 @@ class Setup_Models_Config
      * @return string Output for save in the file.
      */
     private function _getDatabase($username = '', $password = '', $dbname = '', $adapter = 'Pdo_Mysql',
-        $host = 'localhost')
+        $host = 'localhost', $port = 3306)
     {
         $content  = $this->_eol;
         $content .= ';;;;;;;;;;;;' . $this->_eol;
@@ -274,6 +274,7 @@ class Setup_Models_Config
         $content .= $this->_eol;
         $content .= '; Name of the database, inside the server' . $this->_eol;
         $content .= 'database.params.dbname = "' . addcslashes($dbname, '"') . '"' . $this->_eol;
+        $content .= 'database.params.port = ' . (int) $port . $this->_eol;
 
         return $content;
     }
