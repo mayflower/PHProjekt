@@ -76,13 +76,14 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
         this._node = this.main._contentWidget.monthView;
     },
 
-    onLoaded: function(content) {
+    onLoaded: function(reqData) {
         // Summary:
         //    Render the list itself
         // Description:
         //    Render the list itself
 
         if (this._destroyed === false) {
+            var content = reqData.data;
             var total = 0;
 
             var totalClass = 'weekday';
