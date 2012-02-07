@@ -105,7 +105,7 @@ class Phprojekt_Auth_Proxy
      */
     public static function getEffectiveUserId()
     {
-        return self::getEffectiveUser()->id;
+        return (int) self::getEffectiveUser()->id;
     }
 
     /**
