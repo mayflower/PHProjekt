@@ -64,7 +64,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     _rules:            [],
     _filterCookie:     null,
     _deleteAllFilters: null,
-    _filterSeparator:  ';',
     _filterData:       [],
 
     // Constants
@@ -118,7 +117,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         phpr.DataStore.addStore({url: this.url});
         phpr.DataStore.addStore({url: this.getActionsUrl});
         var dlist = new dojo.DeferredList([
-            phpr.DataStore.requestData({url: this.url, serverQuery: {'filters[]': this._filterData}}),
+            phpr.DataStore.requestData({url: this.url, serverQuery: this._getFiltersServerQuery(this._filterData)}),
             phpr.DataStore.requestData({url: this.getActionsUrl})
         ]);
         dlist.addCallback(dojo.hitch(this, "onLoaded"));
@@ -245,7 +244,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 styles:   "text-align: right;"
             });
             this.filterField.push({
-                key:   '_fixedId',
+                key:   'id',
                 label: 'ID',
                 type:  'text'
             });
@@ -769,17 +768,16 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
         var data = new Array(sendData.filterOperator || 'AND', sendData.filterField, sendData.filterRule,
             sendData.filterValue);
-        var newFilter = data.join(this._filterSeparator);
 
         // Don't save the same filter two times
         for (var i in filters) {
-            if (filters[i] === newFilter) {
+            if (filters[i].join(",") === data.join(",")) {
                 found = 1;
                 break;
             }
         }
         if (!found) {
-            filters.push(newFilter);
+            filters.push(data);
         }
 
         this.sendFilterRequest(filters);
@@ -809,27 +807,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this.setUrl();
 
         // Fix id
-        this._filterData = [];
-        for (var f in filters) {
-            this._filterData.push(filters[f].replace('_fixedId', 'id'));
-        }
-
-        var currentCookie = dojo.cookie(this._filterCookie);
-        if (typeof(currentCookie) == 'undefined') {
-            // New cookie
-            if (filters.length > 0) {
-                dojo.cookie(this._filterCookie, filters, {expires: 365});
-            }
-        } else {
-            // Existing cookie
-            if (filters != currentCookie) {
-                if (filters.length > 0) {
-                    dojo.cookie(this._filterCookie, filters, {expires: 365});
-                } else {
-                    dojo.cookie(this._filterCookie, filters);
-                }
-            }
-        }
+        this._filterData = filters || [];
+        dojo.cookie(this._filterCookie, dojo.toJson(filters), {expires: 365});
     },
 
     sendFilterRequest: function(filters) {
@@ -841,8 +820,12 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
         phpr.DataStore.deleteData({url: this.url});
         phpr.DataStore.addStore({url: this.url});
-        phpr.DataStore.requestData({url: this.url, serverQuery: {'filters[]': this._filterData},
+        phpr.DataStore.requestData({url: this.url, serverQuery: this._getFiltersServerQuery(filters),
             processData: dojo.hitch(this, "onLoaded")});
+    },
+
+    _getFiltersServerQuery: function(filters) {
+        return { 'filters': dojo.toJson(filters) };
     },
 
     getFilters: function() {
@@ -851,17 +834,14 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Description:
         //    Returns the filters saved in the cookie,
         //    clean the array for return only valid filters
-        var filters = dojo.cookie(this._filterCookie);
-        if (filters === undefined) {
+        var filters = [];
+        try {
+            var filters = dojo.fromJson(dojo.cookie(this._filterCookie));
+        } catch (e) {
+            //ignore
+        }
+        if (filters === undefined || !dojo.isArray(filters)) {
             filters = [];
-        } else {
-            filters = filters.split(",");
-            for (var i in filters) {
-                var data  = filters[i].split(this._filterSeparator, 4);
-                if (!data[0] || !data[1] || !data[2] || !data[3]) {
-                    filters.splice(i, 1);
-                }
-            }
         }
 
         return filters;
@@ -912,7 +892,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
         var operator = null;
         for (var i in filters) {
-            var data  = filters[i].split(this._filterSeparator, 4);
+            var data  = filters[i];
             if (data[0] && data[1] && data[2] && data[3]) {
                 // Operator
                 if (first) {

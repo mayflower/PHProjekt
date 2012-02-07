@@ -350,12 +350,14 @@ class IndexController extends Zend_Controller_Action
      */
     public function getFilterWhere($where)
     {
-        $filters = $this->getRequest()->getParam('filters', array());
+        $filters = $this->getRequest()->getParam('filters', "[]");
+
+        $filters = json_decode($filters);
 
         if (!empty($filters)) {
             $filterClass = new Phprojekt_Filter($this->getModelObject(), $where);
             foreach ($filters as $filter) {
-                list($filterOperator, $filterField, $filterRule, $filterValue) = explode(";", $filter);
+                list($filterOperator, $filterField, $filterRule, $filterValue) = $filter;
                 $filterOperator = Cleaner::sanitize('alpha', $filterOperator, null);
                 $filterField    = Cleaner::sanitize('alpha', $filterField, null);
                 $filterRule     = Cleaner::sanitize('alpha', $filterRule, null);
