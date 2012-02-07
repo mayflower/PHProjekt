@@ -247,7 +247,7 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/jsonList/');
         $this->request->setParam('nodeId', 1);
-        $this->request->setParam('filters', array('AND;title;like;test'));
+        $this->request->setParam('filters', '[["AND","title","like","test"]]');
         $response = $this->getResponse();
         $this->assertContains('"numRows":1}', $response);
     }
