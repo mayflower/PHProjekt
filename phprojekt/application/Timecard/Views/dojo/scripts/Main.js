@@ -207,7 +207,12 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this._menuCollector = new phpr.Default.System.GarbageCollector();
 
         dojo.subscribe("Timecard.changeDate", this, "changeDate");
+        dojo.subscribe("phpr.dateChanged", this, "_systemDateChanged");
         dojo.connect(this._bookingStore, "onChange", this, "_dataChanged");
+    },
+
+    _systemDateChanged: function() {
+        this._bookingStore.setDate(new Date());
     },
 
     renderTemplate: function() {
