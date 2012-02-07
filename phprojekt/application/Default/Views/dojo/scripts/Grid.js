@@ -172,8 +172,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         phpr.DataStore.addStore({url: this._tagUrl});
         phpr.DataStore.requestData({
             url: this._tagUrl,
-            processData: dojo.hitch(this, function() {
-                this.publish("drawTagsBox", [phpr.DataStore.getData({url: this._tagUrl})]);
+            processData: dojo.hitch(this, function(reqData) {
+                this.publish("drawTagsBox", [reqData.data]);
             })
         });
     },

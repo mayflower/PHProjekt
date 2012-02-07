@@ -54,7 +54,7 @@ dojo.declare("phpr.Default.System.Store", phpr.Default.System.Component, {
             url: this._url,
             processData: function() {
                 self.makeSelect();
-                deferred.callback();
+                deferred.callback(arguments);
             }
         });
 
