@@ -85,6 +85,18 @@ class Phprojekt_IndexController_Test extends FrontInit
     }
 
     /**
+     * Test if the list json response with  is ok
+     */
+    public function testJsonListActionWithNodeIdAndRecursive()
+    {
+        $this->setRequestUrl('Project/index/jsonList/');
+        $this->request->setParam('nodeId', 1);
+        $this->request->setParam('recursive', 'true');
+        $response = $this->getResponse();
+        $this->assertContains('"numRows":3}', $response);
+    }
+
+    /**
      * Test of json detail model
      */
     public function testJsonDetailAction()
