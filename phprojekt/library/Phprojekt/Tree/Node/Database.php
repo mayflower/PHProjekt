@@ -222,14 +222,19 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      * @param $count How many records should be retreived. null if unlimited.
      * @param $offset The initial offset. null for no offset.
      */
-    public function getRecordsFor(Phprojekt_ActiveRecord_Abstract $model, $count = null, $offset = null)
+    public function getRecordsFor(Phprojekt_ActiveRecord_Abstract $model, $count = null, $offset = null, $where = null)
     {
         $projectIds = array_keys($this->_index);
         if (count($projectIds) == 0) {
             return array();
         } else {
-            $database   = $model->getAdapter();
-            $where = $database->quoteInto('project_id IN (?)', $projectIds);
+            $database = $model->getAdapter();
+
+            if (null !== $where) {
+                $where .= " AND ";
+            }
+
+            $where .= $database->quoteInto('project_id IN (?)', $projectIds);
             return $model->fetchAll($where, null, $count, $offset);
         }
     }
