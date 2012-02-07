@@ -195,7 +195,6 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     _contentWidget: null,
     _menuCollector: null,
     _bookingStore: null,
-    startStopBar: null,
 
     constructor: function() {
         this.module = 'Timecard';
@@ -237,11 +236,6 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this._bookingStore.dataChanged();
         this.grid = new this.gridWidget(this, this._date);
         this.form = new this.formWidget(this, this._date);
-        this.startStopBar = new phpr.Timecard.StartStopBar({
-            container: this._contentWidget.startStopButtonRow,
-            bookingStore: this._bookingStore
-        });
-        this.garbageCollector.addObject(this.startStopBar);
     },
 
     _dataChanged: function() {
