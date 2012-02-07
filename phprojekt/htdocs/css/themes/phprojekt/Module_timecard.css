@@ -60,112 +60,38 @@
     padding: 0 0 0 5px;
 }
 
-/* DayView */
-.phprojekt .timecardDayView {
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-}
+/* List View */
 
-.phprojekt .timecardDayView .dayViewWhite,
-.phprojekt .timecardDayView .dayViewCelestial {
-    background-color: white;
-    float: left;
+.phprojekt .timecardDayViewEntry {
     width: 100%;
-    margin-left: 0px;
-    z-index: -10;
-    height: 20px;
-    overflow: hidden;
 }
 
-.phprojekt .timecardDayView .dayViewWhite .hourBox,
-.phprojekt .timecardDayView .dayViewCelestial .hourBox {
-    background-color: #D4DFEA;
-    border-top: 1px solid black;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-    font-size: 10px;
-    text-align: center;
-    vertical-align: middle;
-    width: 6em;
+.phprojekt .timecardDayViewTHead {
+    font-weight: bold;
+}
+
+.phprojekt .timecardDayViewTd {
+    padding-left: 5px;
 }
 
 
-.dj_ie .phprojekt .timecardDayView .dayViewWhite .hourBox,
-.dj_ie .phprojekt .timecardDayView .dayViewCelestial .hourBox {
-    padding: 0 0 0 7px;
+.phprojekt .timecardDayViewFooter {
+    border-top: 1px solid #000000;
 }
 
-.phprojekt .timecardDayView .dayViewCelestial {
-    background-color: #e9f3ff;
-}
-
-.phprojekt .timecardDayView .addButton .dijitButtonNode {
-    width: 15px;
-    border: none;
-    background: none;
-    padding: 0 3px 0 0;
-}
-
-.dj_ie .phprojekt .timecardDayView .addButton .dijitButtonNode {
-    padding: 0 3px 0 5px;
-}
-
-.dj_ie .phprojekt .timecardDayView .addButton .dijitButtonContents {
-    height: 15px;
-}
-
-.phprojekt .timecardDayView .add {
-    margin-left: 0;
-}
-
-.phprojekt .dndTarget,
-.phprojekt .dndTargetOpen {
-    display: inline;
-    position: absolute;
-    left: 0px;
-    width: 85%;
-    float: left;
-    cursor: pointer;
-    color: #294064;
-    line-height: 1.1;
-    padding-left: 1%;
-    border-width: 3px;
-    background-color: linen;
-    border-color: #263349;
-    border-style: solid solid solid;
-}
-
-.phprojekt .dndTargetOpen {
-    border: 3px solid red;
-    background: red;
+.phprojekt .timecardDayViewTableBody {
+    border-spacing: 5px;
 }
 
 /* FormView*/
 .phprojekt .dndSource {
-    border: 3px solid #f4cc47;
-    -moz-border-radius: 8pt 8pt;
-    radius: 8pt;
-    cursor: pointer;
     padding-left: 10px;
     color: #000;
     background-color: #ffcc33;
-    width: 95%;
     font-size: 8pt;
     font-weight: bold;
     filter: alpha(opacity=50);
     opacity: .5;
-}
-
-.dj_safari .phprojekt .projectBookingForm {
-    overflow: hidden;
-}
-
-.phprojekt .projectBookingForm .formContainer {
-    padding-left: 0px;
-    background: #fff;
-    margin: 0px;
-    width: 100%;
-    padding: 0px;
 }
 
 .phprojekt .projectBookingForm .col1 {
@@ -214,4 +140,3 @@
 .dj_ie .phprojekt .hiddenTooltipPoint {
     left: 4em;
 }
-

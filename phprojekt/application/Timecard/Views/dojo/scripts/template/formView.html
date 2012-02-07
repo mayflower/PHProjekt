@@ -1,26 +1,37 @@
 <div>
     <!-- Form -->
-    <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="projectBookingForm" style="overflow-y: auto;"
-            class="projectBookingForm">
+    <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="projectBookingForm" class="projectBookingForm">
         <form dojoType="dijit.form.Form" dojoAttachPoint="bookingForm" name="bookingForm" onsubmit="return false;"
         style="display: inline;">
-        <table class="form formContainer">
-        <col class="col1" />
-        <col class="col2" />
-        <col class="col3" />
+        <table class="form">
+        <colgroup>
+            <col class="col1" />
+            <col class="col2" />
+            <col class="col3" />
+            <col class="col3" />
+        </colgroup>
         <tr dojoAttachPoint="formBottom">
             <td>&nbsp;</td>
             <td>
-                <button dojoType="dijit.form.Button" baseClass="positive" dojoAttachPoint="saveBookingButton"
-                    type="button" iconClass="tick">
-                    {{saveText}}
-                </button>
+                <div style="display: inline">
+                    <button dojoType="dijit.form.Button" baseClass="positive" dojoAttachPoint="saveBookingButton"
+                        type="button" iconClass="tick">
+                        {{saveText}}
+                    </button>
+                </div>
                 &nbsp;
-                <div id="deleteBookingButtonDiv"
+                <div dojoAttachPoint="deleteBookingButtonDiv"
                 style="display: none;">
                     <button dojoType="dijit.form.Button" baseClass="positive" dojoAttachPoint="deleteBookingButton"
                         class="deleteBookingButton" type="button" iconClass="cross">
                         {{deleteText}}
+                    </button>
+                </div>
+                &nbsp;
+                <div style="display: inline">
+                    <button dojoType="dijit.form.Button" baseClass="positive" dojoAttachPoint="newBookingButton"
+                        class="newBookingButton" type="button" iconClass="cross">
+                        {{newText}}
                     </button>
                 </div>
             </td>
