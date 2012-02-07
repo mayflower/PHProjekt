@@ -48,9 +48,9 @@
     <tags_users id="1" user_id="1" tag_id="1" />
     <tags_users id="2" user_id="1" tag_id="2" />
     <tags_users id="3" user_id="1" tag_id="3" />
-    <tags word="this" crc32="3632233996" />
-    <tags word="this" crc32="3632233996" />
-    <tags word="this" crc32="3632233996" />
+    <tags word="this"/>
+    <tags word="this"/>
+    <tags word="this"/>
     <tags_modules tag_user_id="1" module_id="1" item_id="1" />
     <tags_modules tag_user_id="2" module_id="1" item_id="1" />
     <tags_modules tag_user_id="3" module_id="1" item_id="1" />

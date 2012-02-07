@@ -3,7 +3,6 @@
  * Tags class.
  *
  * The class provide the functions for manage tags per user.
- * All the words are converted to crc32 for search it.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,7 +28,6 @@
  * Tags class.
  *
  * The class provide the functions for manage tags per user.
- * All the words are converted to crc32 for search it.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -308,9 +306,8 @@ class Phprojekt_Tags
         $this->_tagsModules->deleteRelations($moduleId, $itemId, $oldTagUserRelations);
 
         foreach ($array as $word) {
-            $crc32 = crc32($word);
             // Save the tag
-            $tagId = $this->_tags->saveTags($crc32, $word);
+            $tagId = $this->_tags->saveTags($word);
 
             // Save the tag-user relation
             $tagUserId = $this->_tagsUsers->saveTags($tagId);
