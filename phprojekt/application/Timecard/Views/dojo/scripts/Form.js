@@ -271,7 +271,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                     if (id > 0) {
                         for (var j in range) {
                             if (range[j].id == id) {
-                                delete range[j];
+                                range.slice(j, 1);
                                 break;
                             }
                         }
