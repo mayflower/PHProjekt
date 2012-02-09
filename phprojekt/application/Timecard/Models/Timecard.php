@@ -231,15 +231,15 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $date      = substr($this->startDatetime, 0, 10);
         $select    = Phprojekt::getInstance()->getDb()->select();
 
+        $select->from("timecard", "COUNT(*) > 0")
+            ->where("owner_id = ?", Phprojekt_Auth_Proxy::getEffectiveUserId())
+            ->where("DATE(start_datetime) = ?", $date);
+
+        if ($this->id) {
+            $select->where("id != ?", $this->id);
+        }
+
         if (null !== $this->endTime) {
-            $select->from("timecard", "COUNT(*) > 0")
-                ->where("owner_id = ?", Phprojekt_Auth_Proxy::getEffectiveUserId())
-                ->where("DATE(start_datetime) = ?", $date);
-
-            if ($this->id) {
-                $select->where("id != ?", $this->id);
-            }
-
             $select->where("(TIME(start_datetime) <= ? AND end_time > ?) "
                     . " OR (TIME(start_datetime) < ? AND end_time >= ?) "
                     . " OR (TIME(start_datetime) <= ? AND end_time >= ?) "
@@ -249,14 +249,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     $startTime, $this->endTime,
                     $startTime, $this->endTime);
         } else {
-            $select->from("timecard", "COUNT(*) > 0")
-                ->where("owner_id = ?", Phprojekt_Auth_Proxy::getEffectiveUserId())
-                ->where("DATE(start_datetime) = ?", $date);
-
-            if ($this->id) {
-                $select->where("id != ?", $this->id);
-            }
-
             $select->where("(TIME(start_datetime) <= ? AND end_time > ? )"
                     . " OR (TIME(start_datetime) <= ? AND end_time IS NULL)",
                     $startTime, $startTime,
@@ -315,12 +307,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $endDayofTheMonth = date("t", mktime(0, 0, 0, $month, 1, $year));
         $datas            = array();
         for ($i = 1; $i <= $endDayofTheMonth; $i++) {
-            $day = $i;
-
-            $day = str_pad($day, 2, "0", STR_PAD_LEFT);
+            $day   = $i;
+            $day   = str_pad($day, 2, "0", STR_PAD_LEFT);
             $month = str_pad($month, 2, "0", STR_PAD_LEFT);
-
-            $date = $year . '-' . $month . '-' . $day;
+            $date  = $year . '-' . $month . '-' . $day;
 
             $data         = array();
             $data['date'] = $date;
@@ -437,7 +427,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      *
      * @return array
      */
-    public function getRunningBooking($year, $month, $date)
+    static public function getRunningBooking($year, $month, $date)
     {
         $ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
         $db = Phprojekt::getInstance()->getDb();

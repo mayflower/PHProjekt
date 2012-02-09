@@ -178,7 +178,7 @@ class Timecard_IndexController extends IndexController
         $year = (int) $this->getRequest()->getParam('year', date("Y"));
         $month = (int) $this->getRequest()->getParam('month', date("m"));
         $date = (int) $this->getRequest()->getParam('date', date("j"));
-        $record = $this->getModelObject()->getRunningBooking($year, $month, $date);
+        $record = Timecard_Models_Timecard::getRunningBooking($year, $month, $date);
         if ($record) {
             $data['id']        = $record['id'];
             $data['projectId'] = $record['project_id'];
