@@ -1,7 +1,7 @@
 <tr id="trAccessFor{{id}}">
     <td>{{input|safe}}</td>
-    {% for checkBox in checkBoxs %}
-        <td>{{checkBox|safe}}</td>
+    {% for right in rights %}
+        <td dojoAttachPoint="{{right}}"></td>
     {% endfor %}
-    <td>{{button|safe}}</td>
+    <td dojoAttachPoint="button"></td>
 </tr>
