@@ -348,14 +348,16 @@ class IndexController extends Zend_Controller_Action
      *
      * @return string Where clause.
      */
-    public function getFilterWhere($where)
+    public function getFilterWhere($where = null)
     {
-        $filters = $this->getRequest()->getParam('filters', array());
+        $filters = $this->getRequest()->getParam('filters', "[]");
+
+        $filters = json_decode($filters);
 
         if (!empty($filters)) {
             $filterClass = new Phprojekt_Filter($this->getModelObject(), $where);
             foreach ($filters as $filter) {
-                list($filterOperator, $filterField, $filterRule, $filterValue) = explode(";", $filter);
+                list($filterOperator, $filterField, $filterRule, $filterValue) = $filter;
                 $filterOperator = Cleaner::sanitize('alpha', $filterOperator, null);
                 $filterField    = Cleaner::sanitize('alpha', $filterField, null);
                 $filterRule     = Cleaner::sanitize('alpha', $filterRule, null);
@@ -471,7 +473,7 @@ class IndexController extends Zend_Controller_Action
                 $projectId);
             $tree->setup();
             Phprojekt_Converter_Json::echoConvert(
-                $tree->getRecordsFor($this->getModelObject()),
+                $tree->getRecordsFor($this->getModelObject(), null, null, $this->getFilterWhere()),
                 Phprojekt_ModelInformation_Default::ORDERING_LIST);
         } else  {
             $where   = $this->getFilterWhere($where);

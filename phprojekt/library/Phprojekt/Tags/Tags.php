@@ -3,7 +3,6 @@
  * Tags class.
  *
  * The class provide the functions for manage all the tags
- * All the words are converted to crc32 for search it.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,7 +28,6 @@
  * Tags class.
  *
  * The class provide the functions for manage all the tags
- * All the words are converted to crc32 for search it.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -67,21 +65,17 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
      * This function use the Zend_DB insert.
      * First check if the pair don´t exist.
      *
-     * @param integer $crc32 The crc32 number of the word.
      * @param string  $word  The word itself.
      *
      * @return integer ID of the tag.
      */
-    public function saveTags($crc32, $word)
+    public function saveTags($word)
     {
-        $id      = 0;
-        $where   = array();
-        $where[] = $this->getAdapter()->quoteInto('crc32 = ?', $crc32);
-        $where[] = $this->getAdapter()->quoteInto('word  = ?', $word);
+        $id    = 0;
+        $where = $this->getAdapter()->quoteInto('word  = ?', $word);
 
         $record = $this->fetchAll($where);
         if ($record->count() == 0) {
-            $data['crc32'] = $crc32;
             $data['word']  = $word;
             $id = $this->insert($data);
         } else {
@@ -102,7 +96,7 @@ class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
      */
     public function getTagId($word)
     {
-        $where = $this->getAdapter()->quoteInto('crc32 = ?', crc32($word));
+        $where = $this->getAdapter()->quoteInto('word = ?', $word);
 
         $record = $this->fetchAll($where);
         if ($record->count() > 0) {

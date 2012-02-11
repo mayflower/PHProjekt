@@ -234,8 +234,7 @@
             "create":
             {
                 "id":    "default",
-                "word":  {"type": "varchar", "notNull": "true"},
-                "crc32": {"type": "bigint", "notNull": "true"}
+                "word":  {"type": "varchar", "notNull": "true"}
             }
         },
 

@@ -322,19 +322,16 @@ dojo.declare("phpr.DataStore", null, {
 
         if (!alreadyActive) {
             if (this._internalCache[params.url].data.length === 0) {
-                var that = this;
                 phpr.loading.show();
                 this._internalCache[params.url].active = true;
                 this._internalCache[params.url].deferred = deferred;
+                var that = this;
                 this._internalCache[params.url].store.fetch({
                     serverQuery: params.serverQuery || {},
                     onComplete:  dojo.hitch(this, "saveData", {
                         url: params.url,
                         processData: function() {
-                            deferred.callback({
-                                data: that.getData(params),
-                                metaData: that.getMetaData(params)
-                            });
+                            deferred.callback(that.getCombinedData(params));
                         }
                     }),
                     onError: dojo.hitch(this, "errorHandler", {
@@ -345,10 +342,7 @@ dojo.declare("phpr.DataStore", null, {
                     })
                 });
             } else {
-                deferred.callback({
-                    data: this.getData(params),
-                    metaData: this.getMetaData(params)
-                });
+                deferred.callback(this.getCombinedData(params));
             }
         }
 
@@ -391,10 +385,7 @@ dojo.declare("phpr.DataStore", null, {
         this._internalCache[params.url].data = data;
         phpr.loading.hide();
         if (params.processData) {
-            params.processData({
-                data: this.getData(params),
-                metaData: this.getMetaData(params)
-            });
+            params.processData(this.getCombinedData(params));
         }
     },
 
@@ -412,6 +403,13 @@ dojo.declare("phpr.DataStore", null, {
         // Description:
         //    Return the "metadata" tag from the server
         return this.getStore(params).getValue(this._internalCache[params.url].data[1], "metadata") || [];
+    },
+
+    getCombinedData: function(params) {
+        return {
+            data: this.getData(params),
+            metaData: this.getMetaData(params)
+        };
     },
 
     deleteData: function(params) {
