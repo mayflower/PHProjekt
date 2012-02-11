@@ -72,7 +72,7 @@ END:VEVENT
 END:VCALENDAR
 HERE;
         $vcalendar = Sabre_VObject_Reader::read($calendarData);
-        $model = new Calendar2_Models_Calendar2();
+        $model     = new Calendar2_Models_Calendar2();
         $model->fromVObject($vcalendar->vevent);
         $this->assertEquals('Saal 1', $model->location);
         $this->assertEquals('Some Description', $model->description);
