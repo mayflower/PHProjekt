@@ -227,14 +227,16 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
             }
         }
 
+        var sortFunc = function(a, b) {
+            a = phpr.date.isoDatetimeTojsDate(a.start);
+            b = phpr.date.isoDatetimeTojsDate(b.start);
+            return a - b;
+        };
+
         for (var row in this._schedule) {
             for (var day in this._schedule[row]) {
-                if (this._schedule[row][day]['events'] !== undefined) {
-                    this._schedule[row][day]['events'].sort(function(a, b) {
-                        a = phpr.date.isoDatetimeTojsDate(a['start']);
-                        b = phpr.date.isoDatetimeTojsDate(b['start']);
-                        return a - b;
-                    });
+                if (this._schedule[row][day].events !== undefined) {
+                    this._schedule[row][day].events.sort(sortFunc);
                 }
             }
         }
