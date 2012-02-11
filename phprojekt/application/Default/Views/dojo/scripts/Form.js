@@ -207,44 +207,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             }
         }
 
-        var rows = '';
-        for (var id in accessContent) {
-            if (accessContent[id].userDisplay) {
-                var isCurrentUser = (id == phpr.currentUserId);
-                var checkBoxs     = [];
-                var userId        = isCurrentUser ? currentUser : id;
-                if (userId == 1 && currentUser != 1) {
-                    continue;
-                }
-                for (var i in this._rights) {
-                    var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
-                    checkBoxs.push(this.render(["phpr.Default.template.access", "checkbox.html"], null, {
-                        fieldId:  fieldId,
-                        checked:  accessContent[id][this._rights[i].toLowerCase()] ? 'checked' : '',
-                        hidden:   (isCurrentUser && this._accessPermissions),
-                        value:    (accessContent[id][this._rights[i].toLowerCase()]) ? 1 : 0,
-                        disabled: (!this._writePermissions) ? 'disabled="disabled"' : ''
-                    }));
-                }
-                var input = this.render(["phpr.Default.template.access", "input.html"], null, {
-                    id:          userId,
-                    disabled:    (!this._writePermissions) ? 'disabled="disabled"' : '',
-                    userDisplay: accessContent[id].userDisplay,
-                    currentUser: isCurrentUser
-                });
-                var button = this.render(["phpr.Default.template.access", "button.html"], null, {
-                    id:        userId,
-                    useDelete: !isCurrentUser
-                });
-                rows += this.render(["phpr.Default.template.access", "row.html"], null, {
-                    id:        userId,
-                    input:     input,
-                    checkBoxs: checkBoxs,
-                    button:    button
-                });
-            }
-        }
-
         // Template for the access tab
         var accessData = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Default.template.access.tab.html",
@@ -260,11 +222,17 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 accessAdminText:    phpr.nls.get('Admin'),
                 accessActionText:   phpr.nls.get('Action'),
                 accessPermissions:  (users.length > 0) ? this._accessPermissions : false,
-                users:              users,
-                rows:               rows
+                users:              users
             }
         });
+        this._accessTab = accessData;
         this.garbageCollector.addNode(accessData);
+
+        for (var id in accessContent) {
+            if (accessContent[id].userDisplay) {
+                this._addAccessTabRow(accessContent[id], currentUser);
+            }
+        }
 
         var def = this.addTab([accessData], 'tabAccess', 'Access', 'accessFormTab');
         return def.then(dojo.hitch(this, function() {
@@ -274,33 +242,105 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
             // Add "add" button for access
             if (this._accessPermissions && users.length > 0) {
-                this.addTinyButton('add', 'accessAddButton', 'newAccess');
+                this.addTinyButton('add', accessData.accessAddButton, 'newAccess');
                 this.garbageCollector.addEvent(
                     dojo.connect(dijit.byId("checkAdminAccessAdd"),
                         "onClick", dojo.hitch(this, "checkAllAccess", "Add")));
             }
-
-            if (this._accessPermissions) {
-                // Add "delete" buttons for access
-                // Add "check all" functions
-                for (var userId in accessContent) {
-                    if (accessContent[userId].userDisplay) {
-                        if (userId != currentUser && userId != 1) {
-                            this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
-
-                            this.garbageCollector.addEvent(
-                                dojo.connect(
-                                    dijit.byId("checkAdminAccess[" + userId + "]"),
-                                    "onClick",
-                                    dojo.hitch(this, "checkAllAccess", "[" + userId + "]")));
-                        }
-                    }
-                }
-            }
         }));
     },
 
-    addTinyButton: function(type, nodeId, functionName, extraParams) {
+    _deleteAccessRowForUserId: function(userId) {
+        if (this._accessRowsForUsers[userId]) {
+            this._accessRowsForUsers[userId].destroyRecursive();
+            delete this._accessRowsForUsers[userId];
+        }
+    },
+
+    _addAccessTabRow: function(accessContent, currentUser) {
+        if (!this._accessRowsForUsers) {
+            this._accessRowsForUsers = {};
+        }
+
+        var id = accessContent.userId;
+
+        var isCurrentUser = (id == phpr.currentUserId);
+        var userId        = isCurrentUser ? currentUser : id;
+
+        var accessPermission = this._accessPermissions &&
+                                userId != currentUser &&
+                                userId != 1;
+
+        if ((userId == 1 && currentUser != 1) || (!accessPermission && this._accessRowsForUsers[userId])) {
+            return;
+        }
+
+        this._deleteAccessRowForUserId(id);
+
+        var input = phpr.fillTemplate("phpr.Default.template.access.input.html", {
+            id:          userId,
+            disabled:    (!this._writePermissions) ? 'disabled="disabled"' : '',
+            userDisplay: accessContent.userDisplay,
+            currentUser: isCurrentUser
+        });
+
+        var row = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.access.row.html",
+            templateData: {
+                id: userId,
+                input: input,
+                rights: this._rights
+            }
+        });
+
+        var checkBoxes = [];
+        for (var i in this._rights) {
+            var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
+            var rightName = accessContent[this._rights[i].toLowerCase()];
+            var checkBox = new phpr.Default.System.TemplateWrapper({
+                templateName: "phpr.Default.template.access.checkbox.html",
+                templateData: {
+                    fieldId:  fieldId,
+                    checked:  rightName ? 'checked' : '',
+                    hidden:   (isCurrentUser && this._accessPermissions),
+                    value:    rightName ? 1 : 0,
+                    disabled: (!this._writePermissions) ? 'disabled="disabled"' : ''
+                }
+            });
+
+            this.garbageCollector.addNode(checkBox);
+
+            if (accessPermission && this._rights[i] === "Admin") {
+                this.garbageCollector.addEvent(
+                    dojo.connect(
+                        checkBox.checkBox,
+                        "onClick",
+                        dojo.hitch(this, "_checkAllAccessBoxesIfChecked", checkBox.checkBox, checkBoxes)));
+            }
+            row[this._rights[i]].appendChild(checkBox.domNode);
+            checkBoxes.push(checkBox);
+        }
+
+        if (accessPermission) {
+            var button = dojo.create('div');
+            this.addTinyButton('delete', button, '_deleteAccessRowForUserId', [userId]);
+            row.button.appendChild(button);
+        }
+
+        this._accessRowsForUsers[userId] = row;
+        this._accessTab.tbody.appendChild(row.domNode);
+        this.garbageCollector.addNode(row);
+    },
+
+    _checkAllAccessBoxesIfChecked: function(controlBox, checkBoxes) {
+        if (controlBox.checked) {
+            for (var idx in checkBoxes) {
+                checkBoxes[idx].checkBox.set('checked', true);
+            }
+        }
+    },
+
+    addTinyButton: function(type, node, functionName, extraParams) {
         // Summary:
         //    Add a button
         // Description:
@@ -314,7 +354,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var button = new dijit.form.Button(params);
         this.garbageCollector.addNode(button);
 
-        dojo.byId(nodeId).appendChild(button.domNode);
+        node.appendChild(button.domNode);
 
         this.garbageCollector.addEvent(
             dojo.connect(button, "onClick",
@@ -371,7 +411,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 templateName: "phpr.Default.template.form.tabs.html",
                 templateData: {
                     formId:    formId || ''
-                }});
+                }
+            });
 
             var l = innerWidgets.length;
             for (var i = 0; i < l; i++) {
@@ -568,10 +609,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this.form        = this.setFormContent();
             this.formsWidget = [];
 
-            this.node.set('content', this.form);
-
-            this.form.startup();
-
             var deferred = new dojo.Deferred();
 
             deferred.callback();
@@ -631,6 +668,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     p.viewManager.getView().completeContent.domNode.focus();
                     dojo.byId(firstRequiredField).focus();
                 }
+
+                this.node.set('content', this.form);
+
+                this.node.resize();
 
                 this.postRenderForm();
                 this._loadIndicator.hide();
@@ -877,68 +918,24 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Add a the row of one user-accees
         //    with the values selected on the first row
-        var userId = dijit.byId("dataAccessAdd").get('value');
-        if (!dojo.byId("trAccessFor" + userId) && userId > 0) {
-            phpr.destroyWidget("dataAccess[" + userId + "]");
-            for (var i in this._rights) {
-                var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
-                phpr.destroyWidget(fieldId);
-            }
-            phpr.destroyWidget("accessDeleteButton" + userId);
+        var userId = this._accessTab.dataAccessAdd.get('value');
+        var data = {
+            userId:          userId,
+            disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
+            userDisplay: this._accessTab.dataAccessAdd.get('displayedValue'),
+            currentUser: false
+        };
 
-            var table = dojo.byId("accessTable");
-            var row   = table.insertRow(table.rows.length);
-            row.id    = "trAccessFor" + userId;
-
-            var cellIndex = 0;
-
-            // Input
-            var cell  = row.insertCell(cellIndex);
-            var input = this.render(["phpr.Default.template.access", "input.html"], null, {
-                id:          userId,
-                disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
-                userDisplay: dijit.byId("dataAccessAdd").get('displayedValue'),
-                currentUser: false
-            });
-            cell.innerHTML = input;
-            this.garbageCollector.addNode(cell);
-            cellIndex++;
-
-            // CheckBoxs
-            for (var i in this._rights) {
-                var cell       = row.insertCell(cellIndex);
-                var fieldId    = 'check' + this._rights[i] + 'Access[' + userId + ']';
-                var fieldAddId = 'check' + this._rights[i] + 'AccessAdd';
-                var checkBox   = this.render(["phpr.Default.template.access", "checkbox.html"], null, {
-                    fieldId:  fieldId,
-                    checked:  dijit.byId(fieldAddId).checked ? 'checked' : '',
-                    hidden:   false,
-                    value:    1,
-                    disabled: ''
-                });
-                cell.innerHTML = checkBox;
-                this.garbageCollector.addNode(cell);
-                cellIndex++;
-            }
-
-            // Delete Button
-            var cell   = row.insertCell(cellIndex);
-            var button = this.render(["phpr.Default.template.access", "button.html"], null, {
-                id:        userId,
-                useDelete: true
-            });
-            cell.innerHTML = button;
-            this.garbageCollector.addNode(cell);
-            cellIndex++;
-
-            dojo.parser.parse(row);
-
-            this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
-            this.garbageCollector.addEvent(
-                dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"),
-                    "onClick",
-                    dojo.hitch(this, "checkAllAccess", "[" + userId + "]")));
+        if (!data.userDisplay) {
+            return;
         }
+
+        for (var i in this._rights) {
+            var fieldAddId = 'check' + this._rights[i] + 'AccessAdd';
+            data[this._rights[i].toLowerCase()] = this._accessTab[fieldAddId].checked;
+        }
+
+        this._addAccessTabRow(data, phpr.currentUserId);
     },
 
     deleteAccess: function(userId) {

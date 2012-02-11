@@ -1,31 +1,19 @@
 <div>
-    <div dojoAttachPoint="timecardDayView" class="timecardDayView"
-        style="position: absolute; height: 960px;">
-    {% for hour in hours %}
-        <div dojoAttachPoint="hours{{hour.hour}}" dojoType="dijit.layout.ContentPane" class="{{hour.class}}">
-            <div class="hourBox"
-            {% ifequal hour.hour 0 %}
-            style="border-top: 0px;"
-            {% else %}
-                {% ifequal hour.hour 23 %}
-            style="border-bottom: 0px;"
-                {% endifequal %}
-            {% endifequal %}
-            >
-                <span>{{hour.display}}</span>
-                <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
-                onClick="dojo.publish('Timecard.formProxy', ['fillFormTime', '{{hour.hour}}']);">
-                </button>
-                <div dojoType="dijit.Tooltip" connectId="buttonHours{{hour.hour}}" label="{{tooltipHelpTxt}}">
-                </div>
-                <div dojoAttachPoint="buttonHours{{hour.hour}}" dojoType="dijit.layout.ContentPane" class="hiddenTooltipPoint">
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-        <div dojoAttachPoint="projectBookingContainer" dojoType="dijit.layout.ContentPane"
-        style="position: absolute; top: 0%; left: 7em; margin: 0px; height: 960px; padding-top: 0px;
-        overflow: hidden; width: 100%;">
-        </div>
+    <div dojoAttachPoint="timecardDayView" class="timecardDayView">
+        <table>
+            <thead>
+                <tr>
+                    <th class="timecardDayViewTHead">{{start}}</th>
+                    <th class="timecardDayViewTd timecardDayViewTHead">{{end}}</th>
+                    <th class="timecardDayViewTd timecardDayViewTHead">{{hours}}</th>
+                    <th class="timecardDayViewTd timecardDayViewTHead">{{project}}</th>
+                    <th class="timecardDayViewTd timecardDayViewTHead">{{note}}</th>
+                </tr>
+            </thead>
+            <tfoot><tr><td class="timecardDayViewFooter" colspan="5" dojoAttachPoint="footer"></td></tr></tfoot>
+            <tbody dojoAttachPoint="list"></tbody>
+        </table>
+        <hr>
+        <div dojoAttachPoint="form" dojoType="dijit.layout.ContentPane"></div>
     </div>
 </div>
