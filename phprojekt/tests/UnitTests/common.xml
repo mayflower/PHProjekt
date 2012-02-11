@@ -170,7 +170,7 @@
         is_required="0" is_unique="0"/>
     <database_manager table_name="Todo" table_field="project_id" form_tab="1" form_label="Project" form_type="selectValues" form_position="3" form_columns="1" form_regexp="" form_range="Project#id#title" default_value="" list_position="0" list_align="" list_use_filter="1" alt_position="0" status="1" is_integer="1" is_required="1" is_unique="0"/>
     <database_manager table_name="Todo" table_field="user_id" form_tab="1" form_label="User" form_type="selectValues" form_position="8" form_columns="1" form_regexp="" form_range="User#id#lastname" default_value="" list_position="6" list_align="left" list_use_filter="1" alt_position="7" status="1" is_integer="1" is_required="0" is_unique="0"/>
-    <setting />
+    <setting user_id="1" module_id="0" key_value="timeZone" value="1" identifier="Core" />
     <!-- CONTACT DBMANAGER -->
     <database_manager table_name='Contact'
         table_field="name" form_tab="1" form_label="name"
@@ -299,4 +299,6 @@
         module_id="7" item_id="2" user_id="1" access="255" />
     <!-- /FILEMANAGER TESTS -->
     <frontend_message />
+
+    <calendar2 />
 </dataset>
