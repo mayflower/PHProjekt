@@ -406,8 +406,8 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
             var endDatetime = new Date(startDatetime);
             endDatetime.setHours(endDatetime.getHours() + 1);
 
-            params['start'] = phpr.date.getIsoDatetime(startDatetime, startDatetime);
-            params['end']   = phpr.date.getIsoDatetime(endDatetime, endDatetime);
+            params.start = phpr.date.getIsoDatetime(startDatetime, startDatetime);
+            params.end   = phpr.date.getIsoDatetime(endDatetime, endDatetime);
         }
 
         params.recurrenceId = recurrenceId || 0;
