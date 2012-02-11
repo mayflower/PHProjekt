@@ -70,7 +70,6 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
             templateName: "phpr.Default.template.results.mainContentResults.html"
         });
 
-        this.view.defaultMainContent = mainContent.mainContent;
         this.view.resultsTitleBox = mainContent.resultsTitleBox;
         // set the title
         this.view.resultsTitleBox.set('content', config.resultsTitle || "");
@@ -119,7 +118,6 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
         }
 
         this.view.centerMainContent.set('content', mainContent);
-        this.view.defaultMainContent.startup();
         this.view.detailsBox.startup();
     }
 });

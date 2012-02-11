@@ -78,11 +78,11 @@
     <database_manager table_name='Project' table_field="current_status" form_tab="1" form_label="Current status"
         form_type="selectValues" form_position="7" form_columns="1" form_regexp="NULL"
         form_range="1#Offered|2#Ordered|3#Working|4#Ended|5#Stopped|6#Re-Opened|7#Waiting" default_value="NULL"
-        list_position="5" list_align="left" list_use_filter="1" alt_position="2" status="1" is_integer="1"
+        list_position="6" list_align="left" list_use_filter="1" alt_position="2" status="1" is_integer="1"
         is_required="0" is_unique="0" />
     <database_manager table_name='Project' table_field="complete_percent" form_tab="1" form_label="Complete percent"
         form_type="percentage" form_position="8" form_columns="1" form_regexp="NULL"
-        form_range="NULL" default_value="NULL" list_position="6" list_align="left"
+        form_range="NULL" default_value="NULL" list_position="7" list_align="left"
         list_use_filter="1" alt_position="2" status="1" is_integer="0"
         is_required="0" is_unique="0" />
     <database_manager table_name='Project' table_field="budget" form_tab="1" form_label="Budget"

@@ -96,7 +96,7 @@ class Phprojekt_TagController_Test extends FrontInit
     {
         $this->setRequestUrl('Default/Tag/jsonGetModulesByTag/');
         $this->request->setParam('nodeId', 1);
-        $this->request->setParam('tag', 'test');
+        $this->request->setParam('tag', 'this');
         $this->request->setParam('limit', 2);
         $response = $this->getResponse();
         $expected = '{"id":1,"moduleId":1,"moduleName":"Project","moduleLabel":"Project","firstDisplay":"test",'

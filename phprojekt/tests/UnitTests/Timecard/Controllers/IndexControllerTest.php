@@ -87,10 +87,28 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-05-17');
         $response = $this->getResponse();
-        $expected = '"data":[{"id":"7","projectId":"1","startTime":"09:00:00","endTime":"13:00:00",'
-            . '"display":"PHProjekt [My note]"},{"id":"8","projectId":"1","startTime":"14:00:00",'
-            . '"endTime":"18:00:00","display":"PHProjekt [My note]"}]';
-        $this->assertContains($expected, $response);
+        $parsed   = FrontInit::phprJsonToArray($response);
+        $expected = array(
+            "data" => array(
+                array(
+                    "id" => "7",
+                    "projectId" => "1",
+                    "startTime" => "09:00:00",
+                    "endTime" => "13:00:00",
+                    "display" => "PHProjekt",
+                    "note" => "My note"
+                ),
+                array(
+                    "id" => "8",
+                    "projectId" => "1",
+                    "startTime" => "14:00:00",
+                    "endTime" => "18:00:00",
+                    "display" => "PHProjekt",
+                    "note" => "My note"
+                )
+            )
+        );
+        $this->assertEquals($expected, $parsed);
     }
 
     /**
@@ -118,9 +136,20 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-07-03');
         $response = $this->getResponse();
-        $expected = '{"id":"9","projectId":"1","startTime":"10:00:00",' .
-            '"endTime":null,"display":"PHProjekt [My note]"}';
-        $this->assertContains($expected, $response);
+        $parsed   = FrontInit::phprJsonToArray($response);
+        $expected = array(
+            "data" => array(
+                array(
+                    "id" => "9",
+                    "projectId" => "1",
+                    "startTime" => "10:00:00",
+                    "endTime" => null,
+                    "display" => "PHProjekt",
+                    "note" => "My note"
+                )
+            )
+        );
+        $this->assertEquals($expected, $parsed);
     }
 
     /**
