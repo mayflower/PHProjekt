@@ -991,7 +991,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $start = new Datetime($vevent->dtstart->value, new DateTimezone($vevent->dtstart['tzid']->value));
         }
         $start->setTimezone($utc);
-        $this->start = $start->format('Y-m-d H:i:s');
+        $this->start = Phprojekt_Converter_Time::utcToUser($start->format('Y-m-d H:i:s'));
 
         if (substr($vevent->dtend->value, -1) === 'Z') {
             $end = new Datetime($vevent->dtend->value);
@@ -999,7 +999,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             $end = new Datetime($vevent->dtend->value, new DateTimezone($vevent->dtend['tzid']->value));
         }
         $end->setTimezone($utc);
-        $this->end = $end->format('Y-m-d H:i:s');
+        $this->end = Phprojekt_Converter_Time::utcToUser($end->format('Y-m-d H:i:s'));
     }
 
     /**
