@@ -322,6 +322,7 @@ dojo.declare("phpr.DataStore", null, {
 
         if (!alreadyActive) {
             if (this._internalCache[params.url].data.length === 0) {
+                var that = this;
                 phpr.loading.show();
                 this._internalCache[params.url].active = true;
                 this._internalCache[params.url].deferred = deferred;
@@ -330,7 +331,10 @@ dojo.declare("phpr.DataStore", null, {
                     onComplete:  dojo.hitch(this, "saveData", {
                         url: params.url,
                         processData: function() {
-                            deferred.callback();
+                            deferred.callback({
+                                data: that.getData(params),
+                                metaData: that.getMetaData(params)
+                            });
                         }
                     }),
                     onError: dojo.hitch(this, "errorHandler", {
@@ -341,7 +345,10 @@ dojo.declare("phpr.DataStore", null, {
                     })
                 });
             } else {
-                deferred.callback();
+                deferred.callback({
+                    data: this.getData(params),
+                    metaData: this.getMetaData(params)
+                });
             }
         }
 
@@ -384,7 +391,10 @@ dojo.declare("phpr.DataStore", null, {
         this._internalCache[params.url].data = data;
         phpr.loading.hide();
         if (params.processData) {
-            params.processData.call();
+            params.processData({
+                data: this.getData(params),
+                metaData: this.getMetaData(params)
+            });
         }
     },
 

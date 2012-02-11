@@ -28,30 +28,32 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
     _projectRange: null,
     _loading: false,
     _unassignedProjectId: 1,
+    _data: null,
+    _metaData: null,
 
     constructor: function(date) {
         this._date = date;
-        this._setUrls();
     },
 
     _setUrls: function() {
-        this._url = phpr.webpath + 'index.php/Timecard/index/jsonDayList/date/' + phpr.date.getIsoDate(this._date);
+        this._url = phpr.webpath +
+                    'index.php/Timecard/index/jsonGetRunningBookings/' +
+                    'year/' + this._date.getFullYear() +
+                    '/month/' + (this._date.getMonth() + 1) +
+                    '/date/' + this._date.getDate()
+                                ;
         this._detailsUrl = phpr.webpath + 'index.php/Timecard/index/jsonDetail/nodeId/1/id/0';
     },
 
-    _onDataLoaded: function() {
-        this._data = phpr.DataStore.getData({url: this._url});
+    _onDataLoaded: function(data) {
+        this._data = data[0][1];
         this._metaData = phpr.DataStore.getMetaData({url: this._detailsUrl});
         this._runningBooking = null;
-        var l = this._data.length;
 
         this._projectRange = this._getProjectRange(this._metaData);
 
-        for (var i = 0; i < l; i++) {
-            if (this._data[i].endTime === null) {
-                this._runningBooking = this._data[i];
-                break;
-            }
+        if (this._data.length !== 0) {
+            this._runningBooking = this._data;
         }
 
         this._stopLoading();
@@ -74,11 +76,10 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
 
     _updateData: function() {
         if (!this.isLoading()) {
-            this._startLoading();
             this._setUrls();
+            this._startLoading();
 
             phpr.DataStore.deleteData({url: this._url});
-            phpr.DataStore.deleteData({url: this._detailsUrl});
 
             phpr.DataStore.addStore({url: this._url});
             phpr.DataStore.addStore({url: this._detailsUrl});
@@ -144,7 +145,7 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
             startDatetime: phpr.date.getIsoDate(this._date) + " " + phpr.date.getIsoTime(this._runningBooking.startTime),
             endTime: phpr.date.getIsoTime(new Date()),
             projectId: projectId || this.getLastProjectId(),
-            notes: notes || ""
+            notes: notes || this._runningBooking.note || ""
         };
 
         phpr.send({
@@ -175,7 +176,6 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
 
     setDate: function(date) {
         this._date = date;
-        this._setUrls();
         this.dataChanged();
     },
 
@@ -195,7 +195,6 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     _contentWidget: null,
     _menuCollector: null,
     _bookingStore: null,
-    startStopBar: null,
 
     constructor: function() {
         this.module = 'Timecard';
@@ -208,7 +207,12 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this._menuCollector = new phpr.Default.System.GarbageCollector();
 
         dojo.subscribe("Timecard.changeDate", this, "changeDate");
+        dojo.subscribe("phpr.dateChanged", this, "_systemDateChanged");
         dojo.connect(this._bookingStore, "onChange", this, "_dataChanged");
+    },
+
+    _systemDateChanged: function() {
+        this._bookingStore.setDate(new Date());
     },
 
     renderTemplate: function() {
@@ -237,11 +241,6 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         this._bookingStore.dataChanged();
         this.grid = new this.gridWidget(this, this._date);
         this.form = new this.formWidget(this, this._date);
-        this.startStopBar = new phpr.Timecard.StartStopBar({
-            container: this._contentWidget.startStopButtonRow,
-            bookingStore: this._bookingStore
-        });
-        this.garbageCollector.addObject(this.startStopBar);
     },
 
     _dataChanged: function() {

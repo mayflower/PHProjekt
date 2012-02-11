@@ -138,8 +138,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
             if (!isset($data['endTime'])) {
                 // Start Hours button pressed - Check if new start time overlaps any existing period
-                $records = $this->fetchAll($this->_getWhereForTimes());
-                if (count($records) > 0) {
+                if ($this->_hasOverlappingTime()) {
                     $this->_validate->error->addError(array(
                         'field'   => 'Time period',
                         'label'   => Phprojekt::getInstance()->translate('Time period'),
@@ -197,39 +196,23 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     $startTime = substr($startTime, 0, 4);
                 }
                 $startTime = (int) $startTime;
-                $showError = false;
-                $records   = $this->fetchAll($this->_getWhereForTimes());
-                if ($this->id != 0) {
+                $overlaps  = $this->_hasOverlappingTime();
+                if ($this->id != 0 && $overlaps) {
                     // Stop Working Times button pressed, or it is being saved an existing period
                     // Check if end time overlaps any existing period but the current one
-                    if (count($records) > 0) {
-                        foreach ($records as $record) {
-                            if ($record->id != $this->id) {
-                                $showError = true;
-                                break;
-                            }
-                        }
-                        if ($showError) {
-                            $this->_validate->error->addError(array(
-                                'field'   => 'Time period',
-                                'label'   => Phprojekt::getInstance()->translate('Time period'),
-                                'message' => Phprojekt::getInstance()->translate('Can not End Working Time because this'
-                                    . ' moment is occupied by an existing period')));
-                            return false;
-                        }
-                    }
-                } else {
-                    if (count($records) > 0 && $this->id == 0) {
-                        $showError = true;
-                    }
-                    if ($showError) {
-                        $this->_validate->error->addError(array(
-                            'field'   => 'Time period',
-                            'label'   => Phprojekt::getInstance()->translate('Time period'),
-                            'message' => Phprojekt::getInstance()->translate('Can not save it because it overlaps '
-                                . 'existing one')));
-                        return false;
-                    }
+                    $this->_validate->error->addError(array(
+                        'field'   => 'Time period',
+                        'label'   => Phprojekt::getInstance()->translate('Time period'),
+                        'message' => Phprojekt::getInstance()->translate('Can not End Working Time because this'
+                        . ' moment is occupied by an existing period')));
+                    return false;
+                } else if ($overlaps && $this->id == 0) {
+                    $this->_validate->error->addError(array(
+                        'field'   => 'Time period',
+                        'label'   => Phprojekt::getInstance()->translate('Time period'),
+                        'message' => Phprojekt::getInstance()->translate('Can not save it because it overlaps '
+                            . 'existing one')));
+                    return false;
                 }
             }
         }
@@ -238,36 +221,43 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     }
 
     /**
-     * Make the where to check date and times
+     * Checks for overlapping times
      *
-     * @return string
+     * @return Boolean
      */
-    private function _getWhereForTimes()
+    private function _hasOverlappingTime()
     {
-        $startTime = $this->getAdapter()->quote(substr($this->startDatetime, 11));
-        $date      = $this->getAdapter()->quote(substr($this->startDatetime, 0, 10));
-        if (null !== $this->endTime) {
-            $endTime = $this->getAdapter()->quote($this->endTime);
-            $where   = sprintf(" owner_id = %d AND DATE(start_datetime) = %s AND "
-                . " ((TIME(start_datetime) <= %s AND end_time > %s) "
-                . " OR (TIME(start_datetime) < %s AND end_time >= %s) "
-                . " OR (TIME(start_datetime) <= %s AND end_time >= %s) "
-                . " OR (TIME(start_datetime) >= %s AND end_time <= %s) ) ",
-                (int) Phprojekt_Auth::getUserId(), $date,
-                $startTime, $startTime,
-                $endTime, $endTime,
-                $startTime, $endTime,
-                $startTime, $endTime);
-        } else {
-            $where = sprintf(" owner_id = %d AND DATE(start_datetime) = %s AND "
-                . " ((TIME(start_datetime) <= %s AND end_time > %s )"
-                . " OR (TIME(start_datetime) <= %s AND end_time IS NULL)) ",
-                (int) Phprojekt_Auth::getUserId(), $date,
-                $startTime, $startTime,
-                $startTime);
+        $startTime = substr($this->startDatetime, 11);
+        $date      = substr($this->startDatetime, 0, 10);
+        $select    = Phprojekt::getInstance()->getDb()->select();
+
+        $select->from("timecard", "COUNT(*) > 0")
+            ->where("owner_id = ?", Phprojekt_Auth_Proxy::getEffectiveUserId())
+            ->where("DATE(start_datetime) = ?", $date);
+
+        if ($this->id) {
+            $select->where("id != ?", $this->id);
         }
 
-        return $where;
+        if (null !== $this->endTime) {
+            $select->where("(TIME(start_datetime) <= ? AND end_time > ?) "
+                    . " OR (TIME(start_datetime) < ? AND end_time >= ?) "
+                    . " OR (TIME(start_datetime) <= ? AND end_time >= ?) "
+                    . " OR (TIME(start_datetime) >= ? AND end_time <= ?)",
+                    $startTime, $startTime,
+                    $this->endTime, $this->endTime,
+                    $startTime, $this->endTime,
+                    $startTime, $this->endTime);
+        } else {
+            $select->where("(TIME(start_datetime) <= ? AND end_time > ? )"
+                    . " OR (TIME(start_datetime) <= ? AND end_time IS NULL)",
+                    $startTime, $startTime,
+                    $startTime);
+        }
+
+        $ret = $select->query()->fetchColumn();
+
+        return $ret != "0";
     }
 
     /**
@@ -290,39 +280,37 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function getMonthRecords($year, $month)
     {
-        $userId = (int) Phprojekt_Auth::getUserId();
+        $userId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
-        if (strlen($month) == 1) {
-            $month = '0' . $month;
-        }
-
-        $db    = Phprojekt::getInstance()->getDb();
-        $where = sprintf('(owner_id = %d AND DATE(start_datetime) LIKE %s)', $userId,
-            $db->quote($year . '-' . $month . '-%'));
-        $records = $this->fetchAll($where, 'start_datetime ASC');
+        $select = Phprojekt::getInstance()->getDb()->select();
+        $select->from("timecard")
+            ->where("owner_id = ?", $userId)
+            ->where("YEAR(start_datetime) = ?", $year)
+            ->where("MONTH(start_datetime) = ?", $month)
+            ->order("start_datetime ASC");
+        $records = $select->query()->fetchAll();
 
         // Get all the hours for this month
         $sortRecords = array();
         foreach ($records as $record) {
-            $date = date('Y-m-d', strtotime($record->startDatetime));
+            $date = date('Y-m-d', strtotime($record['start_datetime']));
             if (!isset($sortRecords[$date])) {
                 $sortRecords[$date]['sum']        = 0;
                 $sortRecords[$date]['openPeriod'] = 0;
             }
-            if ($record->minutes == 0 && null === $record->endTime) {
+            if ($record['minutes'] == 0 && null === $record['end_time']) {
                 $sortRecords[$date]['openPeriod'] = 1;
             }
-            $sortRecords[$date]['sum'] += (int) $record->minutes;
+            $sortRecords[$date]['sum'] += (int) $record['minutes'];
         }
 
         $endDayofTheMonth = date("t", mktime(0, 0, 0, $month, 1, $year));
         $datas            = array();
         for ($i = 1; $i <= $endDayofTheMonth; $i++) {
-            $day = $i;
-            if (strlen($day) == 1) {
-                $day = '0' . $i;
-            }
-            $date = $year . '-' . $month . '-' . $day;
+            $day   = $i;
+            $day   = str_pad($day, 2, "0", STR_PAD_LEFT);
+            $month = str_pad($month, 2, "0", STR_PAD_LEFT);
+            $date  = $year . '-' . $month . '-' . $day;
 
             $data         = array();
             $data['date'] = $date;
@@ -353,7 +341,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     public function getDayRecords($date)
     {
         $db    = Phprojekt::getInstance()->getDb();
-        $where = sprintf('(owner_id = %d AND DATE(start_datetime) = %s)', (int) Phprojekt_Auth::getUserId(),
+        $where = sprintf('(owner_id = %d AND DATE(start_datetime) = %s)', (int) Phprojekt_Auth_Proxy::getEffectiveUserId(),
             $db->quote($date));
         $records = $this->fetchAll($where, 'start_datetime ASC');
         $datas   = array();
@@ -369,7 +357,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 if (strlen($record->notes) > 50) {
                     $record->notes = substr($record->notes, 0, 50) . '...';
                 }
-                $display .= ' [' . $record->notes . ']';
             }
 
             $data['id']        = $record->id;
@@ -377,6 +364,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $data['startTime'] = substr($record->startDatetime, 11);
             $data['endTime']   = $record->endTime;
             $data['display']   = $display;
+            $data['note']      = $record->notes;
 
             $datas[] = $data;
         }
@@ -430,19 +418,27 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     }
 
     /**
-     * Get running bookings and return an array
-     * of currently running for the given userid
+     * Fetch the currently running booking for the given date
+     * for the effective user.
      *
-     * @param integer $ownerId Owner of the bookings
+     * @param integer $year Year of the bookings
+     * @param integer $month Month of the bookings
+     * @param integer $date Date of the bookings
      *
      * @return array
      */
-    public function getRunningBookings($ownerId)
+    static public function getRunningBooking($year, $month, $date)
     {
-        $where = sprintf('DATE(start_datetime) = %s AND (end_time = "" OR end_time IS NULL) AND owner_id = %d',
-            $this->getAdapter()->quote(date('Y-m-d')), $ownerId);
-        $records = $this->fetchAll($where, null, 1);
-        return $records;
+        $ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $db = Phprojekt::getInstance()->getDb();
+        $select = $db->select();
+        $select->from("timecard")
+            ->where("owner_id = ?", $ownerId)
+            ->where("YEAR(start_datetime) = ?", $year)
+            ->where("MONTH(start_datetime) = ?", $month)
+            ->where("DAY(start_datetime) = ?", $date)
+            ->order("start_datetime ASC");
+        return $db->fetchRow($select);
     }
 
     /**
@@ -452,7 +448,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function delete()
     {
-        if ($this->ownerId == Phprojekt_Auth::getUserId()) {
+        if ($this->ownerId == Phprojekt_Auth_Proxy::getEffectiveUserId()) {
             return parent::delete();
         } else {
             return false;

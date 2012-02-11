@@ -56,38 +56,6 @@ dojo.declare("phpr.Default.System.TemplatedLayoutContainer", [dijit.layout.Conte
                 }
             }
             dojo.addClass(this.domNode, "phprTemplatedLayoutContainer");
-        },
-        buildRendering: function() {
-            this.inherited(arguments);
-        },
-        resize: function() {
-            this.inherited(arguments);
-            dojo.forEach(dijit.findWidgets(this.domNode),
-                    function(w) {
-                        if (dojo.isFunction(w.resize)) {
-                            w.resize();
-                        }
-                    });
-        },
-        layout: function() {
-            this.inherited(arguments);
-            dojo.forEach(dijit.findWidgets(this.domNode),
-                    function(w) {
-                        if (dojo.isFunction(w.layout)) {
-                            w.layout();
-                        }
-                    });
-        },
-        startup: function() {
-            dojo.forEach(dijit.findWidgets(this.domNode),
-                    function(w) {
-                        if (dojo.isFunction(w.startup)) {
-                            w.startup();
-                        }
-                    });
-            this.inherited(arguments);
-            this.layout();
-            this.resize();
         }
     }
 );

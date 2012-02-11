@@ -116,12 +116,12 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this.setGetExtraActionsUrl();
 
         phpr.DataStore.addStore({url: this.url});
-        phpr.DataStore.requestData({url: this.url, serverQuery: {'filters[]': this._filterData},
-            processData: dojo.hitch(this, function() {
-                phpr.DataStore.addStore({url: this.getActionsUrl});
-                phpr.DataStore.requestData({url: this.getActionsUrl, processData: dojo.hitch(this, "onLoaded")});
-            })
-        });
+        phpr.DataStore.addStore({url: this.getActionsUrl});
+        var dlist = new dojo.DeferredList([
+            phpr.DataStore.requestData({url: this.url, serverQuery: {'filters[]': this._filterData}}),
+            phpr.DataStore.requestData({url: this.getActionsUrl})
+        ]);
+        dlist.addCallback(dojo.hitch(this, "onLoaded"));
     },
 
     destroy: function() {
@@ -1538,7 +1538,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         phpr.confirmDialog(dojo.hitch(this, function() {
                                 this.doAction(action, idsSend, mode, this.TARGET_MULTIPLE);
                             }),
-                            phpr.nls.get('Please confirm implement') + ' "' +
+                            phpr.nls.get('Please confirm the following action:') + ' "' +
                             actionName + '"<br />(' + ids.length + ' ' +
                             phpr.nls.get('rows selected') + ')'));
                     select.selectedIndex = 0;

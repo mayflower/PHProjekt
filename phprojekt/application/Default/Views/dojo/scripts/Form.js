@@ -52,7 +52,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
     tabs:               [],
 
-    constructor:function(main, id, module, params, formContainer) {
+    constructor: function(main, id, module, params, formContainer) {
         // Summary:
         //    render the form on construction
         // Description:
@@ -63,7 +63,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         this.setContainer(formContainer);
 
-        if (undefined != params) {
+        if (undefined !== params) {
             this._presetValues = params;
         }
 
@@ -73,11 +73,11 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this._loadIndicator = new phpr.Default.loadingOverlay(this.node.domNode);
         this._loadIndicator.show();
 
-        this._initData.push({'url': this._url, 'processData': dojo.hitch(this, "getFormData")});
+        this._initData.push({'url': this._url});
         this.tabStore = new phpr.Default.System.Store.Tab();
         this._initData.push({'store': this.tabStore});
         this.initData();
-        this.getInitData();
+        this.getInitData([dojo.hitch(this, "getFormData")]);
     },
 
     destroy: function() {
@@ -105,7 +105,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var subModules = this._subModules;
         for (var index in subModules) {
             var subModuleName = subModules[index].name;
-            subModules[index].class.destroy();
+            subModules[index]['class'].destroy();
         }
     },
 
@@ -126,27 +126,35 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             '/index/jsonDetail/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
     },
 
-    getInitData: function() {
+    getInitData: function(callbacks) {
         // Summary:
         //    Process all the POST in cascade for get all the data from the server
         // Description:
         //    Process all the POST in cascade for get all the data from the server
-        var params = this._initData.pop();
+        var deferreds = [];
+        while (this._initData.length > 0) {
+            var params = this._initData.pop();
 
-        if (params.url || params.store) {
-            if (!params.noCache) {
-                params.noCache = false;
+            if (params.url || params.store) {
+                if (!params.noCache) {
+                    params.noCache = false;
+                }
+                if (!params.processData) {
+                    params.processData = function() {};
+                }
             }
-            if (!params.processData) {
-                params.processData = dojo.hitch(this, "getInitData");
+
+            if (params.url) {
+                phpr.DataStore.addStore({'url': params.url, 'noCache': params.noCache});
+                deferreds.push(phpr.DataStore.requestData({'url': params.url, 'processData': params.processData}));
+            } else if (params.store) {
+                deferreds.push(params.store.fetch(params.processData));
             }
         }
+        var dlist = new dojo.DeferredList(deferreds);
 
-        if (params.url) {
-            phpr.DataStore.addStore({'url': params.url, 'noCache': params.noCache});
-            phpr.DataStore.requestData({'url': params.url, 'processData': params.processData});
-        } else if (params.store) {
-            params.store.fetch(params.processData);
+        for (var i = 0; i < callbacks.length; i++) {
+            dlist.addCallback(callbacks[i]);
         }
     },
 
@@ -199,47 +207,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             }
         }
 
-        var rows = '';
-        for (var id in accessContent) {
-            if (accessContent[id].userDisplay) {
-                var isCurrentUser = (id == phpr.currentUserId);
-                var checkBoxs     = [];
-                var userId        = isCurrentUser ? currentUser : id;
-                if (userId == 1 && currentUser != 1) {
-                    continue;
-                }
-                for (var i in this._rights) {
-                    var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
-                    checkBoxs.push(this.render(["phpr.Default.template.access", "checkbox.html"], null, {
-                        fieldId:  fieldId,
-                        checked:  accessContent[id][this._rights[i].toLowerCase()] ? 'checked' : '',
-                        hidden:   (isCurrentUser && this._accessPermissions),
-                        value:    (accessContent[id][this._rights[i].toLowerCase()]) ? 1 : 0,
-                        disabled: (!this._writePermissions) ? 'disabled="disabled"' : ''
-                    }));
-                }
-                var input = this.render(["phpr.Default.template.access", "input.html"], null, {
-                    id:          userId,
-                    disabled:    (!this._writePermissions) ? 'disabled="disabled"' : '',
-                    userDisplay: accessContent[id].userDisplay,
-                    currentUser: isCurrentUser
-                });
-                var button = this.render(["phpr.Default.template.access", "button.html"], null, {
-                    id:        userId,
-                    useDelete: !isCurrentUser
-                });
-                rows += this.render(["phpr.Default.template.access", "row.html"], null, {
-                    id:        userId,
-                    input:     input,
-                    checkBoxs: checkBoxs,
-                    button:    button
-                });
-            }
-        }
-
         // Template for the access tab
         var accessData = new phpr.Default.System.TemplateWrapper({
-            templateName:"phpr.Default.template.access.tab.html",
+            templateName: "phpr.Default.template.access.tab.html",
             templateData: {
                 accessUserText:     phpr.nls.get('User'),
                 accessReadText:     phpr.nls.get('Read'),
@@ -252,11 +222,17 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 accessAdminText:    phpr.nls.get('Admin'),
                 accessActionText:   phpr.nls.get('Action'),
                 accessPermissions:  (users.length > 0) ? this._accessPermissions : false,
-                users:              users,
-                rows:               rows
+                users:              users
             }
         });
+        this._accessTab = accessData;
         this.garbageCollector.addNode(accessData);
+
+        for (var id in accessContent) {
+            if (accessContent[id].userDisplay) {
+                this._addAccessTabRow(accessContent[id], currentUser);
+            }
+        }
 
         var def = this.addTab([accessData], 'tabAccess', 'Access', 'accessFormTab');
         return def.then(dojo.hitch(this, function() {
@@ -266,33 +242,105 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
             // Add "add" button for access
             if (this._accessPermissions && users.length > 0) {
-                this.addTinyButton('add', 'accessAddButton', 'newAccess');
+                this.addTinyButton('add', accessData.accessAddButton, 'newAccess');
                 this.garbageCollector.addEvent(
                     dojo.connect(dijit.byId("checkAdminAccessAdd"),
                         "onClick", dojo.hitch(this, "checkAllAccess", "Add")));
             }
-
-            if (this._accessPermissions) {
-                // Add "delete" buttons for access
-                // Add "check all" functions
-                for (var userId in accessContent) {
-                    if (accessContent[userId].userDisplay) {
-                        if (userId != currentUser && userId != 1) {
-                            this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
-
-                            this.garbageCollector.addEvent(
-                                dojo.connect(
-                                    dijit.byId("checkAdminAccess[" + userId + "]"),
-                                    "onClick",
-                                    dojo.hitch(this, "checkAllAccess", "[" + userId + "]")));
-                        }
-                    }
-                }
-            }
         }));
     },
 
-    addTinyButton: function(type, nodeId, functionName, extraParams) {
+    _deleteAccessRowForUserId: function(userId) {
+        if (this._accessRowsForUsers[userId]) {
+            this._accessRowsForUsers[userId].destroyRecursive();
+            delete this._accessRowsForUsers[userId];
+        }
+    },
+
+    _addAccessTabRow: function(accessContent, currentUser) {
+        if (!this._accessRowsForUsers) {
+            this._accessRowsForUsers = {};
+        }
+
+        var id = accessContent.userId;
+
+        var isCurrentUser = (id == phpr.currentUserId);
+        var userId        = isCurrentUser ? currentUser : id;
+
+        var accessPermission = this._accessPermissions &&
+                                userId != currentUser &&
+                                userId != 1;
+
+        if ((userId == 1 && currentUser != 1) || (!accessPermission && this._accessRowsForUsers[userId])) {
+            return;
+        }
+
+        this._deleteAccessRowForUserId(id);
+
+        var input = phpr.fillTemplate("phpr.Default.template.access.input.html", {
+            id:          userId,
+            disabled:    (!this._writePermissions) ? 'disabled="disabled"' : '',
+            userDisplay: accessContent.userDisplay,
+            currentUser: isCurrentUser
+        });
+
+        var row = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.access.row.html",
+            templateData: {
+                id: userId,
+                input: input,
+                rights: this._rights
+            }
+        });
+
+        var checkBoxes = [];
+        for (var i in this._rights) {
+            var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
+            var rightName = accessContent[this._rights[i].toLowerCase()];
+            var checkBox = new phpr.Default.System.TemplateWrapper({
+                templateName: "phpr.Default.template.access.checkbox.html",
+                templateData: {
+                    fieldId:  fieldId,
+                    checked:  rightName ? 'checked' : '',
+                    hidden:   (isCurrentUser && this._accessPermissions),
+                    value:    rightName ? 1 : 0,
+                    disabled: (!this._writePermissions) ? 'disabled="disabled"' : ''
+                }
+            });
+
+            this.garbageCollector.addNode(checkBox);
+
+            if (accessPermission && this._rights[i] === "Admin") {
+                this.garbageCollector.addEvent(
+                    dojo.connect(
+                        checkBox.checkBox,
+                        "onClick",
+                        dojo.hitch(this, "_checkAllAccessBoxesIfChecked", checkBox.checkBox, checkBoxes)));
+            }
+            row[this._rights[i]].appendChild(checkBox.domNode);
+            checkBoxes.push(checkBox);
+        }
+
+        if (accessPermission) {
+            var button = dojo.create('div');
+            this.addTinyButton('delete', button, '_deleteAccessRowForUserId', [userId]);
+            row.button.appendChild(button);
+        }
+
+        this._accessRowsForUsers[userId] = row;
+        this._accessTab.tbody.appendChild(row.domNode);
+        this.garbageCollector.addNode(row);
+    },
+
+    _checkAllAccessBoxesIfChecked: function(controlBox, checkBoxes) {
+        if (controlBox.checked) {
+            for (var idx in checkBoxes) {
+                checkBoxes[idx].checkBox.set('checked', true);
+            }
+        }
+    },
+
+    addTinyButton: function(type, node, functionName, extraParams) {
         // Summary:
         //    Add a button
         // Description:
@@ -306,7 +354,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var button = new dijit.form.Button(params);
         this.garbageCollector.addNode(button);
 
-        dojo.byId(nodeId).appendChild(button.domNode);
+        node.appendChild(button.domNode);
 
         this.garbageCollector.addEvent(
             dojo.connect(button, "onClick",
@@ -363,7 +411,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 templateName: "phpr.Default.template.form.tabs.html",
                 templateData: {
                     formId:    formId || ''
-                }});
+                }
+            });
 
             var l = innerWidgets.length;
             for (var i = 0; i < l; i++) {
@@ -402,7 +451,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             content.tabform.onSubmit = dojo.hitch(this, "_submitForm");
         }));
 
-        window.setTimeout(function() {deferred.callback()}, 0);
+        window.setTimeout(function() {
+            deferred.callback();
+        }, 0);
 
         return ret;
     },
@@ -418,7 +469,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return result;
     },
 
-    getFormData: function(items, request) {
+    getFormData: function() {
         // Summary:
         //    This function renders the form data according to the database manager settings
         // Description:
@@ -437,17 +488,18 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         this._meta = p.DataStore.getMetaData({url: this._url});
         var data   = p.DataStore.getData({url: this._url});
-        if (data.length == 0) {
+
+        if (data.length === 0) {
             this.node.set('content', p.drawEmptyMessage('The Item was not found'));
         } else {
-            var tabs               = this.getTabs();
             var firstRequiredField = null;
 
             this.setPermissions(data);
             this.presetValues(data);
             this.fieldTemplate = new p.Default.Field();
 
-            for (var i = 0; i < this._meta.length; i++) {
+            var l = this._meta.length;
+            for (var i = 0; i < l; i++) {
                 var fieldValues  = this.setFieldValues(this._meta[i], data[0]);
                 var itemtype     = fieldValues.type;
                 var itemid       = fieldValues.id;
@@ -557,15 +609,12 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this.form        = this.setFormContent();
             this.formsWidget = [];
 
-            this.node.set('content', this.form);
-
-            this.form.startup();
-
             var deferred = new dojo.Deferred();
 
             deferred.callback();
 
             var firstTab = true;
+            var tabs = this.getTabs();
             var l = tabs.length;
             for (var t = 0; t < l; t++) {
                 var tab = tabs[t];
@@ -619,6 +668,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     p.viewManager.getView().completeContent.domNode.focus();
                     dojo.byId(firstRequiredField).focus();
                 }
+
+                this.node.set('content', this.form);
+
+                this.node.resize();
 
                 this.postRenderForm();
                 this._loadIndicator.hide();
@@ -705,7 +758,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         return true;
     },
 
-    _formCallback:function() {
+    _formCallback: function() {
         phpr.viewManager.getView().completeContent.domNode.focus();
     },
 
@@ -742,8 +795,20 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         }
 
         var def = this.addAccessTab(data);
-        def = dojo.when(def, dojo.hitch(this, function() {return this.addNotificationTab(data)}))
-        def = dojo.when(def, dojo.hitch(this, function() {return this.addHistoryTab()}))
+        def = dojo.when(
+            def,
+            dojo.hitch(this, function() {
+                    return this.addNotificationTab(data);
+                }
+            )
+        );
+        def = dojo.when(
+            def,
+            dojo.hitch(this, function() {
+                    return this.addHistoryTab();
+                }
+            )
+        );
         return def;
     },
 
@@ -758,7 +823,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         if (this.id > 0 && this.useHistoryTab()) {
             var widget = new phpr.Default.System.TemplateWrapper({
-                templateName: "phpr.Default.template.history.content.html"});
+                templateName: "phpr.Default.template.history.content.html"
+            });
             this.garbageCollector.addNode(widget);
             return this.addTab([widget], 'tabHistory', 'History', 'accesshistoryTab');
         }
@@ -790,7 +856,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     return;
                 }
                 dojo.addClass('tab' + subModuleName, 'subModuleDiv');
-                subModules[index].class.fillTab('tab' + subModuleName);
+                subModules[index]['class'].fillTab('tab' + subModuleName);
             }, subModuleName));
         }
         this.form.resize();
@@ -852,68 +918,24 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    Add a the row of one user-accees
         //    with the values selected on the first row
-        var userId = dijit.byId("dataAccessAdd").get('value');
-        if (!dojo.byId("trAccessFor" + userId) && userId > 0) {
-            phpr.destroyWidget("dataAccess[" + userId + "]");
-            for (var i in this._rights) {
-                var fieldId = 'check' + this._rights[i] + 'Access[' + userId + ']';
-                phpr.destroyWidget(fieldId);
-            }
-            phpr.destroyWidget("accessDeleteButton" + userId);
+        var userId = this._accessTab.dataAccessAdd.get('value');
+        var data = {
+            userId:          userId,
+            disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
+            userDisplay: this._accessTab.dataAccessAdd.get('displayedValue'),
+            currentUser: false
+        };
 
-            var table = dojo.byId("accessTable");
-            var row   = table.insertRow(table.rows.length);
-            row.id    = "trAccessFor" + userId;
-
-            var cellIndex = 0;
-
-            // Input
-            var cell  = row.insertCell(cellIndex);
-            var input = this.render(["phpr.Default.template.access", "input.html"], null, {
-                id:          userId,
-                disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
-                userDisplay: dijit.byId("dataAccessAdd").get('displayedValue'),
-                currentUser: false
-            });
-            cell.innerHTML = input;
-            this.garbageCollector.addNode(cell);
-            cellIndex++;
-
-            // CheckBoxs
-            for (var i in this._rights) {
-                var cell       = row.insertCell(cellIndex);
-                var fieldId    = 'check' + this._rights[i] + 'Access[' + userId + ']';
-                var fieldAddId = 'check' + this._rights[i] + 'AccessAdd';
-                var checkBox   = this.render(["phpr.Default.template.access", "checkbox.html"], null, {
-                    fieldId:  fieldId,
-                    checked:  dijit.byId(fieldAddId).checked ? 'checked' : '',
-                    hidden:   false,
-                    value:    1,
-                    disabled: ''
-                });
-                cell.innerHTML = checkBox;
-                this.garbageCollector.addNode(cell);
-                cellIndex++;
-            }
-
-            // Delete Button
-            var cell   = row.insertCell(cellIndex);
-            var button = this.render(["phpr.Default.template.access", "button.html"], null, {
-                id:        userId,
-                useDelete: true
-            });
-            cell.innerHTML = button;
-            this.garbageCollector.addNode(cell);
-            cellIndex++;
-
-            dojo.parser.parse(row);
-
-            this.addTinyButton('delete', 'accessDeleteButton' + userId, 'deleteAccess', [userId]);
-            this.garbageCollector.addEvent(
-                dojo.connect(dijit.byId("checkAdminAccess[" + userId + "]"),
-                    "onClick",
-                    dojo.hitch(this, "checkAllAccess", "[" + userId + "]")));
+        if (!data.userDisplay) {
+            return;
         }
+
+        for (var i in this._rights) {
+            var fieldAddId = 'check' + this._rights[i] + 'AccessAdd';
+            data[this._rights[i].toLowerCase()] = this._accessTab[fieldAddId].checked;
+        }
+
+        this._addAccessTabRow(data, phpr.currentUserId);
     },
 
     deleteAccess: function(userId) {
@@ -982,8 +1004,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Event handler for submit events
         // Description:
         //    Triggers submitForm and prevents the event from bubbeling upwards
+        var ret;
         if (!this.isSubmitInProgress()) {
-            var ret = this.submitForm(evt);
+            ret = this.submitForm(evt);
         }
         dojo.stopEvent(evt);
         return ret || false;
@@ -1426,12 +1449,12 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
         this.garbageCollector.addEvent(
             dojo.connect(this.dialog, "onHide",
                 dojo.hitch(this, function() {
-                    phpr.pageManager.modifyCurrentState(
-                        {
+                    phpr.pageManager.modifyCurrentState({
                             id: undefined
                         }, {
                             noAction: true
-                    });
+                        }
+                    );
                 })));
     },
 
