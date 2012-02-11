@@ -1,6 +1,8 @@
+let s:nodecs_command='node ' . expand("<sfile>:p:h") . '/hintcli.js '
+
 function! RunNodecs()
     let l:filename=@%
-    let l:nodecs_output=system('node ~/git/PHProjekt/jshint/hintcli.js '.l:filename)
+    let l:nodecs_output=system(s:nodecs_command . l:filename)
     let l:nodecs_list=split(l:nodecs_output, "\n")
     cexpr l:nodecs_list
     cwindow
