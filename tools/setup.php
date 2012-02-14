@@ -9,7 +9,7 @@
 $url        = 'http://phprojekt.local';
 $adminpw    = 'a';
 $testpw     = 'q';
-$privateDir =  '../phprojekt/phprojekt_private/';
+$privateDir =  '/phprojekt_private/';
 
 /////////////////////////////////////////////////////////
 // No modification beyond this point should be neccessary
@@ -27,6 +27,7 @@ $client->request(
         'dbHost'     => 'localhost',
         'dbName'     => 'phprojekt',
         'dbPass'     => '',
+        'dbPort'     => 3306,
         'dbUser'     => 'phprojekt',
         'serverType' => 'pdo_mysql'
     )
@@ -48,7 +49,7 @@ $client->request(
     $url . '/setup.php/index/jsonFoldersSetup',
     array(
         'confirmationCheck' => '0',
-        'privateDir' => dirname(__FILE__) . '/' . $privateDir
+        'privateDir' => realpath(dirname(__FILE__) . '/../phprojekt') . $privateDir
     )
 );
 $client->request('POST', $url . '/setup.php/index/jsonTablesForm');
