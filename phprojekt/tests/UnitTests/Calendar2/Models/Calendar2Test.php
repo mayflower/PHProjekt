@@ -90,7 +90,6 @@ HERE;
 
         $event = new Calendar2_Models_Calendar2();
         $event = $event->fetchByUid('693F6D66-92C6-47B8-8E97-C799B758FAE4');
-        error_log(var_export(Phprojekt::getInstance()->getDb()->select()->from('calendar2')->query()->fetchAll()), true);
 
         $this->assertEquals(1, count($event), 'Too many events returned by fetchByUid');
         $event = $event[0];

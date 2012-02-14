@@ -81,7 +81,8 @@ class Calendar2_IndexController_Test extends FrontInit
 
     }
 
-    private function _setTimezone($offset) {
+    private function _setTimezone($offset)
+    {
         $this->request = new Zend_Controller_Request_Http();
         $this->setRequestUrl('Core/setting/jsonSave/nodeId/1/moduleName/User');
         $this->request->setParam('confirmValue', '');

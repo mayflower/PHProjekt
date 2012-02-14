@@ -160,7 +160,7 @@ class Calendar2_Helper_Rrule
 
 
         foreach ($datePeriods as $period) {
-            foreach ($period as $date){
+            foreach ($period as $date) {
                 // Work around http://bugs.php.net/bug.php?id=52454
                 // 'Relative dates and getTimestamp increments by one day'
                 $datestring = $date->format('Y-m-d H:i:s');

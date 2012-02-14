@@ -43,7 +43,7 @@
 class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
 {
     /** The helper object to tests */
-    private $helper;
+    private $_helper;
 
     public function setUp()
     {
@@ -56,14 +56,14 @@ class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
             new Datetime('2010-10-15 08:00:00 UTC')
         );
 
-        $this->helper = new Calendar2_Helper_Rrule($first, $duration, $rrule, $except);
+        $this->_helper = new Calendar2_Helper_Rrule($first, $duration, $rrule, $except);
     }
 
     public function testGetDatesInPeriod()
     {
         $start  = new Datetime('2010-10-11 08:00:00 UTC');
         $end    = new Datetime('2010-10-17 08:00:00 UTC');
-        $actual = $this->helper->getDatesInPeriod($start, $end);
+        $actual = $this->_helper->getDatesInPeriod($start, $end);
 
         $expected = array(
             new Datetime('2010-10-11 08:00:00 UTC'),
@@ -92,14 +92,14 @@ class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
 
         foreach ($contained as $date) {
             $this->assertTrue(
-                $this->helper->containsDate($date),
+                $this->_helper->containsDate($date),
                 'Failed asserting that the helper contains ' . $date->format('Y-m-d H:i:s')
             );
         }
 
-        foreach ($notContained as $date){
+        foreach ($notContained as $date) {
             $this->assertFalse(
-                $this->helper->containsDate($date),
+                $this->_helper->containsDate($date),
                 'Failed asserting that the helper does not contain ' . $date->format('Y-m-d H:i:s')
             );
         }
@@ -107,7 +107,7 @@ class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
 
     public function testSplitRrule()
     {
-        $split = $this->helper->splitRrule(
+        $split = $this->_helper->splitRrule(
             new Datetime('2010-10-28 08:00:00 UTC')
         );
 
@@ -124,26 +124,26 @@ class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
     public function testIsLastOcurrence()
     {
         $last = new Datetime('2010-11-14 08:00:00 UTC');
-        $this->assertTrue($this->helper->isLastOccurrence($last));
+        $this->assertTrue($this->_helper->isLastOccurrence($last));
     }
 
     public function testIsFirstOccurrence()
     {
         $first = new Datetime('2010-10-09 08:00:00 UTC');
-        $this->assertTrue($this->helper->isFirstOccurrence($first));
+        $this->assertTrue($this->_helper->isFirstOccurrence($first));
     }
 
     public function testFirstOccurrenceAfter()
     {
         $datetime = new Datetime('2010-11-02 08:00:00 UTC');
         $expected = new Datetime('2010-11-03 08:00:00 UTC');
-        $actual   = $this->helper->firstOccurrenceAfter($datetime);
+        $actual   = $this->_helper->firstOccurrenceAfter($datetime);
         $this->assertEquals($expected, $actual);
 
         // Now with an excluded date in between
         $datetime = new Datetime('2010-10-11 08:00:00 UTC');
         $expected = new Datetime('2010-10-13 08:00:00 UTC');
-        $actual   = $this->helper->firstOccurrenceAfter($datetime);
+        $actual   = $this->_helper->firstOccurrenceAfter($datetime);
         $this->assertEquals($expected, $actual);
     }
 
@@ -151,19 +151,19 @@ class Calendar2_Helper_Rrule_Test extends PHPUnit_Framework_TestCase
     {
         $datetime = new Datetime('2010-11-02 08:00:00 UTC');
         $expected = new Datetime('2010-11-01 08:00:00 UTC');
-        $actual   = $this->helper->lastOccurrenceBefore($datetime);
+        $actual   = $this->_helper->lastOccurrenceBefore($datetime);
         $this->assertEquals($expected, $actual);
 
         // Now with an excluded date in between
         $datetime = new Datetime('2010-10-13 08:00:00 UTC');
         $expected = new Datetime('2010-10-11 08:00:00 UTC');
-        $actual   = $this->helper->lastOccurrenceBefore($datetime);
+        $actual   = $this->_helper->lastOccurrenceBefore($datetime);
         $this->assertEquals($expected, $actual);
     }
 
     public function testGetHumanReadableRrule()
     {
-        $actual   = $this->helper->getHumanReadableRrule();
+        $actual   = $this->_helper->getHumanReadableRrule();
         $expected = 'Every day until 2010-11-14';
         $this->assertEquals($expected, $actual);
     }
