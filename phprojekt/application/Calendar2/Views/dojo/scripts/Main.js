@@ -590,6 +590,14 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
 
         phpr.viewManager.getView().subModuleNavigation.set('content', this._navigation);
+
+        this.addProxyDropDown();
+        this._navigation.onSelectChild(selectedEntry);
+    },
+
+    addProxyDropDown: function() {
+        // Summary:
+        //  Adds the proxy dropdown button to the navigation bar
         var dropDown = dojo.place(
             phpr.fillTemplate("phpr.Calendar2.template.proxyDropDown.html",
                 {
@@ -601,8 +609,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         );
 
         dojo.parser.parse(dropDown);
-
-        this._navigation.onSelectChild(selectedEntry);
     },
 
     addModuleView: function(moduleViews, label, functionName, activeTab) {
