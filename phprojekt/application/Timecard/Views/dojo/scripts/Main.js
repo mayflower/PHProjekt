@@ -46,7 +46,7 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
     },
 
     _onDataLoaded: function(data) {
-        this._data = data[0][1];
+        this._data = data[0][1].data;
         this._metaData = phpr.DataStore.getMetaData({url: this._detailsUrl});
         this._runningBooking = null;
 
@@ -300,8 +300,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
                     dojo.connect(this._menuButton.dropDown, "onOpen", this._bookingStore,
                         function (evt) {
                             if (!this.hasRunningBooking()) {
-                                this.startWorking();
                                 dijit.popup.close(that._menuButton.dropDown.currentPopup);
+                                this.startWorking();
                             }
                         }));
                 dojo.removeClass(this._menuButton.focusNode, "runningBooking");
