@@ -136,6 +136,27 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 }
             }
 
+            if (!empty($data['startDatetime'])) {
+                $overlaps  = $this->_hasOverlappingTime();
+                if ($this->id != 0 && $overlaps) {
+                    // Stop Working Times button pressed, or it is being saved an existing period
+                    // Check if end time overlaps any existing period but the current one
+                    $this->_validate->error->addError(array(
+                        'field'   => 'Time period',
+                        'label'   => Phprojekt::getInstance()->translate('Time period'),
+                        'message' => Phprojekt::getInstance()->translate('Can not End Working Time because this'
+                        . ' moment is occupied by an existing period')));
+                    return false;
+                } else if ($overlaps && $this->id == 0) {
+                    $this->_validate->error->addError(array(
+                        'field'   => 'Time period',
+                        'label'   => Phprojekt::getInstance()->translate('Time period'),
+                        'message' => Phprojekt::getInstance()->translate('Can not save it because it overlaps '
+                            . 'existing one')));
+                    return false;
+                }
+            }
+
             if (!isset($data['endTime'])) {
                 // Start Hours button pressed - Check if new start time overlaps any existing period
                 if ($this->_hasOverlappingTime()) {
@@ -188,32 +209,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     'label'   => Phprojekt::getInstance()->translate('Hours'),
                     'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
                 return false;
-            }
-
-            if (!empty($data['startDatetime'])) {
-                $startTime = str_replace(":", "", substr($data['startDatetime'], 11));
-                if (strlen($startTime) == 6) {
-                    $startTime = substr($startTime, 0, 4);
-                }
-                $startTime = (int) $startTime;
-                $overlaps  = $this->_hasOverlappingTime();
-                if ($this->id != 0 && $overlaps) {
-                    // Stop Working Times button pressed, or it is being saved an existing period
-                    // Check if end time overlaps any existing period but the current one
-                    $this->_validate->error->addError(array(
-                        'field'   => 'Time period',
-                        'label'   => Phprojekt::getInstance()->translate('Time period'),
-                        'message' => Phprojekt::getInstance()->translate('Can not End Working Time because this'
-                        . ' moment is occupied by an existing period')));
-                    return false;
-                } else if ($overlaps && $this->id == 0) {
-                    $this->_validate->error->addError(array(
-                        'field'   => 'Time period',
-                        'label'   => Phprojekt::getInstance()->translate('Time period'),
-                        'message' => Phprojekt::getInstance()->translate('Can not save it because it overlaps '
-                            . 'existing one')));
-                    return false;
-                }
             }
         }
 
