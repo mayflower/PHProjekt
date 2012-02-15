@@ -189,6 +189,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
                 this.loadMonthList();
                 break;
             default:
+                throw new Exception("Unknown action in state");
         }
     },
 
