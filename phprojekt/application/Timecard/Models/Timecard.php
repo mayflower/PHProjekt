@@ -234,23 +234,20 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $select->where("id != ?", $this->id);
         }
 
+        $binding = array('startTime' => $startTime);
+
         if (null !== $this->endTime) {
-            $select->where("(TIME(start_datetime) <= ? AND end_time > ?) "
-                    . " OR (TIME(start_datetime) < ? AND end_time >= ?) "
-                    . " OR (TIME(start_datetime) <= ? AND end_time >= ?) "
-                    . " OR (TIME(start_datetime) >= ? AND end_time <= ?)",
-                    $startTime, $startTime,
-                    $this->endTime, $this->endTime,
-                    $startTime, $this->endTime,
-                    $startTime, $this->endTime);
+            $select->where("(TIME(start_datetime) <= :startTime AND end_time > :startTime) "
+                    . " OR (TIME(start_datetime) < :endTime AND end_time >= :endTime) "
+                    . " OR (TIME(start_datetime) <= :startTime AND end_time >= :endTime) "
+                    . " OR (TIME(start_datetime) >= :startTime AND end_time <= :endTime)");
+            $binding['endTime'] = $this->endTime;
         } else {
-            $select->where("(TIME(start_datetime) <= ? AND end_time > ? )"
-                    . " OR (TIME(start_datetime) <= ? AND end_time IS NULL)",
-                    $startTime, $startTime,
-                    $startTime);
+            $select->where("(TIME(start_datetime) <= :startTime AND end_time > :startTime )"
+                    . " OR (TIME(start_datetime) <= :startTime AND end_time IS NULL)");
         }
 
-        $ret = $select->query()->fetchColumn();
+        $ret = $select->query(null, $binding)->fetchColumn();
 
         return $ret != "0";
     }
