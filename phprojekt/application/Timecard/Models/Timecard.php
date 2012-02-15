@@ -434,6 +434,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $select = $db->select();
         $select->from("timecard")
             ->where("owner_id = ?", $ownerId)
+            ->where("end_time IS NULL")
             ->where("YEAR(start_datetime) = ?", $year)
             ->where("MONTH(start_datetime) = ?", $month)
             ->where("DAY(start_datetime) = ?", $date)
