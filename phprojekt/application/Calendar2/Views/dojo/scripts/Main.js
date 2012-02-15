@@ -567,9 +567,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.addModuleView(moduleViews, phpr.nls.get('Day'), 'dayViewClick', this.isListActive('dayList'));
         this.addModuleView(moduleViews, phpr.nls.get('Week'), 'weekViewClick', this.isListActive(this.weekList));
         this.addModuleView(moduleViews, phpr.nls.get('Month'), 'monthViewClick', this.isListActive(this.monthList));
-        if (this.isListActive('dayList')) {
-            this.addModuleView(moduleViews, phpr.nls.get('Selection'), 'userSelectionClick', this._usersSelectionMode);
-        }
+        this.addModuleView(moduleViews, phpr.nls.get('Selection'), 'userSelectionClick', this._usersSelectionMode);
 
         this._navigation = new phpr.Default.System.TabController({ });
         var selectedEntry;
