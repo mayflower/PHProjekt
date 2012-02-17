@@ -48,20 +48,6 @@
     ?>
     <script type="text/javascript">
         // This variable is needed to be able to clear an existing interval.
-        var interval;
-
-        dojo.addOnLoad(function() {
-            window.getFrontendMessage = function() {
-            <?php if ($this->frontendMsg) { ?>
-                    var pollingLoop = <?php echo $this->pollingLoop; ?>;
-                    interval = setInterval(dojo.hitch(this, function() {
-                        phpr.frontendMessage.getFrontendMessage();
-                        }), pollingLoop);
-            <?php } else { ?>
-                    return;
-            <?php } ?>
-        }});
-
         dojo.addOnLoad(function() {
             <?php
             if (true !== $this->isLoggedIn) {
@@ -73,20 +59,10 @@
                     echo 'window.location.hash';
                 }
                 ?>;
-            <?php
-            }
-            ?>
-            <?php
-            if (true !== $this->isLoggedIn) {
-            ?>
                 dojo.byId('username').focus();
                 dojo.byId('username').select();
             <?php
             } else {
-            ?>
-                getFrontendMessage();
-
-            <?php
             }
             ?>
         });
@@ -99,6 +75,13 @@
     <script type="text/javascript">
         dojo.addOnLoad(function() {
             var main = new phpr.Main("<?php echo $this->webpath; ?>", 1, '<?php echo $this->language; ?>');
+            <?php
+            if ($this->frontendMsg) {
+            ?>
+                phpr.frontendMessage.startLoop(<?php echo $this->pollingLoop; ?>);
+            <?php
+            }
+            ?>
         });
     </script>
     <?php
