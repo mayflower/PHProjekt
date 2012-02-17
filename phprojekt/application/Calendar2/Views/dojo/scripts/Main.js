@@ -392,61 +392,22 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
             var startDateIsToday = false;
             var endTime          = null;
 
-            if (startTime == undefined) {
-                if (startDate == undefined) {
-                    startDateIsToday = true;
-                } else {
-                    // The selected day is today?
-                    todayStart = new Date();
-                    todayStart.setHours(0, 0, 0, 0);
-                    startDate_Date = dojo.date.stamp.fromISOString(startDate);
-                    if (dojo.date.compare(todayStart, startDate_Date) == 0) {
-                        startDateIsToday = true;
-                    }
-                }
-
-                if (startDateIsToday) {
-                    var startHour = today.getHours();
-                    if (today.getMinutes() != 0) {
-                        startHour ++;
-                    }
-                    if (startHour < 8) {
-                        startHour = 8;
-                    }
-                    if (startHour > 17) {
-                        startHour = 8;
-                        addDay    = true;
-                    }
-                } else {
-                    startHour = 8;
-                }
-
-                startTime = dojo.number.format(startHour, {pattern: '00'}) + ':' + '00';
-                endTime   = dojo.number.format(startHour + 1, {pattern: '00'}) + ':' + '00';
+            var startDatetime = new Date();
+            if (startDate !== undefined) {
+                startDatetime = phpr.date.isoDatetimeTojsDate(startDate);
+            }
+            if (startTime === undefined) {
+                startDatetime.setHours(8, 0, 0, 0);
             } else {
-                // Generate the End Time, 1 hour after Start Time
-                var temp          = startTime.split(':');
-                var startHour     = parseInt(temp[0], 10);
-                var startMinutes  = parseInt(temp[1], 10);
-                startHour        += 1;
-                endTime = dojo.number.format(startHour, {pattern: '00'}) + ':'
-                    + dojo.number.format(startMinutes, {pattern: '00'});
+                var st = phpr.date.isoTimeTojsDate(startTime);
+                startDatetime.setHours(st.getHours(), st.getMinutes());
             }
 
-            if (startDate != undefined) {
-                startDate = dojo.date.stamp.fromISOString(startDate);
-                if (addDay) {
-                    startDate = dojo.date.add(startDate, 'day', 1);
-                }
-            } else {
-                if (addDay) {
-                    startDate = dojo.date.add(today, 'day', 1);
-                } else {
-                    startDate = today;
-                }
-            }
-            params['start'] = phpr.date.getIsoDatetime(startDate, startTime);
-            params['end']   = phpr.date.getIsoDatetime(startDate, endTime);
+            var endDatetime = new Date(startDatetime);
+            endDatetime.setHours(endDatetime.getHours() + 1);
+
+            params.start = phpr.date.getIsoDatetime(startDatetime, startDatetime);
+            params.end   = phpr.date.getIsoDatetime(endDatetime, endDatetime);
         }
 
         params.recurrenceId = recurrenceId || 0;
