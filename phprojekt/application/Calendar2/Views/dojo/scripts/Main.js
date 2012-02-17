@@ -189,6 +189,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
                 this.loadMonthList();
                 break;
             default:
+                throw new Exception("Unknown action in state");
         }
     },
 
@@ -527,9 +528,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.addModuleView(moduleViews, phpr.nls.get('Day'), 'dayViewClick', this.isListActive('dayList'));
         this.addModuleView(moduleViews, phpr.nls.get('Week'), 'weekViewClick', this.isListActive(this.weekList));
         this.addModuleView(moduleViews, phpr.nls.get('Month'), 'monthViewClick', this.isListActive(this.monthList));
-        if (this.isListActive('dayList')) {
-            this.addModuleView(moduleViews, phpr.nls.get('Selection'), 'userSelectionClick', this._usersSelectionMode);
-        }
+        this.addModuleView(moduleViews, phpr.nls.get('Selection'), 'userSelectionClick', this._usersSelectionMode);
 
         this._navigation = new phpr.Default.System.TabController({ });
         var selectedEntry;
@@ -552,6 +551,14 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
 
         phpr.viewManager.getView().subModuleNavigation.set('content', this._navigation);
+
+        this.addProxyDropDown();
+        this._navigation.onSelectChild(selectedEntry);
+    },
+
+    addProxyDropDown: function() {
+        // Summary:
+        //  Adds the proxy dropdown button to the navigation bar
         var dropDown = dojo.place(
             phpr.fillTemplate("phpr.Calendar2.template.proxyDropDown.html",
                 {
@@ -563,8 +570,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         );
 
         dojo.parser.parse(dropDown);
-
-        this._navigation.onSelectChild(selectedEntry);
     },
 
     addModuleView: function(moduleViews, label, functionName, activeTab) {
