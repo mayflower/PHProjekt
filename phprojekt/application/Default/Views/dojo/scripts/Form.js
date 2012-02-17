@@ -498,13 +498,14 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             this.presetValues(data);
             this.fieldTemplate = new p.Default.Field();
 
+            var itemdisabled = !this._writePermissions;
+
             var l = this._meta.length;
             for (var i = 0; i < l; i++) {
                 var fieldValues  = this.setFieldValues(this._meta[i], data[0]);
                 var itemtype     = fieldValues.type;
                 var itemid       = fieldValues.id;
                 var itemlabel    = fieldValues.label;
-                var itemdisabled = fieldValues.disabled;
                 var itemrequired = fieldValues.required;
                 var itemlabel    = fieldValues.label;
                 var itemvalue    = fieldValues.value;
@@ -1140,7 +1141,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Draw the tags
         this.publish("drawTagsBox", [currentTags]);
 
-        return this.fieldTemplate.textFieldRender(meta[0].label, meta[0].key, value, 0, false, false);
+        return this.fieldTemplate.textFieldRender(meta[0].label, meta[0].key, value, 0, false, !this._writePermissions);
     },
 
     showHistory: function() {
