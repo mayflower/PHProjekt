@@ -52,7 +52,7 @@ class Core_SettingController extends Core_IndexController
      */
     public function jsonGetModulesAction()
     {
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $data    = $setting->getModules();
 
         Phprojekt_Converter_Json::echoConvert($data);
@@ -80,7 +80,7 @@ class Core_SettingController extends Core_IndexController
         $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
         $moduleId = (int) Phprojekt_Module::getId($module);
 
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule($module);
         $metadata = $setting->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $records  = $setting->getList($moduleId, $metadata);
@@ -118,7 +118,7 @@ class Core_SettingController extends Core_IndexController
         $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', null));
         $this->setCurrentProjectId();
 
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule($module);
 
         $message = $setting->validateSettings($this->getRequest()->getParams());

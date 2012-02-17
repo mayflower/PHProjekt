@@ -22,7 +22,6 @@
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests Filemanager Model class

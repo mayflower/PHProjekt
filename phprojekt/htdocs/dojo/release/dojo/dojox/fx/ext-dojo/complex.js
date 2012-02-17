@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.fx.ext-dojo.complex"]||(dojo._hasResource["dojox.fx.ext-dojo.complex"]=!0,dojo.provide("dojox.fx.ext-dojo.complex"),function(){var a=dojo.animateProperty;dojo.animateProperty=function(b){var c=dojo,d=a(b);dojo.connect(d,"beforeBegin",function(){d.curve.getValue=function(a){var b={},d;for(d in this._properties){var e=this._properties[d],f=e.start;f instanceof c.Color?b[d]=c.blendColors(f,e.end,a,e.tempColor).toCss():f instanceof dojox.fx._Complex?b[d]=f.getValue(a):c.isArray(f)||
+(b[d]=(e.end-f)*a+f+(d!="opacity"?e.units||"px":0))}return b};for(var a in this.properties){var b=this.properties[a];if(typeof b.start=="string"&&/\(/.test(b.start))this.curve._properties[a].start=new dojox.fx._Complex(b)}});return d}}(),dojo.declare("dojox.fx._Complex",null,{PROP:/\([+-]?[\w|,|#|\.|\s]*\)/g,constructor:function(a){var b=a.start.match(this.PROP),c=a.end.match(this.PROP),b=dojo.map(b,this.getProps,this),d=dojo.map(c,this.getProps,this);this._properties={};this.strProp=a.start;dojo.forEach(b,
+function(a,b){dojo.forEach(a,function(a,c){this.strProp=this.strProp.replace(a,"PROP_"+b+""+c);this._properties["PROP_"+b+""+c]=this.makePropObject(a,d[b][c])},this)},this)},getValue:function(a){var b=this.strProp,c,d;for(d in this._properties){var e;c=this._properties[d];c.units=="isColor"?(e=dojo.blendColors(c.beg,c.end,a).toCss(!1),c=""):(e=(c.end-c.beg)*a+c.beg,c=c.units);b=b.replace(d,e+c)}return b},makePropObject:function(a,b){var c=this.getNumAndUnits(a),d=this.getNumAndUnits(b);return{beg:c.num,
+end:d.num,units:c.units}},getProps:function(a){a=a.substring(1,a.length-1);/,/.test(a)?(a=a.replace(/\s/g,""),a=a.split(",")):(a=a.replace(/\s{2,}/g," "),a=a.split(" "));return a},getNumAndUnits:function(a){if(!a)return{};if(/#/.test(a))return{num:new dojo.Color(a),units:"isColor"};var b={num:parseFloat(/-*[\d\.\d|\d]{1,}/.exec(a).join(""))};b.units=/[a-z]{1,}/.exec(a);b.units=b.units&&b.units.length?b.units.join(""):"";return b}}));

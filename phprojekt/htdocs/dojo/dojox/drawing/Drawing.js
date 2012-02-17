@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.Drawing"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.Drawing"] = true;
 dojo.provide("dojox.drawing.Drawing");
 
 (function(){
@@ -37,7 +28,7 @@ dojo.provide("dojox.drawing.Drawing");
 		//			Like Drawing, Toolbar is a psudeo Dijit that does not need Dijit. It is
 		//			optional. It can be oriented horizontal or vertical by placing one of
 		//			those params in the class (at least one is required).  Plugins
-		//			can be added in markup. A drawingId is required to point toolbar to 
+		//			can be added in markup. A drawingId is required to point toolbar to
 		//			the drawing.
 		//		- defaults
 		//			Contains the default styles and dimensions for Stencils. An individual
@@ -76,7 +67,7 @@ dojo.provide("dojox.drawing.Drawing");
 		//
 		// example:
 		//		|	<div dojoType="dojox.drawing.Drawing" id="drawing" defaults="myCustom.defaults"
-		//		|		plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{gap:100}}]">   
+		//		|		plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{gap:100}}]">
 		//		|   </div>
 		//
 		//	example:
@@ -207,7 +198,7 @@ dojo.provide("dojox.drawing.Drawing");
 				height:box.h+"px"
 			});
 			if(!this.canvas){
-				this._createCanvas();		
+				this._createCanvas();
 			}else if(box){
 				this.canvas.resize(box.w, box.h);
 			}
@@ -223,7 +214,7 @@ dojo.provide("dojox.drawing.Drawing");
 			//		a new Stencil. Mostly internal, but could be used.
 			//
 			var surface = data.stencilType;
-			var ui = this.mode=="ui" || mode=="ui"; 
+			var ui = this.mode=="ui" || mode=="ui";
 			return dojo.mixin({
 				container: ui && !surface ? this.canvas.overlay.createGroup() : this.canvas.surface.createGroup(),
 				util:this.util,
@@ -241,7 +232,7 @@ dojo.provide("dojox.drawing.Drawing");
 			//		to be parsed
 			this.plugins.push(plugin);
 			if(this.canvas.surfaceReady){
-				this.initPlugins();		
+				this.initPlugins();
 			}
 		},
 		
@@ -307,7 +298,7 @@ dojo.provide("dojox.drawing.Drawing");
 				}
 			}
 			dojo.forEach(this.plugins, function(p){
-				p.onSurfaceReady && p.onSurfaceReady();	
+				p.onSurfaceReady && p.onSurfaceReady();
 			});
 		
 		},
@@ -429,10 +420,10 @@ dojo.provide("dojox.drawing.Drawing");
 			//		to the drawing.
 			dojo.forEach(objects, function(m){
 				this.addStencil(m.type, m);
-			}, this);	
+			}, this);
 		},
 		
-		changeDefaults: function(/*Object*/newStyle){
+		changeDefaults: function(/*Object*/newStyle,/*boolean*/value){
 			// summary:
 			//		Change the defaults so that all Stencils from this
 			// 		point on will use the newly changed style.
@@ -441,8 +432,11 @@ dojo.provide("dojox.drawing.Drawing");
 			//			An object that represents one of the objects in
 			//			drawing.style that will be mixed in. Not all
 			//			properties are necessary. Only one object may
-			//			be changed at a time. Non-objects like angleSnap
-			//			cannot be changed in this manner.
+			//			be changed at a time. The object boolean parameter
+			//			is not required and if not set objects will automatically
+			//			be changed.
+			//			Changing non-objects like angleSnap requires value
+			//			to be true.
 			// example:
 			//		|	myDrawing.changeDefaults({
 			//		|		norm:{
@@ -452,14 +446,24 @@ dojo.provide("dojox.drawing.Drawing");
 			//		|		}
 			//		|	});
 			//
-			for(var nm in newStyle){
-				for(var n in newStyle[nm]){
-					console.log("  copy", nm, n, " to: ", newStyle[nm][n]);
-					this.defaults[nm][n] = newStyle[nm][n];
+			//console.log("----->>> changeDefault: ",newStyle, " value?: ",value);
+			if(value!=undefined && value){
+				for(var nm in newStyle){
+					this.defaults[nm] = newStyle[nm];
+				}
+			}else{
+				for(var nm in newStyle){
+					for(var n in newStyle[nm]){
+						//console.log("  copy", nm, n, " to: ", newStyle[nm][n]);
+						this.defaults[nm][n] = newStyle[nm][n];
+					}
 				}
 			}
-			this.unSetTool();
-			this.setTool(this.currentType);
+			
+			if(this.currentStencil!=undefined && (!this.currentStencil.created || this.defaults.clickMode)){
+				this.unSetTool();
+				this.setTool(this.currentType);
+			}
 		},
 		
 		onRenderStencil: function(/* Object */stencil){
@@ -471,10 +475,10 @@ dojo.provide("dojox.drawing.Drawing");
 			
 			this.stencils.register(stencil);
 			this.unSetTool();
-			if(!this.defaults.clickMode){ 
+			if(!this.defaults.clickMode){
 				this.setTool(this.currentType);
 			}else{
-				if(this.defaults.clickMode){ this.defaults.clickable = true; }
+				this.defaults.clickable = true;
 			}
 		},
 		
@@ -482,7 +486,7 @@ dojo.provide("dojox.drawing.Drawing");
 			// summary:
 			//		Event fired from a stencil that has destroyed itself
 			//	 	will also be called when it is removed by "removeStencil"
-			//	 	or stencils.onDelete. 
+			//	 	or stencils.onDelete.
 			//
 			this.stencils.unregister(stencil);
 		},
@@ -544,12 +548,10 @@ dojo.provide("dojox.drawing.Drawing");
 			// summary:
 			//		Destroys current tool
 			if(!this.currentStencil.created){
-				this.currentStencil.destroy();	
+				this.currentStencil.destroy();
 			}
 			
 		}
 	});
 	
 })();
-
-}

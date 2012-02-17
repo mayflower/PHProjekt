@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.stencil.Rect"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.stencil.Rect"] = true;
 dojo.provide("dojox.drawing.stencil.Rect");
 
 
@@ -87,7 +78,5 @@ dojox.drawing.stencil.Rect = dojox.drawing.util.oo.declare(
 );
 
 dojox.drawing.register({
-	name:"dojox.drawing.stencil.Rect"	
+	name:"dojox.drawing.stencil.Rect"
 }, "stencil");
-
-}

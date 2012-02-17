@@ -1,18 +1,9 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.xmpp.widget.ChatSession"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.xmpp.widget.ChatSession"] = true;
 dojo.provide("dojox.xmpp.widget.ChatSession");
 dojo.declare("dojox.xmpp.widget.ChatSession",
 	[dijit.layout.LayoutContainer, dijit._Templated],
 	{
-			templateString: dojo.cache("dojox.xmpp.widget", "templates/ChatSession.html", "<div>\r\n<div dojoAttachPoint=\"messages\" dojoType=\"dijit.layout.ContentPane\" layoutAlign=\"client\" style=\"overflow:auto\">\r\n</div>\r\n<div dojoType=\"dijit.layout.ContentPane\" layoutAlign=\"bottom\" style=\"border-top: 2px solid #333333; height: 35px;\"><input dojoAttachPoint=\"chatInput\" dojoAttachEvent=\"onkeypress: onKeyPress\" style=\"width: 100%;height: 35px;\" /></div>\r\n</div>\r\n"),
-			enableSubWidgets: true, 
+			templateString: dojo.cache("dojox.xmpp.widget", "templates/ChatSession.html"),
+			enableSubWidgets: true,
 			widgetsInTemplate: true,
 			
 			widgetType: "ChatSession",
@@ -45,5 +36,3 @@ dojo.declare("dojox.xmpp.widget.ChatSession",
 				}
 			}
 });
-
-}

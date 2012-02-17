@@ -1,17 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.WikipediaStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.WikipediaStore"] = true;
-dojo.provide("dojox.data.WikipediaStore");
-
-dojo.require("dojo.io.script");
-dojo.require("dojox.rpc.Service");
-dojo.require("dojox.data.ServiceStore");
+define("dojox/data/WikipediaStore", ["dojo", "dojox", "dojo/io/script", "dojox/rpc/Service", "dojox/data/ServiceStore"], function(dojo, dojox) {
 
 dojo.experimental("dojox.data.WikipediaStore");
 
@@ -122,5 +109,7 @@ dojo.declare("dojox.data.WikipediaStore", dojox.data.ServiceStore,{
 	}
 });
 
+return dojox.data.WikipediaStore;
 
-}
+});
+

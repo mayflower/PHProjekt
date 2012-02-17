@@ -1,17 +1,8 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+// AMD-ID "dojox/encoding/crypto/RSAKey"
+define(["dojo", "dojox", "dojox/math/BigInteger", "dojox/math/random/Simple"], function(dojo, dojox) {
 
-
-if(!dojo._hasResource["dojox.encoding.crypto.RSAKey"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.encoding.crypto.RSAKey"] = true;
-dojo.provide("dojox.encoding.crypto.RSAKey");
 dojo.experimental("dojox.encoding.crypto.RSAKey");
 
-dojo.require("dojox.math.BigInteger");
-dojo.require("dojox.math.random.Simple");
 
 // Copyright (c) 2005  Tom Wu
 // All Rights Reserved.
@@ -81,4 +72,6 @@ dojo.require("dojox.math.random.Simple");
 	});
 })();
 
-}
+
+return dojox.encoding.crypto.RSAKey;
+});

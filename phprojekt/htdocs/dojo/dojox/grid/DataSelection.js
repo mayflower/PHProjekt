@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.grid.DataSelection"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.grid.DataSelection"] = true;
 dojo.provide("dojox.grid.DataSelection");
 dojo.require("dojox.grid.Selection");
 
@@ -72,5 +63,3 @@ dojo.declare("dojox.grid.DataSelection", dojox.grid.Selection, {
 		}
 	}
 });
-
-}

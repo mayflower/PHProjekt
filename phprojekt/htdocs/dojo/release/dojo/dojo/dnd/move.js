@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojo.dnd.move"])dojo._hasResource["dojo.dnd.move"]=!0,dojo.provide("dojo.dnd.move"),dojo.require("dojo.dnd.Mover"),dojo.require("dojo.dnd.Moveable"),dojo.declare("dojo.dnd.move.constrainedMoveable",dojo.dnd.Moveable,{constraints:function(){},within:!1,markupFactory:function(b,a){return new dojo.dnd.move.constrainedMoveable(a,b)},constructor:function(b,a){a||(a={});this.constraints=a.constraints;this.within=a.within},onFirstMove:function(b){var a=this.constraintBox=this.constraints.call(this,
+b);a.r=a.l+a.w;a.b=a.t+a.h;this.within&&(b=dojo._getMarginSize(b.node),a.r-=b.w,a.b-=b.h)},onMove:function(b,a){var d=this.constraintBox,f=b.node.style;this.onMoving(b,a);a.l=a.l<d.l?d.l:d.r<a.l?d.r:a.l;a.t=a.t<d.t?d.t:d.b<a.t?d.b:a.t;f.left=a.l+"px";f.top=a.t+"px";this.onMoved(b,a)}}),dojo.declare("dojo.dnd.move.boxConstrainedMoveable",dojo.dnd.move.constrainedMoveable,{box:{},markupFactory:function(b,a){return new dojo.dnd.move.boxConstrainedMoveable(a,b)},constructor:function(b,a){var d=a&&a.box;
+this.constraints=function(){return d}}}),dojo.declare("dojo.dnd.move.parentConstrainedMoveable",dojo.dnd.move.constrainedMoveable,{area:"content",markupFactory:function(b,a){return new dojo.dnd.move.parentConstrainedMoveable(a,b)},constructor:function(b,a){var d=a&&a.area;this.constraints=function(){var a=this.node.parentNode,b=dojo.getComputedStyle(a),c=dojo._getMarginBox(a,b);if(d=="margin")return c;var e=dojo._getMarginExtents(a,b);c.l+=e.l;c.t+=e.t;c.w-=e.w;c.h-=e.h;if(d=="border")return c;e=
+dojo._getBorderExtents(a,b);c.l+=e.l;c.t+=e.t;c.w-=e.w;c.h-=e.h;if(d=="padding")return c;e=dojo._getPadExtents(a,b);c.l+=e.l;c.t+=e.t;c.w-=e.w;c.h-=e.h;return c}}}),dojo.dnd.constrainedMover=dojo.dnd.move.constrainedMover,dojo.dnd.boxConstrainedMover=dojo.dnd.move.boxConstrainedMover,dojo.dnd.parentConstrainedMover=dojo.dnd.move.parentConstrainedMover;

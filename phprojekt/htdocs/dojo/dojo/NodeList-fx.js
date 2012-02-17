@@ -1,14 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.NodeList-fx"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.NodeList-fx"] = true;
-dojo.provide("dojo.NodeList-fx");
-dojo.require("dojo.fx");
+define("dojo/NodeList-fx", ["dojo", "dojo/fx"], function(dojo) {
 
 /*=====
 dojo["NodeList-fx"] = {
@@ -25,7 +15,7 @@ dojo.extend(dojo.NodeList, {
 				dojo.mixin(tmpArgs, args);
 				return obj[method](tmpArgs);
 			})
-		); 
+		);
 		return args.auto ? a.play() && this : a; // dojo.Animation|dojo.NodeList
 	},
 
@@ -34,7 +24,7 @@ dojo.extend(dojo.NodeList, {
 		//		wipe in all elements of this NodeList via `dojo.fx.wipeIn`
 		//
 		//	args: Object?
-		//		Additional dojo.Animation arguments to mix into this set with the addition of 
+		//		Additional dojo.Animation arguments to mix into this set with the addition of
 		//		an `auto` parameter.
 		//
 		//	returns: dojo.Animation|dojo.NodeList
@@ -58,7 +48,7 @@ dojo.extend(dojo.NodeList, {
 		//		wipe out all elements of this NodeList via `dojo.fx.wipeOut`
 		//
 		//	args: Object?
-		//		Additional dojo.Animation arguments to mix into this set with the addition of 
+		//		Additional dojo.Animation arguments to mix into this set with the addition of
 		//		an `auto` parameter.
 		//
 		//	returns: dojo.Animation|dojo.NodeList
@@ -77,7 +67,7 @@ dojo.extend(dojo.NodeList, {
 		//		slide all elements of the node list to the specified place via `dojo.fx.slideTo`
 		//
 		//	args: Object?
-		//		Additional dojo.Animation arguments to mix into this set with the addition of 
+		//		Additional dojo.Animation arguments to mix into this set with the addition of
 		//		an `auto` parameter.
 		//
 		//	returns: dojo.Animation|dojo.NodeList
@@ -100,7 +90,7 @@ dojo.extend(dojo.NodeList, {
 		//		fade in all elements of this NodeList via `dojo.fadeIn`
 		//
 		//	args: Object?
-		//		Additional dojo.Animation arguments to mix into this set with the addition of 
+		//		Additional dojo.Animation arguments to mix into this set with the addition of
 		//		an `auto` parameter.
 		//
 		//	returns: dojo.Animation|dojo.NodeList
@@ -119,7 +109,7 @@ dojo.extend(dojo.NodeList, {
 		//		fade out all elements of this NodeList via `dojo.fadeOut`
 		//
 		//	args: Object?
-		//		Additional dojo.Animation arguments to mix into this set with the addition of 
+		//		Additional dojo.Animation arguments to mix into this set with the addition of
 		//		an `auto` parameter.
 		//
 		//	returns: dojo.Animation|dojo.NodeList
@@ -155,14 +145,14 @@ dojo.extend(dojo.NodeList, {
 		//	example:
 		//	|	dojo.query(".zork").animateProperty({
 		//	|		duration: 500,
-		//	|		properties: { 
+		//	|		properties: {
 		//	|			color:		{ start: "black", end: "white" },
-		//	|			left:		{ end: 300 } 
-		//	|		} 
+		//	|			left:		{ end: 300 }
+		//	|		}
 		//	|	}).play();
 		//
 		//	example:
-		//	|	dojo.query(".grue").animateProperty({ 
+		//	|	dojo.query(".grue").animateProperty({
 		//	|		auto:true,
 		//	|		properties: {
 		//	|			height:240
@@ -171,9 +161,9 @@ dojo.extend(dojo.NodeList, {
 		return this._anim(dojo, "animateProperty", args); // dojo.Animation|dojo.NodeList
 	},
 
-	anim: function( /*Object*/			properties, 
-					/*Integer?*/		duration, 
-					/*Function?*/		easing, 
+	anim: function( /*Object*/			properties,
+					/*Integer?*/		duration,
+					/*Function?*/		easing,
 					/*Function?*/		onEnd,
 					/*Integer?*/		delay){
 		//	summary:
@@ -181,8 +171,8 @@ dojo.extend(dojo.NodeList, {
 		//		The returned animation object will already be playing when it
 		//		is returned. See the docs for `dojo.anim` for full details.
 		//	properties: Object
-		//		the properties to animate. does NOT support the `auto` parameter like other 
-		//		NodeList-fx methods. 
+		//		the properties to animate. does NOT support the `auto` parameter like other
+		//		NodeList-fx methods.
 		//	duration: Integer?
 		//		Optional. The time to run the animations for
 		//	easing: Function?
@@ -207,7 +197,7 @@ dojo.extend(dojo.NodeList, {
 					easing: easing
 				});
 			})
-		); 
+		);
 		if(onEnd){
 			dojo.connect(canim, "onEnd", onEnd);
 		}
@@ -215,4 +205,5 @@ dojo.extend(dojo.NodeList, {
 	}
 });
 
-}
+return dojo.NodeList;
+});

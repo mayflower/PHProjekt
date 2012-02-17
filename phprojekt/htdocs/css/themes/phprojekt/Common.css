@@ -16,7 +16,7 @@
   height: 100%;
 }
 
-.phprojekt #completeContent {
+.phprojekt .completeContent {
   width: 100%;
   position: absolute;
   top: 0;
@@ -27,25 +27,25 @@
   color: #529214;
 }
 
-.phprojekt #header {
+.phprojekt .header {
     background: #294064 url("images/headerbg.png");
     background-repeat: repeat-x;
     width: 100%;
 }
 
-.phprojekt #bottomContent {
+.phprojekt .bottomContent {
     background: #fff;
     width: 100%;
     height: 32px;
 }
 
-.phprojekt #header img {
+.phprojekt .header img {
     margin: 0;
     cursor: pointer;
     cursor: hand;
 }
 
-.phprojekt #header #search-bar {
+.phprojekt .header .searchBar {
     margin: 10px 10px;
     background: url("images/searchbar.png");
     width: 120px;
@@ -54,7 +54,7 @@
     padding-top: 1px;
 }
 
-.phprojekt #header #search-bar .dijitTextBox {
+.phprojekt .header .searchBar .dijitTextBox {
     background: transparent !important;
     width: 83px !important;
     border: 0px !important;
@@ -64,7 +64,7 @@
     padding-top: 1px;
 }
 
-.phprojekt #header #search-bar input {
+.phprojekt .header .searchBar input {
     background: url("images/searchfield_bg.png");
     width: 80px;
     border: none;
@@ -87,30 +87,30 @@
     margin-left: 20px;
     padding-top: 1px;
 }
-.dj_ie7 .phprojekt #header #search-bar {
+.dj_ie7 .phprojekt .header .searchBar {
     padding-top: 0;
 }
-.dj_ie7 .phprojekt #header #search-bar input {
+.dj_ie7 .phprojekt .header .searchBar input {
     padding-top: 0;
 }
-.dj_ie .phprojekt #header #search-bar .dijitTextBox {
+.dj_ie .phprojekt .header .searchBar .dijitTextBox {
     margin-top: 3px !important;
 }
 
-.phprojekt #header #toolbar {
+.phprojekt .header .toolbar {
     margin: 15px;
     color: #ffffff;
     font-size: 11px;
     font-weight: bold;
 }
 
-.phprojekt #subheader {
+.phprojekt .subheader {
     width: 100%;
     height: 26px;
     background: white;
 }
 
-.phprojekt #subheader #navigation-container-title {
+.phprojekt .subheader .navigationContainerTitle {
     background: #294064;
     height: 26px;
     line-height: 24px;
@@ -119,11 +119,11 @@
     padding-left: 8px;
 }
 
-.phprojekt #subheader #navigation-container-title p {
+.phprojekt .subheader .navigationContainerTitle p {
     margin-left: 15px;
 }
 
-.phprojekt #subheader .tab {
+.phprojekt .subheader .tab {
     background-repeat: no-repeat;
     height: 26px;
     background-position: center top;
@@ -135,137 +135,39 @@
     font-size: 11px;
 }
 
-.phprojekt #subheader .tab-active {
+.phprojekt .subheader .tabActive {
     background: url("images/tab.png");
     color: white;
 }
 
-.phprojekt #subheader .tab a:focus,
-.phprojekt #subheader .tab a:hover,
-.phprojekt #subheader .tab a:active {
+.phprojekt .subheader .tab a:focus,
+.phprojekt .subheader .tab a:hover,
+.phprojekt .subheader .tab a:active {
     background-color: #8392ab;
     color: #fff;
 }
 
-.phprojekt #navigation-container {
+.phprojekt .navigationContainer {
     border-bottom: 14px solid #294064;
     border-left: 10px solid #294064;
-    background: #294064;
+    background: #294064 !important;
     overflow-y: hidden;
 }
 
-.phprojekt #tree-navigation {
+.phprojekt .treeNavigation {
     margin: 0;
     height: 100%;
     overflow: none;
 }
 
-.phprojekt #containSubModuleNavigation {
-    height: 25px;
+.phprojekt .containSubModuleNavigation {
     width: 100%;
-    border-bottom: 1px solid #294064;
 }
 
-.dj_ie .phprojekt #containSubModuleNavigation {
-    height: 27px;
-}
-
-.phprojekt #containSubModuleNavigation .left img {
-    height: 25px;
-}
-
-.phprojekt #subModuleNavigation {
+.phprojekt .subModuleNavigation {
     margin-top: 2px;
-    height: 30px;
-    width: 98%;
+    overflow: hidden;
 }
-
-.phprojekt #nav_main a,
-.phprojekt #nav_sub a {
-    text-decoration: none;
-    padding-left: 7px;
-    /* text-transform: uppercase; */
-    font-family: Verdana;
-    font-size: 12px;
-    font-weight: 600;
-    color: #A9A098;
-    padding-left: 7px;
-    background: #F0F0F0;
-    border: 1px solid #294064;
-}
-
-.phprojekt #nav_main a span,
-.phprojekt #nav_sub a span {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-right: 7px;
-    margin-top: 0px;
-}
-
-.phprojekt #nav_main a, #nav_main a span,
-.phprojekt #nav_sub a, #nav_sub a span {
-    display: block;
-    float: left
-}
-
-/* Commented backslash hack hides rule from IE5-Mac \*/
-
-.phprojekt #nav_main a, #nav_main a span,
-.phprojekt #nav_sub a, #nav_sub a span {
-    float: none
-}
-
-/* End IE5-Mac hack */
-
-.phprojekt #nav_main a:hover,
-.phprojekt #nav_sub a:hover {
-    background: #fff;
-    text-decoration: none;
-    padding-left: 7px;
-}
-
-.phprojekt #nav_main a:hover span,
-.phprojekt #nav_sub a:hover span {
-    background: #fff;
-    padding-right: 7px;
-    color: #999;
-}
-
-.phprojekt #nav_main li,
-.phprojekt #nav_sub li {
-    float: left;
-    display: block;
-    margin: 0;
-    padding: 0 4px 0 0;
-}
-
-.phprojekt #nav_main td,
-.phprojekt #nav_sub td {
-    margin: 0;
-    padding: 0 4px 0 0;
-}
-
-/* Tabs ACTIVE */
-.phprojekt #nav_main .active a span,
-.phprojekt #nav_sub .active a span {
-    margin-top: 0px;
-}
-
-.phprojekt #nav_main .active a,
-.phprojekt #nav_sub .active a {
-    color: #000;
-    background: #fff;
-    text-decoration: none;
-    padding-left: 7px;
-    border-bottom: 1px solid #FFF;
-}
-
-.phprojekt #nav_main .active a span,
-.phprojekt #nav_sub .active a span {
-    background: #fff;
-    padding-right: 7px;
-}
-
 
 /* Scroll for Tabs */
 .phprojekt .phprScrollWindow {
@@ -476,7 +378,7 @@ h1,h2,h3,h4,h5,h6 {
     margin-bottom: 10px;
 }
 
-.phprojekt #resultstitle {
+.phprojekt .resultsTitleBox {
     margin-left: 10px;
     margin-right: 10px;
     padding-left: 10px;
@@ -489,7 +391,7 @@ h1,h2,h3,h4,h5,h6 {
     overflow: hidden !important;
 }
 
-.phprojekt #searchsuggest {
+.phprojekt .searchsuggest {
     width: auto;
     border: none;
     height: auto;
@@ -539,20 +441,20 @@ h1,h2,h3,h4,h5,h6 {
     vertical-align: baseline;
 }
 
-.phprojekt #searchsuggest .results {
-    background-color: #ccc;
+.phprojekt .searchsuggestcontent .results {
+    background-color: #fff;
     margin-left: 0px;
     margin-right: 0px;
 }
 
-.phprojekt #searchsuggest .results a {
+.phprojekt .searchsuggestcontent .results a {
     color: #000;
     font-weight: bold;
     margin-left: 10px;
     margin-right: 10px;
 }
 
-.phprojekt #searchsuggest .results span {
+.phprojekt .searchsuggestcontent .results span {
     color: #000;
     margin-left: 10px;
     margin-right: 10px;
@@ -586,14 +488,14 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 /* History Table */
-.phprojekt #historyTable th {
+.phprojekt .historyTable th {
     background: #E9E9E9 url(images/titleBar.png) repeat-x scroll center top;
     color: #000000 !important;
     padding-bottom: 0;
     border: 1px dotted #A6A6A6;
 }
 
-.phprojekt #historyTable label {
+.phprojekt .historyTable label {
     color: #000;
     text-transform: none;
     font-weight: normal;
@@ -601,21 +503,21 @@ h1,h2,h3,h4,h5,h6 {
     vertical-align: top;
 }
 
-.phprojekt #historyTable td {
+.phprojekt .historyTable td {
     border: 1px dotted #A6A6A6;
     padding: 5px;
 }
 
-.phprojekt #historyTable .grey {
+.phprojekt .historyTable .grey {
     background-color: #F2F5F9;
 }
 
-.phprojekt #historyTable .white {
+.phprojekt .historyTable .white {
     background-color: white;
 }
 
-.phprojekt #breadCrumb,
-.phprojekt #breadCrumb a {
+.phprojekt .breadCrumb,
+.phprojekt .breadCrumb a {
     font-family: Verdana;
     font-size: 10px;
     font-weight: 600;
@@ -624,12 +526,12 @@ h1,h2,h3,h4,h5,h6 {
     margin-top: 10px;
 }
 
-.dj_ie .phprojekt #breadCrumb,
-.dj_ie .phprojekt #breadCrumb a {
+.dj_ie .phprojekt .breadCrumb,
+.dj_ie .phprojekt .breadCrumb a {
     margin-top: 9px;
 }
 
-.phprojekt #breadCrumb a {
+.phprojekt .breadCrumb a {
     margin-left: 0;
     text-decoration: none;
 }
@@ -639,7 +541,33 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 /* Help */
-.phprojekt #helpDialog ol,
-.phprojekt #helpDialog ul {
+.phprojekt .helpDialog ol,
+.phprojekt .helpDialog ul {
     margin: 0 0 0 1.5em;
+}
+
+.phprojekt .formTabSubForm {
+    margin-top: 10px;
+}
+
+.phprojekt .loadingOuter {
+    height: 100%;
+    width: 100%;
+    background-color: #FFFFFF;
+}
+
+.phprojekt .loadingMiddle {
+    bottom: 50%;
+    right: 50%;
+    position: absolute;
+}
+
+.phprojekt .loadingMiddleInner {
+    left: 50%;
+    top: 50%;
+    position: relative;
+}
+
+.phprojekt .loadingText {
+    text-align: center;
 }

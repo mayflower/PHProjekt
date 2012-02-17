@@ -1,1 +1,4 @@
-({"preview":"Vorschau"})
+({
+	"preview": "Vorschau"
+})
+

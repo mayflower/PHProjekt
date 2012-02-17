@@ -21,7 +21,6 @@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests Tab Model class
@@ -49,7 +48,6 @@ class Phprojekt_TabModelTab_Test extends PHPUnit_Framework_TestCase
         $tabModel = new Phprojekt_Tab_Tab();
         $expected = new Phprojekt_Tab_Information();
         $this->assertEquals($tabModel->getInformation(), $expected);
-        $this->assertEquals($tabModel->getRights(), array());
         $this->assertEquals($tabModel->saveRights(), null);
         $this->assertEquals($tabModel->recordValidate(), false);
         $this->assertEquals($tabModel->getError(),

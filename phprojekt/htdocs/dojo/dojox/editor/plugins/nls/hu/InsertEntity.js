@@ -1,1 +1,4 @@
-({"insertEntity":"Szimbólum beszúrása"})
+({
+	insertEntity: "Szimbólum beszúrása"
+})
+

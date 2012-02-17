@@ -1,19 +1,10 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.sketch.Slider"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.sketch.Slider"] = true;
 dojo.provide("dojox.sketch.Slider");
 
 dojo.require("dijit.form.HorizontalSlider");
 
 dojo.declare("dojox.sketch.Slider",dojox.sketch._Plugin,{
 	_initButton: function(){
-		this.slider=new dijit.form.HorizontalSlider({minimum:5,maximum:100,style:"width:100px;float:right"});
+		this.slider=new dijit.form.HorizontalSlider({minimum:5,maximum:100,style:"width:100px;",baseClass:'dijitInline dijitSlider'});
 		this.slider._movable.node.title='Double Click to "Zoom to Fit"'; //I18N
 		this.connect(this.slider,'onChange','_setZoom');
 		this.connect(this.slider.sliderHandle,'ondblclick','_zoomToFit');
@@ -43,5 +34,3 @@ dojo.declare("dojox.sketch.Slider",dojox.sketch._Plugin,{
 });
 
 dojox.sketch.registerTool("Slider", dojox.sketch.Slider);
-
-}

@@ -21,7 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Index Controller
@@ -40,6 +39,10 @@ require_once 'PHPUnit/Framework.php';
  */
 class User_IndexController_Test extends FrontInit
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
+    }
+
     /**
      * Test the user list
      */
@@ -47,10 +50,14 @@ class User_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Core/user/jsonGetUsers');
         $this->request->setParam('nodeId', 1);
-        $response = $this->getResponse();
-        $expected = '{"id":2,"display":"Solt, Gustavo","current":false},{"id":1,"display":"Soria Parra, David",'
-            . '"current":true}';
-        $this->assertContains($expected, $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $expected = array(
+            'data' => array(
+                array('id' => 2, 'display' => ', Luise Marie'),
+                array('id' => 1, 'display' => 'Mustermann, Max')
+            )
+        );
+        $this->assertEquals($expected, $response);
     }
 
     /**
@@ -58,8 +65,9 @@ class User_IndexController_Test extends FrontInit
      */
     public function testJsonSaveMultipleError()
     {
+        $this->markTestSkipped("Not yet");
         $this->setRequestUrl('Core/user/jsonSaveMultiple');
-        $items = array(2 => array('username' => 'david'));
+        $items = array(2 => array('username' => 'Test'));
         $this->request->setParam('data', $items);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
@@ -79,7 +87,7 @@ class User_IndexController_Test extends FrontInit
         $this->request->setParam('data', $items);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '{"type":"error","message":"ID 3. Last name: Is a required field","code":0,"id":"3"}';
+        $expected = '{"type":"error","message":"ID 2. Last name: Is a required field","code":0,"id":"2"}';
         $this->assertContains($expected, $response);
     }
 }

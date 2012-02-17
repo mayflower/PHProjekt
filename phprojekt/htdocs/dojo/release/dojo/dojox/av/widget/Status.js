@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.av.widget.Status"]||(dojo._hasResource["dojox.av.widget.Status"]=!0,dojo.provide("dojox.av.widget.Status"),dojo.require("dijit._Widget"),dojo.require("dijit._Templated"),dojo.declare("dojox.av.widget.Status",[dijit._Widget,dijit._Templated],{templateString:dojo.cache("dojox.av.widget","resources/Status.html",'<table class="Status">\n    <tr>\n        <td class="Time"><span dojoAttachPoint="timeNode">0.00</span></td>\n        <td class="Status"><div dojoAttachPoint="titleNode">Loading...</div></td>\n        <td class="Duration"><span dojoAttachPoint="durNode">0.00</span></td>\n    </tr>\n</table>\n'),
+setMedia:function(a){this.media=a;dojo.connect(this.media,"onMetaData",this,function(a){this.duration=a.duration;this.durNode.innerHTML=this.toSeconds(this.duration)});dojo.connect(this.media,"onPosition",this,function(a){this.timeNode.innerHTML=this.toSeconds(a)});dojo.forEach(["onMetaData","onPosition","onStart","onBuffer","onPlay","onPaused","onStop","onEnd","onError","onLoad"],function(a){dojo.connect(this.media,a,this,a)},this)},onMetaData:function(a){this.duration=a.duration;this.durNode.innerHTML=
+this.toSeconds(this.duration);this.media.title?this.title=this.media.title:(a=this.media.mediaUrl.split("/"),this.title=a[a.length-1].split(".")[0])},onBuffer:function(a){this.isBuffering=a;console.warn("status onBuffer",this.isBuffering);this.isBuffering?this.setStatus("buffering..."):this.setStatus("Playing")},onPosition:function(){},onStart:function(){this.setStatus("Starting")},onPlay:function(){this.setStatus("Playing")},onPaused:function(){this.setStatus("Paused")},onStop:function(){this.setStatus("Stopped")},
+onEnd:function(){this.setStatus("Stopped")},onError:function(a){console.log("status error:",a);a=a.info.code;a=="NetStream.Play.StreamNotFound"&&(a="Stream Not Found");this.setStatus("ERROR: "+a,!0)},onLoad:function(){this.setStatus("Loading...")},setStatus:function(a,b){b?dojo.addClass(this.titleNode,"statusError"):(dojo.removeClass(this.titleNode,"statusError"),this.isBuffering&&(a="buffering..."));this.titleNode.innerHTML='<span class="statusTitle">'+this.title+'</span> <span class="statusInfo">'+
+a+"</span>"},toSeconds:function(a){a=a.toString();a.indexOf(".")<0?a+=".00":a.length-a.indexOf(".")==2?a+="0":a.length-a.indexOf(".")>2&&(a=a.substring(0,a.indexOf(".")+3));return a}}));

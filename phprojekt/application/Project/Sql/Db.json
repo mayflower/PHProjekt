@@ -1,2 +1,19 @@
 {
+
+"6.1.0-beta1":
+{
+    "structure":
+    {
+        "user_proxy":
+        {
+            "create":
+            {
+                "id":          "default",
+                "proxyed_id":  {"type": "int", "notNull": "true"},
+                "proxying_id": {"type": "int", "notNull": "true"}
+            }
+        }
+    }
+}
+
 }

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.html.ext-dojo.style"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.html.ext-dojo.style"] = true;
 dojo.provide("dojox.html.ext-dojo.style");
 dojo.experimental("dojox.html.ext-dojo.style");
 
@@ -109,7 +100,7 @@ dojo.mixin(dojox.html["ext-dojo"].style, {
 		});
 	},
 	_notSupported: function(){
-		console.warn("Sorry, this browser doesn't support transform and transform-origin");	
+		console.warn("Sorry, this browser doesn't support transform and transform-origin");
 	},
 	_setTransformOriginFilter: function(/*DomNode*/ node, /*String*/ transformOrigin){
 		var to = dojo.trim(transformOrigin)
@@ -467,5 +458,3 @@ dojo.mixin(dojox.html["ext-dojo"].style, {
 });
 
 dojox.html["ext-dojo"].style.init();
-
-}

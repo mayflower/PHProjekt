@@ -104,7 +104,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Phpro
     {
         if (array() === self::$_userIdList) {
             /* @var $user Phprojekt_User_User */
-            $user  = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $user  = new Phprojekt_User_User();
             $users = $user->getAllowedUsers();
             foreach ($users as $node) {
                 self::$_userIdList[$node['id']] = $this->getRangeValues($node['id'], $node['name']);

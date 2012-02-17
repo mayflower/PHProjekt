@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.io.OAuth"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.io.OAuth"] = true;
 dojo.provide("dojox.io.OAuth");
 dojo.require("dojox.encoding.digests.SHA1");
 
@@ -19,7 +10,7 @@ dojox.io.OAuth = new (function(){
 	//		methods (such as dojo.xhr[verb], dojo.io.iframe, etc.).
 	//
 	//		The main method of dojox.io.OAuth is the sign method (see documentation for .sign);
-	//		the idea is that you will "sign" the kwArgs object you'd normally pass to any of 
+	//		the idea is that you will "sign" the kwArgs object you'd normally pass to any of
 	//		the Ajax methods, and then pass the signed object along.  As long as the token
 	//		object used is valid (and the client's date and time are synced with a public
 	//		time server), a signed object should be passed along correctly.
@@ -117,8 +108,8 @@ dojox.io.OAuth = new (function(){
 	function key(args){
 		//	summary:
 		//		return the key used to sign a message based on the token object.
-		return encode(args.consumer.secret) 
-			+ "&" 
+		return encode(args.consumer.secret)
+			+ "&"
 			+ (args.token && args.token.secret ? encode(args.token.secret) : "");
 	}
 
@@ -159,7 +150,7 @@ dojox.io.OAuth = new (function(){
 
 		//	pull anything off the query string
 		var map = parseUrl(args.url);
-		if(map.query){ 
+		if(map.query){
 			var tmp = dojo.queryToObject(map.query);
 			//	re-encode the values.  sigh
 			for(var p in tmp){ tmp[p] = encodeURIComponent(tmp[p]); }
@@ -209,7 +200,7 @@ dojox.io.OAuth = new (function(){
 		}).join("&");
 
 		var baseString = method.toUpperCase()
-			+ "&" + encode(args._url) 
+			+ "&" + encode(args._url)
 			+ "&" + encode(s);
 		return baseString;
 	}
@@ -245,7 +236,7 @@ dojox.io.OAuth = new (function(){
 		}
 	=====*/
 
-	/*	
+	/*
 	 *	Process goes something like this:
 	 *	1. prepare the base string
 	 *	2. create the key
@@ -277,10 +268,10 @@ dojox.io.OAuth = new (function(){
 		/*	summary:
 		 *		Make an XHR request that is OAuth signed.
 		 *	example:
-		 *	|	var dfd = dojox.io.OAuth.xhrGet({ 
+		 *	|	var dfd = dojox.io.OAuth.xhrGet({
 		 *	|		url: "http://someauthdomain.com/path?foo=bar",
-		 *	|		load: function(response, ioArgs){ } 
-		 *	|	}, 
+		 *	|		load: function(response, ioArgs){ }
+		 *	|	},
 		 *	|	{
 		 *	|		consumer:{ key: "lasdkf9asdnfsdf", secret: "9asdnfskdfysjr" }
 		 *	|	});
@@ -302,5 +293,3 @@ dojox.io.OAuth = new (function(){
 		return this.xhr("DELETE", args, oaa);
 	};
 })();
-
-}

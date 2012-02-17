@@ -19,10 +19,22 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-dojo.provide("phpr.Date");
+dojo.provide("phpr.Default.System.Date");
 
-dojo.declare("phpr.Date", null, {
-    getIsoDate:function(date) {
+dojo.declare("phpr.Default.System.Date", null, {
+    _lastDate: new Date(),
+    constructor: function() {
+        this._dateCheck();
+    },
+    _dateCheck: function() {
+        var date = new Date();
+        if (this._lastDate.getDate() !== date.getDate()) {
+            dojo.publish("phpr.dateChanged", []);
+            this._lastDate = date;
+        }
+        setTimeout(dojo.hitch(this, "_dateCheck"), 1000);
+    },
+    getIsoDate: function(date) {
         // Summary:
         //    Convert a js date into ISO date
         // Description:
@@ -31,27 +43,31 @@ dojo.declare("phpr.Date", null, {
         if (day < 10) {
             day = '0' + day;
         }
-        var month = (date.getMonth()+1);
+        var month = (date.getMonth() + 1);
         if (month < 10) {
-            month = '0' + month
+            month = '0' + month;
         }
 
         return date.getFullYear() + '-' + month + '-' + day;
     },
 
-    getIsoTime:function(time) {
+    getIsoTime: function(time) {
         // Summary:
         //    Convert a js time into ISO time
         // Description:
         //    Convert a js time into ISO time
+        var hour, minutes;
+
         if (typeof(time) == 'object') {
-            var hour    = time.getHours();
-            var minutes = time.getMinutes();
-        } else {
+            hour    = time.getHours();
+            minutes = time.getMinutes();
+        } else if (dojo.isString(time)) {
             var value   = time.toString().replace(/\D/g, "");
             value       = value.substr(0, 4);
-            var minutes = value.substr(value.length - 2);
-            var hour    = value.substr(0, value.length - 2);
+            minutes = value.substr(value.length - 2);
+            hour    = value.substr(0, value.length - 2);
+        } else {
+            return;
         }
 
         if (isNaN(hour) || hour > 24 || hour < 0) {
@@ -64,22 +80,22 @@ dojo.declare("phpr.Date", null, {
         return dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
     },
 
-    getIsoDatetime:function(date, time) {
+    getIsoDatetime: function(date, time) {
         // Summary:
         //    Convert a js date and time into ISO datetime
         // Description:
         //    Convert a js date and time into ISO datetime
-        if (date == null) {
+        if (date === null) {
             date = new Date();
         }
-        if (time == null) {
+        if (time === null) {
             time = '0000';
         }
 
         return this.getIsoDate(date) + ' ' + this.getIsoTime(time);
     },
 
-    convertMinutesToTime:function(minutes) {
+    convertMinutesToTime: function(minutes) {
         // Summary:
         //    Convert a number of minutes into HH:mm
         // Description:
@@ -87,17 +103,17 @@ dojo.declare("phpr.Date", null, {
         hoursDiff   = Math.floor(minutes / 60);
         minutesDiff = minutes - (hoursDiff * 60);
 
-        if (hoursDiff == 0 || hoursDiff < 10) {
+        if (hoursDiff === 0 || hoursDiff < 10) {
             hoursDiff = '0' + hoursDiff;
         }
-        if (minutesDiff == 0 || minutesDiff < 10) {
+        if (minutesDiff === 0 || minutesDiff < 10) {
             minutesDiff = '0' + minutesDiff;
         }
 
         return hoursDiff + ':' + minutesDiff;
     },
 
-    convertTimeToMinutes:function(time) {
+    convertTimeToMinutes: function(time) {
         // Summary:
         //    Convert a HH:mm into a number of minutes
         // Description:
@@ -108,7 +124,7 @@ dojo.declare("phpr.Date", null, {
         return (hours * 60) + (minutes);
     },
 
-    isoDateTojsDate:function(date) {
+    isoDateTojsDate: function(date) {
         // Summary:
         //    Convert a iso string of a date into a js object date
         // Description:
@@ -120,7 +136,7 @@ dojo.declare("phpr.Date", null, {
         return new Date(year, month - 1, day);
     },
 
-    isoTimeTojsDate:function(time) {
+    isoTimeTojsDate: function(time) {
         // Summary:
         //    Convert a iso string of a time into a js object date
         // Description:
@@ -135,7 +151,7 @@ dojo.declare("phpr.Date", null, {
         return date;
     },
 
-    isoDatetimeTojsDate:function(datetime) {
+    isoDatetimeTojsDate: function(datetime) {
         // Summary:
         //    Convert a iso string of a date into a js object date
         // Description:
@@ -150,7 +166,7 @@ dojo.declare("phpr.Date", null, {
         return new Date(year, month - 1, day, hour, minutes, 0);
     },
 
-    getLongTranslateMonth:function(month) {
+    getLongTranslateMonth: function(month) {
         // Summary:
         //    Return the string of one month
         // Description:
@@ -160,7 +176,7 @@ dojo.declare("phpr.Date", null, {
         return string + months[month].substr(1);
     },
 
-    getLongTranslateWeekDay:function(week) {
+    getLongTranslateWeekDay: function(week) {
         // Summary:
         //    Return the string of one week day
         // Description:
@@ -170,7 +186,7 @@ dojo.declare("phpr.Date", null, {
         return string + weekdays[week].substr(1);
     },
 
-    getShortTranslateWeekDay:function(week) {
+    getShortTranslateWeekDay: function(week) {
         // Summary:
         //    Return the short string of one week day
         // Description:

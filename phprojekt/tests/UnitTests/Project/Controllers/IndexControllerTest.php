@@ -21,7 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Index Controller
@@ -40,6 +39,10 @@ require_once 'PHPUnit/Framework.php';
  */
 class Project_IndexController_Test extends FrontInit
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml');
+    }
+
     /**
      * Test of json save Project -in fact, default json save
      */
@@ -88,7 +91,7 @@ class Project_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonGetProjectRoleUserRelation/');
         $this->request->setParam('id', 1);
         $response = $this->getResponse();
-        $this->assertContains('{"1":{"id":1,"name":"admin",', $response);
+        $this->assertContains('{"1":{"id":1,"name":"Admin",', $response);
     }
 
     /**
@@ -100,9 +103,13 @@ class Project_IndexController_Test extends FrontInit
         $items = array(2 => array('projectId' => '2'));
         $this->request->setParam('data', $items);
         $this->request->setParam('nodeId', 1);
-        $response = $this->getResponse();
-        $expected = '{"type":"error","message":"ID 2. Project: The project can not be saved under itself","code":0,'
-            . '"id":"2"}';
-        $this->assertContains($expected, $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $expected = array(
+            'type' => 'error',
+            'message' => 'ID 2. Parent: The project can not be saved under itself',
+            'code' => 0,
+            'id' => 2
+        );
+        $this->assertEquals($expected, $response);
     }
 }

@@ -1,30 +1,43 @@
-<!-- Form -->
-<div dojoType="dijit.layout.ContentPane" id="projectBookingForm">
-    <form dojoType="dijit.form.Form" id="bookingForm" name="bookingForm" onsubmit="return false;"
-    style="display: inline;">
-    <table class="form formContainer">
-    <col class="col1" />
-    <col class="col2" />
-    <col class="col3" />
-    {{formData|safe}}
-    <tr>
-        <td>&nbsp;</td>
-        <td>
-            <button dojoType="dijit.form.Button" baseClass="positive" id="saveBookingButton" type="button"
-            iconClass="tick">
-                {{saveText}}
-            </button>
-            &nbsp;
-            <div id="deleteBookingButtonDiv"
-            style="display: none;">
-                <button dojoType="dijit.form.Button" baseClass="positive" id="deleteBookingButton" type="button"
-                iconClass="cross">
-                    {{deleteText}}
-                </button>
-            </div>
-        </td>
-        <td>&nbsp;</td>
-    </tr>
-    </table>
-    </form>
+<div>
+    <!-- Form -->
+    <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="projectBookingForm" class="projectBookingForm">
+        <form dojoType="dijit.form.Form" dojoAttachPoint="bookingForm" name="bookingForm" onsubmit="return false;"
+        style="display: inline;">
+        <table class="form">
+        <colgroup>
+            <col class="col1" />
+            <col class="col2" />
+            <col class="col3" />
+            <col class="col3" />
+        </colgroup>
+        <tr dojoAttachPoint="formBottom">
+            <td>&nbsp;</td>
+            <td>
+                <div style="display: inline">
+                    <button dojoType="dijit.form.Button" baseClass="positive" dojoAttachPoint="saveBookingButton"
+                        type="button" iconClass="tick">
+                        {{saveText}}
+                    </button>
+                </div>
+                &nbsp;
+                <div dojoAttachPoint="deleteBookingButtonDiv"
+                style="display: none;">
+                    <button dojoType="dijit.form.Button" baseClass="positive" dojoAttachPoint="deleteBookingButton"
+                        class="deleteBookingButton" type="button" iconClass="cross">
+                        {{deleteText}}
+                    </button>
+                </div>
+                &nbsp;
+                <div style="display: inline">
+                    <button dojoType="dijit.form.Button" baseClass="positive" dojoAttachPoint="newBookingButton"
+                        class="newBookingButton" type="button" iconClass="cross">
+                        {{newText}}
+                    </button>
+                </div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        </table>
+        </form>
+    </div>
 </div>

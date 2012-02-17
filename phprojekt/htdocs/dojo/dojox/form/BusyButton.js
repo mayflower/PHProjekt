@@ -1,23 +1,14 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.BusyButton"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.BusyButton"] = true;
 dojo.provide("dojox.form.BusyButton");
 
 dojo.require("dijit.form.Button");
 
-dojo.requireLocalization("dijit", "loading", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dijit", "loading");
 
 dojo.declare("dojox.form._BusyButtonMixin",
-	null, 
+	null,
 	{
 		
-	isBusy: false,	
+	isBusy: false,
 	busyLabel: "", // text while button is busy
 	timeout: null, // timeout, should be controlled by xhr call
 	useIcon: true, // use a busy icon
@@ -65,15 +56,15 @@ dojo.declare("dojox.form._BusyButtonMixin",
 	resetTimeout: function(/*Int*/ timeout){
 		// summary:
 		//	to reset existing timeout and setting a new timeout
-		if(this._timeout){	
-			clearTimeout(this._timeout); 
+		if(this._timeout){
+			clearTimeout(this._timeout);
 		}
 		
 		// new timeout
 		if(timeout){
 			this._timeout = setTimeout(dojo.hitch(this, function(){
 				this.cancel();
-			}), timeout);			
+			}), timeout);
 		}else if(timeout == undefined || timeout === 0){
 			this.cancel();
 		}
@@ -118,10 +109,10 @@ dojo.declare("dojox.form._BusyButtonMixin",
 	
 	_clicked: function(e){
 		// summary:
-		//	on button click the button state gets changed 
+		//	on button click the button state gets changed
 		
 		// only do something if button is not busy
-		if(!this.isBusy){ 
+		if(!this.isBusy){
 			this.makeBusy();
 		}
 	}
@@ -130,5 +121,3 @@ dojo.declare("dojox.form._BusyButtonMixin",
 dojo.declare("dojox.form.BusyButton", [dijit.form.Button, dojox.form._BusyButtonMixin], {});
 dojo.declare("dojox.form.BusyComboButton", [dijit.form.ComboButton, dojox.form._BusyButtonMixin], {});
 dojo.declare("dojox.form.BusyDropDownButton", [dijit.form.DropDownButton, dojox.form._BusyButtonMixin], {});
-
-}

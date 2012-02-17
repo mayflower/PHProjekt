@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.dnd.BoundingBoxController"]||(dojo._hasResource["dojox.dnd.BoundingBoxController"]=!0,dojo.provide("dojox.dnd.BoundingBoxController"),dojo.declare("dojox.dnd.BoundingBoxController",null,{_startX:null,_startY:null,_endX:null,_endY:null,constructor:function(a,b){this.events=[dojo.connect(dojo.doc,"onmousedown",this,"_onMouseDown"),dojo.connect(dojo.doc,"onmouseup",this,"_onMouseUp"),dojo.connect(dojo.doc,"onscroll",this,"_finishSelecting")];this.subscriptions=[dojo.subscribe("/dojox/bounding/cancel",
+this,"_finishSelecting")];dojo.forEach(a,function(a){a.selectByBBox&&this.subscriptions.push(dojo.subscribe("/dojox/dnd/bounding",a,"selectByBBox"))},this);this.domNode=dojo.byId(b);dojo.style(this.domNode,{position:"absolute",display:"none"})},destroy:function(){dojo.forEach(this.events,dojo.disconnect);dojo.forEach(this.subscriptions,dojo.unsubscribe);this.domNode=null},boundingBoxIsViable:function(){return!0},_onMouseDown:function(a){if(dojo.mouseButtons.isLeft(a)){if(this._startX===null)this._startX=
+a.clientX,this._startY=a.clientY;this.events.push(dojo.connect(dojo.doc,"onmousemove",this,"_onMouseMove"))}},_onMouseMove:function(a){this._endX=a.clientX;this._endY=a.clientY;this._drawBoundingBox()},_onMouseUp:function(){this._endX!==null&&this.boundingBoxIsViable()&&dojo.publish("/dojox/dnd/bounding",[this._startX,this._startY,this._endX,this._endY]);this._finishSelecting()},_finishSelecting:function(){if(this._startX!==null)dojo.disconnect(this.events.pop()),dojo.style(this.domNode,"display",
+"none"),this._startX=this._endX=null},_drawBoundingBox:function(){dojo.style(this.domNode,{left:Math.min(this._startX,this._endX)+"px",top:Math.min(this._startY,this._endY)+"px",width:Math.abs(this._startX-this._endX)+"px",height:Math.abs(this._startY-this._endY)+"px",display:""})}}));

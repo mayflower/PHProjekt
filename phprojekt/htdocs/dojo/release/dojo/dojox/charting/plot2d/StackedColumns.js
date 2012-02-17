@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.charting.plot2d.StackedColumns"]||(dojo._hasResource["dojox.charting.plot2d.StackedColumns"]=!0,dojo.provide("dojox.charting.plot2d.StackedColumns"),dojo.require("dojox.charting.plot2d.common"),dojo.require("dojox.charting.plot2d.Columns"),dojo.require("dojox.lang.functional"),dojo.require("dojox.lang.functional.reversed"),dojo.require("dojox.lang.functional.sequence"),function(){var j=dojox.lang.functional,o=dojox.charting.plot2d.common,u=j.lambda("item.purgeGroup()");dojo.declare("dojox.charting.plot2d.StackedColumns",
+dojox.charting.plot2d.Columns,{getSeriesStats:function(){var f=o.collectStackedStats(this.series);this._maxRunLength=f.hmax;f.hmin-=0.5;f.hmax+=0.5;return f},render:function(f,g){if(this._maxRunLength<=0)return this;for(var h=j.repeat(this._maxRunLength,"-> 0",0),e=0;e<this.series.length;++e)for(var c=this.series[e],b=0;b<c.data.length;++b){var a=c.data[b];if(a!==null){var d=typeof a=="number"?a:a.y;isNaN(d)&&(d=0);h[b]+=d}}if(this.zoom&&!this.isDataDirty())return this.performZoom(f,g);this.resetEvents();
+if(this.dirty=this.isDirty()){dojo.forEach(this.series,u);this._eventSeries={};this.cleanGroup();var k=this.group;j.forEachRev(this.series,function(a){a.cleanGroup(k)})}var i=this.chart.theme,p,l,v=this._hScaler.scaler.getTransformerFromModel(this._hScaler),q=this._vScaler.scaler.getTransformerFromModel(this._vScaler),w=this.events(),e=o.calculateBarSize(this._hScaler.bounds.scale,this.opt);p=e.gap;l=e.size;for(e=this.series.length-1;e>=0;--e)if(c=this.series[e],!this.dirty&&!c.dirty)i.skip(),this._reconnectEvents(c.name);
+else{c.cleanGroup();for(var r=i.next("column",[this.opt,c]),k=c.group,s=Array(h.length),b=0;b<h.length;++b)if(a=c.data[b],a!==null){var d=h[b],m=q(d),a=typeof a!="number"?i.addMixin(r,"column",a,!0):i.post(r,"column");if(l>=1&&m>=1){var t={x:g.l+v(b+0.5)+p,y:f.height-g.b-q(d),width:l,height:m},n=this._plotFill(a.series.fill,f,g),n=this._shapeFill(n,t),a=k.createRect(t).setFill(n).setStroke(a.series.stroke);c.dyn.fill=a.getFill();c.dyn.stroke=a.getStroke();w&&(d={element:"column",index:b,run:c,shape:a,
+x:b+0.5,y:d},this._connectEvents(d),s[b]=d);this.animate&&this._animateColumn(a,f.height-g.b,m)}}this._eventSeries[c.name]=s;c.dirty=!1;for(b=0;b<c.data.length;++b)a=c.data[b],a!==null&&(d=typeof a=="number"?a:a.y,isNaN(d)&&(d=0),h[b]-=d)}this.dirty=!1;return this}})}());

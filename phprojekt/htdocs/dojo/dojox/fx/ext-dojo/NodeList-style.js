@@ -1,21 +1,12 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.fx.ext-dojo.NodeList-style"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.fx.ext-dojo.NodeList-style"] = true;
 dojo.provide("dojox.fx.ext-dojo.NodeList-style");
 dojo.experimental("dojox.fx.ext-dojo.NodeList-style");
-// summary: 
+// summary:
 //		Core extensions to `dojo.NodeList` providing addtional fx to `dojo.NodeList-fx`
 // 		from `dojox.fx.style`
 //
 // description:
 //		A Package to extend dojo base NodeList with fx provided by the `dojox.fx` project.
-//		These are experimental animations, in an experimental 
+//		These are experimental animations, in an experimental
 
 dojo.require("dojo.NodeList-fx");
 dojo.require("dojox.fx.style");
@@ -69,5 +60,3 @@ dojo.extend(dojo.NodeList, {
 	}
 
 });
-
-}

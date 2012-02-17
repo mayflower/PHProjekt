@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.collections.BinaryTree"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.collections.BinaryTree"] = true;
 dojo.provide("dojox.collections.BinaryTree");
 dojo.require("dojox.collections._base");
 
@@ -19,7 +10,7 @@ dojox.collections.BinaryTree=function(data){
 			var c=new node();
 			if(this.value.value){
 				c.value=this.value.clone();
-			}else{ 
+			}else{
 				c.value=this.value;
 			}
 			if(this.left!=null){
@@ -103,7 +94,7 @@ dojox.collections.BinaryTree=function(data){
 			root=n;
 		}else{
 			i=parent.compare(n);
-			if(i>0){ 
+			if(i>0){
 				parent.left=n;
 			}else{
 				parent.right=n;
@@ -142,14 +133,14 @@ dojox.collections.BinaryTree=function(data){
 		if(!current){ return; }
 		this.count--;
 		if(!current.right){
-			if(!parent){ 
+			if(!parent){
 				root=current.left;
 			}else{
 				i=parent.compare(current);
 				if(i>0){ parent.left=current.left; }
 				else if(i<0){ parent.right=current.left; }
 			}
-		} 
+		}
 		else if(!current.right.left){
 			if(!parent){
 				root=current.right;
@@ -169,7 +160,7 @@ dojox.collections.BinaryTree=function(data){
 			lmParent.left=leftmost.right;
 			leftmost.left=current.left;
 			leftmost.right=current.right;
-			if(!parent){ 
+			if(!parent){
 				root=leftmost;
 			}else{
 				i=parent.compare(current);
@@ -214,5 +205,3 @@ dojox.collections.BinaryTree=function(data){
 dojox.collections.BinaryTree.TraversalMethods={
 	Preorder: 1, Inorder: 2, Postorder: 3
 };
-
-}

@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojo.date"])dojo._hasResource["dojo.date"]=!0,dojo.provide("dojo.date"),dojo.getObject("date",!0,dojo),dojo.date.getDaysInMonth=function(b){var a=b.getMonth(),c=[31,28,31,30,31,30,31,31,30,31,30,31];return a==1&&dojo.date.isLeapYear(b)?29:c[a]},dojo.date.isLeapYear=function(b){b=b.getFullYear();return!(b%400)||!(b%4)&&!!(b%100)},dojo.date.getTimezoneName=function(b){var a=b.toString(),c="",e=a.indexOf("(");if(e>-1)c=a.substring(++e,a.indexOf(")"));else if(e=/([A-Z\/]+) \d{4}$/,
+a=a.match(e))c=a[1];else if(a=b.toLocaleString(),e=/ ([A-Z\/]+)$/,a=a.match(e))c=a[1];return c=="AM"||c=="PM"?"":c},dojo.date.compare=function(b,a,c){b=new Date(+b);a=new Date(+(a||new Date));c=="date"?(b.setHours(0,0,0,0),a.setHours(0,0,0,0)):c=="time"&&(b.setFullYear(0,0,0),a.setFullYear(0,0,0));return b>a?1:b<a?-1:0},dojo.date.add=function(b,a,c){var e=new Date(+b),d=!1,f="Date";switch(a){case "day":break;case "weekday":var g;(a=c%5)?g=parseInt(c/5):(a=c>0?5:-5,g=c>0?(c-5)/5:(c+5)/5);var h=b.getDay(),
+i=0;h==6&&c>0?i=1:h==0&&c<0&&(i=-1);h+=a;if(h==0||h==6)i=c>0?2:-2;c=7*g+a+i;break;case "year":f="FullYear";d=!0;break;case "week":c*=7;break;case "quarter":c*=3;case "month":d=!0;f="Month";break;default:f="UTC"+a.charAt(0).toUpperCase()+a.substring(1)+"s"}if(f)e["set"+f](e["get"+f]()+c);d&&e.getDate()<b.getDate()&&e.setDate(0);return e},dojo.date.difference=function(b,a,c){var a=a||new Date,c=c||"day",e=a.getFullYear()-b.getFullYear(),d=1;switch(c){case "quarter":b=b.getMonth();a=a.getMonth();b=Math.floor(b/
+3)+1;a=Math.floor(a/3)+1;a+=e*4;d=a-b;break;case "weekday":e=Math.round(dojo.date.difference(b,a,"day"));c=parseInt(dojo.date.difference(b,a,"week"));if(e%7==0)e=c*5;else{var d=0,f=b.getDay(),g=a.getDay(),c=parseInt(e/7),a=e%7,b=new Date(b);b.setDate(b.getDate()+c*7);b=b.getDay();if(e>0)switch(!0){case f==6:d=-1;break;case f==0:d=0;break;case g==6:d=-1;break;case g==0:d=-2;break;case b+a>5:d=-2}else if(e<0)switch(!0){case f==6:d=0;break;case f==0:d=1;break;case g==6:d=2;break;case g==0:d=1;break;
+case b+a<0:d=2}e+=d;e-=c*2}d=e;break;case "year":d=e;break;case "month":d=a.getMonth()-b.getMonth()+e*12;break;case "week":d=parseInt(dojo.date.difference(b,a,"day")/7);break;case "day":d/=24;case "hour":d/=60;case "minute":d/=60;case "second":d/=1E3;case "millisecond":d*=a.getTime()-b.getTime()}return Math.round(d)};

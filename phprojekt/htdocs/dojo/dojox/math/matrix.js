@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.math.matrix"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.math.matrix"] = true;
-dojo.provide("dojox.math.matrix");
+// AMD-ID "dojox/math/matrix"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("math.matrix", true, dojox);
 
 dojo.mixin(dojox.math.matrix, {
 	iDF:0,
@@ -298,4 +291,5 @@ dojo.mixin(dojox.math.matrix, {
 	}
 });
 
-}
+return dojox.math.matrix;
+});

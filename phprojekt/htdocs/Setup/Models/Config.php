@@ -98,19 +98,20 @@ class Setup_Models_Config
      *
      * @return string Output for save in the file.
      */
-    public function getDefaultProduction($username, $password, $dbname, $adapter, $host)
+    public function getDefaultProduction($username, $password, $dbname, $adapter, $host, $port)
     {
         $content = $this->_getIntroduction();
         $content .= $this->_eol . '[production]' . $this->_eol;
         $content .= $this->_getLanguage();
         $content .= $this->_getPaths();
-        $content .= $this->_getDatabase($username, $password, $dbname, $adapter, $host);
+        $content .= $this->_getDatabase($username, $password, $dbname, $adapter, $host, $port);
         $content .= $this->_getLogs();
         $content .= $this->_getModules();
         $content .= $this->_getMail();
         $content .= $this->_getMisc();
         $content .= $this->_getFront();
         $content .= $this->_getFrontendMessage();
+        $content .= $this->_getAuthentication();
 
         return $content;
     }
@@ -233,6 +234,10 @@ class Setup_Models_Config
         $content .= '; Path where will be placed modules created by the admin.' . $this->_eol;
         $content .= 'applicationPath = "' . $this->_privateDir . 'application/"' . $this->_eol;
 
+        $content .= $this->_eol;
+        $content .= '; Path where webdav resides' . $this->_eol;
+        $content .= 'webdavPath = "' . $this->_privateDir . 'webdav/"' . $this->_eol;
+
         return $content;
     }
 
@@ -248,7 +253,7 @@ class Setup_Models_Config
      * @return string Output for save in the file.
      */
     private function _getDatabase($username = '', $password = '', $dbname = '', $adapter = 'Pdo_Mysql',
-        $host = 'localhost')
+        $host = 'localhost', $port = 3306)
     {
         $content  = $this->_eol;
         $content .= ';;;;;;;;;;;;' . $this->_eol;
@@ -257,18 +262,19 @@ class Setup_Models_Config
         $content .= $this->_eol;
 
         $content .= '; For this Developer Release, it just has been tested with pdo_mysql.' . $this->_eol;
-        $content .= 'database.adapter = "' . $adapter . '"' . $this->_eol;
+        $content .= 'database.adapter = "' . addcslashes($adapter, '"') . '"' . $this->_eol;
         $content .= $this->_eol;
         $content .= '; The assigned name or IP address for the database server.' . $this->_eol;
-        $content .= 'database.params.host = "' . $host . '"' . $this->_eol;
+        $content .= 'database.params.host = "' . addcslashes($host, '"') . '"' . $this->_eol;
         $content .= $this->_eol;
         $content .= '; Username and password with the appropriate rights for Phprojekt to access to' . $this->_eol;
         $content .= '; the database.' . $this->_eol;
-        $content .= 'database.params.username = "' . $username . '"' . $this->_eol;
-        $content .= 'database.params.password = "' . $password . '"' . $this->_eol;
+        $content .= 'database.params.username = "' . addcslashes($username, '"') . '"' . $this->_eol;
+        $content .= 'database.params.password = "' . addcslashes($password, '"') . '"' . $this->_eol;
         $content .= $this->_eol;
         $content .= '; Name of the database, inside the server' . $this->_eol;
-        $content .= 'database.params.dbname = "' . $dbname . '"' . $this->_eol;
+        $content .= 'database.params.dbname = "' . addcslashes($dbname, '"') . '"' . $this->_eol;
+        $content .= 'database.params.port = ' . (int) $port . $this->_eol;
 
         return $content;
     }
@@ -297,6 +303,10 @@ class Setup_Models_Config
         $content .= '; Note for developers: there are many different type of logs defined that can be' . $this->_eol;
         $content .= '; added here, see the complete list in phprojekt/library/Phprojekt/Log.php' . $this->_eol;
         $content .= 'log.err.filename = "' . $this->_privateDir . 'logs/err.log"' . $this->_eol;
+
+        $content .= $this->_eol;
+        $content .= '; If this is enabled, a stack trace will be logged for every logged message' . $this->_eol;
+        $content .= 'log.printStackTraces = false' . $this->_eol;
 
         return $content;
     }
@@ -359,18 +369,18 @@ class Setup_Models_Config
         $content .= $this->_eol;
         $content .= '; If mailTransport is set to 0, then fill all the needed \'smtp*\' values:' . $this->_eol;
         $content .= '; Name or IP address of the SMTP server to be used to send that notifications.' . $this->_eol;
-        $content .= 'smtpServer = "' . $server . '"' . $this->_eol;
+        $content .= 'smtpServer = "' . addcslashes($server, '"') . '"' . $this->_eol;
         $content .= '; If the SMTP server requires authentication, remove the semicolons \';\' in the' . $this->_eol;
         $content .= '; three following lines and write inside the inverted commas "" the appropriate' . $this->_eol;
         $content .= '; username and password. Auth mode: leave this as "login" if you don\'t know.' . $this->_eol;
         $content .= '; Other available options: plain, cram-md5' . $this->_eol;
         $content .= ';smtpAuth     = "login"' . $this->_eol;
         if (empty($user) && empty($password)) {
-            $content .= ';smtpUser     = "' . $user . '"' . $this->_eol;
-            $content .= ';smtpPassword = "' . $password . '"' . $this->_eol;
+            $content .= ';smtpUser     = "' . addcslashes($user, '"') . '"' . $this->_eol;
+            $content .= ';smtpPassword = "' . addcslashes($password, '"') . '"' . $this->_eol;
         } else {
-            $content .= 'smtpUser     = "' . $user . '"' . $this->_eol;
-            $content .= 'smtpPassword = "' . $password . '"' . $this->_eol;
+            $content .= 'smtpUser     = "' . addcslashes($user, '"') . '"' . $this->_eol;
+            $content .= 'smtpPassword = "' . addcslashes($password, '"') . '"' . $this->_eol;
         }
         $content .= '; You may specify SSL and Port, if the SMTP server of your choice requires them.' . $this->_eol;
         $content .= ';smtpSsl      = ""' . $this->_eol;
@@ -389,7 +399,7 @@ class Setup_Models_Config
      *
      * @return string Output for save in the file.
      */
-    private function _getMisc($compressedDojo = 'true', $useCacheForClasses = 'true')
+    private function _getMisc($compressedDojo = 'true')
     {
         $content  = $this->_eol;
         $content .= ';;;;;;;;' . $this->_eol;
@@ -400,9 +410,6 @@ class Setup_Models_Config
         $content .= '; Use compressed dojo to improve the speed of loading.' . $this->_eol;
         $content .= 'compressedDojo = ' . $compressedDojo . $this->_eol;
         $content .= $this->_eol;
-
-        $content .= '; Use Zend_Registry for cache classes in the same request' . $this->_eol;
-        $content .= 'useCacheForClasses = ' . $useCacheForClasses . $this->_eol;
 
         return $content;
     }
@@ -465,5 +472,65 @@ class Setup_Models_Config
         $content .= 'pollingLoop = 30' . $this->_eol;
 
         return $content;
+    }
+
+    /*
+     * Return the authentication text.
+     *
+     * @return string
+     */
+    private function _getAuthentication()
+    {
+        return <<<HERE
+
+;;;;;;;;;;;;;;;;;;
+; AUTHENTICATION ;
+;;;;;;;;;;;;;;;;;;
+
+; Options: default/ldap
+authentication.mode = 'default'
+
+; Please make sure that your ldap users have 'givenname', 'sn' and 'mail' properties when using ldap.
+
+; Default values for new users [0/1]. DO NOT SET THIS TO 1 WITHOUT KNOWING WHAT YOU DO!
+authentication.integration.admin = 0
+; default status. 'A' for Active, 'I' for Inactive
+authentication.integration.status = 'A'
+; If not set, default config parameter 'language' will be used
+authentication.integration.language = 'en'
+; default timezone for new users. Look into phprojekt/library/Phprojekt/Converter/Time.php line 119ff
+authentication.integration.timeZone = '0000002'
+
+; A comma separated list of users who should have admin privileges in PHProjekt.
+; This will override the authentication.integration.admin parameter for the
+; specified users if the default is 0. Changes to the list also
+; affect to old users during their login. However, if user is already admin,
+; the setting cannot unset by removing the username from the list!
+; Default PHProjekt admin with id=1 is not authenticated through LDAP!
+;authentication.integration.systemAdmins = 'username,username2'
+
+; PLEASE NOTE THAT THESE CONFIGURATIONS SHOULD BE CAREFULLY SET
+; FOR THE LDAP AUTHENTICATION TO WORK!
+
+; If you are not an expert in LDAP configurations, please
+; consult the following references.
+; LDAP configuration vars explainded at:
+; http://framework.zend.com/manual/en/zend.ldap.api.html
+; Example at:
+; http://framework.zend.com/manual/en/zend.auth.adapter.ldap.html
+
+authentication.ldap.server1.host                   = 'ldaphost'
+authentication.ldap.server1.port                   = 389
+authentication.ldap.server1.useSsl                 = false
+authentication.ldap.server1.useStartTls            = false
+authentication.ldap.server1.accountDomainName      = 'domain.com'
+authentication.ldap.server1.accountDomainNameShort = 'DOMAIN'
+authentication.ldap.server1.baseDn                 = 'OU=OrgUnit,DC=domain,DC=com'
+authentication.ldap.server1.allowEmptyPassword     = false
+authentication.ldap.server1.bindRequiresDn         = false
+authentication.ldap.server1.optReferrals           = false
+authentication.ldap.server1.tryUsernameSplit       = false
+authentication.ldap.server1.accountFilterFormat    = null
+HERE;
     }
 }

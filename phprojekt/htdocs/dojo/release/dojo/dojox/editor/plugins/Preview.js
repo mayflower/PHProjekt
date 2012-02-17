@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.editor.plugins.Preview"]||(dojo._hasResource["dojox.editor.plugins.Preview"]=!0,dojo.provide("dojox.editor.plugins.Preview"),dojo.require("dijit.form.Button"),dojo.require("dijit._editor._Plugin"),dojo.require("dojo.i18n"),dojo.requireLocalization("dojox.editor.plugins","Preview",null,"ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw"),dojo.declare("dojox.editor.plugins.Preview",dijit._editor._Plugin,{useDefaultCommand:!1,styles:"",
+stylesheets:null,iconClassPrefix:"dijitAdditionalEditorIcon",_initButton:function(){this._nlsResources=dojo.i18n.getLocalization("dojox.editor.plugins","Preview");this.button=new dijit.form.Button({label:this._nlsResources.preview,showLabel:!1,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"Preview",tabIndex:"-1",onClick:dojo.hitch(this,"_preview")})},setEditor:function(a){this.editor=a;this._initButton()},updateState:function(){this.button.set("disabled",this.get("disabled"))},_preview:function(){try{var a=
+this.editor.get("value"),c="\t\t<meta http-equiv='Content-Type' content='text/html; charset='UTF-8'>\n",b;if(this.stylesheets)for(b=0;b<this.stylesheets.length;b++)c+="\t\t<link rel='stylesheet' type='text/css' href='"+this.stylesheets[b]+"'>\n";this.styles&&(c+="\t\t<style>"+this.styles+"</style>\n");var a="<html>\n\t<head>\n"+c+"\t</head>\n\t<body>\n"+a+"\n\t</body>\n</html>",d=window.open("javascript: ''",this._nlsResources.preview,"status=1,menubar=0,location=0,toolbar=0");d.document.open();d.document.write(a);
+d.document.close()}catch(e){console.warn(e)}}}),dojo.subscribe(dijit._scopeName+".Editor.getPlugin",null,function(a){if(!a.plugin&&a.args.name.toLowerCase()==="preview")a.plugin=new dojox.editor.plugins.Preview({styles:"styles"in a.args?a.args.styles:"",stylesheets:"stylesheets"in a.args?a.args.stylesheets:null})}));

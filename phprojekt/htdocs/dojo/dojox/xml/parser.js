@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.xml.parser"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.xml.parser"] = true;
 dojo.provide("dojox.xml.parser");
 
 //DOM type to int value for reference.
@@ -29,7 +20,7 @@ dojox.xml.parser.parse = function(/*String?*/ str, /*String?*/ mimetype){
 	//		cross-browser implementation of creating an XML document object from null, empty string, and XML text..
 	//
 	//	str:
-	//		Optional text to create the document from.  If not provided, an empty XML document will be created.  
+	//		Optional text to create the document from.  If not provided, an empty XML document will be created.
 	//		If str is empty string "", then a new empty document will be created.
 	//	mimetype:
 	//		Optional mimetype of the text.  Typically, this is text/xml.  Will be defaulted to text/xml if not provided.
@@ -69,7 +60,7 @@ dojox.xml.parser.parse = function(/*String?*/ str, /*String?*/ mimetype){
 			if(pe.errorCode !== 0){
 				throw new Error("Line: " + pe.line + "\n" +
 					"Col: " + pe.linepos + "\n" +
-					"Reason: " + pe.reason + "\n" + 
+					"Reason: " + pe.reason + "\n" +
 					"Error Code: " + pe.errorCode + "\n" +
 					"Source: " + pe.srcText);
 			}
@@ -100,7 +91,7 @@ dojox.xml.parser.textContent = function(/*Node*/node, /*String?*/text){
 	//		Implementation of the DOM Level 3 attribute; scan node for text
 	//	description:
 	//		Implementation of the DOM Level 3 attribute; scan node for text
-	//		This function can also update the text of a node by replacing all child 
+	//		This function can also update the text of a node by replacing all child
 	//		content of the node.
 	//	node:
 	//		The node to get the text off of or set the text on.
@@ -193,6 +184,4 @@ dojox.xml.parser.innerXML = function(/*Node*/node){
 		return (new XMLSerializer()).serializeToString(node);	//	String
 	}
 	return null;
-}
-
 }

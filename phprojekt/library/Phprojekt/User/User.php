@@ -47,15 +47,6 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
                                                 'model'     => 'Setting'));
 
     /**
-     * Has many and belongs to many declrations.
-     *
-     * @var array
-     */
-    public $hasManyAndBelongsToMany = array('groups' => array('classname' => 'Phprojekt_Groups_Groups',
-                                                              'module'    => 'Groups',
-                                                              'model'     => 'Groups'));
-
-    /**
      * The standard information manager with hardcoded field definitions.
      *
      * @var Phprojekt_ModelInformation_Interface
@@ -86,8 +77,8 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         }
         parent::__construct($db);
 
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_User_Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Phprojekt_User_Information();
     }
 
     /**
@@ -98,8 +89,20 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     public function __clone()
     {
         parent::__clone();
-        $this->_validate           = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_informationManager = Phprojekt_Loader::getLibraryClass('Phprojekt_User_Information');
+        $this->_validate           = new Phprojekt_Model_Validate();
+        $this->_informationManager = new Phprojekt_User_Information();
+    }
+
+    /**
+     * Overwrite fetchAll to provide a default sorting by the configured display name.
+     */
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
+    {
+        if (is_null($order)) {
+            $order = self::getDisplay();
+        }
+
+        return parent::fetchAll($where, $order, $count, $offset, $select, $join);
     }
 
     /**
@@ -143,6 +146,26 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     }
 
     /**
+     * Finds a user based on the username
+     *
+     * @param string $username Username of the user to find.
+     *
+     * @return Phprojekt_User_User|null User object or null.
+     */
+    public function findByUsername($username)
+    {
+        $db = Phprojekt::getInstance()->getDb();
+
+        $users = $this->fetchAll($db->quoteInto('username = ?', $username), null, 1);
+
+        if (isset($users[0])) {
+            return $users[0];
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Found an user using the id and return this class for the new user.
      * If the ID is wrong, return the actual user.
      *
@@ -154,7 +177,9 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     {
         if ($id > 0) {
             $clone = clone($this);
-            $clone->find($id);
+            if (!$clone->find($id)) {
+                throw new Phprojekt_PublishedException("Could not find user with id $id");
+            }
             return $clone;
         } else {
             return $this;
@@ -169,7 +194,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     public function save()
     {
         // Reset users by project cache
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $activeRecord = new Project_Models_Project();
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree         = $tree->setup();
         foreach ($tree as $node) {
@@ -183,7 +208,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         if ($this->id == 0) {
             if (parent::save()) {
                 // adding default values
-                $rights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+                $rights = new Phprojekt_Item_Rights();
                 $rights->saveDefaultRights($this->id);
                 return true;
             }
@@ -273,7 +298,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     static public function getSetting($settingName, $defaultValue = null)
     {
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('User');
 
         $value = $setting->getSetting($settingName);
@@ -315,21 +340,35 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     /**
      * Apply the display to the $model and return the result.
      *
-     * @param array               $display The display format.
-     * @param Phprojekt_User_User $model   The model to apply the display.
+     * @param array  $display  The display format.
+     * @param object $object   The model to apply the display.
      *
      * @return string User display.
      */
-    public static function applyDisplay(array $display, $model)
+    public static function applyDisplay(array $display, $object)
     {
         $showValue = array();
         foreach ($display as $value) {
-            if (isset($model->$value)) {
-                $showValue[] = $model->$value;
+            if (isset($object->$value)) {
+                $showValue[] = $object->$value;
             }
         }
 
         return implode(', ', $showValue);
+    }
+
+    /**
+     * Returns the name of the user formatted for display.
+     *
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        static $format = null;
+        if (is_null($format)) {
+            $format = self::getDisplay();
+        }
+        return self::applyDisplay($format, $this);
     }
 
     /**
@@ -346,19 +385,12 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         $usersNamespace = new Zend_Session_Namespace($sessionName);
 
         if (!isset($usersNamespace->users)) {
-            $displayName = $this->getDisplay();
-            $rights      = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-            $ids         = $rights->getUsersWithRight(1, (int) Phprojekt::getCurrentProjectId());
             $where       = sprintf('status = %s', $this->getAdapter()->quote('A'));
-            if (!empty($ids)) {
-                $where .= sprintf(' AND id IN (%s) ', implode(',', $ids));
-            }
-
-            $result = $this->fetchAll($where, $displayName);
-            $values = array();
+            $result      = $this->fetchAll($where);
+            $values      = array();
             foreach ($result as $node) {
                 $values[] = array('id'   => (int) $node->id,
-                                  'name' => $node->applyDisplay($displayName, $node));
+                                  'name' => $node->displayName);
             }
             $usersNamespace->users = $values;
         }

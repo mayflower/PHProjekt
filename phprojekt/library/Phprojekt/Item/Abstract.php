@@ -98,10 +98,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
         parent::__construct($db);
 
         $this->_dbManager = new Phprojekt_DatabaseManager($this, $db);
-        $this->_validate  = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_history   = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $this->_search    = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
-        $this->_rights    = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $this->_validate  = new Phprojekt_Model_Validate();
+        $this->_history   = new Phprojekt_History();
+        $this->_search    = new Phprojekt_Search();
+        $this->_rights    = new Phprojekt_Item_Rights();
     }
 
     /**
@@ -112,10 +112,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function __clone()
     {
         parent::__clone();
-        $this->_validate = Phprojekt_Loader::getLibraryClass('Phprojekt_Model_Validate');
-        $this->_history  = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
-        $this->_search   = Phprojekt_Loader::getLibraryClass('Phprojekt_Search');
-        $this->_rights   = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $this->_validate = new Phprojekt_Model_Validate();
+        $this->_history  = new Phprojekt_History();
+        $this->_search   = new Phprojekt_Search();
+        $this->_rights   = new Phprojekt_Item_Rights();
     }
 
     /**
@@ -135,7 +135,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getNotification()
     {
-        $notification = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification');
+        $notification = new Phprojekt_Notification();
         $notification->setModel($this);
 
         return $notification;
@@ -184,7 +184,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function recordValidate()
     {
         $data   = $this->_data;
-        $fields = $this->_dbManager->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
+        $fields = $this->getInformation()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
 
         return $this->_validate->recordValidate($this, $data, $fields);
     }
@@ -323,18 +323,20 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
         // Only fetch records with read access
-        $join .= sprintf(' INNER JOIN item_rights ON (item_rights.item_id = %s
-            AND item_rights.module_id = %d AND item_rights.user_id = %d) ',
-            $this->getAdapter()->quoteIdentifier($this->getTableName() . '.id'),
-            Phprojekt_Module::getId($this->getModelName()), Phprojekt_Auth::getUserId());
+        if (!Phprojekt_Auth::isAdminUser()) {
+            $join .= sprintf(' INNER JOIN item_rights ON (item_rights.item_id = %s
+                AND item_rights.module_id = %d AND item_rights.user_id = %d) ',
+                $this->getAdapter()->quoteIdentifier($this->getTableName() . '.id'),
+                Phprojekt_Module::getId($this->getModelName()), Phprojekt_Auth_Proxy::getEffectiveUserId());
 
-        // Set where
-        if (null !== $where) {
-            $where .= ' AND ';
+            // Set where
+            if (null !== $where) {
+                $where .= ' AND ';
+            }
+            $where .= ' (' . sprintf('(%s.owner_id = %d OR %s.owner_id IS NULL)', $this->getTableName(),
+                Phprojekt_Auth_Proxy::getEffectiveUserId(), $this->getTableName());
+            $where .= sprintf(' OR ((item_rights.access & %d) = %d)) ', Phprojekt_Acl::READ, Phprojekt_Acl::READ);
         }
-        $where .= ' (' . sprintf('(%s.owner_id = %d OR %s.owner_id IS NULL)', $this->getTableName(),
-            Phprojekt_Auth::getUserId(), $this->getTableName());
-        $where .= ' OR (item_rights.access > 0)) ';
 
         return parent::fetchAll($where, $order, $count, $offset, $select, $join);
     }
@@ -344,30 +346,31 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      *
      * @return array Array of rights per user.
      */
-    public function getRights()
+    public function getRights($userId = null)
     {
-        $rights = $this->_rights->getRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
-
-        return $this->_mergeRightsAndRole($rights);
-    }
-
-    /**
-     * Returns the rights merged with the role for the current user for each item.
-     *
-     * @param array $ids An array with all the IDs for check.
-     *
-     * @return array Array of rights per user.
-     */
-    public function getMultipleRights($ids)
-    {
-        $allRights = $this->_rights->getMultipleRights(Phprojekt_Module::getId($this->getModelName()), $ids);
-
-        $return = array();
-        foreach ($allRights as $user => $rights) {
-            $return[$user] = $this->_mergeRightsAndRole($rights);
+        // backward compatbility
+        if (null === $userId) {
+            $userId = Phprojekt_Auth_Proxy::getEffectiveUserId();
         }
 
-        return $return;
+        $moduleId = Phprojekt_Module::getId($this->getModelName());
+        return Phprojekt_Right::getRightsForItems($moduleId, $this->projectId, $userId, array($this->id));
+    }
+
+    public function hasRight($userId, $right, $projectId = null)
+    {
+        if (Phprojekt_Auth::isAdminUser() || $this->isNew()) {
+            return true;
+        }
+
+        $projectId = is_null($projectId) ? $this->projectId : $projectId;
+        $moduleId = Phprojekt_Module::getId($this->getModelName());
+        $rights   = Phprojekt_Right::getRightsForItems($moduleId, $projectId, $userId, array($this->id));
+        if (!isset($rights[$this->id])) {
+            return Phprojekt_Acl::NONE;
+        }
+
+        return ($rights[$this->id] & $right) == $right;
     }
 
     /**
@@ -377,79 +380,8 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getUsersRights()
     {
-        $rights = $this->_rights->getUsersRights(Phprojekt_Module::getId($this->getModelName()), $this->id);
-
-        return $this->_mergeRightsAndRole($rights);
-    }
-
-    /**
-     * Returns the right merged with the role for each user has on a Phprojekt item.
-     *
-     * @param array $rights Array of rights per user.
-     *
-     * @return array Array of rights per user.
-     */
-    public function _mergeRightsAndRole($rights)
-    {
         $moduleId = Phprojekt_Module::getId($this->getModelName());
-        $saveType = Phprojekt_Module::getSaveType($moduleId);
-        switch ($saveType) {
-            case Phprojekt_Module::TYPE_NORMAL:
-                $roleRights      = new Phprojekt_RoleRights($this->projectId, $moduleId, $this->id);
-                $roleRightRead   = $roleRights->hasRight('read');
-                $roleRightWrite  = $roleRights->hasRight('write');
-                $roleRightCreate = $roleRights->hasRight('create');
-                $roleRightAdmin  = $roleRights->hasRight('admin');
-
-                // Map roles with item rights and make one array
-                foreach ($rights as $userId => $access) {
-                    foreach ($access as $name => $value) {
-                        switch ($name) {
-                            case 'admin':
-                                $rights[$userId]['admin'] = $roleRightAdmin && $value;
-                                break;
-                            case 'download':
-                                $rights[$userId]['download'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin)
-                                    && $value;
-                                break;
-                            case 'delete':
-                                $rights[$userId]['delete'] = ($roleRightWrite || $roleRightAdmin) && $value;
-                                break;
-                            case 'copy':
-                                $rights[$userId]['copy'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin)
-                                    && $value;
-                                break;
-                            case 'create':
-                                $rights[$userId]['create'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin)
-                                    && $value;
-                                break;
-                            case 'access':
-                                $rights[$userId]['access'] = ($roleRightRead || $roleRightWrite || $roleRightCreate
-                                || $roleRightAdmin) && $value;
-                                break;
-                            case 'write':
-                                $rights[$userId]['write'] = ($roleRightWrite || $roleRightCreate || $roleRightAdmin)
-                                    && $value;
-                                break;
-                            case 'read':
-                                $rights[$userId]['read'] = ($roleRightRead || $roleRightWrite || $roleRightAdmin)
-                                    && $value;
-                                break;
-                            case 'none':
-                                $rights[$userId]['none'] = $value;
-                                break;
-                        }
-                    }
-                }
-                break;
-            case Phprojekt_Module::TYPE_GLOBAL:
-                break;
-            case Phprojekt_Module::TYPE_MIX:
-                // Implement saveType 2
-                break;
-        }
-
-        return $rights;
+        return $this->_rights->getUsersRights($moduleId, $this->id);
     }
 
     /**
@@ -465,4 +397,22 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     {
         $this->_rights->saveRights(Phprojekt_Module::getId($this->getModelName()), $this->id, $rights);
     }
+
+    /**
+     * Returns all users with the given right.
+     *
+     * @param int  $rights The bitmask with rights. (ORed constants from Phprojekt_Acl.) Any rights if omitted or null.
+     * @param bool $exact  Only return users with these exact rights. Defaults to false if omitted.
+     *
+     * @return array of User The users with the given right.
+     */
+    public function getUsersWithRights($rights = null, $exact = false) {
+        return $this->_rights->getUsersWithRight(
+            Phprojekt_Module::getId($this->getModelName()),
+            $this->id,
+            $rights,
+            $exact
+        );
+    }
+
 }

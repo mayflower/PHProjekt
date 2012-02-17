@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.dnd.BoundingBoxController"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.dnd.BoundingBoxController"] = true;
 dojo.provide("dojox.dnd.BoundingBoxController");
 
 dojo.declare(
@@ -15,7 +6,7 @@ dojo.declare(
 	{
 		// summary: Allows the user draw bounding boxes around nodes on the page.
 		// Publishes to the "/dojox/dnd/bounding" topic to tell the selector to check
-		// to see whether any dnd items fall within the coordinates of the bounding box 
+		// to see whether any dnd items fall within the coordinates of the bounding box
 		
 		// x,y start and end coordinates for the bounding box
 		_startX: null,
@@ -137,5 +128,3 @@ dojo.declare(
 		}
 	}
 );
-
-}

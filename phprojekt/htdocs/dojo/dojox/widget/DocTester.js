@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.DocTester"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.DocTester"] = true;
 dojo.provide("dojox.widget.DocTester");
 
 dojo.require("dojo.string");
@@ -15,12 +6,12 @@ dojo.require("dijit._Templated");
 dojo.require("dojox.form.BusyButton");
 dojo.require("dojox.testing.DocTest");
 
-dojo.declare('dojox.widget.DocTester', 
+dojo.declare('dojox.widget.DocTester',
 	[dijit._Widget, dijit._Templated],
 	{
 		// summary: A widget to run DocTests inside an HTML page.
-		// 
-		templateString: dojo.cache("dojox.widget", "DocTester/DocTester.html", "<div dojoAttachPoint=\"domNode\" class=\"dojoxDocTester\">\r\n\t<div dojoAttachPoint=\"containerNode\"></div>\r\n\t<button dojoType=\"dojox.form.BusyButton\" busyLabel=\"Testing...\" dojoAttachPoint=\"runButtonNode\">Run tests</button>\r\n\t<button dojoType=\"dijit.form.Button\" dojoAttachPoint=\"resetButtonNode\" style=\"display:none;\">Reset</button>\r\n\t<span>\r\n\t\t<span dojoAttachPoint=\"numTestsNode\">0</span> tests,\r\n\t\t<span dojoAttachPoint=\"numTestsOkNode\">0</span> passed,\r\n\t\t<span dojoAttachPoint=\"numTestsNokNode\">0</span> failed\r\n\t</span>\r\n</div>\r\n"),
+		//
+		templateString: dojo.cache('dojox.widget','DocTester/DocTester.html'),
 		widgetsInTemplate: true,
 	
 		_fillContent:function(/*DomNode*/source){
@@ -93,5 +84,3 @@ dojo.declare('dojox.widget.DocTester',
 		}
 	}
 );
-
-}

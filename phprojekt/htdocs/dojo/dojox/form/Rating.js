@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.Rating"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.Rating"] = true;
 dojo.provide("dojox.form.Rating");
 
 dojo.require("dijit.form._FormWidget");
@@ -58,7 +49,7 @@ dojo.declare("dojox.form.Rating",
 	},
 
 	_onMouse: function(evt){
-		if(this._hovering){
+		if(this.hovering){
 			var hoverValue = +dojo.attr(evt.target, "value");
 			this.onMouseOver(evt, hoverValue);
 			this._renderStars(hoverValue, true);
@@ -102,5 +93,3 @@ dojo.declare("dojox.form.Rating",
 		}
 	}
 });
-
-}

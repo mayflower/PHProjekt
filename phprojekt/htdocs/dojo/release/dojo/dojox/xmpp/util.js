@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojox.xmpp.util"])dojo._hasResource["dojox.xmpp.util"]=!0,dojo.provide("dojox.xmpp.util"),dojo.require("dojox.string.Builder"),dojo.require("dojox.encoding.base64"),dojox.xmpp.util.xmlEncode=function(a){a&&(a=a.replace("&","&amp;").replace(">","&gt;").replace("<","&lt;").replace("'","&apos;").replace('"',"&quot;"));return a},dojox.xmpp.util.encodeJid=function(a){for(var d=new dojox.string.Builder,e=0;e<a.length;e++){var b=a.charAt(e),c=b;switch(b){case " ":c="\\20";break;case '"':c=
+"\\22";break;case "#":c="\\23";break;case "&":c="\\26";break;case "'":c="\\27";break;case "/":c="\\2f";break;case ":":c="\\3a";break;case "<":c="\\3c";break;case ">":c="\\3e"}d.append(c)}return d.toString()},dojox.xmpp.util.decodeJid=function(a){return a=a.replace(/\\([23][02367acef])/g,function(a){switch(a){case "\\20":return" ";case "\\22":return'"';case "\\23":return"#";case "\\26":return"&";case "\\27":return"'";case "\\2f":return"/";case "\\3a":return":";case "\\3c":return"<";case "\\3e":return">"}return"ARG"})},
+dojox.xmpp.util.createElement=function(a,d,e){var b=new dojox.string.Builder("<");b.append(a+" ");for(var c in d)b.append(c+'="'),b.append(d[c]),b.append('" ');e?b.append("/>"):b.append(">");return b.toString()},dojox.xmpp.util.stripHtml=function(a){for(var d=0;d<arguments.length;d++);return a.replace(/<[^>]*?>/gi,"")},dojox.xmpp.util.decodeHtmlEntities=function(a){var d=dojo.doc.createElement("textarea");d.innerHTML=a.replace(/</g,"&lt;").replace(/>/g,"&gt;");return d.value},dojox.xmpp.util.htmlToPlain=
+function(a){a=dojox.xmpp.util.decodeHtmlEntities(a);a=a.replace(/<br\s*[i\/]{0,1}>/gi,"\n");return a=dojox.xmpp.util.stripHtml(a)},dojox.xmpp.util.Base64={},dojox.xmpp.util.Base64.encode=function(a){return dojox.encoding.base64.encode(function(a){for(var e=[],b=0;b<a.length;++b)e.push(a.charCodeAt(b));return e}(a))},dojox.xmpp.util.Base64.decode=function(a){return function(a){var e=[];dojo.forEach(a,function(a){e.push(String.fromCharCode(a))});return e.join("")}(dojox.encoding.base64.decode(a))};

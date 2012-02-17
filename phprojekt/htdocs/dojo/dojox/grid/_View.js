@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.grid._View"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.grid._View"] = true;
 dojo.provide("dojox.grid._View");
 
 dojo.require("dijit._Widget");
@@ -19,12 +10,12 @@ dojo.require("dojo.dnd.Source");
 dojo.require("dojo.dnd.Manager");
 
 (function(){
-	// private
+	// a private function
 	var getStyleText = function(inNode, inStyleText){
 		return inNode.style.cssText == undefined ? inNode.getAttribute("style") : inNode.style.cssText;
 	};
 
-	// public
+	// some public functions
 	dojo.declare('dojox.grid._View', [dijit._Widget, dijit._Templated], {
 		// summary:
 		//		A collection of grid columns. A grid is comprised of a set of views that stack horizontally.
@@ -39,7 +30,7 @@ dojo.require("dojo.dnd.Manager");
 		// 		Width for the view, in valid css unit
 		viewWidth: "",
 
-		templateString:"<div class=\"dojoxGridView\" wairole=\"presentation\">\r\n\t<div class=\"dojoxGridHeader\" dojoAttachPoint=\"headerNode\" wairole=\"presentation\">\r\n\t\t<div dojoAttachPoint=\"headerNodeContainer\" style=\"width:9000em\" wairole=\"presentation\">\r\n\t\t\t<div dojoAttachPoint=\"headerContentNode\" wairole=\"row\"></div>\r\n\t\t</div>\r\n\t</div>\r\n\t<input type=\"checkbox\" class=\"dojoxGridHiddenFocus\" dojoAttachPoint=\"hiddenFocusNode\" wairole=\"presentation\" />\r\n\t<input type=\"checkbox\" class=\"dojoxGridHiddenFocus\" wairole=\"presentation\" />\r\n\t<div class=\"dojoxGridScrollbox\" dojoAttachPoint=\"scrollboxNode\" wairole=\"presentation\">\r\n\t\t<div class=\"dojoxGridContent\" dojoAttachPoint=\"contentNode\" hidefocus=\"hidefocus\" wairole=\"presentation\"></div>\r\n\t</div>\r\n</div>\r\n",
+		templatePath: dojo.moduleUrl("dojox.grid","resources/View.html"),
 		
 		themeable: false,
 		classTag: 'dojoxGrid',
@@ -87,7 +78,7 @@ dojo.require("dojo.dnd.Manager");
 			this.inherited(arguments);
 		},
 
-		// focus 
+		// focus
 		focus: function(){
 			if(dojo.isIE || dojo.isWebKit || dojo.isOpera){
 				this.hiddenFocusNode.focus();
@@ -565,7 +556,7 @@ dojo.require("dojo.dnd.Manager");
 				this.contentWidth = this.getContentWidth();
 				this.headerContentNode.firstChild.style.width = this.contentWidth;
 			}
-			// FIXME: it should be easier to get w from this.scrollboxNode.clientWidth, 
+			// FIXME: it should be easier to get w from this.scrollboxNode.clientWidth,
 			// but clientWidth seemingly does not include scrollbar width in some cases
 			var w = this.scrollboxNode.offsetWidth - this.getScrollbarWidth();
 			if(!this._removingColumn){
@@ -624,7 +615,7 @@ dojo.require("dojo.dnd.Manager");
 		},
 
 		buildRowContent: function(inRowIndex, inRowNode){
-			inRowNode.innerHTML = this.content.generateHtml(inRowIndex, inRowIndex); 
+			inRowNode.innerHTML = this.content.generateHtml(inRowIndex, inRowIndex);
 			if(this.flexCells && this.contentWidth){
 				// FIXME: accessing firstChild here breaks encapsulation
 				inRowNode.firstChild.style.width = this.contentWidth;
@@ -840,5 +831,3 @@ dojo.require("dojo.dnd.Manager");
 		return oldMakeAvatar.call(dojo.dnd.manager());
 	};
 })();
-
-}

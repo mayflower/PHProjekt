@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.mobile.app.StageController"]||(dojo._hasResource["dojox.mobile.app.StageController"]=!0,dojo.provide("dojox.mobile.app.StageController"),dojo.experimental("dojox.mobile.app.StageController"),dojo.require("dojox.mobile.app.SceneController"),dojo.declare("dojox.mobile.app.StageController",null,{scenes:null,effect:"fade",constructor:function(b){this.domNode=b;this.scenes=[];if(dojo.config.mobileAnim)this.effect=dojo.config.mobileAnim},getActiveSceneController:function(){return this.scenes[this.scenes.length-
+1]},pushScene:function(b,a){if(!this._opInProgress){this._opInProgress=!0;var e=dojo.create("div",{"class":"scene-wrapper",style:{visibility:"hidden"}},this.domNode),d=new dojox.mobile.app.SceneController({},e);this.scenes.length>0&&this.scenes[this.scenes.length-1].assistant.deactivate();this.scenes.push(d);var c=this;dojo.forEach(this.scenes,this.setZIndex);d.stageController=this;d.init(b,a).addCallback(function(){c.scenes.length==1?(d.domNode.style.visibility="visible",c.scenes[c.scenes.length-
+1].assistant.activate(a),c._opInProgress=!1):c.scenes[c.scenes.length-2].performTransition(c.scenes[c.scenes.length-1].domNode,1,c.effect,null,function(){c.scenes[c.scenes.length-1].assistant.activate(a);c._opInProgress=!1})})}},setZIndex:function(b,a){dojo.style(b.domNode,"zIndex",a+1)},popScene:function(b){if(!this._opInProgress){var a=this;this.scenes.length>1?(this._opInProgress=!0,this.scenes[a.scenes.length-2].assistant.activate(b),this.scenes[a.scenes.length-1].performTransition(a.scenes[this.scenes.length-
+2].domNode,-1,this.effect,null,function(){a._destroyScene(a.scenes[a.scenes.length-1]);a.scenes.splice(a.scenes.length-1,1);a._opInProgress=!1})):console.log("cannot pop the scene if there is just one")}},popScenesTo:function(b,a){if(!this._opInProgress){for(;this.scenes.length>2&&this.scenes[this.scenes.length-2].sceneName!=b;)this._destroyScene(this.scenes[this.scenes.length-2]),this.scenes.splice(this.scenes.length-2,1);this.popScene(a)}},_destroyScene:function(b){b.assistant.deactivate();b.assistant.destroy();
+b.destroyRecursive()}}));

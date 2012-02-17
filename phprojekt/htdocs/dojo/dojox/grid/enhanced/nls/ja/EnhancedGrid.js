@@ -1,1 +1,11 @@
-({"descending":"降順","ascending":"昇順","nestedSort":"ネストされたソート","unsorted":"この列はソートしないでください","singleSort":"単一ソート","sortingState":"${0} - ${1}"})
+({
+	singleSort: "単一ソート",
+	nestedSort: "ネスト・ソート",
+	ascending: "昇順",
+	descending: "降順",
+	sortingState: "${0} - ${1}",
+	unsorted: "この列をソートしない",
+	indirectSelectionRadio: "行 ${0}、単一選択、ラジオ・ボックス",
+	indirectSelectionCheckBox: "行 ${0}、複数選択、チェック・ボックス",
+	selectAll: "すべてを選択"
+})

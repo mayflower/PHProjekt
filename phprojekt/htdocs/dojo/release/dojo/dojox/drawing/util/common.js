@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.drawing.util.common"]||(dojo._hasResource["dojox.drawing.util.common"]=!0,dojo.provide("dojox.drawing.util.common"),dojo.require("dojox.math.round"),function(){var g={},h=0;dojox.drawing.util.common={radToDeg:function(a){return a*180/Math.PI},degToRad:function(a){return a*Math.PI/180},angle:function(a,b){if(b){b/=180;var c=this.radians(a),d=Math.PI*b,c=dojox.math.round(c/d)*d;return dojox.math.round(this.radToDeg(c))}else return this.radToDeg(this.radians(a))},oppAngle:function(a){(a+=
+180)>360&&(a-=360);return a},radians:function(a){return Math.atan2(a.start.y-a.y,a.x-a.start.x)},length:function(a){return Math.sqrt(Math.pow(a.start.x-a.x,2)+Math.pow(a.start.y-a.y,2))},lineSub:function(a,b,c,d,e){var f=this.distance(this.argsToObj.apply(this,arguments)),f=f<e?e:f,f=(f-e)/f;return{x:a-(a-c)*f,y:b-(b-d)*f}},argsToObj:function(){var a=arguments;return a.length<4?a[0]:{start:{x:a[0],y:a[1]},x:a[2],y:a[3]}},distance:function(){var a=this.argsToObj.apply(this,arguments);return Math.abs(Math.sqrt(Math.pow(a.start.x-
+a.x,2)+Math.pow(a.start.y-a.y,2)))},slope:function(a,b){return!(a.x-b.x)?0:(a.y-b.y)/(a.x-b.x)},pointOnCircle:function(a,b,c,d){d=d*Math.PI/180;return{x:a+c*Math.cos(d),y:b-c*Math.sin(d)}},constrainAngle:function(a,b,c){var d=this.angle(a);if(d>=b&&d<=c)return a;var e=this.length(a);return this.pointOnCircle(a.start.x,a.start.y,e,d>c?c:b-d<100?b:c)},snapAngle:function(a,b){var c=this.radians(a),d=this.length(a),e=Math.PI*b,c=this.radToDeg(Math.round(c/e)*e);return this.pointOnCircle(a.start.x,a.start.y,
+d,c)},idSetStart:function(a){h=a},uid:function(a){a=a||"shape";g[a]=g[a]===void 0?h:g[a]+1;return a+g[a]},abbr:function(a){return a.substring(a.lastIndexOf(".")+1).charAt(0).toLowerCase()+a.substring(a.lastIndexOf(".")+2)},mixin:function(){},objects:{},register:function(a){this.objects[a.id]=a},byId:function(a){return this.objects[a]},attr:function(a,b,c,d){if(!a)return!1;try{if(a.shape&&a.util)a=a.shape;if(!c&&b=="id"&&a.target){for(var e=a.target;!dojo.attr(e,"id");)e=e.parentNode;return dojo.attr(e,
+"id")}if(a.rawNode||a.target){var f=Array.prototype.slice.call(arguments);f[0]=a.rawNode||a.target;return dojo.attr.apply(dojo,f)}return dojo.attr(a,"id")}catch(g){return!1}}}}());

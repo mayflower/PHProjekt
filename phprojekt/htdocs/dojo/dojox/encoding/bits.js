@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.encoding.bits"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.encoding.bits"] = true;
-dojo.provide("dojox.encoding.bits");
+// AMD-ID "dojox/encoding/bits"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("encoding.bits", true, dojox);
 
 dojox.encoding.bits.OutputStream = function(){
 	this.reset();
@@ -72,4 +65,6 @@ dojo.extend(dojox.encoding.bits.InputStream, {
 	}
 });
 
-}
+
+return dojox.encoding.bits;
+});

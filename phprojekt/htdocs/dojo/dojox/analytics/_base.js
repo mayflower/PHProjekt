@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.analytics._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.analytics._base"] = true;
 dojo.provide("dojox.analytics._base");
 
 dojox.analytics = function(){
@@ -36,7 +27,7 @@ dojox.analytics = function(){
 dojo.extend(dojox.analytics, {
 	schedulePusher: function(/* Int */interval){
 		// summary: Schedule the data pushing routines to happen in interval ms
-		setTimeout(dojo.hitch(this, "checkData"), interval || this.sendInterval); 
+		setTimeout(dojo.hitch(this, "checkData"), interval || this.sendInterval);
 	},
 
 	addData: function(dataType, data){
@@ -139,5 +130,3 @@ dojo.extend(dojox.analytics, {
 
 //create the analytics  singleton
 dojox.analytics = new dojox.analytics();
-
-}

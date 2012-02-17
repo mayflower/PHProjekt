@@ -1,1 +1,32 @@
-({"buttonSet":"Nastaviť","insertTableTitle":"Vložiť tabuľku","insertTableRowAfterLabel":"Pridať riadok za","center":"na stred","deleteTableColumnLabel":"Vymazať stĺpec","right":"vpravo","insertTableColumnBeforeLabel":"Pridať stĺpec pred","tableWidth":"Šírka tabuľky:","buttonInsert":"Vložiť","default":"štandardne","align":"Zarovnať:","insertTableRowBeforeLabel":"Pridať riadok pred","cellSpacing":"Rozstupy buniek:","pixels":"pixely","selectTableLabel":"Vybrať tabuľku","rows":"Riadky:","modifyTableTitle":"Upraviť tabuľku","cellPadding":"Odsadenie obsahu buniek:","deleteTableRowLabel":"Vymazať riadok","backgroundColor":"Farba pozadia:","insertTableColumnAfterLabel":"Pridať stĺpec za","left":"vľavo","borderThickness":"Hrúbka rámčeka","columns":"Stĺpce:","percent":"percentá","borderColor":"Farba rámčeka:"})
+({
+	insertTableTitle: "Vložiť tabuľku",
+	modifyTableTitle: "Upraviť tabuľku",
+	rows: "Riadky:",
+	columns: "Stĺpce:",
+	align: "Zarovnanie:",
+	cellPadding: "Výplň buniek:",
+	cellSpacing: "Rozstup buniek:",
+	tableWidth: "Šírka tabuľky:",
+	backgroundColor: "Farba pozadia:",
+	borderColor: "Farba rámika:",
+	borderThickness: "Hrúbka rámika:",
+	percent: "percent",
+	pixels: "pixlov",
+	"default": "predvolené",
+	left: "vľavo",
+	center: "stred",
+	right: "vpravo",
+	buttonSet: "Nastaviť", // translated elsewhere?
+	buttonInsert: "Vložiť",
+	buttonCancel: "Zrušiť",
+
+	selectTableLabel: "Vybrať tabuľku",
+	insertTableRowBeforeLabel: "Pridať riadok pred",
+	insertTableRowAfterLabel: "Pridať riadok za",
+	insertTableColumnBeforeLabel: "Pridať stĺpec pred",
+	insertTableColumnAfterLabel: "Pridať stĺpec za",
+	deleteTableRowLabel: "Vymazať riadok",
+	deleteTableColumnLabel: "Vymazať stĺpec"
+})
+	
+

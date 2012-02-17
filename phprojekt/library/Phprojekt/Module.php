@@ -74,29 +74,24 @@ class Phprojekt_Module
             return self::$_cache;
         }
 
-        $moduleNamespace = new Zend_Session_Namespace('Phprojekt_Module_Module-_getCachedIds');
-        if (!isset($moduleNamespace->modules)) {
+        $cache = Phprojekt::getInstance()->getCache();
+        if ((self::$_cache = $cache->load('Phprojekt_Module_Module___getCachedIds')) === false) {
+            // cache miss
             $db     = Phprojekt::getInstance()->getDb();
             $select = $db->select()
                          ->from('module');
             $stmt = $db->query($select);
             $rows = $stmt->fetchAll();
 
+            self::$_cache = array();
             foreach ($rows as $row) {
                 self::$_cache[$row['name']] = array('id'       => $row['id'],
                                                     'label'    => $row['label'],
                                                     'saveType' => $row['save_type']);
             }
-            $moduleNamespace->modules = self::$_cache;
-        } else {
-            self::$_cache = $moduleNamespace->modules;
+            $cache->save(self::$_cache);
         }
-
-        if (isset(self::$_cache)) {
-            return self::$_cache;
-        } else {
-            return array();
-        }
+        return self::$_cache;
     }
 
     /**

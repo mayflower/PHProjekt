@@ -11,13 +11,13 @@ Contributing
 
 Patches to PHProjekt are always welcome.
 
-Before submitting patches to the mailinglist
-(phprojekt-devel@lists.sourceforge.net) or committing to the
-repository make sure that your prepared your patch with the following
-rules in mind.
+Before submitting pull requests sure that your prepared your patch with
+the following rules in mind.
+
+For a new feature, please open a pull request.
 
  1. Use unified diff format. This can be done using the diff -u switch. Version control
-    systems like subversion use unified diffs by default. You can also send us
+    systems like git use unified diffs by default. You can also send us
     pull requests.
 
  2. Include a proper commit message
@@ -25,12 +25,14 @@ rules in mind.
  3. Make sure that you used Zend Framework Coding standard.
     http://framework.zend.com/manual/en/coding-standard.html
 
- 4. If you like to add new functionallity, make sure that you write a proper proposal
-    to the mailinglist.
+ 4. If you like to add new functionallity, make sure that you write a proper proposal.
 
  5. If you include third party libraries, make sure that they can be distributed und
     the terms of the Lesser GNU Public License 3 as described in the LICENSE file.
 
+ 6. If you change anything under htdocs/dojo, recompile the dojo packages to include new compressed javascript
+    ("ant compilejs" in the project root).
+
 Happy hacking.
 
-(c) 2010 Mayflower GmbH and Contributors
+(c) 2011 Mayflower GmbH and Contributors

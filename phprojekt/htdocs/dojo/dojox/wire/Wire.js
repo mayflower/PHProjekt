@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.wire.Wire"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.wire.Wire"] = true;
 dojo.provide("dojox.wire.Wire");
 
 dojo.require("dojox.wire._base");
@@ -66,7 +57,7 @@ dojo.declare("dojox.wire.Wire", null, {
 							this.converter = testObj;
 						}
 					}catch(e){
-						//Do if this fails.	
+						//Do if this fails.
 					}
 				}else if(dojo.isObject(convertObject)){
 					//It's an object, like a jsId ... see if it has a convert function
@@ -75,7 +66,7 @@ dojo.declare("dojox.wire.Wire", null, {
 					}
 				}
 
-				//No object with that name (Converter is still a string), 
+				//No object with that name (Converter is still a string),
 				//then look for a class that needs to be dynamically loaded...
 				if(dojo.isString(this.converter)){
 					var converterClass = dojox.wire._getClass(this.converter);
@@ -384,5 +375,3 @@ dojo.declare("dojox.wire.Wire", null, {
 		return useAttr;
 	}
 });
-
-}

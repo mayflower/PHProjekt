@@ -49,7 +49,7 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
     function getProjectModulePermissionsById($projectId)
     {
         $modules = array();
-        $model   = Phprojekt_Loader::getLibraryClass('Phprojekt_Module_Module');
+        $model   = new Phprojekt_Module_Module();
         foreach ($model->fetchAll('active = 1 AND (save_type = 0 OR save_type = 2)', 'name ASC') as $module) {
             $modules['data'][$module->id] = array();
             $modules['data'][$module->id]['id']    = (int) $module->id;
@@ -59,12 +59,18 @@ class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abs
             $modules['data'][$module->id]['inProject'] = false;
         }
 
-        $where  = sprintf('project_module_permissions.project_id = %d AND module.active = 1', (int) $projectId);
-        $select = ' module.id AS module_id ';
-        $join   = ' RIGHT JOIN module ON ( module.id = project_module_permissions.module_id ';
-        $join  .= ' AND (module.save_type = 0 OR module.save_type = 2) )';
-        foreach ($this->fetchAll($where, 'module.name ASC', null, null, $select, $join) as $right) {
-            $modules['data'][$right->moduleId]['inProject'] = true;
+        $select = Phprojekt::getInstance()->getDb()->select();
+        $select->from(array('pmp' => 'project_module_permissions'), 'module_id')
+            ->joinRight(
+                array('m' => 'module'),
+                'm.id = pmp.module_id AND (m.save_type = 0 OR m.save_type = 2)',
+                array()
+            )
+            ->where('pmp.project_id = ?', (int) $projectId)
+            ->where('m.active = 1');
+
+        foreach ($select->query()->fetchAll(Zend_Db::FETCH_COLUMN) as $moduleId) {
+            $modules['data'][$moduleId]['inProject'] = true;
         }
 
         return $modules;

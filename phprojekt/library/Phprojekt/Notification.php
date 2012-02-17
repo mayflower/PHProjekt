@@ -141,7 +141,7 @@ class Phprojekt_Notification
     {
         // Sometimes, the user may try to modify an existing item and presses Save without having modified even one
         // field. In that case, no mail should be sent.
-        $history            = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+        $history            = new Phprojekt_History();
         $this->_lastHistory = $history->getLastHistoryData($this->_model);
         if (empty($this->_lastHistory)) {
             return;
@@ -170,7 +170,7 @@ class Phprojekt_Notification
 
         if (!empty($recipients)) {
             $recipientsPerLang = array();
-            $setting           = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+            $setting           = new Phprojekt_Setting();
             foreach ($recipients as $recipient) {
                 $lang = $setting->getSetting('language', (int) $recipient);
                 if (null === $lang) {
@@ -246,7 +246,7 @@ class Phprojekt_Notification
     public function getSubject()
     {
         $mailTitle = "";
-        if (isset($this->_model->searchFirstDisplayField)) {
+        if ($this->_model->hasField('searchFirstDisplayField')) {
             $mailTitle = $this->_model->{$this->_model->searchFirstDisplayField};
         }
         $subject = trim('[' . $this->_model->getModelName() . ' #' . $this->_model->id . '] ' . $mailTitle);
@@ -428,7 +428,7 @@ class Phprojekt_Notification
 
         if (null !== $this->_model) {
             // This is only possible if $this->model is not null
-            $history            = Phprojekt_Loader::getLibraryClass('Phprojekt_History');
+            $history            = new Phprojekt_History();
             $this->_lastHistory = $history->getLastHistoryData($this->_model);
 
             $bodyChanges = (false === empty($this->_controllProcess)) ? array() : $this->getBodyChanges(null, false);
@@ -478,7 +478,7 @@ class Phprojekt_Notification
                 $description = 'has deleted the entry';
                 break;
             case (self::LAST_ACTION_EDIT):
-                $description = 'has edit the existing entry';
+                $description = 'has modified the existing entry';
                 break;
             case (self::LAST_ACTION_LOGIN):
                 $description = 'has logged in';
@@ -574,7 +574,7 @@ class Phprojekt_Notification
         $itemName = "-";
 
         if (false === empty($this->_model)) {
-            if (isset($this->_model->{$this->_model->searchFirstDisplayField})) {
+            if ($this->_model->hasField($this->_model->searchFirstDisplayField)) {
                 $itemName = $this->_model->{$this->_model->searchFirstDisplayField};
             } else {
                 $itemName = "ID: " . $this->_model->id;
@@ -659,16 +659,16 @@ class Phprojekt_Notification
             $userIds = $this->_model->getUsersRights();
 
             if (is_array($userIds) && !empty($userIds)) {
-                foreach ($userIds as $right) {
-                    if (($right['userId'] == Phprojekt_Auth::getUserId()) || true === $right['none']) {
+                foreach ($userIds as $userId => $right) {
+                    if (($userId == Phprojekt_Auth::getUserId()) || true === $right['none']) {
                         continue;
                     }
 
-                    $recipients[] = $right['userId'];
+                    $recipients[] = $userId;
                 }
             }
         } else {
-            $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+            $user    = new Phprojekt_User_User();
             $userIds = $user->fetchAll();
 
             foreach ($userIds as $user) {
@@ -723,7 +723,7 @@ class Phprojekt_Notification
      */
     public function getSetting($settingName, $userId)
     {
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('Notification');
 
         $value = $setting->getSetting($settingName, $userId);
@@ -744,7 +744,7 @@ class Phprojekt_Notification
                                  Core_Models_Notification_Setting::FIELD_USERGENERATED => 0,
                                  Core_Models_Notification_Setting::FIELD_ALERTS        => 0);
 
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('Notification');
         $setting->setSettings($defaultSettings);
     }

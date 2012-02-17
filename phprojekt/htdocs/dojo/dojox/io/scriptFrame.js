@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.io.scriptFrame"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.io.scriptFrame"] = true;
 dojo.provide("dojox.io.scriptFrame");
 
 dojo.require("dojo.io.script");
@@ -36,7 +27,7 @@ dojo.require("dojo.io.iframe");
 		},
 
 		_fixAttachUrl: function(/*String*/url){
-			//summary: fixes the URL so that 		
+			//summary: fixes the URL so that
 		},
 
 		_loaded: function(/*String*/frameId){
@@ -92,5 +83,3 @@ dojo.require("dojo.io.iframe");
 	}
 })();
 
-
-}

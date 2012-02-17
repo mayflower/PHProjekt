@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.charting.scaler.common"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.scaler.common"] = true;
 dojo.provide("dojox.charting.scaler.common");
 
 (function(){
@@ -24,9 +15,13 @@ dojo.provide("dojox.charting.scaler.common");
 			return false;
 		},
 		getNumericLabel: function(/*Number*/ number, /*Number*/ precision, /*Object*/ kwArgs){
-			var def = kwArgs.fixed ? 
-						number.toFixed(precision < 0 ? -precision : 0) : 
-						number.toString();
+			var def = "";
+			if(dojo.number){
+				def = (kwArgs.fixed ? dojo.number.format(number, {places : precision < 0 ? -precision : 0}) :
+					dojo.number.format(number)) || "";
+			}else{
+				def = kwArgs.fixed ? number.toFixed(precision < 0 ? -precision : 0) : number.toString();
+			}
 			if(kwArgs.labelFunc){
 				var r = kwArgs.labelFunc(def, number, precision);
 				if(r){ return r; }
@@ -61,5 +56,3 @@ dojo.provide("dojox.charting.scaler.common");
 		}
 	});
 })();
-
-}

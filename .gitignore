@@ -1,4 +1,6 @@
+build
 .buildpath
 .project
 .settings/*
 phprojekt/configuration.php
+phprojekt/htdocs/dojo/release/dojo/dojo/build.txt

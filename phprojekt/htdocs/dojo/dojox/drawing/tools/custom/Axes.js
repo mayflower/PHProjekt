@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.tools.custom.Axes"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.tools.custom.Axes"] = true;
 dojo.provide("dojox.drawing.tools.custom.Axes");
 dojo.require("dojox.drawing.stencil.Path");
 
@@ -100,8 +91,8 @@ dojox.drawing.tools.custom.Axes = dojox.drawing.util.oo.declare(
 				{x:z.x, y:z.y}
 			];
 			var len = this.util.length({start:{x:c.x, y:c.y}, x:z.x, y:z.y});
-			len > this.zAxis.minimumSize ? this.zAxis.setPoints(p) : false; 
-			this.zAxis.cosphi = 1; 
+			len > this.zAxis.minimumSize ? this.zAxis.setPoints(p) : false;
+			this.zAxis.cosphi = 1;
 		},
 		
 		createLabels: function(){
@@ -580,5 +571,3 @@ dojox.drawing.tools.custom.Axes.setup = {
 	iconClass:"iconAxes"
 };
 dojox.drawing.register(dojox.drawing.tools.custom.Axes.setup, "tool");
-
-}

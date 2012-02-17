@@ -1,1 +1,17 @@
-({"text":"Kuvaus:","insertImageTitle":"Kuvan ominaisuudet","set":"Aseta","newWindow":"Uusi ikkuna","topWindow":"Päällimmäinen ikkuna","target":"Kohde:","createLinkTitle":"Linkin ominaisuudet","parentWindow":"Pääikkuna","currentWindow":"Nykyinen ikkuna","url":"URL-osoite:"})
+define(
+//begin v1.x content
+({
+	createLinkTitle: "Linkin ominaisuudet",
+	insertImageTitle: "Kuvan ominaisuudet",
+	url: "URL-osoite:",
+	text: "Kuvaus:",
+	target: "Kohde:",
+	set: "Aseta",
+	currentWindow: "Nykyinen ikkuna",
+	parentWindow: "Pääikkuna",
+	topWindow: "Päällimmäinen ikkuna",
+	newWindow: "Uusi ikkuna"
+})
+
+//end v1.x content
+);

@@ -1,16 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.tree.dndSource"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.tree.dndSource"] = true;
-dojo.provide("dijit.tree.dndSource");
-
-dojo.require("dijit.tree._dndSelector");
-dojo.require("dojo.dnd.Manager");
+define("dijit/tree/dndSource", ["dojo", "dijit", "dijit/tree/_dndSelector", "dojo/dnd/Manager"], function(dojo, dijit) {
 
 /*=====
 dijit.tree.__SourceArgs = function(){
@@ -144,9 +132,8 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 		//		Keeps track of current drop target.
 
 		var m = dojo.dnd.manager(),
-			oldTarget = this.targetAnchor,			// the DOMNode corresponding to TreeNode mouse was previously over
-			newTarget = this.current,				// DOMNode corresponding to TreeNode mouse is currently over
-			newTargetWidget = this.currentWidget,	// the TreeNode itself
+			oldTarget = this.targetAnchor,			// the TreeNode corresponding to TreeNode mouse was previously over
+			newTarget = this.current,				// TreeNode corresponding to TreeNode mouse is currently over
 			oldDropPosition = this.dropPosition;	// the previous drop position (over/before/after)
 
 		// calculate if user is indicating to drop the dragged node before, after, or over
@@ -155,7 +142,7 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 		if(newTarget && this.betweenThreshold > 0){
 			// If mouse is over a new TreeNode, then get new TreeNode's position and size
 			if(!this.targetBox || oldTarget != newTarget){
-				this.targetBox = dojo.position(newTarget, true);
+				this.targetBox = dojo.position(newTarget.rowNode, true);
 			}
 			if((e.pageY - this.targetBox.y) <= this.betweenThreshold){
 				newDropPosition = "Before";
@@ -166,23 +153,23 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 
 		if(newTarget != oldTarget || newDropPosition != oldDropPosition){
 			if(oldTarget){
-				this._removeItemClass(oldTarget, oldDropPosition);
+				this._removeItemClass(oldTarget.rowNode, oldDropPosition);
 			}
 			if(newTarget){
-				this._addItemClass(newTarget, newDropPosition);
+				this._addItemClass(newTarget.rowNode, newDropPosition);
 			}
 
 			// Check if it's ok to drop the dragged node on/before/after the target node.
 			if(!newTarget){
 				m.canDrop(false);
-			}else if(newTargetWidget == this.tree.rootNode && newDropPosition != "Over"){
+			}else if(newTarget == this.tree.rootNode && newDropPosition != "Over"){
 				// Can't drop before or after tree's root node; the dropped node would just disappear (at least visually)
 				m.canDrop(false);
 			}else if(m.source == this && (newTarget.id in this.selection)){
 				// Guard against dropping onto yourself (TODO: guard against dropping onto your descendant, #7140)
 				m.canDrop(false);
-			}else if(this.checkItemAcceptance(newTarget, m.source, newDropPosition.toLowerCase())
-					&& !this._isParentChildDrop(m.source, newTarget)){
+			}else if(this.checkItemAcceptance(newTarget.rowNode, m.source, newDropPosition.toLowerCase())
+					&& !this._isParentChildDrop(m.source, newTarget.rowNode)){
 				m.canDrop(true);
 			}else{
 				m.canDrop(false);
@@ -208,12 +195,23 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 		}else{
 			if(this.mouseDown && this.isSource &&
 				 (Math.abs(e.pageX-this._lastX)>=this.dragThreshold || Math.abs(e.pageY-this._lastY)>=this.dragThreshold)){
-				var n = this.getSelectedNodes();
-				var nodes=[];
-				for(var i in n){
-					nodes.push(n[i]);
-				}
+				var nodes = this.getSelectedTreeNodes();
 				if(nodes.length){
+					if(nodes.length > 1){
+						//filter out all selected items which has one of their ancestor selected as well
+						var seen = this.selection, i = 0, r = [], n, p;
+						nextitem: while((n = nodes[i++])){
+							for(p = n.getParent(); p && p !== this.tree; p = p.getParent()){
+								if(seen[p.id]){ //parent is already selected, skip this node
+									continue nextitem;
+								}
+							}
+							//this node does not have any ancestors selected, add it
+							r.push(n);
+						}
+						nodes = r;
+					}
+					nodes = dojo.map(nodes, function(n){return n.domNode});
 					m.startDrag(this, nodes, this.copyState(dojo.isCopyKey(e)));
 				}
 			}
@@ -231,7 +229,7 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 		this.mouseButton = e.button;
 		this._lastX = e.pageX;
 		this._lastY = e.pageY;
-		this.inherited("onMouseDown",arguments);
+		this.inherited(arguments);
 	},
 
 	onMouseUp: function(e){
@@ -243,7 +241,7 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 		//		private
 		if(this.mouseDown){
 			this.mouseDown = false;
-			this.inherited("onMouseUp",arguments);
+			this.inherited(arguments);
 		}
 	},
 
@@ -369,7 +367,7 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 			this.isDragging = false;
 
 			// Compute the new parent item
-			var targetWidget = dijit.getEnclosingWidget(target);
+			var targetWidget = target;
 			var newParentItem;
 			var insertIndex;
 			newParentItem = (targetWidget && targetWidget.item) || tree.item;
@@ -425,7 +423,7 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 					// Get the hash to pass to model.newItem().  A single call to
 					// itemCreator() returns an array of hashes, one for each drag source node.
 					if(!newItemsParams){
-						newItemsParams = this.itemCreator(nodes, target, source);
+						newItemsParams = this.itemCreator(nodes, target.rowNode, source);
 					}
 
 					// Create new item in the tree, based on the drag source.
@@ -499,16 +497,13 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 
 
 		var root = source.tree.domNode;
-		var ids = {};
-		for(var x in source.selection){
-			ids[source.selection[x].parentNode.id] = true;
-		}
+		var ids = source.selection;
 
 		var node = targetRow.parentNode;
 
 		// Iterate up the DOM hierarchy from the target drop row,
 		// checking of any of the dragged nodes have the same ID.
-		while(node != root && (!node.id || !ids[node.id])){
+		while(node != root && !ids[node.id]){
 			node = node.parentNode;
 		}
 
@@ -521,7 +516,7 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 		// tags:
 		//		private
 		if(!this.targetAnchor){ return; }
-		this._removeItemClass(this.targetAnchor, this.dropPosition);
+		this._removeItemClass(this.targetAnchor.rowNode, this.dropPosition);
 		this.targetAnchor = null;
 		this.targetBox = null;
 		this.dropPosition = null;
@@ -534,4 +529,6 @@ dojo.declare("dijit.tree.dndSource", dijit.tree._dndSelector, {
 	}
 });
 
-}
+
+return dijit.tree.dndSource;
+});

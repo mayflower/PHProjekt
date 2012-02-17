@@ -1,13 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.rpc.Client"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.rpc.Client"] = true;
-dojo.provide("dojox.rpc.Client");
+define("dojox/rpc/Client", ["dojo"], function(dojo) {
 // Provide extra headers for robust client and server communication
 (function() {
 	dojo._defaultXhr = dojo.xhr;
@@ -29,4 +20,6 @@ dojo.provide("dojox.rpc.Client");
 // initiate the client id to a good random number
 dojox.rpc.Client.clientId = (Math.random() + '').substring(2,14) + (new Date().getTime() + '').substring(8,13);
 
-}
+return dojox.rpc.Client;
+
+});

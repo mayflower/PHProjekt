@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.gfx3d.lighting"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx3d.lighting"] = true;
 dojo.provide("dojox.gfx3d.lighting");
 dojo.require("dojox.gfx._base");
 
@@ -102,7 +93,7 @@ dojo.require("dojox.gfx._base");
 		specular: function(normal, v, roughness, lights){
 			var c = lite.black();
 			for(var i = 0; i < lights.length; ++i){
-				var l = lights[i], 
+				var l = lights[i],
 					h = lite.normalize(lite.add(lite.normalize(l.direction), v)),
 					s = Math.pow(Math.max(0, lite.dot(normal, h)), 1 / roughness);
 				c = lite.addColor(c, lite.scaleColor(s, l.color));
@@ -244,5 +235,3 @@ dojox.gfx3d.lighting.finish = {
 	// very highly polished and reflective
 	metalE: {Ka: 0.10, Kd: 0.7, Ks: 0.8, roughness: 1/120}
 };
-
-}

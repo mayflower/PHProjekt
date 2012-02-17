@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojox.collections.SortedList"])dojo._hasResource["dojox.collections.SortedList"]=!0,dojo.provide("dojox.collections.SortedList"),dojo.require("dojox.collections._base"),dojox.collections.SortedList=function(e){var j=this,d={},c=[],g=function(a,b){return a.key>b.key?1:a.key<b.key?-1:0},f=function(){c=[];for(var a=j.getIterator();!a.atEnd();)c.push(a.get());c.sort(g)},i={};this.count=c.length;this.add=function(a,b){if(!d[a])d[a]=new dojox.collections.DictionaryEntry(a,b),this.count=
+c.push(d[a]),c.sort(g)};this.clear=function(){d={};c=[];this.count=c.length};this.clone=function(){return new dojox.collections.SortedList(this)};this.contains=this.containsKey=function(a){return i[a]?!1:d[a]!=null};this.containsValue=function(a){for(var b=this.getIterator();!b.atEnd();)if(b.get().value==a)return!0;return!1};this.copyTo=function(a,b){for(var c=this.getIterator(),d=b;!c.atEnd();)a.splice(d,0,c.get()),d++};this.entry=function(a){return d[a]};this.forEach=function(a,b){dojo.forEach(c,
+a,b)};this.getByIndex=function(a){return c[a].valueOf()};this.getIterator=function(){return new dojox.collections.DictionaryIterator(d)};this.getKey=function(a){return c[a].key};this.getKeyList=function(){for(var a=[],b=this.getIterator();!b.atEnd();)a.push(b.get().key);return a};this.getValueList=function(){for(var a=[],b=this.getIterator();!b.atEnd();)a.push(b.get().value);return a};this.indexOfKey=function(a){for(var b=0;b<c.length;b++)if(c[b].key==a)return b;return-1};this.indexOfValue=function(a){for(var b=
+0;b<c.length;b++)if(c[b].value==a)return b;return-1};this.item=function(a){if(a in d&&!i[a])return d[a].valueOf()};this.remove=function(a){delete d[a];f();this.count=c.length};this.removeAt=function(a){delete d[c[a].key];f();this.count=c.length};this.replace=function(a,b){return d[a]?(d[a]=new dojox.collections.DictionaryEntry(a,b),f(),!0):(this.add(a,b),!1)};this.setByIndex=function(a,b){d[c[a].key].value=b;f();this.count=c.length};if(e){for(e=e.getIterator();!e.atEnd();){var h=e.get();c[c.length]=
+d[h.key]=new dojox.collections.DictionaryEntry(h.key,h.value)}c.sort(g)}};

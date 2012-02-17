@@ -1,13 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.window"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.window"] = true;
-dojo.provide("dojo._base.window");
+define("dojo/_base/window", ["dojo/lib/kernel"], function(dojo){
 
 /*=====
 dojo.doc = {
@@ -34,7 +25,7 @@ dojo.body = function(){
 	// Note: document.body is not defined for a strict xhtml document
 	// Would like to memoize this, but dojo.doc can change vi dojo.withDoc().
 	return dojo.doc.body || dojo.doc.getElementsByTagName("body")[0]; // Node
-}
+};
 
 dojo.setContext = function(/*Object*/globalObject, /*DocumentElement*/globalDocument){
 	// summary:
@@ -47,9 +38,9 @@ dojo.setContext = function(/*Object*/globalObject, /*DocumentElement*/globalDocu
 	dojo.doc = globalDocument;
 };
 
-dojo.withGlobal = function(	/*Object*/globalObject, 
-							/*Function*/callback, 
-							/*Object?*/thisObject, 
+dojo.withGlobal = function(	/*Object*/globalObject,
+							/*Function*/callback,
+							/*Object?*/thisObject,
 							/*Array?*/cbArguments){
 	// summary:
 	//		Invoke callback with globalObject as dojo.global and
@@ -68,11 +59,11 @@ dojo.withGlobal = function(	/*Object*/globalObject,
 	}finally{
 		dojo.global = oldGlob;
 	}
-}
+};
 
-dojo.withDoc = function(	/*DocumentElement*/documentObject, 
-							/*Function*/callback, 
-							/*Object?*/thisObject, 
+dojo.withDoc = function(	/*DocumentElement*/documentObject,
+							/*Function*/callback,
+							/*Object?*/thisObject,
 							/*Array?*/cbArguments){
 	// summary:
 	//		Invoke callback with documentObject as dojo.doc.
@@ -103,6 +94,6 @@ dojo.withDoc = function(	/*DocumentElement*/documentObject,
 		dojo.isQuirks = oldQ;
 	}
 };
-	
 
-}
+return dojo;
+});

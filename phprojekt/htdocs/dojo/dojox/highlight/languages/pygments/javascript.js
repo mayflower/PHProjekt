@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.highlight.languages.pygments.javascript"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.highlight.languages.pygments.javascript"] = true;
 dojo.provide("dojox.highlight.languages.pygments.javascript");
 
 dojo.require("dojox.highlight._base");
@@ -29,8 +20,8 @@ dojo.require("dojox.highlight._base");
 				"name builtin": {
 					"Array": 1, "Boolean": 1, "Date": 1, "Error": 1, "Function": 1, "Math": 1,
 					"netscape": 1, "Number": 1, "Object": 1, "Packages": 1, "RegExp": 1,
-					"String": 1, "sun": 1, "decodeURI": 1, "decodeURIComponent": 1, 
-					"encodeURI": 1, "encodeURIComponent": 1, "Error": 1, "eval": 1, 
+					"String": 1, "sun": 1, "decodeURI": 1, "decodeURIComponent": 1,
+					"encodeURI": 1, "encodeURIComponent": 1, "Error": 1, "eval": 1,
 					"isFinite": 1, "isNaN": 1, "parseFloat": 1, "parseInt": 1, "document": 1,
 					"window": 1
 				},
@@ -39,7 +30,7 @@ dojo.require("dojox.highlight._base");
 				}
 			},
 			contains: [
-				"comment single", "comment multiline", 
+				"comment single", "comment multiline",
 				"number integer", "number oct", "number hex", "number float",
 				"string single", "string double", "string regex",
 				"operator",
@@ -92,7 +83,7 @@ dojo.require("dojox.highlight._base");
 			},
 			{
 				className: "string double",
-				begin: '"', 
+				begin: '"',
 				end: '"',
 				illegal: "\\n",
 				contains: ["string escape"],
@@ -155,5 +146,3 @@ dojo.require("dojox.highlight._base");
 		]
 	};
 })();
-
-}

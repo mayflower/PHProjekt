@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.grid._RowSelector"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.grid._RowSelector"] = true;
 dojo.provide("dojox.grid._RowSelector");
 dojo.require("dojox.grid._View");
 
@@ -20,7 +11,7 @@ dojo.declare('dojox.grid._RowSelector', dojox.grid._View, {
 		this.inherited('buildRendering', arguments);
 		this.scrollboxNode.style.overflow = "hidden";
 		this.headerNode.style.visibility = "hidden";
-	},	
+	},
 	getWidth: function(){
 		return this.viewWidth || this.defaultWidth;
 	},
@@ -62,5 +53,3 @@ dojo.declare('dojox.grid._RowSelector', dojox.grid._View, {
 		}
 	}
 });
-
-}

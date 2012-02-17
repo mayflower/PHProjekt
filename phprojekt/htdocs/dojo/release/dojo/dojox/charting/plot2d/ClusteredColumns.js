@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.charting.plot2d.ClusteredColumns"]||(dojo._hasResource["dojox.charting.plot2d.ClusteredColumns"]=!0,dojo.provide("dojox.charting.plot2d.ClusteredColumns"),dojo.require("dojox.charting.plot2d.common"),dojo.require("dojox.charting.plot2d.Columns"),dojo.require("dojox.lang.functional"),dojo.require("dojox.lang.functional.reversed"),function(){var o=dojox.lang.functional,v=dojox.charting.plot2d.common,w=o.lambda("item.purgeGroup()");dojo.declare("dojox.charting.plot2d.ClusteredColumns",
+dojox.charting.plot2d.Columns,{render:function(h,f){var A;if(this.zoom&&!this.isDataDirty())return this.performZoom(h,f);this.resetEvents();if(this.dirty=this.isDirty()){dojo.forEach(this.series,w);this._eventSeries={};this.cleanGroup();var k=this.group;o.forEachRev(this.series,function(a){a.cleanGroup(k)})}var i=this.chart.theme,d,p,q,x=this._hScaler.scaler.getTransformerFromModel(this._hScaler),r=this._vScaler.scaler.getTransformerFromModel(this._vScaler),s=Math.max(0,this._vScaler.bounds.lower),
+l=r(s),y=this.events();d=v.calculateBarSize(this._hScaler.bounds.scale,this.opt,this.series.length);p=d.gap;A=q=d.size,d=A;for(var j=0;j<this.series.length;++j){var b=this.series[j],z=q*j;if(!this.dirty&&!b.dirty)i.skip(),this._reconnectEvents(b.name);else{b.cleanGroup();for(var t=i.next("column",[this.opt,b]),k=b.group,u=Array(b.data.length),c=0;c<b.data.length;++c){var a=b.data[c];if(a!==null){var e=typeof a=="number"?a:a.y,g=r(e),m=Math.abs(g-l),a=typeof a!="number"?i.addMixin(t,"column",a,!0):
+i.post(t,"column");if(d>=1&&m>=1){var g={x:f.l+x(c+0.5)+p+z,y:h.height-f.b-(e>s?g:l),width:d,height:m},n=this._plotFill(a.series.fill,h,f),n=this._shapeFill(n,g),a=k.createRect(g).setFill(n).setStroke(a.series.stroke);b.dyn.fill=a.getFill();b.dyn.stroke=a.getStroke();y&&(e={element:"column",index:c,run:b,shape:a,x:c+0.5,y:e},this._connectEvents(e),u[c]=e);this.animate&&this._animateColumn(a,h.height-f.b-l,m)}}}this._eventSeries[b.name]=u;b.dirty=!1}}this.dirty=!1;return this}})}());

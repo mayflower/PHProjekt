@@ -86,11 +86,6 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $sessionName    = 'Phprojekt_Item_Rights-getUsersRights' . '-' . $moduleId . '-' . $itemId;
         $rightNamespace = new Zend_Session_Namespace($sessionName);
         $rightNamespace->unsetAll();
-
-        // Reset users by module-item
-        $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-' . $moduleId . '-' . $itemId;
-        $rightNamespace = new Zend_Session_Namespace($sessionName);
-        $rightNamespace->unsetAll();
     }
 
     /**
@@ -141,49 +136,14 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      *
      * @return integer Bitmask for the module-item-user pair.
      */
-    public function getItemRight($moduleId, $itemId, $userId)
+    public static function getItemRight($moduleId, $itemId, $userId)
     {
-        // Cache the query
-        $sessionName           = 'Phprojekt_Item_Rights-getItemRight' . '-' . $moduleId . '-' . $itemId . '-' . $userId;
-        $rightPerUserNamespace = new Zend_Session_Namespace($sessionName);
-        if (!isset($rightPerUserNamespace->right)) {
-            $row = $this->find((int) $moduleId, (int) $itemId, (int) $userId)->toArray();
-            if (isset($row[0])) {
-                $value = $row[0]['access'];
-            } else {
-                $value = 0;
-            }
-            $rightPerUserNamespace->right = $value;
+        $rights = self::getItemRights($moduleId, array($itemId), $userId);
+        if (isset($rights[$itemId])) {
+            return $rights[$itemId];
         }
 
-        return $rightPerUserNamespace->right;
-    }
-
-    /**
-     * Returns the rights for the current user of a moduleId-ItemId pair.
-     *
-     * @param string  $moduleId The module ID.
-     * @param integer $itemId   The item ID.
-     *
-     * @return array Array with 'moduleId', 'itemId', 'userId' and all the access key.
-     */
-    public function getRights($moduleId, $itemId)
-    {
-        $values        = array();
-        $currentUserId = (int) Phprojekt_Auth::getUserId();
-
-        $access = $this->getItemRight($moduleId, $itemId, $currentUserId);
-        if ($access == 0) {
-            // Use for an empty rights
-            $access = (int) Phprojekt_Acl::ALL;
-        }
-        $values['currentUser']['moduleId'] = (int) $moduleId;
-        $values['currentUser']['itemId']   = (int) $itemId;
-        $values['currentUser']['userId']   = $currentUserId;
-        $access                            = Phprojekt_Acl::convertBitmaskToArray($access);
-        $values['currentUser']             = array_merge($values['currentUser'], $access);
-
-        return $values;
+        return Phprojekt_Acl::NONE;
     }
 
     /**
@@ -194,30 +154,21 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      *
      * @return array Array with 'moduleId', 'itemId', 'userId' and all the access key.
      */
-    public function getMultipleRights($moduleId, $ids)
+    public static function getItemRights($moduleId, $itemIds, $userId)
     {
-        $values        = array();
-        $currentUserId = (int) Phprojekt_Auth::getUserId();
-
-        $where = sprintf('module_id = %d AND user_id = %d AND item_id IN (%s)', (int) $moduleId,
-            $currentUserId, implode(",", $ids));
-        $rows = $this->fetchAll($where)->toArray();
-
-        foreach ($ids as $id) {
-            // Set the current User
-            // Use for an empty rights, if not, will be re-write
-            $values[$id]['currentUser']['moduleId'] = (int) $moduleId;
-            $values[$id]['currentUser']['itemId']   = (int) $id;
-            $values[$id]['currentUser']['userId']   = $currentUserId;
-            $access                                 = Phprojekt_Acl::convertBitmaskToArray((int) Phprojekt_Acl::ALL);
-            $values[$id]['currentUser']             = array_merge($values[$id]['currentUser'], $access);
-        }
+        $values = array_fill_keys($itemIds, array());
+        $where  = sprintf('module_id = %d AND user_id = %d AND item_id IN (%s)',
+            (int) $moduleId, (int) $userId, implode(",", $itemIds));
+        $obj  = new self();
+        $rows = $obj->fetchAll($where);
 
         foreach ($rows as $row) {
-            $access                                 = Phprojekt_Acl::convertBitmaskToArray($row['access']);
-            $values[$row['item_id']]['currentUser'] = array_merge($values[$row['item_id']]['currentUser'], $access);
+            // Set the current User
+            // Use for an empty rights, if not, will be re-write
+            $values[$row->item_id] = $row->access;
         }
 
+        unset($obj);
         return $values;
     }
 
@@ -236,31 +187,19 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $rightNamespace = new Zend_Session_Namespace($sessionName);
 
         if (!isset($rightNamespace->right)) {
-            $values        = array();
-            $currentUserId = (int) Phprojekt_Auth::getUserId();
-
-            // Set the current User
-            // Use for an empty rights, if not, will be re-write
-            $values['currentUser']['moduleId'] = (int) $moduleId;
-            $values['currentUser']['itemId']   = (int) $itemId;
-            $values['currentUser']['userId']   = $currentUserId;
-            $access                            = Phprojekt_Acl::convertBitmaskToArray((int) Phprojekt_Acl::ALL);
-            $values['currentUser']             = array_merge($values['currentUser'], $access);
-
-            $where = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
-            $rows  = $this->fetchAll($where)->toArray();
+            $values = array();
+            $where  = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
+            $rows   = $this->fetchAll($where)->toArray();
             foreach ($rows as $row) {
-                $access  = Phprojekt_Acl::convertBitmaskToArray($row['access']);
-                if ($currentUserId == $row['user_id']) {
-                    $values['currentUser'] = array_merge($values['currentUser'], $access);
-                } else {
-                    $values[$row['user_id']]['moduleId'] = (int) $moduleId;
-                    $values[$row['user_id']]['itemId']   = (int) $itemId;
-                    $values[$row['user_id']]['userId']   = (int) $row['user_id'];
-                    $values[$row['user_id']]             = array_merge($values[$row['user_id']], $access);
-                }
+                $access = Phprojekt_Acl::convertBitmaskToArray($row['access']);
+                $values[$row['user_id']] = array_merge($access, array(
+                    'moduleId' => (int) $moduleId,
+                    'itemId'   => (int) $itemId,
+                    'userId'   => (int) $row['user_id']
+                ));
             }
             $rightNamespace->right = $values;
+
         }
 
         return $rightNamespace->right;
@@ -279,34 +218,39 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $data['module_id'] = Phprojekt_Module::getId('Project');
         $data['item_id']   = 1;
         $data['user_id']   = (int) $userId;
-        $data['access']    = (int) Phprojekt_Acl::WRITE;
+        $data['access']    = (int) Phprojekt_Acl::WRITE | Phprojekt_Acl::CREATE;
         $this->insert($data);
     }
 
     /**
-     * Return all the users with at least one right for a moduleId-ItemId pair.
+     * Returns all users that have a given right (or any right if none is given) on an item.
      *
      * @param string  $moduleId The module ID.
      * @param integer $itemId   The item ID.
+     * @param int     $rights   A bitmask of rights (Constants in Phprojekt_Acl). All users with any rights will be
+     *                              returned if null or omitted.
+     * @param bool    $exact    Only get users with exact $rights instead of all users that have at least $rights.
+     *                              Default is false.
      *
      * @return array Array of user IDs.
      */
-    public function getUsersWithRight($moduleId, $itemId)
+    public function getUsersWithRight($moduleId, $itemId, $rights = null, $exact = false)
     {
-        // Cache the query
-        $sessionName    = 'Phprojekt_Item_Rights-getUsersWithRight' . '-' . $moduleId . '-' . $itemId;
-        $rightNamespace = new Zend_Session_Namespace($sessionName);
+        $db     = Phprojekt::getInstance()->getDb();
+        $where  = $db->quoteInto('module_id = ? AND ', (int) $moduleId);
+        $where .= $db->quoteInto('item_id = ?', (int) $itemId);
 
-        if (!isset($rightNamespace->right)) {
-            $values = array();
-            $where  = sprintf('module_id = %d AND item_id = %d AND access > 0', (int) $moduleId, (int) $itemId);
-            $rows   = $this->fetchAll($where)->toArray();
-            foreach ($rows as $row) {
-                $values[] = $row['user_id'];
-            }
-            $rightNamespace->right = $values;
+        if (is_null($rights)) {
+            $where .= ' AND access > 0';
+        } else if ($exact) {
+            $where .= $db->quoteInto(' AND access = ?', (int) $rights);
+        } else {
+            $where .= $db->quoteInto(' AND (access & ?) = ?', (int) $rights, (int) $rights);
         }
 
-        return $rightNamespace->right;
+        $user  = new Phprojekt_User_User();
+        $users = $user->fetchAll($where, null, null, null, null, "JOIN item_rights ON item_rights.user_id = user.id");
+
+        return $users;
     }
 }

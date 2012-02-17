@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource['dojox.widget.gauge.AnalogArrowIndicator']){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource['dojox.widget.gauge.AnalogArrowIndicator'] = true;
 dojo.provide('dojox.widget.gauge.AnalogArrowIndicator');
 dojo.require('dojox.widget.AnalogGauge');
 
@@ -14,7 +5,7 @@ dojo.experimental("dojox.widget.gauge.AnalogArrowIndicator");
 
 dojo.declare("dojox.widget.gauge.AnalogArrowIndicator",[dojox.widget.gauge.AnalogLineIndicator],{
 	_getShapes: function(){
-		// summary: 
+		// summary:
 		//		Override of dojox.widget.AnalogLineIndicator._getShapes
 		if(!this._gauge){
 			return null;
@@ -44,5 +35,3 @@ dojo.declare("dojox.widget.gauge.AnalogArrowIndicator",[dojox.widget.gauge.Analo
 		return shapes;
 	}
 });
-
-}

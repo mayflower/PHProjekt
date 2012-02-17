@@ -21,7 +21,9 @@
 
 dojo.provide("phpr.Minutes.Form");
 
-dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
+dojo.require("dijit.Dialog");
+
+dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
     // Request url for get the data
     _peopleUrl: null,
 
@@ -49,13 +51,15 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Add default module tabs plus Items and mail tabs
         // Description:
         //    Extends inherited method to add the Items and mail tabs,
-        this.inherited(arguments);
+        var def = this.inherited(arguments);
 
         // Render additional tabs only if there is an ID
         // (these tabs don't make sense for unsaved records)
         if (this.id > 0) {
-            this.addMailTab(data);
+            def = dojo.when(def, dojo.hitch(this, this.addMailTab, data));
         }
+
+        return def;
     },
 
     addMailTab:function(data) {
@@ -63,40 +67,49 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
         //    Mail tab
         // Description:
         //    Display options for sending Minutes per mail
-        var mailForm = this.render(["phpr.Minutes.template", "minutesMailForm.html"], null, {
-            'id':            this.id,
-            'people':        phpr.DataStore.getData({url: this._peopleUrl}),
-            'lblRecipients': phpr.nls.get('Recipients'),
-            'lblAdditional': phpr.nls.get('Additional Recipients'),
-            'lblTooltip':    phpr.nls.get('Email addresses of unlisted recipients, comma-separated.'),
-            'lblOptions':    phpr.nls.get('Options'),
-            'lblAttachPdf':  phpr.nls.get('Include PDF attachment'),
-            'lblSendMail':   phpr.nls.get('Send mail'),
-            'lblPreview':    phpr.nls.get('Preview')
+        var mailForm = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Minutes.template.minutesMailForm.html",
+            templateData: {
+                'id':            this.id,
+                'people':        phpr.DataStore.getData({url: this._peopleUrl}),
+                'lblRecipients': phpr.nls.get('Recipients'),
+                'lblAdditional': phpr.nls.get('Additional Recipients'),
+                'lblTooltip':    phpr.nls.get('Email addresses of unlisted recipients, comma-separated.'),
+                'lblOptions':    phpr.nls.get('Options'),
+                'lblAttachPdf':  phpr.nls.get('Include PDF attachment'),
+                'lblSendMail':   phpr.nls.get('Send mail'),
+                'lblPreview':    phpr.nls.get('Preview')
+            }
         });
 
-        this.addTab(mailForm, 'tabMail', 'Mail', 'mailFormTab');
+        var def = this.addTab([mailForm], 'tabMail', 'Mail', 'mailFormTab');
 
-        dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick', dojo.hitch(this, function() {
-            phpr.send({
-                url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId
-                    + '/id/' + this.id,
-                content:   dijit.byId('mailFormTab').get('value'),
-                onSuccess: dojo.hitch(this, function(data) {
-                    new phpr.handleResponse('serverFeedback', data);
-                })
-            })
-        }));
+        return def.then(dojo.hitch(this, function() {
+            this.garbageCollector.addEvent(
+                dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick', dojo.hitch(this, function() {
+                    phpr.send({
+                        url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId
+                        + '/id/' + this.id,
+                        content: dijit.byId('mailFormTab').get('value')
+                    }).then(dojo.hitch(this, function(data) {
+                        if (data) {
+                            new phpr.handleResponse('serverFeedback', data);
+                        }
+                    }));
+                })));
 
-        dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', dojo.hitch(this, function() {
-            window.open(phpr.webpath + 'index.php/Minutes/index/pdf/nodeId/' + phpr.currentProjectId
-                + '/id/' + this.id + '/csrfToken/' + phpr.csrfToken, 'pdf');
+            this.garbageCollector.addEvent(
+                dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', dojo.hitch(this, function() {
+                    window.open(phpr.webpath + 'index.php/Minutes/index/pdf/nodeId/' + phpr.currentProjectId
+                        + '/id/' + this.id + '/csrfToken/' + phpr.csrfToken, 'pdf');
+                })));
         }));
     },
 
     postRenderForm:function() {
         // Summary:
         //    Keep the itemStatus value for future use
+        this.inherited(arguments);
         var data         = phpr.DataStore.getData({url: this._url});
         this._itemStatus = data[0].itemStatus;
     },
@@ -178,7 +191,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
                 this._allowSubmit = true;
                 confirmDialog.hide();
                 confirmDialog.destroyRecursive();
-                this.submitForm();
+                this._submitForm();
             }),
             callbackCancel: dojo.hitch(this, function(e) {
                 this._allowSubmit = false;
@@ -201,8 +214,10 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.Form, {
 
         dojo.body().appendChild(confirmDialog.domNode);
         confirmDialog.startup();
-        dojo.connect(dijit.byId('minutesConfirmDialogButtonOK'), 'onClick', options.callbackOk);
-        dojo.connect(dijit.byId('minutesConfirmDialogButtonCancel'), 'onClick', options.callbackCancel);
+        this.garbageCollector.addEvent(
+            dojo.connect(dijit.byId('minutesConfirmDialogButtonOK'), 'onClick', options.callbackOk));
+        this.garbageCollector.addEvent(
+            dojo.connect(dijit.byId('minutesConfirmDialogButtonCancel'), 'onClick', options.callbackCancel));
         confirmDialog.show();
     },
 

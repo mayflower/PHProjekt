@@ -20,8 +20,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
-
 /**
  * Tests for Index Controller
  *
@@ -33,7 +31,7 @@ require_once 'PHPUnit/Framework.php';
  * @since      File available since Release 6.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
-class FrontInit extends PHPUnit_Framework_TestCase
+abstract class FrontInit extends DatabaseTest
 {
     public $request      = null;
     public $response     = null;
@@ -48,6 +46,7 @@ class FrontInit extends PHPUnit_Framework_TestCase
      */
     public function __construct()
     {
+        parent::__construct();
         $this->request  = new Zend_Controller_Request_Http();
         $this->response = new Zend_Controller_Response_Http();
         $this->config   = Phprojekt::getInstance()->getConfig();
@@ -175,16 +174,40 @@ class FrontInit extends PHPUnit_Framework_TestCase
         $this->error = false;
         try {
             $this->front->dispatch($this->request, $this->response);
-        } catch (Phprojekt_PublishedException $error) {
-            $this->error        = true;
-            $this->errormessage = $error->getMessage();
-            unset($error);
+            $this->content = ob_get_contents();
+            ob_end_clean();
+        } catch(Exception $e) {
+            /* make sure we end the output buffering in case of an exception */
+            ob_end_clean();
+            throw $e;
         }
-        $this->content = ob_get_contents();
-        ob_end_clean();
 
         $this->request->setParams(array());
 
         return $this->content;
+    }
+
+    /**
+     * Helper function to parse returned json.
+     *
+     * @param  string $json The json returned by getResponse()
+     * @return array A php array containing the data as strings. (No type conversions)
+     */
+    public static function phprJsonToArray($json)
+    {
+        $json = substr($json, 5, -1);
+        return Zend_Json::decode($json);
+    }
+
+    /**
+     * Reset the request and the response to allow another request to be done in this test
+     */
+    protected function _reset()
+    {
+        $this->request  = new Zend_Controller_Request_Http();
+        $this->response = new Zend_Controller_Response_Http();
+
+        $this->request->setModuleName('Default');
+        $this->request->setActionName('index');
     }
 }

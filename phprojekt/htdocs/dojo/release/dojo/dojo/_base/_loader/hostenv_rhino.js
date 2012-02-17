@@ -1,0 +1,14 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo.baseUrl=dojo.config.baseUrl?dojo.config.baseUrl:"./";dojo.locale=dojo.locale||String(java.util.Locale.getDefault().toString().replace("_","-").toLowerCase());dojo._name="rhino";dojo.isRhino=!0;if(typeof print=="function")console.debug=print;if(!("byId"in dojo))dojo.byId=function(a,c){return a&&(typeof a=="string"||a instanceof String)?(c||(c=document),c.getElementById(a)):a};
+dojo._isLocalUrl=function(a){var c=(new java.io.File(a)).exists();if(!c){var b;try{b=(new java.net.URL(a)).openStream(),b.close()}finally{b&&b.close&&b.close()}}return c};
+dojo._loadUri=function(a,c){if(dojo._loadedUrls[a])return!0;try{var b;try{b=dojo._isLocalUrl(a)}catch(e){return!1}dojo._loadedUrls[a]=!0;if(c){var d=(b?readText:readUri)(a,"UTF-8");eval("'\u200f'").length||(d=String(d).replace(/[\u200E\u200F\u202A-\u202E]/g,function(a){return"\\u"+a.charCodeAt(0).toString(16)}));d=/^define\(/.test(d)?d:"("+d+")";c(eval(d))}else load(a);dojo._loadedUrls.push(a);return!0}catch(f){return dojo._loadedUrls[a]=!1,console.debug("rhino load('"+a+"') failed. Exception: "+
+f),!1}};dojo.exit=function(a){quit(a)};function readText(a,c){var c=c||"utf-8",b=new java.io.File(a),b=new java.io.FileInputStream(b);return dj_readInputStream(b,c)}function readUri(a,c){var b=(new java.net.URL(a)).openConnection(),c=c||b.getContentEncoding()||"utf-8",b=b.getInputStream();return dj_readInputStream(b,c)}
+function dj_readInputStream(a,c){var b=new java.io.BufferedReader(new java.io.InputStreamReader(a,c));try{for(var e=new java.lang.StringBuffer,d="";(d=b.readLine())!==null;)e.append(d),e.append(java.lang.System.getProperty("line.separator"));return e.toString()}finally{b.close()}}dojo._getText=function(a,c){try{var b=(dojo._isLocalUrl(a)?readText:readUri)(a,"UTF-8");b!==null&&(b+="");return b}catch(e){if(c)return null;else throw e;}};dojo.doc=typeof document!="undefined"?document:null;dojo.body=function(){return document.body};
+if(typeof setTimeout=="undefined"||typeof clearTimeout=="undefined")dojo._timeouts=[],clearTimeout=function(a){dojo._timeouts[a]&&dojo._timeouts[a].stop()},setTimeout=function(a,c){var b=new java.lang.Runnable({sleepTime:c,hasSlept:!1,run:function(){if(!this.hasSlept)this.hasSlept=!0,java.lang.Thread.currentThread().sleep(this.sleepTime);try{a()}catch(b){console.debug("Error running setTimeout thread:"+b)}}}),b=new java.lang.Thread(b);b.start();return dojo._timeouts.push(b)-1};
+if(dojo.config.modulePaths)for(var param in dojo.config.modulePaths)dojo.registerModulePath(param,dojo.config.modulePaths[param]);

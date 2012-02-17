@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.fx.ext-dojo.complex"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.fx.ext-dojo.complex"] = true;
 dojo.provide("dojox.fx.ext-dojo.complex");
 
 (function(){
@@ -19,14 +10,14 @@ dojo.provide("dojox.fx.ext-dojo.complex");
 		//		Note this can also be used with (and is actually intended for)
 		//		CSS3 properties, such as transform:
 		//		transform: rotate(10deg) translateX(0px)
-		//		
+		//
 		//	description:
 		//		The standard animation doesn't know what to do with something like
 		//		rect(...). This class identifies complex properties by they being a
 		//		string and having parenthesis. If so, that property is made into a
 		//		dojox.fx._Complex object and the getValue() is obtained from
 		//		there.
-		//		
+		//
 		//	example:
 		//		|	var ani = dojo.animateProperty({
 		//		|		node:dojo.byId("myDiv"),
@@ -35,7 +26,7 @@ dojo.provide("dojox.fx.ext-dojo.complex");
 		//		|			clip:{start:'rect(0px 50px 50px 0px)', end:'rect(10px 30px 30px 10px)'}
 		//		|		}
 		//		|	}).play();
-		//		
+		//
 		var d = dojo;
 		var ani = da(options);
 		
@@ -127,7 +118,7 @@ dojo.declare("dojox.fx._Complex", null, {
 		// summary:
 		//		Returns an object that stores the numeric value and
 		//		units of the beggining and ending properties.
-		//		
+		//
 		var b = this.getNumAndUnits(beg);
 		var e = this.getNumAndUnits(end);
 		return {
@@ -141,7 +132,7 @@ dojo.declare("dojox.fx._Complex", null, {
 		// summary:
 		//		Helper function that splits a stringified set of properties
 		//		into individual units.
-		//		
+		//
 		str = str.substring(1, str.length-1);
 		var s;
 		if(/,/.test(str)){
@@ -158,7 +149,7 @@ dojo.declare("dojox.fx._Complex", null, {
 		//		Helper function that returns the numeric verion of the string
 		//		property (or dojo.Color object) and the unit in which it was
 		//		defined.
-		//		
+		//
 		if(!prop){ return {}; }
 		if(/#/.test(prop)){
 			return {
@@ -176,5 +167,3 @@ dojo.declare("dojox.fx._Complex", null, {
 });
 
 
-
-}

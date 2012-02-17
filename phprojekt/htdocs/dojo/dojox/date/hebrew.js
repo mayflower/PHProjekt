@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.date.hebrew"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.date.hebrew"] = true;
 dojo.provide("dojox.date.hebrew");
 
 dojo.require("dojox.date.hebrew.Date");
@@ -90,30 +81,30 @@ dojox.date.hebrew.add = function(/*dojox.date.hebrew.Date*/date, /*String*/inter
 			newHebrDate.setDate(date.getDate() + amount);
 			break;
 		case "month":
-			var month = date.getMonth(); 
+			var month = date.getMonth();
 			var add = month + amount;
 			if(!date.isLeapYear(date.getFullYear())){
 				if(month < 5 && add >= 5){ add++;}
-				else if (month > 5 && add <= 5){ add--;}	
+				else if (month > 5 && add <= 5){ add--;}
 			}
 			newHebrDate.setMonth(add);
 			break;
 		case "hour":
 			newHebrDate.setHours(date.getHours() + amount);
-			break;	
+			break;
 		case "minute":
 			newHebrDate.setMinutes(date.getMinutes() + amount);
-			break;	
+			break;
 		case "second":
 			newHebrDate.setSeconds(date.getSeconds() + amount);
-			break;	
+			break;
 		case "millisecond":
 			newHebrDate.setMilliseconds(date.getMilliseconds() + amount);
 			break;
 	}
 
 	return newHebrDate; // dojox.date.hebrew.Date
-}; 
+};
 
 dojox.date.hebrew.difference = function(/*dojox.date.hebrew.Date*/date1, /*dojox.date.hebrew.Date?*/date2, /*String?*/interval){
 	//	based on and similar to dojo.date.difference
@@ -223,7 +214,7 @@ dojox.date.hebrew.difference = function(/*dojox.date.hebrew.Date*/date1, /*dojox
 				var i = enddate.getFullYear()  + 1;
 				var e = startdate.getFullYear();
 				for (i;   i < e;  i++){
-					delta += enddate.isLeapYear(i) ? 13 : 12; 
+					delta += enddate.isLeapYear(i) ? 13 : 12;
 				}
 			}
 			if(date1.toGregorian() < date2.toGregorian()){
@@ -252,7 +243,5 @@ dojox.date.hebrew.difference = function(/*dojox.date.hebrew.Date*/date1, /*dojox
 	}
 
 	// Round for fractional values and DST leaps
-	return Math.round(delta); // Number (integer) 
+	return Math.round(delta); // Number (integer)
 };
-
-}

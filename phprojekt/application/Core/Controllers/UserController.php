@@ -44,7 +44,6 @@ class Core_UserController extends Core_IndexController
      * <pre>
      *  - id      => id of user.
      *  - display => Display for the user.
-     *  - current => True or false if is the current user.
      * </pre>
      *
      * The return is in JSON format.
@@ -54,16 +53,15 @@ class Core_UserController extends Core_IndexController
     public function jsonGetUsersAction()
     {
         IndexController::setCurrentProjectId();
-        $db      = Phprojekt::getInstance()->getDb();
-        $user    = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-        $records = $user->getAllowedUsers();
-        $current = Phprojekt_Auth::getUserId();
+        $db          = Phprojekt::getInstance()->getDb();
+        $where       = sprintf('status = %s', $db->quote('A'));
+        $user        = new Phprojekt_User_User();
+        $records     = $user->fetchAll($where);
 
         $data = array();
-        foreach ($records as $record) {
-            $data['data'][] = array('id'      => (int) $record['id'],
-                                    'display' => $record['name'],
-                                    'current' => $current == $record['id']);
+        foreach ($records as $node) {
+            $data['data'][] = array('id'      => $node->id,
+                                    'display' => $node->displayName);
         }
 
         Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);
@@ -91,7 +89,7 @@ class Core_UserController extends Core_IndexController
      */
     public function jsonDetailAction()
     {
-        $user = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $user = new Phprojekt_User_User();
         $id   = (int) $this->getRequest()->getParam("id");
 
         $user->find($id);
@@ -104,29 +102,26 @@ class Core_UserController extends Core_IndexController
         $data['status']    = (empty($user->status)) ? "" : $user->status;
         $data['admin']     = (empty($user->admin)) ? "" : $user->admin;
 
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('User');
 
         $fields = $setting->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
-        $tmp    = $setting->getList(0, $fields, $user->id);
+        $values    = $setting->getList(0, $fields, $user->id);
+        $values    = $values[0];
+        unset($values['id']);
 
-        foreach ($tmp as $values) {
-            foreach ($values as $key => $value) {
-                if ($key != 'id') {
-                    if (!empty($data["id"])) {
-                        $data[$key] = $value;
-                    } else {
-                        foreach ($fields as $field) {
-                            if ($field['key'] == $key) {
-                                if (!is_null($field['default'])) {
-                                    $data[$key] = $field['default'];
-                                } else {
-                                    $data[$key] = "";
-                                }
-                                break;
-                            }
-                        }
-                    }
+        if (!empty($data['id'])) {
+            $data = array_merge($data, $values);
+        } else {
+            foreach ($fields as $field) {
+                if (!array_key_exists($field['key'], $values)) {
+                    continue;
+                }
+
+                if (!is_null($field['default'])) {
+                    $data[$field['key']] = $field['default'];
+                } else {
+                    $data[$field['key']] = "";
                 }
             }
         }
@@ -141,6 +136,39 @@ class Core_UserController extends Core_IndexController
                       "numRows"  => count($records));
 
         Phprojekt_Converter_Json::echoConvert($data);
+    }
+
+    /**
+     * Returns a list of all the users the current user has proxy rights on
+     *
+     * Returns a list of all the users with:
+     * <pre>
+     *  - id      => id of user.
+     *  - display => Display for the user.
+     *  - current => True or false if is the current user.
+     * </pre>
+     *
+     * The return is in JSON format.
+     *
+     * @return void
+     */
+    public function jsonGetProxyableUsersAction()
+    {
+        $current      = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $proxyTable   = new Phprojekt_Auth_ProxyTable();
+        $proxyUserIds = $proxyTable->getProxyableUsersForUserId();
+
+        $data = array();
+
+        foreach ($proxyUserIds as $user) {
+            $data['data'][] = array(
+                'id'      => (int) $user->id,
+                'display' => $user->displayName,
+                'current' => $current == $user->id
+            );
+        }
+
+        Phprojekt_Converter_Json::echoConvert($data, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
 
     /**
@@ -176,7 +204,7 @@ class Core_UserController extends Core_IndexController
         $this->setCurrentProjectId();
 
         // Settings
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('User');
         $message = $setting->validateSettings($this->getRequest()->getParams());
 

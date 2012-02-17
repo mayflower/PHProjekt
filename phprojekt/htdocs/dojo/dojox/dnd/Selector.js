@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.dnd.Selector"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.dnd.Selector"] = true;
 dojo.provide("dojox.dnd.Selector");
 
 dojo.require("dojo.dnd.Selector");
@@ -166,5 +157,3 @@ dojo.declare(
 		}
 	}
 );
-
-}

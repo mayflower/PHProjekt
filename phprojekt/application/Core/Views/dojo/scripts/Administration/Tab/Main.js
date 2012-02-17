@@ -41,7 +41,7 @@ dojo.declare("phpr.Tab.Main", phpr.Core.Main, {
         if (this.form) {
             this.form.updateData();
         }
-        var tabStore = new phpr.Store.Tab();
+        var tabStore = new phpr.Default.System.Store.Tab();
         tabStore.update();
     }
 });

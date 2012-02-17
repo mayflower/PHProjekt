@@ -122,7 +122,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonGetFavoritesProjectsAction()
     {
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('Timecard');
 
         $favorites = $setting->getSetting('favorites');
@@ -132,7 +132,7 @@ class Timecard_IndexController extends IndexController
             $favorites = array();
         }
 
-        $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+        $activeRecord = new Project_Models_Project();
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree         = $tree->setup();
 
@@ -156,32 +156,41 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
-     * Checks if there are open bookings at the moment.
+     * Returns the currently running booking on the given day or null.
      *
      * It returns a string in JSON format with:
      * <pre>
      *  - type   => 'success'.
-     *  - status => True or false if there are open bookings.
-     *  - date   => startTime and date of the open booking or null.
+     *  - data   =>
+     *      - id        => id of the booking record.
+     *      - projectId => id of the booking project.
+     *      - startTime => HH:mm:ss of the start time.
+     *      - endTime   => HH:mm:ss of the end time.
+     *      - note      => The notes of the booking if any.
      *  - code   => 0.
      *  - id     => 0.
      * </pre>
      *
      * @return void
      */
-    public function jsonHasRunningBookingsAction()
+    public function jsonGetRunningBookingsAction()
     {
-        $records = $this->getModelObject()->getRunningBookings(Phprojekt_Auth::getUserId());
-        if (count($records) > 0) {
-            $record = end($records);
-            $date   = $record->startDatetime;
+        $year = (int) $this->getRequest()->getParam('year', date("Y"));
+        $month = (int) $this->getRequest()->getParam('month', date("m"));
+        $date = (int) $this->getRequest()->getParam('date', date("j"));
+        $record = Timecard_Models_Timecard::getRunningBooking($year, $month, $date);
+        if ($record) {
+            $data['id']        = $record['id'];
+            $data['projectId'] = $record['project_id'];
+            $data['startTime'] = substr($record['start_datetime'], 11);
+            $data['endTime']   = $record['end_time'];
+            $data['note']      = $record['notes'];
         } else {
-            $date = null;
+            $data = null;
         }
 
         $return = array('type'    => 'success',
-                        'status'  => (count($records) > 0) ? 'true' : 'false',
-                        'date'    => $date,
+                        'data'    => $data,
                         'code'    => 0,
                         'id'      => 0);
 
@@ -257,7 +266,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonFavoritesSaveAction()
     {
-        $setting = Phprojekt_Loader::getLibraryClass('Phprojekt_Setting');
+        $setting = new Phprojekt_Setting();
         $setting->setModule('Timecard');
 
         $setting->setSettings($this->getRequest()->getParams());

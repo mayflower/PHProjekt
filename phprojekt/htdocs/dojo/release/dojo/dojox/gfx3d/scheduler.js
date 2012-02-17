@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.gfx3d.scheduler"]||(dojo._hasResource["dojox.gfx3d.scheduler"]=!0,dojo.provide("dojox.gfx3d.scheduler"),dojo.provide("dojox.gfx3d.drawer"),dojo.require("dojox.gfx3d.vector"),dojo.mixin(dojox.gfx3d.scheduler,{zOrder:function(b,a){a=a?a:dojox.gfx3d.scheduler.order;b.sort(function(b,d){return a(d)-a(b)});return b},bsp:function(b,a){var a=a?a:dojox.gfx3d.scheduler.outline,c=new dojox.gfx3d.scheduler.BinarySearchTree(b[0],a);dojo.forEach(b.slice(1),function(b){c.add(b,a)});return c.iterate(a)},
+order:function(b){return b.getZOrder()},outline:function(b){return b.getOutline()}}),dojo.declare("dojox.gfx3d.scheduler.BinarySearchTree",null,{constructor:function(b,a){this.minus=this.plus=null;this.object=b;var c=a(b);this.orient=c[0];this.normal=dojox.gfx3d.vector.normalize(c)},add:function(b,a){var c=a(b),d=dojox.gfx3d.vector,e=this.normal,f=this.orient,g=dojox.gfx3d.scheduler.BinarySearchTree;if(dojo.every(c,function(a){return Math.floor(0.5+d.dotProduct(e,d.substract(a,f)))<=0}))this.minus?
+this.minus.add(b,a):this.minus=new g(b,a);else if(dojo.every(c,function(a){return Math.floor(0.5+d.dotProduct(e,d.substract(a,f)))>=0}))this.plus?this.plus.add(b,a):this.plus=new g(b,a);else throw"The case: polygon cross siblings' plate is not implemneted yet";},iterate:function(){var b=dojox.gfx3d.vector,a=[],c=null,c=Math.floor(0.5+b.dotProduct(this.normal,b.substract({x:0,y:0,z:-1E4},this.orient)))<=0?[this.plus,this.minus]:[this.minus,this.plus];c[0]&&(a=a.concat(c[0].iterate()));a.push(this.object);
+c[1]&&(a=a.concat(c[1].iterate()));return a}}),dojo.mixin(dojox.gfx3d.drawer,{conservative:function(b,a,c){dojo.forEach(this.objects,function(a){a.destroy()});dojo.forEach(a,function(a){a.draw(c.lighting)})},chart:function(b,a,c){dojo.forEach(this.todos,function(a){a.draw(c.lighting)})}}));

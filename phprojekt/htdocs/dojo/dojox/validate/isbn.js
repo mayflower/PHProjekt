@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.validate.isbn"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.validate.isbn"] = true;
 dojo.provide("dojox.validate.isbn");
 // summary: Provides ISBN validation functions in `dojox.validate`
 //
@@ -23,7 +14,7 @@ dojox.validate.isValidIsbn = function(/* String */value) {
 	len = value.length;
 
 	switch(len){
-		case 10: 
+		case 10:
 			weight = len;
 			// ISBN-10 validation algorithm
 			for(var i = 0; i < 9; i++){
@@ -32,7 +23,7 @@ dojox.validate.isValidIsbn = function(/* String */value) {
 			}
 			var t = value.charAt(9).toUpperCase();
 			sum += t == 'X' ? 10 : parseInt(t);
-			return sum % 11 == 0; // Boolean			
+			return sum % 11 == 0; // Boolean
 			break;
 		case 13:
 			weight = -1;
@@ -40,10 +31,8 @@ dojox.validate.isValidIsbn = function(/* String */value) {
 				sum += parseInt(value.charAt(i)) * (2 + weight);
 				weight *= -1;
 			}
-			return sum % 10 == 0; // Boolean		
-			break;			
+			return sum % 10 == 0; // Boolean
+			break;
 	}
 	return false;
-}
-
 }

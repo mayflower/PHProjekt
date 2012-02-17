@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.UpgradeBar"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.UpgradeBar"] = true;
 dojo.provide("dojox.widget.UpgradeBar");
 
 dojo.require("dojo.window");
@@ -64,7 +55,7 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 	//		link is not displayed.
 	noRemindButton:"Don't Remind Me Again",
 
-	templateString: dojo.cache("dojox.widget", "UpgradeBar/UpgradeBar.html", "<div class=\"dojoxUpgradeBar\">\r\n\t<div class=\"dojoxUpgradeBarMessage\" dojoAttachPoint=\"messageNode\">message</div>\r\n\t<div class=\"dojoxUpgradeBarReminderButton\" dojoAttachPoint=\"dontRemindButtonNode\" dojoAttachEvent=\"onclick:_onDontRemindClick\">${noRemindButton}</div>\r\n\t<span dojoAttachPoint=\"closeButtonNode\" class=\"dojoxUpgradeBarCloseIcon\" dojoAttachEvent=\"onclick: hide, onmouseenter: _onCloseEnter, onmouseleave: _onCloseLeave\" title=\"${buttonCancel}\"></span>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.widget","UpgradeBar/UpgradeBar.html"),
 
 	constructor: function(props, node){
 
@@ -230,5 +221,3 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 	}
 
 });
-
-}

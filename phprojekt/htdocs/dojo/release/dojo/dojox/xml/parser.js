@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojox.xml.parser"])dojo._hasResource["dojox.xml.parser"]=!0,dojo.provide("dojox.xml.parser"),dojox.xml.parser.parse=function(b,c){var a=dojo.doc,d,c=c||"text/xml";if(b&&dojo.trim(b)&&"DOMParser"in dojo.global){d=(new DOMParser).parseFromString(b,c);a=d.documentElement;if(a.nodeName=="parsererror"&&a.namespaceURI=="http://www.mozilla.org/newlayout/xml/parsererror.xml"){var e=a.getElementsByTagNameNS("http://www.mozilla.org/newlayout/xml/parsererror.xml","sourcetext")[0];if(e)e=
+e.firstChild.data;throw Error("Error parsing text "+a.firstChild.data+" \n"+e);}return d}else if("ActiveXObject"in dojo.global){a=function(a){return"MSXML"+a+".DOMDocument"};a=["Microsoft.XMLDOM",a(6),a(4),a(3),a(2)];dojo.some(a,function(a){try{d=new ActiveXObject(a)}catch(b){return!1}return!0});if(b&&d&&(d.async=!1,d.loadXML(b),a=d.parseError,a.errorCode!==0))throw Error("Line: "+a.line+"\nCol: "+a.linepos+"\nReason: "+a.reason+"\nError Code: "+a.errorCode+"\nSource: "+a.srcText);if(d)return d}else if(a.implementation&&
+a.implementation.createDocument)if(b&&dojo.trim(b)&&a.createElement){e=a.createElement("xml");e.innerHTML=b;var f=a.implementation.createDocument("foo","",null);dojo.forEach(e.childNodes,function(a){f.importNode(a,!0)});return f}else return a.implementation.createDocument("","",null);return null},dojox.xml.parser.textContent=function(b,c){if(arguments.length>1)return dojox.xml.parser.replaceChildren(b,(b.ownerDocument||dojo.doc).createTextNode(c)),c;else{if(b.textContent!==void 0)return b.textContent;
+var a="";b&&dojo.forEach(b.childNodes,function(b){switch(b.nodeType){case 1:case 5:a+=dojox.xml.parser.textContent(b);break;case 3:case 2:case 4:a+=b.nodeValue}});return a}},dojox.xml.parser.replaceChildren=function(b,c){var a=[];dojo.isIE&&dojo.forEach(b.childNodes,function(b){a.push(b)});dojox.xml.parser.removeChildren(b);dojo.forEach(a,dojo.destroy);dojo.isArray(c)?dojo.forEach(c,function(a){b.appendChild(a)}):b.appendChild(c)},dojox.xml.parser.removeChildren=function(b){for(var c=b.childNodes.length;b.hasChildNodes();)b.removeChild(b.firstChild);
+return c},dojox.xml.parser.innerXML=function(b){if(b.innerXML)return b.innerXML;else if(b.xml)return b.xml;else if(typeof XMLSerializer!="undefined")return(new XMLSerializer).serializeToString(b);return null};

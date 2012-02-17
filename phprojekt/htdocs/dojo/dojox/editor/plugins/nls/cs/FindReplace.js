@@ -1,1 +1,22 @@
-({"backwards":"V opačném směru","findReplace":"Přepnout hledání/nahrazování","replaceAll":"Všechny výskyty","replaceDialogText":"Počet nahrazených výskytů: ${0}. ","replaceButton":"Nahradit","findButton":"Najít","findLabel":"Hledaný řetězec:","matchCase":"S rozlišením velkých a malých písmen","replaceLabel":"Nahrazující řetězec:","eofDialogTextFind":"found","eofDialogText":"Last occurrence ${0}","findTooltip":"Enter text to find","replaceTooltip":"Enter text to replace with","replaceAllButton":"Replace All","eofDialogTextReplace":"replaced","backwardsTooltip":"Search backwards for text","replaceAllButtonTooltip":"Replace all the text","replaceButtonTooltip":"Replace the text","matchCaseTooltip":"Match case","findButtonTooltip":"Find the text"})
+({
+	"findLabel": "Najít:",
+	"findTooltip": "Zadejte hledaný text.",
+	"replaceLabel": "Nahrazující řetězec:",
+	"replaceTooltip": "Zadejte text pro nahrazení.",
+	"findReplace": "Najít a nahradit",
+	"matchCase": "S rozlišením velkých a malých písmen",
+	"matchCaseTooltip": "S rozlišením velkých a malých písmen",
+	"backwards": "V opačném směru",
+	"backwardsTooltip": "Hledat text v opačném směru",
+	"replaceAll": "Všechny výskyty",
+	"replaceAllButton": "Nahradit vše",
+	"replaceAllButtonTooltip": "Nahradit všechen text",
+	"findButton": "Najít",
+	"findButtonTooltip": "Najít text",
+	"replaceButton": "Nahradit",
+	"replaceButtonTooltip": "Nahradit text",
+	"replaceDialogText": "Počet nahrazených výskytů: ${0}.",
+	"eofDialogText": "Poslední výskyt ${0}",
+	"eofDialogTextFind": "byl nalezen",
+	"eofDialogTextReplace": "byl nahrazen"
+})

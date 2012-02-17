@@ -1,15 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit.layout.AccordionPane"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.layout.AccordionPane"] = true;
-dojo.provide("dijit.layout.AccordionPane");
-
-dojo.require("dijit.layout.ContentPane");
+define("dijit/layout/AccordionPane", ["dojo", "dijit", "dijit/layout/ContentPane"], function(dojo, dijit) {
 
 dojo.declare("dijit.layout.AccordionPane", dijit.layout.ContentPane, {
 	// summary:
@@ -27,4 +16,6 @@ dojo.declare("dijit.layout.AccordionPane", dijit.layout.ContentPane, {
 	}
 });
 
-}
+
+return dijit.layout.AccordionPane;
+});

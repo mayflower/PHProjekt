@@ -21,7 +21,6 @@
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Database Nodes
@@ -38,17 +37,22 @@ require_once 'PHPUnit/Framework.php';
  * @group      treenode
  * @group      phprojekt-treenode
  */
-class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
+class Phprojekt_Tree_Node_DatabaseTest extends DatabaseTest
 {
     private $_tree;
     private $_model;
+
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../../common.xml');
+    }
 
     /**
      * initialite
      */
     public function setUp()
     {
-        $this->_model = new Project_Models_Project($this->sharedFixture);
+        parent::setUp();
+        $this->_model = new Project_Models_Project();
         $this->_tree = new Phprojekt_Tree_Node_Database($this->_model, 1);
         $this->_tree = $this->_tree->setup();
     }
@@ -59,7 +63,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
     public function testSetup()
     {
         $this->assertEquals('/', $this->_tree->path);
-        $this->assertEquals('Invisible Root', $this->_tree->title);
+        $this->assertEquals('PHProjekt', $this->_tree->title);
         $this->assertNotNull($this->_tree->id);
         $this->assertEquals(1, count($this->_tree->getChildren()));
         $this->assertNotNull($this->_tree->isSetup());
@@ -92,10 +96,10 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
     public function testGetDepthDisplay()
     {
         $node = $this->_tree->getNodeById(2);
-        $this->assertEquals('....Project 1', $node->getDepthDisplay('title'));
+        $this->assertEquals('Test Project', $node->getDepthDisplay('title'));
         $node = $this->_tree->getNodeById(5);
-        $this->assertEquals('........Test Project', $node->getDepthDisplay('title'));
-        $this->assertEquals('........2009-08-01', $node->getDepthDisplay('startDate'));
+        $this->assertEquals('Sub Project', $node->getDepthDisplay('title'));
+        $this->assertEquals('2009-06-02', $node->getDepthDisplay('startDate'));
     }
 
     /**
@@ -104,13 +108,13 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
     public function testGetFirstChild()
     {
         $child = $this->_tree->getFirstChild();
-        $this->assertEquals('Project 1', $child->title);
+        $this->assertEquals('Test Project', $child->title);
 
         $node  = $this->_tree->getNodeById(2);
         $child = $node->getFirstChild();
         $this->assertEquals('Sub Project', $child->title);
 
-        $node  = $this->_tree->getNodeById(4);
+        $node  = $this->_tree->getNodeById(5);
         $child = $node->getFirstChild();
         $this->assertEquals('Sub Sub Project 1', $child->title);
 
@@ -124,13 +128,13 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
      */
     public function testMove()
     {
-        $child1 = $this->_tree->getNodeById(4);
-        $child2 = $this->_tree->getNodeById(5);
+        $child1 = $this->_tree->getNodeById(5);
+        $child2 = $this->_tree->getNodeById(2);
         $child1->setParentNode($child2);
 
         $tree = new Phprojekt_Tree_Node_Database($this->_model, 1);
         $tree = $tree->setup();
-        $this->assertEquals(5, $tree->getNodeById(4)->parentNode->id);
+        $this->assertEquals(2, $tree->getNodeById(5)->parentNode->id);
     }
 
     /**
@@ -159,11 +163,11 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
      */
     public function testGetSubtree()
     {
-        $tree = new Phprojekt_Tree_Node_Database($this->_model, 4);
+        $tree = new Phprojekt_Tree_Node_Database($this->_model, 5);
         $tree = $tree->setup();
 
         $this->assertEquals(2, count($tree->getChildren()));
-        $this->assertNull($tree->getNodeById(2));
+        $this->assertNull($tree->getNodeById(4));
         $this->assertEquals('Sub Project', $tree->title);
 
         $this->assertTrue($tree->isRootNodeForCurrentTree());
@@ -175,7 +179,7 @@ class Phprojekt_Tree_Node_DatabaseTest extends PHPUnit_Framework_TestCase
      */
     public function testDeleteNode()
     {
-        $tree = new Phprojekt_Tree_Node_Database($this->_model, 4);
+        $tree = new Phprojekt_Tree_Node_Database($this->_model, 5);
         $tree = $tree->setup();
         $this->assertEquals(2, count($tree->getChildren()));
         $tree->delete();

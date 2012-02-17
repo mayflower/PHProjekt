@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>PHProjekt</title>
+    <link rel="shortcut icon" href="<?php echo $this->webPath; ?>img/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->webPath; ?>min/min/?g=phprojekt" />
+    <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/dojo/dojo.js"></script>
+    <script type="text/javascript">
+        dojo.require('dojo.parser');
+        dojo.require('dijit.layout.BorderContainer');
+        dojo.require('dijit.layout.ContentPane');
+        dojo.require('dijit.Toolbar');
+        function getMaxHeight() {
+            var availHeight = 0;
+
+            if (document.layers) {
+                availHeight = window.innerHeight + window.pageYOffset;
+            } else if (document.all) {
+                availHeight = document.documentElement.clientHeight + document.documentElement.scrollTop;
+            } else if (document.getElementById) {
+                availHeight = window.innerHeight + window.pageYOffset;
+            }
+
+            return availHeight;
+        }
+
+        dojo.addOnLoad(function() {
+            dojo.parser.parse();
+        });
+
+    </script>
+</head>
+<body class="phprojekt">
+
+<div class="completeContent" dojoType="dijit.layout.BorderContainer" persist="true"
+ style="width: 100%; height: 1000px;">
+    <!-- Left Content -->
+    <div class="navigationContainer" dojoType="dijit.layout.ContentPane" region="left" splitter="false" minSize="180"
+    maxSize="300"
+    style="width: 15%; overflow: hidden;">
+        <div region="center" dojoType="dijit.layout.ContentPane">
+            <div class="treeNavigation">
+                <div dojoType="dijit.layout.ContentPane" class="treeBox"
+                 style="height: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Bar menu -->
+    <div dojoType="dijit.layout.ContentPane" region="top" class="header"
+    style="height: 55px; overflow: hidden;">
+        <img class="left" src="<?php echo $this->webPath; ?>img/logo.png" alt="PHProjekt 6" />
+        <div class="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
+        </div>
+        <div class="loadingIcon" class="right align-right"
+        style="margin-top: 5px; margin-bottom: 5px; display: none;">
+            <img class="left" src="<?php echo $this->webPath; ?>img/ajax-loader.gif" alt="Loadding" />
+        </div>
+    </div>
+
+    <!-- Center Content -->
+    <div    class="completeCenterContent"
+            dojoType="dijit.layout.ContentPane"
+            region="center"
+            style="height: 1000px;">
+        <br/>
+        <?php $p = Phprojekt::getInstance(); ?>
+        <div class="prepend-0" class="content">
+            <h2><?php echo $p->translate('Migration'); ?></h2>
+            <p>
+                <?php echo $p->translate(<<<HERE
+This is the place where migration happens after installing a new Version.
+Currently, there's nothing to upgrade, so this page is quite boring.<br/>
+Visit the 
+HERE
+); ?>
+                <a href="<?php echo $this->webPath; ?>index.php">
+                    <?php echo $p->translate('main page'); ?>
+                </a>
+                <?php echo $p->translate(' for more interesting things.'); ?>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

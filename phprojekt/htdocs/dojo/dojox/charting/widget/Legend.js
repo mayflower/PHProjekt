@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.charting.widget.Legend"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.widget.Legend"] = true;
 dojo.provide("dojox.charting.widget.Legend");
 
 dojo.require("dijit._Widget");
@@ -16,7 +7,7 @@ dojo.require("dojox.lang.functional.array");
 dojo.require("dojox.lang.functional.fold");
 
 dojo.declare("dojox.charting.widget.Legend", [dijit._Widget, dijit._Templated], {
-	// summary: A legend for a chart. A legend contains summary labels for 
+	// summary: A legend for a chart. A legend contains summary labels for
 	// each series of data contained in the chart.
 	//
 	// Set the horizontal attribute to boolean false to layout legend labels vertically.
@@ -33,7 +24,7 @@ dojo.declare("dojox.charting.widget.Legend", [dijit._Widget, dijit._Templated], 
 	horizontal: true,
 	swatchSize: 18,
 	
-	templateString: "<table dojoAttachPoint='legendNode' class='dojoxLegendNode'><tbody dojoAttachPoint='legendBody'></tbody></table>",
+	templateString: "<table dojoAttachPoint='legendNode' class='dojoxLegendNode' role='group' aria-label='chart legend'><tbody dojoAttachPoint='legendBody'></tbody></table>",
 	
 	legendNode: null,
 	legendBody: null,
@@ -77,8 +68,7 @@ dojo.declare("dojox.charting.widget.Legend", [dijit._Widget, dijit._Templated], 
 		if(this.horizontal){
 			dojo.addClass(this.legendNode, "dojoxLegendHorizontal");
 			// make a container <tr>
-			this._tr = dojo.doc.createElement("tr");
-			this.legendBody.appendChild(this._tr);
+			this._tr = dojo.create("tr", null, this.legendBody);
 			this._inrow = 0;
 		}
 		
@@ -110,32 +100,31 @@ dojo.declare("dojox.charting.widget.Legend", [dijit._Widget, dijit._Templated], 
 	},
 	_addLabel: function(dyn, label){
 		// create necessary elements
-		var icon = dojo.doc.createElement("td"),
-			text = dojo.doc.createElement("td"),
-			div  = dojo.doc.createElement("div");
-		dojo.addClass(icon, "dojoxLegendIcon");
+		var wrapper = dojo.create("td"),
+			icon = dojo.create("div", null, wrapper),
+			text = dojo.create("label", null, wrapper),
+			div  = dojo.create("div", {
+				style: {
+					"width": this.swatchSize + "px",
+					"height":this.swatchSize + "px",
+					"float": "left"
+				}
+			}, icon);
+		dojo.addClass(icon, "dojoxLegendIcon dijitInline");
 		dojo.addClass(text, "dojoxLegendText");
-		div.style.width  = this.swatchSize + "px";
-		div.style.height = this.swatchSize + "px";
-		icon.appendChild(div);
-		
 		// create a skeleton
 		if(this._tr){
 			// horizontal
-			this._tr.appendChild(icon);
-			this._tr.appendChild(text);
+			this._tr.appendChild(wrapper);
 			if(++this._inrow === this.horizontal){
 				// make a fresh container <tr>
-				this._tr = dojo.doc.createElement("tr");
-				this.legendBody.appendChild(this._tr);
+				this._tr = dojo.create("tr", null, this.legendBody);
 				this._inrow = 0;
 			}
 		}else{
 			// vertical
-			var tr = dojo.doc.createElement("tr");
-			this.legendBody.appendChild(tr);
-			tr.appendChild(icon);
-			tr.appendChild(text);
+			var tr = dojo.create("tr", null, this.legendBody);
+			tr.appendChild(wrapper);
 		}
 		
 		// populate the skeleton
@@ -176,5 +165,3 @@ dojo.declare("dojox.charting.widget.Legend", [dijit._Widget, dijit._Templated], 
 		}
 	}
 });
-
-}

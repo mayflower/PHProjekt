@@ -1,18 +1,9 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.mobile.app._Widget"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.mobile.app._Widget"] = true;
 dojo.provide("dojox.mobile.app._Widget");
 dojo.experimental("dojox.mobile.app._Widget");
 
-dojo.require("dijit._Widget");
+dojo.require("dijit._WidgetBase");
 
-dojo.declare("dojox.mobile.app._Widget", dijit._Widget, {
+dojo.declare("dojox.mobile.app._Widget", dijit._WidgetBase, {
 	// summary:
 	//		The base mobile app widget.
 
@@ -20,8 +11,8 @@ dojo.declare("dojox.mobile.app._Widget", dijit._Widget, {
 		// summary:
 		//		Returns the scroll position.
 		return {
-			x: window.scrollX,
-			y: window.scrollY
+			x: dojo.global.scrollX,
+			y: dojo.global.scrollY
 		};
 	},
 
@@ -29,7 +20,7 @@ dojo.declare("dojox.mobile.app._Widget", dijit._Widget, {
 		if(event.toLowerCase() == "dblclick"
 			|| event.toLowerCase() == "ondblclick"){
 
-			if(window["Mojo"]){
+			if(dojo.global["Mojo"]){
 				// Handle webOS tap event
 				return this.connect(target, Mojo.Event.tap, fn);
 			}
@@ -37,5 +28,3 @@ dojo.declare("dojox.mobile.app._Widget", dijit._Widget, {
 		return this.inherited(arguments);
 	}
 });
-
-}

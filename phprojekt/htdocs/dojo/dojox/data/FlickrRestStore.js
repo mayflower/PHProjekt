@@ -1,15 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.data.FlickrRestStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.FlickrRestStore"] = true;
-dojo.provide("dojox.data.FlickrRestStore");
-
-dojo.require("dojox.data.FlickrStore");
+define("dojox/data/FlickrRestStore", ["dojo", "dojox", "dojox/data/FlickrStore"], function(dojo, dojox) {
 
 dojo.declare("dojox.data.FlickrRestStore",
 	dojox.data.FlickrStore, {
@@ -489,5 +478,6 @@ dojo.declare("dojox.data.FlickrRestStore",
 	}
 });
 
+return dojox.data.FlickrRestStore;
+});
 
-}

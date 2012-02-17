@@ -1,76 +1,13 @@
-.dijitToasterContent {
-    background: #E6EFC2;
-    color: #529214;
-    border-color: #C6D880;
-    width: 35em;
-    text-align: left;
-    padding-left: 1em;
-}
-
-.dijitToasterMessage,
-.dijitToasterWarning,
-.dijitToasterError,
-.dijitToasterFatal {
-    padding: .1em;
-    margin-top: 0em;
-    margin-bottom: 1em;
-}
-
-.dijitToasterMessage hr {
-     background: #529214;
-}
-
-.dijitToasterMessage {
-     border-color: #C6D880;
-}
-
-.dijitToasterMessage .dijitToasterContent {
-    background: #E6EFC2;
-    color: #529214;
-}
-
-.dijitToasterWarning .hr {
-    background: #817134;
-}
-
-.dijitToasterWarning {
-    border-color: #FFD324;
-}
-
-.dijitToasterWarning .dijitToasterContent {
-    background: #FFF6BF;
-    color: #817134;
-}
-
-.dijitToasterError,
-.dijitToasterFatal {
-    border-color: #FBC2C4;
-}
-
-.dijitToasterFatal hr,
-.dijitToasterError hr {
-    background: #D12F19;
-}
-
-.dijitToasterFatal .dijitToasterContent,
-.dijitToasterError .dijitToasterContent {
-    background: #FBE3E4;
-    color: #D12F19;
-}
-
-.dijitToasterClip {
-    position: absolute;
-    z-index: 5000;
-    overflow: hidden;
-}
-
 .dijitToasterContainer {
     display: block;
     position: absolute;
+    width: 300px;
+    margin: 0px;
+    font: 12px Tahoma, Helvetica, Verdana, Arial;
 }
 
 #disableFrontendMessage {
     border: 1px solid #DFDFDF;
-    width: 36em;
+    width: 200px;
     background: #EFEFEF;
 }

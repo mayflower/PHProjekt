@@ -1,15 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo._base.Color"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo._base.Color"] = true;
-dojo.provide("dojo._base.Color");
-dojo.require("dojo._base.array");
-dojo.require("dojo._base.lang");
+define("dojo/_base/Color", ["dojo/lib/kernel", "dojo/_base/array", "dojo/_base/lang"], function(dojo){
 
 (function(){
 
@@ -199,7 +188,7 @@ dojo.require("dojo._base.lang");
 		//		Builds a `dojo.Color` from a 3 or 4 element array, mapping each
 		//		element in sequence to the rgb(a) values of the color.
 		// example:
-		//		| var myColor = dojo.colorFromArray([237,237,237,0.5]); // grey, 50% alpha 
+		//		| var myColor = dojo.colorFromArray([237,237,237,0.5]); // grey, 50% alpha
 		// returns:
 		//		A dojo.Color object. If obj is passed, it will be the return value.
 		var t = obj || new d.Color();
@@ -224,4 +213,5 @@ dojo.require("dojo._base.lang");
 	};
 })();
 
-}
+return dojo.Color;
+});

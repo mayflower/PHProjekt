@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.sketch.Figure"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.sketch.Figure"] = true;
 dojo.provide("dojox.sketch.Figure");
 dojo.experimental("dojox.sketch");
 
@@ -73,10 +64,10 @@ dojo.require("dojox.sketch.UndoStack");
 			return obj;
 		};
 		this.clearSelections=function(){
-			for(var i=0; i<self.selected.length; i++){ 
+			for(var i=0; i<self.selected.length; i++){
 				self.selected[i].setMode(ta.Annotation.Modes.View);
 			}
-			self.selected=[]; 
+			self.selected=[];
 		};
 		this.replaceSelection=function(n, o){
 			if(!self.isSelected(o)){
@@ -86,7 +77,7 @@ dojo.require("dojox.sketch.UndoStack");
 			var idx=-1;
 			for(var i=0; i<self.selected.length; i++){
 				if(self.selected[i]==o){
-					idx=i; 
+					idx=i;
 					break;
 				}
 			}
@@ -143,7 +134,7 @@ dojo.require("dojox.sketch.UndoStack");
 		//	drag handlers.
 		this._md=function(e){
 			//in IE, when clicking into the drawing canvas, the node does not get focused,
-			//do it manually here to force it, otherwise the keydown event listener is 
+			//do it manually here to force it, otherwise the keydown event listener is
 			//never triggered in IE.
 			if(dojox.gfx.renderer=='vml'){
 				self.node.focus();
@@ -346,7 +337,7 @@ dojo.require("dojox.sketch.UndoStack");
 		}
 	};
 	p._get=function(key){
-		if(key&&key.indexOf("bounding")>-1){ 
+		if(key&&key.indexOf("bounding")>-1){
 			key=key.replace("-boundingBox","");
 		}else if(key&&key.indexOf("-labelShape")>-1){
 			key=key.replace("-labelShape","");
@@ -464,15 +455,15 @@ dojo.require("dojox.sketch.UndoStack");
 		//	create from pseudo-DOM
 		if(this.surface){ this.destroy(true); }
 		var node=obj.documentElement;	//	should be either the document or the docElement
-		this.size={ 
-			w:parseFloat(node.getAttribute('width'),10), 
-			h:parseFloat(node.getAttribute('height'),10) 
+		this.size={
+			w:parseFloat(node.getAttribute('width'),10),
+			h:parseFloat(node.getAttribute('height'),10)
 		};
 		var g=node.childrenByName("g")[0];
 		var img=g.childrenByName("image")[0];
 		this.imageSize={
-			w:parseFloat(img.getAttribute('width'),10), 
-			h:parseFloat(img.getAttribute('height'),10) 
+			w:parseFloat(img.getAttribute('width'),10),
+			h:parseFloat(img.getAttribute('height'),10)
 		};
 		this.imageSrc=img.getAttribute("xlink:href");
 		this.initialize(n);
@@ -525,7 +516,7 @@ dojo.require("dojox.sketch.UndoStack");
 			+ 'xmlns:dojoxsketch="http://dojotoolkit.org/dojox/sketch" '
 			+ 'width="' + this.size.w + '" height="' + this.size.h + '">'
 			+ '<g>'
-			+ '<image xlink:href="' + this.imageSrc + '" x="0" y="0" width="' 
+			+ '<image xlink:href="' + this.imageSrc + '" x="0" y="0" width="'
 			+ this.size.w + '" height="' + this.size.h + '" />';
 		for(var i=0; i<this.shapes.length; i++){ s+= this.shapes[i].serialize(); }
 		s += '</g></svg>';
@@ -533,5 +524,3 @@ dojo.require("dojox.sketch.UndoStack");
 	};
 	p.getValue=p.serialize;
 })();
-
-}

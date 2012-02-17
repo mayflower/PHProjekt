@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.charting.themes.Tom"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.charting.themes.Tom"] = true;
 dojo.provide("dojox.charting.themes.Tom");
 
 dojo.require("dojox.gfx.gradutils");
@@ -53,17 +44,17 @@ dojo.require("dojox.charting.Theme");
 		},
 		seriesThemes: [
 			{fill: g(defaultFill, "#bf9e0a", "#ecc20c")},
-			{fill: g(defaultFill, "#73b086", "#95e5af")},	
-			{fill: g(defaultFill, "#c7212d", "#ed2835")},	
-			{fill: g(defaultFill, "#87ab41", "#b6e557")},	
-			{fill: g(defaultFill, "#b86c25", "#d37d2a")}	
+			{fill: g(defaultFill, "#73b086", "#95e5af")},
+			{fill: g(defaultFill, "#c7212d", "#ed2835")},
+			{fill: g(defaultFill, "#87ab41", "#b6e557")},
+			{fill: g(defaultFill, "#b86c25", "#d37d2a")}
 		],
 		markerThemes: [
-			{fill: "#bf9e0a", stroke: {color: "#ecc20c"}},	
+			{fill: "#bf9e0a", stroke: {color: "#ecc20c"}},
 			{fill: "#73b086", stroke: {color: "#95e5af"}},
-			{fill: "#c7212d", stroke: {color: "#ed2835"}},	
-			{fill: "#87ab41", stroke: {color: "#b6e557"}},	
-			{fill: "#b86c25", stroke: {color: "#d37d2a"}}	
+			{fill: "#c7212d", stroke: {color: "#ed2835"}},
+			{fill: "#87ab41", stroke: {color: "#b6e557"}},
+			{fill: "#b86c25", stroke: {color: "#d37d2a"}}
 		]
 	});
 	
@@ -94,5 +85,3 @@ dojo.require("dojox.charting.Theme");
 		return theme;
 	};
 })();
-
-}

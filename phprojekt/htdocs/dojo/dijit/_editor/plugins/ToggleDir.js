@@ -1,13 +1,5 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+define("dijit/_editor/plugins/ToggleDir", ["dojo", "dijit", "dijit/_editor/_Plugin", "dijit/form/ToggleButton"], function(dojo, dijit) {
 
-
-if(!dojo._hasResource["dijit._editor.plugins.ToggleDir"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit._editor.plugins.ToggleDir"] = true;
-dojo.provide("dijit._editor.plugins.ToggleDir");
 dojo.experimental("dijit._editor.plugins.ToggleDir");
 
 dojo.require("dijit._editor._Plugin");
@@ -45,8 +37,9 @@ dojo.declare("dijit._editor.plugins.ToggleDir",
 		},
 
 		updateState: function(){
-			// Override _Plugin.updateState() to do nothing, since we don't need to react to changes in the
-			// editor like arrow keys etc.
+			// summary:
+			//		Over-ride for button state control for disabled to work.
+			this.button.set("disabled", this.get("disabled"));
 		},
 
 		_setRtl: function(rtl){
@@ -72,4 +65,6 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	}
 });
 
-}
+
+return dijit._editor.plugins.ToggleDir;
+});

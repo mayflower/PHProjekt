@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.tools.Pencil"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.tools.Pencil"] = true;
 dojo.provide("dojox.drawing.tools.Pencil");
 
 dojox.drawing.tools.Pencil = dojox.drawing.util.oo.declare(
@@ -90,5 +81,3 @@ dojox.drawing.tools.Pencil.setup = {
 };
 
 dojox.drawing.register(dojox.drawing.tools.Pencil.setup, "tool");
-
-}

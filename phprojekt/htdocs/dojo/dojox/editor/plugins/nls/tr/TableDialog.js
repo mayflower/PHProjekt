@@ -1,1 +1,30 @@
-({"buttonSet":"Ayarla","insertTableTitle":"Tablo Ekle","insertTableRowAfterLabel":"Satırı Arkasına Ekle","center":"orta","deleteTableColumnLabel":"Sütunu Sil","right":"sağ","insertTableColumnBeforeLabel":"Sütunu Önüne Ekle","tableWidth":"Tablo Genişliği","buttonInsert":"Ekle","default":"varsayılan","align":"Hizala:","insertTableRowBeforeLabel":"Satırı Önüne Ekle","cellSpacing":"Hücre Aralığı:","pixels":"piksel","selectTableLabel":"Tablo Seç","rows":"Satırlar:","modifyTableTitle":"Tabloyu Değiştir","cellPadding":"Hücre Doldurma:","deleteTableRowLabel":"Satırı Sil","backgroundColor":"Arka Plan Rengi:","insertTableColumnAfterLabel":"Sütunu Arkasına Ekle","left":"sol","borderThickness":"Kenarlık Kalınlığı","columns":"Sütunlar:","percent":"yüzde","borderColor":"Kenarlık Rengi: "})
+({
+	insertTableTitle: "Tablo Ekle",
+	modifyTableTitle: "Tabloyu Değiştir",
+	rows: "Satırlar:",
+	columns: "Sütunlar:",
+	align: "Hizala:",
+	cellPadding: "Hücre Doldurma:",
+	cellSpacing: "Hücre Aralığı:",
+	tableWidth: "Tablo Genişliği",
+	backgroundColor: "Arka Plan Rengi:",
+	borderColor: "Kenarlık Rengi:",
+	borderThickness: "Kenarlık Kalınlığı",
+	percent: "yüzde",
+	pixels: "piksel",
+	"default": "varsayılan",
+	left: "sol",
+	center: "orta",
+	right: "sağ",
+	buttonSet: "Ayarla", // translated elsewhere?
+	buttonInsert: "Ekle",
+	buttonCancel: "İptal",
+
+	selectTableLabel: "Tablo Seç",
+	insertTableRowBeforeLabel: "Satırı Önüne Ekle",
+	insertTableRowAfterLabel: "Satırı Arkasına Ekle",
+	insertTableColumnBeforeLabel: "Sütunu Önüne Ekle",
+	insertTableColumnAfterLabel: "Sütunu Arkasına Ekle",
+	deleteTableRowLabel: "Satırı Sil",
+	deleteTableColumnLabel: "Sütunu Sil"
+})

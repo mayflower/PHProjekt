@@ -1,17 +1,8 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.mdnd.AutoScroll"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.mdnd.AutoScroll"] = true;
 dojo.provide("dojox.mdnd.AutoScroll");
 
 dojo.declare(
-	"dojox.mdnd.AutoScroll", 
-	null, 
+	"dojox.mdnd.AutoScroll",
+	null,
 {
 	// summary:
 	//		Activate scrolling while dragging a widget.
@@ -38,7 +29,7 @@ dojo.declare(
 	init: function(){
 		//console.log("dojox.mdnd.AutoScroll ::: init ");
 		this._html = (dojo.isWebKit) ? dojo.body() : dojo.body().parentNode;
-		this.getViewport();	
+		this.getViewport();
 	},
 
 	getViewport:function(){
@@ -202,5 +193,3 @@ dojox.mdnd.autoScroll = null;
 (function(){
 	dojox.mdnd.autoScroll = new dojox.mdnd.AutoScroll();
 }());
-
-}

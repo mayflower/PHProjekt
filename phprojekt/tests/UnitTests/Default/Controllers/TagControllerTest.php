@@ -22,7 +22,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Tag Controller
@@ -42,6 +41,10 @@ require_once 'PHPUnit/Framework.php';
  */
 class Phprojekt_TagController_Test extends FrontInit
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml');
+    }
+
     /**
      * Test of json get tags
      */
@@ -50,10 +53,27 @@ class Phprojekt_TagController_Test extends FrontInit
         $this->setRequestUrl('Default/Tag/jsonGetTags/');
         $this->request->setParam('nodeId', 1);
         $this->request->setParam('limit', 2);
-        $response = $this->getResponse();
-        $expected = '"metadata":[{"key":"string","label":"Tag"},{"key":"count","label":"Count"}],'
-            . '"data":[{"string":"this","count":3}';
-        $this->assertContains($expected, $response);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $expected = array(
+            'metadata' => array(
+                array(
+                    'key'   => 'string',
+                    'label' => 'Tag',
+                ),
+                array(
+                    'key'   => 'count',
+                    'label' => 'Count',
+                ),
+            ),
+            'data' => array(
+                array(
+                    'string' => 'this',
+                    'count'  => '3',
+                ),
+            ),
+            'numRows' => 1,
+        );
+        $this->assertEquals($expected, $response);
     }
 
     /**
@@ -76,7 +96,7 @@ class Phprojekt_TagController_Test extends FrontInit
     {
         $this->setRequestUrl('Default/Tag/jsonGetModulesByTag/');
         $this->request->setParam('nodeId', 1);
-        $this->request->setParam('tag', 'test');
+        $this->request->setParam('tag', 'this');
         $this->request->setParam('limit', 2);
         $response = $this->getResponse();
         $expected = '{"id":1,"moduleId":1,"moduleName":"Project","moduleLabel":"Project","firstDisplay":"test",'

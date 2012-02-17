@@ -21,7 +21,6 @@
  * @author     Eduardo Polidor <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Groups
@@ -38,8 +37,12 @@ require_once 'PHPUnit/Framework.php';
  * @group      group
  * @group      phprojekt-group
  */
-class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
+class Phprojekt_GroupTest extends DatabaseTest
 {
+    protected function getDataSet() {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * Set user
      */
@@ -110,16 +113,5 @@ class Phprojekt_GroupTest extends PHPUnit_Framework_TestCase
         $converted[] = $data;
 
         $this->assertEquals($converted, $group->getInformation()->getFieldDefinition());
-    }
-
-    /**
-     * Test for mock function
-     */
-    public function testMocks()
-    {
-        $group = new Phprojekt_Groups_Groups($this->sharedFixture);
-        $this->assertEquals(array(), $group->getRights());
-
-        $this->assertTrue($group->recordValidate());
     }
 }

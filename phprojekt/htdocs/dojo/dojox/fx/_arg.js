@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.fx._arg"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.fx._arg"] = true;
 dojo.provide("dojox.fx._arg");
 
 dojox.fx._arg.StyleArgs = function(/*Object*/ args){
@@ -21,14 +12,12 @@ dojox.fx._arg.StyleArgs = function(/*Object*/ args){
 }
 
 dojox.fx._arg.ShadowResizeArgs = function(/*Object*/ args){
-	// summary: 
+	// summary:
 	//	The odd way to document object parameters.
 	// x: Integer
 	//	the width to set
 	// y: Integer
-	//	the height to set	
+	//	the height to set
 	this.x = args.x;
 	this.y = args.y;
-}
-
 }

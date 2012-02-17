@@ -1,13 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+define("dijit/form/RangeBoundTextBox", ["dojo", "dijit", "dijit/form/ValidationTextBox"], function(dojo, dijit) {
 
 
-if(!dojo._hasResource["dijit.form.RangeBoundTextBox"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.form.RangeBoundTextBox"] = true;
-dojo.provide("dijit.form.RangeBoundTextBox");
-dojo.require("dijit.form.ValidationTextBox");
 
-}
+return dijit.form.RangeBoundTextBox;
+});

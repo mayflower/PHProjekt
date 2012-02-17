@@ -1,1 +1,10 @@
-({"selectContents":"Seleziona contenuto","deleteElement":"Elimina elemento","moveEnd":"Sposta il cursore per terminare","deleteContents":"Elimina contenuto","nodeActions":"Azioni ${nodeName}","selectElement":"Seleziona elemento","moveStart":"Sposta il cursore per iniziare"})
+({
+	"nodeActions": "Azioni ${nodeName}",
+	"selectContents": "Seleziona contenuto",
+	"selectElement": "Seleziona elemento",
+	"deleteElement": "Elimina elemento",
+	"deleteContents": "Elimina contenuto",
+	"moveStart": "Sposta il cursore per iniziare",
+	"moveEnd": "Sposta il cursore per terminare"
+})
+

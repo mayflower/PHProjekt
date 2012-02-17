@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.util.common"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.util.common"] = true;
 dojo.provide("dojox.drawing.util.common");
 dojo.require("dojox.math.round");
 
@@ -56,7 +47,7 @@ dojo.require("dojox.math.round");
 			// arguments:
 			//		obj: EventObject
 			//			Manager.Mouse event.
-			// 		snap: Float 
+			// 		snap: Float
 			//			Returns nearest angle within snap limits
 			//
 			//obj = this.argsToObj.apply(this, arguments);
@@ -223,7 +214,7 @@ dojo.require("dojox.math.round");
 		},
 		mixin: function(o1, o2){
 			// TODO: make faster
-			//return dojo.mixin(dojo.clone(o1), dojo.clone(o2));	
+			//return dojo.mixin(dojo.clone(o1), dojo.clone(o2));
 		},
 		
 		objects:{}, //private?
@@ -234,7 +225,7 @@ dojo.require("dojox.math.round");
 			//		the Toolbar. Since multiple drawings can be on one
 			//		page, this function serves a little more use than
 			//		on first apearance.
-			this.objects[obj.id] = obj;	
+			this.objects[obj.id] = obj;
 		},
 		byId: function(/*String*/id){
 			// summary:
@@ -268,8 +259,8 @@ dojo.require("dojox.math.round");
 				if(elem.rawNode || elem.target){
 					var args = Array.prototype.slice.call(arguments);
 					args[0] = elem.rawNode || elem.target;
-					return dojo.attr.apply(dojo, args);	
-				}		
+					return dojo.attr.apply(dojo, args);
+				}
 				return dojo.attr(elem, "id");
 				
 				
@@ -287,5 +278,3 @@ dojo.require("dojox.math.round");
 	};
 	
 })();
-
-}

@@ -166,6 +166,8 @@ class Setup_Models_Setup
             $this->_error[] = 'The database user can not be empty';
         } else if (!isset($params['dbName']) || empty($params['dbName'])) {
             $this->_error[] = 'The database name can not be empty';
+        } else if (!isset($params['dbPort']) || empty($params['dbPort'])) {
+            $this->_error[] = 'The database port can not be empty ';
         } else {
             ob_start();
             try {
@@ -173,7 +175,8 @@ class Setup_Models_Setup
                     'host'     => $params['dbHost'],
                     'username' => $params['dbUser'],
                     'password' => $params['dbPass'],
-                    'dbname'   => $params['dbName']
+                    'dbname'   => $params['dbName'],
+                    'port'     => (int) $params['dbPort']
                 );
                 $db = Zend_Db::factory($params['serverType'], $dbParams);
                 $db->getConnection();
@@ -378,6 +381,19 @@ class Setup_Models_Setup
             }
         }
 
+        // Check webdav folders
+        $dirs = array(
+            'webdav',
+            'webdav' . DIRECTORY_SEPARATOR . 'public',
+            'webdav' . DIRECTORY_SEPARATOR . 'data',
+            'webdav' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'locks'
+        );
+        foreach ($dirs as $d) {
+            if (!$this->_checkWriteAccess($privateDir, $d)) {
+                $valid = false;
+            }
+        }
+
         // Check old installations
 
         // Upload dir
@@ -569,7 +585,7 @@ class Setup_Models_Setup
         $config            = new Setup_Models_Config();
         $content           = $config->getDefaultProduction($databaseNamespace->data['dbUser'],
             $databaseNamespace->data['dbPass'], $databaseNamespace->data['dbName'], 'Pdo_Mysql',
-            $databaseNamespace->data['dbHost']);
+            $databaseNamespace->data['dbHost'], $databaseNamespace->data['dbPort']);
 
         $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
         $configFile = $baseDir . "configuration.php";
@@ -633,7 +649,8 @@ class Setup_Models_Setup
                     'host'     => $databaseNamespace->data['dbHost'],
                     'username' => $databaseNamespace->data['dbUser'],
                     'password' => $databaseNamespace->data['dbPass'],
-                    'dbname'   => $databaseNamespace->data['dbName']);
+                    'dbname'   => $databaseNamespace->data['dbName'],
+                    'port'     => $databaseNamespace->data['dbPort']);
 
         return Zend_Db::factory($databaseNamespace->data['serverType'], $dbParams);
     }
@@ -696,20 +713,22 @@ class Setup_Models_Setup
      */
     private function chmodRecursive($path, $dirMode, $fileMode)
     {
-        if (!is_dir($path)) {
-            return @chmod($path, (int) $fileMode);
-        }
+        $iter = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator($path));
 
-        $dir = opendir($path);
-        while (($file = readdir($dir)) !== false) {
-            if ($file != '.' && $file != '..') {
-                $fullPath = $path . '/' . $file;
-                $this->chmodRecursive($fullPath, $dirMode, $fileMode);
+        $result = true;
+        foreach ($iter as $entry) {
+            if ($entry->getFilename() == '.' || $entry->getFilename() == '..') {
+                continue;
+            }
 
+            if ($entry->isDir()) {
+                $result = $result && @chmod((string) $entry, $dirMode);
+            } else {
+                $result = $result && @chmod((string) $entry, $fileMode);
             }
         }
-        closedir($dir);
 
-        return @chmod($path, (int) $dirMode);
+        return $result;
     }
 }

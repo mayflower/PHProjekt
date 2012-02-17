@@ -265,8 +265,15 @@
     border-color: #657c9c;
 }
 
-.phprojekt .dijitArrowButtonInner {
+.phprojekt .dijitArrowButtonInner,
+.phprojekt .dijitButtonNode .dijitArrowButtonInner {
     background: url("../images/spriteArrows.png") no-repeat left top;
+    width: 11px;
+}
+
+.phprojekt .runningBooking .dijitArrowButtonInner,
+.phprojekt .dijitButtonNode .runningBooking .dijitArrowButtonInner {
+    background: url("../images/spriteArrows.png") no-repeat -33px top;
     width: 11px;
 }
 
@@ -285,24 +292,24 @@
     width: 11px;
 }
 
-.phprojekt #systemNavigation {
+.phprojekt .systemNavigation {
     margin: 0px 0px 0px;
     float: left;
 }
 
-.phprojekt #mainNavigation .dijitButtonContents,
-.phprojekt #systemNavigation .dijitButtonContents {
+.phprojekt .mainNavigation .dijitButtonContents,
+.phprojekt .systemNavigation .dijitButtonContents {
     font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
     color: #ffffff;
     font-size: 12px;
     font-weight: normal;
 }
 
-.phprojekt #mainNavigation .selected {
+.phprojekt .mainNavigation .selected {
     color: #ffcc33;
 }
 
-.phprojekt #mainNavigation button::-moz-focus-inner,
+.phprojekt .mainNavigation button::-moz-focus-inner,
 input[type="reset"]::-moz-focus-inner,
 input[type="button"]::-moz-focus-inner,
 input[type="submit"]::-moz-focus-inner,
@@ -310,7 +317,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
     border: none;
 }
 
-.phprojekt #detailsBox .dijitDropDownButton {
+.phprojekt .detailsBox .dijitDropDownButton {
     margin: 0;
     height: 20px;
 }
@@ -370,16 +377,25 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
     margin: 0px 0px 0px 0px;
 }
 
-.phprojekt #buttonRow {
+.phprojekt .dijitContentPane .buttonRow {
     padding-left: 5px;
     padding-top: 7px;
 }
 
-.phprojekt #buttonRow .dijitButtonNode {
+.phprojekt .dijitContentPane .rightButtonRow {
+    padding-top: 7px;
+}
+
+.phprojekt .dijitContentPane .rightButtonRow label {
+    padding-right: 1ex;
+}
+
+
+.phprojekt .dijitContentPane .buttonRow .dijitButtonNode {
     margin-right: 5px;
 }
 
-.dj_ie .phprojekt #buttonRow {
+.dj_ie .phprojekt .dijitContentPane .buttonRow {
     padding-top: 6px;
 }
 

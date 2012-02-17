@@ -1,1 +1,5 @@
-({"saturationPickerTitle":"Selector saturaţie","huePickerTitle":"Selector nuanţă","valueLabel":"v","blueLabel":"b","saturationLabel":"s","greenLabel":"g","redLabel":"r","hueLabel":"h","hexLabel":"hex","degLabel":"°"})
+({
+huePickerTitle: "Selector nuanţă",
+saturationPickerTitle: "Selector saturaţie"
+})
+

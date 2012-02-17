@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.xmpp.UserService"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.xmpp.UserService"] = true;
 dojo.provide("dojox.xmpp.UserService");
 
 dojo.declare("dojox.xmpp.UserService", null, {
@@ -32,7 +23,7 @@ dojo.declare("dojox.xmpp.UserService", null, {
 		var req={
 			id: this.session.getNextIqId(),
 			type: 'set'
-		}			
+		}
 		
 		var request = new dojox.string.Builder(dojox.xmpp.util.createElement("iq",req,false));
 		request.append(dojox.xmpp.util.createElement("query",{xmlns:"jabber:iq:private"},false));
@@ -100,5 +91,3 @@ dojo.declare("dojox.xmpp.UserService", null, {
 		//console.log("UserService::onGetPersonalProfileFailure() ", err);
 	}
 });
-
-}

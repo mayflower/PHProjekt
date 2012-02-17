@@ -119,7 +119,7 @@ $lang["You can not delete the root project"] = "Usted no puede borrar el project
 $lang["The model argument is expected"] = "El argumento model es requerido";
 $lang["Confirmation"] = "Confirmación";
 $lang["Are you sure you want to delete?"] = "�Está seguro que desea eliminar?";
-$lang["Please confirm implement"] = "Por favor, confirme aplicar";
+$lang["Please confirm the following action:"] = "Por favor, confirme las siguientes medidas:";
 $lang["rows selected"] = "filas seleccionadas";
 $lang["Period"] = "Período";
 $lang["End date can not be before Start date"] = "La Fecha de fin no puede ser anterior a la Fecha de comienzo";
@@ -208,7 +208,7 @@ $lang["Filter_OR"] = "O";
 // Toaster
 $lang["has created the new entry"] = "ha creado el nuevo ítem";
 $lang["has deleted the entry"] = "ha borrado el ítem";
-$lang["has edit the existing entry"] = "ha editado el ítem existente";
+$lang["has modified the existing entry"] = "ha editado el ítem existente";
 $lang["has logged in"] = "ha entrado";
 $lang["has logged out"] = "ha salído";
 $lang["Your event starts at"] = "Su evento empieza a las";
@@ -259,11 +259,11 @@ $lang["Zip code"] = "Código postal";
 $lang["Country"] = "País";
   // Project
 $lang["Title"] = "Título";
-$lang["Parent"] = "Proyecto";
+$lang["Parent"] = "Parent";
   // Others
 $lang["Type"] = "Tipo";
 $lang["Status"] = "Estado";
-$lang["Current status"] = "Estado";
+$lang["Current status"] = "Estado actual";
 $lang["Percent"] = "Porcentaje";
 $lang["Complete percent"] = "Porcentaje completado";
 $lang["Budget"] = "Presupuesto";

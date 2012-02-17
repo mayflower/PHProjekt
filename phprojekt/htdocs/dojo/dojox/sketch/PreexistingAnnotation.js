@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.sketch.PreexistingAnnotation"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.sketch.PreexistingAnnotation"] = true;
 dojo.provide("dojox.sketch.PreexistingAnnotation");
 
 dojo.require("dojox.sketch.Annotation");
@@ -54,7 +45,7 @@ dojo.require("dojox.sketch.Anchor");
 		
 		for(var i=0; i<obj.childNodes.length; i++){
 			var c=obj.childNodes[i];
-			if(c.localName=="text"){ 
+			if(c.localName=="text"){
 				this.property('label',c.childNodes.length?c.childNodes[0].nodeValue:'');
 			}
 			else if(c.localName=="rect"){
@@ -87,19 +78,19 @@ dojo.require("dojox.sketch.Anchor");
 		this.shape.getEventSource().setAttribute("id", this.id);
 		//if(this.transform.dx || this.transform.dy){ this.shape.setTransform(this.transform); }
 		this.rectShape=this.shape.createRect({
-				x:this.start.x, 
-				y: this.start.y, 
-				width: this.end.x-this.start.x, 
-				height:this.end.y-this.start.y, 
+				x:this.start.x,
+				y: this.start.y,
+				width: this.end.x-this.start.x,
+				height:this.end.y-this.start.y,
 				r:this.radius
 			})
 			//.setStroke({color:this.property('fill'), width:1})
 			.setFill([255,255,255,0.1]);
 		this.rectShape.getEventSource().setAttribute("shape-rendering","crispEdges");
 		this.labelShape=this.shape.createText({
-				x:this.textPosition.x, 
-				y:this.textPosition.y, 
-				text:this.property('label'), 
+				x:this.textPosition.x,
+				y:this.textPosition.y,
+				text:this.property('label'),
 				align:this.textAlign
 			})
 			//.setFont(font)
@@ -126,19 +117,19 @@ dojo.require("dojox.sketch.Anchor");
 		this._pos();
 		this.shape.setTransform(this.transform);
 		this.rectShape.setShape({
-				x:this.start.x, 
-				y: this.start.y, 
-				width: this.end.x-this.start.x, 
-				height:this.end.y-this.start.y, 
+				x:this.start.x,
+				y: this.start.y,
+				width: this.end.x-this.start.x,
+				height:this.end.y-this.start.y,
 				r:this.radius
 			})
 			//.setStroke({ color:this.property('fill'), width:1 })
 			.setFill([255,255,255,0.1]);
 
-		this.labelShape.setShape({ 
-				x:this.textPosition.x, 
-				y:this.textPosition.y, 
-				text:this.property('label') 
+		this.labelShape.setShape({
+				x:this.textPosition.x,
+				y:this.textPosition.y,
+				text:this.property('label')
 			})
 			.setFill(this.property('fill'));
 		this.zoom();
@@ -172,5 +163,3 @@ dojo.require("dojox.sketch.Anchor");
 
 	ta.Annotation.register("Preexisting");
 })();
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.manager._registry"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.manager._registry"] = true;
 dojo.provide("dojox.drawing.manager._registry");
 
 (function(){
@@ -23,11 +14,11 @@ dojo.provide("dojox.drawing.manager._registry");
 		if(type=="drawing"){
 			_registered.drawing[item.id] = item;
 		}else if(type=="tool"){
-			_registered.tool[item.name] = item;	
+			_registered.tool[item.name] = item;
 		}else if(type=="stencil"){
-			_registered.stencil[item.name] = item;	
+			_registered.stencil[item.name] = item;
 		}else if(type=="plugin"){
-			_registered.plugin[item.name] = item;	
+			_registered.plugin[item.name] = item;
 		}else if(type=="button"){
 			_registered.button[item.toolType] = item;
 		}
@@ -38,5 +29,3 @@ dojo.provide("dojox.drawing.manager._registry");
 	}
 	
 })();
-
-}

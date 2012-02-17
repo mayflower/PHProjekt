@@ -1,1 +1,8 @@
-({"descending":"Descendente","ascending":"Ascendente","nestedSort":"Ordenação imbricada","unsorted":"Não ordenar esta coluna","singleSort":"Ordenação única","sortingState":"${0} - ${1}"})
+({
+	singleSort: "Ordenação única",
+	nestedSort: "Ordenação imbricada",
+	ascending: "Ascendente",
+	descending: "Descendente",
+	unsorted: "Não ordenar esta coluna"
+})
+

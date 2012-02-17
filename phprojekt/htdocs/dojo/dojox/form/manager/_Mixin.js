@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.manager._Mixin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.manager._Mixin"] = true;
 dojo.provide("dojox.form.manager._Mixin");
 
 dojo.require("dijit._Widget");
@@ -105,7 +96,7 @@ dojo.require("dijit._Widget");
 							// TODO: for some reason for radio button widgets
 							// w.checked != w.focusNode.checked when value changes.
 							// We test the underlying value to be 100% sure.
-							if(this.watch && dojo.attr(w.focusNode, "checked")){
+							if(this.watching && dojo.attr(w.focusNode, "checked")){
 								this[o](w.get("value"), name, w, evt);
 							}
 						}));
@@ -118,7 +109,7 @@ dojo.require("dijit._Widget");
 						"onClick" : "onChange";
 				dojo.forEach(observers, function(o){
 					c.push(dojo.connect(w, eventName, this, function(evt){
-						if(this.watch){
+						if(this.watching){
 							this[o](w.get("value"), name, w, evt);
 						}
 					}));
@@ -137,7 +128,7 @@ dojo.require("dijit._Widget");
 		//		functionality. See additional mixins in dojox.form.manager
 		//		namespace.
 
-		watch: true,
+		watching: true,
 
 		startup: function(){
 			// summary:
@@ -297,10 +288,10 @@ dojo.require("dijit._Widget");
 				// input/radio array of widgets
 				if(isSetter){
 					dojo.forEach(elem, function(widget){
-						widget.set("checked", false, !this.watch);
+						widget.set("checked", false, !this.watching);
 					});
 					dojo.forEach(elem, function(widget){
-						widget.set("checked", widget.value === value, !this.watch);
+						widget.set("checked", widget.value === value, !this.watching);
 					});
 					return this;	// self
 				}
@@ -322,7 +313,7 @@ dojo.require("dijit._Widget");
 			// checkbox widget is a special case :-(
 			if(elem.declaredClass == "dijit.form.CheckBox"){
 				if(isSetter){
-					elem.set("value", Boolean(value), !this.watch);
+					elem.set("value", Boolean(value), !this.watching);
 					return this;	// self
 				}
 				return Boolean(elem.get("value"));	// Object
@@ -330,7 +321,7 @@ dojo.require("dijit._Widget");
 
 			// all other elements
 			if(isSetter){
-				elem.set("value", value, !this.watch);
+				elem.set("value", value, !this.watching);
 				return this;	// self
 			}
 			return elem.get("value");	// Object
@@ -491,5 +482,3 @@ dojo.require("dijit._Widget");
 dojo.extend(dijit._Widget, {
 	observer: ""
 });
-
-}

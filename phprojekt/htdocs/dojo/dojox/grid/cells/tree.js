@@ -1,24 +1,15 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.grid.cells.tree"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.grid.cells.tree"] = true;
 dojo.provide("dojox.grid.cells.tree");
 
 dojo.require("dojox.grid.cells");
 
 dojox.grid.cells.TreeCell = {
 	formatAggregate: function(inItem, level, inRowIndexes){
-		var f, g=this.grid, i=g.edit.info, 
+		var f, g=this.grid, i=g.edit.info,
 			d=g.aggregator ? g.aggregator.getForCell(this, level, inItem, level === this.level ? "cnt" : this.parentCell.aggregate) : (this.value || this.defaultValue);
 		return this._defaultFormat(d, [d, level - this.level, inRowIndexes, this]);
 	},
 	formatIndexes: function(inRowIndexes, inItem){
-		var f, g=this.grid, i=g.edit.info, 
+		var f, g=this.grid, i=g.edit.info,
 			d=this.get ? this.get(inRowIndexes[0], inItem, inRowIndexes) : (this.value || this.defaultValue);
 		if(this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndexes[0] && i.cell==this))){
 			return this.formatEditing(d, inRowIndexes[0], inRowIndexes);
@@ -74,5 +65,3 @@ dojox.grid.cells.TreeCell = {
 		return result;
 	}
 };
-
-}

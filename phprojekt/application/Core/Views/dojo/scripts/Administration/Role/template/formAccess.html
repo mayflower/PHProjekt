@@ -29,7 +29,7 @@
                 {{module.label}}
             </td>
             <td>
-                <input type="checkbox" dojotype="phpr.form.CheckBox" id="checkReadAccess[{{module.id}}]"
+                <input type="checkbox" dojotype="phpr.Default.System.Form.CheckBox" id="checkReadAccess[{{module.id}}]"
                 name="checkReadAccess[{{module.id}}]"
                 {% if module.read %}
                 checked
@@ -37,7 +37,7 @@
                 value="1" />
             </td>
             <td>
-                <input type="checkbox" dojotype="phpr.form.CheckBox" id="checkWriteAccess[{{module.id}}]"
+                <input type="checkbox" dojotype="phpr.Default.System.Form.CheckBox" id="checkWriteAccess[{{module.id}}]"
                 name="checkWriteAccess[{{module.id}}]"
                 {% if module.write %}
                 checked
@@ -45,7 +45,7 @@
                 value="1" />
             </td>
             <td>
-                <input type="checkbox" dojotype="phpr.form.CheckBox" id="checkCreateAccess[{{module.id}}]"
+                <input type="checkbox" dojotype="phpr.Default.System.Form.CheckBox" id="checkCreateAccess[{{module.id}}]"
                 name="checkCreateAccess[{{module.id}}]"
                 {% if module.create %}
                 checked
@@ -53,7 +53,7 @@
                 value="1" />
             </td>
             <td>
-                <input type="checkbox" dojotype="phpr.form.CheckBox" id="checkAdminAccess[{{module.id}}]"
+                <input type="checkbox" dojotype="phpr.Default.System.Form.CheckBox" id="checkAdminAccess[{{module.id}}]"
                 name="checkAdminAccess[{{module.id}}]"
                 {% if module.admin %}
                 checked

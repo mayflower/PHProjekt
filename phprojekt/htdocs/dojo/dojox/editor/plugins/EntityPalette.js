@@ -1,20 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.editor.plugins.EntityPalette"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.EntityPalette"] = true;
-dojo.provide("dojox.editor.plugins.EntityPalette");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
-dojo.require("dijit._PaletteMixin");
-dojo.require("dojo.i18n");
-
-dojo.requireLocalization("dojox.editor.plugins", "latinEntities", null, "ROOT,cs,de,es,fr,hu,it,ja,ko,pl,pt,ro,ru,zh,zh-tw");
+define("dojox/editor/plugins/EntityPalette", ["dojo", "dijit", "dojox", "dijit/_Widget", "dijit/_Templated", "dijit/_PaletteMixin", "dojo/i18n", "i18n!dojox/editor/plugins/nls/latinEntities"], function(dojo, dijit, dojox) {
 
 dojo.experimental("dojox.editor.plugins.EntityPalette");
 
@@ -231,4 +215,6 @@ dojo.declare("dojox.editor.plugins.LatinEntity",
 		}
 });
 
-}
+return dojox.editor.plugins.EntityPalette;
+
+});

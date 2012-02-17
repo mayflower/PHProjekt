@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.widget.Portlet"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.widget.Portlet"] = true;
 dojo.experimental("dojox.widget.Portlet");
 dojo.provide("dojox.widget.Portlet");
 dojo.require("dijit.TitlePane");
@@ -17,9 +8,9 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 	//		in a dojox.layout.GridContainer. Child widgets can insert
 	//		an icon into the title bar of the Portlet, which when
 	//		clicked, executes the "toggle" method of the child widget.
-	//		A child widget must specify the attribute 
+	//		A child widget must specify the attribute
 	//		"portletIconClass", and the optional class
-	//		"portletIconHoverClass", as well as the 
+	//		"portletIconHoverClass", as well as the
 	//		"toggle" function.
 
 	// resizeChildren: Boolean
@@ -90,7 +81,7 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 
 						while(n){
 							if(n == child.domNode){
-								
+
 								// Only fire this once, as the widget is now visible
 								// at least once, so child measurements should be accurate.
 								_this.unsubscribe(s);
@@ -123,7 +114,7 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 				}
 			}
 		}
-		
+
 		// Prevent clicks on icons from causing a drag to start.
 		this.connect(this.titleBarNode, "onmousedown", function(evt){
 			if (dojo.hasClass(evt.target, "dojoxPortletIcon")) {
@@ -156,7 +147,7 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 				if(!child.started && !child._started){
 					child.startup()
 				}
-			} 
+			}
 			catch(e){
 				console.log(this.id + ":" + this.declaredClass, e);
 			}
@@ -170,7 +161,7 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 
 	_placeSettingsWidgets: function(){
 		// summary: Checks all the children to see if they are instances
-		//		of dojox.widget.PortletSettings.	If they are, 
+		//		of dojox.widget.PortletSettings. If they are,
 		//		create an icon for them in the title bar which when clicked,
 		//		calls their toggle() method.
 
@@ -185,7 +176,7 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 	},
 
 	_createIcon: function(clazz, hoverClazz, fn){
-		// summary: 
+		// summary:
 		//		creates an icon in the title bar.
 
 		var icon = dojo.create("div",{
@@ -208,7 +199,7 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 	},
 
 	onClose: function(evt){
-		// summary: 
+		// summary:
 		//		Hides the portlet. Note that it does not
 		//		persist this, so it is up to the client to
 		//		listen to this method and persist the closed state
@@ -227,23 +218,23 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 	},
 
 	_updateSize: function(){
-		// summary: 
+		// summary:
 		//		Updates the size of all child widgets.
 		if(!this.open || !this._started || !this.resizeChildren){
 			return;
 		}
-		
+
 		if(this._timer){
 			clearTimeout(this._timer);
 		}
-		// Delay applying the size change in case the size 
+		// Delay applying the size change in case the size
 		// changes very frequently, for performance reasons.
 		this._timer = setTimeout(dojo.hitch(this, function(){
 			var size ={
 				w: dojo.style(this.domNode, "width"),
 				h: dojo.style(this.domNode, "height")
 			};
-	
+
 			// If the Portlet is in a StackWidget, and it is not
 			// visible, do not update the size, as it could
 			// make child widgets miscalculate.
@@ -254,7 +245,7 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 					return;
 				}
 			}
-	
+
 			if(this._size){
 				// If the size of the portlet hasn't changed, don't
 				// resize the children, as this can be expensive
@@ -263,8 +254,6 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 				}
 			}
 			this._size = size;
-	
-			
 
 			var fns = ["resize", "layout"];
 			this._timer = null;
@@ -279,9 +268,9 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 							console.log(e);
 						}
 						break;
-					} 
+					}
 				}
-			});	
+			});
 			this.onUpdateSize();
 		}), 100);
 	},
@@ -305,11 +294,11 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 	},
 
 	addChild: function(child){
-		// summary: 
+ 		// summary:
 		//		Adds a child widget to the portlet.
 		this._size = null;
 		this.inherited(arguments);
-		
+
 		if(this._started){
 			this._placeSettingsWidgets();
 			this._updateSize();
@@ -318,14 +307,21 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 			child.startup();
 		}
 	},
-	
+
 	destroyDescendants: function(/*Boolean*/ preserveDom){
 		this.inherited(arguments);
 		if(this._settingsWidget){
 			this._settingsWidget.destroyRecursive(preserveDom);
 		}
 	},
-	
+
+	destroy: function(){
+		if(this._timer){
+			clearTimeout(this._timer);
+		}
+		this.inherited(arguments);
+	},
+
 	_setCss: function(){
 		this.inherited(arguments);
 		dojo.style(this.arrowNode, "display", this.toggleable ? "":"none");
@@ -333,9 +329,9 @@ dojo.declare("dojox.widget.Portlet", [dijit.TitlePane, dijit._Container],{
 });
 
 dojo.declare("dojox.widget.PortletSettings", [dijit._Container, dijit.layout.ContentPane],{
-	// summary: 
+	// summary:
 	//		A settings widget to be used with a dojox.widget.Portlet.
-	// description: 
+	// description:
 	//		This widget should be placed inside a dojox.widget.Portlet widget.
 	//		It is used to set some preferences for that Portlet.	It is essentially
 	//		a ContentPane, and should contain other widgets and DOM nodes that
@@ -364,13 +360,13 @@ dojo.declare("dojox.widget.PortletSettings", [dijit._Container, dijit.layout.Con
 	},
 
 	_setPortletAttr: function(portlet){
-		// summary: 
+		// summary:
 		//		Sets the portlet that encloses this widget.
 		this.portlet = portlet;
 	},
 
 	toggle: function(){
-		// summary: 
+		// summary:
 		//		Toggles the visibility of this widget.
 		var n = this.domNode;
 		if(dojo.style(n, "display") == "none"){
@@ -393,9 +389,9 @@ dojo.declare("dojox.widget.PortletSettings", [dijit._Container, dijit.layout.Con
 	}
 });
 
-dojo.declare("dojox.widget.PortletDialogSettings", 
+dojo.declare("dojox.widget.PortletDialogSettings",
 	dojox.widget.PortletSettings,{
-	// summary: 
+	// summary:
 	//		A settings widget to be used with a dojox.widget.Portlet, which displays
 	//		the contents of this widget in a dijit.Dialog box.
 
@@ -408,12 +404,12 @@ dojo.declare("dojox.widget.PortletDialogSettings",
 	},
 
 	toggle: function(){
-		// summary: 
+		// summary:
 		//		Shows and hides the Dialog box.
 		if(!this.dialog){
 			dojo["require"]("dijit.Dialog");
 			this.dialog = new dijit.Dialog({title: this.title});
-			
+
 			dojo.body().appendChild(this.dialog.domNode);
 
 			// Move this widget inside the dialog
@@ -432,5 +428,3 @@ dojo.declare("dojox.widget.PortletDialogSettings",
 		}
 	}
 });
-
-}

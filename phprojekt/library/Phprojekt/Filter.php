@@ -174,11 +174,10 @@ class Phprojekt_Filter
                 $k     = date("Y-m-d H:i:s", Phprojekt_Converter_Time::userToUtc($value));
             }
         } else {
-            $keyword               = mb_strtolower($keyword, 'UTF-8');
-            $this->_record->$field = $keyword;
-            $k                     = $this->_record->$field;
-            $identifier            = $this->_record->getTableName() . '.' . $identifier;
-            $identifier            = Phprojekt::getInstance()->getDb()->quoteIdentifier($identifier);
+            $keyword    = mb_strtolower($keyword, 'UTF-8');
+            $k          = $keyword;
+            $identifier = $this->_record->getTableName() . '.' . $identifier;
+            $identifier = Phprojekt::getInstance()->getDb()->quoteIdentifier($identifier);
         }
 
         switch ($rule) {

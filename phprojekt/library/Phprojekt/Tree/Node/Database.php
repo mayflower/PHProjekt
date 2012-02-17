@@ -97,8 +97,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     /**
      * Initialize a new node and sets the tree the node belongs to.
      *
-     * @param stdClass $activeRecord The Object that holds the tree.
-     * @param integer  $id           The requested node, that will be the root node.
+     * @param Phprojekt_ActiveRecord_Abstract|stdclass $activeRecord The Object that holds the tree.
+     * @param integer                                  $id           The requested node, that will be the root node.
      *
      * @return void
      */
@@ -161,44 +161,22 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $cache = Phprojekt::getInstance()->getCache();
         if ($this->_requestedId == 0) {
             return $this;
-        } else if ($this->_requestedId > 1) {
-            if (!($object = $cache->load(self::CACHE_NAME))) {
-                $tree   = new Phprojekt_Tree_Node_Database($this->_activeRecord, 1);
-                $object = $tree->setup();
-            }
-
-            $tree = $object->getNodeById($this->_requestedId);
-            if (null === $tree) {
-                throw new Phprojekt_Tree_Node_Exception('Requested node not found');
-            }
-            $tree->_parentNode = null;
-
-            return $this->applyRights($tree);
-        } else if (!($object = $cache->load(self::CACHE_NAME))) {
+        } else {
             $database = $this->getActiveRecord()->getAdapter();
             $table    = $this->getActiveRecord()->getTableName();
             $select   = $database->select();
 
-            $select->from($table, 'path')
-                   ->where(sprintf('id = %d', (int) $this->_requestedId))
-                   ->limit(1);
+            $select->from(array('t' => $table), array())
+                   ->join(array('tt' => $table),
+                       sprintf('t.id = %d AND (tt.path like CONCAT(t.path, t.id, "/%%") OR tt.id = t.id)', (int) $this->_requestedId),
+                       '*')
+                   ->order('path')
+                   ->order('id');
 
             if (null !== $filter) {
-                $filter->filter($select, $this->getActiveRecord()->getAdapter());
+                $filter->filter($select, 'tt');
             }
 
-            $rootPath = $database->fetchOne($select);
-
-            if (null === $rootPath) {
-                throw new Phprojekt_Tree_Node_Exception('Requested node not found');
-            }
-
-            // Get all the projects
-            $where  = sprintf("(%s OR id = %d)", $database->quoteInto("path LIKE ?", $rootPath . '%'), (int) $this->id);
-            $select = $database->select();
-            $select->from($table)
-                   ->where($where)
-                   ->order('path');
             $treeData = $select->query()->fetchAll(Zend_Db::FETCH_CLASS);
             foreach ($treeData as $index => $record) {
                 foreach ($record as $key => $value) {
@@ -235,43 +213,56 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
+     * Returns a set of records of the given active record that are associated
+     * with the selected tree nodes.
+     *
+     * For example, you can get all todo recrods of projects in a given subtree.
+     *
+     * @param $model The active record used to get the data
+     * @param $count How many records should be retreived. null if unlimited.
+     * @param $offset The initial offset. null for no offset.
+     */
+    public function getRecordsFor(Phprojekt_ActiveRecord_Abstract $model, $count = null, $offset = null, $where = null)
+    {
+        $projectIds = array_keys($this->_index);
+        if (count($projectIds) == 0) {
+            return array();
+        } else {
+            $database = $model->getAdapter();
+
+            if (null !== $where) {
+                $where .= " AND ";
+            }
+
+            $where .= $database->quoteInto('project_id IN (?)', $projectIds);
+            return $model->fetchAll($where, null, $count, $offset);
+        }
+    }
+
+    /**
      * Delete the projects where the user don't have access.
      *
      * @param Phprojekt_Tree_Node_Database $object Tree class.
      *
      * @return Phprojekt_Tree_Node_Database The tree class with only the allowed nodes.
      */
-    public function applyRights($object)
+    public function applyRights(Phprojekt_Tree_Node_Database $object)
     {
-        $sessionName     = 'Phprojekt_Tree_Node_Database-applyRights';
-        $rightsNamespace = new Zend_Session_Namespace($sessionName);
-
-        // Get the itemRights relation
-        if (isset($rightsNamespace->rights)) {
-            $rights = $rightsNamespace->rights;
-        } else {
-            $database = $this->getActiveRecord()->getAdapter();
-            $where    = sprintf("module_id = %d AND user_id = %d AND access > 0",
-                Phprojekt_Module::getId($this->getActiveRecord()->getModelName()), Phprojekt_Auth::getUserId());
-            $select = $database->select();
-            $select->from('item_rights', 'item_id')
-                   ->where($where);
-            $results = $select->query()->fetchAll();
-            $rights  = array();
-            foreach ($results as $result) {
-                $rights[] = $result['item_id'];
-            }
-            $rightsNamespace->rights = $rights;
+        if (Phprojekt_Auth::isAdminUser()) {
+            return $object;
         }
 
-        // Delete the projects where the user don't have access
-        foreach ($object as $index => $tree) {
-            if (!in_array($tree->id, $rights)) {
-                if ($tree->isRootNodeForCurrentTree()) {
-                    throw new Phprojekt_Tree_Node_Exception('Requested node not found');
-                } else {
-                    $this->deleteNode($object, $tree->id);
-                }
+        $projectIds   = array_keys($object->_index);
+        // We don't use the effective user id here to make access management more simple. This way, a user really needs
+        // read access to be able to look at a project.
+        $rights       = Phprojekt_Right::getRightsForItems(1, 1, Phprojekt_Auth::getUserId(), $projectIds);
+        $currentRight = Phprojekt_Acl::ALL;
+        foreach ($object as $index => $node) {
+            $currentRight = isset($rights[$node->id]) ? $rights[$node->id] : $currentRight;
+            /* delete node cannot update the iterator reference, so we check if it's still in the index or already
+             * removed */
+            if ((Phprojekt_Acl::READ & $currentRight) <= 0 && isset($object->_index[$node->id])) {
+                $object->deleteNode($object, $node->id);
             }
         }
 
@@ -279,17 +270,19 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Delete a children node.
+     * Delete a children node from the current tree, but leave it in the 
+     * database
      *
      * @param Phprojekt_Tree_Node_Database $object Tree class.
      * @param integer                      $id     IF for delete.
      *
      * @return void
      */
-    public function deleteNode($object, $id)
+    private function deleteNode(Phprojekt_Tree_Node_Database $object, $id)
     {
         if (isset($object->_children[$id])) {
             unset($object->_children[$id]);
+            unset($object->_index[$id]);
         } else {
             foreach ($object->_children as $children) {
                 $this->deleteNode($children, $id);
@@ -305,8 +298,11 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function getActiveRecord()
     {
         if (!$this->_activeRecord instanceof Phprojekt_ActiveRecord_Abstract) {
-            $model = Phprojekt_Loader::getModel('Project', 'Project');
+            $model = new Project_Models_Project();
             $this->_activeRecord = $model->find($this->_requestedId);
+            if (!$this->_activeRecord instanceof Phprojekt_ActiveRecord_Abstract) {
+                throw new Exception("Requested TreeID not found or no permissions");
+            }
         }
 
         return $this->_activeRecord;
@@ -483,7 +479,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function __set($key, $value)
     {
         if (null !== $this->_activeRecord) {
-            // Don´t allow to set the tree dependent stuff
+            // Don't allow to set the tree dependent stuff
             if (!in_array($key, array('id', 'path'))) {
                 $this->getActiveRecord()->$key = $value;
             }
@@ -499,7 +495,8 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function __isset($key)
     {
-        return array_key_exists($key, get_object_vars($this)) || isset($this->getActiveRecord()->$key);
+        $objectvars = get_object_vars($this);
+        return isset($objectvars[$key]) || isset($this->getActiveRecord()->$key);
     }
 
     /**
@@ -619,7 +616,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function getDepthDisplay($value)
     {
-        return str_repeat('....', $this->getDepth()) . $this->$value;
+        return str_repeat('', $this->getDepth()) . $this->$value;
     }
 
     /**
@@ -656,6 +653,14 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         }
 
         return null;
+    }
+
+    /**
+     * Pass-through to hasField method of active record.
+     */
+    public function hasField($field)
+    {
+        return $this->getActiveRecord()->hasField($field);
     }
 
     /**

@@ -22,7 +22,6 @@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests Module Model class
@@ -153,21 +152,5 @@ class Phprojekt_ModuleModelModule_Test extends PHPUnit_Framework_TestCase
         $module->active   = 1;
         $module->saveType = 0;
         $this->assertTrue($module->recordValidate());
-    }
-
-    /**
-     * Test for mock function
-     */
-    public function testMocks()
-    {
-        $module = new Phprojekt_Module_Module();
-        $this->assertEquals(array(), $module->getRights());
-
-        $module->name     = 'Test';
-        $module->label    = 'Test';
-        $module->active   = 1;
-        $module->saveType = 0;
-        $module->saveRights();
-        $this->assertEquals(array(), $module->getRights());
     }
 }

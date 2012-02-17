@@ -76,7 +76,7 @@ class Phprojekt_Configuration extends Phprojekt_ActiveRecord_Abstract
         $results = array();
 
         // System settings
-        $model = Phprojekt_Loader::getModel('Core', 'General_Configuration');
+        $model = new Core_Models_General_Configuration();
         if ($model) {
             $results[] = array('name'  => 'General',
                                'label' => Phprojekt::getInstance()->translate('General'));

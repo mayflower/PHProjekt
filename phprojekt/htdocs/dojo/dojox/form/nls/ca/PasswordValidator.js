@@ -1,1 +1,5 @@
-({"badPasswordMessage":"La contrasenya no és correcta","nomatchMessage":"Les contrasenyes no coincideixen"})
+({
+        nomatchMessage: "Les contrasenyes no coincideixen",
+		badPasswordMessage: "La contrasenya no és correcta"
+})
+

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.RangeSlider"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.RangeSlider"] = true;
 dojo.provide("dojox.form.RangeSlider");
 dojo.require("dijit.form.HorizontalSlider");
 dojo.require("dijit.form.VerticalSlider");
@@ -35,29 +26,29 @@ dojo.require("dojox.fx");
 
 			// define a custom constructor for a SliderMoverMax that points back to me
 			var _self = this;
-			var mover = function(){
-				dijit.form._SliderMoverMax.apply(this, arguments);
-				this.widget = _self;
-			};
-			dojo.extend(mover, dijit.form._SliderMoverMax.prototype);
+            var mover = dojo.declare(dijit.form._SliderMoverMax, {
+                constructor: function(){
+                    this.widget = _self;
+                }
+            });
 
 			this._movableMax = new dojo.dnd.Moveable(this.sliderHandleMax,{ mover: mover });
 			dijit.setWaiState(this.focusNodeMax, "valuemin", this.minimum);
 			dijit.setWaiState(this.focusNodeMax, "valuemax", this.maximum);
 		
 			// a dnd for the bar!
-			var barMover = function(){
-				dijit.form._SliderBarMover.apply(this, arguments);
-				this.widget = _self;
-			};
-			dojo.extend(barMover, dijit.form._SliderBarMover.prototype);
+            var barMover = dojo.declare(dijit.form._SliderBarMover, {
+                constructor: function(){
+                    this.widget = _self;
+                }
+            });
 			this._movableBar = new dojo.dnd.Moveable(this.progressBar,{ mover: barMover });
 		},
 	
 		destroy: function(){
 			this.inherited(arguments);
 			this._movableMax.destroy();
-			this._movableBar.destroy(); 
+			this._movableBar.destroy();
 		},
 	
 		_onKeyPress: function(/*Event*/ e){
@@ -142,12 +133,12 @@ dojo.require("dojox.fx");
 			var value = dojo.isArray(signedChange) ? [
 					this._getBumpValue(signedChange[0].change, signedChange[0].useMaxValue),
 					this._getBumpValue(signedChange[1].change, signedChange[1].useMaxValue)
-				] 
+				]
 				: this._getBumpValue(signedChange, useMaxValue)
 
-			this._setValueAttr(value, true, 
+			this._setValueAttr(value, true,
 				// conditional passed the valueAttr
-				!dojo.isArray(signedChange) && 
+				!dojo.isArray(signedChange) &&
 				((signedChange > 0 && !useMaxValue) || (useMaxValue && signedChange < 0))
 			);
 		},
@@ -180,7 +171,7 @@ dojo.require("dojox.fx");
 				// (but don't do on IE because it causes a flicker on mouse up (due to blur then focus)
 				dijit.focus(this.progressBar);
 			}
-			dojo.stopEvent(e);	
+			dojo.stopEvent(e);
 		},
 	
 		_onRemainingBarClick: function(e){
@@ -282,8 +273,8 @@ dojo.require("dojox.fx");
 				propsHandleMax[this._handleOffsetCoord] = { start: this.sliderHandleMax.style[this._handleOffsetCoord], end: sliderHandleMaxVal, units:"%"};
 				propsBar[this._handleOffsetCoord] = { start: this.progressBar.style[this._handleOffsetCoord], end: progressBarVal, units:"%"};
 				propsBar[this._progressPixelSize] = { start: this.progressBar.style[this._progressPixelSize], end: (percentMax - percentMin) * 100, units:"%"};
-				var animHandle = dojo.animateProperty({node: this.sliderHandle,duration: duration, properties: propsHandle}); 
-				var animHandleMax = dojo.animateProperty({node: this.sliderHandleMax,duration: duration, properties: propsHandleMax}); 
+				var animHandle = dojo.animateProperty({node: this.sliderHandle,duration: duration, properties: propsHandle});
+				var animHandleMax = dojo.animateProperty({node: this.sliderHandleMax,duration: duration, properties: propsHandleMax});
 				var animBar = dojo.animateProperty({node: this.progressBar,duration: duration, properties: propsBar});
 				var animCombine = dojo.fx.combine([animHandle, animHandleMax, animBar]);
 				animCombine.play();
@@ -296,7 +287,7 @@ dojo.require("dojox.fx");
 		}
 	});
 
-	dojo.declare("dijit.form._SliderMoverMax", dijit.form._SliderMover, {	
+	dojo.declare("dijit.form._SliderMoverMax", dijit.form._SliderMover, {
 
 		onMouseMove: function(e){
 			var widget = this.widget;
@@ -306,7 +297,9 @@ dojo.require("dojox.fx");
 				widget._setPixelValue_ = dojo.hitch(widget, "_setPixelValue");
 				widget._isReversed_ = widget._isReversed();
 			}
-			var pixelValue = e[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
+			
+			var coordEvent = e.touches ? e.touches[0] : e; // if multitouch take first touch for coords
+			var pixelValue = coordEvent[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
 			widget._setPixelValue_(widget._isReversed_ ? (abspos[widget._pixelCount]-pixelValue) : pixelValue, abspos[widget._pixelCount], false, true);
 		},
 	
@@ -336,12 +329,14 @@ dojo.require("dojox.fx");
 			if(!bar){
 				bar = widget._bar = dojo.coords(widget.progressBar, true);
 			}
+			var coordEvent = e.touches ? e.touches[0] : e; // if multitouch take first touch for coords
 			
 			if(!mouseOffset){
-				mouseOffset = widget._mouseOffset = e[widget._mousePixelCoord] - abspos[widget._startingPixelCoord] - bar[widget._startingPixelCount];
+				mouseOffset = widget._mouseOffset = coordEvent[widget._mousePixelCoord] - abspos[widget._startingPixelCoord] - bar[widget._startingPixelCount];
 			}
 			
-			var pixelValueMin = e[widget._mousePixelCoord] - abspos[widget._startingPixelCoord] - mouseOffset,
+				
+			var pixelValueMin = coordEvent[widget._mousePixelCoord] - abspos[widget._startingPixelCoord] - mouseOffset,
 				pixelValueMax = pixelValueMin + bar[widget._pixelCount];
 				// we don't narrow the slider when it reaches the bumper!
 				// maybe there is a simpler way
@@ -360,7 +355,7 @@ dojo.require("dojox.fx");
 			}
 			// getting the real values by pixel
 			var myValues = [
-				widget._getValueByPixelValue(widget._isReversed_ ? (abspos[widget._pixelCount] - pixelValues[0]) : pixelValues[0], abspos[widget._pixelCount]), 
+				widget._getValueByPixelValue(widget._isReversed_ ? (abspos[widget._pixelCount] - pixelValues[0]) : pixelValues[0], abspos[widget._pixelCount]),
 				widget._getValueByPixelValue(widget._isReversed_ ? (abspos[widget._pixelCount] - pixelValues[1]) : pixelValues[1], abspos[widget._pixelCount])
 			];
 			// and setting the value of the widget
@@ -382,7 +377,7 @@ dojo.require("dojox.fx");
 		{
 			// summary:
 			// 	A form widget that allows one to select a range with two horizontally draggable images
-			templateString: dojo.cache("dojox.form", "resources/HorizontalRangeSlider.html", "<table class=\"dijit dijitReset dijitSlider dijitSliderH dojoxRangeSlider\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" rules=\"none\" dojoAttachEvent=\"onkeypress:_onKeyPress,onkeyup:_onKeyUp\"\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\" colspan=\"2\"></td\r\n\t\t><td dojoAttachPoint=\"topDecoration\" class=\"dijitReset dijitSliderDecoration dijitSliderDecorationT dijitSliderDecorationH\"></td\r\n\t\t><td class=\"dijitReset\" colspan=\"2\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset dijitSliderButtonContainer dijitSliderButtonContainerH\"\r\n\t\t\t><div class=\"dijitSliderDecrementIconH\" tabIndex=\"-1\" style=\"display:none\" dojoAttachPoint=\"decrementButton\"><span class=\"dijitSliderButtonInner\">-</span></div\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"\r\n\t\t\t><div class=\"dijitSliderBar dijitSliderBumper dijitSliderBumperH dijitSliderLeftBumper\" dojoAttachEvent=\"onmousedown:_onClkDecBumper\"></div\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"\r\n\t\t\t><input dojoAttachPoint=\"valueNode\" type=\"hidden\" ${!nameAttrSetting}\r\n\t\t\t/><div waiRole=\"presentation\" class=\"dojoxRangeSliderBarContainer\" dojoAttachPoint=\"sliderBarContainer\"\r\n\t\t\t\t><div dojoAttachPoint=\"sliderHandle\" tabIndex=\"${tabIndex}\" class=\"dijitSliderMoveable dijitSliderMoveableH\" dojoAttachEvent=\"onmousedown:_onHandleClick\" waiRole=\"slider\" valuemin=\"${minimum}\" valuemax=\"${maximum}\"\r\n\t\t\t\t\t><div class=\"dijitSliderImageHandle dijitSliderImageHandleH\"></div\r\n\t\t\t\t></div\r\n\t\t\t\t><div waiRole=\"presentation\" dojoAttachPoint=\"progressBar,focusNode\" class=\"dijitSliderBar dijitSliderBarH dijitSliderProgressBar dijitSliderProgressBarH\" dojoAttachEvent=\"onmousedown:_onBarClick\"></div\r\n\t\t\t\t><div dojoAttachPoint=\"sliderHandleMax,focusNodeMax\" tabIndex=\"${tabIndex}\" class=\"dijitSliderMoveable dijitSliderMoveableH\" dojoAttachEvent=\"onmousedown:_onHandleClickMax\" waiRole=\"sliderMax\" valuemin=\"${minimum}\" valuemax=\"${maximum}\"\r\n\t\t\t\t\t><div class=\"dijitSliderImageHandle dijitSliderImageHandleH\"></div\r\n\t\t\t\t></div\r\n\t\t\t\t><div waiRole=\"presentation\" dojoAttachPoint=\"remainingBar\" class=\"dijitSliderBar dijitSliderBarH dijitSliderRemainingBar dijitSliderRemainingBarH\" dojoAttachEvent=\"onmousedown:_onRemainingBarClick\"></div\r\n\t\t\t></div\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"\r\n\t\t\t><div class=\"dijitSliderBar dijitSliderBumper dijitSliderBumperH dijitSliderRightBumper\" dojoAttachEvent=\"onmousedown:_onClkIncBumper\"></div\r\n\t\t></td\r\n\t\t><td class=\"dijitReset dijitSliderButtonContainer dijitSliderButtonContainerH\"\r\n\t\t\t><div class=\"dijitSliderIncrementIconH\" tabIndex=\"-1\" style=\"display:none\" dojoAttachPoint=\"incrementButton\"><span class=\"dijitSliderButtonInner\">+</span></div\r\n\t\t></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\" colspan=\"2\"></td\r\n\t\t><td dojoAttachPoint=\"containerNode,bottomDecoration\" class=\"dijitReset dijitSliderDecoration dijitSliderDecorationB dijitSliderDecorationH\"></td\r\n\t\t><td class=\"dijitReset\" colspan=\"2\"></td\r\n\t></tr\r\n></table>\r\n")
+			templateString: dojo.cache('dojox.form','resources/HorizontalRangeSlider.html')
 		}
 	);
 
@@ -391,10 +386,8 @@ dojo.require("dojox.fx");
 		{
 			// summary:
 			// 	A form widget that allows one to select a range with two vertically draggable images
-			templateString: dojo.cache("dojox.form", "resources/VerticalRangeSlider.html", "<table class=\"dijitReset dijitSlider dijitSliderV dojoxRangeSlider\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" rules=\"none\"\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset dijitSliderButtonContainer dijitSliderButtonContainerV\"\r\n\t\t\t><div class=\"dijitSliderIncrementIconV\" tabIndex=\"-1\" style=\"display:none\" dojoAttachPoint=\"decrementButton\" dojoAttachEvent=\"onclick: increment\"><span class=\"dijitSliderButtonInner\">+</span></div\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset\"\r\n\t\t\t><center><div class=\"dijitSliderBar dijitSliderBumper dijitSliderBumperV dijitSliderTopBumper\" dojoAttachEvent=\"onclick:_onClkIncBumper\"></div></center\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td dojoAttachPoint=\"leftDecoration\" class=\"dijitReset dijitSliderDecoration dijitSliderDecorationL dijitSliderDecorationV\" style=\"text-align:center;height:100%;\"></td\r\n\t\t><td class=\"dijitReset\" style=\"height:100%;\"\r\n\t\t\t><input dojoAttachPoint=\"valueNode\" type=\"hidden\" ${!nameAttrSetting}\r\n\t\t\t/><center waiRole=\"presentation\" style=\"position:relative;height:100%;\" dojoAttachPoint=\"sliderBarContainer\"\r\n\t\t\t\t><div waiRole=\"presentation\" dojoAttachPoint=\"remainingBar\" class=\"dijitSliderBar dijitSliderBarV dijitSliderRemainingBar dijitSliderRemainingBarV\" dojoAttachEvent=\"onmousedown:_onRemainingBarClick\"\r\n\t\t\t\t\t><div dojoAttachPoint=\"sliderHandle\" tabIndex=\"${tabIndex}\" class=\"dijitSliderMoveable dijitSliderMoveableV\" dojoAttachEvent=\"onkeypress:_onKeyPress,onmousedown:_onHandleClick\" style=\"vertical-align:top;\" waiRole=\"slider\" valuemin=\"${minimum}\" valuemax=\"${maximum}\"\r\n\t\t\t\t\t\t><div class=\"dijitSliderImageHandle dijitSliderImageHandleV\"></div\r\n\t\t\t\t\t></div\r\n\t\t\t\t\t><div waiRole=\"presentation\" dojoAttachPoint=\"progressBar,focusNode\" tabIndex=\"${tabIndex}\" class=\"dijitSliderBar dijitSliderBarV dijitSliderProgressBar dijitSliderProgressBarV\" dojoAttachEvent=\"onkeypress:_onKeyPress,onmousedown:_onBarClick\"\r\n\t\t\t\t\t></div\r\n\t\t\t\t\t><div dojoAttachPoint=\"sliderHandleMax,focusNodeMax\" tabIndex=\"${tabIndex}\" class=\"dijitSliderMoveable dijitSliderMoveableV\" dojoAttachEvent=\"onkeypress:_onKeyPress,onmousedown:_onHandleClickMax\" style=\"vertical-align:top;\" waiRole=\"slider\" valuemin=\"${minimum}\" valuemax=\"${maximum}\"\r\n\t\t\t\t\t\t><div class=\"dijitSliderImageHandle dijitSliderImageHandleV\"></div\r\n\t\t\t\t\t></div\r\n\t\t\t\t></div\r\n\t\t\t></center\r\n\t\t></td\r\n\t\t><td dojoAttachPoint=\"containerNode,rightDecoration\" class=\"dijitReset dijitSliderDecoration dijitSliderDecorationR dijitSliderDecorationV\" style=\"text-align:center;height:100%;\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset\"\r\n\t\t\t><center><div class=\"dijitSliderBar dijitSliderBumper dijitSliderBumperV dijitSliderBottomBumper\" dojoAttachEvent=\"onclick:_onClkDecBumper\"></div></center\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n\t><tr class=\"dijitReset\"\r\n\t\t><td class=\"dijitReset\"></td\r\n\t\t><td class=\"dijitReset dijitSliderButtonContainer dijitSliderButtonContainerV\"\r\n\t\t\t><div class=\"dijitSliderDecrementIconV\" tabIndex=\"-1\" style=\"display:none\" dojoAttachPoint=\"incrementButton\" dojoAttachEvent=\"onclick: decrement\"><span class=\"dijitSliderButtonInner\">-</span></div\r\n\t\t></td\r\n\t\t><td class=\"dijitReset\"></td\r\n\t></tr\r\n></table>\r\n")
+			templateString: dojo.cache('dojox.form','resources/VerticalRangeSlider.html')
 		}
 	);
 
 })();
-
-}

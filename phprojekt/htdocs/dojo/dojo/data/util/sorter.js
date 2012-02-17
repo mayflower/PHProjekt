@@ -1,19 +1,11 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+define("dojo/data/util/sorter", ["dojo"], function(dojo) {
+dojo.getObject("data.util.sorter", true, dojo);
 
-
-if(!dojo._hasResource["dojo.data.util.sorter"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.data.util.sorter"] = true;
-dojo.provide("dojo.data.util.sorter");
-
-dojo.data.util.sorter.basicComparator = function(	/*anything*/ a, 
+dojo.data.util.sorter.basicComparator = function(	/*anything*/ a,
 													/*anything*/ b){
-	//	summary:  
+	//	summary:
 	//		Basic comparision function that compares if an item is greater or less than another item
-	//	description:  
+	//	description:
 	//		returns 1 if a > b, -1 if a < b, 0 if equal.
 	//		'null' values (null, undefined) are treated as larger values so that they're pushed to the end of the list.
 	//		And compared to each other, null is equivalent to undefined.
@@ -30,18 +22,18 @@ dojo.data.util.sorter.basicComparator = function(	/*anything*/ a,
 		b = undefined;
 	}
 	if(a == b){
-		r = 0; 
+		r = 0;
 	}else if(a > b || a == null){
-		r = 1; 
+		r = 1;
 	}
 	return r; //int {-1,0,1}
 };
 
 dojo.data.util.sorter.createSortFunction = function(	/* attributes array */sortSpec,
 														/*dojo.data.core.Read*/ store){
-	//	summary:  
+	//	summary:
 	//		Helper function to generate the sorting function based off the list of sort attributes.
-	//	description:  
+	//	description:
 	//		The sort function creation will look for a property on the store called 'comparatorMap'.  If it exists
 	//		it will look in the mapping for comparisons function for the attributes.  If one is found, it will
 	//		use it instead of the basic comparator, which is typically used for strings, ints, booleans, and dates.
@@ -83,7 +75,7 @@ dojo.data.util.sorter.createSortFunction = function(	/* attributes array */sortS
 				}
 				comp = map[attr] || bc;
 			}
-			sortFunctions.push(createSortFunction(attr, 
+			sortFunctions.push(createSortFunction(attr,
 				dir, comp, store));
 		}
 	}
@@ -95,8 +87,9 @@ dojo.data.util.sorter.createSortFunction = function(	/* attributes array */sortS
 				return ret;//int
 			}
 		}
-		return 0; //int  
+		return 0; //int
 	}; // Function
 };
 
-}
+return dojo.data.util.sorter;
+});

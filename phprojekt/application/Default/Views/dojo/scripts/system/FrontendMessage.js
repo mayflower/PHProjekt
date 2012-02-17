@@ -19,16 +19,16 @@
  * @author     Martin Ruprecht <martin.ruprecht@mayflower.de>
  */
 
-dojo.provide("phpr.FrontendMessage");
+dojo.provide("phpr.Default.System.FrontendMessage");
 
-dojo.declare("phpr.FrontendMessage", null, {
+dojo.declare("phpr.Default.System.FrontendMessage", null, {
     url: null,
 
-    constructor:function() {
+    constructor: function() {
         this.url = phpr.webpath + 'index.php/Default/index/jsonGetFrontendMessage';
     },
 
-    getFrontendMessage:function() {
+    getFrontendMessage: function() {
         // Summary:
         //    Performs an AJAX call to the given URL
         // Description:
@@ -42,7 +42,7 @@ dojo.declare("phpr.FrontendMessage", null, {
                 phpr.handleError(this.url, 'silence', error);
             },
             load: function(response) {
-                if (false != response.data) {
+                if (false !== response.data) {
                     that.showToaster(response.data);
                 }
             },
@@ -50,7 +50,7 @@ dojo.declare("phpr.FrontendMessage", null, {
         });
     },
 
-    disableFrontendMessages:function() {
+    disableFrontendMessages: function() {
         // Summary:
         //    Disables all the frontend messages
         // Description:
@@ -58,14 +58,15 @@ dojo.declare("phpr.FrontendMessage", null, {
         //    from the indexController
         var url = phpr.webpath + 'index.php/Default/index/jsonDisableFrontendMessages';
         phpr.send({
-            url:       url,
-            onSuccess: dojo.hitch(this, function(data) {
+            url:       url
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
-            })
-        });
+            }
+        }));
     },
 
-    showToaster:function(data) {
+    showToaster: function(data) {
         // Summary:
         //    Publishes the dojo toaster widget
         // Description:
@@ -111,8 +112,8 @@ dojo.declare("phpr.FrontendMessage", null, {
                 var url = phpr.webpath + 'index.php/Timecard';
                 phpr.DataStore.deleteDataPartialString({url: url});
 
-                phpr.Tree.updateData();
-                phpr.Tree.loadTree();
+                phpr.tree.updateData();
+                phpr.tree.loadTree();
             }
 
             // Restore the views
@@ -132,7 +133,7 @@ dojo.declare("phpr.FrontendMessage", null, {
         return;
     },
 
-    _templateString:function(data) {
+    _templateString: function(data) {
         // Summary:
         //    Process the data into an string
         // Description:
@@ -148,21 +149,26 @@ dojo.declare("phpr.FrontendMessage", null, {
 
         switch (data.process) {
             case 'add':
-                template = "<br /><a href='" + phpr.webpath + "index.php#" + data.module + "," + data.projectId
-                    + "id," + data.itemId + "'><i>" + phpr.nls.get(data.module, data.module) + "</i>: <b>"
-                    + data.user + "</b> " + data.description + " <i>" + data.item + "</i> " + project + " <i><b>"
-                    + data.project +"</b></i>.</a><br />&nbsp;"
+                template = "<br /><a href='" + phpr.webpath + "index.php#" +
+                    data.module + "," + data.projectId + "id," + data.itemId +
+                    "'><i>" + phpr.nls.get(data.module, data.module) +
+                    "</i>: <b>" + data.user + "</b> " + data.description +
+                    " <i>" + data.item + "</i> " + project + " <i><b>" +
+                    data.project + "</b></i>.</a><br />&nbsp;";
                 break;
             case 'delete':
-                template = "<br /><i>" + phpr.nls.get(data.module, data.module) + "</i>: <b>" + data.user + "</b> "
-                    + data.description + " <i>" + data.item + "</i> " + project + " <i><b>"
-                    + data.project +"</b></i>.<br />&nbsp;";
+                template = "<br /><i>" + phpr.nls.get(data.module, data.module) +
+                    "</i>: <b>" + data.user + "</b> " + data.description +
+                    " <i>" + data.item + "</i> " + project + " <i><b>" +
+                    data.project + "</b></i>.<br />&nbsp;";
                 break;
             case 'edit':
-                template = "<br /><a href='" + phpr.webpath + "index.php#" + data.module + "," + data.projectId
-                    + "id," + data.itemId + "'><i>" + phpr.nls.get(data.module, data.module) + "</i>: <b>"
-                    + data.user + "</b> " + data.description + " <i>" + data.item + "</i> " + project + " <i><b>"
-                    + data.project +"</b></i>.</a><br />&nbsp;";
+                template = "<br /><a href='" + phpr.webpath + "index.php#" +
+                    data.module + "," + data.projectId + "id," + data.itemId +
+                    "'><i>" + phpr.nls.get(data.module, data.module) +
+                    "</i>: <b>" + data.user + "</b> " + data.description +
+                    " <i>" + data.item + "</i> " + project + " <i><b>" +
+                    data.project + "</b></i>.</a><br />&nbsp;";
                 break;
             case 'login':
                 template = "<br /><b>" + data.user + "</b> " + data.description + "<br />&nbsp;";
@@ -171,8 +177,8 @@ dojo.declare("phpr.FrontendMessage", null, {
                 template = "<br /><b>" + data.user + "</b> " + data.description + "<br />&nbsp;";
                 break;
             case 'remind':
-                template = "<br />" + data.description + " " + data.time + ": <br /><i><b>"
-                    + data.item + "</b></i>";
+                template = "<br />" + data.description + " " + data.time +
+                    ": <br /><i><b>" + data.item + "</b></i>";
                 break;
             default:
                 template = "<br />" + data.user + " " + data.description + "<br />&nbsp;";

@@ -1,14 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.rpc.ProxiedPath"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.rpc.ProxiedPath"] = true;
-dojo.provide("dojox.rpc.ProxiedPath");
-dojo.require("dojox.rpc.Service");
+define("dojox/rpc/ProxiedPath", ["dojo", "dojox", "dojox/rpc/Service"], function(dojo, dojox) {
 
 dojox.rpc.envelopeRegistry.register(
 	"PROXIED-PATH",function(str){return str == "PROXIED-PATH"},{
@@ -35,4 +25,4 @@ dojox.rpc.envelopeRegistry.register(
 	}
 );
 
-}
+});

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.xmpp.TransportSession"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.xmpp.TransportSession"] = true;
 dojo.provide("dojox.xmpp.TransportSession");
 dojo.require("dojox.xmpp.bosh");
 dojo.require("dojox.xmpp.util");
@@ -167,15 +158,15 @@ dojo.extend(dojox.xmpp.TransportSession, {
 
 		dispatchPacket: function(msg, protocolMatchType, matchId, matchProperty){
 			// summary
-			// Main Packet dispatcher, most calls should be made with this other 
-			// than a few setup calls which use add items to the queue directly 
+			// Main Packet dispatcher, most calls should be made with this other
+			// than a few setup calls which use add items to the queue directly
 			//protocolMatchType, matchId, and matchProperty are optional params
 			//that allow a deferred to be tied to a protocol response instad of the whole
 			//rid
 	
 		//	//console.log("In dispatchPacket ", msg, protocolMatchType, matchId, matchProperty);
 			if (msg){
-				this.protocolPacketQueue.push(msg);	
+				this.protocolPacketQueue.push(msg);
 			}
 			
 			var def = new dojo.Deferred();
@@ -183,8 +174,8 @@ dojo.extend(dojox.xmpp.TransportSession, {
 
 			if (protocolMatchType && matchId){
 				def.protocolMatchType = protocolMatchType;
-				def.matchId = matchId;	
-				def.matchProperty = matchProperty || "id";	
+				def.matchId = matchId;
+				def.matchProperty = matchProperty || "id";
 				if(def.matchProperty != "id") {
 					this.matchTypeIdAttribute[protocolMatchType] = def.matchProperty;
 				}
@@ -194,7 +185,7 @@ dojo.extend(dojox.xmpp.TransportSession, {
 			if(!this.dispatchTimer) {
 				this.dispatchTimer = setTimeout(dojo.hitch(this, "_dispatchPacket"), 600);
 			}
-			return def;	
+			return def;
 		},
 	
 		_dispatchPacket: function(){
@@ -247,7 +238,7 @@ dojo.extend(dojox.xmpp.TransportSession, {
 						return;
 					}
 				
-				} 
+				}
 				req.rid= this.rid++;
 				this.lastPollTime = new Date().getTime();
 				envelope = new dojox.string.Builder(dojox.xmpp.util.createElement("body", req, true));
@@ -296,7 +287,7 @@ dojo.extend(dojox.xmpp.TransportSession, {
 			//console.log("TransportSession::sendXml()"+ new Date().getTime() + " RID: ", rid, " MSG: ", message);
 			this.transmitState = "transmitting";
 			var def = null;
-			if(this.useScriptSrcTransport) { 
+			if(this.useScriptSrcTransport) {
 				//console.log("using script src to transmit");
 				def = dojox.xmpp.bosh.get({
 					rid: rid,
@@ -320,7 +311,7 @@ dojo.extend(dojox.xmpp.TransportSession, {
 					timeout: this.sendTimeout
 				});
 			}
-			//process the result document 
+			//process the result document
 			def.addCallback(this, function(res){
 				return this.processDocument(res, rid);
 			});
@@ -344,20 +335,20 @@ dojo.extend(dojox.xmpp.TransportSession, {
 			var expectedId = this.outboundQueue[0]["rid"];
 			//console.log("expectedId", expectedId);
 			if (rid==expectedId){
-				this.removeFromOutboundQueue(rid);	
+				this.removeFromOutboundQueue(rid);
 				this.processResponse(body, rid);
-				this.processInboundQueue();	
+				this.processInboundQueue();
 			}else{
 				//console.log("TransportSession::processDocument() rid: ", rid, " expected: ", expectedId);
 				var gap = rid-expectedId;
 			
 				if (gap < this.hold + 2){
-					this.addToInboundQueue(doc,rid);	
+					this.addToInboundQueue(doc,rid);
 				}else{
 					//console.log("TransportSession::processDocument() RID is outside of the expected response window");
 				}
 			}
-			return doc;	
+			return doc;
 		},
 
 		processInboundQueue: function(){
@@ -370,7 +361,7 @@ dojo.extend(dojox.xmpp.TransportSession, {
 		addToInboundQueue: function(doc,rid){
 			for (var i=0; i<this.inboundQueue.length;i++){
 				if (rid < this.inboundQueue[i]["rid"]){continue;}
-				this.inboundQueue.splice(i,0,{doc: doc, rid: rid});	
+				this.inboundQueue.splice(i,0,{doc: doc, rid: rid});
 			}
 		},
 
@@ -396,20 +387,20 @@ dojo.extend(dojox.xmpp.TransportSession, {
 					throw new Error("No sid returned during xmpp session startup");
 				}
 
-				this.authId = body.getAttribute("authid");	
+				this.authId = body.getAttribute("authid");
 				if (this.authId == "") {
 					if (this.authRetries-- < 1) {
 						console.error("Unable to obtain Authorization ID");
-						this.terminateSession();	
+						this.terminateSession();
 					}
 				}
-				this.wait= body.getAttribute("wait");	
+				this.wait= body.getAttribute("wait");
 				if( body.getAttribute("polling")){
 					this.polling= parseInt(body.getAttribute("polling"))*1000;
 				}
 			
 				//console.log("Polling value ", this.polling);
-				this.inactivity = body.getAttribute("inactivity");	
+				this.inactivity = body.getAttribute("inactivity");
 				this.setState("Ready");
 			}
 
@@ -477,8 +468,8 @@ dojo.extend(dojox.xmpp.TransportSession, {
 					this.setState("Terminate", errorMessage);
 					return false;
 				}else{
-					this.removeFromOutboundQueue(rid);	
-					setTimeout(dojo.hitch(this, function(){ this.dispatchPacket(); }), 200);	
+					this.removeFromOutboundQueue(rid);
+					setTimeout(dojo.hitch(this, function(){ this.dispatchPacket(); }), 200);
 					return true;
 				}
 				return false;
@@ -488,7 +479,7 @@ dojo.extend(dojox.xmpp.TransportSession, {
 				//console.log("Wait timeout");
 			}
 			
-			this.removeFromOutboundQueue(rid);	
+			this.removeFromOutboundQueue(rid);
 			//FIXME conditional processing if request will be needed based on type of error.
 			if(err && err.firstChild) {
 			//console.log("Error ", err.firstChild.getAttribute("type") + " status code " + httpStatusCode);
@@ -501,10 +492,10 @@ dojo.extend(dojox.xmpp.TransportSession, {
 					}
 					this.setState("Terminate", errorMessage);
 					return false;
-				}			
+				}
 			}
 			this.transmitState = "error";
-			setTimeout(dojo.hitch(this, function(){ this.dispatchPacket(); }), 200);	
+			setTimeout(dojo.hitch(this, function(){ this.dispatchPacket(); }), 200);
 			//console.log("Error: ", arguments);
 			return true;
 		},
@@ -514,5 +505,3 @@ dojo.extend(dojox.xmpp.TransportSession, {
 		onProcessProtocolResponse: function(msg){},
 		onReady: function(newState, oldState){}
 });
-
-}

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.tools.Path"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.tools.Path"] = true;
 dojo.provide("dojox.drawing.tools.Path");
 
 dojox.drawing.tools.Path = dojox.drawing.util.oo.declare(
@@ -26,7 +17,7 @@ dojox.drawing.tools.Path = dojox.drawing.util.oo.declare(
 	{
 		draws:true,
 		onDown: function(obj){
-			if(!this._started){ 
+			if(!this._started){
 				this.onStartPath(obj);
 			}
 			
@@ -66,15 +57,15 @@ dojox.drawing.tools.Path = dojox.drawing.util.oo.declare(
 				
 				switch(evt.letter){
 					case "c":
-						this.onCompletePath(true); break;		
+						this.onCompletePath(true); break;
 					case "l": this.pathMode = "L"; break;
-					case "m": this.makeSubPath(false); break;		
-					case "q": this.pathMode = "Q"; break;		
+					case "m": this.makeSubPath(false); break;
+					case "q": this.pathMode = "Q"; break;
 					case "s": this.pathMode = "S"; break;
 					case "z": this.makeSubPath(true); break;
 				}
 				 
-				//console.log("KEY:", evt.letter);	
+				//console.log("KEY:", evt.letter);
 			});
 		},
 		
@@ -210,5 +201,3 @@ dojox.drawing.tools.Path.setup = {
 };
 
 dojox.drawing.register(dojox.drawing.tools.Path.setup, "tool");
-
-}

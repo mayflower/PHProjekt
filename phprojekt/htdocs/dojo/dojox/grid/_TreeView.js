@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.grid._TreeView"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.grid._TreeView"] = true;
 dojo.provide("dojox.grid._TreeView");
 
 dojo.require("dijit._Widget");
@@ -23,7 +14,7 @@ dojo.declare("dojox.grid._Expando", [ dijit._Widget, dijit._Templated ], {
 	rowIdx: -1,
 	expandoCell: null,
 	level: 0,
-	templateString:"<div class=\"dojoxGridExpando\"\r\n\t><div class=\"dojoxGridExpandoNode\" dojoAttachEvent=\"onclick:onToggle\"\r\n\t\t><div class=\"dojoxGridExpandoNodeInner\" dojoAttachPoint=\"expandoInner\"></div\r\n\t></div\r\n></div>\r\n",
+	templatePath: dojo.moduleUrl("dojox.grid", "resources/Expando.html"),
 	_toggleRows: function(toggleClass, open){
 		if(!toggleClass || !this.rowNode){ return; }
 		if(dojo.query("table.dojoxGridRowTableNeedsRowUpdate").length){
@@ -39,7 +30,7 @@ dojo.declare("dojox.grid._Expando", [ dijit._Widget, dijit._Templated ], {
 			if(p){
 				dojo.query("tr[dojoxTreeGridPath^=\"" + p + "/\"]", this.rowNode).forEach(function(n){
 					var en = dojo.query(".dojoxGridExpando", n)[0];
-					if(en && en.parentNode && en.parentNode.parentNode && 
+					if(en && en.parentNode && en.parentNode.parentNode &&
 								!dojo.hasClass(en.parentNode.parentNode, "dojoxGridNoChildren")){
 						var ew = dijit.byNode(en);
 						if(ew){
@@ -177,7 +168,7 @@ dojo.declare("dojox.grid._Expando", [ dijit._Widget, dijit._Templated ], {
 		this.open = this.expandoCell.getOpenState(this.itemId);
 		if(view.grid.treeModel){
 			// TODO: Rather than hard-code the 18px and 3px, we should probably
-			// calculate them based off css or something...  However, all the 
+			// calculate them based off css or something...  However, all the
 			// themes that we support use these values.
 			dojo.style(this.domNode , "marginLeft" , (this.level * 18) + "px");
 			if(this.domNode.parentNode){
@@ -206,7 +197,7 @@ dojo.declare("dojox.grid._TreeContentBuilder", dojox.grid._ContentBuilder, {
 				if(html[0].indexOf('dojoxGridRowTableNeedsRowUpdate') == -1){
 					html[0] = html[0].replace("dojoxGridRowTable", "dojoxGridRowTable dojoxGridRowTableNeedsRowUpdate");
 				}
-				return; 
+				return;
 			}
 			var rowNodeIdx = html.length;
 			toggleClasses = toggleClasses || [];
@@ -280,7 +271,7 @@ dojo.declare("dojox.grid._TreeContentBuilder", dojox.grid._ContentBuilder, {
 						iStack.push(values.length);
 						createRow(level, rowItem, true, toggleClasses, iStack, parentOpen);
 					}else{
-						html[rowNodeIdx] = '<tr class="' + tcString + ' dojoxGridNoChildren" dojoxTreeGridPath="' + rowStack.join('/') + '">';					
+						html[rowNodeIdx] = '<tr class="' + tcString + ' dojoxGridNoChildren" dojoxTreeGridPath="' + rowStack.join('/') + '">';
 					}
 				}else{
 					if(!store.isItemLoaded(rowItem)){
@@ -305,7 +296,7 @@ dojo.declare("dojox.grid._TreeContentBuilder", dojox.grid._ContentBuilder, {
 			}
 			n = n.parentNode;
 		}
-		return (n != this.domNode) ? n : null; 
+		return (n != this.domNode) ? n : null;
 	},
 	getCellNode: function(inRowNode, inCellIndex){
 		var node = dojo.query("td[idx='" + inCellIndex + "']", inRowNode)[0];
@@ -450,5 +441,3 @@ dojo.declare("dojox.grid._TreeView", [dojox.grid._View], {
 		}
 	}
 });
-
-}

@@ -21,7 +21,6 @@
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests Todo Model class
@@ -38,15 +37,22 @@ require_once 'PHPUnit/Framework.php';
  * @group      model
  * @group      todo-model
  */
-class Todo_Models_Todo_Test extends PHPUnit_Framework_TestCase
+class Todo_Models_Todo_Test extends DatabaseTest
 {
+    protected function getDataSet() {
+        return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
+            array(
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
+    }
+
     /**
      * Test getTo method
      */
     public function testGetNotificationRecipients()
     {
         $todoModel = new Todo_Models_Todo();
-        $todoModel->find(2);
+        $todoModel->find(1);
         $response = $todoModel->getNotification()->getTo();
         $expected = array();
         $this->assertEquals($expected, $response);

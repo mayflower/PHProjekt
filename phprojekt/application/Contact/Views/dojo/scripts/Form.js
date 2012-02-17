@@ -21,16 +21,16 @@
 
 dojo.provide("phpr.Contact.Form");
 
-dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
+dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
 
     initData:function() {
         // Get all the active users
-        this.userStore = new phpr.Store.User();
+        this.userStore = new phpr.Default.System.Store.User();
         this._initData.push({'store': this.userStore});
     },
 
     addModuleTabs:function(data) {
-        this.addHistoryTab();
+        return this.addHistoryTab();
     },
 
     addBasicFields:function() {
@@ -41,11 +41,14 @@ dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
             return false;
         }
 
+        this.setSubmitInProgress(true);
         phpr.send({
             url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId
                 + '/id/' + this.id,
-            content:   this.sendData,
-            onSuccess: dojo.hitch(this, function(data) {
+            content:   this.sendData
+        }).then(dojo.hitch(this, function(data) {
+            this.setSubmitInProgress(false);
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (!this.id) {
                     this.id = data['id'];
@@ -54,21 +57,22 @@ dojo.declare("phpr.Contact.Form", phpr.Default.Form, {
                     this.publish("updateCacheData");
                     this.publish("setUrlHash", [phpr.module]);
                 }
-            })
-        });
+            }
+        }));
     },
 
     deleteForm:function() {
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id,
-            onSuccess: dojo.hitch(this, function(data) {
+            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
                     this.publish("setUrlHash", [phpr.module]);
                 }
-            })
-        });
+            }
+        }));
     },
 
     updateData:function() {

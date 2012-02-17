@@ -1,40 +1,41 @@
 <tr>
     <td colspan="3">
-    <table id="relationTable"
+    <table dojoAttachPoint="relationTable"
     style="position: relative; left: 75px">
-    <tr>
-        <td>
-            <label>{{accessUserText}}</label>
-        </td>
-        <td>
-            <label>{{accessRoleText}}</label>
-        </td>
-        <td>
-            <label>{{accessActionText}}</label>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <select id="relationUserAdd" name="relationUserAdd" dojoType="phpr.FilteringSelect" required="false"
-            autocomplete="false" value="" invalidMessage="" {{disabled}} >
-                {% for user in users %}
-                <option value="{{user.id}}" >{{user.display}}</option>
-                {% endfor %}
-            </select>
-        </td>
-        <td>
-            <select id="relationRoleAdd" name="relationRoleAdd" dojoType="phpr.FilteringSelect" required="false"
-            autocomplete="false" value="" invalidMessage="" {{disabled}} >
-                {% for role in roles %}
-                <option value="{{role.id}}" >{{role.name}}</option>
-                {% endfor %}
-            </select>
-        </td>
-        <td>
-            <div id="relationAddButton"></div>
-        </td>
-    </tr>
-    {{rows|safe}}
+    <tbody dojoAttachPoint="tbody">
+        <tr>
+            <td>
+                <label>{{accessUserText}}</label>
+            </td>
+            <td>
+                <label>{{accessRoleText}}</label>
+            </td>
+            <td>
+                <label>{{accessActionText}}</label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select dojoAttachPoint="relationUserAdd" name="relationUserAdd" dojoType="phpr.FilteringSelect" required="false"
+                autocomplete="false" value="" invalidMessage="" {{disabled}} >
+                    {% for user in users %}
+                    <option value="{{user.id}}" >{{user.display}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <select dojoAttachPoint="relationRoleAdd" name="relationRoleAdd" dojoType="phpr.FilteringSelect" required="false"
+                autocomplete="false" value="" invalidMessage="" {{disabled}} >
+                    {% for role in roles %}
+                    <option value="{{role.id}}" >{{role.name}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <div dojoAttachPoint="relationAddButton"></div>
+            </td>
+        </tr>
+    </tbody>
     </table>
     </td>
 </tr>

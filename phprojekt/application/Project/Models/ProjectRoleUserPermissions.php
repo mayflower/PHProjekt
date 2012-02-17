@@ -49,7 +49,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
     function getProjectRoleUserPermissions($projectId)
     {
         $roles = array();
-        $model = Phprojekt_Loader::getLibraryClass('Phprojekt_Role_Role');
+        $model = new Phprojekt_Role_Role();
 
         foreach ($model->fetchAll(null, 'name ASC') as $role) {
             $roles['data'][$role->id] = array();
@@ -57,12 +57,16 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
             $roles['data'][$role->id]['name']  = $role->name;
             $roles['data'][$role->id]['users'] = array();
         }
-        $where   = sprintf('project_role_user_permissions.project_id = %d', (int) $projectId);
-        $order   = 'project_role_user_permissions.user_id ASC';
-        $select  = ' user.username, user.firstname, user.lastname ';
-        $join    = ' LEFT JOIN user ON user.id = project_role_user_permissions.user_id ';
+        $select  = Phprojekt::getInstance()->getDb()->select();
+        $select->from(
+            array('prup' => 'project_role_user_permissions'),
+            array('roleId' => 'role_id', 'userId' => 'user_id')
+        )
+            ->where('prup.project_id = ?', (int) $projectId)
+            ->joinLeft(array('u' => 'user'), 'u.id = prup.user_id', array('username', 'firstname', 'lastname'))
+            ->order('prup.user_id ASC');
         $display = Phprojekt_User_User::getDisplay();
-        foreach ($this->fetchAll($where, $order, null, null, $select, $join) as $right) {
+        foreach ($select->query()->fetchAll(Zend_Db::FETCH_OBJ) as $right) {
             $userDisplay = Phprojekt_User_User::applyDisplay($display, $right);
 
             $roles['data'][$right->roleId]['users'][] = array('id'      => (int) $right->userId,
@@ -88,7 +92,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
         }
 
         // Save roles only for allowed users
-        $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $activeRecord = new Phprojekt_User_User();
         $result       = $activeRecord->getAllowedUsers();
         foreach ($result as $user) {
             $userId = $user['id'];
@@ -137,7 +141,7 @@ class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_A
                 } else {
                     // Fix Root Project
                     if ($projectId > 1) {
-                        $project = Phprojekt_Loader::getModel('Project', 'Project');
+                        $project = new Project_Models_Project();
                         $parent  = $project->find($projectId);
                         if (!is_null($parent) && !empty($parent) && $parent->projectId > 0) {
                             $sessionName = 'Project_Models_ProjectRoleUserPermissions-fetchUserRole-'

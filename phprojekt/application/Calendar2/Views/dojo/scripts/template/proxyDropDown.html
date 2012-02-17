@@ -1,0 +1,15 @@
+<div class="dijitTab" style="height: 29px">
+    <div class="dijitTabInnerDiv">
+        <div class="dijitTabContent">
+            {{label}}
+            <select data-dojo-type="dijit.form.Select">
+                <script type="dojo/connect" event="onChange">
+                    dojo.publish("Calendar2.proxyChanged", [this]);
+                </script>
+                <script type="dojo/connect" event="startup">
+                    dojo.publish("Calendar2.proxyLoad", [this]);
+                </script>
+            </select>
+        </div>
+    </div>
+</div>

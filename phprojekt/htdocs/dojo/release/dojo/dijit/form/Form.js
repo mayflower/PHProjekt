@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dijit.form.Form"]||(dojo._hasResource["dijit.form.Form"]=!0,dojo.provide("dijit.form.Form"),dojo.require("dijit._Widget"),dojo.require("dijit._Templated"),dojo.require("dijit.form._FormMixin"),dojo.require("dijit.layout._ContentPaneResizeMixin"),dojo.declare("dijit.form.Form",[dijit._Widget,dijit._Templated,dijit.form._FormMixin,dijit.layout._ContentPaneResizeMixin],{name:"",action:"",method:"",encType:"","accept-charset":"",accept:"",target:"",templateString:"<form dojoAttachPoint='containerNode' dojoAttachEvent='onreset:_onReset,onsubmit:_onSubmit' ${!nameAttrSetting}></form>",
+attributeMap:dojo.delegate(dijit._Widget.prototype.attributeMap,{action:"",method:"",encType:"","accept-charset":"",accept:"",target:""}),postMixInProperties:function(){this.nameAttrSetting=this.name?"name='"+this.name+"'":"";this.inherited(arguments)},execute:function(){},onExecute:function(){},_setEncTypeAttr:function(a){this.encType=a;dojo.attr(this.domNode,"encType",a);if(dojo.isIE)this.domNode.encoding=a},postCreate:function(){if(dojo.isIE&&this.srcNodeRef&&this.srcNodeRef.attributes){var a=
+this.srcNodeRef.attributes.getNamedItem("encType");a&&!a.specified&&typeof a.value=="string"&&this.set("encType",a.value)}this.inherited(arguments)},reset:function(a){var b={returnValue:!0,preventDefault:function(){this.returnValue=!1},stopPropagation:function(){},currentTarget:a?a.target:this.domNode,target:a?a.target:this.domNode};this.onReset(b)!==!1&&b.returnValue&&this.inherited(arguments,[])},onReset:function(){return!0},_onReset:function(a){this.reset(a);dojo.stopEvent(a);return!1},_onSubmit:function(a){var b=
+dijit.form.Form.prototype;if(this.execute!=b.execute||this.onExecute!=b.onExecute)dojo.deprecated("dijit.form.Form:execute()/onExecute() are deprecated. Use onSubmit() instead.","","2.0"),this.onExecute(),this.execute(this.getValues());this.onSubmit(a)===!1&&dojo.stopEvent(a)},onSubmit:function(){return this.isValid()},submit:function(){this.onSubmit()!==!1&&this.containerNode.submit()}}));

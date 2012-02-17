@@ -3,21 +3,24 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>PHProjekt</title>
-    <link rel="shortcut icon" href="<?php echo $this->webpath; ?>img/favicon.ico" type="image/x-icon" />
-    <style type="text/css">
-        @import "<?php echo $this->webpath; ?>css/themes/phprojekt/phprojektCssCompiler.php";
-    </style>
+    <link rel="favicon" href="<?php echo $this->webpath ?>img/favicon.ico"></link>
+    <link rel="shortcut icon" href="<?php echo $this->webpath ?>img/favicon.ico"></link>
+    <link href="<?php echo $this->webpath; ?>min/min/?g=phprojekt" rel="stylesheet" type="text/css" />
+
     <script type="text/javascript">
         var djConfig = {isDebug: false, parseOnLoad: true, useCommentedJson: true};
     </script>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
-    <?php
-    if ($this->compressedDojo) {
-    ?>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/mydojo.js"></script>
-    <?php
-    }
-    ?>
+        <?php
+        if ($this->compressedDojo) {
+        ?>
+            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/dojo.js"></script>
+        <?php
+        } else {
+        ?>
+            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/dojo.js.uncompressed.js"></script>
+        <?php
+        }
+        ?>
     <script type="text/javascript">
         var par   = window.parent.document;
         var input = par.getElementById("<?php echo $this->field; ?>");

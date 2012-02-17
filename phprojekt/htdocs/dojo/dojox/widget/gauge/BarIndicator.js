@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource['dojox.widget.gauge.BarIndicator']){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource['dojox.widget.gauge.BarIndicator'] = true;
 dojo.provide('dojox.widget.gauge.BarIndicator');
 dojo.require('dojox.widget.BarGauge');
 
@@ -73,11 +64,9 @@ dojo.declare("dojox.widget.gauge.BarIndicator",[dojox.widget.gauge.BarLineIndica
 		}else{
 			if(c!=v){
 				var anim = new dojo.Animation({curve: [c, v], duration: this.duration, easing: this.easing});
-				dojo.connect(anim, "onAnimate", dojo.hitch(this, this._createShapes)); 
+				dojo.connect(anim, "onAnimate", dojo.hitch(this, this._createShapes));
 				anim.play();
 			}
 		}
 	}
 });
-
-}

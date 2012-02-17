@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.gfx3d.scheduler"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx3d.scheduler"] = true;
 dojo.provide("dojox.gfx3d.scheduler");
 dojo.provide("dojox.gfx3d.drawer");
 dojo.require("dojox.gfx3d.vector");
@@ -42,16 +33,16 @@ dojo.mixin(dojox.gfx3d.scheduler, {
 dojo.declare("dojox.gfx3d.scheduler.BinarySearchTree", null, {
 	constructor: function(obj, outline){
 		// summary: build the binary search tree, using binary space partition algorithm.
-		// The idea is for any polygon, for example, (a, b, c), the space is divided by 
-		// the plane into two space: plus and minus. 
-		// 
+		// The idea is for any polygon, for example, (a, b, c), the space is divided by
+		// the plane into two space: plus and minus.
+		//
 		// for any arbitary vertex p, if(p - a) dotProduct n = 0, p is inside the plane,
-		// > 0, p is in the plus space, vice versa for minus space. 
+		// > 0, p is in the plus space, vice versa for minus space.
 		// n is the normal vector that is perpendicular the plate, defined as:
 		//            n = ( b - a) crossProduct ( c - a )
 		//
 		// in this implementation, n is declared as normal, ,a is declared as orient.
-		// 
+		//
 		// obj: object: dojox.gfx3d.Object
 		this.plus = null;
 		this.minus = null;
@@ -81,8 +72,8 @@ dojo.declare("dojox.gfx3d.scheduler.BinarySearchTree", null, {
 				this.minus = new BST(obj, outline);
 			}
 		}else if(
-			dojo.every(o, function(item){ 
-				return Math.floor(epsilon + v.dotProduct(n, v.substract(item, a))) >= 0; 
+			dojo.every(o, function(item){
+				return Math.floor(epsilon + v.dotProduct(n, v.substract(item, a))) >= 0;
 			})
 		){
 			if(this.plus){
@@ -113,13 +104,13 @@ dojo.declare("dojox.gfx3d.scheduler.BinarySearchTree", null, {
 			subs = [this.minus, this.plus];
 		}
 
-		if(subs[0]){ 
+		if(subs[0]){
 			sorted = sorted.concat(subs[0].iterate());
 		}
 
 		sorted.push(this.object);
 
-		if(subs[1]){ 
+		if(subs[1]){
 			sorted = sorted.concat(subs[1].iterate());
 		}
 		return sorted;
@@ -146,8 +137,6 @@ dojo.mixin(dojox.gfx3d.drawer, {
 			item.draw(viewport.lighting);
 		});
 	}
-	// More aggrasive optimization may re-order the DOM nodes using the order 
+	// More aggrasive optimization may re-order the DOM nodes using the order
 	// of objects, and only elements of todos call setShape.
 });
-
-}

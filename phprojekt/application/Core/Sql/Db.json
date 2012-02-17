@@ -61,25 +61,6 @@
             }
         },
 
-        "groups":
-        {
-            "create":
-            {
-                "id":   "default",
-                "name": {"type": "varchar"}
-            }
-        },
-
-        "groups_user_relation":
-        {
-            "create":
-            {
-                "id":        "default",
-                "groups_id": {"type": "int", "notNull": "true"},
-                "user_id":   {"type": "int", "notNull": "true"}
-            }
-        },
-
         "history":
         {
             "create":
@@ -253,8 +234,7 @@
             "create":
             {
                 "id":    "default",
-                "word":  {"type": "varchar", "notNull": "true"},
-                "crc32": {"type": "bigint", "notNull": "true"}
+                "word":  {"type": "varchar", "notNull": "true"}
             }
         },
 
@@ -288,6 +268,15 @@
                 "lastname":  {"type": "varchar"},
                 "status":    {"type": "varchar", "length": "1", "default": "A"},
                 "admin":     {"type": "int", "length": "1", "notNull": "true", "default": "0"}
+            }
+        },
+        "user_proxy":
+        {
+            "create":
+            {
+                "id":           "default",
+                "proxyed_id":   {"type": "int", "notNull": "true"},
+                "proxying_id":   {"type": "int", "notNull": "true"}
             }
         }
     },
@@ -531,17 +520,6 @@
             ]
         },
 
-        "groups":
-        {
-            "insert":
-            [
-                {
-                    "id":   "1",
-                    "name": "Default"
-                }
-            ]
-        },
-
         "role":
         {
             "insert":
@@ -677,17 +655,6 @@
                     "admin":      "1",
                     "_relations":
                     {
-                        "groups_user_relation":
-                        {
-                            "insert":
-                            [
-                                {
-                                    "groups_id": "all",
-                                    "user_id":   "##id##"
-                                }
-                            ]
-                        },
-
                         "setting":
                         {
                             "insert":
@@ -736,17 +703,6 @@
                     "admin":      "0",
                     "_relations":
                     {
-                        "groups_user_relation":
-                        {
-                            "insert":
-                            [
-                                {
-                                    "groups_id": "1",
-                                    "user_id":   "##id##"
-                                }
-                            ]
-                        },
-
                         "setting":
                         {
                             "insert":

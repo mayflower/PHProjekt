@@ -1,20 +1,11 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.mobile.app._FormWidget"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.mobile.app._FormWidget"] = true;
 dojo.provide("dojox.mobile.app._FormWidget");
 dojo.experimental("dojox.mobile.app._FormWidget");
 
 dojo.require("dojo.window");
 
-dojo.require("dijit._Widget");
+dojo.require("dijit._WidgetBase");
 
-dojo.declare("dojox.mobile.app._FormWidget", dijit._Widget, {
+dojo.declare("dojox.mobile.app._FormWidget", dijit._WidgetBase, {
 	// summary:
 	//		Base class for widgets corresponding to native HTML elements such as <checkbox> or <button>,
 	//		which can be children of a <form> node or a `dojox.mobile.app.Form` widget.
@@ -22,7 +13,7 @@ dojo.declare("dojox.mobile.app._FormWidget", dijit._Widget, {
 	// description:
 	//		Represents a single HTML element.
 	//		All these widgets should have these attributes just like native HTML input elements.
-	//		You can set them during widget construction or afterwards, via `dijit._Widget.attr`.
+	//		You can set them during widget construction or afterwards, via `dijit._WidgetBase.attr`.
 	//
 	//		They also share some common methods.
 
@@ -56,7 +47,7 @@ dojo.declare("dojox.mobile.app._FormWidget", dijit._Widget, {
 	scrollOnFocus: false,
 
 	// These mixins assume that the focus node is an INPUT, as many but not all _FormWidgets are.
-	attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
+	attributeMap: dojo.delegate(dijit._WidgetBase.prototype.attributeMap, {
 		value: "focusNode",
 		id: "focusNode",
 		alt: "focusNode",
@@ -82,13 +73,6 @@ dojo.declare("dojox.mobile.app._FormWidget", dijit._Widget, {
 		dojo.attr(this.focusNode, 'disabled', value);
 		if(this.valueNode){
 			dojo.attr(this.valueNode, 'disabled', value);
-		}
-
-		if(value){
-			// reset these, because after the domNode is disabled, we can no longer receive
-			// mouse related events, see #4200
-			this._hovering = false;
-			this._active = false;
 		}
 	},
 
@@ -301,5 +285,3 @@ dojo.declare("dojox.mobile.app._FormValueWidget", dojox.mobile.app._FormWidget,
 		this._setValueAttr(this._resetValue, true);
 	}
 });
-
-}

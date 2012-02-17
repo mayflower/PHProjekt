@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.mdnd.dropMode.DefaultDropMode"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.mdnd.dropMode.DefaultDropMode"] = true;
 dojo.provide("dojox.mdnd.dropMode.DefaultDropMode");
 dojo.require("dojox.mdnd.AreaManager");
 
@@ -16,7 +7,7 @@ dojo.declare("dojox.mdnd.dropMode.DefaultDropMode", null, {
 	//		Default class to find the nearest target.
 
 	// _oldXPoint: Integer
-	//		used to save a X position 
+	//		used to save a X position
 	_oldXPoint: null,
 
 	// _oldYPoint: Integer
@@ -47,13 +38,13 @@ dojo.declare("dojox.mdnd.dropMode.DefaultDropMode", null, {
 			var x =  object.coords.x;
 			for (var i = 0; i < length; i++) {
 				if (x < areas[i].coords.x) {
-					for (var j = length-1; j >= i; j--) 
+					for (var j = length-1; j >= i; j--)
 						areas[j + 1] = areas[j];
 					areas[i] = object;
 					break;
 				}
 			}
-			if (i == length) 
+			if (i == length)
 				areas.push(object);
 		}
 		return areas;	// Array
@@ -84,7 +75,7 @@ dojo.declare("dojox.mdnd.dropMode.DefaultDropMode", null, {
 					this._updateArea(area);
 					this._updateArea(nextArea);
 					currentRight = area.coords.x + area.node.offsetWidth;
-					nextLeft =  nextArea.coords.x;	
+					nextLeft =  nextArea.coords.x;
 					area.coords.x2 = currentRight + (nextLeft-currentRight)/2;
 				}
 				else if (i == length-1) {
@@ -168,8 +159,8 @@ dojo.declare("dojox.mdnd.dropMode.DefaultDropMode", null, {
 		// summary:
 		//		return coordinates of the draggable item
 		// description:
-		//		return for: 
-		// 			- X point : the middle 
+		//		return for:
+		// 			- X point : the middle
 		//	  		- Y point : search if the user goes up or goes down with his mouse.
 		//	  		- Up : top of the draggable item
 		//	  		- Down : bottom of the draggable item
@@ -190,14 +181,14 @@ dojo.declare("dojox.mdnd.dropMode.DefaultDropMode", null, {
 				this._oldBehaviour = "down";
 				y += size.h;
 			}
-			else 
+			else
 				if (y <= this._oldYPoint) {
 					this._oldBehaviour = "up";
 				}
 		}
 		this._oldYPoint = y;
-		return { 
-			'x': coords.x + (size.w / 2), 
+		return {
+			'x': coords.x + (size.w / 2),
 			'y': y
 			};	// Object
 	},
@@ -267,7 +258,7 @@ dojo.declare("dojox.mdnd.dropMode.DefaultDropMode", null, {
 		//		check if the dragNode is in the interval.
 		//		The x coordinate is basically provided by the <getDragPoint> method.
 		// areaList:
-		//		a list of DnD areas objects 	
+		//		a list of DnD areas objects
 		// index:
 		//		index of a DnD area (to get the interval)
 		// x:
@@ -283,7 +274,7 @@ dojo.declare("dojox.mdnd.dropMode.DefaultDropMode", null, {
 				return true;
 			}
 		}
-		else 
+		else
 			if (coords.x2 == -1) {
 				if (x > coords.x1) {
 					return true;
@@ -335,10 +326,8 @@ dojo.declare("dojox.mdnd.dropMode.DefaultDropMode", null, {
 });
 
 //------------
-//Singleton	
+//Singleton
 //------------
 (function(){
 	dojox.mdnd.areaManager()._dropMode = new dojox.mdnd.dropMode.DefaultDropMode();
 }());
-
-}

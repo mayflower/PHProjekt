@@ -364,7 +364,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         $converted['label']         = Phprojekt::getInstance()->translate($field->formLabel, null, $module);
         $converted['originalLabel'] = $field->formLabel;
         $converted['type']          = $field->formType;
-        $converted['hint']          = Phprojekt::getInstance()->getTooltip($key);
+        $converted['hint']          = Phprojekt::getInstance()->getTooltip($key, $module);
         $converted['listPosition']  = (int) $field->listPosition;
         $converted['formPosition']  = (int) $field->formPosition;
         $converted['fieldset']      = '';
@@ -456,7 +456,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
 
         switch ($module) {
             case 'Project':
-                $activeRecord = Phprojekt_Loader::getModel('Project', 'Project');
+                $activeRecord = new Project_Models_Project();
                 $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
                 $tree         = $tree->setup();
                 foreach ($tree as $node) {
@@ -465,7 +465,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                 }
                 break;
             case 'User':
-                $activeRecord = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
+                $activeRecord = new Phprojekt_User_User();
                 $result       = $activeRecord->getAllowedUsers();
                 if (!$field->isRequired && $field->formType == 'selectValues') {
                     $options[] = array('id'   => 0,
@@ -556,6 +556,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
                         'label'   => Phprojekt::getInstance()->translate('Module Designer'),
                         'message' => Phprojekt::getInstance()->translate('There are two fields with the same '
                             . 'Field Name')));
+                    break;
+                } else if ($valid && strpos($field['tableField'], '?') != false) {
+                    $valid = false;
+                    $this->_error->addError(array(
+                        'field'   => 'Module Designer',
+                        'label'   => Phprojekt::getInstance()->translate('Module Designer'),
+                        'message' => Phprojekt::getInstance()->translate('"?" is not allowed in the field name')));
                     break;
                 } else if ($valid) {
                     $foundFields[] = $field['tableField'];
@@ -727,7 +734,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
             $databaseManager = clone($this);
             foreach ($values as $key => $value) {
 
-                if (isset($databaseManager->$key)) {
+                if ($databaseManager->hasField($key)) {
                     switch ($key) {
                         case 'formRegexp':
                         case 'formRange':
@@ -951,7 +958,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         foreach ($result as $item) {
             $showValue = array();
             foreach ($values as $value) {
-                if (isset($item->$value)) {
+                if ($item->hasField($value)) {
                     $showValue[] = $item->$value;
                 }
             }

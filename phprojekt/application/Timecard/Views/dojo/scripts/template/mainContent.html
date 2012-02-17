@@ -1,15 +1,17 @@
-<div dojoType="dijit.layout.BorderContainer" id="detailsBox" gutters="false" design="sidebar"
-style="width: 100%; height: 100%; padding: 5px;">
-    <div dojoType="dijit.layout.ContentPane" region="left" id="monthView"
-    style="width: 33%; overflow-x: hidden;">
+<div>
+    <div dojoType="dijit.layout.BorderContainer" gutters="false" design="headline"
+        style="width: 100%; height: 100%; padding: 5px;">
+        <div dojoType="dijit.layout.ContentPane" region="left" dojoAttachPoint="monthView"
+        style="width: 300px; overflow-x: hidden;">
+        </div>
+        <div dojoType="dijit.layout.ContentPane" region="center" dojoAttachPoint="dayView"
+        style="overflow-x: hidden; overflow-y: auto;">
+        </div>
     </div>
-    <div dojoType="dijit.layout.ContentPane" region="center" id="dayView"
-    style="width: 66.5%; overflow-x: hidden;">
-    </div>
-</div>
-<!-- Dialog -->
-<div dojoType="dijit.Dialog" id="manageFavorites" title="{{manageFavoritesText}}" draggable="false"
-style="background-color: white; width: auto; height: auto;">
-    <div id="dialogContent">
+    <!-- Dialog -->
+    <div dojoType="dijit.Dialog" dojoAttachPoint="manageFavorites" title="{{manageFavoritesText}}" draggable="false"
+    style="background-color: white; width: auto; height: auto;">
+        <div dojoAttachPoint="dialogContent" dojoType="dijit.layout.ContentPane">
+        </div>
     </div>
 </div>

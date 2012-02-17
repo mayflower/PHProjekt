@@ -4,125 +4,68 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>PHProjekt</title>
-    <link rel="shortcut icon" href="<?php echo $this->webpath; ?>img/favicon.ico" type="image/x-icon" />
-    <style type="text/css">
-        @import "<?php echo $this->webpath; ?>css/themes/phprojekt/phprojektCssCompiler.php";
-    </style>
+    <link rel="favicon" href="<?php echo $this->webpath ?>img/favicon.ico"></link>
+    <link rel="shortcut icon" href="<?php echo $this->webpath ?>img/favicon.ico"></link>
+    <link href="<?php echo $this->webpath; ?>min/min/?g=phprojekt" rel="stylesheet" type="text/css" />
+
     <script type="text/javascript">
-        var djConfig = {isDebug: false, parseOnLoad: false, bindEncoding: "utf-8",
+        var djConfig = {isDebug: false, parseOnLoad: true, bindEncoding: "utf-8",
                         locale: '<?php echo $this->language; ?>'};
     </script>
     <?php
     if (true === $this->isLoggedIn) {
         if ($this->compressedDojo) {
-    ?>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/mydojo.js"></script>
-    <?php
+        ?>
+            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/dojo.js"></script>
+            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/phprojekt.js"></script>
+        <?php
         } else {
-    ?>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js.uncompressed.js"></script>
-    <?php
+        ?>
+            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/dojo.js.uncompressed.js"></script>
+            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/phprojekt.js.uncompressed.js"></script>
+        <?php
         }
-    ?>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>index.php/js/index/csrfToken/<?php
-        echo Phprojekt::createCsrfToken(); ?>">
-    </script>
+        ?>
+        <script type="text/javascript"
+            src="<?php echo $this->webpath; ?>index.php/js/index/csrfToken/<?php echo Phprojekt::createCsrfToken(); ?>">
+        </script>
     <?php
     } else {
     ?>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/dojo.js"></script>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/dojo/mydojo.js"></script>
-    <script type="text/javascript">
-    dojo.require("dojo.parser");
-    dojo.require("dijit.layout.BorderContainer");
-    dojo.require("dijit.layout.ContentPane");
-    dojo.require("dijit.Toolbar");
-    dojo.require("dijit.form.Form");
-    dojo.require("dijit.form.TextBox");
-    dojo.require("dijit.form.CheckBox");
-    </script>
+        <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/dojo.js"></script>
+        <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/login.js"></script>
+        <script type="text/javascript">
+            dojo.require("dojo.parser");
+            dojo.require("dijit.layout.BorderContainer");
+            dojo.require("dijit.layout.ContentPane");
+            dojo.require("dijit.Toolbar");
+            dojo.require("dijit.form.Form");
+            dojo.require("dijit.form.TextBox");
+            dojo.require("dijit.form.CheckBox");
+        </script>
     <?php
     }
     ?>
     <script type="text/javascript">
-        function getMaxHeight() {
-            var availHeight = 0;
-
-            if (document.layers) {
-                availHeight = window.innerHeight + window.pageYOffset;
-            } else if (document.all) {
-                availHeight = document.documentElement.clientHeight + document.documentElement.scrollTop;
-            } else if (document.getElementById) {
-                availHeight = window.innerHeight + window.pageYOffset;
-            }
-
-            return availHeight;
-        }
-
-        function init() {
-            availHeight = getMaxHeight();
-
-            if (dijit.byId('completeContent')) {
-                dojo.style(dojo.byId('completeContent'), "height", availHeight + "px");
-                dijit.byId('completeContent').resize();
-            }
-
-            if (dojo.byId('completeCenterContent')) {
-                dojo.style(dojo.byId('completeCenterContent'), "height", (availHeight - 60) + "px");
-                if (dijit.byId('completeCenterContent')) {
-                    dijit.byId('completeCenterContent').resize();
-                }
-            }
-        }
-
         // This variable is needed to be able to clear an existing interval.
         var interval;
 
-        function getFrontendMessage() {
-            <?php
-            if ($this->frontendMsg) {
-            ?>
-                var pollingLoop = <?php echo $this->pollingLoop; ?>;
-                interval = setInterval(dojo.hitch(this, function() {
-                    phpr.frontendMessage.getFrontendMessage();
-                }), pollingLoop);
-            <?php
-            } else {
-            ?>
-                return;
-            <?php
-            }
-            ?>
-        }
+        dojo.addOnLoad(function() {
+            window.getFrontendMessage = function() {
+            <?php if ($this->frontendMsg) { ?>
+                    var pollingLoop = <?php echo $this->pollingLoop; ?>;
+                    interval = setInterval(dojo.hitch(this, function() {
+                        phpr.frontendMessage.getFrontendMessage();
+                        }), pollingLoop);
+            <?php } else { ?>
+                    return;
+            <?php } ?>
+        }});
 
         dojo.addOnLoad(function() {
             <?php
-            if (true === $this->isLoggedIn) {
+            if (true !== $this->isLoggedIn) {
             ?>
-            if (!window.location.hash) {
-                // If current hash if empty,
-                // try to fetch one from browser cookies
-                // or use the default
-                var hash = dojo.cookie('location.hash');
-                if (hash != undefined) {
-                    window.location.hash = hash;
-                } else {
-                    window.location.hash = "Project";
-                }
-            }
-            recentHash = window.location.hash;
-            setInterval(initialiseStateFromUrl, 500);
-            // Add shortcut icon
-            var link  = document.createElement("link");
-            link.type = "image/x-icon";
-            link.rel  = "shortcut icon";
-            link.href = "<?php echo $this->webpath; ?>img/favicon.ico";
-            document.getElementsByTagName("head")[0].appendChild(link);
-            <?php
-            } else {
-            ?>
-                dojo.parser.parse();
                 dojo.byId('hash').value = <?php
                 if ($this->hash) {
                     echo '"' . $this->hash . '"';
@@ -133,7 +76,6 @@
             <?php
             }
             ?>
-            init();
             <?php
             if (true !== $this->isLoggedIn) {
             ?>
@@ -143,14 +85,11 @@
             } else {
             ?>
                 getFrontendMessage();
+
             <?php
             }
             ?>
         });
-
-        window.onresize = function() {
-            init();
-        };
     </script>
 </head>
 <body class="phprojekt">
@@ -158,9 +97,9 @@
     if (true === $this->isLoggedIn) {
     ?>
     <script type="text/javascript">
-        phpr.Url   = new phpr.Url();
-        var module = phpr.Url.getModule();
-        var main   = new phpr.Main("<?php echo $this->webpath; ?>", module, 1, '<?php echo $this->language; ?>');
+        dojo.addOnLoad(function() {
+            var main = new phpr.Main("<?php echo $this->webpath; ?>", 1, '<?php echo $this->language; ?>');
+        });
     </script>
     <?php
     } else {

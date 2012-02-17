@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.validate.us"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.validate.us"] = true;
 dojo.provide("dojox.validate.us");
 dojo.require("dojox.validate._base");
 
@@ -70,6 +61,4 @@ dojox.validate.us.isZipCode = function(/*String*/value){
 		]
 	};
 	return dojox.validate.isNumberFormat(value, flags); // Boolean
-}
-
 }

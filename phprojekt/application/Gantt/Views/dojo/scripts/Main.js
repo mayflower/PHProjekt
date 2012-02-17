@@ -21,6 +21,8 @@
 
 dojo.provide("phpr.Gantt.Main");
 
+dojo.require("dijit.form.DateTextBox");
+
 dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     gantt:   null,
     scale:   1.8,
@@ -43,17 +45,28 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //   Custom renderTemplate for gantt
         var projectPeriodHelp = phpr.nls.get('Click on a Project timeline and see and/or change here the Start and End '
             + 'dates.');
-        this.render(["phpr.Gantt.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-            webpath:                     phpr.webpath,
-            selectedProjectTimelineText: phpr.nls.get('Selected Project Timeline'),
-            projectPeriodHelp:           projectPeriodHelp
+
+        var view = phpr.viewManager.useDefaultView({blank: true}).clear();
+
+        var content = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Gantt.template.mainContent.html",
+            templateData: {
+                webpath:                     phpr.webpath,
+                selectedProjectTimelineText: phpr.nls.get('Selected Project Timeline'),
+                projectPeriodHelp:           projectPeriodHelp
+            }
         });
+
+        view.centerMainContent.set('content', content);
+
+        this.ganttContainer = content;
+        this.ganttChart = content.ganttChart;
     },
 
     setWidgets:function() {
         // Summary:
         //   Custom setWidgets for gantt
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
         this.gantt = new phpr.Project.GanttBase(this);
         this._url  = phpr.webpath + 'index.php/Gantt/index/jsonGetProjects/nodeId/' + phpr.currentProjectId;
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
@@ -362,7 +375,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var maxWidth  = 268 + (365 * 2 * years);
 
         // Change the width to the maxWidth
-        dojo.style(dojo.byId('ganttChart'), "width", maxWidth + "px");
+        dojo.style(this.ganttChart, "width", maxWidth + "px");
 
         // Draw the timeline with the correct scale
         var totalWidth = 0;
@@ -437,15 +450,16 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         sendData['projects[]'] = projects;
         phpr.send({
             url:       phpr.webpath + 'index.php/Gantt/index/jsonSave/nodeId/' + phpr.currentProjectId,
-            content:   sendData,
-            onSuccess: dojo.hitch(this, function(data) {
+            content:   sendData
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     this.updateCacheData(ids);
                     this.reload();
                 }
-            })
-        });
+            }
+        }));
     },
 
     updateCacheData:function(ids) {
@@ -454,7 +468,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // Description:
         //    Update list, parent and form cached for the changed projects
         for (var i in ids) {
-            var parentId = phpr.Tree.getParentId(ids[i]);
+            var parentId = phpr.tree.getParentId(ids[i]);
             // List
             var listUrl = phpr.webpath + 'index.php/Project/index/jsonList/nodeId/' + ids[i];
             phpr.DataStore.deleteDataPartialString({url: listUrl});

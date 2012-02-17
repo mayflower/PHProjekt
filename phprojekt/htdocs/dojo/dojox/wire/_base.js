@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.wire._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.wire._base"] = true;
 dojo.provide("dojox.wire._base");
 
 dojox.wire._defaultWireClass = "dojox.wire.Wire";
@@ -41,7 +32,7 @@ dojox.wire.register = function(/*Function||String*/wireClass, /*String*/key){
 
 dojox.wire._getClass = function(/*String*/name){
 	//	summary:
-	//		Returns a class 
+	//		Returns a class
 	//	description:
 	//		The class is loaded by dojo.require() and returned
 	//		by dojo.getObject().
@@ -198,5 +189,3 @@ dojox.wire.disconnect = function(/*Object*/connection){
 		dojo.disconnect(connection.handle);
 	}
 };
-
-}

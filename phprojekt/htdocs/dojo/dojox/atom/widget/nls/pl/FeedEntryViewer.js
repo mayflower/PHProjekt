@@ -1,1 +1,12 @@
-({"close":"[Zamknij]","title":"Tytuł","authors":"Autorzy","summary":"Podsumowanie","content":"Treść","contributors":"Kontrybutorzy","updated":"Zaktualizowano","displayOptions":"[Opcje wyświetlania]","id":"Identyfikator"})
+({
+	displayOptions: "[opcje wyświetlania]",
+	title: "Tytuł",
+	authors: "Autorzy",
+	contributors: "Kontrybutorzy",
+	id: "Identyfikator",
+	close: "[zamknij]",
+	updated: "Zaktualizowano",
+	summary: "Podsumowanie",
+	content: "Treść"
+})
+

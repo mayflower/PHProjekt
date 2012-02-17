@@ -38,6 +38,35 @@
 final class Default_Helpers_Save
 {
     /**
+     * Maps the parameter array to the appropriate model properties.
+     *
+     * As we are pretty inconsistent in how we do stuff, the model can either
+     * be a Phprojekt_Tree_Node_Database or an Phprojekt_Model_Interface.
+     *
+     * @param mixed   $model   A model
+     * @param array   $params  The mysterious parameters array
+     * @param boolean $newItem At least something need a special handling,
+     *                         so new items get something special.
+     */
+    protected static function parameterToModel($model, $params, $newItem = false)
+    {
+        foreach ($params as $k => $v) {
+            if ($model->hasField($k)) {
+                // Don't allow to set the id on save, since it is done by the ActiveRecord
+                if ($k !== 'id') {
+                    $model->$k = $v;
+                }
+            }
+        }
+
+        if ($newItem && $model->hasField('ownerId')) {
+            $model->ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        }
+
+        return $model;
+    }
+
+    /**
      * Save a tree.
      *
      * @param Phprojekt_Tree_Node_Database $node     The project to save.
@@ -59,12 +88,7 @@ final class Default_Helpers_Save
         $parentNode = new Phprojekt_Tree_Node_Database($node->getActiveRecord(), $parentId);
         $parentNode = $parentNode->setup();
 
-        // Assign the values
-        foreach ($params as $k => $v) {
-            if (isset($node->$k)) {
-                $node->$k = $v;
-            }
-        }
+        $node = self::parameterToModel($node, $params);
 
         if (empty($node->getActiveRecord()->id)) {
             $newItem = true;
@@ -72,68 +96,72 @@ final class Default_Helpers_Save
             $newItem = false;
         }
 
-        // Set the owner
-        if ($newItem && isset($node->ownerId)) {
-            $node->ownerId = Phprojekt_Auth::getUserId();
-        }
-
         // Parent Project
-        if (!isset($node->projectId) || null === $node->projectId) {
+        if (!isset($node->projectId)) {
             $node->projectId = 1;
         }
-        $projectId = $node->projectId;
 
-        // Checks
         if (!$node->getActiveRecord()->recordValidate()) {
             $errors = $node->getActiveRecord()->getError();
             $error  = array_pop($errors);
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
-        } else if (!self::_checkModule(1, $projectId)) {
-            throw new Phprojekt_PublishedException('You do not have access to add projects on the parent project');
-        } else if (!self::_checkItemRights($node->getActiveRecord(), 'Project')) {
-            throw new Phprojekt_PublishedException('You do not have access to do this action');
-        } else {
-            if (null === $node->id || $node->id == 0) {
-                $parentNode->appendNode($node);
-            } else {
-                $node->projectId = 0;
-                $node->setParentNode($parentNode);
-            }
-
-            // Save access, modules and roles only if the user have "admin" right
-            $itemRights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-            $check      = $itemRights->getRights(1, $node->getActiveRecord()->id);
-            if ($check['currentUser']['admin']) {
-                $rights = Default_Helpers_Right::getItemRights($params, 1, $newItem);
-
-                if (count($rights) > 0) {
-                    $node->getActiveRecord()->saveRights($rights);
-                }
-
-                // Save the module-project relation
-                if (isset($params['moduleRelation'])) {
-                    if (!isset($params['checkModuleRelation'])) {
-                        $params['checkModuleRelation'] = array();
-                    }
-                    $saveModules = array();
-                    foreach ($params['checkModuleRelation'] as $checkModule => $checkValue) {
-                        if ($checkValue == 1) {
-                            $saveModules[] = $checkModule;
-                        }
-                    }
-                    $node->getActiveRecord()->saveModules($saveModules);
-                }
-
-                // Save the role-user-project relation
-                if (isset($params['userRelation'])) {
-                    $model = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
-                    $model->saveRelation($params['roleRelation'], array_keys($params['userRelation']),
-                        $node->getActiveRecord()->id);
-                }
-            }
-
-            return $node->getActiveRecord();
         }
+
+        if (!self::_checkModule(1, $node->projectId)) {
+            throw new Phprojekt_PublishedException(
+                'You do not have access to add projects on the parent project');
+        }
+
+        $userId = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $model  = $node->getActiveRecord();
+        $rights = Default_Helpers_Right::getRights($params);
+        if ($newItem) {
+            if (!$parentNode->getActiveRecord()->hasRight($userId, Phprojekt_Acl::CREATE)) {
+                throw new Phprojekt_PublishedException(
+                    'You do not have the necessary create right');
+            }
+            $rights[$userId] = Phprojekt_Acl::ALL;
+            $parentNode->appendNode($node);
+        } else if (!$model->hasRight($userId, Phprojekt_Acl::WRITE, $model->id)) {
+            throw new Phprojekt_PublishedException(
+                'You do not have the necessary write right');
+        }
+
+        if ($newItem || $model->hasRight($userId, Phprojekt_Acl::ADMIN, $model->id)) {
+            /* ensure we have at least one right */
+            if (count($rights) <= 0) {
+                throw new Phprojekt_PublishedException(
+                    'At least one person must have access to this item');
+            }
+
+            $model->saveRights($rights);
+            // Save the module-project relation
+            if (isset($params['moduleRelation'])) {
+                if (!isset($params['checkModuleRelation'])) {
+                    $params['checkModuleRelation'] = array();
+                }
+                $saveModules = array();
+                foreach ($params['checkModuleRelation'] as $checkModule => $checkValue) {
+                    if ($checkValue == 1) {
+                        $saveModules[] = $checkModule;
+                    }
+                }
+                $model->saveModules($saveModules);
+            }
+
+            // Save the role-user-project relation
+            if (isset($params['userRelation'])) {
+                $pru = new Project_Models_ProjectRoleUserPermissions();
+                $pru->saveRelation($params['roleRelation'], array_keys($params['userRelation']),
+                    $node->getActiveRecord()->id);
+            }
+        }
+
+        //FIXME: This hurts. It is needed to make Node_Database save everything.
+        $node->projectId = 0;
+        $node->setParentNode($parentNode);
+
+        return $model;
     }
 
     /**
@@ -149,140 +177,102 @@ final class Default_Helpers_Save
      */
     protected static function _saveModel(Phprojekt_Model_Interface $model, array $params)
     {
-        foreach ($params as $k => $v) {
-            if (isset($model->$k)) {
-                // Don't allow to set the id on save, since it is done by the ActiveRecord
-                if (!in_array($k, array('id'))) {
-                    $model->$k = $v;
-                }
-            }
-        }
-
-        if (empty($model->id)) {
-            $newItem = true;
-        } else {
-            $newItem = false;
-        }
-
-        // Set the owner
-        if ($newItem && isset($model->ownerId)) {
-            $model->ownerId = Phprojekt_Auth::getUserId();
-        }
-
-        // Parent Project
-        if (isset($model->projectId)) {
-            $projectId = $model->projectId;
-        } else {
-            $projectId = 0;
-        }
-
-        // Checks
+        $newItem    = empty($params['id']);
+        $model      = self::parameterToModel($model, $params, $newItem);
+        $projectId  = ($model->hasField('projectId')) ? $model->projectId : 0;
+        $userId     = Phprojekt_Auth_Proxy::getEffectiveUserId();
         $moduleName = Phprojekt_Loader::getModuleFromObject($model);
         $moduleId   = Phprojekt_Module::getId($moduleName);
+
         if (!$model->recordValidate()) {
             $errors = $model->getError();
             $error  = array_pop($errors);
             throw new Phprojekt_PublishedException($error['label'] . ': ' . $error['message']);
-        } else if (!self::_checkModule($moduleId, $projectId)) {
-            throw new Phprojekt_PublishedException('The parent project do not have enabled this module');
-        } else if (!self::_checkItemRights($model, $moduleName)) {
-            throw new Phprojekt_PublishedException('You do not have access to do this action');
-        } else {
+        }
+
+        if (!self::_checkModule($moduleId, $projectId)) {
+            throw new Phprojekt_PublishedException(
+                'The parent project do not have enabled this module');
+        }
+
+        $rights = Default_Helpers_Right::getRights($params);
+
+        if ($model instanceof Phprojekt_Item_Abstract) {
+            if ($newItem && !Phprojekt_Module::saveTypeIsGlobal($moduleId)) {
+                $project = new Project_Models_Project();
+                $project->find($projectId);
+                if (!$project->hasRight($userId, Phprojekt_Acl::CREATE)) {
+                    throw new Phprojekt_PublishedException(
+                        'You do not have the necessary create right');
+                }
+                $rights[$userId] = Phprojekt_Acl::ALL;
+            } else if (!$model->hasRight($userId, Phprojekt_Acl::WRITE)) {
+                throw new Phprojekt_PublishedException(
+                    'You do not have the necessary wrte right');
+            }
+
             // Set the projectId to 1 for global modules
             // @TODO Remove the Timecard limitation
-            if (isset($model->projectId) && Phprojekt_Module::saveTypeIsGlobal($moduleId)
+            if ($model->hasField('projectId') && Phprojekt_Module::saveTypeIsGlobal($moduleId)
                 && Phprojekt_Module::getModuleName($moduleId) != 'Timecard') {
-                $model->projectId = 1;
-            }
+                    $model->projectId = 1;
+                }
 
             $model->save();
 
             // Save access only if the user have "admin" right
-            $itemRights = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
-            $check      = $itemRights->getRights($moduleId, $model->id);
-            if ($check['currentUser']['admin']) {
-                if ($moduleName == 'Core') {
-                    $rights = Default_Helpers_Right::getModuleRights($params);
-                } else {
-                    $rights = Default_Helpers_Right::getItemRights($params, $moduleId, $newItem);
+            if ($newItem || $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::ADMIN)) {
+                if (!Phprojekt_Auth_Proxy::isAdminUser() && count($rights) <= 0) {
+                    throw new Phprojekt_PublishedException(
+                        'At least one person must have access to this item');
                 }
-
-                if (count($rights) > 0) {
-                    $model->saveRights($rights);
-                }
+                $model->saveRights($rights);
             }
 
-            return $model;
+        } else {
+            $model->save();
+            $model->saveRights($rights);
         }
+
+        return $model;
     }
 
     /**
-     * Overwrite call to support multiple save routines.
+     * Save helper for tree nodes and models
      *
      * @throws Exception If validation of parameters fails.
      *
      * @return void
      */
-    public static function save()
+    public static function save($model, array $params, $parentId = null)
     {
-        $arguments = func_get_args();
-        $model     = $arguments[0];
-        $params    = $arguments[1];
-
-        if (func_num_args() < 2) {
-            throw new Phprojekt_PublishedException('Two arguments expected');
-        }
-
-        if (!is_array($params)) {
-            throw new Phprojekt_PublishedException('Second parameter needs to be an array');
-        }
-
         if ($model instanceof Phprojekt_Tree_Node_Database) {
-            if (func_num_args() == 3) {
-                $parentId = $arguments[2];
-            } else if (array_key_exists('projectId', $params)) {
-                $parentId = $params['projectId'];
-            } else {
-                throw new Phprojekt_PublishedException('No parent id found in parameters or passed');
+            if (is_null($parentId)) {
+                if (array_key_exists('projectId', $params)) {
+                    $parentId = $params['projectId'];
+                } else {
+                    throw new Phprojekt_PublishedException('No parent id found in parameters or passed');
+                }
             }
 
-            $return = self::_saveTree($model, $params, $parentId);
+            $returnModel = self::_saveTree($model, $params, $parentId);
+            $notifyModel = $model->getActiveRecord();
+        } else if ($model instanceof Phprojekt_Model_Interface) {
+            $returnModel = self::_saveModel($model, $params);
+            $notifyModel = $model;
+        }
 
-            // Send mail notification?
-            if (array_key_exists('sendNotification', $params)) {
-                if ($params['sendNotification'] == 1) {
-                    $model->getActiveRecord()->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
-                }
+        if ($notifyModel instanceof Phprojekt_Item_Abstract) {
+            if (isset($params['sendNotification']) && $params['sendNotification']) {
+                $notifyModel->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
             }
 
             if (Phprojekt::getInstance()->getConfig()->frontendMessages) {
-                $model->getActiveRecord()->getNotification()->saveFrontendMessage();
+                $notifyModel->getNotification()->saveFrontendMessage();
             }
-
-            return $return;
         }
 
-        if ($model instanceof Phprojekt_Model_Interface) {
-            $return = self::_saveModel($model, $params);
-
-            // Send mail notification?
-            if (array_key_exists('sendNotification', $params)) {
-                if ($params['sendNotification'] == 1) {
-                    $model->getNotification()->send(Phprojekt_Notification::TRANSPORT_MAIL_TEXT);
-                }
-            }
-
-            if (Phprojekt::getInstance()->getConfig()->frontendMessages) {
-                if (method_exists($model, 'getNotification')) {
-                    $model->getNotification()->saveFrontendMessage();
-                }
-            }
-
-            return $return;
-
-        }
-
-        return true;
+        return $model;
     }
 
     /**
@@ -294,60 +284,12 @@ final class Default_Helpers_Save
      */
     private static function _checkModule($moduleId, $projectId)
     {
-        $boolean = false;
-        if ($projectId > 0) {
-            if ($projectId == 1 && !Phprojekt_Module::saveTypeIsNormal($moduleId)) {
-                $boolean = true;
-            } else {
-                if (!Phprojekt_Module::saveTypeIsNormal($moduleId)) {
-                    $boolean = true;
-                } else {
-                    $relation = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
-                    $modules  = $relation->getProjectModulePermissionsById($projectId);
-                    if ($modules['data'][$moduleId]['inProject']) {
-                        $boolean = true;
-                    } else {
-                        $boolean = false;
-                    }
-                }
-            }
-        } else {
-            $boolean = true;
-        }
-        return $boolean;
-    }
-
-    /**
-     * Check if the user has write access to the item if is not a global module.
-     *
-     * @param Phprojekt_Model_Interface $model      The model to save.
-     * @param string                    $moduleName The current module.
-     *
-     * @return boolean False if not.
-     */
-    private static function _checkItemRights($model, $moduleName)
-    {
-        $canWrite = false;
-
-        if ($moduleName == 'Core') {
-            return Phprojekt_Auth::isAdminUser();
-        } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))) {
-            $itemRights = $model->getRights();
-
-            if (isset($itemRights['currentUser'])) {
-                if (!$itemRights['currentUser']['write']  &&
-                    !$itemRights['currentUser']['create'] &&
-                    !$itemRights['currentUser']['copy']   &&
-                    !$itemRights['currentUser']['admin']) {
-                    $canWrite = false;
-                } else {
-                    $canWrite = true;
-                }
-            }
-        } else {
-            $canWrite = true;
+        if ($projectId <= 0 || !Phprojekt_Module::saveTypeIsNormal($moduleId)) {
+            return true;
         }
 
-        return $canWrite;
+        $relation = new Project_Models_ProjectModulePermissions();
+        $modules  = $relation->getProjectModulePermissionsById($projectId);
+        return !empty($modules['data'][$moduleId]['inProject']);
     }
 }

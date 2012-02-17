@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.dtl._Templated"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.dtl._Templated"] = true;
 dojo.provide("dojox.dtl._Templated");
 dojo.require("dijit._Templated");
 dojo.require("dojox.dtl._base");
@@ -75,7 +66,7 @@ dojo.declare("dojox.dtl._Templated", dijit._Templated, {
 				inherited: {dir: this.dir, lang: this.lang}
 			}));
 
-			//Restore the query. 
+			//Restore the query.
 			if(qry){
 				parser._query = qry;
 				parser._attrName = attr;
@@ -109,7 +100,7 @@ dojo.declare("dojox.dtl._Templated", dijit._Templated, {
 
 		templateString = dojo.string.trim(templateString || dojo.cache(templatePath, {sanitize: true}));
 
-		if(	this._dijitTemplateCompat && 
+		if(	this._dijitTemplateCompat &&
 			(alwaysUseString || templateString.match(/\$\{([^\}]+)\}/g))
 		){
 			templateString = this._stringRepl(templateString);
@@ -134,5 +125,3 @@ dojo.declare("dojox.dtl._Templated", dijit._Templated, {
 		this.inherited(arguments);
 	}
 });
-
-}

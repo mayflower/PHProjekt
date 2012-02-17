@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.math.stats"]||(dojo._hasResource["dojox.math.stats"]=!0,dojo.provide("dojox.math.stats"),dojo.getObject("math.stats",!0,dojox),function(){var g=dojox.math.stats;dojo.mixin(g,{sd:function(a){return Math.sqrt(g.variance(a))},variance:function(a){var b=0,c=0;dojo.forEach(a,function(a){b+=a;c+=Math.pow(a,2)});return c/a.length-Math.pow(b/a.length,2)},bestFit:function(a,b,c){b=b||"x";c=c||"y";a[0]!==void 0&&typeof a[0]=="number"&&(a=dojo.map(a,function(a,b){return{x:b,y:a}}));
+for(var d=0,f=0,h=0,g=0,i=0,l=0,m=0,j=a.length,k,e=0;e<j;e++)d+=a[e][b],f+=a[e][c],h+=Math.pow(a[e][b],2),g+=Math.pow(a[e][c],2),i+=a[e][b]*a[e][c];for(e=0;e<j;e++)k=a[e][b]-d/j,l+=k*k,m+=k*a[e][c];a=m/(l||1);h=Math.sqrt((h-Math.pow(d,2)/j)*(g-Math.pow(f,2)/j));if(h===0)throw Error("dojox.math.stats.bestFit: the denominator for Pearson's R is 0.");i=(i-d*f/j)/h;h=Math.pow(i,2);a<0&&(i=-i);return{slope:a,intercept:(f-d*a)/(j||1),r:i,r2:h}},forecast:function(a,b,c,d){a=g.bestFit(a,c,d);return a.slope*
+b+a.intercept},mean:function(a){var b=0;dojo.forEach(a,function(a){b+=a});return b/Math.max(a.length,1)},min:function(a){return Math.min.apply(null,a)},max:function(a){return Math.max.apply(null,a)},median:function(a){var b=a.slice(0).sort(function(a,b){return a-b});return(b[Math.floor(a.length/2)]+b[Math.ceil(a.length/2)])/2},mode:function(a){var b={},c=0,d=Number.MIN_VALUE;dojo.forEach(a,function(a){b[a]!==void 0?b[a]++:b[a]=1});for(var f in b)d<b[f]&&(d=b[f],c=f);return c},sum:function(a){var b=
+0;dojo.forEach(a,function(a){b+=a});return b},approxLin:function(a,b){var c=b*(a.length-1),d=Math.ceil(c),f=d-1;return f<0?a[0]:d>=a.length?a[a.length-1]:a[f]*(d-c)+a[d]*(c-f)},summary:function(a,b){b||(a=a.slice(0),a.sort(function(a,b){return a-b}));var c=g.approxLin;return{min:a[0],p25:c(a,0.25),med:c(a,0.5),p75:c(a,0.75),max:a[a.length-1],p10:c(a,0.1),p90:c(a,0.9)}}})}());

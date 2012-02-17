@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.layout.GridContainerLite"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.layout.GridContainerLite"] = true;
 dojo.provide("dojox.layout.GridContainerLite");
 
 dojo.require("dijit._Templated");
@@ -63,13 +54,13 @@ dojo.declare(
 	// 	|	});
 	
 	//	autoRefresh: Boolean
-	//		Enable the refresh of registered areas on drag start. 
+	//		Enable the refresh of registered areas on drag start.
 	autoRefresh: true,
 
 
 	// templateString: String
 	//		template of gridContainer.
-	templateString: dojo.cache("dojox.layout", "resources/GridContainer.html", "<div id=\"${id}\" class=\"gridContainer\" dojoAttachPoint=\"containerNode\" tabIndex=\"0\" dojoAttachEvent=\"onkeypress:_selectFocus\">\r\n\t<div dojoAttachPoint=\"gridContainerDiv\">\r\n\t\t<table class=\"gridContainerTable\" dojoAttachPoint=\"gridContainerTable\" cellspacing=\"0\" cellpadding=\"0\">\r\n\t\t\t<tbody>\r\n\t\t\t\t<tr dojoAttachPoint=\"gridNode\" >\r\n\t\t\t\t\t\r\n\t\t\t\t</tr>\r\n\t\t\t</tbody>\r\n\t\t</table>\r\n\t</div>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.layout", "resources/GridContainer.html"),
 
 	// dragHandleClass: Array :
 	//		CSS class enabling a drag handle on a child.
@@ -183,6 +174,10 @@ dojo.declare(
 			if(widget.resize && dojo.isFunction(widget.resize)){
 				widget.resize();
 			}
+
+			// Update the column of the widget
+			widget.set("column", node.parentNode.cellIndex);
+			
 			if(this.doLayout){
 				var domNodeHeight = this._contentBox.h,
 					divHeight = dojo.contentBox(this.gridContainerDiv).h;
@@ -330,7 +325,7 @@ dojo.declare(
 		i = 0;
 		while(i < this.nbZones){
 			// Add the parameter accept in each zone used by AreaManager
-			// (see method dojox.mdnd.AreaManager:registerByNode)			
+			// (see method dojox.mdnd.AreaManager:registerByNode)
 			this._grid.push({
 				'node': dojo.create("td", {
 					'class': "gridContainerZone",
@@ -343,6 +338,12 @@ dojo.declare(
 			});
 			i++;
 		}
+	},
+	
+	_getZonesAttr: function(){
+		// summary:
+		//   return array of zone (domNode)
+		return dojo.query(".gridContainerZone",  this.containerNode);
 	},
 
 	enableDnd: function(){
@@ -451,6 +452,7 @@ dojo.declare(
 				dojo.attr(child.domNode, "tabIndex", "0");
 			}
 		}
+		child.set("column", column);
 		return child; // Widget
 	},
 
@@ -499,7 +501,7 @@ dojo.declare(
 	_setColWidthsAttr: function(value){
 		this.colWidths = dojo.isString(value) ? value.split(",") : (dojo.isArray(value) ? value : [value]);
 		
-		if(this._started){ 
+		if(this._started){
 			this._updateColumnsWidth();
 		}
 	},
@@ -818,5 +820,3 @@ dojo.extend(dijit._Widget, {
 	//		Defined only if dojo.require("dojox.layout.GridContainerLite") is done.
 	dragRestriction : false
 });
-
-}

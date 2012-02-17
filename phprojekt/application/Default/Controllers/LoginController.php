@@ -52,7 +52,7 @@ class LoginController extends Zend_Controller_Action
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
-        $this->render('index');
+        $this->render('login');
     }
 
     /**
@@ -80,15 +80,20 @@ class LoginController extends Zend_Controller_Action
         $hash       = Cleaner::sanitize('xss', $this->getRequest()->getParam('hash', null));
         $keepLogged = (int) $this->getRequest()->getParam('keepLogged', 0);
         $keepLogged = ($keepLogged == 1) ? true : false;
+        $loginServer = $this->getRequest()->getParam('domain', null);
 
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         try {
-            $success = Phprojekt_Auth::login($username, $password, $keepLogged);
+            $success = Phprojekt_Auth::login(
+                $username,
+                $password,
+                array('keepLogged' => $keepLogged, 'loginServer' => $loginServer)
+            );
             if ($success === true) {
                 $config = Phprojekt::getInstance()->getConfig();
-                $frontendMessage = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification');
+                $frontendMessage = new Phprojekt_Notification();
                 $frontendMessage->setControllProcess(Phprojekt_Notification::LAST_ACTION_LOGIN);
                 $frontendMessage->saveFrontendMessage();
                 $this->_redirect($config->webpath . 'index.php' . $hash);
@@ -99,7 +104,7 @@ class LoginController extends Zend_Controller_Action
             $this->view->username = $username;
             $this->view->hash     = $hash;
 
-            $this->render('index');
+            $this->render('login');
         }
     }
 
@@ -151,7 +156,7 @@ class LoginController extends Zend_Controller_Action
      */
     public function logoutAction()
     {
-        $frontendMessage = Phprojekt_Loader::getLibraryClass('Phprojekt_Notification');
+        $frontendMessage = new Phprojekt_Notification();
         $frontendMessage->setControllProcess(Phprojekt_Notification::LAST_ACTION_LOGOUT);
         $frontendMessage->saveFrontendMessage();
 

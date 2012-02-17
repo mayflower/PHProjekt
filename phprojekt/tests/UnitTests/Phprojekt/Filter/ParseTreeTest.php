@@ -21,7 +21,6 @@
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Eglers Parse Tree

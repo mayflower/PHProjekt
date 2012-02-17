@@ -1,1 +1,17 @@
-({"text":"Описание:","insertImageTitle":"Свойства изображения","set":"Задать","newWindow":"Новое окно","topWindow":"Окно верхнего уровня","target":"Целевой объект:","createLinkTitle":"Свойства ссылки","parentWindow":"Родительское окно","currentWindow":"Текущее окно","url":"URL:"})
+define(
+//begin v1.x content
+({
+	createLinkTitle: "Свойства ссылки",
+	insertImageTitle: "Свойства изображения",
+	url: "URL:",
+	text: "Описание:",
+	target: "Целевой объект:",
+	set: "Задать",
+	currentWindow: "Текущее окно",
+	parentWindow: "Родительское окно",
+	topWindow: "Верхнее окно",
+	newWindow: "Новое окно"
+})
+
+//end v1.x content
+);

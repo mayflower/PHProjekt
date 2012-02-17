@@ -1,13 +1,5 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+define("dojox/data/GoogleSearchStore", ["dojo", "dojox", "dojo/io/script"], function(dojo, dojox) {
 
-
-if(!dojo._hasResource["dojox.data.GoogleSearchStore"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.data.GoogleSearchStore"] = true;
-dojo.provide("dojox.data.GoogleSearchStore");
 dojo.provide("dojox.data.GoogleWebSearchStore");
 dojo.provide("dojox.data.GoogleBlogSearchStore");
 dojo.provide("dojox.data.GoogleLocalSearchStore");
@@ -15,8 +7,6 @@ dojo.provide("dojox.data.GoogleVideoSearchStore");
 dojo.provide("dojox.data.GoogleNewsSearchStore");
 dojo.provide("dojox.data.GoogleBookSearchStore");
 dojo.provide("dojox.data.GoogleImageSearchStore");
-
-dojo.require("dojo.io.script");
 
 dojo.experimental("dojox.data.GoogleSearchStore");
 
@@ -86,7 +76,7 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 
 	// _attributes: Array
 	// The list of attributes that this store supports
-	_attributes: [	"unescapedUrl", "url", "visibleUrl", "cacheUrl", "title", 
+	_attributes: [	"unescapedUrl", "url", "visibleUrl", "cacheUrl", "title",
 			"titleNoFormatting", "content", "estimatedResultCount"],
 
 	// _aggregtedAttributes: Hash
@@ -110,7 +100,7 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 
 
 	// _queryAttrs: Hash
-	// Maps query hash keys to Google query parameters. 
+	// Maps query hash keys to Google query parameters.
 	_queryAttrs: {
 		text: 'q'
 	},
@@ -251,7 +241,7 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 
 		if(!request.query){
 			if(request.onError){
-				request.onError.call(scope, new Error(this.declaredClass + 
+				request.onError.call(scope, new Error(this.declaredClass +
 					": A query must be specified."));
 				return;
 			}
@@ -261,7 +251,7 @@ dojo.declare("dojox.data.GoogleSearchStore",null,{
 		var query = {};
 		for(var attr in this._queryAttrs) {
 			query[attr] = request.query[attr];
-		}		
+		}
 		request = {
 			query: query,
 			onComplete: request.onComplete,
@@ -508,7 +498,7 @@ dojo.declare("dojox.data.GoogleBlogSearchStore", dojox.data.GoogleSearchStore,{
 	//		</ul>
 	//		The query accepts one parameter: text - The string to search for
 	_type: "blogs",
-	_attributes: ["blogUrl", "postUrl", "title", "titleNoFormatting", "content", 
+	_attributes: ["blogUrl", "postUrl", "title", "titleNoFormatting", "content",
 			"author", "publishedDate"],
 	_aggregatedAttributes: { }
 });
@@ -653,10 +643,11 @@ dojo.declare("dojox.data.GoogleImageSearchStore", dojox.data.GoogleSearchStore,{
 	//		</ul>
 	//		The query accepts one parameter: text - The string to search for
 	_type: "images",
-	_attributes: ["title", "titleNoFormatting", "visibleUrl", "url", "unescapedUrl", 
-			"originalContextUrl", "width", "height", "tbWidth", "tbHeight", 
+	_attributes: ["title", "titleNoFormatting", "visibleUrl", "url", "unescapedUrl",
+			"originalContextUrl", "width", "height", "tbWidth", "tbHeight",
 			"tbUrl", "content", "contentNoFormatting"],
 	_aggregatedAttributes: { }
 });
 
-}
+return dojox.data.GoogleSearchStore;
+});

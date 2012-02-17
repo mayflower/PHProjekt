@@ -1,15 +1,29 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+define("dijit/tree/_dndContainer", ["dojo", "dijit", "dojo/dnd/common", "dojo/dnd/Container"], function(dojo, dijit) {
 
+dojo.getObject("tree", true, dojo);
 
-if(!dojo._hasResource["dijit.tree._dndContainer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit.tree._dndContainer"] = true;
-dojo.provide("dijit.tree._dndContainer");
-dojo.require("dojo.dnd.common");
-dojo.require("dojo.dnd.Container");
+dijit.tree._compareNodes = function(n1, n2){
+	if(n1 === n2){
+		return 0;
+	}
+	
+	if('sourceIndex' in document.documentElement){ //IE
+		//TODO: does not yet work if n1 and/or n2 is a text node
+		return n1.sourceIndex - n2.sourceIndex;
+	}else if('compareDocumentPosition' in document.documentElement){ //FF, Opera
+		return n1.compareDocumentPosition(n2) & 2 ? 1: -1;
+	}else if(document.createRange){ //Webkit
+		var r1 = doc.createRange();
+		r1.setStartBefore(n1);
+
+		var r2 = doc.createRange();
+		r2.setStartBefore(n2);
+
+		return r1.compareBoundaryPoints(r1.END_TO_END, r2);
+	}else{
+		throw Error("dijit.tree._compareNodes don't know how to compare two different nodes in this browser");
+	}
+};
 
 dojo.declare("dijit.tree._dndContainer",
 	null,
@@ -72,9 +86,9 @@ dojo.declare("dijit.tree._dndContainer",
 			// tags:
 			//		protected
 
-			var node = this.selection[key],
+			var widget = this.selection[key],
 				ret = {
-					data: dijit.getEnclosingWidget(node),
+					data: widget,
 					type: ["treeNode"]
 				};
 
@@ -96,8 +110,7 @@ dojo.declare("dijit.tree._dndContainer",
 			//		Called when mouse is moved over a TreeNode
 			// tags:
 			//		protected
-			this.current = widget.rowNode;
-			this.currentWidget = widget;
+			this.current = widget;
 		},
 
 		onMouseOut: function(/*TreeNode*/ widget, /*Event*/ evt){
@@ -106,7 +119,6 @@ dojo.declare("dijit.tree._dndContainer",
 			// tags:
 			//		protected
 			this.current = null;
-			this.currentWidget = null;
 		},
 
 		_changeState: function(type, newState){
@@ -119,8 +131,7 @@ dojo.declare("dijit.tree._dndContainer",
 			var prefix = "dojoDnd" + type;
 			var state = type.toLowerCase() + "State";
 			//dojo.replaceClass(this.node, prefix + newState, prefix + this[state]);
-			dojo.removeClass(this.node, prefix + this[state]);
-			dojo.addClass(this.node, prefix + newState);
+			dojo.replaceClass(this.node, prefix + newState, prefix + this[state]);
 			this[state] = newState;
 		},
 
@@ -161,4 +172,6 @@ dojo.declare("dijit.tree._dndContainer",
 		}
 });
 
-}
+
+return dijit.tree._dndContainer;
+});

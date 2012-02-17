@@ -1,1 +1,30 @@
-({"buttonSet":"Defineix","insertTableTitle":"Insereix taula","insertTableRowAfterLabel":"Afegeix fila després","center":"centrat","deleteTableColumnLabel":"Suprimeix columna","right":"dreta","insertTableColumnBeforeLabel":"Afegeix columna abans","tableWidth":"Amplada de taula:","buttonInsert":"Insereix","default":"default","align":"Alinea:","insertTableRowBeforeLabel":"Afegeix fila abans","cellSpacing":"Espaiat de cel·la:","pixels":"píxels","selectTableLabel":"Selecciona taula","rows":"Files:","modifyTableTitle":"Modifica taula","cellPadding":"Emplenat de cel·la:","deleteTableRowLabel":"Suprimeix fila","backgroundColor":"Color de fons:","insertTableColumnAfterLabel":"Afegeix columna després","left":"esquerra","borderThickness":"Gruix del contorn","columns":"Columnes:","percent":"percentatge","borderColor":"Color del contorn"})
+({
+	insertTableTitle: "Insereix taula",
+	modifyTableTitle: "Modifica taula",
+	rows: "Files:",
+	columns: "Columnes:",
+	align: "Alinea:",
+	cellPadding: "Emplenat de cel·la:",
+	cellSpacing: "Espaiat de cel·la:",
+	tableWidth: "Amplada de taula:",
+	backgroundColor: "Color de fons:",
+	borderColor: "Color del contorn",
+	borderThickness: "Gruix del contorn",
+	percent: "percentatge",
+	pixels: "píxels",
+	"default": "default",
+	left: "esquerra",
+	center: "centrat",
+	right: "dreta",
+	buttonSet: "Defineix", // translated elsewhere?
+	buttonInsert: "Insereix",
+	buttonCancel: "Cancel·la",
+
+	selectTableLabel: "Selecciona taula",
+	insertTableRowBeforeLabel: "Afegeix fila abans",
+	insertTableRowAfterLabel: "Afegeix fila després",
+	insertTableColumnBeforeLabel: "Afegeix columna abans",
+	insertTableColumnAfterLabel: "Afegeix columna després",
+	deleteTableRowLabel: "Suprimeix fila",
+	deleteTableColumnLabel: "Suprimeix columna"
+})

@@ -18,15 +18,15 @@
             {{value|safe}}
         </div>
         <div dojoType="phpr.Dialog" id="dialogFor_{{id}}" draggable="false" refocus="false" execute="
-            var value = dijit.byId('editorFor_{{id}}').get('value');
-            dojo.byId('displayHtml_{{id}}').innerHTML = value;
-            dijit.byId('{{id}}').set('value', value);
-            dojo.byId('displayText_{{id}}').style.display = 'none';
-            dojo.byId('textButtons_{{id}}').style.display = 'none';
-            dojo.byId('displayHtml_{{id}}').style.display = 'inline';
-            dojo.byId('htmlButtons_{{id}}').style.display = 'inline';"
-        style="width: 82%;">
-            <div dojoType="dijit.Editor" id="editorFor_{{id}}" plugins="['bold', 'italic', 'underline',
+                var value = dijit.byId('editorFor_{{id}}').attr('value');
+                dojo.byId('displayHtml_{{id}}').innerHTML = value;
+                dijit.byId('{{id}}').set('value', value);
+                dojo.byId('displayText_{{id}}').style.display = 'none';
+                dojo.byId('textButtons_{{id}}').style.display = 'none';
+                dojo.byId('displayHtml_{{id}}').style.display = 'inline';
+                dojo.byId('htmlButtons_{{id}}').style.display = 'inline';"
+                    style="width: 82%;">
+            <div dojoType="phpr.Default.EditorContainer" id="editorFor_{{id}}" extraPlugins="['bold', 'italic', 'underline',
                 'strikethrough', 'subscript', 'superscript', 'removeFormat','|', 'justifyCenter',
                 'justifyFull', 'justifyLeft', 'justifyRight', 'delete', '|', 'insertOrderedList',
                 'insertUnorderedList', 'indent', 'outdent', '|', 'insertHorizontalRule', 'createLink', 'insertImage',
@@ -50,6 +50,7 @@
                 dojo.byId('displayHtml_{{id}}').style.display = 'inline';
                 dojo.byId('htmlButtons_{{id}}').style.display = 'inline';
                 dijit.byId('editorFor_{{id}}').set('value', dijit.byId('{{id}}').get('value'));
+                dijit.byId('editorFor_{{id}}').show();
                 dijit.byId('dialogFor_{{id}}').show();">
             </button>
         </div>
@@ -58,7 +59,8 @@
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="edit" class="editButton"
             title="{{editHtmlTxt}}" onclick="
                 dijit.byId('editorFor_{{id}}').set('value', dijit.byId('{{id}}').get('value'));
-                dijit.byId('dialogFor_{{id}}').show();">
+                dijit.byId('editorFor_{{id}}').show();
+                dijit.byId('dialogFor_{{id}}').show(); ">
             </button>
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="toTextButton" class="toTextButton"
             title="{{textModeTxt}}" onclick="

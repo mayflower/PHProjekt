@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.date.hebrew.numerals"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.date.hebrew.numerals"] = true;
 dojo.provide("dojox.date.hebrew.numerals");
 
 //Conversion from "Hindi" numerals to Hebrew numerals and vice versa
@@ -48,7 +39,7 @@ dojo.provide("dojox.date.hebrew.numerals");
 	 
 	var convertNumberToStr = function(num){
 		var str  = "", n = 4, j = 9;
-  		while(num){ 
+  		while(num){
 			if(num >= n*100){
 				str += HUN.charAt(n-1);
 				num -= n*100;
@@ -65,9 +56,9 @@ dojo.provide("dojox.date.hebrew.numerals");
 			}else if(num > 0){
 				str += DIG.charAt(num-1);
 				num = 0;
-			}		
+			}
 		}
-		return str; //String	
+		return str; //String
 	};
 
 	dojox.date.hebrew.numerals.getYearHebrewLetters = function(/*Number */ year){
@@ -76,7 +67,7 @@ dojo.provide("dojox.date.hebrew.numerals");
 		// example:
 		// |		var date1 = new dojox.date.hebrew.Date();
 		// |
-		// |		document.writeln(dojox.date.hebrew.numerals.getYearHebrewLetters(date1.getFullYear());	
+		// |		document.writeln(dojox.date.hebrew.numerals.getYearHebrewLetters(date1.getFullYear());
 		
 		var rem = year % 1000;
 		//FIXME: tests include dates outside this range and seem to pass.
@@ -86,7 +77,7 @@ dojo.provide("dojox.date.hebrew.numerals");
 	
 	dojox.date.hebrew.numerals.parseYearHebrewLetters  = function(/*String hebrew year*/ year){
 		// summary: converts the year written in Hebrew numerals to an integer
-		//                   
+		//
 		// example:
 		// |		var date = new dojox.date.hebrew.Date();
 		// |        	date.setFullYear(dojox.date.hebrew.numerals.parseYearHebrewLetters('\u05ea\u05e9\u05e1\u05f4\u05d7'));
@@ -124,7 +115,7 @@ dojo.provide("dojox.date.hebrew.numerals");
 		// |		document.writeln(dojox.date.hebrew.numerals.getMonthHebrewLetters(date1.getMonth());
 
 		return transformChars(convertNumberToStr(month+1)); // String
-	};	
+	};
 
 	dojox.date.hebrew.numerals.parseMonthHebrewLetters = function(/*String*/monthStr){
 		// summary: converts a Hebrew numeral string representing
@@ -141,10 +132,8 @@ dojo.provide("dojox.date.hebrew.numerals");
 		var monnum = dojox.date.hebrew.numerals.parseDayHebrewLetters(monthStr) - 1;
 
 		if(monnum == -1 || monnum > 12){
-			throw new Error("The month name is incorrect , month = " + monnum); 
+			throw new Error("The month name is incorrect , month = " + monnum);
 		}
 		return monnum;
 	};
 })();
-
-}

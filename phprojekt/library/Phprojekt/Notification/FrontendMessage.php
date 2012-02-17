@@ -101,11 +101,10 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
             return false;
         }
 
-        $userObject     = PHProjekt_Loader::getLibraryClass('Phprojekt_User_User');
+        $userObject     = new Phprojekt_User_User();
         $user           = $userObject->find($messageData[0]->actorId);
-        $displaySetting = $userObject->getDisplay();
 
-        $data['user']        = $userObject->applyDisplay($displaySetting, $userObject);
+        $data['user']        = $userObject->displayName;
         $data['module']      = ucfirst(Phprojekt_Module::getModuleName($messageData[0]->moduleId));
         $data['process']     = $messageData[0]->process;
         $data['description'] = Phprojekt::getInstance()->translate($messageData[0]->description);
@@ -123,7 +122,7 @@ class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abst
         $data['time'] = date("H:i", Phprojekt_Converter_Time::utcToUser($messageData[0]->validFrom) + $addTime);
 
         // Convert project name
-        $project         = Phprojekt_Loader::getModel('Project', 'Project');
+        $project         = new Project_Models_Project();
         $data['project'] = $project->find($data['projectId'])->title;
 
         return $data;

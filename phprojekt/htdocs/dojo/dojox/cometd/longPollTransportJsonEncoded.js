@@ -1,18 +1,9 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.cometd.longPollTransportJsonEncoded"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.cometd.longPollTransportJsonEncoded"] = true;
 dojo.provide("dojox.cometd.longPollTransportJsonEncoded");
 dojo.require("dojox.cometd._base");
 
 dojox.cometd.longPollTransportJsonEncoded = new function(){
-	// This is an alternative implementation to that provided in logPollTransportFormEncoded.js 
-	// that sends messages as text/json rather than form encoding them. 
+	// This is an alternative implementation to that provided in logPollTransportFormEncoded.js
+	// that sends messages as text/json rather than form encoding them.
 	
 	this._connectionType="long-polling";
 	this._cometd=null;
@@ -166,5 +157,3 @@ dojox.cometd.longPollTransport = dojox.cometd.longPollTransportJsonEncoded;
 dojox.cometd.connectionTypes.register("long-polling", dojox.cometd.longPollTransport.check, dojox.cometd.longPollTransportJsonEncoded);
 dojox.cometd.connectionTypes.register("long-polling-json-encoded", dojox.cometd.longPollTransport.check, dojox.cometd.longPollTransportJsonEncoded);
 
-
-}

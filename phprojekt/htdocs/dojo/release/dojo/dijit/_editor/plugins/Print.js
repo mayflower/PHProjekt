@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dijit._editor.plugins.Print"]||(dojo._hasResource["dijit._editor.plugins.Print"]=!0,dojo.provide("dijit._editor.plugins.Print"),dojo.require("dijit._editor._Plugin"),dojo.require("dijit.form.Button"),dojo.require("dojo.i18n"),dojo.requireLocalization("dijit._editor","commands",null,"ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,kk,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw"),dojo.declare("dijit._editor.plugins.Print",dijit._editor._Plugin,{_initButton:function(){var a=dojo.i18n.getLocalization("dijit._editor",
+"commands"),b=this.editor;this.button=new dijit.form.Button({label:a.print,dir:b.dir,lang:b.lang,showLabel:!1,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"Print",tabIndex:"-1",onClick:dojo.hitch(this,"_print")})},setEditor:function(a){this.editor=a;this._initButton();this.editor.onLoadDeferred.addCallback(dojo.hitch(this,function(){this.editor.iframe.contentWindow.print||this.button.set("disabled",!0)}))},updateState:function(){var a=this.get("disabled");this.editor.iframe.contentWindow.print||
+(a=!0);this.button.set("disabled",a)},_print:function(){var a=this.editor.iframe;if(a.contentWindow.print)if(!dojo.isOpera&&!dojo.isChrome)dijit.focus(a),a.contentWindow.print();else{var b=this.editor.document,c=this.editor.get("value"),c="<html><head><meta http-equiv='Content-Type' content='text/html; charset='UTF-8'></head><body>"+c+"</body></html>",a=window.open("javascript: ''","","status=0,menubar=0,location=0,toolbar=0,width=1,height=1,resizable=0,scrollbars=0");a.document.open();a.document.write(c);
+a.document.close();if(b=b.getElementsByTagName("style"))for(c=0;c<b.length;c++){var e=b[c].innerHTML,d=a.document.createElement("style");d.appendChild(a.document.createTextNode(e));a.document.getElementsByTagName("head")[0].appendChild(d)}a.print();a.close()}}}),dojo.subscribe(dijit._scopeName+".Editor.getPlugin",null,function(a){if(!a.plugin&&a.args.name.toLowerCase()==="print")a.plugin=new dijit._editor.plugins.Print({command:"print"})}));

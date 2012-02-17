@@ -26,7 +26,7 @@ dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
         this.inherited(arguments);
 
         // Delete parent cache
-        var parentId = phpr.Tree.getParentId(phpr.currentProjectId);
+        var parentId = phpr.tree.getParentId(phpr.currentProjectId);
         var url      = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonList/nodeId/' + parentId;
         phpr.DataStore.deleteData({url: url});
 
@@ -40,6 +40,6 @@ dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
         // Summary:
         //    Actions after the saveChanges call returns success
         this.inherited(arguments);
-        phpr.Tree.loadTree();
+        phpr.tree.loadTree();
     }
 });

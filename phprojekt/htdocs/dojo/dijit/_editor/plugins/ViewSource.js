@@ -1,21 +1,4 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dijit._editor.plugins.ViewSource"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dijit._editor.plugins.ViewSource"] = true;
-dojo.provide("dijit._editor.plugins.ViewSource");
-
-dojo.require("dojo.window");
-dojo.require("dojo.i18n");
-
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.form.Button");
-
-dojo.requireLocalization("dijit._editor", "commands", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+define("dijit/_editor/plugins/ViewSource", ["dojo", "dijit", "dojo/window", "dojo/i18n", "dijit/_editor/_Plugin", "dijit/form/Button", "i18n!dijit/_editor/nls/commands"], function(dojo, dijit) {
 
 dojo.declare("dijit._editor.plugins.ViewSource",dijit._editor._Plugin,{
 	// summary:
@@ -153,35 +136,10 @@ dojo.declare("dijit._editor.plugins.ViewSource",dijit._editor._Plugin,{
 				html = this._filter(html);
 				ed.set("value", html);
 				this._pluginList = [];
-				this._disabledPlugins = dojo.filter(edPlugins, function(p){
+				dojo.forEach(edPlugins, function(p){
 					// Turn off any plugins not controlled by queryCommandenabled.
-					if(p && p.button && !p.button.get("disabled") &&
-						!(p instanceof dijit._editor.plugins.ViewSource)){
-						p._vs_updateState = p.updateState;
-						p.updateState = function(){
-							return false;
-						};
-						p.button.set("disabled", true);
-						if(p.command){
-							// FF has a weird behavior when spellcheck is off,
-							// queryCommandValue() returns true on the doc, and as such
-							// toggles 'on' some actions.  So, we need to explictly 
-							// toggle them off.  TODO:  Add a disable API to _Plugin.js
-							// It would aleviate the need for this.
-							switch(p.command){
-								case "bold":
-								case "italic":
-								case "underline":
-								case "strikethrough":
-								case "superscript":
-								case "subscript":
-									p.button.set("checked", false);
-									break;
-								default:
-									break;
-							}
-						}
-						return true;
+					if(!(p instanceof dijit._editor.plugins.ViewSource)){
+						p.set("disabled", true)
 					}
 				});
 
@@ -194,7 +152,7 @@ dojo.declare("dijit._editor.plugins.ViewSource",dijit._editor._Plugin,{
 				}
 
 				this.sourceArea.value = html;
-				var is = dojo.marginBox(ed.iframe.parentNode);
+				var is = dojo._getMarginSize(ed.iframe.parentNode);
 
 				dojo.marginBox(this.sourceArea, {
 					w: is.w,
@@ -242,6 +200,13 @@ dojo.declare("dijit._editor.plugins.ViewSource",dijit._editor._Plugin,{
 
 				//Trigger a check for command enablement/disablement.
 				this.editor.onNormalizedDisplayChanged();
+
+				this.editor.__oldGetValue = this.editor.getValue;
+				this.editor.getValue = dojo.hitch(this, function() {
+					var txt = this.sourceArea.value;
+					txt = this._filter(txt);
+					return txt;
+				});
 			}else{
 				// First check that we were in source view before doing anything.
 				// corner case for being called with a value of false and we hadn't
@@ -251,6 +216,11 @@ dojo.declare("dijit._editor.plugins.ViewSource",dijit._editor._Plugin,{
 				}
 				dojo.disconnect(this._resizeHandle);
 				delete this._resizeHandle;
+
+				if(this.editor.__oldGetValue){
+					this.editor.getValue = this.editor.__oldGetValue;
+					delete this.editor.__oldGetValue;
+				}
 
 				// Restore all the plugin buttons state.
 				ed.queryCommandEnabled = ed._sourceQueryCommandEnabled;
@@ -262,15 +232,11 @@ dojo.declare("dijit._editor.plugins.ViewSource",dijit._editor._Plugin,{
 					ed.endEditing();
 				}
 
-				dojo.forEach(this._disabledPlugins, function(p){
+				dojo.forEach(edPlugins, function(p){
 					// Turn back on any plugins we turned off.
-					p.button.set("disabled", false);
-					if(p._vs_updateState){
-						p.updateState = p._vs_updateState;
-					}
+					p.set("disabled", false);
 				});
 
-				this._disabledPlugins = null;
 				dojo.style(this.sourceArea, "display", "none");
 				dojo.style(ed.iframe, "display", "block");
 				delete ed._sourceQueryCommandEnabled;
@@ -293,6 +259,12 @@ dojo.declare("dijit._editor.plugins.ViewSource",dijit._editor._Plugin,{
 		}catch(e){
 			console.log(e);
 		}
+	},
+
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
 	},
 
 	_resize: function(){
@@ -565,4 +537,6 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	}
 });
 
-}
+
+return dijit._editor.plugins.ViewSource;
+});

@@ -72,34 +72,4 @@ interface Phprojekt_Model_Interface extends Iterator
      * @return boolean True on sucessful save.
      */
     public function save();
-
-    /**
-     * Validate the data of the current record.
-     *
-     * @return boolean True for valid.
-     */
-    public function recordValidate();
-
-    /**
-     * Gets the rights of the item for the current user.
-     *
-     * @return array Array of rights per user.
-     */
-    public function getRights();
-
-    /**
-     * Gets the rights of various items for the current user
-     *
-     * @param array $ids Array with various item IDs.
-     *
-     * @return array Array of rights per user.
-     */
-    public function getMultipleRights($ids);
-
-    /**
-     * Gets the rights of the item for other users.
-     *
-     * @return array Array of rights per user.
-     */
-    public function getUsersRights();
 }

@@ -1,1 +1,6 @@
-({"name":"Nume","size":"Dimensiune (în octeţi)","path":"Cale "})
+({
+name: "Nume",
+path: "Cale ",
+size: "Dimensiune (în octeţi)"
+})
+

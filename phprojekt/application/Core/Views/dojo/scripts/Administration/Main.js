@@ -46,7 +46,7 @@ dojo.declare("phpr.Administration.Main", phpr.Core.Main, {
 
     updateCacheData:function() {
         phpr.DataStore.deleteAllCache();
-        phpr.Tree.updateData();
+        phpr.tree.updateData();
         phpr.treeLastProjectSelected = null;
         if (this.form) {
             this.form.updateData();

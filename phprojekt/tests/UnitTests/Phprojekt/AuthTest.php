@@ -21,7 +21,6 @@
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests for Language Adapter
@@ -38,17 +37,27 @@ require_once 'PHPUnit/Framework.php';
  * @group      auth
  * @group      phprojekt-auth
  */
-class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
+class Phprojekt_AuthTest extends DatabaseTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->sharedFixture = Phprojekt::getInstance()->getDb();
+    }
+
+    protected function getDataSet()
+    {
+        return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
+    }
+
     /**
      * Test if login passes with user not logged it
      */
     public function testLoginWithoutSession()
     {
-        $this->setExpectedException('Phprojekt_Auth_UserNotLoggedInException');
         $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
         $authNamespace->unsetAll();
-        Phprojekt_Auth::isLoggedIn();
+        $this->assertFalse(Phprojekt_Auth::isLoggedIn());
     }
 
     /**
@@ -115,11 +124,7 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
      * This try has to log in the user
      */
     public function testLogin() {
-        try {
-            $tmp = Phprojekt_Auth::login('david', 'test');
-        } catch (Phprojekt_Auth_Exception $error) {
-            $this->fail($error->getMessage()." ".$error->getCode());
-        }
+        $tmp = Phprojekt_Auth::login('Test', 'test');
         $this->assertTrue($tmp);
 
         /* logged in needs to be true */
@@ -132,7 +137,7 @@ class Phprojekt_AuthTest extends PHPUnit_Framework_TestCase
     public function testUserId() {
         $user = new Phprojekt_User_User(array ('db' => $this->sharedFixture));
         $clone = $user->findUserById(1);
-        $this->assertEquals('david', $clone->username);
+        $this->assertEquals('Test', $clone->username);
 
         $clone = $user->findUserById(0);
         $this->assertEquals('', $clone->username);

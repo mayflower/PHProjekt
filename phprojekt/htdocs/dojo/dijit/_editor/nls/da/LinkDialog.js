@@ -1,1 +1,17 @@
-({"text":"Beskrivelse:","insertImageTitle":"Billedegenskaber","set":"Definér","newWindow":"Nyt vindue","topWindow":"Øverste vindue","target":"Mål:","createLinkTitle":"Linkegenskaber","parentWindow":"Overordnet vindue","currentWindow":"Aktuelt vindue","url":"URL:"})
+define(
+//begin v1.x content
+({
+	createLinkTitle: "Linkegenskaber",
+	insertImageTitle: "Billedegenskaber",
+	url: "URL:",
+	text: "Beskrivelse:",
+	target: "Mål:",
+	set: "Definér",
+	currentWindow: "Aktuelt vindue",
+	parentWindow: "Overordnet vindue",
+	topWindow: "Øverste vindue",
+	newWindow: "Nyt vindue"
+})
+
+//end v1.x content
+);

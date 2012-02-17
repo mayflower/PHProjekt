@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.plugins._Plugin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.plugins._Plugin"] = true;
 dojo.provide("dojox.drawing.plugins._Plugin");
 
 dojox.drawing.plugins._Plugin = dojox.drawing.util.oo.declare(
@@ -34,7 +25,7 @@ dojox.drawing.plugins._Plugin = dojox.drawing.util.oo.declare(
 		button:null,//gfx button
 		type:"dojox.drawing.plugins._Plugin",
 		connect: function(){
-			this._cons.push(dojo.connect.apply(dojo, arguments));	
+			this._cons.push(dojo.connect.apply(dojo, arguments));
 		},
 		disconnect: function(/*handle | Array*/handles){
 			// summary:
@@ -46,5 +37,3 @@ dojox.drawing.plugins._Plugin = dojox.drawing.util.oo.declare(
 		}
 	}
 );
-
-}

@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.data.util.JsonQuery"]||(dojo._hasResource["dojox.data.util.JsonQuery"]=!0,dojo.provide("dojox.data.util.JsonQuery"),dojo.declare("dojox.data.util.JsonQuery",null,{useFullIdInQueries:!1,_toJsonQuery:function(a,b){function k(b,e){var d=e.__id;if(d){var c={};c[g.idAttribute]=g.useFullIdInQueries?e.__id:e[g.idAttribute];e=c}for(var h in e){var c=e[h],l=b+(/^[a-zA-Z_][\w_]*$/.test(h)?"."+h:"["+dojo._escapeString(h)+"]");c&&typeof c=="object"?k(l,c):c!="*"&&(j+=(f?"":"&")+l+(!d&&
+typeof c=="string"&&a.queryOptions&&a.queryOptions.ignoreCase?"~":"=")+(g.simplifiedQuery?encodeURIComponent(c):dojo.toJson(c)),f=!1)}}var f=!0,g=this;if(a.query&&typeof a.query=="object"){var j="[?(";k("@",a.query);f?j="":j+=")]";a.queryStr=j.replace(/\\"|"/g,function(a){return a=='"'?"'":a})}else if(!a.query||a.query=="*")a.query="";var d=a.sort;if(d){a.queryStr=a.queryStr||(typeof a.query=="string"?a.query:"");f=!0;for(i=0;i<d.length;i++)a.queryStr+=(f?"[":",")+(d[i].descending?"\\":"/")+"@["+
+dojo._escapeString(d[i].attribute)+"]",f=!1;a.queryStr+="]"}if(b&&(a.start||a.count))a.queryStr=(a.queryStr||(typeof a.query=="string"?a.query:""))+"["+(a.start||"")+":"+(a.count?(a.start||0)+a.count:"")+"]";return typeof a.queryStr=="string"?(a.queryStr=a.queryStr.replace(/\\"|"/g,function(a){return a=='"'?"'":a}),a.queryStr):a.query},jsonQueryPagination:!0,fetch:function(a){this._toJsonQuery(a,this.jsonQueryPagination);return this.inherited(arguments)},isUpdateable:function(){return!0},matchesQuery:function(a,
+b){b._jsonQuery=b._jsonQuery||dojox.json.query(this._toJsonQuery(b));return b._jsonQuery([a]).length},clientSideFetch:function(a,b){a._jsonQuery=a._jsonQuery||dojox.json.query(this._toJsonQuery(a));return this.clientSidePaging(a,a._jsonQuery(b))},querySuperSet:function(a,b){return!a.query?b.query:this.inherited(arguments)}}));

@@ -1,19 +1,8 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojo.rpc.JsonpService"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojo.rpc.JsonpService"] = true;
-dojo.provide("dojo.rpc.JsonpService");
-dojo.require("dojo.rpc.RpcService");
-dojo.require("dojo.io.script");
+define("dojo/rpc/JsonpService", ["dojo", "dojo/rpc/RpcService", "dojo/io/script"], function(dojo) {
 
 dojo.declare("dojo.rpc.JsonpService", dojo.rpc.RpcService, {
 	// summary:
-	//	Generic JSONP service.  Minimally extends RpcService to allow 
+	//	Generic JSONP service.  Minimally extends RpcService to allow
 	//	easy definition of nearly any JSONP style service. Example
 	//	SMD files exist in dojox.data
 
@@ -25,10 +14,10 @@ dojo.declare("dojo.rpc.JsonpService", dojo.rpc.RpcService, {
 
 			dojo.forEach(this.required, function(req){
 				if(req=="" || req==undefined){
-					throw new Error("Required Service Argument not found: "+req); 
+					throw new Error("Required Service Argument not found: "+req);
 				}
 			});
-		}		
+		}
 	},
 
 	strictArgChecks: false,
@@ -50,7 +39,7 @@ dojo.declare("dojo.rpc.JsonpService", dojo.rpc.RpcService, {
 			callbackParamName: this.callbackParamName||"callback",
 			content: this.createRequest(parameters),
 			timeout: this.timeout,
-			handleAs: "json",	
+			handleAs: "json",
 			preventCache: true
 		});
 		def.addCallbacks(this.resultCallback(deferredRequestHandler), this.errorCallback(deferredRequestHandler));
@@ -69,4 +58,5 @@ dojo.declare("dojo.rpc.JsonpService", dojo.rpc.RpcService, {
 	}
 });
 
-}
+return dojo.rpc.JsonpService;
+});

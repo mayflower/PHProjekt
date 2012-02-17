@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.atom.widget.FeedEntryViewer"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.atom.widget.FeedEntryViewer"] = true;
 dojo.provide("dojox.atom.widget.FeedEntryViewer");
 
 dojo.require("dojo.fx");
@@ -15,7 +6,7 @@ dojo.require("dijit._Templated");
 dojo.require("dijit._Container");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dojox.atom.io.Connection");
-dojo.requireLocalization("dojox.atom.widget", "FeedEntryViewer", null, "ROOT,ar,ca,cs,da,de,el,es,fi,fr,he,hu,it,ja,ko,nb,nl,pl,pt,pt-pt,ro,ru,sk,sl,sv,th,tr,zh,zh-tw");
+dojo.requireLocalization("dojox.atom.widget", "FeedEntryViewer");
 
 dojo.experimental("dojox.atom.widget.FeedEntryViewer");
 
@@ -37,7 +28,7 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 	_optionButtonDisplayed: true,
 
 	//Templates for the HTML rendering.  Need to figure these out better, admittedly.
-	templateString: dojo.cache("dojox.atom", "widget/templates/FeedEntryViewer.html", "<div class=\"feedEntryViewer\">\r\n    <table border=\"0\" width=\"100%\" class=\"feedEntryViewerMenuTable\" dojoAttachPoint=\"feedEntryViewerMenu\" style=\"display: none;\">\r\n        <tr width=\"100%\"  dojoAttachPoint=\"entryCheckBoxDisplayOptions\">\r\n            <td align=\"right\">\r\n                <span class=\"feedEntryViewerMenu\" dojoAttachPoint=\"displayOptions\" dojoAttachEvent=\"onclick:_toggleOptions\"></span>\r\n            </td>\r\n        </tr>\r\n        <tr class=\"feedEntryViewerDisplayCheckbox\" dojoAttachPoint=\"entryCheckBoxRow\" width=\"100%\" style=\"display: none;\">\r\n            <td dojoAttachPoint=\"feedEntryCelltitle\">\r\n                <input type=\"checkbox\" name=\"title\" value=\"Title\" dojoAttachPoint=\"feedEntryCheckBoxTitle\" dojoAttachEvent=\"onclick:_toggleCheckbox\"/>\r\n\t\t\t\t<label for=\"title\" dojoAttachPoint=\"feedEntryCheckBoxLabelTitle\"></label>\r\n            </td>\r\n            <td dojoAttachPoint=\"feedEntryCellauthors\">\r\n                <input type=\"checkbox\" name=\"authors\" value=\"Authors\" dojoAttachPoint=\"feedEntryCheckBoxAuthors\" dojoAttachEvent=\"onclick:_toggleCheckbox\"/>\r\n\t\t\t\t<label for=\"title\" dojoAttachPoint=\"feedEntryCheckBoxLabelAuthors\"></label>\r\n            </td>\r\n            <td dojoAttachPoint=\"feedEntryCellcontributors\">\r\n                <input type=\"checkbox\" name=\"contributors\" value=\"Contributors\" dojoAttachPoint=\"feedEntryCheckBoxContributors\" dojoAttachEvent=\"onclick:_toggleCheckbox\"/>\r\n\t\t\t\t<label for=\"title\" dojoAttachPoint=\"feedEntryCheckBoxLabelContributors\"></label>\r\n            </td>\r\n            <td dojoAttachPoint=\"feedEntryCellid\">\r\n                <input type=\"checkbox\" name=\"id\" value=\"Id\" dojoAttachPoint=\"feedEntryCheckBoxId\" dojoAttachEvent=\"onclick:_toggleCheckbox\"/>\r\n\t\t\t\t<label for=\"title\" dojoAttachPoint=\"feedEntryCheckBoxLabelId\"></label>\r\n            </td>\r\n            <td rowspan=\"2\" align=\"right\">\r\n                <span class=\"feedEntryViewerMenu\" dojoAttachPoint=\"close\" dojoAttachEvent=\"onclick:_toggleOptions\"></span>\r\n            </td>\r\n\t\t</tr>\r\n\t\t<tr class=\"feedEntryViewerDisplayCheckbox\" dojoAttachPoint=\"entryCheckBoxRow2\" width=\"100%\" style=\"display: none;\">\r\n            <td dojoAttachPoint=\"feedEntryCellupdated\">\r\n                <input type=\"checkbox\" name=\"updated\" value=\"Updated\" dojoAttachPoint=\"feedEntryCheckBoxUpdated\" dojoAttachEvent=\"onclick:_toggleCheckbox\"/>\r\n\t\t\t\t<label for=\"title\" dojoAttachPoint=\"feedEntryCheckBoxLabelUpdated\"></label>\r\n            </td>\r\n            <td dojoAttachPoint=\"feedEntryCellsummary\">\r\n                <input type=\"checkbox\" name=\"summary\" value=\"Summary\" dojoAttachPoint=\"feedEntryCheckBoxSummary\" dojoAttachEvent=\"onclick:_toggleCheckbox\"/>\r\n\t\t\t\t<label for=\"title\" dojoAttachPoint=\"feedEntryCheckBoxLabelSummary\"></label>\r\n            </td>\r\n            <td dojoAttachPoint=\"feedEntryCellcontent\">\r\n                <input type=\"checkbox\" name=\"content\" value=\"Content\" dojoAttachPoint=\"feedEntryCheckBoxContent\" dojoAttachEvent=\"onclick:_toggleCheckbox\"/>\r\n\t\t\t\t<label for=\"title\" dojoAttachPoint=\"feedEntryCheckBoxLabelContent\"></label>\r\n            </td>\r\n        </tr>\r\n    </table>\r\n    \r\n    <table class=\"feedEntryViewerContainer\" border=\"0\" width=\"100%\">\r\n        <tr class=\"feedEntryViewerTitle\" dojoAttachPoint=\"entryTitleRow\" style=\"display: none;\">\r\n            <td>\r\n                <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\r\n                    <tr class=\"graphic-tab-lgray\">\r\n\t\t\t\t\t\t<td class=\"lp2\">\r\n\t\t\t\t\t\t\t<span class=\"lp\" dojoAttachPoint=\"entryTitleHeader\"></span>\r\n\t\t\t\t\t\t</td>\r\n                    </tr>\r\n                    <tr>\r\n                        <td dojoAttachPoint=\"entryTitleNode\">\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n\r\n        <tr class=\"feedEntryViewerAuthor\" dojoAttachPoint=\"entryAuthorRow\" style=\"display: none;\">\r\n            <td>\r\n                <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\r\n                    <tr class=\"graphic-tab-lgray\">\r\n\t\t\t\t\t\t<td class=\"lp2\">\r\n\t\t\t\t\t\t\t<span class=\"lp\" dojoAttachPoint=\"entryAuthorHeader\"></span>\r\n\t\t\t\t\t\t</td>\r\n                    </tr>\r\n                    <tr>\r\n                        <td dojoAttachPoint=\"entryAuthorNode\">\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n\r\n        <tr class=\"feedEntryViewerContributor\" dojoAttachPoint=\"entryContributorRow\" style=\"display: none;\">\r\n            <td>\r\n                <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\r\n                    <tr class=\"graphic-tab-lgray\">\r\n\t\t\t\t\t\t<td class=\"lp2\">\r\n\t\t\t\t\t\t\t<span class=\"lp\" dojoAttachPoint=\"entryContributorHeader\"></span>\r\n\t\t\t\t\t\t</td>\r\n                    </tr>\r\n                    <tr>\r\n                        <td dojoAttachPoint=\"entryContributorNode\" class=\"feedEntryViewerContributorNames\">\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n        \r\n        <tr class=\"feedEntryViewerId\" dojoAttachPoint=\"entryIdRow\" style=\"display: none;\">\r\n            <td>\r\n                <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\r\n                    <tr class=\"graphic-tab-lgray\">\r\n\t\t\t\t\t\t<td class=\"lp2\">\r\n\t\t\t\t\t\t\t<span class=\"lp\" dojoAttachPoint=\"entryIdHeader\"></span>\r\n\t\t\t\t\t\t</td>\r\n                    </tr>\r\n                    <tr>\r\n                        <td dojoAttachPoint=\"entryIdNode\" class=\"feedEntryViewerIdText\">\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n    \r\n        <tr class=\"feedEntryViewerUpdated\" dojoAttachPoint=\"entryUpdatedRow\" style=\"display: none;\">\r\n            <td>\r\n                <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\r\n                    <tr class=\"graphic-tab-lgray\">\r\n\t\t\t\t\t\t<td class=\"lp2\">\r\n\t\t\t\t\t\t\t<span class=\"lp\" dojoAttachPoint=\"entryUpdatedHeader\"></span>\r\n\t\t\t\t\t\t</td>\r\n                    </tr>\r\n                    <tr>\r\n                        <td dojoAttachPoint=\"entryUpdatedNode\" class=\"feedEntryViewerUpdatedText\">\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n    \r\n        <tr class=\"feedEntryViewerSummary\" dojoAttachPoint=\"entrySummaryRow\" style=\"display: none;\">\r\n            <td>\r\n                <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\r\n                    <tr class=\"graphic-tab-lgray\">\r\n\t\t\t\t\t\t<td class=\"lp2\">\r\n\t\t\t\t\t\t\t<span class=\"lp\" dojoAttachPoint=\"entrySummaryHeader\"></span>\r\n\t\t\t\t\t\t</td>\r\n                    </tr>\r\n                    <tr>\r\n                        <td dojoAttachPoint=\"entrySummaryNode\">\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n    \r\n        <tr class=\"feedEntryViewerContent\" dojoAttachPoint=\"entryContentRow\" style=\"display: none;\">\r\n            <td>\r\n                <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\r\n                    <tr class=\"graphic-tab-lgray\">\r\n\t\t\t\t\t\t<td class=\"lp2\">\r\n\t\t\t\t\t\t\t<span class=\"lp\" dojoAttachPoint=\"entryContentHeader\"></span>\r\n\t\t\t\t\t\t</td>\r\n                    </tr>\r\n                    <tr>\r\n                        <td dojoAttachPoint=\"entryContentNode\">\r\n                        </td>\r\n                    </tr>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n    </table>\r\n</div>\r\n"),
+	templateString: dojo.cache("dojox.atom", "widget/templates/FeedEntryViewer.html"),
 	
 	_entry: null, //The entry that is being viewed/edited.
 	_feed: null, //The feed the entry came from.
@@ -97,7 +88,7 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//		Function to clear all the display nodes for the ATOM entry from the viewer.
 
 		dojo.forEach([
-			"entryTitleRow", "entryAuthorRow", "entryContributorRow", "entrySummaryRow", "entryContentRow", 
+			"entryTitleRow", "entryAuthorRow", "entryContributorRow", "entrySummaryRow", "entryContentRow",
 			"entryIdRow", "entryUpdatedRow"
 			], function(node){
 				dojo.style(this[node], "display", "none");
@@ -164,27 +155,27 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 			}
 
 			if(this.entryUpdatedHeader){
-				this.setUpdatedHeader(this.entryUpdatedHeader, entry); 
+				this.setUpdatedHeader(this.entryUpdatedHeader, entry);
 			}
 
 			if(this.entryUpdatedNode){
-				this.setUpdated(this.entryUpdatedNode, this._editMode, entry); 
+				this.setUpdated(this.entryUpdatedNode, this._editMode, entry);
 			}
 
 			if(this.entrySummaryHeader){
-				this.setSummaryHeader(this.entrySummaryHeader, entry); 
+				this.setSummaryHeader(this.entrySummaryHeader, entry);
 			}
 
 			if(this.entrySummaryNode){
-				this.setSummary(this.entrySummaryNode, this._editMode, entry); 
+				this.setSummary(this.entrySummaryNode, this._editMode, entry);
 			}
 
 			if(this.entryContentHeader){
-				this.setContentHeader(this.entryContentHeader, entry); 
+				this.setContentHeader(this.entryContentHeader, entry);
 			}
 
 			if(this.entryContentNode){
-				this.setContent(this.entryContentNode, this._editMode, entry); 
+				this.setContent(this.entryContentNode, this._editMode, entry);
 			}
 		}
 		this._displaySections();
@@ -504,7 +495,7 @@ dojo.declare("dojox.atom.widget.FeedEntryViewer",[dijit._Widget, dijit._Template
 		//		Internal function for determining which sections of the view to actually display.
 		//
 		//	returns:
-		//		Nothing. 
+		//		Nothing.
 		dojo.style(this.entryTitleRow, 'display', 'none');
 		dojo.style(this.entryAuthorRow, 'display', 'none');
 		dojo.style(this.entryContributorRow, 'display', 'none');
@@ -762,7 +753,7 @@ dojo.declare("dojox.atom.widget.EntryHeader",[dijit._Widget, dijit._Templated, d
 	//	description:
 	//		Widget representing a header in a FeedEntryViewer/Editor
 	title: "",
-	templateString: dojo.cache("dojox.atom", "widget/templates/EntryHeader.html", "<span dojoAttachPoint=\"entryHeaderNode\" class=\"entryHeaderNode\"></span>\r\n"),
+	templateString: dojo.cache("dojox.atom", "widget/templates/EntryHeader.html"),
 
 	postCreate: function(){
 		this.setListHeader();
@@ -790,5 +781,3 @@ dojo.declare("dojox.atom.widget.EntryHeader",[dijit._Widget, dijit._Templated, d
 		this.clear();
 	}
 });
-
-}

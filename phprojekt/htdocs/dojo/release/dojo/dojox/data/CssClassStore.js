@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.data.CssClassStore"]||(dojo._hasResource["dojox.data.CssClassStore"]=!0,dojo.provide("dojox.data.CssClassStore"),dojo.require("dojox.data.CssRuleStore"),dojo.declare("dojox.data.CssClassStore",dojox.data.CssRuleStore,{_labelAttribute:"class",_idAttribute:"class",_cName:"dojox.data.CssClassStore",getFeatures:function(){return{"dojo.data.api.Read":!0,"dojo.data.api.Identity":!0}},getAttributes:function(a){this._assertIsItem(a);return["class","classSans"]},getValue:function(a,
+c,b){return(a=this.getValues(a,c))&&a.length>0?a[0]:b},getValues:function(a,c){this._assertIsItem(a);this._assertIsAttribute(c);var b=[];c==="class"?b=[a.className]:c==="classSans"&&(b=[a.className.replace(/\./g,"")]);return b},_handleRule:function(a){for(var c={},a=a.selectorText.split(" "),b=0;b<a.length;b++){var d=a[b],e=d.indexOf(".");if(d&&d.length>0&&e!==-1){var f=d.indexOf(",")||d.indexOf("["),d=d.substring(e,f!==-1&&f>e?f:d.length);c[d]=!0}}for(var g in c)if(!this._allItems[g])a={},a.className=
+g,a[this._storeRef]=this,this._allItems[g]=a},_handleReturn:function(){var a=[],c={},b;for(b in this._allItems)c[b]=this._allItems[b];for(;this._pending.length;)b=this._pending.pop(),b.request._items=c,a.push(b);for(;a.length;)b=a.pop(),b.fetch?this._handleFetchReturn(b.request):this._handleFetchByIdentityReturn(b.request)},_handleFetchByIdentityReturn:function(a){var c=a._items[dojo.isWebKit?a.identity.toLowerCase():a.identity];this.isItem(c)||(c=null);a.onItem&&a.onItem.call(a.scope||dojo.global,
+c)},getIdentity:function(a){this._assertIsItem(a);return this.getValue(a,this._idAttribute)},getIdentityAttributes:function(a){this._assertIsItem(a);return[this._idAttribute]},fetchItemByIdentity:function(a){a=a||{};if(!a.store)a.store=this;this._pending&&this._pending.length>0?this._pending.push({request:a}):(this._pending=[{request:a}],this._fetch(a));return a}}));

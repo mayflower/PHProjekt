@@ -1,1 +1,22 @@
-({"emoticonLaughing":"смех","emoticonCool":"здорово","emoticonTongue":"насмешка","emoticonCrying":"плачь","emoticonOops":"уупс","emoticonFrown":"хмурый вид","emoticonAngry":"злость","emoticonShy":"застенчивость","emoticonNo":"нет","emoticonAngel":"ангел","smiley":"Вставить значок настроения","emoticonIdea":"есть идея","emoticonEyebrow":"удивление","emoticonSmile":"улыбка","emoticonWink":"подмигивание","emoticonYes":"да","emoticonGrin":"усмешка","emoticonGoofy":"глупый","emoticonHalf":"половина"})
+({
+	smiley: "Вставить значок настроения",
+	emoticonSmile: "улыбка",
+	emoticonLaughing: "смех",
+	emoticonWink: "подмигивание",
+	emoticonGrin: "усмешка",
+	emoticonCool: "здорово",
+	emoticonAngry: "злость",
+	emoticonHalf: "половина",
+	emoticonEyebrow: "удивление",
+	emoticonFrown: "хмурый вид",
+	emoticonShy: "застенчивость",
+	emoticonGoofy: "глупый",
+	emoticonOops: "уупс",
+	emoticonTongue: "насмешка",
+	emoticonIdea: "есть идея",
+	emoticonYes: "да",
+	emoticonNo: "нет",
+	emoticonAngel: "ангел",
+	emoticonCrying: "плачь"
+})
+

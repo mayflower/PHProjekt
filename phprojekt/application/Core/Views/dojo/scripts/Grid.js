@@ -23,11 +23,11 @@ dojo.provide("phpr.Core.Grid");
 
 dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
     setUrl:function() {
-        this.url = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonList/nodeId/1';
+        this.url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonList/nodeId/1';
     },
 
     setGetExtraActionsUrl:function() {
-        this.getActionsUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonGetExtraActions';
+        this.getActionsUrl = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonGetExtraActions';
     },
 
     useCheckbox:function() {
@@ -35,7 +35,11 @@ dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
     },
 
     getLinkForEdit:function(id) {
-        this.main.setUrlHash(phpr.parentmodule, id, [phpr.module]);
+        phpr.pageManager.modifyCurrentState({
+            moduleName: this.main.module,
+            id: id,
+            action: this.main.action ? this.main.action : undefined
+        });
     },
 
     canEdit:function(inRowIndex) {

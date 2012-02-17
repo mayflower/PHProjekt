@@ -52,7 +52,7 @@ class Phprojekt_Model_Validate
      */
     public function __construct()
     {
-        $this->error = Phprojekt_Loader::getLibraryClass('Phprojekt_Error');
+        $this->error = new Phprojekt_Error();
     }
 
     /**
@@ -62,7 +62,7 @@ class Phprojekt_Model_Validate
      */
     public function __clone()
     {
-        $this->error = Phprojekt_Loader::getLibraryClass('Phprojekt_Error');
+        $this->error = new Phprojekt_Error();
     }
 
     /**
@@ -70,12 +70,12 @@ class Phprojekt_Model_Validate
      *
      * @return boolean True for valid.
      */
-    public function recordValidate($class, $data, $fields)
+    public function recordValidate(Phprojekt_ActiveRecord_Abstract $class, $data, $fields)
     {
         $valid = true;
 
         foreach ($data as $varname => $value) {
-            if (isset($class->$varname)) {
+            if ($class->hasField($varname)) {
                 // Validate with the database_manager stuff
                 foreach ($fields as $field) {
                     if ($field['key'] == $varname) {

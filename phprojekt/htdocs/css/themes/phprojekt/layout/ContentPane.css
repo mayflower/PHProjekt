@@ -4,6 +4,10 @@
     padding: 0px;
 }
 
+.phprojekt tr.dijitContentPane {
+    display: table-row;
+}
+
 /* nested layouts */
 .phprojekt .dijitTabContainerTop-dijitContentPane,
 .phprojekt .dijitTabContainerLeft-dijitContentPane,
@@ -16,12 +20,17 @@
 }
 
 .phprojekt .dijitSplitContainer-dijitContentPane,
+.phprojekt .dijitLayoutContainer-dijitLayoutContainer,
 .phprojekt .dijitBorderContainer-dijitContentPane {
     border: 0px #B1BADF solid;
     background-color: #fff;
     padding: 0px;
 }
 
-.phprojekt #detailsBox {
-    overflow-x: hidden
+.phprojekt .detailsBox .dijitContentPaneSingleChild {
+    overflow-y: auto;
+}
+
+.phprojekt .detailsBox {
+    overflow-x: hidden;
 }

@@ -21,7 +21,6 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-require_once 'PHPUnit/Framework.php';
 
 /**
  * Tests Role class
@@ -60,14 +59,5 @@ class Phprojekt_Role_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($role->modulePermissions->fetchAll()));
 
         $role->delete();
-    }
-
-    /**
-     * Test for mock function
-     */
-    public function testMocks()
-    {
-        $role = new Phprojekt_Role_Role();
-        $this->assertEquals(array(), $role->getRights());
     }
 }

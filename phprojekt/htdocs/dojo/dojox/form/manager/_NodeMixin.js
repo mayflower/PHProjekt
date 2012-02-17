@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.manager._NodeMixin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.manager._NodeMixin"] = true;
 dojo.provide("dojox.form.manager._NodeMixin");
 
 dojo.require("dojox.form.manager._Mixin");
@@ -101,7 +92,7 @@ dojo.require("dojox.form.manager._Mixin");
 				var eventName = ce(n);
 				dojo.forEach(observers, function(o){
 					c.push(dojo.connect(n, eventName, this, function(evt){
-						if(this.watch){
+						if(this.watching){
 							this[o](this.formNodeValue(name), name, n, evt);
 						}
 					}));
@@ -367,5 +358,3 @@ dojo.require("dojox.form.manager._Mixin");
 		}
 	});
 })();
-
-}

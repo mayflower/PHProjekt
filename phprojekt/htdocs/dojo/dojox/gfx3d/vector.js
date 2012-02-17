@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.gfx3d.vector"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx3d.vector"] = true;
 dojo.provide("dojox.gfx3d.vector");
 
 dojo.mixin(dojox.gfx3d.vector, {
@@ -22,7 +13,7 @@ dojo.mixin(dojox.gfx3d.vector, {
 		var l = arguments.length;
 		if(l == 0){
 			return {x: 0, y: 0, z: 0};
-		} 
+		}
 		var v = dojox.gfx3d.vector.sum(arguments);
 		return {x: v.x/l, y: v.y/l, z: v.z/l};
 	},
@@ -101,7 +92,7 @@ dojo.mixin(dojox.gfx3d.vector, {
 		// a: Object: a point
 		// b: Object: a point
 		// c: Object: a point
-		var l, m, n; 
+		var l, m, n;
 		if(a instanceof Array){
 			l = a[0]; m = a[1]; n = a[2];
 		}else{
@@ -113,5 +104,3 @@ dojo.mixin(dojox.gfx3d.vector, {
 		return dojox.gfx3d.vector.crossProduct(u, v);
 	}
 });
-
-}

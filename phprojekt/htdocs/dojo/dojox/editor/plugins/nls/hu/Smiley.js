@@ -1,1 +1,22 @@
-({"emoticonLaughing":"nevetés","emoticonCool":"laza","emoticonTongue":"nyelv","emoticonCrying":"sírás","emoticonOops":"hoppá","emoticonFrown":"rosszallás","emoticonAngry":"mérges","emoticonShy":"szégyenlős","emoticonNo":"nem","emoticonAngel":"angyal","smiley":"Hangulatjel beszúrása","emoticonIdea":"ötlet","emoticonEyebrow":"szemöldök","emoticonSmile":"mosoly","emoticonWink":"kacsintás","emoticonYes":"igen","emoticonGrin":"vigyor","emoticonGoofy":"ostoba","emoticonHalf":"fél"})
+({
+	smiley: "Hangulatjel beszúrása",
+	emoticonSmile: "mosoly",
+	emoticonLaughing: "nevetés",
+	emoticonWink: "kacsintás",
+	emoticonGrin: "vigyor",
+	emoticonCool: "laza",
+	emoticonAngry: "mérges",
+	emoticonHalf: "fél",
+	emoticonEyebrow: "szemöldök",
+	emoticonFrown: "rosszallás",
+	emoticonShy: "szégyenlős",
+	emoticonGoofy: "ostoba",
+	emoticonOops: "hoppá",
+	emoticonTongue: "nyelv",
+	emoticonIdea: "ötlet",
+	emoticonYes: "igen",
+	emoticonNo: "nem",
+	emoticonAngel: "angyal",
+	emoticonCrying: "sírás"
+})
+

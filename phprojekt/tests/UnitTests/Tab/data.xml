@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+    <tab id='1' label='Basic Data' />
+    <tab id='2' label='Test Tab' />
+    <tab id='3' label='Another Tab' />
+</dataset>

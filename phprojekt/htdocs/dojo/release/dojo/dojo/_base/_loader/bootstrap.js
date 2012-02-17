@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+(function(){if(typeof this.loadFirebugConsole=="function")this.loadFirebugConsole();else{this.console=this.console||{};for(var i=["assert","count","debug","dir","dirxml","error","group","groupEnd","info","profile","profileEnd","time","timeEnd","trace","warn","log"],m=0,k;k=i[m++];)console[k]||function(){var b=k+"";console[b]="log"in console?function(){var c=Array.apply({},arguments);c.unshift(b+":");console.log(c.join(" "))}:function(){};console[b]._fake=!0}()}typeof dojo=="undefined"&&(dojo={_scopeName:"dojo",
+_scopePrefix:"",_scopePrefixArgs:"",_scopeSuffix:"",_scopeMap:{},_scopeMapRev:{}});var c=dojo;typeof dijit=="undefined"&&(dijit={_scopeName:"dijit"});typeof dojox=="undefined"&&(dojox={_scopeName:"dojox"});if(!c._scopeArgs)c._scopeArgs=[dojo,dijit,dojox];c.global=this;c.config={isDebug:!1,debugAtAllCosts:!1};if(i=typeof djConfig!="undefined"?djConfig:typeof dojoConfig!="undefined"?dojoConfig:null)for(var g in i)c.config[g]=i[g];dojo.locale=c.config.locale;g="$Rev: 24595 $".match(/\d+/);dojo.version=
+{major:1,minor:6,patch:1,flag:"",revision:g?+g[0]:NaN,toString:function(){with(c.version)return major+"."+minor+"."+patch+flag+" ("+revision+")"}};typeof OpenAjax!="undefined"&&OpenAjax.hub.registerLibrary(dojo._scopeName,"http://dojotoolkit.org",c.version.toString());var h,l,j={};for(m in{toString:1}){h=[];break}dojo._extraNames=h=h||["hasOwnProperty","valueOf","isPrototypeOf","propertyIsEnumerable","toLocaleString","toString","constructor"];l=h.length;dojo._mixin=function(b,c){var a,d,e;for(a in c)if(d=
+c[a],!(a in b)||b[a]!==d&&(!(a in j)||j[a]!==d))b[a]=d;if(l&&c)for(e=0;e<l;++e)if(a=h[e],d=c[a],!(a in b)||b[a]!==d&&(!(a in j)||j[a]!==d))b[a]=d;return b};dojo.mixin=function(b,f){b||(b={});for(var a=1,d=arguments.length;a<d;a++)c._mixin(b,arguments[a]);return b};dojo._getProp=function(b,f,a){for(var a=a||c.global,d=0,e;a&&(e=b[d]);d++)d==0&&c._scopeMap[e]&&(e=c._scopeMap[e]),a=e in a?a[e]:f?a[e]={}:void 0;return a};dojo.setObject=function(b,f,a){var d=b.split("."),b=d.pop();return(a=c._getProp(d,
+!0,a))&&b?a[b]=f:void 0};dojo.getObject=function(b,f,a){return c._getProp(b.split("."),f,a)};dojo.exists=function(b,f){return c.getObject(b,!1,f)!==void 0};dojo.eval=function(b){return c.global.eval?c.global.eval(b):eval(b)};c.deprecated=c.experimental=function(){}})();

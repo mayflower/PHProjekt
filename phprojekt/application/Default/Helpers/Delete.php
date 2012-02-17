@@ -55,7 +55,7 @@ final class Default_Helpers_Delete
         } else if (!self::_checkItemRights($model, 'Project')) {
             throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
-            $relations = Phprojekt_Loader::getModel('Project', 'ProjectModulePermissions');
+            $relations = new Project_Models_ProjectModulePermissions();
             $where     = sprintf('project_id = %d', (int) $id);
 
             // Delete related items
@@ -85,7 +85,7 @@ final class Default_Helpers_Delete
             }
 
             // Delete user-role-projetc relation
-            $relations = Phprojekt_Loader::getModel('Project', 'ProjectRoleUserPermissions');
+            $relations = new Project_Models_ProjectRoleUserPermissions();
             $records   = $relations->fetchAll($where);
             if (is_array($records)) {
                 foreach ($records as $record) {
@@ -115,12 +115,12 @@ final class Default_Helpers_Delete
             throw new Phprojekt_PublishedException('You do not have access to do this action');
         } else {
             $return = $model->delete();
-            if ((isset($return->id) && null === $return->id) || null === $return) {
-                 // ActiveRecord delete the model.
-                return true;
-            } else if (is_bool($return)) {
+            if (is_bool($return)) {
                 // An extention returns true or false.
                 return $return;
+            } else if (is_null($return) || (is_a($return, 'Phprojekt_ActiveRecord_Abstract') && is_null($return->id))) {
+                 // ActiveRecord delete the model.
+                return true;
             } else {
                 // Any other value, is wrong.
                 return false;
@@ -171,27 +171,17 @@ final class Default_Helpers_Delete
      *
      * @return boolean True for a valid right.
      */
-    private static function _checkItemRights($model, $moduleName)
+    private static function _checkItemRights(Phprojekt_ActiveRecord_Abstract $model, $moduleName)
     {
         $canDelete = false;
 
         if ($moduleName == 'Core') {
             return Phprojekt_Auth::isAdminUser();
-        } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))) {
-            $itemRights = $model->getRights();
-
-            if (isset($itemRights['currentUser'])) {
-                if (!$itemRights['currentUser']['delete'] &&
-                    !$itemRights['currentUser']['admin']) {
-                    $canDelete = false;
-                } else {
-                    $canDelete = true;
-                }
-            }
+        } else if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($moduleName))
+                && method_exists($model, 'hasRight')) {
+            return $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DELETE);
         } else {
-            $canDelete = true;
+            return true;
         }
-
-        return $canDelete;
     }
 }

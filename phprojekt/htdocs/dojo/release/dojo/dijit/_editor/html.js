@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dijit._editor.html"])dojo._hasResource["dijit._editor.html"]=!0,dojo.provide("dijit._editor.html"),dojo.getObject("_editor",!0,dijit),dijit._editor.escapeXml=function(a,c){a=a.replace(/&/gm,"&amp;").replace(/</gm,"&lt;").replace(/>/gm,"&gt;").replace(/"/gm,"&quot;");c||(a=a.replace(/'/gm,"&#39;"));return a},dijit._editor.getNodeHtml=function(a){var c;switch(a.nodeType){case 1:var d=a.nodeName.toLowerCase();if(!d||d.charAt(0)=="/")return"";c="<"+d;var g=[],b;if(dojo.isIE&&a.outerHTML){b=
+a.outerHTML;b=b.substr(0,b.indexOf(">")).replace(/(['"])[^"']*\1/g,"");for(var h=/(\b\w+)\s?=/g,f;f=h.exec(b);)if(f=f[1],f.substr(0,3)!="_dj")if((f=="src"||f=="href")&&a.getAttribute("_djrealurl"))g.push([f,a.getAttribute("_djrealurl")]);else{var e,i;switch(f){case "style":e=a.style.cssText.toLowerCase();break;case "class":e=a.className;break;case "width":if(d==="img"){(i=/width=(\S+)/i.exec(b))&&(e=i[1]);break}case "height":if(d==="img"){(i=/height=(\S+)/i.exec(b))&&(e=i[1]);break}default:e=a.getAttribute(f)}e!=
+null&&g.push([f,e.toString()])}}else for(h=0;b=a.attributes[h++];)if(e=b.name,e.substr(0,3)!="_dj"){b=b.value;if(e=="src"||e=="href")a.getAttribute("_djrealurl")&&(b=a.getAttribute("_djrealurl"));g.push([e,b])}g.sort(function(a,b){return a[0]<b[0]?-1:a[0]==b[0]?0:1});for(h=0;b=g[h++];)c+=" "+b[0]+'="'+(dojo.isString(b[1])?dijit._editor.escapeXml(b[1],!0):b[1])+'"';if(d==="script")c+=">"+a.innerHTML+"</"+d+">";else if(a.childNodes.length)c+=">"+dijit._editor.getChildrenHtml(a)+"</"+d+">";else switch(d){case "br":case "hr":case "img":case "input":case "base":case "meta":case "area":case "basefont":c+=
+" />";break;default:c+="></"+d+">"}break;case 4:case 3:c=dijit._editor.escapeXml(a.nodeValue,!0);break;case 8:c="<\!--"+dijit._editor.escapeXml(a.nodeValue,!0)+"--\>";break;default:c="<\!-- Element not recognized - Type: "+a.nodeType+" Name: "+a.nodeName+"--\>"}return c},dijit._editor.getChildrenHtml=function(a){var c="";if(!a)return c;for(var d=a.childNodes||a,g=!dojo.isIE||d!==a,b,h=0;b=d[h++];)if(!g||b.parentNode==a)c+=dijit._editor.getNodeHtml(b);return c};

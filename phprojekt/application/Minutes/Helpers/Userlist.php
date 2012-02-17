@@ -45,26 +45,27 @@ final class Minutes_Helpers_Userlist
      *
      * @return array Array with 'id' and 'display'
      */
-    public static function expandIdList($idList = '')
+    public static function expandIdList()
     {
-        if (1 < ($num = func_num_args())) {
-            for ($i = 1; $i < $num; $i++) {
-                $addList = (string) func_get_arg($i);
-                if ("" != $addList) {
-                    $idList .= ',' . $addList;
-                }
+        $addArray = array();
+        $num = func_num_args();
+        for ($i = 0; $i < $num; $i++) {
+            $addList = (string) func_get_arg($i);
+            if ("" != $addList) {
+                $addArray[] = $addList;
             }
         }
 
+        $idList = implode(",", $addArray);
+
         $data = array();
         if (!empty($idList)) {
-            $user     = Phprojekt_Loader::getLibraryClass('Phprojekt_User_User');
-            $display  = $user->getDisplay();
-            $userList = $user->fetchAll(sprintf('id IN (%s)', $idList), $display);
+            $user     = new Phprojekt_User_User();
+            $userList = $user->fetchAll(sprintf('id IN (%s)', $idList));
 
             foreach ($userList as $record) {
                 $data[] = array('id'      => (int) $record->id,
-                                'display' => $record->applyDisplay($display, $record));
+                                'display' => $record->displayName);
             }
         }
 

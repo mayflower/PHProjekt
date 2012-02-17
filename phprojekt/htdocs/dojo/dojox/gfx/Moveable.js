@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.gfx.Moveable"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.gfx.Moveable"] = true;
 dojo.provide("dojox.gfx.Moveable");
 
 dojo.require("dojox.gfx.Mover");
@@ -42,8 +33,9 @@ dojo.declare("dojox.gfx.Moveable", null, {
 		// summary: event processor for onmousedown, creates a Mover for the shape
 		// e: Event: mouse event
 		if(this.delay){
-			this.events.push(this.shape.connect("onmousemove", this, "onMouseMove"));
-			this.events.push(this.shape.connect("onmouseup", this, "onMouseUp"));
+			this.events.push(
+				this.shape.connect("onmousemove", this, "onMouseMove"),
+				this.shape.connect("onmouseup", this, "onMouseUp"));
 			this._lastX = e.clientX;
 			this._lastY = e.clientY;
 		}else{
@@ -104,5 +96,3 @@ dojo.declare("dojox.gfx.Moveable", null, {
 		// default implementation does nothing
 	}
 });
-
-}

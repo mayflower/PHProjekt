@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.io.xhrPlugins"]||(dojo._hasResource["dojox.io.xhrPlugins"]=!0,dojo.provide("dojox.io.xhrPlugins"),dojo.require("dojo.AdapterRegistry"),dojo.require("dojo._base.xhr"),function(){function f(){return h=dojox.io.xhrPlugins.plainXhr=h||dojo._defaultXhr||dojo.xhr}var d,h;dojox.io.xhrPlugins.register=function(){var e=f();d||(d=new dojo.AdapterRegistry,dojo[dojo._defaultXhr?"_defaultXhr":"xhr"]=function(c,b,a){return d.match.apply(d,arguments)},d.register("xhr",function(c,b){if(!b.url.match(/^\w*:\/\//))return!0;
+var a=window.location.href.match(/^.*?\/\/.*?\//)[0];return b.url.substring(0,a.length)==a},e));return d.register.apply(d,arguments)};dojox.io.xhrPlugins.addProxy=function(e){var c=f();dojox.io.xhrPlugins.register("proxy",function(){return!0},function(b,a,j){a.url=e+encodeURIComponent(a.url);return c.call(dojo,b,a,j)})};var g;dojox.io.xhrPlugins.addCrossSiteXhr=function(e,c){var b=f();if(g===void 0&&window.XMLHttpRequest)try{(new XMLHttpRequest).open("GET","http://testing-cross-domain-capability.com",
+!0),g=!0,dojo.config.noRequestedWithHeaders=!0}catch(a){g=!1}dojox.io.xhrPlugins.register("cs-xhr",function(a,b){return(g||window.XDomainRequest&&b.sync!==!0&&(a=="GET"||a=="POST"||c))&&b.url.substring(0,e.length)==e},g?b:function(){var a=dojo._xhrObj;dojo._xhrObj=function(){function a(c,e){return function(){b.readyState=e;b.status=c}}var b=new XDomainRequest;b.readyState=1;b.setRequestHeader=function(){};b.getResponseHeader=function(a){return a=="Content-Type"?b.contentType:null};b.onload=a(200,
+4);b.onprogress=a(200,3);b.onerror=a(404,4);return b};var b=(c?c(f()):f()).apply(dojo,arguments);dojo._xhrObj=a;return b})};dojox.io.xhrPlugins.fullHttpAdapter=function(e,c){return function(b,a,d){var f={},g={};if(b!="GET"){g["http-method"]=b;if(a.putData&&c)f["http-content"]=a.putData,delete a.putData,d=!1;if(a.postData&&c)f["http-content"]=a.postData,delete a.postData,d=!1;b="POST"}for(var i in a.headers){var h=i.match(/^X-/)?i.substring(2).replace(/-/g,"_").toLowerCase():"http-"+i;g[h]=a.headers[i]}a.query=
+dojo.objectToQuery(g);dojo._ioAddQueryToUrl(a);a.content=dojo.mixin(a.content||{},f);return e.call(dojo,b,a,d)}}}());

@@ -8,7 +8,7 @@
         </label>
     </td>
     <td>
-        <div dojoType="phpr.form.HorizontalSlider" name="{{id}}" value="{{value}}" maximum="100" minimum="0"
+        <div dojoType="phpr.Default.System.Form.HorizontalSlider" name="{{id}}" value="{{value}}" maximum="100" minimum="0"
         discreteValues="1001" pageIncrement="100" showButtons="false" intermediateChanges="true" {{disabled}}
         id="{{id}}" onChange="
             dojo.byId('{{id}}Text').value=dojo.number.format(arguments[0] / 100, {places: 1, pattern: '#%'});"

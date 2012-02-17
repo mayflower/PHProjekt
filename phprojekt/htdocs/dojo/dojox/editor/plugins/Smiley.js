@@ -1,22 +1,6 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+define("dojox/editor/plugins/Smiley", ["dojo", "dijit", "dojox", "dijit/_editor/_Plugin", "dijit/form/ToggleButton", "dijit/form/DropDownButton", "dojox/editor/plugins/_SmileyPalette", "dojo/i18n", "dojox/html/format", "i18n!dojox/editor/plugins/nls/Smiley"], function(dojo, dijit, dojox) {
 
-
-if(!dojo._hasResource["dojox.editor.plugins.Smiley"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.editor.plugins.Smiley"] = true;
-dojo.provide("dojox.editor.plugins.Smiley");
 dojo.experimental("dojox.editor.plugins.Smiley");
-
-dojo.require("dojo.i18n");
-dojo.require("dijit._editor._Plugin");
-dojo.require("dijit.form.ToggleButton");
-dojo.require("dijit.form.DropDownButton");
-dojo.require("dojox.editor.plugins._SmileyPalette");
-
-dojo.requireLocalization("dojox.editor.plugins", "Smiley", null, "ROOT,cs,de,es,fr,hu,it,ja,ko,pl,pt,ro,ru,zh,zh-tw");
 
 dojo.declare("dojox.editor.plugins.Smiley", dijit._editor._Plugin, {
 	// summary:
@@ -60,6 +44,12 @@ dojo.declare("dojox.editor.plugins.Smiley", dijit._editor._Plugin, {
 		});
 		this.emoticonImageRegexp = new RegExp("class=(\"|\')" + this.emoticonImageClass + "(\"|\')");
 	},
+	
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
+	},
 
 	setEditor: function(editor){
 		// summary:
@@ -98,7 +88,7 @@ dojo.declare("dojox.editor.plugins.Smiley", dijit._editor._Plugin, {
 		// summary:
 		//		Pre-filter for editor to convert strings like [:-)] into an <img> of the corresponding smiley
 		var emoticon = dojox.editor.plugins.Emoticon.fromAscii(ascii);
-		return emoticon ? emoticon.imgHtml(this.emoticonImageClass) : ascii;
+		return emoticon ? emoticon.imgHtml(this.emoticonImageClass) : str;
 	},
 
 	_encode: function(str){
@@ -124,4 +114,6 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	}
 });
 
-}
+return dojox.editor.plugins.Smiley;
+
+});

@@ -1,0 +1,12 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojo.dnd.Moveable"]||(dojo._hasResource["dojo.dnd.Moveable"]=!0,dojo.provide("dojo.dnd.Moveable"),dojo.require("dojo.dnd.Mover"),dojo.declare("dojo.dnd.Moveable",null,{handle:"",delay:0,skip:!1,constructor:function(a,b){this.node=dojo.byId(a);b||(b={});this.handle=b.handle?dojo.byId(b.handle):null;if(!this.handle)this.handle=this.node;this.delay=b.delay>0?b.delay:0;this.skip=b.skip;this.mover=b.mover?b.mover:dojo.dnd.Mover;this.events=[dojo.connect(this.handle,"onmousedown",this,
+"onMouseDown"),dojo.connect(this.handle,"ontouchstart",this,"onMouseDown"),dojo.connect(this.handle,"ondragstart",this,"onSelectStart"),dojo.connect(this.handle,"onselectstart",this,"onSelectStart")]},markupFactory:function(a,b){return new dojo.dnd.Moveable(b,a)},destroy:function(){dojo.forEach(this.events,dojo.disconnect);this.events=this.node=this.handle=null},onMouseDown:function(a){if(!this.skip||!dojo.dnd.isFormElement(a)){if(this.delay){this.events.push(dojo.connect(this.handle,"onmousemove",
+this,"onMouseMove"),dojo.connect(this.handle,"ontouchmove",this,"onMouseMove"),dojo.connect(this.handle,"onmouseup",this,"onMouseUp"),dojo.connect(this.handle,"ontouchend",this,"onMouseUp"));var b=a.touches?a.touches[0]:a;this._lastX=b.pageX;this._lastY=b.pageY}else this.onDragDetected(a);dojo.stopEvent(a)}},onMouseMove:function(a){var b=a.touches?a.touches[0]:a;if(Math.abs(b.pageX-this._lastX)>this.delay||Math.abs(b.pageY-this._lastY)>this.delay)this.onMouseUp(a),this.onDragDetected(a);dojo.stopEvent(a)},
+onMouseUp:function(a){for(var b=0;b<2;++b)dojo.disconnect(this.events.pop());dojo.stopEvent(a)},onSelectStart:function(a){(!this.skip||!dojo.dnd.isFormElement(a))&&dojo.stopEvent(a)},onDragDetected:function(a){new this.mover(this.node,a,this)},onMoveStart:function(a){dojo.publish("/dnd/move/start",[a]);dojo.addClass(dojo.body(),"dojoMove");dojo.addClass(this.node,"dojoMoveItem")},onMoveStop:function(a){dojo.publish("/dnd/move/stop",[a]);dojo.removeClass(dojo.body(),"dojoMove");dojo.removeClass(this.node,
+"dojoMoveItem")},onFirstMove:function(){},onMove:function(a,b){this.onMoving(a,b);var c=a.node.style;c.left=b.l+"px";c.top=b.t+"px";this.onMoved(a,b)},onMoving:function(){},onMoved:function(){}}));

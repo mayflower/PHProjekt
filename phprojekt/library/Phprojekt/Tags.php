@@ -3,7 +3,6 @@
  * Tags class.
  *
  * The class provide the functions for manage tags per user.
- * All the words are converted to crc32 for search it.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,7 +28,6 @@
  * Tags class.
  *
  * The class provide the functions for manage tags per user.
- * All the words are converted to crc32 for search it.
  *
  * @category   PHProjekt
  * @package    Phprojekt
@@ -98,9 +96,9 @@ class Phprojekt_Tags
      */
     private function __construct()
     {
-        $this->_tags        = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Tags');
-        $this->_tagsModules = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Modules');
-        $this->_tagsUsers   = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Users');
+        $this->_tags        = new Phprojekt_Tags_Tags();
+        $this->_tagsModules = new Phprojekt_Tags_Modules();
+        $this->_tagsUsers   = new Phprojekt_Tags_Users();
     }
 
     /**
@@ -110,9 +108,9 @@ class Phprojekt_Tags
      */
     public function __clone()
     {
-        $this->_tags        = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Tags');
-        $this->_tagsModules = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Modules');
-        $this->_tagsUsers   = Phprojekt_Loader::getLibraryClass('Phprojekt_Tags_Users');
+        $this->_tags        = new Phprojekt_Tags_Tags();
+        $this->_tagsModules = new Phprojekt_Tags_Modules();
+        $this->_tagsUsers   = new Phprojekt_Tags_Users();
     }
 
     /**
@@ -133,7 +131,7 @@ class Phprojekt_Tags
 
     /**
      * Get all the tags for the current user
-     * and return and array sorted by the number of ocurrences.
+     * and return and array sorted by the number of ocurrences first and tag name second.
      *
      * If the $limit is set, the returned array is limited to the $limit tags.
      *
@@ -145,38 +143,21 @@ class Phprojekt_Tags
     {
         $foundResults = array();
 
-        // Get all the user-tags relations
-        $tmpResults = $this->_tagsUsers->getUserTagIds();
-
-        // Convert result to array per tags
-        // And count the number of occurrences
-        foreach ($tmpResults as $tagUserId => $tagId) {
-            $tagName = $this->_tags->getTagName($tagId);
-
-            $modules = $this->_tagsModules->getModulesByRelationId($tagUserId);
-            if (!isset($foundResults[$tagName])) {
-                $foundResults[$tagName] = 0;
+        $select = Phprojekt::getInstance()->getDb()->select();
+        $select->from(array('t' => 'tags'), array('string' => 'word', 'count' => 'COUNT(word)'))
+            ->join(array('tu' => 'tags_users'), 'tu.tag_id = t.id', array())
+            ->join(array('tm' => 'tags_modules'), 'tm.tag_user_id = tu.id', array())
+            ->where('tu.user_id = ?', Phprojekt_Auth::getUserId())
+            ->group('t.word')
+            ->order('count DESC')
+            ->order('string ASC');
+        if ($limit !== 0) {
+            if (!is_int($limit)) {
+                throw new Exception('$limit must be an integer!');
             }
-            $foundResults[$tagName] = $foundResults[$tagName] + count($modules);
-
+            $select->limit($limit);
         }
-
-        // Return the $limit tags
-        if ($limit > 0) {
-            $foundResults = array_slice($foundResults, 0, $limit);
-        }
-
-        // Return the formated array
-        $tmp = $foundResults;
-        $foundResults = array();
-        foreach ($tmp as $tagName => $count) {
-            if ($count > 0) {
-                $foundResults[] = array('string' => $tagName,
-                                        'count'  => $count);
-            }
-        }
-
-        return $foundResults;
+        return $select->query()->fetchAll(Zend_Db::FETCH_ASSOC);
     }
 
     /**
@@ -193,7 +174,7 @@ class Phprojekt_Tags
     {
         $foundResults = array();
         $results      = array();
-        $rights       = Phprojekt_Loader::getLibraryClass('Phprojekt_Item_Rights');
+        $rights       = new Phprojekt_Item_Rights();
         $userId       = Phprojekt_Auth::getUserId();
 
         if (!empty($tag)) {
@@ -216,7 +197,7 @@ class Phprojekt_Tags
 
                 // Convert result to array and add the display data
                 // only fetch records with read access
-                $display        = Phprojekt_Loader::getLibraryClass('Phprojekt_Search_Display');
+                $display        = new Phprojekt_Search_Display();
                 $dataForDisplay = array();
                 foreach ($foundResults as $result) {
                     if ($rights->getItemRight($result['moduleId'], $result['itemId'], $userId) > 0) {
@@ -325,9 +306,8 @@ class Phprojekt_Tags
         $this->_tagsModules->deleteRelations($moduleId, $itemId, $oldTagUserRelations);
 
         foreach ($array as $word) {
-            $crc32 = crc32($word);
             // Save the tag
-            $tagId = $this->_tags->saveTags($crc32, $word);
+            $tagId = $this->_tags->saveTags($word);
 
             // Save the tag-user relation
             $tagUserId = $this->_tagsUsers->saveTags($tagId);

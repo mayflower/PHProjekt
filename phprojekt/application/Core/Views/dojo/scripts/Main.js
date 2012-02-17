@@ -21,13 +21,90 @@
 
 dojo.provide("phpr.Core.Main");
 
-dojo.declare("phpr.Core.Main", phpr.Default.Main, {
-    constructor:function() {
-        this.module = "Core";
-        this.loadFunctions(this.module);
+dojo.provide("phpr.Core.ViewMixin");
 
+// This ist our view mixin, it provides us with a border container without the overview box
+// this is only needed because the pagestyle is relative to the bordercontainer
+// TODO: make all stylings work without the bordercontainer if no overview is required
+dojo.declare("phpr.Core.ViewMixin", phpr.Default.System.ViewContentMixin, {
+    mixin: function() {
+        // Insert our api into the view
+        this.inherited(arguments);
+        this.view.clear = dojo.hitch(this, "clear");
+        this.view.clearDetails = dojo.hitch(this, "clearDetails");
+    },
+    destroyMixin: function() {
+        // Remove our inserted content from the view
+        this.clear();
+        this._clearCenterMainContent();
+        delete this.view.clear;
+        delete this.view.clearDetails;
+        delete this.view.detailsBox;
+        delete this.view.defaultMainContent;
+    },
+    update: function(config) {
+        // Render the new content onto the page
+        this.inherited(arguments);
+        this.clear();
+        this._clearCenterMainContent();
+        this._renderBorderContainer(config ? config.summaryTxt : "");
+        return this.view;
+    },
+    clearDetails: function() {
+        // remove the content of the detailsbox
+        if (this.view.detailsBox && this.view.detailsBox.destroyDescendants) {
+            this.view.detailsBox.destroyDescendants();
+        }
+
+        return this.view;
+    },
+    clear: function() {
+        // clear the content of the mixin
+        this.clearDetails();
+        return this.view;
+    },
+    _clearCenterMainContent: function() {
+        // clear everything inside the centerMainContent (our dom container)
+        // thereby remove all our inserted widgets
+        if (this.view.centerMainContent && this.view.centerMainContent.destroyDescendants) {
+            this.view.centerMainContent.destroyDescendants();
+        }
+        this.view.defaultMainContent = null;
+    },
+    _renderBorderContainer: function(summaryTxt) {
+        // render the bordercontainer which lies inside the centerMainContent
+        var mainContent = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.mainContent.html"
+        });
+
+        this.view.defaultMainContent = mainContent.mainContent;
+
+        var details = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Core.template.DetailsBox.html",
+            templateData: {
+                summaryTxt: summaryTxt
+            }
+        });
+
+        this._detailsBox = details;
+        this.view.detailsBox = details.detailsBox;
+        this.view.defaultMainContent.addChild(details);
+
+        this.view.centerMainContent.set('content', this.view.defaultMainContent);
+        this.view.defaultMainContent.startup();
+    }
+});
+
+dojo.declare("phpr.Core.Main", phpr.Default.Main, {
+    action: null,
+
+    constructor:function() {
+        this.module     = "Core";
         this.gridWidget = phpr.Core.Grid;
         this.formWidget = phpr.Core.Form;
+        this.state     = {};
+
+        this.loadFunctions(this.module);
     },
 
     getSystemModules:function() {
@@ -66,7 +143,6 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         //    Set the global vars for this module
         // Description:
         //    Set the global vars for this module
-        phpr.module = this.module;
         if (this.isSystemModule(this.module)) {
             phpr.submodule    = this.module;
             phpr.parentmodule = 'Administration';
@@ -76,35 +152,43 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         }
     },
 
-    reload:function(module) {
+    reload:function(state) {
         // Summary:
         //    Rewritten the function for work like a system module and like a form
         // Description:
         //    Rewritten the function for work like a system module and like a form
+
+        this.state = state || {};
+
+        var module = this.state.moduleName;
+
+        this.action = state.action;
+
+        this.destroy();
         this.defineModules(module);
-        if (this.isSystemModule(this.module)) {
-            this.render(["phpr.Default.template", "mainContent.html"], dojo.byId('centerMainContent'));
-        } else {
-            if (!module) {
-                var summaryTxt = this.getSummary();
-            } else {
-                var summaryTxt = '';
-            }
-            this.render(["phpr.Core.template", "mainContent.html"], dojo.byId('centerMainContent'), {
-                summaryTxt: summaryTxt
-            });
-        }
         this.cleanPage();
-        phpr.Tree.fadeOut();
+
+        phpr.tree.fadeOut();
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
-        phpr.Tree.loadTree();
-        if (this.isSystemModule(this.module)) {
-            var updateUrl = phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonSaveMultiple/nodeId/1';
-            this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId);
-        } else if (module) {
-            this.form = new this.formWidget(this, 0, this.module);
+        phpr.tree.loadTree();
+
+        if (this.isSystemModule(state.action)) {
+            phpr.pageManager.modifyCurrentState({ action: undefined, moduleName: state.action });
+        } else if (this.isSystemModule(module)) {
+            var updateUrl = phpr.webpath + 'index.php/Core/' + module.toLowerCase() + '/jsonSaveMultiple/nodeId/1';
+            var view = phpr.viewManager.useDefaultView({blank: true}).clear();
+            this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId, view.centerMainContent);
+        } else {
+            var summaryTxt = this.getSummary();
+            var view = phpr.viewManager.setView(phpr.Default.System.DefaultView, phpr.Core.ViewMixin, {
+                summaryTxt: summaryTxt
+            });
+
+            if (this.state.action) {
+                this.form = new this.formWidget(this, 0, this.module, null, view.detailsBox);
+            }
         }
     },
 
@@ -143,27 +227,42 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                         "moduleFunction": "setUrlHash",
                         "functionParams": "'" + parentModule + "', null, ['" + tmp[i].name + "']"});
                 }
-                var navigation = '<table id="nav_main"><tr>';
+                this._navigation = new phpr.Default.System.TabController({ });
+
+                modules = this.sortModuleTabs(modules);
+                var selectedEntry;
+                var activeTab = false;
                 for (var i = 0; i < modules.length; i++) {
                     var liclass        = '';
                     var moduleName     = modules[i].name;
                     var moduleLabel    = modules[i].label;
                     var moduleFunction = modules[i].moduleFunction;
                     var functionParams = modules[i].functionParams;
-                    if (moduleName == phpr.submodule) {
-                        liclass = 'class = active';
+
+                    if (moduleName == this.action || moduleName == this.module) {
+                        activeTab = true;
                     }
-                    navigation += self.render(["phpr.Core.template", "navigation.html"], null, {
-                        moduleName:     parentModule,
-                        moduleLabel:    moduleLabel,
-                        liclass:        liclass,
-                        moduleFunction: moduleFunction,
-                        functionParams: functionParams
+
+                    var entry = this._navigation.getEntryFromOptions({
+                        moduleLabel: moduleLabel,
+                        callback: dojo.hitch(
+                            this,
+                            "_subModuleNavigationClick",
+                            parentModule,
+                            moduleFunction,
+                            functionParams)
                     });
+                    this._navigation.onAddChild(entry);
+
+                    if (activeTab && !selectedEntry) {
+                        selectedEntry = entry;
+                    }
                 }
-                navigation += "</tr></table>";
-                dojo.byId("subModuleNavigation").innerHTML = navigation;
-                phpr.initWidgets(dojo.byId("subModuleNavigation"));
+
+                var subModuleNavigation = phpr.viewManager.getView().subModuleNavigation;
+                subModuleNavigation.set('content', this._navigation);
+                this._navigation.onSelectChild(selectedEntry);
+
                 this.customSetSubmoduleNavigation();
             })
         })
@@ -190,24 +289,34 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         //    Rewritten the function for work like a system module and like a form
 
         // Module name
-        if (data[0]) {
-            if (this.isSystemModule(data[0])) {
-                var module    = data.shift();
-                var subModule = module;
+        if (data.action) {
+            var module = null;
+            if (this.isSystemModule(data.moduleName)) {
+                module    = data.moduleName;
             } else {
-                var module    = this.module;
-                var subModule = data.shift();
+                module    = this.module;
             }
 
-            if (data[0] && data[1] && data[0] == 'id') {
+            var state = {
+                moduleName: module,
+                action: data.action
+            };
+
+            if (this.isSystemModule(data.moduleName)) {
+                state.parentModule = this.module;
+            }
+
+            if (data.id) {
                 // If is an id, open a form
-                var id = parseInt(data[1]);
-                if (subModule && (id > 0 || id == 0)) {
-                    dojo.publish(module + ".reload", [subModule]);
-                    dojo.publish(module + ".openForm", [id, subModule]);
+                if (subModule && (data.id > 0 || data.id == 0)) {
+                    state.id = data.id;
+                    phpr.pageManager.modifyCurrentState(state);
                 }
-            } else {
-                dojo.publish(module + ".reload", [subModule]);
+            } else if (this.action != data.action) {
+                this.action = data.action;
+                phpr.pageManager.modifyCurrentState(state, {
+                    forceModuleReload: true
+                });
             }
         }
     },
@@ -217,9 +326,9 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         //     This function is responsible for displaying the form for a new entry in the
         //     current Module
         if (this.isSystemModule(this.module)) {
-            this.publish("setUrlHash", [phpr.parentmodule, 0, [phpr.module]]);
+            this.publish("setUrlHash", [this.module, 0, [this.action]]);
         } else {
-            this.publish("setUrlHash", [phpr.parentmodule, 0]);
+            this.publish("setUrlHash", [this.module, 0]);
         }
     },
 

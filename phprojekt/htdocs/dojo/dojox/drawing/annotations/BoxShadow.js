@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.drawing.annotations.BoxShadow"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.drawing.annotations.BoxShadow"] = true;
 dojo.provide("dojox.drawing.annotations.BoxShadow");
 
 dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
@@ -113,7 +104,7 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 				p = o.place,
 				c = o.color;
 				
-			this[this.method](o, size, mult, d, r, p, c);	
+			this[this.method](o, size, mult, d, r, p, c);
 		},
 		
 		hide: function(){
@@ -140,7 +131,7 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 			for(var i=1;i<=size;i++){
 				var lineWidth = i * mult;
 				//var rect = this.container.createLine({x1:d.x1+shx, y1:d.y1+shy, x2:d.x2+shx, y2:d.y2+shy})
-				//	.setStroke({width:lineWidth, color:c, cap:"round"})		
+				//	.setStroke({width:lineWidth, color:c, cap:"round"})
 			
 				if(dojox.gfx.renderer=="svg"){
 					var strAr = [];
@@ -155,11 +146,11 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 					if(closePath){
 						strAr.push("Z");
 					}
-					this.container.createPath(strAr.join(", ")).setStroke({width:lineWidth, color:c, cap:"round"})	
+					this.container.createPath(strAr.join(", ")).setStroke({width:lineWidth, color:c, cap:"round"})
 					
 				}else{
 					// Leaving this code for VML. It seems slightly faster but times vary.
-					var pth = this.container.createPath({}).setStroke({width:lineWidth, color:c, cap:"round"})	
+					var pth = this.container.createPath({}).setStroke({width:lineWidth, color:c, cap:"round"})
 					
 					dojo.forEach(this.points, function(o, i){
 						if(i==0 || o.t=="M"){
@@ -186,7 +177,7 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 			for(var i=1;i<=size;i++){
 				var lineWidth = i * mult;
 				this.container.createLine({x1:d.x1+shx, y1:d.y1+shy, x2:d.x2+shx, y2:d.y2+shy})
-					.setStroke({width:lineWidth, color:c, cap:"round"})		
+					.setStroke({width:lineWidth, color:c, cap:"round"})
 			}
 		},
 		createForEllipse: function(o, size, mult, d, r, p, c){
@@ -198,7 +189,7 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 			for(var i=1;i<=size;i++){
 				var lineWidth = i * mult;
 				this.container.createEllipse({cx:d.cx+shx, cy:d.cy+shy, rx:d.rx-sh, ry:d.ry-sh, r:r})
-					.setStroke({width:lineWidth, color:c})		
+					.setStroke({width:lineWidth, color:c})
 			}
 		},
 		
@@ -211,7 +202,7 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 			for(var i=1;i<=size;i++){
 				var lineWidth = i * mult;
 				this.container.createRect({x:d.x+shx, y:d.y+shy, width:d.width-sh, height:d.height-sh, r:r})
-					.setStroke({width:lineWidth, color:c})		
+					.setStroke({width:lineWidth, color:c})
 			}
 		},
 		
@@ -234,7 +225,7 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 				y:pt.y
 			}
 			var angle = this.util.angle(obj);
-			var lineLength = this.util.length(obj); 
+			var lineLength = this.util.length(obj);
 			var al = this.style.arrows.length;
 			var aw = this.style.arrows.width/3;
 			if(lineLength<al){
@@ -279,7 +270,7 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 					
 				}else{
 					// Leaving this code for VML. It seems slightly faster but times vary.
-					var pth = this.container.createPath({}).setStroke({width:lineWidth, color:c, cap:"round"})	
+					var pth = this.container.createPath({}).setStroke({width:lineWidth, color:c, cap:"round"})
 					
 					dojo.forEach(pts, function(o, i){
 						if(i==0 || o.t=="M"){
@@ -314,5 +305,3 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 		}
 	}
 );
-
-}

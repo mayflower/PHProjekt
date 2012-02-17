@@ -61,7 +61,7 @@ class Phprojekt_Converter_Json
             $front = Zend_Controller_Front::getInstance();
             $front->getResponse()->setHeader('Content-Type', 'application/json; charset=utf-8');
         }
-        echo self::convert($param1, $param2);
+        Phprojekt_CompressedSender::send(self::convert($param1, $param2));
     }
 
     /**
@@ -110,19 +110,18 @@ class Phprojekt_Converter_Json
      * Convert a model or a model information into a json stream.
      *
      * @param Phprojekt_Interface_Model | array $models The model(s) to convert.
-     * @param integer                           $order
-     *          A Phprojekt_ModelInformation_Default::ORDERING_* const that
-     *          defines the ordering for the convert.
+     * @param integer                           $order  A Phprojekt_ModelInformation_Default::ORDERING_* const that
+     *                                                  defines the ordering for the convert.
      *
      * @return string Data in JSON format.
      */
-    private static function _convertModel(
-            $models,
-            $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
+    private static function _convertModel($models, $order = Phprojekt_ModelInformation_Default::ORDERING_DEFAULT)
     {
         if (empty($models)) {
             throw new Exception('Called with empty value');
         }
+        // TODO: Are we sure every model is of the same type and have the same
+        // parent?
         if (!is_array($models)) {
             $models = array($models);
         }
@@ -130,12 +129,17 @@ class Phprojekt_Converter_Json
         $fieldDefinition = $information->getFieldDefinition($order);
 
         $datas   = array();
-        $ids  = array();
+        $itemIds = array();
         foreach ($models as $model) {
+            if (!($model instanceof Phprojekt_Model_Interface)) {
+                throw new Exception("A given model does not implement the
+                    model interface.");
+            }
+
             $data = array();
 
             $data['id'] = (int) $model->id;
-            $ids[]      = $data['id'];
+            $itemIds[]  = $data['id'];
             foreach ($fieldDefinition as $field) {
                 $key   = $field['key'];
                 $value = $model->$key;
@@ -145,11 +149,23 @@ class Phprojekt_Converter_Json
             $datas[]        = $data;
         }
 
-        $rights = $models[0]->getMultipleRights($ids);
-        // We need the $idx to modify the $datas elements instead of just
-        // copies.
-        foreach ($datas as $index => $data) {
-            $datas[$index]['rights'] = $rights[$datas[$index]['id']];
+        $userId    = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $moduleId  = Phprojekt_Module::getId($models[0]->getModelName());
+        // Okay we got real models and stuff that pretends to be a model
+        // so we try to guess if we the model has rights that we can access
+        if ($models[0] instanceof Phprojekt_Item_Abstract) {
+            if ($models[0] instanceof Project_Models_Project) {
+                $projectId = $models[0]->id;
+            } else {
+                $projectId = $models[0]->projectId;
+            }
+            // TODO: we still asume that the getModelName call works
+            $rights    = Phprojekt_Right::getRightsForItems($moduleId,
+                $projectId, $userId, $itemIds);
+            // We need the $idx to modify the $datas elements instead of just copies.
+            foreach ($datas as $index => $data) {
+                $datas[$index]['rights'][$userId] = Phprojekt_Acl::convertBitmaskToArray($rights[$datas[$index]['id']]);
+            }
         }
 
         $data = array('metadata' => $fieldDefinition,
@@ -167,27 +183,37 @@ class Phprojekt_Converter_Json
      *
      * @return mixed The converted value to give to self::_makeJsonString.
      */
-    final private static function _convertModelValue($value, $field)
+    final private static function _convertModelValue($value, $field = null)
     {
-        if (is_numeric($value) && $field['integer']) {
-            return (int) $value;
+        if (!is_null($field)) {
+            if (is_numeric($value) && $field['integer']) {
+                return (int)$value;
+            }
+
+            if (is_scalar($value)) {
+                return $value;
+            }
+
+            if ($field['integer']) {
+                if (is_null($value) && !is_null($field['default'])) {
+                    return (int) $field['default'];
+                } else {
+                    return (int) $value;
+                }
+            }
+            if (is_null($value) && !is_null($field['default'])) {
+                return (string) $field['default'];
+            }
         }
+
         if (is_scalar($value)) {
             return $value;
         }
-        if ($field['integer']) {
-            if (is_null($value) && !is_null($field['default'])) {
-                return (int) $field['default'];
-            } else {
-                return (int) $value;
-            }
-        }
-        if (is_null($value) && !is_null($field['default'])) {
-            return (string) $field['default'];
-        }
+
         if (is_array($value)) {
             return array_map(array(get_class(), __FUNCTION__), $value);
         }
+
         return (string) $value;
     }
 

@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+dojo._hasResource["dojox.widget.Roller"]||(dojo._hasResource["dojox.widget.Roller"]=!0,dojo.provide("dojox.widget.Roller"),dojo.require("dijit._Widget"),dojo.declare("dojox.widget.Roller",dijit._Widget,{delay:2E3,autoStart:!0,itemSelector:"> li",durationIn:400,durationOut:275,_idx:-1,postCreate:function(){if(!this.items)this.items=[];dojo.addClass(this.domNode,"dojoxRoller");dojo.query(this.itemSelector,this.domNode).forEach(function(a,b){this.items.push(a.innerHTML);b==0?(this._roller=a,this._idx=
+0):dojo.destroy(a)},this);if(!this._roller)this._roller=dojo.create("li",null,this.domNode);this.makeAnims();this.autoStart&&this.start()},makeAnims:function(){var a=this.domNode;dojo.mixin(this,{_anim:{"in":dojo.fadeIn({node:a,duration:this.durationIn}),out:dojo.fadeOut({node:a,duration:this.durationOut})}});this._setupConnects()},_setupConnects:function(){var a=this._anim;this.connect(a.out,"onEnd",function(){this._setIndex(this._idx+1);a["in"].play(15)});this.connect(a["in"],"onEnd",function(){this._timeout=
+setTimeout(dojo.hitch(this,"_run"),this.delay)})},start:function(){if(!this.rolling)this.rolling=!0,this._run()},_run:function(){this._anim.out.gotoPercent(0,!0)},stop:function(){this.rolling=!1;var a=this._anim,b=this._timeout;b&&clearTimeout(b);a["in"].stop();a.out.stop()},_setIndex:function(a){var b=this.items.length-1;a<0&&(a=b);a>b&&(a=0);this._roller.innerHTML=this.items[a]||"error!";this._idx=a}}),dojo.declare("dojox.widget.RollerSlide",dojox.widget.Roller,{durationOut:175,makeAnims:function(){var a=
+this.domNode;dojo.style(a,"position","relative");dojo.style(this._roller,"position","absolute");dojo.mixin(this,{_anim:{"in":dojo.animateProperty({node:a,duration:this.durationIn,properties:{top:{end:0,start:25},opacity:1}}),out:dojo.fadeOut({node:a,duration:this.durationOut})}});this._setupConnects()}}),dojo.declare("dojox.widget._RollerHover",null,{postCreate:function(){this.inherited(arguments);this.connect(this.domNode,"onmouseenter","stop");this.connect(this.domNode,"onmouseleave","start")}}));

@@ -1,12 +1,3 @@
-/*
-	Copyright (c) 2004-2010, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-
-if(!dojo._hasResource["dojox.form.manager._EnableMixin"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
-dojo._hasResource["dojox.form.manager._EnableMixin"] = true;
 dojo.provide("dojox.form.manager._EnableMixin");
 
 dojo.require("dojox.form.manager._Mixin");
@@ -34,7 +25,7 @@ dojo.require("dojox.form.manager._Mixin");
 			//		If it is omitted, all known form elements are to be processed.
 
 			var result = this.inspectFormWidgets(ia(function(name, widget){
-				return !widget.attr("disabled");
+				return !widget.get("disabled");
 			}), names);
 
 			if(this.inspectFormNodes){
@@ -62,7 +53,7 @@ dojo.require("dojox.form.manager._Mixin");
 			}
 
 			this.inspectFormWidgets(aa(function(name, widget, value){
-				widget.attr("disabled", !value);
+				widget.set("disabled", !value);
 			}), state, defaultState);
 
 			if(this.inspectFormNodes){
@@ -88,5 +79,3 @@ dojo.require("dojox.form.manager._Mixin");
 		}
 	});
 })();
-
-}

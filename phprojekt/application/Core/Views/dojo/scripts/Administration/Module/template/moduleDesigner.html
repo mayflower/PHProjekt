@@ -1,8 +1,6 @@
-<div id="moduleDesignerContent"
- style="width: 100%; height: 100%; background-color: #294064;">
-    <div
-    style="background-color: #294064; height: 98%; width: 48%; float: left;">
-        <div dojoType="phpr.Module.Designer" id="moduleDesignerSource" jsId="moduleDesignerSource" copyOnly="false"
+<div class="claro" id="moduleDesignerContent" style="width: 100%; height: 100%; background-color: #294064;">
+    <div style="background-color: #294064; height: 98%; width: 48%; float: left;">
+        <div dojoType="phpr.Module.Designer" id="moduleDesignerSource" tabId="moduleDesignerSource" copyOnly="false"
         skipForm="true" selfAccept="false"
         style="background-color: #fff; height: 65%; width: 100%; margin: 4px; overflow: auto;">
         </div>
@@ -42,7 +40,7 @@
             {% for tab in tabs %}
             <div dojoType="dijit.layout.ContentPane" title="{{tab.name}}">
                 <div dojoType="phpr.Module.Designer" id="moduleDesignerTarget{{tab.nameId}}"
-                jsId="moduleDesignerTarget{{tab.nameId}}" skipForm="true" selfAccept="true"
+                tabId="moduleDesignerTarget{{tab.nameId}}" skipForm="true" selfAccept="true"
                 style="background-color: #fff; width: 100%; height: 95%; margin: 0px;">
                 </div>
             </div>

@@ -25,7 +25,6 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
     define('PHPUnit_MAIN_METHOD', 'Phprojekt_AllTests::main');
 }
 
-require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 require_once 'ActiveRecord/AbstractTest.php';
@@ -96,7 +95,7 @@ class Phprojekt_AllTests
         $suite = new PHPUnit_Framework_TestSuite('Default Controller');
 
         $suite->addTestSuite('Phprojekt_ModuleTest');
-        $suite->addTestSuite('Phprojekt_GroupTest');
+//        $suite->addTestSuite('Phprojekt_GroupTest');
         $suite->addTestSuite('Phprojekt_LoaderTest');
         $suite->addTestSuite('Phprojekt_DatabaseManagerTest');
         $suite->addTestSuite('Phprojekt_DatabaseManager_FieldTest');
@@ -122,7 +121,7 @@ class Phprojekt_AllTests
         $suite->addTestSuite('Phprojekt_SearchTest');
         $suite->addTestSuite('Phprojekt_TabsTest');
         $suite->addTestSuite('Phprojekt_PhprojektTest');
-        $suite->addTestSuite('Phprojekt_Date_CollectionTest');
+        //$suite->addTestSuite('Phprojekt_Date_CollectionTest');
         $suite->addTestSuite('Phprojekt_ConfigurationTest');
         $suite->addTestSuite('Phprojekt_SettingTest');
         $suite->addTestSuite('Phprojekt_FilterTest');

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+    <timecard id="7" owner_id="1" start_datetime="2009-05-17 9:00:00"
+        end_time="13:00:00" minutes="" project_id="1" notes="My note"
+        module_id="2" item_id="1" />
+    <timecard id="8" owner_id="1" start_datetime="2009-05-17 14:00:00"
+        end_time="18:00:00" minutes="120" project_id="1" notes="My note"
+        module_id="2" item_id="1" />
+    <timecard id="9" owner_id="1" start_datetime="2009-07-03 10:00:00"
+        minutes="" project_id="1" notes="My note"
+        module_id="2" item_id="1" />
+</dataset>

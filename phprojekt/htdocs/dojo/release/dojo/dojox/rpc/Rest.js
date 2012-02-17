@@ -1,0 +1,11 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+
+if(!dojo._hasResource["dojox.rpc.Rest"]){dojo._hasResource["dojox.rpc.Rest"]=!0;dojo.provide("dojox.rpc.Rest");dojox.rpc&&dojox.rpc.transportRegistry&&dojox.rpc.transportRegistry.register("REST",function(c){return c=="REST"},{getExecutor:function(c,d,a){return new dojox.rpc.Rest(d.name,(d.contentType||a._smd.contentType||"").match(/json|javascript/),null,function(c,e){var b=a._getRequest(d,[c]);b.url=b.target+(b.data?"?"+b.data:"");if(e&&(e.start>=0||e.count>=0))b.headers=b.headers||{},b.headers.Range=
+"items="+(e.start||"0")+"-"+("count"in e&&e.count!=Infinity?e.count+(e.start||0)-1:"");return b})}});var drr,index=function(c,d,a){c.addCallback(function(d){if(c.ioArgs.xhr&&a)a=c.ioArgs.xhr.getResponseHeader("Content-Range"),c.fullLength=a&&(a=a.match(/\/(.*)/))&&parseInt(a[1]);return d});return c};drr=dojox.rpc.Rest=function(c,d,a,f){function e(a){b[a]=function(c,d){return drr._change(a,b,c,d)}}var b;b=function(a,c){return drr._get(b,a,c)};b.isJson=d;b._schema=a;b.cache={serialize:d?(dojox.json&&
+dojox.json.ref||dojo).toJson:function(a){return a}};b._getRequest=f||function(a,b){dojo.isObject(a)&&(a=(a=dojo.objectToQuery(a))?"?"+a:"");if(b&&b.sort&&!b.queryStr){a+=(a?"&":"?")+"sort(";for(var e=0;e<b.sort.length;e++){var f=b.sort[e];a+=(e>0?",":"")+(f.descending?"-":"+")+encodeURIComponent(f.attribute)}a+=")"}e={url:c+(a==null?"":a),handleAs:d?"json":"text",contentType:d?"application/json":"text/plain",sync:dojox.rpc._sync,headers:{Accept:d?"application/json,application/javascript":"*/*"}};
+if(b&&(b.start>=0||b.count>=0))e.headers.Range="items="+(b.start||"0")+"-"+("count"in b&&b.count!=Infinity?b.count+(b.start||0)-1:"");dojox.rpc._sync=!1;return e};e("put");e("post");e("delete");b.servicePath=c;return b};drr._index={};drr._timeStamps={};drr._change=function(c,d,a,f){a=d._getRequest(a);a[c+"Data"]=f;return index(dojo.xhr(c.toUpperCase(),a,!0),d)};drr._get=function(c,d,a){a=a||{};return index(dojo.xhrGet(c._getRequest(d,a)),c,a.start>=0||a.count>=0,d)}};
