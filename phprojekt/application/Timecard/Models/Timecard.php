@@ -136,6 +136,27 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 }
             }
 
+            if (!empty($data['startDatetime'])) {
+                $overlaps  = $this->_hasOverlappingTime();
+                if ($this->id != 0 && $overlaps) {
+                    // Stop Working Times button pressed, or it is being saved an existing period
+                    // Check if end time overlaps any existing period but the current one
+                    $this->_validate->error->addError(array(
+                        'field'   => 'Time period',
+                        'label'   => Phprojekt::getInstance()->translate('Time period'),
+                        'message' => Phprojekt::getInstance()->translate('Can not End Working Time because this'
+                        . ' moment is occupied by an existing period')));
+                    return false;
+                } else if ($overlaps && $this->id == 0) {
+                    $this->_validate->error->addError(array(
+                        'field'   => 'Time period',
+                        'label'   => Phprojekt::getInstance()->translate('Time period'),
+                        'message' => Phprojekt::getInstance()->translate('Can not save it because it overlaps '
+                            . 'existing one')));
+                    return false;
+                }
+            }
+
             if (!isset($data['endTime'])) {
                 // Start Hours button pressed - Check if new start time overlaps any existing period
                 if ($this->_hasOverlappingTime()) {
@@ -189,32 +210,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
                 return false;
             }
-
-            if (!empty($data['startDatetime'])) {
-                $startTime = str_replace(":", "", substr($data['startDatetime'], 11));
-                if (strlen($startTime) == 6) {
-                    $startTime = substr($startTime, 0, 4);
-                }
-                $startTime = (int) $startTime;
-                $overlaps  = $this->_hasOverlappingTime();
-                if ($this->id != 0 && $overlaps) {
-                    // Stop Working Times button pressed, or it is being saved an existing period
-                    // Check if end time overlaps any existing period but the current one
-                    $this->_validate->error->addError(array(
-                        'field'   => 'Time period',
-                        'label'   => Phprojekt::getInstance()->translate('Time period'),
-                        'message' => Phprojekt::getInstance()->translate('Can not End Working Time because this'
-                        . ' moment is occupied by an existing period')));
-                    return false;
-                } else if ($overlaps && $this->id == 0) {
-                    $this->_validate->error->addError(array(
-                        'field'   => 'Time period',
-                        'label'   => Phprojekt::getInstance()->translate('Time period'),
-                        'message' => Phprojekt::getInstance()->translate('Can not save it because it overlaps '
-                            . 'existing one')));
-                    return false;
-                }
-            }
         }
 
         return $this->_validate->recordValidate($this, $data, $fields);
@@ -239,23 +234,20 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $select->where("id != ?", $this->id);
         }
 
+        $binding = array('startTime' => $startTime);
+
         if (null !== $this->endTime) {
-            $select->where("(TIME(start_datetime) <= ? AND end_time > ?) "
-                    . " OR (TIME(start_datetime) < ? AND end_time >= ?) "
-                    . " OR (TIME(start_datetime) <= ? AND end_time >= ?) "
-                    . " OR (TIME(start_datetime) >= ? AND end_time <= ?)",
-                    $startTime, $startTime,
-                    $this->endTime, $this->endTime,
-                    $startTime, $this->endTime,
-                    $startTime, $this->endTime);
+            $select->where("(TIME(start_datetime) <= :startTime AND end_time > :startTime) "
+                    . " OR (TIME(start_datetime) < :endTime AND end_time >= :endTime) "
+                    . " OR (TIME(start_datetime) <= :startTime AND end_time >= :endTime) "
+                    . " OR (TIME(start_datetime) >= :startTime AND end_time <= :endTime)");
+            $binding['endTime'] = $this->endTime;
         } else {
-            $select->where("(TIME(start_datetime) <= ? AND end_time > ? )"
-                    . " OR (TIME(start_datetime) <= ? AND end_time IS NULL)",
-                    $startTime, $startTime,
-                    $startTime);
+            $select->where("(TIME(start_datetime) <= :startTime AND end_time > :startTime )"
+                    . " OR (TIME(start_datetime) <= :startTime AND end_time IS NULL)");
         }
 
-        $ret = $select->query()->fetchColumn();
+        $ret = $select->query(null, $binding)->fetchColumn();
 
         return $ret != "0";
     }
@@ -434,6 +426,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $select = $db->select();
         $select->from("timecard")
             ->where("owner_id = ?", $ownerId)
+            ->where("end_time IS NULL")
             ->where("YEAR(start_datetime) = ?", $year)
             ->where("MONTH(start_datetime) = ?", $month)
             ->where("DAY(start_datetime) = ?", $date)
