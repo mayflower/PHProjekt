@@ -49,7 +49,6 @@ class Phprojekt_Converter_String
         // Clean up HTML
         $string = strip_tags($string);
         $string = mb_strtolower($string, 'UTF-8');
-        $string = preg_replace('#\P{L}+#u', ' ', $string);
 
         return $string;
     }
