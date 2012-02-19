@@ -66,33 +66,18 @@
      For TextBox, ComboBox, Spinner: the table that contains the input.
      Otherwise the actual input element.
      */
-    border: 1px solid #8ba0bd;
     line-height: normal;
     font-size: 100%;
 }
 
+.dj_webkit .phprojekt .dijitDisabled input,
+.dj_webkit .phprojekt .dijitTextBoxDisabled,
+.dj_webkit .phprojekt .dijitTextBoxDisabled .dijitInputContainer,
+.phprojekt .dijitDisabled input,
 .phprojekt .dijitTextBoxDisabled,
-.phprojekt .dijitComboBoxDisabled,
-.phprojekt select,
-.phprojekt .dijitSpinnerDisabled,
-.phprojekt .dijitMultiSelect,
-.phprojekt .dijitTextAreaDisabled {
-    color: gray;
-}
-
-.phprojekt .dijitTextBoxDisabled,
-.phprojekt .dijitComboBoxDisabled,
-.phprojekt .dijitSpinnerDisabled,
-.phprojekt .dijitTextAreaDisabled {
-    background: #C3D3E5 url('../images/buttonDisabled.png') repeat-x scroll center top;
-    opacity: 0.6;
-}
-
-.dj_safari .phprojekt .dijitTextBoxDisabled,
-.dj_safari .phprojekt .dijitComboBoxDisabled,
-.dj_safari .phprojekt .dijitSpinnerDisabled,
-.dj_safari .phprojekt .dijitTextareaDisabled {
-    color: #eee;
+.phprojekt .dijitTextBoxDisabled .dijitInputContainer {
+    color: #000000 !important;
+    background-color: #F5F5F5 !important;
 }
 
 .dj_gecko .phprojekt select {

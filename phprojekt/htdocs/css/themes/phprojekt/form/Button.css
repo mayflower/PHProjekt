@@ -231,9 +231,7 @@
 .phprojekt .dijitSpinnerDisabled,
 .phprojekt .dijitSpinnerDisabled .dijitButtonNode {
     /* disabled state - inner */
-    border-color: #b9bbdd #b9bbdd #b9bbdd #b9bbdd;
-    background: #c3d3e5 url("../images/buttonDisabled.png") top repeat-x;
-    opacity: 0.60; /* Safari, Opera and Mozilla */
+    background: #c3d3e5 top repeat-x;
 }
 
 .phprojekt .dijitButtonHover .dijitButtonNode,
@@ -263,6 +261,11 @@
      when a toggle button is in a depressed state
      */
     border-color: #657c9c;
+}
+
+.phprojekt .dijitArrowButtonContainer input,
+.phprojekt .dijitComboBox .dijitArrowButtonInner input {
+    border: 1px solid transparent !important;
 }
 
 .phprojekt .dijitArrowButtonInner,
