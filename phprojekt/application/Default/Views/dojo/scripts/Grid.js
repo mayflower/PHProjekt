@@ -702,7 +702,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         break;
                     default:
                         input  = '<input type="text" name="filterValue" dojoType="dijit.form.ValidationTextBox" ' +
-                            'regExp="' + phpr.regExpForFilter.getExp() + '" ' +
                             'invalidMessage="' + phpr.regExpForFilter.getMsg() + '" />';
                         rulesOptions = new Array('like', 'notLike', 'begins', 'ends', 'equal', 'notEqual',
                             'major', 'majorEqual', 'minor', 'minorEqual');
