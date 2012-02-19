@@ -23,6 +23,10 @@ dojo.provide("phpr.Default.System.FrontendMessage");
 
 dojo.declare("phpr.Default.System.FrontendMessage", null, {
     url: null,
+    _disabled: false,
+    _lastRun: new Date(),
+    _interval: 30000,
+    _timeout: null,
 
     constructor: function() {
         this.url = phpr.webpath + 'index.php/Default/index/jsonGetFrontendMessage';
@@ -45,9 +49,42 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
                 if (false !== response.data) {
                     that.showToaster(response.data);
                 }
+                that._scheduleNextRun();
             },
             handleAs: 'json'
         });
+    },
+
+    _scheduleNextRun: function() {
+        if (this._disabled) {
+            return;
+        }
+
+        var waittime = Math.max(0, this._interval - (new Date() - this._lastRun));
+        var that = this;
+
+        if (this._timeout !== null) {
+            clearTimeout(this._timeout);
+        }
+
+        this._timeout = setTimeout(
+            function() {
+                that._nextRun();
+                that._timeout = null;
+            },
+            waittime
+        );
+
+        this._lastRun = new Date();
+    },
+
+    _nextRun: function() {
+        this.getFrontendMessage();
+    },
+
+    startLoop: function(interval) {
+        this._interval = interval;
+        this._scheduleNextRun();
     },
 
     disableFrontendMessages: function() {
@@ -56,6 +93,7 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
         // Description:
         //    Disables all the frontend messages by calling the disableFrontendMessages action
         //    from the indexController
+        this._disabled = true;
         var url = phpr.webpath + 'index.php/Default/index/jsonDisableFrontendMessages';
         phpr.send({
             url:       url
@@ -72,8 +110,6 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
         // Description:
         //    Publishes the dojo toaster widget and clears the existing interval loop.
         //    In addition, starts a new interval loop.
-        clearInterval(window.interval);
-        window.getFrontendMessage();
 
         var moduleUrl  = "#" + data.module + "," + data.projectId + ",id," + data.itemId;
         var currentUrl = window.location.hash;
