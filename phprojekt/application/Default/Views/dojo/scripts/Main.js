@@ -926,8 +926,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Add the onkeyup to the search field
         if (this._searchEvent === null) {
             var searchfield = phpr.viewManager.getView().searchfield;
-            searchfield.regExp         = phpr.regExpForFilter.getExp();
-            searchfield.invalidMessage = phpr.regExpForFilter.getMsg();
             this._searchEvent = dojo.connect(searchfield.domNode, "onkeyup",
                     dojo.hitch(this, "waitForSubmitSearchForm"));
             this.garbageCollector.addEvent(this._searchEvent);
