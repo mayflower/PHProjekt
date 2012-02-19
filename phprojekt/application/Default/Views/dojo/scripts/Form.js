@@ -1431,7 +1431,9 @@ dojo.declare("phpr.Default.DialogForm", phpr.Default.Form, {
     setContainer: function(container) {
         this.node = new dijit.layout.ContentPane({style: "width: 100%; height: 100%; overflow: hidden;"});
         this.buttons = new dijit.layout.ContentPane({style: "width: 100%; height: 30px; padding-top: 10px;"});
-        this.dialog = new dijit.Dialog({style: "width: 80%; height: 80%;"});
+        //draggable = false must be set because otherwise the dialog can not be closed on the ipad
+        //bug: http://bugs.dojotoolkit.org/ticket/13488
+        this.dialog = new dijit.Dialog({style: "width: 80%; height: 80%;", draggable: false});
 
         this.dialog.show();
 
