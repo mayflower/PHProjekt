@@ -76,6 +76,11 @@ class Calendar2_Helper_Rrule
     private $_duration;
 
     /**
+     * @var dateInterval original duration
+     */
+    private $_durationDT;
+
+    /**
      * Constructor.
      *
      * @param Datetime          $first      The first occurence of the event.
@@ -93,6 +98,7 @@ class Calendar2_Helper_Rrule
         $tmp = clone $first;
         $tmp->add($duration);
         $this->_duration    = $tmp->getTimestamp() - $first->getTimestamp();
+        $this->_durationDT  = $duration;
     }
 
     /**
@@ -476,7 +482,7 @@ class Calendar2_Helper_Rrule
         if (empty($this->_rrule)) {
             // No recurrence at all
             $tmp = clone $this->_first;
-            $tmp->add(new DateInterval("PT{$this->_duration}S"));
+            $tmp->add($this->_durationDT);
             return $tmp;
         }
         if (!array_key_exists('UNTIL', $this->_rrule) || empty($this->_rrule['UNTIL'])) {
@@ -485,7 +491,7 @@ class Calendar2_Helper_Rrule
         }
 
         $until = clone $this->_rrule['UNTIL'];
-        $until->add(new DateInterval("PT{$this->_duration}S"));
+        $until->add($this->_durationDT);
         return $until;
     }
 
