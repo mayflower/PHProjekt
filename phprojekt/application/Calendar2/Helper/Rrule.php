@@ -479,7 +479,7 @@ class Calendar2_Helper_Rrule
             $tmp->add(new DateInterval("PT{$this->_duration}S"));
             return $tmp;
         }
-        if (!array_key_exists('UNITL', $this->_rrule) || empty($this->_rrule['UNTIL'])) {
+        if (!array_key_exists('UNTIL', $this->_rrule) || empty($this->_rrule['UNTIL'])) {
             // Unlimited recurrence
             return null;
         }
