@@ -104,6 +104,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         dojo.subscribe(this.module + ".dayViewClick", this, "dayViewClick");
         dojo.subscribe(this.module + ".weekViewClick", this, "weekViewClick");
         dojo.subscribe(this.module + ".monthViewClick", this, "monthViewClick");
+        dojo.subscribe(this.module + ".caldavViewClick", this, "caldavViewClick");
         dojo.subscribe(this.module + ".setDate", this, "setDate");
         dojo.subscribe(this.module + ".userSelectionClick", this, "userSelectionClick");
         dojo.subscribe(this.module + ".anotherViewDayClick", this, "anotherViewDayClick");
@@ -121,6 +122,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.dayListSelectWidget = phpr.Calendar2.ViewDayListSelect;
         this.weekListWidget = phpr.Calendar2.ViewWeekList;
         this.monthListWidget = phpr.Calendar2.ViewMonthList;
+        this.caldavViewWidget = phpr.Calendar2.ViewCaldav;
         this.formWidget = phpr.Calendar2.Form;
         this.userStore = new phpr.Default.System.Store.User();
 
@@ -187,6 +189,9 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
                 break;
             case "monthList":
                 this.loadMonthList();
+                break;
+            case "caldavView":
+                this.loadCaldavView();
                 break;
             default:
         }
@@ -280,6 +285,16 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.setScheduleBar(true, false);
     },
 
+    loadCaldavView: function() {
+        // Summary:
+        //    This function loads the Caldav view
+        this.destroyOtherLists('caldavView');
+        phpr.viewManager.getView().buttonRow.set('content', '');
+        this.setNewEntry();
+        this.caldavView = new this.caldavViewWidget();
+        this.setSubmoduleNavigation();
+    },
+
     showFormFromList: function(rowID) {
         // Summary:
         //    This function opens an specific item clicked from the views
@@ -322,6 +337,12 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
 
         this._changeStateWithNewAction("monthList");
+    },
+
+    caldavViewClick: function() {
+        // Summary:
+        //    This function loads the caldav view.
+        this._changeStateWithNewAction("caldavView");
     },
 
     _changeStateWithNewAction: function(actionName, force) {
@@ -527,6 +548,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.addModuleView(moduleViews, phpr.nls.get('Day'), 'dayViewClick', this.isListActive('dayList'));
         this.addModuleView(moduleViews, phpr.nls.get('Week'), 'weekViewClick', this.isListActive(this.weekList));
         this.addModuleView(moduleViews, phpr.nls.get('Month'), 'monthViewClick', this.isListActive(this.monthList));
+        this.addModuleView(moduleViews, phpr.nls.get('CalDav'), 'caldavViewClick', this.isListActive(this.caldavView));
         if (this.isListActive('dayList')) {
             this.addModuleView(moduleViews, phpr.nls.get('Selection'), 'userSelectionClick', this._usersSelectionMode);
         }
