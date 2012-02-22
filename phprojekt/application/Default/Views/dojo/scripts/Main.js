@@ -1334,6 +1334,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                     connectId: [node],
                     showDelay: 50
                 });
+                break;
             }
         }
     },
