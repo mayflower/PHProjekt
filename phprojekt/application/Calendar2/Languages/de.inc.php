@@ -402,3 +402,11 @@ $lang['Checking availability...'] = 'Überprüfe Verfügbarkeit...';
 $lang['The participant is available'] = 'Der Teilnehmer ist verfügbar';
 $lang['The participant is not available'] = 'Der Teilnehmer ist nicht verfügbar';
 $lang['Availability'] = 'Verfügbarkeit';
+
+// caldav
+$lang['CalDav urls'] = 'CalDav Urls';
+$lang['CalDav url'] = 'CalDav Url';
+$lang['CalDav url for Apple software'] = 'CalDav Url für Apple software';
+$lang['Notice'] = 'Hinweis';
+$lang['Please pay attention to the trailing slash, it is important'] = 'Bitte achten sie auf den Slash am Ende der Url,
+                                                                        dieser wird benötigt';

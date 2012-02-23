@@ -22,7 +22,7 @@
 dojo.provide("phpr.Project.Form");
 
 dojo.declare("phpr.Project.Form", phpr.Default.Form, {
-    initData:function() {
+    initData: function() {
         // Get roles
         this.roleStore = new phpr.Default.System.Store.Role(phpr.currentProjectId, this.id);
         this._initData.push({'store': this.roleStore});
@@ -34,7 +34,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.inherited(arguments);
     },
 
-    addModuleTab:function(data) {
+    addModuleTab: function(data) {
         // Summary:
         //    Add Tab for allow/disallow modules on the project
         // Description:
@@ -45,7 +45,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
         var modulesData = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Project.template.moduleTab.html",
-            templateData:{
+            templateData: {
                 moduleNameText:   phpr.nls.get('Module'),
                 moduleActiveText: phpr.nls.get('Active'),
                 modules:          this.moduleStore.getList(),
@@ -57,7 +57,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         return this.addTab([modulesData], 'tabModules', 'Module', 'moduleFormTab');
     },
 
-    addRoleTab:function(data) {
+    addRoleTab: function(data) {
         // Summary:
         //    Add Tab for user-role relation into the project
         // Description:
@@ -67,7 +67,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         }
 
         var currentUser  = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
-        var users        = new Array();
+        var users        = [];
         var userList     = this.userStore.getList();
         var relationList = this.roleStore.getRelationList();
 
@@ -86,7 +86,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 accessUserText:   phpr.nls.get('User'),
                 accessRoleText:   phpr.nls.get('Role'),
                 accessActionText: phpr.nls.get('Action'),
-                disabled:         (users.length == 0 || !this._accessPermissions) ? 'disabled="disabled"' : '',
+                disabled:         (users.length === 0 || !this._accessPermissions) ? 'disabled="disabled"' : '',
                 users:            users,
                 roles:            this.roleStore.getList()
             }
@@ -94,7 +94,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
         this._rolesTab = rolesData;
 
-        for (i in relationList) {
+        for (var i in relationList) {
             this._addRoleTabRow(relationList[i], currentUser);
         }
         this.garbageCollector.addNode(rolesData);
@@ -128,13 +128,14 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             this._roleRowsForUsers = {};
         }
 
-        this._deleteRoleRowForUserId(relationData.userId)
+        this._deleteRoleRowForUserId(relationData.userId);
 
         var row = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Project.template.roleRow.html",
             templateData: {
                 userId:    relationData.userId
-        }});
+            }
+        });
 
         this.garbageCollector.addNode(row);
 
@@ -145,7 +146,8 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
                 userDisplay: relationData.userDisplay,
                 currentUser: (relationData.userId == currentUser)
-            }});
+            }
+        });
         this.garbageCollector.addNode(userField);
 
         row.userField.appendChild(userField.domNode);
@@ -158,7 +160,8 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 disabled:    (!this._accessPermissions) ? 'disabled="disabled"' : '',
                 currentUser: (relationData.userId == currentUser),
                 roleName:    relationData.roleName
-            }});
+            }
+        });
         this.garbageCollector.addNode(roleField);
 
         row.roleField.appendChild(roleField.domNode);
@@ -175,20 +178,31 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this._rolesTab.tbody.appendChild(row.domNode);
     },
 
-    addModuleTabs:function(data) {
+    addModuleTabs: function(data) {
         if (this._destroyed) {
             return;
         }
 
         var def = this.addAccessTab(data);
-        def = dojo.when(def, dojo.hitch(this, function() {return this.addModuleTab(data)}))
-        def = dojo.when(def, dojo.hitch(this, function() {return this.addRoleTab(data)}))
-        def = dojo.when(def, dojo.hitch(this, function() {return this.addNotificationTab(data)}))
-        def = dojo.when(def, dojo.hitch(this, function() {return this.addHistoryTab()}))
+        def = dojo.when(def, dojo.hitch(this, function() {
+            return this.addModuleTab(data);
+        }));
+        def = dojo.when(def, dojo.hitch(this, function() {
+            return this.addRoleTab(data);
+        }));
+        def = dojo.when(def, dojo.hitch(this, function() {
+            return this.addNotificationTab(data);
+        }));
+        def = dojo.when(def, dojo.hitch(this, function() {
+            return this.addWebDavTab();
+        }));
+        def = dojo.when(def, dojo.hitch(this, function() {
+            return this.addHistoryTab();
+        }));
         return def;
     },
 
-    newRoleUser:function() {
+    newRoleUser: function() {
         // Summary:
         //    Add a new row of one user-role
         // Description:
@@ -208,13 +222,75 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
     },
 
-    deleteForm:function() {
+    addWebDavTab: function() {
+        // Summary:
+        //    Add the webdav tab
+        // Description:
+        //    Add a tab with the webdav url of the project
+
+        var url = phpr.webpath + 'index.php/Project/index/jsonTree';
+        var that = this;
+        phpr.DataStore.addStore({ url: url });
+        return phpr.DataStore.requestData({ url: url}).then(
+            function(data) {
+                data = data.data;
+                var path;
+                var state = phpr.pageManager.getState();
+                var projectId = parseInt(state.projectId) || null;
+                if (projectId && dojo.isArray(data.items)) {
+                    var path = that._buildPathFromTreeData(data.items);
+                    var url = phpr.webpath + "index.php/WebDAV/index/index/" + path;
+                    var widget = new phpr.Default.System.TemplateWrapper({
+                        templateName: "phpr.Project.template.webdavTab.html",
+                        templateData: {
+                            label: phpr.nls.get("WebDav url"),
+                            url: url
+                        }
+                    });
+
+                    return that.addTab([widget], 'tabWebDav', "WebDav", null);
+                }
+            }
+        );
+
+    },
+
+    _buildPathFromTreeData: function(data) {
+        var projects = this._convertTreeDataToProjectMap(data);
+        var currentProjectId = "" + phpr.pageManager.getState().projectId;
+
+        if (!currentProjectId) {
+            return "";
+        }
+
+        var traverseTree = function(item) {
+            var ret = "";
+            if (item.parent && projects[item.parent] && item.parent != "1") {
+                ret = traverseTree(projects[item.parent]);
+            }
+
+            return ret + encodeURIComponent(item.name) + "/";
+        };
+
+        return traverseTree(projects[currentProjectId]);
+    },
+
+    _convertTreeDataToProjectMap: function(data) {
+        var map = {};
+        dojo.forEach(data, function(item) {
+            map[item.id] = dojo.clone(item);
+        });
+
+        return map;
+    },
+
+    deleteForm: function() {
         // Summary:
         //    This function is responsible for deleting a dojo element
         // Description:
         //    This function calls jsonDeleteAction
         //    Also show a warning since the process can take some time
-        var result     = Array();
+        var result     = [];
         result.type    = 'warning';
         result.message = phpr.nls.get('The deletion of a project and its subprojects might take a while');
         new phpr.handleResponse('serverFeedback', result);
@@ -222,7 +298,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         this.inherited(arguments);
     },
 
-    updateData:function() {
+    updateData: function() {
         this.inherited(arguments);
 
         var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
