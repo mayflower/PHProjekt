@@ -321,7 +321,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
                     }).then(dojo.hitch(this, function() {
                         this.setSubmitInProgress(false);
                         phpr.pageManager.modifyCurrentState(
-                            { moduleName: "Module" },
+                            { moduleName: "Module", id: undefined },
                             { forceModuleReload: true }
                         );
                     }));
