@@ -143,10 +143,14 @@ HERE;
         $this->assertEquals('Saal 1', $model->location);
         $this->assertEquals('Some Description', $model->description);
         $this->assertEquals('the summary is here', $model->summary);
+
+        $reflection = new ReflectionClass($model);
+        $data       = $reflection->getProperty('_data');
+        $data->setAccessible(true);
+        $data       = $data->getValue($model);
+
         // User timezone is utc in tests, so 1500 is correct
-        error_log(var_export($model->start, true));
-        error_log(var_export($model->end, true));
-        $this->assertEquals('2011-12-29 15:00:00', $model->start);
-        $this->assertEquals('2011-12-29 16:00:00', $model->end);
+        $this->assertEquals('2011-12-29 15:00:00', $data['start']);
+        $this->assertEquals('2011-12-29 16:00:00', $data['end']);
     }
 }

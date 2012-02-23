@@ -22,7 +22,7 @@ $lang["End time has to be between 0:00 and 24:00"] = "La hora final tiene que se
 $lang["The end time is invalid"] = "La hora final es inválida";
 $lang["Can not End Working Time because this moment is occupied by an existing period"] = "No se puede Terminar "
     . "Tiempo de Trabajo porque este momento está ocupado por un período existente";
-$lang["Can not save it because it overlaps existing one"] = "No puede grabarse porque se superpone con un período "
+$lang["The entry overlaps with an existing one"] = "No puede grabarse porque se superpone con un período "
     . "existente";
 
 // View
