@@ -216,7 +216,6 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
      *
      * @return void
      */
-
     public function updateCalendarObject($calendarId, $objectUri, $calendarData)
     {
         $db    = Phprojekt::getInstance()->getDb();
