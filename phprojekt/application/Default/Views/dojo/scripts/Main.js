@@ -643,20 +643,13 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         phpr.DataStore.requestData({
             url:         subModuleUrl,
             processData: dojo.hitch(this, function() {
-                var modules        = phpr.DataStore.getData({url: subModuleUrl});
+                var modules        = dojo.clone(phpr.DataStore.getData({url: subModuleUrl}));
                 var foundBasicData = false;
 
-                for (var i = 0; i < modules.length; i++) {
-                    if (modules[i].label == 'Basic Data') {
-                        foundBasicData = true;
-                        break;
-                    }
-                }
-
-                if (!foundBasicData && phpr.currentProjectId != 1) {
+                if (phpr.currentProjectId != 1) {
                     modules.unshift({
                         name:           "Project",
-                        label:          "Basic Data",
+                        label:          phpr.nls.get("Basic Data"),
                         rights:         {read: true},
                         moduleFunction: "setUrlHash",
                         functionParams: "'Project', null, ['basicData']"
@@ -666,7 +659,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 if (currentModule == "BasicData") {
                     phpr.module = 'Project';
                 }
-
 
                 var subModuleNavigation = phpr.viewManager.getView().subModuleNavigation;
                 this._navigation = new phpr.Default.System.TabController({ });
