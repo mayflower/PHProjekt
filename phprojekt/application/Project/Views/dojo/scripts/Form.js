@@ -194,10 +194,10 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             return this.addNotificationTab(data);
         }));
         def = dojo.when(def, dojo.hitch(this, function() {
-            return this.addHistoryTab();
+            return this.addWebDavTab();
         }));
         def = dojo.when(def, dojo.hitch(this, function() {
-            return this.addWebDavTab();
+            return this.addHistoryTab();
         }));
         return def;
     },
