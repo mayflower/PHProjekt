@@ -113,7 +113,10 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         $this->_updateRights();
         $this->_updateLastEnd();
 
-        //TODO no tags, no search, no history, no changes single occurrences yet;
+        $this->_updateTags();
+        $this->_updateHistory();
+
+        //TODO no search, no changes single occurrences yet;
     }
 
     private function _copyEvents()
@@ -187,6 +190,52 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             );
         }
 
+    }
+
+    private function _updateTags()
+    {
+        $db = $this->_db;
+
+        $db->query(
+            $db->quoteInto(
+                'DELETE FROM tm
+                USING tags_modules AS tm
+                    LEFT OUTER JOIN calendar2 AS c
+                    ON tm.item_id = c.id
+                WHERE tm.module_id = ?
+                    AND c.id IS NULL',
+                $this->_oldCalId
+            )
+        );
+
+        $db->update(
+            'tags_modules',
+            array('module_id' => $this->_newCalId),
+            $db->quoteInto('module_id = ?', $this->_oldCalId)
+        );
+    }
+
+    private function _updateHistory()
+    {
+        $db = $this->_db;
+
+        $db->query(
+            $db->quoteInto(
+                'DELETE FROM h
+                USING history AS h
+                    LEFT OUTER JOIN calendar2 AS c
+                    ON h.item_id = c.id
+                WHERE h.module_id = ?
+                    AND c.id IS NULL',
+                $this->_oldCalId
+            )
+        );
+
+        $db->update(
+            'history',
+            array('module_id' => $this->_newCalId),
+            $db->quoteInto('module_id = ?', $this->_oldCalId)
+        );
     }
 
     /**
