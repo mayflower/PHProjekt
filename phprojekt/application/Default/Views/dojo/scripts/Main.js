@@ -719,7 +719,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
                 this.customSetSubmoduleNavigation();
 
-                if (!phpr.isGlobalModule(this.module)) {
+                if (!phpr.isGlobalModule(this.module) && (currentModule != "BasicData")) {
                     var isListRecursiveBox = new dijit.form.CheckBox({
                         checked: this.state.includeSubentries == "true"
                     });
