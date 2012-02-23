@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0-RC
  * @author     Alesia Khizhko <alesia.khizhko@mayflower.de>
  */
 
@@ -35,7 +35,7 @@ require_once 'Zend/Pdf.php';
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0-RC
  * @author     Alesia Khizhko <alesia.khizhko@mayflower.de>
  */
 class Phprojekt_Pdf_Page extends Zend_Pdf_Page

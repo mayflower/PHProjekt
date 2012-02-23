@@ -32,7 +32,7 @@ require_once 'LoginTest.php';
  * Static test suite.
  *
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0-RC
  * @license    LGPL v3 (See LICENSE file)
  * @package    PHProjekt
  * @link       http://www.phprojekt.com

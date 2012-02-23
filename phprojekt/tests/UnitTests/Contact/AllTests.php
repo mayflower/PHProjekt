@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0-RC
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
 */
 
@@ -41,7 +41,7 @@ require_once 'Models/ContactTest.php';
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0-RC
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 class Contact_AllTests
