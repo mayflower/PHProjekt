@@ -54,8 +54,8 @@ $min_cachePath = '/tmp';
  * If /min/ is directly inside your document root, just uncomment the 
  * second line. The third line might work on some Apache servers.
  */
-$min_documentRoot = '';
-//$min_documentRoot = substr(__FILE__, 0, strlen(__FILE__) - 15);
+$min_documentRoot = realpath(dirname(__FILE__) . "/../../");
+//$min_documentRoot = substr(__FILE__, 0, strlen(__FILE__) - 19);
 //$min_documentRoot = $_SERVER['SUBDOMAIN_DOCUMENT_ROOT'];
 
 
@@ -97,13 +97,13 @@ $min_serveOptions['maxAge'] = 1800;
  * 
  * // = shortcut for DOCUMENT_ROOT 
  */
-$min_serveOptions['minApp']['allowDirs'] = array('//dojo', '//css');
+$min_serveOptions['minApp']['allowDirs'] = array();
 
 /**
  * Set to true to disable the "f" GET parameter for specifying files.
  * Only the "g" parameter will be considered.
  */
-$min_serveOptions['minApp']['groupsOnly'] = false;
+$min_serveOptions['minApp']['groupsOnly'] = true;
 
 /**
  * Maximum # of files that can be specified in the "f" GET parameter
@@ -123,7 +123,9 @@ $min_serveOptions['minApp']['maxFiles'] = 999;
  * array('//static' => 'D:\\staticStorage')  // Windows
  * </code>
  */
+list($sitePrefix) = explode('/min/min/index.php', $_SERVER['SCRIPT_NAME'], 2);
 $min_symlinks = array();
+$min_symlinks['//' . ltrim($sitePrefix, '/')] = $min_documentRoot;
 
 
 /**
