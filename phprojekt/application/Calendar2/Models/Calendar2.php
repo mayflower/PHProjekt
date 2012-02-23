@@ -993,10 +993,16 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         $start->setTimezone($utc);
         $this->start = Phprojekt_Converter_Time::utcToUser($start->format('Y-m-d H:i:s'));
 
-        if (substr($vevent->dtend->value, -1) === 'Z') {
-            $end = new Datetime($vevent->dtend->value);
-        } else {
-            $end = new Datetime($vevent->dtend->value, new DateTimezone($vevent->dtend['tzid']->value));
+        if ($vevent->dtend) {
+            if (substr($vevent->dtend->value, -1) === 'Z') {
+                $end = new Datetime($vevent->dtend->value);
+            } else {
+                $end = new Datetime($vevent->dtend->value, new DateTimezone($vevent->dtend['tzid']->value));
+            }
+        } else if ($vevent->duration){
+            $duration = new DateInterval($vevent->duration->value);
+            $end = clone $start;
+            $end->add($duration);
         }
         $end->setTimezone($utc);
         $this->end = Phprojekt_Converter_Time::utcToUser($end->format('Y-m-d H:i:s'));
