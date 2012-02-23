@@ -185,6 +185,9 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         def = dojo.when(def, dojo.hitch(this, function() {return this.addRoleTab(data)}))
         def = dojo.when(def, dojo.hitch(this, function() {return this.addNotificationTab(data)}))
         def = dojo.when(def, dojo.hitch(this, function() {return this.addHistoryTab()}))
+        def = dojo.when(def, dojo.hitch(this, function() {
+            return this.addWebDavTab();
+        }));
         return def;
     },
 
@@ -206,6 +209,68 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
         this._addRoleTabRow(data);
 
+    },
+
+    addWebDavTab: function() {
+        // Summary:
+        //    Add the webdav tab
+        // Description:
+        //    Add a tab with the webdav url of the project
+
+        var url = phpr.webpath + 'index.php/Project/index/jsonTree';
+        var that = this;
+        phpr.DataStore.addStore({ url: url });
+        return phpr.DataStore.requestData({ url: url}).then(
+            function(data) {
+                data = data.data;
+                var path;
+                var state = phpr.pageManager.getState();
+                var projectId = parseInt(state.projectId) || null;
+                if (projectId && dojo.isArray(data.items)) {
+                    var path = that._buildPathFromTreeData(data.items);
+                    var url = phpr.webpath + "index.php/WebDAV/index/index/" + path;
+                    var widget = new phpr.Default.System.TemplateWrapper({
+                        templateName: "phpr.Project.template.webdavTab.html",
+                        templateData: {
+                            label: phpr.nls.get("WebDav url"),
+                            url: url
+                        }
+                    });
+
+                    return that.addTab([widget], 'tabWebDav', "WebDav", null);
+                }
+            }
+        );
+
+    },
+
+    _buildPathFromTreeData: function(data) {
+        var projects = this._convertTreeDataToProjectMap(data);
+        var currentProjectId = "" + phpr.pageManager.getState().projectId;
+
+        if (!currentProjectId) {
+            return "";
+        }
+
+        var traverseTree = function(item) {
+            var ret = "";
+            if (item.parent && projects[item.parent] && item.parent != "1") {
+                ret = traverseTree(projects[item.parent]);
+            }
+
+            return ret + encodeURIComponent(item.name) + "/";
+        };
+
+        return traverseTree(projects[currentProjectId]);
+    },
+
+    _convertTreeDataToProjectMap: function(data) {
+        var map = {};
+        dojo.forEach(data, function(item) {
+            map[item.id] = dojo.clone(item);
+        });
+
+        return map;
     },
 
     deleteForm:function() {
