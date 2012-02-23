@@ -22,7 +22,7 @@ $lang["End time has to be between 0:00 and 24:00"] = "End time has to be between
 $lang["The end time is invalid"] = "The end time is invalid";
 $lang["Can not End Working Time because this moment is occupied by an existing period"] = "Can not End Working Time "
     . "because this moment is occupied by an existing period";
-$lang["The entry overlaps with an existing one"] = "The entry overlaps  with an existing one";
+$lang["The entry overlaps with an existing one"] = "The entry overlaps with an existing one";
 
 // View
 $lang["Manage project list"] = "Manage project list";
