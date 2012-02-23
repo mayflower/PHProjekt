@@ -109,6 +109,8 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         $this->_db->delete('calendar2');
 
         $this->_copyEvents();
+        $this->_updateSingleChangedOccurrences();
+
         $this->_updateUsers();
         $this->_updateRights();
         $this->_updateLastEnd();
@@ -130,6 +132,219 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
 
         // This actually happens...
         $db->query('UPDATE calendar2 SET end = start WHERE end < start');
+    }
+
+    private function _updateSingleChangedOccurrences()
+    {
+        if ($this->_debug) Phprojekt::getInstance()->getLog()->debug('_updateSingleChangedOccurrences');
+        $limit = 500;
+        $start = 0;
+
+        $done = false;
+
+        do {
+            if ($this->_debug) Phprojekt::getInstance()->getLog()->debug($start);
+            $entries = $this->_db->select()->from(array('c' => 'calendar'))
+                ->join(array('p' => 'calendar'), 'c.parent_id = p.id', array())
+                ->where('c.parent_id != 0')
+                ->where('c.parent_id != c.id')
+                ->where('c.rrule  = ""')
+                ->where('p.rrule != ""')
+                ->order(array('c.parent_id ASC', 'c.end_datetime ASC'))
+                ->limit($limit, $start)
+                ->query()->fetchAll();
+            $start += $limit;
+
+            if (empty($entries)) {
+                if ($this->_debug) Phprojekt::getInstance()->getLog()->debug('done');
+                $done = true;
+            } else {
+                $group           = array();
+                $currentParentId = $entries[0]['parent_id'];
+
+                foreach ($entries as $event) {
+                    if ($event['parent_id'] == $currentParentId) {
+                        $group[] = $event;
+                    } else {
+                        $this->_updateSingleChangedEventGroup($group);
+
+                        $group           = array($event);
+                        $currentParentId = $event['parent_id'];
+                    }
+                }
+            }
+        } while (!$done);
+    }
+
+    /**
+     * Update a group of events with a common parent id
+     */
+    private function _updateSingleChangedEventGroup($events)
+    {
+        $parent = $this->_db->select()->from('calendar')
+            ->where(
+                'id = ?',
+                $events[0]['parent_id']
+            ) ->query()->fetch();
+
+
+        $start    = new Datetime($parent['start_datetime']);
+        $duration = $start->diff(new Datetime($parent['end_datetime']));
+        $helper   = new Calendar2_Helper_Rrule($start, $duration, $parent['rrule']);
+
+        $last = new Datetime($events[count($events) - 1]['end_datetime']);
+
+        $occurrences = $helper->getDatesInPeriod($start, $last);
+        $deleted = array();
+        $added   = array();
+
+        while (!empty($events) && $events[0]['start_datetime'] == $parent['start_datetime']) {
+            array_shift($events);
+        }
+
+        $addedTimes   = array();
+        $regularTimes = array();
+        foreach ($events as $e) {
+            // At this point we throw away confirmation information, mostly because I'm too tired and it's too
+            // complicated to retrieve them.
+            if ($e['participant_id'] != $parent['owner_id']) {
+                continue;
+            }
+
+            if (empty($occurrences)) {
+                $addedTimes[] = $e['start_datetime'];
+                $added[] = $e;
+                continue;
+            }
+            $cmp = $this->_compareDatetimeWithEvent($occurrences[0], $e);
+            if ($cmp < 0) {
+                // occurrence is before
+                $deleted[] = array_shift($occurrences);
+            } else if ($cmp === 0) {
+                $regularTimes[] = array_shift($occurrences);
+                if ($this->_eventDataDiffers($parent, $e)) {
+                    $addedTimes[] = $e['start_datetime'];
+                    $deleted[] = new Datetime($e['start_datetime']);
+                    $added[] = $e;
+                }
+            } else {
+                // event is before occurrence
+                $added[] = $e;
+            }
+        }
+
+        $addedEventsParticipants = array();
+        foreach ($events as $e) {
+            if ($e['participant_id'] == $parent['owner_id']) {
+                continue;
+            }
+
+            if (in_array($e['start_datetime'], $addedTimes)) {
+                if(!array_key_exists($e['start_datetime'], $addedEventsParticipants)) {
+                    $addedEventsParticipants[$e['start_datetime']] = array();
+                }
+                $addedEventsParticipants[$e['start_datetime']][] = array('id' => $e['participant_id'], 'status' => $e['status']);
+            } else if (!in_array($e['start_datetime'], $regularTimes)) {
+                // This event doesn't really belong here. We just create a new one for the user independent of $parent.
+                $this->_db->insert(
+                    'calendar2',
+                    array(
+                        'project_id' => $e['project_id'],
+                        'summary' => $e['title'],
+                        'description' => $e['notes'],
+                        'location' => $e['place'],
+                        'comments' => "",
+                        'start' => $e['start_datetime'],
+                        'last_end' => $e['end_datetime'],
+                        'end' => $e['end_datetime'],
+                        'owner_id' => $e['participant_id'],
+                        'rrule' => '',
+                        'visibility' => $e['visibility'] + 1
+                    )
+                );
+                $calendar2_id = $this->_db->lastInsertId();
+                $this->_db->insert(
+                    'calendar2_user_relation',
+                    array(
+                        'calendar2_id' => $calendar2_id,
+                        'user_id' => $e['participant_id'],
+                        'confirmation_status' => $e['status']
+                    )
+                );
+            }
+        }
+
+        if (!empty($deleted)) $this->_deletedOccurrences($parent, $deleted);
+        if (!empty($added))   $this->_addedOccurrences($parent, $added, $addedEventsParticipants);
+    }
+
+    /** negative if $dt < $event, 0 on ==, positive if $dt > $event */
+    private function _compareDatetimeWithEvent($dt, $event)
+    {
+        return $dt->getTimestamp() - strToTime($event['start_datetime']);
+    }
+
+    private function _eventDataDiffers($a, $b)
+    {
+        return ($a['title'] !== $b['title'] || $a['place'] !== $b['place'] || $a['notes'] !== $b['notes']);
+    }
+
+    private function _deletedOccurrences($parent, $deleted)
+    {
+        $sql   = "INSERT INTO calendar2_excluded_dates (calendar2_id, date) values \n";
+        $first = array_shift($deleted);
+        $sql  .= '(' . (int) $parent['id'] . ", '"  . $first->format('Y-m-d H:i:s') . "')\n";
+        foreach ($deleted as $dt) {
+            $sql .= ', (' . (int) $parent['id'] . ", '" . $dt->format('Y-m-d H:i:s') . "')\n";
+        }
+
+        if ($this->_debug) Phprojekt::getInstance()->getLog()->debug($sql);
+        $this->_db->query($sql);
+    }
+
+    private function _addedOccurrences($parent, $added, $participants)
+    {
+        $parent2 = $this->_db->select()->from('calendar2')->where('id = ?', $parent['id'])->query()->fetch();
+
+        $toInsert  = array();
+
+        foreach ($added as $e){
+            $toInsert[]  = '('
+                . (int) $e['project_id'] . ', '
+                . "'{$e['title']}'" . ', '
+                . "'{$e['notes']}'" . ', '
+                . "'{$e['place']}'" . ', '
+                . "'{$e['start_datetime']}'" . ', '
+                . "'{$e['end_datetime']}'" . ', '
+                . "'{$e['end_datetime']}'" . ', '
+                . (int) $e['owner_id'] . ', '
+                . "'{$e['start_datetime']}'" . ', '
+                . (int) $e['visibility'] . ', '
+                . "'{$parent2['uid']}'" . ', '
+                . 'NOW(), '
+                . "'{$parent2['uri']}'" . ')';
+        }
+
+        $sql  = 'INSERT INTO calendar2 (project_id, summary, description, location, start, last_end, end, owner_id, '
+                . 'recurrence_id, visibility, uid, last_modified, uri) VALUES ' . "\n";
+        $sql .= implode(", \n", $toInsert);
+        if ($this->_debug) Phprojekt::getInstance()->getLog()->debug($sql);
+        $this->_db->query($sql);
+
+        foreach ($participants as $start => $data) {
+            $calendar2_id = (int) $this->_db->select()->from('calendar2', 'id')
+                    ->where('uid = ?', $parent2['uid'])
+                    ->where('start = ?', $start)
+                    ->query()->fetchColumn();
+
+            foreach ($data as $k => $d) {
+                $data[$k] = '(' . $calendar2_id . ', ' . $d['id'] . ', ' . $d['status'] . ")";
+            }
+            $sql  = "INSERT INTO calendar2_user_relation (calendar2_id, user_id, confirmation_status) VALUES \n";
+            $sql .= implode(", \n", $data);
+            if ($this->_debug) Phprojekt::getInstance()->getLog()->debug($sql);
+            $this->_db->query($sql);
+        }
     }
 
     private function _updateUsers()
