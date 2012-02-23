@@ -99,12 +99,11 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $response                     = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
         $error           = $timecardModel->getError();
-        $expectedMessage = 'Can not Start Working Time because this moment is occupied by an existing period or an '
-            . 'open one';
+        $expectedMessage = 'The entry overlaps with an existing one';
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
         // Wrong data start time after end time
-        $timecardModel->startDatetime = '2009-05-17 18:00:00';
+        $timecardModel->startDatetime = '2009-05-18 18:00:00';
         $timecardModel->endTime       = '11:00:00';
         $response = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
@@ -113,7 +112,7 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
         // Wrong data - End time too late
-        $timecardModel->startDatetime = '2009-05-17 10:00:00';
+        $timecardModel->startDatetime = '2009-05-18 10:00:00';
         $timecardModel->endTime       = '25:00:00';
         $response                     = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
@@ -122,7 +121,7 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
         // Wrong data - Invalid end time
-        $timecardModel->startDatetime = '2009-05-17 10:00:00';
+        $timecardModel->startDatetime = '2009-05-18 10:00:00';
         $timecardModel->endTime       = '12:60:00';
         $response                     = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
@@ -131,7 +130,7 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
         // Wrong data - Invalid start time
-        $timecardModel->startDatetime = '2009-05-17 10:60:00';
+        $timecardModel->startDatetime = '2009-05-18 10:60:00';
         $timecardModel->endTime       = '12:00:00';
         $response                     = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
@@ -149,7 +148,7 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
         // Wrong data - Invalid start time
-        $timecardModel->startDatetime = '2009-05-17 10:60:00';
+        $timecardModel->startDatetime = '2009-05-18 10:60:00';
         $timecardModel->endTime       = '12:00:00';
         $response                     = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);

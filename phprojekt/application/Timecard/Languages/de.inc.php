@@ -22,8 +22,8 @@ $lang["End time has to be between 0:00 and 24:00"] = "Endzeit muss zwischen 0:00
 $lang["The end time is invalid"] = "Die Endzeit ist ungültig";
 $lang["Can not End Working Time because this moment is occupied by an existing period"]
 = "Kann den Endzeitpunkt nicht nutzen (zeitliche Überschneidung)";
-$lang["Can not save it because it overlaps existing one"] = "kann nicht gespeichert werden, weil es Überschneidungen "
-    . "bestehenden";
+$lang["The entry overlaps with an existing one"] = "Kann nicht gespeichert werden, da es Überschneidungen "
+    . "gibt";
 
 // View
 $lang["Manage project list"] = "Verwalte die Projektliste";

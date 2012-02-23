@@ -151,8 +151,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     $this->_validate->error->addError(array(
                         'field'   => 'Time period',
                         'label'   => Phprojekt::getInstance()->translate('Time period'),
-                        'message' => Phprojekt::getInstance()->translate('Can not save it because it overlaps '
-                            . 'existing one')));
+                        'message' => Phprojekt::getInstance()->translate('The entry overlaps with an existing one')));
                     return false;
                 }
             }
