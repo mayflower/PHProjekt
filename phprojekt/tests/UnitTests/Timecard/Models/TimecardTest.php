@@ -99,8 +99,7 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $response                     = $timecardModel->recordValidate();
         $this->assertEquals(false, $response);
         $error           = $timecardModel->getError();
-        $expectedMessage = 'Can not Start Working Time because this moment is occupied by an existing period or an '
-            . 'open one';
+        $expectedMessage = 'The entry overlaps with an existing one';
         $this->assertEquals($expectedMessage, $error[0]['message']);
 
         // Wrong data start time after end time
