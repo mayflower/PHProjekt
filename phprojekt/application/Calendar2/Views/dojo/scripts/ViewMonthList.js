@@ -206,7 +206,7 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
             }
 
             for (var row in this._schedule) {
-                for (weekDay in this._schedule[row]) {
+                for (var weekDay in this._schedule[row]) {
                     var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
                         content[event]['endDate'], content[event]['endTime'], this._schedule[row][weekDay]['date']);
                     if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
@@ -223,6 +223,20 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
                         this._schedule[row][weekDay]['events'][nextEvent]['occurrence'] = content[event]['occurrence'];
                         this._schedule[row][weekDay]['events'][nextEvent]['warning'] = warning;
                     }
+                }
+            }
+        }
+
+        var sortFunc = function(a, b) {
+            a = phpr.date.isoDatetimeTojsDate(a.start);
+            b = phpr.date.isoDatetimeTojsDate(b.start);
+            return a - b;
+        };
+
+        for (var row in this._schedule) {
+            for (var day in this._schedule[row]) {
+                if (this._schedule[row][day].events !== undefined) {
+                    this._schedule[row][day].events.sort(sortFunc);
                 }
             }
         }
