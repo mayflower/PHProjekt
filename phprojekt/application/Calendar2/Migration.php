@@ -98,9 +98,13 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
     {
         $db = $this->_db;
 
-        if (!in_array('calendar', $db->listTables())) {
+        $this->_oldCalId = $db->select()->from('module')->where('name = "Calendar"')->query()->fetchColumn();
+        if (!in_array('calendar', $db->listTables()) || empty($this->_oldCalId)) {
             throw new Exception('Old Calendar is gone, cannot migrate');
         }
+
+        $this->_newCalId = $db->select()->from('module')->where('name = "Calendar"')->query()->fetchColumn();
+
 
         $this->_db->delete('calendar2');
 
@@ -143,11 +147,11 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         $db = $this->_db;
 
         $db->query('insert ignore into item_rights (module_id, item_id, user_id, access) select
-            ' . Phprojekt_Module::getId('Calendar2') . ' as module_id, calendar2_id as item_id, user_id, 1 as access
+            ' . $this->_newCalId . ' as module_id, calendar2_id as item_id, user_id, 1 as access
             from calendar2_user_relation');
 
         $db->query('insert into item_rights (module_id, item_id, user_id, access) select
-            ' . Phprojekt_Module::getId('Calendar2') . ' as module_id, id as item_id, owner_id as user_id, 255 as
+            ' . $this->_newCalId . ' as module_id, id as item_id, owner_id as user_id, 255 as
             access from calendar2 on duplicate key update access = 255');
     }
 
