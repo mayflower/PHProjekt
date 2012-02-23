@@ -216,6 +216,7 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
      *
      * @return void
      */
+
     public function updateCalendarObject($calendarId, $objectUri, $calendarData)
     {
         $db    = Phprojekt::getInstance()->getDb();
@@ -228,7 +229,7 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
             throw new Sabre_DAV_Exception_NotImplemented('Cannot alter events with modified occurrences');
         }
         $vevent = Sabre_VObject_Reader::read($calendarData)->vevent;
-        if (count($vevent) > 1) {
+        if ($vevent->count() > 1) {
             throw new Sabre_DAV_Exception_NotImplemented('Cannot update specific occurrences');
         }
         $events[0]->fromVObject($vevent);
