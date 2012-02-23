@@ -827,13 +827,13 @@ class IndexController extends Zend_Controller_Action
             }
         }
 
-        $user = new Phprojekt_User_User();
-        $user->find(Phprojekt_Auth_Proxy::getEffectiveUserId());
+        $user = Phprojekt_Auth_Proxy::getEffectiveUser();
+
         // System info
         $data[] = array('name'  => 'phprojektVersion',
                         'value' => Phprojekt::getVersion());
         $data[] = array('name'  => 'currentUserId',
-                        'value' => Phprojekt_Auth_Proxy::getEffectiveUserId());
+                        'value' => $user->id);
         $data[] = array('name'  => 'currentUserName',
                         'value' => $user->username);
         $data[] = array('name'  => 'csrfToken',
