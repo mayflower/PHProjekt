@@ -49,8 +49,9 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     _submitInProgress:  false,
     _loadIndicator: null,
     _subModules: null,
+    _historyContent: null,
 
-    tabs:               [],
+    tabs: { _empty: true },
 
     constructor: function(main, id, module, params, formContainer) {
         // Summary:
@@ -114,7 +115,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Set the node to render in
         // Description:
         //    Set the node to render in
-        this.node = container;
+        var layout = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.form.splitContainer.html"
+        });
+        this._splitContainer = layout;
+        this.node = this._splitContainer.formContainer;
+        this.garbageCollector.addNode(layout);
+        container.set('content', layout);
     },
 
     setUrl: function() {
@@ -408,9 +415,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             }
 
             var content = new phpr.Default.System.TemplateWrapper({
-                templateName: "phpr.Default.template.form.tabs.html",
+                templateName: "phpr.Default.template.form.section.html",
                 templateData: {
-                    formId:    formId || ''
+                    formId: formId || '',
+                    title: phpr.nls.get(title)
                 }
             });
 
@@ -421,31 +429,27 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 this.garbageCollector.addNode(widget);
             }
 
-            var tab = new dijit.layout.ContentPane({
-                id:    id,
-                title: phpr.nls.get(title)
-            });
-
             dojo.style(
-                tab.containerNode,
+                content.containerNode,
                 {
-                    'height': '100%',
-                    'width': '100%'
+                    'width': '100%',
+                    'height': 'auto'
                 }
             );
 
-            tab.set('content', content);
-
             content.startup();
 
+            if (this.tabs._empty === false) {
+                dojo.place("<hr>", this.form.containerNode);
+            }
 
-            this.form.addChild(tab);
+            dojo.place(content.domNode, this.form.containerNode);
             if (typeof content.tabform != "undefined") {
-                this.tabs.push(tab);
+                this.tabs[id] = content;
+                this.tabs._empty = false;
                 this.formsWidget.push(content.tabform);
             }
 
-            this.garbageCollector.addNode(tab);
             this.garbageCollector.addNode(content);
 
             content.tabform.onSubmit = dojo.hitch(this, "_submitForm");
@@ -658,12 +662,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     p.DataStore.deleteData({url: this._url});
                 }
 
-                if (this.id > 0 && this.useHistoryTab()) {
-                    this.garbageCollector.addEvent(
-                        dojo.connect(dijit.byId("tabHistory"),
-                            "onShow", dojo.hitch(this, "showHistory")));
-                }
-
                 // Set cursor to the first required field
                 if (dojo.byId(firstRequiredField)) {
                     p.viewManager.getView().completeContent.domNode.focus();
@@ -728,7 +726,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             }
         });
         this.garbageCollector.addNode(buttons);
-        this.formdata[tabId].push(buttons);
+        this._splitContainer.buttonsContainer.set('content', buttons);
     },
 
     setActionFormButtons: function() {
@@ -768,22 +766,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Set the Container
         // Description:
         //    Set the Container
-        var tabContainer = new dijit.layout.TabContainer(
-            {
-                style:   'height: 100%;',
-                useMenu: false,
-                useSlider: false
-            },
-            dojo.create('div'));
-        dojo.addClass(tabContainer.domNode, 'claro');
 
-        this.garbageCollector.addNode(tabContainer);
+        var container = new dijit.layout.ContentPane({}, dojo.create('div'));
+        dojo.addClass(container.domNode, 'claro');
 
-        this.garbageCollector.addEvent(
-                dojo.connect(tabContainer, 'selectChild',
-                    dojo.hitch(this, '_formCallback')));
+        this.garbageCollector.addNode(container);
 
-        return tabContainer;
+        return container;
     },
 
     addModuleTabs: function(data) {
@@ -826,8 +815,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             var widget = new phpr.Default.System.TemplateWrapper({
                 templateName: "phpr.Default.template.history.content.html"
             });
+            this._historyContent = widget;
             this.garbageCollector.addNode(widget);
-            return this.addTab([widget], 'tabHistory', 'History', 'accesshistoryTab');
+            var ret = this.addTab([widget], 'tabHistory', 'History', 'accesshistoryTab');
+            return ret.then(dojo.hitch(this, "showHistory"));
         }
     },
 
@@ -979,7 +970,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this.sendData = [];
         for (var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
-                this.form.selectChild(this.tabs[i]);
                 this.formsWidget[i].validate();
                 return false;
             }
@@ -1149,21 +1139,29 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    This function renders the history data
         // Description:
         //    This function renders the history data
-        if (this.id > 0) {
-            dojo.byId('historyContent').innerHTML = '';
+        if (this.id > 0 && this._historyContent !== null) {
+            this._historyContent.historyContent.set('content', '');
             this._historyUrl = phpr.webpath + 'index.php/Core/history/jsonList/nodeId/1/moduleName/' +
                 phpr.module + '/itemId/' + this.id;
             phpr.DataStore.addStore({'url': this._historyUrl, 'noCache': true});
-            phpr.DataStore.requestData({'url': this._historyUrl, 'processData': dojo.hitch(this, function() {
-                this.render(["phpr.Default.template.history", "data.html"], dojo.byId('historyContent'), {
-                    dateTxt:     phpr.nls.get('Date'),
-                    userTxt:     phpr.nls.get('User'),
-                    fieldTxt:    phpr.nls.get('Field'),
-                    oldValueTxt: phpr.nls.get('Old value'),
-                    newValueTxt: phpr.nls.get('New value'),
-                    data:        this.getHistoryData()
-                });
-            })});
+            phpr.DataStore.requestData({'url': this._historyUrl}).then(dojo.hitch(this,
+                function() {
+                    var widget = new phpr.Default.System.TemplateWrapper({
+                        templateName: "phpr.Default.template.history.data.html",
+                        templateData: {
+                            dateTxt:     phpr.nls.get('Date'),
+                            userTxt:     phpr.nls.get('User'),
+                            fieldTxt:    phpr.nls.get('Field'),
+                            oldValueTxt: phpr.nls.get('Old value'),
+                            newValueTxt: phpr.nls.get('New value'),
+                            data:        this.getHistoryData()
+                        }
+                    });
+                    this._historyContent.historyContent.set('content', widget);
+                    this.garbageCollector.addNode(widget);
+                    dojo.style(this._historyContent.domNode, { height: "100%" });
+                })
+            );
         }
     },
 

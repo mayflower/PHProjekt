@@ -400,3 +400,11 @@ $lang['Checking availability...'] = 'Checking availability...';
 $lang['The participant is available'] = 'The participant is available';
 $lang['The participant is not available'] = 'The participant is not available';
 $lang['Availability'] = 'Availability';
+
+// caldav
+$lang['CalDav urls'] = 'CalDav Urls';
+$lang['CalDav url'] = 'CalDav url';
+$lang['CalDav url for Apple software'] = 'CalDav url for Apple software';
+$lang['Notice'] = 'Notice';
+$lang['Please pay attention to the trailing slash, it is important'] = 'Please pay attention to the trailing slash, it
+                                                                        is important';
