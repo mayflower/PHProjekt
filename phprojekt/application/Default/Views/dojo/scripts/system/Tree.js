@@ -254,40 +254,44 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
 
     drawBreadCrumb: function() {
         var projects = [];
-        var _this    = this;
 
-        if (!phpr.isGlobalModule(phpr.module)) {
-            if (phpr.treeLastProjectSelected != phpr.currentProjectId || phpr.currentProjectId == 1) {
-                this.tree.model.store.fetchItemByIdentity({
-                    identity: phpr.currentProjectId,
-                    onItem: function(item) {
-                        if (item) {
-                            var paths = phpr.treePaths[phpr.currentProjectId].toString().split("\/");
-                            for (var i in paths) {
-                                if (paths[i] > 0 && paths[i] != phpr.currentProjectId) {
-                                    _this.tree.model.store.fetchItemByIdentity({
-                                        identity: paths[i],
-                                        onItem: function(item) {
-                                            if (item) {
-                                                projects.push({"id":   item.id,
-                                                               "name": item.name});
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                            projects.push({"id":   item.id,
-                                           "name": item.name});
-                        }
-                    }
-                });
-                phpr.BreadCrumb.setProjects(projects);
-            }
-        } else {
-            phpr.BreadCrumb.setProjects(projects);
+        if (!phpr.isGlobalModule(phpr.module) && (phpr.treeLastProjectSelected != phpr.currentProjectId || phpr.currentProjectId == 1)) {
+            var projects = this._getProjectHirarchyArray(phpr.currentProjectId);
         }
+
+        phpr.BreadCrumb.setProjects(projects);
         phpr.BreadCrumb.setModule();
         phpr.BreadCrumb.draw();
+    },
+
+    _getProjectHirarchyArray: function(itemId) {
+        var that = this;
+        var ret = [];
+        var item;
+
+        that._store.fetchItemByIdentity({
+            identity: itemId,
+            onItem: function(titem) {
+                if (titem) {
+                    item = titem;
+                }
+            }
+        });
+
+        if (!item) {
+            return [];
+        }
+
+        if (item.parent[0]) {
+            ret = that._getProjectHirarchyArray(item.parent[0]);
+        }
+
+        ret.push({
+            "id":   item.id,
+            "name": item.name
+        });
+
+        return ret;
     },
 
     fadeOut: function() {
