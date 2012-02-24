@@ -42,7 +42,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         this.setId(null);
     },
 
-    loadTree:function() {
+    loadTree: function() {
         var tree = phpr.viewManager.getView().treeBox;
         // Data of the tree
         phpr.DataStore.addStore({url: this._url});
@@ -63,7 +63,8 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
                 dojo.connect(this.tree, "onClick", dojo.hitch(this, "onItemClick"));
                 phpr.viewManager.getView().navigationContainerTitle.set('content', phpr.nls.get('Projects'));
                 this.finishDraw();
-            }, tree)});
+            }, tree)
+        });
         tree = null;
     },
 
@@ -96,7 +97,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         }
     },
 
-    getTree:function() {
+    getTree: function() {
         var treeWidget = new dijit.Tree({
                 model:    this._model,
                 showRoot: false,
@@ -124,7 +125,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         this._url = phpr.webpath + 'index.php/Project/index/jsonTree';
     },
 
-    setId:function(id) {
+    setId: function(id) {
         // Summary:
         //    Set the id of the widget
         // Description:
@@ -208,9 +209,9 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         //    Collect path and change the long names
         var node = phpr.viewManager.getView().navigationContainer.domNode;
         var width = node.style.width.replace(/px/, "");
-        for(var i in data.items) {
-            var name  = data.items[i]['name'].toString();
-            var depth = data.items[i]['path'].match(/\//g).length;
+        for (var i in data.items) {
+            var name  = data.items[i].name.toString();
+            var depth = data.items[i].path.match(/\//g).length;
             if (depth > 5) {
                 depth = 5;
             }
