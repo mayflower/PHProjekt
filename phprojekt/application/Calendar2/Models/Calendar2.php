@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: 6.1.0-RC
+ * @version    Release: 6.1.0-rc2
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 require_once 'Sabre.autoload.php';
@@ -35,7 +35,7 @@ require_once 'Sabre.autoload.php';
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: 6.1.0-RC
+ * @version    Release: 6.1.0-rc2
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
