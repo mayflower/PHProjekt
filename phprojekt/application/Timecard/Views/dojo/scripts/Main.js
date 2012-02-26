@@ -35,9 +35,16 @@ dojo.declare("phpr.Timecard.Store", null, {
     _favoritesData: null,
     _mergedFavorites: null,
     _dlist: null,
+    _updateListener: null,
 
     constructor: function(date) {
         this._date = date;
+
+        this._updateListener = dojo.subscribe("Project.updateCacheData", this, "dataChanged");
+    },
+
+    destory: function() {
+        dojo.unsubscribe(this._updateListener);
     },
 
     _setUrls: function() {
