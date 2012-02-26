@@ -276,7 +276,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 templateData: {
                     saveText: phpr.nls.get('Save'),
                     deleteText: phpr.nls.get('Delete'),
-                    newText: phpr.nls.get('New')
+                    newText: phpr.nls.get('New'),
+                    deleteDisplay: this.id > 0 ? "inline" : "none"
                 }
             });
 
