@@ -308,7 +308,7 @@ class Setup_Models_Setup
         $privateDir = self::slashify($params['privateDir']);
 
         // Check write access
-        $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
+        $baseDir    = $this->getBaseDir();
         $configFile = $baseDir . "configuration.php";
 
         if (!file_exists($configFile)) {
@@ -587,7 +587,7 @@ class Setup_Models_Setup
             $databaseNamespace->data['dbPass'], $databaseNamespace->data['dbName'], 'Pdo_Mysql',
             $databaseNamespace->data['dbHost'], $databaseNamespace->data['dbPort']);
 
-        $baseDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
+        $baseDir    = $this->getBaseDir();
         $configFile = $baseDir . "configuration.php";
         file_put_contents($configFile, $content);
 
@@ -730,5 +730,14 @@ class Setup_Models_Setup
         }
 
         return $result;
+    }
+
+    /**
+    * Retuns the baseDir.
+    *
+    * @return string the basedir
+     */
+    private function getBaseDir() {
+        return realpath(dirname(__FILE__) . "/../../../") . "/";
     }
 }
