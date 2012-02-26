@@ -52,12 +52,13 @@ class Phprojekt_PhprojektTest extends PHPUnit_Framework_TestCase
         $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.1-RC2", "6.0.1-RC1"));
         $this->assertLessThan(0, Phprojekt::compareVersion("6.0.0-RC1", "6.0.0"));
         $this->assertLessThan(0, Phprojekt::compareVersion("6.0.0-beta1", "6.0.0-RC"));
-        $this->assertLessThan(0, Phprojekt::compareVersion("6.0.0-beta2", "6.0.0-beta1"));
-        $this->assertLessThan(0, Phprojekt::compareVersion("6.0.0-beta1", "6.0.0-beta"));
-        $this->assertLessThan(0, Phprojekt::compareVersion("6.0.0-alpha1", "6.0.0-RC"));
-        $this->assertLessThan(0, Phprojekt::compareVersion("6.0.0-alpha2", "6.0.0-alpha1"));
-        $this->assertLessThan(0, Phprojekt::compareVersion("6.0.0-alpha1", "6.0.0-alpha"));
-        $this->assertLessThan(0, Phprojekt::compareVersion("6.0.0-alpha", "6.0.0-beta5"));
+        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.0-beta2", "6.0.0-beta1"));
+        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.0-beta1", "6.0.0-beta"));
+        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.0-RC", "6.0.0-alpha2"));
+        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.0-alpha2", "6.0.0-alpha1"));
+        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.0-alpha1", "6.0.0-alpha"));
+        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.0-beta", "6.0.0-alpha5"));
+        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.0-rc2", "6.0.0-RC"));
         $this->assertEquals(0, Phprojekt::compareVersion("6.0.0-RC1", "6.0.0-RC1"));
         $this->assertEquals(0, Phprojekt::compareVersion("6.0.1", "6.0.1"));
     }
