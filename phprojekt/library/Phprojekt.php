@@ -190,7 +190,7 @@ class Phprojekt
         }
 
         if (isset($v1elements[3]) && isset($v2elements[3])) {
-            return strcmp($v1elements[3], $v2elements[3]);
+            return strcmp(strtolower($v1elements[3]), strtolower($v2elements[3]));
         } else if (!isset($v1elements[3]) && isset($v2elements[3])) {
             return 1;
         } else if (isset($v1elements[3]) && !isset($v2elements[3])) {
