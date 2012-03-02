@@ -105,7 +105,7 @@ class Setup_Models_Setup
         }
 
         // Checking if configuration.php exists
-        $baseDir = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
+        $baseDir = $this->getBaseDir();
         if (file_exists($baseDir . "configuration.php")) {
             throw new Exception("Configuration file found. Please, delete it before run setup again.");
         }
@@ -592,7 +592,6 @@ class Setup_Models_Setup
         file_put_contents($configFile, $content);
 
         // Set access
-        $baseDir = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']);
         if (PHP_OS == 'WIN32' || PHP_OS == 'WINNT') {
             $this->_error[] = '"' . $baseDir . '" should have the next rights: 0755 for folders, 0644 for files';
         } else {
