@@ -5,6 +5,10 @@
         </label>
     </td>
     <td colspan="2">
-        <a href="{{url}}">{{url}}</a>
+    {% if error %}
+        {{errorMessage|safe}}
+    {% else %}
+        <a href="{{url|safe}}">{{url|safe}}</a>
+    {% endif %}
     </td>
 </tr>
