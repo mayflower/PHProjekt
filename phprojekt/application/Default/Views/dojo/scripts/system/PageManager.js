@@ -122,6 +122,10 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             phpr.garbageCollector.collect();
         }
 
+        if (state.projectId && !this._isValidProjectId(state.projectId)) {
+            state.projectId = phpr.rootProjectId;
+        }
+
         if (options.omitHistoryItem !== true) {
             this._setHash(state);
         }
@@ -143,9 +147,6 @@ dojo.declare("phpr.Default.System.PageManager", null, {
 
             if (state.projectId && state.moduleName && !state.globalModuleName) {
                 var projectId = state.projectId;
-                if (projectId < 1) {
-                    projectId = 1;
-                }
                 if (phpr.currentProjectId != projectId) {
                     newProject = true;
                 }
@@ -196,6 +197,19 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             this._activeModule = mod;
             this._signalActiveModuleChange();
         }
+    },
+
+    _isValidProjectId: function(pid) {
+        if (pid < 1) {
+            return false;
+        }
+
+        var path = phpr.tree.getProjectHirarchyArray(pid);
+        if (path.length === 0) {
+            return false;
+        }
+
+        return true;
     },
 
     _signalActiveModuleChange: function() {
