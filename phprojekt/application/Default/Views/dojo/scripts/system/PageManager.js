@@ -165,7 +165,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             if ("undefined" != typeof state.id) {
                 // If is an id, open a form
                 if (module && (state.id > 0 || state.id === "0" || state.id === 0)) {
-                    if (module !== this.oldmodule || newProject) {
+                    if (!reloaded && (module !== this.oldmodule || newProject)) {
                         this._reloadModule(module, [ state ]);
                     }
                     if (dojo.isFunction(mod.openForm)) {
