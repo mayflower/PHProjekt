@@ -118,7 +118,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         $this->_updateTags();
         $this->_updateHistory();
 
-        //TODO no search, no changes single occurrences yet;
+        $this->_regenerateSearch();
     }
 
     private function _copyEvents()
@@ -451,6 +451,27 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             array('module_id' => $this->_newCalId),
             $db->quoteInto('module_id = ?', $this->_oldCalId)
         );
+    }
+
+    private function _regenerateSearch()
+    {
+        $step  = 100;
+        $start = 0;
+        $max   = $this->_db->select()->from('calendar2', 'MAX(id)')->query()->fetchColumn();
+
+        $model  = new Calendar2_Models_Calendar2();
+        $search = new Phprojekt_Search();
+
+        while ($start <= $max) {
+            if ($this->_debug) Phprojekt::getInstance()->getLog()->debug($start . ' - ' . ($start + $step));
+
+            $events = $model->fetchAll("id >= $start AND id < " . ($start + $step));
+            $start += $step;
+
+            foreach ($events as $e){
+                $search->indexObjectItem($e);
+            }
+        }
     }
 
     /**
