@@ -266,11 +266,10 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
     },
 
     _getProjectHirarchyArray: function(itemId) {
-        var that = this;
         var ret = [];
         var item;
 
-        that._store.fetchItemByIdentity({
+        this._store.fetchItemByIdentity({
             identity: itemId,
             onItem: function(titem) {
                 if (titem) {
@@ -284,7 +283,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         }
 
         if (item.parent[0]) {
-            ret = that._getProjectHirarchyArray(item.parent[0]);
+            ret = this._getProjectHirarchyArray(item.parent[0]);
         }
 
         ret.push({
