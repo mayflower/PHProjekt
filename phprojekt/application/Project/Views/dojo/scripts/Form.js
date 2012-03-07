@@ -238,17 +238,30 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 var state = phpr.pageManager.getState();
                 var projectId = parseInt(state.projectId) || null;
                 if (projectId && dojo.isArray(data.items)) {
-                    var path = that._buildPathFromTreeData(data.items);
-                    var url = phpr.webpath + "index.php/WebDAV/index/index/" + path;
+                    var error = false,
+                        path,
+                        url = "",
+                        errorMessage = "";
+
+                    try {
+                        path = that._buildPathFromTreeData(data.items);
+                        url = phpr.webpath + "index.php/WebDAV/index/index/" + path;
+                    } catch (e) {
+                        error = true;
+                        errorMessage = e.message;
+                    }
+
                     var widget = new phpr.Default.System.TemplateWrapper({
                         templateName: "phpr.Project.template.webdavTab.html",
                         templateData: {
-                            label: phpr.nls.get("WebDav url"),
-                            url: url
+                            label: phpr.nls.get("WebDAV url"),
+                            url: url,
+                            error: error,
+                            errorMessage: errorMessage
                         }
                     });
 
-                    return that.addTab([widget], 'tabWebDav', "WebDav", null);
+                    return that.addTab([widget], 'tabWebDav', "WebDAV", null);
                 }
             }
         );
@@ -256,32 +269,20 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     },
 
     _buildPathFromTreeData: function(data) {
-        var projects = this._convertTreeDataToProjectMap(data);
-        var currentProjectId = "" + phpr.pageManager.getState().projectId;
+        var path = "";
+        var hirarchy = phpr.tree.getProjectHirarchyArray(this.id);
+        var l = hirarchy.length;
 
-        if (!currentProjectId) {
-            return "";
+        for (var i = 0; i < l; i++) {
+            var segment = hirarchy[i].name[0];
+            if (segment.indexOf('/') !== -1) {
+                throw new Error(phpr.nls.get("There must be no slashes in project names for WebDAV to work.", "Project"));
+            } else {
+                path += encodeURIComponent(segment) + "/";
+            }
         }
 
-        var traverseTree = function(item) {
-            var ret = "";
-            if (item.parent && projects[item.parent] && item.parent != "1") {
-                ret = traverseTree(projects[item.parent]);
-            }
-
-            return ret + encodeURIComponent(item.name) + "/";
-        };
-
-        return traverseTree(projects[currentProjectId]);
-    },
-
-    _convertTreeDataToProjectMap: function(data) {
-        var map = {};
-        dojo.forEach(data, function(item) {
-            map[item.id] = dojo.clone(item);
-        });
-
-        return map;
+        return path;
     },
 
     deleteForm: function() {

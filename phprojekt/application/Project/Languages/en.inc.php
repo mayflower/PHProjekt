@@ -202,3 +202,6 @@ $lang["Content Help"]["Role"] = "<br />
 
 $lang["Content Help"]["Notification"] = "DEFAULT";
 $lang["Content Help"]["History"] = "DEFAULT";
+
+//webdav
+$lang["There must be no slashes in project names for WebDAV to work."] = "There must be no slashes in project names for WebDAV to work.";

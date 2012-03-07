@@ -257,7 +257,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         var projects = [];
 
         if (!phpr.isGlobalModule(phpr.module) && (phpr.treeLastProjectSelected != phpr.currentProjectId || phpr.currentProjectId == 1)) {
-            var projects = this._getProjectHirarchyArray(phpr.currentProjectId);
+            var projects = this.getProjectHirarchyArray(phpr.currentProjectId);
         }
 
         phpr.BreadCrumb.setProjects(projects);
@@ -265,7 +265,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         phpr.BreadCrumb.draw();
     },
 
-    _getProjectHirarchyArray: function(itemId) {
+    getProjectHirarchyArray: function(itemId) {
         var ret = [];
         var item;
 
@@ -283,7 +283,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         }
 
         if (item.parent[0]) {
-            ret = this._getProjectHirarchyArray(item.parent[0]);
+            ret = this.getProjectHirarchyArray(item.parent[0]);
         }
 
         ret.push({
