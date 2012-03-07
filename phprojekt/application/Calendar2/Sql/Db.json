@@ -31,9 +31,8 @@
         {
             "create":
             {
-                "id":                   "default",
-                "calendar2_id":         {"type": "int", "notNull": "true"},
-                "user_id":              {"type": "int", "notNull": "true"},
+                "calendar2_id":         {"type": "int", "notNull": "true", "primary": "true"},
+                "user_id":              {"type": "int", "notNull": "true", "primary": "true"},
                 "confirmation_status":  {"type": "int", "notNull": "true", "default": "1"}
             }
         },
