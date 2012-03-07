@@ -497,6 +497,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             templateName: "phpr.Default.template.GridBox.html"
         });
 
+        this.garbageCollector.addNode(gridBoxContainer);
+
         phpr.viewManager.getView().centerMainContent.set('content', gridBoxContainer);
         gridBoxContainer.startup();
         this.grid = new this.gridWidget(
