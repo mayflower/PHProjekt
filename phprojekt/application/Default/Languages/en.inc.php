@@ -515,3 +515,12 @@ Using this feature it is very easy and fast to find projects that for example sh
 </p>
 EOT;
 
+$lang["Actions"] = "Actions";
+$lang["Actions tutorial text"] = <<<EOT
+<h3>Actions</h3>
+<p>
+Each module may provide you with a set of features like for example converting it's content to a csv format, adding new subitems or filter the contents of the grid.
+These actions are accessible through buttons right below the project module list.
+</p>
+EOT;
+
