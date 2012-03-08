@@ -524,3 +524,9 @@ These actions are accessible through buttons right below the project module list
 </p>
 EOT;
 
+$lang["Help tutorial text"] = <<<EOT
+<h3>Help</h3>
+<p>
+To get further help with the provided features in PHProjekt or to take the tutorial again, just press the help button in the top right corner.
+</p>
+EOT;
