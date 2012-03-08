@@ -449,6 +449,14 @@ $lang["Content Help"]["History"] = "<br />
     It has five columns: <i>date</i>, <i>user</i>, <i>field</i>, <i>old value</i> and <i>new value</i>.";
 
 // TUTORIAL
+
+$lang["Tutorial Header"] = <<<EOT
+    <p>
+This tutorial will guide you through the basic features of PHProjekt.</br>
+Click the tabs to go through the elements of the tutorial.
+    </p>
+EOT;
+
 $lang["The Tree"] = "The Tree";
 $lang["Tree tutorial text"] = <<<EOT
 <h3>The Tree</h3>
