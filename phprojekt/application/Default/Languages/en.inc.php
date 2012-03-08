@@ -503,3 +503,15 @@ modules and changing the general company settings.</br>
 </p>
 EOT;
 
+$lang["Tags tutorial text"] = <<<EOT
+<h3>Tags</h3>
+<p>
+Tags help you to easily find specific projects.</br>
+In the forms in the project modules it is possible to enter a comma separated list of tags that are associated with each item.</br>
+As you add tags to projects, they will appear in the tags box in the bottom left corner.</br>
+When you click on one of the tag names in this box, PHProjekt will display a search window, listing all projects
+with the specified tags, grouped by module.</br>
+Using this feature it is very easy and fast to find projects that for example share a common topic.
+</p>
+EOT;
+
