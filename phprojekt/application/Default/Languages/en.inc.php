@@ -492,3 +492,14 @@ administration section of PHProjekt and assigning the role to the user.
 </p>
 EOT;
 
+$lang["Global Modules"] = "Global Modules";
+$lang["Global Modules tutorial text"] = <<<EOT
+<h3>Global Modules</h3>
+<p>
+Unlinke project modules, global modules are not bound to a specific project but only exist once for any given user.</br>
+They are used for general tasks like timetracking, calendars, managing contacts, adjusting the user settings or,
+if you are an administrator, changing global PHProjekt settings like adding users and roles, modifying
+modules and changing the general company settings.</br>
+</p>
+EOT;
+

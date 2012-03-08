@@ -70,6 +70,7 @@ dojo.declare("phpr.Default.TutorialOverlay", phpr.Default.System.Component, {
         this._addTreeTutorial();
         this._addGridTutorial();
         this._addProjectModulesTutorial();
+        this._addGlobalModulesTutorial();
     },
 
     _setCheckBox: function() {
@@ -112,6 +113,11 @@ dojo.declare("phpr.Default.TutorialOverlay", phpr.Default.System.Component, {
     _addProjectModulesTutorial: function() {
         var domNode = phpr.viewManager.getView().containSubModuleNavigation;
         this._addTutorialEntry("Project Modules", "Project Modules tutorial text", domNode);
+    },
+
+    _addGlobalModulesTutorial: function() {
+        var domNode = phpr.viewManager.getView().mainNavigation.domNode;
+        this._addTutorialEntry("Global Modules", "Global Modules tutorial text", domNode);
     },
 
     _addTutorialEntry: function(title, text, domNode) {
