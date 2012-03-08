@@ -447,3 +447,16 @@ $lang["Content Help"]["History"] = "<br />
     <br />
     It shows a listing of the changes made to the item since its creation.<br />
     It has five columns: <i>date</i>, <i>user</i>, <i>field</i>, <i>old value</i> and <i>new value</i>.";
+
+// TUTORIAL
+$lang["The Tree"] = "The Tree";
+$lang["Tree tutorial text"] = <<<EOT
+<h3>The Tree</h3>
+<p>
+The tree is the main way to navigate around your projects in PHProjekt 6.
+Inside the tree you can find all projects that you are currently allowed to see.
+To get to the root node of the tree, just click the PHProjekt logo in the top left corner.
+You can expand and collapse subprojects in the tree with the cross button on the left side of each label.
+</p>
+EOT;
+

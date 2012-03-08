@@ -66,6 +66,8 @@ dojo.declare("phpr.Default.TutorialOverlay", phpr.Default.System.Component, {
 
         this._setCheckBox();
         this._setHeader();
+
+        this._addTreeTutorial();
     },
 
     _setCheckBox: function() {
@@ -90,6 +92,11 @@ dojo.declare("phpr.Default.TutorialOverlay", phpr.Default.System.Component, {
             url: phpr.webpath + 'index.php/Default/index/jsonSetTutorialDisplayed',
             content: { displayed: (value ? "true" : "false") }
         });
+    },
+
+    _addTreeTutorial: function() {
+        var domNode = phpr.viewManager.getView().treeNavigation;
+        this._addTutorialEntry("Tree", "Tree tutorial text", domNode);
     },
 
     _addTutorialEntry: function(title, text, domNode) {
