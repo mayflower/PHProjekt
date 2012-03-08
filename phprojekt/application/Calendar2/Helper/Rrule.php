@@ -108,7 +108,7 @@ class Calendar2_Helper_Rrule
      * @param Datetime $start The start of the period.
      * @param datetime $end   The end of the period.
      *
-     * @return Array of Datetime The single events.
+     * @return Array of Datetime The single events sorted in ascending order.
      */
     public function getDatesInPeriod(Datetime $start, Datetime $end)
     {
@@ -164,8 +164,9 @@ class Calendar2_Helper_Rrule
             }
         }
 
-
-        foreach ($datePeriods as $period) {
+        $dateSeries = array();
+        foreach ($datePeriods as $k => $period) {
+            $dateSeries[$k] = array();
             foreach ($period as $date) {
                 // Work around http://bugs.php.net/bug.php?id=52454
                 // 'Relative dates and getTimestamp increments by one day'
@@ -176,9 +177,37 @@ class Calendar2_Helper_Rrule
                 if ($startTs <= $ts + $this->_duration
                         && $ts <= $endTs
                         && !in_array($date, $this->_exceptions)) {
-                    $dates[] = new Datetime($datestring, new DateTimeZone('UTC'));
+                    $dateSeries[$k][] = $ts;
                 } else if ($ts > $endTs) {
                    break;
+                }
+            }
+            if (empty($dateSeries[$k])) {
+                unset($dateSeries[$k]);
+            }
+        }
+
+        while(!empty($dateSeries)) {
+            foreach (array_keys($dateSeries) as $k) {
+                $smallestOther = null;
+                foreach ($dateSeries as $cmpK =>$s) {
+                    if ($cmpK == $k) {
+                        continue;
+                    }
+                    if ($smallestOther == null || $s[0] < $smallestOther) {
+                        $smallestOther = $s[0];
+                    }
+                }
+                while (!empty($dateSeries[$k]) && ($smallestOther == null || $dateSeries[$k][0] < $smallestOther)) {
+                    $dt = new DateTime('@' . array_shift($dateSeries[$k]));
+                    $dt->setTimezone(new DateTimeZone('UTC'));
+                    $dates[] = $dt;
+                }
+
+                if (empty($dateSeries[$k])) {
+                    unset($dateSeries[$k]);
+                } else if ($dateSeries[$k][0] == $smallestOther) {
+                    array_shift($dateSeries[$k]);
                 }
             }
         }
