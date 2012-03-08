@@ -476,3 +476,19 @@ only show you a message indicating that there are currently no subprojects and a
 </p>
 EOT;
 
+$lang["Project Modules"] = "Project Modules";
+$lang["Project Modules tutorial text"] = <<<EOT
+<h3>Project Modules</h3>
+<p>
+Project modules are the core of the PHProjekt groupware.</br>
+Each module is associated with a project.</br>
+Modules contain all the functionality that you can use on a given project like
+inputting form data, uploading files, creating helpdesk tickets, watching statistics and so on.</br>
+You can manage the active modules of any project but the root project by selecting it in the tree and clicking on 
+the "Basic Data" tab. This tab contains a section "Module" where you can enable or disable the installed modules for the
+selected projects.</br>
+It is possible to control the access to specific modules on a per user basis by creating appropriate roles in the
+administration section of PHProjekt and assigning the role to the user.
+</p>
+EOT;
+
