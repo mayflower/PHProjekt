@@ -460,3 +460,19 @@ You can expand and collapse subprojects in the tree with the cross button on the
 </p>
 EOT;
 
+$lang["The Grid"] = "The Grid";
+$lang["Grid tutorial text"] = <<<EOT
+<h3>The Grid</h3>
+<p>
+The grid is a more sophisticated way to navigate the child projects of a selected project.</br>
+Here you can see a summary of some of the data of each child project and edit the listed projects directly by double-clicking
+on a given cell value.</br>
+If you just do a single click on a grid row, the full featured project form will open and allow you to see all the values
+of the selected project.</br>
+On the left side of each row is a small checkbox which can be used to select multiple projects and delete or export them
+together using the "with selected" dropdown menu at the bottom of the grid.</br>
+If the selected project has no child projects yet and you have the permission to create subprojects, the grid will
+only show you a message indicating that there are currently no subprojects and a button to create one.
+</p>
+EOT;
+

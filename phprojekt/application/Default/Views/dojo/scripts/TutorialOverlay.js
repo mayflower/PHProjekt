@@ -68,6 +68,7 @@ dojo.declare("phpr.Default.TutorialOverlay", phpr.Default.System.Component, {
         this._setHeader();
 
         this._addTreeTutorial();
+        this._addGridTutorial();
     },
 
     _setCheckBox: function() {
@@ -97,6 +98,14 @@ dojo.declare("phpr.Default.TutorialOverlay", phpr.Default.System.Component, {
     _addTreeTutorial: function() {
         var domNode = phpr.viewManager.getView().treeNavigation;
         this._addTutorialEntry("Tree", "Tree tutorial text", domNode);
+    },
+
+    _addGridTutorial: function() {
+        var domNode = function() {
+            return phpr.tutorialAnchors.grid;
+        };
+
+        this._addTutorialEntry("Grid", "Grid tutorial text", domNode);
     },
 
     _addTutorialEntry: function(title, text, domNode) {
