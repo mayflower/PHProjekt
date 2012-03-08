@@ -828,6 +828,15 @@ class IndexController extends Zend_Controller_Action
         }
 
         $user = Phprojekt_Auth_Proxy::getEffectiveUser();
+        $settings = $user->settings->fetchAll();
+
+        $tutorialDisplayed = "false";
+        foreach ($settings as $setting) {
+            if ($setting->keyValue == "tutorialDisplayed") {
+                $tutorialDisplayed = $setting->value;
+                break;
+            }
+        }
 
         // System info
         $data[] = array('name'  => 'phprojektVersion',
@@ -838,6 +847,8 @@ class IndexController extends Zend_Controller_Action
                         'value' => $user->username);
         $data[] = array('name'  => 'csrfToken',
                         'value' => Phprojekt::createCsrfToken());
+        $data[] = array('name'  => 'tutorialDisplayed',
+                        'value' => $tutorialDisplayed);
 
         Phprojekt_Converter_Json::echoConvert($data);
     }
@@ -953,6 +964,49 @@ class IndexController extends Zend_Controller_Action
         } else {
             Phprojekt_Converter_Json::echoConvert(array());
         }
+    }
+
+    /**
+     * Sets the tutorialDisplayed setting of the current user.
+     *
+     * Sets the tutorialDisplayed setting of the current user, indicating that the tutorial has been displayed.
+     * The request parameter "displayed" should either be true or false.
+     *
+     * @return void
+     */
+    public function jsonSetTutorialDisplayedAction()
+    {
+        $displayed = $this->getRequest()->getParam('displayed', "");
+        if ($displayed == "true") {
+            $displayed = "true";
+        } else {
+            $displayed = "false";
+        }
+
+        $user = Phprojekt_Auth_Proxy::getEffectiveUser();
+        $settings = $user->settings->fetchAll();
+
+        $found = false;
+        foreach ($settings as $setting) {
+            // Update
+            if ($setting->keyValue == "tutorialDisplayed") {
+                $setting->value = $displayed;
+                $setting->save();
+                $found = true;
+                break;
+            }
+        }
+        if (!$found) {
+            // Create
+            $record             = $user->settings->create();
+            $record->moduleId   = 0;
+            $record->keyValue   = "tutorialDisplayed";
+            $record->value      = $displayed;
+            $record->identifier = 'Core';
+            $record->save();
+        }
+
+        Phprojekt_Converter_Json::echoConvert(array());
     }
 
     /**
