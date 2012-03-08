@@ -143,8 +143,8 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
     _parseTimeToDate: function(timeString) {
         var d = new Date(0);
         var time = timeString.match(/(\d+):(\d+):(\d+)/);
-        d.setHours(parseInt(time[1]));
-        d.setMinutes(parseInt(time[2]) || 0);
+        d.setHours(parseInt(time[1], 10));
+        d.setMinutes(parseInt(time[2], 10) || 0);
         return d;
     },
 
@@ -267,7 +267,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 // projectId
                 var range = dojo.clone(meta[3].range);
                 for (var i in favorites) {
-                    var id = parseInt(favorites[i].id);
+                    var id = parseInt(favorites[i].id, 10);
                     if (id > 0) {
                         for (var j in range) {
                             if (range[j].id == id) {
@@ -275,7 +275,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                                 break;
                             }
                         }
-                        range.unshift({'id': parseInt(favorites[i].id), 'name': favorites[i].name});
+                        range.unshift({'id': parseInt(favorites[i].id, 10), 'name': favorites[i].name});
                     }
                 }
 
@@ -566,7 +566,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         dijit.byId('endTime').set('displayedValue', end);
         dijit.byId('projectId').set('value', project === 0 ? 1 : project);
         dijit.byId('notes').set('value', notes);
-        if (parseInt(this.id) > 0) {
+        if (parseInt(this.id, 10) > 0) {
             dojo.style(this._formContent.deleteBookingButtonDiv, 'display', 'inline');
         } else {
             dojo.style(this._formContent.deleteBookingButtonDiv, 'display', 'none');
@@ -586,17 +586,17 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
             var endTime = data[0].endTime.substr(0, 5);
             var startTime = data[0].startDatetime.substr(11, 5);
             if (endTime === 0 || endTime === null) {
-                var hour = parseInt(startTime) + 1;
+                var hour = parseInt(startTime, 10) + 1;
                 var endTime = phpr.date.getIsoTime(hour + '00');
             }
 
             var temp = startTime.split(':');
 
-            var start = parseInt(temp[0]);
+            var start = parseInt(temp[0], 10);
             if (start === 0) {
-                var start = parseInt(temp[0].substr(1, 1));
+                var start = parseInt(temp[0].substr(1, 1), 10);
             }
-            var end = parseInt(temp[1]);
+            var end = parseInt(temp[1], 10);
 
             var index;
             if (end >= 0 && end < 30) {
