@@ -42,8 +42,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         this._initData.push({'store': this.userStore});
 
         // Get the tags
-        this._tagUrl = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
-            + '/id/' + this.id;
+        this._tagUrl = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' +
+            this.id;
         this._initData.push({'url': this._tagUrl});
     },
 
@@ -70,50 +70,50 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
 
         // Check if rule for recurrence is set
         if (this.id > 0 && false === this._multipleEvents) {
-            this.sendData['rrule'] = null;
-        } else if (this.sendData['rruleFreq']) {
+            this.sendData.rrule = null;
+        } else if (this.sendData.rruleFreq) {
             // Set frequence
-            var rrule = 'FREQ=' + this.sendData['rruleFreq'];
+            var rrule = 'FREQ=' + this.sendData.rruleFreq;
 
             // Set until value if available
-            if (this.sendData['rruleUntil']) {
-                until = this.sendData['rruleUntil'];
+            if (this.sendData.rruleUntil) {
+                until = this.sendData.rruleUntil;
                 if (!until.setHours) {
                     until = phpr.date.isoDateTojsDate(until);
                 }
-                var startDatetime = phpr.date.isoDatetimeTojsDate(this.sendData['start']);
+                var startDatetime = phpr.date.isoDatetimeTojsDate(this.sendData.start);
                 until.setHours(startDatetime.getHours());
                 until.setMinutes(startDatetime.getMinutes());
                 until.setSeconds(startDatetime.getSeconds());
                 until = dojo.date.add(until, 'minute', until.getTimezoneOffset());
                 rrule += ';UNTIL=' + dojo.date.locale.format(until, {datePattern: 'yyyyMMdd\'T\'HHmmss\'Z\'',
                     selector: 'date'});
-                this.sendData['rruleUntil'] = null;
+                this.sendData.rruleUntil = null;
             }
 
             // Set interval if available
-            if (this.sendData['rruleInterval']) {
-                rrule += ';INTERVAL=' + this.sendData['rruleInterval'];
-                this.sendData['rruleInterval'] = null;
+            if (this.sendData.rruleInterval) {
+                rrule += ';INTERVAL=' + this.sendData.rruleInterval;
+                this.sendData.rruleInterval = null;
             }
 
             // Set weekdays if available
             if (this.sendData['rruleByDay[]']) {
                 rrule += ';BYDAY=' + this.sendData['rruleByDay[]'];
                 this.sendData['rruleByDay[]'] = null;
-            } else if (this.sendData['rruleByDay']) {
-                rrule += ';BYDAY=' + this.sendData['rruleByDay'];
-                this.sendData['rruleByDay'] = null;
+            } else if (this.sendData.rruleByDay) {
+                rrule += ';BYDAY=' + this.sendData.rruleByDay;
+                this.sendData.rruleByDay = null;
             }
-            this.sendData['rruleFreq'] = null;
+            this.sendData.rruleFreq = null;
 
-            this.sendData['rrule'] = rrule;
+            this.sendData.rrule = rrule;
         } else {
-            this.sendData['rrule'] = null;
+            this.sendData.rrule = null;
         }
 
-        this.sendData['multipleEvents']       = this._multipleEvents;
-        this.sendData['multipleParticipants'] = this._multipleParticipants;
+        this.sendData.multipleEvents       = this._multipleEvents;
+        this.sendData.multipleParticipants = this._multipleParticipants;
 
         return true;
     },
@@ -130,9 +130,15 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
             def = this.addParticipantsTab(data);
         }
 
-        def = dojo.when(def, dojo.hitch(this, function() {return this.addRecurrenceTab(data)}));
-        def = dojo.when(def, dojo.hitch(this, function() {return this.addNotificationTab(data)}));
-        def = dojo.when(def, dojo.hitch(this, function() {return this.addHistoryTab()}));
+        def = dojo.when(def, dojo.hitch(this, function() {
+            return this.addRecurrenceTab(data);
+        }));
+        def = dojo.when(def, dojo.hitch(this, function() {
+            return this.addNotificationTab(data);
+        }));
+        def = dojo.when(def, dojo.hitch(this, function() {
+            return this.addHistoryTab();
+        }));
         return def;
     },
 
@@ -173,8 +179,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         // Description:
         //   If it has changed to a valid date, then add or substract the difference between previous and current value
         // to the End date
-        if (this._currentDate != dijit.byId('start_forDate').value
-                    && dijit.byId('start_forDate').isValid()) {
+        if (this._currentDate != dijit.byId('start_forDate').value && dijit.byId('start_forDate').isValid()) {
             diff = dojo.date.difference(
                     this._currentDate,
                     dijit.byId('start_forDate').value,
@@ -197,8 +202,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         // Description:
         //    If it has changed to a valid time, then add or substract the difference between previous and current value
         // to the End time
-        if (this._currentTime != dijit.byId('start_forTime').value
-                && dijit.byId('start_forTime').isValid()) {
+        if (this._currentTime != dijit.byId('start_forTime').value && dijit.byId('start_forTime').isValid()) {
             diff = dojo.date.difference(
                     this._currentTime,
                     dijit.byId('start_forTime').value,
@@ -227,9 +231,9 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         var userList       = this.userStore.getList();
         var currentUser    = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
         var participantIds = data[0].participants;
-        var participants   = new Array();
-        var users          = new Array();
-        var statuses       = data[0]["confirmationStatuses"];
+        var participants   = [];
+        var users          = [];
+        var statuses       = data[0].confirmationStatuses;
 
         if (userList) {
             for (var i in userList) {
@@ -243,9 +247,10 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         // Make an array with the current participants
         for (var i in participantIds) {
             if (participantIds[i] != currentUser) {
+                var userName;
                 for (var j in userList) {
                     if (userList[j].id == participantIds[i]) {
-                        var userName = userList[j].display;
+                        userName = userList[j].display;
                         break;
                     }
                 }
@@ -299,8 +304,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
             dojo.connect(newParticipant, "onClick", dojo.hitch(this, "newParticipant"));
 
             // Delete buttons for participant
-            for (i in participants) {
-                var userId     = participants[i]["userId"];
+            for (var i in participants) {
+                var userId     = participants[i].userId;
                 var buttonName = "participantDeleteButton" + userId;
                 var params = {
                     label: '',
@@ -332,8 +337,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
             row.id       = "trParticipantFor" + userId;
 
             var cell = row.insertCell(0);
-            cell.innerHTML = '<input id="dataParticipant[' + userId + ']" name="newParticipants[]" '
-                + ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
+            cell.innerHTML = '<input id="dataParticipant[' + userId + ']" name="newParticipants[]" ' +
+                ' type="hidden" value="' + userId + '" dojoType="dijit.form.TextBox" />' + userName;
             var cell = row.insertCell(1);
             cell.innerHTML = '<div id="participantDeleteButton' + userId + '"></div>';
             var cell = row.insertCell(2);
@@ -361,7 +366,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
     updateAvailabilityStatus: function(userId) {
         cell = dojo.byId('participantAvailabilityIndicator' + userId);
         if (!cell) {
-            return
+            return;
         }
         dojo.attr(cell, 'src', '/img/ajax-loader-small.gif');
         dojo.attr(cell, 'title', phpr.nls.get('Checking availability...'));
@@ -374,7 +379,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                 end:   dojo.byId('end').value
             }
         }).then(function(data) {
-            if (data && data['available']) {
+            if (data && data.available) {
                 dojo.attr(cell, 'src', '/css/themes/phprojekt/images/tick.gif');
                 dojo.attr(cell, 'title', phpr.nls.get('The participant is available'));
             } else {
@@ -382,7 +387,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                 dojo.attr(cell, 'title', phpr.nls.get('The participant is not available'));
             }
         });
-     },
+    },
 
     updateAllAvailabilityStatuses: function(userId) {
         dojo.query('[id^=participantAvailabilityIndicator]').forEach(
@@ -432,12 +437,10 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                 rule  = rrule[i].split('=');
                 name  = rule[0];
                 value = rule[1];
-                switch (name) {
-                    case 'UNTIL':
-                        value = dojo.date.locale.parse(value, {datePattern: "yyyyMMdd'T'HHmmss'Z'", selector: 'date'});
-                        value = dojo.date.add(value, 'minute', -value.getTimezoneOffset());
-                        value = dojo.date.locale.format(value, {datePattern: 'yyyy-MM-dd', selector: 'date'});
-                        break;
+                if (name === 'UNTIL') {
+                    value = dojo.date.locale.parse(value, {datePattern: "yyyyMMdd'T'HHmmss'Z'", selector: 'date'});
+                    value = dojo.date.add(value, 'minute', -value.getTimezoneOffset());
+                    value = dojo.date.locale.format(value, {datePattern: 'yyyy-MM-dd', selector: 'date'});
                 }
                 values[name] = value;
             }
@@ -464,15 +467,16 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
 
         // Add fields
         // If the user is not the owner, can see the recurrence but disabled (add hidden fields for keep the value)
+        var disabled;
         if (this.id > 0) {
-            var disabled = !this._owner;
+            disabled = !this._owner;
         } else {
-            var disabled = false;
+            disabled = false;
         }
-        var intervalHelp = phpr.nls.get('The interval for the option selected in Repeats.')
-            + '<br />' + phpr.nls.get('E.g.: Repeats Weekly - Interval 2, that will create one event every 2 weeks.');
-        var untilHelp = phpr.nls.get('The day the recurrence will stop happening.')
-            + '<br />' + phpr.nls.get('The last event\'s day could not match this day.');
+        var intervalHelp = phpr.nls.get('The interval for the option selected in Repeats.') + '<br />' +
+            phpr.nls.get('E.g.: Repeats Weekly - Interval 2, that will create one event every 2 weeks.');
+        var untilHelp = phpr.nls.get('The day the recurrence will stop happening.') + '<br />' +
+            phpr.nls.get('The last event\'s day could not match this day.');
         recurrenceTab.push(this.fieldTemplate.selectRender(rangeFreq, phpr.nls.get('Repeats'), 'rruleFreq', values.FREQ,
             false, disabled));
         recurrenceTab.push(this.fieldTemplate.textFieldRender(phpr.nls.get('Interval'), 'rruleInterval',
@@ -492,7 +496,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         // Description:
         //    This function calls jsonDeleteAction
 
-        var rruleFreq = this.formsWidget[this._FRMWIDG_RECURRENCE].get('value')['rruleFreq'];
+        var rruleFreq = this.formsWidget[this._FRMWIDG_RECURRENCE].get('value').rruleFreq;
         if (this.id > 0) {
             // If the event has recurrence or is at least one participant added in participants tab, ask what to modify
             if (rruleFreq && null === this._multipleEvents) {
@@ -505,8 +509,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         this.sendData.multipleParticipants = this._multipleParticipants;
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
-                                    + '/occurrence/' + this._originalData.occurrence,
+            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id + '/occurrence/' +
+                    this._originalData.occurrence,
             content:   this.sendData
         }).then(dojo.hitch(this, function(data) {
             if (data) {
@@ -528,7 +532,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
 
     showEventSelector: function(action, nextFunction) {
         var view = phpr.viewManager.getView();
-        view.eventSelectorContainer.destroyDescendants();;
+        view.eventSelectorContainer.destroyDescendants();
 
         view.eventSelectorTitle.innerHTML = phpr.nls.get(action + ' repeating events');
         view.eventSelectorDialog.set('title', phpr.nls.get('Calendar2'));
@@ -579,12 +583,12 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
     updateCacheIds: function() {
         // Summary:
         //    This function deletes the cache of the 3 urls for the ids stored in _updateCacheIds
-        for (idPos in this._updateCacheIds) {
+        for (var idPos in this._updateCacheIds) {
             var id         = this._updateCacheIds[idPos];
             var url        = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + id;
             var relatedUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetRelatedData/id/' + id;
-            var tagUrl     = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
-                + '/id/' + id;
+            var tagUrl     = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module +
+                '/id/' + id;
             phpr.DataStore.deleteData({url: url});
             phpr.DataStore.deleteData({url: relatedUrl});
             phpr.DataStore.deleteData({url: tagUrl});
@@ -621,11 +625,11 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         }).then(dojo.hitch(this, function(data) {
             new phpr.handleResponse('serverFeedback', data);
             if (data.type == 'success') {
-                this.id = data['id'];
+                this.id = data.id;
                 return phpr.send({
-                    url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module
-                    + '/id/' + this.id,
-                       content:   this.sendData
+                    url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module + '/id/' +
+                        this.id,
+                    content:   this.sendData
                 });
             } else {
                 this.setSubmitInProgress(false);
@@ -633,7 +637,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         })).then(dojo.hitch(this, function(data) {
             this.setSubmitInProgress(false);
             if (data) {
-                if (this.sendData['string']) {
+                if (this.sendData.string) {
                     new phpr.handleResponse('serverFeedback', data);
                 }
                 if (data.type == 'success') {
