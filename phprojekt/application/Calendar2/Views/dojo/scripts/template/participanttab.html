@@ -1,6 +1,6 @@
 <tr>
     <td colspan="3">
-    <table id="participantTable"
+    <table dojoAttachPoint="participantTable"
     style="position: relative; left: 75px">
     <tr>
         <td>
@@ -15,7 +15,7 @@
     </tr>
     <tr>
         <td>
-            <select id="dataParticipantAdd" name="dataParticipantAdd" dojoType="phpr.FilteringSelect"
+            <select dojoAttachPoint="dataParticipantAdd" name="dataParticipantAdd" dojoType="phpr.FilteringSelect"
             required="false" autocomplete="false" value="" invalidMessage="" >
                 {% for user in users %}
                 <option value="{{user.id}}" >{{user.name}}</option>
@@ -23,18 +23,18 @@
             </select>
         </td>
         <td>
-            <div id="participantAddButton">
+            <div dojoAttachPoint="participantAddButton">
             </div>
         </td>
     </tr>
     {% for item in participants %}
-    <tr id="trParticipantFor{{item.userId}}"
+    <tr dojoAttachPoint="trParticipantFor{{item.userId}}"
     {% ifequal currentUser item.userId %}
         style="display: none;"
         {% endifequal %}
     >
         <td class="{{item.statusClass}}">
-            <input id="dataParticipant[{{item.userId}}]"
+            <input dojoAttachPoint="dataParticipant[{{item.userId}}]"
                    name="newParticipants[]"
                    type="hidden"
                    value="{{item.userId}}"
@@ -42,7 +42,7 @@
             {{item.userName}}
         </td>
         <td>
-            <div id="participantDeleteButton{{item.userId}}">
+            <div dojoAttachPoint="participantDeleteButton{{item.userId}}">
             </div>
         </td>
     </tr>

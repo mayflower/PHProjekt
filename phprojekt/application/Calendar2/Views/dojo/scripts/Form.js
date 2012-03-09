@@ -273,7 +273,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         this._participantsInTab = participants.length;
 
         // Template for the participants tab
-        var participantData = new phpr.Default.System.TemplateWrapper({
+        this._participantData = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Calendar2.template.participanttab.html",
             templateData: {
                 participantUserText:            phpr.nls.get('User'),
@@ -282,9 +282,10 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                 users:                          users,
                 currentUser:                    currentUser,
                 participants:                   participants
-        }});
+            }
+        });
 
-        var def = this.addTab([participantData], 'tabParticipant', 'Participants', 'participantFormTab');
+        var def = this.addTab([this._participantData], 'tabParticipant', 'Participants', 'participantFormTab');
         def.then(dojo.hitch(this, function() {
             // Add button for participant
             var params = {
@@ -294,7 +295,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                 baseClass: 'smallIcon'
             };
             newParticipant = new dijit.form.Button(params);
-            dojo.byId("participantAddButton").appendChild(newParticipant.domNode);
+            this._participantData.participantAddButton.appendChild(newParticipant.domNode);
             dojo.connect(newParticipant, "onClick", dojo.hitch(this, "newParticipant"));
 
             // Delete buttons for participant
@@ -309,7 +310,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
                 };
 
                 var tmp = new dijit.form.Button(params);
-                dojo.byId(buttonName).appendChild(tmp.domNode);
+                this._participantData[buttonName].appendChild(tmp.domNode);
                 dojo.connect(tmp, "onClick", dojo.hitch(this, "deleteParticipant", userId));
             }
         }));
@@ -320,13 +321,13 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         //    Add a new row of one participant
         // Description:
         //    Add a the row of one participant
-        var userId = dijit.byId("dataParticipantAdd").get('value');
+        var userId = this._participantData.dataParticipantAdd.get('value');
         if (!dojo.byId("trParticipantFor" + userId) && userId > 0) {
             phpr.destroyWidget("dataParticipant[" + userId + "]");
             phpr.destroyWidget("ParticipantDeleteButton" + userId);
 
-            var userName = dijit.byId("dataParticipantAdd").get('displayedValue');
-            var table    = dojo.byId("participantTable");
+            var userName = this._participantData.dataParticipantAdd.get('displayedValue');
+            var table    = this._participantData.participantTable;
             var row      = table.insertRow(table.rows.length);
             row.id       = "trParticipantFor" + userId;
 
