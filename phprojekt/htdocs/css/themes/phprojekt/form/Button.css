@@ -383,6 +383,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 .phprojekt .dijitContentPane .buttonRow {
     padding-left: 5px;
     padding-top: 7px;
+    padding-bottom: 5px;
 }
 
 .phprojekt .dijitContentPane .rightButtonRow {
