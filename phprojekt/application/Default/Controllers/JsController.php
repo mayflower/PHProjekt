@@ -116,6 +116,7 @@ class JsController extends IndexController
                     phpr.regExpForFilter  = new phpr.regExpForFilter();
                     phpr.garbageCollector = new phpr.Default.System.GarbageCollector();
                     phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";
+                    phpr.tutorialAnchors = {};
         ';
 
         foreach ($this->_modules as $module) {
