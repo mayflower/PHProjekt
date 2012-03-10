@@ -369,7 +369,7 @@ class Phprojekt_Tags
     {
         $fields   = array();
         $fields[] = array('key'   => 'string',
-                          'label' => Phprojekt::getInstance()->translate('Tag'));
+                          'label' => Phprojekt::getInstance()->translate('Tags'));
         $fields[] = array('key'   => 'count',
                           'label' => Phprojekt::getInstance()->translate('Count'));
         return $fields;
