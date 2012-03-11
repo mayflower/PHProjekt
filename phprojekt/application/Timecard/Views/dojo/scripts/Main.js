@@ -22,6 +22,7 @@
 dojo.provide("phpr.Timecard.Main");
 
 dojo.declare("phpr.Timecard.BookingStore", null, {
+    _hasData: false,
     _date: null,
     _url: null,
     _detailsUrl: null,
@@ -56,6 +57,7 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
             this._runningBooking = this._data;
         }
 
+        this._hasData = true;
         this._stopLoading();
         this.onChange();
     },
