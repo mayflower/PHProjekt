@@ -31,6 +31,7 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
     _unassignedProjectId: 1,
     _data: null,
     _metaData: null,
+    _dlist: null,
 
     constructor: function(date) {
         this._date = date;
@@ -48,7 +49,7 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
 
     _onDataLoaded: function(data) {
         this._data = data[0][1].data;
-        this._metaData = phpr.DataStore.getMetaData({url: this._detailsUrl});
+        this._metaData = data[1][1].metaData;
         this._runningBooking = null;
 
         this._projectRange = this._getProjectRange(this._metaData);
@@ -57,6 +58,7 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
             this._runningBooking = this._data;
         }
 
+        this._dlist = null;
         this._hasData = true;
         this._stopLoading();
         this.onChange();
@@ -79,19 +81,25 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
     _updateData: function() {
         if (!this.isLoading()) {
             this._setUrls();
-            this._startLoading();
 
             phpr.DataStore.deleteData({url: this._url});
 
             phpr.DataStore.addStore({url: this._url});
             phpr.DataStore.addStore({url: this._detailsUrl});
+            return this._requestData();
+        }
+    },
 
-            var dlist = new dojo.DeferredList([
+    _requestData: function() {
+        if (!this.isLoading()) {
+            this._startLoading();
+            this._dlist = new dojo.DeferredList([
                 phpr.DataStore.requestData({url: this._url}),
                 phpr.DataStore.requestData({url: this._detailsUrl})
             ]);
 
-            dlist.addCallback(dojo.hitch(this, "_onDataLoaded"));
+            this._dlist.addCallback(dojo.hitch(this, "_onDataLoaded"));
+            return this._dlist;
         }
     },
 
