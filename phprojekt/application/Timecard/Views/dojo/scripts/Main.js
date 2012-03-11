@@ -29,8 +29,11 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
     _projectRange: null,
     _loading: false,
     _unassignedProjectId: 1,
+    _favoritesUrl: null,
     _data: null,
     _metaData: null,
+    _favoritesData: null,
+    _mergedFavorites: null,
     _dlist: null,
 
     constructor: function(date) {
@@ -38,6 +41,7 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
     },
 
     _setUrls: function() {
+        this._favoritesUrl = phpr.webpath + 'index.php/Timecard/index/jsonGetFavoritesProjects';
         this._url = phpr.webpath +
                     'index.php/Timecard/index/jsonGetRunningBookings/' +
                     'year/' + this._date.getFullYear() +
@@ -50,9 +54,11 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
     _onDataLoaded: function(data) {
         this._data = data[0][1].data;
         this._metaData = data[1][1].metaData;
+        this._favoritesData = data[2][1].data;
         this._runningBooking = null;
 
         this._projectRange = this._getProjectRange(this._metaData);
+        this._computeMergedFavorites();
 
         if (this._data.length !== 0) {
             this._runningBooking = this._data;
@@ -78,9 +84,38 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
         return range;
     },
 
+    /*
+     * This function merges the project list with the favorites.
+     * the resulting list will be the same as the project list, but the favorites will be placed at the top of the list
+     */
+    _computeMergedFavorites: function() {
+        if (this._metaData && this._metaData[3].range && this._favoritesData) {
+            // projectId
+            var favorites = this._favoritesData;
+            var range = dojo.clone(this._projectRange);
+            for (var i in favorites) {
+                var id = parseInt(favorites[i].id);
+                if (id > 0) {
+                    for (var j in range) {
+                        if (range[j].id == id) {
+                            range.slice(j, 1);
+                            break;
+                        }
+                    }
+                    range.unshift({'id': parseInt(favorites[i].id), 'name': favorites[i].name});
+                }
+            }
+            this._mergedFavorites = range;
+            return range;
+        } else {
+            return null;
+        }
+    },
+
     _updateData: function() {
         if (!this.isLoading()) {
             this._setUrls();
+            this._cleanFavoritesData();
 
             phpr.DataStore.deleteData({url: this._url});
 
@@ -95,12 +130,25 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
             this._startLoading();
             this._dlist = new dojo.DeferredList([
                 phpr.DataStore.requestData({url: this._url}),
-                phpr.DataStore.requestData({url: this._detailsUrl})
+                phpr.DataStore.requestData({url: this._detailsUrl}),
+                phpr.DataStore.requestData({url: this._favoritesUrl})
             ]);
 
             this._dlist.addCallback(dojo.hitch(this, "_onDataLoaded"));
             return this._dlist;
         }
+    },
+
+    _cleanFavoritesData: function() {
+        if (!this.isLoading()) {
+            phpr.DataStore.deleteData({url: this._favoritesUrl});
+            phpr.DataStore.addStore({url: this._favoritesUrl});
+        }
+    },
+
+    _updateFavoritesData: function() {
+        this._cleanFavoritesData();
+        this._requestData();
     },
 
     _startLoading: function() {
@@ -172,12 +220,63 @@ dojo.declare("phpr.Timecard.BookingStore", null, {
         }));
     },
 
+    setFavoriteProjects: function(projects) {
+        if (!dojo.isArray(projects)) {
+            throw new Error("Invalid project list");
+        }
+
+        if (projects.length === 0) {
+            projects.push(0);
+        }
+
+        var sendData = {
+            'favorites[]': projects
+        };
+
+        phpr.send({
+            url:     phpr.webpath + 'index.php/Timecard/index/jsonFavoritesSave',
+            content: sendData
+        }).then(dojo.hitch(this, function(data) {
+            if (data) {
+                new phpr.handleResponse('serverFeedback', data);
+                if (data.type == 'success') {
+                    this._updateFavoritesData();
+                }
+            }
+        }));
+    },
+
     getLastProjectId: function() {
         if (this.hasRunningBooking()) {
             return parseInt(this._runningBooking.projectId);
         } else {
             return this._unassignedProjectId;
         }
+    },
+
+    getMergedFavoriteProjects: function() {
+        var cb = new dojo.Deferred();
+
+        if (this._hasData === true) {
+            cb.callback(this._mergedFavorites);
+        } else {
+            this._dlist.addCallback(dojo.hitch(this, function() {
+                cb.callback(this._mergedFavorites);
+            }));
+        }
+        return cb;
+    },
+
+    getFavoriteProjects: function() {
+        var cb = new dojo.Deferred();
+        if (this._hasData === true) {
+            cb.callback(this._favoritesData);
+        } else {
+            this._dlist.addCallback(dojo.hitch(this, function() {
+                cb.callback(this._favoritesData);
+            }));
+        }
+        return cb;
     },
 
     dataChanged: function() {
