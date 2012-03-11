@@ -245,7 +245,9 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         ]);
 
         dlist.addCallback(dojo.hitch(this, function(data) {
-            if (!this._formContent) {
+            if (this._formContent) {
+                this._formContent.destroyRecursive();
+            }
             var range = data[1][1];
             var meta = data[0][1].metaData;
 
@@ -296,9 +298,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 }))
             );
 
-            } else {
-                dijit.byId('timecardId').set('value', this.id);
-            }
             this.garbageCollector.addEvent(
                 dojo.connect(this._formContent.newBookingButton, "onClick", dojo.hitch(this, function() {
                     this.fillForm(0);
@@ -306,7 +305,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
             );
 
             dojo.byId('projectId').focus();
-            this.updateForm(date, start, end, project, notes);
         }));
     },
 
@@ -504,23 +502,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
             dojo.style('projectFavoritesTarget', 'height', this._manFavBoxesHeight + 'px');
         } else {
             dojo.style('projectFavoritesTarget', 'height', '');
-        }
-    },
-
-    updateForm: function(date, start, end, project, notes) {
-        // Summary:
-        //    Fill the form with some data
-        // Description:
-        //    Fill the form with some data
-        dijit.byId("startDatetime_forDate").set('displayedValue', phpr.date.getIsoDate(date));
-        dijit.byId('startDatetime_forTime').set('displayedValue', start);
-        dijit.byId('endTime').set('displayedValue', end);
-        dijit.byId('projectId').set('value', project === 0 ? 1 : project);
-        dijit.byId('notes').set('value', notes);
-        if (parseInt(this.id, 10) > 0) {
-            dojo.style(this._formContent.deleteBookingButtonDiv, 'display', 'inline');
-        } else {
-            dojo.style(this._formContent.deleteBookingButtonDiv, 'display', 'none');
         }
     },
 
