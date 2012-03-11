@@ -170,7 +170,15 @@ dojo.declare("phpr.Timecard.Store", null, {
     },
 
     getProjectRange: function() {
-        return this._projectRange;
+        var cb = new dojo.Deferred();
+        if (this._hasData === true) {
+            cb.callback(this._projectRange);
+        } else {
+            this._dlist.addCallback(dojo.hitch(this, function() {
+                cb.callback(this._projectRange);
+            }));
+        }
+        return cb;
     },
 
     startWorking: function(projectId, notes) {
