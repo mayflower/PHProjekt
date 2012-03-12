@@ -187,7 +187,7 @@ class Calendar2_Helper_Rrule
             }
         }
 
-        while(!empty($dateSeries)) {
+        while (!empty($dateSeries)) {
             foreach (array_keys($dateSeries) as $k) {
                 $smallestOther = null;
                 foreach ($dateSeries as $cmpK =>$s) {

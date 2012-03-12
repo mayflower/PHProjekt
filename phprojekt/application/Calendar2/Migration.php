@@ -89,7 +89,6 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
      */
     private $_debug = false;
 
-    //private $_tagsObj  = null;
     private $_oldCalId = null;
     private $_newCalId = null;
     private $_search   = null;
@@ -104,7 +103,6 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         }
 
         $this->_newCalId = $db->select()->from('module')->where('name = "Calendar"')->query()->fetchColumn();
-
 
         $this->_db->delete('calendar2');
 
@@ -125,25 +123,30 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
     {
         $db = $this->_db;
 
-        $db->query('INSERT INTO calendar2 SELECT id, project_id, title AS summary, notes AS description, place AS
+        $db->query(
+            'INSERT INTO calendar2 SELECT id, project_id, title AS summary, notes AS description, place AS
             location, "" AS comments, start_datetime AS start, NULL AS last_end, end_datetime AS end,
             owner_id, rrule, NULL AS recurrence_id, visibility, NULL AS uid, NOW() AS last_modified, NULL AS
-            uri FROM calendar WHERE parent_id = 0 OR parent_id = id OR rrule != ""');
+            uri FROM calendar WHERE parent_id = 0 OR parent_id = id OR rrule != ""'
+        );
 
-        // This actually happens...
         $db->query('UPDATE calendar2 SET end = start WHERE end < start');
     }
 
     private function _updateSingleChangedOccurrences()
     {
-        if ($this->_debug) Phprojekt::getInstance()->getLog()->debug('_updateSingleChangedOccurrences');
+        if ($this->_debug) {
+            Phprojekt::getInstance()->getLog()->debug('_updateSingleChangedOccurrences');
+        }
         $limit = 500;
         $start = 0;
 
         $done = false;
 
         do {
-            if ($this->_debug) Phprojekt::getInstance()->getLog()->debug($start);
+            if ($this->_debug) {
+                Phprojekt::getInstance()->getLog()->debug($start);
+            }
             $entries = $this->_db->select()->from(array('c' => 'calendar'))
                 ->join(array('p' => 'calendar'), 'c.parent_id = p.id', array())
                 ->where('c.parent_id != 0')
@@ -156,7 +159,9 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             $start += $limit;
 
             if (empty($entries)) {
-                if ($this->_debug) Phprojekt::getInstance()->getLog()->debug('done');
+                if ($this->_debug) {
+                    Phprojekt::getInstance()->getLog()->debug('done');
+                }
                 $done = true;
             } else {
                 $group           = array();
@@ -186,7 +191,6 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                 'id = ?',
                 $events[0]['parent_id']
             ) ->query()->fetch();
-
 
         $start    = new Datetime($parent['start_datetime']);
         $duration = $start->diff(new Datetime($parent['end_datetime']));
@@ -240,10 +244,13 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             }
 
             if (in_array($e['start_datetime'], $addedTimes)) {
-                if(!array_key_exists($e['start_datetime'], $addedEventsParticipants)) {
+                if (!array_key_exists($e['start_datetime'], $addedEventsParticipants)) {
                     $addedEventsParticipants[$e['start_datetime']] = array();
                 }
-                $addedEventsParticipants[$e['start_datetime']][] = array('id' => $e['participant_id'], 'status' => $e['status']);
+                $addedEventsParticipants[$e['start_datetime']][] = array(
+                    'id' => $e['participant_id'],
+                    'status' => $e['status']
+                );
             } else if (!in_array($e['start_datetime'], $regularTimes)) {
                 // This event doesn't really belong here. We just create a new one for the user independent of $parent.
                 $this->_db->insert(
@@ -262,11 +269,11 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                         'visibility' => $e['visibility'] + 1
                     )
                 );
-                $calendar2_id = $this->_db->lastInsertId();
+                $newCalendarId = $this->_db->lastInsertId();
                 $this->_db->insert(
                     'calendar2_user_relation',
                     array(
-                        'calendar2_id' => $calendar2_id,
+                        'calendar2_id' => $newCalendarId,
                         'user_id' => $e['participant_id'],
                         'confirmation_status' => $e['status']
                     )
@@ -298,17 +305,19 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             $sql .= ', (' . (int) $parent['id'] . ", '" . $dt->format('Y-m-d H:i:s') . "')\n";
         }
 
-        if ($this->_debug) Phprojekt::getInstance()->getLog()->debug($sql);
+        if ($this->_debug) {
+            Phprojekt::getInstance()->getLog()->debug($sql);
+        }
         $this->_db->query($sql);
     }
 
     private function _addedOccurrences($parent, $added, $participants)
     {
-        $parent2 = $this->_db->select()->from('calendar2')->where('id = ?', $parent['id'])->query()->fetch();
+        $newParent = $this->_db->select()->from('calendar2')->where('id = ?', $parent['id'])->query()->fetch();
 
         $toInsert  = array();
 
-        foreach ($added as $e){
+        foreach ($added as $e) {
             $toInsert[]  = '('
                 . (int) $e['project_id'] . ', '
                 . "'{$e['title']}'" . ', '
@@ -320,29 +329,33 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                 . (int) $e['owner_id'] . ', '
                 . "'{$e['start_datetime']}'" . ', '
                 . (int) $e['visibility'] . ', '
-                . "'{$parent2['uid']}'" . ', '
+                . "'{$newParent['uid']}'" . ', '
                 . 'NOW(), '
-                . "'{$parent2['uri']}'" . ')';
+                . "'{$newParent['uri']}'" . ')';
         }
 
         $sql  = 'INSERT INTO calendar2 (project_id, summary, description, location, start, last_end, end, owner_id, '
                 . 'recurrence_id, visibility, uid, last_modified, uri) VALUES ' . "\n";
         $sql .= implode(", \n", $toInsert);
-        if ($this->_debug) Phprojekt::getInstance()->getLog()->debug($sql);
+        if ($this->_debug) {
+            Phprojekt::getInstance()->getLog()->debug($sql);
+        }
         $this->_db->query($sql);
 
         foreach ($participants as $start => $data) {
-            $calendar2_id = (int) $this->_db->select()->from('calendar2', 'id')
-                    ->where('uid = ?', $parent2['uid'])
-                    ->where('start = ?', $start)
-                    ->query()->fetchColumn();
+            $newCalendarId = (int) $this->_db->select()->from('calendar2', 'id')
+                ->where('uid = ?', $newParent['uid'])
+                ->where('start = ?', $start)
+                ->query()->fetchColumn();
 
             foreach ($data as $k => $d) {
-                $data[$k] = '(' . $calendar2_id . ', ' . $d['id'] . ', ' . $d['status'] . ")";
+                $data[$k] = '(' . $newCalendarId . ', ' . $d['id'] . ', ' . $d['status'] . ")";
             }
             $sql  = "INSERT INTO calendar2_user_relation (calendar2_id, user_id, confirmation_status) VALUES \n";
             $sql .= implode(", \n", $data);
-            if ($this->_debug) Phprojekt::getInstance()->getLog()->debug($sql);
+            if ($this->_debug) {
+                Phprojekt::getInstance()->getLog()->debug($sql);
+            }
             $this->_db->query($sql);
         }
     }
@@ -351,26 +364,34 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
     {
         $db = $this->_db;
 
-        $db->query('insert ignore into calendar2_user_relation (calendar2_id, user_id, confirmation_status) select
-            p.id as calendar2_id, c.participant_id as user_id, c.status + 1 as confirmation_status from calendar as
-            c join calendar as p on c.parent_id = p.id where c.parent_id != 0 and c.parent_id != c.id');
+        $db->query(
+            'INSERT IGNORE INTO calendar2_user_relation (calendar2_id, user_id, confirmation_status) SELECT
+            p.id AS calendar2_id, c.participant_id AS user_id, c.status + 1 AS confirmation_status FROM calendar AS
+            c join calendar AS p ON c.parent_id = p.id WHERE c.parent_id != 0 AND c.parent_id != c.id'
+        );
 
-        $db->query('insert ignore into calendar2_user_relation (calendar2_id, user_id, confirmation_status) select
-            id as calendar2_id, participant_id as user_id, status + 1 as confirmation_status from calendar where
-            parent_id = 0 or parent_id = id');
+        $db->query(
+            'INSERT IGNORE INTO calendar2_user_relation (calendar2_id, user_id, confirmation_status) SELECT
+            id AS calendar2_id, participant_id AS user_id, status + 1 AS confirmation_status FROM calendar WHERE
+            parent_id = 0 OR parent_id = id'
+        );
     }
 
     private function _updateRights()
     {
         $db = $this->_db;
 
-        $db->query('insert ignore into item_rights (module_id, item_id, user_id, access) select
-            ' . $this->_newCalId . ' as module_id, calendar2_id as item_id, user_id, 1 as access
-            from calendar2_user_relation');
+        $db->query(
+            'INSERT IGNORE INTO item_rights (module_id, item_id, user_id, access) SELECT
+            ' . $this->_newCalId . ' AS module_id, calendar2_id AS item_id, user_id, 1 AS access
+            FROM calendar2_user_relation'
+        );
 
-        $db->query('insert into item_rights (module_id, item_id, user_id, access) select
-            ' . $this->_newCalId . ' as module_id, id as item_id, owner_id as user_id, 255 as
-            access from calendar2 on duplicate key update access = 255');
+        $db->query(
+            'INSERT INTO item_rights (module_id, item_id, user_id, access) SELECT
+            ' . $this->_newCalId . ' AS module_id, id AS item_id, owner_id AS user_id, 255 AS
+            access FROM calendar2 ON DUPLICATE KEY UPDATE access = 255'
+        );
     }
 
     /**
@@ -380,7 +401,9 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
      */
     private function _updateLastEnd()
     {
-        if ($this->_debug) Phprojekt::getInstance()->getLog()->debug('_updateLastEnd');
+        if ($this->_debug) {
+            Phprojekt::getInstance()->getLog()->debug('_updateLastEnd');
+        }
         $this->_db->query('UPDATE calendar2 SET last_end = end WHERE rrule = ""');
 
         $entries = $this->_db->select()->from('calendar2', array('id', 'start', 'end', 'rrule'))
@@ -463,12 +486,14 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         $search = new Phprojekt_Search();
 
         while ($start <= $max) {
-            if ($this->_debug) Phprojekt::getInstance()->getLog()->debug($start . ' - ' . ($start + $step));
+            if ($this->_debug) {
+                Phprojekt::getInstance()->getLog()->debug($start . ' - ' . ($start + $step));
+            }
 
             $events = $model->fetchAll("id >= $start AND id < " . ($start + $step));
             $start += $step;
 
-            foreach ($events as $e){
+            foreach ($events as $e) {
                 $search->indexObjectItem($e);
             }
         }
