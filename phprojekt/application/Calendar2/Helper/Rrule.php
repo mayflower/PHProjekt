@@ -166,24 +166,9 @@ class Calendar2_Helper_Rrule
 
         $dateSeries = array();
         foreach ($datePeriods as $k => $period) {
-            $dateSeries[$k] = array();
-            foreach ($period as $date) {
-                // Work around http://bugs.php.net/bug.php?id=52454
-                // 'Relative dates and getTimestamp increments by one day'
-                $datestring = $date->format('Y-m-d H:i:s');
-                $date       = new Datetime($datestring, new DateTimeZone('UTC'));
-
-                $ts = $date->getTimestamp();
-                if ($startTs <= $ts + $this->_duration
-                        && $ts <= $endTs
-                        && !in_array($date, $this->_exceptions)) {
-                    $dateSeries[$k][] = $ts;
-                } else if ($ts > $endTs) {
-                   break;
-                }
-            }
-            if (empty($dateSeries[$k])) {
-                unset($dateSeries[$k]);
+            $series = $this->_periodToArray($period, $startTs, $endTs);
+            if (!empty($series)) {
+                $dateSeries[] = $series;
             }
         }
 
@@ -221,6 +206,33 @@ class Calendar2_Helper_Rrule
             }
         }
         return $dates;
+    }
+
+    /**
+     * Retrieves all events from an dateperiod that lie between two points in time.
+     *
+     * This takes event duration in account.
+     */
+    private function _periodToArray(DatePeriod $period, $startTs, $endTs)
+    {
+        $ret = array();
+        foreach ($period as $date){
+            // Work around http://bugs.php.net/bug.php?id=52454
+            // 'Relative dates and getTimestamp increments by one day'
+            $datestring = $date->format('Y-m-d H:i:s');
+            $date       = new Datetime($datestring, new DateTimeZone('UTC'));
+
+            $ts = $date->getTimestamp();
+            if ($startTs <= $ts + $this->_duration
+                    && $ts <= $endTs
+                    && !in_array($date, $this->_exceptions)) {
+                $dateSeries[$k][] = $ts;
+            } else if ($ts > $endTs) {
+               break;
+            }
+        }
+
+        return $ret;
     }
 
     /**
