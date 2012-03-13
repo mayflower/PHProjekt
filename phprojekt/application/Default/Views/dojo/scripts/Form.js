@@ -662,18 +662,17 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                     p.DataStore.deleteData({url: this._url});
                 }
 
-                // Set cursor to the first required field
-                if (dojo.byId(firstRequiredField)) {
-                    p.viewManager.getView().completeContent.domNode.focus();
-                    dojo.byId(firstRequiredField).focus();
-                }
-
                 this.node.set('content', this.form);
 
                 this.node.resize();
 
                 this.postRenderForm();
                 this._loadIndicator.hide();
+
+                // Set cursor to the first required field
+                if (dojo.byId(firstRequiredField)) {
+                    dojo.byId(firstRequiredField).focus();
+                }
             }));
         }
     },
