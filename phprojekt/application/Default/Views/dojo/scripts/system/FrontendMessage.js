@@ -149,7 +149,6 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
                 phpr.DataStore.deleteDataPartialString({url: url});
 
                 phpr.tree.updateData();
-                phpr.tree.loadTree();
             }
 
             // Restore the views

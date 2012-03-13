@@ -22,7 +22,7 @@
 dojo.provide("phpr.Project.Grid");
 
 dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
-    updateData:function() {
+    updateData: function() {
         this.inherited(arguments);
 
         // Delete parent cache
@@ -36,10 +36,10 @@ dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
         phpr.DataStore.deleteDataPartialString({url: phpr.webpath + 'index.php/Timecard/index/jsonDetail/'});
     },
 
-    updateAfterSaveChanges:function() {
+    updateAfterSaveChanges: function() {
         // Summary:
         //    Actions after the saveChanges call returns success
         this.inherited(arguments);
-        phpr.tree.loadTree();
+        phpr.tree.updateData();
     }
 });
