@@ -134,8 +134,8 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
     },
 
     updateData: function() {
-        phpr.destroyWidget(this._idName);
         phpr.DataStore.deleteData({url: this._url});
+        this.loadTree();
     },
 
     onItemClick: function(item) {

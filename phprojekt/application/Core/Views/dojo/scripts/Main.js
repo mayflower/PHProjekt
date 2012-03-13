@@ -172,7 +172,6 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         this.setSubGlobalModulesNavigation();
         this.hideSuggest();
         this.setSearchForm();
-        phpr.tree.loadTree();
 
         if (this.isSystemModule(state.action)) {
             phpr.pageManager.modifyCurrentState({ action: undefined, moduleName: state.action });

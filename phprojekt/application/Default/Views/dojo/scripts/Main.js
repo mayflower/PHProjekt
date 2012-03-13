@@ -486,7 +486,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Set and start the widgets of the module
         // Description:
         //    Set and start the widgets of the module
-        phpr.tree.loadTree();
         var updateUrl = phpr.webpath +
             'index.php/' +
             phpr.module +
@@ -1142,7 +1141,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         phpr.tree.fadeIn();
         this.hideSuggest();
         this.setSearchForm();
-        phpr.tree.loadTree();
 
         phpr.send({
             url:       getDataUrl,

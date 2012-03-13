@@ -66,7 +66,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     setWidgets:function() {
         // Summary:
         //   Custom setWidgets for gantt
-        phpr.tree.loadTree();
         this.gantt = new phpr.Project.GanttBase(this);
         this._url  = phpr.webpath + 'index.php/Gantt/index/jsonGetProjects/nodeId/' + phpr.currentProjectId;
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});

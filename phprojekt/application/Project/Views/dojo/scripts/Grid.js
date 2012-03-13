@@ -40,6 +40,6 @@ dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
         // Summary:
         //    Actions after the saveChanges call returns success
         this.inherited(arguments);
-        phpr.tree.loadTree();
+        phpr.tree.updateData();
     }
 });
