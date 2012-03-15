@@ -166,51 +166,15 @@ class Calendar2_Helper_Rrule
 
         $dateSeries = array();
         foreach ($datePeriods as $k => $period) {
-            $dateSeries[$k] = array();
-            foreach ($period as $date) {
-                // Work around http://bugs.php.net/bug.php?id=52454
-                // 'Relative dates and getTimestamp increments by one day'
-                $datestring = $date->format('Y-m-d H:i:s');
-                $date       = new Datetime($datestring, new DateTimeZone('UTC'));
-
-                $ts = $date->getTimestamp();
-                if ($startTs <= $ts + $this->_duration
-                        && $ts <= $endTs
-                        && !in_array($date, $this->_exceptions)) {
-                    $dateSeries[$k][] = $ts;
-                } else if ($ts > $endTs) {
-                   break;
-                }
-            }
-            if (empty($dateSeries[$k])) {
-                unset($dateSeries[$k]);
+            $series = $this->_periodToArray($period, $startTs, $endTs);
+            if (!empty($series)) {
+                $dateSeries[] = $series;
             }
         }
 
-        while (!empty($dateSeries)) {
-            foreach (array_keys($dateSeries) as $k) {
-                $smallestOther = null;
-                foreach ($dateSeries as $cmpK =>$s) {
-                    if ($cmpK == $k) {
-                        continue;
-                    }
-                    if ($smallestOther == null || $s[0] < $smallestOther) {
-                        $smallestOther = $s[0];
-                    }
-                }
-                while (!empty($dateSeries[$k]) && ($smallestOther == null || $dateSeries[$k][0] < $smallestOther)) {
-                    $dt = new DateTime('@' . array_shift($dateSeries[$k]));
-                    $dt->setTimezone(new DateTimeZone('UTC'));
-                    $dates[] = $dt;
-                }
-
-                if (empty($dateSeries[$k])) {
-                    unset($dateSeries[$k]);
-                } else if ($dateSeries[$k][0] == $smallestOther) {
-                    array_shift($dateSeries[$k]);
-                }
-            }
-        }
+        // Assumptions hold. All periods where created with the same duration. They were in order in $datePeriods, so
+        // they are correctly ordered in $dateSeries, too.
+        $dates = $this->_mergeSequences($dateSeries);
 
         if ($this->_rrule['ORIGINAL_FREQ'] == 'DAILY' && !empty($this->_rrule['BYDAY'])) {
             foreach ($dates as $key => $date) {
@@ -221,6 +185,59 @@ class Calendar2_Helper_Rrule
             }
         }
         return $dates;
+    }
+
+    /**
+     * Retrieves all events from an dateperiod that lie between two points in time.
+     *
+     * This takes event duration in account.
+     */
+    private function _periodToArray(DatePeriod $period, $startTs, $endTs)
+    {
+        $ret = array();
+        foreach ($period as $date){
+            // Work around http://bugs.php.net/bug.php?id=52454
+            // 'Relative dates and getTimestamp increments by one day'
+            $datestring = $date->format('Y-m-d H:i:s');
+            $date       = new Datetime($datestring, new DateTimeZone('UTC'));
+
+            $ts = $date->getTimestamp();
+            if ($startTs <= $ts + $this->_duration
+                    && $ts <= $endTs
+                    && !in_array($date, $this->_exceptions)) {
+                $dateSeries[$k][] = $ts;
+            } else if ($ts > $endTs) {
+               break;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Merges sorted event sequences.
+     *
+     * This makes the following assumptions:
+     *  1. All arrays in $sequences have the same spacing between events,
+     *      i.e. the interval used to create the dateperiods is the same.
+     *  2. $sequences is sorted in regard to the first element of each inner array
+     *  3. All first elements of the series are before any of the second elements.
+     *      (With 1. this holds for all n and n+1)
+     */
+    private function _mergeSequences(array $sequences)
+    {
+        $ret = array();
+
+        while (!empty($sequences)) {
+            foreach (array_keys($sequences) as $k) {
+                $ret[] = array_shift($sequences[$k]);
+                if (empty($sequences[$k])) {
+                    unset($sequences[$k]);
+                }
+            }
+        }
+
+        return $ret;
     }
 
     /**

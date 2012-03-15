@@ -447,3 +447,94 @@ $lang["Content Help"]["History"] = "<br />
     <br />
     It shows a listing of the changes made to the item since its creation.<br />
     It has five columns: <i>date</i>, <i>user</i>, <i>field</i>, <i>old value</i> and <i>new value</i>.";
+
+// TUTORIAL
+
+$lang["Tutorial Header"] = <<<EOT
+    <p>
+This tutorial will guide you through the basic features of PHProjekt.</br>
+Click the tabs to go through the elements of the tutorial.
+    </p>
+EOT;
+
+$lang["The Tree"] = "The Tree";
+$lang["Tree tutorial text"] = <<<EOT
+<h3>The Tree</h3>
+<p>
+The tree is the main way to navigate around your projects in PHProjekt 6.
+Inside the tree you can find all projects that you are currently allowed to see.
+To get to the root node of the tree, just click the PHProjekt logo in the top left corner.
+You can expand and collapse subprojects in the tree with the cross button on the left side of each label.
+</p>
+EOT;
+
+$lang["The Grid"] = "The Grid";
+$lang["Grid tutorial text"] = <<<EOT
+<h3>The Grid</h3>
+<p>
+The grid is a more sophisticated way to navigate the child projects of a selected project.</br>
+Here you can see a summary of some of the data of each child project and edit the listed projects directly by double-clicking
+on a given cell value.</br>
+If you just do a single click on a grid row, the full featured project form will open and allow you to see all the values
+of the selected project.</br>
+On the left side of each row is a small checkbox which can be used to select multiple projects and delete or export them
+together using the "with selected" dropdown menu at the bottom of the grid.</br>
+If the selected project has no child projects yet and you have the permission to create subprojects, the grid will
+only show you a message indicating that there are currently no subprojects and a button to create one.
+</p>
+EOT;
+
+$lang["Project Modules"] = "Project Modules";
+$lang["Project Modules tutorial text"] = <<<EOT
+<h3>Project Modules</h3>
+<p>
+Project modules are the core of the PHProjekt groupware.</br>
+Each module is associated with a project.</br>
+Modules contain all the functionality that you can use on a given project like
+inputting form data, uploading files, creating helpdesk tickets, watching statistics and so on.</br>
+You can manage the active modules of any project but the root project by selecting it in the tree and clicking on 
+the "Basic Data" tab. This tab contains a section "Module" where you can enable or disable the installed modules for the
+selected projects.</br>
+It is possible to control the access to specific modules on a per user basis by creating appropriate roles in the
+administration section of PHProjekt and assigning the role to the user.
+</p>
+EOT;
+
+$lang["Global Modules"] = "Global Modules";
+$lang["Global Modules tutorial text"] = <<<EOT
+<h3>Global Modules</h3>
+<p>
+Unlinke project modules, global modules are not bound to a specific project but only exist once for any given user.</br>
+They are used for general tasks like timetracking, calendars, managing contacts, adjusting the user settings or,
+if you are an administrator, changing global PHProjekt settings like adding users and roles, modifying
+modules and changing the general company settings.</br>
+</p>
+EOT;
+
+$lang["Tags tutorial text"] = <<<EOT
+<h3>Tags</h3>
+<p>
+Tags help you to easily find specific projects.</br>
+In the forms in the project modules it is possible to enter a comma separated list of tags that are associated with each item.</br>
+As you add tags to projects, they will appear in the tags box in the bottom left corner.</br>
+When you click on one of the tag names in this box, PHProjekt will display a search window, listing all projects
+with the specified tags, grouped by module.</br>
+Using this feature it is very easy and fast to find projects that for example share a common topic.
+</p>
+EOT;
+
+$lang["Actions"] = "Actions";
+$lang["Actions tutorial text"] = <<<EOT
+<h3>Actions</h3>
+<p>
+Each module may provide you with a set of features like for example converting it's content to a csv format, adding new subitems or filter the contents of the grid.
+These actions are accessible through buttons right below the project module list.
+</p>
+EOT;
+
+$lang["Help tutorial text"] = <<<EOT
+<h3>Help</h3>
+<p>
+To get further help with the provided features in PHProjekt or to take the tutorial again, just press the help button in the top right corner.
+</p>
+EOT;

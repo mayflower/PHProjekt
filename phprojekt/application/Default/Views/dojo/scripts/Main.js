@@ -404,6 +404,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 this.addLogoTooltip();
                 this.setGlobalModulesNavigation();
 
+                this._setTutorialButton();
+                this._maybeShowTutorial();
+
                 phpr.pageManager.init();
                 phpr.InitialScreen.end();
             }));
@@ -497,6 +500,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             templateName: "phpr.Default.template.GridBox.html"
         });
 
+        this.garbageCollector.addNode(gridBoxContainer);
+
         phpr.viewManager.getView().centerMainContent.set('content', gridBoxContainer);
         gridBoxContainer.startup();
         this.grid = new this.gridWidget(
@@ -587,6 +592,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             showLabel: true,
             onClick:   dojo.hitch(this, "showHelp")
         });
+
+        phpr.tutorialAnchors.helpButton = button;
+
         systemToolbar.addChild(button);
         button = null;
 
@@ -742,6 +750,34 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
     _subModuleNavigationClick: function(name, func, params) {
         dojo.publish(name + "." + func, eval("[" + params + "]"));
+    },
+
+    _setTutorialButton: function() {
+        var button = phpr.viewManager.getView().tutorialButton;
+        button.set("label", phpr.nls.get("Tutorial"));
+        dojo.connect(button,
+            "onClick",
+            dojo.hitch(
+                this,
+                function() {
+                    phpr.viewManager.getView().helpDialog.hide();
+                    this._showTutorial();
+                }
+            )
+        );
+    },
+
+    _maybeShowTutorial: function() {
+        if (phpr.config.tutorialDisplayed === "false") {
+            this._showTutorial();
+        }
+    },
+
+    _showTutorial: function() {
+        if (!phpr.tutorialOverlay) {
+            phpr.tutorialOverlay = new phpr.Default.TutorialOverlay();
+        }
+        phpr.tutorialOverlay.show();
     },
 
     setNewEntry: function() {
