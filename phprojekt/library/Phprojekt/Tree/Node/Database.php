@@ -218,9 +218,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      *
      * For example, you can get all todo recrods of projects in a given subtree.
      *
-     * @param $model The active record used to get the data
-     * @param $count How many records should be retreived. null if unlimited.
-     * @param $offset The initial offset. null for no offset.
+     * @param Phprojekt_ActiveRecord_Abstract $model  The active record used to get the data
+     * @param int    $count  How many records should be retreived. null if unlimited. Optional.
+     * @param int    $offset The initial offset. null for no offset. Optional.
+     * @param string $where  A clause to narrow down matching objects. Optional.
      */
     public function getRecordsFor(Phprojekt_ActiveRecord_Abstract $model, $count = null, $offset = null, $where = null)
     {
