@@ -241,6 +241,26 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
+     * Returns the count of the models of the given type in this subtree.
+     *
+     * @param $model The activeRecord module used to get the data.
+     * @param $where The clause to determine matching objects. Optional.
+     */
+    public function getRecordsCount(Phprojekt_ActiveRecord_Abstract $model, $where = null)
+    {
+        $projectIds = array_keys($this->_index);
+        if (empty($projectIds)) {
+            return 0;
+        }
+
+        if (!is_null($where)) {
+            $where .= ' AND ';
+        }
+        $where .= $model->getAdapter()->quoteInto('project_id IN (?)', $projectIds);
+        return $model->count($where);
+    }
+
+    /**
      * Delete the projects where the user don't have access.
      *
      * @param Phprojekt_Tree_Node_Database $object Tree class.
