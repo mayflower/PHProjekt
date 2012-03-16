@@ -90,6 +90,11 @@ class IndexController extends Zend_Controller_Action
     const NODEID_REQUIRED_TEXT = "Node Id parameter required";
 
     /**
+     * String for use if the nodeId is not in the request parameters.
+     */
+    const PROJECTID_REQUIRED_TEXT = "projectId parameter required";
+
+    /**
      * Internal number for the root project.
      */
     const INVISIBLE_ROOT = 1;
@@ -327,6 +332,7 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Keep in the registry the current project id.
+     * Deprecated, do not use.
      *
      * @return void
      */
@@ -336,6 +342,22 @@ class IndexController extends Zend_Controller_Action
 
         if (empty($projectId)) {
             throw new Phprojekt_PublishedException(self::NODEID_REQUIRED_TEXT);
+        } else {
+            Phprojekt::setCurrentProjectId($projectId);
+        }
+    }
+
+    /**
+     * Keeps the project id in zend registry or reports an error if an empty value is supplied.
+     *
+     * @param int $projectId The project id to store.
+     *
+     * @return void
+     */
+    protected function _storeCurrentProjectId($projectId)
+    {
+        if (empty($projectId)) {
+            throw new Phprojekt_PublishedException(self::PROJECTID_REQUIRED_TEXT);
         } else {
             Phprojekt::setCurrentProjectId($projectId);
         }
