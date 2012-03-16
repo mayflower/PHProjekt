@@ -1006,10 +1006,7 @@ class Setup_Models_Migration
      */
     private function _migrateTimecard()
     {
-        // Todos
         $this->_todos = $this->_getSession('migratedTodos');
-
-        // Helpdesk
         $this->_helpdesk = $this->_getSession('migratedHelpdesk');
 
         // Multiple inserts
