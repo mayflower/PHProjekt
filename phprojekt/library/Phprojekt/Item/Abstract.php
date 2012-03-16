@@ -342,6 +342,40 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
+     * Override count function to account for rights.
+     *
+     * @param string $where A where clause to count a subset of the results.
+     *
+     * @return integer Count of results.
+     */
+    public function count($where = null)
+    {
+        if (Phprojekt_Auth::isAdminUser()) {
+            return parent::count($where);
+        }
+
+        $db     = Phprojekt::getInstance()->getDb();
+        $rawTable = $this->getTableName();
+        $table  = $db->quoteIdentifier($rawTable);
+        $select = $db->select()->from($rawTable, array('COUNT(*)'));
+        if (!is_null($where)) {
+            $select->where($where);
+        }
+        $select->join(array('ir' => 'item_rights'), "ir.item_id = {$table}.id", array())
+            ->where('ir.module_id = :thisModule')
+            ->where('ir.user_id = :effectiveUser')
+            ->where("{$table}.owner_id = :effectiveUser OR (ir.access & :right) = :right")
+            ->bind(
+                array(
+                    ':thisModule' => Phprojekt_Module::getId($this->getModelName()),
+                    ':effectiveUser' => Phprojekt_Auth_Proxy::getEffectiveUserId(),
+                    ':right' => Phprojekt_Acl::READ
+                )
+            );
+        return $select->query()->fetchColumn();
+    }
+
+    /**
      * Returns the rights merged with the role for the current user.
      *
      * @return array Array of rights per user.
