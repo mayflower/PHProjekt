@@ -1014,105 +1014,143 @@ class Setup_Models_Migration
             'item_id');
         $dbValues = array();
 
-        $currentDatum = '';
-        $currentUser  = -1;
-        $lastHour     = 8;
-        $lastMinutes  = 0;
+        // get all user Ids with bookings
+        $userIds = $this->_dbOrig->select()
+            ->distinct()
+            ->from(PHPR_DB_PREFIX . 'timecard', array('users'))
+            ->query()->fetchAll(Zend_Db::FETCH_COLUMN);
 
-        $run   = true;
-        $start = 0;
-        $end   = self::ROWS_PER_QUERY;
+        foreach($userIds as $userId) {
+            if(!array_key_exists($userId, $this->_users)) {
+                continue;
+            }
+            $datumRegexp = '[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}';
+            $timecardRows = $this->_dbOrig->select()->from(
+                PHPR_DB_PREFIX . 'timecard',
+                array('datum', 'anfang', 'ende', 'users')
+            )
+                ->where('users = ?', $userId)
+                ->where('anfang IS NOT NULL AND ende IS NOT NULL')
+                ->where('anfang < ende')
+                ->where('datum REGEXP "'. $datumRegexp . '"')
+                ->query()->fetchAll();
+            $projectRows = $this->_dbOrig->select()->from(
+                PHPR_DB_PREFIX . 'timeproj',
+                array('datum', 'users', 'projekt', 'h', 'm', 'note', 'module', 'module_id')
+            )
+                ->where('users = ?', $userId)
+                ->where('datum REGEXP "' . $datumRegexp . '"')
+                ->where('(h > 0 AND m >= 0) OR (h = 0 AND m > 0)')
+                ->query()->fetchAll();
 
-        while ($run) {
-            // Timeproj
-            $query = "SELECT * FROM " . PHPR_DB_PREFIX . "timeproj ORDER BY datum, users, projekt LIMIT "
-                . $start . ", " . $end;
-            $timeprojs = $this->_dbOrig->query($query)->fetchAll();
-            if (empty($timeprojs)) {
-                $run = false;
-            } else {
-                $start = $start + $end;
+            $days = array();
+            foreach($timecardRows as $row) {
+                // don't migrate running bookings
+                if (is_null($row['ende'])) {
+                    continue;
+                }
+
+                if (!array_key_exists($row['datum'], $days)) {
+                    $days[$row['datum']] = array(
+                        'bookings' => array(),
+                        'projectBookings' => array(),
+                        'bookingMinutesLeft' => 24 * 60
+                    );
+                }
+
+                $minutes = $this->_timecardGetDifferenceInMinutes($row['anfang'], $row['ende']);
+                if ($days[$row['datum']]['bookingMinutesLeft'] - $minutes < 0) {
+                    continue;
+                }
+
+                $days[$row['datum']]['bookings'][] = array(
+                    'row' => $row,
+                    'minutes' => min($minutes, $days[$row['datum']]['bookingMinutesLeft'])
+                );
+                $days[$row['datum']]['bookingMinutesLeft'] -= $minutes;
             }
 
-            foreach ($timeprojs as $timeproj) {
-                $userId = $timeproj['users'];
-                if (isset($this->_users[$userId])) {
-                    if ($currentDatum != $timeproj['datum']) {
-                        $currentDatum = $timeproj['datum'];
-                        $lastHour     = 8;
-                        $lastMinutes  = 0;
-                    }
-                    if ($currentUser != $userId) {
-                        $lastHour    = 8;
-                        $lastMinutes = 0;
-                        $currentUser = $userId;
-                    }
+            // aggregate worked hours
+            foreach($projectRows as $row) {
+                // ignore project bookings which are not backed by timecard bookings
+                if (!array_key_exists($row['datum'], $days)) {
+                    continue;
+                }
 
-                    $timeproj['projekt'] = $this->_processParentProjId($timeproj['projekt'], 0);
+                $days[$row['datum']]['projectBookings'][] = array(
+                    'row' => $row,
+                    'minutes' => (int) $row['h'] * 60 + (int) $row['m']
+                );
+            }
 
-                    // Fix wrong values the way P5 would show it to the users
-                    if (empty($timeproj['h']) || $timeproj['h'] < 0) {
-                        $timeproj['h'] = 0;
-                    } else if ($timeproj['h'] > 24) {
-                         // I don't know how P5 shows more than 24 hours in a day, but I suppose this is the right way
-                         $timeproj['h'] = 24;
-                         $timeproj['m'] = 0;
-                    }
-                    if (empty($timeproj['m']) || $timeproj['m'] < 0) {
-                        $timeproj['m'] = 0;
-                    }
+            // add the root project as fallback
+            foreach(array_keys($days) as $datum) {
+                $days[$datum]['projectBookings'][] = array(
+                    'row' => array(
+                        'projekt' => '-1',
+                        'note' => '',
+                        'module' => '',
+                        'module_id' => 0
+                    ),
+                    'minutes' => 24*60
+                );
+            }
 
-                    $minutes = ($timeproj['h'] * 60) + $timeproj['m'];
-
-                    if ($minutes == 0) {
+            foreach($days as $daykey => $day) {
+                $projectBooking = array_shift($day['projectBookings']);
+                foreach($day['bookings'] as $booking) {
+                    //skip zero length bookings
+                    if ($booking['minutes'] == 0) {
                         continue;
                     }
 
-                    $dateTime = strtotime($timeproj['datum']);
-                    if ($dateTime === false || $dateTime === -1) {
-                        continue;
-                    } else {
-                        $year  = date("Y", $dateTime);
-                        $month = date("m", $dateTime);
-                        $day   = date("d", $dateTime);
+                    $datum = $booking['row']['datum'];
 
-                        $timeproj['datum'] = $year . "-" . $month . "-" . $day;
+                    // assign each booking a project
+                    $starttime = $this->_timecardTimeToDatetime($datum, $booking['row']['anfang']);
+                    $endtime = clone $starttime;
+                    while ($booking['minutes'] > 0) {
+                        while ($projectBooking['minutes'] == 0) {
+                            // Never empty because we added a 24-hour fallback
+                            $projectBooking = array_shift($day['projectBookings']);
+                        }
+                        list($moduleId, $itemId) = $this->_getItemAndModule($projectBooking['row']);
 
-                        $starTimeValue = mktime($lastHour, $lastMinutes, 0, $month, $day, $year);
-                        $endTimeValue  = mktime($lastHour, $lastMinutes + $minutes, 0, $month, $day, $year);
-
-                        // Check endTime
-                        if (date("d", $endTimeValue) != $day) {
-                            // Split into 2 days
-                            $starTime = date("H:i:s", $starTimeValue);
-                            $endTime  = "00:00:00";
-
-                            list($moduleId, $itemId) = $this->_getItemAndModule($timeproj);
-
-                            $dbValues[] = array($this->_users[$userId], $timeproj['datum'] . " " . $starTime, $endTime,
-                                $minutes, $timeproj['projekt'], $this->_fix($timeproj['note'], 65500),
-                                $moduleId, $itemId);
-
-                            $tmpMinutes = ((24 - $lastHour)* 60);
-                            if ($lastMinutes > 0) {
-                                $tmpMinutes += (60 - $lastMinutes);
-                            }
-                            $minutes = $minutes - $tmpMinutes;
-
-                            $starTimeValue     = mktime(8, 0, 0, $month, $day + 1, $year);
-                            $endTimeValue      = mktime(8, $minutes, 0, $month, $day + 1, $year);
-                            $timeproj['datum'] = date("Y-m-d", $starTimeValue);
-                            $currentDatum      = $timeproj['datum'];
+                        $bookedMinutes = null;
+                        if ($booking['minutes'] > $projectBooking['minutes']) {
+                            // fill booking with projectTime
+                            $endtime->add(new DateInterval('PT' . $projectBooking['minutes'] . 'M'));
+                            $bookedMinutes = $projectBooking['minutes'];
+                            $booking['minutes'] -= $projectBooking['minutes'];
+                            $projectBooking['minutes'] = 0;
+                        } else {
+                            // fill booking with projectTime
+                            $endtime->add(new DateInterval('PT' . $booking['minutes'] . 'M'));
+                            $bookedMinutes = $booking['minutes'];
+                            $projectBooking['minutes'] -= $booking['minutes'];
+                            $booking['minutes'] = 0;
                         }
 
-                        $starTime    = date("H:i:s", $starTimeValue);
-                        $lastHour    = date("H", $endTimeValue);
-                        $lastMinutes = date("i", $endTimeValue);
-                        $endTime     = $lastHour . ":" . $lastMinutes . ":00";
-                        list($moduleId, $itemId) = $this->_getItemAndModule($timeproj);
 
-                        $dbValues[] = array($this->_users[$userId], $timeproj['datum'] . " " . $starTime, $endTime,
-                            $minutes, $timeproj['projekt'], $this->_fix($timeproj['note'], 65500), $moduleId, $itemId);
+                        // use the invisible root if no project time was booked
+                        if ($projectBooking['row']['projekt'] == '-1') {
+                            $projectId = 1;
+                        } else {
+                            $projectId = $this->_processParentProjId($projectBooking['row']['projekt'], 0);
+                        }
+
+                        $dbValues[] = array(
+                            $this->_users[$userId],
+                            $starttime->format('Y-m-d H:i:s'),
+                            $endtime->format('H:i:s'),
+                            $bookedMinutes,
+                            $projectId,
+                            $this->_fix($projectBooking['row']['note'], 65500),
+                            $moduleId,
+                            $itemId
+                        );
+
+                        $starttime = clone $endtime;
                     }
                 }
             }
@@ -1129,6 +1167,31 @@ class Setup_Models_Migration
 
         $this->_cleanSession('migratedTodos');
         $this->_cleanSession('migratedHelpdesk');
+    }
+
+    private function _timecardTimeToDatetime($date, $time) {
+        //fix time values
+        if (strlen($time) == 3) {
+            $time = "0" . $time;
+        }
+
+        $d = new DateTime($date);
+        $d->setTime(substr($time, 0, 2), substr($time, 2, 2));
+
+        return $d;
+    }
+
+    private function _timecardGetDifferenceInMinutes($start, $end) {
+        //fix time values
+        $start = sprintf('%04d', $start);
+        $end   = sprintf('%04d', $end);
+
+        $starthour = substr($start, 0, 2);
+        $endhour = substr($end, 0, 2);
+        $startminute = substr($start, 2, 2);
+        $endminute = substr($end, 2, 2);
+
+        return ($endhour * 60 + $endminute) - ($starthour * 60 + $startminute);
     }
 
     /**
