@@ -119,7 +119,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         phpr.DataStore.addStore({url: this.url});
         phpr.DataStore.addStore({url: this.getActionsUrl});
         var dlist = new dojo.DeferredList([
-            phpr.DataStore.requestData({url: this.url, serverQuery: this._getFiltersServerQuery(this._filterData)}),
+            phpr.MetadataStore.metadataFor(phpr.module),
             phpr.DataStore.requestData({url: this.getActionsUrl})
         ]);
         dlist.addCallback(dojo.hitch(this, "onLoaded"));
