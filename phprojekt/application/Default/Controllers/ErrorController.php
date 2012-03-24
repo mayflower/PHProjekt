@@ -72,12 +72,13 @@ class ErrorController extends Zend_Controller_Action
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
                 // 404 error -- controller or action not found
-                $this->getResponse()->setRawHeader('HTTP/1.1 404 Not Found');
+                $this->getResponse()->setHttpResponseCode(404);
                 $message  = "The url " . Cleaner::sanitize('xss', urldecode($error->request->getRequestUri())) . " do not exists";
                 Phprojekt::getInstance()->getLog()->err($message);
                 die($message);
                 break;
             default:
+                $this->getResponse()->setHttpResponseCode(500);
                 $exception = $error->exception;
                 // We only forward exception with type PublishedException
                 if ($exception instanceof Phprojekt_PublishedException) {
