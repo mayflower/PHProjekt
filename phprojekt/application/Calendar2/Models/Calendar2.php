@@ -452,6 +452,10 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         return $events;
     }
 
+    public function count($where = null) {
+        return Phprojekt_ActiveRecord_Abstract::count($where);
+    }
+
     /**
      * Get all events in the period that the currently active user participates
      * in. Both given times are inclusive.
