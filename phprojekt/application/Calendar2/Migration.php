@@ -367,7 +367,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         $db->query(
             'INSERT IGNORE INTO calendar2_user_relation (calendar2_id, user_id, confirmation_status) SELECT
             p.id AS calendar2_id, c.participant_id AS user_id, c.status + 1 AS confirmation_status FROM calendar AS
-            c join calendar AS p ON c.parent_id = p.id WHERE c.parent_id != 0 AND c.parent_id != c.id'
+            c JOIN calendar AS p ON c.parent_id = p.id WHERE c.parent_id != 0 AND c.parent_id != c.id'
         );
 
         $db->query(
