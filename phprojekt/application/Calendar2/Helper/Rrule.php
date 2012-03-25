@@ -202,10 +202,8 @@ class Calendar2_Helper_Rrule
             $date       = new Datetime($datestring, new DateTimeZone('UTC'));
 
             $ts = $date->getTimestamp();
-            if ($startTs <= $ts + $this->_duration
-                    && $ts <= $endTs
-                    && !in_array($date, $this->_exceptions)) {
-                $dateSeries[$k][] = $ts;
+            if ($startTs <= $ts + $this->_duration && $ts <= $endTs && !in_array($date, $this->_exceptions)) {
+                $ret[] = new Datetime('@' . $ts);
             } else if ($ts > $endTs) {
                break;
             }
