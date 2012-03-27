@@ -21,5 +21,5 @@
 
 dojo.provide("phpr.Calendar2.Grid");
 
-dojo.declare("phpr.Calendar2.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Calendar2.Grid", phpr.Default.LegacyGrid, {
 });

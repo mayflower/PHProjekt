@@ -21,5 +21,5 @@
 
 dojo.provide("phpr.Minutes.Grid");
 
-dojo.declare("phpr.Minutes.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Minutes.Grid", phpr.Default.LegacyGrid, {
 });
