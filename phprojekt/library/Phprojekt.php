@@ -541,6 +541,7 @@ class Phprojekt
         $front->setModuleControllerDirectoryName('Controllers');
         $front->addModuleDirectory(PHPR_CORE_PATH);
         $front->addModuleDirectory(PHPR_USER_CORE_PATH);
+        $front->getRouter()->addRoute('rest', new Phprojekt_RestRoute($front));
 
         // Add SubModules directories with controlles
         $moduleDirectories = $this->_getControllersFolders($helperPaths);
