@@ -505,6 +505,21 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
+     * Returns the metadata for this Module's default module.
+     *
+     * Mandatory parameters:
+     *  - integer projectId The id of the project that the metadata should be based on.
+     */
+    public function metadataAction()
+    {
+        $projectId = $this->getRequest()->getParam('projectId', null);
+        $this->_storeCurrentProjectId($projectId);
+
+        $fieldDefinition  = $this->getModelObject()->getInformation()->getFieldDefinition();
+        echo Zend_Json_Encoder::encode($fieldDefinition);
+    }
+
+    /**
      * Returns the detail (fields and data) of one item from the model.
      *
      * The return have:
