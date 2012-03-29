@@ -24,6 +24,8 @@ dojo.provide("phpr.Default.Grid");
 dojo.require("dijit.form.Button");
 dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("dojox.grid.DataGrid");
+dojo.require("dojo.store.JsonRest");
+dojo.require("dojo.data.ObjectStore");
 
 dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     // Summary:
@@ -116,7 +118,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this.setFilterQuery(this.getFilters());
         this.setGetExtraActionsUrl();
 
-        phpr.DataStore.addStore({url: this.url});
         phpr.DataStore.addStore({url: this.getActionsUrl});
         var dlist = new dojo.DeferredList([
             phpr.MetadataStore.metadataFor(phpr.module),
@@ -153,15 +154,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         }
     },
 
-    setUrl: function() {
+    getRestUrl: function() {
         // Summary:
-        //    Set the url for getting the data
-        // Description:
-        //    Set the url for getting the data
-        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonList/nodeId/' + this.id;
-        for (var key in this.extraParams) {
-            this.url += '/' + key + '/' + this.extraParams[key];
-        }
+        //    Get the url of the rest api to use
+        return phpr.webpath + 'index.php/' + phpr.module + '/' + phpr.module + '/';
     },
 
     showTags: function() {
@@ -805,8 +801,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Description:
         //    Make the POST values of the filters if there are any
         //    Save the used filters in the cookie
-        this.setUrl();
-
         // Fix id
         this._filterData = filters || [];
         dojo.cookie(this._filterCookie, dojo.toJson(filters), {expires: 365});
@@ -989,9 +983,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             return;
         }
 
-        var meta = phpr.DataStore.getMetaData({url: this.url});
+        var meta = dataContent[0][1];
 
         if (meta.length === 0) {
+            //TODO: This never triggers at the moment.
             // Create a "ADD" button
             var params = {
                 label:     phpr.nls.get('Add a new item'),
@@ -1029,7 +1024,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             this.gridData = {
                 items: []
             };
-            var content = dojo.clone(phpr.DataStore.getData({url: this.url}));
 
             // Get datetime keys
             this.splitFields = [];
@@ -1070,18 +1064,16 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 }
                 this.gridData.items.push(content[i]);
             }
-            var store = new dojo.data.ItemFileWriteStore({data: this.gridData});
-
             // Render export Button
             this.setExportButton(meta);
 
             this.setGridLayout(meta);
 
-            var type = this.useCheckbox() ? "phpr.Default.System.Grid._View" : "dojox.grid._View";
-
             this.grid = new dojox.grid.DataGrid({
-                store:     store,
-                structure: [{type: type,
+                store: new dojo.data.ObjectStore({objectStore: new dojo.store.JsonRest({target: this.getRestUrl()})}),
+                query: this.getQuery(),
+                structure: [{
+                    type: this.useCheckbox() ? "phpr.Default.System.Grid._View" : "dojox.grid._View",
                     defaultCell: {
                         editable: true,
                         type:     phpr.Default.System.Grid.cells.Text,
@@ -1089,7 +1081,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     },
                     rows: this.gridLayout
                 }]
-                }, dojo.create('div'));
+            }, dojo.create('div'));
 
             this.setClickEdit();
 
@@ -1157,6 +1149,26 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
         // Draw the tags
         this.showTags();
+    },
+
+    refresh: function() {
+        this.grid.setQuery(this.getQuery());
+    },
+
+    getQuery: function() {
+        var q = {};
+        var state = phpr.pageManager.getState();
+        if (!phpr.isGlobalModule(state.moduleName)) {
+            q.projectId = state.projectId;
+        }
+        if (state.includeSubentries == "true") {
+            q.recursive = "true";
+        }
+        var filters = this.getFilters();
+        if (filters.length > 0) {
+            q.filters = dojo.toJson(filters);
+        }
+        return q;
     },
 
     saveGridScroll: function() {
