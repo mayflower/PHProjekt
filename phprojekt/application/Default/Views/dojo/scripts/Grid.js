@@ -38,7 +38,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     _newRowValues: [],
     _oldRowValues: [],
     gridData:      [],
-    url:           null,
     getActionsUrl: null,
     _tagUrl:       null,
     _exportButton: null,
@@ -66,7 +65,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     _rules:            [],
     _filterCookie:     null,
     _deleteAllFilters: null,
-    _filterData:       [],
 
     // Constants
     MODE_XHR:        0,
@@ -92,7 +90,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this._newRowValues    = {};
         this._oldRowValues    = {};
         this.gridData         = {};
-        this.url              = null;
         this.getActionsUrl    = null;
         this.extraColumns     = [];
         this.comboActions     = [];
@@ -536,23 +533,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 formatter: phpr.Default.System.Grid.formatIcon
             });
         }
-
-        this.customGridLayout(meta);
-    },
-
-    customGridLayout: function(meta) {
-        // Summary:
-        //    Custom functions for the layout
-        // Description:
-        //    Custom functions for the layout
-    },
-
-    setClickEdit: function() {
-        // Summary:
-        //    Set the edit type
-        // Description:
-        //    Set if each field is ediatable with one or two clicks
-        this.grid.singleClickEdit = false;
     },
 
     setExportButton: function(meta) {
@@ -1068,7 +1048,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 }]
             }, dojo.create('div'));
 
-            this.setClickEdit();
+            this.grid.singleClickEdit = false;
 
             this.node.set('content', this.grid);
 
@@ -1251,7 +1231,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                             var rowId = this.grid.store.getValue(item, 'id');
                             this.hideTooltip(e);
                             this._doubleClickTimer = null;
-                            this.getLinkForEdit(rowId);
+                            phpr.pageManager.modifyCurrentState({ id: rowId });
                         },
                         e
                     ),
@@ -1259,14 +1239,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 );
             }
         }
-    },
-
-    getLinkForEdit: function(id) {
-        // Summary:
-        //    Return the link for open the form
-        // Description:
-        //    Return the link for open the form
-        phpr.pageManager.modifyCurrentState({ id: id });
     },
 
     checkCanEdit: function(inCell, inRowIndex) {
