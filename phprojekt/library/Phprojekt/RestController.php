@@ -105,17 +105,43 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
     public function postAction()
     {
-        throw new Exception('Not implemented!');
+        throw new Phprojekt_PublishedException('Not implemented!');
     }
 
     public function putAction()
     {
-        throw new Exception('Not implemented!');
+        if (!$id = $this->_getParam('id', false)) {
+            throw new Phprojekt_PublishedException('No id given');
+        }
+
+        $item = Zend_Json::decode($this->getRequest()->getRawBody());
+        if (!$item) {
+            throw new Phprojekt_PublishedException('No data was received');
+        }
+
+        if ($item['id'] !== $id) {
+            throw new Phprojekt_PublishedException('Can not alter the id of existing items');
+        }
+        unset($item['id']);
+
+        $model = $this->newModelObject()->find($id);
+        if (!$model) {
+            $this->getResponse()->setHttpResponseCode(404);
+            echo "item with id $id not found";
+            return;
+        }
+
+        foreach ($item as $property => $value) {
+            $model->$property = $value;
+        }
+        $model->save();
+
+        echo Zend_Json_Encoder::encode($model->toArray());
     }
 
     public function deleteAction()
     {
-        throw new Exception('Not implemented!');
+        throw new Phprojekt_PublishedException('Not implemented!');
     }
 
     protected function newModelObject()
