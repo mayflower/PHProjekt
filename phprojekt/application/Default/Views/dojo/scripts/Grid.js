@@ -115,7 +115,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this.gridLayout  = [];
         this.filterField = [];
 
-        this.setFilterQuery(this.getFilters());
+        this.saveFilters(this.getFilters());
         this.setGetExtraActionsUrl();
 
         phpr.DataStore.addStore({url: this.getActionsUrl});
@@ -777,7 +777,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             filters.push(data);
         }
 
-        this.sendFilterRequest(filters);
+        this.saveFilters(filters);
+        this.manageFilters();
+        this.refresh();
         return false;
     },
 
@@ -792,35 +794,18 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         } else {
             filters.splice(index, 1);
         }
-        this.sendFilterRequest(filters);
+        this.saveFilters(filters);
+        this.manageFilters();
+        this.refresh();
     },
 
-    setFilterQuery: function(filters) {
+    saveFilters: function(filters) {
         // Summary:
         //    Make the POST values of the filters
         // Description:
         //    Make the POST values of the filters if there are any
         //    Save the used filters in the cookie
-        // Fix id
-        this._filterData = filters || [];
         dojo.cookie(this._filterCookie, dojo.toJson(filters), {expires: 365});
-    },
-
-    sendFilterRequest: function(filters) {
-        // Summary:
-        //    Make the request to the server
-        // Description:
-        //    Make the request to the server
-        this.setFilterQuery(filters);
-
-        phpr.DataStore.deleteData({url: this.url});
-        phpr.DataStore.addStore({url: this.url});
-        phpr.DataStore.requestData({url: this.url, serverQuery: this._getFiltersServerQuery(filters),
-            processData: dojo.hitch(this, "onLoaded")});
-    },
-
-    _getFiltersServerQuery: function(filters) {
-        return { 'filters': dojo.toJson(filters) };
     },
 
     getFilters: function() {
@@ -1445,15 +1430,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 '/index/csvList/nodeId/' + this.id +
                 '/csrfToken/' + phpr.csrfToken);
         return false;
-    },
-
-    updateData: function() {
-        // Summary:
-        //    Delete the cache for this grid
-        // Description:
-        //    Delete the cache for this grid
-        phpr.DataStore.deleteData({url: this.url});
-        phpr.DataStore.deleteData({url: this._tagUrl});
     },
 
     setGetExtraActionsUrl: function() {
