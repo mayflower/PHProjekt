@@ -276,15 +276,7 @@ dojo.declare("phpr.DataStore", null, {
         //    Set a new store for save the data
         // Description:
         //    Set a new store for save the data
-        if (typeof this._internalCache[params.url] == 'undefined') {
-            store = new phpr.ReadStore({url: params.url});
-            this._internalCache[params.url] = {
-                data: [],
-                store: store,
-                deferred: null,
-                active: false
-            };
-        } else if (params.noCache) {
+        if (typeof this._internalCache[params.url] == 'undefined' || params.noCache) {
             store = new phpr.ReadStore({url: params.url});
             this._internalCache[params.url] = {
                 data: [],
