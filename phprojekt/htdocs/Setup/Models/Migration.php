@@ -493,8 +493,12 @@ class Setup_Models_Migration
                     $status = 'I';
                 }
 
+                $username = $this->_fix($username);
+                if ($username === 'Admin') {
+                    continue;
+                }
                 $userId = $this->_tableManager->insertRow('user', array(
-                    'username'  => $this->_fix($username),
+                    'username'  => $username,
                     'firstname' => $firstName,
                     'lastname'  => $lastName,
                     'status'    => $status,
