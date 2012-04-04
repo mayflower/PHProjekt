@@ -999,7 +999,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             } else {
                 $end = new Datetime($vevent->dtend->value, new DateTimezone($vevent->dtend['tzid']->value));
             }
-        } else if ($vevent->duration){
+        } else if ($vevent->duration) {
             $duration = new DateInterval($vevent->duration->value);
             $end = clone $start;
             $end->add($duration);
