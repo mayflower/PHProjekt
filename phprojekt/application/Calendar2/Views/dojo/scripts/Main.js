@@ -147,7 +147,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     setWidgets: function() {
         // Summary:
         //   Custom setWidgets for calendar
-        phpr.tree.loadTree();
         this.userStore.fetch(
             dojo.hitch(this, function() {
                 if (this.getActiveUser() === null) {

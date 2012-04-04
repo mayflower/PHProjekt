@@ -61,7 +61,6 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.hideSuggest();
         this.setSearchForm();
         phpr.tree.fadeIn();
-        phpr.tree.loadTree();
 
         this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, phpr.module, {}, view.centerMainContent);
     },

@@ -361,8 +361,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     setWidgets: function() {
         // Summary:
         //   Custom setWidgets for timecard
-        phpr.tree.loadTree();
         this._store.dataChanged();
+
         this.grid = new this.gridWidget(this, this._date);
         this.form = new this.formWidget(this, this._date);
     },

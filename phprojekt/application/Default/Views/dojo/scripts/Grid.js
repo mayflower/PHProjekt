@@ -95,6 +95,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this.extraColumns     = [];
         this.comboActions     = [];
 
+        phpr.tutorialAnchors.grid = this.node.containerNode;
+
         var getHashForCookie  = null;
 
         // Set cookies urls

@@ -108,7 +108,7 @@ class Calendar2_Helper_Rrule
      * @param Datetime $start The start of the period.
      * @param datetime $end   The end of the period.
      *
-     * @return Array of Datetime The single events.
+     * @return Array of Datetime The single events sorted in ascending order.
      */
     public function getDatesInPeriod(Datetime $start, Datetime $end)
     {
@@ -164,24 +164,17 @@ class Calendar2_Helper_Rrule
             }
         }
 
-
-        foreach ($datePeriods as $period) {
-            foreach ($period as $date) {
-                // Work around http://bugs.php.net/bug.php?id=52454
-                // 'Relative dates and getTimestamp increments by one day'
-                $datestring = $date->format('Y-m-d H:i:s');
-                $date       = new Datetime($datestring, new DateTimeZone('UTC'));
-
-                $ts = $date->getTimestamp();
-                if ($startTs <= $ts + $this->_duration
-                        && $ts <= $endTs
-                        && !in_array($date, $this->_exceptions)) {
-                    $dates[] = new Datetime($datestring, new DateTimeZone('UTC'));
-                } else if ($ts > $endTs) {
-                   break;
-                }
+        $dateSeries = array();
+        foreach ($datePeriods as $k => $period) {
+            $series = $this->_periodToArray($period, $startTs, $endTs);
+            if (!empty($series)) {
+                $dateSeries[] = $series;
             }
         }
+
+        // Assumptions hold. All periods where created with the same duration. They were in order in $datePeriods, so
+        // they are correctly ordered in $dateSeries, too.
+        $dates = $this->_mergeSequences($dateSeries);
 
         if ($this->_rrule['ORIGINAL_FREQ'] == 'DAILY' && !empty($this->_rrule['BYDAY'])) {
             foreach ($dates as $key => $date) {
@@ -192,6 +185,59 @@ class Calendar2_Helper_Rrule
             }
         }
         return $dates;
+    }
+
+    /**
+     * Retrieves all events from an dateperiod that lie between two points in time.
+     *
+     * This takes event duration in account.
+     */
+    private function _periodToArray(DatePeriod $period, $startTs, $endTs)
+    {
+        $ret = array();
+        foreach ($period as $date){
+            // Work around http://bugs.php.net/bug.php?id=52454
+            // 'Relative dates and getTimestamp increments by one day'
+            $datestring = $date->format('Y-m-d H:i:s');
+            $date       = new Datetime($datestring, new DateTimeZone('UTC'));
+
+            $ts = $date->getTimestamp();
+            if ($startTs <= $ts + $this->_duration
+                    && $ts <= $endTs
+                    && !in_array($date, $this->_exceptions)) {
+                $dateSeries[$k][] = $ts;
+            } else if ($ts > $endTs) {
+               break;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Merges sorted event sequences.
+     *
+     * This makes the following assumptions:
+     *  1. All arrays in $sequences have the same spacing between events,
+     *      i.e. the interval used to create the dateperiods is the same.
+     *  2. $sequences is sorted in regard to the first element of each inner array
+     *  3. All first elements of the series are before any of the second elements.
+     *      (With 1. this holds for all n and n+1)
+     */
+    private function _mergeSequences(array $sequences)
+    {
+        $ret = array();
+
+        while (!empty($sequences)) {
+            foreach (array_keys($sequences) as $k) {
+                $ret[] = array_shift($sequences[$k]);
+                if (empty($sequences[$k])) {
+                    unset($sequences[$k]);
+                }
+            }
+        }
+
+        return $ret;
     }
 
     /**

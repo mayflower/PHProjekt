@@ -54,7 +54,6 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
     setWidgets:function() {
         // Summary:
         //   Custom setWidgets for statistic
-        phpr.tree.loadTree();
         var today  = new Date();
         var start  = new Date(today.getFullYear(), today.getMonth(), 1);
         var end    = new Date(today.getFullYear(), today.getMonth(), 31);

@@ -34,6 +34,8 @@ dojo.declare("phpr.Default.System.PageManager", null, {
 
     _defaultModule: "Project",
 
+    _initCalled: false,
+
     constructor: function() {
         dojo.subscribe("/dojo/hashchange", this, "_hashChange");
     },
@@ -80,7 +82,11 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             }
         }
 
-        this.changeState(state, options);
+        if (this._initCalled === true) {
+            this.changeState(state, options);
+        } else {
+            this._setHash(state);
+        }
     },
 
     _setHash: function(state, replaceItem) {
@@ -261,7 +267,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     },
 
     _hashChange: function() {
-        if (dojo.hash() != this._recentHash) {
+        if (dojo.hash() != this._recentHash && this._initCalled === true) {
             this.changeState(dojo.queryToObject(dojo.hash()));
         }
     },
@@ -295,6 +301,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         // Description:
         //      This will fetch the url hash from the cookie if none is found
         //      and if no moduleName is provided, loads the Project module.
+        this._initCalled = true;
         if (dojo.hash() === "") {
             // Try loading hash from cookie, or use default state
             var hash = dojo.cookie('location.hash') || null;
