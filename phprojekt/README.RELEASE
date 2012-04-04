@@ -6,33 +6,24 @@ This is a checklist for all the steps that the release require.
         1.1.1 VERSION
         1.1.2 library/PHProjekt.php
         1.1.3 tests/UnitTests/Phprojekt/PhprojektTest.php
-        1.1.4 tests/UnitTests/Default/Controllers/IndexControllerTest.php
-        1.1.5 run unitTest
+        1.1.4 run unitTest
 
-    1.2 Copy the phprojekt folder
-
-    1.3 Remove production directories and files:
-        1.3.1 phprojekt_private/
-        1.3.2 test/
-        1.3.3 configuration.php
-        1.3.4 README.RELEASE
-
-    1.4 Make a search and replace for @package_version@ and replace
+    1.2 Make a search and replace for @package_version@ and replace
         it with the current version.
 
-    1.5 recompile javascript
+    1.3 recompile javascript
         1.5.1 ant compilejs
 
-    1.6 commit
+    1.4 commit
 
-    1.7 Make a new tag.
-        1.1.8 git tag -s 6.x.x
-        1.1.9 git push 6.x.x
+    1.5 Make a new tag.
+        1.5.1 git tag -s 6.x.x
+        1.5.2 git push 6.x.x
 
     New tags are automatically fetched from github and will be displayed
     on the phprojekt.com website.
 
-    1.8 Mark release as done in Jira
+    1.6 Mark release as done in Jira
 
 2 Web
 
@@ -56,6 +47,5 @@ This is a checklist for all the steps that the release require.
         5.1.1 VERSION
         5.1.2 library/PHProjekt.php
         5.1.3 tests/UnitTests/Phprojekt/PhprojektTest.php
-        5.1.4 tests/UnitTests/Default/Controllers/IndexControllerTest.php
-        5.1.5 run unitTest
-        5.1.6 commit
+        5.1.4 run unitTest
+        5.1.5 commit
