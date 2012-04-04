@@ -1062,15 +1062,19 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Count.
-     * ! NOTE we call the fetchAll of the parent here.
-     * So this might not performe good at the moment
+     * Count rows that match a given where clause.
+     *
+     * @param string $where A where clause to count a subset of the results.
      *
      * @return integer Count of results.
      */
-    public function count()
+    public function count($where = null)
     {
-        return parent::fetchAll()->count();
+        $select = $this->select()->from($this, array('COUNT(*)'));
+        if (!is_null($where)) {
+            $select->where($where);
+        }
+        return $select->query()->fetchColumn();
     }
 
     /**
