@@ -1276,8 +1276,12 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Description:
         //    Save only the items that have changed, to save them later
         //    If the user can't edit the item, restore the last value
-        this.grid.store.save();
-        return;
+        if (this.grid.store.isDirty()) {
+            this.grid.store.save({
+                onComplete: this.refresh,
+                scope: this
+            });
+        }
     },
 
     exportData: function() {
