@@ -53,10 +53,12 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         $recursive = $this->getRequest()->getParam('recursive', 'false');
         $recursive = $recursive === 'true' ? true : false;
         $model     = $this->newModelObject();
+        $moduleId  = Phprojekt_Module::getId($this->getRequest()->getModuleName());
+        $isGlobal  = Phprojekt_Module::saveTypeIsGlobal($moduleId);
 
-        if (empty($projectId) && $model->hasField('projectId')) {
+        if (empty($projectId) && !$isGlobal) {
             throw new Phprojekt_PublishedException('projectId not given for non-global module');
-        } else if (!empty($projectId) && !$model->hasField('projectId')) {
+        } else if (!empty($projectId) && $isGlobal) {
             throw new Phprojekt_PublishedException('projectId given for global module');
         }
 
