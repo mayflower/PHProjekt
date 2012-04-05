@@ -83,13 +83,9 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
             $recordCount = $model->count($where);
         }
 
-        foreach ($records as $k => $v) {
-            $records[$k] = $v->toArray();
-        }
-
         $end = min($end, $recordCount);
         $this->getResponse()->setHeader('Content-Range', "items {$start}-{$end}/{$recordCount}");
-        echo Zend_Json_Encoder::encode($records);
+        echo Zend_Json_Encoder::encode(Phprojekt_Model_Converter::convertModels($records));
     }
 
     public function getAction()
@@ -100,7 +96,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
             $record = $record->find($id);
         }
 
-        echo Zend_Json_Encoder::encode($record->toArray());
+        echo Zend_Json_Encoder::encode(Phprojekt_Model_Converter::convertModel($record));
     }
 
     public function postAction()
