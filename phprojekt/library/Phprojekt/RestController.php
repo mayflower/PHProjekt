@@ -43,6 +43,14 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
+    public function preDispatch()
+    {
+        $projectId = $this->getRequest()->getParam('projectId', null);
+        if (!is_null($projectId)) {
+            Phprojekt::setCurrentProjectId($projectId);
+        }
+    }
+
     public function indexAction()
     {
         $projectId = (int) $this->getRequest()->getParam('projectId', null);
