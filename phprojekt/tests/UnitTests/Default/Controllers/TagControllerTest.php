@@ -58,7 +58,7 @@ class Phprojekt_TagController_Test extends FrontInit
             'metadata' => array(
                 array(
                     'key'   => 'string',
-                    'label' => 'Tag',
+                    'label' => 'Tags',
                 ),
                 array(
                     'key'   => 'count',
