@@ -87,7 +87,7 @@ class User_IndexController_Test extends FrontInit
         $this->request->setParam('data', $items);
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $expected = '{"type":"error","message":"ID 2. Last name: Is a required field","code":0,"id":"2"}';
+        $expected = '{"type":"error","message":"ID 2. Last name: Is a required field","id":"2"}';
         $this->assertContains($expected, $response);
     }
 }

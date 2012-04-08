@@ -44,7 +44,7 @@ class Core_IndexController extends IndexController
      * The function check them, and allow the acction or not,
      * if not, the user is redirected to the login form or throws an exception.
      *
-     * @throws Phprojekt_PublishedException If the user is not an admin.
+     * @throws Zend_Controller_Action_Exception If the user is not an admin.
      *
      * @return void
      */

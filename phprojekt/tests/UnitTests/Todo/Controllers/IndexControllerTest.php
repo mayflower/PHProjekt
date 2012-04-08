@@ -174,8 +174,8 @@ class Todo_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         try {
             $this->front->dispatch($this->request, $this->response);
-        } catch (Phprojekt_PublishedException $error) {
-            $this->assertEquals(0, $error->getCode());
+        } catch (Zend_Controller_Action_Exception $error) {
+            $this->assertEquals(404, $error->getCode());
             return;
         }
 

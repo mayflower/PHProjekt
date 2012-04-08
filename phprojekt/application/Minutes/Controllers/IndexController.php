@@ -71,11 +71,10 @@ class Minutes_IndexController extends IndexController
      * <pre>
      *  - type    => 'success' or 'error'.
      *  - message => Success or error message.
-     *  - code    => 0.
      *  - id      => id of the deleted item.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On missing or wrong id, or on error in the action delete.
+     * @throws Zend_Controller_Action_Exception On missing or wrong id, or on error in the action delete.
      *
      * @return void
      */
@@ -84,11 +83,11 @@ class Minutes_IndexController extends IndexController
         $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+            throw new Zend_Controller_Action_Exception(self::ID_REQUIRED_TEXT, 400);
         } else {
             $minutes = $this->getModelObject()->find($id);
             if (empty($minutes->id)) {
-                throw new Phprojekt_PublishedException(self::NOT_FOUND);
+                throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
             }
         }
         $minutesItems = $minutes->items->fetchAll();
@@ -111,12 +110,11 @@ class Minutes_IndexController extends IndexController
 
             $return = array('type'    => $type,
                             'message' => $message,
-                            'code'    => 0,
                             'id'      => $id);
 
             Phprojekt_Converter_Json::echoConvert($return);
         } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
         }
     }
 
@@ -140,7 +138,7 @@ class Minutes_IndexController extends IndexController
      *
      * The return is in JSON format.
      *
-     * @throws Phprojekt_PublishedException On wrong id.
+     * @throws Zend_Controller_Action_Exception On wrong id.
      *
      * @return void
      */
@@ -157,7 +155,7 @@ class Minutes_IndexController extends IndexController
             $data['numRows'] = count($data['data']);
             Phprojekt_Converter_Json::echoConvert($data);
         } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
         }
     }
 
@@ -180,11 +178,10 @@ class Minutes_IndexController extends IndexController
      * <pre>
      *  - type    => 'success' or 'error'.
      *  - message => Success or error message.
-     *  - code    => 0 for success, -1 for error.
      *  - id      => id of the minute.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the send action or wrong id.
+     * @throws Zend_Controller_Action_Exception On error in the send action or wrong id.
      *
      * @return void
      */
@@ -196,7 +193,7 @@ class Minutes_IndexController extends IndexController
 
         // Sanity check
         if (empty($params['id']) || !is_numeric($params['id'])) {
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+            throw new Zend_Controller_Action_Exception(self::ID_REQUIRED_TEXT, 400);
         }
 
         $minutesId = (int) $params['id'];
@@ -205,12 +202,12 @@ class Minutes_IndexController extends IndexController
         // Was the id provided a valid one?
         if (!($minutes instanceof Phprojekt_Model_Interface) || !$minutes->id) {
             // Invalid ID
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+            throw new Zend_Controller_Action_Exception(self::ID_REQUIRED_TEXT, 400);
         }
 
         // Security check: is the current user owner of this minutes entry?
         if ($minutes->ownerId != PHprojekt_Auth::getUserId()) {
-            throw new Phprojekt_PublishedException(self::USER_IS_NOT_OWNER);
+            throw new Zend_Controller_Action_Exception(self::USER_IS_NOT_OWNER, 403);
         }
 
         $mail = new Phprojekt_Mail();
@@ -261,7 +258,6 @@ class Minutes_IndexController extends IndexController
 
             $return = array('type'    => 'success',
                             'message' => Phprojekt::getInstance()->translate(self::MAIL_SUCCESS_TEXT),
-                            'code'    => 0,
                             'id'      => $minutesId);
         } else {
             $message = Phprojekt::getInstance()->translate(self::MAIL_FAIL_TEXT);
@@ -272,7 +268,6 @@ class Minutes_IndexController extends IndexController
 
             $return = array('type'    => 'error',
                             'message' => nl2br($message), // @todo Converting to BR should be done in the view!
-                            'code'    => -1,
                             'id'      => $minutesId);
         }
 
@@ -291,11 +286,10 @@ class Minutes_IndexController extends IndexController
      * <pre>
      *  - type    => 'success' or 'error'.
      *  - message => Success or error message.
-     *  - code    => 0 for success, -1 for error.
      *  - id      => id of the minute.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the pdf creation action or wrong id.
+     * @throws Zend_Controller_Action_Exception On error in the pdf creation action or wrong id.
      *
      * @return void
      */
@@ -305,7 +299,7 @@ class Minutes_IndexController extends IndexController
         $this->setCurrentProjectId();
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+            throw new Zend_Controller_Action_Exception(self::ID_REQUIRED_TEXT, 400);
         }
 
         $minutes = $this->getModelObject()->find($id);
@@ -326,7 +320,7 @@ class Minutes_IndexController extends IndexController
 
             echo $outputString;
         } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
         }
     }
 

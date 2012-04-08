@@ -102,7 +102,7 @@ class Statistic_IndexController_Test extends FrontInit
 
         try {
             $this->front->dispatch($this->request, $this->response);
-        } catch (Phprojekt_PublishedException $error) {
+        } catch (Zend_Controller_Action_Exception $error) {
             $this->assertEquals("Period: End time can not be before Start time", $error->getMessage());
             return;
         }

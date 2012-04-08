@@ -107,7 +107,6 @@ class Project_IndexController_Test extends FrontInit
         $expected = array(
             'type' => 'error',
             'message' => 'ID 2. Parent: The project can not be saved under itself',
-            'code' => 0,
             'id' => 2
         );
         $this->assertEquals($expected, $response);

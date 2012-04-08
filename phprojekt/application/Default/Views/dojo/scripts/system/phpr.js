@@ -143,23 +143,21 @@ phpr.send = function(/*Object*/paramsIn) {
     });
 
 
-    deferred.then(
+    deferred = deferred.then(
         function(data, ioArgs) {
-            try {
-                // 500 is the error code for logut
-                if (data.code && data.code == 500) {
-                    location = phpr.webpath + 'index.php/Login/logout';
-                    throw new Error("Invalid Data");
-                } else {
-                    phpr.loading.hide();
-                    return data;
-                }
-            } catch (e) {
-                phpr.handleError(params.url, 'exception');
-            }
+            phpr.loading.hide();
+            return data;
         },
         function(err) {
-            phpr.handleError(params.url, 'php');
+            // try to parse json from the error message
+            try {
+                var data = dojo.fromJson(err.responseText);
+                return data;
+            } catch (e) {
+                // unexpected error, return no data
+                phpr.handleError(params.url, 'php');
+                return {};
+            }
         }
     );
 
