@@ -250,6 +250,50 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         var vals = null;
         var maxLength = null;
 
+        var dateFormatter = function(date) {
+            if (!date) {
+                return '';
+            } else {
+                return dojo.date.locale.format(
+                    phpr.date.isoDateTojsDate(date),
+                    this.constraint
+                );
+            }
+        };
+
+        var getDateWidgetProps = function(date) {
+            return { value: phpr.date.isoDateTojsDate(date) };
+        };
+
+        var getDateValue = function(row) {
+            var date = this.widget.get("value");
+            if (!date) {
+                return;
+            }
+
+            var dt = this.grid.getItem(row)[this.field];
+            dt = phpr.date.isoDatetimeTojsDate(dt);
+            dt.setFullYear(date.getFullYear());
+            dt.setMonth(date.getMonth());
+            dt.setDate(date.getDate());
+            return phpr.date.getIsoDatetime(dt, dt);
+        };
+
+        var dtTimeGetValue = function(row) {
+            var time = this.widget.get("value");
+            if (!time) {
+                return;
+            }
+            var hours = time.getHours(),
+                minutes = time.getMinutes();
+
+            var dt = this.grid.getItem(row)[this.field];
+            dt = phpr.date.isoDateTojsDate(dt);
+            dt.setHours(hours);
+            dt.setMinutes(minutes);
+            return phpr.date.getIsoTime(dt);
+        };
+
         // Module columns
         for (var i = 0; i < meta.length; i++) {
             switch (meta[i].type) {
@@ -290,12 +334,13 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         name:          meta[i].label,
                         field:         meta[i].key,
                         styles:        "text-align: center;",
-                        type:          phpr.Default.System.Grid.cells.DateTextBox,
+                        type:          dojox.grid.cells.DateTextBox,
                         promptMessage: 'yyyy-MM-dd',
+                        formatter: dateFormatter,
+                        getValue: getDateValue,
                         constraint:    {
                             formatLength:   'short',
-                            selector:       "date",
-                            datePattern:    'yyyy-MM-dd'
+                            selector:       'date'
                         },
                         editable:      meta[i].readOnly ? false : true
                     });
@@ -308,25 +353,26 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
                 case 'datetime':
                     this.gridLayout.push({
-                        width:         '90px',
-                        name:          meta[i].label + ' (' + phpr.nls.get('Date') + ')',
-                        field:         meta[i].key + '_forDate',
-                        styles:        "text-align: center;",
-                        type:          phpr.Default.System.Grid.cells.DateTextBox,
-                        promptMessage: 'yyyy-MM-dd',
-                        constraint:    {
+                        width: '90px',
+                        name: meta[i].label + ' (' + phpr.nls.get('Date') + ')',
+                        field: meta[i].key,
+                        styles: "text-align: center;",
+                        type: dojox.grid.cells.DateTextBox,
+                        getValue: getDateValue,
+                        formatter: dateFormatter,
+                        constraint: {
                             formatLength:   'short',
-                            selector:       "date",
-                            datePattern:    'yyyy-MM-dd'
+                            selector:       'date'
                         },
-                        editable:      meta[i].readOnly ? false : true
+                        editable: meta[i].readOnly ? false : true
                     });
                     this.gridLayout.push({
                         width:    '90px',
                         name:     meta[i].label + ' (' + phpr.nls.get('Hour') + ')',
-                        field:    meta[i].key + '_forTime',
+                        field:    meta[i].key,
                         styles:   "text-align: center;",
-                        type:     phpr.Default.System.Grid.cells.Time,
+                        type: phpr.Default.System.Grid.cells.Time,
+                        getValue: dtTimeGetValue,
                         editable: meta[i].readOnly ? false : true
                     });
                     this.filterField.push({
