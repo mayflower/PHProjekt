@@ -354,13 +354,15 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
             return parent::count($where);
         }
 
-        $db     = Phprojekt::getInstance()->getDb();
+        $db       = Phprojekt::getInstance()->getDb();
         $rawTable = $this->getTableName();
-        $table  = $db->quoteIdentifier($rawTable);
-        $select = $db->select()->from($rawTable, array('COUNT(*)'));
+        $table    = $db->quoteIdentifier($rawTable);
+        $select   = $db->select()->from($rawTable, array('COUNT(*)'));
+
         if (!is_null($where)) {
             $select->where($where);
         }
+
         $select->join(array('ir' => 'item_rights'), "ir.item_id = {$table}.id", array())
             ->where('ir.module_id = :thisModule')
             ->where('ir.user_id = :effectiveUser')
@@ -372,6 +374,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
                     ':right' => Phprojekt_Acl::READ
                 )
             );
+
         return $select->query()->fetchColumn();
     }
 

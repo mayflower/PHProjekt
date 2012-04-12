@@ -241,7 +241,7 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     }
 
     /**
-     * Returns the count of the models of the given type in this subtree.
+     * Returns the number of the models of the given type in this subtree.
      *
      * @param $model The activeRecord module used to get the data.
      * @param $where The clause to determine matching objects. Optional.
