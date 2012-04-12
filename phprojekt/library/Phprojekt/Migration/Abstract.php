@@ -62,7 +62,7 @@ abstract class Phprojekt_Migration_Abstract
      * In case anything goes wrong, you can just roll back and throw a new
      * Exception. (For debugging purposes, pass the old Exception as third
      * parameter to the new Exception).
-     * IMPORTANT: Please don't throw Phprojekt_PublishedException s unless you
+     * IMPORTANT: Please don't throw Zend_Controller_Action_Exceptions with error codes 4xx unless you
      *            _really_ make sure they don't contain sensitive data. They
      *            might be shown to the user.
      *

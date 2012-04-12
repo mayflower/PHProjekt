@@ -183,16 +183,15 @@ class Gantt_IndexController extends IndexController
      *  - array <b>projects</b> Array with projectId,startDate and endDate by comma separated
      * </pre>
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * If there is an error, the save will return a Zend_Controller_Action_Exception,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => 0.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the action save or wrong parameters.
+     * @throws Zend_Controller_Action_Exception On error in the action save or wrong parameters.
      *
      * @return void
      */
@@ -208,7 +207,7 @@ class Gantt_IndexController extends IndexController
         if (empty($projects)) {
             $label   = Phprojekt::getInstance()->translate('Projects');
             $message = Phprojekt::getInstance()->translate('No project info was received');
-            throw new Phprojekt_PublishedException($label . ': ' . $message);
+            throw new Zend_Controller_Action_Exception($label . ': ' . $message, 400);
         }
 
         foreach ($projects as $project) {
@@ -218,7 +217,7 @@ class Gantt_IndexController extends IndexController
             if (empty($id) || empty($startDate) || empty($endDate)) {
                 $label   = Phprojekt::getInstance()->translate('Projects');
                 $message = Phprojekt::getInstance()->translate('Incomplete data received');
-                throw new Phprojekt_PublishedException($label . ': ' . $message);
+                throw new Zend_Controller_Action_Exception($label . ': ' . $message, 400);
             }
 
             $id = (int) $id;
@@ -227,7 +226,7 @@ class Gantt_IndexController extends IndexController
             if (empty($activeRecord->id)) {
                 $label   = Phprojekt::getInstance()->translate('Project');
                 $message = Phprojekt::getInstance()->translate('Id not found #') . $id;
-                throw new Phprojekt_PublishedException($label . ': ' . $message);
+                throw new Zend_Controller_Action_Exception($label . ': ' . $message, 400);
             }
 
             // Check: dates are valid?
@@ -240,7 +239,7 @@ class Gantt_IndexController extends IndexController
                 } else {
                     $message = Phprojekt::getInstance()->translate('End date invalid');
                 }
-                throw new Phprojekt_PublishedException($label . ': ' . $message);
+                throw new Zend_Controller_Action_Exception($label . ': ' . $message, 400);
             }
 
             // Check: start date after end date?
@@ -249,7 +248,7 @@ class Gantt_IndexController extends IndexController
             if ($startDateTemp > $endDateTemp) {
                 $label   = Phprojekt::getInstance()->translate('Project id #') . $id;
                 $message = Phprojekt::getInstance()->translate('Start date can not be after End date');
-                throw new Phprojekt_PublishedException($label . ': ' . $message);
+                throw new Zend_Controller_Action_Exception($label . ': ' . $message, 400);
             }
 
             $activeRecord->startDate = $startDate;
@@ -264,7 +263,6 @@ class Gantt_IndexController extends IndexController
 
         $return = array('type'    => 'success',
                         'message' => $message,
-                        'code'    => 0,
                         'id'      => 0);
 
         Phprojekt_Converter_Json::echoConvert($return);

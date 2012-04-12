@@ -185,16 +185,15 @@ class Core_UserController extends Core_IndexController
      *  - mixed   <b>all other user fields</b> All the fields values to save.
      * </pre>
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * If there is an error, the save will return a Zend_Controller_Action_Exception,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => Id of the user.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
+     * @throws Zend_Controller_Action_Exception On error in the action save or wrong id.
      *
      * @return void
      */
@@ -233,7 +232,6 @@ class Core_UserController extends Core_IndexController
 
         $return = array('type'    => $type,
                         'message' => $message,
-                        'code'    => 0,
                         'id'      => $id);
 
         Phprojekt_Converter_Json::echoConvert($return);

@@ -37,25 +37,25 @@
  */
 class ErrorController extends Zend_Controller_Action
 {
+
     /**
-     * Initialize our error controller and disable the viewRenderer.
+     * Init function to register the contexts
+     *
+     * Sets the json context for the error action.
      *
      * @return void
      */
-    public function init()
-    {
-        $this->_helper->viewRenderer->setNoRender();
+    public function init() {
+        $this->_helper->contextSwitch()
+            ->addActionContext('error', 'json')
+            ->setAutoJsonSerialization(false)
+            ->initContext();
     }
 
     /**
      * Default error action.
      *
-     * On Phprojekt_PublishedException, return an error string in JSON format.
-     * <pre>
-     *  - type    => 'error'.
-     *  - message => Error message.
-     *  - code    => Error code.
-     * </pre>
+     * On Zend_Controller_Action_Exception, if the error code is 4xx return an error message matching the accepted type.
      *
      * On wrong controller name or action, terminates script execution.
      *
@@ -68,6 +68,13 @@ class ErrorController extends Zend_Controller_Action
         $error = $this->_getParam('error_handler');
 
         $this->getResponse()->clearBody();
+        $exception = $error->exception;
+
+        $viewerror = array(
+            'type'    => 'error',
+            'message' => 'Internal Server Error'
+        );
+
         switch ($error->type) {
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
             case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
@@ -78,19 +85,20 @@ class ErrorController extends Zend_Controller_Action
                 die($message);
                 break;
             default:
-                $this->getResponse()->setHttpResponseCode(500);
-                $exception = $error->exception;
-                // We only forward exception with type PublishedException
-                if ($exception instanceof Phprojekt_PublishedException) {
-                    $error = array('type'    => 'error',
-                                   'message' => $exception->getMessage(),
-                                   'code'    => $exception->getCode());
-                    echo '{}&&(' . Zend_Json_Encoder::encode($error) . ')';
+                // We only forward exception with 4xx code to the client
+                if ($exception instanceof Zend_Controller_Action_Exception &&
+                        $exception->getCode() >= 400 &&
+                        $exception->getCode() < 500) {
+
+                    $this->getResponse()->setHttpResponseCode($exception->getCode());
+                    $viewerror['message'] = $exception->getMessage();
                 } else {
+                    $this->getResponse()->setHttpResponseCode(500);
                     $logger = Phprojekt::getInstance()->getLog();
                     $logger->err($exception->getMessage() . "\n" . $exception->getTraceAsString());
                 }
                 break;
         }
+        $this->view->error = $viewerror;
     }
 }

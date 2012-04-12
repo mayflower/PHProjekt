@@ -208,11 +208,8 @@ class Phprojekt_Auth_ProxyTable
         $validUser = false;
         $user = new Phprojekt_User_User();
 
-        try {
-            $user->find((int) $userId);
+        if ($user->find((int) $userId)) {
             $validUser =  true;
-        } catch (Phprojekt_PublishedException $e) {
-            // User not found
         }
 
         return $validUser;

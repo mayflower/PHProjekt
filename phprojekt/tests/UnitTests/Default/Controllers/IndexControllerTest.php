@@ -65,7 +65,7 @@ class Phprojekt_IndexController_Test extends FrontInit
 
         try {
             $this->front->dispatch($this->request, $this->response);
-        } catch (Phprojekt_PublishedException $error) {
+        } catch (Zend_Controller_Action_Exception $error) {
             $this->assertEquals(IndexController::NODEID_REQUIRED_TEXT, $error->getMessage());
             return;
         }
@@ -158,7 +158,7 @@ class Phprojekt_IndexController_Test extends FrontInit
 
     /**
      * Test of json delete project -without a project Id-
-     * @expectedException Phprojekt_PublishedException
+     * @expectedException Zend_Controller_Action_Exception
      */
     public function testJsonDeleteNoId()
     {

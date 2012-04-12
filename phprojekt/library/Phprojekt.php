@@ -852,7 +852,7 @@ class Phprojekt
         // Show a message to the user throw an exception
         if ($throwErrors && $useException) {
             $messageUser = Phprojekt::getInstance()->translate($errDesc);
-            throw new Phprojekt_PublishedException($messageUser);
+            throw new Zend_Controller_Action_Exception($messageUser, 500);
         }
 
         // Don't execute PHP internal error handler

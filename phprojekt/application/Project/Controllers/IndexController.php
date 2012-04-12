@@ -49,16 +49,15 @@ class Project_IndexController extends IndexController
      *  - mixed   <b>all other module fields</b> All the fields values to save.
      * </pre>
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * If there is an error, the save will return a Zend_Controller_Action_Exception,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => Id of the project.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
+     * @throws Zend_Controller_Action_Exception On error in the action save or wrong id.
      *
      * @return void
      */
@@ -89,12 +88,11 @@ class Project_IndexController extends IndexController
 
             $return = array('type'    => 'success',
                             'message' => $message,
-                            'code'    => 0,
                             'id'      => $showId);
 
             Phprojekt_Converter_Json::echoConvert($return);
         } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
         }
     }
 
@@ -112,7 +110,6 @@ class Project_IndexController extends IndexController
      * <pre>
      *  - type    => 'success' or 'error'.
      *  - message => Success or error message.
-     *  - code    => 0.
      *  - id      => Comma separated ids of the projects.
      * </pre>
      *
@@ -133,7 +130,7 @@ class Project_IndexController extends IndexController
                 $nodeId   = (int) $this->getRequest()->getParam('nodeId', null);
                 $newNode  = Default_Helpers_Save::save($node, $fields, $nodeId);
                 $showId[] = $newNode->id;
-            } catch (Phprojekt_PublishedException $error) {
+            } catch (Zend_Controller_Action_Exception $error) {
                 $success = false;
                 $showId  = array($id);
                 $message = sprintf("ID %d. %s", $id, $error->getMessage());
@@ -150,7 +147,6 @@ class Project_IndexController extends IndexController
 
         $return = array('type'    => $resultType,
                         'message' => $message,
-                        'code'    => 0,
                         'id'      => implode(',', $showId));
 
         Phprojekt_Converter_Json::echoConvert($return);
