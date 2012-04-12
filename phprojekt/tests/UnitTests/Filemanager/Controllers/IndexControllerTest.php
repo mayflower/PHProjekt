@@ -251,10 +251,10 @@ class Filemanager_IndexController_Test extends FrontInit
         $this->request->setParam('id', 50);
         try {
             $this->front->dispatch($this->request, $this->response);
-        } catch (Phprojekt_PublishedException $error) {
+        } catch (Zend_Controller_Action_Exception $error) {
             $expectedErrorMsg = Phprojekt::getInstance()->translate(Filemanager_IndexController::NOT_FOUND);
-            $this->assertEquals(0, $error->getCode());
-            $this->assertEquals($expectedErrorMsg, $error->message);
+            $this->assertEquals(404, $error->getCode());
+            $this->assertEquals($expectedErrorMsg, $error->getMessage());
             return;
         }
 

@@ -243,7 +243,7 @@ class Timecard_IndexController_Test extends FrontInit
     /**
      * Test of json Save
      *
-     * @expectedException Phprojekt_PublishedException
+     * @expectedException Zend_Controller_Action_Exception
      */
     public function testJsonSaveWrongStartTime()
     {
@@ -260,7 +260,7 @@ class Timecard_IndexController_Test extends FrontInit
     /**
      * Test of json Save
      *
-     * @expectedException Phprojekt_PublishedException
+     * @expectedException Zend_Controller_Action_Exception
      */
     public function testJsonSaveStartAfterEndTime()
     {
@@ -278,7 +278,7 @@ class Timecard_IndexController_Test extends FrontInit
     /**
      * Test of json Save
      *
-     * @expectedException Phprojekt_PublishedException
+     * @expectedException Zend_Controller_Action_Exception
      */
     public function testJsonSaveEndTimeInvalid()
     {

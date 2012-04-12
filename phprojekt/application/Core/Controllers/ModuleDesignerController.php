@@ -93,11 +93,10 @@ class Core_ModuleDesignerController extends Core_IndexController
      * <pre>
      *  - type    => 'success' or 'error'.
      *  - message => Success or error message.
-     *  - code    => 0.
      *  - id      => id of the module.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the action save.
+     * @throws Zend_Controller_Action_Exception On error in the action save.
      *
      * @return void
      */
@@ -157,7 +156,6 @@ class Core_ModuleDesignerController extends Core_IndexController
 
         $return = array('type'    => $type,
                         'message' => $message,
-                        'code'    => 0,
                         'id'      => $id);
 
         Phprojekt_Converter_Json::echoConvert($return);

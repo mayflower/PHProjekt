@@ -131,16 +131,15 @@ class MinutesItem_IndexController extends IndexController
      *  - mixed   <b>all other module fields</b> All the fields values to save.
      * </pre>
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * If there is an error, the save will return a Zend_Controller_Action_Exception,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => Id of the minute item.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
+     * @throws Zend_Controller_Action_Exception On error in the action save or wrong id.
      *
      * @return void
      */
@@ -150,9 +149,9 @@ class MinutesItem_IndexController extends IndexController
         $model = $this->getModelObject();
 
         if (empty($model->getParent()->id)) {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
         } elseif (4 == $model->getParent()->itemStatus) {
-            throw new Phprojekt_PublishedException(self::MINUTES_READ_ONLY);
+            throw new Zend_Controller_Action_Exception(self::MINUTES_READ_ONLY, 403);
         } else {
             $id = (int) $this->getRequest()->getParam('id');
 
@@ -169,12 +168,11 @@ class MinutesItem_IndexController extends IndexController
 
                 $return = array('type'    => 'success',
                                 'message' => $message,
-                                'code'    => 0,
                                 'id'      => $model->id);
 
                 Phprojekt_Converter_Json::echoConvert($return);
             } else {
-                throw new Phprojekt_PublishedException(self::NOT_FOUND);
+                throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
             }
         }
     }
@@ -192,11 +190,10 @@ class MinutesItem_IndexController extends IndexController
      * <pre>
      *  - type    => 'success' or 'error'.
      *  - message => Success or error message.
-     *  - code    => 0.
      *  - id      => id of the deleted item.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On missing or wrong id, or on error in the action delete.
+     * @throws Zend_Controller_Action_Exception On missing or wrong id, or on error in the action delete.
      *
      * @return void
      */
@@ -207,13 +204,13 @@ class MinutesItem_IndexController extends IndexController
         $model = $this->getModelObject();
 
         if (empty($model->getParent()->id)) {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
         } elseif (4 == $model->getParent()->itemStatus) {
-            throw new Phprojekt_PublishedException(self::MINUTES_READ_ONLY);
+            throw new Zend_Controller_Action_Exception(self::MINUTES_READ_ONLY, 403);
         }
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+            throw new Zend_Controller_Action_Exception(self::ID_REQUIRED_TEXT, 400);
         }
 
         $model->find($id);
@@ -230,12 +227,11 @@ class MinutesItem_IndexController extends IndexController
 
             $return = array('type'    => $type,
                             'message' => $message,
-                            'code'    => 0,
                             'id'      => $id);
 
             Phprojekt_Converter_Json::echoConvert($return);
         } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
         }
     }
 

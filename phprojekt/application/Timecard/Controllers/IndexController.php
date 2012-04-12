@@ -167,7 +167,6 @@ class Timecard_IndexController extends IndexController
      *      - startTime => HH:mm:ss of the start time.
      *      - endTime   => HH:mm:ss of the end time.
      *      - note      => The notes of the booking if any.
-     *  - code   => 0.
      *  - id     => 0.
      * </pre>
      *
@@ -191,7 +190,6 @@ class Timecard_IndexController extends IndexController
 
         $return = array('type'    => 'success',
                         'data'    => $data,
-                        'code'    => 0,
                         'id'      => 0);
 
         Phprojekt_Converter_Json::echoConvert($return);
@@ -209,16 +207,15 @@ class Timecard_IndexController extends IndexController
      *  - mixed   <b>all other module fields</b> All the fields values to save.
      * </pre>
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * If there is an error, the save will return a Zend_Controller_Action_Exception,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => Id of the booking.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
+     * @throws Zend_Controller_Action_Exception On error in the action save or wrong id.
      *
      * @return void
      */
@@ -240,7 +237,6 @@ class Timecard_IndexController extends IndexController
 
         $return = array('type'    => 'success',
                         'message' => $message,
-                        'code'    => 0,
                         'id'      => $model->id);
 
         Phprojekt_Converter_Json::echoConvert($return);
@@ -258,7 +254,6 @@ class Timecard_IndexController extends IndexController
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => 0.
      * </pre>
      *
@@ -274,7 +269,6 @@ class Timecard_IndexController extends IndexController
         $message = Phprojekt::getInstance()->translate(self::EDIT_TRUE_TEXT);
         $return  = array('type'    => 'success',
                          'message' => $message,
-                         'code'    => 0,
                          'id'      => 0);
 
         Phprojekt_Converter_Json::echoConvert($return);

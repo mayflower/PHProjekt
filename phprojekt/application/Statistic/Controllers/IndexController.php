@@ -56,7 +56,7 @@ class Statistic_IndexController extends IndexController
      *
      * The return is in JSON format.
      *
-     * @throws Phprojekt_PublishedException On error in the parameters.
+     * @throws Zend_Controller_Action_Exception On error in the parameters.
      *
      * @return void
      */
@@ -72,7 +72,7 @@ class Statistic_IndexController extends IndexController
         } else {
             $messageTitle = Phprojekt::getInstance()->translate('Period');
             $messageDesc  = Phprojekt::getInstance()->translate('End time can not be before Start time');
-            throw new Phprojekt_PublishedException($messageTitle . ': ' . $messageDesc);
+            throw new Zend_Controller_Action_Exception($messageTitle . ': ' . $messageDesc, 400);
         }
     }
 
