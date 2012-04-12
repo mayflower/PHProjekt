@@ -56,28 +56,33 @@ dojo.declare("phpr.Default.System.Date", null, {
         //    Convert a js time into ISO time
         // Description:
         //    Convert a js time into ISO time
-        var hour, minutes;
+        var hours, minutes;
 
         if (typeof(time) == 'object') {
-            hour    = time.getHours();
+            hours    = time.getHours();
             minutes = time.getMinutes();
         } else if (dojo.isString(time)) {
-            var value   = time.toString().replace(/\D/g, "");
-            value       = value.substr(0, 4);
-            minutes = value.substr(value.length - 2);
-            hour    = value.substr(0, value.length - 2);
+            if (time.match(/^\d\d:\d\d(:\d\d)?$/)) {
+                hours = time.substr(0, 2);
+                minutes = time.substr(3, 2);
+            } else if (time.match(/^\d\d\d\d-\d\d-\d\d.\d\d:\d\d(:\d\d)?/)) {
+                hours = time.substr(11, 2);
+                minutes = time.substr(14, 2);
+            } else {
+                return;
+            }
         } else {
             return;
         }
 
-        if (isNaN(hour) || hour > 24 || hour < 0) {
+        if (isNaN(hours) || hours > 24 || hours < 0) {
             hour = '00';
         }
         if (isNaN(minutes) || minutes > 60 || minutes < 0) {
             minutes = '00';
         }
 
-        return dojo.number.format(hour, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
+        return dojo.number.format(hours, {pattern: '00'}) + ':' + dojo.number.format(minutes, {pattern: '00'});
     },
 
     getIsoDatetime: function(date, time) {
@@ -141,8 +146,16 @@ dojo.declare("phpr.Default.System.Date", null, {
         //    Convert a iso string of a time into a js object date
         // Description:
         //    Convert a iso string of a time into a js object date
-        var hours   = time.substr(0, 2);
-        var minutes = time.substr(3, 2);
+        var hours, minutes;
+        if (time.match(/^\d{2}:\d{2}/)) {
+            hours = time.substr(0, 2);
+            minutes = time.substr(3, 2);
+        } else if (time.match(/^\d{4}-\d{2}-\d{2}.\d{2}:\d{2}(:\d{2})?/)) {
+            hours = time.substr(11, 2);
+            minutes = time.substr(14, 2);
+        } else {
+            return;
+        }
 
         var date = new Date();
         date.setHours(hours);
