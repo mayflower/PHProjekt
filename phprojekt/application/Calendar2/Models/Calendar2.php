@@ -451,6 +451,17 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Returns the count of the calendar2 objects matching the given sql clause.
+     *
+     * @param string $where A SQL-where-clause limiting the result set
+     *
+     * @return int
+     */
+    public function count($where = null) {
+        return Phprojekt_ActiveRecord_Abstract::count($where);
+    }
+
+    /**
      * Get all events in the period that the currently active user participates
      * in. Both given times are inclusive.
      *
