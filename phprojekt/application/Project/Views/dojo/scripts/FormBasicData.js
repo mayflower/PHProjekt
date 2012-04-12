@@ -22,17 +22,17 @@
 dojo.provide("phpr.Project.FormBasicData");
 
 dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
-    setUrl:function() {
+    setUrl: function() {
         // Summary:
         //    Set the url for get the data
-        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/'
-            + phpr.tree.getParentId(this.id) + '/id/' + this.id;
+        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/' +
+                    phpr.tree.getParentId(this.id) + '/id/' + this.id;
     },
 
-    initData:function() {
+    initData: function() {
         // Get the rights for other users
-        this._accessUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetUsersRights'
-            + '/nodeId/' + phpr.tree.getParentId(phpr.currentProjectId) + '/id/' + this.id;
+        this._accessUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetUsersRights' +
+                        '/nodeId/' + phpr.tree.getParentId(phpr.currentProjectId) + '/id/' + this.id;
         this._initData.push({'url': this._accessUrl});
 
         // Get all the active users
@@ -48,31 +48,31 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
         this._initData.push({'store': this.moduleStore});
 
         // Get the tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module
-            + '/id/' + this.id;
+        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module +
+                        '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
     },
 
-    postRenderForm:function() {
+    postRenderForm: function() {
         if (dijit.byId("deleteButton")) {
             dijit.byId("deleteButton").destroy();
         }
     },
 
-    submitForm:function() {
+    submitForm: function() {
         if (!this.prepareSubmission()) {
             return false;
         }
 
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.tree.getParentId(this.id)
-                + '/id/' + this.id,
+            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' +
+                    phpr.tree.getParentId(this.id) + '/id/' + this.id,
             content:   this.sendData
         }).then(dojo.hitch(this, function(data) {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (!this.id) {
-                    this.id = data['id'];
+                    this.id = data.id;
                 }
                 if (data.type == 'success') {
                     return phpr.send({
@@ -84,7 +84,7 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
             }
         })).then(dojo.hitch(this, function(data) {
             if (data) {
-                if (this.sendData['string']) {
+                if (this.sendData.string) {
                     new phpr.handleResponse('serverFeedback', data);
                 }
                 if (data.type == 'success') {
