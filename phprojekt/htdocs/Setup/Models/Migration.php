@@ -365,6 +365,9 @@ HERE
 
         // Save words
         $this->_saveSession('migratedSearchWord', $this->_searchWord);
+
+        $c2migration = new Calendar2_Migration();
+        $c2migration->upgrade(null, Phprojekt::getInstance()->getDb());
     }
 
     /**
