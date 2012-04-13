@@ -330,6 +330,34 @@ class Setup_Models_Migration
      */
     public function migrateCalendar()
     {
+        Phprojekt::getInstance()->getDb()->query(<<<HERE
+CREATE TABLE `calendar` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) DEFAULT '0',
+  `owner_id` int(11) DEFAULT NULL,
+  `project_id` int(11) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `place` varchar(255) DEFAULT NULL,
+  `notes` text,
+  `start_datetime` datetime DEFAULT NULL,
+  `end_datetime` datetime DEFAULT NULL,
+  `status` int(1) DEFAULT '0',
+  `rrule` text,
+  `visibility` int(1) DEFAULT '0',
+  `participant_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+)
+HERE
+    );
+        Phprojekt::getInstance()->getDb()->insert(
+            'module',
+            array(
+                'name' => 'Calendar',
+                'label' => 'Calendar',
+                'save_type' => 1,
+                'active' => 1
+            )
+        );
         $this->_migrateCalendar();
 
         $this->_executeItemRightsInsert();
