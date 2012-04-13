@@ -218,9 +218,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      *
      * For example, you can get all todo recrods of projects in a given subtree.
      *
-     * @param $model The active record used to get the data
-     * @param $count How many records should be retreived. null if unlimited.
-     * @param $offset The initial offset. null for no offset.
+     * @param Phprojekt_ActiveRecord_Abstract $model  The active record used to get the data
+     * @param int    $count  How many records should be retreived. null if unlimited. Optional.
+     * @param int    $offset The initial offset. null for no offset. Optional.
+     * @param string $where  A clause to narrow down matching objects. Optional.
      */
     public function getRecordsFor(Phprojekt_ActiveRecord_Abstract $model, $count = null, $offset = null, $where = null)
     {
@@ -237,6 +238,26 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             $where .= $database->quoteInto('project_id IN (?)', $projectIds);
             return $model->fetchAll($where, null, $count, $offset);
         }
+    }
+
+    /**
+     * Returns the number of the models of the given type in this subtree.
+     *
+     * @param $model The activeRecord module used to get the data.
+     * @param $where The clause to determine matching objects. Optional.
+     */
+    public function getRecordsCount(Phprojekt_ActiveRecord_Abstract $model, $where = null)
+    {
+        $projectIds = array_keys($this->_index);
+        if (empty($projectIds)) {
+            return 0;
+        }
+
+        if (!is_null($where)) {
+            $where .= ' AND ';
+        }
+        $where .= $model->getAdapter()->quoteInto('project_id IN (?)', $projectIds);
+        return $model->count($where);
     }
 
     /**
