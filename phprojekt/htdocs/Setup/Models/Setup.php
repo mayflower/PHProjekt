@@ -59,23 +59,13 @@ class Setup_Models_Setup
     private $_message = array();
 
     /**
-     * Constructor.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->_checkServer();
-    }
-
-    /**
      * Do some checks before install.
      *
      * @throws Expeption If the server don't have the requirements.
      *
      * @return void
      */
-    private function _checkServer()
+    public function checkServer()
     {
         // Check the server
         $checkServer = Phprojekt::checkExtensionsAndSettings();
