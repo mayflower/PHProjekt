@@ -570,7 +570,6 @@ class Setup_Models_Setup
      */
     public function finish()
     {
-        $this->_writeConfigFile();
         $this->_checkPrivateDirRights();
         $this->_deleteSessionAndCookies();
     }
@@ -706,7 +705,7 @@ class Setup_Models_Setup
         return realpath(dirname(__FILE__) . "/../../../") . "/";
     }
 
-    private function _writeConfigFile()
+    public function writeConfigFile()
     {
         $databaseNamespace = new Zend_Session_Namespace('databaseData');
         $config            = new Setup_Models_Config();

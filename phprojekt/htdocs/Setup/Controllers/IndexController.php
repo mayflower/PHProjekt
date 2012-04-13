@@ -356,8 +356,9 @@ class IndexController extends Zend_Controller_Action
                             $type    = 'success';
                         } else {
                             $message = $error;
-  	                        $type    = 'notice';
+                            $type    = 'notice';
                         }
+                        $this->_setup->writeConfigFile();
                     } else {
                         $error   = $this->_setup->getError();
                         $message = array_shift($error);
