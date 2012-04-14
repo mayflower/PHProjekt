@@ -155,6 +155,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
         }
         this._renderSubModule();
     },
+
     destroySubForm: function() {
         if (this.subForm && dojo.isFunction(this.subForm.destroy)) {
             this.subForm.destroy();
@@ -318,6 +319,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
                 phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'));
             }));
         }
+
         dojo.connect(dijit.byId("subModuleNewButton"), 'onClick', dojo.hitch(this, function() {
             this.main.destroySubForm();
             this.main.subForm = new this.main.formWidget(this.main, 0, phpr.module, {}, this.main.detailsBox);
