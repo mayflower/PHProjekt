@@ -95,21 +95,35 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
         return url;
     },
 
-    fillTab: function(nodeId) {
+    createTab: function(main) {
         // Summary:
         //    Create the sub module tab
         // Description:
         //    Create the divs for contain the grid and the form
-        var content = new dijit.layout.ContentPane({
-            region: 'center'
+
+        // we need a fixed height here because the form rendering flow is still inherently broken
+        // subforms cannot determine it's height because their rendering is triggered after the outer form
+        // is build.
+        this.borderContainer = new dijit.layout.BorderContainer({
+            design: 'sidebar',
+            style: 'height: 400px; width: 100%;'
         }, document.createElement('div'));
 
-        var borderContainer = new dijit.layout.BorderContainer({
-            design: 'sidebar'
-        }, document.createElement('div'));
+        this._buildForm();
+        this._renderSubModule();
 
+        return main.addTab(
+            [this.borderContainer],
+            'tab' + this.module,
+            phpr.nls.get(this.module, this.module),
+            this.module + 'FormTab'
+        );
+    },
+
+    _buildForm: function() {
         this.overviewBox = new dijit.layout.ContentPane({
-            region: 'center'
+            region: 'center',
+            style:  'width: 50%; height: 100%;'
         }, document.createElement('div'));
 
         this.detailsBox = new dijit.layout.ContentPane({
@@ -117,15 +131,10 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
             style:  'width: 50%; height: 100%;'
         }, document.createElement('div'));
 
-        borderContainer.addChild(this.overviewBox);
-        borderContainer.addChild(this.detailsBox);
-        content.set("content", borderContainer.domNode);
+        this.borderContainer.addChild(this.overviewBox);
+        this.borderContainer.addChild(this.detailsBox);
 
-        dijit.byId(nodeId).set('content', content);
-
-        dojo.connect(dijit.byId(nodeId), "onShow", dojo.hitch(this, function() {
-            this._renderSubModule();
-        }));
+        dojo.addClass(this.borderContainer.domNode, 'subModuleDiv');
     },
 
     _renderSubModule: function() {
