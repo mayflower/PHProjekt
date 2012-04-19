@@ -397,11 +397,11 @@ class Setup_Models_Setup
 
         // Set access
         if (PHP_OS == 'WIN32' || PHP_OS == 'WINNT') {
-            $this->_error[] = '"' . $privateDir . '" should have the next rights: 0770 for folders, 0660 for files';
+            $this->_error[] = "\"$privateDir\" should have the following rights: 0770 for folders, 0660 for files";
         } else {
             // Private folder
             if (!$this->chmodRecursive($privateDir, 0770, 0660)) {
-                $this->_error[] = '"' . $privateDir . '" should have the next rights: 0770 for folders, 0660 for files';
+                $this->_error[] = "\"$privateDir \" should have the following rights: 0770 for folders, 0660 for files";
             }
         }
 
@@ -722,11 +722,11 @@ class Setup_Models_Setup
     {
         $baseDir = $this->getBaseDir();
         if (PHP_OS == 'WIN32' || PHP_OS == 'WINNT') {
-            $this->_error[] = '"' . $baseDir . '" should have the next rights: 0755 for folders, 0644 for files';
+            $this->_error[] = "\"$baseDir\" should have the following rights: 0755 for folders, 0644 for files";
         } else {
             // Root
             if (!$this->chmodRecursive($baseDir, 0755, 0644)) {
-                $this->_error[] = '"' . $baseDir . '" should have the next rights: 0755 for folders, 0644 for files';
+                $this->_error[] = "\"$baseDir\" should have the following rights: 0755 for folders, 0644 for files";
             }
         }
     }
