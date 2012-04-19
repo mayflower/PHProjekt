@@ -709,9 +709,14 @@ class Setup_Models_Setup
     {
         $databaseNamespace = new Zend_Session_Namespace('databaseData');
         $config            = new Setup_Models_Config();
-        $content           = $config->getDefaultProduction($databaseNamespace->data['dbUser'],
-            $databaseNamespace->data['dbPass'], $databaseNamespace->data['dbName'], 'Pdo_Mysql',
-            $databaseNamespace->data['dbHost'], $databaseNamespace->data['dbPort']);
+        $content           = $config->getDefaultProduction(
+            $databaseNamespace->data['dbUser'],
+            $databaseNamespace->data['dbPass'],
+            $databaseNamespace->data['dbName'],
+            'Pdo_Mysql',
+            $databaseNamespace->data['dbHost'],
+            $databaseNamespace->data['dbPort']
+        );
 
         $baseDir    = $this->getBaseDir();
         $configFile = $baseDir . "configuration.php";
