@@ -516,7 +516,9 @@ class IndexController extends Zend_Controller_Action
         $this->_storeCurrentProjectId($projectId);
 
         $fieldDefinition  = $this->getModelObject()->getInformation()->getFieldDefinition();
-        echo Zend_Json_Encoder::encode($fieldDefinition);
+        Phprojekt_CompressedSender::send(
+            Zend_Json_Encoder::encode($fieldDefinition)
+        );
     }
 
     /**
