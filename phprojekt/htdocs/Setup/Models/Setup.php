@@ -729,7 +729,6 @@ class Setup_Models_Setup
         if (PHP_OS == 'WIN32' || PHP_OS == 'WINNT') {
             $this->_error[] = "\"$baseDir\" should have the following rights: 0755 for folders, 0644 for files";
         } else {
-            // Root
             if (!$this->chmodRecursive($baseDir, 0755, 0644)) {
                 $this->_error[] = "\"$baseDir\" should have the following rights: 0755 for folders, 0644 for files";
             }
