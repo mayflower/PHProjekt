@@ -35,18 +35,24 @@ dojo.declare("phpr.MetadataStore", null, {
                 this._cache[module] = {};
             }
             this._cache[module][projectId] = {};
+            var url = phpr.webpath + "index.php/" + module + "/index/metadata";
             var def = dojo.xhrGet({
-                url: phpr.webpath + "index.php/" + module + "/index/metadata",
+                url: url,
                 content: {
                     csrfToken: phpr.csrfToken,
                     projectId: projectId
                 },
                 handleAs: 'json'
-            }).then(dojo.hitch(this, function (data) {
-                this._cache[module][projectId].data = data;
-                this._cache[module][projectId].deferred = undefined;
-                return data;
-            }));
+            }).then(
+                dojo.hitch(this, function (data) {
+                    this._cache[module][projectId].data = data;
+                    this._cache[module][projectId].deferred = undefined;
+                    return data;
+                }),
+                function(err) {
+                    phpr.handleError(url, 'php');
+                }
+            );
             this._cache[module][projectId].deferred = def;
             return def;
         } else if (typeof this._cache[module][projectId].data !== 'undefined') {
