@@ -54,6 +54,18 @@ class Phprojekt_Loader extends Zend_Loader
     const CLASS_PATTERN = '[A-Za-z0-9_]+';
 
     /**
+     * Adds a directory to search when autoloading.
+     *
+     * @param string $directory The directory
+     *
+     * @return void
+     */
+    public static function addIncludeDirectory($directory)
+    {
+        self::$_directories[] = $directory;
+    }
+
+    /**
      * Load a class
      *
      * @param string       $class Name of the class.

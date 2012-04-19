@@ -49,6 +49,10 @@ require_once 'Phprojekt/Loader.php';
 $autoloader = Zend_Loader_Autoloader::getInstance();
 $autoloader->pushAutoloader(array('Phprojekt_Loader', 'autoload'));
 
+Phprojekt_Loader::addIncludeDirectory(
+    realpath(PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application')
+);
+
 ini_set('max_execution_time', 0);
 error_reporting(-1);
 

@@ -409,8 +409,12 @@ class Phprojekt
         // Report all PHP errors
         error_reporting(-1);
 
-        define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
-        define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
+        if (!defined('PHPR_CORE_PATH')) {
+            define('PHPR_CORE_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application');
+        }
+        if (!defined('PHPR_LIBRARY_PATH')) {
+            define('PHPR_LIBRARY_PATH', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library');
+        }
         if (!defined('PHPR_CONFIG_FILE')) {
             define('PHPR_CONFIG_FILE', PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'configuration.php');
         }
@@ -445,10 +449,18 @@ class Phprojekt
                 . $response->getBasePath() . '/';
             $this->_config->basepath = $response->getBasePath() . '/';
         }
-        define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
-        define('PHPR_ROOT_WEB_BASE_PATH', $this->_config->basepath . 'index.php/');
-        define('PHPR_TEMP_PATH', $this->_config->tmpPath);
-        define('PHPR_USER_CORE_PATH', $this->_config->applicationPath);
+        if (!defined('PHPR_ROOT_WEB_PATH')) {
+            define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
+        }
+        if (!defined('PHPR_ROOT_WEB_BASE_PATH')) {
+            define('PHPR_ROOT_WEB_BASE_PATH', $this->_config->basepath . 'index.php/');
+        }
+        if (!defined('PHPR_TEMP_PATH')) {
+            define('PHPR_TEMP_PATH', $this->_config->tmpPath);
+        }
+        if (!defined('PHPR_USER_CORE_PATH')) {
+            define('PHPR_USER_CORE_PATH', $this->_config->applicationPath);
+        }
 
         set_include_path('.' . PATH_SEPARATOR
             . PHPR_LIBRARY_PATH . PATH_SEPARATOR
