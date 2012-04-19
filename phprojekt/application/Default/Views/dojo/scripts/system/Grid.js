@@ -327,7 +327,11 @@ dojo.declare("phpr.Default.System.Grid.cells.Time", dojox.grid.cells._Widget, {
 
         var i = this.grid.edit.info,
             d = this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
-        if (this.editable && (this.alwaysEditing || (i.rowIndex == inRowIndex && i.cell == this))) {
+        if (this.editable &&
+                (this.alwaysEditing ||
+                    (i.rowIndex == inRowIndex && i.cell == this)
+                )
+           ) {
             d = phpr.date.getIsoTime(d);
             return this.formatEditing(d, inRowIndex);
         } else {

@@ -367,10 +367,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         editable: meta[i].readOnly ? false : true
                     });
                     this.gridLayout.push({
-                        width:    '90px',
-                        name:     meta[i].label + ' (' + phpr.nls.get('Hour') + ')',
-                        field:    meta[i].key,
-                        styles:   "text-align: center;",
+                        width: '90px',
+                        name: meta[i].label + ' (' + phpr.nls.get('Hour') + ')',
+                        field: meta[i].key,
+                        styles: "text-align: center;",
                         type: phpr.Default.System.Grid.cells.Time,
                         getValue: dtTimeGetValue,
                         editable: meta[i].readOnly ? false : true
@@ -1169,16 +1169,18 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     getQuery: function() {
         var q = {};
         var state = phpr.pageManager.getState();
+        var filters = this.getFilters();
+
         if (!phpr.isGlobalModule(state.moduleName)) {
             q.projectId = state.projectId;
         }
         if (state.includeSubentries == "true") {
             q.recursive = "true";
         }
-        var filters = this.getFilters();
         if (filters.length > 0) {
             q.filters = dojo.toJson(filters);
         }
+
         return q;
     },
 

@@ -59,7 +59,7 @@ dojo.declare("phpr.Default.System.Date", null, {
         var hours, minutes;
 
         if (typeof(time) == 'object') {
-            hours    = time.getHours();
+            hours = time.getHours();
             minutes = time.getMinutes();
         } else if (dojo.isString(time)) {
             if (time.match(/^\d\d:\d\d(:\d\d)?$/)) {
