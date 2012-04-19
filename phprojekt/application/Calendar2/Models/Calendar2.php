@@ -452,6 +452,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         return $events;
     }
 
+    /**
+     * Returns the count of objects matching the query
+     *
+     * @param string $where The where-clause
+     *
+     * @return int Count of matching entries
+     */
     public function count($where = null) {
         return Phprojekt_ActiveRecord_Abstract::count($where);
     }
