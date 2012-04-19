@@ -99,10 +99,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         var getHashForCookie  = null;
 
         // Set cookies urls
-        if (phpr.isGlobalModule(phpr.module)) {
-            getHashForCookie = phpr.module;
+        if (phpr.isGlobalModule(this.main.module)) {
+            getHashForCookie = this.main.module;
         } else {
-            getHashForCookie = phpr.module + '.' + phpr.currentProjectId;
+            getHashForCookie = this.main.module + '.' + phpr.currentProjectId;
         }
         this._filterCookie     = getHashForCookie + '.filters';
         this._sortColumnCookie = getHashForCookie + ".grid.sortColumn";
@@ -117,7 +117,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
         phpr.DataStore.addStore({url: this.getActionsUrl});
         var dlist = new dojo.DeferredList([
-            phpr.MetadataStore.metadataFor(phpr.module),
+            phpr.MetadataStore.metadataFor(this.main.module),
             phpr.DataStore.requestData({url: this.getActionsUrl})
         ]);
         dlist.addCallback(dojo.hitch(this, "onLoaded"));
@@ -154,7 +154,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     getRestUrl: function() {
         // Summary:
         //    Get the url of the rest api to use
-        return phpr.webpath + 'index.php/' + phpr.module + '/' + phpr.module + '/';
+        return phpr.webpath + 'index.php/' + this.main.module + '/' + this.main.module + '/';
     },
 
     showTags: function() {
@@ -660,7 +660,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     var filterform = new phpr.Default.System.TemplateWrapper({
                         templateName: "phpr.Default.template.filters.form.html",
                         templateData: {
-                            module:  phpr.module,
+                            module:  this.main.module,
                             andTxt:  phpr.nls.get("Filter_AND"),
                             orTxt:   phpr.nls.get("Filter_OR"),
                             okTxt:   phpr.nls.get("OK")
@@ -877,7 +877,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             if (this.gridFilters.filterFieldDiv.domNode.style.display == 'none') {
                 if (this.filterField.length > 0) {
                     var fieldSelect = '<select name="filterField" dojoType="phpr.FilteringSelect" ' +
-                        'autocomplete="false" onchange="dojo.publish(\'' + phpr.module + '.gridProxy\', ' +
+                        'autocomplete="false" onchange="dojo.publish(\'' + this.main.module + '.gridProxy\', ' +
                         '[\'changeInputFilter\', this.value]); return false;">';
                     fieldSelect += '<option value=""></option>';
                     for (var i in this.filterField) {
@@ -940,7 +940,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     }
                 }
                 html += phpr.fillTemplate("phpr.Default.template.filters.display.html", {
-                    module:   phpr.module,
+                    module:   this.main.module,
                     id:       i,
                     operator: operator,
                     field:    label,
@@ -1130,7 +1130,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 var content = new phpr.Default.System.TemplateWrapper({
                     templateName: "phpr.Default.template.gridActions.html",
                     templateData: {
-                        module:        phpr.module,
+                        module:        this.main.module,
                         actions:       this.comboActions,
                         checkAllTxt:   phpr.nls.get('Check All'),
                         uncheckAllTxt: phpr.nls.get('Uncheck All')
@@ -1335,7 +1335,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    Open a new window in CSV mode
         // Description:
         //    Open a new window in CSV mode
-        window.open(phpr.webpath + 'index.php/' + phpr.module +
+        window.open(phpr.webpath + 'index.php/' + this.main.module +
                 '/index/csvList/nodeId/' + this.id +
                 '/csrfToken/' + phpr.csrfToken);
         return false;
@@ -1344,7 +1344,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     setGetExtraActionsUrl: function() {
         // Summary:
         //    Sets the url where to get the grid actions data from
-        this.getActionsUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetExtraActions';
+        this.getActionsUrl = phpr.webpath + 'index.php/' + this.main.module + '/index/jsonGetExtraActions';
     },
 
     itemsCheck: function(state) {
@@ -1473,7 +1473,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Summary:
         //    Isolated code for easy customization, this function returns the URL to be called for the requested action.
 
-        return phpr.webpath + 'index.php/' + phpr.module + '/index/' + action +
+        return phpr.webpath + 'index.php/' + this.main.module + '/index/' + action +
             '/nodeId/' + phpr.currentProjectId + '/' + idUrl + '/' + ids;
     },
 
