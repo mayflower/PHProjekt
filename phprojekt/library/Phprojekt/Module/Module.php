@@ -100,7 +100,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
      * @param Phprojekt_Model_Interface $model  The model.
      * @param array                     $params The parameters used to feed the model.
      *
-     * @throws Phprojekt_PublishedException On no valid parameters.
+     * @throws Zend_Controller_Action_Exception On no valid parameters.
      *
      * @return boolean True for a sucessful save.
      */
@@ -159,7 +159,7 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
         } else {
             $errors = $this->getError();
             $error  = array_pop($errors);
-            throw new Phprojekt_PublishedException($error['field'] . ' ' . $error['message']);
+            throw new Zend_Controller_Action_Exception($error['field'] . ' ' . $error['message'], 400);
         }
     }
 

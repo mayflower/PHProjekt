@@ -156,16 +156,15 @@ class TagController extends IndexController
      *  - string <b>moduleName</b> Name of the module.
      * </pre>
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * If there is an error, the save will return a Zend_Controller_Action_Exception,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => 0.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On missing or wrong id.
+     * @throws Zend_Controller_Action_Exception On missing or wrong id.
      *
      * @return void
      */
@@ -176,7 +175,7 @@ class TagController extends IndexController
         $string = (string) $this->getRequest()->getParam('string', '');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+            throw new Zend_Controller_Action_Exception(self::ID_REQUIRED_TEXT, 400);
         }
 
         $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
@@ -188,7 +187,6 @@ class TagController extends IndexController
 
         $return = array('type'    => 'success',
                         'message' => $message,
-                        'code'    => 0,
                         'id'      => 0);
 
         Phprojekt_Converter_Json::echoConvert($return);
@@ -207,16 +205,15 @@ class TagController extends IndexController
      *  - string <b>moduleName</b> Name of the module.
      * </pre>
      *
-     * If there is an error, the delete will return a Phprojekt_PublishedException,
+     * If there is an error, the delete will return a Zend_Controller_Action_Exception,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => 0.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On missing or wrong id.
+     * @throws Zend_Controller_Action_Exception On missing or wrong id.
      *
      * @return void
      */
@@ -226,7 +223,7 @@ class TagController extends IndexController
         $id     = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+            throw new Zend_Controller_Action_Exception(self::ID_REQUIRED_TEXT, 400);
         }
 
         $module   = Cleaner::sanitize('alnum', $this->getRequest()->getParam('moduleName', 'Project'));
@@ -238,7 +235,6 @@ class TagController extends IndexController
 
         $return = array('type'    => 'success',
                         'message' => $message,
-                        'code'    => 0,
                         'id'      => 0);
 
         Phprojekt_Converter_Json::echoConvert($return);

@@ -249,7 +249,7 @@ class Helpdesk_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         try {
             $this->front->dispatch($this->request, $this->response);
-        } catch (Phprojekt_PublishedException $error) {
+        } catch (Zend_Controller_Action_Exception $error) {
             $expectedErrorMsg = Phprojekt::getInstance()->translate(Helpdesk_IndexController::NOT_FOUND);
             $this->assertEquals(0, $error->getCode());
             $this->assertEquals($expectedErrorMsg, $error->message);

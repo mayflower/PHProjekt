@@ -84,7 +84,7 @@ class Core_UpgradeController extends Core_IndexController
     public function upgradeAction()
     {
         if (!Phprojekt_Auth::isAdminUser()) {
-            throw new Phprojekt_PublishedException('Insufficient rights.', 500);
+            throw new Zend_Controller_Action_Exception('Insufficient rights.', 403);
         }
 
         $extensions = new Phprojekt_Extensions(PHPR_CORE_PATH);
@@ -107,7 +107,7 @@ class Core_UpgradeController extends Core_IndexController
     public function jsonUpgradeAction()
     {
         if (!Phprojekt_Auth::isAdminUser()) {
-            throw new Phprojekt_PublishedException('Insufficient rights.', 500);
+            throw new Zend_Controller_Action_Exception('Insufficient rights.', 403);
         }
 
         $extensions = new Phprojekt_Extensions(PHPR_CORE_PATH);

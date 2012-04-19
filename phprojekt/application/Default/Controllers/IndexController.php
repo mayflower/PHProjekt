@@ -137,6 +137,22 @@ class IndexController extends Zend_Controller_Action
     const DISABLE_FRONTEND_MESSAGES_FALSE_TEXT = "No settings were disabled!";
 
     /**
+     * Initialize our controller and disable the viewRenderer.
+     *
+     * Try to detect ajax requests and set the format so we can use json templates.
+     *
+     * @return void
+     */
+    public function init()
+    {
+        $this->_helper->viewRenderer->setNoRender();
+        // check for ajax request, if ajax, send json, if not, send html page
+        if ($this->getRequest()->getHeader('X-Requested-With') === 'XMLHttpRequest') {
+            $this->getRequest()->setParam('format', 'json');
+        }
+    }
+
+    /**
      * Init function.
      *
      * Checks if it is a logged user, if not,
@@ -144,7 +160,7 @@ class IndexController extends Zend_Controller_Action
      *
      * The function sets up the helper and cleans all the variables.
      *
-     * @throws Phprojekt_PublishedException If the user is not logged in and the request is a POST.
+     * @throws Zend_Controller_Action_Exception If the user is not logged in and the request is a POST.
      *
      * @return void
      */
@@ -180,8 +196,6 @@ class IndexController extends Zend_Controller_Action
             }
         }
 
-        // This is a work around as we cannot set this in the front
-        $this->_helper->viewRenderer->setNoRender();
         $this->view->clearVars();
         $this->view->isLoggedIn = $isLoggedIn;
 
@@ -315,7 +329,7 @@ class IndexController extends Zend_Controller_Action
      * The function needs at least one parameter
      * (The array of parameters itself for return it).
      *
-     * @throws Phprojekt_PublishedException If the arguments are missing.
+     * @throws Zend_Controller_Action_Exception If the arguments are missing.
      *
      * @return array
      */
@@ -341,7 +355,7 @@ class IndexController extends Zend_Controller_Action
         $projectId = (int) $this->getRequest()->getParam("nodeId");
 
         if (empty($projectId)) {
-            throw new Phprojekt_PublishedException(self::NODEID_REQUIRED_TEXT);
+            throw new Zend_Controller_Action_Exception(self::NODEID_REQUIRED_TEXT, 400);
         } else {
             Phprojekt::setCurrentProjectId($projectId);
         }
@@ -569,16 +583,15 @@ class IndexController extends Zend_Controller_Action
      *  - mixed   <b>all other module fields</b> All the fields values to save.
      * </pre>
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * If there is an error, the save will return a Zend_Controller_Action_Exception,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => Id of the item.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
+     * @throws Zend_Controller_Action_Exception On error in the action save or wrong id.
      *
      * @return void
      */
@@ -603,7 +616,6 @@ class IndexController extends Zend_Controller_Action
 
             $return = array('type'    => 'success',
                             'message' => $message,
-                            'code'    => 0,
                             'id'      => $model->id);
 
             Phprojekt_Converter_Json::echoConvert($return);
@@ -626,7 +638,6 @@ class IndexController extends Zend_Controller_Action
      * <pre>
      *  - type    => 'success' or 'error'.
      *  - message => Success or error message.
-     *  - code    => 0.
      *  - id      => Comma separated ids of the items.
      * </pre>
      *
@@ -646,7 +657,7 @@ class IndexController extends Zend_Controller_Action
             try {
                 Default_Helpers_Save::save($model, $params);
                 $showId[] = $id;
-            } catch (Phprojekt_PublishedException $error) {
+            } catch (Zend_Controller_Action_Exception $error) {
                 $message = sprintf("ID %d. %s", $id, $error->getMessage());
                 $success = false;
                 $showId  = array($id);
@@ -663,7 +674,6 @@ class IndexController extends Zend_Controller_Action
 
         $return = array('type'    => $resultType,
                         'message' => $message,
-                        'code'    => 0,
                         'id'      => implode(',', $showId));
 
         Phprojekt_Converter_Json::echoConvert($return);
@@ -681,11 +691,10 @@ class IndexController extends Zend_Controller_Action
      * <pre>
      *  - type    => 'success' or 'error'.
      *  - message => Success or error message.
-     *  - code    => 0.
      *  - id      => id of the deleted item.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On missing or wrong id, or on error in the action delete.
+     * @throws Zend_Controller_Action_Exception On missing or wrong id, or on error in the action delete.
      *
      * @return void
      */
@@ -694,7 +703,7 @@ class IndexController extends Zend_Controller_Action
         $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+            throw new Zend_Controller_Action_Exception(self::ID_REQUIRED_TEXT, 400);
         }
 
         $model = $this->getModelObject()->find($id);
@@ -710,12 +719,11 @@ class IndexController extends Zend_Controller_Action
             }
             $return = array('type'    => $resultType,
                             'message' => $message,
-                            'code'    => 0,
                             'id'      => $id);
 
             Phprojekt_Converter_Json::echoConvert($return);
         } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
         }
     }
 
@@ -727,16 +735,15 @@ class IndexController extends Zend_Controller_Action
      *  - string <b>ids</b> Comma separated ids of the item to delete.
      * </pre>
      *
-     * If there is an error, the delete will return a Phprojekt_PublishedException,
+     * If there is an error, the delete will return a Zend_Controller_Action_Exception,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => Comma separated ids of the items.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the action delete.
+     * @throws Zend_Controller_Action_Exception On error in the action delete.
      *
      * @return void
      */
@@ -760,7 +767,6 @@ class IndexController extends Zend_Controller_Action
 
             $return = array('type'    => 'success',
                             'message' => $message,
-                            'code'    => 0,
                             'id'      => implode(',', $showId));
 
             Phprojekt_Converter_Json::echoConvert($return);
@@ -962,7 +968,6 @@ class IndexController extends Zend_Controller_Action
 
         $return = array('type'    => $resultType,
                         'message' => $message,
-                        'code'    => 0,
                         'id'      => 0);
 
         Phprojekt_Converter_Json::echoConvert($return);

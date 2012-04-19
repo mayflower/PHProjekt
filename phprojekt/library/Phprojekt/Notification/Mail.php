@@ -208,7 +208,7 @@ class Phprojekt_Notification_Mail extends Phprojekt_Mail
         try {
             $this->send($smtpTransport);
         } catch(Exception $e) {
-            throw new Phprojekt_PublishedException('SMTP error: ' . $e->getMessage());
+            throw new Zend_Controller_Action_Exception('SMTP error: ' . $e->getMessage(), 422);
         }
     }
 }

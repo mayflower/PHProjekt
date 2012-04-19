@@ -100,15 +100,13 @@ class Calendar2_IndexController extends IndexController
         $userId = $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('int', $userId)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid userId '$userId'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid userId '$userId'", 400);
         }
 
         $userId = (int) $userId;
 
         if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById($userId)) {
-            throw new Phprojekt_PublishedException("Current user has no proxy rights for this user $userId");
+            throw new Zend_Controller_Action_Exception("Current user has no proxy rights for this user $userId", 403);
         } else {
             Phprojekt_Auth_Proxy::switchToUserById($userId);
         }
@@ -133,25 +131,21 @@ class Calendar2_IndexController extends IndexController
         $userId    = $this->getRequest()->getParam('userId', (int) Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('isoDate', $dateStart)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid dateStart '$dateStart'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid dateStart '$dateStart'", 400);
         }
 
         if (!Cleaner::validate('isoDate', $dateEnd)) {
-            throw new Phprojekt_PublishedException("Invalid dateEnd $dateEnd");
+            throw new Zend_Controller_Action_Exception("Invalid dateEnd $dateEnd", 400);
         }
 
         if (!Cleaner::validate('int', $userId)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid userId '$userId'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid userId '$userId'", 400);
         }
 
         $userId = (int) $userId;
 
         if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById($userId)) {
-            throw new Phprojekt_PublishedException("Current user has no proxy rights for this user $userId");
+            throw new Zend_Controller_Action_Exception("Current user has no proxy rights for this user $userId", 403);
         } else {
             Phprojekt_Auth_Proxy::switchToUserById($userId);
         }
@@ -183,9 +177,7 @@ class Calendar2_IndexController extends IndexController
     {
         $date = $this->getRequest()->getParam('date');
         if (!Cleaner::validate('isoDate', $date)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid date '$date'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid date '$date'", 400);
         }
 
         $this->getRequest()->setParam('dateStart', $date);
@@ -222,11 +214,11 @@ class Calendar2_IndexController extends IndexController
         $users = explode(',', $users);
 
         if (!Cleaner::validate('isoDate', $date)) {
-            throw new Phprojekt_PublishedException("Invalid date '$date'");
+            throw new Zend_Controller_Action_Exception("Invalid date '$date'", 400);
         }
         foreach ($users as $index => $user) {
             if (!Cleaner::validate('int', $user)) {
-                throw new Phprojekt_PublishedException("Invalid user '$user'");
+                throw new Zend_Controller_Action_Exception("Invalid user '$user'", 400);
             }
             $users[$index] = (int) $user;
         }
@@ -281,16 +273,15 @@ class Calendar2_IndexController extends IndexController
      *  - mixed   <b>other module fields</b> All the fields values to save.
      * </pre>
      *
-     * If there is an error, the save will throw a Phprojekt_PublishedException,
+     * If there is an error, the save will throw a Zend_Controller_Action_Exception,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => Id of the item.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error or wrong id.
+     * @throws Zend_Controller_Action_Exception On error or wrong id.
      *
      * @return void
      */
@@ -304,20 +295,16 @@ class Calendar2_IndexController extends IndexController
         if (!Cleaner::validate('int', $id, true)
                 && 'null'      !== $id
                 && 'undefined' !== $id) {
-            throw new Phprojekt_PublishedException("Invalid id '$id'");
+            throw new Zend_Controller_Action_Exception("Invalid id '$id'", 400);
         }
         $id = (int) $id;
 
         if (!empty($id) && !self::_validateTimestamp($occurrence)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid occurrence '$occurrence'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid occurrence '$occurrence'", 400);
         }
 
         if (!Cleaner::validate('int', $userId)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid userId '$userId'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid userId '$userId'", 400);
         }
 
         $userId = (int) $userId;
@@ -327,17 +314,13 @@ class Calendar2_IndexController extends IndexController
         if ('1' === $sendNotifications) {
             $sendNotifications = 'true';
         } else if (!Cleaner::validate('boolean', $sendNotifications)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid value for sendNotification '$sendNotifications'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid value for sendNotification '$sendNotifications'", 400);
         }
 
         $sendNotifications = ($sendNotifications == 'true') ? true : false;
 
         if (!Phprojekt_Auth_Proxy::hasProxyRightForUserById($userId)) {
-            throw new Phprojekt_PublishedException(
-                "You are not allowed to do this"
-            );
+            throw new Zend_Controller_Action_Exception("Current user has no proxy rights for this user $userId", 403);
         } else {
             Phprojekt_Auth_Proxy::switchToUserById($userId);
         }
@@ -360,9 +343,7 @@ class Calendar2_IndexController extends IndexController
         } else if ($model->ownerId == Phprojekt_Auth_Proxy::getEffectiveUserId()) {
             $newId = $this->_saveAction($model, $params);
         } else {
-            throw new Phprojekt_PublishedException(
-                "User did not have the right to modify this item."
-            );
+            throw new Zend_Controller_Action_Exception("User did not have the right to modify this item.", 400);
         }
 
         if ($sendNotifications) {
@@ -374,7 +355,6 @@ class Calendar2_IndexController extends IndexController
             array(
                 'type'    => 'success',
                 'message' => $message,
-                'code'    => 0,
                 'id'      => $newId
             )
         );
@@ -394,7 +374,6 @@ class Calendar2_IndexController extends IndexController
      * <pre>
      *  - type    => 'success' or 'error'.
      *  - message => Success or error message.
-     *  - code    => 0.
      *  - id      => Comma separated ids of the items.
      * </pre>
      *
@@ -413,7 +392,7 @@ class Calendar2_IndexController extends IndexController
         foreach ($data as $id => $occurrences) {
             foreach ($occurrences as $recurrenceId => $fields) {
                 if ($recurrenceId == 'undefined') {
-                    throw new Phprojekt_PublishedException('\'undefined\' given as recurrence id!');
+                    throw new Zend_Controller_Action_Exception('\'undefined\' given as recurrence id!', 400);
                 }
 
                 $model->findWithRecurrenceId($id, $recurrenceId);
@@ -439,7 +418,6 @@ class Calendar2_IndexController extends IndexController
         $return = array(
             'type'               => $resultType,
             'message'            => $message,
-            'code'               => 0,
             'id'                 => implode(',', $showId),
             'changedOccurrences' => $changedOccurrences
         );
@@ -478,15 +456,13 @@ class Calendar2_IndexController extends IndexController
         if (!Cleaner::validate('int', $id)
                 && 'null'      !== $id
                 && 'undefined' !== $id) {
-            throw new Phprojekt_PublishedException("Invalid id '$id'");
+            throw new Zend_Controller_Action_Exception("Invalid id '$id'", 400);
         }
 
         $id = (int) $id;
 
         if (!Cleaner::validate('int', $userId)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid userId '$userId'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid userId '$userId'", 400);
         }
 
         $userId = (int) $userId;
@@ -497,9 +473,7 @@ class Calendar2_IndexController extends IndexController
             try {
                 $occurrence = new Datetime($occurrence, new DateTimeZone('UTC'));
             } catch (Exception $e) {
-                throw new Phprojekt_PublishedException(
-                    "Invalid occurrence timestamp '$occurrence'"
-                );
+                throw new Zend_Controller_Action_Exception("Invalid occurrence timestamp '$occurrence'", 400);
             }
         }
         $this->setCurrentProjectId();
@@ -547,11 +521,10 @@ class Calendar2_IndexController extends IndexController
      * <pre>
      *  - type    => 'success' or 'error'.
      *  - message => Success or error message.
-     *  - code    => 0.
      *  - id      => id of the deleted item.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On wrong parameters.
+     * @throws Zend_Controller_Action_Exception On wrong parameters.
      *
      * @return void
      */
@@ -569,24 +542,18 @@ class Calendar2_IndexController extends IndexController
         );
 
         if (!Cleaner::validate('int', $id)) {
-            throw new Phprojekt_PublishedException("Invalid id '$id'");
+            throw new Zend_Controller_Action_Exception("Invalid id '$id'", 400);
         }
         if (!self::_validateTimestamp($occurrence)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid occurrence timestamp '$occurrence'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid occurrence timestamp '$occurrence'", 400);
         }
         if (!Cleaner::validate('boolean', $multiple)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid multiple '$multiple'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid multiple '$multiple'", 400);
         }
         if ('1' === $sendNotifications) {
             $sendNotifications = 'true';
         } else if (!Cleaner::validate('boolean', $sendNotifications)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid value for sendNotification '$sendNotifications'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid value for sendNotification '$sendNotifications'", 400);
         }
         $sendNotifications = ($sendNotifications == 'true') ? true : false;
 
@@ -621,7 +588,6 @@ class Calendar2_IndexController extends IndexController
                 'message' => Phprojekt::getInstance()->translate(
                     self::DELETE_TRUE_TEXT
                 ),
-                'code'    => 0,
                 'id'      => $id
             )
         );
@@ -646,18 +612,14 @@ class Calendar2_IndexController extends IndexController
         $end   = $this->getRequest()->getParam('end');
 
         if (!Cleaner::validate('int', $user)) {
-            throw new Phprojekt_PublishedException("Invalid user id '$id'");
+            throw new Zend_Controller_Action_Exception("Invalid user id '$id'", 400);
         }
         $user = (int) $user;
         if (!self::_validateTimestamp($start)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid start timestamp '$start'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid start timestamp '$start'", 400);
         }
         if (!self::_validateTimestamp($end)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid end timestamp '$start'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid end timestamp '$start'", 400);
         }
         $start = new Datetime($start, $this->_getUserTimezone());
         $end   = new Datetime($end, $this->_getUserTimezone());
@@ -703,18 +665,14 @@ class Calendar2_IndexController extends IndexController
         $end   = $this->getRequest()->getParam('end');
 
         if (!Cleaner::validate('int', $user)) {
-            throw new Phprojekt_PublishedException("Invalid id '$id'");
+            throw new Zend_Controller_Action_Exception("Invalid id '$id'", 400);
         }
         $user = (int) $user;
         if (!self::_validateTimestamp($start)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid start timestamp '$start'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid start timestamp '$start'", 400);
         }
         if (!self::_validateTimestamp($end)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid end timestamp '$start'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid end timestamp '$start'", 400);
         }
         $start = new Datetime($start, $this->_getUserTimezone());
         $end   = new Datetime($end, $this->_getUserTimezone());
@@ -745,7 +703,7 @@ class Calendar2_IndexController extends IndexController
      *
      * @return int The id of the (new) model object.
      *
-     * @throws Phprojekt_PublishedException On malformed $params content.
+     * @throws Zend_Controller_Action_Exception On malformed $params content.
      */
     private function _updateConfirmationStatusAction($model, $params)
     {
@@ -756,14 +714,10 @@ class Calendar2_IndexController extends IndexController
 
         if (!Cleaner::validate('int', $status)
                 || !Calendar2_Models_Calendar2::isValidStatus((int) $status)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid confirmationStatus '$status'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid confirmationStatus '$status'", 400);
         }
         if (!Cleaner::validate('boolean', $multiple)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid multiple '$multiple'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid multiple '$multiple'", 400);
         }
 
         $status   = (int) $status;
@@ -810,48 +764,38 @@ class Calendar2_IndexController extends IndexController
             : 'true';
 
         if (!is_array($participants)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid newParticipants '$participants'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid newParticipants '$participants'", 400);
         }
         foreach ($participants as $p) {
             if (!Cleaner::validate('int', $p)) {
                 //TODO: Check if the participant exists? Many db calls, little
                 //      gain...
-                throw new Phprojekt_PublishedException(
-                    "Invalid participant $p"
-                );
+                throw new Zend_Controller_Action_Exception("Invalid participant $p", 400);
             }
         }
         if (!self::_validateTimestamp($start)) {
-            throw new Phprojekt_PublishedException("Invalid start '$start'");
+            throw new Zend_Controller_Action_Exception("Invalid start '$start'", 400);
         }
         if (!self::_validateTimestamp($end)) {
-            throw new Phprojekt_PublishedException("Invalid end '$end'");
+            throw new Zend_Controller_Action_Exception("Invalid end '$end'", 400);
         }
         if (!Cleaner::validate('int', $visibility)
                 || !Calendar2_Models_Calendar2::isValidVisibility(
                     (int) $visibility
                 )) {
-            throw new Phprojekt_PublishedException(
-                "Invalid visibility '$visibility'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid visibility '$visibility'", 400);
         }
 
         $visibility = (int) $visibility;
 
         if (!Cleaner::validate('int', $params['userId'])) {
-            throw new Phprojekt_PublishedException(
-                "Invalid userId " . $params['userId']
-            );
+            throw new Zend_Controller_Action_Exception("Invalid userId " . $params['userId'], 400);
         }
 
         $params['userId'] = (int) $params['userId'];
 
         if (!Cleaner::validate('boolean', $multiple)) {
-            throw new Phprojekt_PublishedException(
-                "Invalid multiple '$multiple'"
-            );
+            throw new Zend_Controller_Action_Exception("Invalid multiple '$multiple'", 400);
         }
 
         $multiple = ('true' == strtolower($multiple));

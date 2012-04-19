@@ -59,16 +59,15 @@ class Core_ModuleController extends Core_IndexController
      *  - mixed   <b>all other module fields</b> All the fields values to save.
      * </pre>
      *
-     * If there is an error, the save will return a Phprojekt_PublishedException,
+     * If there is an error, the save will return a Zend_Controller_Action_Exception,
      * if not, it returns a string in JSON format with:
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => Id of the module.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the action save.
+     * @throws Zend_Controller_Action_Exception On error in the action save.
      *
      * @return void
      */
@@ -98,7 +97,6 @@ class Core_ModuleController extends Core_IndexController
 
         $return = array('type'    => 'success',
                         'message' => $message,
-                        'code'    => 0,
                         'id'      => $model->id);
 
         Phprojekt_Converter_Json::echoConvert($return);
@@ -150,11 +148,10 @@ class Core_ModuleController extends Core_IndexController
      * <pre>
      *  - type    => 'success'.
      *  - message => Success message.
-     *  - code    => 0.
      *  - id      => id of the deleted item.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On missing or wrong id, or on error in the action delete.
+     * @throws Zend_Controller_Action_Exception On missing or wrong id, or on error in the action delete.
      *
      * @return void
      */
@@ -163,14 +160,14 @@ class Core_ModuleController extends Core_IndexController
         $id = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
-            throw new Phprojekt_PublishedException(self::ID_REQUIRED_TEXT);
+            throw new Zend_Controller_Action_Exception(self::ID_REQUIRED_TEXT, 400);
         }
 
         $model = $this->getModelObject()->find($id);
 
         if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
             if (is_dir(PHPR_CORE_PATH . $model->name)) {
-                throw new Phprojekt_PublishedException(self::CAN_NOT_DELETE_SYSTEM_MODULE);
+                throw new Zend_Controller_Action_Exception(self::CAN_NOT_DELETE_SYSTEM_MODULE, 422);
             }
 
             $databaseModel = Phprojekt_Loader::getModel($model->name, $model->name);
@@ -197,12 +194,11 @@ class Core_ModuleController extends Core_IndexController
 
             $return = array('type'    => $type,
                             'message' => $message,
-                            'code'    => 0,
                             'id'      => $id);
 
             Phprojekt_Converter_Json::echoConvert($return);
         } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
         }
     }
 }

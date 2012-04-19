@@ -43,7 +43,7 @@ class Core_AdministrationController extends Core_IndexController
      * Only admin users can access to these actions,
      * if the user is not an admin, is redirected to the login form or throws an exception.
      *
-     * @throws Phprojekt_PublishedException If the user is not an admin.
+     * @throws Zend_Controller_Action_Exception If the user is not an admin.
      *
      * @return void
      */
@@ -126,11 +126,10 @@ class Core_AdministrationController extends Core_IndexController
      * <pre>
      *  - type    => 'success' or 'error'.
      *  - message => Success or error message.
-     *  - code    => 0.
      *  - id      => 0.
      * </pre>
      *
-     * @throws Phprojekt_PublishedException On error in the action save or wrong id.
+     * @throws Zend_Controller_Action_Exception On error in the action save or wrong id.
      *
      * @return void
      */
@@ -154,7 +153,6 @@ class Core_AdministrationController extends Core_IndexController
 
         $return = array('type'    => $type,
                         'message' => $message,
-                        'code'    => 0,
                         'id'      => 0);
 
         Phprojekt_Converter_Json::echoConvert($return);

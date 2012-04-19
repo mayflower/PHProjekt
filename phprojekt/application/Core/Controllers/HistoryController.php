@@ -56,7 +56,7 @@ class Core_HistoryController extends Core_IndexController
      *
      * The return is in JSON format.
      *
-     * @throws Phprojekt_PublishedException On missing or wrong moduleId or itemId.
+     * @throws Zend_Controller_Action_Exception On missing or wrong moduleId or itemId.
      *
      * @return void
      */
@@ -75,7 +75,7 @@ class Core_HistoryController extends Core_IndexController
         }
 
         if (empty($itemId) || empty($moduleId)) {
-            throw new Phprojekt_PublishedException("Invalid module or item");
+            throw new Zend_Controller_Action_Exception("Invalid module or item", 400);
         } else {
             $history = new Phprojekt_History();
             $data    = $history->getHistoryData(null, $itemId, $moduleId, $startDate, $endDate, $userId);
