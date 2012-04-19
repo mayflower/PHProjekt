@@ -608,7 +608,7 @@ class IndexController extends Zend_Controller_Action
 
             Phprojekt_Converter_Json::echoConvert($return);
         } else {
-            throw new Phprojekt_PublishedException(self::NOT_FOUND);
+            throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
         }
     }
 
