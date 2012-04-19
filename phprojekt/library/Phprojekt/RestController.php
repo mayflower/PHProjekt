@@ -95,7 +95,9 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
         $end = min($end, $recordCount);
         $this->getResponse()->setHeader('Content-Range', "items {$start}-{$end}/{$recordCount}");
-        echo Zend_Json_Encoder::encode(Phprojekt_Model_Converter::convertModels($records));
+        Phprojekt_CompressedSender::send(
+            Zend_Json_Encoder::encode(Phprojekt_Model_Converter::convertModels($records))
+        );
     }
 
     public function getAction()
@@ -106,7 +108,9 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
             $record = $record->find($id);
         }
 
-        echo Zend_Json_Encoder::encode(Phprojekt_Model_Converter::convertModel($record));
+        Phprojekt_CompressedSender::send(
+            Zend_Json_Encoder::encode(Phprojekt_Model_Converter::convertModel($record))
+        );
     }
 
     public function postAction()
@@ -142,7 +146,9 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         }
         $model->save();
 
-        echo Zend_Json_Encoder::encode($model->toArray());
+        Phprojekt_CompressedSender::send(
+            Zend_Json_Encoder::encode($model->toArray())
+        );
     }
 
     public function deleteAction()
