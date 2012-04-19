@@ -26,7 +26,9 @@ dojo.declare("phpr.MetadataStore", null, {
     _cache: {},
 
     metadataFor: function(module, projectId) {
-        projectId = projectId || phpr.currentProjectId;
+        if (projectId === undefined) {
+            throw "No projectId provided in phpr.Metadatastore::metadataFor!";
+        }
 
         if (typeof this._cache[module] == 'undefined' || typeof this._cache[module][projectId] == "undefined") {
             if (typeof this._cache[module] == 'undefined') {
