@@ -4,8 +4,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>PHProjekt</title>
-    <link rel="favicon" href="<?php echo $this->webpath ?>img/favicon.ico"></link>
-    <link rel="shortcut icon" href="<?php echo $this->webpath ?>img/favicon.ico"></link>
+    <link rel="favicon" href="<?php echo $this->webpath ?>img/favicon.ico" />
+    <link rel="shortcut icon" href="<?php echo $this->webpath ?>img/favicon.ico" />
     <link href="<?php echo $this->webpath; ?>min/min/?g=phprojekt" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript">
@@ -46,12 +46,12 @@
     <?php
     }
     ?>
+    <?php
+        if (true !== $this->isLoggedIn) {
+    ?>
     <script type="text/javascript">
         // This variable is needed to be able to clear an existing interval.
         dojo.addOnLoad(function() {
-            <?php
-            if (true !== $this->isLoggedIn) {
-            ?>
                 dojo.byId('hash').value = <?php
                 if ($this->hash) {
                     echo '"' . $this->hash . '"';
@@ -61,12 +61,11 @@
                 ?>;
                 dojo.byId('username').focus();
                 dojo.byId('username').select();
-            <?php
-            } else {
-            }
-            ?>
         });
     </script>
+    <?php
+        }
+    ?>
 </head>
 <body class="phprojekt">
     <?php
