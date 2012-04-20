@@ -33,7 +33,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
     // Internal var for keep the itemStatus value
     _itemStatus: 0,
 
-    initData:function() {
+    initData: function() {
         // Summary:
         //    Init all the data before draw the form
         // Description:
@@ -46,7 +46,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
         }
     },
 
-    addModuleTabs:function(data) {
+    addModuleTabs: function(data) {
         // Summary:
         //    Add default module tabs plus Items and mail tabs
         // Description:
@@ -62,7 +62,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
         return def;
     },
 
-    addMailTab:function(data) {
+    addMailTab: function(data) {
         // Summary:
         //    Mail tab
         // Description:
@@ -88,8 +88,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
             this.garbageCollector.addEvent(
                 dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick', dojo.hitch(this, function() {
                     phpr.send({
-                        url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId
-                        + '/id/' + this.id,
+                        url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId +
+                            '/id/' + this.id,
                         content: dijit.byId('mailFormTab').get('value')
                     }).then(dojo.hitch(this, function(data) {
                         if (data) {
@@ -100,13 +100,13 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
 
             this.garbageCollector.addEvent(
                 dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', dojo.hitch(this, function() {
-                    window.open(phpr.webpath + 'index.php/Minutes/index/pdf/nodeId/' + phpr.currentProjectId
-                        + '/id/' + this.id + '/csrfToken/' + phpr.csrfToken, 'pdf');
+                    window.open(phpr.webpath + 'index.php/Minutes/index/pdf/nodeId/' + phpr.currentProjectId +
+                        '/id/' + this.id + '/csrfToken/' + phpr.csrfToken, 'pdf');
                 })));
         }));
     },
 
-    postRenderForm:function() {
+    postRenderForm: function() {
         // Summary:
         //    Keep the itemStatus value for future use
         this.inherited(arguments);
@@ -132,8 +132,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
                 if (!this._allowSubmit) {
                     this.displayConfirmDialog({
                         title:   phpr.nls.get('Unfinalize Minutes'),
-                        message: phpr.nls.get('Are you sure this Minutes entry should no longer be finalized?')
-                            + '<br />' + phpr.nls.get('After proceeding, changes to the data will be possible again.')
+                        message: phpr.nls.get('Are you sure this Minutes entry should no longer be finalized?') +
+                            '<br />' + phpr.nls.get('After proceeding, changes to the data will be possible again.')
                     });
                     result = false;
                 }
@@ -143,8 +143,8 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
                 if (!this._allowSubmit) {
                     this.displayConfirmDialog({
                         title:   phpr.nls.get('Finalize Minutes'),
-                        message: phpr.nls.get('Are you sure this Minutes entry should be finalized?')
-                            + '<br />' + phpr.nls.get('Write access will be prohibited!')
+                        message: phpr.nls.get('Are you sure this Minutes entry should be finalized?') +
+                            '<br />' + phpr.nls.get('Write access will be prohibited!')
                     });
                     result = false;
                 }
@@ -153,9 +153,9 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
                 // informal message that form can't be saved.
                 this.displayConfirmDialog({
                     title:   phpr.nls.get('Minutes are finalized'),
-                    message: phpr.nls.get('This Minutes entry is finalized.')
-                        + '<br />' + phpr.nls.get('Editing data is no longer possible.')
-                        + '<br />' + phpr.nls.get('Your changes have not been saved.'),
+                    message: phpr.nls.get('This Minutes entry is finalized.') +
+                        '<br />' + phpr.nls.get('Editing data is no longer possible.') +
+                        '<br />' + phpr.nls.get('Your changes have not been saved.'),
                     displayButtons: false
                 });
                 result = false;
@@ -221,7 +221,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
         confirmDialog.show();
     },
 
-    updateData:function() {
+    updateData: function() {
         // Summary:
         //    Delete the cache for this form
         // Description:
