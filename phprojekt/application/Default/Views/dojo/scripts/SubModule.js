@@ -101,19 +101,25 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
         // Description:
         //    Create the divs for contain the grid and the form
 
+        var container = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.form.singleTableRow.html"
+        });
+
         // we need a fixed height here because the form rendering flow is still inherently broken
         // subforms cannot determine it's height because their rendering is triggered after the outer form
         // is build.
         this.borderContainer = new dijit.layout.BorderContainer({
             design: 'sidebar',
             style: 'height: 400px; width: 100%;'
-        }, document.createElement('div'));
+        });
 
         this._buildForm();
         this._renderSubModule();
 
+        container.containerNode.appendChild(this.borderContainer.domNode);
+
         return main.addTab(
-            [this.borderContainer],
+            [container],
             'tab' + this.module,
             phpr.nls.get(this.module, this.module),
             this.module + 'FormTab'
@@ -122,13 +128,12 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
 
     _buildForm: function() {
         this.overviewBox = new dijit.layout.ContentPane({
-            region: 'center',
-            style:  'width: 50%; height: 100%;'
+            region: 'center'
         }, document.createElement('div'));
 
         this.detailsBox = new dijit.layout.ContentPane({
             region: 'right',
-            style:  'width: 50%; height: 100%;'
+            style:  'width: 50%;'
         }, document.createElement('div'));
 
         this.borderContainer.addChild(this.overviewBox);
