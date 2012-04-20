@@ -67,22 +67,46 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
         //    Mail tab
         // Description:
         //    Display options for sending Minutes per mail
-        var mailForm = new phpr.Default.System.TemplateWrapper({
-            templateName: "phpr.Minutes.template.minutesMailForm.html",
+        var widgets = [];
+        widgets.push(new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Minutes.template.mail.recipients.html",
             templateData: {
                 'id':            this.id,
                 'people':        phpr.DataStore.getData({url: this._peopleUrl}),
-                'lblRecipients': phpr.nls.get('Recipients'),
+                'lblRecipients': phpr.nls.get('Recipients')
+            }
+        }));
+
+        widgets.push(new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Minutes.template.mail.additionalRecipients.html",
+            templateData: {
                 'lblAdditional': phpr.nls.get('Additional Recipients'),
-                'lblTooltip':    phpr.nls.get('Email addresses of unlisted recipients, comma-separated.'),
+                'lblTooltip':    phpr.nls.get('Email addresses of unlisted recipients, comma-separated.')
+            }
+        }));
+
+        widgets.push(new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Minutes.template.mail.options.html",
+            templateData: {
                 'lblOptions':    phpr.nls.get('Options'),
-                'lblAttachPdf':  phpr.nls.get('Include PDF attachment'),
+                'lblAttachPdf':  phpr.nls.get('Include PDF attachment')
+            }
+        }));
+
+        widgets.push(new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Minutes.template.mail.buttons.html",
+            templateData: {
                 'lblSendMail':   phpr.nls.get('Send mail'),
                 'lblPreview':    phpr.nls.get('Preview')
             }
-        });
+        }));
 
-        var def = this.addTab([mailForm], 'tabMail', 'Mail', 'mailFormTab');
+        var l = widgets.length;
+        for (var i = 0; i < l; i++) {
+            this.garbageCollector.addNode(widgets[i]);
+        }
+
+        var def = this.addTab(widgets, 'tabMail', 'Mail', 'mailFormTab');
 
         return def.then(dojo.hitch(this, function() {
             this.garbageCollector.addEvent(
