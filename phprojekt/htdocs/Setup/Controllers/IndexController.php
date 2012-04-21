@@ -80,11 +80,7 @@ class IndexController extends Zend_Controller_Action
         try {
             $this->_setup = new Setup_Models_Setup();
             $message      = $this->_setup->getMessage();
-            if (!empty($message)) {
-                $this->view->message = $message;
-            } else {
-                $this->view->success = "Server OK";
-            }
+            $this->view->message = $message;
         } catch (Exception $error) {
             $this->view->error = explode("\n", $error->getMessage());
         }
@@ -97,6 +93,17 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
+        try {
+            $this->_setup->checkServer();
+            $message = $this->_setup->getMessage();
+            if (!empty($message)) {
+                $this->view->message = $message;
+            } else {
+                $this->view->success = "Server OK";
+            }
+        } catch (Exception $error) {
+            $this->view->error = explode("\n", $error->getMessage());
+        }
         $this->view->template = $this->view->render('server.phtml');
         $this->render('index');
     }
@@ -349,8 +356,9 @@ class IndexController extends Zend_Controller_Action
                             $type    = 'success';
                         } else {
                             $message = $error;
-  	                        $type    = 'notice';
+                            $type    = 'notice';
                         }
+                        $this->_setup->writeConfigFile();
                     } else {
                         $error   = $this->_setup->getError();
                         $message = array_shift($error);
