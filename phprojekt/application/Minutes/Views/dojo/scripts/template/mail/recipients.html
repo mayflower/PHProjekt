@@ -1,0 +1,19 @@
+<tr>
+    <td class="label">
+        <input type="hidden" name="id" value="{{id}}" />
+        <label for="minutesMailFormRecipients">{{lblRecipients}}</label>
+    </td>
+    <td>
+        <select dojoType="dojox.form.CheckedMultiSelect" id="minutesMailFormRecipients" name="recipients[]"
+            multiple="true">
+            {% for recipient in people %}
+            <option value="{{recipient.id}}">
+            {{recipient.display}}
+            </option>
+            {% endfor %}
+        </select>
+    </td>
+    <td>
+        <!-- Tooltip -->
+    </td>
+</tr>
